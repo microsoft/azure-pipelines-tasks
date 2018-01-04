@@ -127,6 +127,8 @@ describe('Npm Task', function () {
 
         assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
         assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
+        assert(tr.stdOutContained('OverridingProjectNpmrc'), 'install from feed shoud override project .npmrc');
+        assert(tr.stdOutContained('RestoringProjectNpmrc'), 'install from .npmrc shoud restore project .npmrc');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
@@ -141,6 +143,8 @@ describe('Npm Task', function () {
 
         assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
         assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
+        assert(!tr.stdOutContained('OverridingProjectNpmrc'), 'install from .npmrc shoud not override project .npmrc');
+        assert(!tr.stdOutContained('RestoringProjectNpmrc'), 'install from .npmrc shoud not restore project .npmrc');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
@@ -171,6 +175,8 @@ describe('Npm Task', function () {
 
         assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
         assert(tr.stdOutContained('npm publish successful'), 'npm should have installed the package');
+        assert(tr.stdOutContained('OverridingProjectNpmrc'), 'publish should always ooverrideverride project .npmrc');
+        assert(tr.stdOutContained('RestoringProjectNpmrc'), 'publish should always restore project .npmrc');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
@@ -212,7 +218,7 @@ describe('Npm Task', function () {
         };
         mockery.registerMock('fs', mockFs);
 
-        let npmrcParser = require('../npmrcparser');
+        let npmrcParser = require('npm-common/npmrcparser');
         let registries = npmrcParser.GetRegistries('');
 
         assert.equal(registries.length, 3);
@@ -225,7 +231,7 @@ describe('Npm Task', function () {
 
     it('gets feed id from VSTS registry', (done: MochaDone) => {
         mockery.registerMock('vsts-task-lib/task', {});
-        let util = require('../util');
+        let util = require('npm-common/util');
 
         assert.equal(util.getFeedIdFromRegistry(
             'http://account.visualstudio.com/_packaging/feedId/npm/registry'),
@@ -258,7 +264,7 @@ describe('Npm Task', function () {
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
-        let util = require('../util');
+        let util = require('npm-common/util');
 
         return util.getPackagingCollectionUrl().then(u => {
             assert.equal(u, 'http://example.pkgs.visualstudio.com/'.toLowerCase());
@@ -300,7 +306,7 @@ describe('Npm Task', function () {
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
-        let util = require('../util');
+        let util = require('npm-common/util');
 
         return util.getLocalRegistries('').then((registries: string[]) => {
             assert.equal(registries.length, 1);

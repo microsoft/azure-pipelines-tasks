@@ -5,18 +5,22 @@ import Q = require('q');
 import os = require('os');
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import { IExecOptions } from 'vsts-task-lib/toolrunner';
 
-import sqCommon = require('./CodeAnalysis/SonarQube/common');
-import sqGradle = require('./CodeAnalysis/gradlesonar');
-import { CodeAnalysisOrchestrator } from './CodeAnalysis/Common/CodeAnalysisOrchestrator';
-import { BuildOutput, BuildEngine } from './CodeAnalysis/Common/BuildOutput';
-import { PmdTool } from './CodeAnalysis/Common/PmdTool';
-import { CheckstyleTool } from './CodeAnalysis/Common/CheckstyleTool';
-import { FindbugsTool } from './CodeAnalysis/Common/FindbugsTool';
+import sqCommon = require('codeanalysis-common/SonarQube/common');
+import sqGradle = require('codeanalysis-common/gradlesonar');
+import { CodeAnalysisOrchestrator } from 'codeanalysis-common/Common/CodeAnalysisOrchestrator';
+import { BuildOutput, BuildEngine } from 'codeanalysis-common/Common/BuildOutput';
+import { PmdTool } from 'codeanalysis-common/Common/PmdTool';
+import { CheckstyleTool } from 'codeanalysis-common/Common/CheckstyleTool';
+import { FindbugsTool } from 'codeanalysis-common/Common/FindbugsTool';
 import { CodeCoverageEnablerFactory } from 'codecoverage-tools/codecoveragefactory';
 import { ICodeCoverageEnabler } from 'codecoverage-tools/codecoverageenabler';
 import ccUtil = require('codecoverage-tools/codecoverageutilities');
 import javacommons = require('java-common/java-common');
+import systemToken = require('utility-common/accesstoken');
+
+const accessTokenEnvSetting: string = 'VSTS_ENV_ACCESS_TOKEN';
 
 // Configure the JVM associated with this run.
 function setGradleOpts(gradleOptions: string): void {
@@ -127,12 +131,14 @@ function configureWrapperScript(wrapperScript: string): string {
 // update JAVA_HOME if user selected specific JDK version or set path manually
 function setJavaHome(javaHomeSelection: string): void {
     let specifiedJavaHome: string;
+    let javaTelemetryData;
 
     if (javaHomeSelection === 'JDKVersion') {
         tl.debug('Using JDK version to find and set JAVA_HOME');
         let jdkVersion: string = tl.getInput('jdkVersion');
         let jdkArchitecture: string = tl.getInput('jdkArchitecture');
-
+        javaTelemetryData = { "jdkVersion": jdkVersion };
+        
         if (jdkVersion !== 'default') {
             specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
         }
@@ -140,11 +146,22 @@ function setJavaHome(javaHomeSelection: string): void {
         tl.debug('Using path from user input to set JAVA_HOME');
         let jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
         specifiedJavaHome = jdkUserInputPath;
+        javaTelemetryData = { "jdkVersion": "custom" };
     }
+    javacommons.publishJavaTelemetry('Gradle', javaTelemetryData);
+    
     if (specifiedJavaHome) {
         tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
         process.env['JAVA_HOME'] = specifiedJavaHome;
     }
+}
+
+function getExecOptions(): IExecOptions {
+    var env = process.env;
+    env[accessTokenEnvSetting] = systemToken.getSystemAccessToken();
+    return <IExecOptions> {
+        env: env,
+    };
 }
 
 async function run() {
@@ -242,8 +259,8 @@ async function run() {
             // Looks like: 'SonarQube analysis is enabled.'
             console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
 
-            gradleRunner = sqGradle.applyEnabledSonarQubeArguments(gradleRunner);
-            gradleRunner = sqGradle.applySonarQubeCodeCoverageArguments(gradleRunner, isCodeCoverageOpted, codeCoverageTool, summaryFile);
+            gradleRunner = <ToolRunner> sqGradle.applyEnabledSonarQubeArguments(gradleRunner);
+            gradleRunner = <ToolRunner> sqGradle.applySonarQubeCodeCoverageArguments(gradleRunner, isCodeCoverageOpted, codeCoverageTool, summaryFile);
         }
         gradleRunner = codeAnalysisOrchestrator.configureBuild(gradleRunner);
 
@@ -252,7 +269,7 @@ async function run() {
         let statusFailed: boolean = false;
         let analysisError: any;
         try {
-            gradleResult = await gradleRunner.exec();
+            gradleResult = await gradleRunner.exec(getExecOptions());
             sqGradle.processSonarQubeIntegration();
             tl.debug(`Gradle result: ${gradleResult}`);
         } catch (err) {

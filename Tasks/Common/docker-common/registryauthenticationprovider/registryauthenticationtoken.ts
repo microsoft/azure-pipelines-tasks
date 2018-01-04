@@ -1,6 +1,7 @@
 "use strict";
 
 import * as tl from "vsts-task-lib/task";
+const util = require('util');
 
 export default class RegistryServerAuthenticationToken {
 
@@ -11,8 +12,9 @@ export default class RegistryServerAuthenticationToken {
     private username: string;
     private password: string;
     private email: string;
+    private xMetaSourceClient: string; 
     
-    constructor(username: string, authenticationPassword: string, registry: string, email: string) {
+    constructor(username: string, authenticationPassword: string, registry: string, email: string, xMetaSourceClient: string) {
         
         // Replace it with setvariable once vsts-task-lib is updated
         console.log("##vso[task.setvariable variable=CONTAINER_USERNAME;issecret=true;]" + username);
@@ -22,6 +24,7 @@ export default class RegistryServerAuthenticationToken {
         this.password = authenticationPassword;
         this.username = username;
         this.email = email;
+        this.xMetaSourceClient = xMetaSourceClient;
     }
     
     public getUsername(): string {
@@ -40,4 +43,8 @@ export default class RegistryServerAuthenticationToken {
         return this.email;
     }
     
+    public getDockerConfig(): string {
+        var auths = util.format('{"auths": { "%s": {"auth": "%s", "email": "%s" } }, "HttpHeaders":{"X-Meta-Source-Client":"%s"} }', this.registry,new Buffer(this.username+":"+this.password).toString('base64'),this.email, this.xMetaSourceClient);
+        return auths;
+    }
 }

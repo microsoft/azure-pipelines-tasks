@@ -116,7 +116,7 @@ function New-TfvcSrcSrvIniContent {
             (Get-Date))
         'INDEXER=TFSTB'
         'SRCSRV: variables ------------------------------------------'
-        'TFS_EXTRACT_CMD=tf.exe view /version:%var4% /noprompt "$%var3%" /server:%fnvar%(%var2%) /console > %SRCSRVTRG%'
+        'TFS_EXTRACT_CMD=tf.exe view /version:%var4% /noprompt "$%var3%" /server:%fnvar%(%var2%) /output:%SRCSRVTRG%'
         'TFS_EXTRACT_TARGET=%targ%\%var2%%fnbksl%(%var3%)\%var4%\%fnfile%(%var5%)'
         'SRCSRVVERCTRL=tfs'
         'SRCSRVERRDESC=access'

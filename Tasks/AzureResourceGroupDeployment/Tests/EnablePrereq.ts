@@ -13,8 +13,8 @@ tr.setInput("templateLocation", "Linked artifact")
 tr.setInput("overrideParameters", "");
 tr.setInput("deploymentMode", "Complete");
 tr.setInput("enableDeploymentPrerequisites", "ConfigureVMwithWinRM");
-tr.setInput("csmFile", path.join(__dirname, "CSM.json"));
-tr.setInput("csmParametersFile", path.join(__dirname, "CSM.json"));
+tr.setInput("csmFile", "CSM.json");
+tr.setInput("csmParametersFile", "CSM.json");
 
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
@@ -24,6 +24,23 @@ process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONID"] = "sId";
 process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
+
+var CSMJson = path.join(__dirname, "CSM.json");
+var CSMwithComments = path.join(__dirname, "CSMwithComments.json");
+var defaults = path.join(__dirname, "defaults.json");
+var faultyCSM = path.join(__dirname, "faultyCSM.json");
+
+let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+    "findMatch": {
+        "CSM.json" : [CSMJson],
+        "CSMwithComments.json" : [CSMwithComments],
+        "defaults.json" : [defaults],
+        "faultyCSM.json" : [faultyCSM],
+        "" : [""]
+    }
+};
+
+tr.setAnswers(a);
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 tr.registerMock('azure-arm-rest/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));

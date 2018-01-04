@@ -182,6 +182,11 @@ Try
         # Import SQLPS Module
         Import-SqlPs
 
+        if($sqlUserName)
+        {
+            $SqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
+        }
+
         $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$ServerName`" -Database `"$DatabaseName`" -Username `"$SqlUsername`" "
 
         $commandToRun = $scriptArgument + " -Password `"$SqlPassword`" "

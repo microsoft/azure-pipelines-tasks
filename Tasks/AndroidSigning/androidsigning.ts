@@ -1,17 +1,6 @@
-/*
-  Copyright (c) Microsoft. All rights reserved.
-  Licensed under the MIT license. See LICENSE file in the project root for full license information.
-*/
-
 import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
-
-// Define error handler
-var onError = function (errorMsg) {
-    tl.error(errorMsg);
-    tl.exit(1);
-}
 
 /*
 Signing the specified file.  Move the current file to fn.unsigned, and
@@ -25,16 +14,16 @@ var jarsigning = (fn: string) => {
     if (!jarsigner) {
         var java_home = tl.getVariable('JAVA_HOME');
         if (!java_home) {
-            onError("JAVA_HOME is not set");
+            throw tl.loc('JavaHomeNotSet');
         }
 
-        jarsigner = path.join(java_home, 'bin', 'jarsigner');
+        jarsigner = tl.resolve(java_home, 'bin', 'jarsigner');
     }
 
-    var jarsignerRunner = tl.createToolRunner(jarsigner);
+    var jarsignerRunner = tl.tool(jarsigner);
 
-    // Get keystore file for signing
-    var keystoreFile = tl.getInput('keystoreFile', true);
+    // Get keystore file path for signing
+    var keystoreFile = tl.getTaskVariable('KEYSTORE_FILE_PATH');
 
     // Get keystore alias
     var keystoreAlias = tl.getInput('keystoreAlias', true);
@@ -56,14 +45,14 @@ var jarsigning = (fn: string) => {
     }
 
     if (jarsignerArguments) {
-        jarsignerRunner.argString(jarsignerArguments);
+        jarsignerRunner.line(jarsignerArguments);
     }
 
-    var unsignedFn = fn + ".unsigned"; 
-    var success = tl.mv(fn, unsignedFn, true, false);
+    var unsignedFn = fn + ".unsigned";
+    var success = tl.mv(fn, unsignedFn, '-f', false);
 
     jarsignerRunner.arg(['-signedjar', fn, unsignedFn, keystoreAlias]);
-    
+
     return jarsignerRunner.exec(null);
 }
 
@@ -78,125 +67,72 @@ var zipaligning = (fn: string) => {
 
     // if the tool path is not set, let's find one (anyone) from the SDK folder
     if (!zipaligner) {
-        
+
         var android_home = tl.getVariable('ANDROID_HOME');
         if (!android_home) {
-            onError("ANDROID_HOME is not set");
+            throw tl.loc('AndroidHomeNotSet');
         }
-    
-        var allFiles = tl.find(path.join(android_home, 'build-tools'));
-        // Now matching the pattern against all files
-        var zipalignToolsList = tl.match(allFiles, "zipalign*", {matchBase: true});
+
+        var zipalignToolsList = tl.findMatch(tl.resolve(android_home, 'build-tools'), "zipalign*", null, { matchBase: true });
 
         if (!zipalignToolsList || zipalignToolsList.length === 0) {
-            onError("Could not find zipalign tool inside ANDROID_HOME: " + android_home);
+            throw tl.loc('CouldNotFindZipalignInAndroidHome', android_home);
         }
 
         zipaligner = zipalignToolsList[0];
     }
 
     if (!zipaligner) {
-         onError("Could not find zipalign tool.");
+        throw tl.loc('CouldNotFindZipalign');
     }
 
-    var zipalignRunner = tl.createToolRunner(zipaligner);
+    var zipalignRunner = tl.tool(zipaligner);
 
     // alignment must be 4 or play store will reject, hard code this to avoid user errors
     zipalignRunner.arg(["-v", "4"]);
 
-    var unalignedFn = fn + ".unaligned"; 
-    var success = tl.mv(fn, unalignedFn, true, false);
-    
+    var unalignedFn = fn + ".unaligned";
+    var success = tl.mv(fn, unalignedFn, '-f', false);
+
     zipalignRunner.arg([unalignedFn, fn]);
     return zipalignRunner.exec(null);
 }
 
-var process = (fn: string) => {
+async function run() {
+    try {
+        // Configure localization
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-    tl.debug('process '+fn);
+        // Get files to be signed 
+        let filesPattern: string = tl.getInput('files', true);
 
-    return Q.fcall(() => {
-       if (jarsign) {
-           return jarsigning(fn);
-       }
+        // Signing the APK?
+        let jarsign: boolean = tl.getBoolInput('jarsign');
 
-       return Q(0);
-    })
-    .then(() => {
-        if (zipalign) {
-            return zipaligning(fn);
+        // Zipaligning the APK?
+        let zipalign: boolean = tl.getBoolInput('zipalign');
+
+        // Resolve files for the specified value or pattern
+        let filesToSign: string[] = tl.findMatch(null, filesPattern);
+
+        // Fail if no matching files were found
+        if (!filesToSign || filesToSign.length === 0) {
+            throw tl.loc('NoMatchingFiles', filesPattern);
         }
 
-        return Q(0);
-    })
-}
+        for (let file of filesToSign) {
+            if (jarsign) {
+                await jarsigning(file);
+            }
 
-//-----------------------------------------------------------------------------
-// Program
-//-----------------------------------------------------------------------------
-// Get files to be signed 
-var filesPattern = tl.getInput('files', true);
-
-// Signing the APK?
-var jarsign: boolean = tl.getBoolInput('jarsign');
-
-// Zipaligning the APK?
-var zipalign: boolean = tl.getBoolInput('zipalign');
-
-// Resolve files for the specified value or pattern
-if (filesPattern.indexOf('*') == -1 && filesPattern.indexOf('?') == -1) {
-    // No pattern found, check literal path to a single file
-    tl.checkPath(filesPattern, 'files');
-
-    // Use the specified single file
-    var filesList = [filesPattern];
-
-} else {
-    var firstWildcardIndex = function(str) {
-        var idx = str.indexOf('*');
-
-        var idxOfWildcard = str.indexOf('?');
-        if (idxOfWildcard > -1) {
-            return (idx > -1) ?
-                Math.min(idx, idxOfWildcard) : idxOfWildcard;
+            if (zipalign) {
+                await zipaligning(file);
+            }
         }
-
-        return idx;
-    }
-
-    // Find app files matching the specified pattern
-    tl.debug('Matching glob pattern: ' + filesPattern);
-
-    // First find the most complete path without any matching patterns
-    var idx = firstWildcardIndex(filesPattern);
-    tl.debug('Index of first wildcard: ' + idx);
-    var findPathRoot = path.dirname(filesPattern.slice(0, idx));
-
-    tl.debug('find root dir: ' + findPathRoot);
-
-    // Now we get a list of all files under this root
-    var allFiles = tl.find(findPathRoot);
-
-    // Now matching the pattern against all files
-    var filesList: string[] = tl.match(allFiles, filesPattern, {matchBase: true});
-
-    // Fail if no matching app files were found
-    if (!filesList || filesList.length == 0) {
-        onError('No matching files were found with search pattern: ' + filesPattern);
+    } catch (err) {
+        tl.setResult(tl.TaskResult.Failed, err);
     }
 }
 
-var result = Q({});
-filesList.forEach((fn) => {
-    result = result.then(() => {
-        return process(fn);
-    })
-})
+run();
 
-result.then(() => {
-    tl.exit(0);
-})
-.fail((err) => {
-    tl.error(err);
-    tl.exit(1);
-});

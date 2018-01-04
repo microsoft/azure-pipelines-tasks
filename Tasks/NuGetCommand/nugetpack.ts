@@ -2,9 +2,11 @@ import * as tl from "vsts-task-lib/task";
 import * as nutil from "nuget-task-common/Utility";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as path from "path";
-import * as ngToolRunner from "./Common/NuGetToolRunner";
-import * as packUtils from "./Common/NuGetPackUtilities";
+import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
+import * as packUtils from "nuget-task-common/PackUtilities";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import {IExecSyncResult} from "vsts-task-lib/toolrunner";
+import * as telemetry from 'utility-common/telemetry';
 
 class PackOptions implements INuGetCommandOptions {
     constructor(
@@ -13,6 +15,7 @@ class PackOptions implements INuGetCommandOptions {
         public includeReferencedProjects: boolean,
         public version: string,
         public properties: string[],
+        public createSymbolsPackage: boolean,
         public verbosity: string,
         public configFile: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings
@@ -22,7 +25,7 @@ class PackOptions implements INuGetCommandOptions {
 export async function run(nuGetPath: string): Promise<void> {
     nutil.setConsoleCodePage();
 
-    let searchPattern = tl.getPathInput("searchPatternPack", true);
+    let searchPatternInput = tl.getPathInput("searchPatternPack", true);
     let configuration = tl.getInput("configurationToPack");
     let versioningScheme = tl.getInput("versioningScheme");
     let includeRefProj = tl.getBoolInput("includeReferencedProjects");
@@ -30,11 +33,13 @@ export async function run(nuGetPath: string): Promise<void> {
     let majorVersion = tl.getInput("requestedMajorVersion");
     let minorVersion = tl.getInput("requestedMinorVersion");
     let patchVersion = tl.getInput("requestedPatchVersion");
+    let timezone = tl.getInput("packTimezone");
     let propertiesInput = tl.getInput("buildProperties");
     let verbosity = tl.getInput("verbosityPack");
+    let createSymbolsPackage = tl.getBoolInput("includeSymbols");
     let outputDir = undefined;
 
-    try 
+    try
     {
         // If outputDir is not provided then the root working directory is set by default.
         // By requiring it, it will throw an error if it is not provided and we can set it to undefined.
@@ -59,8 +64,8 @@ export async function run(nuGetPath: string): Promise<void> {
             case "byPrereleaseNumber":
                 tl.debug(`Getting prerelease number`);
 
-                let nowUtcString = packUtils.getUtcDateString();
-                version = `${majorVersion}.${minorVersion}.${patchVersion}-CI-${nowUtcString}`;
+                let nowDateTimeString = packUtils.getNowDateString(timezone);
+                version = `${majorVersion}.${minorVersion}.${patchVersion}-CI-${nowDateTimeString}`;
                 break;
             case "byEnvVar":
                 tl.debug(`Getting version from env var: ${versionEnvVar}`);
@@ -95,7 +100,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 {
                     tl.warning(tl.loc("Warning_MoreThanOneVersionInBuildNumber"))
                 }
-                
+
                 version = versionMatches[0];
                 break;
         }
@@ -113,10 +118,11 @@ export async function run(nuGetPath: string): Promise<void> {
         if (!useLegacyFind) {
             let findOptions: tl.FindOptions = <tl.FindOptions>{};
             let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            filesList = tl.findMatch(undefined, searchPattern, findOptions, matchOptions);
+            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
+            filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
         }
         else {
-            filesList = nutil.resolveFilterSpec(searchPattern);
+            filesList = nutil.resolveFilterSpec(searchPatternInput);
         }
 
         tl.debug(`Found ${filesList.length} files`);
@@ -145,12 +151,13 @@ export async function run(nuGetPath: string): Promise<void> {
             includeRefProj,
             version,
             props,
+            createSymbolsPackage,
             verbosity,
             undefined,
             environmentSettings);
 
         for (const file of filesList) {
-            await packAsync(file, packOptions);
+            pack(file, packOptions);
         }
     } catch (err) {
         tl.error(err);
@@ -158,7 +165,7 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function packAsync(file: string, options: PackOptions): Q.Promise<number> {
+function pack(file: string, options: PackOptions): IExecSyncResult {
     console.log(tl.loc("Info_AttemptingToPackFile") + file);
 
     let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, undefined);
@@ -181,6 +188,7 @@ function packAsync(file: string, options: PackOptions): Q.Promise<number> {
     }
 
     nugetTool.argIf(options.includeReferencedProjects, "-IncludeReferencedProjects")
+    nugetTool.argIf(options.createSymbolsPackage, "-Symbols")
 
     if (options.version) {
         nugetTool.arg("-version");
@@ -192,5 +200,12 @@ function packAsync(file: string, options: PackOptions): Q.Promise<number> {
         nugetTool.arg(options.verbosity);
     }
 
-    return nugetTool.exec();
+    let execResult = nugetTool.execSync();
+    if (execResult.code !== 0) {
+        telemetry.logStderr(execResult.code, execResult.stderr);
+        throw tl.loc("Error_NugetFailedWithCodeAndErr",
+            execResult.code,
+            execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
+    }
+    return execResult;
 }

@@ -47,7 +47,7 @@
   "loc.messages.RestartAppServiceAccepted": "다시 시작 요청을 App Service에서 허용했습니다. %s",
   "loc.messages.InvalidAction": "잘못된 작업을 선택했습니다.",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "경고: 배포 상태를 업데이트할 수 없습니다. 이 웹 사이트에 SCM 끝점을 사용할 수 없습니다.",
-  "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "Azure App Service의 액세스 토큰을 가져올 수 없습니다. StatusCode %s(%s)",
+  "loc.messages.CouldnotfetchaccesstokenforAzureStatusCode": "Azure App Service의 액세스 토큰을 가져올 수 없습니다. StatusCode %s(%s)",
   "loc.messages.WebAppDoesntExist": "웹앱 '%s'이(가) 없습니다.",
   "loc.messages.UnabletoretrieveWebAppID": "Azure App Service '%s'에 대한 연결 정보를 가져올 수 없습니다. 상태 코드: %s",
   "loc.messages.StartingSwapSlot": "웹앱에 대한 슬롯 교환을 요청하는 중입니다.%s",

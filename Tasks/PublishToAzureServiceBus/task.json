@@ -1,12 +1,13 @@
 {
   "id": "BA761F24-CBD6-48CB-92F3-FC13396405B1",
   "name": "PublishToAzureServiceBus",
-  "friendlyName": "Publish To Azure Service Bus (Preview)",
+  "friendlyName": "Publish To Azure Service Bus",
   "description": "Sends a message to azure service bus using a service connection (no agent required).",
   "category": "Utility",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/publish-to-azure-service-bus)",
   "visibility": [
-      "Release"
+    "Build",
+    "Release"
   ],
   "runsOn": [
       "Server"
@@ -15,14 +16,15 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 6
   },
   "preview": "true",
   "inputs": [
   {
     "name": "connectedServiceName",
+    "aliases": ["azureSubscription"],
     "type": "connectedService:AzureServiceBus",
-    "label": "Azure Service Bus Connection",
+    "label": "Azure service bus connection",
     "defaultValue": "",
     "required": true,
     "helpMarkDown": "Select a Azure Service Bus connection."
@@ -44,7 +46,7 @@
   {
         "name": "waitForCompletion",
         "type": "boolean",
-        "label": "Wait for Task Completion",
+        "label": "Wait for task completion",
         "defaultValue": "false",
         "required": true,
         "helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."

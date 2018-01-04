@@ -1,8 +1,8 @@
 import http = require('http'); // Used to get the HTTP status code meanings
 import Q = require('q');
 
-let ISonarQubeServer = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/server').ISonarQubeServer;
-let SonarQubeEndpoint = require('../../../Tasks/Maven/CodeAnalysis/SonarQube/endpoint').SonarQubeEndpoint;
+let ISonarQubeServer = require('../../../Tasks/Common/codeanalysis-common/SonarQube/server').ISonarQubeServer;
+let SonarQubeEndpoint = require('../../../Tasks/Common/codeanalysis-common/SonarQube/endpoint').SonarQubeEndpoint;
 
 export class MockSonarQubeServer /*implements ISonarQubeServer*/ {
 

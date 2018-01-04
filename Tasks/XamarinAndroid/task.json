@@ -11,11 +11,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 119,
-        "Patch": 1
+        "Minor": 129,
+        "Patch": 0
     },
     "demands": [
-        "AndroidSDK",
         "MSBuild",
         "Xamarin.Android"
     ],
@@ -35,6 +34,7 @@
     "inputs": [
         {
             "name": "project",
+            "aliases": [ "projectFile" ],
             "type": "filePath",
             "label": "Project",
             "defaultValue": "**/*.csproj",
@@ -51,6 +51,7 @@
         },
         {
             "name": "outputDir",
+            "aliases": [ "outputDirectory" ],
             "type": "string",
             "label": "Output Directory",
             "defaultValue": "",
@@ -82,6 +83,7 @@
         },
         {
             "name": "msbuildLocationMethod",
+            "aliases": [ "msbuildLocationOption" ],
             "type": "radio",
             "label": "MSBuild",
             "required": false,
@@ -94,6 +96,7 @@
         },
         {
             "name": "msbuildVersion",
+            "aliases": [ "msbuildVersionOption" ],
             "type": "pickList",
             "label": "MSBuild Version",
             "required": false,
@@ -111,6 +114,7 @@
         },
         {
             "name": "msbuildLocation",
+            "aliases": [ "msbuildFile" ],
             "type": "string",
             "label": "MSBuild Location",
             "defaultValue": "",
@@ -121,6 +125,7 @@
         },
         {
             "name": "msbuildArchitecture",
+            "aliases": [ "msbuildArchitectureOption" ],
             "type": "pickList",
             "label": "MSBuild Architecture",
             "defaultValue": "x86",
@@ -144,6 +149,7 @@
         },
         {
             "name": "jdkSelection",
+            "aliases": [ "jdkOption" ],
             "type": "radio",
             "label": "Select JDK to use for the build",
             "required": true,
@@ -157,6 +163,7 @@
         },
         {
             "name": "jdkVersion",
+            "aliases": [ "jdkVersionOption" ],
             "type": "pickList",
             "label": "JDK Version",
             "required": false,
@@ -166,6 +173,7 @@
             "visibleRule": "jdkSelection = JDKVersion",
             "options": {
                 "default": "default",
+                "1.9": "JDK 9",
                 "1.8": "JDK 8",
                 "1.7": "JDK 7",
                 "1.6": "JDK 6"
@@ -173,6 +181,7 @@
         },
         {
             "name": "jdkUserInputPath",
+            "aliases": [ "jdkDirectory" ],
             "type": "string",
             "label": "JDK Path",
             "required": true,
@@ -183,11 +192,13 @@
         },
         {
             "name": "jdkArchitecture",
+            "aliases": [ "jdkArchitectureOption" ],
             "type": "pickList",
             "label": "JDK Architecture",
-            "defaultValue": "x86",
+            "defaultValue": "x64",
             "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
+            "visibleRule": "jdkVersion != default",
             "groupName": "jdkOptions",
             "options": {
                 "x86": "x86",
@@ -209,7 +220,7 @@
         }
     },
     "messages": {
-        "JDKNotFound": "Failed to find specified JDK version. Please make sure environment variable %s exists and is set to the location of a corresponding JDK.",
+        "JDKNotFound": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
         "NoMatchingProjects": "No files were found matching: %s.",
         "XamarinAndroidBuildFailed": "%s\nSee https://go.microsoft.com/fwlink/?LinkId=760847.",
         "XamarinAndroidSucceeded": "Xamarin.Android task execution completed with no errors.",

@@ -12,6 +12,7 @@ try {
     # Load utility functions
     . "$PSScriptRoot\utilities.ps1"
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
+    Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
 
     # Collect input values
 
@@ -32,6 +33,7 @@ try {
     $skipUpgrade =  [System.Boolean]::Parse((Get-VstsInput -Name skipUpgradeSameTypeAndVersion))
     $skipValidation =  [System.Boolean]::Parse((Get-VstsInput -Name skipPackageValidation))
     $unregisterUnusedVersions = [System.Boolean]::Parse((Get-VstsInput -Name unregisterUnusedVersions))
+    $configureDockerSettings = [System.Boolean]::Parse((Get-VstsInput -Name configureDockerSettings))
 
     $clusterConnectionParameters = @{}
 
@@ -50,6 +52,12 @@ try {
 
     # Connect to cluster
     Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+
+    if ($configureDockerSettings)
+    {
+        Import-Module "$PSScriptRoot\Update-DockerSettings.psm1"
+        Update-DockerSettings -ApplicationPackagePath $applicationPackagePath -ClusterConnectionParameters $clusterConnectionParameters
+    }
 
     . "$PSScriptRoot\ServiceFabricSDK\ServiceFabricSDK.ps1"
 

@@ -29,3 +29,8 @@ Assert-AreEqual $vmWinRMHttpsPort $resource.winRMHttpsPort
 $response = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $validRG -azureRMVMResources $null
 
 Assert-IsNullOrEmpty $response
+
+$response = Get-AzureRMVMsConnectionDetailsInResourceGroup -resourceGroupName $validRG -azureRMVMResources $azureRMVMResources -connectedServiceName "connectedServiceName"
+Assert-IsNotNullOrEmpty $response
+Assert-AreEqual 3 $response.Count
+

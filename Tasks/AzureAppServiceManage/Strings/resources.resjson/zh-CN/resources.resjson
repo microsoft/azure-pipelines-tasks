@@ -47,7 +47,7 @@
   "loc.messages.RestartAppServiceAccepted": "应用服务 %s 接受的重启请求",
   "loc.messages.InvalidAction": "所选操作无效!",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "警告: 无法更新部署状态。此网站未启用 SCM 终结点。",
-  "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "无法提取 Azure 应用服务的访问令牌。StatusCode %s (%s)",
+  "loc.messages.CouldnotfetchaccesstokenforAzureStatusCode": "无法提取 Azure 应用服务的访问令牌。StatusCode %s (%s)",
   "loc.messages.WebAppDoesntExist": "Web 应用 \"%s\" 不存在。",
   "loc.messages.UnabletoretrieveWebAppID": "无法检索 Azure 应用服务 \"%s\" 的连接详细信息。状态代码: %s",
   "loc.messages.StartingSwapSlot": "正在请求 Web 应用 %s 的交换槽",

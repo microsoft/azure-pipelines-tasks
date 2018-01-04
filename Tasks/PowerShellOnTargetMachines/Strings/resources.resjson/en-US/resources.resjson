@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "Execute PowerShell scripts on remote machine(s)",
   "loc.instanceNameFormat": "Run PowerShell on $(EnvironmentName)",
+  "loc.releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
   "loc.group.displayName.deployment": "Deployment",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.EnvironmentName": "Machines",
@@ -28,5 +29,12 @@
   "loc.input.label.ResourceFilteringMethod": "Select Machines By",
   "loc.input.help.ResourceFilteringMethod": "Optionally, select a subset of machines either by providing machine names or tags.",
   "loc.input.label.MachineNames": "Filter Criteria",
-  "loc.input.help.MachineNames": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines."
+  "loc.input.help.MachineNames": "This input is valid only for machine groups or output variables and is not supported for flat list of machines yet. Provide a list of machines like, dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34, or tags like, Role:DB; OS:Win8.1. If multiple tags are provided, then the task will run in all the machines with the specified tags. The default is to run the task in all machines.",
+  "loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
+  "loc.messages.PS_TM_DeploymentStartedForMachine0": "Deployment started for machine: '{0}'",
+  "loc.messages.PS_TM_DeploymentStatusForMachine01": "Deployment status for machine '{0}' : '{1}'",
+  "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "Deployment failed on machine '{0}' with following message : '{1}'",
+  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'",
+  "loc.messages.PS_TM_0PortWasNotProvidedForResource1": "{0} port was not provided for resource '{1}'",
+  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "Deployment on one or more machines failed."
 }

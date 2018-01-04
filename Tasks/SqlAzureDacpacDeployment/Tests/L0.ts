@@ -10,7 +10,7 @@ var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
 
 describe('SqlAzureDacpacDeployment  Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         if (psm.testSupported()) {
@@ -84,6 +84,9 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
         });
         it('Validate SQL Package Command Line Arguments (Get-SqlPackageCommandArguments)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityGetSqlCmdArgs.ps1'), done);
+        });
+        it('Validate Username (Get-FormattedSqlUsername)', (done) => {
+            psr.run(path.join(__dirname, 'L0UtilityFormatUsername.ps1'), done);
         });
     }
 });

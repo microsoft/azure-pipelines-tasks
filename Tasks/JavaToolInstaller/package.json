@@ -1,0 +1,28 @@
+{
+    "name": "java-tool-installer",
+    "version": "0.126.0",
+    "description": "Java Tool Installer",
+    "main": "javaToolInstaller.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/microsoft/vsts-tasks.git"
+    },
+    "keywords": [
+        "VSTS",
+        "Tasks",
+        "Java"
+    ],
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/microsoft/vsts-tasks/issues"
+    },
+    "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+    "dependencies": {
+        "vsts-task-lib": "2.1.0",
+        "vsts-task-tool-lib": "^0.4.1"
+    }
+}

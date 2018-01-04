@@ -209,12 +209,13 @@ async function doWork() {
         // update JAVA_HOME if user selected specific JDK version or set path manually
         var javaHomeSelection = tl.getInput('javaHomeSelection', true);
         var specifiedJavaHome = null;
-
+        var javaTelemetryData = null;
         if (javaHomeSelection == 'JDKVersion') {
             tl.debug('Using JDK version to find and set JAVA_HOME');
             var jdkVersion = tl.getInput('jdkVersion');
             var jdkArchitecture = tl.getInput('jdkArchitecture');
-
+            javaTelemetryData = { "jdkVersion": jdkVersion };
+            
             if (jdkVersion != 'default') {
                 specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
             }
@@ -223,8 +224,10 @@ async function doWork() {
             tl.debug('Using path from user input to set JAVA_HOME');
             var jdkUserInputPath = tl.getPathInput('jdkUserInputPath', true, true);
             specifiedJavaHome = jdkUserInputPath;
+            javaTelemetryData = { "jdkVersion": "custom" };
         }
-
+        javacommons.publishJavaTelemetry('Ant', javaTelemetryData);
+        
         if (specifiedJavaHome) {
             tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
             process.env['JAVA_HOME'] = specifiedJavaHome;

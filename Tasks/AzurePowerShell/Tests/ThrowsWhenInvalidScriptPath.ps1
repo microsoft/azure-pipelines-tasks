@@ -7,6 +7,7 @@ foreach ($path in @( "script`rpath", "script`npath" )) {
     Unregister-Mock Get-VstsInput
     Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
     Register-Mock Get-VstsInput { $path } -- -Name ScriptPath
+    Register-Mock Get-VstsInput { "4.1.0" } -- -Name TargetAzurePs
 
     # Act/Assert.
     Assert-Throws {

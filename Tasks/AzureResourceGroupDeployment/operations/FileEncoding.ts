@@ -1,6 +1,7 @@
 //File Encoding detected to be : utf-32be, which is not supported by Node.js
 //'Unable to detect encoding of file ' + typeCode
 //'File buffer is too short to detect encoding type'
+
 var fs = require('fs');
 import tl = require('vsts-task-lib');
 
@@ -13,7 +14,7 @@ export class FileEncoding {
     }
 }
 
-function detectFileEncodingWithBOM(buffer: Buffer) {
+function detectFileEncodingWithBOM(buffer: Buffer): FileEncoding {
     tl.debug('Detecting file encoding using BOM');
     var type: string;
     if (buffer.slice(0, 3).equals(new Buffer([239, 187, 191]))) {
@@ -38,7 +39,7 @@ function detectFileEncodingWithBOM(buffer: Buffer) {
     return new FileEncoding(type, true);
 }
 
-function detectFileEncodingWithoutBOM(buffer: Buffer) {
+function detectFileEncodingWithoutBOM(buffer: Buffer): FileEncoding {
     tl.debug('Detecting file encoding without BOM');
 
     var typeCode = 0;
@@ -85,6 +86,7 @@ export function detectFileEncoding(fileName: string, buffer: Buffer): FileEncodi
     if (fileEncoding == null) {
         throw new Error(tl.loc("CouldNotDetectEncoding", fileName));
     }
+    console.log(tl.loc("DetectedFileEncoding", fileName, fileEncoding.type));
     return fileEncoding;
 }
 

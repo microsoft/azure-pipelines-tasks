@@ -19,6 +19,7 @@ Register-Mock Get-VstsInput { $overwriteBehavior } -- -Name overwriteBehavior
 Register-Mock Get-VstsInput { "false" } -- -Name skipUpgradeSameTypeAndVersion
 Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
+Register-Mock Get-VstsInput { "false" } -- -Name configureDockerSettings
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath

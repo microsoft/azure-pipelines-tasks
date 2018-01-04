@@ -28,12 +28,22 @@ export interface TestConfigurations {
     vsTestLocationMethod: string;
     vsTestVersion: string;
     vsTestLocation: string;
-    vsTestVersionDetais: version.VSTestVersion;
+    vsTestVersionDetails: version.VSTestVersion;
     pathtoCustomTestAdapters: string;
     tiaConfig: TiaConfiguration;
     runInParallel: boolean;
     runTestsInIsolation: boolean;
     otherConsoleOptions: string;
+    taskInstanceIdentifier: string;
+    runUITests: boolean;
+    ignoreTestFailures: string;
+    rerunFailedTests: boolean;
+    rerunType: string;
+    rerunFailedThreshold: number;
+    rerunFailedTestCasesMaxLimit: number;
+    rerunMaxAttempts: number;
+    toolsInstallerConfig: ToolsInstallerConfiguration;
+    proxyConfiguration: ProxyConfiguration
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -41,6 +51,18 @@ export interface DtaTestConfigurations extends TestConfigurations {
     customSlicingenabled: boolean;
     dtaEnvironment: DtaEnvironment;
     numberOfAgentsInPhase: number;
+    useVsTestConsole: string;
+    numberOfTestCasesPerSlice: number;
+    batchingType: BatchingType;
+    runningTimePerBatchInMs: number;
+    proceedAfterAbortedTestCase: boolean;
+}
+
+export interface ProxyConfiguration {
+    proxyUrl: string;
+    proxyUserName: string;
+    proxyPassword: string;
+    proxyBypassHosts: string;
 }
 
 export interface DtaEnvironment {
@@ -54,7 +76,12 @@ export interface DtaEnvironment {
 export interface VsTestConfigurations extends TestConfigurations {
     publishRunAttachments: string;
     vstestDiagFile: string;
-    ignoreVstestFailure: string;
+    responseFile: string;
+    isResponseFileRun: boolean;
+    responseSupplementryFile: string;
+    vstestArgsFile: string;
+    responseFileSupported: boolean;
+    publishTestResultsInTiaMode: boolean;
 }
 
 export interface TiaConfiguration {
@@ -65,10 +92,25 @@ export interface TiaConfiguration {
     sourcesDir: string;
     runIdFile: string;
     baseLineBuildIdFile: string;
+    responseFile: string;
     useNewCollector: boolean;
     isPrFlow: string;
     context: string;
     useTestCaseFilterInResponseFile: string;
     userMapFile: string;
     disableEnablingDataCollector: boolean;
+}
+
+export interface ToolsInstallerConfiguration {
+    vsTestPackageLocation: string; // root of the package downloaded by Tools installer
+    vsTestConsolePathFromPackageLocation: string; // path to vstest.console.exe
+    x86ProfilerProxyDLLLocation: string;
+    x64ProfilerProxyDLLLocation: string;
+    isToolsInstallerInUse: boolean;
+}
+
+export enum BatchingType {
+    TestCaseBased,
+    TestExecutionTimeBased,
+    AssemblyBased
 }

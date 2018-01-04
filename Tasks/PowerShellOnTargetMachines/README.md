@@ -1,7 +1,7 @@
 # PowerShell on Target Machines 
 
 ### Overview
-The task is used run PowerShell on the target machines. The task can run both PowerShell scripts and PowerShell-DSC scripts. For PowerShell scripts, PowerShell 2.0 is needed on the machines and for PowerShell-DSC scripts [Windows Management Framework 4.0](https://www.microsoft.com/en-in/download/details.aspx?id=40855&40ddd5bd-f9e7-49a6-3526-f86656931a02=True) needs to be installed on the machines. WMF 4.0 ships in-the-box in Windows 8.1 and Windows Server 20012 R2.
+The task is used run PowerShell on the target machines. The task can run both PowerShell scripts and PowerShell-DSC scripts. For PowerShell scripts, PowerShell 2.0 is needed on the machines and for PowerShell-DSC scripts [Windows Management Framework 4.0](https://www.microsoft.com/en-in/download/details.aspx?id=40855&40ddd5bd-f9e7-49a6-3526-f86656931a02=True) needs to be installed on the machines. WMF 4.0 ships in-the-box in Windows 8.1 and Windows Server 2012 R2.
 
 ### WinRM setup
 This task uses the [Windows Remote Management](https://msdn.microsoft.com/en-us/library/aa384426.aspx) (WinRM) to access domain-joined or workgroup, on-premises physical or virtual machines.

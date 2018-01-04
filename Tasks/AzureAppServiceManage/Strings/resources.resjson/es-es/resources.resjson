@@ -47,7 +47,7 @@
   "loc.messages.RestartAppServiceAccepted": "App Service aceptó la solicitud de reinicio: %s",
   "loc.messages.InvalidAction": "Se seleccionó una acción no válida",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ADVERTENCIA: No se puede actualizar el estado de la implementación. El punto de conexión de SCM no está habilitado para este sitio web.",
-  "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "No se pudo capturar el token de acceso para Azure App Service. StatusCode %s (%s)",
+  "loc.messages.CouldnotfetchaccesstokenforAzureStatusCode": "No se pudo capturar el token de acceso para Azure App Service. StatusCode %s (%s)",
   "loc.messages.WebAppDoesntExist": "No existe WebApp \"%s\".",
   "loc.messages.UnabletoretrieveWebAppID": "No se pueden recuperar los detalles de conexión para Azure App Service: \"%s\". Código de estado: %s",
   "loc.messages.StartingSwapSlot": "Solicitando intercambio de ranura para Aplicación web: %s",

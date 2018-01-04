@@ -10,6 +10,7 @@ tr.setInput('XmlTransformation', 'true');
 
 process.env['TASK_TEST_TRACE'] = 1;
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
+process.env['SYSTEM_DEBUG'] = false;
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -34,7 +35,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "DefaultWorkingDirectory/ctt/ctt.exe": true
     },
     "exec": {
-        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw": {
+        "DefaultWorkingDirectory/ctt/ctt.exe s:C:\\tempFolder\\web.config t:C:\\tempFolder\\web.Release.config d:C:\\tempFolder\\web.config pw i": {
             "code": 0,
             "stdout": "ctt execution successful"
         },

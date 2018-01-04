@@ -47,7 +47,7 @@
   "loc.messages.RestartAppServiceAccepted": "Demande de redémarrage acceptée par App Service : %s",
   "loc.messages.InvalidAction": "Action non valide sélectionnée",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "AVERTISSEMENT : Impossible de mettre à jour l'état de déploiement. Le point de terminaison SCM n'est pas activé pour ce site web.",
-  "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "Impossible de récupérer le jeton d'accès pour Azure App Service. Code d'état : %s (%s)",
+  "loc.messages.CouldnotfetchaccesstokenforAzureStatusCode": "Impossible de récupérer le jeton d'accès pour Azure App Service. Code d'état : %s (%s)",
   "loc.messages.WebAppDoesntExist": "L'application web '%s' n'existe pas.",
   "loc.messages.UnabletoretrieveWebAppID": "Impossible de récupérer les détails de connexion d'Azure App Service : '%s'. Code d'état : %s",
   "loc.messages.StartingSwapSlot": "Demande d'échange d'emplacement pour l'application web : %s",

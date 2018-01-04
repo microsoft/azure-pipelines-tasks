@@ -11,11 +11,14 @@ nmh.setNugetVersionInputDefault();
 tmr.setInput('command', 'restore');
 tmr.setInput('solution', 'packages.config');
 tmr.setInput('selectOrConfig', 'config');
+tmr.setInput('nugetConfigPath', 'c:\\foobar\\config\\directory\\NuGet_.config');
+
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "osType": {},
     "checkPath": {
-        "c:\\agent\\home\\directory\\packages.config": true
+        "c:\\agent\\home\\directory\\packages.config": true,
+        "c:\\foobar\\config\\directory\\NuGet_.config": true
     },
     "which": {},
     "exec": {
@@ -25,7 +28,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stderr": ""
         }
     },
-    "exist": {},
+    "exist": {"c:\\foobar\\config\\directory\\NuGet_.config": true},
     "stats": {
         "c:\\agent\\home\\directory\\packages.config": {
             "isFile": true

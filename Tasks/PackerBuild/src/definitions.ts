@@ -36,5 +36,5 @@ export interface ITemplateFileProvider {
 
 export interface ITemplateVariablesProvider {
     register(packerHost: IPackerHost): void;
-    getTemplateVariables(packerHost: IPackerHost): Map<string, string>;
+    getTemplateVariables(packerHost: IPackerHost): Promise<Map<string, string>>;
 }

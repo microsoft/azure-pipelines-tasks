@@ -6,6 +6,7 @@
   "category": "Utility",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "visibility": [
+    "Build",
     "Release"
   ],
   "runsOn": [
@@ -15,12 +16,15 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 6
   },
   "preview": "true",
   "inputs": [
     {
       "name": "connectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureServiceBus",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",

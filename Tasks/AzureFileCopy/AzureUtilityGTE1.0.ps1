@@ -23,25 +23,19 @@ function Get-AzureStorageAccountResourceGroupName
     $ARMStorageAccountResourceType =  "Microsoft.Storage/storageAccounts"
     if (-not [string]::IsNullOrEmpty($storageAccountName))
     {
-        try
-        {
-            Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
-            $azureStorageAccountResourceDetails = (Get-AzureRMResource -ErrorAction Stop) | Where-Object { ($_.ResourceType -eq $ARMStorageAccountResourceType) -and ($_.ResourceName -eq $storageAccountName)}
-            Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
+        Write-Verbose "[Azure Call]Getting resource details for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
+        $azureStorageAccountResourceDetails = (Get-AzureRMResource -ErrorAction Stop) | Where-Object { ($_.ResourceType -eq $ARMStorageAccountResourceType) -and ($_.ResourceName -eq $storageAccountName)}
+        Write-Verbose "[Azure Call]Retrieved resource details successfully for azure storage account resource: $storageAccountName with resource type: $ARMStorageAccountResourceType"
 
-            $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
-            return $azureStorageAccountResourceDetails.ResourceGroupName
-        }
-        finally
+        $azureResourceGroupName = $azureStorageAccountResourceDetails.ResourceGroupName
+        if ([string]::IsNullOrEmpty($azureResourceGroupName))
         {
-            if ([string]::IsNullOrEmpty($azureResourceGroupName))
-            {
-                Write-Verbose "(ARM)Storage account: $storageAccountName not found"
-
-                Write-Telemetry "Task_InternalError" "RMStorageAccountNotFound"
-                Throw (Get-VstsLocString -Key "AFC_StorageAccountNotFound" -ArgumentList $storageAccountName)
-            }
+            Write-Verbose "(ARM)Storage account: $storageAccountName not found"
+            Write-Telemetry "Task_InternalError" "RMStorageAccountNotFound"
+            Throw (Get-VstsLocString -Key "AFC_StorageAccountNotFound" -ArgumentList $storageAccountName)
         }
+
+        return $azureResourceGroupName
     }
 }
 
@@ -283,6 +277,60 @@ function Get-AzureRMVMsInResourceGroup
     }
 }
 
+function Get-AzureRMResourceGroupResourcesDetailsForAzureStack
+{
+    param([string]$resourceGroupName,
+          [object]$azureRMVMResources,
+          [object]$endpoint)
+
+    [hashtable]$azureRGResourcesDetails = @{}
+    [hashtable]$loadBalancerDetails = @{}
+    
+    if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
+    {
+        Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"
+        $networkInterfaceResources = Get-AzureNetworkInterfaceDetails -ResourceGroupName $resourceGroupName -endpoint $endpoint
+        Write-Verbose "[Azure Call]Got network interfaces in resource group $resourceGroupName"
+        $azureRGResourcesDetails.Add("networkInterfaceResources", $networkInterfaceResources)
+
+        Write-Verbose "[Azure Call]Getting public IP Addresses in resource group $resourceGroupName"
+        $publicIPAddressResources = Get-AzurePublicIpAddressDetails -ResourceGroupName $resourceGroupName -endpoint $endpoint
+        Write-Verbose "[Azure Call]Got public IP Addresses in resource group $resourceGroupName"
+        $azureRGResourcesDetails.Add("publicIPAddressResources", $publicIPAddressResources)
+
+        Write-Verbose "[Azure Call]Getting load balancers in resource group $resourceGroupName"
+        $lbGroup =  Get-AzureLoadBalancersDetails -ResourceGroupName $resourceGroupName -endpoint $endpoint
+        Write-Verbose "[Azure Call]Got load balancers in resource group $resourceGroupName"
+
+        if($lbGroup)
+        {
+            foreach($lb in $lbGroup)
+            {
+                $lbDetails = @{}
+                Write-Verbose "[Azure Call]Getting load balancer in resource group $resourceGroupName"
+                $loadBalancer = Get-AzureLoadBalancerDetails -Name $lb.Name -ResourceGroupName $resourceGroupName -endpoint $endpoint
+                Write-Verbose "[Azure Call]Got load balancer in resource group $resourceGroupName"
+
+                Write-Verbose "[Azure Call]Getting LoadBalancer Frontend Ip Config"
+                $frontEndIPConfigs = Get-AzureRMLoadBalancerFrontendIpConfigDetails -LoadBalancer $loadBalancer
+                Write-Verbose "[Azure Call]Got LoadBalancer Frontend Ip Config"
+
+                Write-Verbose "[Azure Call]Getting Azure LoadBalancer Inbound NatRule Config"
+                $inboundRules = Get-AzureRMLoadBalancerInboundNatRuleConfigDetails -LoadBalancer $loadBalancer
+                Write-Verbose "[Azure Call]Got Azure LoadBalancer Inbound NatRule Config"
+
+                $lbDetails.Add("frontEndIPConfigs", $frontEndIPConfigs)
+                $lbDetails.Add("inboundRules", $inboundRules)
+                $loadBalancerDetails.Add($lb.Name, $lbDetails)
+            }
+
+            $azureRGResourcesDetails.Add("loadBalancerResources", $loadBalancerDetails)
+        }
+    }
+
+    return $azureRGResourcesDetails
+}
+
 function Get-AzureRMResourceGroupResourcesDetails
 {
     param([string]$resourceGroupName,
@@ -290,6 +338,7 @@ function Get-AzureRMResourceGroupResourcesDetails
 
     [hashtable]$azureRGResourcesDetails = @{}
     [hashtable]$loadBalancerDetails = @{}
+
     if(-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
         Write-Verbose "[Azure Call]Getting network interfaces in resource group $resourceGroupName"

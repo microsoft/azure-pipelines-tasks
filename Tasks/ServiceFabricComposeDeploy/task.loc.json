@@ -10,13 +10,14 @@
     "Release"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 38
+    "Minor": 2,
+    "Patch": 3
   },
   "demands": [
     "Cmd"
@@ -38,6 +39,9 @@
   "inputs": [
     {
       "name": "serviceConnectionName",
+      "aliases": [
+        "clusterConnection"
+      ],
       "type": "connectedService:serviceFabric",
       "label": "ms-resource:loc.input.label.serviceConnectionName",
       "defaultValue": "",
@@ -77,6 +81,9 @@
     },
     {
       "name": "dockerRegistryEndpointName",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
       "type": "connectedService:dockerRegistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpointName",
       "required": false,
@@ -86,6 +93,9 @@
     },
     {
       "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
@@ -166,11 +176,12 @@
     "RemovingApplication": "ms-resource:loc.messages.RemovingApplication",
     "ApplicationRemoved": "ms-resource:loc.messages.ApplicationRemoved",
     "EncryptingPassword": "ms-resource:loc.messages.EncryptingPassword",
-    "CertificateNotFound": "ms-resource:loc.messages.CertificateNotFound",
     "CreatingApplication": "ms-resource:loc.messages.CreatingApplication",
     "WaitingForDeploy": "ms-resource:loc.messages.WaitingForDeploy",
     "CurrentStatus": "ms-resource:loc.messages.CurrentStatus",
     "DeployFailed": "ms-resource:loc.messages.DeployFailed",
-    "CheckingComposeFile": "ms-resource:loc.messages.CheckingComposeFile"
+    "CheckingComposeFile": "ms-resource:loc.messages.CheckingComposeFile",
+    "UnsupportedAPIVersion": "ms-resource:loc.messages.UnsupportedAPIVersion",
+    "UsingAPIVersion": "ms-resource:loc.messages.UsingAPIVersion"
   }
 }

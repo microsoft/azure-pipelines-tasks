@@ -22,34 +22,37 @@ async function run() {
         var resolvedSummaryFile: string = resolvePathToSingleItem(workingDirectory, summaryFileLocation);
         if (failIfCoverageIsEmpty && await ccUtil.isCodeCoverageFileEmpty(resolvedSummaryFile, codeCoverageTool)) {
             throw tl.loc('NoCodeCoverage');
-        }
+        } else if (!tl.exist(resolvedSummaryFile)) {
+            tl.warning(tl.loc('NoCodeCoverage'));
+        } else {
+            // Resolve the report directory.
+            // It may contain wildcards allowing the path to change between builds, such as for:
+            // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage
+            var resolvedReportDirectory: string = resolvePathToSingleItem(workingDirectory, reportDirectory);
 
-        // Resolve the report directory.
-        // It may contain wildcards allowing the path to change between builds, such as for:
-        // $(System.DefaultWorkingDirectory)\artifacts***$(Configuration)\testresults\coverage
-        var resolvedReportDirectory: string = resolvePathToSingleItem(workingDirectory, reportDirectory);
-
-        // Get any 'Additional Files' to publish as build artifacts
-        if (additionalFiles) {
-            // Does the 'Additional Files' value contain wildcards?
-            if (containsWildcard(additionalFiles)) {
-                // Resolve matches of the 'Additional Files' pattern
-                var additionalFileMatches: string[] = tl.findMatch(
-                    workingDirectory,
-                    additionalFiles,
-                    { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
-                    { matchBase: true });
+            // Get any 'Additional Files' to publish as build artifacts
+            if (additionalFiles) {
+                // Does the 'Additional Files' value contain wildcards?
+                if (containsWildcard(additionalFiles)) {
+                    // Resolve matches of the 'Additional Files' pattern
+                    var additionalFileMatches: string[] = tl.findMatch(
+                        workingDirectory,
+                        additionalFiles,
+                        { followSymbolicLinks: false, followSpecifiedSymbolicLink: false },
+                        { matchBase: true });
+                }
+                else {
+                    // Use the specific additional file (no wildcards)
+                    var additionalFileMatches: string[] = [additionalFiles];
+                }
+                additionalFileMatches = additionalFileMatches.filter(file => pathExistsAsFile(file));
                 tl.debug(tl.loc('FoundNMatchesForPattern', additionalFileMatches.length, additionalFiles));
             }
-            else {
-                // Use the specific additional file (no wildcards)
-                var additionalFileMatches: string[] = [additionalFiles];
-            }
-        }
 
-        // Publish code coverage data
-        var ccPublisher = new tl.CodeCoveragePublisher();
-        ccPublisher.publish(codeCoverageTool, resolvedSummaryFile, resolvedReportDirectory, additionalFileMatches);
+            // Publish code coverage data
+            var ccPublisher = new tl.CodeCoveragePublisher();
+            ccPublisher.publish(codeCoverageTool, resolvedSummaryFile, resolvedReportDirectory, additionalFileMatches);
+        }
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
@@ -93,6 +96,17 @@ function resolvePathToSingleItem(workingDirectory:string, pathInput: string) : s
 function containsWildcard(inputValue: string) : boolean {
     return inputValue.indexOf('*') >= 0 ||
            inputValue.indexOf('?') >= 0;
+}
+
+// Gets whether the specified path exists as file.
+function pathExistsAsFile(path: string) {
+    try {
+        return tl.stats(path).isFile();
+    }
+    catch (error) {
+        tl.debug(error);
+        return false;
+    }
 }
 
 run();

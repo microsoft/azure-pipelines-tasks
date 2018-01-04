@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 19
   },
   "runsOn": [
     "Agent",
@@ -69,6 +69,9 @@
     },
     {
       "name": "solution",
+      "aliases": [
+        "restoreSolution"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.solution",
       "defaultValue": "**/*.sln",
@@ -78,9 +81,12 @@
     },
     {
       "name": "selectOrConfig",
+      "aliases": [
+        "feedsToUse"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.selectOrConfig",
-      "defaultValue": "config",
+      "defaultValue": "select",
       "helpMarkDown": "ms-resource:loc.input.help.selectOrConfig",
       "required": "true",
       "options": {
@@ -91,6 +97,9 @@
     },
     {
       "name": "feedRestore",
+      "aliases": [
+        "vstsFeed"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feedRestore",
       "defaultValue": "",
@@ -124,6 +133,9 @@
     },
     {
       "name": "externalEndpoints",
+      "aliases": [
+        "externalFeedCredentials"
+      ],
       "type": "connectedService:ExternalNuGetFeed",
       "label": "ms-resource:loc.input.label.externalEndpoints",
       "required": false,
@@ -146,6 +158,9 @@
     },
     {
       "name": "packagesDirectory",
+      "aliases": [
+        "restoreDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.packagesDirectory",
       "defaultValue": "",
@@ -162,7 +177,6 @@
       "required": "false",
       "groupName": "restoreAdvanced",
       "options": {
-        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"
@@ -170,9 +184,12 @@
     },
     {
       "name": "searchPatternPush",
+      "aliases": [
+        "packagesToPush"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPush",
-      "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg",
       "helpMarkDown": "ms-resource:loc.input.help.searchPatternPush",
       "required": true,
       "visibleRule": "command = push"
@@ -191,6 +208,9 @@
     },
     {
       "name": "feedPublish",
+      "aliases": [
+        "publishVstsFeed"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.feedPublish",
       "defaultValue": "",
@@ -209,6 +229,9 @@
     },
     {
       "name": "externalEndpoint",
+      "aliases": [
+        "publishFeedCredentials"
+      ],
       "type": "connectedService:ExternalNuGetFeed",
       "label": "ms-resource:loc.input.label.externalEndpoint",
       "required": true,
@@ -224,7 +247,6 @@
       "required": "false",
       "groupName": "pushAdvanced",
       "options": {
-        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"
@@ -232,6 +254,9 @@
     },
     {
       "name": "searchPatternPack",
+      "aliases": [
+        "packagesToPack"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPack",
       "defaultValue": "**/*.csproj",
@@ -241,6 +266,9 @@
     },
     {
       "name": "configurationToPack",
+      "aliases": [
+        "configuration"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.configurationToPack",
       "defaultValue": "$(BuildConfiguration)",
@@ -250,6 +278,9 @@
     },
     {
       "name": "outputDir",
+      "aliases": [
+        "packDestination"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.outputDir",
       "defaultValue": "$(Build.ArtifactStagingDirectory)",
@@ -293,6 +324,9 @@
     },
     {
       "name": "requestedMajorVersion",
+      "aliases": [
+        "majorVersion"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.requestedMajorVersion",
       "defaultValue": "1",
@@ -303,6 +337,9 @@
     },
     {
       "name": "requestedMinorVersion",
+      "aliases": [
+        "minorVersion"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.requestedMinorVersion",
       "defaultValue": "0",
@@ -313,6 +350,9 @@
     },
     {
       "name": "requestedPatchVersion",
+      "aliases": [
+        "patchVersion"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.requestedPatchVersion",
       "defaultValue": "0",
@@ -320,6 +360,28 @@
       "required": true,
       "groupName": "packOptions",
       "visibleRule": "versioningScheme = byPrereleaseNumber"
+    },
+    {
+      "name": "packTimezone",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packTimezone",
+      "defaultValue": "utc",
+      "helpMarkDown": "ms-resource:loc.input.help.packTimezone",
+      "required": "false",
+      "groupName": "packOptions",
+      "options": {
+        "utc": "UTC",
+        "local": "Agent local time"
+      },
+      "visibleRule": "versioningScheme = byPrereleaseNumber"
+    },
+    {
+      "name": "includeSymbols",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.includeSymbols",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.includeSymbols",
+      "groupName": "packOptions"
     },
     {
       "name": "buildProperties",
@@ -339,7 +401,6 @@
       "required": "false",
       "groupName": "packAdvanced",
       "options": {
-        "-": "-",
         "Quiet": "Quiet",
         "Normal": "Normal",
         "Detailed": "Detailed"
@@ -389,27 +450,6 @@
     "UnknownRestoreMode": "ms-resource:loc.messages.UnknownRestoreMode",
     "CouldNotFindNuGetService": "ms-resource:loc.messages.CouldNotFindNuGetService",
     "NoNuGetSpecified": "ms-resource:loc.messages.NoNuGetSpecified",
-    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
-    "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
-    "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
-    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
-    "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
-    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
-    "NGCommon_NuGetConfigIsPackagesConfig": "ms-resource:loc.messages.NGCommon_NuGetConfigIsPackagesConfig",
-    "NGCommon_NuGetConfigIsInvalid": "ms-resource:loc.messages.NGCommon_NuGetConfigIsInvalid",
-    "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
-    "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
-    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
-    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
-    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
-    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
-    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
-    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
-    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
-    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
-    "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
-    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
-    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
     "Warning_AutomaticallyVersionReferencedProjects": "ms-resource:loc.messages.Warning_AutomaticallyVersionReferencedProjects",
     "Error_AutomaticallyVersionReleases": "ms-resource:loc.messages.Error_AutomaticallyVersionReleases",
     "Error_NoVersionFoundInBuildNumber": "ms-resource:loc.messages.Error_NoVersionFoundInBuildNumber",
@@ -426,10 +466,36 @@
     "Warning_FallBackToNuGet": "ms-resource:loc.messages.Warning_FallBackToNuGet",
     "Info_NoPackagesMatchedTheSearchPattern": "ms-resource:loc.messages.Info_NoPackagesMatchedTheSearchPattern",
     "Warning_ForceNuGetCannotSkipConflicts": "ms-resource:loc.messages.Warning_ForceNuGetCannotSkipConflicts",
-    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
     "Error_PushNotARegularFile": "ms-resource:loc.messages.Error_PushNotARegularFile",
     "Warning_AllowDuplicatesOnlyAvailableHosted": "ms-resource:loc.messages.Warning_AllowDuplicatesOnlyAvailableHosted",
+    "Warning_SkipConflictsNotSupportedUnixAgents": "ms-resource:loc.messages.Warning_SkipConflictsNotSupportedUnixAgents",
+    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
+    "Error_ApiKeyNotSupported": "ms-resource:loc.messages.Error_ApiKeyNotSupported",
+    "Error_ExpectedConfigurationElement": "ms-resource:loc.messages.Error_ExpectedConfigurationElement",
+    "Error_NoMatchingFilesFoundForPattern": "ms-resource:loc.messages.Error_NoMatchingFilesFoundForPattern",
+    "Error_NoUrlWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoUrlWasFoundWhichMatches",
+    "Error_NoVersionWasFoundWhichMatches": "ms-resource:loc.messages.Error_NoVersionWasFoundWhichMatches",
+    "Error_NuGetToolInstallerFailer": "ms-resource:loc.messages.Error_NuGetToolInstallerFailer",
+    "Info_AvailableVersions": "ms-resource:loc.messages.Info_AvailableVersions",
+    "Info_ExpectBehaviorChangeWhenUsingVersionQuery": "ms-resource:loc.messages.Info_ExpectBehaviorChangeWhenUsingVersionQuery",
+    "Info_MatchingUrlWasFoundSettingAuth": "ms-resource:loc.messages.Info_MatchingUrlWasFoundSettingAuth",
+    "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_SavingTempConfig": "ms-resource:loc.messages.Info_SavingTempConfig",
-    "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized"
+    "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
+    "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
+    "NGCommon_AddingSources": "ms-resource:loc.messages.NGCommon_AddingSources",
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
+    "NGCommon_DetectedNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_DetectedNuGetExtensionsPath",
+    "NGCommon_DetectedNuGetVersion": "ms-resource:loc.messages.NGCommon_DetectedNuGetVersion",
+    "NGCommon_IgnoringNuGetExtensionsPath": "ms-resource:loc.messages.NGCommon_IgnoringNuGetExtensionsPath",
+    "NGCommon_NoSourcesFoundInConfig": "ms-resource:loc.messages.NGCommon_NoSourcesFoundInConfig",
+    "NGCommon_NuGetConfigIsInvalid": "ms-resource:loc.messages.NGCommon_NuGetConfigIsInvalid",
+    "NGCommon_NuGetConfigIsPackagesConfig": "ms-resource:loc.messages.NGCommon_NuGetConfigIsPackagesConfig",
+    "NGCommon_RemovingSources": "ms-resource:loc.messages.NGCommon_RemovingSources",
+    "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
+    "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
+    "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
+    "Error_NugetFailedWithCodeAndErr": "ms-resource:loc.messages.Error_NugetFailedWithCodeAndErr"
   }
 }

@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 56
+    "Minor": 3,
+    "Patch": 17
   },
   "demands": [
     "vstest"
@@ -34,6 +34,11 @@
       "name": "executionOptions",
       "displayName": "ms-resource:loc.group.displayName.executionOptions",
       "isExpanded": true
+    },
+    {
+      "name": "advancedExecutionOptions",
+      "displayName": "ms-resource:loc.group.displayName.advancedExecutionOptions",
+      "isExpanded": false
     },
     {
       "name": "reportingOptions",
@@ -53,14 +58,14 @@
       "options": {
         "testAssemblies": "Test assemblies",
         "testPlan": "Test plan",
-        "testRun": "Test run (for on-demand runs)"
+        "testRun": "Test run"
       }
     },
     {
       "name": "testAssemblyVer2",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.testAssemblyVer2",
-      "defaultValue": "**\\*test*.dll\n!**\\obj\\**",
+      "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.testAssemblyVer2",
       "groupName": "testSelection",
@@ -129,7 +134,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.searchFolder",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
-      "required": false,
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.searchFolder",
       "groupName": "testSelection"
     },
@@ -196,7 +201,8 @@
       "options": {
         "latest": "Latest",
         "15.0": "Visual Studio 2017",
-        "14.0": "Visual Studio 2015"
+        "14.0": "Visual Studio 2015",
+        "toolsInstaller": "Installed by Tools Installer"
       }
     },
     {
@@ -233,6 +239,15 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "pathtoCustomTestAdapters",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pathtoCustomTestAdapters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
+      "groupName": "executionOptions"
+    },
+    {
       "name": "runInParallel",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.runInParallel",
@@ -248,15 +263,6 @@
       "defaultValue": "False",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.runTestsInIsolation",
-      "groupName": "executionOptions"
-    },
-    {
-      "name": "pathtoCustomTestAdapters",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.pathtoCustomTestAdapters",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.pathtoCustomTestAdapters",
       "groupName": "executionOptions"
     },
     {
@@ -276,6 +282,77 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.otherConsoleOptions",
       "groupName": "executionOptions"
+    },
+    {
+      "name": "distributionBatchType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.distributionBatchType",
+      "defaultValue": "basedOnTestCases",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.distributionBatchType",
+      "groupName": "advancedExecutionOptions",
+      "options": {
+        "basedOnTestCases": "Based on number of tests and agents",
+        "basedOnExecutionTime": "Based on past running time of tests",
+        "basedOnAssembly": "Based on test assemblies"
+      }
+    },
+    {
+      "name": "batchingBasedOnAgentsOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.batchingBasedOnAgentsOption",
+      "required": false,
+      "groupName": "advancedExecutionOptions",
+      "defaultValue": "autoBatchSize",
+      "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnAgentsOption",
+      "options": {
+        "autoBatchSize": "Automatically determine the batch size",
+        "customBatchSize": "Specify a batch size"
+      },
+      "visibleRule": "distributionBatchType = basedOnTestCases"
+    },
+    {
+      "name": "customBatchSizeValue",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customBatchSizeValue",
+      "defaultValue": "10",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customBatchSizeValue",
+      "groupName": "advancedExecutionOptions",
+      "visibleRule": "distributionBatchType = basedOnTestCases && batchingBasedOnAgentsOption = customBatchSize"
+    },
+    {
+      "name": "batchingBasedOnExecutionTimeOption",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.batchingBasedOnExecutionTimeOption",
+      "required": false,
+      "groupName": "advancedExecutionOptions",
+      "defaultValue": "autoBatchSize",
+      "helpMarkDown": "ms-resource:loc.input.help.batchingBasedOnExecutionTimeOption",
+      "options": {
+        "autoBatchSize": "Automatically determine the batch time",
+        "customTimeBatchSize": "Specify running time per batch"
+      },
+      "visibleRule": "distributionBatchType = basedOnExecutionTime"
+    },
+    {
+      "name": "customRunTimePerBatchValue",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.customRunTimePerBatchValue",
+      "defaultValue": "60",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.customRunTimePerBatchValue",
+      "groupName": "advancedExecutionOptions",
+      "visibleRule": "distributionBatchType = basedOnExecutionTime && batchingBasedOnExecutionTimeOption = customTimeBatchSize"
+    },
+    {
+      "name": "dontDistribute",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.dontDistribute",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dontDistribute",
+      "groupName": "advancedExecutionOptions"
     },
     {
       "name": "testRunTitle",
@@ -312,12 +389,65 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "rerunFailedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.rerunFailedTests",
+      "defaultValue": "False",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunFailedTests",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "rerunType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.rerunType",
+      "defaultValue": "basedOnTestFailurePercentage",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunType",
+      "groupName": "executionOptions",
+      "options": {
+        "basedOnTestFailurePercentage": "% failure",
+        "basedOnTestFailureCount": "# of failed tests"
+      },
+      "visibleRule": "rerunFailedTests = true"
+    },
+    {
+      "name": "rerunFailedThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rerunFailedThreshold",
+      "defaultValue": "30",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunFailedThreshold",
+      "groupName": "executionOptions",
+      "visibleRule": "rerunFailedTests = true && rerunType = basedOnTestFailurePercentage"
+    },
+    {
+      "name": "rerunFailedTestCasesMaxLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rerunFailedTestCasesMaxLimit",
+      "defaultValue": "5",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunFailedTestCasesMaxLimit",
+      "groupName": "executionOptions",
+      "visibleRule": "rerunFailedTests = true && rerunType = basedOnTestFailureCount"
+    },
+    {
+      "name": "rerunMaxAttempts",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rerunMaxAttempts",
+      "defaultValue": "3",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunMaxAttempts",
+      "groupName": "executionOptions",
+      "visibleRule": "rerunFailedTests = true"
     }
   ],
   "sourceDefinitions": [
     {
       "target": "testPlan",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
+      "endpoint": "/$(system.teamProject)/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",
       "authKey": "tfs:teamfoundation"
@@ -344,7 +474,8 @@
   },
   "messages": {
     "VstestLocationDoesNotExist": "ms-resource:loc.messages.VstestLocationDoesNotExist",
-    "VstestReturnCode": "ms-resource:loc.messages.VstestReturnCode",
+    "VstestFailedReturnCode": "ms-resource:loc.messages.VstestFailedReturnCode",
+    "VstestPassedReturnCode": "ms-resource:loc.messages.VstestPassedReturnCode",
     "NoMatchingTestAssemblies": "ms-resource:loc.messages.NoMatchingTestAssemblies",
     "VstestNotFound": "ms-resource:loc.messages.VstestNotFound",
     "NoVstestFound": "ms-resource:loc.messages.NoVstestFound",
@@ -374,8 +505,8 @@
     "ErrorWhileUpdatingSettings": "ms-resource:loc.messages.ErrorWhileUpdatingSettings",
     "VideoCollectorNotSupportedWithRunSettings": "ms-resource:loc.messages.VideoCollectorNotSupportedWithRunSettings",
     "runTestInIsolationNotSupported": "ms-resource:loc.messages.runTestInIsolationNotSupported",
-    "tiaNotSupportedInDta": "ms-resource:loc.messages.tiaNotSupportedInDta",
     "overrideNotSupported": "ms-resource:loc.messages.overrideNotSupported",
+    "testSettingPropertiesNotSupported": "ms-resource:loc.messages.testSettingPropertiesNotSupported",
     "vstestVersionInvalid": "ms-resource:loc.messages.vstestVersionInvalid",
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
     "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported",
@@ -404,6 +535,30 @@
     "testPlanSelector": "ms-resource:loc.messages.testPlanSelector",
     "testRunSelector": "ms-resource:loc.messages.testRunSelector",
     "testRunIdInvalid": "ms-resource:loc.messages.testRunIdInvalid",
-    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput"
+    "testRunIdInput": "ms-resource:loc.messages.testRunIdInput",
+    "testSourcesFilteringFailed": "ms-resource:loc.messages.testSourcesFilteringFailed",
+    "noTestSourcesFound": "ms-resource:loc.messages.noTestSourcesFound",
+    "DontShowWERUIDisabledWarning": "ms-resource:loc.messages.DontShowWERUIDisabledWarning",
+    "noVstestConsole": "ms-resource:loc.messages.noVstestConsole",
+    "numberOfTestCasesPerSlice": "ms-resource:loc.messages.numberOfTestCasesPerSlice",
+    "invalidTestBatchSize": "ms-resource:loc.messages.invalidTestBatchSize",
+    "invalidRunTimePerBatch": "ms-resource:loc.messages.invalidRunTimePerBatch",
+    "minimumRunTimePerBatchWarning": "ms-resource:loc.messages.minimumRunTimePerBatchWarning",
+    "RunTimePerBatch": "ms-resource:loc.messages.RunTimePerBatch",
+    "searchLocationNotDirectory": "ms-resource:loc.messages.searchLocationNotDirectory",
+    "rerunFailedTests": "ms-resource:loc.messages.rerunFailedTests",
+    "rerunFailedThreshold": "ms-resource:loc.messages.rerunFailedThreshold",
+    "invalidRerunFailedThreshold": "ms-resource:loc.messages.invalidRerunFailedThreshold",
+    "rerunFailedTestCasesMaxLimit": "ms-resource:loc.messages.rerunFailedTestCasesMaxLimit",
+    "invalidRerunFailedTestCasesMaxLimit": "ms-resource:loc.messages.invalidRerunFailedTestCasesMaxLimit",
+    "rerunMaxAttempts": "ms-resource:loc.messages.rerunMaxAttempts",
+    "invalidRerunMaxAttempts": "ms-resource:loc.messages.invalidRerunMaxAttempts",
+    "rerunNotSupported": "ms-resource:loc.messages.rerunNotSupported",
+    "toolsInstallerPathNotSet": "ms-resource:loc.messages.toolsInstallerPathNotSet",
+    "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
+    "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError",
+    "OverrideUseVerifiableInstrumentation": "ms-resource:loc.messages.OverrideUseVerifiableInstrumentation",
+    "NoTestResultsDirectoryFound": "ms-resource:loc.messages.NoTestResultsDirectoryFound",
+    "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported"
   }
 }

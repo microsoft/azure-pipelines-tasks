@@ -8,7 +8,7 @@ import path = require('path');
 import fs = require('fs');
 
 describe('General Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         // init here
@@ -20,7 +20,7 @@ describe('General Suite', function () {
     });
 
     it('Find invalid task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // get a list of all _build/task folders
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -56,7 +56,7 @@ describe('General Suite', function () {
     })
 
     it('Find nested task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Path to the _build/Tasks folder.
         var tasksFolder = path.resolve(__dirname, '../Tasks');
@@ -86,7 +86,7 @@ describe('General Suite', function () {
     })
 
     it('Find .js with uppercase', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 		
         // Path to the _build/Tasks folder.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -129,7 +129,7 @@ describe('General Suite', function () {
     })
 
     it('Find unsupported demands', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         var supportedDemands: string[] = ['AndroidSDK',
             'ant',
@@ -202,8 +202,8 @@ describe('General Suite', function () {
     })
 
     it('Find unsupported runsOn', (done) => {
-        this.timeout(20000);
-        var supportedRunsOn: string[] = ['Agent', 'DeploymentGroup', 'Server'];
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+        var supportedRunsOn: string[] = ['Agent', 'DeploymentGroup', 'Server', 'ServerGate'];
 
         supportedRunsOn.forEach(runsOn => {
             if (supportedRunsOn.indexOf(runsOn.toLocaleLowerCase()) < 0) {
@@ -244,8 +244,8 @@ describe('General Suite', function () {
         done();
     })
 
-    it('Find invalid server Task', (done) => {
-        this.timeout(20000);
+    it('Find invalid server Task/ServerGate', (done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Path to the _build/Tasks folder.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -258,6 +258,7 @@ describe('General Suite', function () {
 
         var supportedServerExecutionHandlers: string[] = [
             'RM:ManualIntervention', 
+            'Delay',
             'ServiceBus',
             'HttpRequest'];
 
@@ -271,21 +272,24 @@ describe('General Suite', function () {
             var taskFolder = taskFolders[i];
             var taskjson = path.join(taskFolder, 'task.json');
             var task = JSON.parse(fs.readFileSync(taskjson).toString());
-            if (task.hasOwnProperty('runsOn') && task['runsOn'].some(x => x.toLowerCase() == 'server')) {
-                if (task['runsOn'].length > 1) {
-                    assert(false, 'Found invalid value of runsOn in ' + taskjson + '. RunsOn should only be server for server task.');
+            if (task.hasOwnProperty('runsOn') && (task['runsOn'].some(x => x.toLowerCase() == 'server') || task['runsOn'].some(x => x.toLowerCase() == 'servergate'))) {
+                task['runsOn'].sort();
+                if (task['runsOn'].length > 2
+                    || (task['runsOn'].length == 2
+                        && (task['runsOn'][0].toLowerCase() != 'server' || task['runsOn'][1].toLowerCase() != 'servergate'))) {
+                        assert(false, 'Found invalid value of runsOn in ' + taskjson + '. RunsOn should "server" or "server","servergate" for server task. "servergate" for server gate');
                 }
 
                 if (task.hasOwnProperty('demands') && task['demands'].length > 0) {
-                    assert(false, 'Found invalid value for demands in ' + taskjson + '. Demands should be either empty or absent for server task.');
+                    assert(false, 'Found invalid value for demands in ' + taskjson + '. Demands should be either empty or absent for server task/servergate.');
                 }
 
                 if (task.hasOwnProperty('minimumAgentVersion')){
-                     assert(false, 'Found minimumAgentVersion in ' + taskjson + '. This should not be present for server task.');
+                     assert(false, 'Found minimumAgentVersion in ' + taskjson + '. This should not be present for server task/servergate.');
                 }
 
                 if (!task.hasOwnProperty('execution')) {
-                    assert(false, 'No execution section found for server task in ' + taskjson + '.');
+                    assert(false, 'No execution section found for server task/servergate in ' + taskjson + '.');
                 }
                 
                 var handlers = Object.keys(task['execution']);
@@ -295,16 +299,19 @@ describe('General Suite', function () {
                 }
                 
                 var handlerName : string = handlers[0];
-                if (!supportedServerExecutionHandlers.some(x => x.toLowerCase() == handlerName.toLowerCase())){
-                    assert(false, 'Found Invalid task handler name : ' + handlerName + ' in ' + taskjson + '.');
+                if (task['runsOn'].some(x => x.toLowerCase() == 'servergate') && handlerName.toLowerCase() != 'HttpRequest'.toLowerCase()) {
+                        assert(false, 'Found Invalid servergate handler name : ' + handlerName + ' in ' + taskjson + '.'); 
                 }
+                else if (!supportedServerExecutionHandlers.some(x => x.toLowerCase() == handlerName.toLowerCase())) {
+                        assert(false, 'Found Invalid task handler name : ' + handlerName + ' in ' + taskjson + '.');
+                }               
 
                 var execution = task['execution'][handlerName];
                 if (execution.hasOwnProperty('events')) {
                     var taskEvents = execution['events'];
                     Object.keys(taskEvents).forEach( eventName => {
                         if (!supportedTaskEvents.some(x => x.toLowerCase() == eventName.toLowerCase())) {
-                            assert(false, 'Found Invalid task event name ' + eventName + 'in ' + taskjson + '.')
+                            assert(false, 'Found Invalid task/servergate event name ' + eventName + 'in ' + taskjson + '.')
                         }
                     });
                 }
@@ -315,7 +322,7 @@ describe('General Suite', function () {
     })
 
     it('Find invalid message key in task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // get all task.json and module.json paths under _build/Tasks.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -367,7 +374,7 @@ describe('General Suite', function () {
     })
 
     it('Find missing string in .ts', (done: MochaDone) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // search the source dir for all _build/Tasks and module folders.
         let tasksPath = path.resolve(__dirname, '../Tasks');
@@ -490,7 +497,7 @@ describe('General Suite', function () {
     })
 
     it('Find missing string in .ps1/.psm1', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Push all _build/Tasks folders onto the stack.
         var folders: string[] = [];

@@ -7,21 +7,32 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
+    "Build",
     "Release"
   ],
   "runsOn": [
-    "Server"
+    "Server",
+    "ServerGate"
   ],
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 7
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [],
+  "groups": [
+    {
+      "name": "completionOptions",
+      "displayName": "ms-resource:loc.group.displayName.completionOptions",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "connectedServiceName",
+      "aliases": [
+        "serviceConnection"
+      ],
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
@@ -64,13 +75,21 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.body",
       "required": "false",
-      "defaultValue": "",
+      "defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
       "properties": {
         "resizable": "true",
         "rows": "3",
-        "maxLength": "500"
+        "maxLength": "2000"
       },
       "visibleRule": "method != GET && method != HEAD"
+    },
+    {
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.urlSuffix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
     },
     {
       "name": "waitForCompletion",
@@ -78,18 +97,30 @@
       "label": "ms-resource:loc.input.label.waitForCompletion",
       "Required": "false",
       "defaultValue": "false",
+      "groupName": "completionOptions",
       "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+    },
+    {
+      "name": "successCriteria",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.successCriteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.successCriteria",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
     }
   ],
   "execution": {
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceName)",
-        "EndpointUrl": "$(endpoint.url)",
+        "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers": "$(headers)",
-        "WaitForCompletion": "$(waitForCompletion)"
+        "WaitForCompletion": "$(waitForCompletion)",
+        "Expression": "$(successCriteria)"
       }
     }
   }

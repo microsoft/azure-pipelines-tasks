@@ -22,7 +22,13 @@ $runDuration,
 $machineType
 )
 
-$userAgent = "ApacheJmeterTestBuildTask"
+#Set the userAgent appropriately based on whether the task is running as part of a ci or cd
+if($Env:SYSTEM_HOSTTYPE -ieq "build") {
+    $userAgent = "ApacheJmeterTestBuildTask"
+}
+else {
+    $userAgent = "ApacheJmeterTestReleaseTask"
+}
 $global:RestTimeout = 60
 $global:apiVersion = "api-version=1.0"
 
@@ -82,6 +88,9 @@ Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+
+$machineType = 0
+Write-Output "Reset Load generator machine type to $machineType"
 
 #Validate Input
 ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $testDrop $loadTest

@@ -10,13 +10,14 @@
     "Release"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 6
   },
   "demands": [
     "Cmd"
@@ -25,6 +26,9 @@
   "inputs": [
     {
       "name": "serviceConnectionName",
+      "aliases": [
+        "clusterConnection"
+      ],
       "type": "connectedService:servicefabric",
       "label": "ms-resource:loc.input.label.serviceConnectionName",
       "defaultValue": "",
@@ -73,7 +77,7 @@
       "defaultValue": "",
       "required": false,
       "properties": {
-        "editorExtension": "ms.vss-distributed-task-input-editor.parameters-grid"
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
     }

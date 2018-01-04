@@ -15,8 +15,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 113,
+    "Major": 2,
+    "Minor": 0,
     "Patch": 4
   },
   "demands": [
@@ -26,6 +26,9 @@
   "inputs": [
     {
       "name": "ConnectedServiceNameSelector",
+      "aliases": [
+        "azureConnectionType"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
       "required": false,
@@ -38,6 +41,9 @@
     },
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureClassicSubscription"
+      ],
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -47,6 +53,9 @@
     },
     {
       "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
       "defaultValue": "",
@@ -99,6 +108,33 @@
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    },
+    {
+      "name": "TargetAzurePs",
+      "aliases": [
+        "azurePowerShellVersion"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TargetAzurePs",
+      "defaultValue": "LatestVersion",
+      "required": false,
+      "options": {
+        "LatestVersion": "Latest installed version",
+        "OtherVersion": "Specify other version"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
+    },
+    {
+      "name": "CustomTargetAzurePs",
+      "aliases": [
+        "preferredAzurePowerShellVersion"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.CustomTargetAzurePs",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "TargetAzurePs = OtherVersion",
+      "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -109,6 +145,7 @@
   },
   "messages": {
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
-    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0"
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
+    "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion"
   }
 }

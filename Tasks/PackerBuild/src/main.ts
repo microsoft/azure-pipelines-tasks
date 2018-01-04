@@ -15,14 +15,14 @@ import TaskInputTemplateVariablesProvider from "./taskInputTemplateVariablesProv
 async function run(): Promise<any> {
     var host: packerHost = new packerHost();
     await host.initialize();
-    
+
     // register providers
     registerProviders(host);
 
     // run packer commands
     try {
         packerFix.run(host);
-        packerValidate.run(host);
+        await packerValidate.run(host);
         await packerBuild.run(host);
         console.log(tl.loc("PackerBuildCompleted"));
     }
@@ -32,7 +32,7 @@ async function run(): Promise<any> {
 }
 
 function registerProviders(host: packerHost): void {
-    
+
     // register built-in templates provider. This provider provides built-in packer templates used by task
     var builtInTemplateFileProvider = new builtinTemplateFileProvider();
     builtInTemplateFileProvider.register(host);
@@ -62,6 +62,6 @@ tl.setResourcePath(taskManifestPath);
 
 run().then((result) =>
     tl.setResult(tl.TaskResult.Succeeded, "")
-).catch((error) => 
+).catch((error) =>
     tl.setResult(tl.TaskResult.Failed, error)
 );

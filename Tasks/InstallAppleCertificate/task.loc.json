@@ -5,16 +5,15 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "preview": true,
   "visibility": [
     "Build",
     "Release"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 119,
-    "Patch": 0
+    "Major": 1,
+    "Minor": 126,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -96,6 +95,24 @@
       "helpMarkDown": "ms-resource:loc.input.help.deleteCustomKeychain",
       "visibleRule": "keychain = custom",
       "groupName": "advanced"
+    },
+    {
+      "name": "signingIdentity",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signingIdentity",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.signingIdentity",
+      "groupName": "advanced"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "signingIdentity",
+      "description": "The resolved Common Name of the subject in the signing certificate. Either supplied as an input or parsed from the P12 certificate file."
+    },
+    {
+      "name": "keychainPath",
+      "description": "The path for the keychain file with the certificate."
     }
   ],
   "prejobexecution": {
@@ -111,6 +128,7 @@
     }
   },
   "messages": {
-    "INVALID_P12": "ms-resource:loc.messages.INVALID_P12"
+    "INVALID_P12": "ms-resource:loc.messages.INVALID_P12",
+    "NoP12PwdWarning": "ms-resource:loc.messages.NoP12PwdWarning"
   }
 }

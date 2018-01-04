@@ -1,0 +1,14 @@
+{
+    "cp": [
+        {
+            "source": [
+                "./checkstyle.gradle",
+                "./checkstyle.xml",
+                "./pmd.gradle",
+                "./sonar.gradle",
+                "./findbugs.gradle"
+            ],
+            "dest": "./"
+        }
+    ]
+}

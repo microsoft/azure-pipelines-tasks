@@ -1,8 +1,3 @@
-/// <reference path="../../../definitions/node.d.ts" /> 
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
-/// <reference path="../../../definitions/Q.d.ts" />
-/// <reference path="../../../definitions/vso-node-api.d.ts" /> 
-
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
@@ -13,13 +8,93 @@ import deployAzureRG = require("../models/DeployAzureRG");
 import armResource = require("azure-arm-rest/azure-arm-resource");
 import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
-var parameterParser = require("./ParameterParser").parse;
+import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
 import fileEncoding = require('./FileEncoding');
+import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
+import httpInterfaces = require("typed-rest-client/Interfaces");
 
-var stripJsonComments = require("strip-json-comments");
-var httpClient = require('vso-node-api/HttpClient');
-var httpObj = new httpClient.HttpCallbackClient("VSTS_AGENT");
+var hm = require("typed-rest-client/HttpClient");
+var uuid = require("uuid");
+
+let proxyUrl: string = tl.getVariable("agent.proxyurl");
+var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
+    proxy: {
+        proxyUrl: proxyUrl,
+        proxyUsername: tl.getVariable("agent.proxyusername"),
+        proxyPassword: tl.getVariable("agent.proxypassword"),
+        proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null
+    }
+} : {};
+
+let ignoreSslErrors: string = tl.getVariable("VSTS_ARM_REST_IGNORE_SSL_ERRORS");
+requestOptions.ignoreSslError = ignoreSslErrors && ignoreSslErrors.toLowerCase() == "true";
+
+let httpClient = new hm.HttpClient(tl.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
+
+function stripJsonComments(content) {
+    if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
+        return content;
+    }
+
+    var currentChar;
+    var nextChar;
+    var prevChar;
+    var insideQuotes = false;
+    var contentWithoutComments = '';
+    var insideComment = 0;
+    var singlelineComment = 1;
+    var multilineComment = 2;
+
+    for (var i = 0; i < content.length; i++) {
+        currentChar = content[i];
+        nextChar = i + 1 < content.length ? content[i + 1] : "";
+
+        if (insideComment) {
+            var update = false;
+            if (insideComment == singlelineComment && (currentChar + nextChar === '\r\n' || currentChar === '\n')) {
+                i--;
+                insideComment = 0;
+                continue;
+            }
+
+            if (insideComment == multilineComment && currentChar + nextChar === '*/') {
+                i++;
+                insideComment = 0;
+                continue;
+            }
+
+        } else {
+            prevChar = i - 1 >= 0 ? content[i - 1] : "";
+
+            if (currentChar == '"' && prevChar != '\\') {
+                insideQuotes = !insideQuotes
+            }
+
+            if (!insideQuotes) {
+                if (currentChar + nextChar === '//') {
+                    insideComment = singlelineComment;
+                    i++;
+                }
+
+                if (currentChar + nextChar === '/*') {
+                    insideComment = multilineComment;
+                    i++;
+                }
+            }
+        }
+
+        if (!insideComment) {
+            contentWithoutComments += content[i];
+        }
+    }
+
+    return contentWithoutComments;
+}
+
+function formatNumber(num: number): string {
+    return ("0" + num).slice(-2);
+}
 
 class Deployment {
     public properties: Object;
@@ -85,7 +160,7 @@ export class ResourceGroup {
         await this.registerEnvironmentIfRequired(armClient);
     }
 
-    private writeDeploymentErrors(error) {
+    private writeDeploymentErrors(error): void {
         console.log(tl.loc("ErrorsInYourDeployment", error.code));
         if (error.message) {
             tl.error(error.message);
@@ -141,28 +216,40 @@ export class ResourceGroup {
 
     private createDeploymentName(): string {
         var name: string;
-        if (this.taskParameters.templateLocation == "Linked artifact")
-            name = this.taskParameters.csmFile;
-        else
+        if (this.taskParameters.templateLocation == "Linked artifact") {
+            name = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmFile)[0];
+        } else {
             name = this.taskParameters.csmFileLink;
+        }
         name = path.basename(name).split(".")[0].replace(" ", "");
-        var ts = new Date(Date.now());
-        var depName = util.format("%s-%s%s%s-%s%s", name, ts.getFullYear(), ts.getMonth(), ts.getDate(), ts.getHours(), ts.getMinutes());
-        return depName;
+        name = name.substr(0, 40);
+        var timestamp = new Date(Date.now());
+        var uniqueId = uuid().substr(0, 4);
+        var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
+            formatNumber(timestamp.getMonth()),
+            formatNumber(timestamp.getDate()),
+            formatNumber(timestamp.getHours()),
+            formatNumber(timestamp.getMinutes()),
+            formatNumber(timestamp.getSeconds()),
+            uniqueId);
+        var deploymentName = util.format("%s-%s", name, suffix);
+        if (deploymentName.match(/^[-\w\._\(\)]+$/) === null) {
+            deploymentName = util.format("deployment-%s", suffix);
+        }
+        return deploymentName;
     }
 
-    private castToType(value: string, type: string) {
-        switch (type) {
+    private castToType(value: string, type: string): any {
+        switch (type.toLowerCase()) {
             case "int":
-                return parseInt(value);
             case "object":
-                return JSON.parse(value);
-            case "secureObject":
-                return JSON.parse(value);
+            case "secureobject":
             case "array":
-                return JSON.parse(value);
             case "bool":
-                return value === "true";
+                return JSON.parse(value);
+            case "string":
+            case "securestring":
+                return JSON.parse(`"` + value + `"`); // Adding trailing quotes for JSON parser to detect string
             default:
                 // Sending as string
                 break;
@@ -170,19 +257,20 @@ export class ResourceGroup {
         return value;
     }
 
-    private updateOverrideParameters(template: Object, parameters: Object): Object {
+    private updateOverrideParameters(template: TemplateObject, parameters: Map<string, ParameterValue>): Map<string, ParameterValue> {
         tl.debug("Overriding Parameters..");
 
-        var overrideParameters = parameterParser(this.taskParameters.overrideParameters);
-        for (var key in overrideParameters) {
-            tl.debug("Overriding key: " + key);
+        var overrideParameters: NameValuePair[] = PowerShellParameters.parse(this.taskParameters.overrideParameters, true, "\\");
+        for (var overrideParameter of overrideParameters) {
+            tl.debug("Overriding key: " + overrideParameter.name);
             try {
-                overrideParameters[key]["value"] = this.castToType(overrideParameters[key]["value"], template["parameters"][key]["type"]);
+                overrideParameter.value = this.castToType(overrideParameter.value, template.parameters[overrideParameter.name].type);
             } catch (error) {
-                tl.debug(tl.loc("ErrorWhileParsingParameter", key, error.toString()));
+                console.log(tl.loc("ErrorWhileParsingParameter", overrideParameter.name, error.toString()));
             }
-            parameters[key] = overrideParameters[key];
-
+            parameters[overrideParameter.name] = {
+                value: overrideParameter.value
+            } as ParameterValue;
         }
         return parameters;
     }
@@ -202,44 +290,72 @@ export class ResourceGroup {
 
     private downloadFile(url): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            httpObj.get("GET", url, {}, (error, result, contents) => {
-                if (error) {
-                    return reject(tl.loc("FileFetchFailed", url, error));
-                }
-                if (result.statusCode === 200)
+            httpClient.get(url, {}).then(async (response) => {
+                if (response.message.statusCode == 200) {
+                    let contents: string = "";
+                    try {
+                        contents = await response.readBody();
+                    } catch (error) {
+                        reject(tl.loc("UnableToReadResponseBody", error));
+                    }
                     resolve(contents);
-                else {
-                    var errorMessage = result.statusCode.toString() + ": " + result.statusMessage;
+                } else {
+                    var errorMessage = response.message.statusCode.toString() + ": " + response.message.statusMessage;
                     return reject(tl.loc("FileFetchFailed", url, errorMessage));
                 }
+            }, (error) => {
+                return reject(tl.loc("FileFetchFailed", url, error));
             });
         });
     }
 
     private getDeploymentDataForLinkedArtifact(): Deployment {
-        var template: Object;
-        try {
-            tl.debug("Loading CSM Template File.. " + this.taskParameters.csmFile);
-            template = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmFile)));
-            tl.debug("Loaded CSM File");
+        var template: TemplateObject;
+        var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmFile);
+        if (fileMatches.length > 1) {
+            throw new Error(tl.loc("TemplateFilePatternMatchingMoreThanOneFile", fileMatches));
         }
-        catch (error) {
-            throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
+        if (fileMatches.length < 1) {
+            throw new Error(tl.loc("TemplateFilePatternMatchingNoFile"));
+        }
+        var csmFilePath = fileMatches[0];
+        if (!fs.lstatSync(csmFilePath).isDirectory()) {
+            tl.debug("Loading CSM Template File.. " + csmFilePath);
+            try {
+                template = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(csmFilePath)));
+            }
+            catch (error) {
+                throw new Error(tl.loc("TemplateParsingFailed", csmFilePath, utils.getError(error.message)));
+            }
+            tl.debug("Loaded CSM File");
+        } else {
+            throw new Error(tl.loc("CsmFilePatternMatchesADirectoryInsteadOfAFile", csmFilePath));
         }
 
-        var parameters = {};
-        try {
-            if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
-                if (!fs.lstatSync(this.taskParameters.csmParametersFile).isDirectory()) {
-                    tl.debug("Loading Parameters File.. " + this.taskParameters.csmParametersFile);
-                    var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(this.taskParameters.csmParametersFile)));
+        var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
+        if (utils.isNonEmpty(this.taskParameters.csmParametersFile)) {
+            var fileMatches = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory"), this.taskParameters.csmParametersFile);
+            if (fileMatches.length > 1) {
+                throw new Error(tl.loc("TemplateParameterFilePatternMatchingMoreThanOneFile", fileMatches));
+            }
+            if (fileMatches.length < 1) {
+                throw new Error(tl.loc("TemplateParameterFilePatternMatchingNoFile"));
+            }
+            var csmParametersFilePath = fileMatches[0];
+            if (!fs.lstatSync(csmParametersFilePath).isDirectory()) {
+                tl.debug("Loading Parameters File.. " + csmParametersFilePath);
+                try {
+                    var parameterFile = JSON.parse(stripJsonComments(fileEncoding.readFileContentsAsText(csmParametersFilePath)));
                     tl.debug("Loaded Parameters File");
-                    parameters = parameterFile["parameters"];
+                    parameters = parameterFile["parameters"] as Map<string, ParameterValue>;
+                } catch (error) {
+                    throw new Error(tl.loc("ParametersFileParsingFailed", csmParametersFilePath, utils.getError(error.message)));
+                }
+            } else {
+                if (tl.filePathSupplied("csmParametersFile")) {
+                    throw new Error(tl.loc("ParametersPatternMatchesADirectoryInsteadOfAFile", csmParametersFilePath));
                 }
             }
-        }
-        catch (error) {
-            throw new Error(tl.loc("ParametersFileParsingFailed", utils.getError(error.message)));
         }
 
         if (utils.isNonEmpty(this.taskParameters.overrideParameters)) {
@@ -259,7 +375,7 @@ export class ResourceGroup {
         properties["templateLink"] = {
             uri: this.taskParameters.csmFileLink
         };
-        var parameters = {};
+        var parameters: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
         var deployment = new Deployment(properties);
 
         if (utils.isNonEmpty(this.taskParameters.csmParametersFileLink)) {
@@ -323,6 +439,10 @@ export class ResourceGroup {
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
+                    // if (result && result["properties"] && result["properties"]["outputs"]) {
+                    //     tl.command("task.setvariable", { "isOutput": "true", "variable": "DeploymentOutputs" }, JSON.stringify(result["properties"]["outputs"]));
+                    //     console.log(tl.loc("AddedOutputVariable"));
+                    // }
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();
                 });

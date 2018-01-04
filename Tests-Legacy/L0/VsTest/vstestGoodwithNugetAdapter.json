@@ -63,7 +63,7 @@
             "code": 0,
             "stdout": "vstest"
         },
-        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /TestAdapterPath:/source/dir": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /TestAdapterPath:E:\\source\\dir": {
             "code": 0,
             "stdout": "vstest"
         },
@@ -90,6 +90,15 @@
         "wmic datafile where name='\\\\vs\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
 			"code": 0,
 			"stdout" : "version=14.0.0.0"
+        },
+        "C:\\WINDOWS\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\Windows\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\windows\\system32\\chcp.com 65001": {
+            "code": 0
         }
     },
     "rmRF": {
@@ -99,12 +108,14 @@
         }
     },
     "exist": {
+        "E:\\source\\dir": true,
         "settings.runsettings": true,
         "path/to/customadapters": true,
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": false,
         "some\\path\\to\\vstest.console.exe": true,
         "some\\illegal\\path\\to\\vstest.console.exe": false,
-        "\\path\\to\\vstest\\directory": true
+        "\\path\\to\\vstest\\directory": true,
+        "/source/dir":true
     },
     "stats": {
         "settings.runsettings": {
@@ -121,6 +132,12 @@
         },
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
-        }
+        },
+        "/source/dir": {
+            "isDirectory":true
+        },
+        "E:\\source\\dir": {
+            "isDirectory":true
+        }     
     }
 }

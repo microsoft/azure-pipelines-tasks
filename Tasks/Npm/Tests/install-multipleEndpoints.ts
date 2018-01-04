@@ -21,6 +21,8 @@ let auth = {
 };
 tmr.mockServiceEndpoint('1', 'http://example.com/1/', auth);
 tmr.mockServiceEndpoint('2', 'http://example.com/2/', auth);
+tmr.answers["stats"] = {};
+tmr.answers["stats"][process.cwd()] = {"isDirectory":true};
 tmr.mockNpmCommand('install', {
     code: 0,
     stdout: 'npm install successful'

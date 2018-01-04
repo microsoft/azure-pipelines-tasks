@@ -12,10 +12,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 6,
+    "Minor": 124,
     "Patch": 0
   },
-  "preview": true,
   "satisfies": [
     "Node"
   ],

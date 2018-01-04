@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 9
     },
     "runsOn": [
         "Agent",
@@ -22,8 +22,8 @@
     "instanceNameFormat": "npm $(command)",
     "groups": [
         {
-            "name": "customRegistries",
             "displayName": "Custom registries and authentication",
+            "name": "customRegistries",
             "isExpanded": false,
             "visibleRule": "command = install || command = custom"
         },
@@ -32,6 +32,11 @@
             "displayName": "Destination registry and authentication",
             "isExpanded": true,
             "visibleRule": "command = publish"
+        },
+        {   "displayName": "Advanced",
+            "name": "advanced",
+            "isExpanded": false,
+            "visibleRule": "command = install || command = publish"
         }
     ],
     "inputs": [
@@ -53,6 +58,13 @@
             "label": "Working folder with package.json",
             "helpMarkDown": "Path to the folder containing the target package.json and .npmrc files. Select the folder, not the file e.g. \"/packages/mypackage\".",
             "type": "filePath"
+        },
+        {
+            "groupName": "advanced",
+            "name": "verbose",
+            "label": "Verbose logging",
+            "helpMarkDown": "Select to print more information to the console on run",
+            "type": "boolean"
         },
         {
             "name": "customCommand",
@@ -167,6 +179,9 @@
         "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
         "NpmFailed": "Npm failed with return code: %s",
         "FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",
-        "TestDebugLog": "Trying debug log location: %s"
+        "TestDebugLog": "Trying debug log location: %s",
+        "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
+        "RestoringProjectNpmrc": "Restoring project .npmrc",
+        "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory"
     }
 }

@@ -13,10 +13,10 @@
   "version": {
     "Major": 0,
     "Minor": 4,
-    "Patch": 0
+    "Patch": 10
   },
   "demands": [],
-  "preview": "true",
+  "preview": "false",
   "groups": [
     {
       "name": "advanced",
@@ -46,6 +46,9 @@
     },
     {
       "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
@@ -182,6 +185,9 @@
     },
     {
       "name": "workDir",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.workDir",
       "visibleRule": "action = Run a specific service",
@@ -283,6 +289,9 @@
     },
     {
       "name": "cwd",
+      "aliases": [
+        "currentWorkingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
@@ -308,6 +317,7 @@
   "messages": {
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
-    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound"
+    "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
+    "AdditionalDockerComposeFileDoesNotExists": "ms-resource:loc.messages.AdditionalDockerComposeFileDoesNotExists"
   }
 }

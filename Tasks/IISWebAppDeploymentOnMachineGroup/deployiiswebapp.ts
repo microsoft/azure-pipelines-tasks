@@ -32,7 +32,7 @@ async function run()
 
 		if(availableWebPackages.length > 1)
 		{
-			throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpatern'));
+			throw new Error(tl.loc('MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern'));
 		}
 		webDeployPkg = availableWebPackages[0];
 

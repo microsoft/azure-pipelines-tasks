@@ -9,7 +9,7 @@ import path = require('path');
 var psr = null;
 
 describe('ServiceFabricComposeDeploy Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         if (psm.testSupported()) {
@@ -27,11 +27,23 @@ describe('ServiceFabricComposeDeploy Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('Deploy', (done) => {
-            psr.run(path.join(__dirname, 'Deploy.ps1'), done);
+        it('Deploy 2.7', (done) => {
+            psr.run(path.join(__dirname, 'Deploy.2.7.ps1'), done);
         })
-        it('Upgrade', (done) => {
-            psr.run(path.join(__dirname, 'Upgrade.ps1'), done);
+        it('Deploy 2.8', (done) => {
+            psr.run(path.join(__dirname, 'Deploy.2.8.ps1'), done);
+        })
+        it('Deploy Preview', (done) => {
+            psr.run(path.join(__dirname, 'DeployPreview.ps1'), done);
+        })
+        it('Upgrade 2.7', (done) => {
+            psr.run(path.join(__dirname, 'Upgrade.2.7.ps1'), done);
+        })
+        it('Upgrade 2.8', (done) => {
+            psr.run(path.join(__dirname, 'Upgrade.2.8.ps1'), done);
+        })
+        it('Upgrade Preview', (done) => {
+            psr.run(path.join(__dirname, 'UpgradePreview.ps1'), done);
         })
     }
 });

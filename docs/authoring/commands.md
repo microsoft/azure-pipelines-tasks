@@ -111,14 +111,13 @@ To invoke a logging command, simply emit the command via standard output. For ex
             <td>
                 <p align="left">
                     Create and update detail timeline records. <br>
-                    The first time we saw <code>##vso[task.detail]</code> for each task, we will create a detail timeline for the task. <br>
-                    We will create and update nested timeline record base on id and parentid. <br>
-                    Task author need to remember which Guid they used for each timeline record.
-                    The logging system will keep tracking the Guid for each timeline records that been created, so any new Guid will result a new timeline record. <br>
+                    The first time a <code>##vso[task.detail]</code> message is seen for a given task, a detailed timeline is created for that task. <br>
+                    Nested timeline records are created and updated based on id and parentid. <br>
+                    The task author needs to remember which Guid they used for each timeline record. The logging system tracks the Guid for each timeline record that has been created, so any new Guid results in a new timeline record. <br>
                     <b>Examples:</b> <br>
                     Create new root timeline record: <code>##vso[task.logdetail id=new guid;name=project1;type=build;order=1]create new timeline record</code><br>
                     Create new nested timeline record: <code>##vso[task.logdetail id=new guid;parentid=exist timeline record guid;name=project1;type=build;order=1]create new nested timeline record</code><br>
-                    Update exist timeline record: <code>##vso[task.logdetail id=exist timeline record guid;progress=15;state=InProgress;]update timeline record</code>
+                    Update exist timeline record: <code>##vso[task.logdetail id=existing timeline record guid;progress=15;state=InProgress;]update timeline record</code>
                 </p>
             </td>
             <td>
@@ -144,6 +143,37 @@ To invoke a logging command, simply emit the command via standard output. For ex
                     <b>Examples:</b> <br>
                     <code>##vso[task.setvariable variable=testvar;]testvalue</code><br>
                     <code>##vso[task.setvariable variable=testvar;issecret=true;]testvalue</code><br>
+                </p>
+            </td>
+            <td>
+            </td>
+        </tr>
+         <tr>
+            <td>
+                <p align="left">
+                    <code>##vso[task.setendpoint]value</code>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    <code>id</code>=endpoint id (Required) <br>
+                </p>
+                <p align="left">
+                    <code>field</code>=field type authParameter|dataParameter|url (Required) <br>
+                </p>
+                <p align="left">
+                    <code>key</code>=key (Required. Except for field=url) <br>
+                </p>
+                  <p align="left">
+                    <code>value</code>=value for key or url(Required) <br>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Set an endpoint field with given value. Value updated will be retained in the endpoint for the subsequent tasks that execute within the same job.<br>
+                    <b>Examples:</b> <br>
+                    <code>##vso[task.setendpoint id=000-0000-0000;field=authParameter;key=AccessToken]testvalue</code><br>
+                    <code>##vso[task.setendpoint id=000-0000-0000;field=dataParameter;key=userVariable]testvalue</code><br>
                 </p>
             </td>
             <td>

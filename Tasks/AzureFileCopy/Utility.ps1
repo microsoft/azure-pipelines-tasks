@@ -1,6 +1,7 @@
 # Utility Functions used by AzureFileCopy.ps1 (other than azure calls) #
 
 $ErrorActionPreference = 'Stop'
+$azureStackEnvironment = "AzureStack"
 
 function Get-DeploymentModulePath
 {
@@ -744,9 +745,34 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     [hashtable]$azureRMVMsDetails = @{}
     $debugLogsFlag= $env:system_debug
 
+    # Getting endpoint used for the task
+    if($connectedServiceName)
+    {
+        $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
+    }
+    
+    $isAzureStackEnvironment = $false
+    if($endpoint -and $endpoint.Data -and $endpoint.Data.Environment) {
+        $environmentName = $Endpoint.Data.Environment
+        if($environmentName -eq $azureStackEnvironment)
+        {
+            $isAzureStackEnvironment = $true
+        }
+    }
+
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
-        $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+        
+        if($isAzureStackEnvironment) 
+        {
+            Write-Verbose "Fetching resource group resources details for Azure Stack environment."
+            $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetailsForAzureStack -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources -endpoint $endpoint
+        }
+        else 
+        {
+            Write-Verbose "Fetching resource group resources details for Azure/National cloud environments."
+            $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+        }
 
         $networkInterfaceResources = $azureRGResourcesDetails["networkInterfaceResources"]
         $publicIPAddressResources = $azureRGResourcesDetails["publicIPAddressResources"]
@@ -1264,9 +1290,8 @@ function Add-AzureVMCustomScriptExtension
           [string]$location,
           [string]$connectedServiceName)
 
-    $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
-    $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
-    $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
+    $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/ConfigureWinRM.ps1"
+    $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/makecert.exe"
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
     $ruleName = "VSO-Custom-WinRM-Https-Port"
@@ -1291,7 +1316,7 @@ function Add-AzureVMCustomScriptExtension
             return
         }
 
-        $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
+        $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile  -run $scriptToRun -argument $dnsName -location $location
         $resultDetails = $result | ConvertTo-Json
         Write-Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
 

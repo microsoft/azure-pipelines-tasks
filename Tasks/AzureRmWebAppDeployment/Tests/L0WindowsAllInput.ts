@@ -129,6 +129,7 @@ tr.registerMock('./kuduutility.js', {
 }); 
 
 tr.registerMock('azurerest-common/azurerestutility.js', {
+    appInsightsInstrumentationKeyAppSetting: "APPINSIGHTS_INSTRUMENTATIONKEY",
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
         var mockPublishProfile = {
             profileName: 'mytestapp - Web Deploy',

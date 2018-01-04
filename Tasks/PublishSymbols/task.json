@@ -2,58 +2,91 @@
     "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
     "name": "PublishSymbols",
     "friendlyName": "Index Sources & Publish Symbols",
-    "description": "Index your source code and publish symbols to a file share",
-    "helpMarkDown": "Index your source code and publish symbols to a file share<br/>[More Information](https://go.microsoft.com/fwlink/?LinkID=613722)",
+    "description": "Index your source code and publish symbols to a file share or Visual Studio Team Services Symbol Server",
+    "helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Visual Studio Team Services Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in VSTS.",
     "category": "Build",
     "visibility": [
         "Build"
     ],
     "author": "Microsoft Corporation",
+    "preview": true,
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 36
+        "Patch": 6
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": false
+            "isExpanded": true
         }
     ],
     "inputs": [
         {
-            "name": "SymbolsPath",
+            "name": "SymbolsFolder",
             "type": "string",
-            "label": "Path to publish symbols",
-            "defaultValue": "",
+            "label": "Path to symbols folder",
+            "defaultValue": "$(Build.SourcesDirectory)",
             "required": false,
-            "helpMarkDown": "Specify the path to the symbol store share.  If this value is not set, source indexing will occur but symbols will not be published."
+            "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject"
         },
         {
             "name": "SearchPattern",
-            "type": "string",
+            "type": "multiLine",
             "label": "Search pattern",
             "defaultValue": "**/bin/**/*.pdb",
             "required": true,
             "helpMarkDown": "The pattern used to discover the pdb files to publish."
         },
         {
-            "name": "SymbolsFolder",
-            "type": "string",
-            "label": "Path to symbols folder",
-            "defaultValue": "",
+            "name": "IndexSources",
+            "type": "boolean",
+            "label": "Index sources",
+            "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject"
+            "helpMarkDown": "Indicates whether to inject source server information into the PDB files."
         },
         {
-            "name": "SkipIndexing",
+            "name": "PublishSymbols",
             "type": "boolean",
-            "label": "Skip indexing",
-            "defaultValue": "false",
+            "label": "Publish symbols",
+            "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "Indicates whether to skip injecting source server information into the PDB files.",
+            "helpMarkDown": "Indicates whether to publish the symbol files."
+        },
+        {
+            "name": "SymbolServerType",
+            "type": "pickList",
+            "label": "Symbol server type",
+            "required": true,
+            "defaultValue": " ",
+            "helpMarkDown": "Choose where to publish symbols. Symbols published to the VSTS Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in VSTS.",
+            "options": 
+            {
+                " ": "Select one",
+                "TeamServices": "Symbol Server in this account/collection (requires Package Management)",
+                "FileShare": "File share"
+            },
+            "visibleRule": "PublishSymbols = true"
+        },
+        {
+            "name": "SymbolsPath",
+            "type": "string",
+            "label": "Path to publish symbols",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.",
+            "visibleRule": "PublishSymbols = true && SymbolServerType = FileShare"
+        },
+        {
+            "name": "DetailedLog",
+            "type": "boolean",
+            "label": "Verbose logging",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Use verbose logging.",
             "groupName": "advanced"
         },
         {
@@ -102,7 +135,7 @@
             "groupName": "advanced"
         }
     ],
-    "instanceNameFormat": "Publish symbols path: $(SymbolsPath)",
+    "instanceNameFormat": "Publish symbols path",
     "execution": {
         "PowerShell3": {
             "target": "PublishSymbols.ps1"

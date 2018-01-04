@@ -1,6 +1,6 @@
 import * as tl from "vsts-task-lib/task";
 
-export class NuGetConfigHelper {
+export class NuGetConfigHelper2 {
     tempNugetConfigPath = tl.getVariable("Agent.HomeDirectory") + "\\tempNuGet_.config";
     
     setAuthForSourcesInTempNuGetConfigAsync() {

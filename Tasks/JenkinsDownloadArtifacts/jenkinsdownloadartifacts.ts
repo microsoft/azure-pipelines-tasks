@@ -6,154 +6,152 @@ import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
+import request = require('request');
 
-var request = require('request');
+import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
+import * as providers from "artifact-engine/Providers"
+import * as engine from "artifact-engine/Engine"
 
-class Credential {
-    mUsername: string;
-    mPassword: string;
+import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
+import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
+import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 
-    constructor(username: string, password: string) {
-        this.mUsername = username;
-        this.mPassword = password;
+var taskJson = require('./task.json');
+
+const area: string = 'JenkinsDownloadArtifacts';
+
+async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
+    console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
+
+    var templatePath = path.join(__dirname, 'jenkins.handlebars.txt');
+    var webProvider = new providers.WebProvider(artifactQueryUrl, templatePath, variables, handler, { ignoreSslError: !strictSSL });
+    var localFileProvider = new providers.FilesystemProvider(localPathRoot);
+
+    var downloaderOptions = configureDownloaderOptions();
+    var downloader = new engine.ArtifactEngine();
+    await downloader.processItems(webProvider, localFileProvider, downloaderOptions);
+}
+
+function configureDownloaderOptions(): engine.ArtifactEngineOptions {
+    var downloaderOptions = new engine.ArtifactEngineOptions();
+    downloaderOptions.itemPattern = tl.getInput('itemPattern', false) || "**";
+    downloaderOptions.parallelProcessingLimit = +tl.getVariable("release.artifact.download.parallellimit") || 4;
+    var debugMode = tl.getVariable('System.Debug');
+    downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
+
+    return downloaderOptions;
+}
+
+function getDefaultProps() {
+    var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
+    return {
+        hostType: hostType,
+        definitionName: hostType === 'release' ? tl.getVariable('RELEASE.DEFINITIONNAME') : tl.getVariable('BUILD.DEFINITIONNAME'),
+        processId: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEID') : tl.getVariable('BUILD.BUILDID'),
+        processUrl: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEWEBURL') : (tl.getVariable('SYSTEM.TEAMFOUNDATIONSERVERURI') + tl.getVariable('SYSTEM.TEAMPROJECT') + '/_build?buildId=' + tl.getVariable('BUILD.BUILDID')),
+        taskDisplayName: tl.getVariable('TASK.DISPLAYNAME'),
+        jobid: tl.getVariable('SYSTEM.JOBID'),
+        agentVersion: tl.getVariable('AGENT.VERSION'),
+        version: taskJson.version
+    };
+}
+
+function publishEvent(feature, properties: any): void {
+    try {
+        var splitVersion = (process.env.AGENT_VERSION || '').split('.');
+        var major = parseInt(splitVersion[0] || '0');
+        var minor = parseInt(splitVersion[1] || '0');
+        let telemetry = '';
+        if (major > 2 || (major == 2 && minor >= 120)) {
+            telemetry = `##vso[telemetry.publish area=${area};feature=${feature}]${JSON.stringify(Object.assign(getDefaultProps(), properties))}`;
+        }
+        else {
+            if (feature === 'reliability') {
+                let reliabilityData = properties;
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + JSON.stringify(taskJson.version) + ";]" + reliabilityData.errorMessage
+            }
+        }
+        console.log(telemetry);;
     }
-}
-
-function getRequest(url: string, cred: Credential, strictSSL: boolean): Q.Promise<any> {
-    let defer = Q.defer<any>();
-
-    request
-        .get({url: url, strictSSL: strictSSL}, (err, res, body) => {
-            if (res && body && res.statusCode === 200)  {
-                defer.resolve(JSON.parse(body));
-            } else {
-                if (res && res.statusCode) {
-                   tl.debug(tl.loc('ServerCallErrorCode', res.statusCode)); 
-                }
-                if (body) {
-                    tl.debug(body);
-                }
-                defer.reject(new Error(tl.loc('ServerCallFailed')));
-            }
-        })
-        .auth(cred.mUsername, cred.mPassword, true)
-        .on('error', err => {
-            defer.reject(new Error(err));
-        });
-
-        return defer.promise;
-}
-
-function getLastSuccessful(serverEndpointUrl: string, jobName: string, cred: Credential, strictSSL: boolean): Q.Promise<number> {
-    let defer = Q.defer<number>();
-    let lastSuccessfulUrl = `${serverEndpointUrl}/job/${jobName}/api/json?tree=lastSuccessfulBuild[id,displayname]`;
-
-    getRequest(lastSuccessfulUrl, cred, strictSSL)
-    .then( result => {
-        if (result && result['lastSuccessfulBuild']) {
-            let lastSuccessfulBuildId = result['lastSuccessfulBuild']['id'];
-            if (lastSuccessfulBuildId) {
-                defer.resolve(lastSuccessfulBuildId);
-            } else {
-                defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
-            }
-        } else {
-            defer.reject(new Error(tl.loc('CouldNotGetLastSuccessfuilBuildNumber')));
-        }
-    })
-    .fail(err => {defer.reject(err)});
-
-    return defer.promise;
-}
-
-function getArtifactsRelativePaths(serverEndpointUrl: string, jobName: string, jobBuildId: number, 
-        cred: Credential, strictSSL: boolean): Q.Promise<string[]> {
-    let defer = Q.defer<string[]>();
-    let artifactQueryUrl = `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/api/json?tree=artifacts[*]`;
-
-    getRequest(artifactQueryUrl, cred, strictSSL)
-    .then(result => { 
-        if (result && result['artifacts']) {
-            let artifacts = result['artifacts'];
-            if (artifacts.length === 0) {
-                defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
-            } else {
-                let artifactsRelativePaths = result['artifacts'].map(artifact => {
-                    return artifact['relativePath'];
-                });
-                defer.resolve(artifactsRelativePaths);
-            }
-        } else {
-            // no artifacts for this job
-            defer.reject(new Error(tl.loc('CouldNotFindArtifacts', jobName, jobBuildId)));
-        }
-    })
-    .fail(err => {defer.reject(err)});
-
-    return defer.promise
-}
-
-async function download(url: string, localFile: string, cred: Credential, strictSSL: boolean) {
-    tl.debug(tl.loc("DownloadFileTo", url, localFile));
-    await request.get( {url: url, strictSSL: strictSSL} )
-        .auth(cred.mUsername, cred.mPassword, true)
-        .on('error', err => {
-            throw new Error(err);
-        })
-        .pipe(fs.createWriteStream(localFile));
-
-    tl.debug(tl.loc("FileSuccessfullyDownloaded", localFile));
-}
-
-function getArtifactUrl(serverEndpointUrl: string, jobName: string, jobBuildId: number, relativePath: string) {
-    return `${serverEndpointUrl}/job/${jobName}/${jobBuildId}/artifact/${relativePath}`;
+    catch (err) {
+        tl.warning("Failed to log telemetry, error: " + err);
+    }
 }
 
 async function doWork() {
     try {
-        tl.setResourcePath(path.join( __dirname, 'task.json'));
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        let serverEndpoint: string = tl.getInput('serverEndpoint', true);
-        let serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);
+        const serverEndpoint: string = tl.getInput('serverEndpoint', true);
+        const serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);
+        const username: string = tl.getEndpointAuthorizationParameter(serverEndpoint, 'username', false);
+        const password: string = tl.getEndpointAuthorizationParameter(serverEndpoint, 'password', false);
 
-        let serverEndpointAuth: tl.EndpointAuthorization = tl.getEndpointAuthorization(serverEndpoint, false);
-        let username: string = serverEndpointAuth['parameters']['username'];
-        let password: string = serverEndpointAuth['parameters']['password'];
-        let cred: Credential = (username && password) ? new Credential(username, password) : new Credential("", "");
+        const jobName: string = tl.getInput('jobName', true);
+        const localPathRoot: string = tl.getPathInput('saveTo', true);
+        const itemPattern: string = tl.getInput('itemPattern', false) || "**";
+        const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(serverEndpoint, 'acceptUntrustedCerts', true));
 
-        let jobName: string = tl.getInput('jobName', true);
-        let localPathRoot: string = tl.getPathInput('saveTo', true);
+        let jenkinsClient: JenkinsRestClient = new JenkinsRestClient();
+        let jenkinsJobDetails: JenkinsJobDetails;
 
-        let strictSSL: boolean = ("true" !== tl.getEndpointDataParameter(serverEndpoint, "acceptUntrustedCerts", true));
-
-        let jenkinsBuild: string = tl.getInput("jenkinsBuild", true);
-        let buildId: number;
-        if (jenkinsBuild === "LastSuccessfulBuild") {
-            tl.debug(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
-            buildId = await getLastSuccessful(serverEndpointUrl, jobName, cred, strictSSL);
-        } else {
-            let buildIdStr = tl.getInput("jenkinsBuildNumber");
-            buildId = parseInt(buildIdStr);
+        if (tl.getBoolInput('propagatedArtifacts') == true) {
+            var artifactProvider = tl.getInput('artifactProvider');
+            switch (artifactProvider.toLowerCase()) {
+                case "azurestorage":
+                    let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true),
+                        tl.getInput('storageAccountName', true), 
+                        tl.getInput('containerName', true), 
+                        tl.getInput('commonVirtualPath', false));
+                        await azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
+                    break;
+                default:
+                    throw Error(tl.loc('ArtifactProviderNotSupported', artifactProvider));
+            }
         }
-        tl.debug(tl.loc('GetArtifactsFromBuildNumber', buildId, jobName));
+        else {
+            jenkinsJobDetails = await jenkinsClient.GetJobDetails();
+            console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
 
-        let artifactsRelativePaths = await getArtifactsRelativePaths(serverEndpointUrl, jobName,
-                buildId, cred, strictSSL);
-        artifactsRelativePaths.forEach(relativePath => {
-            let localPath = path.resolve(localPathRoot, relativePath);
-            let dir = path.dirname(localPath);
-            if (!tl.exist(dir)) {
-                tl.mkdirP(dir);
+            const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
+            var variables = {
+                "endpoint": {
+                    "url": serverEndpointUrl
+                },
+                "jobUrlInfix": jenkinsJobDetails.jobUrlInfix,
+                "multibranchPipelineUrlInfix": jenkinsJobDetails.multiBranchPipelineUrlInfix,
+                "version": jenkinsJobDetails.buildId
+            };
+
+            var handler = new handlers.BasicCredentialHandler(username, password);
+            
+            await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
+        }
+
+        console.log(tl.loc('ArtifactSuccessfullyDownloaded', localPathRoot));
+
+        let downloadCommitsAndWorkItems: boolean = tl.getBoolInput("downloadCommitsAndWorkItems", false);
+        if (downloadCommitsAndWorkItems) {
+            if (tl.getBoolInput('propagatedArtifacts') == true) {
+                try {
+                    jenkinsJobDetails = await jenkinsClient.GetJobDetails();
+                    console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+                }
+                catch (error) {
+                    tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error));
+                }
             }
 
-            let artifactUrl = getArtifactUrl(serverEndpointUrl, jobName, buildId, relativePath);
-            download(artifactUrl, localPath, cred, strictSSL);
-        });
+            new ArtifactDetailsDownloader()
+                .DownloadCommitsAndWorkItems(jenkinsJobDetails)
+                .then(() => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
+                (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
+        }
 
-    } catch (e) {
-        tl.debug(e.message);
-        tl._writeError(e);
-        tl.setResult(tl.TaskResult.Failed, e.message);
+    } catch (err) {
+        tl.error(err);
+        publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
+        tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }
 

@@ -5,9 +5,10 @@ import * as path from 'path';
 import * as Q from 'q';
 import * as models from './models';
 import * as os from 'os';
+import * as ci from './cieventlogger';
 
 const str = require('string');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
 const builder = new xml2js.Builder();
@@ -15,11 +16,15 @@ const builder = new xml2js.Builder();
 export class Constants {
     public static vsTestVersionString = 'version';
     public static vsTestLocationString = 'location';
+    public static systemDefaultWorkingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 }
 
 export class Helper {
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
         if (!this.isNullEmptyOrUndefined(value)) {
+            if (!name.includes('AccessToken')) {
+                tl.debug('Setting the process env var :' + name + ' to :' + value);
+            }
             envVars[name] = value;
         }
     }
@@ -52,12 +57,25 @@ export class Helper {
         return input;
     }
 
+    public static isToolsInstallerFlow(config: any) {
+        return config.toolsInstallerConfig && config.toolsInstallerConfig.isToolsInstallerInUse;
+    }
+
     public static pathExistsAsFile(path: string) {
         return tl.exist(path) && tl.stats(path).isFile();
     }
 
     public static pathExistsAsDirectory(path: string) {
         return tl.exist(path) && tl.stats(path).isDirectory();
+    }
+
+    public static publishEventToCi(areaCode: string, message: string, tracePoint: number, isUserError: boolean) {
+        const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false };
+        taskProps.areacode = areaCode;
+        taskProps.result = message;
+        taskProps.tracepoint = tracePoint;
+        taskProps.isusererror = isUserError;
+        ci.publishEvent(taskProps);
     }
 
     public static getXmlContents(filePath: string): Q.Promise<any> {
@@ -135,6 +153,9 @@ export class Helper {
     public static printMultiLineLog(multiLineString: string, logFunction: Function) {
         const lines = multiLineString.toString().split('\n');
         lines.forEach(function (line: string) {
+            if (line.trim().length === 0) {
+                return;
+            }
             logFunction(line);
         });
     }
@@ -158,6 +179,14 @@ export class Helper {
         }
 
         return argument;
+    }
+
+    // set the console code page to "UTF-8"
+    public static setConsoleCodePage() {
+        tl.debug("Changing active code page to UTF-8");
+        const chcp = tl.tool(path.resolve(process.env.windir, "system32", "chcp.com"));
+        chcp.arg(["65001"]);
+        chcp.execSync({ silent: true } as tr.IExecSyncOptions);
     }
 
 }

@@ -1,5 +1,3 @@
-/// <reference path="../../../definitions/Q.d.ts" />
-
 import tl = require("vsts-task-lib/task");
 import deployAzureRG = require("../models/DeployAzureRG");
 import azureUtil = require("./AzureUtil");

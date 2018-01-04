@@ -6,14 +6,10 @@ import fs = require('fs');
 import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
-
-// node js modules
-
-import job = require('./job');
-import Job = job.Job;
-import jobqueue = require('./jobqueue');
-import JobQueue = jobqueue.JobQueue;
 import util = require('./util');
+
+import { Job } from './job';
+import { JobQueue } from './jobqueue';
 
 export class TaskOptions {
     serverEndpoint: string;
@@ -84,14 +80,14 @@ export class TaskOptions {
         // 'Build.StagingDirectory' is available during build.
         // It is kept here (different than what is used during release) to maintain
         // compatibility with other tasks relying on Jenkins results being placed in this folder.
-        var resultsDirectory: string = tl.getVariable('Build.StagingDirectory');
+        let resultsDirectory: string = tl.getVariable('Build.StagingDirectory');
         if (!resultsDirectory) {
             // 'System.DefaultWorkingDirectory' is available during build and release
             resultsDirectory = tl.getVariable('System.DefaultWorkingDirectory');
         }
         this.saveResultsTo = path.join(resultsDirectory, 'jenkinsResults');
 
-        this.strictSSL = ("true" !== tl.getEndpointDataParameter(this.serverEndpoint, "acceptUntrustedCerts", true));
+        this.strictSSL = ('true' !== tl.getEndpointDataParameter(this.serverEndpoint, 'acceptUntrustedCerts', true));
         tl.debug('strictSSL=' + this.strictSSL);
 
         this.NO_CRUMB = 'NO_CRUMB';
@@ -103,14 +99,16 @@ async function doWork() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-        var taskOptions: TaskOptions = new TaskOptions();
+        const taskOptions: TaskOptions = new TaskOptions();
 
-        var jobQueue: JobQueue = new JobQueue(taskOptions);
-        var queueUri = await util.pollSubmitJob(taskOptions);
+        const jobQueue: JobQueue = new JobQueue(taskOptions);
+        const queueUri = await util.pollSubmitJob(taskOptions);
         console.log(tl.loc('JenkinsJobQueued'));
-        var rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
+        const rootJob = await util.pollCreateRootJob(queueUri, jobQueue, taskOptions);
         //start the job queue
-        jobQueue.start();
+        jobQueue.Start();
+        //store the job name in the output variable
+        tl.setVariable('JENKINS_JOB_ID', rootJob.ExecutableNumber.toString());
     } catch (e) {
         tl.debug(e.message);
         tl._writeError(e);

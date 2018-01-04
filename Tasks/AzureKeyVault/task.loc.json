@@ -14,13 +14,16 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 14
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -53,7 +56,8 @@
     {
       "target": "KeyVaultName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureKeyVaults"
+      "dataSourceName": "AzureKeyVaultsList",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -87,7 +91,11 @@
     "NumberOfSecretsFound": "ms-resource:loc.messages.NumberOfSecretsFound",
     "NumberOfEnabledSecretsFound": "ms-resource:loc.messages.NumberOfEnabledSecretsFound",
     "DownloadingSecretValue": "ms-resource:loc.messages.DownloadingSecretValue",
+    "AccessDeniedError": "ms-resource:loc.messages.AccessDeniedError",
     "GetSecretValueFailed": "ms-resource:loc.messages.GetSecretValueFailed",
-    "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound"
+    "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound",
+    "GetSecretFailedBecauseOfInvalidCharacters": "ms-resource:loc.messages.GetSecretFailedBecauseOfInvalidCharacters",
+    "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
+    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile"
   }
 }

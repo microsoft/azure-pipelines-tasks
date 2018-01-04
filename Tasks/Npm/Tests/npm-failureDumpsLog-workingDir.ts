@@ -16,7 +16,8 @@ tmr.mockNpmCommand('custom', {
     code: -1,
     stdout: 'some npm failure'
 } as TaskLibAnswerExecResult);
-tmr.answers.exist['C:\\mock\\workingDir\\npm-debug.log'] = true;
+tmr.answers.exist[path.join("C:\\mock\\workingDir", "npm-debug.log")] = true;
+tmr.answers["stats"] = {"C:\\mock\\workingDir": {"isDirectory":true}};
 
 let mockFs = require('fs');
 tmr.registerMock('fs', mockFs);

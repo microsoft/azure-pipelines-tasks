@@ -2,7 +2,7 @@
 
 import path = require('path');
 import * as tl from "vsts-task-lib/task";
-import ContainerConnection from "./containerconnection";
+import ContainerConnection from "docker-common/containerconnection";
 import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
 import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider"
@@ -35,7 +35,9 @@ var action = tl.getInput("action", true);
 /* tslint:disable:no-var-requires */
 require({
     "Build an image": "./containerbuild",
+    "Tag images": "./containertag",
     "Push an image": "./containerpush",
+    "Push images": "./containerpush",
     "Run an image": "./containerrun",
     "Run a Docker command": "./containercommand"
 }[action]).run(connection)

@@ -12,8 +12,8 @@
   "author": "Microsoft",
   "demands": [],
   "version": {
-    "Major": 1,
-    "Minor": 119,
+    "Major": 2,
+    "Minor": 128,
     "Patch": 2
   },
   "groups": [
@@ -77,6 +77,9 @@
     },
     {
       "name": "parameterizedJob",
+      "aliases": [
+        "isParameterizedJob"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.parameterizedJob",
       "defaultValue": false,
@@ -99,6 +102,12 @@
       }
     }
   ],
+  "outputVariables": [
+    {
+      "name": "JENKINS_JOB_ID",
+      "description": "The ID of the Jenkins job instance queued by this task. Use this variable in the Jenkins Download Artifacts task to download the artifacts for this particular job instance."
+    }
+  ],
   "execution": {
     "Node": {
       "target": "jenkinsqueuejobtask.js",
@@ -119,6 +128,7 @@
     "JenkinsJobQueued": "ms-resource:loc.messages.JenkinsJobQueued",
     "JenkinsPipelineFailed": "ms-resource:loc.messages.JenkinsPipelineFailed",
     "JenkinsJobFailed": "ms-resource:loc.messages.JenkinsJobFailed",
-    "JenkinsJobFailedtoQueue": "ms-resource:loc.messages.JenkinsJobFailedtoQueue"
+    "JenkinsJobFailedtoQueue": "ms-resource:loc.messages.JenkinsJobFailedtoQueue",
+    "JenkinsJobQueueUriInvalid": "ms-resource:loc.messages.JenkinsJobQueueUriInvalid"
   }
 }

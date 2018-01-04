@@ -1,9 +1,12 @@
 /// <reference path="../typings/index.d.ts" />
 
 import keyVaultTaskParameters = require("../models/KeyVaultTaskParameters");
-import armKeyVault = require("./azure-rest/azure-arm-keyvault");
+import armKeyVault = require("./azure-arm-keyvault");
 import util = require("util");
 import tl = require("vsts-task-lib/task");
+
+import * as path from 'path';
+import * as fs from 'fs';
 
 export class SecretsToErrorsMapping { 
     public errorsMap: { [key: string]: string; };
@@ -28,7 +31,7 @@ export class SecretsToErrorsMapping {
         var allErrors = "";
         for (var key in this.errorsMap) {
             if (this.errorsMap.hasOwnProperty(key)) {
-                var errorMessagePerSecret = key + ": " + this.errorsMap[key];
+                var errorMessagePerSecret = key + ": " + JSON.stringify(this.errorsMap[key]);
                 allErrors = allErrors + "\n" + errorMessagePerSecret;
             }
         }
@@ -41,14 +44,24 @@ export class KeyVault {
 
     private taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters;
     private keyVaultClient: armKeyVault.KeyVaultClient;
+    private provisionKeyVaultSecretsScript: string;
 
     constructor(taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters) {
         this.taskParameters = taskParameters;
+
         this.keyVaultClient = new armKeyVault.KeyVaultClient(
             this.taskParameters.vaultCredentials, 
             this.taskParameters.subscriptionId,
             this.taskParameters.keyVaultName,
             this.taskParameters.keyVaultUrl);
+
+        var scriptContentFormat = `$ErrorActionPreference=\"Stop\";
+Login-AzureRmAccount -SubscriptionId %s;
+$spn=(Get-AzureRmADServicePrincipal -SPN %s);
+$spnObjectId=$spn.Id;
+Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -PermissionsToSecrets get,list;`;
+
+        this.provisionKeyVaultSecretsScript = util.format(scriptContentFormat, this.taskParameters.subscriptionId, this.taskParameters.servicePrincipalId, this.taskParameters.keyVaultName);
     }
 
     public downloadSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
@@ -141,7 +154,7 @@ export class KeyVault {
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
                 else {
-                    console.log("##vso[task.setvariable variable=" + secretName + ";issecret=true;]" + secretValue);
+                    tl.setVariable(secretName, secretValue, true);
                 }
                 
                 return resolve();
@@ -149,12 +162,34 @@ export class KeyVault {
         });
     }
 
-    private getError(error: any) {
+    private getError(error: any): any {
         tl.debug(JSON.stringify(error));
+
+        if (error && error.message && error.statusCode && error.statusCode == 403) {
+            this.generateAndUploadProvisionKeyVaultPermissionsScript();
+            return tl.loc("AccessDeniedError", error.message);
+        }
+
         if (error && error.message) {
             return error.message;
         }
 
         return error;
+    }
+
+    private generateAndUploadProvisionKeyVaultPermissionsScript(): void {
+        let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.ReleaseDirectory') || process.cwd();
+        let filePath = path.join(tempPath, "ProvisionKeyVaultPermissions.ps1");
+
+        fs.writeFile(filePath, this.provisionKeyVaultSecretsScript, (err) => {
+            if (err) {
+                console.log(tl.loc("CouldNotWriteToFile", err));
+                return;
+            }
+            else {
+                console.log(tl.loc("UploadingAttachment", filePath));
+                console.log(`##vso[task.uploadfile]${filePath}`);
+            }
+        });
     }
 }

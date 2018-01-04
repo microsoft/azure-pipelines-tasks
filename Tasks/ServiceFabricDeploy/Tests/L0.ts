@@ -9,7 +9,7 @@ import path = require('path');
 var psr = null;
 
 describe('ServiceFabricDeploy Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         if (psm.testSupported()) {
@@ -38,6 +38,9 @@ describe('ServiceFabricDeploy Suite', function () {
         })
         it('Windows auth deploy', (done) => {
             psr.run(path.join(__dirname, 'WindowsAuthDeploy.ps1'), done);
+        })
+        it('Certificate deploy with Docker support', (done) => {
+            psr.run(path.join(__dirname, 'CertDeployWithDocker.ps1'), done);
         })
     }
 });

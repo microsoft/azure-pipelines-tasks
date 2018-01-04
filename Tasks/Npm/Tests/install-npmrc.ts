@@ -12,6 +12,8 @@ let tmr = new NpmMockHelper(taskPath);
 tmr.setInput(NpmTaskInput.Command, NpmCommand.Install);
 tmr.setInput(NpmTaskInput.WorkingDir, '');
 tmr.setInput(NpmTaskInput.CustomRegistry, RegistryLocation.Npmrc);
+tmr.answers["stats"] = {};
+tmr.answers["stats"][process.cwd()] = {"isDirectory":true};
 tmr.mockNpmCommand('install', {
     code: 0,
     stdout: 'npm install successful'

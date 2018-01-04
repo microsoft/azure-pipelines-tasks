@@ -7,6 +7,12 @@
         "VS120COMNTools": "/vs/path",
         "vs15Helper": "/path/to/vs15Helper.ps1"
     },
+    "checkPath": {
+        "E:\\settings.runsettings": true,
+        "random.runsettings":true,
+        "E:\\source\\dir\\..\\settings.runsettings": true,
+        "E:\\source\\dir\\.\\settings.runsettings": true
+    },
     "match": {
         "**\\packages\\**\\*TestAdapter.dll": []
     },
@@ -109,6 +115,15 @@
         "wmic datafile where name='\\\\vs2017\\\\installation\\\\folder\\\\Common7\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
 			"code": 0,
 			"stdout" : "version=15.0.0.0"
+        },
+        "C:\\WINDOWS\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\Windows\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\windows\\system32\\chcp.com 65001": {
+            "code": 0
         }
     },
     
@@ -130,7 +145,10 @@
         "\\path\\to\\vstest\\directory": true,
         "E:\\source\\settings.runsettings": true,
         "E:\\source\\dir\\settings.runsettings":true,
-        "E:\\path\\customadapters":true
+        "E:\\path\\customadapters":true,
+        "/source/dir":true,
+        "E:\\source":true,
+        "E:\\source\\dir":true
     },
     "stats": {
         "settings.runsettings": {
@@ -162,6 +180,15 @@
         },
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
-        }       
+        },
+        "/source/dir": {
+            "isDirectory":true
+        },
+        "E:\\source": {
+            "isDirectory":true
+        },
+        "E:\\source\\dir": {
+            "isDirectory":true
+        }     
     }
 }

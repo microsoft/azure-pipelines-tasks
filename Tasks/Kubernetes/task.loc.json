@@ -16,16 +16,21 @@
     "Patch": 8
   },
   "demands": [],
-  "preview": "true",
+  "preview": "false",
   "groups": [
-    {
-      "name": "registry",
-      "displayName": "ms-resource:loc.group.displayName.registry",
-      "isExpanded": true
-    },
     {
       "name": "commands",
       "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    },
+    {
+      "name": "registry",
+      "displayName": "ms-resource:loc.group.displayName.registry",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
     },
     {
@@ -37,65 +42,12 @@
   "inputs": [
     {
       "name": "kubernetesServiceEndpoint",
+      "aliases": [
+        "kubernetesServiceConnection"
+      ],
       "type": "connectedService:kubernetes",
       "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint"
-    },
-    {
-      "name": "containerRegistryType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.containerRegistryType",
-      "defaultValue": "Azure Container Registry",
-      "required": true,
-      "options": {
-        "Azure Container Registry": "Azure Container Registry",
-        "Container Registry": "Container Registry"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.containerRegistryType",
-      "groupName": "registry"
-    },
-    {
-      "name": "dockerRegistryEndpoint",
-      "type": "connectedService:dockerregistry",
-      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
-      "visibleRule": "containerRegistryType = Container Registry",
-      "groupName": "registry"
-    },
-    {
-      "name": "azureSubscriptionEndpoint",
-      "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
-      "visibleRule": "containerRegistryType = Azure Container Registry",
-      "defaultValue": "",
-      "groupName": "registry"
-    },
-    {
-      "name": "azureContainerRegistry",
-      "label": "ms-resource:loc.input.label.azureContainerRegistry",
-      "type": "pickList",
-      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
-      "visibleRule": "containerRegistryType = Azure Container Registry",
-      "defaultValue": "",
-      "groupName": "registry"
-    },
-    {
-      "name": "secretName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.secretName",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.secretName",
-      "groupName": "registry"
-    },
-    {
-      "name": "forceUpdate",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.forceUpdate",
-      "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.forceUpdate",
-      "groupName": "registry"
     },
     {
       "name": "command",
@@ -144,11 +96,115 @@
       "type": "multiLine",
       "properties": {
         "resizable": "true",
-        "rows": "2"
+        "rows": "2",
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
       "label": "ms-resource:loc.input.label.arguments",
       "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "groupName": "commands"
+    },
+    {
+      "name": "containerRegistryType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.containerRegistryType",
+      "defaultValue": "Azure Container Registry",
+      "required": true,
+      "options": {
+        "Azure Container Registry": "Azure Container Registry",
+        "Container Registry": "Container Registry"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.containerRegistryType",
+      "groupName": "registry"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "containerRegistryType = Container Registry",
+      "groupName": "registry"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "containerRegistryType = Azure Container Registry",
+      "defaultValue": "",
+      "groupName": "registry"
+    },
+    {
+      "name": "azureContainerRegistry",
+      "label": "ms-resource:loc.input.label.azureContainerRegistry",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
+      "visibleRule": "containerRegistryType = Azure Container Registry",
+      "defaultValue": "",
+      "groupName": "registry"
+    },
+    {
+      "name": "secretName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.secretName",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.secretName",
+      "groupName": "registry"
+    },
+    {
+      "name": "forceUpdate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceUpdate",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.forceUpdate",
+      "groupName": "registry"
+    },
+    {
+      "name": "versionOrLocation",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.versionOrLocation",
+      "defaultValue": "version",
+      "required": false,
+      "options": {
+        "version": "Version",
+        "location": "Specify Location"
+      },
+      "groupName": "advanced"
+    },
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "defaultValue": "1.7.0",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec",
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = version"
+    },
+    {
+      "name": "checkLatest",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatest",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatest",
+      "required": false,
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = version"
+    },
+    {
+      "name": "specifyLocation",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.specifyLocation",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.specifyLocation",
+      "required": true,
+      "groupName": "advanced",
+      "visibleRule": "versionOrLocation = location"
     },
     {
       "name": "namespace",
@@ -165,7 +221,7 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
-      "groupName": "commands"
+      "groupName": "advanced"
     },
     {
       "name": "outputFormat",
@@ -208,6 +264,12 @@
     "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
     "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
     "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
-    "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified"
+    "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified",
+    "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
+    "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
+    "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
+    "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
+    "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
+    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion"
   }
 }

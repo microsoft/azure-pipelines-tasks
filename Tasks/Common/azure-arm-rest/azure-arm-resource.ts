@@ -1,8 +1,11 @@
-import msRestAzure = require("./azure-arm-common");
-import azureServiceClient = require("./AzureServiceClient");
-import util = require("util");
+import { ToError, ServiceClient } from './AzureServiceClient';
+import { AzureEndpoint } from './azureModels';
+import msRestAzure = require('./azure-arm-common');
+import azureServiceClient = require('./AzureServiceClient');
+import webClient = require('./webClient');
+import util = require('util');
 import tl = require('vsts-task-lib/task');
-import Q = require("q");
+import Q = require('q');
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 
@@ -12,7 +15,7 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId: string, options?: any) {
         super(credentials, subscriptionId);
 
-        this.apiVersion = '2016-07-01';
+        this.apiVersion = (credentials.isAzureStackEnvironment) ? '2016-06-01' : '2017-05-10';
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
         if (!!options && !!options.longRunningOperationRetryTimeout) {
@@ -23,6 +26,45 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
     }
 }
 
+export class Resources {
+    private _client: ServiceClient;
+    
+    constructor(endpoint: AzureEndpoint) {
+        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
+            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
+        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
+    }
+
+    public async getResources(resourceType: string, resourceName: string) {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+
+        httpRequest.uri = this._client.getRequestUri('//subscriptions/{subscriptionId}/resources', {},
+        [`$filter=resourceType EQ \'${resourceType}\' AND name EQ \'${resourceName}\'`], '2016-07-01');
+
+        var result = [];
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            result = result.concat(response.body.value);
+            if(response.body.nextLink) {
+                var nextResult = await this._client.accumulateResultFromPagedResult(response.body.nextLink);
+                if (nextResult.error) {
+                    throw Error(nextResult.error);
+                }
+                result = result.concat(nextResult.result);
+            }
+
+            return result;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetResourceID', resourceType, resourceName, this._client.getFormattedError(error)))
+        }
+    }
+}
 export class ResourceGroups {
     private client: ResourceManagementClient;
 
@@ -42,7 +84,7 @@ export class ResourceGroups {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'HEAD';
         httpRequest.uri = this.client.getRequestUri(
             '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}',
@@ -52,7 +94,7 @@ export class ResourceGroups {
         );
 
         // Send Request and process response.
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             if (response.statusCode == 204 || response.statusCode == 404) {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.statusCode == 204));
@@ -78,7 +120,7 @@ export class ResourceGroups {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
         httpRequest.uri = this.client.getRequestUri(
             '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}',
@@ -87,7 +129,7 @@ export class ResourceGroups {
             }
         );
 
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode !== 202 && statusCode !== 200) {
@@ -95,7 +137,7 @@ export class ResourceGroups {
             }
             else {
                 // Create Result
-                this.client.getLongRunningOperationResult(response).then((response: azureServiceClient.WebResponse) => {
+                this.client.getLongRunningOperationResult(response).then((response: webClient.WebResponse) => {
                     if (response.statusCode == 200) {
                         deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
                     }
@@ -125,7 +167,7 @@ export class ResourceGroups {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.headers = {};
         httpRequest.uri = this.client.getRequestUri(
@@ -141,7 +183,7 @@ export class ResourceGroups {
         }
 
         // Send Request
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
             if (statusCode !== 200 && statusCode !== 201) {
@@ -181,7 +223,7 @@ export class Deployments {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.headers = {};
         httpRequest.uri = this.client.getRequestUri(
@@ -198,7 +240,7 @@ export class Deployments {
         }
 
         // Send Request
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
                 var statusCode = response.statusCode;
                 if (statusCode !== 200 && statusCode !== 201) {
@@ -226,7 +268,7 @@ export class Deployments {
 
     public get(resourceGroupName, deploymentName, callback) {
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this.client.getRequestUri(
             '//subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/Microsoft.Resources/deployments/{deploymentName}',
@@ -237,7 +279,7 @@ export class Deployments {
         );
 
         // Send Request and process response.
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
 
             if (response.statusCode != 200) {
@@ -269,7 +311,7 @@ export class Deployments {
         }
 
         // Create HTTP transport objects
-        var httpRequest = new azureServiceClient.WebRequest();
+        var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.headers = {};
         httpRequest.uri = this.client.getRequestUri(
@@ -286,7 +328,7 @@ export class Deployments {
         }
 
         // Send Request
-        this.client.beginRequest(httpRequest).then((response: azureServiceClient.WebResponse) => {
+        this.client.beginRequest(httpRequest).then((response: webClient.WebResponse) => {
             return new Promise<azureServiceClient.ApiResult>((resolve, reject) => {
                 var statusCode = response.statusCode;
                 if (statusCode !== 200 && statusCode !== 400) {

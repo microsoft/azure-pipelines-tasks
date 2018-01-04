@@ -1,18 +1,6 @@
 ########################################
 # Private functions.
 ########################################
-function Get-SymStorePath {
-    $symstorePath = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\externals\symstore\symstore.exe"
-    $legacySymstorePath = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\Symstore\symstore.exe"
-    if (!([System.IO.File]::Exists($symstorePath)) -and		
-        ([System.IO.File]::Exists($legacySymstorePath)))		
-    {		
-        $symstorePath = $legacySymstorePath		
-    }
-    
-    Assert-VstsPath -LiteralPath $symstorePath -PathType Leaf -PassThru
-}
-
 function Get-ValidValue {
     [CmdletBinding()]
     param(

@@ -15,14 +15,14 @@ export async function run(packerHost: packerHost): Promise<any> {
     command.arg("-force");
 
     // add all variables
-    var variableProviders = packerHost.getTemplateVariablesProviders(); 
-    variableProviders.forEach((provider) => {
-        var variables = provider.getTemplateVariables(packerHost);
+    var variableProviders = packerHost.getTemplateVariablesProviders();
+    for (var provider of variableProviders) {
+        var variables = await provider.getTemplateVariables(packerHost);
         variables.forEach((value: string, key: string) => {
             command.arg(["-var", util.format("%s=%s", key, value)]);
         });
-    });
-    
+    }
+
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));
 
     console.log(tl.loc("ExecutingPackerBuild"));

@@ -11,9 +11,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 112,
-    "Patch": 1
+    "Minor": 125,
+    "Patch": 0
   },
+  "deprecated": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "demands": [
     "xcode"

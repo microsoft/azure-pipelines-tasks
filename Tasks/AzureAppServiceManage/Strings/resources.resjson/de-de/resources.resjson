@@ -47,7 +47,7 @@
   "loc.messages.RestartAppServiceAccepted": "Anforderung zum Neustart von App Service akzeptiert: %s",
   "loc.messages.InvalidAction": "Ungültige Aktion ausgewählt!",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNUNG: Der Bereitstellungsstatus kann nicht aktualisiert werden. Der SCM-Endpunkt steht für diese Website nicht zur Verfügung.",
-  "loc.messages.CouldnotfetchacccesstokenforAzureStatusCode": "Das Zugriffstoken für Azure App Service konnte nicht abgerufen werden. Statuscode: %s (%s)",
+  "loc.messages.CouldnotfetchaccesstokenforAzureStatusCode": "Das Zugriffstoken für Azure App Service konnte nicht abgerufen werden. Statuscode: %s (%s)",
   "loc.messages.WebAppDoesntExist": "Die Webapp \"%s\" ist nicht vorhanden.",
   "loc.messages.UnabletoretrieveWebAppID": "Die Verbindungsdetails für Azure App Service konnten nicht abgerufen werden: \"%s\". Statuscode: %s",
   "loc.messages.StartingSwapSlot": "Slottausch für Web-App wird angefordert: %s",

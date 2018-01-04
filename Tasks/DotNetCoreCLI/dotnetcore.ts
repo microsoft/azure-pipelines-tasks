@@ -1,7 +1,13 @@
 import tl = require("vsts-task-lib/task");
+import tr = require("vsts-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
+
+import * as packCommand from './packcommand';
+import * as pushCommand from './pushcommand';
+import * as restoreCommand from './restorecommand';
+import * as utility from "./Common/utility";
 
 export class dotNetExe {
     private command: string;
@@ -11,6 +17,7 @@ export class dotNetExe {
     private zipAfterPublish: boolean;
     private outputArgument: string = "";
     private outputArgumentIndex: number = 0;
+    private workingDirectory: string;
 
     constructor() {
         this.command = tl.getInput("command");
@@ -18,33 +25,64 @@ export class dotNetExe {
         this.arguments = tl.getInput("arguments", false) || "";
         this.publishWebProjects = tl.getBoolInput("publishWebProjects", false);
         this.zipAfterPublish = tl.getBoolInput("zipAfterPublish", false);
+        this.workingDirectory = tl.getPathInput("workingDirectory", false);
     }
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
+        if (this.command === "custom") {
+            this.command = tl.getInput("custom", true);
+        }
+
+        switch (this.command) {
+            case "build":
+            case "publish":
+            case "run":
+                await this.executeBasicCommand();
+                break;
+            case "test":
+                await this.executeTestCommand();
+                break;
+            case "restore":
+                await restoreCommand.run();
+                break;
+            case "pack":
+                await packCommand.run();
+                break;
+            case "push":
+                await pushCommand.run();
+                break;
+            default:
+                tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        }
+    }
+
+    private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
 
         this.extractOutputArgument();
 
         // Use empty string when no project file is specified to operate on the current directory
-        var projectFiles = [""];
-        if (this.projects || (this.isPublishCommand() && this.publishWebProjects)) {
-            projectFiles = this.getProjectFiles();
+        var projectFiles = this.getProjectFiles();
+        if (projectFiles.length === 0) {
+            throw tl.loc("noProjectFilesFound");
         }
         var failedProjects: string[] = [];
-        for (var fileIndex in projectFiles) {
+        for (const fileIndex of Object.keys(projectFiles)) {
             var projectFile = projectFiles[fileIndex];
             var dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
             dotnet.arg(projectFile);
             var dotnetArguments = this.arguments;
-            if (this.isPublishCommand() && this.outputArgument) {
+            if (this.isPublishCommand() && this.outputArgument && tl.getBoolInput("modifyOutputPath")) {
                 var output = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 dotnetArguments = this.replaceOutputArgument(output);
             }
             dotnet.line(dotnetArguments);
             try {
-                var result = await dotnet.exec();
+                var result = await dotnet.exec(<tr.IExecOptions>{
+                    cwd: this.workingDirectory
+                });
                 await this.zipAfterPublishIfRequired(projectFile);
             } catch (err) {
                 tl.error(err);
@@ -53,6 +91,57 @@ export class dotNetExe {
         }
         if (failedProjects.length > 0) {
             throw tl.loc("dotnetCommandFailed", failedProjects);
+        }
+    }
+
+    private async executeTestCommand(): Promise<void> {
+        const dotnetPath = tl.which('dotnet', true);
+        const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
+        const resultsDirectory = tl.getVariable('Agent.TempDirectory');
+
+        if (enablePublishTestResults && enablePublishTestResults === true) {
+            this.arguments = this.arguments.concat(` --logger trx --results-directory ${resultsDirectory}`);
+        }
+
+        // Use empty string when no project file is specified to operate on the current directory
+        const projectFiles = this.getProjectFiles();
+        if (projectFiles.length === 0) {
+            tl.warning(tl.loc('noProjectFilesFound'));
+            return;
+        }
+
+        const failedProjects: string[] = [];
+        for (const fileIndex of Object.keys(projectFiles)) {
+            const projectFile = projectFiles[fileIndex];
+            const dotnet = tl.tool(dotnetPath);
+            dotnet.arg(this.command);
+            dotnet.arg(projectFile);
+            dotnet.line(this.arguments);
+            try {
+                const result = await dotnet.exec();
+            } catch (err) {
+                tl.error(err);
+                failedProjects.push(projectFile);
+            }
+        }
+        if (enablePublishTestResults && enablePublishTestResults === true) {
+            this.publishTestResults(resultsDirectory);
+        }
+        if (failedProjects.length > 0) {
+            throw tl.loc('dotnetCommandFailed', failedProjects);
+        }
+    }
+
+    private publishTestResults(resultsDir: string): void {
+        const buildConfig = tl.getVariable('BuildConfiguration');
+        const buildPlaform = tl.getVariable('BuildPlatform');
+        const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
+            tl.warning('No test result files were found.');
+        } else {
+            const tp: tl.TestPublisher = new tl.TestPublisher('VSTest');
+            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true');
+            //refer https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts#L1620
         }
     }
 
@@ -66,10 +155,15 @@ export class dotNetExe {
         if (this.isPublishCommand() && this.zipAfterPublish) {
             var outputSource: string = "";
             if (this.outputArgument) {
-                outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                if (tl.getBoolInput("modifyOutputPath")) {
+                    outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
+                } else {
+                    outputSource = this.outputArgument;
+                }
+
             }
             else {
-                var pattern = "/**/publish";
+                var pattern = "**/publish";
                 var files = tl.findMatch(path.dirname(projectFile), pattern);
                 for (var fileIndex in files) {
                     var file = files[fileIndex];
@@ -87,7 +181,7 @@ export class dotNetExe {
                 tl.rmRF(outputSource);
             }
             else {
-                tl.warning(tl.loc("noPublishFolderFoundToZip", projectFile));
+                throw tl.loc("noPublishFolderFoundToZip", projectFile);
             }
         }
     }
@@ -189,11 +283,7 @@ export class dotNetExe {
             projectPattern = ["**/*.csproj", "**/*.vbproj", "**/*.fsproj"];
         }
 
-        var projectFiles = tl.findMatch(tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(), projectPattern);
-        if (!projectFiles || !projectFiles.length) {
-            tl.warning(tl.loc("noProjectFilesFound"));
-            return [];
-        }
+        var projectFiles = utility.getProjectFiles(projectPattern);
 
         if (searchWebProjects) {
             projectFiles = projectFiles.filter(function (file, index, files): boolean {
@@ -203,7 +293,7 @@ export class dotNetExe {
             });
 
             if (!projectFiles.length) {
-                tl.warning(tl.loc("noWebProjctFound"));
+                tl.error(tl.loc("noWebProjctFound"));
             }
         }
 

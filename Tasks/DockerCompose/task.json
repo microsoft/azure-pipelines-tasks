@@ -13,10 +13,10 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 0
+        "Patch": 10
     },
     "demands": [],
-    "preview": "true",
+    "preview": "false",
     "groups": [
         {
             "name": "advanced",
@@ -46,6 +46,7 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
@@ -182,6 +183,7 @@
         },
         {
             "name": "workDir",
+            "aliases": ["workingDirectory"],
             "type": "string",
             "label": "Working Directory",
             "visibleRule": "action = Run a specific service",
@@ -192,7 +194,7 @@
             "type": "string",
             "label": "Entrypoint Override",
             "visibleRule": "action = Run a specific service",
-            "helpMarkDown": "Override the default entrypoint for the specific service container."
+            "helpMarkDown": "Override the default entry point for the specific service container."
         },
         {
             "name": "containerCommand",
@@ -283,6 +285,7 @@
         },
         {
             "name": "cwd",
+            "aliases": ["currentWorkingDirectory"],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
@@ -306,8 +309,9 @@
         }
     },
     "messages": {
-        "ContainerPatternFound": "Pattern found in dockerfilepath parameter",
-        "ContainerPatternNotFound": "No pattern found in dockerfilepath parameter",
-        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found."
+        "ContainerPatternFound": "Pattern found in docker compose filepath parameter",
+        "ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
+        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found.",
+        "AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists."
     }
 }

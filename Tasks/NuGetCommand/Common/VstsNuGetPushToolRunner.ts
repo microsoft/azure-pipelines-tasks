@@ -1,8 +1,8 @@
 import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunner";
-import * as auth from "./Authentication";
+import * as auth from "nuget-task-common/Authentication";
 import * as tl from "vsts-task-lib/task";
-import * as util from "./utilities";
 import * as path from "path";
+import * as telemetry from 'utility-common/telemetry';
 
 export interface VstsNuGetPushSettings {
     continueOnConflict: boolean;
@@ -38,8 +38,8 @@ export class VstsNuGetPushToolRunner extends ToolRunner {
 
     public execSync(options?: IExecOptions): IExecSyncResult {
         options = initializeExecutionOptions(options, this.settings);
-
-        return super.execSync(options);
+        let execResult = super.execSync(options);
+        return execResult;
     }
 
     public exec(options?: IExecOptions): Q.Promise<number> {

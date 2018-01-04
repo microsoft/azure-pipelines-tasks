@@ -104,7 +104,7 @@ target.clean = function () {
 target.build = function() {
     target.clean();
 
-    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '3.0.0')) {
             fail('expected 3.0.0 or higher');
@@ -236,7 +236,7 @@ target.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 target.test = function() {
-    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '2.3.3');
 
     // build the general tests and ps test infra
@@ -271,7 +271,7 @@ target.test = function() {
 //
 
 target.testLegacy = function() {
-    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '2.3.3');
 
     if (options.suite) {
@@ -314,10 +314,11 @@ target.testLegacy = function() {
                 var modTestCopyDest = path.join(legacyTestPath, 'L0', `Common-${modName}`);
                 if (test('-e', modTestCopySource) && !test('-e', modTestCopyDest)) {
                     matchCopy('*', modTestCopySource, modTestCopyDest, { noRecurse: true, matchBase: true });
-
+                }
+                var modCopySource = path.join(commonPath, modName);
+                var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
+                if (test('-e', modCopySource) && !test('-e', modCopyDest)) {
                     // copy the common module layout
-                    var modCopySource = path.join(commonPath, modName);
-                    var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
                     matchCopy('*', modCopySource, modCopyDest, { noRecurse: true, matchBase: true });
                 }
             });

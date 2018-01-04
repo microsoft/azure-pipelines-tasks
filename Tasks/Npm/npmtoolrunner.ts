@@ -5,12 +5,16 @@ import * as Q from 'q';
 
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
+import {NpmTaskInput} from './constants';
+
+import * as util from 'npm-common/util';
 
 export class NpmToolRunner extends tr.ToolRunner {
     private cacheLocation: string;
     private dbg: boolean;
+    private projectNpmrc: () => string = () => path.join(this.workingDirectory, '.npmrc');
 
-    constructor(private workingDirectory: string, private npmrc?: string) {
+    constructor(private workingDirectory: string, private npmrc: string, private overrideProjectNpmrc: boolean) {
         super('npm');
 
         this.on('debug', (message: string) => {
@@ -23,23 +27,36 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         let cacheOptions = { silent: true } as tr.IExecSyncOptions;
+        if (!tl.stats(workingDirectory).isDirectory()) {
+            throw new Error(tl.loc('WorkingDirectoryNotDirectory'));
+        }
         this.cacheLocation = tl.execSync('npm', 'config get cache', this._prepareNpmEnvironment(cacheOptions)).stdout.trim();
     }
 
     public exec(options?: tr.IExecOptions): Q.Promise<number> {
         options = this._prepareNpmEnvironment(options) as tr.IExecOptions;
 
-        return super.exec(options).catch((reason: any) => {
-            return this._printDebugLog(this._getDebugLogPath(options)).then((value: void): number => {
-                throw reason;
-            });
-        });
+        this._saveProjectNpmrc();
+        return super.exec(options).then(
+            (code: number): number => {
+                this._restoreProjectNpmrc();
+                return code;
+            },
+            (reason: any) => {
+                this._restoreProjectNpmrc();
+                return this._printDebugLog(this._getDebugLogPath(options)).then((value: void): number => {
+                    throw reason;
+                });
+            }
+        );
     }
 
     public execSync(options?: tr.IExecSyncOptions): tr.IExecSyncResult {
         options = this._prepareNpmEnvironment(options);
 
+        this._saveProjectNpmrc();
         const execResult = super.execSync(options);
+        this._restoreProjectNpmrc();
         if (execResult.code !== 0) {
             this._printDebugLogSync(this._getDebugLogPath(options));
             throw new Error(tl.loc('NpmFailed', execResult.code));
@@ -72,7 +89,7 @@ export class NpmToolRunner extends tr.ToolRunner {
             options.env = process.env;
         }
 
-        if (this.dbg) {
+        if (this.dbg || tl.getBoolInput(NpmTaskInput.Verbose, false)) {
             options.env['NPM_CONFIG_LOGLEVEL'] = 'verbose';
         }
 
@@ -129,5 +146,20 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         console.log(fs.readFileSync(log, 'utf-8'));
+    }
+
+    private _saveProjectNpmrc(): void {
+        if (this.overrideProjectNpmrc) {
+            tl.debug(tl.loc('OverridingProjectNpmrc', this.projectNpmrc()));
+            util.saveFile(this.projectNpmrc());
+            tl.rmRF(this.projectNpmrc());
+        }
+    }
+
+    private _restoreProjectNpmrc(): void {
+        if (this.overrideProjectNpmrc) {
+            tl.debug(tl.loc('RestoringProjectNpmrc'));
+            util.restoreFile(this.projectNpmrc());
+        }
     }
 }

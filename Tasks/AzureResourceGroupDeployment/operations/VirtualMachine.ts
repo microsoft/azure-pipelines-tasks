@@ -1,6 +1,3 @@
-/// <reference path="../../../definitions/node.d.ts" /> 
-/// <reference path="../../../definitions/vsts-task-lib.d.ts" /> 
-
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import armCompute = require('azure-arm-rest/azure-arm-compute');
@@ -60,7 +57,7 @@ export class VirtualMachine {
         });
     }
 
-    private getDeleteVMCallback(client, vmName, callback) {
+    private getDeleteVMCallback(client, vmName, callback): () => void {
         var deleteExtensionFromVM = () => {
             console.log(tl.loc("VM_Delete", vmName));
             client.virtualMachines.deleteMethod(this.taskParameters.resourceGroupName, vmName, callback);

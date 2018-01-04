@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 116,
+    "Minor": 128,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -31,6 +31,9 @@
   "inputs": [
     {
       "name": "credsType",
+      "aliases": [
+        "credentialsOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.credsType",
       "defaultValue": "serviceEndpoint",
@@ -76,6 +79,9 @@
     },
     {
       "name": "rootFolder",
+      "aliases": [
+        "rootDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.rootFolder",
       "defaultValue": "",
@@ -96,6 +102,9 @@
     },
     {
       "name": "remotePath",
+      "aliases": [
+        "remoteDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.remotePath",
       "defaultValue": "/upload/$(Build.BuildId)/",
@@ -110,6 +119,16 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.clean",
       "groupName": "advanced"
+    },
+    {
+      "name": "cleanContents",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanContents",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanContents",
+      "groupName": "advanced",
+      "visibleRule": "clean = false"
     },
     {
       "name": "overwrite",
@@ -147,6 +166,8 @@
   },
   "messages": {
     "CleanRemoteDir": "ms-resource:loc.messages.CleanRemoteDir",
+    "CleanRemoteDirContents": "ms-resource:loc.messages.CleanRemoteDirContents",
+    "CleanFileDeleteFail": "ms-resource:loc.messages.CleanFileDeleteFail",
     "ConnectPort": "ms-resource:loc.messages.ConnectPort",
     "Disconnected": "ms-resource:loc.messages.Disconnected",
     "DisconnectHost": "ms-resource:loc.messages.DisconnectHost",

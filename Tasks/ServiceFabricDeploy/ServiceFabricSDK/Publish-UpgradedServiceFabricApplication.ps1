@@ -171,6 +171,11 @@ function Publish-UpgradedServiceFabricApplication
        $ApplicationName = Get-ApplicationNameFromApplicationParameterFile $ApplicationParameterFilePath
     }
 
+    if(!$ApplicationName)
+    {
+        Write-Error (Get-VstsLocString -Key EmptyApplicationName)
+    }    
+
     $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
     if (!$names)
     {
@@ -298,10 +303,10 @@ function Publish-UpgradedServiceFabricApplication
 
             $UpgradeParameters["ApplicationParameter"] = $ApplicationParameter
 
-            $serviceTypeHealthPolicyMap = $upgradeParameters["ServiceTypeHealthPolicyMap"]
+            $serviceTypeHealthPolicyMap = $UpgradeParameters["ServiceTypeHealthPolicyMap"]
             if ($serviceTypeHealthPolicyMap -and $serviceTypeHealthPolicyMap -is [string])
             {
-                $upgradeParameters["ServiceTypeHealthPolicyMap"] = Invoke-Expression $serviceTypeHealthPolicyMap
+                $UpgradeParameters["ServiceTypeHealthPolicyMap"] = Invoke-Expression $serviceTypeHealthPolicyMap
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_StartAppUpgrade)
@@ -319,12 +324,15 @@ function Publish-UpgradedServiceFabricApplication
             return
         }
 
-        do
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-            Start-Sleep -Seconds 3
-            $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
-        } while ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted")
+        Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+        $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
+        $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
+        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+                                -ActionSuccessValidator $upgradeStatusValidator `
+                                -MaxTries 2147483647 `
+                                -RetryIntervalInSeconds 3 `
+                                -RetryableExceptions @("System.Fabric.FabricTransientException") `
+                                -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 
         if($UnregisterUnusedVersions)
         {

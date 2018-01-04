@@ -43,18 +43,44 @@ export interface VMProperties {
     storageProfile: StorageProfile
 }
 
+export interface VirtualMachineProfile {
+    networkProfile?: NetworkProfile;
+    instanceView?: InstanceView;
+    storageProfile?: StorageProfile;
+    extensionProfile?:ExtensionProfile;
+}
+
+export interface VMSSProperties {
+    virtualMachineProfile: VirtualMachineProfile;
+    provisioningState?: string;
+}
+
 export interface VMExtensionProperties {
-    provisioningState: string;
+    provisioningState?: string;
+    type: string;
+    publisher: string;
+    typeHandlerVersion: string;
+    autoUpgradeMinorVersion?: boolean;
+    settings?: Object;
+    protectedSettings?: Object;
 }
 
 export interface StorageProfile{
-    imageReference: Map<string, string>;
+    imageReference?: Map<string, string>;
     osDisk: OSDisk;
-    dataDisks: Map<string, string>[];
+    dataDisks?: Map<string, string>[];
 }
 
 export interface OSDisk{
     osType: string;
+    name: string;
+    createOption: string;
+    caching: string;
+    image: ImageUrl;
+}
+
+export interface ImageUrl{
+    uri: string;
 }
 
 export interface DnsSettings {
@@ -63,6 +89,10 @@ export interface DnsSettings {
 
 export interface NetworkProfile {
     networkInterfaces: NetworkInterface[]
+}
+
+export interface ExtensionProfile {
+    extensions: VMExtension[];
 }
 
 export interface InstanceView {
@@ -84,8 +114,23 @@ export interface VM extends AzureBaseObject {
     tags?: string ;
 }
 
-export interface VMExtension extends AzureBaseObject {
+export interface VMSS extends AzureBaseObject {
+    properties?: VMSSProperties,
+    location?: string,
+    tags?: string ;
+}
+
+export interface VMExtension {
+    name?: string;
+    id?: string;
     properties: VMExtensionProperties,
+    sku?: VMSku;
+}
+
+export interface VMSku {
+    name?: string,
+    tier?: string;
+    capacity?: string;
 }
 
 export interface NetworkInterface extends AzureBaseObject {
@@ -106,4 +151,121 @@ export interface BackendAddressPool extends AzureBaseObject {
 
 export interface PublicIPAddress extends AzureBaseObject {
     properties: PublicIPAddressProperties;
+}
+
+export interface VMExtensionMetadata {
+    type: string;
+    publisher: string;
+    typeHandlerVersion: string;
+}
+
+export enum ComputeResourceType {
+    VirtualMachine,
+    VirtualMachineScaleSet
+}
+
+export interface StorageAccountSku {
+    name: string;
+    tier?: string;
+}
+
+export interface StorageAccountEndpoints {
+    blob?: string;
+    table?: string;
+    file?: string;
+    queue?: string;
+}
+
+export interface StorageAccountProperties {
+    creationTime?: string;
+    primaryLocation?: string;
+    primaryEndpoints?: StorageAccountEndpoints;
+    provisioningState?: string;
+    secondaryLocation?: string;
+    secondaryndpoints?: StorageAccountEndpoints;
+    statusOfPrimary?: string;
+    statusOfSecondary?: string;
+    supportsHttpsTrafficOnly?: boolean;
+}
+
+export interface StorageAccount extends AzureBaseObject {
+    type: string;
+    location?: string;
+    sku?: StorageAccountSku;
+    kind?: string;
+    tags?: Map<string, string>;
+    properties?: StorageAccountProperties;
+}
+
+export interface AzureEndpoint {
+    subscriptionID: string;
+    subscriptionName: string;
+    servicePrincipalClientID?: string;
+    servicePrincipalKey?: string;
+    tenantID: string;
+    environmentAuthorityUrl: string;
+    url: string;
+    environment: string;
+    activeDirectoryResourceID: string;
+    activeDirectoryAuthority?: string;
+    graphEndpoint?: string;
+    galleryUrl?: string;
+    portalEndpoint?: string;
+    AzureKeyVaultDnsSuffix?: string;
+    AzureKeyVaultServiceEndpointResourceId?: string;
+}
+
+export interface AzureAppServiceConfigurationDetails {
+    id: string;
+    name: string;
+    type: string;
+    kind?: string;
+    location: string;
+    tags: string;
+    properties?: {[key: string]: any};
+}
+
+export interface WebJob {
+    name: string;
+    status: string;
+    runCommand: string;
+    log_url: string;
+    url: string;
+    type: string;
+}
+
+export interface SiteExtension {
+    id: string;
+    title: string;
+    description: string;
+    extension_url: string;
+    local_path: string;
+    version: string;
+    project_url: string;
+    authors: Array<string>;
+    provisioningState: string;
+    local_is_latest_version: boolean;
+}
+
+export interface WebTest {
+    id?: string;
+    name: string;
+    type: string;
+    location: string;
+    tags: {[key: string]: string},
+    kind?: string,
+    etag?: string;
+    properties?: {[key: string]: any};
+}
+
+
+export interface ApplicationInsights {
+    id?: string;
+    name: string;
+    type: string;
+    location: string;
+    tags: {[key: string]: string},
+    kind?: string,
+    etag?: string;
+    properties?: {[key: string]: any};
 }

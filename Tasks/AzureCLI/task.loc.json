@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 129,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -33,6 +33,9 @@
   "inputs": [
     {
       "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
       "required": true,
@@ -70,11 +73,14 @@
       "properties": {
         "resizable": "true",
         "rows": "10",
-        "maxLength": "500"
+        "maxLength": "4000"
       }
     },
     {
       "name": "args",
+      "aliases": [
+        "arguments"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.args",
       "defaultValue": "",
@@ -86,6 +92,9 @@
     },
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
