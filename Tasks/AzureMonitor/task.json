@@ -1,7 +1,7 @@
 {
 	"id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
 	"name": "AzureMonitor",
-	"friendlyName": "Monitor Azure Alerts",
+	"friendlyName": "Query Azure Monitor Alerts",
 	"description": "Observe the configured Azure monitor rules for active alerts.",
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-monitor)",
@@ -19,7 +19,7 @@
 		"Patch": 5
 	},
 	"preview": "true",
-	"instanceNameFormat": "Monitor Azure Alerts",
+	"instanceNameFormat": "Query Azure Monitor alerts",
 	"groups": [],
 	"inputs": [{
 			"name": "connectedServiceNameARM",
