@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [],
   "preview": "false",
@@ -205,6 +205,15 @@
       "required": true,
       "groupName": "advanced",
       "visibleRule": "versionOrLocation = location"
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.namespace",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace",
+      "groupName": "commands"
     },
     {
       "name": "cwd",
