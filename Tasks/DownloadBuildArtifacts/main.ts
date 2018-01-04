@@ -3,9 +3,9 @@ var url = require('url');
 var fs = require('fs');
 
 import * as tl from 'vsts-task-lib/task';
-import { IBuildApi } from 'vso-node-api/BuildApi';
-import { IRequestHandler } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
-import { WebApi, getHandlerFromToken } from 'vso-node-api/WebApi';
+import { IBuildApi } from './vso-node-api/BuildApi';
+import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
+import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
@@ -163,7 +163,7 @@ async function main(): Promise<void> {
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
-                    let downloadUrl = decodeURI(artifact.resource.downloadUrl.replace("file:", ""));
+                    let downloadUrl = decodeURIComponent(artifact.resource.downloadUrl.replace("file:", ""));
                     let artifactLocation = downloadUrl + '/' + artifact.name;
                     if (!fs.existsSync(artifactLocation)) {
                         console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));

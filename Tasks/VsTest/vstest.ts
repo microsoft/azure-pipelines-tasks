@@ -69,16 +69,19 @@ export function startTest() {
             task: 'VsTestConsoleFlow',
             runInParallel: vstestConfig.runInParallel,
             result: 'Failed',
-            settingsType:  !utils.Helper.isNullOrUndefined(vstestConfig.settingsFile) ? vstestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : vstestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none': 'none',
+            settingsType: !utils.Helper.isNullOrUndefined(vstestConfig.settingsFile) ? vstestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : vstestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none': 'none',
             testSelection: vstestConfig.testSelection,
             tiaEnabled: vstestConfig.tiaConfig.tiaEnabled,
-            vsTestVersion: vstestConfig.vsTestVersionDetails.majorVersion + '.' + vstestConfig.vsTestVersionDetails.minorversion + '.' + vstestConfig.vsTestVersionDetails.patchNumber
+            vsTestVersion: vstestConfig.vsTestVersionDetails.majorVersion + '.' + vstestConfig.vsTestVersionDetails.minorversion + '.' + vstestConfig.vsTestVersionDetails.patchNumber,
+            consoleOptionsEnabled:
+                !utils.Helper.isNullOrWhitespace(vstestConfig.otherConsoleOptions) ? vstestConfig.otherConsoleOptions : '',
+            rerunEnabled: vstestConfig.rerunFailedTests,
+            rerunType: utils.Helper.isNullEmptyOrUndefined(vstestConfig.rerunType) ? '' : vstestConfig.rerunType
         };
 
         invokeVSTest().then(function (taskResult) {
             uploadVstestDiagFile();
-            if (vstestConfig.tiaConfig.tiaEnabled)
-            {
+            if (vstestConfig.tiaConfig.tiaEnabled) {
                 uploadFile(path.join(os.tmpdir(), "TestImpactZip.zip"));
                 uploadFile(path.join(os.tmpdir(), "TestSelector.log"));
             }
@@ -144,7 +147,7 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
     }
 
     if (vstestConfig.codeCoverageEnabled) {
-        if(!utils.Helper.isToolsInstallerFlow(vstestConfig)) {
+        if (!utils.Helper.isToolsInstallerFlow(vstestConfig)) {
             argsArray.push('/EnableCodeCoverage');
         }
     }
@@ -409,9 +412,17 @@ function uploadVstestDiagFile(): void {
 
 function uploadFile(file: string): void {
     if (utils.Helper.pathExistsAsFile(file)) {
-        let stats = fs.statSync(file);
+        const stats = fs.statSync(file);
         tl.debug('File exists. Size: ' + stats.size + ' Bytes');
         console.log('##vso[task.uploadfile]' + file);
+
+        const files = tl.findMatch(os.tmpdir(), ['*host.*.txt', '*datacollector.*.txt']);
+        if (files) {
+            files.forEach(file => {
+                tl.debug('Uploading file: ' + file);
+                console.log('##vso[task.uploadfile]' + file);
+            });
+        }
     }
 }
 
@@ -437,7 +448,7 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
     }
 
     let testselector = new testselectorinvoker.TestSelectorInvoker();
-    let code = testselector.publishCodeChanges(tiaConfig, testCaseFilterFile, vstestConfig.taskInstanceIdentifier);
+    let code = testselector.publishCodeChanges(tiaConfig, vstestConfig.proxyConfiguration, testCaseFilterFile, vstestConfig.taskInstanceIdentifier);
 
     if (code !== 0) {
         // If publishing code changes fails, we run all tests. Here we are calling the non tia run because
@@ -516,7 +527,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 
     vstestConfig.publishTestResultsInTiaMode = uploadTiaResults;
     let updateResponseSupplementryFileSuccess = isResponseFileRun && updateResponseFile(getVstestArguments(settingsFile, false), vstestConfig.responseSupplementryFile);
-    if (!updateResponseSupplementryFileSuccess && vstestConfig.rerunFailedTests){
+    if (!updateResponseSupplementryFileSuccess && vstestConfig.rerunFailedTests) {
         tl.warning(tl.loc("rerunNotSupported"));
         vstestConfig.rerunFailedTests = false;
     }
@@ -542,9 +553,9 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
 
 async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersion: number): Promise<tl.TaskResult> {
     let updateResponseFileSuccess = updateResponseFile(getVstestArguments(settingsFile, true), vstestConfig.responseFile);
-    if (!updateResponseFileSuccess){
+    if (!updateResponseFileSuccess) {
         return runVsTestAndUploadResults(settingsFile, vsVersion, false, '', false).then(function (runResult) {
-            if (!vstestConfig.rerunFailedTests){
+            if (!vstestConfig.rerunFailedTests) {
                 let publishResult = publishTestResults(resultsDirectory);
                 return (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) ?
                     tl.TaskResult.Failed :
@@ -555,18 +566,18 @@ async function runVsTestAndUploadResultsNonTIAMode(settingsFile: string, vsVersi
     }
 
     return runVsTestAndUploadResults(settingsFile, vsVersion, true, vstestConfig.responseFile, false)
-    .then(function (runResult) {
-        if (!vstestConfig.rerunFailedTests) {
-            let publishResult = publishTestResults(resultsDirectory);
-            return (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) ?
-                tl.TaskResult.Failed :
-                tl.TaskResult.Succeeded;
-        }
-        return runResult;
-    }).catch(function (err) {
-        tl.error(err);
-        return tl.TaskResult.Failed;
-    });
+        .then(function (runResult) {
+            if (!vstestConfig.rerunFailedTests) {
+                let publishResult = publishTestResults(resultsDirectory);
+                return (runResult === tl.TaskResult.Failed || publishResult === tl.TaskResult.Failed) ?
+                    tl.TaskResult.Failed :
+                    tl.TaskResult.Succeeded;
+            }
+            return runResult;
+        }).catch(function (err) {
+            tl.error(err);
+            return tl.TaskResult.Failed;
+        });
 }
 
 async function invokeVSTest(): Promise<tl.TaskResult> {
@@ -578,7 +589,7 @@ async function invokeVSTest(): Promise<tl.TaskResult> {
         }
 
         if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetails === null
-             || (!vstestConfig.vsTestVersionDetails.isTestImpactSupported() && !(utils.Helper.isToolsInstallerFlow(vstestConfig))))) {
+            || (!vstestConfig.vsTestVersionDetails.isTestImpactSupported() && !(utils.Helper.isToolsInstallerFlow(vstestConfig))))) {
             tl.warning(tl.loc('VstestTIANotSupported'));
             tiaConfig.tiaEnabled = false;
         }
@@ -608,7 +619,7 @@ async function invokeVSTest(): Promise<tl.TaskResult> {
 
     try {
         newSettingsFile = await settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig,
-             vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false, vstestConfig.codeCoverageEnabled && utils.Helper.isToolsInstallerFlow(vstestConfig));
+            vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false, vstestConfig.codeCoverageEnabled && utils.Helper.isToolsInstallerFlow(vstestConfig));
         return vsTestCall(newSettingsFile, vsVersion);
     }
     catch (err) {

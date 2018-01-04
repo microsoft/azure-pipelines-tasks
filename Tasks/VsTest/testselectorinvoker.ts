@@ -7,7 +7,7 @@ import { Helper } from './helpers'
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
-    public publishCodeChanges(tiaConfig: models.TiaConfiguration, testCaseFilterFile: string, taskInstanceIdentifier: string): number {
+    public publishCodeChanges(tiaConfig: models.TiaConfiguration, proxyConfig: models.ProxyConfiguration, testCaseFilterFile: string, taskInstanceIdentifier: string): number {
         tl.debug('Entered publish code changes');
 
         const startTime = perf();
@@ -19,6 +19,7 @@ export class TestSelectorInvoker {
         let prFlow: string;
         let rebaseLimit: string;
         let sourcesDirectory: string;
+
         let newprovider = 'true';
         if (this.getTIALevel(tiaConfig) === 'method') {
             newprovider = 'false';
@@ -76,11 +77,15 @@ export class TestSelectorInvoker {
                 'filter': pathFilters,
                 'userMapFile': tiaConfig.userMapFile ? tiaConfig.userMapFile : '',
                 'testCaseFilterResponseFile': testCaseFilterFile ? testCaseFilterFile : '',
+                'proxyurl': proxyConfig.proxyUrl,
+                'proxyusername': proxyConfig.proxyUserName,
+                'proxypassword': proxyConfig.proxyPassword,
+                'proxybypasslist': proxyConfig.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier,
-                'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
-                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT'),
-                'DebugLogging' : this.isDebugEnabled()
+                'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
+                'VSTS_HTTP_TIMEOUT': tl.getVariable('VSTS_HTTP_TIMEOUT'),
+                'DebugLogging': this.isDebugEnabled()
             },
             silent: null,
             outStream: null,
@@ -168,11 +173,15 @@ export class TestSelectorInvoker {
                 'useTestCaseFilterInResponseFile': useTestCaseFilterInResponseFile,
                 'testCaseFilterOutputFile': testCaseFilterOutputFile ? testCaseFilterOutputFile : "",
                 'isCustomEngineEnabled': String(!Helper.isNullOrWhitespace(tiaConfig.userMapFile)),
+                'proxyurl': vstestConfig.proxyConfiguration.proxyUrl,
+                'proxyusername': vstestConfig.proxyConfiguration.proxyUserName,
+                'proxypassword': vstestConfig.proxyConfiguration.proxyPassword,
+                'proxybypasslist': vstestConfig.proxyConfiguration.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
-                'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
-                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT'),
-                'DebugLogging' : this.isDebugEnabled()
+                'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
+                'VSTS_HTTP_TIMEOUT': tl.getVariable('VSTS_HTTP_TIMEOUT'),
+                'DebugLogging': this.isDebugEnabled()
             },
             silent: null,
             outStream: null,
@@ -227,11 +236,15 @@ export class TestSelectorInvoker {
                 'resultfile': resultFile,
                 'runidfile': tiaConfig.runIdFile,
                 'context': tiaConfig.context,
+                'proxyurl': vstestConfig.proxyConfiguration.proxyUrl,
+                'proxyusername': vstestConfig.proxyConfiguration.proxyUserName,
+                'proxypassword': vstestConfig.proxyConfiguration.proxyPassword,
+                'proxybypasslist': vstestConfig.proxyConfiguration.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': vstestConfig.taskInstanceIdentifier,
-                'VSTS_HTTP_RETRY' : tl.getVariable('VSTS_HTTP_RETRY'),
-                'VSTS_HTTP_TIMEOUT' : tl.getVariable('VSTS_HTTP_TIMEOUT'),
-                'DebugLogging' : this.isDebugEnabled()
+                'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
+                'VSTS_HTTP_TIMEOUT': tl.getVariable('VSTS_HTTP_TIMEOUT'),
+                'DebugLogging': this.isDebugEnabled()
             },
             silent: null,
             outStream: null,
@@ -268,7 +281,7 @@ export class TestSelectorInvoker {
         if (sysDebug === undefined) {
             return "false";
         }
-    
+
         return sysDebug.toLowerCase() === 'true' ? "true" : "false";
     }
 }
