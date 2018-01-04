@@ -70,6 +70,12 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     }
 }
 
+export function sleepFor(sleepDurationInSeconds): Promise<any> {
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, sleepDurationInSeconds * 1000);
+    });
+}
+
 async function sendRequestInternal(request: WebRequest): Promise<WebResponse> {
     tl.debug(util.format("[%s]%s", request.method, request.uri));
     var response: httpClient.HttpClientResponse = await httpCallbackClient.request(request.method, request.uri, request.body, request.headers);
@@ -94,10 +100,4 @@ async function toWebResponse(response: httpClient.HttpClientResponse): Promise<W
     }
 
     return res;
-}
-
-export function sleepFor(sleepDurationInSeconds): Promise<any> {
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve, sleepDurationInSeconds * 1000);
-    });
 }

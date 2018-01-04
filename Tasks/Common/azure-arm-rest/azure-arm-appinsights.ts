@@ -46,7 +46,7 @@ export class AzureApplicationInsights {
         }
     }
 
-    public async update(insightProperties: any) {
+    public async update(insightProperties: any): Promise<ApplicationInsights> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.body = JSON.stringify(insightProperties);
