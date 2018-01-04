@@ -218,7 +218,9 @@ export interface AzureEndpoint {
     applicationTokenCredentials: ApplicationTokenCredentials;
 }
 
-export interface AzureAppServiceConfigurationDetails extends AzureBaseObject {
+export interface AzureAppServiceConfigurationDetails {
+    id: string;
+    name: string;
     type: string;
     kind?: string;
     location: string;
