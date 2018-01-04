@@ -6,7 +6,7 @@
   "loc.group.displayName.sign": "Signing & Provisioning",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",
-  "loc.input.help.solution": "Relative path from the repository root of the Xamarin.iOS solution to build.",
+  "loc.input.help.solution": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards.",
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Standard configurations are Ad-Hoc, AppStore, Debug, Release.",
   "loc.input.label.clean": "Clean",
@@ -56,5 +56,5 @@
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
   "loc.messages.MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist or is not a directory: %s"
+  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
 }
