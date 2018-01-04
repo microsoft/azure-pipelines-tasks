@@ -81,7 +81,7 @@ describe('Npm Task', function () {
 
         tr.run();
 
-        assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdOutContained('; debug cli configs'), 'should have debug npm config output');
         assert(tr.stdOutContained('; cli configs') === false, 'should not have regular npm config output');
@@ -97,7 +97,7 @@ describe('Npm Task', function () {
 
         tr.run();
 
-        assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdOutContained('; cli configs'), 'should have regular npm config output');
         assert(tr.stdOutContained('; debug cli configs') === false, 'should not have debug npm config output');
@@ -125,7 +125,7 @@ describe('Npm Task', function () {
 
         tr.run();
 
-        assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
         assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
         assert(tr.stdOutContained('OverridingProjectNpmrc'), 'install from feed shoud override project .npmrc');
         assert(tr.stdOutContained('RestoringProjectNpmrc'), 'install from .npmrc shoud restore project .npmrc');
@@ -141,7 +141,7 @@ describe('Npm Task', function () {
 
         tr.run();
 
-        assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
         assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
         assert(!tr.stdOutContained('OverridingProjectNpmrc'), 'install from .npmrc shoud not override project .npmrc');
         assert(!tr.stdOutContained('RestoringProjectNpmrc'), 'install from .npmrc shoud not restore project .npmrc');
@@ -173,7 +173,7 @@ describe('Npm Task', function () {
 
         tr.run();
 
-        assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
         assert(tr.stdOutContained('npm publish successful'), 'npm should have installed the package');
         assert(tr.stdOutContained('OverridingProjectNpmrc'), 'publish should always ooverrideverride project .npmrc');
         assert(tr.stdOutContained('RestoringProjectNpmrc'), 'publish should always restore project .npmrc');
@@ -189,7 +189,7 @@ describe('Npm Task', function () {
 
         tr.run();
 
-        assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
+        assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
         assert(tr.stdOutContained('npm publish successful'), 'npm should have installed the package');
         assert(tr.succeeded, 'task should have succeeded');
 
