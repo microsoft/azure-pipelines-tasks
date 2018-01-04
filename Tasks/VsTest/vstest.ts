@@ -74,7 +74,9 @@ export function startTest() {
             tiaEnabled: vstestConfig.tiaConfig.tiaEnabled,
             vsTestVersion: vstestConfig.vsTestVersionDetails.majorVersion + '.' + vstestConfig.vsTestVersionDetails.minorversion + '.' + vstestConfig.vsTestVersionDetails.patchNumber,
             consoleOptionsEnabled:
-                !utils.Helper.isNullOrWhitespace(vstestConfig.otherConsoleOptions) ? vstestConfig.otherConsoleOptions : ''
+                !utils.Helper.isNullOrWhitespace(vstestConfig.otherConsoleOptions) ? vstestConfig.otherConsoleOptions : '',
+            rerunEnabled: vstestConfig.rerunFailedTests,
+            rerunType: utils.Helper.isNullEmptyOrUndefined(vstestConfig.rerunType) ? '' : vstestConfig.rerunType
         };
 
         invokeVSTest().then(function (taskResult) {
