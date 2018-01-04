@@ -17,8 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 15
-    },
+        "Patch": 16
     "demands": [
         "vstest"
     ],
@@ -202,7 +201,7 @@
                 "latest": "Latest",
                 "15.0": "Visual Studio 2017",
                 "14.0": "Visual Studio 2015",
-                "toolsInstaller":"Installed by Tools Installer"
+                "toolsInstaller": "Installed by Tools Installer"
             }
         },
         {
