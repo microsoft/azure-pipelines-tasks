@@ -218,9 +218,7 @@ export interface AzureEndpoint {
     applicationTokenCredentials: ApplicationTokenCredentials;
 }
 
-export interface AzureAppServiceConfigurationDetails {
-    id: string;
-    name: string;
+export interface AzureAppServiceConfigurationDetails extends AzureBaseObject {
     type: string;
     kind?: string;
     location: string;
@@ -250,9 +248,7 @@ export interface SiteExtension {
     local_is_latest_version: boolean;
 }
 
-export interface WebTest {
-    id?: string;
-    name: string;
+export interface WebTest extends AzureBaseObject {
     type: string;
     location: string;
     tags: {[key: string]: string},
@@ -262,9 +258,7 @@ export interface WebTest {
 }
 
 
-export interface ApplicationInsights {
-    id?: string;
-    name: string;
+export interface ApplicationInsights extends AzureBaseObject{
     type: string;
     location: string;
     tags: {[key: string]: string},
