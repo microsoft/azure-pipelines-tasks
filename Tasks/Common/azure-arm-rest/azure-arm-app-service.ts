@@ -249,7 +249,7 @@ export class AzureAppService {
         }
     }
 
-    public async getApplicationSettings() {
+    public async getApplicationSettings(): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
@@ -272,7 +272,7 @@ export class AzureAppService {
         }
     }
 
-    public async updateApplicationSettings(applicationSettings) {
+    public async updateApplicationSettings(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
@@ -296,7 +296,7 @@ export class AzureAppService {
         }
     }
 
-    public async patchApplicationSettings(properties) {
+    public async patchApplicationSettings(properties): Promise<void> {
         var applicationSettings = await this.getApplicationSettings();
         for(var key in properties) {
             applicationSettings.properties[key] = properties[key];
@@ -306,7 +306,7 @@ export class AzureAppService {
 
     }
     
-    public async getConfiguration() {
+    public async getConfiguration(): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'GET';
@@ -329,7 +329,7 @@ export class AzureAppService {
         }
     }
 
-    public async updateConfiguration(applicationSettings) {
+    public async updateConfiguration(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
@@ -353,7 +353,7 @@ export class AzureAppService {
         }
     }
 
-    public async patchConfiguration(properties) {
+    public async patchConfiguration(properties): Promise<void> {
         var applicationSettings = await this.getConfiguration();
         for(var key in properties) {
             applicationSettings.properties[key] = properties[key];
