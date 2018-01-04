@@ -50,7 +50,7 @@ export class DistributedTest {
             } else {
                 tl.debug('Modules/DTAExecutionHost.exe exited');
                 tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
-            }            
+            }
         } catch (error) {
             ci.publishEvent({ environmenturi: this.dtaTestConfig.dtaEnvironment.environmentUri, error: error });
             tl.error(error);
@@ -58,7 +58,7 @@ export class DistributedTest {
         }
     }
 
-    private async startDtaExecutionHost(): Promise<number> {        
+    private async startDtaExecutionHost(): Promise<number> {
         const envVars: { [key: string]: string; } = process.env;
         this.testSourcesFile = this.createTestSourcesFile();
         tl.debug('Total env vars before setting DTA specific vars is :' + Object.keys(envVars).length);
@@ -137,7 +137,9 @@ export class DistributedTest {
             task: "VsTestDistributedFlow",
             testSelection: this.dtaTestConfig.testSelection,
             tiaEnabled: this.dtaTestConfig.tiaConfig.tiaEnabled,
-            vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber
+            vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber,
+            rerunEnabled: this.dtaTestConfig.rerunFailedTests,
+            rerunType: utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.rerunType) ? '' : this.dtaTestConfig.rerunType
         };
 
         if (code !== 0) {
@@ -148,7 +150,7 @@ export class DistributedTest {
 
         ci.publishEvent(consolidatedCiData);
         this.cleanUpDtaExeHost();
-        return code;        
+        return code;
     }
 
     private cleanUpDtaExeHost() {
@@ -187,7 +189,7 @@ export class DistributedTest {
         }
     }
 
-    private async addDtaTestRunEnvVars(envVars: any) {        
+    private async addDtaTestRunEnvVars(envVars: any) {
         utils.Helper.addToProcessEnvVars(envVars, 'TE.SourceFilter', this.dtaTestConfig.sourceFilter.join('|'));
         //Modify settings file to enable configurations and data collectors.
         let settingsFile = this.dtaTestConfig.settingsFile;
@@ -255,7 +257,7 @@ export class DistributedTest {
                 this.dtaTestConfig.numberOfTestCasesPerSlice.toString());
         }
 
-        if (this.dtaTestConfig.rerunFailedTests) {            
+        if (this.dtaTestConfig.rerunFailedTests) {
             utils.Helper.addToProcessEnvVars(envVars, 'TE.RerunFailedTests', "true");
             tl.debug("Type of rerun: " + this.dtaTestConfig.rerunType);
             if (this.dtaTestConfig.rerunType === 'basedOnTestFailureCount') {
