@@ -14,10 +14,7 @@ export class AzureApplicationInsights {
     private _client: ServiceClient;
 
     constructor(endpoint: AzureEndpoint, resourceGroupName: string, name: string) {
-        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
-            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
-        
-        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
         this._endpoint = endpoint;
         this._resourceGroupName = resourceGroupName;
         this._name = name;

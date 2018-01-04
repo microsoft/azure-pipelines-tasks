@@ -3,7 +3,7 @@ import tl = require('vsts-task-lib/task');
 import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
-import { 
+import {
     AzureEndpoint,
     AzureAppServiceConfigurationDetails
 } from './azureModels';
@@ -13,11 +13,10 @@ import {
     ToError
 } from './AzureServiceClient';
 import { Kudu } from './azure-arm-app-service-kudu';
-
+import constants = require('./constants');
 var parseString = require('xml2js').parseString;
 
 export class AzureAppService {
-    private _endpoint: AzureEndpoint;
     private _resourceGroup: string;
     private _name: string;
     private _slot: string;
@@ -27,17 +26,14 @@ export class AzureAppService {
     private _appServicePublishingProfile: any;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
-        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
-            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
-        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
-        this._endpoint = endpoint;
+        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
         this._resourceGroup = resourceGroup;
         this._name = name;
-        this._slot = (slot && slot.toLowerCase() == 'production') ? null : slot;
+        this._slot = (slot && slot.toLowerCase() == constants.productionSlot) ? null : slot;
         this._appKind = appKind;
     }
 
-    public async start() {
+    public async start(): Promise<void> {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'POST';
@@ -54,14 +50,13 @@ export class AzureAppService {
             }
 
             console.log(tl.loc('StartedAppService', this._getFormattedName()));
-            return response.statusCode;
         }
         catch(error) {
             throw Error(tl.loc('FailedToStartAppService', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
-    public async stop() {
+    public async stop(): Promise<void> {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'POST';
@@ -78,14 +73,13 @@ export class AzureAppService {
             }
 
             console.log(tl.loc('StoppedAppService', this._getFormattedName()));
-            return response.statusCode;
         }
         catch(error) {
             throw Error(tl.loc('FailedToStopAppService', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
-    public async restart() {
+    public async restart(): Promise<void> {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'POST';
@@ -102,14 +96,13 @@ export class AzureAppService {
             }
 
             console.log(tl.loc('RestartedAppService', this._getFormattedName()));
-            return response.body;
         }
         catch(error) {
             throw Error(tl.loc('FailedToRestartAppService', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
-    public async swap(slotName: string, preserveVNet?: boolean) {
+    public async swap(slotName: string, preserveVNet?: boolean): Promise<void> {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'POST';
@@ -136,7 +129,6 @@ export class AzureAppService {
             }
 
             console.log(tl.loc('SwappedAppServiceSlotSlots', this._name, this.getSlot(), slotName));
-            return response.statusCode;
         }
         catch(error) {
             throw Error(tl.loc('FailedToSwapAppServiceSlotSlots', this._name, this.getSlot(), slotName, this._client.getFormattedError(error)));
@@ -151,7 +143,7 @@ export class AzureAppService {
         return this._appServiceConfigurationDetails;
     }
 
-    public async monitorAppState(state: string) {
+    public async monitorAppState(state: string): Promise<void> {
         state = state.toLowerCase();
         if(["running", "stopped"].indexOf(state) == -1) {
             throw new Error(tl.loc('InvalidMonitorAppState', state));
@@ -198,7 +190,7 @@ export class AzureAppService {
         return defer.promise;
     }
 
-    public async pingApplication(numberOfTimes: number) {
+    public async pingApplication(numberOfTimes: number): Promise<void> {
         numberOfTimes = numberOfTimes ? numberOfTimes : 1;
         try {
             var applicationUrl: string = (await this.getWebDeployPublishingProfile()).destinationAppUrl;    

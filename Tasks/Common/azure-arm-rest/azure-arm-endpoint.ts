@@ -2,10 +2,14 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import webClient = require("./webClient");
 import { AzureEndpoint } from "./azureModels";
+import { ApplicationTokenCredentials } from './azure-arm-common';
+import constants = require('./constants');
 
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
     private _connectedServiceName: string;
+    private applicationTokenCredentials: ApplicationTokenCredentials;
+
     // Add an entry here and separate function for each new environment
     private _environments = {
         'AzureStack': 'azurestack'
@@ -40,6 +44,9 @@ export class AzureRMEndpoint {
                 this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
                 this.endpoint.activeDirectoryResourceID = this.endpoint.url;
             }
+
+            this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
+                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack);
         }
 
         return this.endpoint;

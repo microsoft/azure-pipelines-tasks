@@ -10,14 +10,9 @@ import { AzureEndpoint, WebTest } from './azureModels';
 export class ApplicationInsightsWebTests {
     private _resourceGroupName: string;
     private _client: ServiceClient;
-    private _endpoint: AzureEndpoint;
 
-    constructor(endpoint: AzureEndpoint, resourceGroup?: string) {
-        let credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
-            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
-
-        this._endpoint = endpoint;
-        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
+    constructor(endpoint: AzureEndpoint, resourceGroup: string) {
+        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
         this._resourceGroupName = resourceGroup;
     }
 

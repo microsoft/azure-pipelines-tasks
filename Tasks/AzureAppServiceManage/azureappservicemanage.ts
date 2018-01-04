@@ -8,9 +8,11 @@ import { AzureApplicationInsights } from 'azure-arm-rest/azure-arm-appinsights';
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import { ApplicationInsightsWebTests } from 'azure-arm-rest/azure-arm-appinsights-webtests';
 import { Resources } from 'azure-arm-rest/azure-arm-resource';
+import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
+import { KuduServiceUtils } from './operations/KuduServiceUtils';
+import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
 
 const APPLICATION_INSIGHTS_EXTENSION_NAME: string = "Microsoft.ApplicationInsights.AzureWebSites";
-const pingApplicationCount: number = 1;
 const productionSlot: string = "production";
 
 async function enableContinuousMonitoring(appService: AzureAppService, appInsights: AzureApplicationInsights) {
@@ -76,40 +78,30 @@ async function run() {
         var taskResult = true;
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
-
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
-        var resources: Array<any> = await new Resources(azureEndpoint).getResources('Microsoft.Web/Sites', webAppName);
 
         if(action != "Swap Slots" && !slotName) {
-            if(!resources || resources.length == 0) {
-                throw new Error(tl.loc('ResourceDoesntExist', webAppName));
-            }
-            else if(resources.length == 1) {
-                resourceGroupName = resources[0].id.split("/")[4];
-            }
-            else {
-                throw new Error(tl.loc('MultipleResourceGroupFoundForAppService', webAppName));
-            }
+            resourceGroupName = await AzureResourceFilterUtils.getResourceGroupName(azureEndpoint, 'Microsoft.Web/Sites', webAppName);
         }
 
-        tl.debug(`Resource Group: ${resourceGroupName}`);    
+        tl.debug(`Resource Group: ${resourceGroupName}`);
+        var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
+        var azureAppServiceUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appService);
+
         switch(action) {
             case "Start Azure App Service": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 await appService.start();
-                await appService.monitorAppState("running");
-                await appService.pingApplication(pingApplicationCount);
+                await azureAppServiceUtils.monitorApplicationState("running");
+                await azureAppServiceUtils.pingApplication();
                 break;
             }
             case "Stop Azure App Service": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 await appService.stop();
-                await appService.monitorAppState("stopped");
-                await appService.pingApplication(pingApplicationCount);
+                await azureAppServiceUtils.monitorApplicationState("stopped");
+                await azureAppServiceUtils.pingApplication();
                 break;
             }
             case "Restart Azure App Service": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 await appService.restart();
                 break;
             }
@@ -117,42 +109,40 @@ async function run() {
                 targetSlot = (swapWithProduction) ? productionSlot : targetSlot;
                 var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
                 var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
+                var appServiceSourceSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceSourceSlot);
+                var appServiceTargetSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceTargetSlot);
+
                 if(appServiceSourceSlot.getSlot().toLowerCase() == appServiceTargetSlot.getSlot().toLowerCase()) {
                     updateDeploymentStatus = false;
                     throw new Error(tl.loc('SourceAndTargetSlotCannotBeSame'));
-
                 }
+
                 console.log(tl.loc('WarmingUpSlots'));
-                await appServiceSourceSlot.pingApplication(1);
-                await appServiceTargetSlot.pingApplication(1);
+                await appServiceSourceSlotUtils.pingApplication();
+                await appServiceTargetSlotUtils.pingApplication();
                 await appServiceSourceSlot.swap(targetSlot, preserveVnet);
                 break;
             }
             case "Start all continuous webjobs": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-                var appServiceKuduService = await appService.getKuduService();
-                console.log(tl.loc('StartingContinousWebJobs'));
-                await appServiceKuduService.startContinuousWebJobs();
-                console.log(tl.loc('StartedContinousWebJobs'));
+                var appServiceKuduService: Kudu = await azureAppServiceUtils.getKuduService();
+                var kuduServiceUtils: KuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
+                await kuduServiceUtils.startContinuousWebJobs();
                 break;
             }
             case "Stop all continuous webjobs": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-                var appServiceKuduService = await appService.getKuduService();
-                console.log(tl.loc('StoppingContinousWebJobs'));
-                await appServiceKuduService.stopContinuousWebJobs();
-                console.log(tl.loc('StoppedContinousWebJobs'));
+                var appServiceKuduService = await azureAppServiceUtils.getKuduService();
+                var kuduServiceUtils: KuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
+                await kuduServiceUtils.stopContinuousWebJobs();
                 break;
             }
             case "Install Extensions": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
-                var appServiceKuduService = await appService.getKuduService();
+                var appServiceKuduService = await azureAppServiceUtils.getKuduService();
+                var kuduServiceUtils: KuduServiceUtils = new KuduServiceUtils(appServiceKuduService);
                 var extensionOutputVariablesArray = (extensionOutputVariables) ? extensionOutputVariables.split(',') : [];
-                await appServiceKuduService.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
+                await kuduServiceUtils.installSiteExtensions(extensionList.split(','), extensionOutputVariablesArray);
                 break;
             }
             case "Enable Continuous Monitoring": {
-                var appService: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, slotName);
                 var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
                 try {
                     await enableContinuousMonitoring(appService, appInsights);

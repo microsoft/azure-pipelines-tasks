@@ -1,6 +1,7 @@
 import { AzureEndpoint, WebTest } from '../azureModels';
 import { ApplicationInsightsWebTests } from '../azure-arm-appinsights-webtests';
 import * as querystring from "querystring";
+import { ApplicationTokenCredentials } from '../azure-arm-common';
 export var nock = require('nock');
 
 export function getMockEndpoint() {
@@ -15,7 +16,9 @@ export function getMockEndpoint() {
         tenantID: "MOCK_TENANT_ID",
         url: "https://management.azure.com/",
         environmentAuthorityUrl: "https://login.windows.net/",
-        activeDirectoryResourceID: "https://management.azure.com/"
+        activeDirectoryResourceID: "https://management.azure.com/",
+        applicationTokenCredentials: new ApplicationTokenCredentials("MOCK_SPN_ID", "MOCK_TENANT_ID", "MOCK_SPN_KEY", "https://management.azure.com/",
+        "https://login.windows.net/", "https://management.azure.com/", false)
     }
     
     nock("https://login.windows.net", {
