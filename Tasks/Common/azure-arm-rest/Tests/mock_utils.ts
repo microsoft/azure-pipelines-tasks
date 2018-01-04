@@ -39,7 +39,7 @@ export function getMockEndpoint() {
     return endpoint;
 }
 
-export function mockAzureARMAppInsightsWebTests() {
+export function mockAzureARMAppInsightsWebTests() { /*
     var MockWebTest1: WebTest = (new ApplicationInsightsWebTests(getMockEndpoint(), "MOCK_RESOURCE_GROUP_NAME")).configureNewWebTest("MOCK_APP_INSIGHTS_1", "http://MOCK_APP_1.azurewebsites.net", "MOCK_TEST_1");
     MockWebTest1.tags = {"hidden-link:/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_1": "Resource"};
     var MockWebTest2: WebTest = (new ApplicationInsightsWebTests(getMockEndpoint(), "MOCK_RESOURCE_GROUP_NAME")).configureNewWebTest("MOCK_APP_INSIGHTS_2", "http://MOCK_APP_2.azurewebsites.net", "MOCK_TEST_2");
@@ -62,7 +62,7 @@ export function mockAzureARMAppInsightsWebTests() {
         "content-type": "application/json; charset=utf-8"
     }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/webtests/VSTS_MOCK_TEST_FAIL?api-version=2015-05-01")
     .reply(501, 'Failed to add new web test').persist();
-
+    */
 }
 
 export function mockAzureApplicationInsightsTests() {
