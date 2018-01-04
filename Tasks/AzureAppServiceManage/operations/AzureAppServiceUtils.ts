@@ -80,6 +80,4 @@ export class AzureAppServiceUtils {
 
         throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
     }
-
-
 }

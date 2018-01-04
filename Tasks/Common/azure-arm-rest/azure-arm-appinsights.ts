@@ -66,10 +66,6 @@ export class AzureApplicationInsights {
         }
     }
 
-    public getEndpoint(): AzureEndpoint {
-        return this._endpoint;
-    }
-
     public getResourceGroupName(): string {
         return this._resourceGroupName;
     }

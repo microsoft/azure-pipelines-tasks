@@ -11,52 +11,7 @@ import { Resources } from 'azure-arm-rest/azure-arm-resource';
 import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
 import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
-
-const APPLICATION_INSIGHTS_EXTENSION_NAME: string = "Microsoft.ApplicationInsights.AzureWebSites";
-const productionSlot: string = "production";
-
-async function enableContinuousMonitoring(appService: AzureAppService, appInsights: AzureApplicationInsights) {
-    var appDetails = await appService.get();
-    var appInsightsResource = await appInsights.get();
-    var appInsightsWebTests = new ApplicationInsightsWebTests(appInsights.getEndpoint(), appInsights.getResourceGroupName());
-    var webDeployPublishingProfile = await appService.getWebDeployPublishingProfile();
-    var applicationUrl = webDeployPublishingProfile.destinationAppUrl;
-    if(appDetails.kind.indexOf("linux") == -1) {
-        var appKuduService = await appService.getKuduService();
-        await appKuduService.installSiteExtension(APPLICATION_INSIGHTS_EXTENSION_NAME);
-    }
-
-    appInsightsResource.tags["hidden-link:" + appDetails.id] = "Resource";
-    tl.debug('Link app insights with app service via tag');
-    await appInsights.update(appInsightsResource);
-    tl.debug('Link app service with app insights via instrumentation key');
-    await appService.patchApplicationSettings({"APPINSIGHTS_INSTRUMENTATIONKEY": appInsightsResource.properties['InstrumentationKey']});
-    try {
-        tl.debug('Enable alwaysOn property for app service.');
-        await appService.patchConfiguration({"alwaysOn": true});    
-    }
-    catch(error) {
-        tl.warning(error);
-    }
-    
-    try {
-        tl.debug('add web test for app service - app insights');
-        await appInsightsWebTests.addWebTest(appInsightsResource, applicationUrl);
-    }
-    catch(error) {
-        tl.warning(error);
-    }
-}
-
-
-async function updateDeploymentStatusInKudu(kuduService: Kudu, taskResult: boolean, DeploymentID: string, customMessage: any) {
-    try {
-        return await kuduService.updateDeployment(taskResult, DeploymentID, customMessage);
-    }
-    catch(error) {
-        tl.warning(error);
-    }
-}
+import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUtils';
 
 async function run() {
     try {
@@ -106,7 +61,7 @@ async function run() {
                 break;
             }
             case "Swap Slots": {
-                targetSlot = (swapWithProduction) ? productionSlot : targetSlot;
+                targetSlot = (swapWithProduction) ? "production" : targetSlot;
                 var appServiceSourceSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, sourceSlot);
                 var appServiceTargetSlot: AzureAppService = new AzureAppService(azureEndpoint, resourceGroupName, webAppName, targetSlot);
                 var appServiceSourceSlotUtils: AzureAppServiceUtils = new AzureAppServiceUtils(appServiceSourceSlot);
@@ -144,13 +99,7 @@ async function run() {
             }
             case "Enable Continuous Monitoring": {
                 var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
-                try {
-                    await enableContinuousMonitoring(appService, appInsights);
-                }
-                catch(error) {
-                    throw new Error(tl.loc('FailedToEnableContinuousMonitoring', error));
-                }
-                console.log(tl.loc("ContinousMonitoringEnabled", webAppName));
+                await enableContinuousMonitoring(azureEndpoint, appService, appInsights);
                 break;
             }
             default: {
@@ -167,22 +116,24 @@ async function run() {
     try {
         switch(action) {
             case "Swap Slots": {
-                if(appServiceSourceSlot && appServiceTargetSlot && updateDeploymentStatus) {
-                    var sourceSlotKuduService = await appServiceSourceSlot.getKuduService();
-                    var targetSlotKuduService = await appServiceTargetSlot.getKuduService();
+                if(appServiceSourceSlotUtils && appServiceSourceSlotUtils && updateDeploymentStatus) {
+                    var sourceSlotKuduService = await appServiceSourceSlotUtils.getKuduService();
+                    var targetSlotKuduService = await appServiceSourceSlotUtils.getKuduService();
+                    var sourceSlotKuduServiceUtils = new KuduServiceUtils(sourceSlotKuduService);
+                    var targetSlotKuduServiceUtils = new KuduServiceUtils(targetSlotKuduService);
                     var customMessage = {
                         'type': 'SlotSwap',
                         'sourceSlot': appServiceSourceSlot.getSlot(),
                         'targetSlot': appServiceTargetSlot.getSlot()
                     }
-                    var DeploymentID = await updateDeploymentStatusInKudu(sourceSlotKuduService, taskResult, null, customMessage);
-                    await updateDeploymentStatusInKudu(targetSlotKuduService, taskResult, DeploymentID, customMessage);
+                    var DeploymentID = await sourceSlotKuduServiceUtils.updateDeploymentStatus(taskResult, null, customMessage);
+                    await targetSlotKuduServiceUtils.updateDeploymentStatus(taskResult, DeploymentID, customMessage);
                 }
                 break;
             }
             case "Install Extensions": {
-                if(appServiceKuduService) {
-                    await updateDeploymentStatusInKudu(appServiceKuduService, taskResult, null, {"type": action});
+                if(kuduServiceUtils) {
+                    await kuduServiceUtils.updateDeploymentStatus(taskResult, null, { "type" : action });
                 }
                 break;
             }

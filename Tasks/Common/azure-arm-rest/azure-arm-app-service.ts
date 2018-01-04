@@ -427,4 +427,8 @@ export class AzureAppService {
     private _getFormattedName(): string {
         return this._slot ? `${this._name}-${this._slot}` : this._name;
     }
-}
+
+    public getName(): string {
+        return this._name;
+    }
+ }

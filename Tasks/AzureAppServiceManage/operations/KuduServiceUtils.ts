@@ -88,6 +88,16 @@ export class KuduServiceUtils {
         }
     }
 
+    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any) {
+        try {
+            var requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
+            return await this._appServiceKuduService.updateDeployment(requestBody);
+        }
+        catch(error) {
+            tl.warning(error);
+        }
+    }
+
     private async _pollForNewProcess(processID: number, id: number) {
         var retryCount = 6;
         while(true) {
@@ -128,5 +138,71 @@ export class KuduServiceUtils {
         else {
             return extensionInfo['local_path'];
         }
+    }    
+
+    private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any): any {
+        
+        var status = isDeploymentSuccess ? 4 : 3;
+        var author = tl.getVariable('build.sourceVersionAuthor') || tl.getVariable('build.requestedfor') ||
+                            tl.getVariable('release.requestedfor') || tl.getVariable('agent.name')
+    
+        var buildUrl = tl.getVariable('build.buildUri');
+        var releaseUrl = tl.getVariable('release.releaseUri');
+    
+        var buildId = tl.getVariable('build.buildId');
+        var releaseId = tl.getVariable('release.releaseId');
+        
+        var buildNumber = tl.getVariable('build.buildNumber');
+        var releaseName = tl.getVariable('release.releaseName');
+    
+        var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
+        var teamProject = tl.getVariable('system.teamProjectId');
+    
+         var commitId = tl.getVariable('build.sourceVersion');
+         var repoName = tl.getVariable('build.repository.name');
+         var repoProvider = tl.getVariable('build.repository.provider');
+    
+        var buildOrReleaseUrl = "" ;
+        deploymentID = !!deploymentID ? deploymentID : (releaseId ? releaseId : buildId) + Date.now().toString();
+    
+        if(releaseUrl !== undefined) {
+            buildOrReleaseUrl = collectionUrl + teamProject + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=" + releaseId + "&_a=release-summary";
+        }
+        else if(buildUrl !== undefined) {
+            buildOrReleaseUrl = collectionUrl + teamProject + "/_build?buildId=" + buildId + "&_a=summary";
+        }
+    
+        var message = {
+            type : customMessage? customMessage.type : "",
+            commitId : commitId,
+            buildId : buildId,
+            releaseId : releaseId,
+            buildNumber : buildNumber,
+            releaseName : releaseName,
+            repoProvider : repoProvider,
+            repoName : repoName,
+            collectionUrl : collectionUrl,
+            teamProject : teamProject
+        };
+        // Append Custom Messages to original message
+        for(var attribute in customMessage) {
+            message[attribute] = customMessage[attribute];
+        }
+    
+        var deploymentLogType: string = message['type'];
+        var active: boolean = false;
+        if(deploymentLogType.toLowerCase() === "deployment" && isDeploymentSuccess) {
+            active = true;
+        }
+    
+        return {
+            id: deploymentID,
+            active : active,
+            status : status,
+            message : JSON.stringify(message),
+            author : author,
+            deployer : 'VSTS',
+            details : buildOrReleaseUrl
+        };
     }
 }
