@@ -248,7 +248,9 @@ export interface SiteExtension {
     local_is_latest_version: boolean;
 }
 
-export interface WebTest extends AzureBaseObject {
+export interface WebTest {
+    id?: string;
+    name: string;
     type: string;
     location: string;
     tags: {[key: string]: string},
@@ -258,7 +260,9 @@ export interface WebTest extends AzureBaseObject {
 }
 
 
-export interface ApplicationInsights extends AzureBaseObject{
+export interface ApplicationInsights {
+    id?: string;
+    name: string;
     type: string;
     location: string;
     tags: {[key: string]: string},
