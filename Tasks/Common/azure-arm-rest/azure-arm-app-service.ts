@@ -143,87 +143,12 @@ export class AzureAppService {
         return this._appServiceConfigurationDetails;
     }
 
-    public async monitorAppState(state: string): Promise<void> {
-        state = state.toLowerCase();
-        if(["running", "stopped"].indexOf(state) == -1) {
-            throw new Error(tl.loc('InvalidMonitorAppState', state));
-        }
-
-        while(true) {
-            var appDetails = await this.get(true);
-            if(appDetails && appDetails.properties && appDetails.properties["state"]) {
-                tl.debug(`App Service state: ${appDetails.properties["state"]}`)
-                if(appDetails.properties["state"].toLowerCase() == state) {
-                    tl.debug(`App Service state '${appDetails.properties["state"]}' matched with expected state '${state}'.`);
-                    console.log(tl.loc('AppServiceState', appDetails.properties["state"]));
-                    break;
-                }
-                await webClient.sleepFor(5);
-            }
-            else {
-                tl.debug('Unable to monitor app service details as the state is unknown.');
-                break;
-            }
-        }
-    }
-
     public async getPublishingProfileWithSecrets(force?: boolean) {
         if(force || !this._appServicePublishingProfile) {
             this._appServicePublishingProfile = await this._getPublishingProfileWithSecrets();
         }
 
         return this._appServicePublishingProfile;
-    }
-
-    public async getWebDeployPublishingProfile() {
-        var publishingProfile = await this.getPublishingProfileWithSecrets();
-        var defer = Q.defer<any>();
-        parseString(publishingProfile, (error, result) => {
-            for (var index in result.publishData.publishProfile) {
-                if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy") {
-                    defer.resolve(result.publishData.publishProfile[index].$);
-                }
-            }
-            defer.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
-        });
-
-        return defer.promise;
-    }
-
-    public async pingApplication(numberOfTimes: number): Promise<void> {
-        numberOfTimes = numberOfTimes ? numberOfTimes : 1;
-        try {
-            var applicationUrl: string = (await this.getWebDeployPublishingProfile()).destinationAppUrl;    
-        }
-        catch(error) {
-            tl.debug(`Unable to get publishing profile for ping application. Error: ${this._client.getFormattedError(error)}`);
-        }
-        
-        if(!applicationUrl) {
-            tl.debug('Application Url not found.');
-            return;
-        }
-
-        tl.debug(`Ping App Service for '${numberOfTimes}' time(s).`);
-        var webRequest = new webClient.WebRequest();
-        webRequest.method = 'GET';
-        webRequest.uri = applicationUrl;
-
-        while(numberOfTimes > 0) {
-            try {
-                tl.debug('pausing for 5 seconds before request');
-                await webClient.sleepFor(5);
-                var response = await webClient.sendRequest(webRequest);
-
-                tl.debug(`App Service status Code: '${response.statusCode}'. Status Message: '${response.statusMessage}'`);
-            }
-            catch(error) {
-                tl.debug(`Unable to ping App Service. Error: ${this._client.getFormattedError(error)}`);
-            }
-            finally {
-                numberOfTimes -= 1;
-            }
-        }
     }
 
     public async getPublishingCredentials() {
@@ -365,15 +290,6 @@ export class AzureAppService {
 
     public getSlot(): string {
         return this._slot ? this._slot : "production";
-    }
-
-    public async getKuduService() {
-        var publishingCredentials = await this.getPublishingCredentials();
-        if(publishingCredentials.properties["scmUri"]) {
-            tl.setVariable(`AZURE_APP_SERVICE_KUDU_${this._name}_${this.getSlot()}_PASSWORD`, publishingCredentials.properties["publishingPassword"], true);
-            return new Kudu(publishingCredentials.properties["scmUri"], publishingCredentials.properties["publishingUserName"], publishingCredentials.properties["publishingPassword"]);
-        }
-        throw Error(tl.loc('KuduSCMDetailsAreEmpty'));
     }
     
     private async _getPublishingProfileWithSecrets() {

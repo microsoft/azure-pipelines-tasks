@@ -95,6 +95,7 @@ class AzureAppServiceTests {
         
     }
 
+    /*
     public static async monitorAppState() {
         var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
         appSerivce.monitorAppState("Running")
@@ -103,7 +104,7 @@ class AzureAppServiceTests {
             tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.monitorAppState() should have passed but failed');
         });
     }
-
+    */
     public static async getPublishingProfileWithSecrets() {
         var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
         appSerivce.getPublishingProfileWithSecrets().then((value) => {
@@ -121,6 +122,7 @@ class AzureAppServiceTests {
         });        
     }
 
+    /*
     public static async getWebDeployPublishingProfile() {
         var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
         appSerivce.getWebDeployPublishingProfile().then((value) => {
@@ -131,6 +133,7 @@ class AzureAppServiceTests {
         });        
     }
 
+    */
     public static async getPublishingCredentials() {
         var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
         appSerivce.getPublishingCredentials().then((value) => {
@@ -239,6 +242,7 @@ class AzureAppServiceTests {
         });
     }
 
+    /*
     public static async getKuduService() {
         var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
         appSerivce.getKuduService().then((value) => {
@@ -248,6 +252,7 @@ class AzureAppServiceTests {
             tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.updateConfiguration() should have passed but failed');
         });
     }
+    */
 }
 
 AzureAppServiceTests.start();
@@ -255,12 +260,12 @@ AzureAppServiceTests.stop();
 AzureAppServiceTests.restart();
 AzureAppServiceTests.swap();
 AzureAppServiceTests.get();
-AzureAppServiceTests.monitorAppState();
+// AzureAppServiceTests.monitorAppState();
 AzureAppServiceTests.getPublishingProfileWithSecrets();
-AzureAppServiceTests.getWebDeployPublishingProfile();
+// AzureAppServiceTests.getWebDeployPublishingProfile();
 AzureAppServiceTests.getPublishingCredentials();
 AzureAppServiceTests.getApplicationSettings();
 AzureAppServiceTests.updateApplicationSettings();
 AzureAppServiceTests.getConfiguration();
 AzureAppServiceTests.updateConfiguration();
-AzureAppServiceTests.getKuduService();
+// AzureAppServiceTests.getKuduService();
