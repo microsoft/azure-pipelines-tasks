@@ -14,11 +14,18 @@
    ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 1
   },
   "preview": "true",
+  "groups": [
+      {
+          "name": "signingDetails",
+          "displayName": "Certificate Details",
+          "isExpanded": true
+      }
+  ],
   "inputs": [
   {
     "name": "connectedServiceName",
@@ -44,13 +51,32 @@
     }
   },
   {
+    "name": "signPayload",
+    "type": "boolean",
+    "label": "Sign the Message",
+    "defaultValue": "false",
+    "required": true,
+    "helpMarkDown": "If this is set to true, message will be signed provided a private certificate.",
+    "groupName": "signingDetails"
+  },
+  {
+    "name": "certificateString",
+    "type": "string",
+    "label": "Certificate Variable",
+    "required": true,
+    "defaultValue": "",
+    "helpMarkDown": "Certificate pulled in from Key Vault store. Should be used like '$(LinkedVariableGroup)'. You can also define regular/Secret variable.",
+    "visibleRule": "signPayload = true",
+    "groupName": "signingDetails"
+  },
+  {
         "name": "waitForCompletion",
         "type": "boolean",
         "label": "Wait for task completion",
         "defaultValue": "false",
         "required": true,
         "helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
-    }
+  }
   ],
   "instanceNameFormat": "Publish to Azure Service Bus",
   "execution": {
@@ -63,9 +89,12 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
+        "signPayload": "$(signPayload)",
+        "certificateString": "$(certificateString)",
         "messageProperties": {
           "jobid": "$(system.jobId)",
-          "taskId": "$(system.taskId)"
+          "taskId": "$(system.taskId)",
+          "signature": ""
         }
       }
     }

@@ -14,11 +14,18 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 1
   },
   "preview": "true",
+  "groups": [
+    {
+      "name": "signingDetails",
+      "displayName": "ms-resource:loc.group.displayName.signingDetails",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "connectedServiceName",
@@ -46,6 +53,25 @@
       }
     },
     {
+      "name": "signPayload",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.signPayload",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.signPayload",
+      "groupName": "signingDetails"
+    },
+    {
+      "name": "certificateString",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.certificateString",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.certificateString",
+      "visibleRule": "signPayload = true",
+      "groupName": "signingDetails"
+    },
+    {
       "name": "waitForCompletion",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.waitForCompletion",
@@ -67,9 +93,12 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
+        "signPayload": "$(signPayload)",
+        "certificateString": "$(certificateString)",
         "messageProperties": {
           "jobid": "$(system.jobId)",
-          "taskId": "$(system.taskId)"
+          "taskId": "$(system.taskId)",
+          "signature": ""
         }
       }
     }
