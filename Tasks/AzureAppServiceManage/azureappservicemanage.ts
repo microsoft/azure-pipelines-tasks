@@ -53,11 +53,11 @@ async function run() {
             case "Stop Azure App Service": {
                 await appService.stop();
                 await azureAppServiceUtils.monitorApplicationState("stopped");
-                await azureAppServiceUtils.pingApplication();
                 break;
             }
             case "Restart Azure App Service": {
                 await appService.restart();
+                await azureAppServiceUtils.pingApplication();
                 break;
             }
             case "Swap Slots": {
@@ -73,8 +73,13 @@ async function run() {
                 }
 
                 console.log(tl.loc('WarmingUpSlots'));
-                await appServiceSourceSlotUtils.pingApplication();
-                await appServiceTargetSlotUtils.pingApplication();
+                try {
+                    await Promise.all([appServiceSourceSlotUtils.pingApplication(), appServiceTargetSlotUtils.pingApplication()]);
+                }
+                catch(error) {
+                    tl.debug('Failed to warm-up slots. Error: ' + error);
+                }
+
                 await appServiceSourceSlot.swap(targetSlot, preserveVnet);
                 break;
             }
