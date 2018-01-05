@@ -53,7 +53,7 @@ export function substituteJsonVariable(jsonObject, envObject) {
         var jsonChildArray = jsonChild.split('.');
         var resultNode = checkEnvTreePath(jsonChildArray, 0, jsonChildArray.length, envObject);
         if(resultNode != undefined) {
-            if(resultNode.isEnd && typeof jsonObject[jsonChild] !== "object") {
+            if(resultNode.isEnd && (jsonObject[jsonChild] == null || typeof jsonObject[jsonChild] !== "object")) {
                 tl.debug('substituting value on key: ' + jsonChild);
                 jsonObject[jsonChild] = resultNode.value;
             }
@@ -62,6 +62,66 @@ export function substituteJsonVariable(jsonObject, envObject) {
             }
         }
     }
+}
+
+function stripJsonComments(content) {
+    if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
+        return content;
+    }
+
+    var currentChar;
+    var nextChar;
+    var prevChar;
+    var insideQuotes = false;
+    var contentWithoutComments = '';
+    var insideComment = 0;
+    var singlelineComment = 1;
+    var multilineComment = 2;
+
+    for (var i = 0; i < content.length; i++) {
+        currentChar = content[i];
+        nextChar = i + 1 < content.length ? content[i + 1] : "";
+
+        if (insideComment) {
+            var update = false;
+            if (insideComment == singlelineComment && (currentChar + nextChar === '\r\n' || currentChar === '\n')) {
+                i--;
+                insideComment = 0;
+                continue;
+            }
+
+            if (insideComment == multilineComment && currentChar + nextChar === '*/') {
+                i++;
+                insideComment = 0;
+                continue;
+            }
+
+        } else {
+            prevChar = i - 1 >= 0 ? content[i - 1] : "";
+
+            if (currentChar == '"' && prevChar != '\\') {
+                insideQuotes = !insideQuotes
+            }
+
+            if (!insideQuotes) {
+                if (currentChar + nextChar === '//') {
+                    insideComment = singlelineComment;
+                    i++;
+                }
+
+                if (currentChar + nextChar === '/*') {
+                    insideComment = multilineComment;
+                    i++;
+                }
+            }
+        }
+
+        if (!insideComment) {
+            contentWithoutComments += content[i];
+        }
+    }
+
+    return contentWithoutComments;
 }
 
 export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
@@ -80,6 +140,7 @@ export function jsonVariableSubstitution(absolutePath, jsonSubFiles) {
                 fileContent = fileContent.slice(1);
             }
             try {
+                fileContent = stripJsonComments(fileContent);
                 var jsonObject = JSON.parse(fileContent);
             }
             catch(exception) {
