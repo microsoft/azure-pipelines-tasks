@@ -11,7 +11,7 @@
   "loc.input.label.signPayload": "Sign the Message",
   "loc.input.help.signPayload": "If this is set to true, message will be signed provided a private certificate.",
   "loc.input.label.certificateString": "Certificate Variable",
-  "loc.input.help.certificateString": "Certificate pulled in from Key Vault store. Should be used like '$(LinkedVariableGroup)'. You can also define regular/Secret variable.",
+  "loc.input.help.certificateString": "Certificate pulled in from Key Vault store. Please create a variable group that is linked to an Azure Key Vault, which contains a variable, whose value is the certificate. You can do this by going to Library -> Variable group -> + Variable group -> Select 'Link secrets from an Azure key vault as variables' -> Select your Azure subscription -> Select the key vault name -> Ensure that the variable with the certificate is selected. You can also define regular/secret variable which will contain certificate content as string.",
   "loc.input.label.waitForCompletion": "Wait for task completion",
   "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
 }

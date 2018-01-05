@@ -65,7 +65,7 @@
     "label": "Certificate Variable",
     "required": true,
     "defaultValue": "",
-    "helpMarkDown": "Certificate pulled in from Key Vault store. Should be used like '$(LinkedVariableGroup)'. You can also define regular/Secret variable.",
+    "helpMarkDown": "Certificate pulled in from Key Vault store. Please create a variable group that is linked to an Azure Key Vault, which contains a variable, whose value is the certificate. You can do this by going to Library -> Variable group -> + Variable group -> Select 'Link secrets from an Azure key vault as variables' -> Select your Azure subscription -> Select the key vault name -> Ensure that the variable with the certificate is selected. You can also define regular/secret variable which will contain certificate content as string.",
     "visibleRule": "signPayload = true",
     "groupName": "signingDetails"
   },
