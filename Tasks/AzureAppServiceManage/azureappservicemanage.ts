@@ -121,9 +121,9 @@ async function run() {
     try {
         switch(action) {
             case "Swap Slots": {
-                if(appServiceSourceSlotUtils && appServiceSourceSlotUtils && updateDeploymentStatus) {
+                if(appServiceSourceSlotUtils && appServiceTargetSlotUtils && updateDeploymentStatus) {
                     var sourceSlotKuduService = await appServiceSourceSlotUtils.getKuduService();
-                    var targetSlotKuduService = await appServiceSourceSlotUtils.getKuduService();
+                    var targetSlotKuduService = await appServiceTargetSlotUtils.getKuduService();
                     var sourceSlotKuduServiceUtils = new KuduServiceUtils(sourceSlotKuduService);
                     var targetSlotKuduServiceUtils = new KuduServiceUtils(targetSlotKuduService);
                     var customMessage = {
