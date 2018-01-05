@@ -15,8 +15,6 @@ export function ApplicationInsightsTests() {
             list(tr);
             console.log("\tvalidating create");
             create(tr);
-            console.log("\tvalidating addWebTest");
-            addWebTest(tr);
         }
         catch(error) {
             passed = false;
@@ -39,8 +37,4 @@ function list(tr) {
 function create(tr) {
     assert(tr.stdOutContained('FailedToCreateWebTests'), 'Should have printed: FailedToCreateWebTests');
     assert(tr.stdOutContained('added web test MOCK_TEST_1.'), 'added web test MOCK_TEST_1.');
-}
-
-function addWebTest(tr) {
-    assert(tr.stdOutContained('WebTestAlreadyConfigured http://MOCK_APP_1.azurewebsites.net'), 'Should have printed: WebTestAlreadyConfigured http://MOCK_APP_1.azurewebsites.net');
 }
