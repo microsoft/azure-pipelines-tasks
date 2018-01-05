@@ -6,11 +6,12 @@ import { mockKuduServiceTests } from './mock_utils';
 mockKuduServiceTests();
 
 export class KuduTests { 
+    
     public static async updateDeployment() {
 
         try {
             var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
-            await kudu.updateDeployment(true, 'MOCK_DEPLOYMENT_ID', {type: 'Deployment'});
+            await kudu.updateDeployment({id: 'MOCK_DEPLOYMENT_ID', type: 'Deployment'});
         }
         catch(error) {
             tl.error(error);
@@ -19,7 +20,7 @@ export class KuduTests {
 
         try {
             var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
-            await kudu.updateDeployment(true, 'MOCK_DEPLOYMENT_ID', {type: 'Deployment'});
+            await kudu.updateDeployment({id: 'MOCK_DEPLOYMENT_ID', type: 'Deployment'});
             tl.setResult(tl.TaskResult.Failed, 'KuduTests.updateDeployment() should have failed but passed');
         }
         catch(error) {
@@ -27,6 +28,7 @@ export class KuduTests {
         }
     }
 
+    
     public static async getContinuousJobs() {
         try {
             var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');

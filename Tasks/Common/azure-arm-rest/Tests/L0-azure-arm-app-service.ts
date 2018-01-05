@@ -21,12 +21,12 @@ export function AzureAppServiceMockTests() {
             swap(tr);
             console.log("\tvalidating get");
             get(tr);
-            console.log("\tvalidating monitorAppState");
-            monitorAppState(tr);
+            //console.log("\tvalidating monitorAppState");
+            //monitorAppState(tr);
             console.log("\tvalidating getPublishingProfileWithSecrets");
             getPublishingProfileWithSecrets(tr);
-            console.log("\tvalidating getWebDeployPublishingProfile");
-            getWebDeployPublishingProfile(tr);
+            //console.log("\tvalidating getWebDeployPublishingProfile");
+            //getWebDeployPublishingProfile(tr);
             console.log("\tvalidating getApplicationSettings");
             getApplicationSettings(tr);
             console.log("\tvalidating updateApplicationSettings");
@@ -35,8 +35,8 @@ export function AzureAppServiceMockTests() {
             getConfiguration(tr);
             console.log("\tvalidating updateConfiguration");
             updateConfiguration(tr);
-            console.log("\tvalidating getKuduService");
-            getKuduService(tr);
+            //console.log("\tvalidating getKuduService");
+            //getKuduService(tr);
         }
         catch(error) {
             passed = false;

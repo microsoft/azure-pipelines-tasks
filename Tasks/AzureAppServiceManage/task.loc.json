@@ -382,6 +382,7 @@
     "InstallingSiteExtension": "ms-resource:loc.messages.InstallingSiteExtension",
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "ContinousMonitoringEnabled": "ms-resource:loc.messages.ContinousMonitoringEnabled",
+    "EnablingContinousMonitoring": "ms-resource:loc.messages.EnablingContinousMonitoring",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "StartingContinousWebJobs": "ms-resource:loc.messages.StartingContinousWebJobs",
     "StartedContinousWebJobs": "ms-resource:loc.messages.StartedContinousWebJobs",

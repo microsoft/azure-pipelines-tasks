@@ -147,6 +147,7 @@
   "loc.messages.InstallingSiteExtension": "Installing site Extension '%s'",
   "loc.messages.FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
   "loc.messages.ContinousMonitoringEnabled": "Continuous Monitoring enabled for App Service '%s'.",
+  "loc.messages.EnablingContinousMonitoring": "Enabling continuous Monitoring for App Service '%s'.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
   "loc.messages.StartingContinousWebJobs": "Starting continuous WebJobs",
   "loc.messages.StartedContinousWebJobs": "Started continuous WebJobs.",

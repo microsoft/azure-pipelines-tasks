@@ -380,6 +380,7 @@
         "InstallingSiteExtension": "Installing site Extension '%s'",
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "ContinousMonitoringEnabled": "Continuous Monitoring enabled for App Service '%s'.",
+        "EnablingContinousMonitoring": "Enabling continuous Monitoring for App Service '%s'.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "StartingContinousWebJobs": "Starting continuous WebJobs",
         "StartedContinousWebJobs": "Started continuous WebJobs.",

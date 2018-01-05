@@ -9,7 +9,7 @@ var endpoint = getMockEndpoint();
 mockAzureARMAppInsightsWebTests();
 
 export class ApplicationInsightsWebTestsTests {
-    public static async get() {
+    public static async list() {
         let appInsightsWebTests: ApplicationInsightsWebTests = new ApplicationInsightsWebTests(endpoint, "MOCK_RESOURCE_GROUP_NAME");
         try {
             console.log(`WEB TEST COUNT: ${(await appInsightsWebTests.list()).length}`);
@@ -20,24 +20,17 @@ export class ApplicationInsightsWebTestsTests {
         }
     }
 
-    public static async addWebTest() {
-        let appInsightsWebTests: ApplicationInsightsWebTests = new ApplicationInsightsWebTests(endpoint, "MOCK_RESOURCE_GROUP_NAME");
-        try {
-            await appInsightsWebTests.addWebTest({id: "hidden-link:/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_1".toLowerCase()}, "http://MOCK_APP_1.azurewebsites.net");
-        }
-        catch(error) {
-            console.log(error);
-            tl.setResult(tl.TaskResult.Failed, 'ApplicationInsightsWebTestsTests.addWebTest() should have passed but failed');
-        }
-    }
-
     public static async create() {
         let appInsightsWebTests: ApplicationInsightsWebTests = new ApplicationInsightsWebTests(endpoint, "MOCK_RESOURCE_GROUP_NAME");
         
         try {
             await appInsightsWebTests.create({
+                type: '',
+                location: '',
+                tags: {},
+                name: 'VSTS_MOCK_TEST',
                 id: "hidden-link:/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_1".toLowerCase()
-            }, "http://MOCK_APP_NEW.azurewebsites.net", "VSTS_MOCK_TEST");
+             });
         }
         catch(error) {
             console.log(error);
@@ -46,8 +39,12 @@ export class ApplicationInsightsWebTestsTests {
 
         try {
             await appInsightsWebTests.create({
+                type: '',
+                location: '',
+                tags: {},
+                name: 'VSTS_MOCK_TEST_FAIL',
                 id: "hidden-link:/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.insights/components/MOCK_APP_INSIGHTS_FAIL".toLowerCase()
-            }, "http://MOCK_APP_NEW.azurewebsites.net", "VSTS_MOCK_TEST_FAIL");
+            });
 
             tl.setResult(tl.TaskResult.Failed, 'ApplicationInsightsWebTestsTests.create() should have failed but passed');
         }
@@ -57,6 +54,5 @@ export class ApplicationInsightsWebTestsTests {
     }
 }
 
-ApplicationInsightsWebTestsTests.get();
-ApplicationInsightsWebTestsTests.addWebTest();
+ApplicationInsightsWebTestsTests.list();
 ApplicationInsightsWebTestsTests.create();
