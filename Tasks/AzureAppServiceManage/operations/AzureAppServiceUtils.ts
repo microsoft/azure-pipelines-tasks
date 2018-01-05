@@ -1,6 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import webClient = require('azure-arm-rest/WebClient');
+import webClient = require('azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
