@@ -188,6 +188,7 @@ function ValidateFiles($inputName, $loadtestDrop, $fileName, $testSettings)
     {
         # Check for fileName
         $global:ScopedTestDrop = $file.Directory.FullName;
+        $global:ScopedLoadTest = $file.FullName
         $global:RunTestSettingsFile = "";
         Write-Host -NoNewline ("Selected load test file is '{0}' under '{1}'"  -f $file.FullName, $global:ScopedTestDrop)
         Write-Host -NoNewline "Test Drop location used for the run is $global:ScopedTestDrop. Please ensure all required files (test dlls, plugin dlls, dependent files) are part of this output folder"
