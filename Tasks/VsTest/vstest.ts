@@ -144,7 +144,7 @@ function getVstestArguments(settingsFile: string, tiaEnabled: boolean): string[]
     }
 
     if (isDebugEnabled()) {
-        if (vstestConfig.vsTestVersionDetais != null && vstestConfig.vsTestVersionDetais.vstestDiagSupported()) {
+        if (vstestConfig.vsTestVersionDetails != null && vstestConfig.vsTestVersionDetails.vstestDiagSupported()) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {
             tl.warning(tl.loc('VstestDiagNotSupported'));
@@ -344,7 +344,7 @@ function generateResponseFile(discoveredTests: string, testCaseFilterOutputFile:
 
 function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: string, vsVersion: number, argsArray: string[], addOtherConsoleOptions: boolean): Q.Promise<number> {
     const defer = Q.defer<number>();
-    const vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
+    const vstest = tl.tool(vstestConfig.vsTestVersionDetails.vstestExeLocation);
     addVstestArgs(argsArray, vstest);
 
     // Adding the other console options here
@@ -431,7 +431,7 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
         argsArray.push('/UseVsixExtensions:true');
     }
 
-    let vstest = tl.tool(vstestConfig.vsTestVersionDetais.vstestExeLocation);
+    let vstest = tl.tool(vstestConfig.vsTestVersionDetails.vstestExeLocation);
 
     if (vsVersion === 14.0) {
         tl.debug('Visual studio 2015 selected. Selecting vstest.console.exe in task ');
@@ -714,7 +714,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
             tiaConfig.tiaEnabled = false;
         }
 
-        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetais === null || !vstestConfig.vsTestVersionDetais.isTestImpactSupported())) {
+        if (tiaConfig.tiaEnabled && (vstestConfig.vsTestVersionDetails === null || !vstestConfig.vsTestVersionDetails.isTestImpactSupported())) {
             tl.warning(tl.loc('VstestTIANotSupported'));
             tiaConfig.tiaEnabled = false;
         }
@@ -725,14 +725,14 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     // We need to use private data collector dll
-    if (vstestConfig.vsTestVersionDetais !== null) {
-        tiaConfig.useNewCollector = vstestConfig.vsTestVersionDetais.isPrivateDataCollectorNeededForTIA();
+    if (vstestConfig.vsTestVersionDetails !== null) {
+        tiaConfig.useNewCollector = vstestConfig.vsTestVersionDetails.isPrivateDataCollectorNeededForTIA();
     }
 
     setRunInParallellIfApplicable();
 
     let newSettingsFile = vstestConfig.settingsFile;
-    const vsVersion = vstestConfig.vsTestVersionDetais.majorVersion;
+    const vsVersion = vstestConfig.vsTestVersionDetails.majorVersion;
 
     if (newSettingsFile) {
         if (!pathExistsAsFile(newSettingsFile)) {
@@ -743,7 +743,7 @@ function invokeVSTest(testResultsDirectory: string): Q.Promise<number> {
     }
 
     try {
-        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vsVersion, false, vstestConfig.overrideTestrunParameters, false).
+        settingsHelper.updateSettingsFileAsRequired(vstestConfig.settingsFile, vstestConfig.runInParallel, vstestConfig.tiaConfig, vstestConfig.vsTestVersionDetails, false, vstestConfig.overrideTestrunParameters, false).
             then(function (ret) {
                 newSettingsFile = ret;
                 runVStest(testResultsDirectory, newSettingsFile, vsVersion)
@@ -838,7 +838,7 @@ function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: 
 
 function setRunInParallellIfApplicable() {
     if (vstestConfig.runInParallel) {
-        if (vstestConfig.vsTestVersionDetais != null && vstestConfig.vsTestVersionDetais.isRunInParallelSupported()) {
+        if (vstestConfig.vsTestVersionDetails != null && vstestConfig.vsTestVersionDetails.isRunInParallelSupported()) {
             return;
         }
 
