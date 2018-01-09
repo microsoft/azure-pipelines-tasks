@@ -56,9 +56,10 @@ async function main(): Promise<void> {
     var promise = new Promise<void>(async (resolve, reject) => {
         var buildType: string = tl.getInput("buildType", true);
         var isCurrentBuild: boolean = buildType.toLowerCase() === 'current';
-        var projectId: string = isCurrentBuild ? tl.getVariable("System.TeamProjectId") : tl.getInput("project", true);
-        var definitionId: string = isCurrentBuild ? '' : tl.getInput("definition", true);
-        var buildId: number = parseInt(isCurrentBuild ? tl.getVariable("Build.BuildId") : tl.getInput("buildId", true));
+        var isSpecificBuildWithTriggering: boolean = tl.getBoolInput("specificBuildWithTriggering", false);
+        var projectId: string = null;
+        var definitionId: string = null;
+        var buildId: number = null;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
 
@@ -74,6 +75,37 @@ async function main(): Promise<void> {
         var buildApi: IBuildApi = webApi.getBuildApi();
         var artifacts = [];
         var itemPattern: string = '**';
+
+        if (isCurrentBuild)
+        {
+            projectId = tl.getVariable("System.TeamProjectId");
+            definitionId = '';
+            buildId = parseInt(tl.getVariable("Build.BuildId"));
+        }
+        else{
+            let releaseUri = tl.getVariable("Release.ReleaseUri");
+
+            var triggeringBuildFound: boolean = false;
+            if (!releaseUri && isSpecificBuildWithTriggering)
+            {
+                // populate values using the triggering build
+                projectId = tl.getVariable("build.triggeredBy.projectId");
+                definitionId = tl.getVariable("build.triggeredBy.definitionId");
+                buildId = parseInt(tl.getVariable("build.triggeredBy.buildId"));
+
+                // verify that the triggerring bruild's info was found
+                if (projectId && definitionId && buildId) 
+                {
+                    triggeringBuildFound = true;
+                }
+            }
+            if (!triggeringBuildFound)
+            {
+                projectId = tl.getInput("project", true);
+                definitionId = tl.getInput("definition", true);
+                buildId = parseInt(tl.getInput("buildId", true));
+            }
+        }
 
         // verify that buildId belongs to the definition selected
         if (definitionId) {

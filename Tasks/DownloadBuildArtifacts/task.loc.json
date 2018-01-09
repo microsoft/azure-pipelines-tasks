@@ -9,8 +9,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 128,
-    "Patch": 1
+    "Minor": 129,
+    "Patch": 21
   },
   "groups": [
     {
@@ -32,6 +32,15 @@
         "specific": "Specific build"
       },
       "helpMarkDown": "ms-resource:loc.input.help.buildType"
+    },
+    {
+      "name": "specificBuildWithTriggering",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.specificBuildWithTriggering",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "buildType == specific",
+      "helpMarkDown": "ms-resource:loc.input.help.specificBuildWithTriggering"
     },
     {
       "name": "project",
