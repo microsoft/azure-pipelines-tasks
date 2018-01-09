@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 34
+    "Patch": 37
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -713,6 +713,8 @@
     "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
     "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
     "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
-    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation"
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation",
+    "RenameLockedFilesEnabled": "ms-resource:loc.messages.RenameLockedFilesEnabled",
+    "FailedToEnableRenameLockedFiles": "ms-resource:loc.messages.FailedToEnableRenameLockedFiles"
   }
 }

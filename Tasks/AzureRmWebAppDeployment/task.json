@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 34
+        "Patch": 37
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -653,7 +653,7 @@
         "RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
         "Physicalpathalreadyexists": "Physical path '%s' already exists",
         "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
-        "FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. Error Code: %s",
+        "FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. Error : %s",
         "FailedtocheckphysicalPath": "Failed to check kudu physical path. Error Code: %s",
         "VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
@@ -701,6 +701,8 @@
         "UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
         "AddingReleaseAnnotation": "Adding release annotation for the Application Insights resource '%s'",
         "SuccessfullyAddedReleaseAnnotation": "Successfully added release annotation to the Application Insight : %s",
-        "FailedAddingReleaseAnnotation": "Failed to add release annotation. %s"
+        "FailedAddingReleaseAnnotation": "Failed to add release annotation. %s",
+        "RenameLockedFilesEnabled": "Rename locked files enabled for App Service.",
+        "FailedToEnableRenameLockedFiles": "Failed to enable rename locked files. Error: %s"
     }
 }

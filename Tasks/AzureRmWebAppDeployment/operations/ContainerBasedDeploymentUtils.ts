@@ -1,0 +1,212 @@
+import tl = require('vsts-task-lib/task');
+import url = require('url');
+import util = require('util');
+import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
+import { TaskParameters } from './TaskParameters';
+import { parse }  from './ParameterParserUtility';
+import { AzureAppServiceUtils } from './AzureAppServiceUtils';
+
+enum registryTypes {
+    "AzureContainerRegistry",
+    "Registry", // TODO: Rename it to DockerHub while supporting all the registry types. Also add all these registry types in Task.json in ImageSource pick list.
+    "PrivateRegistry"
+}
+
+export class ContainerBasedDeploymentUtils {
+    private _appService: AzureAppService;
+
+    constructor(appService: AzureAppService) {
+        this._appService = appService;
+    }
+
+    public async deployWebAppImage(taskParameters: TaskParameters): Promise<void> {
+        var imageName = this._getImageName();
+        tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
+
+        tl.debug("Updating the webapp configuration.");
+        await this._updateConfigurationDetails(this._appService, taskParameters.StartupCommand, imageName);
+
+        tl.debug('Updating web app settings');
+        await this._updateApplicationSettings(this._appService, taskParameters, imageName);   
+    }
+
+    private async _updateApplicationSettings(appService: AzureAppService, taskParameters: TaskParameters, imageName: string) {
+        var appSettingsParameters = taskParameters.AppSettings;
+        appSettingsParameters = appSettingsParameters ? appSettingsParameters.trim() : "";
+        appSettingsParameters =  await this._getContainerRegistrySettings(imageName, null) + ' ' + appSettingsParameters;
+        var appSettingsNewProperties = parse(appSettingsParameters);
+        await appService.patchApplicationSettings(appSettingsNewProperties);
+        var appServiceUtility = new AzureAppServiceUtils(appService);
+        await appServiceUtility.updateAndMonitorAppSettings(appSettingsNewProperties);
+    }
+
+    private async _updateConfigurationDetails(appService: AzureAppService, startupCommand: string, imageName: string) {
+        var updatedConfigDetails = JSON.stringify({
+            "properties": {
+                "appCommandLine": startupCommand,
+                "linuxFxVersion": "DOCKER|" + imageName
+            }
+        });
+
+        await appService.patchConfiguration(updatedConfigDetails);
+    }
+
+    private getDockerHubImageName() {
+        var namespace = tl.getInput('DockerNamespace', true);
+        var image = tl.getInput('DockerRepository', true);
+        var tag = tl.getInput('DockerImageTag', false);
+    
+        return this._constructImageName(namespace, image, tag);
+    }
+
+    private _getAzureContainerImageName() {
+        var registry = tl.getInput('AzureContainerRegistryLoginServer', true) + ".azurecr.io";
+        var image = tl.getInput('AzureContainerRegistryImage', true);
+        var tag = tl.getInput('AzureContainerRegistryTag', false);
+    
+        return this._constructImageName(registry, image, tag);
+    }
+
+    private _getDockerHubImageName() {
+        var namespace = tl.getInput('DockerNamespace', true);
+        var image = tl.getInput('DockerRepository', true);
+        var tag = tl.getInput('DockerImageTag', false);
+    
+        return this._constructImageName(namespace, image, tag);
+    }
+
+    private _constructImageName(namespace, repository, tag): string {
+        var imageName = null;
+        /*
+            Special Case : If release definition is not linked to build artifacts
+            then $(Build.BuildId) variable don't expand in release. So clearing state
+            of dockerImageTag if $(Build.BuildId) not expanded in value of dockerImageTag.
+        */
+        if(tag && (tag.trim() == "$(Build.BuildId)")) {
+            tag = null;
+        }
+    
+        if(tag) {
+            imageName = namespace + "/" + repository + ":" + tag;
+        } else {
+            imageName = namespace + "/" + repository;
+        }
+    
+        return imageName;
+    }
+
+    private _getPrivateRegistryImageName(): string {
+        var registryConnectedServiceName = tl.getInput('RegistryConnectedServiceName', true);
+        var loginServer = tl.getEndpointAuthorizationParameter(registryConnectedServiceName, 'url', true);
+    
+        var registry = url.parse(loginServer).hostname;
+        var image = tl.getInput('PrivateRegistryImage', true);
+        var tag = tl.getInput('PrivateRegistryTag', false);
+    
+        return this._constructImageName(registry, image, tag);
+    }
+
+    private _updateWebAppSettings(appSettingsParameters, webAppSettings) {
+        // In case of public repo, clear the connection details of a registry
+        var dockerRespositoryAccess = tl.getInput('DockerRepositoryAccess', true);
+        
+        // Uncomment the below lines while supprting all registry types.
+        // if(dockerRespositoryAccess === "public")
+        // {
+        //     deleteRegistryConnectionSettings(webAppSettings);
+        // }
+        
+        var parsedAppSettings = parse(appSettingsParameters);
+        for (var settingName in parsedAppSettings) {
+            var setting = settingName.trim();
+            var settingVal = parsedAppSettings[settingName].value;
+            settingVal = settingVal ? settingVal.trim() : "";
+    
+            if(setting) {
+                webAppSettings["properties"][setting] = settingVal;
+            }
+        }
+    }
+
+    private _getImageName(): string {
+        var registryType = tl.getInput('ImageSource', true);
+        var imageName = null;
+    
+        switch(registryType) {        
+            case registryTypes[registryTypes.AzureContainerRegistry]:
+                imageName = this._getAzureContainerImageName();
+                break;
+    
+            case registryTypes[registryTypes.Registry]:
+                imageName = this._getDockerHubImageName();
+                break;
+    
+            case registryTypes[registryTypes.PrivateRegistry]:
+                imageName = this._getPrivateRegistryImageName();
+                break;
+        }
+    
+        return imageName;
+    }
+
+    private async _getContainerRegistrySettings(imageName, endPoint) {
+        var containerRegistryType = tl.getInput('ImageSource', true);
+        var containerRegistrySettings = "-DOCKER_CUSTOM_IMAGE_NAME " + imageName;
+        var containerRegistryAuthParamsFormatString = "-DOCKER_REGISTRY_SERVER_URL %s -DOCKER_REGISTRY_SERVER_USERNAME %s -DOCKER_REGISTRY_SERVER_PASSWORD %s";
+    
+        switch(containerRegistryType) {
+            case registryTypes[registryTypes.AzureContainerRegistry]:
+                containerRegistrySettings = await this._getAzureContainerRegistrySettings(endPoint, containerRegistrySettings, containerRegistryAuthParamsFormatString);
+                break;
+    
+            case registryTypes[registryTypes.Registry]:
+                var dockerRespositoryAccess = tl.getInput('DockerRepositoryAccess', false);
+                if(dockerRespositoryAccess === "private")
+                {
+                    containerRegistrySettings = this._getDockerPrivateRegistrySettings(containerRegistrySettings, containerRegistryAuthParamsFormatString);
+                }
+                break;
+    
+            case registryTypes[registryTypes.PrivateRegistry]:
+                containerRegistrySettings = this._getDockerPrivateRegistrySettings(containerRegistrySettings, containerRegistryAuthParamsFormatString);
+                break;           
+        }    
+    
+        return containerRegistrySettings;
+    }
+
+    private async _getAzureContainerRegistrySettings(endPoint, containerRegistrySettings, containerRegistryAuthParamsFormatString) {    
+        var registryServerName = tl.getInput('AzureContainerRegistryLoginServer', true);
+        var registryUrl = "https://" + registryServerName + ".azurecr.io";    
+        tl.debug("Azure Container Registry Url: " + registryUrl);
+    
+        var registryName = tl.getInput('AzureContainerRegistry', true);
+        var resourceGroupName = '';// await azureRESTUtility.getResourceGroupName(endPoint, registryName, "Microsoft.ContainerRegistry/registries");
+        tl.debug("Resource group name of a registry: " + resourceGroupName);
+    
+        var creds = null //await azureRESTUtility.getAzureContainerRegistryCredentials(endPoint, registryName, resourceGroupName);
+        tl.debug("Successfully retrieved the registry credentials");
+    
+        var username = creds.username;
+        var password = creds["passwords"][0].value;
+    
+        return containerRegistrySettings + " " + util.format(containerRegistryAuthParamsFormatString, registryUrl, username, password);
+    }
+    
+    private _getDockerPrivateRegistrySettings(containerRegistrySettings, containerRegistryAuthParamsFormatString) {
+        var registryConnectedServiceName = tl.getInput('RegistryConnectedServiceName', true);    
+        var username = tl.getEndpointAuthorizationParameter(registryConnectedServiceName, 'username', true);
+        var password = tl.getEndpointAuthorizationParameter(registryConnectedServiceName, 'password', true);    
+        var registryUrl = tl.getEndpointAuthorizationParameter(registryConnectedServiceName, 'registry', true);
+    
+        tl.debug("Docker or Private Container Registry Url: " + registryUrl);
+    
+        return containerRegistrySettings + " " + util.format(containerRegistryAuthParamsFormatString, registryUrl, username, password);
+    }
+
+    private _deleteRegistryConnectionSettings(webAppSettings) {
+        delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_URL"];
+        delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_USERNAME"];
+        delete webAppSettings["properties"]["DOCKER_REGISTRY_SERVER_PASSWORD"];
+    }
+}

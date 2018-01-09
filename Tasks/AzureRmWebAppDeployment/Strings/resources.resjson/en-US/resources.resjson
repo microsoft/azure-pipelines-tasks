@@ -135,7 +135,7 @@
   "loc.messages.RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
   "loc.messages.Physicalpathalreadyexists": "Physical path '%s' already exists",
   "loc.messages.KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
-  "loc.messages.FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. Error Code: %s",
+  "loc.messages.FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. Error : %s",
   "loc.messages.FailedtocheckphysicalPath": "Failed to check kudu physical path. Error Code: %s",
   "loc.messages.VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
   "loc.messages.JSONParseError": "Unable to parse JSON file: %s. Error: %s",
@@ -183,5 +183,7 @@
   "loc.messages.UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
   "loc.messages.AddingReleaseAnnotation": "Adding release annotation for the Application Insights resource '%s'",
   "loc.messages.SuccessfullyAddedReleaseAnnotation": "Successfully added release annotation to the Application Insight : %s",
-  "loc.messages.FailedAddingReleaseAnnotation": "Failed to add release annotation. %s"
+  "loc.messages.FailedAddingReleaseAnnotation": "Failed to add release annotation. %s",
+  "loc.messages.RenameLockedFilesEnabled": "Rename locked files enabled for App Service.",
+  "loc.messages.FailedToEnableRenameLockedFiles": "Failed to enable rename locked files. Error: %s"
 }
