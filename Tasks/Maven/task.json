@@ -289,23 +289,11 @@
             "defaultValue": "latest",
             "options": {
                 "latest": "Use latest release",
-                "specify": "Specify version number",
                 "pom": "Use version declared in your pom.xml"
             },
-            "helpMarkDown": "The SonarQube Maven plugin version to use. You can use latest version, fix version here or in your pom.xml.",
+            "helpMarkDown": "The SonarQube Maven plugin version to use. You can use latest version, or rely on the version in your pom.xml.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqMavenPluginVersion",
-            "aliases": [ "sonarQubeGradlePluginVersion" ],
-            "type": "string",
-            "label": "SonarQube Scanner for Maven Plugin Version",
-            "required": true,
-            "defaultValue": "3.4.0.905",
-            "helpMarkDown": "Refer to http://repo1.maven.org/maven2/org/sonarsource/scanner/maven/sonar-maven-plugin/ for all available versions.",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true && sqMavenPluginVersionChoice = specify"
         },
         {
             "name": "checkstyleAnalysisEnabled",

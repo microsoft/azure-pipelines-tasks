@@ -296,9 +296,6 @@ function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): T
         case 'latest':
             mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar`);
             break;
-        case 'specify':
-            mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:${tl.getInput('sqMavenPluginVersion')}:sonar`);
-            break;
         case 'pom':
             mvnsq.arg(`sonar:sonar`);
             break;
