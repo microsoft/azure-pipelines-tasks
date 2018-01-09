@@ -23,7 +23,7 @@ if (osPlat !== 'win32') {
         utils.Helper.setConsoleCodePage();
         const blockRun = isMultiConfigOnDemandRun();
         if (blockRun) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+            tl.setResult(tl.TaskResult.Failed, tl.loc('MultiConfigNotSupportedWithOnDemand'));
         }
         const useDtaExecutionEngine = isDtaEngineRequired();
         if (useDtaExecutionEngine) {
