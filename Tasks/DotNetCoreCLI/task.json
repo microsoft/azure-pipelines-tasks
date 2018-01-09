@@ -13,11 +13,12 @@
     "runsOn": [
         "Agent"
     ],
+    "deprecated": true,
     "demands": [],
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 1
+        "Patch": 2
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "dotnet $(command)",
