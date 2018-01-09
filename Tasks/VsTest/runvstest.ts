@@ -22,6 +22,9 @@ if (osPlat !== 'win32') {
     try {
         utils.Helper.setConsoleCodePage();
         const blockRun = isMultiConfigOnDemandRun();
+        if (blockRun) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+        }
         const useDtaExecutionEngine = isDtaEngineRequired();
         if (useDtaExecutionEngine) {
             ci.publishEvent({
