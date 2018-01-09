@@ -9,11 +9,12 @@
         "Build",
         "Release"
     ],
+    "deprecated": true,
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 99
+        "Patch": 100
     },
     "demands": [
         "azureps"
