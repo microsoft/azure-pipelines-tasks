@@ -101,6 +101,7 @@ async function main(): Promise<void> {
             }
             if (!triggeringBuildFound)
             {
+                // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
                 definitionId = tl.getInput("definition", true);
                 buildId = parseInt(tl.getInput("buildId", true));
