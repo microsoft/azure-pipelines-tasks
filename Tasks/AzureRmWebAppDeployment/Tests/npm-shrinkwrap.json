@@ -59,6 +59,11 @@
       "from": "ms@2.0.0",
       "resolved": "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
     },
+    "nock": {
+      "version": "9.0.11",
+      "from": "nock@9.0.11",
+      "resolved": "https://registry.npmjs.org/nock/-/nock-9.0.11.tgz"
+    },
     "propagate": {
       "version": "0.4.0",
       "from": "propagate@0.4.0",
