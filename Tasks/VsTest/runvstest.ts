@@ -21,6 +21,7 @@ if (osPlat !== 'win32') {
 
     try {
         utils.Helper.setConsoleCodePage();
+        const blockRun = isMultiConfigOnDemandRun();
         const useDtaExecutionEngine = isDtaEngineRequired();
         if (useDtaExecutionEngine) {
             ci.publishEvent({
@@ -46,6 +47,17 @@ if (osPlat !== 'win32') {
         taskProps.state = 'completed';
         ci.publishEvent(taskProps);
     }
+}
+
+function isMultiConfigOnDemandRun(): boolean {
+    const testType = tl.getInput('testSelector');
+    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+
+    if (testType && testType.toLowerCase() === 'testrun' && parallelExecution && parallelExecution.toLowerCase() === 'multiconfiguration') {
+        return true;
+    }
+
+    return false;
 }
 
 function isDtaEngineRequired(): boolean {
