@@ -99,8 +99,14 @@ try {
     $applicationName = Get-ApplicationNameFromApplicationParameterFile $applicationParameterFile
     $app = Get-ServiceFabricApplication -ApplicationName $applicationName
 
+    $useDiffPackage = Get-VstsInput -Name useDiffPackage
+    if ($useDiffPackage)
+    {
+        Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
+        $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
+    }
     $publishParameters = @{
-        'ApplicationPackagePath' = $applicationPackagePath
+        'ApplicationPackagePath' = if (!$diffPackagePath) {$applicationPackagePath} else {[string]$diffPackagePath}
         'ApplicationParameterFilePath' = $applicationParameterFile
         'ErrorAction' = "Stop"
     }

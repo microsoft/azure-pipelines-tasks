@@ -204,13 +204,7 @@ export class ServiceClient {
         }
     }
 
-    private sleepFor(sleepDurationInSeconds): Promise<any> {
-        return new Promise((resolve, reeject) => {
-            setTimeout(resolve, sleepDurationInSeconds * 1000);
-        });
-    }
-
-    public getFormattedError(error: any) {
+    public getFormattedError(error: any): string {
         if(error && error.message) {
             if(error.statusCode) {
                 var errorMessage = typeof error.message.valueOf() == 'string' ? error.message 
@@ -222,5 +216,11 @@ export class ServiceClient {
         }
 
         return error;
+    }
+
+    private sleepFor(sleepDurationInSeconds): Promise<any> {
+        return new Promise((resolve, reeject) => {
+            setTimeout(resolve, sleepDurationInSeconds * 1000);
+        });
     }
 }

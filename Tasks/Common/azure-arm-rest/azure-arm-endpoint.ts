@@ -2,10 +2,14 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import webClient = require("./webClient");
 import { AzureEndpoint } from "./azureModels";
+import { ApplicationTokenCredentials } from './azure-arm-common';
+import constants = require('./constants');
 
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
     private _connectedServiceName: string;
+    private applicationTokenCredentials: ApplicationTokenCredentials;
+
     // Add an entry here and separate function for each new environment
     private _environments = {
         'AzureStack': 'azurestack'
@@ -16,8 +20,7 @@ export class AzureRMEndpoint {
         this.endpoint = null;
     }
 
-    public async getEndpoint() {
-        let dataDeferred = Q.defer<AzureEndpoint>();
+    public async getEndpoint(): Promise<AzureEndpoint> {
         if(!!this.endpoint) {
             return this.endpoint;
         }
@@ -35,18 +38,21 @@ export class AzureRMEndpoint {
             } as AzureEndpoint;
 
             if(this.endpoint.environment != null && this.endpoint.environment.toLowerCase() == this._environments.AzureStack && ( !this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID)) {
-                return await this._getAzureStackData(this.endpoint);
+                this.endpoint = await this._updateAzureStackData(this.endpoint);
             }
             else {
                 this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
                 this.endpoint.activeDirectoryResourceID = this.endpoint.url;
             }
+
+            this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
+                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack);
         }
 
         return this.endpoint;
     }
 
-    private _getAzureStackData(endpoint: AzureEndpoint) {
+    private async _updateAzureStackData(endpoint: AzureEndpoint): Promise<AzureEndpoint> {
         let dataDeferred = Q.defer<AzureEndpoint>();
         let webRequest = new webClient.WebRequest();
         webRequest.uri = `${endpoint.url}metadata/endpoints?api-version=2015-01-01`;
@@ -55,55 +61,55 @@ export class AzureRMEndpoint {
             'Content-Type': 'application/json'
         }
 
-        webClient.sendRequest(webRequest).then((response: webClient.WebResponse) => {
-            if(response.statusCode == 200) {
-                let result = response.body;
-                endpoint.graphEndpoint = result.graphEndpoint;
-                endpoint.galleryUrl = result.galleryUrl;
-                endpoint.portalEndpoint = result.portalEndpoint;
-                var authenticationData = result.authentication;
-                if(!!authenticationData) {
-                    var loginEndpoint = authenticationData.loginEndpoint;
-                    if(!!loginEndpoint) {
-                        loginEndpoint += (loginEndpoint[loginEndpoint.length - 1] == "/") ? "" : "/";
-                        endpoint.activeDirectoryAuthority = loginEndpoint;
-                        endpoint.environmentAuthorityUrl = loginEndpoint;
-                    }
-                    else {
-                        // change to login endpoint
-                        dataDeferred.reject(tl.loc('UnableToFetchAuthorityURL'));
-                    }
+        let azureStackResult;
+        try {
+            let response: webClient.WebResponse = await webClient.sendRequest(webRequest);
+            if(response.statusCode != 200) {
+                tl.debug("Action: _updateAzureStackData, Response: " + JSON.stringify(response));
+                throw new Error(response.statusCode + ' ' + response.statusMessage)
+            }
 
-                    var audiences = authenticationData.audiences;
-                    if(audiences && audiences.length > 0) {
-                        endpoint.activeDirectoryResourceID = audiences[0];
-                    }
+            azureStackResult = response.body;
+        }
+        catch(error) {
+            throw new Error(tl.loc("FailedToFetchAzureStackDependencyData", error.toString()));
+        }
 
-                    try {
-                        var endpointUrl =  endpoint.url;
-                        endpointUrl += (endpointUrl[endpointUrl.length-1] == "/") ? "" : "/";
-                        var index = endpointUrl.indexOf('.');
-                        var domain = endpointUrl.substring(index+1);
-                        domain = (domain.lastIndexOf("/") == domain.length-1) ? domain.substring(0, domain.length-1): domain;
-                        endpoint.AzureKeyVaultDnsSuffix = ("vault" + domain).toLowerCase();
-                        endpoint.AzureKeyVaultServiceEndpointResourceId = ("https://vault." + domain).toLowerCase();
-                    }
-                    catch(error) {
-                        dataDeferred.reject(tl.loc("SpecifiedAzureRmEndpointIsInvalid", endpointUrl));
-                    }
-
-                    dataDeferred.resolve(endpoint);
-                }
-
+        endpoint.graphEndpoint = azureStackResult.graphEndpoint;
+        endpoint.galleryUrl = azureStackResult.galleryUrl;
+        endpoint.portalEndpoint = azureStackResult.portalEndpoint;
+        var authenticationData = azureStackResult.authentication;
+        if(!!authenticationData) {
+            var loginEndpoint = authenticationData.loginEndpoint;
+            if(!!loginEndpoint) {
+                loginEndpoint += (loginEndpoint[loginEndpoint.length - 1] == "/") ? "" : "/";
+                endpoint.activeDirectoryAuthority = loginEndpoint;
+                endpoint.environmentAuthorityUrl = loginEndpoint;
             }
             else {
-                tl.debug("Action: initializeAzureStackData, Response: " + JSON.stringify(response));
-                dataDeferred.reject(tl.loc("FailedToFetchAzureStackDependencyData", response.statusCode));
+                // change to login endpoint
+                throw new Error(tl.loc('UnableToFetchAuthorityURL'));
             }
-        }, (error) => {
-            dataDeferred.reject(error);
-        });
-        
-        return dataDeferred.promise;
+
+            var audiences = authenticationData.audiences;
+            if(audiences && audiences.length > 0) {
+                endpoint.activeDirectoryResourceID = audiences[0];
+            }
+
+            try {
+                var endpointUrl =  endpoint.url;
+                endpointUrl += (endpointUrl[endpointUrl.length-1] == "/") ? "" : "/";
+                var index = endpointUrl.indexOf('.');
+                var domain = endpointUrl.substring(index+1);
+                domain = (domain.lastIndexOf("/") == domain.length-1) ? domain.substring(0, domain.length-1): domain;
+                endpoint.AzureKeyVaultDnsSuffix = ("vault" + domain).toLowerCase();
+                endpoint.AzureKeyVaultServiceEndpointResourceId = ("https://vault." + domain).toLowerCase();
+            }
+            catch(error) {
+                throw new Error(tl.loc("SpecifiedAzureRmEndpointIsInvalid", endpointUrl));
+            }
+        }
+
+        return endpoint;
     }
 }

@@ -14,10 +14,7 @@ export class AzureApplicationInsights {
     private _client: ServiceClient;
 
     constructor(endpoint: AzureEndpoint, resourceGroupName: string, name: string) {
-        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
-            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
-        
-        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
         this._endpoint = endpoint;
         this._resourceGroupName = resourceGroupName;
         this._name = name;
@@ -46,7 +43,7 @@ export class AzureApplicationInsights {
         }
     }
 
-    public async update(insightProperties: any) {
+    public async update(insightProperties: any): Promise<ApplicationInsights> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.body = JSON.stringify(insightProperties);
@@ -67,10 +64,6 @@ export class AzureApplicationInsights {
         catch(error) {
             throw Error(tl.loc('FailedToUpdateApplicationInsightsResource', this._name, this._client.getFormattedError(error)))
         }
-    }
-
-    public getEndpoint(): AzureEndpoint {
-        return this._endpoint;
     }
 
     public getResourceGroupName(): string {

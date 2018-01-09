@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 128,
-        "Patch": 1
+        "Minor": 129,
+        "Patch": 0
     },
     "demands": [
         "xcode"
@@ -357,7 +357,7 @@
         "XcodeSuccess": "Xcode task execution completed with no errors.",
         "TempKeychainDeleteFailed": "Failed to delete the temporary keychain created during the build: `%s`",
         "ProvProfileDeleteFailed": "Failed to delete the provisioning profile `%s`.",
-        "ExportMethodNotIdentified": "Failed to automatically identify the export method to use from the archive file. This might cause errors during the build or produce an invalid package. Set `Export options` to `Plist` or `Specify`.",
+        "ExportMethodNotIdentified": "Failed to automatically identify the export method to use from the archive file. This might cause errors during the build or produce an invalid package. If export fails, either enable signing (set `Signing Style` to `Project Defaults`), or configure export manually (set `Export options` to `Plist` or `Specify`).",
         "ExportOptionsPlistInvalidFilePath": "The `Export options` plist file does not exist at `%s`. Provide the path to a valid plist file.",
         "SchemeRequiredForArchive": "The scheme must be specified to generate the package with xcodebuild archive and export.",
         "WorkspaceOrProjectRequiredForArchive": "The workspace or project path must be specified to generate the package with xcodebuild archive and export.",

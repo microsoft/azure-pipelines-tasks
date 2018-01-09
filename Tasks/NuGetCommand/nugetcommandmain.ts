@@ -123,7 +123,7 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
                 'nugetVersion': nugetVersion
             };
 
-        telemetry.emitTelemetry(nugetTelem);
+        telemetry.emitTelemetry('Packaging', 'NuGetCommand', nugetTelem);
     } catch (err) {
         tl.debug(`Unable to log NuGet task init telemetry. Err:( ${err} )`);
     }
