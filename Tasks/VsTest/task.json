@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 17
+        "Patch": 18
     },
     "demands": [
         "vstest"
@@ -559,6 +559,7 @@
         "ToolsInstallerInstallationError": "The Visual Studio Test Platform tools installer did not run or did not complete the installation successfully, please refer to the following blog for information on how to use the tools installer: https://aka.ms/vstesttoolsinstaller",
         "OverrideUseVerifiableInstrumentation": "Overriding UseVerifiableInstrumentation field to false in the runsettings file.",
         "NoTestResultsDirectoryFound": "Test results directory not found.",
-        "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms."
+        "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
+        "MultiConfigNotSupportedWithOnDemand": "On demand runs are not supported with Multi-Configuration option. Please use 'None' or 'Multi-agent' parallelism option."
     }
 }
