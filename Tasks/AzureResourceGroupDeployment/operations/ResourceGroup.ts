@@ -40,6 +40,7 @@ function stripJsonComments(content) {
     var currentChar;
     var nextChar;
     var prevChar;
+    var beforePrevChar;
     var insideQuotes = false;
     var contentWithoutComments = '';
     var insideComment = 0;
@@ -66,9 +67,15 @@ function stripJsonComments(content) {
 
         } else {
             prevChar = i - 1 >= 0 ? content[i - 1] : "";
-
-            if (currentChar == '"' && prevChar != '\\') {
-                insideQuotes = !insideQuotes
+            beforePrevChar = i - 2 >= 0 ? content[i - 2] : "";
+            
+            if (currentChar == '"') {
+                if (prevChar != '\\') {
+                    insideQuotes = !insideQuotes;
+                }
+                if (prevChar == '\\' && beforePrevChar == '\\') {
+                    insideQuotes = !insideQuotes;
+                }
             }
 
             if (!insideQuotes) {
