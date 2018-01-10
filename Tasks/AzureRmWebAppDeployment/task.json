@@ -440,7 +440,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
-            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder."
+            "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder.<br /><br />Note: This will also remove all files related to any extension installed on this Azure App Service. To prevent this, select 'Exclude files from App_Data folder' checkbox. "
         },
         {
             "name": "ExcludeFilesFromAppDataFlag",

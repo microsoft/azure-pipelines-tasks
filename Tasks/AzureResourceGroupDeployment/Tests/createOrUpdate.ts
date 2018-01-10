@@ -15,6 +15,7 @@ tr.setInput("overrideParameters", "");
 tr.setInput("deploymentMode", "Complete");
 tr.setInput("enableDeploymentPrerequisites", "None");
 tr.setInput("csmParametersFile", process.env["csmParametersFile"]);
+tr.setInput("deploymentOutputs", !!process.env["deploymentOutputs"] ? process.env["deploymentOutputs"] : "");
 
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
