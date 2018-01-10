@@ -55,6 +55,9 @@
 			"type": "pickList",
 			"label": "Resource name",
 			"required": true,
+			"properties": {
+				"EditableOptions": "True"
+			},
 			"helpMarkDown": "Select name of Azure resource to monitor."
 		}, {
 			"name": "alertRules",

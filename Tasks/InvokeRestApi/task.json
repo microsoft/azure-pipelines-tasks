@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   }, 
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [{
@@ -89,24 +89,28 @@
       "helpMarkDown": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1."
     },
     {
-      "name":"waitForCompletion",
-      "type":"boolean",
-      "label":"Wait for completion",
-      "Required":"false",
-      "defaultValue":"false",
+      "name": "waitForCompletion",
+      "type": "pickList",
+      "label": "Complete based on",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
       "groupName": "completionOptions",
-      "helpMarkDown":"The task will wait for the TaskCompleted event to be fired by the REST API invoked. Wait period will be equivalent to task timeout mentioned in control section below."
+      "options": {
+        "true": "Callback",
+        "false": "ApiResponse"
+      }
     },
-	{
-	  "name": "successCriteria",
-	  "type": "string",
-	  "label": "Success criteria",
-	  "defaultValue": "",
-	  "required": false,
-	  "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
-	  "groupName": "completionOptions",
-	  "visibleRule": "waitForCompletion = false"
-	}
+    {
+      "name": "successCriteria",
+      "type": "string",
+      "label": "Success criteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
+    }
   ],
 
   "execution": {
