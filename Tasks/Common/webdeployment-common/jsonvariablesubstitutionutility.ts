@@ -64,7 +64,7 @@ export function substituteJsonVariable(jsonObject, envObject) {
     }
 }
 
-function stripJsonComments(content) {
+export function stripJsonComments(content) {
     if (!content || (content.indexOf("//") < 0 && content.indexOf("/*") < 0)) {
         return content;
     }
