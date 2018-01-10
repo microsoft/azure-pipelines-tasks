@@ -39,7 +39,6 @@ function stripJsonComments(content) {
 
     var currentChar;
     var nextChar;
-    var prevChar;
     var insideQuotes = false;
     var contentWithoutComments = '';
     var insideComment = 0;
@@ -65,21 +64,26 @@ function stripJsonComments(content) {
             }
 
         } else {
-            prevChar = i - 1 >= 0 ? content[i - 1] : "";
-
-            if (currentChar == '"' && prevChar != '\\') {
-                insideQuotes = !insideQuotes
+            if (insideQuotes && currentChar == "\\") {
+                contentWithoutComments += currentChar + nextChar;
+                i++; // Skipping checks for next char if escaped
+                continue;
             }
-
-            if (!insideQuotes) {
-                if (currentChar + nextChar === '//') {
-                    insideComment = singlelineComment;
-                    i++;
+            else {
+                if (currentChar == '"') {
+                    insideQuotes = !insideQuotes;
                 }
 
-                if (currentChar + nextChar === '/*') {
-                    insideComment = multilineComment;
-                    i++;
+                if (!insideQuotes) {
+                    if (currentChar + nextChar === '//') {
+                        insideComment = singlelineComment;
+                        i++;
+                    }
+
+                    if (currentChar + nextChar === '/*') {
+                        insideComment = multilineComment;
+                        i++;
+                    }
                 }
             }
         }
@@ -443,7 +447,7 @@ export class ResourceGroup {
                         tl.setVariable(this.taskParameters.deploymentOutputs, JSON.stringify(result["properties"]["outputs"]));
                         console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
                     }
-                    
+
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();
                 });
