@@ -2,7 +2,7 @@ import tl = require('vsts-task-lib/task');
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import { Resources } from 'azure-arm-rest/azure-arm-resource';
 
-export class AzureResourceFilterUtils {
+export class AzureResourceFilterUtility {
     public static async getResourceGroupName(endpoint: AzureEndpoint, resourceType: string, resourceName: string): Promise<string> {
         var azureResources: Resources = new Resources(endpoint);
         var filteredResources: Array<any> = await azureResources.getResources(resourceType, resourceName);

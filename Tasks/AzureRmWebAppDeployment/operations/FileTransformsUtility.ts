@@ -6,7 +6,7 @@ var deployUtility = require('webdeployment-common/utility.js');
 var fileTransformationsUtility = require('webdeployment-common/fileTransformationsUtility.js');
 var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 
-export class FileTransformsUtils {
+export class FileTransformsUtility {
     public static async applyTransformations(webPackage: string, taskParams: TaskParameters): Promise<string> {
         var applyFileTransformFlag = taskParams.JSONFiles.length != 0 || taskParams.XmlTransformation || taskParams.XmlVariableSubstitution;
         if (applyFileTransformFlag || taskParams.GenerateWebConfig) {

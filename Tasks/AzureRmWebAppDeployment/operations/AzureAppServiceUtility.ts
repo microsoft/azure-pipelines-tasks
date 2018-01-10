@@ -6,7 +6,7 @@ import Q = require('q');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureAppServiceConfigurationDetails } from 'azure-arm-rest/azureModels';
 
-export class AzureAppServiceUtils {
+export class AzureAppServiceUtility {
     private _appService: AzureAppService;
     constructor(appService: AzureAppService) {
         this._appService = appService;
@@ -31,32 +31,11 @@ export class AzureAppServiceUtils {
             await this._appService.patchMetaData(this._getNewMetaData());
             tl.debug('Updated metadata with latest release details');
         }
-    }
-
-
-    public async monitorApplicationState(state: string): Promise<void> {
-        state = state.toLowerCase();
-        if(["running", "stopped"].indexOf(state) == -1) {
-            throw new Error(tl.loc('InvalidMonitorAppState', state));
-        }
-
-        while(true) {
-            var appDetails = await this._appService.get(true);
-            if(appDetails && appDetails.properties && appDetails.properties["state"]) {
-                tl.debug(`App Service state: ${appDetails.properties["state"]}`)
-                if(appDetails.properties["state"].toLowerCase() == state) {
-                    tl.debug(`App Service state '${appDetails.properties["state"]}' matched with expected state '${state}'.`);
-                    console.log(tl.loc('AppServiceState', appDetails.properties["state"]));
-                    break;
-                }
-                await webClient.sleepFor(5);
-            }
-            else {
-                tl.debug('Unable to monitor app service details as the state is unknown.');
-                break;
-            }
+        else {
+            tl.debug(`Skipped updating the SCM value. Value: ${scmType}`);
         }
     }
+
 
     public async getWebDeployPublishingProfile(): Promise<any> {
         var publishingProfile = await this._appService.getPublishingProfileWithSecrets();
@@ -147,6 +126,11 @@ export class AzureAppServiceUtils {
     }
 
     public async updateAndMonitorAppSettings(properties: any): Promise<void> {
+        for(var property in properties) {
+            if(properties[property].value) {
+                properties[property] = properties[property].value;
+            }
+        }
         await this._appService.patchApplicationSettings(properties);
         var kuduService = await this.getKuduService();
         const interator: number = 6;
@@ -183,7 +167,7 @@ export class AzureAppServiceUtils {
                     console.log(tl.loc('RenameLockedFilesEnabled'));
                 }
                 else {
-                    tl.debug('Rename locked files is alreay enabled in App Service');
+                    tl.debug('Rename locked files is already enabled in App Service');
                 }
             }
         }

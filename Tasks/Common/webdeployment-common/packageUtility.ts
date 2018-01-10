@@ -2,7 +2,7 @@ import tl = require('vsts-task-lib/task');
 import utility = require('./utility');
 
 export class PackageUtility {
-    public getPackagePath(packagePath: string): string {
+    public static getPackagePath(packagePath: string): string {
         var availablePackages: string[] = utility.findfiles(packagePath);
         if(availablePackages.length == 0) {
             throw new Error(tl.loc('Nopackagefoundwithspecifiedpattern'));

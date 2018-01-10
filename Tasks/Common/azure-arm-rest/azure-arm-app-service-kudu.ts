@@ -257,7 +257,7 @@ export class Kudu {
     }
 
 
-    public async getFileContent(physicalPath: string, fileName: string): Promise<void> {
+    public async getFileContent(physicalPath: string, fileName: string): Promise<string> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
@@ -340,7 +340,7 @@ export class Kudu {
     public async runCommand(physicalPath: string, command: string,) {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
-        httpRequest.uri = this._client.getRequestUri(`/api/zip/${physicalPath}/`);
+        httpRequest.uri = this._client.getRequestUri(`/api/command`);
         httpRequest.headers = {
             'content-type': 'multipart/form-data',
             'If-Match': '*'
@@ -362,6 +362,8 @@ export class Kudu {
             }
         }
         catch(error) {
+            console.log("!!!!");
+            console.log(error);
             throw Error(error.toString());
         }
     }

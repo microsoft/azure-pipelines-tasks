@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 37
+        "Patch": 39
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -40,16 +40,15 @@
             "visibleRule": "WebAppKind != \"\""
         },
         {
+            "name": "ApplicationSettings",
+            "displayName": "Application Settings",
+            "isExpanded": false
+        },
+        {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
             "visibleRule": "WebAppKind != \"\""
-        },
-        {
-            "name": "ApplicationSettings",
-            "displayName": "Application Settings",
-            "isExpanded": true,
-            "visibleRule": "WebAppKind = applinux"
         }
     ],
     "inputs": [

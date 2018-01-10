@@ -12,7 +12,7 @@ enum registryTypes {
     "PrivateRegistry"
 }
 
-export class ContainerBasedDeploymentUtils {
+export class ContainerBasedDeploymentUtility {
     private _appService: AzureAppService;
 
     constructor(appService: AzureAppService) {

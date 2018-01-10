@@ -177,7 +177,7 @@ export async function runPostDeploymentScript(publishingProfile, physicalPath, s
     }
     finally {
         if(scriptFile.isCreated) {
-            tl.rmRF(scriptFile.filePath, true);
+            // tl.rmRF(scriptFile.filePath, true);
         }
         try {
             await uploadFiletoKudu(publishingProfile, physicalPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, 'postDeploymentScript', 'deleteLogFile' + fileExtension));

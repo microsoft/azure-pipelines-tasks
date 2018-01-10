@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 37
+    "Patch": 39
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -40,16 +40,15 @@
       "visibleRule": "WebAppKind != \"\""
     },
     {
+      "name": "ApplicationSettings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
+      "isExpanded": false
+    },
+    {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true,
       "visibleRule": "WebAppKind != \"\""
-    },
-    {
-      "name": "ApplicationSettings",
-      "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
-      "isExpanded": true,
-      "visibleRule": "WebAppKind = applinux"
     }
   ],
   "inputs": [
