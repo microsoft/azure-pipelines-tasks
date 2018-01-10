@@ -106,6 +106,7 @@ export class KuduServiceUtility {
             }
         }
     }
+
     public getDeploymentID(): string {
         if(this._deploymentID) {
             return this._deploymentID;
@@ -131,10 +132,13 @@ export class KuduServiceUtility {
         var deploymentID: string = (releaseId ? releaseId : buildId) + Date.now().toString();
         return deploymentID;
     }
+
     public async deployWebPackage(packagePath: string, physicalPath: string, virtualPath: string, appOffline: boolean): Promise<void> {
         try {
             if(appOffline) {
                 await this._appOfflineKuduService(physicalPath, true);
+                tl.debug('Wait for 10 seconds for app_offline to take effect');
+                await webClient.sleepFor(10);
             }
 
             if(tl.stats(packagePath).isDirectory()) {

@@ -4,7 +4,7 @@ import util = require('util');
 import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
 import { TaskParameters } from './TaskParameters';
 import { parse }  from './ParameterParserUtility';
-import { AzureAppServiceUtils } from './AzureAppServiceUtils';
+import { AzureAppServiceUtility } from './AzureAppServiceUtility';
 
 enum registryTypes {
     "AzureContainerRegistry",
@@ -36,7 +36,7 @@ export class ContainerBasedDeploymentUtility {
         appSettingsParameters =  await this._getContainerRegistrySettings(imageName, null) + ' ' + appSettingsParameters;
         var appSettingsNewProperties = parse(appSettingsParameters);
         await appService.patchApplicationSettings(appSettingsNewProperties);
-        var appServiceUtility = new AzureAppServiceUtils(appService);
+        var appServiceUtility = new AzureAppServiceUtility(appService);
         await appServiceUtility.updateAndMonitorAppSettings(appSettingsNewProperties);
     }
 
