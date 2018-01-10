@@ -136,6 +136,7 @@ export class KuduServiceUtility {
     }
 
     public async deployWebPackage(packagePath: string, physicalPath: string, virtualPath: string, appOffline: boolean): Promise<void> {
+        physicalPath = physicalPath ? physicalPath : physicalRootPath;
         try {
             if(appOffline) {
                 await this._appOfflineKuduService(physicalPath, true);

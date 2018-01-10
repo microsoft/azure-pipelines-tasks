@@ -48,7 +48,7 @@ async function main() {
                 case 'Builtin': {
                     var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
                     tl.debug('Performing Linux built-in package deployment');
-                    await kuduServiceUtility.deployWebPackage(webPackage, '/site/wwwroot', '/', taskParams.TakeAppOfflineFlag);
+                    await kuduServiceUtility.deployWebPackage(webPackage, null , '/', taskParams.TakeAppOfflineFlag);
                     await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
                     break;
                 }
