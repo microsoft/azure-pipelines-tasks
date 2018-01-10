@@ -40,7 +40,6 @@ function stripJsonComments(content) {
     var currentChar;
     var nextChar;
     var prevChar;
-    var beforePrevChar;
     var insideQuotes = false;
     var contentWithoutComments = '';
     var insideComment = 0;
@@ -66,27 +65,28 @@ function stripJsonComments(content) {
             }
 
         } else {
-            prevChar = i - 1 >= 0 ? content[i - 1] : "";
-            beforePrevChar = i - 2 >= 0 ? content[i - 2] : "";
-            
-            if (currentChar == '"') {
-                if (prevChar != '\\') {
-                    insideQuotes = !insideQuotes;
-                }
-                if (prevChar == '\\' && beforePrevChar == '\\') {
-                    insideQuotes = !insideQuotes;
-                }
+            if (insideQuotes && currentChar == "\\") {
+                contentWithoutComments += currentChar + nextChar;
+                i++; // Skipping checks for next char if escaped
+                continue;
             }
+            else {
+                prevChar = i - 1 >= 0 ? content[i - 1] : "";
 
-            if (!insideQuotes) {
-                if (currentChar + nextChar === '//') {
-                    insideComment = singlelineComment;
-                    i++;
+                if (currentChar == '"') {
+                    insideQuotes = !insideQuotes;
                 }
 
-                if (currentChar + nextChar === '/*') {
-                    insideComment = multilineComment;
-                    i++;
+                if (!insideQuotes) {
+                    if (currentChar + nextChar === '//') {
+                        insideComment = singlelineComment;
+                        i++;
+                    }
+
+                    if (currentChar + nextChar === '/*') {
+                        insideComment = multilineComment;
+                        i++;
+                    }
                 }
             }
         }
@@ -450,7 +450,7 @@ export class ResourceGroup {
                         tl.setVariable(this.taskParameters.deploymentOutputs, JSON.stringify(result["properties"]["outputs"]));
                         console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
                     }
-                    
+
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();
                 });
