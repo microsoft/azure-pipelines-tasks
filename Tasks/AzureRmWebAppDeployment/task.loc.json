@@ -721,6 +721,7 @@
     "FailedToDeleteFile": "ms-resource:loc.messages.FailedToDeleteFile",
     "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
     "FailedToGetFileContent": "ms-resource:loc.messages.FailedToGetFileContent",
-    "FailedToListPath": "ms-resource:loc.messages.FailedToListPath"
+    "FailedToListPath": "ms-resource:loc.messages.FailedToListPath",
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
   }
 }

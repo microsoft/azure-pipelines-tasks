@@ -35,7 +35,6 @@ export class ContainerBasedDeploymentUtility {
         appSettingsParameters = appSettingsParameters ? appSettingsParameters.trim() : "";
         appSettingsParameters =  await this._getContainerRegistrySettings(imageName, null) + ' ' + appSettingsParameters;
         var appSettingsNewProperties = parse(appSettingsParameters);
-        await appService.patchApplicationSettings(appSettingsNewProperties);
         var appServiceUtility = new AzureAppServiceUtility(appService);
         await appServiceUtility.updateAndMonitorAppSettings(appSettingsNewProperties);
     }

@@ -203,20 +203,3 @@ export function redirectMSDeployErrorToConsole() {
         tl.rmRF(msDeployErrorFilePath);
     }
 }
-
-export function shouldRetryMSDeploy() {
-    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + ERROR_FILE_NAME;
-    
-    if(tl.exist(msDeployErrorFilePath)) {
-        var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
-
-        if(errorFileContent !== "") {
-            if(errorFileContent.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
-                tl.warning(errorFileContent);
-                return true;
-            }
-        }
-    }
-
-    return false;
-}

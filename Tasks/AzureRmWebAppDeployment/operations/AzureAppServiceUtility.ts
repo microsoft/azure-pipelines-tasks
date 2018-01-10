@@ -131,6 +131,7 @@ export class AzureAppServiceUtility {
                 properties[property] = properties[property].value;
             }
         }
+        
         await this._appService.patchApplicationSettings(properties);
         var kuduService = await this.getKuduService();
         const interator: number = 6;

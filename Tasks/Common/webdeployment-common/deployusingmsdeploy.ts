@@ -47,18 +47,17 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     
     try {
         var shouldContinue = true;
-        while(shouldContinue) {
+        while(retryCount > 0) {
             try {
-                 await executeMSDeploy(msDeployCmdArgs);
-                 shouldContinue = false;
-            } catch (error) {
-                shouldContinue = (msDeployUtility.shouldRetryMSDeploy() && retryCount-- > 0);
-                if(!shouldContinue) {
-                    throw error;
-                } else {
-                    console.log("Retrying to deploy app service.");
-                }
+                await executeMSDeploy(msDeployCmdArgs);
+                break;
             }
+            catch (error) {
+                console.log(error);
+                console.log(tl.loc('RetryToDeploy'));
+            }
+
+            retryCount -= 1;
         }
         if(publishingProfile != null) {
             console.log(tl.loc('PackageDeploymentSuccess'));
