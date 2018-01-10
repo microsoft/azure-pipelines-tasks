@@ -13,7 +13,7 @@
   "loc.input.label.headers": "Headers",
   "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
   "loc.input.label.body": "Body",
-  "loc.input.label.waitForCompletion": "Completion event",
+  "loc.input.label.waitForCompletion": "Completion event", 
   "loc.input.help.waitForCompletion": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
   "loc.input.label.successCriteria": "Success criteria",
   "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​"
