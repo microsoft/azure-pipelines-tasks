@@ -50,12 +50,13 @@ async function main() {
                     tl.debug('Performing Linux built-in package deployment');
                     await kuduServiceUtility.deployWebPackage(webPackage, '/site/wwwroot', '/', taskParams.TakeAppOfflineFlag);
                     await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
-
+                    break;
                 }
                 case 'Registry': {
                     tl.debug("Performing container based deployment.");
                     let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(appService);
                     await containerDeploymentUtility.deployWebAppImage(taskParams);
+                    break;
                 }
                 default: {
                     throw new Error('Invalid Image source Type');

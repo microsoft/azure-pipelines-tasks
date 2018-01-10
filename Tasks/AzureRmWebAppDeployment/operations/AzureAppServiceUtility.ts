@@ -146,7 +146,7 @@ export class AzureAppServiceUtility {
         
         await this._appService.patchApplicationSettings(properties);
         var kuduService = await this.getKuduService();
-        const interator: number = 6;
+        var interator: number = 6;
         tl.debug('retrieving values from Kudu service to check if new values are updated');
         while(interator > 0) {
             var kuduServiceAppSettings = await kuduService.getAppSettings();
@@ -163,7 +163,7 @@ export class AzureAppServiceUtility {
                 tl.debug('New properties are updated in Kudu service.');
                 break;
             }
-
+            interator -= 1;
             await webClient.sleepFor(10);
         }
 
