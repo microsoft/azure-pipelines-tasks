@@ -127,6 +127,13 @@
         "RestartingKuduService": "Restarting Kudu Service.",
         "RestartedKuduService": "Kudu Service restarted",
         "FailedToRestartKuduService": "Failed to restart kudu Service. %s.",
-        "FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s"
+        "FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s",
+        "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
+        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy web package. Error: %s",
+        "FailedToCreatePath": "Failed to create path '%s' from Kudu. Error: %s",
+        "FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
+        "FailedToUploadFile": "Failed to upload file '%s/%s from Kudu. Error: %s",
+        "FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
+        "FailedToListPath": "Failed to list path '%s'. Error: %s"
     }
 }

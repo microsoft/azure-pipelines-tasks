@@ -252,7 +252,7 @@ export class Kudu {
             }
         }
         catch(error) {
-            throw Error(tl.loc('FailedToFetchKuduAppSettings', this._getFormattedError(error)));
+            throw Error(tl.loc('FailedToListPath', physicalPath, this._getFormattedError(error)));
         }
     }
 
@@ -268,7 +268,7 @@ export class Kudu {
 
         try {
             var response = await this._client.beginRequest(httpRequest);
-            tl.debug(`listFiles. Data: ${JSON.stringify(response)}`);
+            tl.debug(`getFileContent. Data: ${JSON.stringify(response)}`);
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }
@@ -280,7 +280,7 @@ export class Kudu {
             }
         }
         catch(error) {
-            throw Error(tl.loc('FailedToFetchKuduAppSettings', this._getFormattedError(error)));
+            throw Error(tl.loc('FailedToGetFileContent', physicalPath, fileName, this._getFormattedError(error)));
         }
     }
 
@@ -300,16 +300,15 @@ export class Kudu {
 
         try {
             var response = await this._client.beginRequest(httpRequest);
-            tl.debug(`createPath. Data: ${JSON.stringify(response)}`);
+            tl.debug(`uploadFile. Data: ${JSON.stringify(response)}`);
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
-                console.log(tl.loc('KuduPhysicalpathCreatedSuccessfully', physicalPath));
                 return response.body;
             }
             
             throw response;
         }
         catch(error) {
-            throw Error(tl.loc('FailedtocreateKuduPhysicalPath', this._getFormattedError(error)));
+            throw Error(tl.loc('FailedToUploadFile', this._getFormattedError(error)));
         }
     }
 
@@ -326,14 +325,13 @@ export class Kudu {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`createPath. Data: ${JSON.stringify(response)}`);
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
-                console.log(tl.loc('KuduPhysicalpathCreatedSuccessfully', physicalPath));
                 return response.body;
             }
             
             throw response;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToCreatePath', this._getFormattedError(error)));
+            throw Error(tl.loc('FailedToCreatePath', physicalPath, this._getFormattedError(error)));
         }
     }
 
@@ -362,8 +360,6 @@ export class Kudu {
             }
         }
         catch(error) {
-            console.log("!!!!");
-            console.log(error);
             throw Error(error.toString());
         }
     }
@@ -405,7 +401,7 @@ export class Kudu {
 
         try {
             var response = await this._client.beginRequest(httpRequest);
-            tl.debug(`listFiles. Data: ${JSON.stringify(response)}`);
+            tl.debug(`deleteFile. Data: ${JSON.stringify(response)}`);
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }

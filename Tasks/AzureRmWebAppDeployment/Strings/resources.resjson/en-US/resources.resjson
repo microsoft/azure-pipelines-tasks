@@ -185,5 +185,12 @@
   "loc.messages.SuccessfullyAddedReleaseAnnotation": "Successfully added release annotation to the Application Insight : %s",
   "loc.messages.FailedAddingReleaseAnnotation": "Failed to add release annotation. %s",
   "loc.messages.RenameLockedFilesEnabled": "Rename locked files enabled for App Service.",
-  "loc.messages.FailedToEnableRenameLockedFiles": "Failed to enable rename locked files. Error: %s"
+  "loc.messages.FailedToEnableRenameLockedFiles": "Failed to enable rename locked files. Error: %s",
+  "loc.messages.WebJobsInProgressIssue": "Few WebJobs in running state prevents the deployment from removing the files. You can disable 'Remove additional files at destinaton' option or Stop continuous Jobs before deployment.",
+  "loc.messages.FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s",
+  "loc.messages.FailedToCreatePath": "Failed to create path '%s' from Kudu. Error: %s",
+  "loc.messages.FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
+  "loc.messages.FailedToUploadFile": "Failed to upload file '%s/%s from Kudu. Error: %s",
+  "loc.messages.FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
+  "loc.messages.FailedToListPath": "Failed to list path '%s'. Error: %s"
 }

@@ -714,6 +714,13 @@
     "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
     "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation",
     "RenameLockedFilesEnabled": "ms-resource:loc.messages.RenameLockedFilesEnabled",
-    "FailedToEnableRenameLockedFiles": "ms-resource:loc.messages.FailedToEnableRenameLockedFiles"
+    "FailedToEnableRenameLockedFiles": "ms-resource:loc.messages.FailedToEnableRenameLockedFiles",
+    "WebJobsInProgressIssue": "ms-resource:loc.messages.WebJobsInProgressIssue",
+    "FailedToFetchKuduAppSettings": "ms-resource:loc.messages.FailedToFetchKuduAppSettings",
+    "FailedToCreatePath": "ms-resource:loc.messages.FailedToCreatePath",
+    "FailedToDeleteFile": "ms-resource:loc.messages.FailedToDeleteFile",
+    "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
+    "FailedToGetFileContent": "ms-resource:loc.messages.FailedToGetFileContent",
+    "FailedToListPath": "ms-resource:loc.messages.FailedToListPath"
   }
 }

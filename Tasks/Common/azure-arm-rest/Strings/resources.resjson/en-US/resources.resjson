@@ -126,5 +126,12 @@
   "loc.messages.RestartingKuduService": "Restarting Kudu Service.",
   "loc.messages.RestartedKuduService": "Kudu Service restarted",
   "loc.messages.FailedToRestartKuduService": "Failed to restart kudu Service. %s.",
-  "loc.messages.FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s"
+  "loc.messages.FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
+  "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Failed to deploy web package. Error: %s",
+  "loc.messages.FailedToCreatePath": "Failed to create path '%s' from Kudu. Error: %s",
+  "loc.messages.FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
+  "loc.messages.FailedToUploadFile": "Failed to upload file '%s/%s from Kudu. Error: %s",
+  "loc.messages.FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
+  "loc.messages.FailedToListPath": "Failed to list path '%s'. Error: %s"
 }
