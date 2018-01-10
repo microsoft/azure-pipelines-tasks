@@ -422,7 +422,7 @@
             "defaultValue": "",
             "required": false ,
             "helpMarkDown": "Path to appcenter CLI on the build or release agent."
-        },        
+        },
         {
             "name": "debug",
             "aliases": [ "showDebugOutput" ],
