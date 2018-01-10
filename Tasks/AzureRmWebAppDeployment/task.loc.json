@@ -40,8 +40,8 @@
       "visibleRule": "WebAppKind != \"\""
     },
     {
-      "name": "ApplicationSettings",
-      "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
+      "name": "ApplicationAndConfigurationSettings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
       "isExpanded": false
     },
     {
@@ -405,8 +405,20 @@
       "label": "ms-resource:loc.input.label.AppSettings",
       "defaultValue": "",
       "required": false,
-      "groupName": "ApplicationSettings",
+      "groupName": "ApplicationAndConfigurationSettings",
       "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "ConfigurationSettings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.ConfigurationSettings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationSettings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }

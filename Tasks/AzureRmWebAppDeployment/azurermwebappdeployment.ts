@@ -40,7 +40,6 @@ async function main() {
         let kuduService: Kudu = await appServiceUtility.getKuduService();
         kuduServiceUtility = new KuduServiceUtility(kuduService);
         if(taskParams.WebAppUri) {
-            
             tl.setVariable(taskParams.WebAppUri, await appServiceUtility.getApplicationURL());
         }
 
@@ -98,6 +97,11 @@ async function main() {
         if(taskParams.AppSettings && !(taskParams.isLinuxApp && taskParams.isBuiltinLinuxWebApp)) {
             var customApplicationSettings = ParameterParser.parse(taskParams.AppSettings);
             await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
+        }
+
+        if(taskParams.ConfigurationSettings) {
+            var customApplicationSettings = ParameterParser.parse(taskParams.ConfigurationSettings);
+            await appServiceUtility.updateConfigurationSettings(customApplicationSettings);
         }
 
         if(taskParams.ScriptType) {

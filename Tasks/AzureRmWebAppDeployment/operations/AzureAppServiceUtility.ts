@@ -125,6 +125,18 @@ export class AzureAppServiceUtility {
         }: null;
     }
 
+    public async updateConfigurationSettings(properties: any) : Promise<void> {
+        for(var property in properties) {
+            if(properties[property].value) {
+                properties[property] = properties[property].value;
+            }
+        }
+
+        tl.debug('Updating custom configuration values');
+        await this._appService.patchConfiguration(properties);
+        tl.debug('Updated custom configuration values');
+    }
+
     public async updateAndMonitorAppSettings(properties: any): Promise<void> {
         for(var property in properties) {
             if(properties[property].value) {

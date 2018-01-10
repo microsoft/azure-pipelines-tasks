@@ -223,7 +223,6 @@ export class AzureAppService {
 
     public async patchApplicationSettings(properties): Promise<void> {
         var applicationSettings = await this.getApplicationSettings();
-        console.log(properties);
         for(var key in properties) {
             applicationSettings.properties[key] = properties[key];
         }
