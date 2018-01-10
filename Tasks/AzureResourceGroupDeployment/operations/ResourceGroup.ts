@@ -39,7 +39,6 @@ function stripJsonComments(content) {
 
     var currentChar;
     var nextChar;
-    var prevChar;
     var insideQuotes = false;
     var contentWithoutComments = '';
     var insideComment = 0;
@@ -71,8 +70,6 @@ function stripJsonComments(content) {
                 continue;
             }
             else {
-                prevChar = i - 1 >= 0 ? content[i - 1] : "";
-
                 if (currentChar == '"') {
                     insideQuotes = !insideQuotes;
                 }
