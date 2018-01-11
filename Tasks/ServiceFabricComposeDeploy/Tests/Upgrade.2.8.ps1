@@ -56,6 +56,12 @@ $serviceFabricComposeDeploymentStatus = @{
     "StatusDetails" = ""
 }
 
+$serviceFabricComposeUpgradeStatus = @{
+    "DeploymentName"        = $applicationName
+    "UpgradeState"    = "RollingForwardCompleted"
+    "UpgradeStatusDetails" = ""
+}
+
 # Need to store the bool in an object so the lambdas will share the reference
 $removed = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
 $removed.Value = $false
@@ -72,20 +78,35 @@ Register-Mock Get-ServiceFabricComposeDeploymentStatus {
 } -DeploymentName: $applicationName
 
 Register-Mock Remove-ServiceFabricComposeDeployment {
-    $removed.Value = $true
 } -DeploymentName: $applicationName -Force: True
 
-Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath: $composeFilePath -ErrorAction: Stop
+Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath $composeFilePath -ErrorAction Stop
 
 Register-Mock New-ServiceFabricComposeDeployment {
-    $removed.Value = $false
 } -- -DeploymentName: $applicationName -Compose: $composeFilePath
+
+Register-Mock Get-ServiceFabricComposeDeploymentUpgrade {
+    if (($removed.Value -eq $true))
+    {
+        $removed.Value = $false
+        return $null;
+    }
+    else
+    {
+        return $serviceFabricComposeUpgradeStatus
+    }
+} -DeploymentName: $applicationName
+
+Register-Mock Start-ServiceFabricComposeDeploymentUpgrade {
+    $removed.Value = $true
+} -- -DeploymentName: $applicationName -FailureAction: Rollback -Monitored: True -Compose: $composeFilePath
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
-Assert-WasCalled Get-ServiceFabricComposeDeploymentStatus -Times 3
-Assert-WasCalled Remove-ServiceFabricComposeDeployment -Times 1
-Assert-WasCalled New-ServiceFabricComposeDeployment -Times 1
+Assert-WasCalled Get-ServiceFabricComposeDeploymentStatus -Times 1
+Assert-WasCalled Get-ServiceFabricComposeDeploymentUpgrade -Times 2
+Assert-WasCalled Remove-ServiceFabricComposeDeployment -Times 0
+Assert-WasCalled New-ServiceFabricComposeDeployment -Times 0

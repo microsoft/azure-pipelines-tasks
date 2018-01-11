@@ -160,3 +160,33 @@ function New-ServiceFabricComposeApplicationHelper
         }
     }
 }
+
+function Start-ServiceFabricComposeDeploymentUpgradeHelper
+{
+    Param (
+        [Parameter(Mandatory=$True)]
+        [string]
+        $ApiVersion,
+
+        [Parameter(Mandatory=$True)]
+        [HashTable]
+        $UpgradeParameters
+    )
+
+    Start-ServiceFabricComposeDeploymentUpgrade @UpgradeParameters
+}
+
+function Get-ServiceFabricComposeDeploymentUpgradeHelper
+{
+    Param (
+        [Parameter(Mandatory=$True)]
+        [string]
+        $ApiVersion,
+
+        [Parameter(Mandatory=$True)]
+        [HashTable]
+        $GetUpgradeParameters
+    )
+
+    return Get-ServiceFabricComposeDeploymentUpgrade @GetUpgradeParameters
+}
