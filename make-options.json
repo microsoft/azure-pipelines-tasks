@@ -61,7 +61,6 @@
         "SqlDacpacDeploymentOnMachineGroup",
         "SSH",
         "VSBuild",
-        "VsTest",
         "VSMobileCenterUpload",
         "VSMobileCenterTest",
         "WindowsMachineFileCopy",
