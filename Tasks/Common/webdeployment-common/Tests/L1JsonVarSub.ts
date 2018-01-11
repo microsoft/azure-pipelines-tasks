@@ -1,3 +1,4 @@
+import { validate } from './L1JSONVarSubWithComments';
 var jsonSubUtil = require('webdeployment-common/jsonvariablesubstitutionutility.js');
 
 var envVarObject = jsonSubUtil.createEnvTree([
@@ -60,3 +61,5 @@ if(jsonObject['constructor.name'] === 'newConstructorName' &&
     jsonObject['constructor']['name'] === 'newConstructorName' && jsonObject['constructor']['valueOf'] === 'constructorNewValue') {
         console.log('JSON - substitute inbuilt JSON attributes validated');
 }
+
+validate();
