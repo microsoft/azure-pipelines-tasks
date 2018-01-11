@@ -61,7 +61,6 @@
         "SqlDacpacDeploymentOnMachineGroup",
         "SSH",
         "VSBuild",
-        "VSMobileCenterUpload",
         "VSMobileCenterTest",
         "WindowsMachineFileCopy",
         "XamarinAndroid",
