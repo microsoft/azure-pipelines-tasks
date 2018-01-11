@@ -46,18 +46,16 @@ export class KuduServiceUtility {
             await this._appServiceKuduService.uploadFile(physicalRootPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
             await this._appServiceKuduService.uploadFile(physicalRootPath, 'kuduPostDeploymentScript_' + uniqueID + fileExtension, scriptFile.filePath);
             console.log(tl.loc('ExecuteScriptOnKudu'));
-
             await this.runCommand('site\\wwwroot', 'mainCmdFile_' + uniqueID + fileExtension + ' ' + uniqueID, 30, 'script_result_' +  uniqueID + '.txt');
-
             await this._printPostDeploymentLogs(physicalRootPath, uniqueID);
 
         }
         catch(error) {
-            throw Error(error);
+            throw Error(tl.loc('FailedToRunScriptOnKuduError', error));
         }
         finally {
             try {
-                await this._appServiceKuduService.uploadFile(physicalRootPath, 'delete_log_file_' + uniqueID + fileExtension, scriptFile.filePath);
+                await this._appServiceKuduService.uploadFile(physicalRootPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
                 await this.runCommand(physicalRootPath, 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
             }
             catch(error) {
@@ -161,7 +159,11 @@ export class KuduServiceUtility {
                 await this._pollForFile(physicalPath, pollFile, timeOut * 6);
             }
             else {
-                throw error;
+                if(typeof error.valueOf() == 'string') {
+                    throw error;
+                }
+
+                throw `${error.statusCode} - ${error.statusMessage}`;
             }
         }
     }
@@ -235,9 +237,9 @@ export class KuduServiceUtility {
 
         while (attempts < noOfRetry) {
             attempts += 1;
-            var fileContent: string = await this._appServiceKuduService.getFileContent(physicalPath, fileContent);
+            var fileContent: string = await this._appServiceKuduService.getFileContent(physicalPath, fileName);
             if(fileContent == null) {
-                tl.debug('File: ' + fileName + 'found. retry after 10 seconds. Attempt: ' + attempts);
+                tl.debug('File: ' + fileName + ' not found. retry after 10 seconds. Attempt: ' + attempts);
                 await webClient.sleepFor(10);
             }
             else {

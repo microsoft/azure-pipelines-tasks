@@ -673,7 +673,7 @@
         "failedtoUploadFileToKudu": "Unable to upload file: %s to Kudu (%s). Status Code: %s",
         "failedtoUploadFileToKuduError": "Unable to upload file: %s to Kudu (%s). Error: %s",
         "ExecuteScriptOnKudu": "Executing given script on Kudu service.",
-        "FailedToRunScriptOnKuduError": "Unable to run the script on Kudu: %s. Error: %s",
+        "FailedToRunScriptOnKuduError": "Unable to run the script on Kudu Service. Error: %s",
         "FailedToRunScriptOnKudu": "Unable to run the script on Kudu: %s. Status Code: %s",
         "ScriptExecutionOnKuduSuccess": "Successfully executed script on Kudu.",
         "ScriptExecutionOnKuduFailed": "Executed script returned '%s' as return code. Error: %s",

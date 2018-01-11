@@ -47,12 +47,15 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     
     try {
         var shouldContinue = true;
-        while(retryCount > 0) {
+        while(true) {
             try {
                 await executeMSDeploy(msDeployCmdArgs);
                 break;
             }
             catch (error) {
+                if(retryCount == 0) {
+                    throw error;
+                }
                 console.log(error);
                 console.log(tl.loc('RetryToDeploy'));
             }

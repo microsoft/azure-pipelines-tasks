@@ -146,7 +146,7 @@
   "loc.messages.failedtoUploadFileToKudu": "Unable to upload file: %s to Kudu (%s). Status Code: %s",
   "loc.messages.failedtoUploadFileToKuduError": "Unable to upload file: %s to Kudu (%s). Error: %s",
   "loc.messages.ExecuteScriptOnKudu": "Executing given script on Kudu service.",
-  "loc.messages.FailedToRunScriptOnKuduError": "Unable to run the script on Kudu: %s. Error: %s",
+  "loc.messages.FailedToRunScriptOnKuduError": "Unable to run the script on Kudu Service. Error: %s",
   "loc.messages.FailedToRunScriptOnKudu": "Unable to run the script on Kudu: %s. Status Code: %s",
   "loc.messages.ScriptExecutionOnKuduSuccess": "Successfully executed script on Kudu.",
   "loc.messages.ScriptExecutionOnKuduFailed": "Executed script returned '%s' as return code. Error: %s",
