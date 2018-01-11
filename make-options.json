@@ -2,7 +2,6 @@
     "tasks": [
         "AndroidSigning",
         "ANT",
-        "AppCenterDistribute",
         "AppCenterTest",
         "ArchiveFiles",
         "AzureAppServiceManage",
@@ -11,7 +10,6 @@
         "AzureFileCopy",
         "AzureFunction",
         "AzureKeyVault",
-        "AzureMonitorAlerts",
         "AzureMonitor",		
         "AzureNLBManagement",
         "AzurePowerShell",
