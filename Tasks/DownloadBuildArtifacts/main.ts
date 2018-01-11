@@ -149,7 +149,7 @@ async function main(): Promise<void> {
                     var containerId: number = parseInt(containerParts[1]);
                     var containerPath: string = containerParts[2];
 
-                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + containerPath + "&isShallow=true&api-version=4.1-preview.4";
+                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
                     console.log(tl.loc("DownloadArtifacts", itemsUrl));
 
                     var variables = {};
