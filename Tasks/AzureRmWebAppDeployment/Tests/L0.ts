@@ -26,8 +26,12 @@ describe('AzureRmWebAppDeployment Suite', function() {
         done();
     });
     after(function() {
-        
-        tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'), true);
+        try {
+            tl.rmRF(path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub', 'parameters_test.xml'));
+        }
+        catch(error) {
+            tl.debug(error);
+        }
     });
 
     ApplicationInsightsTests.ApplicationInsightsTests();
