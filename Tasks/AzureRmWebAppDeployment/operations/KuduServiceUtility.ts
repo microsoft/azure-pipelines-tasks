@@ -118,7 +118,7 @@ export class KuduServiceUtility {
                 await this._appOfflineKuduService(physicalPath, false);
             }
 
-            console.log(tl.loc('PackageDeploymentSuccess'));
+            console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat", packagePath, physicalPath));
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
@@ -166,7 +166,7 @@ export class KuduServiceUtility {
         }
     }
 
-    private _getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux): {[key: string]: string | boolean} {
+    private _getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux): any {
         if(scriptType === 'Inline Script') {
             tl.debug('creating kuduPostDeploymentScript_local file');
             var scriptFilePath = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), isLinux ? 'kuduPostDeploymentScript_local.sh' : 'kuduPostDeploymentScript_local.cmd');

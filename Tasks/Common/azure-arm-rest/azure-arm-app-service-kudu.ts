@@ -168,7 +168,7 @@ export class Kudu {
         }
     }
 
-    public async getProcess(processID: number): Promise<void> {
+    public async getProcess(processID: number): Promise<any> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
@@ -377,7 +377,6 @@ export class Kudu {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`extractZIP. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
-                console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat", webPackage, physicalPath));
                 return ;
             }
             else {

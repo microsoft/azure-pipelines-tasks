@@ -7,11 +7,9 @@ export async function addReleaseAnnotation(endpoint: AzureEndpoint, azureAppServ
     try {
         var appSettings = await azureAppService.getApplicationSettings();
         var instrumentationKey = appSettings && appSettings.properties && appSettings.properties.APPINSIGHTS_INSTRUMENTATIONKEY;
-        console.log(appSettings.properties);
         if(instrumentationKey) {
             let appinsightsResources: ApplicationInsightsResources = new ApplicationInsightsResources(endpoint);
             var appInsightsResources = await appinsightsResources.list(null, [`$filter=InstrumentationKey eq '${instrumentationKey}'`]);
-            console.log(appInsightsResources);
             if(appInsightsResources.length > 0) {
                 var appInsights: AzureApplicationInsights = new AzureApplicationInsights(endpoint, appInsightsResources[0].id.split('/')[4], appInsightsResources[0].name);
                 var releaseAnnotationData = getReleaseAnnotation(isDeploymentSuccess);

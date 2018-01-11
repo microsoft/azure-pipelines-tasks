@@ -410,7 +410,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Edit web app configuration settings following the syntax -key value .<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+            "helpMarkDown": "Edit web app configuration settings following the syntax -key value.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             }

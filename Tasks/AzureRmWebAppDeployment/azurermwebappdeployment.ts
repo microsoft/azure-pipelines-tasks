@@ -27,7 +27,8 @@ async function main() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
-        
+
+        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParams.WebAppName));
         if(!taskParams.DeployToSlotFlag) {
             taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(azureEndpoint, 'Microsoft.Web/Sites', taskParams.WebAppName);
         }
