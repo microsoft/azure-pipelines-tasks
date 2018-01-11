@@ -8,8 +8,24 @@ import * as util from 'npm-common/util';
 export async function run(command?: string): Promise<void> {
     let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     let npmrc = util.getTempNpmrcPath();
-    let npmRegistry: INpmRegistry;
+    let npmRegistry: INpmRegistry = await getPublishRegistry();
 
+    tl.debug(tl.loc('PublishRegistry', npmRegistry.url));
+    util.appendToNpmrc(npmrc, `registry=${npmRegistry.url}\n`);
+    util.appendToNpmrc(npmrc, `${npmRegistry.auth}\n`);
+
+    // For publish, always override their project .npmrc
+    let npm = new NpmToolRunner(workingDir, npmrc, true);
+    npm.line('publish');
+
+    npm.execSync();
+
+    tl.rmRF(npmrc);
+    tl.rmRF(util.getTempPath());
+}
+
+export async function getPublishRegistry(): Promise<INpmRegistry>{
+    let npmRegistry: INpmRegistry;
     let registryLocation = tl.getInput(NpmTaskInput.PublishRegistry);
     switch (registryLocation) {
         case RegistryLocation.Feed:
@@ -23,17 +39,5 @@ export async function run(command?: string): Promise<void> {
             npmRegistry = NpmRegistry.FromServiceEndpoint(endpointId);
             break;
     }
-
-    tl.debug(tl.loc('PublishRegistry', npmRegistry.url));
-    util.appendToNpmrc(npmrc, `registry=${npmRegistry.url}\n`);
-    util.appendToNpmrc(npmrc, `${npmRegistry.auth}\n`);
-
-    // For publish, always override their project .npmrc
-    let npm = new NpmToolRunner(workingDir, npmrc, true);
-    npm.line('publish');
-
-    await npm.exec();
-
-    tl.rmRF(npmrc);
-    tl.rmRF(util.getTempPath());
+    return npmRegistry;
 }

@@ -11,12 +11,13 @@
     "Release"
   ],
   "runsOn": [
-    "Server"
+    "Server",
+    "ServerGate"
   ],
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 5
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

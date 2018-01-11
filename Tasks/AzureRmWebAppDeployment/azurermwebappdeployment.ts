@@ -189,9 +189,9 @@ async function run() {
                     await updateStartupCommandAndRuntimeStack(endPoint, webAppName, resourceGroupName, deployToSlotFlag, slotName, runtimeStack, startupCommand);
                 }
             }
-            if(!isLinuxWebApp && scriptType) {
+            if(scriptType) {
                 var kuduWorkingDirectory = virtualApplication ? virtualApplicationPhysicalPath : 'site/wwwroot';
-                await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag);
+                await kuduUtility.runPostDeploymentScript(publishingProfile, kuduWorkingDirectory, scriptType, inlineScript, scriptPath, takeAppOfflineFlag, isLinuxWebApp);
             }
         }
 
@@ -387,7 +387,7 @@ async function updateAppSetting(SPN, webAppName: string, resourceGroupName: stri
 }
 
 async function addReleaseAnnotation(SPN, webAppName: string, webAppSettings: any, isDeploymentSuccess: boolean) {
-    let appInsightsInstrumentationKey: string = webAppSettings.properties && webAppSettings.properties[azureRESTUtility.appInsightsInstrumentationKeyAppSetting];
+    let appInsightsInstrumentationKey: string = webAppSettings && webAppSettings.properties && webAppSettings.properties[azureRESTUtility.appInsightsInstrumentationKeyAppSetting];
 
     if (!!appInsightsInstrumentationKey) {
         let appInsightsResource = await azureRESTUtility.getApplicationInsightsResources(SPN, null, `InstrumentationKey eq '${appInsightsInstrumentationKey}'`);

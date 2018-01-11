@@ -26,6 +26,7 @@
     "inputs": [
         {
             "name": "serviceConnectionName",
+            "aliases": ["clusterConnection"],
             "type": "connectedService:servicefabric",
             "label": "Cluster Connection",
             "defaultValue": "",

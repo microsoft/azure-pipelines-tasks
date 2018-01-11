@@ -16,12 +16,15 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 4
+    "Patch": 6
   },
   "preview": "true",
   "inputs": [
     {
       "name": "connectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureServiceBus",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",

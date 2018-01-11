@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 126,
+        "Minor": 129,
         "Patch": 0
     },
     "demands": [
@@ -35,9 +35,9 @@
             "aliases": [ "solutionFile" ],
             "type": "filePath",
             "label": "Solution",
-            "defaultValue": "",
+            "defaultValue": "**/*.sln",
             "required": true,
-            "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build."
+            "helpMarkDown": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards."
         },
         {
             "name": "configuration",
@@ -239,6 +239,8 @@
         "MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
         "MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
         "MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
-        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent."
+        "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
+        "MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
+        "SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
     }
 }

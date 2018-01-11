@@ -1,3 +1,5 @@
+import { ApplicationTokenCredentials } from "./azure-arm-common";
+
 export interface AzureBaseObject {
     name?: string;
     id: string;
@@ -195,4 +197,78 @@ export interface StorageAccount extends AzureBaseObject {
     kind?: string;
     tags?: Map<string, string>;
     properties?: StorageAccountProperties;
+}
+
+export interface AzureEndpoint {
+    subscriptionID: string;
+    subscriptionName: string;
+    servicePrincipalClientID?: string;
+    servicePrincipalKey?: string;
+    tenantID: string;
+    environmentAuthorityUrl: string;
+    url: string;
+    environment: string;
+    activeDirectoryResourceID: string;
+    activeDirectoryAuthority?: string;
+    graphEndpoint?: string;
+    galleryUrl?: string;
+    portalEndpoint?: string;
+    AzureKeyVaultDnsSuffix?: string;
+    AzureKeyVaultServiceEndpointResourceId?: string;
+    applicationTokenCredentials: ApplicationTokenCredentials;
+}
+
+export interface AzureAppServiceConfigurationDetails {
+    id: string;
+    name: string;
+    type: string;
+    kind?: string;
+    location: string;
+    tags: string;
+    properties?: {[key: string]: any};
+}
+
+export interface WebJob {
+    name: string;
+    status: string;
+    runCommand: string;
+    log_url: string;
+    url: string;
+    type: string;
+}
+
+export interface SiteExtension {
+    id: string;
+    title: string;
+    description: string;
+    extension_url: string;
+    local_path: string;
+    version: string;
+    project_url: string;
+    authors: Array<string>;
+    provisioningState: string;
+    local_is_latest_version: boolean;
+}
+
+export interface WebTest {
+    id?: string;
+    name: string;
+    type: string;
+    location: string;
+    tags: {[key: string]: string},
+    kind?: string,
+    etag?: string;
+    properties?: {[key: string]: any};
+}
+
+
+export interface ApplicationInsights {
+    id?: string;
+    name: string;
+    type: string;
+    location: string;
+    tags: {[key: string]: string},
+    kind?: string,
+    etag?: string;
+    properties?: {[key: string]: any};
 }

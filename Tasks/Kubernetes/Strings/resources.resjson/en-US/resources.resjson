@@ -31,11 +31,13 @@
   "loc.input.help.forceUpdate": "Delete the docker-registry secret if it exists and create a new one with updated values.",
   "loc.input.label.versionOrLocation": "Kubectl",
   "loc.input.label.versionSpec": "Version Spec",
-  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 1.7, 1.x, 4.x, 6.10.0, >=6.10.0",
+  "loc.input.help.versionSpec": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
   "loc.input.label.checkLatest": "Check for Latest Version",
   "loc.input.help.checkLatest": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
   "loc.input.label.specifyLocation": "Path to Kubectl",
-  "loc.input.help.specifyLocation": "Path to the kubectl version to use",
+  "loc.input.help.specifyLocation": "Full path to the kubectl.exe",
+  "loc.input.label.namespace": "Namespace",
+  "loc.input.help.namespace": "Name of the namespace to run the command in.",
   "loc.input.label.cwd": "Working directory",
   "loc.input.help.cwd": "Working directory for the Kubectl command.",
   "loc.input.label.outputFormat": "Output format",
@@ -48,5 +50,8 @@
   "loc.messages.DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
   "loc.messages.FileNotFoundException": "Can not find file at location: %s",
   "loc.messages.DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",
-  "loc.messages.DownloadPathForStableTxt": "Download path for stable.txt: %s"
+  "loc.messages.DownloadPathForStableTxt": "Download path for stable.txt: %s",
+  "loc.messages.DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
+  "loc.messages.DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
+  "loc.messages.UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases"
 }

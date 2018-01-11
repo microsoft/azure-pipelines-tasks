@@ -247,6 +247,30 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 </p>
             </td>
         </tr>
+        <tr>
+            <td>
+                <p align="left">
+                    <code>##vso[task.prependpath]local directory path</code>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Instruction for the agent to update the PATH environment variable. The specified directory is prepended
+                    to the PATH. The updated environment variable will be reflected in subsequent tasks.<br>
+                    <b>Example:</b> <br>
+                    <code>##vso[task.prependpath]c:\my\directory\path</code>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    2.115.0
+                </p>
+            </td>
+        </tr>
     </tbody>
 </table>
 

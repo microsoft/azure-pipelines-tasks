@@ -76,7 +76,7 @@
   "loc.messages.XcodeSuccess": "Xcode task execution completed with no errors.",
   "loc.messages.TempKeychainDeleteFailed": "Failed to delete the temporary keychain created during the build: `%s`",
   "loc.messages.ProvProfileDeleteFailed": "Failed to delete the provisioning profile `%s`.",
-  "loc.messages.ExportMethodNotIdentified": "Failed to automatically identify the export method to use from the archive file. This might cause errors during the build or produce an invalid package. Set `Export options` to `Plist` or `Specify`.",
+  "loc.messages.ExportMethodNotIdentified": "Failed to automatically identify the export method to use from the archive file. This might cause errors during the build or produce an invalid package. If export fails, either enable signing (set `Signing Style` to `Project Defaults`), or configure export manually (set `Export options` to `Plist` or `Specify`).",
   "loc.messages.ExportOptionsPlistInvalidFilePath": "The `Export options` plist file does not exist at `%s`. Provide the path to a valid plist file.",
   "loc.messages.SchemeRequiredForArchive": "The scheme must be specified to generate the package with xcodebuild archive and export.",
   "loc.messages.WorkspaceOrProjectRequiredForArchive": "The workspace or project path must be specified to generate the package with xcodebuild archive and export.",

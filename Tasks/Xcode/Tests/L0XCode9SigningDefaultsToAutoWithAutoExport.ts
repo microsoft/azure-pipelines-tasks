@@ -28,7 +28,7 @@ tr.registerMock('readline', {
             on: function(event, cb) {
                 if (event === 'line') {
                     cb("Foo");
-                    cb("                                    ProvisioningStyle = Automatic;"); // First line wins. This should be ignored.                    
+                    cb("                                    ProvisioningStyle = Automatic;"); // First line wins. This should be ignored.
                     cb("Bar");
                     cb("Baz");
                 }

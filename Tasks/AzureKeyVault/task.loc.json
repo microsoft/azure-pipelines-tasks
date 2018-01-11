@@ -14,13 +14,16 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 14
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
   "inputs": [
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -91,6 +94,8 @@
     "AccessDeniedError": "ms-resource:loc.messages.AccessDeniedError",
     "GetSecretValueFailed": "ms-resource:loc.messages.GetSecretValueFailed",
     "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound",
-    "GetSecretFailedBecauseOfInvalidCharacters": "ms-resource:loc.messages.GetSecretFailedBecauseOfInvalidCharacters"
+    "GetSecretFailedBecauseOfInvalidCharacters": "ms-resource:loc.messages.GetSecretFailedBecauseOfInvalidCharacters",
+    "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
+    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile"
   }
 }

@@ -3,9 +3,9 @@ var url = require('url');
 var fs = require('fs');
 
 import * as tl from 'vsts-task-lib/task';
-import { IBuildApi } from 'vso-node-api/BuildApi';
-import { IRequestHandler } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
-import { WebApi, getHandlerFromToken } from 'vso-node-api/WebApi';
+import { IBuildApi } from './vso-node-api/BuildApi';
+import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
+import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
@@ -44,7 +44,7 @@ function publishEvent(feature, properties: any): void {
         else {
             if (feature === 'reliability') {
                 let reliabilityData = properties;
-                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + taskJson.version + ";]" + reliabilityData.errorMessage
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + JSON.stringify(taskJson.version) + ";]" + reliabilityData.errorMessage
             }
         }
         console.log(telemetry);;
@@ -149,7 +149,7 @@ async function main(): Promise<void> {
                     var containerId: number = parseInt(containerParts[1]);
                     var containerPath: string = containerParts[2];
 
-                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + containerPath + "&isShallow=true&api-version=4.1-preview.4";
+                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
                     console.log(tl.loc("DownloadArtifacts", itemsUrl));
 
                     var variables = {};
@@ -163,7 +163,7 @@ async function main(): Promise<void> {
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
-                    let downloadUrl = artifact.resource.downloadUrl.replace("file:", "");
+                    let downloadUrl = decodeURIComponent(artifact.resource.downloadUrl.replace("file:", ""));
                     let artifactLocation = downloadUrl + '/' + artifact.name;
                     if (!fs.existsSync(artifactLocation)) {
                         console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));

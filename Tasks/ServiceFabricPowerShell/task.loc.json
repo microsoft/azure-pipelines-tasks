@@ -26,6 +26,9 @@
   "inputs": [
     {
       "name": "serviceConnectionName",
+      "aliases": [
+        "clusterConnection"
+      ],
       "type": "connectedService:servicefabric",
       "label": "ms-resource:loc.input.label.serviceConnectionName",
       "defaultValue": "",

@@ -19,12 +19,9 @@ tmr.mockNpmCommand('custom', {
 tmr.answers.exist['C:\\mock\\cache\\npm-debug.log'] = false;
 tmr.answers["stats"] = {"C:\\mock\\cache": {"isDirectory":true}};
 tmr.answers.findMatch['*-debug.log'] = [
-    'C:\\mock\cache\\_logs\\someRandomNpm-debug.log'
+    'someRandomNpm-debug.log'
 ];
-let mockFs = require('fs');
-tmr.registerMock('fs', mockFs);
-mockFs.readFile = (a, b, cb) => {
-    cb(undefined, 'NPM_DEBUG_LOG');
-};
+let fs = require('fs');
+fs.writeFileSync('someRandomNpm-debug.log', 'NPM_DEBUG_LOG', 'utf-8');
 tmr.run();
 

@@ -253,7 +253,7 @@ function publishPackageNuGet(packageFile: string, options: PublishOptions, authI
 
     let execResult = nugetTool.execSync();
     if (execResult.code !== 0) {
-        telemetry.logStderr(execResult.code, execResult.stderr);
+        telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
         throw tl.loc("Error_NugetFailedWithCodeAndErr",
             execResult.code,
             execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
@@ -283,7 +283,7 @@ function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPus
         return;
     }
 
-    telemetry.logStderr(execResult.code, execResult.stderr);
+    telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
     throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush",
         execResult.code,
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));

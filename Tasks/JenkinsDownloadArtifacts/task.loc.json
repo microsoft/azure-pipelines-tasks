@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 128,
-    "Patch": 3
+    "Patch": 4
   },
   "groups": [
     {
@@ -36,6 +36,9 @@
   "inputs": [
     {
       "name": "serverEndpoint",
+      "aliases": [
+        "jenkinsServerConnection"
+      ],
       "type": "connectedService:Jenkins",
       "label": "ms-resource:loc.input.label.serverEndpoint",
       "defaultValue": "",

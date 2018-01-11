@@ -29,6 +29,26 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
+
+function Publish-Azure-Telemetry
+ {
+   param([object] $deploymentResponse, [string] $jobId)
+    if($deploymentResponse){
+       $jsonString = -join("{" , 
+       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
+       "," , 
+       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
+       "," , 
+       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
+       "," ,
+       "`"JobId`" : `"$jobId`"" ,
+       "}")
+    }
+
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$jsonString"
+    Write-Host $telemetryString
+ }
+
 try
 {
     # keep machineNames parameter name unchanged due to back compatibility
@@ -57,7 +77,7 @@ try
     $deploymentOperation = 'Deployment'
 
     $envOperationStatus = "Passed"
-
+    $jobId = $env:SYSTEM_JOBID;
     # enabling detailed logging only when system.debug is true
     $enableDetailedLoggingString = $env:system_debug
     if ($enableDetailedLoggingString -ne "true")
@@ -103,7 +123,7 @@ try
             $status = $deploymentResponse.Status
 
             Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStatusForMachine01" -ArgumentList $displayName, $status)
-
+            Publish-Azure-Telemetry -deploymentResponse $deploymentResponse -jobId $jobId
             if ($status -ne "Passed")
             {
                 Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
@@ -143,6 +163,7 @@ try
 
                     Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                     Write-Output (Get-VstsLocString -Key "PS_TM_DeploymentStatusForMachine01" -ArgumentList $displayName, $status)
+                    Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
                     if($status -ne "Passed")
                     {
                         $envOperationStatus = "Failed"

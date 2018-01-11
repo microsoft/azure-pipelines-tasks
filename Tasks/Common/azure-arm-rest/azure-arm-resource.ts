@@ -1,9 +1,11 @@
-import msRestAzure = require("./azure-arm-common");
-import azureServiceClient = require("./AzureServiceClient");
-import webClient = require("./webClient");
-import util = require("util");
+import { ToError, ServiceClient } from './AzureServiceClient';
+import { AzureEndpoint } from './azureModels';
+import msRestAzure = require('./azure-arm-common');
+import azureServiceClient = require('./AzureServiceClient');
+import webClient = require('./webClient');
+import util = require('util');
 import tl = require('vsts-task-lib/task');
-import Q = require("q");
+import Q = require('q');
 
 export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 
@@ -24,6 +26,45 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
     }
 }
 
+export class Resources {
+    private _client: ServiceClient;
+    
+    constructor(endpoint: AzureEndpoint) {
+        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
+            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
+        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
+    }
+
+    public async getResources(resourceType: string, resourceName: string) {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+
+        httpRequest.uri = this._client.getRequestUri('//subscriptions/{subscriptionId}/resources', {},
+        [`$filter=resourceType EQ \'${resourceType}\' AND name EQ \'${resourceName}\'`], '2016-07-01');
+
+        var result = [];
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            result = result.concat(response.body.value);
+            if(response.body.nextLink) {
+                var nextResult = await this._client.accumulateResultFromPagedResult(response.body.nextLink);
+                if (nextResult.error) {
+                    throw Error(nextResult.error);
+                }
+                result = result.concat(nextResult.result);
+            }
+
+            return result;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetResourceID', resourceType, resourceName, this._client.getFormattedError(error)))
+        }
+    }
+}
 export class ResourceGroups {
     private client: ResourceManagementClient;
 

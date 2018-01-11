@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 2,
-        "Patch": 16
+        "Minor": 129,
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -35,11 +35,20 @@
             "displayName": "Advanced deployment options for virtual machines",
             "isExpanded": true,
             "visibleRule": "action = Create Or Update Resource Group || action = Select Resource Group"
+        },
+        {
+            "name": "Outputs",
+            "displayName": "Outputs",
+            "isExpanded": true,
+            "visibleRule": "action = Create Or Update Resource Group"
         }
     ],
     "inputs": [
         {
             "name": "ConnectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
@@ -182,6 +191,9 @@
         },
         {
             "name": "deploymentGroupEndpoint",
+            "aliases": [
+                "teamServicesConnection"
+            ],
             "type": "connectedService:ExternalTfs",
             "label": "TFS/VSTS endpoint",
             "groupName": "AdvancedDeploymentOptions",
@@ -194,6 +206,9 @@
         },
         {
             "name": "project",
+            "aliases": [
+                "teamProject"
+            ],
             "type": "pickList",
             "label": "Team project",
             "groupName": "AdvancedDeploymentOptions",
@@ -234,12 +249,15 @@
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMwithWinRM || enableDeploymentPrerequisites = None",
             "helpMarkDown": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected."
-        }
-    ],
-    "OutputVariables": [
+        },
         {
-            "name": "DeploymentOutputs",
-            "description": "This task output variable will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
+            "name": "deploymentOutputs",
+            "type": "string",
+            "label": "Deployment outputs",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "Outputs",
+            "helpMarkDown": "Provide a name for the variable for the output variable which will contain the outputs section of the current deployment object in string format. You can use the “ConvertFrom-Json” PowerShell cmdlet to parse the JSON object and access the individual output values."
         }
     ],
     "dataSourceBindings": [
@@ -397,7 +415,7 @@
         "ProvisioningStatusOfExtensionIsNotSucceeded": "Provisioning State of WinRMCustomScriptExtension is not succeeded on vm: '%s'.",
         "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
         "ExtensionNotFound": "Extension not found on the vm: %s",
-        "AddedOutputVariable": "Updated output variable 'DeploymentOutputs', which contains the outputs section of the current deployment object in string format. Follow this link: https://go.microsoft.com/fwlink/?linkid=853539 to learn how to use it in your defintion",
+        "AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
         "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
         "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
