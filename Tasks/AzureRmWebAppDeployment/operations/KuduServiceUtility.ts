@@ -46,7 +46,9 @@ export class KuduServiceUtility {
             await this._appServiceKuduService.uploadFile(physicalRootPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
             await this._appServiceKuduService.uploadFile(physicalRootPath, 'kuduPostDeploymentScript_' + uniqueID + fileExtension, scriptFile.filePath);
             console.log(tl.loc('ExecuteScriptOnKudu'));
-            await this.runCommand('site\\wwwroot', 'mainCmdFile_' + uniqueID + fileExtension + ' ' + uniqueID, 30, 'script_result_' +  uniqueID + '.txt');
+            await this.runCommand('site\\wwwroot',
+             'mainCmdFile_' + uniqueID + fileExtension + ' ' + uniqueID,
+              30, 'script_result_' +  uniqueID + '.txt');
             await this._printPostDeploymentLogs(physicalRootPath, uniqueID);
 
         }
@@ -56,7 +58,7 @@ export class KuduServiceUtility {
         finally {
             try {
                 await this._appServiceKuduService.uploadFile(physicalRootPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
-                await this.runCommand(physicalRootPath, 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
+                await this.runCommand('site\\wwwroot', 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
             }
             catch(error) {
                 tl.debug('Unable to delete log files : ' + error);
