@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -93,12 +93,16 @@
     },
     {
       "name": "waitForCompletion",
-      "type": "boolean",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.waitForCompletion",
-      "Required": "false",
       "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion",
       "groupName": "completionOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+      "options": {
+        "true": "Callback",
+        "false": "ApiResponse"
+      }
     },
     {
       "name": "successCriteria",

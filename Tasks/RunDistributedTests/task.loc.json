@@ -13,8 +13,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 54
+    "Patch": 56
   },
+  "deprecated": true,
   "runsOn": [
     "Agent"
   ],
