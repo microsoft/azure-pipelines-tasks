@@ -1,7 +1,7 @@
 // TODO: This whole file is copied from AzureResourceGroupDeployment task. Move this parser to common lib
 // Similar parser is used in Grid UI extension. Try to move the code to some place where all can use it.
 
-export function parse(input: string) {
+export function parse(input: string): {[key: string]: any} {
     var result = {};
     var index = 0;
     var obj = { name: "", value: "" };
@@ -37,7 +37,7 @@ function isName(literal: string, specialCharacterFlag: boolean): boolean {
     return literal[0] === '-' && !specialCharacterFlag && isNaN(Number(literal));
 }
 
-function findLiteral(input, currentPosition) {
+function findLiteral(input, currentPosition): {[key: string]: any} {
     var specialCharacterFlag = false;
     for (; currentPosition < input.length; currentPosition++) {
         if (input[currentPosition] == " " || input[currentPosition] == "\t") {

@@ -143,7 +143,7 @@ export class AzureAppService {
         return this._appServiceConfigurationDetails;
     }
 
-    public async getPublishingProfileWithSecrets(force?: boolean) {
+    public async getPublishingProfileWithSecrets(force?: boolean): Promise<any>{
         if(force || !this._appServicePublishingProfile) {
             this._appServicePublishingProfile = await this._getPublishingProfileWithSecrets();
         }
@@ -151,7 +151,7 @@ export class AzureAppService {
         return this._appServicePublishingProfile;
     }
 
-    public async getPublishingCredentials() {
+    public async getPublishingCredentials(): Promise<any> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
@@ -264,7 +264,7 @@ export class AzureAppService {
 
     }
 
-    public async getMetaData(): Promise<AzureAppServiceConfigurationDetails> {
+    public async getMetadata(): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
@@ -311,16 +311,16 @@ export class AzureAppService {
         }
     }
 
-    public async patchMetaData(properties): Promise<void> {
-        var applicationSettings = await this.getMetaData();
+    public async patchMetadata(properties): Promise<void> {
+        var applicationSettings = await this.getMetadata();
         for(var key in properties) {
             applicationSettings.properties[key] = properties[key];
         }
 
-        await this.updateMetaData(applicationSettings);
+        await this.updateMetadata(applicationSettings);
     }
 
-    public async updateMetaData(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
+    public async updateMetadata(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
@@ -344,12 +344,11 @@ export class AzureAppService {
         }
     }
     
-
     public getSlot(): string {
         return this._slot ? this._slot : "production";
     }
     
-    private async _getPublishingProfileWithSecrets() {
+    private async _getPublishingProfileWithSecrets(): Promise<any> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';

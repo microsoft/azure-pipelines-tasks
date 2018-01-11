@@ -23,17 +23,17 @@ export class KuduServiceUtility {
         }
     }
 
-    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any) {
+    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<void> {
         try {
             var requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
-            return await this._appServiceKuduService.updateDeployment(requestBody);
+            await this._appServiceKuduService.updateDeployment(requestBody);
         }
         catch(error) {
             tl.warning(error);
         }
     }
 
-    public async runPostDeploymentScript(taskParams: TaskParameters) {
+    public async runPostDeploymentScript(taskParams: TaskParameters): Promise<void> {
         try {
             if(taskParams.TakeAppOfflineFlag) {
                 await this._appOfflineKuduService(physicalRootPath, true);
@@ -65,46 +65,6 @@ export class KuduServiceUtility {
             }
             if(taskParams.TakeAppOfflineFlag) {
                 await this._appOfflineKuduService(physicalRootPath, false);
-            }
-        }
-    }
-
-    private async _printPostDeploymentLogs(physicalPath: string, uniqueID: string) : Promise<void> {
-        var stdoutLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stdout_' + uniqueID + '.txt');
-        var stderrLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stderr_' + uniqueID + '.txt');
-        var scriptReturnCode = await this._appServiceKuduService.getFileContent(physicalPath, 'script_result_' + uniqueID + '.txt');
-
-        if(scriptReturnCode == null) {
-            throw new Error('File not found in Kudu Service. ' + 'script_result_' + uniqueID + '.txt');
-        }
-
-        if(stdoutLog) {
-            console.log(tl.loc('stdoutFromScript'));
-            console.log(stdoutLog);
-        }
-        if(stderrLog) {
-            console.log(tl.loc('stderrFromScript'));
-            if(scriptReturnCode != '0') {
-                tl.error(stderrLog);
-                throw Error(tl.loc('ScriptExecutionOnKuduFailed', scriptReturnCode, stderrLog));
-            }
-            else {
-                console.log(stderrLog);
-            }
-        }
-    }
-
-    private async runCommand(physicalPath: string, command: string, timeOut: number, pollFile: string) {
-        try {
-            await this._appServiceKuduService.runCommand(physicalPath, command);
-        }
-        catch(error) {
-            if(timeOut > 0 && error.toString().indexOf('Request timeout: /api/command') != -1) {
-                tl.debug('Request timeout occurs. Trying to poll for file: ' + pollFile);
-                await this._pollForFile(physicalPath, pollFile, timeOut * 6);
-            }
-            else {
-                throw error;
             }
         }
     }
@@ -166,15 +126,55 @@ export class KuduServiceUtility {
         }
     }
 
-    private _getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux) {
+    private async _printPostDeploymentLogs(physicalPath: string, uniqueID: string) : Promise<void> {
+        var stdoutLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stdout_' + uniqueID + '.txt');
+        var stderrLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stderr_' + uniqueID + '.txt');
+        var scriptReturnCode = await this._appServiceKuduService.getFileContent(physicalPath, 'script_result_' + uniqueID + '.txt');
+
+        if(scriptReturnCode == null) {
+            throw new Error('File not found in Kudu Service. ' + 'script_result_' + uniqueID + '.txt');
+        }
+
+        if(stdoutLog) {
+            console.log(tl.loc('stdoutFromScript'));
+            console.log(stdoutLog);
+        }
+        if(stderrLog) {
+            console.log(tl.loc('stderrFromScript'));
+            if(scriptReturnCode != '0') {
+                tl.error(stderrLog);
+                throw Error(tl.loc('ScriptExecutionOnKuduFailed', scriptReturnCode, stderrLog));
+            }
+            else {
+                console.log(stderrLog);
+            }
+        }
+    }
+
+    private async runCommand(physicalPath: string, command: string, timeOut: number, pollFile: string): Promise<void> {
+        try {
+            await this._appServiceKuduService.runCommand(physicalPath, command);
+        }
+        catch(error) {
+            if(timeOut > 0 && error.toString().indexOf('Request timeout: /api/command') != -1) {
+                tl.debug('Request timeout occurs. Trying to poll for file: ' + pollFile);
+                await this._pollForFile(physicalPath, pollFile, timeOut * 6);
+            }
+            else {
+                throw error;
+            }
+        }
+    }
+
+    private _getPostDeploymentScript(scriptType, inlineScript, scriptPath, isLinux): {[key: string]: string | boolean} {
         if(scriptType === 'Inline Script') {
             tl.debug('creating kuduPostDeploymentScript_local file');
             var scriptFilePath = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), isLinux ? 'kuduPostDeploymentScript_local.sh' : 'kuduPostDeploymentScript_local.cmd');
             tl.writeFile(scriptFilePath, inlineScript);
             tl.debug('Created temporary script file : ' + scriptFilePath);
             return {
-                filePath: scriptFilePath,
-                isCreated: true
+                "filePath": scriptFilePath,
+                "isCreated": true
             };
         }
         if(!tl.exist(scriptPath)) {
@@ -210,7 +210,7 @@ export class KuduServiceUtility {
 
     }
 
-    private async _appOfflineKuduService(physicalPath: string, enableFeature: boolean) {
+    private async _appOfflineKuduService(physicalPath: string, enableFeature: boolean): Promise<void> {
         if(enableFeature) {
             tl.debug('Trying to enable app offline mode.');
             var appOfflineFilePath = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), 'app_offline_temp.htm');

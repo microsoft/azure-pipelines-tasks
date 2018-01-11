@@ -28,7 +28,7 @@ export class AzureAppServiceUtility {
             await this._appService.updateConfiguration(configDetails);
             tl.debug('updated SCM Type to VSTS-RM');
             tl.debug('Updating metadata with latest release details');
-            await this._appService.patchMetaData(this._getNewMetaData());
+            await this._appService.patchMetadata(this._getNewMetaData());
             tl.debug('Updated metadata with latest release details');
         }
         else {
@@ -108,7 +108,7 @@ export class AzureAppServiceUtility {
         return phyicalToVirtualPathMap.physicalPath;
     }
 
-    private _getPhysicalToVirtualPathMap(virtualApplication: string, virtualApplicationMappings: any) {
+    private _getPhysicalToVirtualPathMap(virtualApplication: string, virtualApplicationMappings: any): any {
         // construct URL depending on virtualApplication or root of webapplication 
         var physicalPath = null;
         var virtualPath = "/" + virtualApplication;
@@ -189,7 +189,7 @@ export class AzureAppServiceUtility {
         }
     }
 
-    public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string) {
+    public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> {
         var configDetails = await this._appService.getConfiguration();
         var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
@@ -203,8 +203,7 @@ export class AzureAppServiceUtility {
         }
     }
 
-    
-    private _getNewMetaData() {
+    private _getNewMetaData(): any {
         var collectionUri = tl.getVariable("system.teamfoundationCollectionUri");
         var projectId = tl.getVariable("system.teamprojectId");
         var buildDefintionId = tl.getVariable("build.definitionId")

@@ -70,7 +70,7 @@ export class Kudu {
         }
     }
 
-    public async getContinuousJobs(): Promise<Array<WebJob>>{
+    public async getContinuousJobs(): Promise<Array<WebJob>> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/continuouswebjobs`);
@@ -168,7 +168,7 @@ export class Kudu {
         }
     }
 
-    public async getProcess(processID: number) {
+    public async getProcess(processID: number): Promise<void> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
@@ -186,7 +186,7 @@ export class Kudu {
         }
     }
 
-    public async killProcess(processID: number) {
+    public async killProcess(processID: number): Promise<void> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
         httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
@@ -256,7 +256,6 @@ export class Kudu {
         }
     }
 
-
     public async getFileContent(physicalPath: string, fileName: string): Promise<string> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
         var httpRequest = new webClient.WebRequest();
@@ -312,7 +311,7 @@ export class Kudu {
         }
     }
 
-    public async createPath(physicalPath: string) {
+    public async createPath(physicalPath: string): Promise<any> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
@@ -335,7 +334,7 @@ export class Kudu {
         }
     }
 
-    public async runCommand(physicalPath: string, command: string,) {
+    public async runCommand(physicalPath: string, command: string): Promise<void> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/command`);
@@ -390,7 +389,7 @@ export class Kudu {
         }
     }
 
-    public async deleteFile(physicalPath: string, fileName: string) {
+    public async deleteFile(physicalPath: string, fileName: string): Promise<void> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
@@ -402,11 +401,8 @@ export class Kudu {
         try {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`deleteFile. Data: ${JSON.stringify(response)}`);
-            if([200, 201, 204].indexOf(response.statusCode) != -1) {
-                return response.body;
-            }
-            else if(response.statusCode === 404) {
-                return null;
+            if([200, 201, 204, 404].indexOf(response.statusCode) != -1) {
+                return ;
             }
             else {
                 throw response;

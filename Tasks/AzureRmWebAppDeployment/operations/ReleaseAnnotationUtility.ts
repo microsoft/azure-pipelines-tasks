@@ -3,7 +3,7 @@ import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
 import { AzureApplicationInsights, ApplicationInsightsResources} from 'azure-arm-rest/azure-arm-appinsights';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 var uuidV4 = require("uuid/v4");
-export async function addReleaseAnnotation(endpoint: AzureEndpoint, azureAppService: AzureAppService, isDeploymentSuccess: boolean) {
+export async function addReleaseAnnotation(endpoint: AzureEndpoint, azureAppService: AzureAppService, isDeploymentSuccess: boolean): Promise<void> {
     try {
         var appSettings = await azureAppService.getApplicationSettings();
         var instrumentationKey = appSettings && appSettings.properties && appSettings.properties.APPINSIGHTS_INSTRUMENTATIONKEY;
@@ -31,7 +31,7 @@ export async function addReleaseAnnotation(endpoint: AzureEndpoint, azureAppServ
     }
 }
 
-function getReleaseAnnotation(isDeploymentSuccess: boolean): any {
+function getReleaseAnnotation(isDeploymentSuccess: boolean): {[key: string]: any} {
     let annotationName = "Release Annotation";
     let releaseUri = tl.getVariable("Release.ReleaseUri");
     let buildUri = tl.getVariable("Build.BuildUri");
