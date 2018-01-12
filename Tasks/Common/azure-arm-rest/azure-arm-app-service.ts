@@ -308,7 +308,7 @@ export class AzureAppService {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
             var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
-            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/metadata`,
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/metadata/list`,
             {
                 '{resourceGroupName}': this._resourceGroup,
                 '{name}': this._name,

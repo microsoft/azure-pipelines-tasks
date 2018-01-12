@@ -13,26 +13,32 @@ export class AzureAppServiceUtility {
     }
 
     public async updateScmTypeAndConfigurationDetails() : Promise<void>{
-        var configDetails = await this._appService.getConfiguration();
-        var scmType: string = configDetails.properties.scmType;
-        if (scmType && scmType.toLowerCase() === "none") {
-            var updatedConfigDetails = JSON.stringify(
-                {
-                    "properties": {
-                        "scmType": "VSTSRM"
-                    }
-            });
+            try {
+            var configDetails = await this._appService.getConfiguration();
+            var scmType: string = configDetails.properties.scmType;
+            if (scmType && scmType.toLowerCase() === "none") {
+                var updatedConfigDetails = JSON.stringify(
+                    {
+                        "properties": {
+                            "scmType": "VSTSRM"
+                        }
+                });
 
-            configDetails.properties.scmType = 'VSTSRM';
-            tl.debug('updating SCM Type to VSTS-RM');
-            await this._appService.updateConfiguration(configDetails);
-            tl.debug('updated SCM Type to VSTS-RM');
-            tl.debug('Updating metadata with latest release details');
-            await this._appService.patchMetadata(this._getNewMetadata());
-            tl.debug('Updated metadata with latest release details');
+                configDetails.properties.scmType = 'VSTSRM';
+                tl.debug('updating SCM Type to VSTS-RM');
+                await this._appService.updateConfiguration(configDetails);
+                tl.debug('updated SCM Type to VSTS-RM');
+                tl.debug('Updating metadata with latest release details');
+                await this._appService.patchMetadata(this._getNewMetadata());
+                tl.debug('Updated metadata with latest release details');
+                console.log(tl.loc("SuccessfullyUpdatedAzureRMWebAppConfigDetails"));
+            }
+            else {
+                tl.debug(`Skipped updating the SCM value. Value: ${scmType}`);
+            }
         }
-        else {
-            tl.debug(`Skipped updating the SCM value. Value: ${scmType}`);
+        catch(error) {
+            tl.warning(tl.loc("FailedToUpdateAzureRMWebAppConfigDetails", error));
         }
     }
 

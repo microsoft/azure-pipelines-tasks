@@ -398,7 +398,7 @@ export function mockAzureAppServiceTests() {
     nock('https://management.azure.com', {
         "authorization": "Bearer DUMMY_ACCESS_TOKEN",
         "content-type": "application/json; charset=utf-8"
-    }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata?api-version=2016-08-01")
+    }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata/list?api-version=2016-08-01")
     .reply(200, {
         id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata",
         name: "MOCK_APP_SERVICE_NAME",
@@ -413,7 +413,7 @@ export function mockAzureAppServiceTests() {
     nock('https://management.azure.com', {
         "authorization": "Bearer DUMMY_ACCESS_TOKEN",
         "content-type": "application/json; charset=utf-8"
-    }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/metadata?api-version=2016-08-01")
+    }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/metadata/list?api-version=2016-08-01")
     .reply(500, 'internal_server_error').persist();
     
     nock('https://management.azure.com', {
