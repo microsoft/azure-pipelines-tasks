@@ -57,7 +57,7 @@ The task is used to deploy a Web  project to an existing Azure Web App. The mand
 
 * **Parameters File:** (Optional) The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment.
 
-* **Remove Additional Files at Destination:** Select the option to delete the files in the AzureRM Web App that have no matching files in the Web App zip package. This will ensure that during the Web project deployment any additional files in the AzureRM Web App are deleted, and the only files in the AzureRM Web App are the ones in the Web App zip package.
+* **Remove Additional Files at Destination:** Select the option to delete the files in the AzureRM Web App that have no matching files in the Web App zip package. This will ensure that during the Web project deployment any additional files in the AzureRM Web App are deleted, and the only files in the AzureRM Web App are the ones in the Web App zip package. This will also remove all files related to any extension installed on this Azure App Service. To prevent this, select 'Exclude files from App_Data folder' checkbox.
 
 * **Exclude Files from the App_Data Folder:** Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App. This is a useful option to select, if a local database or a WebJob has been deployed earlier to the AzureRM Web App, and they should not be deleted in the subsequent deployments of the Web project.
 
