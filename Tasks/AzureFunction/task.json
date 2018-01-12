@@ -22,7 +22,7 @@
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{
 			"name": "completionOptions",
-			"displayName": "Completion Options",
+			"displayName": "Advanced",
 			"isExpanded": false
 		}
 	],
@@ -81,7 +81,7 @@
 			"type": "multiLine",
 			"label": "Body",
 			"required": "false",
-			"defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
+			"defaultValue": "",
 			"properties": {
 				"resizable": "true",
 				"rows": "3",
@@ -92,7 +92,7 @@
 		}, {
 			"name": "waitForCompletion",
 			"type": "pickList",
-			"label": "Complete based on",
+			"label": "Completion event",
 			"defaultValue": "false",
 			"required": true,
 			"helpMarkDown": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
