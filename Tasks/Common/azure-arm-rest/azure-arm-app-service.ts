@@ -278,13 +278,28 @@ export class AzureAppService {
         }
     }
 
-    public async patchConfiguration(properties): Promise<void> {
-        var applicationSettings = await this.getConfiguration();
-        for(var key in properties) {
-            applicationSettings.properties[key] = properties[key];
-        }
+    public async patchConfiguration(properties: any): Promise<any> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'PATCH';
+            httpRequest.body = JSON.stringify(properties);
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/web`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
 
-        await this.updateConfiguration(applicationSettings);
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToPatchAppServiceConfiguration', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
 
     }
 
@@ -307,7 +322,7 @@ export class AzureAppService {
             return response.body;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToGetAppServiceConfiguration', this._getFormattedName(), this._client.getFormattedError(error)));
+            throw Error(tl.loc('FailedToGetAppServiceMetadata', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
@@ -331,7 +346,7 @@ export class AzureAppService {
             return response.body;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToUpdateAppServiceConfiguration', this._getFormattedName(), this._client.getFormattedError(error)));
+            throw Error(tl.loc('FailedToUpdateAppServiceMetadata', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
     

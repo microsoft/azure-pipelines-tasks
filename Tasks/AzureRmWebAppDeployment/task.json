@@ -625,7 +625,7 @@
         "UnabletoretrieveResourceID": "Unable to retrieve connection details for Azure Resource:'%s'. Status Code: %s",
         "CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch access token for Azure. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
-        "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
+        "Failedtoupdatedeploymenthistory": "Failed to update deployment history. Error: %s",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
         "Unabletoretrievewebconfigdetails": "Unable to retrieve App Service configuration details. Status Code: '%s'",
         "Unabletoretrievewebappsettings": "Unable to retrieve App Service application settings. [Status Code: '%s', Error Message: '%s']",
@@ -719,9 +719,19 @@
         "FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s",
         "FailedToCreatePath": "Failed to create path '%s' from Kudu. Error: %s",
         "FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
-        "FailedToUploadFile": "Failed to upload file '%s/%s from Kudu. Error: %s",
+        "FailedToUploadFile": "Failed to upload file '%s/%s' from Kudu. Error: %s",
         "FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
-        "FailedToListPath": "Failed to list path '%s'. Error: %s",
-        "RetryToDeploy": "Retrying to deploy the package."
+        "FailedToListPath": "Failed to list path '%s' from Kudu. Error: %s",
+        "RetryToDeploy": "Retrying to deploy the package.",
+        "FailedToGetAppServiceDetails": "Failed to fetch App Service '%s' details. Error: %s",
+        "FailedToGetAppServicePublishingProfile": "Failed to fetch App Service '%s' publishing profile. Error: %s",
+        "FailedToUpdateAppServiceMetadata": "Failed to update App service '%s' Meta data. Error: %s",
+        "FailedToGetAppServiceMetadata": "Failed to get App service '%s' Meta data. Error: %s",
+        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
+        "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
+        "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
+        "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
+        "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+        "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s"
     }
 }

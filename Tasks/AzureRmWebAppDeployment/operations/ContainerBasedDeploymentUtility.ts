@@ -40,12 +40,12 @@ export class ContainerBasedDeploymentUtility {
     }
 
     private async _updateConfigurationDetails(appService: AzureAppService, startupCommand: string, imageName: string): Promise<void> {
-        var updatedConfigDetails = JSON.stringify({
+        var updatedConfigDetails = {
             "properties": {
                 "appCommandLine": startupCommand,
                 "linuxFxVersion": "DOCKER|" + imageName
             }
-        });
+        };
 
         await appService.patchConfiguration(updatedConfigDetails);
     }

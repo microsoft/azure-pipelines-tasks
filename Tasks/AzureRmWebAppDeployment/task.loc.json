@@ -734,6 +734,16 @@
     "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
     "FailedToGetFileContent": "ms-resource:loc.messages.FailedToGetFileContent",
     "FailedToListPath": "ms-resource:loc.messages.FailedToListPath",
-    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy"
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy",
+    "FailedToGetAppServiceDetails": "ms-resource:loc.messages.FailedToGetAppServiceDetails",
+    "FailedToGetAppServicePublishingProfile": "ms-resource:loc.messages.FailedToGetAppServicePublishingProfile",
+    "FailedToUpdateAppServiceMetadata": "ms-resource:loc.messages.FailedToUpdateAppServiceMetadata",
+    "FailedToGetAppServiceMetadata": "ms-resource:loc.messages.FailedToGetAppServiceMetadata",
+    "FailedToPatchAppServiceConfiguration": "ms-resource:loc.messages.FailedToPatchAppServiceConfiguration",
+    "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
+    "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
+    "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
+    "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
+    "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings"
   }
 }

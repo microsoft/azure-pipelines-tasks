@@ -28,14 +28,13 @@ export class AzureAppServiceUtility {
             await this._appService.updateConfiguration(configDetails);
             tl.debug('updated SCM Type to VSTS-RM');
             tl.debug('Updating metadata with latest release details');
-            await this._appService.patchMetadata(this._getNewMetaData());
+            await this._appService.patchMetadata(this._getNewMetadata());
             tl.debug('Updated metadata with latest release details');
         }
         else {
             tl.debug(`Skipped updating the SCM value. Value: ${scmType}`);
         }
     }
-
 
     public async getWebDeployPublishingProfile(): Promise<any> {
         var publishingProfile = await this._appService.getPublishingProfileWithSecrets();
@@ -133,7 +132,7 @@ export class AzureAppServiceUtility {
         }
 
         tl.debug('Updating custom configuration values');
-        await this._appService.patchConfiguration(properties);
+        await this._appService.patchConfiguration({'properties': properties});
         tl.debug('Updated custom configuration values');
     }
 
@@ -203,7 +202,7 @@ export class AzureAppServiceUtility {
         }
     }
 
-    private _getNewMetaData(): any {
+    private _getNewMetadata(): any {
         var collectionUri = tl.getVariable("system.teamfoundationCollectionUri");
         var projectId = tl.getVariable("system.teamprojectId");
         var buildDefintionId = tl.getVariable("build.definitionId")
