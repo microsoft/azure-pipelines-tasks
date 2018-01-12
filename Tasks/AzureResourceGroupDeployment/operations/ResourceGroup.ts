@@ -425,6 +425,7 @@ export class ResourceGroup {
                 throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
             }
             parameters = this.updateOverrideParameters(template, parameters);
+            parameters = this.sanitizeParameters(parameters);
             deployment.properties["parameters"] = parameters;
         }
 
