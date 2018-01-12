@@ -383,7 +383,7 @@ export function mockKuduServiceTests() {
     });
 
     nock('http://FAIL_MOCK_SCM_WEBSITE').
-    put('/api/deployments/MOCK_DEPLOYMENT_ID').reply(504,'Some server side issue').persist();
+    put('/api/deployments/MOCK_DEPLOYMENT_ID').reply(501,'Some server side issue').persist();
 
     nock('http://MOCK_SCM_WEBSITE').
     get('/api/continuouswebjobs').reply(200, [
@@ -435,4 +435,52 @@ export function mockKuduServiceTests() {
     nock('http://MOCK_SCM_WEBSITE')
     .delete('/api/processes/0').reply(502, 'Bad Gaterway');
 
+    nock('http://MOCK_SCM_WEBSITE').
+    get('/api/settings').reply(200, { MSDEPLOY_RENAME_LOCKED_FILES : '1', ScmType: "VSTSRM" });
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    get('/api/settings').reply(501, 'Internal error occured');
+
+    nock('http://MOCK_SCM_WEBSITE').
+    get('/api/vfs/site/wwwroot/').reply(200, [{name: 'web.config'}, { name: 'content', size: 777}]);
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    get('/api/vfs/site/wwwroot/').reply(501, 'Internal error occured');
+
+    nock('http://MOCK_SCM_WEBSITE').
+    get('/api/vfs/site/wwwroot/hello.txt').reply(200, 'HELLO.TXT FILE CONTENT');
+
+    nock('http://MOCK_SCM_WEBSITE').
+    get('/api/vfs/site/wwwroot/404.txt').reply(404, null);
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    get('/api/vfs/site/wwwroot/web.config').reply(501, 'Internal error occured');
+
+    nock('http://MOCK_SCM_WEBSITE').
+    put('/api/vfs/site/wwwroot/hello.txt').reply(200);
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    put('/api/vfs/site/wwwroot/web.config').reply(501, 'Internal error occured');
+
+    nock('http://MOCK_SCM_WEBSITE').
+    put('/api/vfs/site/wwwroot/').reply(200);
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    put('/api/vfs/site/wwwroot/').reply(501, 'Internal error occured');
+
+    nock('http://MOCK_SCM_WEBSITE').
+    post('/api/command').reply(200);
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    post('/api/command').reply(501, 'Internal error occured');
+
+    nock('http://MOCK_SCM_WEBSITE').
+    put('/api/zip/site/wwwroot/').reply(200);
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    put('/api/zip/site/wwwroot/').reply(501, 'Internal error occured');
+
+    nock('http://MOCK_SCM_WEBSITE').delete('/api/vfs/site/wwwroot/hello.txt').reply(200);
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').delete('/api/vfs/site/wwwroot/web.config').reply(501, 'Internal error occured');
 }

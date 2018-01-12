@@ -231,6 +231,7 @@ export class Kudu {
 
     public async listDir(physicalPath: string): Promise<void> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/`);
@@ -258,6 +259,7 @@ export class Kudu {
 
     public async getFileContent(physicalPath: string, fileName: string): Promise<string> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/${fileName}`);
@@ -285,6 +287,7 @@ export class Kudu {
 
     public async uploadFile(physicalPath: string, fileName: string, filePath: string): Promise<void> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
         if(!tl.exist(filePath)) {
             throw new Error(tl.loc('FilePathInvalid', filePath));
         }
@@ -307,12 +310,13 @@ export class Kudu {
             throw response;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToUploadFile', this._getFormattedError(error)));
+            throw Error(tl.loc('FailedToUploadFile', physicalPath, fileName, this._getFormattedError(error)));
         }
     }
 
     public async createPath(physicalPath: string): Promise<any> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/`);
@@ -339,7 +343,7 @@ export class Kudu {
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/command`);
         httpRequest.headers = {
-            'content-type': 'multipart/form-data',
+            'Content-Type': 'multipart/form-data',
             'If-Match': '*'
         };
         httpRequest.body = JSON.stringify({
@@ -364,11 +368,13 @@ export class Kudu {
     }
 
     public async extractZIP(webPackage: string, physicalPath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.uri = this._client.getRequestUri(`/api/zip/${physicalPath}/`);
         httpRequest.headers = {
-            'content-type': 'multipart/form-data',
+            'Content-Type': 'multipart/form-data',
             'If-Match': '*'
         };
         httpRequest.body = fs.createReadStream(webPackage);
@@ -390,6 +396,7 @@ export class Kudu {
 
     public async deleteFile(physicalPath: string, fileName: string): Promise<void> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
         httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/${fileName}`);
