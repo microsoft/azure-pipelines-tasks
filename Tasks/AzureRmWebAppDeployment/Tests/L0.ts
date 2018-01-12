@@ -488,6 +488,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('JSON - special variables validated') > 0, 'JSON - special variables validation error');
         assert(tr.stdout.search('JSON - variables with dot character validated') > 0, 'JSON variables with dot character validation error');
         assert(tr.stdout.search('JSON - substitute inbuilt JSON attributes validated') > 0, 'JSON inbuilt variable substitution validation error');
+        assert(tr.stdout.search('VALID JSON COMMENTS TESTS PASSED') > 0, 'VALID JSON COMMENTS TESTS PASSED');
+        assert(tr.stdout.search('INVALID JSON COMMENTS TESTS PASSED') > 0, 'INVALID JSON COMMENTS TESTS PASSED');
         assert(tr.succeeded, 'task should have succeeded');
         done();
     });
