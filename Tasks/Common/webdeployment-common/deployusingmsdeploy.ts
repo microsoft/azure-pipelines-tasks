@@ -49,6 +49,7 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
         var shouldContinue = true;
         while(true) {
             try {
+                retryCount -= 1;
                 await executeMSDeploy(msDeployCmdArgs);
                 break;
             }
@@ -59,8 +60,6 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
                 console.log(error);
                 console.log(tl.loc('RetryToDeploy'));
             }
-
-            retryCount -= 1;
         }
         if(publishingProfile != null) {
             console.log(tl.loc('PackageDeploymentSuccess'));
