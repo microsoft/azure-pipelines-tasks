@@ -132,23 +132,24 @@ export class AzureAppServiceUtility {
 
     public async updateConfigurationSettings(properties: any) : Promise<void> {
         for(var property in properties) {
-            if(properties[property].value) {
+            if(properties[property].value !== undefined) {
                 properties[property] = properties[property].value;
             }
         }
 
-        tl.debug('Updating custom configuration values');
+        console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(properties)));
         await this._appService.patchConfiguration({'properties': properties});
-        tl.debug('Updated custom configuration values');
+        console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
     public async updateAndMonitorAppSettings(properties: any): Promise<void> {
         for(var property in properties) {
-            if(properties[property].value) {
+            if(properties[property].value !== undefined) {
                 properties[property] = properties[property].value;
             }
         }
         
+        console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(properties)));
         await this._appService.patchApplicationSettings(properties);
         var kuduService = await this.getKuduService();
         var interator: number = 6;
@@ -166,8 +167,10 @@ export class AzureAppServiceUtility {
 
             if(propertiesChanged) {
                 tl.debug('New properties are updated in Kudu service.');
-                break;
+                console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
+                return;
             }
+
             interator -= 1;
             await webClient.sleepFor(10);
         }
@@ -204,7 +207,7 @@ export class AzureAppServiceUtility {
             configDetails.properties.linuxFxVersion = linuxFxVersion;
             configDetails.properties.appCommandLine = appCommandLine;
 
-            await this._appService.updateConfiguration(configDetails);
+            await this.updateConfigurationSettings({linuxFxVersion: linuxFxVersion, appCommandLine: appCommandLine});
         }
     }
 

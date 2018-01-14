@@ -732,6 +732,10 @@
         "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
         "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
         "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
-        "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s"
+        "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
+        "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+        "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
+        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
+        "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings."
     }
 }

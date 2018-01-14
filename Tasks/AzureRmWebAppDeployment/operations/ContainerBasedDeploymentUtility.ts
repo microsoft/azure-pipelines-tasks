@@ -14,9 +14,11 @@ enum registryTypes {
 
 export class ContainerBasedDeploymentUtility {
     private _appService: AzureAppService;
+    private _appServiceUtility: AzureAppServiceUtility;
 
     constructor(appService: AzureAppService) {
         this._appService = appService;
+        this._appServiceUtility = new AzureAppServiceUtility(appService);
     }
 
     public async deployWebAppImage(taskParameters: TaskParameters): Promise<void> {
@@ -24,30 +26,33 @@ export class ContainerBasedDeploymentUtility {
         tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
 
         tl.debug("Updating the webapp configuration.");
-        await this._updateConfigurationDetails(this._appService, taskParameters.StartupCommand, imageName);
+        await this._updateConfigurationDetails(taskParameters, imageName);
 
         tl.debug('Updating web app settings');
-        await this._updateApplicationSettings(this._appService, taskParameters, imageName);   
+        await this._updateApplicationSettings(taskParameters, imageName);   
     }
 
-    private async _updateApplicationSettings(appService: AzureAppService, taskParameters: TaskParameters, imageName: string): Promise<void> {
+    private async _updateApplicationSettings(taskParameters: TaskParameters, imageName: string): Promise<void> {
         var appSettingsParameters = taskParameters.AppSettings;
         appSettingsParameters = appSettingsParameters ? appSettingsParameters.trim() : "";
         appSettingsParameters =  await this._getContainerRegistrySettings(imageName, null) + ' ' + appSettingsParameters;
         var appSettingsNewProperties = parse(appSettingsParameters);
-        var appServiceUtility = new AzureAppServiceUtility(appService);
-        await appServiceUtility.updateAndMonitorAppSettings(appSettingsNewProperties);
+        await this._appServiceUtility.updateAndMonitorAppSettings(appSettingsNewProperties);
     }
 
-    private async _updateConfigurationDetails(appService: AzureAppService, startupCommand: string, imageName: string): Promise<void> {
-        var updatedConfigDetails = {
-            "properties": {
-                "appCommandLine": startupCommand,
-                "linuxFxVersion": "DOCKER|" + imageName
-            }
-        };
+    private async _updateConfigurationDetails(taskParameters: TaskParameters, imageName: string): Promise<void> {
+        var startupCommand: string = taskParameters.StartupCommand;
+        var configSettingsParameters = taskParameters.ConfigurationSettings;
+        var appSettingsNewProperties = !!configSettingsParameters ? parse(configSettingsParameters.trim()): { };
+        appSettingsNewProperties.appCommandLine = {
+            'value': startupCommand
+        }
 
-        await appService.patchConfiguration(updatedConfigDetails);
+        appSettingsNewProperties.linuxFxVersion = {
+            'value': "DOCKER|" + imageName
+        }
+        tl.debug(`CONATINER UPDATE CONFIG VALUES : ${appSettingsNewProperties}`);
+        await this._appServiceUtility.updateConfigurationSettings(appSettingsNewProperties);
     }
 
     private getDockerHubImageName(): string {

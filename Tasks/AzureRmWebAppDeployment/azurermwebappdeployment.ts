@@ -96,14 +96,19 @@ async function main() {
             }
         }
 
-        if(taskParams.AppSettings && !(taskParams.isLinuxApp && taskParams.isBuiltinLinuxWebApp)) {
-            var customApplicationSettings = ParameterParser.parse(taskParams.AppSettings);
-            await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
+        if(!(taskParams.isLinuxApp && !taskParams.isBuiltinLinuxWebApp)) {
+            if(taskParams.AppSettings) {
+                var customApplicationSettings = ParameterParser.parse(taskParams.AppSettings);
+                await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
+            }
+    
+            if(taskParams.ConfigurationSettings) {
+                var customApplicationSettings = ParameterParser.parse(taskParams.ConfigurationSettings);
+                await appServiceUtility.updateConfigurationSettings(customApplicationSettings);
+            }
         }
-
-        if(taskParams.ConfigurationSettings) {
-            var customApplicationSettings = ParameterParser.parse(taskParams.ConfigurationSettings);
-            await appServiceUtility.updateConfigurationSettings(customApplicationSettings);
+        else {
+            tl.debug('App Settings and config settings are already updated during container based deployment.')
         }
 
         if(taskParams.ScriptType) {
