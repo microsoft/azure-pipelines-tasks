@@ -97,33 +97,14 @@ export class AzureAppServiceUtility {
 
         virtualApplication = (virtualApplication.startsWith("/")) ? virtualApplication.substr(1) : virtualApplication;
 
-        var appConfigSettings = await this._appService.getConfiguration();
-        var virtualApplicationMappings = appConfigSettings.properties.virtualApplications;
-        var phyicalToVirtualPathMap = this._getPhysicalToVirtualPathMap(virtualApplication, virtualApplicationMappings);
+        var physicalToVirtualPathMap = await this._getPhysicalToVirtualPathMap(virtualApplication);
 
-        if(!phyicalToVirtualPathMap) {
+        if(!physicalToVirtualPathMap) {
             throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
         }
 
-        tl.debug(`Virtual Application Map: Physical path: '${phyicalToVirtualPathMap.physicalPath}'. Virtual path: '${phyicalToVirtualPathMap.virtualPath}'.`);
-        return phyicalToVirtualPathMap.physicalPath;
-    }
-
-    private _getPhysicalToVirtualPathMap(virtualApplication: string, virtualApplicationMappings: any): any {
-        // construct URL depending on virtualApplication or root of webapplication 
-        var physicalPath = null;
-        var virtualPath = "/" + virtualApplication;
-        
-        for( var mapping of virtualApplicationMappings ) {
-            if(mapping.virtualPath.toLowerCase() == virtualPath.toLowerCase()) {
-                physicalPath = mapping.physicalPath;
-                break;
-            }
-        }
-        return physicalPath ? {
-            'virtualPath': virtualPath,
-            'physicalPath': physicalPath
-        }: null;
+        tl.debug(`Virtual Application Map: Physical path: '${physicalToVirtualPathMap.physicalPath}'. Virtual path: '${physicalToVirtualPathMap.virtualPath}'.`);
+        return physicalToVirtualPathMap.physicalPath;
     }
 
     public async updateConfigurationSettings(properties: any) : Promise<void> {
@@ -205,6 +186,28 @@ export class AzureAppServiceUtility {
 
             await this.updateConfigurationSettings({linuxFxVersion: linuxFxVersion, appCommandLine: appCommandLine});
         }
+    }
+
+    private async _getPhysicalToVirtualPathMap(virtualApplication: string): Promise<any> {
+        // construct URL depending on virtualApplication or root of webapplication 
+        var physicalPath = null;
+        var virtualPath = "/" + virtualApplication;
+        var appConfigSettings = await this._appService.getConfiguration();
+        var virtualApplicationMappings = appConfigSettings.properties && appConfigSettings.properties.virtualApplications;
+
+        if(virtualApplicationMappings) {
+            for( var mapping of virtualApplicationMappings ) {
+                if(mapping.virtualPath.toLowerCase() == virtualPath.toLowerCase()) {
+                    physicalPath = mapping.physicalPath;
+                    break;
+                }
+            }
+        }
+        
+        return physicalPath ? {
+            'virtualPath': virtualPath,
+            'physicalPath': physicalPath
+        }: null;
     }
 
     private _getNewMetadata(): any {
