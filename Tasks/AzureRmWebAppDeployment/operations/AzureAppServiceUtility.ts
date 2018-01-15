@@ -17,13 +17,6 @@ export class AzureAppServiceUtility {
             var configDetails = await this._appService.getConfiguration();
             var scmType: string = configDetails.properties.scmType;
             if (scmType && scmType.toLowerCase() === "none") {
-                var updatedConfigDetails = JSON.stringify(
-                    {
-                        "properties": {
-                            "scmType": "VSTSRM"
-                        }
-                });
-
                 configDetails.properties.scmType = 'VSTSRM';
                 tl.debug('updating SCM Type to VSTS-RM');
                 await this._appService.updateConfiguration(configDetails);
@@ -46,11 +39,14 @@ export class AzureAppServiceUtility {
         var publishingProfile = await this._appService.getPublishingProfileWithSecrets();
         var defer = Q.defer<any>();
         parseString(publishingProfile, (error, result) => {
-            for (var index in result.publishData.publishProfile) {
-                if (result.publishData.publishProfile[index].$.publishMethod === "MSDeploy") {
-                    defer.resolve(result.publishData.publishProfile[index].$);
+            if(result && result.publishData && result.publishData.publishProfile) {
+                for (var index in result.publishData.publishProfile) {
+                    if (result.publishData.publishProfile[index].$ && result.publishData.publishProfile[index].$.publishMethod === "MSDeploy") {
+                        defer.resolve(result.publishData.publishProfile[index].$);
+                    }
                 }
             }
+            
             defer.reject(tl.loc('ErrorNoSuchDeployingMethodExists'));
         });
 
