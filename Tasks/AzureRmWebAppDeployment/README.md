@@ -73,11 +73,11 @@ The task is used to deploy a Web  project to an existing Azure Web App. The mand
 
 * **App Service type\*:** Select the Azure App Service type. The different app types supported are Function App, Web App on Windows, Web App on Linux, Web App for Containers and Azure App Service Environments
 
-* **App Service Name\*:** Select the name of an existing AzureRM Web Application. Enter the name of the Web App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) and [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx).
+* **App Service Name\*:** Select the name of an existing Azure App Service. Enter the name of the Web App if it was provisioned dynamically using the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) and [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx).
 
 * **Deploy to Slot:** Select the option to deploy to an existing slot other than the Production slot. Do not select this option if the Web project is being deployed to the Production slot. The Web App itself is the Production slot.
 
-* **Resource Group:** Select the Azure Resource Group that contains the AzureRM Web App specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
+* **Resource Group:** Select the Azure Resource Group that contains the Azure App Service specified above. Enter the name of the Azure Resource Group if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
 
 * **Slot:** Select the Slot to deploy the Web project to. Enter the name of the Slot if has been dynamically provisioned using [Azure Resource Group Deployment task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DeployAzureResourceGroup) or [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell). This is a required parameter if the option to Deploy to Slot has been selected.
 
@@ -89,12 +89,12 @@ The task is used to deploy a Web  project to an existing Azure Web App. The mand
 
 * **Parameters File:** (Optional) The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment.
 
-* **Remove Additional Files at Destination:** Select the option to delete the files in the AzureRM Web App that have no matching files in the Web App zip package. This will ensure that during the Web project deployment any additional files in the AzureRM Web App are deleted, and the only files in the AzureRM Web App are the ones in the Web App zip package.
+* **Remove Additional Files at Destination:** Select the option to delete the files in the Azure App Service that have no matching files in the Web App zip package. This will ensure that during the Web project deployment any additional files in the Azure App Service are deleted, and the only files in the Azure App Service are the ones in the Web App zip package.
 This will also remove all files related to any extension (for example Application Insights) installed on this Azure App Service. To prevent this, enable 'Exclude files from App_Data folder' as well.
 
-* **Exclude Files from the App_Data Folder:** Select the option to prevent files in the App_Data folder from being deployed to the AzureRM Web App. This is a useful option to select, if a local database or a WebJob has been deployed earlier to the AzureRM Web App, and they should not be deleted in the subsequent deployments of the Web project.
+* **Exclude Files from the App_Data Folder:** Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service. This is a useful option to select, if a local database or a WebJob has been deployed earlier to the Azure App Service, and they should not be deleted in the subsequent deployments of the Web project.
 
-* **Take Application Offline:** Select the option to take the AzureRM Web App offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.
+* **Take Application Offline:** Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the Web App before the sync operation begins. The file will be removed after the sync operation completes successfully.
 
 * **Additional Arguments:** Additional Web Deploy arguments that will be appended to the MSDeploy command while deploying the Azure Web App like,-disableLink:AppPoolExtension -disableLink:ContentExtension. A useful parameter for enabling and disabling rules and for skipping syncing of certain folders.
 
@@ -151,7 +151,7 @@ Start up command for the app. For example if you are using PM2 process manager f
 
 ### Output Variables
 
-* **Web App Hosted URL:** Provide a name, like FabrikamWebAppURL for the variable for the AzureRM Web App Hosted URL. The variable can be used as $(variableName), like $(FabrikamWebAppURL) to refer to the Hosted URL of the AzureRM Web App in subsequent tasks like in the [Run Functional Tests task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/RunDistributedTests) or the [Visual Studio Test task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/VsTest).
+* **Web App Hosted URL:** Provide a name, like FabrikamWebAppURL for the variable for the Azure App Service Hosted URL. The variable can be used as $(variableName), like $(FabrikamWebAppURL) to refer to the Hosted URL of the Azure App Service in subsequent tasks like in the [Run Functional Tests task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/RunDistributedTests) or the [Visual Studio Test task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/VsTest).
 
 
 ### FAQ
