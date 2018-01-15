@@ -96,7 +96,7 @@ async function main() {
             }
         }
 
-        if(!(taskParams.isLinuxApp && !taskParams.isBuiltinLinuxWebApp)) {
+        if(!taskParams.isContainerWebApp) {
             if(taskParams.AppSettings) {
                 var customApplicationSettings = ParameterParser.parse(taskParams.AppSettings);
                 await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);

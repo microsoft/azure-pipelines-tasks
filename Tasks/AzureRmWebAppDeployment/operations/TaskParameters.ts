@@ -32,7 +32,8 @@ export class TaskParametersUtility {
         }
 
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("linux") >= 0;
-        taskParameters.isBuiltinLinuxWebApp = taskParameters.ImageSource && taskParameters.ImageSource.indexOf("Builtin") >=0;
+        taskParameters.isBuiltinLinuxWebApp = taskParameters.ImageSource && taskParameters.ImageSource.indexOf("Builtin") >= 0;
+        taskParameters.isContainerWebApp = taskParameters.isLinuxApp && taskParameters.ImageSource.indexOf("Registry") >= 0;
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.BuiltinLinuxPackage = tl.getInput('BuiltinLinuxPackage', true);
@@ -90,4 +91,5 @@ export interface TaskParameters {
     /** Additional parameters */
     isLinuxApp?: boolean;
     isBuiltinLinuxWebApp?: boolean;
+    isContainerWebApp?: boolean;
 }

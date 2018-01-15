@@ -60,7 +60,7 @@ export class AzureAppServiceUtility {
 
     public async pingApplication(): Promise<void> {
         try {
-            var applicationUrl: string = (await this.getWebDeployPublishingProfile()).destinationAppUrl;
+            var applicationUrl: string = await this.getApplicationURL();
 
             if(!applicationUrl) {
                 tl.debug('Application Url not found.');
@@ -129,9 +129,9 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(properties)));
         await this._appService.patchApplicationSettings(properties);
         var kuduService = await this.getKuduService();
-        var interator: number = 6;
+        var noOftimesToIterate: number = 6;
         tl.debug('retrieving values from Kudu service to check if new values are updated');
-        while(interator > 0) {
+        while(noOftimesToIterate > 0) {
             var kuduServiceAppSettings = await kuduService.getAppSettings();
             var propertiesChanged: boolean = true;
             for(var property in properties) {
@@ -148,7 +148,7 @@ export class AzureAppServiceUtility {
                 return;
             }
 
-            interator -= 1;
+            noOftimesToIterate -= 1;
             await webClient.sleepFor(10);
         }
 
