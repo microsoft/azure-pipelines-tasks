@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
+import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-arm-rest/constants';
 import webClient = require('azure-arm-rest/webClient');
 import { TaskParameters } from './TaskParameters';
 var deployUtility = require('webdeployment-common/utility.js');
@@ -151,14 +152,14 @@ export class KuduServiceUtility {
         }
     }
 
-    private async runCommand(physicalPath: string, command: string, timeOut: number, pollFile: string): Promise<void> {
+    private async runCommand(physicalPath: string, command: string, timeOutInMinutes: number, pollFile: string): Promise<void> {
         try {
             await this._appServiceKuduService.runCommand(physicalPath, command);
         }
         catch(error) {
-            if(timeOut > 0 && error.toString().indexOf('Request timeout: /api/command') != -1) {
+            if(timeOutInMinutes > 0 && error.toString().indexOf('Request timeout: /api/command') != -1) {
                 tl.debug('Request timeout occurs. Trying to poll for file: ' + pollFile);
-                await this._pollForFile(physicalPath, pollFile, timeOut * 6);
+                await this._pollForFile(physicalPath, pollFile, timeOutInMinutes);
             }
             else {
                 if(typeof error.valueOf() == 'string') {
@@ -229,13 +230,18 @@ export class KuduServiceUtility {
         }
     }
 
-    private async _pollForFile(physicalPath: string, fileName: string, noOfRetry: number): Promise<void> {
+    private async _pollForFile(physicalPath: string, fileName: string, timeOutInMinutes: number): Promise<void> {
         var attempts: number = 0;
+        const retryInterval: number = 10;
         if(tl.getVariable('appservicedeploy.retrytimeout')) {
-            noOfRetry = Number(tl.getVariable('appservicedeploy.retrytimeout')) * 6;
-            tl.debug('Retry timeout provided by user: ' + noOfRetry);
+            timeOutInMinutes = Number(tl.getVariable('appservicedeploy.retrytimeout'));
+            tl.debug('Retry timeout in minutes provided by user: ' + timeOutInMinutes);
         }
-        tl.debug('Polling started for file: ' + fileName);
+
+        var timeOutInSeconds = timeOutInMinutes * 60;
+        var noOfRetry = timeOutInSeconds / retryInterval;
+
+        tl.debug(`Polling started for file:  ${fileName} with retry count: ${noOfRetry}`);
 
         while (attempts < noOfRetry) {
             attempts += 1;
@@ -257,7 +263,7 @@ export class KuduServiceUtility {
 
     private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any): any {
         
-        var status = isDeploymentSuccess ? 4 : 3;
+        var status = isDeploymentSuccess ? KUDU_DEPLOYMENT_CONSTANTS.SUCCESS : KUDU_DEPLOYMENT_CONSTANTS.FAILED;
         var author = tl.getVariable('build.sourceVersionAuthor') || tl.getVariable('build.requestedfor') ||
                             tl.getVariable('release.requestedfor') || tl.getVariable('agent.name')
     

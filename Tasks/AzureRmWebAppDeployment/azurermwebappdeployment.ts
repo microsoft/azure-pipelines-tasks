@@ -30,7 +30,7 @@ async function main() {
 
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParams.WebAppName));
         if(!taskParams.DeployToSlotFlag) {
-            taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(azureEndpoint, 'Microsoft.Web/Sites', taskParams.WebAppName);
+            taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(azureEndpoint, taskParams.WebAppName);
         }
 
         tl.debug(`Resource Group: ${taskParams.ResourceGroupName}`);

@@ -3,9 +3,9 @@ import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import { Resources } from 'azure-arm-rest/azure-arm-resource';
 
 export class AzureResourceFilterUtility {
-    public static async getResourceGroupName(endpoint: AzureEndpoint, resourceType: string, resourceName: string): Promise<string> {
+    public static async getResourceGroupName(endpoint: AzureEndpoint, resourceName: string): Promise<string> {
         var azureResources: Resources = new Resources(endpoint);
-        var filteredResources: Array<any> = await azureResources.getResources(resourceType, resourceName);
+        var filteredResources: Array<any> = await azureResources.getResources('Microsoft.Web/Sites', resourceName);
         let resourceGroupName: string;
         if(!filteredResources || filteredResources.length == 0) {
             throw new Error(tl.loc('ResourceDoesntExist', resourceName));
