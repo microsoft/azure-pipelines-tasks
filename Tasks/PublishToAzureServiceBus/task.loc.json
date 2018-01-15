@@ -72,6 +72,16 @@
       "groupName": "signingDetails"
     },
     {
+      "name": "signatureKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signatureKey",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.signatureKey",
+      "visibleRule": "signPayload = true",
+      "groupName": "signingDetails"
+    },
+    {
       "name": "waitForCompletion",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.waitForCompletion",
@@ -93,12 +103,11 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
-        "signPayload": "$(signPayload)",
         "certificateString": "$(certificateString)",
+        "signaturePropertyKey": "$(signatureKey)",
         "messageProperties": {
           "jobid": "$(system.jobId)",
-          "taskId": "$(system.taskId)",
-          "signature": ""
+          "taskId": "$(system.taskId)"
         }
       }
     }

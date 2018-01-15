@@ -70,6 +70,16 @@
     "groupName": "signingDetails"
   },
   {
+    "name": "signatureKey",
+    "type": "string",
+    "label": "Signature Property Key",
+    "required": false,
+    "defaultValue": "",
+    "helpMarkDown": "Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties",
+    "visibleRule": "signPayload = true",
+    "groupName": "signingDetails"
+  },
+  {
         "name": "waitForCompletion",
         "type": "boolean",
         "label": "Wait for task completion",
@@ -89,12 +99,11 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
-        "signPayload": "$(signPayload)",
         "certificateString": "$(certificateString)",
+        "signaturePropertyKey": "$(signatureKey)",
         "messageProperties": {
           "jobid": "$(system.jobId)",
-          "taskId": "$(system.taskId)",
-          "signature": ""
+          "taskId": "$(system.taskId)"
         }
       }
     }
