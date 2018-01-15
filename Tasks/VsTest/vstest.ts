@@ -364,7 +364,7 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     const ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === 'true';
 
     const envVars: { [key: string]: string; } = process.env;
-    utils.Helper.addToProcessEnvVars(envVars, 'TESTCASE_ACCESSTOKEN', tl.getVariable('TESTCASE_ACCESSTOKEN'));
+    utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
 
     const execOptions: tr.IExecOptions = <any>{
         ignoreReturnCode: ignoreTestFailures,
