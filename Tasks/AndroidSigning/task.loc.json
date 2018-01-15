@@ -34,6 +34,9 @@
   "inputs": [
     {
       "name": "files",
+      "aliases": [
+        "apkFiles"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.files",
       "defaultValue": "**/*.apk",

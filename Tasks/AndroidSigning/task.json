@@ -34,6 +34,7 @@
     "inputs": [
         {
             "name": "files",
+            "aliases": ["apkFiles"],
             "type": "filePath",
             "label": "APK Files",
             "defaultValue": "**/*.apk",
