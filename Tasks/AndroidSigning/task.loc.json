@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 126,
+    "Minor": 130,
     "Patch": 0
   },
   "demands": [
@@ -36,7 +36,7 @@
       "name": "files",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.files",
-      "defaultValue": "",
+      "defaultValue": "**/*.apk",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.files"
     },
