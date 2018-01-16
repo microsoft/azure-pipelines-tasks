@@ -21,5 +21,7 @@
         "url": "https://github.com/microsoft/vsts-tasks/issues"
     },
     "homepage": "https://github.com/microsoft/vsts-tasks#readme",
-    "dependencies": {}
+    "dependencies": {
+        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common"
+    }
 }

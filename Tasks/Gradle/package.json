@@ -8,8 +8,12 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
+    "codeanalysis-common": "file:../../_build/Tasks/Common/codeanalysis-common",
+    "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools",
     "glob": "7.1.0",
+    "java-common": "file:../../_build/Tasks/Common/java-common",
     "request": "^2.74.0",
+    "utility-common": "file:../../_build/Tasks/Common/utility-common",
     "vsts-task-lib": "1.1.0",
     "xml2js": "^0.4.16"
   }
