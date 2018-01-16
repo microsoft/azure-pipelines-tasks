@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 3
     },
     "demands": [
         "sh"
@@ -49,7 +49,6 @@
         },
         {
             "name": "disableAutoCwd",
-            "aliases": ["disableAutoWorkingDirectory"],
             "type": "boolean",
             "label": "Specify Working Directory",
             "defaultValue": "false",
@@ -59,7 +58,6 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "",
