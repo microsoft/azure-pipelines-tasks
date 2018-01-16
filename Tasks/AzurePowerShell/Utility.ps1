@@ -73,7 +73,7 @@ function  Get-RollForwardVersion {
         $hostedAgentAzureRmModulePath = $env:SystemDrive + "\Modules\AzureRm_" + $rollForwardAzurePSVersion
         $hostedAgentAzureModulePath = $env:SystemDrive + "\Modules\Azure_" + $rollForwardAzurePSVersion
         
-        if((Test-Path -Path $hostedAgentAzureRmModulePath) -eq $true -and (Test-Path -Path $hostedAgentAzureModulePath) -eq $true) {
+        if((Test-Path -Path $hostedAgentAzureRmModulePath) -eq $true -or (Test-Path -Path $hostedAgentAzureModulePath) -eq $true) {
             Write-Warning (Get-VstsLocString -Key "OverrideAzurePowerShellVersion" -ArgumentList $azurePowerShellVersion, $rollForwardAzurePSVersion)
             return $rollForwardAzurePSVersion;
         }
