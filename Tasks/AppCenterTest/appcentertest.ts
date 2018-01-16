@@ -156,12 +156,6 @@ function getLoginRunner(cliPath: string, debug: boolean, credsType: string): Too
     return loginRunner;
 }
 
-function getVersionRunner(cliPath: string): ToolRunner {
-    let versionRunner = tl.tool(cliPath);
-    versionRunner.arg('-v');
-    return versionRunner;
-}
-
 function getTestRunner(cliPath: string, debug: boolean, app: string, artifactsDir: string, credsType: string): ToolRunner {
     let testRunner = tl.tool(cliPath);
     let appSlug: string = tl.getInput('appSlug', true);
@@ -249,9 +243,6 @@ async function run() {
 
         // Get app info
         let app = resolveInputPatternToOneFile('app', true, "Binary File");
-
-        let versionRunner = getVersionRunner(cliPath);
-        await versionRunner.exec();
 
         // Test prepare
         if (prepareTests) {
