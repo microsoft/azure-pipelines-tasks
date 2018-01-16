@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
+    "securefiles-common": "file:../../_build/Tasks/Common/securefiles-common",
     "vsts-task-lib": "2.1.0"
   }
 }

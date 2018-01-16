@@ -8,8 +8,8 @@
       "version": "file:../../_build/Tasks/Common/azurestack-common",
       "requires": {
         "q": "1.4.1",
-        "vso-node-api": "6.0.1-preview",
-        "vsts-task-lib": "0.9.20",
+        "typed-rest-client": "0.12.0",
+        "vsts-task-lib": "2.0.1-preview",
         "xml2js": "0.4.13"
       },
       "dependencies": {
@@ -29,29 +29,6 @@
           "version": "0.0.1",
           "bundled": true
         },
-        "glob": {
-          "version": "6.0.4",
-          "bundled": true,
-          "requires": {
-            "inflight": "1.0.6",
-            "inherits": "2.0.3",
-            "minimatch": "3.0.4",
-            "once": "1.4.0",
-            "path-is-absolute": "1.0.1"
-          }
-        },
-        "inflight": {
-          "version": "1.0.6",
-          "bundled": true,
-          "requires": {
-            "once": "1.4.0",
-            "wrappy": "1.0.2"
-          }
-        },
-        "inherits": {
-          "version": "2.0.3",
-          "bundled": true
-        },
         "minimatch": {
           "version": "3.0.4",
           "bundled": true,
@@ -65,17 +42,6 @@
         },
         "node-uuid": {
           "version": "1.4.8",
-          "bundled": true
-        },
-        "once": {
-          "version": "1.4.0",
-          "bundled": true,
-          "requires": {
-            "wrappy": "1.0.2"
-          }
-        },
-        "path-is-absolute": {
-          "version": "1.0.1",
           "bundled": true
         },
         "q": {
@@ -98,45 +64,29 @@
           "version": "0.0.4",
           "bundled": true
         },
-        "underscore": {
-          "version": "1.8.3",
-          "bundled": true
-        },
-        "vso-node-api": {
-          "version": "6.0.1-preview",
+        "typed-rest-client": {
+          "version": "0.12.0",
           "bundled": true,
           "requires": {
-            "q": "1.4.1",
             "tunnel": "0.0.4",
             "underscore": "1.8.3"
           }
         },
+        "underscore": {
+          "version": "1.8.3",
+          "bundled": true
+        },
         "vsts-task-lib": {
-          "version": "0.9.20",
+          "version": "2.0.1-preview",
           "bundled": true,
           "requires": {
-            "glob": "6.0.4",
             "minimatch": "3.0.4",
             "mockery": "1.7.0",
             "node-uuid": "1.4.8",
             "q": "1.4.1",
             "semver": "5.4.1",
-            "shelljs": "0.3.0",
-            "vso-node-api": "0.6.1"
-          },
-          "dependencies": {
-            "vso-node-api": {
-              "version": "0.6.1",
-              "bundled": true,
-              "requires": {
-                "q": "1.4.1"
-              }
-            }
+            "shelljs": "0.3.0"
           }
-        },
-        "wrappy": {
-          "version": "1.0.2",
-          "bundled": true
         },
         "xml2js": {
           "version": "0.4.13",
@@ -174,7 +124,7 @@
     "minimatch": {
       "version": "3.0.4",
       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
-      "integrity": "sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==",
+      "integrity": "sha1-UWbihkV/AzBgZL5Ul+jbsMPTIIM=",
       "requires": {
         "brace-expansion": "1.1.8"
       }
@@ -192,7 +142,7 @@
     "semver": {
       "version": "5.4.1",
       "resolved": "https://registry.npmjs.org/semver/-/semver-5.4.1.tgz",
-      "integrity": "sha512-WfG/X9+oATh81XtllIo/I8gOiY9EXRdv1cQdyykeXK17YcUW3EXUAi2To4pcH6nZtJPr7ZOpM5OMyWJZm+8Rsg=="
+      "integrity": "sha1-4FnAnYVx8FQII3M0M1BdOi8AsY4="
     },
     "shelljs": {
       "version": "0.3.0",
@@ -221,7 +171,7 @@
     "uuid": {
       "version": "3.1.0",
       "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.1.0.tgz",
-      "integrity": "sha512-DIWtzUkw04M4k3bf1IcpS2tngXEL26YUD2M0tMDUpnUrz2hgzUBlD55a4FjdLGPvfHxS6uluGWvaVEqgBcVa+g=="
+      "integrity": "sha1-PdPT55Crwk17DToDT/q6vijrvAQ="
     },
     "vsts-task-lib": {
       "version": "2.1.0",
