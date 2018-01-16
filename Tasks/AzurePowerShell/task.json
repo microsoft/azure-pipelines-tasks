@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [
         "azureps"
@@ -108,7 +108,7 @@
             "aliases": ["azurePowerShellVersion"],
             "type": "pickList",
             "label": "Azure PowerShell Version",
-            "defaultValue": "LatestVersion",
+            "defaultValue": "OtherVersion",
             "required": false,
             "options": {
                 "LatestVersion": "Latest installed version",
@@ -136,6 +136,7 @@
     "messages": {
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
         "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
-        "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1"
+        "InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
+        "OverrideAzurePowerShellVersion": "The Azure PowerShell version '{0}' is not supported for Hosted Agent. Overriding it with version '{1}'. Consider changing the version selected."
     }
 }

@@ -1,3 +1,7 @@
+$rollForwardTable = @{
+    "5.0.0" = "5.1.1";
+};
+
 function Update-PSModulePathForHostedAgent {
     [CmdletBinding()]
     param([string] $targetAzurePs)
@@ -58,4 +62,21 @@ function Get-LatestModule {
     }
     Write-Verbose "Latest module folder detected: $resultFolder"
     return $resultFolder
+}
+
+function  Get-RollForwardVersion {
+    [CmdletBinding()]
+    param([string]$azurePowerShellVersion)
+    
+    if(![string]::IsNullOrEmpty($rollForwardTable[$azurePowerShellVersion])) {
+        $rollForwardAzurePSVersion = $rollForwardTable[$azurePowerShellVersion]
+        $hostedAgentAzureRmModulePath = $env:SystemDrive + "\Modules\AzureRm_" + $rollForwardAzurePSVersion
+        $hostedAgentAzureModulePath = $env:SystemDrive + "\Modules\Azure_" + $rollForwardAzurePSVersion
+        
+        if((Test-Path -Path $hostedAgentAzureRmModulePath) -eq $true -and (Test-Path -Path $hostedAgentAzureModulePath) -eq $true) {
+            Write-Warning (Get-VstsLocString -Key "OverrideAzurePowerShellVersion" -ArgumentList $azurePowerShellVersion, $rollForwardAzurePSVersion)
+            return $rollForwardAzurePSVersion;
+        }
+    }
+    return $azurePowerShellVersion
 }
