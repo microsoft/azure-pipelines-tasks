@@ -159,6 +159,9 @@ target.build = function() {
                 var modName = path.basename(modPath);
                 var modOutDir = path.join(commonPath, modName);
 
+                //console.log('taskPath' + taskPath);
+                console.log('modOutDir' + modOutDir);
+
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + modPath, true);
 
@@ -212,6 +215,7 @@ target.build = function() {
 
                     matchCopy('!Tests', modOutDir, dest, { noRecurse: true, matchBase: true });
                 }
+                console.log("3 done");
             });
         }
 

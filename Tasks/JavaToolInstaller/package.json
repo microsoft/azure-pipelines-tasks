@@ -22,6 +22,8 @@
     },
     "homepage": "https://github.com/microsoft/vsts-tasks#readme",
     "dependencies": {
+        "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest",
+        "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider",
         "vsts-task-lib": "2.1.0",
         "vsts-task-tool-lib": "^0.4.1"
     }

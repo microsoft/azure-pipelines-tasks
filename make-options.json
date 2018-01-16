@@ -16,8 +16,8 @@
         "AzureNLBManagement",
         "AzurePowerShell",
         
-
-        "AzureVmssDeployment",
+        
+        
         "Bash",
         "BatchScript",
         "Chef",
@@ -40,19 +40,19 @@
         "DownloadSecureFile",
         "ExtractFiles",
         "FtpUpload",
-        "Gradle",
+        
         "Grunt",
         "Gulp",
-        "IISWebAppDeploymentOnMachineGroup",
+        
         "IISWebAppManagementOnMachineGroup",
         "InstallAppleCertificate",
         "InstallAppleProvisioningProfile",
         "InstallSSHKey",
         "InvokeRestApi",
-        "JavaToolInstaller",
-        "JenkinsDownloadArtifacts",
+        
+        
         "JenkinsQueueJob",
-        "Kubernetes",
+        
         "ManualIntervention",
         "Maven",
         "MSBuild",
