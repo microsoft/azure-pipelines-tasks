@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest",
     "q": "1.4.1",
+    "vsts-task-lib": "2.0.5",
     "xml2js": "0.4.13"
   }
 }

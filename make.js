@@ -56,7 +56,7 @@ var legacyTestPath = path.join(__dirname, '_test', 'Tests-Legacy');
 var legacyTestTasksPath = path.join(__dirname, '_test', 'Tasks');
 
 // node min version
-var minNodeVer = '4.0.0';
+var minNodeVer = '8.9.1';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
@@ -106,8 +106,8 @@ target.build = function() {
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '3.0.0')) {
-            fail('expected 3.0.0 or higher');
+        if (semver.lt(output, '5.5.1')) {
+            fail('expected 5.5.1 or higher');
         }
     });
 
@@ -154,6 +154,8 @@ target.build = function() {
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
 
+            console.log('found ' + common.length + ' common dependencies');
+
             common.forEach(function(mod) {
                 var modPath = path.join(taskPath, mod['module']);
                 var modName = path.basename(modPath);
@@ -189,13 +191,19 @@ target.build = function() {
                     }
                 }
 
-                // npm install the common module to the task dir
+                // copy the common module to the task dir
                 if (mod.type === 'node' && mod.compile == true) {
-                    mkdir('-p', path.join(taskPath, 'node_modules'));
+                    var currentTaskNodeModulesPath = path.join(taskPath, 'node_modules');
+                    mkdir('-p', currentTaskNodeModulesPath);
                     rm('-Rf', path.join(taskPath, 'node_modules', modName));
+
                     var originalDir = pwd();
                     cd(taskPath);
-                    run('npm install ' + modOutDir);
+
+                    // Copy the common files to the node_modules folder for the current task
+                    // We need to do a copy because npm install in npm5 uses sym links and breaks our builds
+                    cp('-r', modOutDir, currentTaskNodeModulesPath)
+
                     cd(originalDir);
                 }
                 // copy module resources to the task output dir
@@ -261,6 +269,9 @@ target.test = function() {
     if (!testsSpec.length && !process.env.TF_BUILD) {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
+
+    // install and use node 6 to run the tests
+    util.installNode('v6.12.0', buildTestsPath);
 
     run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
 }

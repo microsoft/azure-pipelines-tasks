@@ -17,6 +17,14 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "q": "1.4.1"
+    "azurerest-common": "file:../../_build/Tasks/Common/azurerest-common",
+    "azurestack-common": "file:../../_build/Tasks/Common/azurestack-common",
+    "q": "1.4.1",
+    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common"
+    "xml2js": "0.4.13",
+    "uuid": "3.1.0",
+    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest",
+    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common",
+    "vsts-task-lib": "2.0.5"
   }
 }

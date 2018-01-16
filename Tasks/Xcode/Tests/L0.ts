@@ -15,7 +15,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 7 create IPA with archive and auto export', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0ExportArchiveWithAuto.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -49,7 +49,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 7 create IPA with archive and export with specified method', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0ExportArchiveSpecify.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -83,7 +83,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 8 create IPA with export options plist', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0ExportArchiveWithPlist.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -117,7 +117,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 8 create IPA with bad exportOptionsPlist path', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0ExportOptionsPlistBadPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -147,7 +147,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode create IPA with file paths for archive path and export path', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0FilePathForArchiveAndExportPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -181,7 +181,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 7 create IPA with code signing identifiers', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0CreateIpaWithCodeSigningIdentifiers.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -216,7 +216,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 8 automatic code signing with identifiers', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0Xcode8AutomaticSignWithIdentifiers.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -249,7 +249,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 8 automatic signing with development team', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0Xcode8AutomaticSignWithDevTeam.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -286,7 +286,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode archive and export with project path', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0XcodeArchiveExportProject.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -324,7 +324,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 9 automatic signing with files', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0Xcode9AutomaticSignWithFiles.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -361,7 +361,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 9 automatic signing with allowProvisioningUpdates', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0Xcode9AutomaticSignWithAllowProvisioningUpdates.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -399,7 +399,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 9 signing defaults to automatic, with auto export', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0XCode9SigningDefaultsToAutoWithAutoExport.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -428,7 +428,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 9 signing defaults to manual, with auto export', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         let tp = path.join(__dirname, 'L0XCode9SigningDefaultsToManualWithAutoExport.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -466,7 +466,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 9 signing with auto export and cloud entitlement for production', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         const tp = path.join(__dirname, 'L0Xcode9ExportArchiveWithAutoAndCloudEntitlementForProduction.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -507,7 +507,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('Xcode 9 signing with auto export and cloud entitlement for development', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         const tp = path.join(__dirname, 'L0Xcode9ExportArchiveWithAutoAndCloudEntitlementForDevelopment.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -591,7 +591,7 @@ describe('Xcode L0 Suite', function () {
     });
 
     it('macOS auto export', function (done: MochaDone) {
-        this.timeout(1000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         const tp = path.join(__dirname, 'L0macOSAutoExport.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

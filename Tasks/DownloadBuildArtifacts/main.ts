@@ -58,9 +58,12 @@ async function main(): Promise<void> {
     var promise = new Promise<void>(async (resolve, reject) => {
         var buildType: string = tl.getInput("buildType", true);
         var isCurrentBuild: boolean = buildType.toLowerCase() === 'current';
-        var projectId: string = isCurrentBuild ? tl.getVariable("System.TeamProjectId") : tl.getInput("project", true);
-        var definitionId: string = isCurrentBuild ? '' : tl.getInput("definition", true);
-        var buildId: number = parseInt(isCurrentBuild ? tl.getVariable("Build.BuildId") : tl.getInput("buildId", true));
+        var isSpecificBuildWithTriggering: boolean = tl.getBoolInput("specificBuildWithTriggering", false);
+        var projectId: string = null;
+        var definitionId: string = null;
+        var definitionIdSpecified: string = null;
+        var definitionIdTriggered: string = null;
+        var buildId: number = null;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
 
@@ -76,6 +79,56 @@ async function main(): Promise<void> {
         var buildApi: IBuildApi = webApi.getBuildApi();
         var artifacts = [];
         var itemPattern: string = '**';
+
+        if (isCurrentBuild) {
+            projectId = tl.getVariable("System.TeamProjectId");
+            definitionId = '';
+            buildId = parseInt(tl.getVariable("Build.BuildId"));
+        }
+        else {
+            var releaseAlias: string = tl.getVariable("release.triggeringartifact.alias");
+            var triggeringBuildFound: boolean = false;
+            definitionIdSpecified = tl.getInput("definition", true);
+            if (isSpecificBuildWithTriggering) {
+                let hostType = tl.getVariable('system.hostType');
+                if ((hostType && hostType.toUpperCase() != 'BUILD')) {
+                    // try to use alias to grab triggering artifact for release, starting with definition to verify parity with specified definition
+                    definitionIdTriggered = tl.getVariable("release.artifacts." + releaseAlias + ".definitionId");
+                    if (definitionIdTriggered == definitionIdSpecified) {
+                        // populate values using the triggering build
+                        projectId = tl.getVariable("release.artifacts." + releaseAlias + ".projectId");
+                        definitionId = definitionIdTriggered;
+                        buildId = parseInt(tl.getVariable("release.artifacts." + releaseAlias + ".buildId"));
+
+                        // verify that the triggerring bruild's info was found
+                        if (projectId && definitionId && buildId) {
+                            triggeringBuildFound = true;
+                        }
+                    }
+                }
+                else {
+                    //Verify that the triggering build's definition is the same as the specified definition
+                    definitionIdTriggered = tl.getVariable("build.triggeredBy.definitionId");
+                    if (definitionIdTriggered == definitionIdSpecified) {
+                        // populate values using the triggering build
+                        projectId = tl.getVariable("build.triggeredBy.projectId");
+                        definitionId = definitionIdTriggered;
+                        buildId = parseInt(tl.getVariable("build.triggeredBy.buildId"));
+
+                        // verify that the triggerring bruild's info was found
+                        if (projectId && definitionId && buildId) {
+                            triggeringBuildFound = true;
+                        }
+                    }
+                }
+            }
+            if (!triggeringBuildFound) {
+                // Triggering build info not found, or requested, default to specified build info
+                projectId = tl.getInput("project", true);
+                definitionId = definitionIdSpecified;
+                buildId = parseInt(tl.getInput("buildId", true));
+            }
+        }
 
         // verify that buildId belongs to the definition selected
         if (definitionId) {
@@ -163,7 +216,7 @@ async function main(): Promise<void> {
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
-                    let downloadUrl = decodeURIComponent(artifact.resource.downloadUrl.replace("file:", ""));
+                    let downloadUrl = artifact.resource.data;
                     let artifactLocation = downloadUrl + '/' + artifact.name;
                     if (!fs.existsSync(artifactLocation)) {
                         console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));

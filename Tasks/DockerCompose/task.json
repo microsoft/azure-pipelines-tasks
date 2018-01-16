@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 10
+        "Patch": 12
     },
     "demands": [],
     "preview": "false",
@@ -285,7 +285,7 @@
         },
         {
             "name": "cwd",
-            "aliases": ["currentWorkingDirectory"],
+            "aliases": ["workingDirectory"],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",

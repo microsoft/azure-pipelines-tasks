@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "q": "1.4.1"
+    "q": "1.4.1",
+    "vsts-task-lib": "2.0.1-preview",
+    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common"
   }
 }

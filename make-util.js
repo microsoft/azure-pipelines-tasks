@@ -282,6 +282,37 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
+
+var installNode = function (nodeVersion, path) {
+    // determine the platform
+    var platform = os.platform();
+    if (platform != 'darwin' && platform != 'linux' && platform != 'win32') {
+        throw new Error('Unexpected platform: ' + platform);
+    }
+
+    var nodeUrl = 'https://nodejs.org/dist';
+    switch (platform) {
+        case 'darwin':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
+            break;
+        case 'linux':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
+            break;
+        case 'win32':
+            var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
+            var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
+            var nodeDirectory = path.join(path, 'node');
+            mkdir('-p', nodeDirectory);
+            cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
+            cp(nodeLibPath, path.join(nodeDirectory, 'node.lib'));
+            addPath(nodeDirectory);
+            break;
+    }
+}
+exports.installNode = installNode;
+
 var downloadFile = function (url) {
     // validate parameters
     if (!url) {

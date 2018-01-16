@@ -1,0 +1,41 @@
+{
+    "id": "334727F4-9495-4F9D-A391-FC621D671474",
+    "name": "GoTool",
+    "friendlyName": "Go Tool Installer",
+    "description": "Finds or downloads and caches specified version of Go and adds it to the PATH.",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "preview": "true",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "satisfies": ["GO"],
+    "demands": [],
+    "instanceNameFormat": "Use Go $(version)",
+    "inputs": [{
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "1.9.2",
+            "required": true,
+            "helpMarkDown": "Go tool version to download and install.  Examples: 1.9.2"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "gotool.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "FailedToDownload": "Failed to download version %s. Please verify that the version is valid and resolve any other issues. Error: %s",
+        "TempDirNotSet": "Expected Agent.TempDirectory to be set"
+    }
+}

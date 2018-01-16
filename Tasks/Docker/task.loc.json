@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 4
+    "Patch": 6
   },
   "demands": [],
   "preview": "false",
@@ -282,7 +282,19 @@
       "groupName": "advanced"
     },
     {
+      "name": "enforceDockerNamingConvention",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enforceDockerNamingConvention",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.enforceDockerNamingConvention",
+      "groupName": "advanced"
+    },
+    {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
