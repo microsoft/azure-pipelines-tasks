@@ -1,0 +1,264 @@
+import msRestAzure = require("./azure-arm-common");
+import webClient = require("./webClient");
+import tl = require('vsts-task-lib/task');
+import util = require("util");
+import azureServiceClient = require("./AzureServiceClient");
+import Q = require("q");
+
+export class AzureMysqManagementClient extends azureServiceClient.ServiceClient {
+    public firewallRules: FirewallRules;
+
+    constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
+        super(credentials, subscriptionId);
+
+        this.apiVersion = '2017-04-30-preview';
+        this.acceptLanguage = 'en-US';
+        this.generateClientRequestId = true;
+
+        if (!options) options = {};
+
+        if (baseUri) {
+            this.baseUri = baseUri;
+        }
+
+        if (options.apiVersion) {
+            this.apiVersion = options.apiVersion;
+        }
+        if (options.acceptLanguage) {
+            this.acceptLanguage = options.acceptLanguage;
+        }
+        if (options.longRunningOperationRetryTimeout) {
+            this.longRunningOperationRetryTimeout = options.longRunningOperationRetryTimeout;
+        }
+        if (options.generateClientRequestId) {
+            this.generateClientRequestId = options.generateClientRequestId;
+        }
+
+        this.firewallRules = new FirewallRules(this);
+    }
+}
+
+export class FirewallRules {
+    private client: AzureMysqManagementClient;
+
+    constructor(client) {
+        this.client = client;
+    }
+
+    public list(resourceGroupName: string, serverName: string, callback?: azureServiceClient.ApiCallback): void {
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if(!this.isNameValid(serverName)){
+                throw new Error(tl.loc("ServerNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Create HTTP transport objects
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.headers = {};
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DBforMySQL/servers/{serverName}/firewallRules',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{serverName}': serverName
+            }
+        );
+        // Set body to be null
+        httpRequest.body = null;
+
+        //send request
+        var result = [];
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+            if (response.statusCode == 200) {
+                if (response.body.value) {
+                    result = result.concat(response.body.value);
+                }
+
+                if (response.body.nextLink) {
+                    var nextResult = await this.client.accumulateResultFromPagedResult(response.body.nextLink);
+                    if (nextResult.error) {
+                        return new azureServiceClient.ApiResult(nextResult.error);
+                    }
+                    result.concat(nextResult.result);
+                }
+
+                return new azureServiceClient.ApiResult(null, result);
+            }
+            else {
+                return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
+            }
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+    public get(resourceGroupName: string, serverName: string, firewallRuleName: string, callback: azureServiceClient.ApiCallback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if(!this.isNameValid(serverName)){
+                throw new Error(tl.loc("ServerNameCannotBeNull"));
+            }
+            if(!this.isNameValid(firewallRuleName)){
+                throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));
+            }
+        } catch (error) {
+            return callback(error);
+        }
+
+        // Create HTTP transport objects
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.headers = {};
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DBforMySQL/servers/{serverName}/firewallRules/{firewallRuleName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{serverName}': serverName,
+                '{firewallRuleName}': firewallRuleName
+            });
+        httpRequest.body = null;
+
+        this.client.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            if (response.statusCode == 200) {
+                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+            }
+            else {
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+    public createOrUpdate(resourceGroupName: string, serverName: string, firewallRuleName: string, parameters, callback?:  azureServiceClient.ApiCallback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if(!this.isNameValid(serverName)){
+                throw new Error(tl.loc("ServerNameCannotBeNull"));
+            }
+            if(!this.isNameValid(firewallRuleName)){
+                throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));
+            }
+        }
+        catch (error) {
+            return callback(error);
+        }
+
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.headers = {};
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DBforMySQL/servers/{serverName}/firewallRules/{firewallRuleName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{serverName}': serverName,
+                '{firewallRuleName}': firewallRuleName
+            });
+            
+        if (parameters !== null && parameters !== undefined) {
+            httpRequest.body = JSON.stringify(parameters);
+        }
+
+        this.client.beginRequest(httpRequest).then(async (response) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var statusCode = response.statusCode;
+            if (statusCode != 200 && statusCode != 201 && statusCode != 202) {
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            else {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
+                    if (operationResponse.body.status === "Succeeded") {
+                        // Generate Response
+                        deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                    }
+                    else {
+                        // Generate Error
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                    }
+                }, (error) => deferred.reject(error))
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+    public delete(resourceGroupName: string, serverName: string, firewallRuleName: string, callback?:  azureServiceClient.ApiCallback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if(!this.isNameValid(serverName)){
+                throw new Error(tl.loc("ServerNameCannotBeNull"));
+            }
+            if(!this.isNameValid(firewallRuleName)){
+                throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));
+            }
+        }
+        catch (error) {
+            return callback(error);
+        }
+
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.headers = {};
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DBforMySQL/servers/{serverName}/firewallRules/{firewallRuleName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{serverName}': serverName,
+                '{firewallRuleName}': firewallRuleName
+            });
+
+        this.client.beginRequest(httpRequest).then(async (response) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var statusCode = response.statusCode;
+            if (statusCode != 200 && statusCode != 202 && statusCode !=204) {
+                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            else {
+                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
+                    if (operationResponse.body.status === "Succeeded") {
+                        // Generate Response
+                        deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
+                    }
+                    else {
+                        // Generate Error
+                        deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                    }
+                }, (error) => deferred.reject(error))
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+    private isNameValid(name: string): boolean{
+        if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
+            return false;
+        }else{
+            return true;
+        }
+    }
+}
