@@ -49,7 +49,7 @@
     "label": "Message properties",
     "required": true,
     "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
-    "helpMarkDown": "Enter the json messageProperties.",
+    "helpMarkDown": "Enter the json message properties.",
     "properties": {
         "resizable": "true",
         "rows": "10",
