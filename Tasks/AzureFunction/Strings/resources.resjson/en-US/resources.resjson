@@ -9,7 +9,7 @@
   "loc.input.label.key": "Function key",
   "loc.input.help.key": "Function or Host key with which we can access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is an environment level secret variable with value as the secret key like ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==",
   "loc.input.label.method": "Method",
-  "loc.input.help.method": "Select the http method with which the funtion should be invoked with.",
+  "loc.input.help.method": "Select the http method with which the function should be invoked with.",
   "loc.input.label.headers": "Headers",
   "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
   "loc.input.label.queryParameters": "Query parameters",

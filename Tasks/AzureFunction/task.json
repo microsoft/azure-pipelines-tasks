@@ -56,7 +56,7 @@
 				"TRACE": "TRACE",
 				"PATCH": "PATCH"
 			},
-			"helpMarkDown": "Select the http method with which the funtion should be invoked with."
+			"helpMarkDown": "Select the http method with which the function should be invoked with."
 		}, {
 			"name": "headers",
 			"type": "multiLine",
