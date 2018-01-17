@@ -22,6 +22,7 @@ async function run() {
         const testRunner = tl.getInput('testRunner', true);
         const testResultsFiles: string[] = tl.getDelimitedInput('testResultsFiles', '\n', true);
         const mergeResults = tl.getInput('mergeTestResults');
+        const failBuildOnTestFailure = tl.getInput('failBuildOnTestFailure');
         const platform = tl.getInput('platform');
         const config = tl.getInput('configuration');
         const testRunTitle = tl.getInput('testRunTitle');
@@ -31,6 +32,7 @@ async function run() {
         tl.debug('testRunner: ' + testRunner);
         tl.debug('testResultsFiles: ' + testResultsFiles);
         tl.debug('mergeResults: ' + mergeResults);
+        tl.debug('failBuildOnTestFailure: ' + failBuildOnTestFailure);
         tl.debug('platform: ' + platform);
         tl.debug('config: ' + config);
         tl.debug('testRunTitle: ' + testRunTitle);
@@ -80,6 +82,17 @@ async function run() {
             'mergeResultsUserPreference': mergeResults,
             'testResultsFilesCount': testResultsFilesCount
         });
+		
+        if(failBuildOnTestFailure){
+            const failureMatch = 'FAILED';
+            for(let file of matchingTestResultsFiles){
+                let fileContent = fs.readFileSync(file);
+                if(fileContent.indexOf(failureMatch) !== -1){
+                    tl.setResult(tl.TaskResult.Failed, 'Test failures detected in results files.');
+                    return;
+                }
+            }
+        }
 
         tl.setResult(tl.TaskResult.Succeeded, '');
     }
