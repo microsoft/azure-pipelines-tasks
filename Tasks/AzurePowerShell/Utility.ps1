@@ -80,11 +80,11 @@ function Get-LatestModule {
 function  Get-RollForwardVersion {
     [CmdletBinding()]
     param([string]$azurePowerShellVersion)
-    
-    if(![string]::IsNullOrEmpty($rollForwardTable[$azurePowerShellVersion])) {
-        $rollForwardAzurePSVersion = $rollForwardTable[$azurePowerShellVersion]
-        $hostedAgentAzureRmModulePath = Get-SavedModulePath -azurePowerShellVersion $targetAzurePs
-        $hostedAgentAzureModulePath = Get-SavedModulePath -azurePowerShellVersion $targetAzurePs -Classic
+
+    $rollForwardAzurePSVersion = $rollForwardTable[$azurePowerShellVersion]
+    if(![string]::IsNullOrEmpty($rollForwardAzurePSVersion)) {
+        $hostedAgentAzureRmModulePath = Get-SavedModulePath -azurePowerShellVersion $rollForwardAzurePSVersion
+        $hostedAgentAzureModulePath = Get-SavedModulePath -azurePowerShellVersion $rollForwardAzurePSVersion -Classic
     
         if((Test-Path -Path $hostedAgentAzureRmModulePath) -eq $true -or (Test-Path -Path $hostedAgentAzureModulePath) -eq $true) {
             Write-Warning (Get-VstsLocString -Key "OverrideAzurePowerShellVersion" -ArgumentList $azurePowerShellVersion, $rollForwardAzurePSVersion)
