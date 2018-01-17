@@ -315,7 +315,11 @@ function Publish-UpgradedServiceFabricApplication
         catch
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UnregisterAppTypeOnUpgradeFailure -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-            Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force
+            Write-Host -Message $_.Exception.Message
+            if($Action -ne 'Upgrade')
+            {
+                Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force
+            }
             throw
         }
 
