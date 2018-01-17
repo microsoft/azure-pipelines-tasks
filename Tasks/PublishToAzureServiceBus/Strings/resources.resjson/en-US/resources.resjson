@@ -8,7 +8,7 @@
   "loc.input.label.messageBody": "Message body",
   "loc.input.help.messageBody": "Enter the json messageBody.",
   "loc.input.label.messageProperties": "Message properties",
-  "loc.input.help.messageProperties": "Enter the json messageProperties.",
+  "loc.input.help.messageProperties": "Enter the json message properties.",
   "loc.input.label.waitForCompletion": "Wait for task completion",
   "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
 }
