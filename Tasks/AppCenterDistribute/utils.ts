@@ -131,6 +131,11 @@ export function createZipFile(zipStream: NodeJS.ReadableStream, filename: string
 export function resolveSinglePath(pattern: string, continueOnError?: boolean, packParentFolder?: boolean): string {
     tl.debug("---- Resolving a single path");
 
+    // check for absolute path
+    if(tl.exist(pattern)) {
+        return pattern;
+    }
+
     let matches = resolvePaths(pattern, continueOnError, packParentFolder);
 
     if (matches && matches.length > 0) {
