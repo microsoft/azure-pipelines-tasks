@@ -39,9 +39,13 @@ export class AzureAppServiceUtility {
         var publishingProfile = await this._appService.getPublishingProfileWithSecrets();
         var defer = Q.defer<any>();
         parseString(publishingProfile, (error, result) => {
-            if(result && result.publishData && result.publishData.publishProfile) {
-                for (var index in result.publishData.publishProfile) {
-                    if (result.publishData.publishProfile[index].$ && result.publishData.publishProfile[index].$.publishMethod === "MSDeploy") {
+            if(!!error) {
+                defer.reject(error);
+            }
+            var publishProfile = result && result.publishData && result.publishData.publishProfile ? result.publishData.publishProfile : null;
+            if(publishProfile) {
+                for (var index in publishProfile) {
+                    if (publishProfile[index].$ && publishProfile[index].$.publishMethod === "MSDeploy") {
                         defer.resolve(result.publishData.publishProfile[index].$);
                     }
                 }
@@ -181,10 +185,10 @@ export class AzureAppServiceUtility {
 
         if (!(!!appCommandLine == !!startupCommand && appCommandLine == startupCommand)
         || runtimeStack != linuxFxVersion) {
-            configDetails.properties.linuxFxVersion = linuxFxVersion;
-            configDetails.properties.appCommandLine = appCommandLine;
-
-            await this.updateConfigurationSettings({linuxFxVersion: linuxFxVersion, appCommandLine: appCommandLine});
+            await this.updateConfigurationSettings({linuxFxVersion: runtimeStack, appCommandLine: startupCommand});
+        }
+        else {
+            tl.debug(`Skipped updating the values. linuxFxVersion: ${linuxFxVersion} : appCommandLine: ${appCommandLine}`)
         }
     }
 

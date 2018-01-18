@@ -354,6 +354,7 @@
             "label": "Inline Script",
             "defaultValue": ":: You can provide your deployment commands here. One command per line.",
             "groupName": "PostDeploymentAction",
+            "required": true,
             "visibleRule": "ScriptType == Inline Script",
             "properties": {
                 "resizable": "true",

@@ -46,7 +46,6 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     var retryCount = (retryCountParam && !(isNaN(Number(retryCountParam)))) ? Number(retryCountParam): DEFAULT_RETRY_COUNT; 
     
     try {
-        var shouldContinue = true;
         while(true) {
             try {
                 retryCount -= 1;
