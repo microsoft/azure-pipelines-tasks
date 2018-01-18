@@ -182,6 +182,7 @@ function Publish-UpgradedServiceFabricApplication
         return
     }
 
+    $ApplicationTypeAlreadyRegistered = $true
     if ($Action.Equals('RegisterAndUpgrade') -or $Action.Equals('Register'))
     {
         ## Check existence of the application
@@ -218,8 +219,8 @@ function Publish-UpgradedServiceFabricApplication
         $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
         if ($reg)
         {
+            $ApplicationTypeAlreadyRegistered = $false
             Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-            $reg | Unregister-ServiceFabricApplicationType -Force
         }
 
         $applicationPackagePathInImageStore = $names.ApplicationTypeName
@@ -315,7 +316,11 @@ function Publish-UpgradedServiceFabricApplication
         catch
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UnregisterAppTypeOnUpgradeFailure -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-            Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force
+            Write-Host -Message $_.Exception.Message
+            if($ApplicationTypeAlreadyRegistered -eq $false)
+            {
+                Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force
+            }
             throw
         }
 

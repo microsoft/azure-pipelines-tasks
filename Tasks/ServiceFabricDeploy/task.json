@@ -15,7 +15,7 @@
         "DeploymentGroup"
     ],
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 5,
         "Patch": 0
     },
@@ -434,7 +434,7 @@
         "SFSDK_AppTypeMismatch": "Application type of application '{0}' doesn't match the application type in the application manifest of the new application package. Please ensure that the application being upgraded has the same application type.",
         "SFSDK_UpgradeInProgressError": "An upgrade for the application '{0}' is already in progress.",
         "SFSDK_StartAppUpgrade": "Start upgrading application...",
-        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}'...",
+        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}' failed",
         "SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
         "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
         "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
