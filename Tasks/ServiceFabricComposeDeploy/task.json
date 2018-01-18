@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 2
+        "Patch": 0
     },
     "demands": [
         "Cmd"
@@ -179,6 +179,7 @@
         "UpgradeFailed": "Upgrade Failed\nStatus: {0}\nDetails: {1}",
         "CheckingComposeFile": "Checking compose file",
         "UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
-        "UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
+        "UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}.",
+        "UpgradeInProgress": "An upgrade for the application '{0}' is already in progress."
     }
 }

@@ -195,15 +195,20 @@ try {
         $upgradeParameters.ConsiderWarningAsError = $True
         $upgradeParameters.Force = $True
 
+        $upgradeStatus = Get-ServiceFabricComposeDeploymentUpgradeHelper -ApiVersion $apiVersion -GetUpgradeParameters $getStatusParameters
+        if (($upgradeStatus -ne $null) -and IsUpgradeRunning($upgradeStatus.UpgradeState))
+        {
+            Write-Error (Get-VstsLocString -Key UpgradeInProgress -ArgumentList $applicationName)
+        }
+
         Write-Host (Get-VstsLocString -Key UpgradingApplication)
         Start-ServiceFabricComposeDeploymentUpgradeHelper -ApiVersion $apiVersion -UpgradeParameters $upgradeParameters
 
         Write-Host (Get-VstsLocString -Key WaitingForUpgrade)
+        # Wait a minute before checking on the upgrade to avoid getting the status of the last upgrade.
+        Start-Sleep -Seconds 60
         $upgradeStatus = Get-ServiceFabricComposeDeploymentUpgradeHelper -ApiVersion $apiVersion -GetUpgradeParameters $getStatusParameters
-        while (($upgradeStatus -eq $null) -or `
-               ($upgradeStatus.UpgradeState -ne 'Failed' -and `
-                $upgradeStatus.UpgradeState -ne 'Invalid' -and `
-                $upgradeStatus.UpgradeState -ne 'RollingForwardCompleted'))
+        while (($upgradeStatus -eq $null) -or IsUpgradeRunning($upgradeStatus.UpgradeState))
         {
             if ($upgradeStatus -eq $null)
             {
