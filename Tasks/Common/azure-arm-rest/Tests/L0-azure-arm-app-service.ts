@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
-import tl = require('vsts-task-lib');
+import tl = require('vsts-task-lib/task');
 import * as path from 'path';
 
 export function AzureAppServiceMockTests() {
@@ -21,12 +21,10 @@ export function AzureAppServiceMockTests() {
             swap(tr);
             console.log("\tvalidating get");
             get(tr);
-            //console.log("\tvalidating monitorAppState");
-            //monitorAppState(tr);
             console.log("\tvalidating getPublishingProfileWithSecrets");
             getPublishingProfileWithSecrets(tr);
-            //console.log("\tvalidating getWebDeployPublishingProfile");
-            //getWebDeployPublishingProfile(tr);
+            console.log("\tvalidating getPublishingCredentials");
+            getPublishingCredentials(tr);
             console.log("\tvalidating getApplicationSettings");
             getApplicationSettings(tr);
             console.log("\tvalidating updateApplicationSettings");
@@ -35,8 +33,12 @@ export function AzureAppServiceMockTests() {
             getConfiguration(tr);
             console.log("\tvalidating updateConfiguration");
             updateConfiguration(tr);
-            //console.log("\tvalidating getKuduService");
-            //getKuduService(tr);
+            console.log("\tvalidating patchConfiguration");
+            patchConfiguration(tr);
+            console.log("\tvalidating getMetadata");
+            getMetadata(tr);
+            console.log("\tvalidating updateMetadata");
+            updateMetadata(tr);
         }
         catch(error) {
             passed = false;
@@ -102,11 +104,6 @@ function getPublishingProfileWithSecrets(tr) {
     'Should have printed: Error: FailedToGetAppServicePublishingProfile MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
 }
 
-function getWebDeployPublishingProfile(tr) {
-    assert(tr.stdOutContained('WEB DEPLOY PUBLISHING PROFILE: MOCK_APP_SERVICE_NAME - Web Deploy'),
-        'Should have printed:WEB DEPLOY PUBLISHING PROFILE: MOCK_APP_SERVICE_NAME - Web Deploy');
-}
-
 function getPublishingCredentials(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME PUBLISHINGCREDENTIALS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/publishingcredentials/$MOCK_APP_SERVICE_NAME'),
         'Should have printed: MOCK_APP_SERVICE_NAME PUBLISHINGCREDENTIALS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/publishingcredentials/$MOCK_APP_SERVICE_NAME');
@@ -135,7 +132,6 @@ function getConfiguration(tr) {
         'Should have printed: Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
 }
 
-
 function updateConfiguration(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_WEB ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/web'),
         'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_WEB ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/web');
@@ -143,6 +139,22 @@ function updateConfiguration(tr) {
         'Should have printed: Error: FailedToUpdateAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
 }
 
-function getKuduService(tr) {
-    assert(tr.stdOutContained('KUDU SERVICE FROM APP SERVICE', 'Should have printed: KUDU SERVICE FROM APP SERVICE'));
+function patchConfiguration(tr) {
+    assert(tr.stdOutContained('PATCH CONFIGURATION PASSED'), 'Should have printed: PATCH CONFIGURATION PASSED');
+    assert(tr.stdOutContained(' FailedToPatchAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
+        'Should have printed: FailedToPatchAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+}
+
+function getMetadata(tr) {
+    assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_METADATA GET ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata'),
+        'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_METADATA GET ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata');
+    assert(tr.stdOutContained(' FailedToGetAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
+        'Should have printed:  FailedToGetAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+}
+
+function updateMetadata(tr) {
+    assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_METADATA UPDATE ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata'),
+        'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_METADATA UPDATE ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata');
+    assert(tr.stdOutContained(' FailedToUpdateAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
+        'Should have printed: FailedToUpdateAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
 }
