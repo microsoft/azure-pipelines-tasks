@@ -2,8 +2,8 @@ import tl = require("vsts-task-lib/task");
 import { read } from "fs";
 
 export class FirewallRule {
-    private _firewallAddressRange: FirewallAddressRange;
-    private _name: string;
+    private properties: FirewallAddressRange;
+    private name: string;
 
     constructor(name: string, firewallAddressRange: FirewallAddressRange){
         if ( !name ||typeof name.valueOf() !== 'string') {
@@ -13,22 +13,22 @@ export class FirewallRule {
             throw new Error(tl.loc("FirewallAddressRangeCannotBeEmpty"));
         }
 
-        this._name = name;
-        this._firewallAddressRange = firewallAddressRange;
+        this.name = name;
+        this.properties = firewallAddressRange;
     }
 
-    public getFirewallAddressRange(): FirewallAddressRange{
-        return this._firewallAddressRange;
+    public getProperties(): FirewallAddressRange{
+        return this.properties;
     }
 
     public getName(): string{
-        return  this._name;
+        return  this.name;
     }
 }
 
 export class FirewallAddressRange {
-    private _startIpAddress: string;
-    private _endIpAddress: string;
+    private startIpAddress: string;
+    private endIpAddress: string;
 
     constructor(startIpAddress: string, endIpAddress: string){
         if ( !startIpAddress ||typeof startIpAddress.valueOf() !== 'string') {
@@ -39,15 +39,15 @@ export class FirewallAddressRange {
             throw new Error(tl.loc("EndIpAddressCannotBeEmpty"));
         }
 
-        this._startIpAddress = startIpAddress;
-        this._endIpAddress = endIpAddress;
+        this.startIpAddress = startIpAddress;
+        this.endIpAddress = endIpAddress;
     }
 
     public getEndIpAddress(): string{
-        return this._endIpAddress;
+        return this.endIpAddress;
     }
 
     public getStartIpAddress(): string{
-        return this._startIpAddress;
+        return this.startIpAddress;
     }
 }

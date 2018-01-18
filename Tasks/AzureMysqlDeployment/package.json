@@ -17,7 +17,6 @@
     },
     "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
     "dependencies": {
-      "mysql2": "1.5.1",
       "q": "1.4.1",
       "vsts-task-lib": "2.1.0",
       "uuid": "3.0.1"

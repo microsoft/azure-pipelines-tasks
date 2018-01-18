@@ -1,6 +1,6 @@
 {
     "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
-    "name": "AzureMysqlDatabaseDeployment",
+    "name": "AzureMysqlDeployment",
     "friendlyName": "Azure Database for Mysql Deployment",
     "description": "Deploy your changes to Azure DB for Mysql",
     "helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 28
+        "Patch": 37
     },
     "demands": [
     ],
@@ -49,17 +49,6 @@
             "helpMarkDown": "Target Azure Resource Manager subscription for deploying SQL files"
         },
         {
-            "name": "ResourceGroupName",
-            "type": "pickList",
-            "label": "Resource Group",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Name of the target Resource Group for copying files to.",
-            "properties": {
-                "EditableOptions": "True"
-            }
-        },
-        {
             "name": "ServerName",
             "type": "pickList",
             "label": "Host Name",
@@ -75,7 +64,7 @@
             "name": "DatabaseName",
             "type": "string",
             "label": "Database Name",
-            "required": true,
+            "required": false,
             "groupName": "target",
             "defaultValue": "",
             "helpMarkDown": "Name of the Azure SQL Database, where the files will be deployed."
@@ -200,17 +189,10 @@
     ],
     "dataSourceBindings": [
         {
-            "target": "ResourceGroupName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureResourceGroups"
-        },
-        {
             "target": "ServerName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureMysqlDB",
-            "parameters": {
-            "ResourceGroupName": "$(ResourceGroupName)"
-            }
+            "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
         }
         
     ],
@@ -221,16 +203,6 @@
         }
     },
     "messages": {
-        "SAD_InvalidServerAddress": "Either IPAddress mentioned is not a valid IPv4 address or Sql database server: '{0}' does not exist.",
-        "SAD_ServerNotFound": "Sql Database Server: '{0}' not found.",
-        "SAD_InvalidIPv4Address": "IPAddress mentioned is not a valid IPv4 address.",
-        "SAD_FoundMoreFiles": "Found more than one file to deploy with search pattern {0}. There can be only one.",
-        "SAD_NoFilesMatch": "No files were found to deploy with search pattern {0}",
-        "SAD_InvalidDacpacFile": "Invalid Dacpac file '{0}' provided",
-        "SAD_InvalidSqlFile": "Invalid Sql file '{0}' provided",
-        "SAD_NoPassword": "No password specified for the SQL User: '{0}'",
-        "SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided",
-        "SAD_InvalidServerNameFormat": "Server name '{0}' is not in the right format. Use FQDN format like '{1}'",
-        "SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed."
+        
     }
 }
