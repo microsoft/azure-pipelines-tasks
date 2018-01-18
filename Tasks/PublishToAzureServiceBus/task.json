@@ -14,9 +14,9 @@
    ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 1,
-    "Patch": 6
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
   },
   "preview": "true",
   "inputs": [
@@ -33,13 +33,27 @@
     "name": "messageBody",
     "type": "multiLine",
     "label": "Message body",
-    "required": true,
-    "defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
+    "required": false,
+    "defaultValue": "",
     "helpMarkDown": "Enter the json messageBody.",
     "properties": {
         "resizable": "true",
         "rows": "10",
         "maxLength": "5000",
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+    }
+  },
+  {
+    "name": "messageProperties",
+    "type": "multiLine",
+    "label": "Message properties",
+    "required": false,
+    "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
+    "helpMarkDown": "Enter the json message properties.",
+    "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "2000",
         "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
     }
   },
@@ -63,10 +77,7 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
-        "messageProperties": {
-          "jobid": "$(system.jobId)",
-          "taskId": "$(system.taskId)"
-        }
+        "messageProperties": "$(messageProperties)"
       }
     }
   }
