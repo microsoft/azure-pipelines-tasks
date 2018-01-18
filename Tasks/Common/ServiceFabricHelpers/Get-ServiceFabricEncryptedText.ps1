@@ -19,7 +19,7 @@ function Get-ServiceFabricEncryptedText
         foreach($serverCertThumbprint in $serverCertThumbprints)
         {
             $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprint" -ErrorAction SilentlyContinue
-            if (-not $cert)
+            if ($cert)
             {
                 break
             }
