@@ -103,7 +103,7 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
-        "certificateString": "$(certificateString)",
+        "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(rb-test01){{/notEquals}}{{else}}{{/notEquals}}",
         "signaturePropertyKey": "$(signatureKey)",
         "messageProperties": {
           "jobid": "$(system.jobId)",
