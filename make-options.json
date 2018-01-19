@@ -1,8 +1,7 @@
 {
     "tasks": [
         "AzureResourceGroupDeployment",
-        "DockerCompose",
-        "Kubernetes"
+        "DockerCompose"
     ],
     "taskResources": [
         "*.ps1",
