@@ -149,7 +149,7 @@ async function main(): Promise<void> {
                     var containerId: number = parseInt(containerParts[1]);
                     var containerPath: string = containerParts[2];
 
-                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + containerPath + "&isShallow=true&api-version=4.1-preview.4";
+                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
                     console.log(tl.loc("DownloadArtifacts", itemsUrl));
 
                     var variables = {};
@@ -163,7 +163,7 @@ async function main(): Promise<void> {
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
-                    let downloadUrl = decodeURIComponent(artifact.resource.downloadUrl.replace("file:", ""));
+                    let downloadUrl = artifact.resource.data;
                     let artifactLocation = downloadUrl + '/' + artifact.name;
                     if (!fs.existsSync(artifactLocation)) {
                         console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));

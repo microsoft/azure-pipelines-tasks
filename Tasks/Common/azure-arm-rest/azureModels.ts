@@ -1,3 +1,5 @@
+import { ApplicationTokenCredentials } from "./azure-arm-common";
+
 export interface AzureBaseObject {
     name?: string;
     id: string;
@@ -213,6 +215,7 @@ export interface AzureEndpoint {
     portalEndpoint?: string;
     AzureKeyVaultDnsSuffix?: string;
     AzureKeyVaultServiceEndpointResourceId?: string;
+    applicationTokenCredentials: ApplicationTokenCredentials;
 }
 
 export interface AzureAppServiceConfigurationDetails {

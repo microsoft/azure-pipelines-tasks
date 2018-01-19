@@ -40,7 +40,6 @@ let a: any = <any>{
     	"webAppPkg.zip": true,
         "DefaultWorkingDirectory\\error.txt": true
     },
-
     "rmRF": {
         "DefaultWorkingDirectory\\error.txt": true
     }

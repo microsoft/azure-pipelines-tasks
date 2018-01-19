@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 4,
-    "Patch": 10
+    "Patch": 11
   },
   "demands": [],
   "preview": "false",
@@ -290,7 +290,7 @@
     {
       "name": "cwd",
       "aliases": [
-        "currentWorkingDirectory"
+        "workingDirectory"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",

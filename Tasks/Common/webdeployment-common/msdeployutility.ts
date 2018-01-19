@@ -190,8 +190,10 @@ export function redirectMSDeployErrorToConsole() {
             if(errorFileContent.indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
                 tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
             }
-
-            if(errorFileContent.indexOf("FILE_IN_USE") !== -1) {
+            else if(errorFileContent.indexOf("An error was encountered when processing operation 'Delete Directory' on 'D:\\home\\site\\wwwroot\\app_data\\jobs'") !== -1) {
+                tl.warning(tl.loc('WebJobsInProgressIssue'));
+            }
+            else if(errorFileContent.indexOf("FILE_IN_USE") !== -1) {
                 tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
             }
           
@@ -200,21 +202,4 @@ export function redirectMSDeployErrorToConsole() {
 
         tl.rmRF(msDeployErrorFilePath);
     }
-}
-
-export function shouldRetryMSDeploy() {
-    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + ERROR_FILE_NAME;
-    
-    if(tl.exist(msDeployErrorFilePath)) {
-        var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
-
-        if(errorFileContent !== "") {
-            if(errorFileContent.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
-                tl.warning(errorFileContent);
-                return true;
-            }
-        }
-    }
-
-    return false;
 }

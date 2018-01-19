@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 10
     },
     "demands": [],
     "preview": "false",
@@ -211,6 +211,7 @@
         },
         {
             "name": "cwd",
+            "aliases": ["workingDirectory"],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
@@ -228,7 +229,10 @@
                 "yaml": "yaml"
             },
             "helpMarkDown": "Output format.",
-            "groupName": "output"
+            "groupName": "output",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "kubectlOutput",

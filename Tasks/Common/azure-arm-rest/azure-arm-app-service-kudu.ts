@@ -1,10 +1,12 @@
 import msRestAzure = require('./azure-arm-common');
 import tl = require('vsts-task-lib/task');
+import fs = require('fs');
 import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
 import { ToError } from './AzureServiceClient';
 import { WebJob, SiteExtension } from './azureModels';
+
 export class KuduServiceManagementClient {
     private _scmUri;
     private _accesssToken: string;
@@ -47,12 +49,11 @@ export class Kudu {
         this._client = new KuduServiceManagementClient(scmUri, base64EncodedCredential);
     }
 
-    public async updateDeployment(isSucceeded: boolean, deploymentID?: string, customMessage?: any) {
-        var deploymentStatusBody = this._getUpdateHistoryRequest(isSucceeded, deploymentID, customMessage);
+    public async updateDeployment(requestBody: any): Promise<any> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
-        httpRequest.body = JSON.stringify(deploymentStatusBody);
-        httpRequest.uri = this._client.getRequestUri(`/api/deployments/${deploymentStatusBody.id}`);
+        httpRequest.body = JSON.stringify(requestBody);
+        httpRequest.uri = this._client.getRequestUri(`/api/deployments/${requestBody.id}`);
 
         try {
             var response = await this._client.beginRequest(httpRequest);
@@ -69,7 +70,7 @@ export class Kudu {
         }
     }
 
-    public async getContinuousJobs(): Promise<Array<WebJob>>{
+    public async getContinuousJobs(): Promise<Array<WebJob>> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/continuouswebjobs`);
@@ -167,7 +168,7 @@ export class Kudu {
         }
     }
 
-    public async getProcess(processID: number) {
+    public async getProcess(processID: number): Promise<any> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
@@ -185,7 +186,7 @@ export class Kudu {
         }
     }
 
-    public async killProcess(processID: number) {
+    public async killProcess(processID: number): Promise<void> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
         httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
@@ -209,74 +210,212 @@ export class Kudu {
         }
     }
 
-    public async installSiteExtensions(extensionList: Array<string>, outputVariables?: Array<string>) {
-        outputVariables = outputVariables ? outputVariables : [];
-        var outputVariableIterator: number = 0;
-        var siteExtensions = await this.getSiteExtensions();
-        var anyExtensionInstalled: boolean = false;
-        var siteExtensionMap = {};
-        for(var siteExtension of siteExtensions) {
-            siteExtensionMap[siteExtension.id] = siteExtension;
-        }
+    public async getAppSettings(): Promise<Map<string, string>> {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this._client.getRequestUri(`/api/settings`);
 
-        for(var extensionID of extensionList) {
-            var siteExtensionDetails = null;
-            if(siteExtensionMap[extensionID]) {
-                siteExtensionDetails = siteExtensionMap[extensionID];
-                console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
-            }
-            else {
-                siteExtensionDetails = await this.installSiteExtension(extensionID);
-                anyExtensionInstalled = true;
-            }
-
-            if(outputVariableIterator < outputVariables.length) {
-                var extensionLocalPath: string = this._getExtensionLocalPath(siteExtensionDetails);
-                tl.debug('Set output Variable ' + outputVariables[outputVariableIterator] + ' to value: ' + extensionLocalPath);
-                tl.setVariable(outputVariables[outputVariableIterator], this._getExtensionLocalPath(siteExtensionDetails));
-                outputVariableIterator += 1;
-            }
-        }
-        
-        if(anyExtensionInstalled) {
-            await this.restart();
-        }
-    }
-
-    public async restart() {
         try {
-            console.log(tl.loc('RestartingKuduService'));
-            var process0 = await this.getProcess(0);
-            tl.debug(`Process 0 ID: ${process0.id}`);
-            await this.killProcess(0);
-            await this._pollForNewProcess(0, process0.id);
-            console.log(tl.loc('RestartedKuduService'));
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`getAppSettings. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return response.body;
+            }
+
+            throw response;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToRestartKuduService', error.toString()));
-        }
-    }
-    public async startContinuousWebJobs() {
-        var webJobs = await this.getContinuousJobs();
-        for(var webJob of webJobs) {
-            if(webJob.status.toLowerCase() == "running") {
-                console.log(tl.loc('WebJobAlreadyInRunningState', webJob.name));
-            }
-            else {
-                await this.startContinuousWebJob(webJob.name);
-            }
+            throw Error(tl.loc('FailedToFetchKuduAppSettings', this._getFormattedError(error)));
         }
     }
 
-    public async stopContinuousWebJobs() {
-        var webJobs = await this.getContinuousJobs();
-        for(var webJob of webJobs) {
-            if(webJob.status.toLowerCase() == "stopped") {
-                console.log(tl.loc('WebJobAlreadyInStoppedState', webJob.name));
+    public async listDir(physicalPath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`listFiles. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204].indexOf(response.statusCode) != -1) {
+                return response.body;
+            }
+            else if(response.statusCode === 404) {
+                return null;
             }
             else {
-                await this.stopContinuousWebJob(webJob.name);
+                throw response;
             }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToListPath', physicalPath, this._getFormattedError(error)));
+        }
+    }
+
+    public async getFileContent(physicalPath: string, fileName: string): Promise<string> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/${fileName}`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`getFileContent. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204].indexOf(response.statusCode) != -1) {
+                return response.body;
+            }
+            else if(response.statusCode === 404) {
+                return null;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetFileContent', physicalPath, fileName, this._getFormattedError(error)));
+        }
+    }
+
+    public async uploadFile(physicalPath: string, fileName: string, filePath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        if(!tl.exist(filePath)) {
+            throw new Error(tl.loc('FilePathInvalid', filePath));
+        }
+
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/${fileName}`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+        httpRequest.body = fs.createReadStream(filePath);
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`uploadFile. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204].indexOf(response.statusCode) != -1) {
+                return response.body;
+            }
+            
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUploadFile', physicalPath, fileName, this._getFormattedError(error)));
+        }
+    }
+
+    public async createPath(physicalPath: string): Promise<any> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`createPath. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204].indexOf(response.statusCode) != -1) {
+                return response.body;
+            }
+            
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToCreatePath', physicalPath, this._getFormattedError(error)));
+        }
+    }
+
+    public async runCommand(physicalPath: string, command: string): Promise<void> {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.uri = this._client.getRequestUri(`/api/command`);
+        httpRequest.headers = {
+            'Content-Type': 'multipart/form-data',
+            'If-Match': '*'
+        };
+        httpRequest.body = JSON.stringify({
+            'command': command,
+            'dir': physicalPath
+        });
+
+        try {
+            tl.debug('Executing Script on Kudu. Command: ' + command);
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`runCommand. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return ;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(error.toString());
+        }
+    }
+
+    public async extractZIP(webPackage: string, physicalPath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.uri = this._client.getRequestUri(`/api/zip/${physicalPath}/`);
+        httpRequest.headers = {
+            'Content-Type': 'multipart/form-data',
+            'If-Match': '*'
+        };
+        httpRequest.body = fs.createReadStream(webPackage);
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`extractZIP. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return ;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('Failedtodeploywebapppackageusingkuduservice', this._getFormattedError(error)));
+        }
+    }
+
+    public async deleteFile(physicalPath: string, fileName: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/${fileName}`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`deleteFile. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204, 404].indexOf(response.statusCode) != -1) {
+                return ;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToDeleteFile', physicalPath, fileName, this._getFormattedError(error)));
         }
     }
 
@@ -293,113 +432,5 @@ export class Kudu {
         }
 
         return error;
-    }
-
-    private async _pollForNewProcess(processID: number, id: number) {
-        var retryCount = 6;
-        while(true) {
-            try {
-                var process = await this.getProcess(processID);
-                tl.debug(`process ${processID} ID: ${process.id}`);
-                if(process.id != id) {
-                    tl.debug(`New Process created`);
-                    return process;
-                }
-            }
-            catch(error) {
-                tl.debug(`error while polling for process ${processID}: ` + error.toString());
-            }
-            retryCount -= 1;
-            if(retryCount == 0) {
-                throw new Error(tl.loc('TimeoutWhileWaiting'));
-            }
-
-            tl.debug(`sleep for 10 seconds`)
-            await webClient.sleepFor(10);
-        }
-    }
-
-    private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any): any {
-        
-        var status = isDeploymentSuccess ? 4 : 3;
-        var author = tl.getVariable('build.sourceVersionAuthor') || tl.getVariable('build.requestedfor') ||
-                            tl.getVariable('release.requestedfor') || tl.getVariable('agent.name')
-    
-        var buildUrl = tl.getVariable('build.buildUri');
-        var releaseUrl = tl.getVariable('release.releaseUri');
-    
-        var buildId = tl.getVariable('build.buildId');
-        var releaseId = tl.getVariable('release.releaseId');
-        
-        var buildNumber = tl.getVariable('build.buildNumber');
-        var releaseName = tl.getVariable('release.releaseName');
-    
-        var collectionUrl = tl.getVariable('system.TeamFoundationCollectionUri'); 
-        var teamProject = tl.getVariable('system.teamProjectId');
-    
-         var commitId = tl.getVariable('build.sourceVersion');
-         var repoName = tl.getVariable('build.repository.name');
-         var repoProvider = tl.getVariable('build.repository.provider');
-    
-        var buildOrReleaseUrl = "" ;
-        deploymentID = !!deploymentID ? deploymentID : (releaseId ? releaseId : buildId) + Date.now().toString();
-    
-        if(releaseUrl !== undefined) {
-            buildOrReleaseUrl = collectionUrl + teamProject + "/_apps/hub/ms.vss-releaseManagement-web.hub-explorer?releaseId=" + releaseId + "&_a=release-summary";
-        }
-        else if(buildUrl !== undefined) {
-            buildOrReleaseUrl = collectionUrl + teamProject + "/_build?buildId=" + buildId + "&_a=summary";
-        }
-    
-        var message = {
-            type : customMessage? customMessage.type : "",
-            commitId : commitId,
-            buildId : buildId,
-            releaseId : releaseId,
-            buildNumber : buildNumber,
-            releaseName : releaseName,
-            repoProvider : repoProvider,
-            repoName : repoName,
-            collectionUrl : collectionUrl,
-            teamProject : teamProject
-        };
-        // Append Custom Messages to original message
-        for(var attribute in customMessage) {
-            message[attribute] = customMessage[attribute];
-        }
-    
-        var deploymentLogType: string = message['type'];
-        var active: boolean = false;
-        if(deploymentLogType.toLowerCase() === "deployment" && isDeploymentSuccess) {
-            active = true;
-        }
-    
-        return {
-            id: deploymentID,
-            active : active,
-            status : status,
-            message : JSON.stringify(message),
-            author : author,
-            deployer : 'VSTS',
-            details : buildOrReleaseUrl
-        };
-    }    
-       
-    private _getExtensionLocalPath(extensionInfo: JSON): string {
-        var extensionId: string = extensionInfo['id'];
-        var homeDir = "D:\\home\\";
-    
-        if(extensionId.startsWith('python2')) {
-            return homeDir + "Python27";
-        }
-        else if(extensionId.startsWith('python351') || extensionId.startsWith('python352')) {
-            return homeDir + "Python35";
-        }
-        else if(extensionId.startsWith('python3')) {
-            return homeDir + extensionId;
-        }
-        else {
-            return extensionInfo['local_path'];
-        }
     }
 }
