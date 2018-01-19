@@ -3,6 +3,7 @@ import { AzureMysqlManagementClient } from 'azure-arm-rest/azure-arm-mysql';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { ApplicationTokenCredentials} from 'azure-arm-rest/azure-arm-common';
 import { MysqlServer } from '../models/MysqlServer';
+import Q = require('q');
 
 export class MysqlServerOperations{
 

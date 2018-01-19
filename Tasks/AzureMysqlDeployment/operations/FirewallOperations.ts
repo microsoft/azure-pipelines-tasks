@@ -5,6 +5,7 @@ import { FirewallRule, FirewallAddressRange } from '../models/Firewall';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { FirewallConfigurationCheckResult } from '../sql/FirewallConfigurationCheckResult';
 import { ISqlClient } from '../sql/ISqlClient';
+import Q = require('q');
 var uuidV4 = require('uuid/v4');
 
 export class FirewallOperations{
