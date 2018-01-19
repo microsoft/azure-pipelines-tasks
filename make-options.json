@@ -1,18 +1,8 @@
 {
     "tasks": [
-        "ANT",
         "AzureResourceGroupDeployment",
-        "AzureRmWebAppDeployment",
-        "AzureVmssDeployment",
         "DockerCompose",
-        "Gradle",
-        "JavaToolInstaller",
-        "JenkinsDownloadArtifacts",
-        "Kubernetes",
-        "Maven",
-        "Npm",
-        "XamarinAndroid",
-        "XamariniOS"
+        "Kubernetes"
     ],
     "taskResources": [
         "*.ps1",
