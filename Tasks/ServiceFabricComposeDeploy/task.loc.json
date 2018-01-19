@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 3
+    "Minor": 3,
+    "Patch": 0
   },
   "demands": [
     "Cmd"
@@ -177,11 +177,15 @@
     "ApplicationRemoved": "ms-resource:loc.messages.ApplicationRemoved",
     "EncryptingPassword": "ms-resource:loc.messages.EncryptingPassword",
     "CreatingApplication": "ms-resource:loc.messages.CreatingApplication",
+    "UpgradingApplication": "ms-resource:loc.messages.UpgradingApplication",
     "WaitingForDeploy": "ms-resource:loc.messages.WaitingForDeploy",
+    "WaitingForUpgrade": "ms-resource:loc.messages.WaitingForUpgrade",
     "CurrentStatus": "ms-resource:loc.messages.CurrentStatus",
     "DeployFailed": "ms-resource:loc.messages.DeployFailed",
+    "UpgradeFailed": "ms-resource:loc.messages.UpgradeFailed",
     "CheckingComposeFile": "ms-resource:loc.messages.CheckingComposeFile",
     "UnsupportedAPIVersion": "ms-resource:loc.messages.UnsupportedAPIVersion",
-    "UsingAPIVersion": "ms-resource:loc.messages.UsingAPIVersion"
+    "UsingAPIVersion": "ms-resource:loc.messages.UsingAPIVersion",
+    "UpgradeInProgress": "ms-resource:loc.messages.UpgradeInProgress"
   }
 }

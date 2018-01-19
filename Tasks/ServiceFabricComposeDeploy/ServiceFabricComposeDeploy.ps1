@@ -163,48 +163,101 @@ try {
         $getStatusParameters['TimeoutSec'] = $getStatusTimeoutSec
     }
 
+    $upgrading = $false
     $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
     if ($existingApplication -ne $null)
     {
-        Write-Host (Get-VstsLocString -Key RemovingApplication -ArgumentList $applicationName)
-
-        Remove-ServiceFabricComposeApplicationHelper -ApiVersion $apiVersion -RemoveParameters $removeParameters
-        do
+        if ($apiVersion -eq "2.8")
         {
-            Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $existingApplication.Status)
-            Start-Sleep -Seconds 3
-            $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
-        }
-        while ($existingApplication -ne $null)
-        Write-Host (Get-VstsLocString -Key ApplicationRemoved)
-    }
-
-    Write-Host (Get-VstsLocString -Key CreatingApplication)
-    New-ServiceFabricComposeApplicationHelper -ApiVersion $apiVersion -DeployParameters $deployParameters
-
-    Write-Host (Get-VstsLocString -Key WaitingForDeploy)
-    $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
-    while (($newApplication -eq $null) -or `
-           ($newApplication.Status -eq 'Provisioning') -or `
-           ($newApplication.Status -eq 'Creating'))
-    {
-        if ($newApplication -eq $null)
-        {
-            Write-Host (Get-VstsLocString -Key WaitingForDeploy)
+            $upgrading = $true
         }
         else
         {
-            Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.Status)
-        }
-        Start-Sleep -Seconds 3
-        $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
-    }
-    Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.Status)
+            Write-Host (Get-VstsLocString -Key RemovingApplication -ArgumentList $applicationName)
 
-    if ($newApplication.Status -ne 'Created' -and $newApplication.Status -ne 'Ready')
-    {
-        Write-Error (Get-VstsLocString -Key DeployFailed -ArgumentList @($newApplication.Status.ToString(), $newApplication.StatusDetails))
+            Remove-ServiceFabricComposeApplicationHelper -ApiVersion $apiVersion -RemoveParameters $removeParameters
+            do
+            {
+                Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $existingApplication.Status)
+                Start-Sleep -Seconds 3
+                $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
+            }
+            while ($existingApplication -ne $null)
+            Write-Host (Get-VstsLocString -Key ApplicationRemoved)
+        }
     }
+
+    if ($upgrading)
+    {
+        $upgradeParameters = New-Object 'System.Collections.Hashtable' $deployParameters
+        $upgradeParameters.Monitored = $True
+        $upgradeParameters.FailureAction = 'Rollback'
+        $upgradeParameters.ConsiderWarningAsError = $True
+        $upgradeParameters.Force = $True
+
+        $upgradeStatus = Get-ServiceFabricComposeDeploymentUpgradeHelper -ApiVersion $apiVersion -GetUpgradeParameters $getStatusParameters
+        if (($upgradeStatus -ne $null) -and (IsUpgradeRunning $upgradeStatus.UpgradeState))
+        {
+            Write-Error (Get-VstsLocString -Key UpgradeInProgress -ArgumentList $applicationName)
+        }
+
+        Write-Host (Get-VstsLocString -Key UpgradingApplication)
+        Start-ServiceFabricComposeDeploymentUpgradeHelper -ApiVersion $apiVersion -UpgradeParameters $upgradeParameters
+
+        Write-Host (Get-VstsLocString -Key WaitingForUpgrade)
+        # Wait a minute before checking on the upgrade to avoid getting the status of the last upgrade.
+        Start-Sleep -Seconds 60
+        $upgradeStatus = Get-ServiceFabricComposeDeploymentUpgradeHelper -ApiVersion $apiVersion -GetUpgradeParameters $getStatusParameters
+        while (($upgradeStatus -eq $null) -or (IsUpgradeRunning $upgradeStatus.UpgradeState))
+        {
+            if ($upgradeStatus -eq $null)
+            {
+                Write-Host (Get-VstsLocString -Key WaitingForUpgrade)
+            }
+            else
+            {
+                Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $upgradeStatus.UpgradeState )
+            }
+            Start-Sleep -Seconds 3
+            $upgradeStatus = Get-ServiceFabricComposeDeploymentUpgradeHelper -ApiVersion $apiVersion -GetUpgradeParameters $getStatusParameters
+        }
+        Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $upgradeStatus.UpgradeState)
+
+        if ($upgradeStatus.UpgradeState -ne 'RollingForwardCompleted')
+        {
+            Write-Error (Get-VstsLocString -Key UpgradeFailed -ArgumentList @($upgradeStatus.UpgradeState.ToString(), $upgradeStatus.UpgradeStatusDetails))
+        }
+    }
+    else
+    {
+        Write-Host (Get-VstsLocString -Key CreatingApplication)
+        New-ServiceFabricComposeApplicationHelper -ApiVersion $apiVersion -DeployParameters $deployParameters
+
+        Write-Host (Get-VstsLocString -Key WaitingForDeploy)
+        $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
+        while (($newApplication -eq $null) -or `
+               ($newApplication.Status -eq 'Provisioning') -or `
+               ($newApplication.Status -eq 'Creating'))
+        {
+            if ($newApplication -eq $null)
+            {
+                Write-Host (Get-VstsLocString -Key WaitingForDeploy)
+            }
+            else
+            {
+                Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.Status)
+            }
+            Start-Sleep -Seconds 3
+            $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
+        }
+        Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $newApplication.Status)
+
+        if ($newApplication.Status -ne 'Created' -and $newApplication.Status -ne 'Ready')
+        {
+            Write-Error (Get-VstsLocString -Key DeployFailed -ArgumentList @($newApplication.Status.ToString(), $newApplication.StatusDetails))
+        }
+    }
+
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }

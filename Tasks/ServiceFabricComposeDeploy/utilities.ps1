@@ -160,3 +160,72 @@ function New-ServiceFabricComposeApplicationHelper
         }
     }
 }
+
+function Start-ServiceFabricComposeDeploymentUpgradeHelper
+{
+    Param (
+        [Parameter(Mandatory=$True)]
+        [string]
+        $ApiVersion,
+
+        [Parameter(Mandatory=$True)]
+        [HashTable]
+        $UpgradeParameters
+    )
+
+    Start-ServiceFabricComposeDeploymentUpgrade @UpgradeParameters
+}
+
+function Get-ServiceFabricComposeDeploymentUpgradeHelper
+{
+    Param (
+        [Parameter(Mandatory=$True)]
+        [string]
+        $ApiVersion,
+
+        [Parameter(Mandatory=$True)]
+        [HashTable]
+        $GetUpgradeParameters
+    )
+
+    $composeDeploymentUpgrade = Get-ServiceFabricComposeDeploymentUpgrade @GetUpgradeParameters
+
+    if ($composeDeploymentUpgrade -eq $null)
+    {
+        return $null
+    }
+
+    # Currently there is a bug in Get-ServiceFabricComposeDeploymentUpgrade so that it returns the wrong upgrade status when rolling back, need to get that information from Get-ServiceFabricApplicationUpgrade instead
+    $appUpgradeParameters = @{
+        "ApplicationName" = $composeDeploymentUpgrade.ApplicationName
+    }
+    if ($GetUpgradeParameters['TimeoutSec'])
+    {
+        $appUpgradeParameters['TimeoutSec'] = $GetUpgradeParameters['TimeoutSec']
+    }
+    $appUpgrade = Get-ServiceFabricApplicationUpgrade @appUpgradeParameters
+
+    if ($appUpgrade -eq $null)
+    {
+        return $composeDeploymentUpgrade
+    }
+
+    return @{
+        "UpgradeState" = $appUpgrade.UpgradeState
+        "UpgradeStatusDetails" = $composeDeploymentUpgrade.UpgradeStatusDetails
+    }
+}
+
+function IsUpgradeRunning
+{
+    Param (
+        [Parameter(Mandatory=$True)]
+        [string]
+        $UpgradeState
+    )
+
+    return ($UpgradeState -ne 'Failed' -and `
+            $UpgradeState -ne 'Invalid' -and `
+            $UpgradeState -ne 'RollingForwardCompleted' -and `
+            $UpgradeState -ne 'RollingBackCompleted')
+}
