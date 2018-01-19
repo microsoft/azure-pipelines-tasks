@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools",
     "vsts-task-lib": "^2.0.4-preview"
   }
 }
