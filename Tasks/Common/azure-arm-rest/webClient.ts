@@ -21,7 +21,8 @@ var httpCallbackClient = new httpClient.HttpClient(tl.getVariable("AZURE_HTTP_US
 export class WebRequest {
     public method: string;
     public uri: string;
-    public body: string;
+    // body can be string or ReadableStream
+    public body: string | NodeJS.ReadableStream;
     public headers: any;
 }
 

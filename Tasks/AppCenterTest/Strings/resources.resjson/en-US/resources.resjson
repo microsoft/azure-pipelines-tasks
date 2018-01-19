@@ -2,7 +2,7 @@
   "loc.friendlyName": "App Center Test",
   "loc.helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport).",
   "loc.description": "Test app packages with Visual Studio App Center.",
-  "loc.instanceNameFormat": "Test $(app) with Visual Studio App Center",
+  "loc.instanceNameFormat": "Test with Visual Studio App Center",
   "loc.group.displayName.prepare": "Prepare Tests",
   "loc.group.displayName.run": "Run Tests",
   "loc.group.displayName.advanced": "Advanced",

@@ -17,9 +17,8 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "azurerest-common": "file:../../_build/Tasks/Common/azurerest-common",
-    "azurestack-common": "file:../../_build/Tasks/Common/azurestack-common",
     "q": "1.4.1",
-    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common"
+    "xml2js": "0.4.13",
+    "uuid": "3.1.0"
   }
 }
