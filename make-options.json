@@ -1,18 +1,23 @@
 {
     "tasks": [
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        "XamarinTestCloud",
-        "Xcode",
-        "XcodePackageiOS"
+        "ANT",
+        "AzureAppServiceManage", 
+        "AzureResourceGroupDeployment",
+        "AzureRmWebAppDeployment",
+        "AzureVmssDeployment",
+        "Docker",
+        "DockerCompose",
+        "Gradle",
+        "IISWebAppDeploymentOnMachineGroup",
+        "JavaToolInstaller",
+        "JenkinsDownloadArtifacts",
+        "Kubernetes",
+        "Maven",
+        "NodeTool",
+        "Npm",
+        "NuGetToolInstaller",
+        "XamarinAndroid",
+        "XamariniOS"
     ],
     "taskResources": [
         "*.ps1",
