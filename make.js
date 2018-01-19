@@ -215,7 +215,6 @@ target.build = function() {
 
                     matchCopy('!Tests', modOutDir, dest, { noRecurse: true, matchBase: true });
                 }
-                console.log("3 done");
             });
         }
 
