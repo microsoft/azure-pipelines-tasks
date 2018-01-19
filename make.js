@@ -198,7 +198,7 @@ target.build = function() {
                     rm('-Rf', path.join(taskPath, 'node_modules', modName));
                     var originalDir = pwd();
                     cd(taskPath);
-                    run('npm install ' + modOutDir);
+                    //run('npm install ' + modOutDir);
                     cd(originalDir);
                 }
                 // copy module resources to the task output dir
