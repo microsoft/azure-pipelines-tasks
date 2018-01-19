@@ -375,6 +375,16 @@
         "brace-expansion": "1.1.8"
       }
     },
+    "mockery": {
+      "version": "1.7.0",
+      "resolved": "https://registry.npmjs.org/mockery/-/mockery-1.7.0.tgz",
+      "integrity": "sha1-9O3g2HUMHJcnwnLqLGBiniyaHE8="
+    },
+    "node-uuid": {
+      "version": "1.4.8",
+      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.8.tgz",
+      "integrity": "sha1-sEDrCSOWivq/jTL7HxfxFn/auQc="
+    },
     "object-assign": {
       "version": "4.1.1",
       "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz",
@@ -416,6 +426,11 @@
         "pinkie": "2.0.4"
       }
     },
+    "q": {
+      "version": "1.5.1",
+      "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
+      "integrity": "sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc="
+    },
     "rimraf": {
       "version": "2.6.2",
       "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.6.2.tgz",
@@ -439,10 +454,33 @@
         }
       }
     },
+    "semver": {
+      "version": "5.5.0",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.5.0.tgz",
+      "integrity": "sha512-4SJ3dm0WAwWy/NVeioZh5AntkdJoWKxHxcmyP622fOkgHa4z3R0TdBJICINyaSDE6uNwVc8gZr+ZinwZAH4xIA=="
+    },
+    "shelljs": {
+      "version": "0.3.0",
+      "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.3.0.tgz",
+      "integrity": "sha1-NZbmMHp4FUT1kfN9phg2DzHbV7E="
+    },
     "sprintf-js": {
       "version": "1.0.3",
       "resolved": "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz",
       "integrity": "sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw="
+    },
+    "vsts-task-lib": {
+      "version": "2.0.1-preview",
+      "resolved": "https://registry.npmjs.org/vsts-task-lib/-/vsts-task-lib-2.0.1-preview.tgz",
+      "integrity": "sha1-rfx4BRaPtJLVcD7eZIXOt4G2SrQ=",
+      "requires": {
+        "minimatch": "3.0.4",
+        "mockery": "1.7.0",
+        "node-uuid": "1.4.8",
+        "q": "1.5.1",
+        "semver": "5.5.0",
+        "shelljs": "0.3.0"
+      }
     },
     "wrappy": {
       "version": "1.0.2",
