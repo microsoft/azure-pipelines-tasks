@@ -22,6 +22,9 @@
     },
     "homepage": "https://github.com/microsoft/vsts-tasks#readme",
     "dependencies": {
-        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common"
+        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common",
+        "typed-rest-client": "0.12.0",
+        "vsts-task-lib": "2.0.5",
+        "vsts-task-tool-lib": "0.4.1"
     }
 }
