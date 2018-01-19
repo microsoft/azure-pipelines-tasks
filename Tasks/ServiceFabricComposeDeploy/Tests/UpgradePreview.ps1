@@ -73,7 +73,7 @@ Register-Mock Get-ServiceFabricComposeApplicationStatusPaged {
 
 Register-Mock Remove-ServiceFabricComposeApplication {
     $removed.Value = $true
-} -Force: True -ApplicationName: $applicationName
+} -Force: $true -ApplicationName: $applicationName
 
 Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath: $composeFilePath -ErrorAction: Stop
 

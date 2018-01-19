@@ -51,38 +51,45 @@ Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsof
 # Setup mock results of cluster connection
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
-$serviceFabricComposeDeploymentStatus = @{
-    "DeploymentName"  = $deploymentName
-    "ComposeDeploymentStatus" = "Created"
+$deploymentStatus = @{
+    "ApplicationName" = $applicationName
+    "DeploymentName" = $deploymentName
+    "ComposeDeploymentStatus" = "Ready"
     "StatusDetails" = ""
 }
 
-$serviceFabricComposeUpgradeStatus = @{
+$deploymentUpgraded = @{
     "ApplicationName" = $applicationName
     "DeploymentName" = $deploymentName
     "UpgradeState" = "RollingForwardCompleted"
     "UpgradeStatusDetails" = ""
 }
+$applicationUpgraded = @{
+    "ApplicationName" = $applicationName
+    "UpgradeState" = "RollingForwardCompleted"
+}
+
+$deploymentUpgrading = @{
+    "ApplicationName" = $applicationName
+    "DeploymentName"  = $deploymentName
+    "UpgradeState" = "RollingForwardInProgress"
+    "UpgradeStatusDetails" = ""
+}
+$applicationUpgrading = @{
+    "ApplicationName" = $applicationName
+    "UpgradeState" = "RollingForwardInProgress"
+}
 
 # Need to store the bool in an object so the lambdas will share the reference
-$removedCompose = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
-$removedCompose.Value = $false
-$removedApp = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
-$removedApp.Value = $false
+$isUpgrading = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
+$isUpgrading.Value = $false
 
 Register-Mock Get-ServiceFabricComposeDeploymentStatus {
-    if (($removedCompose.Value -eq $true))
-    {
-        return $null;
-    }
-    else
-    {
-        return $serviceFabricComposeDeploymentStatus
-    }
+    return $deploymentStatus
 } -DeploymentName: $deploymentName
 
 Register-Mock Remove-ServiceFabricComposeDeployment {
-} -DeploymentName: $deploymentName -Force: True
+} -DeploymentName: $deploymentName -Force: $true
 
 Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath $composeFilePath -ErrorAction Stop
 
@@ -90,40 +97,40 @@ Register-Mock New-ServiceFabricComposeDeployment {
 } -- -DeploymentName: $deploymentName -Compose: $composeFilePath
 
 Register-Mock Get-ServiceFabricComposeDeploymentUpgrade {
-    if (($removedCompose.Value -eq $true))
+    if ($isUpgrading.Value -eq $true)
     {
-        $removedCompose.Value = $false
-        return $null;
+        return $deploymentUpgrading;
     }
     else
     {
-        return $serviceFabricComposeUpgradeStatus
+        return $deploymentUpgraded
     }
 } -DeploymentName: $deploymentName
 
 Register-Mock Get-ServiceFabricApplicationUpgrade {
-    if (($removedApp.Value -eq $true))
+    if ($isUpgrading.Value -eq $true)
     {
-        $removedApp.Value = $false
-        return $null;
+        $isUpgrading.Value = $false
+        return $applicationUpgrading;
     }
     else
     {
-        return $serviceFabricComposeUpgradeStatus
+        return $applicationUpgraded
     }
 } -ApplicationName: $applicationName
 
 Register-Mock Start-ServiceFabricComposeDeploymentUpgrade {
-    $removedCompose.Value = $true
-    $removedApp.Value = $true
-#} -- -DeploymentName: $deploymentName -FailureAction: Rollback -Monitored: True -Compose: $composeFilePath
+    $isUpgrading.Value = $true
 } -Force: True -ConsiderWarningAsError: True -FailureAction: Rollback -DeploymentName: $deploymentName -Monitored: True -Compose: $composeFilePath
+
+Register-Mock Start-Sleep { } -ParametersEvaluator { $true }
+
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
 Assert-WasCalled Get-ServiceFabricComposeDeploymentStatus -Times 1
-Assert-WasCalled Get-ServiceFabricComposeDeploymentUpgrade -Times 2
+Assert-WasCalled Get-ServiceFabricComposeDeploymentUpgrade -Times 3
 Assert-WasCalled Remove-ServiceFabricComposeDeployment -Times 0
 Assert-WasCalled New-ServiceFabricComposeDeployment -Times 0
