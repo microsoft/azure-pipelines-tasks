@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
+    "Minor": 0,
     "Patch": 1
   },
   "preview": "true",
@@ -103,7 +103,7 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
-        "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(rb-test01){{/notEquals}}{{else}}{{/notEquals}}",
+        "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
         "signaturePropertyKey": "$(signatureKey)",
         "messageProperties": {
           "jobid": "$(system.jobId)",
