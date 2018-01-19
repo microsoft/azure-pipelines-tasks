@@ -21,6 +21,7 @@
     "xml2js": "0.4.13",
     "uuid": "3.1.0",
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest",
-    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common"
+    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common",
+    "vsts-task-lib": "2.0.5"
   }
 }
