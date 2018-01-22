@@ -9,8 +9,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 129,
-    "Patch": 1
+    "Minor": 130,
+    "Patch": 2
   },
   "groups": [
     {
@@ -32,15 +32,6 @@
         "specific": "Specific build"
       },
       "helpMarkDown": "Download artifacts produced by the current build, or from a specific build."
-    },
-    {
-      "name": "specificBuildWithTriggering",
-      "type": "boolean",
-      "label": "When appropriate, download artifacts from the triggering build.",
-      "defaultValue": "false",
-      "required": false,
-      "visibleRule": "buildType == specific",
-      "helpMarkDown": "If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build, it will download artifacts from the build specified in the options below."
     },
     {
       "name": "project",
@@ -67,6 +58,15 @@
         "DisableManageLink": "True"
       },
       "helpMarkDown": "Select the build definition name"
+    },
+    {
+      "name": "specificBuildWithTriggering",
+      "type": "boolean",
+      "label": "When appropriate, download artifacts from the triggering build.",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "buildType == specific",
+      "helpMarkDown": "If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build from the specified definition, it will download artifacts from the build specified in the options below."
     },
     {
       "name": "buildId",

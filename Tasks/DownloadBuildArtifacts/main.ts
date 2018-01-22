@@ -59,6 +59,8 @@ async function main(): Promise<void> {
         var isSpecificBuildWithTriggering: boolean = tl.getBoolInput("specificBuildWithTriggering", false);
         var projectId: string = null;
         var definitionId: string = null;
+        var definitionIdSpecified: string = null;
+        var definitionIdTriggered: string = null;
         var buildId: number = null;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
@@ -86,6 +88,7 @@ async function main(): Promise<void> {
             let releaseUri = tl.getVariable("Release.ReleaseUri");
 
             var triggeringBuildFound: boolean = false;
+            definitionIdSpecified = tl.getInput("definition", true);
             if (!releaseUri && isSpecificBuildWithTriggering)
             {
                 // populate values using the triggering build
@@ -94,16 +97,24 @@ async function main(): Promise<void> {
                 buildId = parseInt(tl.getVariable("build.triggeredBy.buildId"));
 
                 // verify that the triggerring bruild's info was found
-                if (projectId && definitionId && buildId) 
                 {
-                    triggeringBuildFound = true;
+                    // populate values using the triggering build
+                    projectId = tl.getVariable("build.triggeredBy.projectId");
+                    definitionId = definitionIdTriggered;
+                    buildId = parseInt(tl.getVariable("build.triggeredBy.buildId"));
+
+                    // verify that the triggerring bruild's info was found
+                    if (projectId && definitionId && buildId) 
+                    {
+                        triggeringBuildFound = true;
+                    }
                 }
             }
             if (!triggeringBuildFound)
             {
                 // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
-                definitionId = tl.getInput("definition", true);
+                definitionId = definitionIdSpecified;
                 buildId = parseInt(tl.getInput("buildId", true));
             }
         }

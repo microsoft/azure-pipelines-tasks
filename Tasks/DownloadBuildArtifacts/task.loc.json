@@ -9,8 +9,8 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 129,
-    "Patch": 1
+    "Minor": 130,
+    "Patch": 2
   },
   "groups": [
     {
@@ -32,15 +32,6 @@
         "specific": "Specific build"
       },
       "helpMarkDown": "ms-resource:loc.input.help.buildType"
-    },
-    {
-      "name": "specificBuildWithTriggering",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.specificBuildWithTriggering",
-      "defaultValue": "false",
-      "required": false,
-      "visibleRule": "buildType == specific",
-      "helpMarkDown": "ms-resource:loc.input.help.specificBuildWithTriggering"
     },
     {
       "name": "project",
@@ -67,6 +58,15 @@
         "DisableManageLink": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.definition"
+    },
+    {
+      "name": "specificBuildWithTriggering",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.specificBuildWithTriggering",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "buildType == specific",
+      "helpMarkDown": "ms-resource:loc.input.help.specificBuildWithTriggering"
     },
     {
       "name": "buildId",
