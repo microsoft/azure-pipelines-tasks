@@ -38,6 +38,11 @@
             $compareType = Get-VstsInput -Name compareType -Require
             $buildNumber = Get-VstsInput -Name buildNumber
             $overwritePkgArtifact = ((Get-VstsInput -Name overwriteExistingPkgArtifact) -eq "true")
+            $pkgArtifactPath = Get-VstsInput -Name pkgArtifactPath -Require
+            if (-not $pkgArtifactPath.EndsWith('\'))
+            {
+                $pkgArtifactPath = $pkgArtifactPath + '\'
+            }
 
             try
             {
@@ -57,20 +62,26 @@
 
                 Write-Host (Get-VstsLocString -Key SearchingApplicationType -ArgumentList $appTypeName)
 
-                $oldAppPackagePath = Join-Path $oldDropLocation $newAppPackagePath.SubString((Get-VstsTaskVariable -Name Build.SourcesDirectory -Require).Length + 1)
+                if (-not $newAppPackagePath.StartsWith($pkgArtifactPath))
+                {
+                    Write-Error (Get-VstsLocString -Key PackageIsNotUnderArtifact -ArgumentList @($newAppPackagePath, $pkgArtifactPath))
+                }
+                $relativePath = $newAppPackagePath.SubString($pkgArtifactPath.Length)
+
+                $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
                 $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
                 if (Test-Path $oldAppManifestPath)
                 {
                     $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
 
                     # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
-                    # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive. 
+                    # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.
                     $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion
                 }
                 else
                 {
                     Write-Warning (Get-VstsLocString -Key NoManifestInPreviousBuild)
-                    $updateAllVersions = $true 
+                    $updateAllVersions = $true
                 }
             }
             else
@@ -85,7 +96,7 @@
         $logIndent = "".PadLeft(2)
         foreach ($serviceManifestImport in $newAppManifestXml.ApplicationManifest.ServiceManifestImport)
         {
-            $serviceVersion = Update-ServiceVersions -VersionValue $versionValue -ServiceName $serviceManifestImport.ServiceManifestRef.ServiceManifestName -NewPackageRoot $newAppPackagePath -OldPackageRoot $oldAppPackagePath -LogIndent $logIndent -UpdateAllVersions:$updateAllVersions -LogAllChanges:$logAllChanges -ReplaceVersion:$replaceVersion 
+            $serviceVersion = Update-ServiceVersions -VersionValue $versionValue -ServiceName $serviceManifestImport.ServiceManifestRef.ServiceManifestName -NewPackageRoot $newAppPackagePath -OldPackageRoot $oldAppPackagePath -LogIndent $logIndent -UpdateAllVersions:$updateAllVersions -LogAllChanges:$logAllChanges -ReplaceVersion:$replaceVersion
             $serviceManifestImport.ServiceManifestRef.ServiceManifestVersion = $serviceVersion
         }
 
