@@ -118,7 +118,9 @@ export class dotNetExe {
             dotnet.arg(projectFile);
             dotnet.line(this.arguments);
             try {
-                const result = await dotnet.exec();
+                const result = await dotnet.exec(<tr.IExecOptions>{
+                    cwd: this.workingDirectory
+                });
             } catch (err) {
                 tl.error(err);
                 failedProjects.push(projectFile);
