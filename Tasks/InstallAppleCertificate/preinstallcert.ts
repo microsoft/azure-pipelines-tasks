@@ -33,7 +33,7 @@ async function run() {
         tl.setTaskVariable('APPLE_CERTIFICATE_SHA1HASH', p12Hash);
 
         // set the signing identity output variable.
-        tl.setVariable('signingIdentity', p12CN);
+        tl.setTaskVariable('signingIdentity', p12CN);
 
         // install the certificate in specified keychain, keychain is created if required
         let keychain: string = tl.getInput('keychain');
@@ -55,12 +55,12 @@ async function run() {
         await sign.installCertInTemporaryKeychain(keychainPath, keychainPwd, certPath, certPwd, true);
 
         // set the keychain output variable.
-        tl.setVariable('keychainPath', keychainPath);
+        tl.setTaskVariable('keychainPath', keychainPath);
 
         // Set the legacy variables that doesn't use the task's refName, unlike our output variables.
         // If there are multiple InstallAppleCertificate tasks, the last one wins.
-        tl.setVariable('APPLE_CERTIFICATE_SIGNING_IDENTITY', p12CN);
-        tl.setVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
+        tl.setTaskVariable('APPLE_CERTIFICATE_SIGNING_IDENTITY', p12CN);
+        tl.setTaskVariable('APPLE_CERTIFICATE_KEYCHAIN', keychainPath);
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
