@@ -91,12 +91,9 @@ async function main(): Promise<void> {
             definitionIdSpecified = tl.getInput("definition", true);
             if (!releaseUri && isSpecificBuildWithTriggering)
             {
-                // populate values using the triggering build
-                projectId = tl.getVariable("build.triggeredBy.projectId");
-                definitionId = tl.getVariable("build.triggeredBy.definitionId");
-                buildId = parseInt(tl.getVariable("build.triggeredBy.buildId"));
-
-                // verify that the triggerring bruild's info was found
+                //Verify that the triggering build's definition is the same as the specified definition
+                definitionIdTriggered = tl.getVariable("build.triggeredBy.definitionId");
+                if (definitionIdTriggered == definitionIdSpecified)
                 {
                     // populate values using the triggering build
                     projectId = tl.getVariable("build.triggeredBy.projectId");
