@@ -1,7 +1,7 @@
 "use strict";
 
 import * as fs from "fs";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "vsts-task-lib";
 import * as yaml from "js-yaml";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as imageUtils from "docker-common/containerimageutils";

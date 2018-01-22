@@ -40,8 +40,5 @@
     "typescript": "2.3.4",
     "validator": "3.33.0",
     "node-uuid": "1.4.6"
-  },
-  "dependencies": {
-    "java-common": "file:_build/Tasks/Common/java-common"
   }
 }

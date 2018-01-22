@@ -1,6 +1,5 @@
 {
     "tasks": [
-        "AzureResourceGroupDeployment",
         "DockerCompose"
     ],
     "taskResources": [

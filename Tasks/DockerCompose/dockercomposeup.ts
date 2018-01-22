@@ -1,6 +1,6 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+import * as tl from "vsts-task-lib";
 import DockerComposeConnection from "./dockercomposeconnection";
 
 export function run(connection: DockerComposeConnection): any {
