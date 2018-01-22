@@ -63,7 +63,7 @@
   "loc.input.help.outputPattern": "(Optional) Enter a path relative to the working directory where build output (binaries) will be placed. Examples: `output/$(SDK)/$(Configuration)` or `output/$(TestSDK)/$(TestConfiguration)`. Archive and export paths are configured separately.",
   "loc.input.label.useXcpretty": "Use xcpretty",
   "loc.input.help.useXcpretty": "Specify whether to use xcpretty to format xcodebuild output and generate JUnit test results. Enabling this requires xcpretty to be installed on the agent machine. It is preinstalled on VSTS hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
-  "loc.input.label.publishJUnitResults": "Publish to VSTS/TFS",
+  "loc.input.label.publishJUnitResults": "Publish test results to VSTS/TFS",
   "loc.input.help.publishJUnitResults": "If xcpretty is enabled above, specify whether to publish JUnit test results to VSTS/TFS.",
   "loc.messages.SignIdNotFound": "Failed to find the iOS signing identity. Verify that signing and provisioning information is provided.",
   "loc.messages.TempKeychainSetupFailed": "Failed to add the temporary keychain to the keychains search path.",

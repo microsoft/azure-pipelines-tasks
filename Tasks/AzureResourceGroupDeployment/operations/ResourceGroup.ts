@@ -366,12 +366,31 @@ export class ResourceGroup {
             parameters = this.updateOverrideParameters(template, parameters);
         }
 
+        parameters = this.sanitizeParameters(parameters);
+
         var deployment = new Deployment({
             template: template,
             parameters: parameters
         });
         deployment.updateCommonProperties(this.taskParameters.deploymentMode);
         return deployment;
+    }
+
+    private sanitizeParameters(parameters: Map<string, ParameterValue>): Map<string, ParameterValue> {
+        var result: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
+        for (var key in parameters) {
+            if (!!parameters[key].value) {
+                result[key] = {
+                    value: parameters[key].value
+                } as ParameterValue;
+            } else if (!!parameters[key].reference) {
+                result[key] = {
+                    reference: parameters[key].reference
+                } as ParameterValue;
+            }
+        }
+
+        return result;
     }
 
     private async getDeploymentObjectForPublicURL(): Promise<Deployment> {
@@ -406,6 +425,7 @@ export class ResourceGroup {
                 throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
             }
             parameters = this.updateOverrideParameters(template, parameters);
+            parameters = this.sanitizeParameters(parameters);
             deployment.properties["parameters"] = parameters;
         }
 

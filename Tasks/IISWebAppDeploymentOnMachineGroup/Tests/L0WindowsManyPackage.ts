@@ -28,8 +28,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }, 
     "find": {
         "webAppPkgPattern/": ["webAppPkgPattern/webAppPkg1.zip", "webAppPkgPattern/webAppPkg2.zip"]
+    },
+    "osType": {
+        "osType": "Windows"
     }
-     
 }
 
 tr.setAnswers(a);

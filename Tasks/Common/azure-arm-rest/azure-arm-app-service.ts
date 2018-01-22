@@ -24,6 +24,7 @@ export class AzureAppService {
     public _client: ServiceClient;
     private _appServiceConfigurationDetails: AzureAppServiceConfigurationDetails;
     private _appServicePublishingProfile: any;
+    private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
@@ -143,7 +144,7 @@ export class AzureAppService {
         return this._appServiceConfigurationDetails;
     }
 
-    public async getPublishingProfileWithSecrets(force?: boolean) {
+    public async getPublishingProfileWithSecrets(force?: boolean): Promise<any>{
         if(force || !this._appServicePublishingProfile) {
             this._appServicePublishingProfile = await this._getPublishingProfileWithSecrets();
         }
@@ -151,7 +152,7 @@ export class AzureAppService {
         return this._appServicePublishingProfile;
     }
 
-    public async getPublishingCredentials() {
+    public async getPublishingCredentials(): Promise<any> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
@@ -174,27 +175,12 @@ export class AzureAppService {
         }
     }
 
-    public async getApplicationSettings(): Promise<AzureAppServiceConfigurationDetails> {
-        try {
-            var httpRequest = new webClient.WebRequest();
-            httpRequest.method = 'POST';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
-            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/appsettings/list`,
-            {
-                '{resourceGroupName}': this._resourceGroup,
-                '{name}': this._name,
-            }, null, '2016-08-01');
-            
-            var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
-                throw ToError(response);
-            }
+    public async getApplicationSettings(force?: boolean): Promise<AzureAppServiceConfigurationDetails> {
+        if(force || !this._appServiceApplicationSetings) {
+            this._appServiceApplicationSetings = await this._getApplicationSettings();
+        }
 
-            return response.body;
-        }
-        catch(error) {
-            throw Error(tl.loc('FailedToGetAppServiceApplicationSettings', this._getFormattedName(), this._client.getFormattedError(error)));
-        }
+        return this._appServiceApplicationSetings;
     }
 
     public async updateApplicationSettings(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
@@ -278,21 +264,92 @@ export class AzureAppService {
         }
     }
 
-    public async patchConfiguration(properties): Promise<void> {
-        var applicationSettings = await this.getConfiguration();
+    public async patchConfiguration(properties: any): Promise<any> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'PATCH';
+            httpRequest.body = JSON.stringify(properties);
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/web`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToPatchAppServiceConfiguration', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+
+    }
+
+    public async getMetadata(): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'POST';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/metadata/list`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetAppServiceMetadata', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    public async updateMetadata(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'PUT';
+            httpRequest.body = JSON.stringify(applicationSettings);
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/metadata`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUpdateAppServiceMetadata', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+    
+    public async patchMetadata(properties): Promise<void> {
+        var applicationSettings = await this.getMetadata();
         for(var key in properties) {
             applicationSettings.properties[key] = properties[key];
         }
 
-        await this.updateConfiguration(applicationSettings);
-
+        await this.updateMetadata(applicationSettings);
     }
-
+    
     public getSlot(): string {
         return this._slot ? this._slot : "production";
     }
     
-    private async _getPublishingProfileWithSecrets() {
+    private async _getPublishingProfileWithSecrets(): Promise<any> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
@@ -313,6 +370,29 @@ export class AzureAppService {
         }
         catch(error) {
             throw Error(tl.loc('FailedToGetAppServicePublishingProfile', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    private async _getApplicationSettings(): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'POST';
+            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/appsettings/list`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetAppServiceApplicationSettings', this._getFormattedName(), this._client.getFormattedError(error)));
         }
     }
 
