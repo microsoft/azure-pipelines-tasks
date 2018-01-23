@@ -14,11 +14,18 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 1,
-    "Patch": 6
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 1
   },
   "preview": "true",
+  "groups": [
+    {
+      "name": "signingDetails",
+      "displayName": "ms-resource:loc.group.displayName.signingDetails",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "connectedServiceName",
@@ -35,8 +42,8 @@
       "name": "messageBody",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.messageBody",
-      "required": true,
-      "defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
+      "required": false,
+      "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.messageBody",
       "properties": {
         "resizable": "true",
@@ -44,6 +51,49 @@
         "maxLength": "5000",
         "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
       }
+    },
+    {
+      "name": "messageProperties",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.messageProperties",
+      "required": false,
+      "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
+      "helpMarkDown": "ms-resource:loc.input.help.messageProperties",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "2000",
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
+    },
+    {
+      "name": "signPayload",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.signPayload",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.signPayload",
+      "groupName": "signingDetails"
+    },
+    {
+      "name": "certificateString",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.certificateString",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.certificateString",
+      "visibleRule": "signPayload = true",
+      "groupName": "signingDetails"
+    },
+    {
+      "name": "signatureKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signatureKey",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.signatureKey",
+      "visibleRule": "signPayload = true",
+      "groupName": "signingDetails"
     },
     {
       "name": "waitForCompletion",
@@ -67,10 +117,9 @@
         "connectionString": "$(endpoint.serviceBusConnectionString)",
         "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
         "messageBody": "$(messageBody)",
-        "messageProperties": {
-          "jobid": "$(system.jobId)",
-          "taskId": "$(system.taskId)"
-        }
+        "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
+        "signaturePropertyKey": "$(signatureKey)",
+        "messageProperties": "$(messageProperties)"
       }
     }
   }

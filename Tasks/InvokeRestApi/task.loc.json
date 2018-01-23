@@ -15,9 +15,9 @@
     "ServerGate"
   ],
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -62,11 +62,11 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.headers",
       "required": "false",
-      "defaultValue": "{\n\"Content-Type\":\"application/json\"\n}",
+      "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
       "properties": {
         "resizable": "true",
-        "rows": "3",
-        "maxLength": "500"
+        "rows": "10",
+        "maxLength": "2000"
       },
       "helpMarkDown": "ms-resource:loc.input.help.headers"
     },
@@ -75,7 +75,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.body",
       "required": "false",
-      "defaultValue": "{\"JobId\": \"$(system.jobId)\", \"PlanId\": \"$(system.planId)\", \"TimelineId\": \"$(system.timelineId)\", \"ProjectId\": \"$(system.teamProjectId)\", \"VstsUrl\": \"$(system.CollectionUri)\",\"AuthToken\": \"$(system.AccessToken)\"}",
+      "defaultValue": "",
       "properties": {
         "resizable": "true",
         "rows": "3",
@@ -93,12 +93,16 @@
     },
     {
       "name": "waitForCompletion",
-      "type": "boolean",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.waitForCompletion",
-      "Required": "false",
       "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion",
       "groupName": "completionOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+      "options": {
+        "true": "Callback",
+        "false": "ApiResponse"
+      }
     },
     {
       "name": "successCriteria",
