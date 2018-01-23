@@ -30,6 +30,7 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
+        this.setConsoleCodePage();
         if (this.command === "custom") {
             this.command = tl.getInput("custom", true);
         }
@@ -54,6 +55,13 @@ export class dotNetExe {
                 break;
             default:
                 tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", this.command));
+        }
+    }
+
+    private  setConsoleCodePage() {
+        // set the console code page to "UTF-8"
+        if (tl.osType() === 'Windows_NT') {
+            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
         }
     }
 
