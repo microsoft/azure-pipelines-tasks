@@ -1,10 +1,12 @@
 import msRestAzure = require('./azure-arm-common');
 import tl = require('vsts-task-lib/task');
+import fs = require('fs');
 import util = require('util');
 import webClient = require('./webClient');
 import Q = require('q');
 import { ToError } from './AzureServiceClient';
 import { WebJob, SiteExtension } from './azureModels';
+
 export class KuduServiceManagementClient {
     private _scmUri;
     private _accesssToken: string;
@@ -68,7 +70,7 @@ export class Kudu {
         }
     }
 
-    public async getContinuousJobs(): Promise<Array<WebJob>>{
+    public async getContinuousJobs(): Promise<Array<WebJob>> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/continuouswebjobs`);
@@ -166,7 +168,7 @@ export class Kudu {
         }
     }
 
-    public async getProcess(processID: number) {
+    public async getProcess(processID: number): Promise<any> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
@@ -184,7 +186,7 @@ export class Kudu {
         }
     }
 
-    public async killProcess(processID: number) {
+    public async killProcess(processID: number): Promise<void> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
         httpRequest.uri = this._client.getRequestUri(`/api/processes/${processID}`);
@@ -205,6 +207,215 @@ export class Kudu {
         }
         catch(error) {
             throw Error(tl.loc('FailedToKillProcess', this._getFormattedError(error)))
+        }
+    }
+
+    public async getAppSettings(): Promise<Map<string, string>> {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this._client.getRequestUri(`/api/settings`);
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`getAppSettings. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return response.body;
+            }
+
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToFetchKuduAppSettings', this._getFormattedError(error)));
+        }
+    }
+
+    public async listDir(physicalPath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`listFiles. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204].indexOf(response.statusCode) != -1) {
+                return response.body;
+            }
+            else if(response.statusCode === 404) {
+                return null;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToListPath', physicalPath, this._getFormattedError(error)));
+        }
+    }
+
+    public async getFileContent(physicalPath: string, fileName: string): Promise<string> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/${fileName}`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`getFileContent. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204].indexOf(response.statusCode) != -1) {
+                return response.body;
+            }
+            else if(response.statusCode === 404) {
+                return null;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetFileContent', physicalPath, fileName, this._getFormattedError(error)));
+        }
+    }
+
+    public async uploadFile(physicalPath: string, fileName: string, filePath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        if(!tl.exist(filePath)) {
+            throw new Error(tl.loc('FilePathInvalid', filePath));
+        }
+
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/${fileName}`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+        httpRequest.body = fs.createReadStream(filePath);
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`uploadFile. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204].indexOf(response.statusCode) != -1) {
+                return response.body;
+            }
+            
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUploadFile', physicalPath, fileName, this._getFormattedError(error)));
+        }
+    }
+
+    public async createPath(physicalPath: string): Promise<any> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`createPath. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204].indexOf(response.statusCode) != -1) {
+                return response.body;
+            }
+            
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToCreatePath', physicalPath, this._getFormattedError(error)));
+        }
+    }
+
+    public async runCommand(physicalPath: string, command: string): Promise<void> {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.uri = this._client.getRequestUri(`/api/command`);
+        httpRequest.headers = {
+            'Content-Type': 'multipart/form-data',
+            'If-Match': '*'
+        };
+        httpRequest.body = JSON.stringify({
+            'command': command,
+            'dir': physicalPath
+        });
+
+        try {
+            tl.debug('Executing Script on Kudu. Command: ' + command);
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`runCommand. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return ;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(error.toString());
+        }
+    }
+
+    public async extractZIP(webPackage: string, physicalPath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'PUT';
+        httpRequest.uri = this._client.getRequestUri(`/api/zip/${physicalPath}/`);
+        httpRequest.headers = {
+            'Content-Type': 'multipart/form-data',
+            'If-Match': '*'
+        };
+        httpRequest.body = fs.createReadStream(webPackage);
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`extractZIP. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return ;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('Failedtodeploywebapppackageusingkuduservice', this._getFormattedError(error)));
+        }
+    }
+
+    public async deleteFile(physicalPath: string, fileName: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}/${fileName}`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`deleteFile. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204, 404].indexOf(response.statusCode) != -1) {
+                return ;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToDeleteFile', physicalPath, fileName, this._getFormattedError(error)));
         }
     }
 

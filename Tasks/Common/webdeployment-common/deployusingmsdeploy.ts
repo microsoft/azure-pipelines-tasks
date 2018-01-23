@@ -46,18 +46,18 @@ export async function DeployUsingMSDeploy(webDeployPkg, webAppName, publishingPr
     var retryCount = (retryCountParam && !(isNaN(Number(retryCountParam)))) ? Number(retryCountParam): DEFAULT_RETRY_COUNT; 
     
     try {
-        var shouldContinue = true;
-        while(shouldContinue) {
+        while(true) {
             try {
-                 await executeMSDeploy(msDeployCmdArgs);
-                 shouldContinue = false;
-            } catch (error) {
-                shouldContinue = (msDeployUtility.shouldRetryMSDeploy() && retryCount-- > 0);
-                if(!shouldContinue) {
+                retryCount -= 1;
+                await executeMSDeploy(msDeployCmdArgs);
+                break;
+            }
+            catch (error) {
+                if(retryCount == 0) {
                     throw error;
-                } else {
-                    console.log("Retrying to deploy app service.");
                 }
+                console.log(error);
+                console.log(tl.loc('RetryToDeploy'));
             }
         }
         if(publishingProfile != null) {

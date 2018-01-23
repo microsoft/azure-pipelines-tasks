@@ -33,7 +33,7 @@ export async function enableContinuousMonitoring(endpoint: AzureEndpoint, appSer
 
         try {
             tl.debug('Enable alwaysOn property for app service.');
-            await appService.patchConfiguration({"alwaysOn": true});    
+            await appService.patchConfiguration({ "properties" :{"alwaysOn": true}});    
         }
         catch(error) {
             tl.warning(error);

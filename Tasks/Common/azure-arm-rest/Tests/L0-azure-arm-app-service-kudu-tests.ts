@@ -26,6 +26,23 @@ export function KuduServiceTests() {
             getProcess(tr);
             console.log("\tvalidating killProcess");
             killProcess(tr);
+            console.log("\tvalidating getAppSettings");
+            getAppSettings(tr);
+            console.log("\tvalidating listDir");
+            listDir(tr);
+            console.log("\tvalidating getFileContent");
+            getFileContent(tr);
+            console.log("\tvalidating uploadFile");
+            uploadFile(tr);
+            console.log("\tvalidating createPath");
+            createPath(tr);
+            console.log("\tvalidating runCommand");
+            runCommand(tr);
+            console.log("\tvalidating extractZIP");
+            extractZIP(tr);
+            console.log("\tvalidating deleteFile");
+            deleteFile(tr);
+            
         }
         catch(error) {
             passed = false;
@@ -44,8 +61,8 @@ function updateDeployment(tr) {
     assert(tr.stdOutContained('Successfullyupdateddeploymenthistory http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID'),
         'Should have printed: Successfullyupdateddeploymenthistory http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID');
 
-    assert(tr.stdOutContained('FailedToUpdateDeploymentHistory null (CODE: 504)'),
-        'Should have printed: FailedToUpdateDeploymentHistory null (CODE: 504)');
+    assert(tr.stdOutContained('FailedToUpdateDeploymentHistory null (CODE: 501)'),
+        'Should have printed: FailedToUpdateDeploymentHistory null (CODE: 501)');
 }
 
 function getContinuousJobs(tr) {
@@ -93,9 +110,78 @@ function getProcess(tr) {
         'Should have printed: MOCK KUDU PROCESS ID: 1');
 }
 
-
 function killProcess(tr) {
     assert(tr.stdOutContained('KILLED PROCESS 0'),
         'Should have printed: KILLED PROCESS 0');
 }
 
+function getAppSettings(tr) {
+    assert(tr.stdOutContained('KUDU APP SETTINGS {"MSDEPLOY_RENAME_LOCKED_FILES":"1","ScmType":"VSTSRM"}'),
+    'Should have printed: KUDU APP SETTINGS {"MSDEPLOY_RENAME_LOCKED_FILES":"1","ScmType":"VSTSRM"}');
+
+    assert(tr.stdOutContained('FailedToFetchKuduAppSettings null (CODE: 501)'),
+        'Should have printed: FailedToFetchKuduAppSettings null (CODE: 501)');
+}
+
+function listDir(tr) {
+    assert(tr.stdOutContained('KUDU LIST DIR [{"name":"web.config"},{"name":"content","size":777}]'),
+    'Should have printed: KUDU LIST DIR [{"name":"web.config"},{"name":"content","size":777}]');
+
+    assert(tr.stdOutContained('FailedToListPath site/wwwroot null (CODE: 501)'),
+        'Should have printed: FailedToListPath site/wwwroot null (CODE: 501)');
+}
+
+function getFileContent(tr) {
+    assert(tr.stdOutContained('KUDU FILE CONTENT HELLO.TXT FILE CONTENT'),
+    'Should have printed: KUDU FILE CONTENT HELLO.TXT FILE CONTENT');
+
+    assert(tr.stdOutContained('KUDU FILE CONTENT 404 - PASSED'),
+        'Should have printed: KUDU FILE CONTENT 404 - PASSED');
+
+    assert(tr.stdOutContained('FailedToGetFileContent site/wwwroot web.config null (CODE: 501)'),
+        'Should have printed: FailedToGetFileContent site/wwwroot web.config null (CODE: 501)');
+}
+
+function uploadFile(tr) {
+    assert(tr.stdOutContained('KUDU FILE UPLOAD HELLO.TXT PASSED'),
+    'Should have printed: KUDU FILE UPLOAD HELLO.TXT PASSED');
+
+    assert(tr.stdOutContained('FailedToUploadFile site/wwwroot web.config null (CODE: 501)'),
+        'Should have printed: FailedToUploadFile site/wwwroot web.config null (CODE: 501)');
+}
+
+function createPath(tr) {
+    assert(tr.stdOutContained('KUDU CREATE PATH SITE/WWWROOT PASSED'),
+    'Should have printed: KUDU CREATE PATH SITE/WWWROOT PASSED');
+
+    assert(tr.stdOutContained('FailedToCreatePath site/wwwroot null (CODE: 501)'),
+        'Should have printed: FailedToCreatePath site/wwwroot null (CODE: 501)');
+}
+
+function runCommand(tr) {
+
+    assert(tr.stdOutContained('Executing Script on Kudu. Command: echo hello'),
+        'Should have printed: Executing Script on Kudu. Command: echo hello');
+
+    assert(tr.stdOutContained('KUDU RUN COMMAND PASSED'),
+        'Should have printed: KUDU RUN COMMAND PASSED');
+
+    assert(tr.stdOutContained('Executing Script on Kudu. Command: exit /b 1'),
+        'Should have printed: Executing Script on Kudu. Command: exit /b 1');
+}
+
+function extractZIP(tr) {
+    assert(tr.stdOutContained('KUDU ZIP API PASSED'),
+    'Should have printed: KUDU ZIP API PASSED');
+
+    assert(tr.stdOutContained('Failedtodeploywebapppackageusingkuduservice null (CODE: 501)'),
+        'Should have printed: Failedtodeploywebapppackageusingkuduservice null (CODE: 501)');
+}
+
+function deleteFile(tr) {
+    assert(tr.stdOutContained('KUDU DELETE FILE PASSED'),
+        'Should have printed: KUDU DELETE FILE PASSED');
+
+    assert(tr.stdOutContained('FailedToDeleteFile site/wwwroot web.config null (CODE: 501)'),
+        'Should have printed: Error: FailedToDeleteFile site/wwwroot web.config null (CODE: 501)');
+}

@@ -30,14 +30,15 @@ export class dotNetExe {
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
-        if (this.command === "custom") {
-            this.command = tl.getInput("custom", true);
-        }
 
         switch (this.command) {
             case "build":
             case "publish":
             case "run":
+                await this.executeBasicCommand();
+                break;
+            case "custom":
+                this.command = tl.getInput("custom", true);
                 await this.executeBasicCommand();
                 break;
             case "test":
@@ -118,7 +119,9 @@ export class dotNetExe {
             dotnet.arg(projectFile);
             dotnet.line(this.arguments);
             try {
-                const result = await dotnet.exec();
+                const result = await dotnet.exec(<tr.IExecOptions>{
+                    cwd: this.workingDirectory
+                });
             } catch (err) {
                 tl.error(err);
                 failedProjects.push(projectFile);
