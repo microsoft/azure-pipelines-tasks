@@ -4,7 +4,6 @@ import * as tl from "vsts-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "docker-common/sourceutils";
 import * as imageUtils from "docker-common/containerimageutils";
-// import * as tr from "vsts-task-lib/toolrunner";
 
 function dockerTag(connection: DockerComposeConnection, source: string, target: string) {
     var command = connection.createCommand();
