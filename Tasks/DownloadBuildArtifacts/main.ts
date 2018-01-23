@@ -78,8 +78,7 @@ async function main(): Promise<void> {
         var artifacts = [];
         var itemPattern: string = '**';
 
-        if (isCurrentBuild)
-        {
+        if (isCurrentBuild) {
             projectId = tl.getVariable("System.TeamProjectId");
             definitionId = '';
             buildId = parseInt(tl.getVariable("Build.BuildId"));
@@ -89,26 +88,22 @@ async function main(): Promise<void> {
 
             var triggeringBuildFound: boolean = false;
             definitionIdSpecified = tl.getInput("definition", true);
-            if (!releaseUri && isSpecificBuildWithTriggering)
-            {
+            if (!releaseUri && isSpecificBuildWithTriggering) {
                 //Verify that the triggering build's definition is the same as the specified definition
                 definitionIdTriggered = tl.getVariable("build.triggeredBy.definitionId");
-                if (definitionIdTriggered == definitionIdSpecified)
-                {
+                if (definitionIdTriggered == definitionIdSpecified) {
                     // populate values using the triggering build
                     projectId = tl.getVariable("build.triggeredBy.projectId");
                     definitionId = definitionIdTriggered;
                     buildId = parseInt(tl.getVariable("build.triggeredBy.buildId"));
 
                     // verify that the triggerring bruild's info was found
-                    if (projectId && definitionId && buildId) 
-                    {
+                    if (projectId && definitionId && buildId) {
                         triggeringBuildFound = true;
                     }
                 }
             }
-            if (!triggeringBuildFound)
-            {
+            if (!triggeringBuildFound) {
                 // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
                 definitionId = definitionIdSpecified;
