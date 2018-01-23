@@ -108,7 +108,7 @@ function Publish-UpgradedServiceFabricApplication
         [Parameter(ParameterSetName="ApplicationName")]
         [Switch]$SkipUpgradeSameTypeAndVersion
     )
-
+    
     if (!(Test-Path $ApplicationPackagePath))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationPackagePath)
@@ -216,70 +216,84 @@ function Publish-UpgradedServiceFabricApplication
             throw $errMsg
         }
 
-        $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
-        if ($reg)
-        {
-            $ApplicationTypeAlreadyRegistered = $false
-            Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-        }
-
-        $applicationPackagePathInImageStore = $names.ApplicationTypeName
-        Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
-
-        $copyParameters = @{
-            'ApplicationPackagePath' = $AppPkgPathToUse
-            'ImageStoreConnectionString' = $imageStoreConnectionString
-            'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
-        }
-
-        $InstalledSdkVersion = [version](Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
-
-        if ($CopyPackageTimeoutSec)
-        {
-            if ($InstalledSdkVersion -ge [version]"2.3")
-            {
-                $copyParameters['TimeOutSec'] = $CopyPackageTimeoutSec
+        $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }        
+        if ($reg){
+            $appIsInUse = $false
+            $apps = Get-ServiceFabricApplication -ApplicationTypeName $names.ApplicationTypeName
+            $apps | ForEach-Object {
+                if ($_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion)
+                {
+                    $appIsInUse = $true
+                }
             }
-            else
+            if(!$appIsInUse)
             {
-                Write-Warning (Get-VstsLocString -Key SFSDK_CopyPackageTimeoutSecWarning $InstalledSdkVersion)
+                Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
+                $reg | Unregister-ServiceFabricApplicationType -Force
+                $ApplicationTypeAlreadyRegistered = $false        
             }
         }
 
-        if ($CompressPackage)
+        if(!$reg -or !$ApplicationTypeAlreadyRegistered)
         {
-            if ($InstalledSdkVersion -ge [version]"2.5")
-            {
-                $copyParameters['CompressPackage'] = $CompressPackage
+            $applicationPackagePathInImageStore = $names.ApplicationTypeName
+            Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
+
+            $copyParameters = @{
+                'ApplicationPackagePath' = $AppPkgPathToUse
+                'ImageStoreConnectionString' = $imageStoreConnectionString
+                'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
             }
-            else
+
+            $InstalledSdkVersion = [version](Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
+
+            if ($CopyPackageTimeoutSec)
             {
-                Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
+                if ($InstalledSdkVersion -ge [version]"2.3")
+                {
+                    $copyParameters['TimeOutSec'] = $CopyPackageTimeoutSec
+                }
+                else
+                {
+                    Write-Warning (Get-VstsLocString -Key SFSDK_CopyPackageTimeoutSecWarning $InstalledSdkVersion)
+                }
+            }
+
+            if ($CompressPackage)
+            {
+                if ($InstalledSdkVersion -ge [version]"2.5")
+                {
+                    $copyParameters['CompressPackage'] = $CompressPackage
+                }
+                else
+                {
+                    Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
+                }
+            }
+
+            Copy-ServiceFabricApplicationPackage @copyParameters
+            if(!$?)
+            {
+                throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
+            }
+
+            $registerParameters = @{
+                'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
+            }
+
+            if ($RegisterPackageTimeoutSec)
+            {
+                $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
+            }
+
+            Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
+            Register-ServiceFabricApplicationType @registerParameters
+            if(!$?)
+            {
+                throw Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
             }
         }
-
-        Copy-ServiceFabricApplicationPackage @copyParameters
-        if(!$?)
-        {
-            throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
-        }
-
-        $registerParameters = @{
-            'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
-        }
-
-        if ($RegisterPackageTimeoutSec)
-        {
-            $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
-        }
-
-        Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-        Register-ServiceFabricApplicationType @registerParameters
-        if(!$?)
-        {
-            throw Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
-        }
-     }
+    }
 
     if ($Action.Equals('Upgrade') -or $Action.Equals('RegisterAndUpgrade'))
     {
@@ -354,7 +368,7 @@ function Publish-UpgradedServiceFabricApplication
                 }
             }
         }
-
+        
         if($upgradeStatus.UpgradeState -eq "RollingForwardCompleted")
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UpgradeSuccess)
