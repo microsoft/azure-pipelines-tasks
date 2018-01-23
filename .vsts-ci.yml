@@ -110,6 +110,8 @@ phases:
   # Download slices
   - powershell: .\ci\download-slices.ps1
     displayName: Download slices
+    env:
+      SYSTEM_ACCESSTOKEN: $(system.accessToken)
 
   # Stage milestone
   - script: node .\ci\stage-milestone.js

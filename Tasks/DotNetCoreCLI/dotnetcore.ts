@@ -41,6 +41,10 @@ export class dotNetExe {
             case "run":
                 await this.executeBasicCommand();
                 break;
+            case "custom":
+                this.command = tl.getInput("custom", true);
+                await this.executeBasicCommand();
+                break;
             case "test":
                 await this.executeTestCommand();
                 break;
