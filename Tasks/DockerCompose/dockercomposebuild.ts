@@ -1,6 +1,6 @@
 "use strict";
 
-import * as tl from "vsts-task-lib";
+import * as tl from "vsts-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "docker-common/sourceutils";
 import * as imageUtils from "docker-common/containerimageutils";

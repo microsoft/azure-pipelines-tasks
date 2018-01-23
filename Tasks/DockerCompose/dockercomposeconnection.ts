@@ -2,8 +2,8 @@
 
 import * as del from "del";
 import * as path from "path";
-import * as tl from "vsts-task-lib";
-import * as tr from "vsts-task-lib/ToolRunner";
+import * as tl from "vsts-task-lib/task";
+import * as tr from "vsts-task-lib/toolrunner";
 import * as yaml from "js-yaml";
 import * as DockerComposeUtils from "./dockercomposeutils";
 
@@ -76,7 +76,7 @@ export default class DockerComposeConnection extends ContainerConnection {
     }
 
     public createComposeCommand(): tr.ToolRunner {
-        var command: tr.ToolRunner = tl.tool(this.dockerComposePath);
+        var command = tl.tool(this.dockerComposePath);
 
         command.arg(["-f", this.dockerComposeFile]);
 
