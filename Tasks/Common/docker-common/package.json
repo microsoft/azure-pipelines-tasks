@@ -16,6 +16,6 @@
     "del": "2.2.0",
     "q": "1.4.1",
     "vso-node-api": "6.0.1-preview",
-    "vsts-task-lib": "2.0.5"
+    "vsts-task-lib": "2.0.1-preview"
   }
 }
