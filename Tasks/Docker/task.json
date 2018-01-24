@@ -271,19 +271,19 @@
             "helpMarkDown": "Docker command to execute, with arguments. For example, 'rmi -f image-name' to force remove an image."
         },
         {
-            "name": "modifyImageName",
-            "type": "boolean",
-            "label": "Force image name to follow Docker naming convention.",
-            "required": false,
-            "defaultValue": "true",
-            "visibleRule": "action == Build an image || action == Push an image || action == Run an image || action == Tag images || action == Push images",
-            "helpMarkDown": "Change docker image name to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name."
-        },
-        {
             "name": "dockerHostEndpoint",
             "type": "connectedService:dockerhost",
             "label": "Docker Host Connection",
             "helpMarkDown": "Select a Docker host connection. Defaults to the agent's host.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "dontModifyImageName",
+            "type": "boolean",
+            "label": "Do not modify image name",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If disabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
             "groupName": "advanced"
         },
         {

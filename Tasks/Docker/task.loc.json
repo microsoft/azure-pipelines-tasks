@@ -275,19 +275,19 @@
       "helpMarkDown": "ms-resource:loc.input.help.customCommand"
     },
     {
-      "name": "modifyImageName",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.modifyImageName",
-      "required": false,
-      "defaultValue": "true",
-      "visibleRule": "action == Build an image || action == Push an image || action == Run an image || action == Tag images || action == Push images",
-      "helpMarkDown": "ms-resource:loc.input.help.modifyImageName"
-    },
-    {
       "name": "dockerHostEndpoint",
       "type": "connectedService:dockerhost",
       "label": "ms-resource:loc.input.label.dockerHostEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerHostEndpoint",
+      "groupName": "advanced"
+    },
+    {
+      "name": "dontModifyImageName",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.dontModifyImageName",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.dontModifyImageName",
       "groupName": "advanced"
     },
     {
