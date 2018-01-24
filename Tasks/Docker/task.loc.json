@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [],
   "preview": "false",
@@ -273,6 +273,15 @@
       "required": true,
       "visibleRule": "action = Run a Docker command",
       "helpMarkDown": "ms-resource:loc.input.help.customCommand"
+    },
+    {
+      "name": "modifyImageName",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.modifyImageName",
+      "required": false,
+      "defaultValue": "true",
+      "visibleRule": "action == Build an image || action == Push an image || action == Run an image || action == Tag images || action == Push images",
+      "helpMarkDown": "ms-resource:loc.input.help.modifyImageName"
     },
     {
       "name": "dockerHostEndpoint",

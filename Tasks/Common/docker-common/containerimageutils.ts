@@ -20,13 +20,21 @@ export function imageNameWithoutTag(imageName: string): string {
     return generateValidImageName(endIndex < 0 ? imageName : imageName.substr(0, endIndex));
 }
 
-export function getImageName(): string {
-    var imageName = tl.getInput("imageName", true);
-    return generateValidImageName(imageName);
-}
-
 export function generateValidImageName(imageName: string): string {
     imageName = imageName.toLowerCase();
     imageName = imageName.replace(/ /g,"");
     return imageName;
+}
+
+/**
+ * Gets the value of an input and converts to a bool.  Convenience.
+ * If required is true and the value is not set, it will throw.
+ * 
+ * @param     name     name of the bool input to get
+ * @param     required whether input is required.  optional, defaults to true
+ * @returns   string
+ */
+
+export function getBoolInput(name: string, required?: boolean): boolean {
+    return !((tl.getInput(name, required) || '').toUpperCase() == "FALSE");
 }
