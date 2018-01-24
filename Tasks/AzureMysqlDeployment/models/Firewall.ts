@@ -1,5 +1,4 @@
 import tl = require("vsts-task-lib/task");
-import { read } from "fs";
 
 export class FirewallRule {
     private properties: FirewallAddressRange;
