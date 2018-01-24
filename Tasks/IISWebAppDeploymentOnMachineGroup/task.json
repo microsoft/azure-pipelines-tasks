@@ -3,7 +3,7 @@
     "name": "IISWebAppDeploymentOnMachineGroup",
     "friendlyName": "IIS Web App Deploy",
     "description": "Deploy a Website or Web Application using WebDeploy",
-    "helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=866789)",
     "category": "Deploy",
     "visibility": [
         "Release"
