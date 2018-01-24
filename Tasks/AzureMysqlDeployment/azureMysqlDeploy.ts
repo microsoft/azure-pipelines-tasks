@@ -18,6 +18,7 @@ async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
+        // Get all task input parameter
         const azureMysqlTaskParameter: AzureMysqlTaskParameter = new AzureMysqlTaskParameter();
         const endpoint: AzureEndpoint = await new AzureRMEndpoint(azureMysqlTaskParameter.getConnectedServiceName()).getEndpoint();
         if(!endpoint){
@@ -26,22 +27,26 @@ async function run() {
         const azureCredentails = new ApplicationTokenCredentials(endpoint.servicePrincipalClientID,endpoint.tenantID, endpoint.servicePrincipalKey, 
             endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
         const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(azureCredentails, endpoint.subscriptionID);
+        // Get mysql server data entered by user 
         const mysqlServer: MysqlServer = await mysqlServerOperations.getMysqlServerFromServerName(azureMysqlTaskParameter.getServerName());
         const toolPath: string = await new ToolPathOperations().getInstalledPathOfMysql();
+        // Mysql client
         const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName(), toolPath);
         const firewallOperations : FirewallOperations = new FirewallOperations(azureCredentails, endpoint.subscriptionID);
+        //Invoke firewall operation to validate user has permission for server or not. If not whitelist the IP
         const firewallAdded: boolean = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer.getResourceGroupName());
+        //Execute sql script entered by user
         await sqlClient.executeSqlCommand();
-        if(firewallAdded && azureMysqlTaskParameter.getDeleteFirewallRule()){
+        // Delete firewall rule in case of automatic added rule or either user wants to delete it
+        if(firewallAdded || azureMysqlTaskParameter.getDeleteFirewallRule()){
             await firewallOperations.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
         }
     }
     catch(exception) {
         tl.setResult(tl.TaskResult.Failed, exception);
     }
-
+    tl.setResult(tl.TaskResult.Succeeded, "Task is Sucessfully completed");
     tl.debug('Completed action');
 }
-
 
 run();

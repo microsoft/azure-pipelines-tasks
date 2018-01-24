@@ -19,7 +19,8 @@
     "dependencies": {
       "q": "1.4.1",
       "vsts-task-lib": "2.1.0",
-      "uuid": "3.0.1"
+      "uuid": "3.0.1",
+      "winreg": "1.2.2"
     }
   }
   

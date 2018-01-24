@@ -3,7 +3,7 @@ import { ApplicationTokenCredentials} from 'azure-arm-rest/azure-arm-common';
 import { AzureMysqlManagementClient } from 'azure-arm-rest/azure-arm-mysql';
 import { FirewallRule, FirewallAddressRange } from '../models/Firewall';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
-import { FirewallConfigurationCheckResult } from '../sql/FirewallConfigurationCheckResult';
+import { FirewallConfigurationCheckResult } from '../models/FirewallConfigurationCheckResult';
 import { ISqlClient } from '../sql/ISqlClient';
 import Q = require('q');
 var uuidV4 = require('uuid/v4');
@@ -17,6 +17,14 @@ export class FirewallOperations{
         this._azureMysqManagementClient = new AzureMysqlManagementClient(azureCredentials, subscriptionId);
     }
 
+    /**
+     * Add firewall rule for particular mysql server
+     * @param serverName 
+     * @param firewallRule 
+     * @param resourceGroupName 
+     * 
+     * @returns operation is success or failure
+     */
     public async addFirewallRule(serverName: string, firewallRule: FirewallRule, resourceGroupName: string): Promise<boolean> {
         let defer = Q.defer<boolean>();
         this._azureMysqManagementClient.firewallRules.createOrUpdate(resourceGroupName, serverName, firewallRule.getName(), firewallRule, (error, result, request, response) => {
@@ -29,6 +37,13 @@ export class FirewallOperations{
         return defer.promise;
     }
 
+    /**
+     * Delete firewall rule for mysql server 
+     * @param serverName 
+     * @param resourceGroupName 
+     * 
+     * @returns operation is success or failure
+     */
     public async deleteFirewallRule(serverName: string, resourceGroupName: string): Promise<void> {
         let defer = Q.defer<void>();
         this._azureMysqManagementClient.firewallRules.delete(resourceGroupName, serverName, this._firewallName, (error, result, request, response) => {
@@ -41,6 +56,14 @@ export class FirewallOperations{
         return defer.promise;
     }
 
+    /**
+     * To check agent box has permission to connect with mysqlServer or not. If not then add firewall rule to whitelist this IP.
+     * @param azureMysqlTaskParameter 
+     * @param sqlClient 
+     * @param resourceGroupName 
+     * 
+     * @returns operation is success or failure
+     */
     public async invokeFirewallOperations(azureMysqlTaskParameter: AzureMysqlTaskParameter, sqlClient: ISqlClient, resourceGroupName: string) : Promise<boolean> {
         var defer = Q.defer<boolean>();
         const firewallConfigurationCheckResult: FirewallConfigurationCheckResult = await sqlClient.getFirewallConfiguration();

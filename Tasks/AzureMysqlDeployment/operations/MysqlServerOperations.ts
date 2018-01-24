@@ -13,6 +13,9 @@ export class MysqlServerOperations{
         this._azureMysqManagementClient = new AzureMysqlManagementClient(azureCredentials, subscriptionId);
     }
 
+    /**
+     * Get mysql server data from server name including resource group
+     */
     public async getMysqlServerFromServerName(serverName: string): Promise<MysqlServer> {
         let defer = Q.defer<MysqlServer>();
         this._azureMysqManagementClient.mysqlServers.list((error, result, request, response) => {
@@ -25,6 +28,13 @@ export class MysqlServerOperations{
         return defer.promise;
     }
 
+    /**
+     * Filter mysqlServer data from list of mysql server in particular subscription
+     * @param result      List of mysql server in a subscription
+     * @param serverName  server name
+     * 
+     * @returns          MysqlServer data
+     */
     private _getMysqlServerFromResponse(result: any, serverName: string) : MysqlServer{
         let mysqlServer: MysqlServer;
         if(result){
@@ -38,7 +48,13 @@ export class MysqlServerOperations{
         return mysqlServer;
     }
 
-    private _getResourceGroupNameFromUrl(id: string){
+    /**
+     * Get resource group name from mysql server url i.e Id
+     * @param id 
+     * 
+     * @returns resourceGroupName
+     */
+    private _getResourceGroupNameFromUrl(id: string): string{
         if(!id){
             throw new Error(tl.loc("UnableToFindResourceGroupDueToNullId"));
         }
