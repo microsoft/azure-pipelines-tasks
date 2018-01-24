@@ -6,6 +6,7 @@ import webClient = require('./webClient');
 import Q = require('q');
 import { ToError } from './AzureServiceClient';
 import { WebJob, SiteExtension } from './azureModels';
+import { KUDU_DEPLOYMENT_CONSTANTS } from './constants';
 
 export class KuduServiceManagementClient {
     private _scmUri;
@@ -31,8 +32,13 @@ export class KuduServiceManagementClient {
         return httpResponse;
     }
 
-    public getRequestUri(uriFormat: string) {
+    public getRequestUri(uriFormat: string, queryParameters?: Array<string>) {
         uriFormat = uriFormat[0] == "/" ? uriFormat : "/" + uriFormat;
+
+        if(queryParameters && queryParameters.length > 0) {
+            uriFormat = uriFormat + '?' + queryParameters.join('&');
+        }
+
         return this._scmUri + uriFormat;
     }
 
@@ -69,6 +75,7 @@ export class Kudu {
             throw Error(tl.loc('FailedToUpdateDeploymentHistory', this._getFormattedError(error)));
         }
     }
+
 
     public async getContinuousJobs(): Promise<Array<WebJob>> {
         var httpRequest = new webClient.WebRequest();
@@ -394,6 +401,34 @@ export class Kudu {
         }
     }
 
+    public async zipDeploy(webPackage: string, queryParameters: Array<string>): Promise<any> {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.uri = this._client.getRequestUri(`/api/zipdeploy`, queryParameters);
+        httpRequest.body = fs.createReadStream(webPackage);
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`ZIP Deploy response: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                tl.debug('Deployment passed');
+                return null;
+            }
+            else if(response.statusCode == 202) {
+                var pollableURL: string = response.headers.location;
+                tl.debug(`Polling for ZIP Deploy URL: ${pollableURL}`);
+                return await this._getDeploymentDetailsFromPollURL(pollableURL);
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw new Error(tl.loc('PackageDeploymentFailed', this._getFormattedError(error)));
+        }
+
+    }
+
     public async deleteFile(physicalPath: string, fileName: string): Promise<void> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
         physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
@@ -416,6 +451,31 @@ export class Kudu {
         }
         catch(error) {
             throw Error(tl.loc('FailedToDeleteFile', physicalPath, fileName, this._getFormattedError(error)));
+        }
+    }
+
+    private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.uri = pollURL;
+        var timeOutInMinutes
+        while(true) {
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode == 200 || response.statusCode == 202) {
+                var result = response.body;
+                tl.debug(`POLL URL RESULT: ${JSON.stringify(result)}`);
+                if(result.status == KUDU_DEPLOYMENT_CONSTANTS.SUCCESS || result.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
+                    return result;
+                }
+                else {
+                    tl.debug(`Deployment status: ${result.status}. retry after 10 seconds`);
+                    await webClient.sleepFor(10);
+                    continue;
+                }
+            }
+            else {
+                throw response;
+            }
         }
     }
 

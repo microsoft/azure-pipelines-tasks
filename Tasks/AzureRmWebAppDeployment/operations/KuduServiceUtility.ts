@@ -127,6 +127,47 @@ export class KuduServiceUtility {
         }
     }
 
+    public async zipDeploy(packagePath: string, appOffline: boolean, customParameters?: Array<string>): Promise<void> {
+        try {
+            if(appOffline) {
+                await this._appOfflineKuduService(physicalRootPath, true);
+                tl.debug('Wait for 10 seconds for app_offline to take effect');
+                await webClient.sleepFor(10);
+            }
+
+            var deploymentRequestDetails = this._getUpdateHistoryRequest(true, null, null);
+            var queryParameters: Array<string> = [
+                'isAsync=true',
+                'message=' + encodeURIComponent(deploymentRequestDetails.message),
+                'deployer=' + deploymentRequestDetails.deployer,
+                'author=' + deploymentRequestDetails.author,
+                'details=' + encodeURIComponent(deploymentRequestDetails.details)
+            ];
+
+            if(customParameters && customParameters.length > 0) {
+                queryParameters = queryParameters.concat(customParameters);
+            }
+            
+            var deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+            var logs = await this._appServiceKuduService.getFileContent(`/site/deployments/${deploymentDetails.id}`, 'log.log');
+            console.log(logs);
+
+            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
+                throw tl.loc('PackageDeploymentUsingZipDeployFailed');
+            }
+
+            if(appOffline) {
+                await this._appOfflineKuduService(physicalRootPath, false);
+            }
+
+            console.log(tl.loc('PackageDeploymentSuccess'));
+        }
+        catch(error) {
+            tl.error(tl.loc('PackageDeploymentFailed'));
+            throw Error(error);
+        }
+    }
+
     private async _printPostDeploymentLogs(physicalPath: string, uniqueID: string) : Promise<void> {
         var stdoutLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stdout_' + uniqueID + '.txt');
         var stderrLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stderr_' + uniqueID + '.txt');
@@ -294,7 +335,7 @@ export class KuduServiceUtility {
         }
     
         var message = {
-            type : customMessage? customMessage.type : "",
+            type : "deployment",
             commitId : commitId,
             buildId : buildId,
             releaseId : releaseId,
@@ -305,17 +346,20 @@ export class KuduServiceUtility {
             collectionUrl : collectionUrl,
             teamProject : teamProject
         };
-        // Append Custom Messages to original message
-        for(var attribute in customMessage) {
-            message[attribute] = customMessage[attribute];
+
+        if(!!customMessage) {
+            // Append Custom Messages to original message
+            for(var attribute in customMessage) {
+                message[attribute] = customMessage[attribute];
+            }
+            
         }
-    
         var deploymentLogType: string = message['type'];
         var active: boolean = false;
         if(deploymentLogType.toLowerCase() === "deployment" && isDeploymentSuccess) {
             active = true;
         }
-    
+
         return {
             id: deploymentID,
             active : active,

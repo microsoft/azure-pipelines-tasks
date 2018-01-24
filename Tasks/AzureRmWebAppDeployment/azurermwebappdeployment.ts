@@ -38,7 +38,7 @@ async function main() {
         let appServiceUtility: AzureAppServiceUtility = new AzureAppServiceUtility(appService);
 
         await appServiceUtility.pingApplication();
-        let kuduService: Kudu = await appServiceUtility.getKuduService();
+        var kuduService: Kudu = await appServiceUtility.getKuduService();
         kuduServiceUtility = new KuduServiceUtility(kuduService);
         if(taskParams.WebAppUri) {
             tl.setVariable(taskParams.WebAppUri, await appServiceUtility.getApplicationURL());
@@ -49,7 +49,7 @@ async function main() {
                 case 'Builtin': {
                     var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
                     tl.debug('Performing Linux built-in package deployment');
-                    await kuduServiceUtility.deployWebPackage(webPackage, null , '/', taskParams.TakeAppOfflineFlag);
+                    await kuduServiceUtility.zipDeploy(webPackage,taskParams.TakeAppOfflineFlag, ['slotName=' + appService.getSlot()]);
                     await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
                     break;
                 }
@@ -124,7 +124,9 @@ async function main() {
     finally {
         if(kuduServiceUtility) {
             await addReleaseAnnotation(azureEndpoint, appService, isDeploymentSuccess);
-            await kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: appService.getSlot()});
+            if(!(taskParams.isBuiltinLinuxWebApp && isDeploymentSuccess)) { 
+                await kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: appService.getSlot()});
+            }
         }
     }
 }

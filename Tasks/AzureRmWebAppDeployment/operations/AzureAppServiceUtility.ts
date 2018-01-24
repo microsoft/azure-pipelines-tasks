@@ -113,7 +113,7 @@ export class AzureAppServiceUtility {
 
     public async updateConfigurationSettings(properties: any) : Promise<void> {
         for(var property in properties) {
-            if(properties[property].value !== undefined) {
+            if(properties[property] && properties[property].value !== undefined) {
                 properties[property] = properties[property].value;
             }
         }
@@ -125,7 +125,7 @@ export class AzureAppServiceUtility {
 
     public async updateAndMonitorAppSettings(properties: any): Promise<void> {
         for(var property in properties) {
-            if(properties[property].value !== undefined) {
+            if(properties[property] && properties[property].value !== undefined) {
                 properties[property] = properties[property].value;
             }
         }
