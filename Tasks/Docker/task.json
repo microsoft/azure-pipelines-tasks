@@ -278,7 +278,7 @@
             "groupName": "advanced"
         },
         {
-            "name": "modifyImageName",
+            "name": "enforceDockerNamingConvention",
             "type": "boolean",
             "label": "Force image name to follow Docker naming convention",
             "required": false,

@@ -282,12 +282,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "modifyImageName",
+      "name": "enforceDockerNamingConvention",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.modifyImageName",
+      "label": "ms-resource:loc.input.label.enforceDockerNamingConvention",
       "required": false,
       "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.modifyImageName",
+      "helpMarkDown": "ms-resource:loc.input.help.enforceDockerNamingConvention",
       "groupName": "advanced"
     },
     {

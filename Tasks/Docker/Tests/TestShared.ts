@@ -8,7 +8,7 @@ export let TestEnvVars = {
     includeLatestTag: "__includeLatestTag__",
     imageName: "__imageName__",
     additionalImageTags: "__additionalImageTags__",
-    modifyImageName: "__modifyImageName__"
+    enforceDockerNamingConvention: "__enforceDockerNamingConvention__"
 };
 
 export let OperatingSystems = {
