@@ -127,7 +127,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async zipDeploy(packagePath: string, appOffline: boolean, customParameters?: Array<string>): Promise<void> {
+    public async zipDeploy(packagePath: string, appOffline?: boolean, customParameters?: Array<string>): Promise<void> {
         try {
             if(appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, true);
