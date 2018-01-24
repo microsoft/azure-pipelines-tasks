@@ -33,7 +33,7 @@ export class MysqlServerOperations{
      * @param result      List of mysql server in a subscription
      * @param serverName  server name
      * 
-     * @returns          MysqlServer data
+     * @returns           MysqlServer data
      */
     private _getMysqlServerFromResponse(result: any, serverName: string) : MysqlServer{
         let mysqlServer: MysqlServer;
@@ -50,9 +50,9 @@ export class MysqlServerOperations{
 
     /**
      * Get resource group name from mysql server url i.e Id
-     * @param id 
+     * @param id i.e url of the resource
      * 
-     * @returns resourceGroupName
+     * @returns  resourceGroupName
      */
     private _getResourceGroupNameFromUrl(id: string): string{
         if(!id){

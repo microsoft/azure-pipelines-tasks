@@ -10,7 +10,7 @@ export class ToolPathOperations {
     public async getInstalledPathOfMysql(): Promise<string> {
         let defer = Q.defer<string>();
         let path: string; 
-        // To check either it is linux or windows 
+        // To check either it is linux or windows platform
         if(process.platform !== 'win32'){
             // linux check
             path = task.which("mysql", true);

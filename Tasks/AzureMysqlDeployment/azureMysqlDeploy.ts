@@ -7,7 +7,7 @@ import { AzureMysqlTaskParameter } from './models/AzureMysqlTaskParameter';
 import { FirewallOperations } from './operations/FirewallOperations';
 import { MysqlServerOperations } from './operations/MysqlServerOperations';
 import { ToolPathOperations } from './operations/ToolPathOperations';
-import { FirewallConfigurationCheckResult } from './sql/FirewallConfigurationCheckResult';
+import { FirewallConfigurationCheckResult } from './models/FirewallConfigurationCheckResult';
 import { ISqlClient } from './sql/ISqlClient';
 import { MysqlClient } from './sql/MysqlClient';
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
@@ -18,7 +18,7 @@ async function run() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
-        // Get all task input parameter
+        // Get all task input parameters
         const azureMysqlTaskParameter: AzureMysqlTaskParameter = new AzureMysqlTaskParameter();
         const endpoint: AzureEndpoint = await new AzureRMEndpoint(azureMysqlTaskParameter.getConnectedServiceName()).getEndpoint();
         if(!endpoint){
