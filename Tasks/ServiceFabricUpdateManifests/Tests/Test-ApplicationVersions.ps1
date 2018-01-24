@@ -27,7 +27,6 @@ try
     $oldSuffix = ".OldSuffix"
 
     Register-Mock Get-VstsInput { $pkgPath } -- -Name applicationPackagePath -Require
-    Register-Mock Get-VstsInput { $PSScriptRoot } -- -Name pkgArtifactPath -Require
     Register-Mock Get-VstsInput { $newSuffix } -- -Name versionSuffix -Require
     Register-Mock Get-VstsInput { $true } -- -Name updateOnlyChanged -Require
     Register-Mock Find-VstsFiles { $pkgPath } -- -LegacyPattern $pkgPath -IncludeDirectories

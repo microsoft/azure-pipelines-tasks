@@ -86,15 +86,6 @@
       "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
     },
     {
-      "name": "pkgArtifactPath",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.pkgArtifactPath",
-      "defaultValue": "$(build.artifactstagingdirectory)",
-      "required": true,
-      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true",
-      "helpMarkDown": "ms-resource:loc.input.help.pkgArtifactPath"
-    },
-    {
       "name": "logAllChanges",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.logAllChanges",
@@ -185,6 +176,6 @@
     "NoChanges": "ms-resource:loc.messages.NoChanges",
     "PdbWarning": "ms-resource:loc.messages.PdbWarning",
     "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue",
-    "PackageIsNotUnderArtifact": "ms-resource:loc.messages.PackageIsNotUnderArtifact"
+    "CouldNotFindSubPath": "ms-resource:loc.messages.CouldNotFindSubPath"
   }
 }

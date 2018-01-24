@@ -38,11 +38,6 @@
             $compareType = Get-VstsInput -Name compareType -Require
             $buildNumber = Get-VstsInput -Name buildNumber
             $overwritePkgArtifact = ((Get-VstsInput -Name overwriteExistingPkgArtifact) -eq "true")
-            $pkgArtifactPath = Get-VstsInput -Name pkgArtifactPath -Require
-            if (-not $pkgArtifactPath.EndsWith('\'))
-            {
-                $pkgArtifactPath = $pkgArtifactPath + '\'
-            }
 
             try
             {
@@ -62,26 +57,45 @@
 
                 Write-Host (Get-VstsLocString -Key SearchingApplicationType -ArgumentList $appTypeName)
 
-                if (-not $newAppPackagePath.StartsWith($pkgArtifactPath))
+                # Try and find the old app package path by finding the largest substring of the path that exists in the artifact path
+                $relativePath = $newAppPackagePath
+                $pathRoot = [System.IO.Path]::GetPathRoot($relativePath)
+                if(![System.String]::IsNullOrEmpty($pathRoot))
                 {
-                    Write-Error (Get-VstsLocString -Key PackageIsNotUnderArtifact -ArgumentList @($newAppPackagePath, $pkgArtifactPath))
+                    $relativePath = $relativePath.SubString($pathRoot.Length)
                 }
-                $relativePath = $newAppPackagePath.SubString($pkgArtifactPath.Length)
-
+                $relativePath.Trim([System.IO.Path]::DirectorySeparatorChar)
                 $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
-                $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
-                if (Test-Path $oldAppManifestPath)
+                while(!(Test-Path $oldAppPackagePath))
                 {
-                    $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
-
-                    # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
-                    # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.
-                    $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion
+                    $firstSlash = $relativePath.IndexOf([System.IO.Path]::DirectorySeparatorChar)
+                    if ($firstSlash -lt 0)
+                    {
+                        Write-Warning (Get-VstsLocString -Key CouldNotFindSubPath -ArgumentList @($newAppPackagePath, $oldDropLocation))
+                        $updateAllVersions = $true
+                        $oldAppPackagePath = $null
+                        break;
+                    }
+                    $relativePath = $relativePath.SubString($firstSlash + 1)
+                    $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
                 }
-                else
+
+                if ($oldAppPackagePath)
                 {
-                    Write-Warning (Get-VstsLocString -Key NoManifestInPreviousBuild)
-                    $updateAllVersions = $true
+                    $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
+                    if (Test-Path $oldAppManifestPath)
+                    {
+                        $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
+
+                        # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
+                        # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.
+                        $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion
+                    }
+                    else
+                    {
+                        Write-Warning (Get-VstsLocString -Key NoManifestInPreviousBuild)
+                        $updateAllVersions = $true
+                    }
                 }
             }
             else

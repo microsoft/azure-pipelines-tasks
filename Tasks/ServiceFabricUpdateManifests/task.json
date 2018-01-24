@@ -86,15 +86,6 @@
             "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
         },
         {
-            "name": "pkgArtifactPath",
-            "type": "string",
-            "label": "Package Artifact Path",
-            "defaultValue": "$(build.artifactstagingdirectory)",
-            "required": true,
-            "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true",
-            "helpMarkDown": "The path to the artifact containing the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
-        },
-        {
             "name": "logAllChanges",
             "type": "boolean",
             "label": "Log all changes",
@@ -185,6 +176,6 @@
         "NoChanges": "Found no changes.",
         "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
         "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
-        "PackageIsNotUnderArtifact": "The package path '{0}' is not under artifact path '{1}'."
+        "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'."
     }
 }

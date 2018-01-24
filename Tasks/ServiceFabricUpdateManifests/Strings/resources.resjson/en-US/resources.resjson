@@ -15,8 +15,6 @@
   "loc.input.help.updateOnlyChanged": "Incrementally update only the packages that have changed. Use the [deterministic compiler flag](https://go.microsoft.com/fwlink/?LinkId=808668) to ensure builds with the same inputs produce the same outputs.",
   "loc.input.label.pkgArtifactName": "Package Artifact Name",
   "loc.input.help.pkgArtifactName": "The name of the artifact containing the application package for comparison.",
-  "loc.input.label.pkgArtifactPath": "Package Artifact Path",
-  "loc.input.help.pkgArtifactPath": "The path to the artifact containing the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.logAllChanges": "Log all changes",
   "loc.input.help.logAllChanges": "Compare all files in every package and log if the file was added, removed, or if its content changed. Otherwise, compare files in a package only until the first change is found for faster performance.",
   "loc.input.label.compareType": "Compare against",
@@ -62,5 +60,5 @@
   "loc.messages.NoChanges": "Found no changes.",
   "loc.messages.PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
   "loc.messages.InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
-  "loc.messages.PackageIsNotUnderArtifact": "The package path '{0}' is not under artifact path '{1}'."
+  "loc.messages.CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'."
 }
