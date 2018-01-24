@@ -402,20 +402,20 @@ export class Kudu {
     }
 
     public async zipDeploy(webPackage: string, queryParameters: Array<string>): Promise<any> {
-        var httpRequest = new webClient.WebRequest();
+        let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/zipdeploy`, queryParameters);
         httpRequest.body = fs.createReadStream(webPackage);
 
         try {
-            var response = await this._client.beginRequest(httpRequest);
+            let response = await this._client.beginRequest(httpRequest);
             tl.debug(`ZIP Deploy response: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 tl.debug('Deployment passed');
                 return null;
             }
             else if(response.statusCode == 202) {
-                var pollableURL: string = response.headers.location;
+                let pollableURL: string = response.headers.location;
                 tl.debug(`Polling for ZIP Deploy URL: ${pollableURL}`);
                 return await this._getDeploymentDetailsFromPollURL(pollableURL);
             }
@@ -455,12 +455,12 @@ export class Kudu {
     }
 
     private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
-        var httpRequest = new webClient.WebRequest();
+        let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
         httpRequest.uri = pollURL;
-        var timeOutInMinutes
+
         while(true) {
-            var response = await this._client.beginRequest(httpRequest);
+            let response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200 || response.statusCode == 202) {
                 var result = response.body;
                 tl.debug(`POLL URL RESULT: ${JSON.stringify(result)}`);
