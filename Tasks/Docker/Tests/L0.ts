@@ -18,7 +18,7 @@ describe('Docker Suite', function() {
         delete process.env[shared.TestEnvVars.includeLatestTag];
         delete process.env[shared.TestEnvVars.imageName];
         delete process.env[shared.TestEnvVars.additionalImageTags];
-        delete process.env[shared.TestEnvVars.dontModifyImageName];
+        delete process.env[shared.TestEnvVars.modifyImageName];
     });
     after(function () {
     });
@@ -42,6 +42,7 @@ describe('Docker Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
+        process.env[shared.TestEnvVars.modifyImageName] = 'true';
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -52,12 +53,12 @@ describe('Docker Suite', function() {
         done();
     });
 
-    it('Runs fails for docker build for invalid image name and dont modify image name true', (done:MochaDone) => {
+    it('Runs fails for docker build for invalid image name and modify image name false', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
-         process.env[shared.TestEnvVars.dontModifyImageName] = 'true';
+        process.env[shared.TestEnvVars.modifyImageName] = 'false';
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -74,6 +75,7 @@ describe('Docker Suite', function() {
         process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
         process.env[shared.TestEnvVars.imageName] = 'test/Test:2';
         process.env[shared.TestEnvVars.additionalImageTags] = '6';
+        process.env[shared.TestEnvVars.modifyImageName] = 'true';
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);

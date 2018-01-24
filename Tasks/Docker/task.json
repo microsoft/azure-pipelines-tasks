@@ -278,12 +278,12 @@
             "groupName": "advanced"
         },
         {
-            "name": "dontModifyImageName",
+            "name": "modifyImageName",
             "type": "boolean",
-            "label": "Do not modify image name",
+            "label": "Force image name to follow Docker naming convention",
             "required": false,
-            "defaultValue": "false",
-            "helpMarkDown": "If disabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
+            "defaultValue": "true",
+            "helpMarkDown": "If enabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
             "groupName": "advanced"
         },
         {

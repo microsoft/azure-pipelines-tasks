@@ -22,7 +22,7 @@ tr.setInput('qualifyImageName', process.env[shared.TestEnvVars.qualifyImageName]
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
 tr.setInput('additionalImageTags', process.env[shared.TestEnvVars.additionalImageTags] || '');
-tr.setInput('dontModifyImageName', process.env[shared.TestEnvVars.dontModifyImageName]);
+tr.setInput('modifyImageName', process.env[shared.TestEnvVars.modifyImageName]);
 
 console.log("Inputs have been set");
 

@@ -282,12 +282,12 @@
       "groupName": "advanced"
     },
     {
-      "name": "dontModifyImageName",
+      "name": "modifyImageName",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.dontModifyImageName",
+      "label": "ms-resource:loc.input.label.modifyImageName",
       "required": false,
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.dontModifyImageName",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.modifyImageName",
       "groupName": "advanced"
     },
     {
