@@ -6,6 +6,7 @@ import { MysqlServer } from './models/MysqlServer';
 import { AzureMysqlTaskParameter } from './models/AzureMysqlTaskParameter';
 import { FirewallOperations } from './operations/FirewallOperations';
 import { MysqlServerOperations } from './operations/MysqlServerOperations';
+import { ToolPathOperations } from './operations/ToolPathOperations';
 import { FirewallConfigurationCheckResult } from './sql/FirewallConfigurationCheckResult';
 import { ISqlClient } from './sql/ISqlClient';
 import { MysqlClient } from './sql/MysqlClient';
@@ -26,7 +27,8 @@ async function run() {
             endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
         const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(azureCredentails, endpoint.subscriptionID);
         const mysqlServer: MysqlServer = await mysqlServerOperations.getMysqlServerFromServerName(azureMysqlTaskParameter.getServerName());
-        const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName());
+        const toolPath: string = await new ToolPathOperations().getInstalledPathOfMysql();
+        const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName(), toolPath);
         const firewallOperations : FirewallOperations = new FirewallOperations(azureCredentails, endpoint.subscriptionID);
         const firewallAdded: boolean = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer.getResourceGroupName());
         await sqlClient.executeSqlCommand();

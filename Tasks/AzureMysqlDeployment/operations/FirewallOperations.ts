@@ -44,11 +44,11 @@ export class FirewallOperations{
     public async invokeFirewallOperations(azureMysqlTaskParameter: AzureMysqlTaskParameter, sqlClient: ISqlClient, resourceGroupName: string) : Promise<boolean> {
         var defer = Q.defer<boolean>();
         const firewallConfigurationCheckResult: FirewallConfigurationCheckResult = await sqlClient.getFirewallConfiguration();
-        if(!firewallConfigurationCheckResult.isIPAdressAlreadyAdded()){
+        if(!firewallConfigurationCheckResult.isIpAdressAlreadyAdded()){
             this._firewallName = "AutoDetect" + uuidV4();
             const firewallAddressRange: FirewallAddressRange = new FirewallAddressRange(firewallConfigurationCheckResult.getIpAddress(), firewallConfigurationCheckResult.getIpAddress());
             const firewallRule: FirewallRule = new FirewallRule(this._firewallName, firewallAddressRange);
-            this.addFirewallRule(azureMysqlTaskParameter.getServerName(), firewallRule, resourceGroupName);
+            await this.addFirewallRule(azureMysqlTaskParameter.getServerName(), firewallRule, resourceGroupName);
             defer.resolve(true);
         }else{
             defer.resolve(false);
