@@ -218,6 +218,19 @@ target.build = function() {
             });
         }
 
+        ////// EXPERIMENT
+        if (taskMake.hasOwnProperty('rm')) {
+            console.log('removing locally defined resources');
+            console.log(JSON.stringify(taskMake.rm));
+            console.log(outDir);
+            util.removeGroups(taskMake.rm, 'E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common');
+        }
+
+
+
+        ////// END EXPERIMENT
+
+
         // build Node task
         if (shouldBuildNode) {
             buildNodeTask(taskPath, outDir);

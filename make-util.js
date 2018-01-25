@@ -60,6 +60,9 @@ var mkdir = function (options, target) {
 exports.mkdir = mkdir;
 
 var rm = function (options, target) {
+    console.log('going to remove');
+    console.log(JSON.stringify(options));
+    console.log(JSON.stringify(target));
     if (target) {
         shell.rm(options, target);
     }
@@ -167,6 +170,7 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
 
     // remove the locally defined set of resources
     if (taskMake.hasOwnProperty('rm')) {
+        console.log('removing locally defined resources');
         removeGroups(taskMake.rm, destPath);
     }
 }

@@ -1,0 +1,27 @@
+{
+  "name": "vsts-tasks-azurermappservicedeployment",
+  "version": "1.0.0",
+  "description": "VSTS Azure RM App Service Deployment",
+  "main": "AzureRmWebAppDeployment.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "q": "1.4.1",
+    "xml2js": "0.4.13",
+    "uuid": "3.1.0",
+    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest",
+    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common",
+    "vsts-task-lib": "2.0.5"
+  }
+}
