@@ -88,7 +88,6 @@ async function run() {
 
             // Now matching the pattern against all files
             var uploadFilesList = tl.match(allFiles, filesPattern, undefined, {matchBase: true}).map( (s) => {
-                console.log("Inside the pattern match method.")
                 return isWin ? s.replace(/\\/g, '/') : s.replace(/\\/g, '\\\\');
             });
 
