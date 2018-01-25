@@ -1,10 +1,7 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "module": "commonjs"
-    },
-    "exclude": [
-        "node_modules",
-        "../../_build"
-    ]
+        "module": "commonjs",
+        "traceResolution": true
+    }
 }

@@ -147,7 +147,8 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
+    var result = run('tsc --traceResolution --outDir ' + outDir + ' --rootDir ' + taskPath);
+    console.log(result);
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
