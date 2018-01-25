@@ -227,5 +227,4 @@ export class  MysqlServers {
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
     }
-
 }
