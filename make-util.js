@@ -151,6 +151,13 @@ var buildNodeTask = function (taskPath, outDir) {
     console.log('should be running in: ' + taskPath);
     run('npm dedupe');
 
+    //// EXPERIMENT
+    // if (taskMake.hasOwnProperty('rm')) {
+    //     console.log('removing locally defined resources');
+    //     removeGroups(taskMake.rm, destPath);
+    // }
+    //// EXPERIMENT
+
     //var result = run('tsc --traceResolution --outDir ' + outDir + ' --rootDir ' + taskPath);
     var result = run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     console.log(result);
