@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "instanceNameFormat": "Query Work Items",
   "groups": [
@@ -42,8 +42,9 @@
       "label": "Maximum threshold",
       "defaultValue": "0",
       "required": "true",
-      "properties": {
-          "isNonNegativeNumber": "true"
+      "validation": {
+          "expression": "or(isMatch(value, '\\$\\(([^)]+)\\)', 'IgnoreCase'), isInRange(value, 0, 1000000))",
+          "message": "Only variables and numbers in between 0 to 1000000 allowed. Please enter valid input."
       },
       "helpMarkDown": "The maximum number of matching workitems from the query."
     },
@@ -53,8 +54,9 @@
       "label": "Minimum threshold",
       "defaultValue": "0",
       "required": "true",
-      "properties": {
-        "isNonNegativeNumber": "true"
+      "validation": {
+          "expression": "or(isMatch(value, '\\$\\(([^)]+)\\)', 'IgnoreCase'), isInRange(value, 0, 1000000))",
+          "message": "Only variables and numbers allowed. Please enter valid input."
       },
       "groupName": "advanced",
       "helpMarkDown": "The minimum number of matching workitems from the query."

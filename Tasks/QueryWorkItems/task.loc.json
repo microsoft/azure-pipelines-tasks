@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -42,8 +42,9 @@
       "label": "ms-resource:loc.input.label.maxThreshold",
       "defaultValue": "0",
       "required": "true",
-      "properties": {
-        "isNonNegativeNumber": "true"
+	  "validation": {
+          "expression": "or(isMatch(value, '\\$\\(([^)]+)\\)', 'IgnoreCase'), isInRange(value, 0, 1000000))",
+          "message": "Only variables and numbers allowed. Please enter valid input."
       },
       "helpMarkDown": "ms-resource:loc.input.help.maxThreshold"
     },
@@ -53,8 +54,9 @@
       "label": "ms-resource:loc.input.label.minThreshold",
       "defaultValue": "0",
       "required": "true",
-      "properties": {
-        "isNonNegativeNumber": "true"
+	  "validation": {
+          "expression": "or(isMatch(value, '\\$\\(([^)]+)\\)', 'IgnoreCase'), isInRange(value, 0, 1000000))",
+          "message": "Only variables and numbers allowed. Please enter valid input."
       },
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.minThreshold"
