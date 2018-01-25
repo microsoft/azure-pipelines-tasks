@@ -138,6 +138,7 @@ export class KuduServiceUtility {
             await this._preZipDeployOperation();
             tl.debug('Performed pre-zipdeploy operation.');
 
+            
             if(tl.stats(packagePath).isDirectory()) {
                 let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
                 packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
