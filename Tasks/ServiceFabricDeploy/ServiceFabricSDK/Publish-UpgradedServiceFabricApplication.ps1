@@ -108,7 +108,7 @@ function Publish-UpgradedServiceFabricApplication
         [Parameter(ParameterSetName="ApplicationName")]
         [Switch]$SkipUpgradeSameTypeAndVersion
     )
-    
+
     if (!(Test-Path $ApplicationPackagePath))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationPackagePath)
@@ -174,7 +174,7 @@ function Publish-UpgradedServiceFabricApplication
     if(!$ApplicationName)
     {
         Write-Error (Get-VstsLocString -Key EmptyApplicationName)
-    }    
+    }
 
     $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
     if (!$names)
@@ -182,7 +182,7 @@ function Publish-UpgradedServiceFabricApplication
         return
     }
 
-    $ApplicationTypeAlreadyRegistered = $true
+    $ApplicationTypeAlreadyRegistered = $false
     if ($Action.Equals('RegisterAndUpgrade') -or $Action.Equals('Register'))
     {
         ## Check existence of the application
@@ -216,21 +216,27 @@ function Publish-UpgradedServiceFabricApplication
             throw $errMsg
         }
 
-        $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }        
-        if ($reg){
-            $appIsInUse = $false
+        $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
+        if ($reg)
+        {
+            $ApplicationTypeAlreadyRegistered = $true
+            $typeIsInUse = $false
             $apps = Get-ServiceFabricApplication -ApplicationTypeName $names.ApplicationTypeName
             $apps | ForEach-Object {
-                if ($_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion)
+                if (($_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion))
                 {
-                    $appIsInUse = $true
+                    $typeIsInUse = $true
                 }
             }
-            if(!$appIsInUse)
+            if(!$typeIsInUse)
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                 $reg | Unregister-ServiceFabricApplicationType -Force
-                $ApplicationTypeAlreadyRegistered = $false        
+                $ApplicationTypeAlreadyRegistered = $false
+            }
+            else
+            {
+                Write-Host (Get-VstsLocString -Key SFSDK_SkipUnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
             }
         }
 
@@ -331,7 +337,7 @@ function Publish-UpgradedServiceFabricApplication
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UnregisterAppTypeOnUpgradeFailure -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
             Write-Host -Message $_.Exception.Message
-            if($ApplicationTypeAlreadyRegistered -eq $false)
+            if(!$ApplicationTypeAlreadyRegistered)
             {
                 Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force
             }
@@ -368,7 +374,7 @@ function Publish-UpgradedServiceFabricApplication
                 }
             }
         }
-        
+
         if($upgradeStatus.UpgradeState -eq "RollingForwardCompleted")
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UpgradeSuccess)

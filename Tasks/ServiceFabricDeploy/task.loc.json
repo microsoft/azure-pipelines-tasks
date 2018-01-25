@@ -15,8 +15,8 @@
     "DeploymentGroup"
   ],
   "version": {
-    "Major": 2,
-    "Minor": 5,
+    "Major": 1,
+    "Minor": 6,
     "Patch": 0
   },
   "demands": [
@@ -425,6 +425,7 @@
     "SFSDK_AppAlreadyExistsError": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsError",
     "SFSDK_AppAlreadyExistsInfo": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsInfo",
     "SFSDK_UnregisteringExistingAppType": "ms-resource:loc.messages.SFSDK_UnregisteringExistingAppType",
+    "SFSDK_SkipUnregisteringExistingAppType": "ms-resource:loc.messages.SFSDK_SkipUnregisteringExistingAppType",
     "SFSDK_UnableToUnregisterAppType": "ms-resource:loc.messages.SFSDK_UnableToUnregisterAppType",
     "SFSDK_CopyingAppToImageStore": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStore",
     "SFSDK_CopyingAppToImageStoreFailed": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStoreFailed",
