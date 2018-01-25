@@ -194,11 +194,16 @@ target.build = function() {
 
                 // npm install the common module to the task dir
                 if (mod.type === 'node' && mod.compile == true) {
-                    mkdir('-p', path.join(taskPath, 'node_modules'));
+                    var currentTaskNodeModulesPath = path.join(taskPath, 'node_modules');
+                    mkdir('-p', currentTaskNodeModulesPath);
                     rm('-Rf', path.join(taskPath, 'node_modules', modName));
                     var originalDir = pwd();
                     cd(taskPath);
                     //run('npm install ' + modOutDir);
+
+                    // we are in the task path, copy from the common package dir to the node modules dir of the current task
+                    cp('-r', modOutDir, currentTaskNodeModulesPath)
+
                     cd(originalDir);
                 }
                 // copy module resources to the task output dir

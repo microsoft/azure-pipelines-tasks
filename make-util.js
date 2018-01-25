@@ -147,7 +147,12 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    var result = run('tsc --traceResolution --outDir ' + outDir + ' --rootDir ' + taskPath);
+    // move all modules to the highest level possible, this helps us with nested modules inside of the common modules
+    console.log('should be running in: ' + taskPath);
+    run('npm dedupe');
+
+    //var result = run('tsc --traceResolution --outDir ' + outDir + ' --rootDir ' + taskPath);
+    var result = run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     console.log(result);
     cd(originalDir);
 }
