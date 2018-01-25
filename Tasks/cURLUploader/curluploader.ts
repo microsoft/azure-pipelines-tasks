@@ -88,6 +88,9 @@ async function run() {
 
             // Now matching the pattern against all files
             var uploadFilesList = tl.match(allFiles, filesPattern, undefined, {matchBase: true}).map( (s) => {
+                // If running on Windows agent, normalize the Windows style file paths to use '/' rather than '\'.
+                // If running on Linux or macOS, escape any '\' in filenames. This is necessary as curl.exe treats 
+                // '\' in filenames as escape characters, preventing it from finding those files.
                 return isWin ? s.replace(/\\/g, '/') : s.replace(/\\/g, '\\\\');
             });
 
