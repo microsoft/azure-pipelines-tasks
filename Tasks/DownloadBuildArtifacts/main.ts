@@ -78,6 +78,8 @@ async function main(): Promise<void> {
         var artifacts = [];
         var itemPattern: string = '**';
 
+        var releaseAlias: string = tl.getVariable("release.triggeringartifact.alias");
+
         if (isCurrentBuild) {
             projectId = tl.getVariable("System.TeamProjectId");
             definitionId = '';
@@ -88,18 +90,35 @@ async function main(): Promise<void> {
 
             var triggeringBuildFound: boolean = false;
             definitionIdSpecified = tl.getInput("definition", true);
-            if (!releaseUri && isSpecificBuildWithTriggering) {
-                //Verify that the triggering build's definition is the same as the specified definition
-                definitionIdTriggered = tl.getVariable("build.triggeredBy.definitionId");
-                if (definitionIdTriggered == definitionIdSpecified) {
-                    // populate values using the triggering build
-                    projectId = tl.getVariable("build.triggeredBy.projectId");
-                    definitionId = definitionIdTriggered;
-                    buildId = parseInt(tl.getVariable("build.triggeredBy.buildId"));
+            if (isSpecificBuildWithTriggering) {
+                if (releaseUri) {
+                    // try to use alias to grab triggering artifact for release, starting with definition to verify parity with specified definition
+                    definitionIdTriggered = tl.getVariable("release.artifacts." + releaseAlias + ".definitionId");
+                    if (definitionIdTriggered == definitionIdSpecified) {
+                        // populate values using the triggering build
+                        projectId = tl.getVariable("release.artifacts." + releaseAlias + ".projectId");
+                        definitionId = definitionIdTriggered;
+                        buildId = parseInt(tl.getVariable("release.artifacts." + releaseAlias + ".buildId"));
 
-                    // verify that the triggerring bruild's info was found
-                    if (projectId && definitionId && buildId) {
-                        triggeringBuildFound = true;
+                        // verify that the triggerring bruild's info was found
+                        if (projectId && definitionId && buildId) {
+                            triggeringBuildFound = true;
+                        }
+                    }
+                }
+                else {
+                    //Verify that the triggering build's definition is the same as the specified definition
+                    definitionIdTriggered = tl.getVariable("build.triggeredBy.definitionId");
+                    if (definitionIdTriggered == definitionIdSpecified) {
+                        // populate values using the triggering build
+                        projectId = tl.getVariable("build.triggeredBy.projectId");
+                        definitionId = definitionIdTriggered;
+                        buildId = parseInt(tl.getVariable("build.triggeredBy.buildId"));
+
+                        // verify that the triggerring bruild's info was found
+                        if (projectId && definitionId && buildId) {
+                            triggeringBuildFound = true;
+                        }
                     }
                 }
             }
