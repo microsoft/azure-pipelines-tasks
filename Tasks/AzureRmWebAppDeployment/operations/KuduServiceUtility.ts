@@ -98,7 +98,7 @@ export class KuduServiceUtility {
         return deploymentID;
     }
 
-    public async deployWebPackage(packagePath: string, physicalPath: string, virtualPath: string, appOffline: boolean): Promise<void> {
+    public async deployWebPackage(packagePath: string, physicalPath: string, virtualPath: string, appOffline?: boolean): Promise<void> {
         physicalPath = physicalPath ? physicalPath : physicalRootPath;
         try {
             if(appOffline) {
@@ -129,7 +129,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async zipDeploy(packagePath: string, appOffline?: boolean, customParameters?: Array<string>): Promise<void> {
+    public async zipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<void> {
         try {
             
             if(tl.stats(packagePath).isDirectory()) {
@@ -144,22 +144,24 @@ export class KuduServiceUtility {
                 await webClient.sleepFor(10);
             }
 
-            var deploymentRequestDetails = this._getUpdateHistoryRequest(true, null, null);
+            var deploymentRequestDetails = this._getUpdateHistoryRequest(true, null, customMessage);
             var queryParameters: Array<string> = [
                 'isAsync=true',
                 'message=' + encodeURIComponent(deploymentRequestDetails.message),
-                'deployer=' + deploymentRequestDetails.deployer,
+                'deployer=' + 'VSTS',
                 'author=' + deploymentRequestDetails.author,
                 'details=' + encodeURIComponent(deploymentRequestDetails.details)
             ];
 
-            if(customParameters && customParameters.length > 0) {
-                queryParameters = queryParameters.concat(customParameters);
-            }
-            
             var deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
-            var logs = await this._appServiceKuduService.getFileContent(`/site/deployments/${deploymentDetails.id}`, 'log.log');
-            console.log(logs);
+
+            try {
+                var logs = await this._appServiceKuduService.getFileContent(`/site/deployments/${deploymentDetails.id}`, 'log.log');
+                console.log(logs);
+            }
+            catch(error) {
+                tl.debug(`Unable to fetch logs for kudu ZIP Deploy: ${JSON.stringify(error)}`)
+            }
 
             if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
                 throw tl.loc('PackageDeploymentUsingZipDeployFailed');
