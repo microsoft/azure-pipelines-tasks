@@ -49,7 +49,7 @@ async function main() {
                 case 'Builtin': {
                     var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
                     tl.debug('Performing Linux built-in package deployment');
-                    await kuduServiceUtility.zipDeploy(webPackage,taskParams.TakeAppOfflineFlag, ['slotName=' + appService.getSlot()]);
+                    await kuduServiceUtility.zipDeploy(webPackage, taskParams.TakeAppOfflineFlag, { slotName: appService.getSlot() });
                     await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
                     break;
                 }
@@ -124,9 +124,7 @@ async function main() {
     finally {
         if(kuduServiceUtility) {
             await addReleaseAnnotation(azureEndpoint, appService, isDeploymentSuccess);
-            if(!(taskParams.isBuiltinLinuxWebApp && isDeploymentSuccess)) { 
-                await kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: appService.getSlot()});
-            }
+            await kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: appService.getSlot()});
         }
     }
 }
