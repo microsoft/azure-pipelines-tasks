@@ -93,6 +93,5 @@ export class AzureMysqlTaskParameter {
 
 	public getDeleteFirewallRule(): boolean {
 		return this.deleteFirewallRule;
-	}
-    
+	}  
 }

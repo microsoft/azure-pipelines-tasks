@@ -19,9 +19,9 @@ export class FirewallOperations{
 
     /**
      * Add firewall rule for particular mysql server
-     * @param serverName 
-     * @param firewallRule 
-     * @param resourceGroupName 
+     * @param serverName          mysql server name
+     * @param firewallRule        firewallRule i.e name and Ip Adress range
+     * @param resourceGroupName   mysql server resource group name
      * 
      * @returns operation is success or failure
      */
@@ -39,8 +39,8 @@ export class FirewallOperations{
 
     /**
      * Delete firewall rule for mysql server 
-     * @param serverName 
-     * @param resourceGroupName 
+     * @param serverName           mysql server name
+     * @param resourceGroupName    mysql server resource group name
      * 
      * @returns operation is success or failure
      */
@@ -58,24 +58,31 @@ export class FirewallOperations{
 
     /**
      * To check agent box has permission to connect with mysqlServer or not. If not then add firewall rule to whitelist this IP.
-     * @param azureMysqlTaskParameter 
-     * @param sqlClient 
-     * @param resourceGroupName 
+     * @param azureMysqlTaskParameter    task input parameters
+     * @param sqlClient                  mysql client
+     * @param resourceGroupName          mysql server resource group name
      * 
-     * @returns operation is success or failure
+     * @returns                          firewall rule added or not 
      */
     public async invokeFirewallOperations(azureMysqlTaskParameter: AzureMysqlTaskParameter, sqlClient: ISqlClient, resourceGroupName: string) : Promise<boolean> {
         var defer = Q.defer<boolean>();
         const firewallConfigurationCheckResult: FirewallConfigurationCheckResult = await sqlClient.getFirewallConfiguration();
-        if(!firewallConfigurationCheckResult.isIpAdressAlreadyAdded()){
+        if( azureMysqlTaskParameter.getIpDetectionMethod() ==='AutoDetect' && !firewallConfigurationCheckResult.isIpAdressAlreadyAdded()){
             this._firewallName = "AutoDetect" + uuidV4();
             const firewallAddressRange: FirewallAddressRange = new FirewallAddressRange(firewallConfigurationCheckResult.getIpAddress(), firewallConfigurationCheckResult.getIpAddress());
+            const firewallRule: FirewallRule = new FirewallRule(this._firewallName, firewallAddressRange);
+            await this.addFirewallRule(azureMysqlTaskParameter.getServerName(), firewallRule, resourceGroupName);
+            defer.resolve(true);
+        }else if(azureMysqlTaskParameter.getIpDetectionMethod() ==='IPAddressRange'){
+            this._firewallName = "IPAddressRange" + uuidV4();
+            const firewallAddressRange: FirewallAddressRange = new FirewallAddressRange(azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress());
             const firewallRule: FirewallRule = new FirewallRule(this._firewallName, firewallAddressRange);
             await this.addFirewallRule(azureMysqlTaskParameter.getServerName(), firewallRule, resourceGroupName);
             defer.resolve(true);
         }else{
             defer.resolve(false);
         }
+
         return defer.promise;
     }
 }

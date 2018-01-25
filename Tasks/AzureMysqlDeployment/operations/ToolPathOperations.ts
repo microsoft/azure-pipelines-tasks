@@ -41,9 +41,9 @@ export class ToolPathOperations {
 
     /**
      * Get installed location from path
-     * @param path 
+     * @param path     path of window registry 
      * 
-     * @returns installed path
+     * @returns        installed path
      */
     public async getInstalledLocationFromPath(path: string): Promise<string> {
         let defer = Q.defer<string>();
@@ -60,9 +60,9 @@ export class ToolPathOperations {
 
     /**
      * Get resgistry key from path 
-     * @param path
+     * @param path  path of window registry
      * 
-     * @returns registry key   
+     * @returns     registry key   
      */
     private _getToolRegKeyFromPath(path: string): Q.Promise<string> {
         let toolPath: string;
@@ -92,9 +92,9 @@ export class ToolPathOperations {
 
     /**
      * Get installed path from registry key
-     * @param registryKey
+     * @param registryKey   window registry key
      * 
-     * @returns installed path
+     * @returns             installed path
      */
     private _getToolInstalledPathFromRegKey(registryKey: string): Q.Promise<string> {
         var defer = Q.defer<string>();
@@ -113,5 +113,4 @@ export class ToolPathOperations {
     
         return defer.promise;
     }
-
 }
