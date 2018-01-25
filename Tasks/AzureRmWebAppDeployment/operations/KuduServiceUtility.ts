@@ -131,6 +131,13 @@ export class KuduServiceUtility {
 
     public async zipDeploy(packagePath: string, appOffline?: boolean, customParameters?: Array<string>): Promise<void> {
         try {
+            
+            if(tl.stats(packagePath).isDirectory()) {
+                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
+                tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
+            }
+
             if(appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, true);
                 tl.debug('Wait for 10 seconds for app_offline to take effect');
