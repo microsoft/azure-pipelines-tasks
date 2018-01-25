@@ -47,6 +47,14 @@ export class FirewallRules {
         this.client = client;
     }
     
+    /**
+     * Create or update firewall rule for mysql server 
+     * @param resourceGroupName     resource group name of mysql server 
+     * @param serverName            mysql server name
+     * @param firewallRuleName      rule name to be added or updated
+     * @param parameters            optional parameter like start and end ip address
+     * @param callback              response callback 
+     */
     public createOrUpdate(resourceGroupName: string, serverName: string, firewallRuleName: string, parameters, callback?:  azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
@@ -99,6 +107,13 @@ export class FirewallRules {
             (error) => callback(error));
     }
 
+    /**
+     * Delete firewall rule of mysql server
+     * @param resourceGroupName     resource group name of mysql server 
+     * @param serverName            mysql server name
+     * @param firewallRuleName      firewall rule name to be deleted 
+     * @param callback              response callback 
+     */
     public delete(resourceGroupName: string, serverName: string, firewallRuleName: string, callback?:  azureServiceClient.ApiCallback) {
         var client = this.client;
         if (!callback) {
@@ -148,6 +163,9 @@ export class FirewallRules {
             (error) => callback(error));
     }
 
+    /**
+     * Is name valid or not
+     */
     private isNameValid(name: string): boolean{
         if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
             return false;
@@ -164,6 +182,10 @@ export class  MysqlServers {
         this.client = client;
     }
 
+    /**
+     * Get all the mysql server belongs to one subscription
+     * @param callback  Response callback
+     */
     public list(callback?: azureServiceClient.ApiCallback): void {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
