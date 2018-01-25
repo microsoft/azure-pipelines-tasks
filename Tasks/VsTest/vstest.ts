@@ -363,8 +363,12 @@ function executeVstest(testResultsDirectory: string, parallelRunSettingsFile: st
     tl.cd(workingDirectory);
     const ignoreTestFailures = vstestConfig.ignoreVstestFailure && vstestConfig.ignoreVstestFailure.toLowerCase() === 'true';
 
+    const envVars: { [key: string]: string; } = process.env;
+    utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
+
     const execOptions: tr.IExecOptions = <any>{
         ignoreReturnCode: ignoreTestFailures,
+        env: envVars,
         failOnStdErr: false,
         // In effect this will not be called as failOnStdErr is false
         // Keeping this code in case we want to change failOnStdErr
