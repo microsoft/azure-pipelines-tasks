@@ -86,12 +86,11 @@ async function main(): Promise<void> {
             buildId = parseInt(tl.getVariable("Build.BuildId"));
         }
         else{
-            let releaseUri = tl.getVariable("Release.ReleaseUri");
-
             var triggeringBuildFound: boolean = false;
             definitionIdSpecified = tl.getInput("definition", true);
             if (isSpecificBuildWithTriggering) {
-                if (releaseUri) {
+                let hostType = tl.getVariable('system.hostType');
+                if ((hostType && hostType.toUpperCase() != 'BUILD')) {
                     // try to use alias to grab triggering artifact for release, starting with definition to verify parity with specified definition
                     definitionIdTriggered = tl.getVariable("release.artifacts." + releaseAlias + ".definitionId");
                     if (definitionIdTriggered == definitionIdSpecified) {
