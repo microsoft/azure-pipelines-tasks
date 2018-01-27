@@ -31,7 +31,7 @@ async function run() {
         const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(azureCredentails, endpoint.subscriptionID);
         // Get mysql server data entered by user 
         const mysqlServer: MysqlServer = await mysqlServerOperations.getMysqlServerFromServerName(azureMysqlTaskParameter.getServerName());
-        task.debug('Mysql server deatils from server name: '+JSON.stringify(mysqlServer));
+        task.debug('Mysql server details from server name: '+JSON.stringify(mysqlServer));
         const mysqlClientPath: string = await new ToolPathOperations().getInstalledPathOfMysql();
         if(mysqlClientPath){
              // Mysql client
@@ -52,10 +52,12 @@ async function run() {
         }
     }
     catch(exception) {
+        task.debug('Getting exception: '+exception);
         task.setResult(task.TaskResult.Failed, exception);
     }
+
+    task.debug('Task completed sucessfully.');
     task.setResult(task.TaskResult.Succeeded, "Task is Sucessfully completed");
-    task.debug('Completed action');
 }
 
 run();

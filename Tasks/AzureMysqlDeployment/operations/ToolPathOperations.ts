@@ -20,21 +20,27 @@ export class ToolPathOperations {
             // If user has installed 32 bit mysql client in 64 bit machine
             this.getInstalledLocationFromPath("\\Software\\Wow6432Node\\MySQL AB").then((path) => {
                 task.debug('Window Wow6432 mysql executable path: '+path);
-                defer.resolve(path + "\\bin\\mysql.exe");
+                defer.resolve(path + "bin\\mysql.exe");
             },(error) =>{
-                task.debug(error);
+                task.debug("Error during finding of Window Wow6432 mysql executable path: "+ error);
                 this.getInstalledLocationFromPath("\\Software\\MySQL AB").then((path) => {
                     task.debug('Window mysql executable path: '+path);
-                    defer.resolve(path + "\\bin\\mysql.exe");
+                    defer.resolve(path + "bin\\mysql.exe");
                 },(error) =>{
-                    task.debug(error);
-                    const path = task.which("mysql", true);
-                    if(path){
-                        task.debug('Window mysql executable path from enviroment variable: '+path);
-                        defer.resolve(path + "\\bin\\mysql.exe");
-                    }else{
+                    task.debug("Error during finding of Window mysql executable path: "+ error);
+                    try{
+                        const path = task.which("mysql", true);
+                        if(path){
+                            task.debug('Window mysql executable path from enviroment variable: '+path);
+                            defer.resolve(path + "bin\\mysql.exe");
+                        }else{
+                            defer.reject(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
+                        } 
+                    }
+                    catch(exception){
+                        task.debug("Error during finding of Window mysql executable path from environment path: "+ exception);
                         defer.reject(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
-                    }  
+                    }            
                 });
             });
         }
@@ -82,14 +88,21 @@ export class ToolPathOperations {
                 task.debug('Error during fetching registry key from path: '+ err);
                 defer.reject(new Error(task.loc("UnabletofindtheMysqlfromregistryonmachineError", err)));
             }
-            for(var index in subRegKeys) {
-                let subRegKey: string = subRegKeys[index].key;
-                if(subRegKey.match("MySQL Server")){
-                    task.debug('Window mysql registry key: '+ subRegKey);
-                    defer.resolve(subRegKey);
+            let resgistryKeyResult: string;
+            if(subRegKeys){
+                for(var index in subRegKeys) {
+                    let subRegKey: string = subRegKeys[index].key;
+                    if(subRegKey.match("MySQL Server")){
+                        task.debug('Window mysql registry key: '+ subRegKey);
+                        resgistryKeyResult = subRegKey;
+                    }
                 }
             }
-            defer.reject(new Error(task.loc("UnabletofindMysqlfromregistryonmachine")));  
+            if(resgistryKeyResult){
+                defer.resolve(resgistryKeyResult);
+            }else{
+                defer.reject(new Error(task.loc("UnabletofindMysqlfromregistryonmachine")));
+            }      
         });
 
         return defer.promise;

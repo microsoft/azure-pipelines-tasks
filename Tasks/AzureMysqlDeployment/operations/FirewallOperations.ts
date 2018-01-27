@@ -85,7 +85,6 @@ export class FirewallOperations{
             const firewallConfigurationCheckResult: FirewallConfigurationCheckResult = sqlClient.getFirewallConfiguration();
             if(!firewallConfigurationCheckResult.isIpAdressAlreadyAdded()){
                 this._preparefirewallRule(azureMysqlTaskParameter.getServerName(), firewallConfigurationCheckResult.getIpAddress(), firewallConfigurationCheckResult.getIpAddress(), resourceGroupName, "AutoDetect" + uuidV4()).then(() =>{
-                    let firewallConfigurationCheckResult: FirewallConfigurationCheckResult = sqlClient.getFirewallConfiguration();
                     defer.resolve(true);
                 },(error) =>{
                     task.debug("Error during adding firewall rule for IPAddressRange: "+ error);
@@ -107,8 +106,8 @@ export class FirewallOperations{
         const firewallAddressRange: FirewallAddressRange = new FirewallAddressRange(startIpAddress, endIpAddress);
         const firewallRule: FirewallRule = new FirewallRule(this._firewallName, firewallAddressRange);
         this.addFirewallRule(serverName, firewallRule, resourceGroupName).then(() =>{
-                defer.resolve();
                 task.debug('Firewall configuration name added : ' + this._firewallName);
+                defer.resolve();
             },(error) => {
                 defer.reject(error)
             });
