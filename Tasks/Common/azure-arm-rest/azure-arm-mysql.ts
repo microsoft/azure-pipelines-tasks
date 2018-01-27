@@ -65,7 +65,7 @@ export class FirewallRules {
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
             if(!this.isNameValid(serverName)){
-                throw new Error(tl.loc("ServerNameCannotBeNull"));
+                throw new Error(tl.loc("MysqlServerNameCannotBeEmpty"));
             }
             if(!this.isNameValid(firewallRuleName)){
                 throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));
@@ -124,7 +124,7 @@ export class FirewallRules {
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
             if(!this.isNameValid(serverName)){
-                throw new Error(tl.loc("ServerNameCannotBeNull"));
+                throw new Error(tl.loc("MysqlServerNameCannotBeEmpty"));
             }
             if(!this.isNameValid(firewallRuleName)){
                 throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));

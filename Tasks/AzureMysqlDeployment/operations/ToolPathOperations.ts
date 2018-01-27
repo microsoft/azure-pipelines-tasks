@@ -86,7 +86,7 @@ export class ToolPathOperations {
         regKey.keys(function(err, subRegKeys) {
             if(err) {
                 task.debug('Error during fetching registry key from path: '+ err);
-                defer.reject(new Error(task.loc("UnabletofindtheMysqlfromregistryonmachineError", err)));
+                defer.reject(new Error(task.loc("UnableToFindMysqlFromRegistryOnMachineError", err)));
             }
             let resgistryKeyResult: string;
             if(subRegKeys){
@@ -101,7 +101,7 @@ export class ToolPathOperations {
             if(resgistryKeyResult){
                 defer.resolve(resgistryKeyResult);
             }else{
-                defer.reject(new Error(task.loc("UnabletofindMysqlfromregistryonmachine")));
+                defer.reject(new Error(task.loc("UnableToFindMysqlFromRegistry")));
             }      
         });
 
@@ -124,7 +124,7 @@ export class ToolPathOperations {
         regKey.get("Location", function(err,item) {
             if(err) {
                 task.debug('Error during fetching installed path from registry key: '+ err);
-                defer.reject(new Error(task.loc("UnabletofindthelocationfromregistryonmachineError", err)));
+                defer.reject(new Error(task.loc("UnableToFindTheLocationOfMysqlFromRegistryOnMachineError", err)));
             }else{
                 task.debug('Window mysql installed path from registry key: '+ item.value);
                 defer.resolve(item.value);

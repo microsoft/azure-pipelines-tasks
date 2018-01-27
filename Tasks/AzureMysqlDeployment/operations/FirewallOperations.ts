@@ -30,7 +30,7 @@ export class FirewallOperations{
         this._azureMysqManagementClient.firewallRules.createOrUpdate(resourceGroupName, serverName, firewallRule.getName(), firewallRule, (error, result, request, response) => {
             if(error){
                 task.debug("Getting error during adding firewall rule: "+ error);
-                defer.reject(new Error(task.loc("NotAbleToAddFirewallRule")));
+                defer.reject(new Error(task.loc("NotAbleToAddFirewallRule", error)));
             }else{
                 defer.resolve();
             }
@@ -50,7 +50,7 @@ export class FirewallOperations{
         this._azureMysqManagementClient.firewallRules.delete(resourceGroupName, serverName, this._firewallName, (error, result, request, response) => {
             if(error){
                 task.debug("Getting error during deleting firewall rule: "+ error);
-                defer.reject(new Error(task.loc("NotAbleToDeleteFirewallRule")));
+                defer.reject(new Error(task.loc("NotAbleToDeleteFirewallRule", error)));
             }else{
                 defer.resolve();
             }

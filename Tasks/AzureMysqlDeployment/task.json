@@ -19,6 +19,7 @@
         "Patch": 0
     },
     "demands": [ 
+        "mysql"
     ],
     "minimumAgentVersion": "1.100.0",
     "preview": true,
@@ -63,12 +64,15 @@
         },
         {
             "name": "DatabaseName",
-            "type": "string",
+            "type": "pickList",
             "label": "Database Name",
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Name of the Azure MySQL Database, where the files will be deployed."
+            "helpMarkDown": "Name of the Azure MySQL Database, where the files will be deployed.",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "SqlUsername",
@@ -192,10 +196,18 @@
         {
             "target": "ServerName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureMysqlDB",
+            "dataSourceName": "AzureMysqlDbServers",
             "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
-        }
-        
+        },
+        {
+            "target": "DatabaseName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureMysqlDbs",
+            "parameters": {
+				"serverName": "$(ServerName)"	
+			},
+            "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
+        }   
     ],
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
     "execution": {
@@ -204,5 +216,28 @@
         }
     },
     "messages": {
+        "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s .",
+        "FirewallRuleNameCannotBeEmpty": "Firewall rule name cannot be null.",
+        "FirewallAddressRangeCannotBeEmpty": "Firewall address cannot be null.",
+        "StartIpAddressCannotBeEmpty": "Start ip address of firewall rule cannot be null.",
+        "EndIpAddressCannotBeEmpty": "End ip address of firewall rule cannot be null.",
+        "MysqlServerNameCannotBeEmpty": "Mysql server name cannot be null.",
+        "MysqlFullyQualifiedServerNameCannotBeEmpty": "Mysql server fully qualified name cannot be null.",
+        "ResourceGroupCannotBeEmpty": "Resource group name cannot be null.",
+        "NotAbleToAddFirewallRule": "Getting error in adding firewall rule to mysql server. Error: %s .",
+        "NotAbleToDeleteFirewallRule": "Getting error in deleting firewall rule to mysql server. Error: %s .",
+        "AgentIpAddressIsMissingInAddedFirewallRule": "Agent ip address is missing in manually added firewall rule.",
+        "NotAbleToGetAllServers": "Not able to fetch all mysql server of a subscription. Error: %s .",
+        "EmptyOrNullServerList": "Mysql server list is empty. Invalid mysql server host name.",
+        "UnableToFindResourceGroupDueToNullId": "Unable to find resource group due to null id.",
+        "NotAbleToGetInstalledLocationOfMysqlFromPath": "Missing mysql client in agent box.",
+        "UnableToFindMysqlFromRegistryOnMachineError": "Unable to find mysql from registry on machine error.",
+        "UnableToFindMysqlFromRegistry": "Unable to find mysql from registry. Error: %s .",
+        "UnableToFindTheLocationOfMysqlFromRegistryOnMachineError": "Unable to find the location of mysql from registry on machine error. Error: %s .",
+        "AzureMysqlTaskParameterCannotBeEmpty": "Azure mysql task parameter cannot be null.",
+        "ToolPathCannotBeNull": "Tool path cannot be null.",
+        "SqlExecutionException": "Sql execution exception. Please Check the sql script.",
+        "AzureEndpointCannotBeNull": "Invalid subscription name. Azure endpoint can't be null.",
+        "CallbackCannotBeNull": "callback cannot be null."
     }
 }

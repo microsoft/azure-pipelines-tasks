@@ -48,7 +48,7 @@ async function run() {
                 task.debug('Sucessfully deleted firewall rule');
             }
         }else{
-            throw new Error(task.loc("NotAbleToFindMysqlClient"));
+            throw new Error(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
         }
     }
     catch(exception) {

@@ -24,7 +24,7 @@ export class MysqlServerOperations{
         this._azureMysqManagementClient.mysqlServers.list((error, result, request, response) => {
             if(error){
                 task.debug("Error during fetching mysql severs list: "+ error);
-                defer.reject(new Error(task.loc("NotAbleToGetAllServers")));
+                defer.reject(new Error(task.loc("NotAbleToGetAllServers", error)));
             }else{
                 try{
                     const mysqlServer = this._getMysqlServerFromResponse(result, serverName);
