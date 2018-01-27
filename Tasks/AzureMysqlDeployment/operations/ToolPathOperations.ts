@@ -8,34 +8,37 @@ export class ToolPathOperations {
      * Get installed path of mysql either it is linux or windows 
      */
     public async getInstalledPathOfMysql(): Promise<string> {
-        let defer = Q.defer<string>();
-        let path: string; 
+        let defer = Q.defer<string>(); 
         // To check either it is linux or windows platform
         if(process.platform !== 'win32'){
             // linux check
-            path = task.which("mysql", true);
+            const path = task.which("mysql", true);
+            task.debug('Linux mysql executable path: '+path);
             defer.resolve(path);
         }
         else{
-            try{
-                // If user has installed 32 bit mysql client im 64 bit machine
-                path = await this.getInstalledLocationFromPath("\\Software\\Wow6432Node\\MySQL AB");
+            // If user has installed 32 bit mysql client in 64 bit machine
+            this.getInstalledLocationFromPath("\\Software\\Wow6432Node\\MySQL AB").then((path) => {
+                task.debug('Window Wow6432 mysql executable path: '+path);
                 defer.resolve(path + "\\bin\\mysql.exe");
-            }catch(exception){
-                task.debug(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
-                try{
-                    // If mysql client platform and host is same either both is 32 or both is 64
-                    path = await this.getInstalledLocationFromPath("\\Software\\MySQL AB");
+            },(error) =>{
+                task.debug(error);
+                this.getInstalledLocationFromPath("\\Software\\MySQL AB").then((path) => {
+                    task.debug('Window mysql executable path: '+path);
                     defer.resolve(path + "\\bin\\mysql.exe");
-                }catch(exception){
-                    task.debug(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
-                    // Extract from environment variable
-                    path = task.which("mysql", true);
-                    defer.resolve(path + "\\bin\\mysql.exe");
-                }
-    
-            }
-        }   
+                },(error) =>{
+                    task.debug(error);
+                    const path = task.which("mysql", true);
+                    if(path){
+                        task.debug('Window mysql executable path from enviroment variable: '+path);
+                        defer.resolve(path + "\\bin\\mysql.exe");
+                    }else{
+                        defer.reject(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
+                    }  
+                });
+            });
+        }
+
         return defer.promise;
     }
 
@@ -47,14 +50,17 @@ export class ToolPathOperations {
      */
     public async getInstalledLocationFromPath(path: string): Promise<string> {
         let defer = Q.defer<string>();
-        try{
-            const regKey = await this._getToolRegKeyFromPath(path);
-            const installedPath = await this._getToolInstalledPathFromRegKey(regKey);
-            defer.resolve(installedPath);
-        }
-        catch(exception) {
-            throw new Error(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
-        }
+        task.debug('Getting executable path of mysql client for registry path: '+ path);
+        this._getToolRegKeyFromPath(path).then((regKey) => {
+            this._getToolInstalledPathFromRegKey(regKey).then((installedPath) => {
+                defer.resolve(installedPath);
+            },(error) =>{
+                defer.reject(error);
+            })
+        },(error) =>{
+            defer.reject(error);
+        });
+
         return defer.promise;
     }
 
@@ -65,7 +71,6 @@ export class ToolPathOperations {
      * @returns     registry key   
      */
     private _getToolRegKeyFromPath(path: string): Q.Promise<string> {
-        let toolPath: string;
         var defer = Q.defer<string>();
         var regKey = new winreg({
           hive: winreg.HKLM,
@@ -74,17 +79,17 @@ export class ToolPathOperations {
     
         regKey.keys(function(err, subRegKeys) {
             if(err) {
-                throw new Error(task.loc("UnabletofindtheMysqlfromregistryonmachineError", err));
+                task.debug('Error during fetching registry key from path: '+ err);
+                defer.reject(new Error(task.loc("UnabletofindtheMysqlfromregistryonmachineError", err)));
             }
             for(var index in subRegKeys) {
                 let subRegKey: string = subRegKeys[index].key;
                 if(subRegKey.match("MySQL Server")){
+                    task.debug('Window mysql registry key: '+ subRegKey);
                     defer.resolve(subRegKey);
                 }
             }
-
-            throw new Error(task.loc("UnabletofindMysqlfromregistryonmachine"));
-             
+            defer.reject(new Error(task.loc("UnabletofindMysqlfromregistryonmachine")));  
         });
 
         return defer.promise;
@@ -98,7 +103,6 @@ export class ToolPathOperations {
      */
     private _getToolInstalledPathFromRegKey(registryKey: string): Q.Promise<string> {
         var defer = Q.defer<string>();
-
         var regKey = new winreg({
           hive: winreg.HKLM,
           key:  registryKey
@@ -106,9 +110,12 @@ export class ToolPathOperations {
     
         regKey.get("Location", function(err,item) {
             if(err) {
-                throw new Error(task.loc("UnabletofindthelocationfromregistryonmachineError", err));
+                task.debug('Error during fetching installed path from registry key: '+ err);
+                defer.reject(new Error(task.loc("UnabletofindthelocationfromregistryonmachineError", err)));
+            }else{
+                task.debug('Window mysql installed path from registry key: '+ item.value);
+                defer.resolve(item.value);
             }
-            defer.resolve(item.value);
         });
     
         return defer.promise;

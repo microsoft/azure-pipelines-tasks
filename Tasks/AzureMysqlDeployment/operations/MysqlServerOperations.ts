@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import task = require('vsts-task-lib/task');
 import { AzureMysqlManagementClient } from 'azure-arm-rest/azure-arm-mysql';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { ApplicationTokenCredentials} from 'azure-arm-rest/azure-arm-common';
@@ -15,14 +15,24 @@ export class MysqlServerOperations{
 
     /**
      * Get mysql server data from server name including resource group
+     * @param serverName     mysql server name to get details
+     * 
+     * @returns              mysql server details
      */
     public async getMysqlServerFromServerName(serverName: string): Promise<MysqlServer> {
         let defer = Q.defer<MysqlServer>();
         this._azureMysqManagementClient.mysqlServers.list((error, result, request, response) => {
             if(error){
-                throw new Error(tl.loc("NotAbleToGetAllServers"));
+                task.debug("Error during fetching mysql severs list: "+ error);
+                defer.reject(new Error(task.loc("NotAbleToGetAllServers")));
             }else{
-                defer.resolve(this._getMysqlServerFromResponse(result, serverName));   
+                try{
+                    const mysqlServer = this._getMysqlServerFromResponse(result, serverName);
+                    defer.resolve(mysqlServer);
+                }
+                catch(error){
+                    defer.reject(error);   
+                } 
             }
         });
         return defer.promise;
@@ -37,13 +47,16 @@ export class MysqlServerOperations{
      */
     private _getMysqlServerFromResponse(result: any, serverName: string) : MysqlServer{
         let mysqlServer: MysqlServer;
-        if(result){
+        if(result && result.length > 0){
             result.forEach((resultObject) => {
-                if(resultObject.name === serverName){
+                if(resultObject && resultObject.name === serverName){
                     const pathArray =resultObject.id.split("/");
                     mysqlServer = new MysqlServer(resultObject.name, resultObject.properties.fullyQualifiedDomainName, this._getResourceGroupNameFromUrl(resultObject.id));
                 }
             });
+        }else{
+            task.debug("Mysql server list is empty or null.");
+            throw new Error(task.loc("EmptyOrNullServerList"));
         }
         return mysqlServer;
     }
@@ -53,7 +66,7 @@ export class MysqlServerOperations{
      */
     private _getResourceGroupNameFromUrl(id: string): string{
         if(!id){
-            throw new Error(tl.loc("UnableToFindResourceGroupDueToNullId"));
+            throw new Error(task.loc("UnableToFindResourceGroupDueToNullId"));
         }
         const pathArray =id.split("/");
         return pathArray[4];

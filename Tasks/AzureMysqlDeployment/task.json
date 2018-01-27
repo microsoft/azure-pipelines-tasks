@@ -25,7 +25,7 @@
     "groups": [
         {
             "name": "target",
-            "displayName": "MySQL DB Details",
+            "displayName": "DB Details",
             "isExpanded": true
         },
         {
@@ -128,7 +128,7 @@
         {
             "name": "SqlAdditionalArguments",
             "type": "string",
-            "label": "Additional Mysql2 Arguments",
+            "label": "Additional Mysql Arguments",
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
@@ -138,7 +138,7 @@
         {
             "name": "InlineAdditionalArguments",
             "type": "string",
-            "label": "Additional Mysql2 Arguments",
+            "label": "Additional Mysql Arguments",
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
