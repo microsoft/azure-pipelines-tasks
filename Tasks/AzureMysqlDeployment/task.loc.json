@@ -66,15 +66,12 @@
     },
     {
       "name": "DatabaseName",
-      "type": "pickList",
+      "type": "string",
       "label": "ms-resource:loc.input.label.DatabaseName",
       "required": false,
       "groupName": "target",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName",
-      "properties": {
-        "EditableOptions": "True"
-      }
+      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
     },
     {
       "name": "SqlUsername",
@@ -199,15 +196,6 @@
       "target": "ServerName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureMysqlDbServers",
-      "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
-    },
-    {
-      "target": "DatabaseName",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureMysqlDbs",
-      "parameters": {
-        "serverName": "$(ServerName)"
-      },
       "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
     }
   ],

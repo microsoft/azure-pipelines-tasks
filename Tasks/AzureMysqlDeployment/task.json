@@ -64,15 +64,12 @@
         },
         {
             "name": "DatabaseName",
-            "type": "pickList",
+            "type": "string",
             "label": "Database Name",
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Name of the Azure MySQL Database, where the files will be deployed.",
-            "properties": {
-                "EditableOptions": "True"
-            }
+            "helpMarkDown": "Name of the Azure MySQL Database, where the files will be deployed."
         },
         {
             "name": "SqlUsername",
@@ -198,16 +195,7 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureMysqlDbServers",
             "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
-        },
-        {
-            "target": "DatabaseName",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureMysqlDbs",
-            "parameters": {
-				"serverName": "$(ServerName)"	
-			},
-            "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
-        }   
+        }  
     ],
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
     "execution": {
