@@ -133,6 +133,56 @@ export async function findSigningIdentity(keychainPath: string) {
 }
 
 /**
+ * Get Cloud entitlement type Production or Development according to the export method - if entitlement doesn't exists in provisioning profile returns null
+ * @param provisioningProfilePath
+ * @param exportMethod
+ * @returns {string}
+ */
+export async function getCloudEntitlement(provisioningProfilePath: string, exportMethod: string): Promise<string> {
+    //find the provisioning profile details
+    let provProfileDetails: string;
+    const getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
+    getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provisioningProfilePath]);
+    getProvProfileDetailsCmd.on('stdout', function (data) {
+        if (data) {
+            if (provProfileDetails) {
+                provProfileDetails = provProfileDetails.concat(data.toString().trim().replace(/[,\n\r\f\v]/gm, ''));
+            } else {
+                provProfileDetails = data.toString().trim().replace(/[,\n\r\f\v]/gm, '');
+            }
+        }
+    });
+
+    await getProvProfileDetailsCmd.exec();
+
+    let tmpPlist: string;
+    if (provProfileDetails) {
+        //write the provisioning profile to a plist
+        tmpPlist = '_xcodetasktmp.plist';
+        tl.writeFile(tmpPlist, provProfileDetails);
+    } else {
+        throw tl.loc('ProvProfileDetailsNotFound', provisioningProfilePath);
+    }
+
+    //use PlistBuddy to figure out if cloud entitlement exists.
+    const cloudEntitlement: string = await printFromPlist('Entitlements:com.apple.developer.icloud-container-environment', tmpPlist);
+
+    //delete the temporary plist file
+    const deletePlistCommand: ToolRunner = tl.tool(tl.which('rm', true));
+    deletePlistCommand.arg(['-f', tmpPlist]);
+    await deletePlistCommand.exec();
+
+    if (!cloudEntitlement) {
+        return null;
+    }
+
+    tl.debug('Provisioning Profile contains cloud entitlement');
+    return (exportMethod === 'app-store' || exportMethod === 'enterprise' || exportMethod === 'developer-id')
+                ? "Production"
+                : "Development";
+}
+
+/**
  * Find the UUID of the provisioning profile and install the profile
  * @param provProfilePath
  * @returns {string} UUID
@@ -238,11 +288,11 @@ export async function getProvisioningProfileName(provProfilePath: string) {
 }
 
 /**
- * Find the type of the provisioning profile - development, app-store or ad-hoc
+ * Find the type of the iOS provisioning profile - app-store, ad-hoc, enterprise or development
  * @param provProfilePath
  * @returns {string} type
  */
-export async function getProvisioningProfileType(provProfilePath: string) {
+export async function getiOSProvisioningProfileType(provProfilePath: string) {
     let provProfileType: string;
     try {
         //find the provisioning profile details
@@ -305,8 +355,69 @@ export async function getProvisioningProfileType(provProfilePath: string) {
 }
 
 /**
+ * Find the type of the macOS provisioning profile - app-store, developer-id or development.
+ * mac-application is a fourth macOS export method, but it doesn't include signing.
+ * @param provProfilePath
+ * @returns {string} type
+ */
+export async function getmacOSProvisioningProfileType(provProfilePath: string) {
+    let provProfileType: string;
+    try {
+        //find the provisioning profile details
+        let provProfileDetails: string;
+        let getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
+        getProvProfileDetailsCmd.arg(['cms', '-D', '-i', provProfilePath]);
+        getProvProfileDetailsCmd.on('stdout', function (data) {
+            if (data) {
+                if (provProfileDetails) {
+                    provProfileDetails = provProfileDetails.concat(data.toString().trim().replace(/[,\n\r\f\v]/gm, ''));
+                } else {
+                    provProfileDetails = data.toString().trim().replace(/[,\n\r\f\v]/gm, '');
+                }
+            }
+        })
+        await getProvProfileDetailsCmd.exec();
+
+        let tmpPlist: string;
+        if (provProfileDetails) {
+            //write the provisioning profile to a plist
+            tmpPlist = '_xcodetasktmp.plist';
+            fs.writeFileSync(tmpPlist, provProfileDetails);
+        } else {
+            throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
+        }
+
+        //get ProvisionsAllDevices - this will exist for developer-id profiles
+        let provisionsAllDevices: string = await printFromPlist('ProvisionsAllDevices', tmpPlist);
+        tl.debug('provisionsAllDevices = ' + provisionsAllDevices);
+        if (provisionsAllDevices && provisionsAllDevices.trim().toLowerCase() === 'true') {
+            //ProvisionsAllDevices = true in developer-id profiles
+            provProfileType = 'developer-id';
+        } else {
+            let provisionedDevices: string = await printFromPlist('ProvisionedDevices', tmpPlist);
+            if (!provisionedDevices) {
+                // no provisioned devices means it is an app-store profile
+                provProfileType = 'app-store';
+            } else {
+                // profile with provisioned devices - use development
+                provProfileType = 'development';
+            }
+        }
+
+        //delete the temporary plist file
+        let deletePlistCommand: ToolRunner = tl.tool(tl.which('rm', true));
+        deletePlistCommand.arg(['-f', tmpPlist]);
+        await deletePlistCommand.exec();
+    } catch (err) {
+        tl.debug(err);
+    }
+
+    return provProfileType;
+}
+
+/**
  * Find the bundle identifier in the specified Info.plist
- * @param plistPath 
+ * @param plistPath
  * @returns {string} bundle identifier
  */
 export async function getBundleIdFromPlist(plistPath: string) {
@@ -413,7 +524,7 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string) {
         p12Pwd = '';
     }
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
-    
+
     let openssl2: ToolRunner = tl.tool(opensslPath);
     openssl2.arg(['x509', '-noout', '-fingerprint']);
     openssl1.pipeExecOutputToTool(openssl2);
@@ -452,7 +563,7 @@ export async function getP12CommonName(p12Path: string, p12Pwd: string) {
         p12Pwd = '';
     }
     openssl1.arg(['pkcs12', '-in', p12Path, '-nokeys', '-passin', 'pass:' + p12Pwd]);
-    
+
     let openssl2: ToolRunner = tl.tool(opensslPath);
     openssl2.arg(['x509', '-noout', '-subject']);
     openssl1.pipeExecOutputToTool(openssl2);

@@ -14,15 +14,15 @@
         "Agent"
     ],
     "demands": [],
-    "preview": true,
     "version": {
         "Major": 2,
-        "Minor": 1,
-        "Patch": 8
+        "Minor": 129,
+        "Patch": 4
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
-    "groups": [{
+    "groups": [
+        {
             "name": "restoreAuth",
             "displayName": "Feeds and authentication",
             "isExpanded": true,
@@ -57,9 +57,16 @@
             "displayName": "Advanced",
             "isExpanded": false,
             "visibleRule": "command = pack"
+        },
+        {
+            "name": "generalAdvanced",
+            "displayName": "Advanced",
+            "isExpanded": false,
+            "visibleRule": "command != pack && command != push && command != restore"
         }
     ],
-    "inputs": [{
+    "inputs": [
+        {
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -145,7 +152,9 @@
         },
         {
             "name": "selectOrConfig",
-            "aliases": ["feedsToUse"],
+            "aliases": [
+                "feedsToUse"
+            ],
             "type": "radio",
             "label": "Feeds to use",
             "defaultValue": "select",
@@ -159,7 +168,9 @@
         },
         {
             "name": "feedRestore",
-            "aliases": ["vstsFeed"],
+            "aliases": [
+                "vstsFeed"
+            ],
             "type": "pickList",
             "label": "Use packages from this VSTS/TFS feed",
             "defaultValue": "",
@@ -193,7 +204,9 @@
         },
         {
             "name": "externalEndpoints",
-            "aliases": ["externalFeedCredentials"],
+            "aliases": [
+                "externalFeedCredentials"
+            ],
             "type": "connectedService:ExternalNuGetFeed",
             "label": "Credentials for feeds outside this account/collection",
             "required": false,
@@ -216,7 +229,9 @@
         },
         {
             "name": "packagesDirectory",
-            "aliases": ["restoreDirectory"],
+            "aliases": [
+                "restoreDirectory"
+            ],
             "type": "string",
             "label": "Destination directory",
             "defaultValue": "",
@@ -243,7 +258,9 @@
         },
         {
             "name": "searchPatternPush",
-            "aliases": ["packagesToPush"],
+            "aliases": [
+                "packagesToPush"
+            ],
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
@@ -265,7 +282,9 @@
         },
         {
             "name": "feedPublish",
-            "aliases": ["publishVstsFeed"],
+            "aliases": [
+                "publishVstsFeed"
+            ],
             "type": "pickList",
             "label": "Target feed",
             "defaultValue": "",
@@ -275,7 +294,9 @@
         },
         {
             "name": "externalEndpoint",
-            "aliases": ["publishFeedCredentials"],
+            "aliases": [
+                "publishFeedCredentials"
+            ],
             "type": "connectedService:ExternalNuGetFeed",
             "label": "NuGet server",
             "required": true,
@@ -284,7 +305,9 @@
         },
         {
             "name": "searchPatternPack",
-            "aliases": ["packagesToPack"],
+            "aliases": [
+                "packagesToPack"
+            ],
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
@@ -294,7 +317,9 @@
         },
         {
             "name": "configurationToPack",
-            "aliases": ["configuration"],
+            "aliases": [
+                "configuration"
+            ],
             "type": "string",
             "label": "Configuration to Package",
             "defaultValue": "$(BuildConfiguration)",
@@ -304,7 +329,9 @@
         },
         {
             "name": "outputDir",
-            "aliases": ["packDirectory"],
+            "aliases": [
+                "packDirectory"
+            ],
             "type": "filePath",
             "label": "Package Folder",
             "defaultValue": "$(Build.ArtifactStagingDirectory)",
@@ -348,7 +375,9 @@
         },
         {
             "name": "requestedMajorVersion",
-            "aliases": ["majorVersion"],
+            "aliases": [
+                "majorVersion"
+            ],
             "type": "string",
             "label": "Major",
             "defaultValue": "1",
@@ -359,7 +388,9 @@
         },
         {
             "name": "requestedMinorVersion",
-            "aliases": ["minorVersion"],
+            "aliases": [
+                "minorVersion"
+            ],
             "type": "string",
             "label": "Minor",
             "defaultValue": "0",
@@ -370,7 +401,9 @@
         },
         {
             "name": "requestedPatchVersion",
-            "aliases": ["patchVersion"],
+            "aliases": [
+                "patchVersion"
+            ],
             "type": "string",
             "label": "Patch",
             "defaultValue": "0",
@@ -404,9 +437,18 @@
                 "Detailed": "Detailed",
                 "Diagnostic": "Diagnostic"
             }
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "required": "false",
+            "groupName": "generalAdvanced"
         }
     ],
-    "dataSourceBindings": [{
+    "dataSourceBindings": [
+        {
             "target": "feedRestore",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
@@ -451,7 +493,6 @@
         "noPublishFolderFoundToZip": "A publish folder could not be found to zip for project file: %s.",
         "noWebProjctFound": "No web project was found in the repository. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
         "zipFailed": "Zip failed with error: %s",
-
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
         "Error_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s",

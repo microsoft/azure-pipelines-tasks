@@ -50,6 +50,7 @@ export class AzureRGTaskParameters {
     public credentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
+    public deploymentOutputs: string;
 
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
@@ -135,6 +136,7 @@ export class AzureRGTaskParameters {
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(connectedService);
             this.deploymentGroupProjectName = tl.getInput("project");
+            this.deploymentOutputs = tl.getInput("deploymentOutputs");
             return this;
         } catch (error) {
             throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));

@@ -8,6 +8,7 @@ import * as tr from 'vsts-task-lib/toolrunner';
 import {NpmTaskInput} from './constants';
 
 import * as util from 'npm-common/util';
+import * as telemetry from 'utility-common/telemetry';
 
 export class NpmToolRunner extends tr.ToolRunner {
     private cacheLocation: string;
@@ -58,6 +59,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         const execResult = super.execSync(options);
         this._restoreProjectNpmrc();
         if (execResult.code !== 0) {
+            telemetry.logStderr('Packaging', 'npm', execResult.code, execResult.stderr);
             this._printDebugLogSync(this._getDebugLogPath(options));
             throw new Error(tl.loc('NpmFailed', execResult.code));
         }

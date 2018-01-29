@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 3
+        "Patch": 6
     },
     "demands": [],
     "preview": "false",
@@ -39,6 +39,7 @@
         },
         {
             "name": "dockerRegistryEndpoint",
+            "aliases": ["dockerRegistryConnection"],
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Connection",
             "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
@@ -46,6 +47,7 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
@@ -276,7 +278,17 @@
             "groupName": "advanced"
         },
         {
+            "name": "enforceDockerNamingConvention",
+            "type": "boolean",
+            "label": "Force image name to follow Docker naming convention",
+            "required": false,
+            "defaultValue": "true",
+            "helpMarkDown": "If enabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
+            "groupName": "advanced"
+        },
+        {
             "name": "cwd",
+            "aliases": ["workingDirectory"],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",

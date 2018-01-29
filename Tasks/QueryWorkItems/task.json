@@ -4,19 +4,20 @@
   "friendlyName": "Query Work Items",
   "description": "Executes a work item query and checks for the number of items returned.",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+  "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/work-item-query)",
   "category": "Utility",
   "preview": true,
   "visibility": [
     "Release"
   ],
   "runsOn": [
-    "Server"
+    "Server",
+    "ServerGate"
   ],
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 6
   },
   "instanceNameFormat": "Query Work Items",
   "groups": [
@@ -38,22 +39,22 @@
     {
       "name": "maxThreshold",
       "type": "string",
-      "label": "Maximum Threshold",
+      "label": "Maximum threshold",
       "defaultValue": "0",
       "required": "true",
       "properties": {
-          "isNonNegativeNumber": "true"
+          "isVariableOrNonNegativeNumber": "true"
       },
       "helpMarkDown": "The maximum number of matching workitems from the query."
     },
     {
       "name": "minThreshold",
       "type": "string",
-      "label": "Minimum Threshold",
+      "label": "Minimum threshold",
       "defaultValue": "0",
       "required": "true",
       "properties": {
-        "isNonNegativeNumber": "true"
+        "isVariableOrNonNegativeNumber": "true"
       },
       "groupName": "advanced",
       "helpMarkDown": "The minimum number of matching workitems from the query."

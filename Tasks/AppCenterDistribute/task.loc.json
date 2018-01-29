@@ -141,7 +141,12 @@
       "label": "ms-resource:loc.input.label.releaseNotesInput",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.releaseNotesInput",
-      "visibleRule": "releaseNotesSelection = input"
+      "visibleRule": "releaseNotesSelection = input",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"	
+      }
     },
     {
       "name": "releaseNotesFile",

@@ -169,8 +169,12 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         },
         "/usr/libexec/PlistBuddy -c Add provisioningProfiles:com.vsts.test.myApp string Bob _XcodeTaskExportOptions.plist": {
             "code": 0,
-            "stdout": "plist add output here"            
-        }        
+            "stdout": "plist add output here"
+        },
+        "/usr/libexec/PlistBuddy -c Print Entitlements:com.apple.developer.icloud-container-environment _xcodetasktmp.plist": {
+            "code": 1,
+            "stdout": ":com.apple.developer.icloud-container-environment, Does Not Exist"
+        }
     }
 };
 tr.setAnswers(a);

@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 126,
+        "Minor": 127,
         "Patch": 1
     },
     "groups": [
@@ -127,7 +127,12 @@
             "label": "Release Notes",
             "required": true,
             "helpMarkDown": "Release notes for this version.",
-            "visibleRule": "releaseNotesSelection = input"
+            "visibleRule": "releaseNotesSelection = input",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"	
+            }
         },
         {
             "name": "releaseNotesFile",

@@ -54,9 +54,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     },
     "checkPath" : {
+        "/user/build": true,
         "/home/bin/msbuild": true,
         "/home/bin/nuget": true,
         "src/project.sln": true
+    },
+    "findMatch" : {
+        "src/project.sln": ["src/project.sln"]
     }
 };
 tr.setAnswers(a);

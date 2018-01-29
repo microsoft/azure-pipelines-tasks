@@ -34,7 +34,10 @@ Register-Mock Find-VstsFiles { $applicationPackagePath } -- -LegacyPattern $appl
 
 Register-Mock Assert-VstsPath
 Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
-Register-Mock Get-Item { "dummyvalue" } -- "Cert:\CurrentUser\My\$serverCertThumbprint" -ErrorAction SilentlyContinue
+$fakeCert = @{
+    "Thumbprint" = $serverCertThumbprint
+}
+Register-Mock Get-Item { $fakeCert } -- "Cert:\CurrentUser\My\$serverCertThumbprint" -ErrorAction SilentlyContinue
 
 # Setup mock VSTS service endpoint
 # NOTE: The value defined here is a Base64 encoding of a self-signed certificate created specifically for this test.

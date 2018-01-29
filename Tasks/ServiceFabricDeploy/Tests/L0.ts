@@ -42,5 +42,11 @@ describe('ServiceFabricDeploy Suite', function () {
         it('Certificate deploy with Docker support', (done) => {
             psr.run(path.join(__dirname, 'CertDeployWithDocker.ps1'), done);
         })
+        it('Certificate deploy with Docker support and multiple Thumbprints', (done) => {
+            psr.run(path.join(__dirname, 'CertDeployWithDockerMultiThumbprint.ps1'), done);
+        })
+        it('Deploy with diff pkg', (done) => {
+            psr.run(path.join(__dirname, 'CreateDiffPkg.ps1'), done);
+        })
     }
 });

@@ -11,23 +11,28 @@
     "Release"
   ],
   "runsOn": [
-    "Server"
+    "Server",
+    "ServerGate"
   ],
   "version": {
-    "Major": 0,
+    "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [{
-		"name": "completionOptions",
-		"displayName": "ms-resource:loc.group.displayName.completionOptions",
-		"isExpanded": false
-	}
+  "groups": [
+    {
+      "name": "completionOptions",
+      "displayName": "ms-resource:loc.group.displayName.completionOptions",
+      "isExpanded": false
+    }
   ],
   "inputs": [
     {
       "name": "connectedServiceName",
+      "aliases": [
+        "serviceConnection"
+      ],
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
@@ -57,11 +62,11 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.headers",
       "required": "false",
-      "defaultValue": "{\n\"Content-Type\":\"application/json\"\n}",
+      "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
       "properties": {
         "resizable": "true",
-        "rows": "3",
-        "maxLength": "500"
+        "rows": "10",
+        "maxLength": "2000"
       },
       "helpMarkDown": "ms-resource:loc.input.help.headers"
     },
@@ -79,30 +84,42 @@
       "visibleRule": "method != GET && method != HEAD"
     },
     {
-      "name": "waitForCompletion",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.waitForCompletion",
-      "Required": "false",
-      "defaultValue": "false",
-      "groupName": "completionOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.urlSuffix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.urlSuffix"
     },
-	{
-	  "name": "successCriteria",
-	  "type": "string",
-	  "label": "ms-resource:loc.input.label.successCriteria",
-	  "defaultValue": "",
-	  "required": false,
-	  "groupName": "completionOptions",
-	  "visibleRule": "waitForCompletion = false",
-	  "helpMarkDown": "ms-resource:loc.input.help.successCriteria"
-	}
+    {
+      "name": "waitForCompletion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.waitForCompletion",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion",
+      "groupName": "completionOptions",
+      "options": {
+        "true": "Callback",
+        "false": "ApiResponse"
+      }
+    },
+    {
+      "name": "successCriteria",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.successCriteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.successCriteria",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
+    }
   ],
   "execution": {
     "HttpRequest": {
       "Execute": {
         "EndpointId": "$(connectedServiceName)",
-        "EndpointUrl": "$(endpoint.url)",
+        "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",
         "Headers": "$(headers)",

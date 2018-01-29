@@ -11,11 +11,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 128,
-        "Patch": 1
+        "Minor": 129,
+        "Patch": 0
     },
     "demands": [
-        "AndroidSDK",
         "MSBuild",
         "Xamarin.Android"
     ],

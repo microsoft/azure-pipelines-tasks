@@ -72,9 +72,11 @@ async function run() {
 
         // Run the script.
         //
+        // Note, prefer "pwsh" over "powershell". At some point we can remove support for "powershell".
+        //
         // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
         // comment on Windows implementation for an explanation why "-Command" is preferred.
-        let powershell = tl.tool(tl.which('powershell', true))
+        let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
             .arg('-NonInteractive')

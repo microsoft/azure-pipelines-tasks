@@ -2,40 +2,41 @@
 	"id": "537FDB7A-A601-4537-AA70-92645A2B5CE4",
 	"name": "AzureFunction",
 	"friendlyName": "Invoke Azure Function",
-	"description": "Invoke Azure Function as a part of your process.",
+	"description": "Invoke Azure function as a part of your process.",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+	"helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-function)",
 	"category": "Utility",
 	"preview": "true",
 	"visibility": [
 		"Release"
 	],
 	"runsOn": [
-		"Server"
+		"Server",
+		"ServerGate"
 	],
 	"version": {
-		"Major": 0,
+		"Major": 1,
 		"Minor": 0,
-		"Patch": 2
+		"Patch": 0
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{
 			"name": "completionOptions",
-			"displayName": "Completion options",
+			"displayName": "Advanced",
 			"isExpanded": false
 		}
 	],
 	"inputs": [{
 			"name": "function",
 			"type": "string",
-			"label": "Azure Function Url",
+			"label": "Azure function url",
 			"defaultValue": "",
 			"required": true,
 			"helpMarkDown": "Url of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1"
 		}, {
 			"name": "key",
 			"type": "string",
-			"label": "Function Key",
+			"label": "Function key",
 			"defaultValue": "",
 			"required": true,
 			"helpMarkDown": "Function or Host key with which we can access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is an environment level secret variable with value as the secret key like ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw=="
@@ -55,23 +56,23 @@
 				"TRACE": "TRACE",
 				"PATCH": "PATCH"
 			},
-			"helpMarkDown": "Select the http method with which the funtion should be invoked with."
+			"helpMarkDown": "Select the http method with which the function should be invoked with."
 		}, {
 			"name": "headers",
 			"type": "multiLine",
 			"label": "Headers",
 			"required": "false",
-			"defaultValue": "{\n\"Content-Type\":\"application/json\"\n}",
+			"defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
 			"properties": {
 				"resizable": "true",
-				"rows": "3",
-				"maxLength": "500"
+				"rows": "10",
+				"maxLength": "2000"
 			},
 			"helpMarkDown": "Define header in JSON format. The header shall be attached with request to be sent."
 		}, {
 			"name": "queryParameters",
 			"type": "string",
-			"label": "Query Parameters",
+			"label": "Query parameters",
 			"defaultValue": "",
 			"required": false,
 			"helpMarkDown": "Query parameters string append to the function Url. Should not start with with \"?\" and \"&\"."
@@ -91,7 +92,7 @@
 		}, {
 			"name": "waitForCompletion",
 			"type": "pickList",
-			"label": "Complete based on",
+			"label": "Completion event",
 			"defaultValue": "false",
 			"required": true,
 			"helpMarkDown": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
@@ -103,7 +104,7 @@
 		}, {
 			"name": "successCriteria",
 			"type": "string",
-			"label": "Success Criteria",
+			"label": "Success criteria",
 			"defaultValue": "",
 			"required": false,
 			"helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",

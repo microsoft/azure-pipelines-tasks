@@ -97,7 +97,7 @@ function getEnvironmentUri(): string {
     const dontDistribute = tl.getBoolInput('dontDistribute');
     const pipelineId = utils.Helper.isNullEmptyOrUndefined(releaseId) ? 'build'.concat(`/${buildId}`) : 'release'.concat(`/${releaseId}`);
     const phaseId = utils.Helper.isNullEmptyOrUndefined(releaseId) ?
-    tl.getVariable('System.PhaseId') : tl.getVariable('Release.DeployPhaseId');
+        tl.getVariable('System.PhaseId') : tl.getVariable('Release.DeployPhaseId');
 
     if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
         || dontDistribute) {
@@ -123,6 +123,7 @@ function getDtaInstanceId(): number {
 }
 
 function initTestConfigurations(testConfiguration: models.TestConfigurations) {
+
     testConfiguration.testSelection = tl.getInput('testSelector');
     getTestSelectorBasedInputs(testConfiguration);
 
@@ -181,19 +182,31 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     console.log(tl.loc('rerunFailedTests', testConfiguration.rerunFailedTests));
 
     if (testConfiguration.rerunFailedTests) {
-        testConfiguration.rerunFailedThreshold = 30;
-        testConfiguration.rerunMaxAttempts = 3; //default values incase of error
+        testConfiguration.rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
 
-        const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
-        const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
-
-        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
-            testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
-            console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
+        if (testConfiguration.rerunType === 'basedOnTestFailureCount') {
+            testConfiguration.rerunFailedTestCasesMaxLimit = 5; //default value in case of error
+            const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
+            if (!isNaN(rerunFailedTestCasesMaxLimit) && rerunFailedTestCasesMaxLimit > 0 && rerunFailedTestCasesMaxLimit <= 100) {
+                testConfiguration.rerunFailedTestCasesMaxLimit = rerunFailedTestCasesMaxLimit;
+                console.log(tl.loc('rerunFailedTestCasesMaxLimit', testConfiguration.rerunFailedTestCasesMaxLimit));
+            } else {
+                tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
+            }
         } else {
-            tl.warning(tl.loc('invalidRerunFailedThreshold'));
+            testConfiguration.rerunFailedThreshold = 30; //default value in case of error
+            const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
+            if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
+                testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
+                console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
+            } else {
+                tl.warning(tl.loc('invalidRerunFailedThreshold'));
+            }
         }
-        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0) {
+
+        testConfiguration.rerunMaxAttempts = 3; //default values incase of error
+        const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
+        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0 && rerunMaxAttempts <= 10) {
             testConfiguration.rerunMaxAttempts = rerunMaxAttempts;
             console.log(tl.loc('rerunMaxAttempts', testConfiguration.rerunMaxAttempts));
         } else {
@@ -210,18 +223,18 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         }
         if (testConfiguration.vsTestVersion.toLowerCase() === 'toolsinstaller') {
             tl.debug("Trying VsTest installed by tools installer.");
-            ci.publishEvent( { subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) } );
+            ci.publishEvent({ subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) });
 
             testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
 
             // if Tools installer is not there throw.
-            if(utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
-                ci.publishEvent( { subFeature: 'ToolsInstallerInstallationError' } );
+            if (utils.Helper.isNullOrWhitespace(testConfiguration.toolsInstallerConfig.vsTestPackageLocation)) {
+                ci.publishEvent({ subFeature: 'ToolsInstallerInstallationError' });
                 utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
                 throw new Error(tl.loc('ToolsInstallerInstallationError'));
             }
 
-            ci.publishEvent( { subFeature: 'ToolsInstallerInstallationSuccessful' } );
+            ci.publishEvent({ subFeature: 'ToolsInstallerInstallationSuccessful' });
             // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
             testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
             testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
@@ -252,6 +265,18 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     }
 
     testConfiguration.ignoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
+
+    // Get proxy details
+    testConfiguration.proxyConfiguration = getProxyConfiguration();
+}
+
+function getProxyConfiguration(): models.ProxyConfiguration {
+    const proxyConfiguration = {} as models.ProxyConfiguration;
+    proxyConfiguration.proxyUrl = tl.getVariable("agent.proxyurl");
+    proxyConfiguration.proxyUserName = tl.getVariable("agent.proxyusername");
+    proxyConfiguration.proxyPassword = tl.getVariable("agent.proxypassword");
+    proxyConfiguration.proxyBypassHosts = tl.getVariable("agent.proxybypasslist");
+    return proxyConfiguration;
 }
 
 async function logWarningForWER(runUITests: boolean) {
@@ -336,6 +361,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     tiaConfiguration.useNewCollector = false;
+
     const useNewCollector = tl.getVariable('tia.useNewCollector');
     if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
         tiaConfiguration.useNewCollector = true;
