@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Go Tool Installer",
+  "loc.helpMarkDown": "",
+  "loc.description": "Finds or Downloads and caches specified version spec of Go and adds it to the PATH.",
+  "loc.instanceNameFormat": "Use Go $(version)",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Golang tool version to download and install.  Examples: 1.9.2",
+  "loc.messages.ToolFailed": "Tool install failed: %s",
+  "loc.messages.VersionNotSupported": "version '%s' is not available"
+}
