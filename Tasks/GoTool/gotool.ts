@@ -41,7 +41,6 @@ async function getGo(version: string) {
     // prepend the tools path. instructs the agent to prepend for future tasks
     //
     toolLib.prependPath(toolPath);
-
 }
 
 
@@ -56,6 +55,7 @@ async function acquireGo(version: string): Promise<string> {
     try {
         downloadPath = await toolLib.downloadTool(downloadUrl);
     } catch (error) {
+        tl.debug(error);
         throw (tl.loc("VersionNotSupported", version));
     }
 

@@ -24,7 +24,7 @@
             "label": "Version",
             "defaultValue": "1.9.2",
             "required": true,
-            "helpMarkDown": "Golang tool version to download and install.  Examples: 1.9.2"
+            "helpMarkDown": "Go tool version to download and install.  Examples: 1.9.2"
         }
     ],
     "execution": {
@@ -35,6 +35,6 @@
     },
     "messages": {
         "ToolFailed": "Tool install failed: %s",
-        "VersionNotSupported": "version '%s' is not available"
+        "VersionNotSupported": "Version '%s' is not available"
     }
 }
