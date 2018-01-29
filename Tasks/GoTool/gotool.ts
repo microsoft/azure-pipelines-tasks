@@ -34,20 +34,14 @@ async function getGo(version: string) {
         toolPath = await acquireGo(version);
     }
 
-    //
-    // a tool installer initimately knows details about the layout of that tool
-    // for example, node binary is in the bin folder after the extract on Mac/Linux.
-    // layouts could change by version, by platform etc... but that's the tool installers job
-    //
-    if (osPlat != 'win32') {
-        toolPath = path.join(toolPath, 'bin');
-    }
+    setGoEnvironmentVariables(toolPath);
 
+    toolPath = path.join(toolPath, 'bin');
     //
     // prepend the tools path. instructs the agent to prepend for future tasks
     //
     toolLib.prependPath(toolPath);
-    setGoEnvironmentVariables(toolPath);
+
 }
 
 
@@ -69,21 +63,16 @@ async function acquireGo(version: string): Promise<string> {
     // Extract
     //
     let extPath: string;
-    try {
-        if (osPlat == 'win32') {
-            tl.assertAgent('2.115.0');
-            extPath = tl.getVariable('Agent.TempDirectory');
-            if (!extPath) {
-                throw new Error('Expected Agent.TempDirectory to be set');
-            }
-            extPath = await toolLib.extractZip(downloadPath);
-        }
-        else {
-            extPath = await toolLib.extractTar(downloadPath);
-            console.log("Extraction Path:= ", extPath);
-        }
-    } catch (error) {
-        throw (error);
+    extPath = tl.getVariable('Agent.TempDirectory');
+    if (!extPath) {
+        throw new Error('Expected Agent.TempDirectory to be set');
+    }
+
+    if (osPlat == 'win32') {
+        extPath = await toolLib.extractZip(downloadPath);
+    }
+    else {
+        extPath = await toolLib.extractTar(downloadPath);
     }
 
     //
