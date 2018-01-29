@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 0,
+        "Minor": 130,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the SonarQube extension, in task `Prepare Analysis Configuration`",
