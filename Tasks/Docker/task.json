@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [],
     "preview": "false",
@@ -275,6 +275,15 @@
             "type": "connectedService:dockerhost",
             "label": "Docker Host Connection",
             "helpMarkDown": "Select a Docker host connection. Defaults to the agent's host.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "enforceDockerNamingConvention",
+            "type": "boolean",
+            "label": "Force image name to follow Docker naming convention",
+            "required": false,
+            "defaultValue": "true",
+            "helpMarkDown": "If enabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
             "groupName": "advanced"
         },
         {

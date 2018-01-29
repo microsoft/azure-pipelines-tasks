@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 6
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -43,7 +43,7 @@
       "defaultValue": "0",
       "required": "true",
       "properties": {
-        "isNonNegativeNumber": "true"
+        "isVariableOrNonNegativeNumber": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.maxThreshold"
     },
@@ -54,7 +54,7 @@
       "defaultValue": "0",
       "required": "true",
       "properties": {
-        "isNonNegativeNumber": "true"
+        "isVariableOrNonNegativeNumber": "true"
       },
       "groupName": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.minThreshold"
