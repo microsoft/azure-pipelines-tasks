@@ -3,7 +3,7 @@
     "name": "AzureMysqlDeployment",
     "friendlyName": "Azure Database for Mysql Deployment",
     "description": "This is an early preview. Run your scripts and make changes to your Azure DB for Mysql​.",
-    "helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
+    "helpMarkDown": "[More Information](https://aka.ms/mysqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Preview",
