@@ -98,6 +98,10 @@ export default class DockerComposeConnection extends ContainerConnection {
         return command;
     }
 
+    // public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions) {
+    //     super.execCommand(command, options);
+    // }
+
     public getCombinedConfig(imageDigestComposeFile?: string): any {
         var command = this.createComposeCommand();
         if (imageDigestComposeFile) {
