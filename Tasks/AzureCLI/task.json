@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 9
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -27,7 +27,7 @@
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": false
+            "isExpanded": true
         }
     ],
     "inputs": [
@@ -99,7 +99,7 @@
             "label": "Fail on Standard Error",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If this is true, this task will fail when any errors are written to the StandardError stream",
+            "helpMarkDown": "If this is true, this task will fail when any errors are written to the StandardError stream. Unselect the checkbox to ignore standard errors and rely on exit codes to determine the status",
             "groupName": "advanced"
         }
     ],

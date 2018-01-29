@@ -19,7 +19,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 9
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -27,7 +27,7 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "isExpanded": true
     }
   ],
   "inputs": [
