@@ -1,6 +1,6 @@
 {
   "name": "gotool",
-  "version": "0.5.0",
+  "version": "0.0.1",
   "description": "GoLang Tool Installer",
   "main": "gotool.js",
   "scripts": {
