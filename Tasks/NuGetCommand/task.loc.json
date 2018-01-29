@@ -384,6 +384,14 @@
       "groupName": "packOptions"
     },
     {
+      "name": "toolPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.toolPackage",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.toolPackage",
+      "groupName": "packOptions"
+    },
+    {
       "name": "buildProperties",
       "type": "string",
       "label": "ms-resource:loc.input.label.buildProperties",
