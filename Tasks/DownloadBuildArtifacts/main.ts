@@ -78,14 +78,13 @@ async function main(): Promise<void> {
         var artifacts = [];
         var itemPattern: string = '**';
 
-        var releaseAlias: string = tl.getVariable("release.triggeringartifact.alias");
-
         if (isCurrentBuild) {
             projectId = tl.getVariable("System.TeamProjectId");
             definitionId = '';
             buildId = parseInt(tl.getVariable("Build.BuildId"));
         }
-        else{
+        else {
+            var releaseAlias: string = tl.getVariable("release.triggeringartifact.alias");
             var triggeringBuildFound: boolean = false;
             definitionIdSpecified = tl.getInput("definition", true);
             if (isSpecificBuildWithTriggering) {
