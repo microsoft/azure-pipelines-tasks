@@ -207,6 +207,8 @@ target.build = function() {
                     //var p = path.join(modPath, 'node_modules', "vsts-task-lib")
                     //console.log("rm path: " + p);
                     console.log('removing: ' + "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
+
+                    // TODO: Move this to make.json, do it at the task level isntead of the the common _build folder?
                     rm('-Rf', "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
                     // END TEMPORARY
 
