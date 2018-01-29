@@ -60,9 +60,9 @@ var mkdir = function (options, target) {
 exports.mkdir = mkdir;
 
 var rm = function (options, target) {
-    console.log('going to remove');
-    console.log(JSON.stringify(options));
-    console.log(JSON.stringify(target));
+    // console.log('going to remove');
+    // console.log(JSON.stringify(options));
+    // console.log(JSON.stringify(target));
     if (target) {
         shell.rm(options, target);
     }
@@ -169,6 +169,9 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     assert(taskMake, 'taskMake');
     assert(srcPath, 'srcPath');
     assert(destPath, 'destPath');
+
+    console.log('src: ' + srcPath);
+    console.log('dest: ' + destPath);
 
     // copy the globally defined set of default task resources
     var toCopy = makeOptions['taskResources'];

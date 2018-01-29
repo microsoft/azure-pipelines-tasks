@@ -183,6 +183,8 @@ target.build = function() {
                     console.log('> copying module resources');
                     var modMakePath = path.join(modPath, 'make.json');
                     var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
+
+                    
                     copyTaskResources(modMake, modPath, modOutDir);
 
                     // get externals
@@ -196,7 +198,17 @@ target.build = function() {
                 if (mod.type === 'node' && mod.compile == true) {
                     var currentTaskNodeModulesPath = path.join(taskPath, 'node_modules');
                     mkdir('-p', currentTaskNodeModulesPath);
+
+                    console.log('rm path: ' + path.join(taskPath, 'node_modules', modName));
                     rm('-Rf', path.join(taskPath, 'node_modules', modName));
+
+
+                    // THIS IS TEMPORARY AND CAN BE REPLACED BY CODE IN MAKE.JSON FOR COMMON
+                    var p = path.join(modPath, 'node_modules', "vsts-task-lib")
+                    console.log("rm path: " + p);
+                    rm('-Rf', path);
+                    // END TEMPORARY
+
                     var originalDir = pwd();
                     cd(taskPath);
                     
