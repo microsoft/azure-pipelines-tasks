@@ -2,10 +2,11 @@
     "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
     "name": "AzureMysqlDeployment",
     "friendlyName": "Azure Database for Mysql Deployment",
-    "description": "This is an early preview. Deploy your changes to Azure Mysql database.",
+    "description": "This is an early preview. Run your scripts and make changes to your Azure DB for Mysql​.",
     "helpMarkDown": "[More Information](https://aka.ms/sqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
+        "Preview",
         "Build",
         "Release"
     ],
@@ -18,8 +19,8 @@
         "Minor": 0,
         "Patch": 0
     },
-    "demands": [ 
-        "mysql"
+    "demands": [
+        "mysql" 
     ],
     "minimumAgentVersion": "1.100.0",
     "preview": true,
@@ -48,7 +49,7 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Target Azure Resource Manager subscription for deploying MySQL files"
+            "helpMarkDown": "This is needed to connect to your Azure account.<br>To configure new service connection, select the Azure subscription from the list and click 'Authorize'.<br>If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button."
         },
         {
             "name": "ServerName",
@@ -57,7 +58,7 @@
             "required": true,
             "defaultValue": "",
             "groupName": "target",
-            "helpMarkDown": "Azure MySQL Server name, like Fabrikam.database.windows.net,1433 or Fabrikam.database.windows.net.",
+            "helpMarkDown": "Server name of 'Azure DB for Mysql'. Example: fabrikam.mysql.database.azure.com​.",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -69,7 +70,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Name of the Azure MySQL Database, where the files will be deployed."
+            "helpMarkDown": "The name of database on which the script is needed to be run​."
         },
         {
             "name": "SqlUsername",
@@ -78,7 +79,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Specify the Azure MySQL Server administrator login."
+            "helpMarkDown": "Azure Database for MySQL server supports native MySQL authentication.<br>You can connect and authenticate to a server with the server's admin login. Example:  bbo1@fabrikam."
         },
         {
             "name": "SqlPassword",
@@ -87,7 +88,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Password for the Azure MySQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
+            "helpMarkDown": "Administrator password for Azure DB for Mysql. In case you don’t recall the password you can change the password from [Azure portal](https://docs.microsoft.com/en-us/azure/mysql/howto-create-manage-server-portal).<br>It can be variable defined in the definition. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
         },
         {
             "name": "TaskNameSelector",
@@ -109,7 +110,7 @@
             "required": true,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Location of the MySQL script file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
+            "helpMarkDown": "Full path of the script file on the automation agent or on a UNC path accessible to the automation agent like,  \\\\\\\\BudgetIT\\DeployBuilds\\script.sql. Also, predefined system variables like, $(agent.releaseDirectory) can also be used here. A file containing SQL statements can be used here.​",
             "visibleRule": "TaskNameSelector = SqlTask"
         },
         {
@@ -133,7 +134,7 @@
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Additional Mysql arguments that will be applied when executing the given SQL query on the Azure MYSQL Database like, --ssl --user.",
+            "helpMarkDown": "Additional options supported by mysql simple SQL shell.  These options will be applied when executing the given file on the Azure DB for Mysql.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​",
             "visibleRule": "TaskNameSelector = SqlTask"
         },
         {
@@ -143,7 +144,7 @@
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Additional Mysql arguments that will be applied when executing the given SQL query on the Azure MYSQL Database like, --ssl --user",
+            "helpMarkDown": "Additional options supported by mysql simple SQL shell.  These options will be applied when executing the given file on the Azure DB for Mysql.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​",
             "visibleRule": "TaskNameSelector = InlineSqlTask"
         },
         {
@@ -157,7 +158,7 @@
                 "AutoDetect": "AutoDetect",
                 "IPAddressRange": "IPAddressRange"
             },
-            "helpMarkDown": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure MySQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explicitly."
+            "helpMarkDown": "For successful execution of the task, we need to enable administrators to access the Azure Database for MySQL Server from the IP Address of the automation agent.<br>By selecting auto-detect you can automatically add firewall exception for range of possible IP Address of automation agent ​or else you can specify the range explicitly."
         },
         {
             "name": "StartIpAddress",
@@ -167,7 +168,7 @@
             "groupName": "firewall",
             "defaultValue": "",
             "visibleRule": "IpDetectionMethod = IPAddressRange",
-            "helpMarkDown": "The starting IP Address of the automation agent machine pool like 196.21.30.50."
+            "helpMarkDown": "The starting IP Address of the automation agent machine pool like 196.21.30.50 ."
         },
         {
             "name": "EndIpAddress",
@@ -177,7 +178,7 @@
             "groupName": "firewall",
             "defaultValue": "",
             "visibleRule": "IpDetectionMethod = IPAddressRange",
-            "helpMarkDown": "The ending IP Address of the automation agent machine pool like 196.21.30.65."
+            "helpMarkDown": "The ending IP Address of the automation agent machine pool like 196.21.30.65 ."
         },
         {
             "name": "DeleteFirewallRule",
@@ -186,15 +187,14 @@
             "required": false,
             "groupName": "firewall",
             "defaultValue": "true",
-            "helpMarkDown": "If selected, then after the task ends, the IP Addresses specified here are deleted from the 'Allowed IP Addresses' list of the Azure MySQL Server's Firewall."
+            "helpMarkDown": "If selected, the added exception for IP addresses of the automation agent will be removed for corresponding Azure Database for MySQL."
         }
     ],
     "dataSourceBindings": [
         {
             "target": "ServerName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureMysqlDbServers",
-            "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
+            "dataSourceName": "AzureMysqlDbServers"
         }  
     ],
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",

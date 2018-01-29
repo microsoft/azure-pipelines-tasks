@@ -6,6 +6,7 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
+    "Preview",
     "Build",
     "Release"
   ],
@@ -195,8 +196,7 @@
     {
       "target": "ServerName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureMysqlDbServers",
-      "resultTemplate": "{\"Value\":\"{{{name}}}\",\"DisplayValue\":\"{{{name}}}\"}"
+      "dataSourceName": "AzureMysqlDbServers"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

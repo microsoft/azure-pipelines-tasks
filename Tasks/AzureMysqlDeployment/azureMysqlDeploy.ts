@@ -42,7 +42,7 @@ async function run() {
             //Execute sql script entered by user
             await sqlClient.executeSqlCommand();
             // Delete firewall rule in case of automatic added rule or either user wants to delete it
-            if(firewallAdded || azureMysqlTaskParameter.getDeleteFirewallRule()){
+            if(firewallAdded && azureMysqlTaskParameter.getDeleteFirewallRule()){
                 task.debug('Deleting firewall rule');
                 await firewallOperations.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
                 task.debug('Sucessfully deleted firewall rule');
