@@ -3,13 +3,5 @@
 		"module": "../Common/docker-common",
 		"type": "node",
 		"compile" : true
-	}],
-    "rm": [
-        {
-            "items": [
-                "node_modules/docker-common/node_modules/vsts-task-lib"
-            ],
-            "options": "-Rf"
-        }
-    ]
+	}]
 }

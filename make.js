@@ -204,9 +204,10 @@ target.build = function() {
 
 
                     // THIS IS TEMPORARY AND CAN BE REPLACED BY CODE IN MAKE.JSON FOR COMMON
-                    var p = path.join(modPath, 'node_modules', "vsts-task-lib")
-                    console.log("rm path: " + p);
-                    rm('-Rf', path);
+                    //var p = path.join(modPath, 'node_modules', "vsts-task-lib")
+                    //console.log("rm path: " + p);
+                    console.log('removing: ' + "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
+                    rm('-Rf', "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
                     // END TEMPORARY
 
                     var originalDir = pwd();
@@ -220,6 +221,10 @@ target.build = function() {
                     
                     //run('npm install ' + modOutDir);
                     // we are in the task path, copy from the common package dir to the node modules dir of the current task
+                    console.log('copying');
+                    console.log('src: ' + modOutDir);
+                    console.log('dest: ' + currentTaskNodeModulesPath);
+
                     cp('-r', modOutDir, currentTaskNodeModulesPath)
 
 
