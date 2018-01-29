@@ -1,3 +1,5 @@
+///<reference path="../../definitions/node.d.ts" />
+
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as tl from 'vsts-task-lib/task';
 import * as os from 'os';
