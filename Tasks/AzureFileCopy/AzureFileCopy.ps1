@@ -119,7 +119,7 @@ catch
     throw
 }
 
-if($isPremiumStorage)
+if($isPremiumStorage -and $additionalArguments -notLike "*/BlobType:page*")
 {
     Write-Verbose "Setting BlobType to page for Premium Storage account."
     $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"
@@ -156,6 +156,11 @@ if ($destination -eq "AzureBlob")
 # Copying files to Azure VMs
 try
 {
+    # Normalize admin username
+    if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
+    {
+        $vmsAdminUserName = ".\" + $vmsAdminUserName 
+    }
     # getting azure vms properties(name, fqdn, winrmhttps port)
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
     -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName

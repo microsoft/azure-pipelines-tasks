@@ -1,4 +1,5 @@
 import tl = require("vsts-task-lib/task");
+import tr = require("vsts-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 var archiver = require('archiver');
@@ -16,6 +17,7 @@ export class dotNetExe {
     private zipAfterPublish: boolean;
     private outputArgument: string = "";
     private outputArgumentIndex: number = 0;
+    private workingDirectory: string;
 
     constructor() {
         this.command = tl.getInput("command");
@@ -23,18 +25,20 @@ export class dotNetExe {
         this.arguments = tl.getInput("arguments", false) || "";
         this.publishWebProjects = tl.getBoolInput("publishWebProjects", false);
         this.zipAfterPublish = tl.getBoolInput("zipAfterPublish", false);
+        this.workingDirectory = tl.getPathInput("workingDirectory", false);
     }
 
     public async execute() {
         tl.setResourcePath(path.join(__dirname, "task.json"));
-        if (this.command === "custom") {
-            this.command = tl.getInput("custom", true);
-        }
 
         switch (this.command) {
             case "build":
             case "publish":
             case "run":
+                await this.executeBasicCommand();
+                break;
+            case "custom":
+                this.command = tl.getInput("custom", true);
                 await this.executeBasicCommand();
                 break;
             case "test":
@@ -77,7 +81,9 @@ export class dotNetExe {
             }
             dotnet.line(dotnetArguments);
             try {
-                var result = await dotnet.exec();
+                var result = await dotnet.exec(<tr.IExecOptions>{
+                    cwd: this.workingDirectory
+                });
                 await this.zipAfterPublishIfRequired(projectFile);
             } catch (err) {
                 tl.error(err);
@@ -113,7 +119,9 @@ export class dotNetExe {
             dotnet.arg(projectFile);
             dotnet.line(this.arguments);
             try {
-                const result = await dotnet.exec();
+                const result = await dotnet.exec(<tr.IExecOptions>{
+                    cwd: this.workingDirectory
+                });
             } catch (err) {
                 tl.error(err);
                 failedProjects.push(projectFile);

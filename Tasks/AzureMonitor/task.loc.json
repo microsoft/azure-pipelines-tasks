@@ -10,12 +10,13 @@
 		"Release"
 	],
 	"runsOn": [
-		"Server"
+		"Server",
+		"ServerGate"
 	],
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 2
+		"Patch": 5
 	},
 	"instanceNameFormat": "ms-resource:loc.instanceNameFormat",
 	"preview": "true",
@@ -54,6 +55,9 @@
 			"type": "pickList",
 			"label": "ms-resource:loc.input.label.resourceName",
 			"required": true,
+			"properties": {
+				"EditableOptions": "True"
+			},
 			"helpMarkDown": "ms-resource:loc.input.help.resourceName"
 		}, {
 			"name": "alertRules",

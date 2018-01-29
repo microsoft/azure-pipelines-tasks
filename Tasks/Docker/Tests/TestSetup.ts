@@ -22,11 +22,13 @@ tr.setInput('qualifyImageName', process.env[shared.TestEnvVars.qualifyImageName]
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
 tr.setInput('additionalImageTags', process.env[shared.TestEnvVars.additionalImageTags] || '');
+tr.setInput('enforceDockerNamingConvention', process.env[shared.TestEnvVars.enforceDockerNamingConvention]);
 
 console.log("Inputs have been set");
 
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
+process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -71,6 +73,10 @@ a.exist[DockerFilePath] = true;
 a.exec[`docker build -f ${DockerFilePath} -t test/test:2`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 image"
+};
+a.exec[`docker build -f ${DockerFilePath} -t test/Te st:2`] = {
+    "code": 1,
+    "stdout": "test/Te st:2 not valid imagename"
 };
 a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test`] = {
     "code": 0,

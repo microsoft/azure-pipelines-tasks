@@ -8,7 +8,7 @@ describe('NuGetCommand Suite', function () {
 
     after(() => {
     });
-    
+
     it('restore single solution', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -43,7 +43,7 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
-    
+
     it('restore packages.config', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -58,8 +58,8 @@ describe('NuGetCommand Suite', function () {
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
-    });   
-    
+    });
+
     it('restore single solution with noCache', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -75,7 +75,7 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
-    
+
     it('restore single solution with nuget config', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -125,7 +125,7 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
-    
+
     it('restore single solution mono', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -297,6 +297,22 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
+    it('packs tool', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PackTests/packTool.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -Tool'), 'it should have run NuGet');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('works with custom command happy path', (done: MochaDone) => {
         this.timeout(1000);
 
@@ -330,4 +346,66 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, "should have no errors");
         done();
     });
+
+
+    it('custom command fails when exit code !=0', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './CustomCommandTests/customFailPath.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.stdErrContained, "stderr output is here");
+        assert(tr.failed, 'should have failed');
+        done();
+    });
+
+    it('pack fails when exit code !=0', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PackTests/packFails.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.stdErrContained, "stderr output is here");
+        assert(tr.failed, 'should have failed');
+        done();
+    });
+
+    it('publish fails when duplicates are skipped and exit code!=[0|2]', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PublishTests/failWithContinueOnConflict.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.stdErrContained, "stderr output is here");
+        assert(tr.failed, 'should have failed');
+        done();
+    });
+
+    it('publish fails when duplicates are NOT skipped and exit code!=0', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './PublishTests/failWithoutContinueOnConflict.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.stdErrContained, "stderr output is here");
+        assert(tr.failed, 'should have failed');
+        done();
+    });
+
+    it('restore fails when exit code!=0', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/failRestore.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.stdErrContained, "stderr output is here");
+        assert(tr.failed, 'should have failed');
+        done();
+    });
+
 });

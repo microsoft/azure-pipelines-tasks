@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 20
   },
   "runsOn": [
     "Agent",
@@ -189,7 +189,7 @@
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.searchPatternPush",
-      "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg",
       "helpMarkDown": "ms-resource:loc.input.help.searchPatternPush",
       "required": true,
       "visibleRule": "command = push"
@@ -384,6 +384,14 @@
       "groupName": "packOptions"
     },
     {
+      "name": "toolPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.toolPackage",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.toolPackage",
+      "groupName": "packOptions"
+    },
+    {
       "name": "buildProperties",
       "type": "string",
       "label": "ms-resource:loc.input.label.buildProperties",
@@ -495,6 +503,7 @@
     "NGCommon_SpsNotFound": "ms-resource:loc.messages.NGCommon_SpsNotFound",
     "NGCommon_UnabletoDetectNuGetVersion": "ms-resource:loc.messages.NGCommon_UnabletoDetectNuGetVersion",
     "NGCommon_UnableToFindTool": "ms-resource:loc.messages.NGCommon_UnableToFindTool",
-    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion"
+    "Warning_UpdatingNuGetVersion": "ms-resource:loc.messages.Warning_UpdatingNuGetVersion",
+    "Error_NugetFailedWithCodeAndErr": "ms-resource:loc.messages.Error_NugetFailedWithCodeAndErr"
   }
 }

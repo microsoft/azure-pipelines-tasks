@@ -1,24 +1,25 @@
 {
 	"id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
 	"name": "AzureMonitor",
-	"friendlyName": "Azure Monitor",
+	"friendlyName": "Query Azure Monitor Alerts",
 	"description": "Observe the configured Azure monitor rules for active alerts.",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=850348)",
+	"helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-monitor)",
 	"category": "Utility",
 	"visibility": [
 		"Release"
 	],
 	"runsOn": [
-		"Server"
+		"Server",
+		"ServerGate"
 	],
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 2
+		"Patch": 5
 	},
 	"preview": "true",
-	"instanceNameFormat": "Azure Monitor",
+	"instanceNameFormat": "Query Azure Monitor alerts",
 	"groups": [],
 	"inputs": [{
 			"name": "connectedServiceNameARM",
@@ -39,7 +40,7 @@
 		}, {
 			"name": "ResourceType",
 			"type": "pickList",
-			"label": "Resource Type",
+			"label": "Resource type",
 			"defaultValue": "Microsoft.Insights/components",
 			"options": {
 				"Microsoft.Insights/components": "Application Insights",
@@ -54,11 +55,14 @@
 			"type": "pickList",
 			"label": "Resource name",
 			"required": true,
+			"properties": {
+				"EditableOptions": "True"
+			},
 			"helpMarkDown": "Select name of Azure resource to monitor."
 		}, {
 			"name": "alertRules",
 			"type": "pickList",
-			"label": "Alert Rules",
+			"label": "Alert rules",
 			"defaultValue": "",
 			"required": true,
 			"properties": {

@@ -45,6 +45,7 @@ export class NpmMockHelper extends TaskMockRunner {
         );
 
         this.mockNpmCommand('config get cache', { code: 0, stdout: NpmMockHelper.NpmCachePath} as TaskLibAnswerExecResult);
+        this.mockNpmCommand('--version', { code: 0, stdout: "3.10.10"} as TaskLibAnswerExecResult);
         this._mockNpmConfigList();
         this._setToolPath('npm', NpmMockHelper.NpmCmdPath);
         // mock temp npm path

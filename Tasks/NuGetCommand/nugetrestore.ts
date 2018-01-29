@@ -222,7 +222,10 @@ function restorePackages(solutionFile: string, options: RestoreOptions): IExecSy
 
     let execResult = nugetTool.execSync({ cwd: path.dirname(solutionFile) } as IExecOptions);
     if (execResult.code !== 0) {
-        telemetry.logExecResults(execResult.code, execResult.stderr);
+        telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
+        throw tl.loc("Error_NugetFailedWithCodeAndErr",
+            execResult.code,
+            execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
     }
     return execResult;
 }

@@ -16,6 +16,7 @@ class PackOptions implements INuGetCommandOptions {
         public version: string,
         public properties: string[],
         public createSymbolsPackage: boolean,
+        public toolPackage: boolean,
         public verbosity: string,
         public configFile: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings
@@ -37,6 +38,7 @@ export async function run(nuGetPath: string): Promise<void> {
     let propertiesInput = tl.getInput("buildProperties");
     let verbosity = tl.getInput("verbosityPack");
     let createSymbolsPackage = tl.getBoolInput("includeSymbols");
+    let toolPackage = tl.getBoolInput("toolPackage");
     let outputDir = undefined;
 
     try
@@ -152,6 +154,7 @@ export async function run(nuGetPath: string): Promise<void> {
             version,
             props,
             createSymbolsPackage,
+            toolPackage,
             verbosity,
             undefined,
             environmentSettings);
@@ -189,6 +192,7 @@ function pack(file: string, options: PackOptions): IExecSyncResult {
 
     nugetTool.argIf(options.includeReferencedProjects, "-IncludeReferencedProjects")
     nugetTool.argIf(options.createSymbolsPackage, "-Symbols")
+    nugetTool.argIf(options.toolPackage, "-Tool")
 
     if (options.version) {
         nugetTool.arg("-version");
@@ -202,7 +206,10 @@ function pack(file: string, options: PackOptions): IExecSyncResult {
 
     let execResult = nugetTool.execSync();
     if (execResult.code !== 0) {
-        telemetry.logExecResults(execResult.code, execResult.stderr);
+        telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
+        throw tl.loc("Error_NugetFailedWithCodeAndErr",
+            execResult.code,
+            execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
     }
     return execResult;
 }

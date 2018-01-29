@@ -7,17 +7,18 @@ import * as nugetPack from './nugetpack';
 import * as nugetCustom from './nugetcustom';
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as telemetry from 'utility-common/telemetry';
+import * as peParser from "nuget-task-common/pe-parser";
+import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource"
 
 const NUGET_EXE_CUSTOM_LOCATION: string = "NuGetExeCustomLocation";
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
 
-    _logNugetStartupVariables();
-
     // Getting NuGet
     tl.debug('Getting NuGet');
     let nuGetPath: string = undefined;
+    let nugetVersion: string = undefined;
     try {
         nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR) || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
         if (!nuGetPath) {
@@ -29,10 +30,16 @@ async function main(): Promise<void> {
             }
             nuGetPath = await nuGetGetter.getNuGet(cachedVersionToUse);
         }
+        let nugetVersionInfo: VersionInfo  = await peParser.getFileVersionInfoAsync(nuGetPath);
+        if (nugetVersionInfo && nugetVersionInfo.fileVersion){
+            nugetVersion = nugetVersionInfo.fileVersion.toString();
+        }
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error.message);
         return;
+    } finally{
+        _logNugetStartupVariables(nuGetPath, nugetVersion);
     }
 
     let nugetCommand = tl.getInput("command", true);
@@ -56,7 +63,7 @@ async function main(): Promise<void> {
 }
 
 
-function _logNugetStartupVariables() {
+function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
     try {
         let externalendpoint = null;
         let epId = tl.getInput('externalendpoint');
@@ -111,10 +118,12 @@ function _logNugetStartupVariables() {
                 'selectorconfig': tl.getInput('selectorconfig'),
                 'solution': tl.getInput('solution'),
                 'verbositypush': tl.getInput('verbositypush'),
-                'verbosityrestore': tl.getInput('verbosityrestore')
+                'verbosityrestore': tl.getInput('verbosityrestore'),
+                'nuGetPath': nuGetPath,
+                'nugetVersion': nugetVersion
             };
 
-        telemetry.emitTelemetry(nugetTelem);
+        telemetry.emitTelemetry('Packaging', 'NuGetCommand', nugetTelem);
     } catch (err) {
         tl.debug(`Unable to log NuGet task init telemetry. Err:( ${err} )`);
     }

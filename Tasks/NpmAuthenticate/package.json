@@ -18,6 +18,6 @@
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "2.0.6",
-    "npm-common": "../Common/npm-common"
+    "npm-common": "file:../../_build/Tasks/Common/npm-common"
   }
 }

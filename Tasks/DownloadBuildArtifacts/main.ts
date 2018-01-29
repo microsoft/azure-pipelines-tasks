@@ -1,32 +1,34 @@
-var path = require('path')
-var url = require('url')
+var path = require('path');
+var url = require('url');
+var fs = require('fs');
 
 import * as tl from 'vsts-task-lib/task';
-import { IBuildApi } from 'vso-node-api/BuildApi';
-import { IRequestHandler } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
-import { WebApi, getHandlerFromToken } from 'vso-node-api/WebApi';
+import { IBuildApi } from './vso-node-api/BuildApi';
+import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
+import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
 
-var packagejson = require('./package.json');
+var taskJson = require('./task.json');
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 const area: string = 'DownloadBuildArtifacts';
 
 function getDefaultProps() {
+    var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
     return {
-        serverurl: tl.getVariable('System.TEAMFOUNDATIONSERVERURI'),
-        releaseurl: tl.getVariable('Release.ReleaseWebUrl'),
-        releaseid: tl.getVariable('Release.ReleaseId'),
-        builduri: tl.getVariable('Build.BuildUri'),
-        buildid: tl.getVariable('Build.Buildid'),
-        jobid: tl.getVariable('System.Jobid'),
-        agentVersion: tl.getVariable('Agent.Version'),
-        version: packagejson.version
+        hostType: hostType,
+        definitionName: hostType === 'release' ? tl.getVariable('RELEASE.DEFINITIONNAME') : tl.getVariable('BUILD.DEFINITIONNAME'),
+        processId: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEID') : tl.getVariable('BUILD.BUILDID'),
+        processUrl: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEWEBURL') : (tl.getVariable('SYSTEM.TEAMFOUNDATIONSERVERURI') + tl.getVariable('SYSTEM.TEAMPROJECT') + '/_build?buildId=' + tl.getVariable('BUILD.BUILDID')),
+        taskDisplayName: tl.getVariable('TASK.DISPLAYNAME'),
+        jobid: tl.getVariable('SYSTEM.JOBID'),
+        agentVersion: tl.getVariable('AGENT.VERSION'),
+        version: taskJson.version
     };
 }
 
@@ -42,7 +44,7 @@ function publishEvent(feature, properties: any): void {
         else {
             if (feature === 'reliability') {
                 let reliabilityData = properties;
-                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + packagejson.version + ";]" + reliabilityData.errorMessage
+                telemetry = "##vso[task.logissue type=error;code=" + reliabilityData.issueType + ";agentVersion=" + tl.getVariable('Agent.Version') + ";taskId=" + area + "-" + JSON.stringify(taskJson.version) + ";]" + reliabilityData.errorMessage
             }
         }
         console.log(telemetry);;
@@ -130,7 +132,7 @@ async function main(): Promise<void> {
 
         // verify that buildId belongs to the definition selected
         if (definitionId) {
-            var build = await buildApi.getBuild(buildId, projectId).catch((reason) => {
+            var build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), 4).catch((reason) => {
                 reject(reason);
                 return;
             });
@@ -150,7 +152,7 @@ async function main(): Promise<void> {
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName");
-            var artifact = await buildApi.getArtifact(buildId, artifactName, projectId).catch((reason) => {
+            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), 4).catch((reason) => {
                 reject(reason);
                 return;
             });
@@ -164,7 +166,7 @@ async function main(): Promise<void> {
             itemPattern = '**';
         }
         else {
-            var buildArtifacts = await buildApi.getArtifacts(buildId, projectId).catch((reason) => {
+            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), 4).catch((reason) => {
                 reject(reason);
             });
 
@@ -200,7 +202,7 @@ async function main(): Promise<void> {
                     var containerId: number = parseInt(containerParts[1]);
                     var containerPath: string = containerParts[2];
 
-                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + containerPath + "&isShallow=true&api-version=4.1-preview.4";
+                    var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
                     console.log(tl.loc("DownloadArtifacts", itemsUrl));
 
                     var variables = {};
@@ -214,9 +216,16 @@ async function main(): Promise<void> {
                 }
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
-                    console.log(tl.loc("DownloadArtifacts", artifact.resource.downloadUrl));
-                    var fileShareProvider = new providers.FilesystemProvider(artifact.resource.downloadUrl.replace("file:", ""));
-                    var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
+                    let downloadUrl = artifact.resource.data;
+                    let artifactLocation = downloadUrl + '/' + artifact.name;
+                    if (!fs.existsSync(artifactLocation)) {
+                        console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));
+                        artifactLocation = downloadUrl;
+                    }
+
+                    console.log(tl.loc("DownloadArtifacts", artifactLocation));
+                    var fileShareProvider = new providers.FilesystemProvider(artifactLocation);
+                    var fileSystemProvider = new providers.FilesystemProvider(downloadPath + '\\' + artifact.name);
 
                     downloadPromises.push(downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
                         reject(reason);
@@ -236,6 +245,30 @@ async function main(): Promise<void> {
         }
     });
     return promise;
+}
+
+function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
+    var executePromise = new Promise((resolve, reject) => {
+        executeWithRetriesImplementaion(operationName, operation, retryCount, resolve, reject);
+    });
+
+    return executePromise;
+}
+
+function executeWithRetriesImplementaion(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
+    operation().then((result) => {
+        resolve(result);
+    }).catch((error) => {
+        if (currentRetryCount <= 0) {
+            tl.error(tl.loc("OperationFailed", operationName, error));
+            reject(error);
+        }
+        else {
+            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+            currentRetryCount = currentRetryCount - 1;
+            setTimeout(() => executeWithRetriesImplementaion(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
+        }
+    });
 }
 
 main()

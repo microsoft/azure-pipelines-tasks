@@ -61,6 +61,8 @@
   "loc.input.help.packTimezone": "Specifies the desired time zone used to produce the version of the package. Selecting UTC is recommended if you're using hosted build agents as their date and time might differ.",
   "loc.input.label.includeSymbols": "Create symbols package",
   "loc.input.help.includeSymbols": "Specifies that the package contains sources and symbols. When used with a .nuspec file, this creates a regular NuGet package file and the corresponding symbols package.",
+  "loc.input.label.toolPackage": "Tool Package",
+  "loc.input.help.toolPackage": "Determines if the output files of the project should be in the tool folder.",
   "loc.input.label.buildProperties": "Additional build properties",
   "loc.input.help.buildProperties": "Specifies a list of token=value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
   "loc.input.label.verbosityPack": "Verbosity",
@@ -90,7 +92,7 @@
   "loc.messages.PackagesFailedToPublish": "Packages failed to publish",
   "loc.messages.UnknownFeedType": "Unknown feed type '%s'",
   "loc.messages.Error_NoSourceSpecifiedForPush": "No source was specified for push",
-  "loc.messages.Error_UnexpectedErrorVstsNuGetPush": "An unexpected error occurred while trying to push the package with VstsNuGetPush.exe.",
+  "loc.messages.Error_UnexpectedErrorVstsNuGetPush": "An unexpected error occurred while trying to push the package with VstsNuGetPush.exe. Exit code(%s) and error(%s)",
   "loc.messages.Warning_FallBackToNuGet": "VstsNuGetPush.exe was not found, falling back to NuGet.exe.",
   "loc.messages.Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
   "loc.messages.Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
@@ -123,5 +125,6 @@
   "loc.messages.NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
   "loc.messages.NGCommon_UnableToFindTool": "Unable to find tool %s",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.",
+  "loc.messages.Error_NugetFailedWithCodeAndErr": "The nuget command failed with exit code(%s) and error(%s)"
 }

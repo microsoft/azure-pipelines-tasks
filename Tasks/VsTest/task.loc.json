@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 3,
-    "Patch": 2
+    "Patch": 19
   },
   "demands": [
     "vstest"
@@ -400,6 +400,20 @@
       "groupName": "executionOptions"
     },
     {
+      "name": "rerunType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.rerunType",
+      "defaultValue": "basedOnTestFailurePercentage",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunType",
+      "groupName": "executionOptions",
+      "options": {
+        "basedOnTestFailurePercentage": "% failure",
+        "basedOnTestFailureCount": "# of failed tests"
+      },
+      "visibleRule": "rerunFailedTests = true"
+    },
+    {
       "name": "rerunFailedThreshold",
       "type": "string",
       "label": "ms-resource:loc.input.label.rerunFailedThreshold",
@@ -407,7 +421,17 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.rerunFailedThreshold",
       "groupName": "executionOptions",
-      "visibleRule": "rerunFailedTests = true"
+      "visibleRule": "rerunFailedTests = true && rerunType = basedOnTestFailurePercentage"
+    },
+    {
+      "name": "rerunFailedTestCasesMaxLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.rerunFailedTestCasesMaxLimit",
+      "defaultValue": "5",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rerunFailedTestCasesMaxLimit",
+      "groupName": "executionOptions",
+      "visibleRule": "rerunFailedTests = true && rerunType = basedOnTestFailureCount"
     },
     {
       "name": "rerunMaxAttempts",
@@ -525,12 +549,17 @@
     "rerunFailedTests": "ms-resource:loc.messages.rerunFailedTests",
     "rerunFailedThreshold": "ms-resource:loc.messages.rerunFailedThreshold",
     "invalidRerunFailedThreshold": "ms-resource:loc.messages.invalidRerunFailedThreshold",
+    "rerunFailedTestCasesMaxLimit": "ms-resource:loc.messages.rerunFailedTestCasesMaxLimit",
+    "invalidRerunFailedTestCasesMaxLimit": "ms-resource:loc.messages.invalidRerunFailedTestCasesMaxLimit",
     "rerunMaxAttempts": "ms-resource:loc.messages.rerunMaxAttempts",
     "invalidRerunMaxAttempts": "ms-resource:loc.messages.invalidRerunMaxAttempts",
     "rerunNotSupported": "ms-resource:loc.messages.rerunNotSupported",
     "toolsInstallerPathNotSet": "ms-resource:loc.messages.toolsInstallerPathNotSet",
     "testImpactAndCCWontWork": "ms-resource:loc.messages.testImpactAndCCWontWork",
     "ToolsInstallerInstallationError": "ms-resource:loc.messages.ToolsInstallerInstallationError",
-    "OverrideUseVerifiableInstrumentation": "ms-resource:loc.messages.OverrideUseVerifiableInstrumentation"
+    "OverrideUseVerifiableInstrumentation": "ms-resource:loc.messages.OverrideUseVerifiableInstrumentation",
+    "NoTestResultsDirectoryFound": "ms-resource:loc.messages.NoTestResultsDirectoryFound",
+    "OnlyWindowsOsSupported": "ms-resource:loc.messages.OnlyWindowsOsSupported",
+    "MultiConfigNotSupportedWithOnDemand": "ms-resource:loc.messages.MultiConfigNotSupportedWithOnDemand"
   }
 }

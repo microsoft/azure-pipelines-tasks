@@ -28,7 +28,7 @@ tr.registerMock('readline', {
             on: function(event, cb) {
                 if (event === 'line') {
                     cb("Foo");
-                    cb("                                    ProvisioningStyle = Automatic;"); // First line wins. This should be ignored.                    
+                    cb("                                    ProvisioningStyle = Automatic;"); // First line wins. This should be ignored.
                     cb("Bar");
                     cb("Baz");
                 }
@@ -149,6 +149,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/bin/rm -f _xcodetasktmp.plist": {
             "code": 0,
             "stdout": "delete output here"
+        },
+        "/usr/libexec/PlistBuddy -c Print Entitlements:com.apple.developer.icloud-container-environment _xcodetasktmp.plist": {
+            "code": 1,
+            "stdout": ":com.apple.developer.icloud-container-environment, Does Not Exist"
         }
     }
 };

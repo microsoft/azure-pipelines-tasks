@@ -16,8 +16,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 4,
-    "Patch": 6
+    "Minor": 5,
+    "Patch": 1
   },
   "demands": [
     "Cmd"
@@ -82,6 +82,15 @@
       "required": false,
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.compressPackage"
+    },
+    {
+      "name": "useDiffPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useDiffPackage",
+      "defaultValue": "true",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage"
     },
     {
       "name": "copyPackageTimeoutSec",
@@ -329,6 +338,9 @@
     },
     {
       "name": "dockerRegistryEndpoint",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
@@ -338,6 +350,9 @@
     },
     {
       "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
@@ -382,6 +397,14 @@
     }
   },
   "messages": {
+    "DIFFPKG_ApplicationDoesNotExist": "ms-resource:loc.messages.DIFFPKG_ApplicationDoesNotExist",
+    "DIFFPKG_ApplicationIsNotChanged": "ms-resource:loc.messages.DIFFPKG_ApplicationIsNotChanged",
+    "DIFFPKG_CopyingToDiffPackge": "ms-resource:loc.messages.DIFFPKG_CopyingToDiffPackge",
+    "DIFFPKG_CreatingDiffPackage": "ms-resource:loc.messages.DIFFPKG_CreatingDiffPackage",
+    "DIFFPKG_CreatingDiffPackageForService": "ms-resource:loc.messages.DIFFPKG_CreatingDiffPackageForService",
+    "DIFFPKG_NoServicesRunning": "ms-resource:loc.messages.DIFFPKG_NoServicesRunning",
+    "DIFFPKG_ServiceDoesNotExist": "ms-resource:loc.messages.DIFFPKG_ServiceDoesNotExist",
+    "DIFFPKG_ServiceIsNotChanged": "ms-resource:loc.messages.DIFFPKG_ServiceIsNotChanged",
     "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",

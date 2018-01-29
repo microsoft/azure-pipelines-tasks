@@ -39,9 +39,6 @@ export class VstsNuGetPushToolRunner extends ToolRunner {
     public execSync(options?: IExecOptions): IExecSyncResult {
         options = initializeExecutionOptions(options, this.settings);
         let execResult = super.execSync(options);
-        if (execResult.code !== 0) {
-            telemetry.logExecResults(execResult.code, execResult.stderr);
-        }
         return execResult;
     }
 

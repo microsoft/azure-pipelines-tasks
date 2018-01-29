@@ -1,23 +1,16 @@
 {
     "common": [
         {
-            "module": "../Common/azurerest-common",
+            "module": "../Common/azure-arm-rest",
             "type": "node",
             "dest": "./",
-            "compile" : true
-        },
-        {
-            "module": "../Common/azurestack-common",
-            "type": "node",
-            "dest": "./",
-            "compile" : true
+            "compile": true
         }
     ],
     "rm": [
         {
             "items": [
-                "node_modules/azurestack-common/node_modules/vsts-task-lib",
-                "node_modules/azurestack-common/node_modules/vso-node-api"
+                "node_modules/azure-arm-rest/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         }

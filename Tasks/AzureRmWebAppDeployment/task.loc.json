@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 31
+    "Patch": 37
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -34,21 +34,29 @@
       "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
     },
     {
+      "name": "PostDeploymentAction",
+      "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
+      "isExpanded": false,
+      "visibleRule": "WebAppKind != \"\""
+    },
+    {
+      "name": "ApplicationAndConfigurationSettings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
+      "isExpanded": false
+    },
+    {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true,
       "visibleRule": "WebAppKind != \"\""
-    },
-    {
-      "name": "ApplicationSettings",
-      "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
-      "isExpanded": true,
-      "visibleRule": "WebAppKind = applinux"
     }
   ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -57,6 +65,9 @@
     },
     {
       "name": "WebAppKind",
+      "aliases": [
+        "appType"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
       "defaultValue": "app",
@@ -65,13 +76,11 @@
         "app": "Web App",
         "applinux": "Linux Web App",
         "functionapp": "Function App",
-        "logicapp": "Logic App",
         "api": "API App",
         "mobileapp": "Mobile App"
       },
       "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
+        "EditableOptions": "false"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },
@@ -200,6 +209,9 @@
     },
     {
       "name": "RegistryConnectedServiceName",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.RegistryConnectedServiceName",
       "required": true,
@@ -278,6 +290,9 @@
     },
     {
       "name": "BuiltinLinuxPackage",
+      "aliases": [
+        "packageForLinux"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
@@ -338,7 +353,7 @@
         "Inline Script": "Inline Script",
         "File Path": "Script File Path"
       },
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
       "helpMarkDown": "ms-resource:loc.input.help.ScriptType"
     },
     {
@@ -346,7 +361,8 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.InlineScript",
       "defaultValue": ":: You can provide your deployment commands here. One command per line.",
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
+      "required": true,
       "visibleRule": "ScriptType == Inline Script",
       "properties": {
         "resizable": "true",
@@ -359,7 +375,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.ScriptPath",
       "required": true,
-      "groupName": "AdditionalDeploymentOptions",
+      "groupName": "PostDeploymentAction",
       "visibleRule": "ScriptType == File Path"
     },
     {
@@ -390,8 +406,20 @@
       "label": "ms-resource:loc.input.label.AppSettings",
       "defaultValue": "",
       "required": false,
-      "groupName": "ApplicationSettings",
+      "groupName": "ApplicationAndConfigurationSettings",
       "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "ConfigurationSettings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.ConfigurationSettings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationSettings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
@@ -466,6 +494,9 @@
     },
     {
       "name": "XmlTransformation",
+      "aliases": [
+        "enableXmlTransform"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.XmlTransformation",
       "required": false,
@@ -475,6 +506,9 @@
     },
     {
       "name": "XmlVariableSubstitution",
+      "aliases": [
+        "enableXmlVariableSubstitution"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.XmlVariableSubstitution",
       "required": false,
@@ -691,6 +725,31 @@
     "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
     "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
     "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
-    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation"
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation",
+    "RenameLockedFilesEnabled": "ms-resource:loc.messages.RenameLockedFilesEnabled",
+    "FailedToEnableRenameLockedFiles": "ms-resource:loc.messages.FailedToEnableRenameLockedFiles",
+    "WebJobsInProgressIssue": "ms-resource:loc.messages.WebJobsInProgressIssue",
+    "FailedToFetchKuduAppSettings": "ms-resource:loc.messages.FailedToFetchKuduAppSettings",
+    "FailedToCreatePath": "ms-resource:loc.messages.FailedToCreatePath",
+    "FailedToDeleteFile": "ms-resource:loc.messages.FailedToDeleteFile",
+    "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
+    "FailedToGetFileContent": "ms-resource:loc.messages.FailedToGetFileContent",
+    "FailedToListPath": "ms-resource:loc.messages.FailedToListPath",
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy",
+    "FailedToGetAppServiceDetails": "ms-resource:loc.messages.FailedToGetAppServiceDetails",
+    "FailedToGetAppServicePublishingProfile": "ms-resource:loc.messages.FailedToGetAppServicePublishingProfile",
+    "FailedToUpdateAppServiceMetadata": "ms-resource:loc.messages.FailedToUpdateAppServiceMetadata",
+    "FailedToGetAppServiceMetadata": "ms-resource:loc.messages.FailedToGetAppServiceMetadata",
+    "FailedToPatchAppServiceConfiguration": "ms-resource:loc.messages.FailedToPatchAppServiceConfiguration",
+    "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
+    "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
+    "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
+    "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
+    "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
+    "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
+    "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
+    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
+    "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
+    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService"
   }
 }

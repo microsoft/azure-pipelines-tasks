@@ -193,7 +193,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 }
 
                 for (const packageFile of filesList) {
-                    await publishPackageVstsNuGetPushAsync(packageFile, publishOptions);
+                    publishPackageVstsNuGetPush(packageFile, publishOptions);
                 }
             }
             else {
@@ -253,12 +253,15 @@ function publishPackageNuGet(packageFile: string, options: PublishOptions, authI
 
     let execResult = nugetTool.execSync();
     if (execResult.code !== 0) {
-        telemetry.logExecResults(execResult.code, execResult.stderr);
+        telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
+        throw tl.loc("Error_NugetFailedWithCodeAndErr",
+            execResult.code,
+            execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
     }
     return execResult;
 }
 
-async function publishPackageVstsNuGetPushAsync(packageFile: string, options: IVstsNuGetPushOptions) {
+function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPushOptions) {
     let vstsNuGetPushTool = vstsNuGetPushToolRunner.createVstsNuGetPushToolRunner(options.vstsNuGetPushPath, options.settings, options.internalAuthInfo);
     vstsNuGetPushTool.arg(packageFile);
     vstsNuGetPushTool.arg(["-Source", options.feedUri]);
@@ -269,20 +272,21 @@ async function publishPackageVstsNuGetPushAsync(packageFile: string, options: IV
         vstsNuGetPushTool.arg(["-Verbosity", "Detailed"]);
     }
 
-    let exitCode: number = await vstsNuGetPushTool.exec();
-    if (exitCode === 0)
-    {
+    let execResult: IExecSyncResult = vstsNuGetPushTool.execSync();
+    if (execResult.code === 0) {
         return;
     }
 
     // ExitCode 2 means a push conflict occurred
-    if (exitCode === 2 && options.settings.continueOnConflict)
-    {
+    if (execResult.code === 2 && options.settings.continueOnConflict) {
         tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`)
         return;
     }
 
-    throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush"));
+    telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
+    throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush",
+        execResult.code,
+        execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
 
 function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean, nugetExePath: string): boolean {

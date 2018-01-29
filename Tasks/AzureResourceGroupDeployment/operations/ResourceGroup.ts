@@ -39,7 +39,6 @@ function stripJsonComments(content) {
 
     var currentChar;
     var nextChar;
-    var prevChar;
     var insideQuotes = false;
     var contentWithoutComments = '';
     var insideComment = 0;
@@ -65,21 +64,26 @@ function stripJsonComments(content) {
             }
 
         } else {
-            prevChar = i - 1 >= 0 ? content[i - 1] : "";
-
-            if (currentChar == '"' && prevChar != '\\') {
-                insideQuotes = !insideQuotes
+            if (insideQuotes && currentChar == "\\") {
+                contentWithoutComments += currentChar + nextChar;
+                i++; // Skipping checks for next char if escaped
+                continue;
             }
-
-            if (!insideQuotes) {
-                if (currentChar + nextChar === '//') {
-                    insideComment = singlelineComment;
-                    i++;
+            else {
+                if (currentChar == '"') {
+                    insideQuotes = !insideQuotes;
                 }
 
-                if (currentChar + nextChar === '/*') {
-                    insideComment = multilineComment;
-                    i++;
+                if (!insideQuotes) {
+                    if (currentChar + nextChar === '//') {
+                        insideComment = singlelineComment;
+                        i++;
+                    }
+
+                    if (currentChar + nextChar === '/*') {
+                        insideComment = multilineComment;
+                        i++;
+                    }
                 }
             }
         }
@@ -243,7 +247,7 @@ export class ResourceGroup {
         switch (type.toLowerCase()) {
             case "int":
             case "object":
-            case "secureObject":
+            case "secureobject":
             case "array":
             case "bool":
                 return JSON.parse(value);
@@ -362,12 +366,31 @@ export class ResourceGroup {
             parameters = this.updateOverrideParameters(template, parameters);
         }
 
+        parameters = this.sanitizeParameters(parameters);
+
         var deployment = new Deployment({
             template: template,
             parameters: parameters
         });
         deployment.updateCommonProperties(this.taskParameters.deploymentMode);
         return deployment;
+    }
+
+    private sanitizeParameters(parameters: Map<string, ParameterValue>): Map<string, ParameterValue> {
+        var result: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
+        for (var key in parameters) {
+            if (!!parameters[key].value) {
+                result[key] = {
+                    value: parameters[key].value
+                } as ParameterValue;
+            } else if (!!parameters[key].reference) {
+                result[key] = {
+                    reference: parameters[key].reference
+                } as ParameterValue;
+            }
+        }
+
+        return result;
     }
 
     private async getDeploymentObjectForPublicURL(): Promise<Deployment> {
@@ -402,6 +425,7 @@ export class ResourceGroup {
                 throw new Error(tl.loc("TemplateParsingFailed", utils.getError(error.message)));
             }
             parameters = this.updateOverrideParameters(template, parameters);
+            parameters = this.sanitizeParameters(parameters);
             deployment.properties["parameters"] = parameters;
         }
 
@@ -439,10 +463,11 @@ export class ResourceGroup {
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
-                    // if (result && result["properties"] && result["properties"]["outputs"]) {
-                    //     tl.command("task.setvariable", { "isOutput": "true", "variable": "DeploymentOutputs" }, JSON.stringify(result["properties"]["outputs"]));
-                    //     console.log(tl.loc("AddedOutputVariable"));
-                    // }
+                    if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
+                        tl.setVariable(this.taskParameters.deploymentOutputs, JSON.stringify(result["properties"]["outputs"]));
+                        console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
+                    }
+
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
                     resolve();
                 });

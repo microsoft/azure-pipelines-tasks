@@ -139,9 +139,6 @@ describe('Xcode Suite', function() {
                         '| /home/bin/xcpretty -r junit --no-color'),
                     'xcodebuild for running tests in the ios project/workspace should have been run with xcpretty formatting.');
 
-                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;publishRunAttachments=true;resultFiles=\/user\/build\/build\/reports\/junit.xml;\]/) >= 0,
-                    'publish test results should have been called');
-
                 assert(tr.invokedToolCount == 2, 'should have xcodebuild for version, xcodebuild for test with xcpretty');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');

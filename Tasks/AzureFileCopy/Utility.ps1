@@ -2,11 +2,31 @@
 
 $ErrorActionPreference = 'Stop'
 $azureStackEnvironment = "AzureStack"
+$jobId = $env:SYSTEM_JOBID;
 
 function Get-DeploymentModulePath
 {
     Write-Output "$PSScriptRoot\DeploymentUtilities"
 }
+
+function Publish-Azure-Telemetry
+ {
+   param([object] $deploymentResponse, [string] $jobId)
+    if($deploymentResponse){
+       $jsonString = -join("{" , 
+       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
+       "," , 
+       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
+       "," , 
+       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
+       "," ,
+       "`"JobId`" : `"$jobId`"" ,
+       "}")
+    }
+
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=AzureFileCopy]$jsonString"
+    Write-Host $telemetryString
+ }
 
 function Get-AzureCmdletsVersion
 {
@@ -992,7 +1012,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $copyResponse
         Write-Output (Get-VstsLocString -Key "AFC_CopyCompleted" -ArgumentList $resourceName, $status)
-
+        Publish-Azure-Telemetry -deploymentResponse $copyResponse -jobId $jobId
         if ($status -ne "Passed")
         {
             $winrmHelpMsg = Get-VstsLocString -Key "AFC_WinRMHelpMessage"
@@ -1061,7 +1081,7 @@ function Copy-FilesParallellyToAzureVMs
 
                 Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $output
                 Write-Output (Get-VstsLocString -Key "AFC_CopyCompleted" -ArgumentList $resourceName, $status)
-
+                Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
                 if ($status -ne "Passed")
                 {
                     $parallelOperationStatus = "Failed"

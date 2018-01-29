@@ -194,6 +194,9 @@
     "BuildArtifactNotFound": "ms-resource:loc.messages.BuildArtifactNotFound",
     "NoArtifactsFound": "ms-resource:loc.messages.NoArtifactsFound",
     "BuildIdBuildDefinitionMismatch": "ms-resource:loc.messages.BuildIdBuildDefinitionMismatch",
-    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded"
+    "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
+    "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
+    "OperationFailed": "ms-resource:loc.messages.OperationFailed",
+    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound"
   }
 }
