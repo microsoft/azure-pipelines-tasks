@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
+    "Minor": 130,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -319,25 +319,11 @@
       "defaultValue": "latest",
       "options": {
         "latest": "Use latest release",
-        "specify": "Specify version number",
         "pom": "Use version declared in your pom.xml"
       },
       "helpMarkDown": "ms-resource:loc.input.help.sqMavenPluginVersionChoice",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqMavenPluginVersion",
-      "aliases": [
-        "sonarQubeGradlePluginVersion"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqMavenPluginVersion",
-      "required": true,
-      "defaultValue": "3.4.0.905",
-      "helpMarkDown": "ms-resource:loc.input.help.sqMavenPluginVersion",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true && sqMavenPluginVersionChoice = specify"
     },
     {
       "name": "checkstyleAnalysisEnabled",
