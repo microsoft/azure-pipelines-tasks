@@ -19,7 +19,7 @@
         "Minor": 130,
         "Patch": 0
     },
-    "releaseNotes": "Configuration of the SonarQube analysis was moved to the SonarQube extension, in task `Prepare Analysis Configuration`",
+    "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
         "maven"
     ],
@@ -279,7 +279,7 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Run a [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing the current goals. 'install' or 'package' goals should be executed first."
+            "helpMarkDown": "Run a [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing the current goals. `install` or `package` goals should be executed first. You have to add the `Prepare Analysis Configuration` task of the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions in your build definition before this Maven task."
         },
         {
             "name": "sqMavenPluginVersionChoice",
