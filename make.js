@@ -180,7 +180,6 @@ target.build = function() {
                     console.log('> copying module resources');
                     var modMakePath = path.join(modPath, 'make.json');
                     var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
-
                     copyTaskResources(modMake, modPath, modOutDir);
 
                     // get externals
