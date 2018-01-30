@@ -4,8 +4,7 @@
         
 
 
-        "NpmAuthenticate",
-        "NuGet",
+
         "NugetPackager",
         "NuGetPublisher",
         "NuGetCommand",
