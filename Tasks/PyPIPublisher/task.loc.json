@@ -14,11 +14,18 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
+    {
+      "name": "serviceEndpoint",
+      "type": "connectedService:generic",
+      "label": "ms-resource:loc.input.label.serviceEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoint"
+    },
     {
       "name": "wd",
       "type": "filePath",
@@ -27,11 +34,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.wd"
     },
     {
-      "name": "serviceEndpoint",
-      "type": "connectedService:generic",
-      "label": "ms-resource:loc.input.label.serviceEndpoint",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoint"
+      "name": "wheel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.wheel",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.wheel"
     }
   ],
   "execution": {
