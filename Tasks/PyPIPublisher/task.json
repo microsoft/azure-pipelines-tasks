@@ -2,7 +2,7 @@
   "id": "2d8a1d60-8ccd-11e7-a792-11ac56e9f553",
   "name": "PyPIPublisher",
   "friendlyName": "PyPI Publisher",
-  "description": "Publish Python packages to the PyPI",
+  "description": "Publish Python packages to PyPI",
   "author": "Microsoft Corporation",
   "helpMarkDown": "[More Information](https://aka.ms/pypipublisher)",
   "category": "Utility",
