@@ -101,6 +101,7 @@ async function run() {
 
             var azureWebAppDetails = null;
             var virtualApplicationPhysicalPath = null;
+            var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
             
             if (!isLinuxWebApp) {
                 if (virtualApplication) {
@@ -116,7 +117,7 @@ async function run() {
                         throw Error(tl.loc("VirtualApplicationDoesNotExist", virtualApplication));
                     }
                 }
-                var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webDeployPkg);
+                
                 var applyFileTransformFlag = JSONFiles.length != 0 || xmlTransformation || xmlVariableSubstitution;
 
                 if (applyFileTransformFlag || generateWebConfig) {
