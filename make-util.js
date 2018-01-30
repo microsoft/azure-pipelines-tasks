@@ -60,9 +60,6 @@ var mkdir = function (options, target) {
 exports.mkdir = mkdir;
 
 var rm = function (options, target) {
-    // console.log('going to remove');
-    // console.log(JSON.stringify(options));
-    // console.log(JSON.stringify(target));
     if (target) {
         shell.rm(options, target);
     }
@@ -147,8 +144,7 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    var result = run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
-    console.log(result);
+    run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     cd(originalDir);
 }
 exports.buildNodeTask = buildNodeTask;
@@ -157,9 +153,6 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
     assert(taskMake, 'taskMake');
     assert(srcPath, 'srcPath');
     assert(destPath, 'destPath');
-
-    console.log('src: ' + srcPath);
-    console.log('dest: ' + destPath);
 
     // copy the globally defined set of default task resources
     var toCopy = makeOptions['taskResources'];
@@ -174,7 +167,6 @@ var copyTaskResources = function (taskMake, srcPath, destPath) {
 
     // remove the locally defined set of resources
     if (taskMake.hasOwnProperty('rm')) {
-        console.log('removing locally defined resources');
         removeGroups(taskMake.rm, destPath);
     }
 }

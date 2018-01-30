@@ -159,9 +159,6 @@ target.build = function() {
                 var modName = path.basename(modPath);
                 var modOutDir = path.join(commonPath, modName);
 
-                //console.log('taskPath' + taskPath);
-                console.log('modOutDir' + modOutDir);
-
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + modPath, true);
 
@@ -184,9 +181,6 @@ target.build = function() {
                     var modMakePath = path.join(modPath, 'make.json');
                     var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
 
-                    console.log('copying common');
-                    console.log('src: ' + modPath);
-                    console.log('dest: ' + modOutDir);
                     copyTaskResources(modMake, modPath, modOutDir);
 
                     // get externals
@@ -200,8 +194,6 @@ target.build = function() {
                 if (mod.type === 'node' && mod.compile == true) {
                     var currentTaskNodeModulesPath = path.join(taskPath, 'node_modules');
                     mkdir('-p', currentTaskNodeModulesPath);
-
-                    console.log('rm path: ' + path.join(taskPath, 'node_modules', modName));
                     rm('-Rf', path.join(taskPath, 'node_modules', modName));
 
                     var originalDir = pwd();
