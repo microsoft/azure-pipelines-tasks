@@ -469,10 +469,6 @@ var removeGroup = function (group, pathRoot) {
 }
 
 var removeGroups = function (groups, pathRoot) {
-    console.log('preparing to remove groups');
-    console.log('path root: ' + pathRoot);
-    console.log('groups: ' + JSON.stringify(groups));
-
     assert(groups, 'groups');
     assert(groups.length, 'groups.length');
     groups.forEach(function (group) {
