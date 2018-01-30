@@ -25,7 +25,7 @@
   "loc.input.label.runSettingsFile": "Archivo de configuración de ejecución",
   "loc.input.help.runSettingsFile": "Ruta de acceso al archivo runsettings o testsettings que se va a usar en las pruebas.",
   "loc.input.label.overrideRunParams": "Reemplazar parámetros de ejecución de prueba",
-  "loc.input.help.overrideRunParams": "Reemplace los parámetros definidos en la sección TestRunParameters del archivo runsettings. Por ejemplo: `AppURL=$(DeployURL);Port=8080`",
+  "loc.input.help.overrideRunParams": "Reemplace los parámetros definidos en la sección \"TestRunParameters\" del archivo runsettings o la sección \"Propiedades\" del archivo testsettings. Por ejemplo: \"AppURL=$(DeployURL);Port=8080\". Nota: Se puede acceder a las propiedades especificadas en el archivo testsettings a través de TestContext mediante Test Agent 2017 Update 4 o superior.",
   "loc.input.label.codeCoverageEnabled": "Cobertura de código habilitada",
   "loc.input.help.codeCoverageEnabled": "Si es necesario habilitar la cobertura de código.",
   "loc.input.label.customSlicingEnabled": "Distribuir pruebas por número de máquinas",
