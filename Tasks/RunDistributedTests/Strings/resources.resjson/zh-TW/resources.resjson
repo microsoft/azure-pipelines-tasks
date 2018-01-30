@@ -25,7 +25,7 @@
   "loc.input.label.runSettingsFile": "回合設定檔案",
   "loc.input.help.runSettingsFile": "要在測試中使用之 runsettings 或 testsettings 檔案的路徑。",
   "loc.input.label.overrideRunParams": "覆寫測試回合參數",
-  "loc.input.help.overrideRunParams": "覆寫在 runsettings 檔案 TestRunParameters 區段中定義的參數。例如: `AppURL=$(DeployURL);Port=8080`",
+  "loc.input.help.overrideRunParams": "覆寫在 runsettings 檔案 `TestRunParameters` 區段或 testsettings 檔案的 `Properties` 區段中定義的參數。例如: `AppURL=$(DeployURL);Port=8080`。注意: 在 testsettings 檔案中指定的屬性可以透過使用 Test Agent 2017 Update 4 更高版本的 TestContext 存取。",
   "loc.input.label.codeCoverageEnabled": "已啟用程式碼涵蓋範圍",
   "loc.input.help.codeCoverageEnabled": "是否需要啟用程式碼涵蓋範圍。",
   "loc.input.label.customSlicingEnabled": "依電腦數目散發測試",

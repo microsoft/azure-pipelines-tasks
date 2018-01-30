@@ -25,7 +25,7 @@
   "loc.input.label.runSettingsFile": "Файл параметров запуска",
   "loc.input.help.runSettingsFile": "Путь к файлу runsettings или testsettings для использования в тестах.",
   "loc.input.label.overrideRunParams": "Переопределить параметры тестового запуска",
-  "loc.input.help.overrideRunParams": "Переопределите параметры, заданные в разделе TestRunParameters файла runsettings. Пример: \"AppURL=$(DeployURL);Port=8080\"",
+  "loc.input.help.overrideRunParams": "Переопределите параметры, определенные в разделе \"TestRunParameters\" файла runsettings или в разделе \"Properties\" файла testsettings. Например, \"AppURL=$(DeployURL);Port=8080\". Примечание. К свойствам, указанным в файле testsettings, можно обратиться через TestContext, используя агент тестирования 2017 с обновлением 4 или более поздней версии.",
   "loc.input.label.codeCoverageEnabled": "Оценка объемов протестированного кода включена",
   "loc.input.help.codeCoverageEnabled": "Нужно ли включить оценку объемов протестированного кода.",
   "loc.input.label.customSlicingEnabled": "Распределить тесты по числу компьютеров",

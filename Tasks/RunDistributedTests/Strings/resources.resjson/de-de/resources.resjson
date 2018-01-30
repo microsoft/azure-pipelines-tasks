@@ -25,7 +25,7 @@
   "loc.input.label.runSettingsFile": "Testlaufeinstellungsdatei",
   "loc.input.help.runSettingsFile": "Pfad zur Ausführungs- oder Testeinstellungsdatei, die bei den Tests verwendet werden soll.",
   "loc.input.label.overrideRunParams": "Testlaufparameter überschreiben",
-  "loc.input.help.overrideRunParams": "Überschreiben Sie Parameter, die im Abschnitt \"TestRunParameters\" der Datei mit den Ausführungseinstellungen definiert sind, z. B. \"AppURL=$(DeployURL);Port=8080\".",
+  "loc.input.help.overrideRunParams": "Überschreiben Sie Parameter, die im Abschnitt \"TestRunParameters\" der Datei mit Laufzeiteinstellungen oder im Abschnitt \"Properties\" der Datei mit Testeinstellungen definiert sind. Beispiel: AppURL=$(DeployURL);Port=8080. Hinweis: Auf Eigenschaften in der Datei mit den Testeinstellungen kann über TestContext unter Verwendung von Test Agent 2017 Update 4 oder höher zugegriffen werden.",
   "loc.input.label.codeCoverageEnabled": "Code Coverage aktiviert",
   "loc.input.help.codeCoverageEnabled": "Angabe, ob Code Coverage aktiviert werden muss.",
   "loc.input.label.customSlicingEnabled": "Tests nach Anzahl der Computer verteilen",
