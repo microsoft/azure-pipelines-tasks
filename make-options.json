@@ -16,7 +16,7 @@
         "AzureNLBManagement",
         "AzurePowerShell",
         "AzureResourceGroupDeployment",
-        "AzureRmWebAppDeployment",
+        "AzureRmWebAppDeployment",        
         "AzureVmssDeployment",
         "Bash",
         "BatchScript",
