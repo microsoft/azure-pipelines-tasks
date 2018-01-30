@@ -8,6 +8,9 @@ import { TaskParameters } from './TaskParameters';
 var deployUtility = require('webdeployment-common/utility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
+const deploymentFolder: string = 'site/deployments';
+const manifestFileName: string = 'manifest';
+const VSTS_ZIP_DEPLOY = 'VSTS_ZIP_DEPLOY';
 
 export class KuduServiceUtility {
     private _appServiceKuduService: Kudu;
@@ -24,10 +27,10 @@ export class KuduServiceUtility {
         }
     }
 
-    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<void> {
+    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<string> {
         try {
             var requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
-            await this._appServiceKuduService.updateDeployment(requestBody);
+            return await this._appServiceKuduService.updateDeployment(requestBody);
         }
         catch(error) {
             tl.warning(error);
@@ -129,9 +132,12 @@ export class KuduServiceUtility {
         }
     }
 
-    public async zipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<void> {
+    public async zipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
         try {
-            
+            tl.debug('Performing pre-zipdeploy operation.');
+            await this._preZipDeployOperation();
+            tl.debug('Performed pre-zipdeploy operation.');
+
             if(tl.stats(packagePath).isDirectory()) {
                 let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
                 packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
@@ -144,19 +150,19 @@ export class KuduServiceUtility {
                 await webClient.sleepFor(10);
             }
 
-            var deploymentRequestDetails = this._getUpdateHistoryRequest(true, null, customMessage);
-            var queryParameters: Array<string> = [
+            let deploymentRequestDetails = this._getUpdateHistoryRequest(true, null, customMessage);
+            let queryParameters: Array<string> = [
                 'isAsync=true',
                 'message=' + encodeURIComponent(deploymentRequestDetails.message),
-                'deployer=' + 'VSTS',
+                'deployer=' + VSTS_ZIP_DEPLOY,
                 'author=' + deploymentRequestDetails.author,
                 'details=' + encodeURIComponent(deploymentRequestDetails.details)
             ];
 
-            var deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
 
             try {
-                var logs = await this._appServiceKuduService.getFileContent(`/site/deployments/${deploymentDetails.id}`, 'log.log');
+                let logs = await this._appServiceKuduService.getFileContent(`${deploymentFolder}/${deploymentDetails.id}`, 'log.log');
                 console.log(logs);
             }
             catch(error) {
@@ -172,10 +178,48 @@ export class KuduServiceUtility {
             }
 
             console.log(tl.loc('PackageDeploymentSuccess'));
+            return deploymentDetails.id;
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
             throw Error(error);
+        }
+    }
+
+
+    public async postZipDeployOperation(oldDeploymentID: string, activeDeploymentID: string): Promise<void> {
+        try {
+            tl.debug(`Performing post zip-deploy operation: ${oldDeploymentID} => ${activeDeploymentID}`);
+            let manifestFile = await this._appServiceKuduService.getFileContent(`${deploymentFolder}/${oldDeploymentID}`, manifestFileName);
+            if(!!manifestFile) {
+                let tempManifestFile: string = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), manifestFileName);
+                tl.writeFile(tempManifestFile, manifestFile);
+                await this._appServiceKuduService.uploadFile(`${deploymentFolder}/${activeDeploymentID}`, manifestFileName, tempManifestFile);
+            }
+        }
+        catch(error) {
+            tl.debug(`Failed to execute post zip-deploy operation: ${JSON.stringify(error)}.`);
+        }
+    }
+
+    private async _preZipDeployOperation(): Promise<void> {
+        try {
+            let activeDeploymentID: string = await this._appServiceKuduService.getFileContent(deploymentFolder, 'active');
+            if(!!activeDeploymentID) {
+                let activeDeploymentFolder: string = `${deploymentFolder}/${activeDeploymentID}`;
+                tl.debug(`Active Deployment ID: '${activeDeploymentID}'. Deployment Folder: '${activeDeploymentFolder}'`);
+                let manifestFileContent: string = await this._appServiceKuduService.getFileContent(activeDeploymentFolder, manifestFileName);
+                if(!manifestFileContent) {
+                    tl.debug(`No Manifest file present. Creating a empty manifest file in '${activeDeploymentFolder}' directory.`);
+                    var tempManifestFile: string = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), manifestFileName);
+                    tl.writeFile(tempManifestFile, '');
+                    await this._appServiceKuduService.uploadFile(`${activeDeploymentFolder}`, manifestFileName, tempManifestFile);
+                    tl.debug(`Manifest file created in '${activeDeploymentFolder}' directory.`);
+                }
+            }
+        }
+        catch(error) {
+            tl.debug(`Failed to execute pre zip-deploy operation: ${JSON.stringify(error)}.`);
         }
     }
 
