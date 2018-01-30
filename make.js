@@ -194,7 +194,7 @@ target.build = function() {
                     }
                 }
 
-                // npm install the common module to the task dir
+                // copy the common module to the task dir
                 if (mod.type === 'node' && mod.compile == true) {
                     var currentTaskNodeModulesPath = path.join(taskPath, 'node_modules');
                     mkdir('-p', currentTaskNodeModulesPath);
@@ -204,36 +204,23 @@ target.build = function() {
 
 
                     // THIS IS TEMPORARY AND CAN BE REPLACED BY CODE IN MAKE.JSON FOR COMMON
-                    //var p = path.join(modPath, 'node_modules', "vsts-task-lib")
-                    //console.log("rm path: " + p);
+                    // copy task resources does this... does that solve our issue?
                     console.log('removing: ' + "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
-
-                    // TODO: Move this to make.json, do it at the task level isntead of the the common _build folder?
                     rm('-Rf', "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
                     // END TEMPORARY
 
                     var originalDir = pwd();
                     cd(taskPath);
                     
-
-
-
-
-
-                    
                     //run('npm install ' + modOutDir);
                     // we are in the task path, copy from the common package dir to the node modules dir of the current task
-                    console.log('copying');
-                    console.log('src: ' + modOutDir);
-                    console.log('dest: ' + currentTaskNodeModulesPath);
+                    // console.log('copying');
+                    // console.log('src: ' + modOutDir);
+                    // console.log('dest: ' + currentTaskNodeModulesPath);
 
+                    // Copy the common files to the node_modules folder for the current task
+                    // We need to do a copy because npm install in npm5 uses sym links and breaks our builds
                     cp('-r', modOutDir, currentTaskNodeModulesPath)
-
-
-
-
-
-
 
                     cd(originalDir);
                 }
@@ -253,16 +240,6 @@ target.build = function() {
                 }
             });
         }
-
-        ////// EXPERIMENT
-        // if (taskMake.hasOwnProperty('rm')) {
-        //     console.log('removing locally defined resources');
-        //     console.log(JSON.stringify(taskMake.rm));
-        //     console.log(outDir);
-        //     util.removeGroups(taskMake.rm, 'E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common');
-        // }
-        ////// END EXPERIMENT
-
 
         // build Node task
         if (shouldBuildNode) {
