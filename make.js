@@ -191,8 +191,8 @@ target.build = function() {
 
                     // THIS IS TEMPORARY AND CAN BE REPLACED BY CODE IN MAKE.JSON FOR COMMON
                     // copy task resources does this... does that solve our issue?
-                    console.log('removing: ' + "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
-                    rm('-Rf', "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
+                    //console.log('removing: ' + "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
+                    //rm('-Rf', "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
                     // END TEMPORARY
 
                     // get externals
