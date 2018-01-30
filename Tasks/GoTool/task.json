@@ -2,9 +2,10 @@
     "id": "334727F4-9495-4F9D-A391-FC621D671474",
     "name": "GoTool",
     "friendlyName": "Go Tool Installer",
-    "description": "Finds or Downloads and caches specified version spec of Go and adds it to the PATH.",
+    "description": "Finds or downloads and caches specified version of Go and adds it to the PATH.",
     "helpMarkDown": "",
     "category": "Tool",
+    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -12,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 1
+        "Minor": 1,
+        "Patch": 0
     },
     "satisfies": ["GO"],
     "demands": [],
@@ -34,7 +35,7 @@
         }
     },
     "messages": {
-        "ToolFailed": "Tool install failed: %s",
-        "VersionNotSupported": "Version '%s' is not available"
+        "FailedToDownload": "Failed to download version %s: please check if it is a valid version or there might be a network issue. Error: %s",
+        "TempDirNotSet": "Expected Agent.TempDirectory to be set"
     }
 }
