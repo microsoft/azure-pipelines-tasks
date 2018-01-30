@@ -147,17 +147,6 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
-    // move all modules to the highest level possible, this helps us with nested modules inside of the common modules
-    // console.log('should be running in: ' + taskPath);
-    // run('npm dedupe');
-
-    //// EXPERIMENT
-    // if (taskMake.hasOwnProperty('rm')) {
-    //     console.log('removing locally defined resources');
-    //     removeGroups(taskMake.rm, destPath);
-    // }
-    //// EXPERIMENT
-
     var result = run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     console.log(result);
     cd(originalDir);

@@ -184,8 +184,16 @@ target.build = function() {
                     var modMakePath = path.join(modPath, 'make.json');
                     var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
 
-                    
+                    console.log('copying common');
+                    console.log('src: ' + modPath);
+                    console.log('dest: ' + modOutDir);
                     copyTaskResources(modMake, modPath, modOutDir);
+
+                    // THIS IS TEMPORARY AND CAN BE REPLACED BY CODE IN MAKE.JSON FOR COMMON
+                    // copy task resources does this... does that solve our issue?
+                    console.log('removing: ' + "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
+                    rm('-Rf', "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
+                    // END TEMPORARY
 
                     // get externals
                     if (modMake.hasOwnProperty('externals')) {
@@ -202,21 +210,8 @@ target.build = function() {
                     console.log('rm path: ' + path.join(taskPath, 'node_modules', modName));
                     rm('-Rf', path.join(taskPath, 'node_modules', modName));
 
-
-                    // THIS IS TEMPORARY AND CAN BE REPLACED BY CODE IN MAKE.JSON FOR COMMON
-                    // copy task resources does this... does that solve our issue?
-                    console.log('removing: ' + "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
-                    rm('-Rf', "E:\\github\\vsts-tasks\\_build\\Tasks\\Common\\docker-common\\node_modules\\vsts-task-lib");
-                    // END TEMPORARY
-
                     var originalDir = pwd();
                     cd(taskPath);
-                    
-                    //run('npm install ' + modOutDir);
-                    // we are in the task path, copy from the common package dir to the node modules dir of the current task
-                    // console.log('copying');
-                    // console.log('src: ' + modOutDir);
-                    // console.log('dest: ' + currentTaskNodeModulesPath);
 
                     // Copy the common files to the node_modules folder for the current task
                     // We need to do a copy because npm install in npm5 uses sym links and breaks our builds
