@@ -154,6 +154,8 @@ target.build = function() {
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
 
+            console.log('found ' + common.length + ' common dependencies');
+
             common.forEach(function(mod) {
                 var modPath = path.join(taskPath, mod['module']);
                 var modName = path.basename(modPath);

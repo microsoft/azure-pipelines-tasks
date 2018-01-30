@@ -126,6 +126,8 @@ var pathExists = function (checkPath) {
 exports.pathExists = pathExists;
 
 var buildNodeTask = function (taskPath, outDir) {
+    console.log('BUILDING NODE TASK');
+
     var originalDir = pwd();
     cd(taskPath);
     var packageJsonPath = rp('package.json');

@@ -11,13 +11,13 @@
         "AzureFileCopy",
         "AzureFunction",
         "AzureKeyVault",
-        "AzureMonitorAlerts",
+        
         "AzureMonitor",		
         "AzureNLBManagement",
         "AzurePowerShell",
         "AzureResourceGroupDeployment",
         "AzureRmWebAppDeployment",        
-        "AzureVmssDeployment",
+        
         "Bash",
         "BatchScript",
         "Chef",
@@ -34,7 +34,7 @@
         "DeployVisualStudioTestAgent",
         "Docker",
         "DockerCompose",
-        "DotNetCoreCLI",
+        
         "DotNetCoreInstaller",
         "DownloadBuildArtifacts",
         "DownloadSecureFile",
