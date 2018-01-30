@@ -35,7 +35,7 @@
         }
     },
     "messages": {
-        "FailedToDownload": "Failed to download version %s: please check if it is a valid version or there might be a network issue. Error: %s",
+        "FailedToDownload": "Failed to download version %s. Please verify that the version is valid and resolve any other issues. Error: %s",
         "TempDirNotSet": "Expected Agent.TempDirectory to be set"
     }
 }
