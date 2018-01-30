@@ -21,9 +21,11 @@ var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 
 async function main() {
+    let zipDeploymentID: string;
+    var isDeploymentSuccess: boolean = true;
+    var kuduServiceUtility: KuduServiceUtility;
+
     try {
-        var isDeploymentSuccess: boolean = true;
-        var kuduServiceUtility: KuduServiceUtility;
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
@@ -49,7 +51,7 @@ async function main() {
                 case 'Builtin': {
                     var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
                     tl.debug('Performing Linux built-in package deployment');
-                    await kuduServiceUtility.zipDeploy(webPackage, taskParams.TakeAppOfflineFlag, { slotName: appService.getSlot() });
+                    zipDeploymentID = await kuduServiceUtility.zipDeploy(webPackage, taskParams.TakeAppOfflineFlag, { slotName: appService.getSlot() });
                     await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
                     break;
                 }
@@ -124,7 +126,10 @@ async function main() {
     finally {
         if(kuduServiceUtility) {
             await addReleaseAnnotation(azureEndpoint, appService, isDeploymentSuccess);
-            await kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: appService.getSlot()});
+            let activeDeploymentID: string = await kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: appService.getSlot()});
+            if(zipDeploymentID && activeDeploymentID && isDeploymentSuccess) {
+                await kuduServiceUtility.postZipDeployOperation(zipDeploymentID, activeDeploymentID);
+            }
         }
     }
 }

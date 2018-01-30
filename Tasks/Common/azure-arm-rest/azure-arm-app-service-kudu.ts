@@ -55,7 +55,7 @@ export class Kudu {
         this._client = new KuduServiceManagementClient(scmUri, base64EncodedCredential);
     }
 
-    public async updateDeployment(requestBody: any): Promise<any> {
+    public async updateDeployment(requestBody: any): Promise<string> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'PUT';
         httpRequest.body = JSON.stringify(requestBody);
