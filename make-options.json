@@ -2,13 +2,8 @@
     "tasks": [
 
         
-        "JenkinsQueueJob",
-        "Kubernetes",
-        "ManualIntervention",
-        "Maven",
-        "MSBuild",
-        "NodeTool",
-        "Npm",
+
+
         "NpmAuthenticate",
         "NuGet",
         "NugetPackager",
