@@ -132,6 +132,7 @@ export class KuduServiceUtility {
 
     public async zipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
         try {
+            console.log(tl.loc('PackageDeploymentInitiated'));
             await this._preZipDeployOperation();
 
             if(tl.stats(packagePath).isDirectory()) {
