@@ -271,9 +271,7 @@ target.test = function() {
     }
 
     // install and use node 6 to run the tests
-    // temporarily use nvm use as a hack to get node 6, fix it after using existing code to dl/install node
-    //run('nvm use 6.12.0');
-    util.installNode('6.12.0', buildTestsPath);
+    util.installNode('v6.12.0', buildTestsPath);
 
     run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
 }

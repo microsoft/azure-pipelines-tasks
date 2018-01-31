@@ -283,7 +283,7 @@ var ensureTool = function (name, versionArgs, validate) {
 exports.ensureTool = ensureTool;
 
 
-var installNode = function (version, testPath) {
+var installNode = function (nodeVersion, testPath) {
     if (process.env['TF_BUILD']) {
         // skip adding node 5.10.1 to the PATH. the CI definition tests against node 5 and 6.
         return;
@@ -300,8 +300,7 @@ var installNode = function (version, testPath) {
     // download the same version of node used by the agent
     // and add node to the PATH
     var nodeUrl = 'https://nodejs.org/dist';
-    var nodeVersion = 'v5.10.1';
-    //var nodeVersion = version;
+
     switch (platform) {
         case 'darwin':
             var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
