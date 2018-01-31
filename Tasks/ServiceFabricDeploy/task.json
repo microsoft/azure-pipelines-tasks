@@ -16,7 +16,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 5,
+        "Minor": 6,
         "Patch": 0
     },
     "demands": [
@@ -421,6 +421,7 @@
         "SFSDK_AppAlreadyExistsError": "An application with name '{0}' already exists, its type is '{1}' and version is '{2}'. You must first remove the existing application before a new application can be deployed or provide a new name for the application.",
         "SFSDK_AppAlreadyExistsInfo": "An application with name '{0}' already exists in the cluster with application type '{1}' and version '{2}'. Removing it.",
         "SFSDK_UnregisteringExistingAppType": "Application type '{0}' and version '{1}' was already registered with the cluster, unregistering it...",
+        "SFSDK_SkipUnregisteringExistingAppType": "Application type '{0}' and version '{1}' is already registered with the cluster and currently is in use, hence skipping unregistering Application Type",
         "SFSDK_UnableToUnregisterAppType": "Unregistering the existing application type was unsuccessful.",
         "SFSDK_CopyingAppToImageStore": "Copying application to image store...",
         "SFSDK_CopyingAppToImageStoreFailed": "Copying of application package to image store failed. Cannot continue with registering the application.",
@@ -434,7 +435,7 @@
         "SFSDK_AppTypeMismatch": "Application type of application '{0}' doesn't match the application type in the application manifest of the new application package. Please ensure that the application being upgraded has the same application type.",
         "SFSDK_UpgradeInProgressError": "An upgrade for the application '{0}' is already in progress.",
         "SFSDK_StartAppUpgrade": "Start upgrading application...",
-        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}'...",
+        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}' failed",
         "SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
         "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
         "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",

@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 20
+    "Patch": 21
   },
   "runsOn": [
     "Agent",
@@ -381,6 +381,14 @@
       "label": "ms-resource:loc.input.label.includeSymbols",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.includeSymbols",
+      "groupName": "packOptions"
+    },
+    {
+      "name": "toolPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.toolPackage",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.toolPackage",
       "groupName": "packOptions"
     },
     {
