@@ -20,7 +20,6 @@
         "Patch": 0
     },
     "demands": [
-        "mysql" 
     ],
     "minimumAgentVersion": "1.100.0",
     "preview": true,
@@ -200,7 +199,7 @@
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
     "execution": {
         "Node": {
-            "target": "azureMysqlDeploy.js"
+            "target": "azuremysqldeploy.js"
         }
     },
     "messages": {
@@ -218,6 +217,7 @@
         "NotAbleToGetAllServers": "Not able to fetch all mysql server of a subscription. Error: %s .",
         "EmptyOrNullServerList": "Mysql server list is empty. Invalid mysql server host name.",
         "UnableToFindResourceGroupDueToNullId": "Unable to find resource group due to null id.",
+        "UnableToFindResourceGroupDueToInvalidId":  "Unable to find resource group due to invalid id.",
         "NotAbleToGetInstalledLocationOfMysqlFromPath": "Missing mysql client in agent box.",
         "UnableToFindMysqlFromRegistryOnMachineError": "Unable to find mysql from registry on machine error.",
         "UnableToFindMysqlFromRegistry": "Unable to find mysql from registry. Error: %s .",

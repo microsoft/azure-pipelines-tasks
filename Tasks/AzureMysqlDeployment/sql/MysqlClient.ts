@@ -1,5 +1,5 @@
 import { ISqlClient } from './ISqlClient';
-import { FirewallConfigurationCheckResult } from '../models//FirewallConfigurationCheckResult';
+import { FirewallConfiguration } from '../models/FirewallConfiguration';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import task = require("vsts-task-lib/task");
 import Q = require('q');
@@ -28,8 +28,8 @@ export class MysqlClient implements ISqlClient {
     /**
      * Get Firewall configuration related to agent box
      */
-    public getFirewallConfiguration(): FirewallConfigurationCheckResult {
-        let firewallConfigurationCheckReult: FirewallConfigurationCheckResult = new FirewallConfigurationCheckResult(true);
+    public getFirewallConfiguration(): FirewallConfiguration {
+        let firewallConfiguration: FirewallConfiguration = new FirewallConfiguration(true);
         // Regex to extract Ip Address from string
         const regexToGetIpAddress = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
         const result = task.execSync(this._toolPath, this._getArgumentString());
@@ -38,10 +38,10 @@ export class MysqlClient implements ISqlClient {
         if(result && result.stderr){
             var ipAddresses = result.stderr.match(regexToGetIpAddress);
             if(ipAddresses && ipAddresses.length > 0){
-                firewallConfigurationCheckReult = new FirewallConfigurationCheckResult(false, ipAddresses[0]);         
+                firewallConfiguration = new FirewallConfiguration(false, ipAddresses[0]);         
             }
         }
-        return firewallConfigurationCheckReult;
+        return firewallConfiguration;
     }
 
     /**

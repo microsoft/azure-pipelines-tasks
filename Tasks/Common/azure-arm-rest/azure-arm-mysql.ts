@@ -95,12 +95,10 @@ export class FirewallRules {
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 201 && statusCode != 202) {
                 // Generate Error
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                    // Generate Response
-                    deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-                }, (error) => deferred.reject(error))
+                // Generate Response
+                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
@@ -150,13 +148,11 @@ export class FirewallRules {
             var statusCode = response.statusCode;
             if (statusCode != 200 && statusCode != 202 && statusCode !=204) {
                 // Generate Error
-                deferred.resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else {
-                this.client.getLongRunningOperationResult(response).then((operationResponse: webClient.WebResponse) => {
-                    // Generate Response
-                    deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
-                }, (error) => deferred.reject(error))
+                // Generate Response
+                deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),

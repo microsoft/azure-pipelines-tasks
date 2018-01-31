@@ -7,7 +7,6 @@ import { AzureMysqlTaskParameter } from './models/AzureMysqlTaskParameter';
 import { FirewallOperations } from './operations/FirewallOperations';
 import { MysqlServerOperations } from './operations/MysqlServerOperations';
 import { ToolPathOperations } from './operations/ToolPathOperations';
-import { FirewallConfigurationCheckResult } from './models/FirewallConfigurationCheckResult';
 import { ISqlClient } from './sql/ISqlClient';
 import { MysqlClient } from './sql/MysqlClient';
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
@@ -26,9 +25,7 @@ async function run() {
             task.debug('Azure Endpoint is null');
             throw new Error(task.loc("AzureEndpointCannotBeNull"));
         }       
-        const azureCredentails = new ApplicationTokenCredentials(endpoint.servicePrincipalClientID,endpoint.tenantID, endpoint.servicePrincipalKey, 
-            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
-        const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(azureCredentails, endpoint.subscriptionID);
+        const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
         // Get mysql server data entered by user 
         const mysqlServer: MysqlServer = await mysqlServerOperations.getMysqlServerFromServerName(azureMysqlTaskParameter.getServerName());
         task.debug('Mysql server details from server name: '+JSON.stringify(mysqlServer));
@@ -36,7 +33,7 @@ async function run() {
         if(mysqlClientPath){
              // Mysql client
             const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName(), mysqlClientPath);
-            const firewallOperations : FirewallOperations = new FirewallOperations(azureCredentails, endpoint.subscriptionID);
+            const firewallOperations : FirewallOperations = new FirewallOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
             //Invoke firewall operation to validate user has permission for server or not. If not whitelist the IP
             const firewallAdded: boolean = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer.getResourceGroupName());
             //Execute sql script entered by user

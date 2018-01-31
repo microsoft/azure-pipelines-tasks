@@ -50,7 +50,6 @@ export class MysqlServerOperations{
         if(result && result.length > 0){
             result.forEach((resultObject) => {
                 if(resultObject && resultObject.name === serverName){
-                    const pathArray =resultObject.id.split("/");
                     mysqlServer = new MysqlServer(resultObject.name, resultObject.properties.fullyQualifiedDomainName, this._getResourceGroupNameFromUrl(resultObject.id));
                 }
             });
@@ -69,6 +68,9 @@ export class MysqlServerOperations{
             throw new Error(task.loc("UnableToFindResourceGroupDueToNullId"));
         }
         const pathArray =id.split("/");
+        if(pathArray[3] != 'resourceGroups'){
+            throw new Error(task.loc("UnableToFindResourceGroupDueToInvalidId"));
+        }
         return pathArray[4];
     }
 

@@ -19,9 +19,7 @@
     "Minor": 0,
     "Patch": 0
   },
-  "demands": [
-    "mysql"
-  ],
+  "demands": [],
   "minimumAgentVersion": "1.100.0",
   "preview": true,
   "groups": [
@@ -202,7 +200,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "azureMysqlDeploy.js"
+      "target": "azuremysqldeploy.js"
     }
   },
   "messages": {
@@ -220,6 +218,7 @@
     "NotAbleToGetAllServers": "ms-resource:loc.messages.NotAbleToGetAllServers",
     "EmptyOrNullServerList": "ms-resource:loc.messages.EmptyOrNullServerList",
     "UnableToFindResourceGroupDueToNullId": "ms-resource:loc.messages.UnableToFindResourceGroupDueToNullId",
+    "UnableToFindResourceGroupDueToInvalidId": "ms-resource:loc.messages.UnableToFindResourceGroupDueToInvalidId",
     "NotAbleToGetInstalledLocationOfMysqlFromPath": "ms-resource:loc.messages.NotAbleToGetInstalledLocationOfMysqlFromPath",
     "UnableToFindMysqlFromRegistryOnMachineError": "ms-resource:loc.messages.UnableToFindMysqlFromRegistryOnMachineError",
     "UnableToFindMysqlFromRegistry": "ms-resource:loc.messages.UnableToFindMysqlFromRegistry",

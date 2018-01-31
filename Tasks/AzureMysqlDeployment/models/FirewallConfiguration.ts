@@ -1,4 +1,4 @@
-export class FirewallConfigurationCheckResult {
+export class FirewallConfiguration {
 
     private ipAdressAlreadyAdded: boolean;
     private ipAddress: string;
