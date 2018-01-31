@@ -69,6 +69,14 @@ export class Helper {
         return tl.exist(path) && tl.stats(path).isDirectory();
     }
 
+    public static isDebugEnabled(): boolean {
+        const sysDebug = tl.getVariable('System.Debug');
+        if (sysDebug === undefined) {
+            return false;
+        }
+        return sysDebug.toLowerCase() === 'true';
+    }
+
     public static publishEventToCi(areaCode: string, message: string, tracePoint: number, isUserError: boolean) {
         const taskProps = { areacode: '', result: '', tracepoint: 0, isusererror: false };
         taskProps.areacode = areaCode;
