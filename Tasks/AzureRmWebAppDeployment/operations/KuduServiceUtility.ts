@@ -29,7 +29,7 @@ export class KuduServiceUtility {
 
     public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<string> {
         try {
-            var requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
+            let requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
             return await this._appServiceKuduService.updateDeployment(requestBody);
         }
         catch(error) {
@@ -132,9 +132,7 @@ export class KuduServiceUtility {
 
     public async zipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
         try {
-            tl.debug('Performing pre-zipdeploy operation.');
             await this._preZipDeployOperation();
-            tl.debug('Performed pre-zipdeploy operation.');
 
             if(tl.stats(packagePath).isDirectory()) {
                 let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
@@ -148,19 +146,16 @@ export class KuduServiceUtility {
                 await webClient.sleepFor(10);
             }
 
-            let deploymentRequestDetails = this._getUpdateHistoryRequest(true, null, customMessage);
             let queryParameters: Array<string> = [
                 'isAsync=true',
-                'message=' + encodeURIComponent(deploymentRequestDetails.message),
-                'deployer=' + VSTS_ZIP_DEPLOY,
-                'author=' + deploymentRequestDetails.author,
-                'details=' + encodeURIComponent(deploymentRequestDetails.details)
+                'deployer=' + VSTS_ZIP_DEPLOY
             ];
 
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
 
             try {
                 let logs = await this._appServiceKuduService.getFileContent(`${deploymentFolder}/${deploymentDetails.id}`, 'log.log');
+                tl.debug(`logs from ZIP deploy`);
                 console.log(logs);
             }
             catch(error) {
@@ -187,13 +182,14 @@ export class KuduServiceUtility {
 
     public async postZipDeployOperation(oldDeploymentID: string, activeDeploymentID: string): Promise<void> {
         try {
-            tl.debug(`Performing post zip-deploy operation: ${oldDeploymentID} => ${activeDeploymentID}`);
+            tl.debug(`ZIP DEPLOY - Performing post zip-deploy operation: ${oldDeploymentID} => ${activeDeploymentID}`);
             let manifestFile = await this._appServiceKuduService.getFileContent(`${deploymentFolder}/${oldDeploymentID}`, manifestFileName);
             if(!!manifestFile) {
                 let tempManifestFile: string = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), manifestFileName);
                 tl.writeFile(tempManifestFile, manifestFile);
                 await this._appServiceKuduService.uploadFile(`${deploymentFolder}/${activeDeploymentID}`, manifestFileName, tempManifestFile);
             }
+            tl.debug('ZIP DEPLOY - Performed post-zipdeploy operation.');
         }
         catch(error) {
             tl.debug(`Failed to execute post zip-deploy operation: ${JSON.stringify(error)}.`);
@@ -202,6 +198,7 @@ export class KuduServiceUtility {
 
     private async _preZipDeployOperation(): Promise<void> {
         try {
+            tl.debug('ZIP DEPLOY - Performing pre-zipdeploy operation.');
             let activeDeploymentID: string = await this._appServiceKuduService.getFileContent(deploymentFolder, 'active');
             if(!!activeDeploymentID) {
                 let activeDeploymentFolder: string = `${deploymentFolder}/${activeDeploymentID}`;
@@ -214,6 +211,10 @@ export class KuduServiceUtility {
                     await this._appServiceKuduService.uploadFile(`${activeDeploymentFolder}`, manifestFileName, tempManifestFile);
                     tl.debug(`Manifest file created in '${activeDeploymentFolder}' directory.`);
                 }
+                else {
+                    tl.debug('Manifest file present in active deployment directory. Skip creating a new one.');
+                }
+                tl.debug('ZIP DEPLOY - Performed pre-zipdeploy operation.');
             }
         }
         catch(error) {
