@@ -61,6 +61,8 @@
   "loc.input.help.packTimezone": "Specifies the desired time zone used to produce the version of the package. Selecting UTC is recommended if you're using hosted build agents as their date and time might differ.",
   "loc.input.label.includeSymbols": "Create symbols package",
   "loc.input.help.includeSymbols": "Specifies that the package contains sources and symbols. When used with a .nuspec file, this creates a regular NuGet package file and the corresponding symbols package.",
+  "loc.input.label.toolPackage": "Tool Package",
+  "loc.input.help.toolPackage": "Determines if the output files of the project should be in the tool folder.",
   "loc.input.label.buildProperties": "Additional build properties",
   "loc.input.help.buildProperties": "Specifies a list of token=value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
   "loc.input.label.verbosityPack": "Verbosity",

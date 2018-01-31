@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [],
   "preview": "false",
@@ -279,6 +279,15 @@
       "type": "connectedService:dockerhost",
       "label": "ms-resource:loc.input.label.dockerHostEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerHostEndpoint",
+      "groupName": "advanced"
+    },
+    {
+      "name": "enforceDockerNamingConvention",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enforceDockerNamingConvention",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.enforceDockerNamingConvention",
       "groupName": "advanced"
     },
     {

@@ -1,7 +1,7 @@
 ﻿function Publish-NewServiceFabricApplication
 {
     <#
-    .SYNOPSIS 
+    .SYNOPSIS
     Publishes a new Service Fabric application type to Service Fabric cluster.
 
     .DESCRIPTION
@@ -15,7 +15,7 @@
     Path to the folder containing the Service Fabric application package OR path to the zipped service fabric applciation package.
 
     .PARAMETER ApplicationParameterFilePath
-    Path to the application parameter file which contains Application Name and application parameters to be used for the application.    
+    Path to the application parameter file which contains Application Name and application parameters to be used for the application.
 
     .PARAMETER ApplicationName
     Name of Service Fabric application to be created. If value for this parameter is provided alongwith ApplicationParameterFilePath it will override the Application name specified in ApplicationParameter  file.
@@ -28,9 +28,9 @@
     specified in ApplicationParameter file. In case a parameter is found in application parameter file and on commandline, commandline parameter will override the one specified in application parameter file.
 
     .PARAMETER OverwriteBehavior
-    Overwrite Behavior if an application exists in the cluster with the same name. Available Options are Never, Always, SameAppTypeAndVersion. 
+    Overwrite Behavior if an application exists in the cluster with the same name. Available Options are Never, Always, SameAppTypeAndVersion.
     Never will not remove the existing application. This is the default behavior.
-    Always will remove the existing application even if its Application type and Version is different from the application being created. 
+    Always will remove the existing application even if its Application type and Version is different from the application being created.
     SameAppTypeAndVersion will remove the existing application only if its Application type and Version is same as the application being created.
 
     .PARAMETER SkipPackageValidation
@@ -56,15 +56,15 @@
 
     #>
 
-    [CmdletBinding(DefaultParameterSetName="ApplicationName")]  
+    [CmdletBinding(DefaultParameterSetName="ApplicationName")]
     Param
     (
         [Parameter(Mandatory=$true,ParameterSetName="ApplicationParameterFilePath")]
         [Parameter(Mandatory=$true,ParameterSetName="ApplicationName")]
         [String]$ApplicationPackagePath,
-    
+
         [Parameter(Mandatory=$true,ParameterSetName="ApplicationParameterFilePath")]
-        [String]$ApplicationParameterFilePath,    
+        [String]$ApplicationParameterFilePath,
 
         [Parameter(Mandatory=$true,ParameterSetName="ApplicationName")]
         [Parameter(ParameterSetName="ApplicationParameterFilePath")]
@@ -153,7 +153,7 @@
     {
         Write-Warning (Get-VstsLocString -Key SFSDK_UnableToVerifyClusterConnection)
         throw
-    }    
+    }
 
     # If ApplicationName is not specified on command line get application name from Application Parameter file.
     if(!$ApplicationName)
@@ -186,7 +186,7 @@
                 throw $errMsg
             }
 
-            if($OverwriteBehavior.Equals("SameAppTypeAndVersion")) 
+            if($OverwriteBehavior.Equals("SameAppTypeAndVersion"))
             {
                 if($app.ApplicationTypeVersion -eq $names.ApplicationTypeVersion -and $app.ApplicationTypeName -eq $names.ApplicationTypeName)
                 {
@@ -196,13 +196,13 @@
                 {
                     $errMsg = (Get-VstsLocString -Key SFSDK_AppAlreadyExistsError -ArgumentList @($ApplicationName, $app.ApplicationTypeName, $app.ApplicationTypeVersion))
                     throw $errMsg
-                }             
+                }
             }
 
             if($OverwriteBehavior.Equals("Always"))
             {
                 $removeApp = $true
-            }            
+            }
 
             if($removeApp)
             {
@@ -223,8 +223,8 @@
                 }
 
                 if($OverwriteBehavior.Equals("Always"))
-                {                    
-                    # Unregsiter AppType and Version if there are no other applciations for the Type and Version. 
+                {
+                    # Unregsiter AppType and Version if there are no other applciations for the Type and Version.
                     # It will unregister the existing application's type and version even if its different from the application being created,
                     if((Get-ServiceFabricApplication | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
@@ -232,81 +232,100 @@
                     }
                 }
             }
-        }        
-
+        }
+        $ApplicationTypeAlreadyRegistered = $false
         $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object  { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
         if ($reg)
         {
-            Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-            $reg | Unregister-ServiceFabricApplicationType -Force
+            $ApplicationTypeAlreadyRegistered = $true
+            $typeIsInUse = $false
+            $apps = Get-ServiceFabricApplication -ApplicationTypeName $names.ApplicationTypeName
+            $apps | ForEach-Object {
+                if (($_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion))
+                {
+                    $typeIsInUse = $true
+                }
+            }
+            if(!$typeIsInUse)
+            {
+                Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
+                $reg | Unregister-ServiceFabricApplicationType -Force
+                $ApplicationTypeAlreadyRegistered = $false
+                if(!$?)
+                {
+                    throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
+                }
+            }
+            else
+            {
+                Write-Warning (Get-VstsLocString -Key SFSDK_SkipUnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
+            }
+        }
+        if(!$reg -or !$ApplicationTypeAlreadyRegistered)
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
+            # Get image store connection string
+            $clusterManifestText = Get-ServiceFabricClusterManifest
+            $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
+
+            $applicationPackagePathInImageStore = $names.ApplicationTypeName
+            $copyParameters = @{
+                'ApplicationPackagePath' = $AppPkgPathToUse
+                'ImageStoreConnectionString' = $imageStoreConnectionString
+                'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
+            }
+
+            $InstalledSdkVersion = [version](Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
+
+            if ($CopyPackageTimeoutSec)
+            {
+                if ($InstalledSdkVersion -ge [version]"2.3")
+                {
+                    $copyParameters['TimeOutSec'] = $CopyPackageTimeoutSec
+                }
+                else
+                {
+                    Write-Warning (Get-VstsLocString -Key SFSDK_CopyPackageTimeoutSecWarning $InstalledSdkVersion)
+                }
+            }
+
+            if ($CompressPackage)
+            {
+                if ($InstalledSdkVersion -ge [version]"2.5")
+                {
+                    $copyParameters['CompressPackage'] = $CompressPackage
+                }
+                else
+                {
+                    Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
+                }
+            }
+
+            Copy-ServiceFabricApplicationPackage @copyParameters
             if(!$?)
             {
-                throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
+                throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
             }
-        }
 
-        Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
-        # Get image store connection string
-        $clusterManifestText = Get-ServiceFabricClusterManifest
-        $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
+            $registerParameters = @{
+                'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
+            }
 
-        $applicationPackagePathInImageStore = $names.ApplicationTypeName
-        $copyParameters = @{
-            'ApplicationPackagePath' = $AppPkgPathToUse
-            'ImageStoreConnectionString' = $imageStoreConnectionString
-            'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
-        }
-
-        $InstalledSdkVersion = [version](Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
-
-        if ($CopyPackageTimeoutSec)
-        {
-            if ($InstalledSdkVersion -ge [version]"2.3")
+            if ($RegisterPackageTimeoutSec)
             {
-                $copyParameters['TimeOutSec'] = $CopyPackageTimeoutSec
+                $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
             }
-            else
+
+            Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
+            Register-ServiceFabricApplicationType @registerParameters
+            if(!$?)
             {
-                Write-Warning (Get-VstsLocString -Key SFSDK_CopyPackageTimeoutSecWarning $InstalledSdkVersion)
+                throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
             }
-        }
 
-        if ($CompressPackage)
-        {
-            if ($InstalledSdkVersion -ge [version]"2.5")
-            {
-                $copyParameters['CompressPackage'] = $CompressPackage
-            }
-            else
-            {
-                Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
-            }
+            Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
+            Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
         }
-
-        Copy-ServiceFabricApplicationPackage @copyParameters
-        if(!$?)
-        {
-            throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
-        }
-
-        $registerParameters = @{
-            'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
-        }
-        
-        if ($RegisterPackageTimeoutSec)
-        {
-            $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
-        }
-
-        Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-        Register-ServiceFabricApplicationType @registerParameters
-        if(!$?)
-        {
-            throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
-        }
-
-        Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
-        Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
     }
 
     if($Action.Equals("Create") -or $Action.Equals("RegisterAndCreate"))
@@ -316,7 +335,7 @@
         # If application parameters file is specified read values from and merge it with parameters passed on Commandline
         if ($PSBoundParameters.ContainsKey('ApplicationParameterFilePath'))
         {
-           $appParamsFromFile = Get-ApplicationParametersFromApplicationParameterFile $ApplicationParameterFilePath        
+           $appParamsFromFile = Get-ApplicationParametersFromApplicationParameterFile $ApplicationParameterFilePath
            if(!$ApplicationParameter)
             {
                 $ApplicationParameter = $appParamsFromFile
@@ -324,9 +343,9 @@
             else
             {
                 $ApplicationParameter = Merge-Hashtables -HashTableOld $appParamsFromFile -HashTableNew $ApplicationParameter
-            }    
+            }
         }
-    
+
         New-ServiceFabricApplication -ApplicationName $ApplicationName -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -ApplicationParameter $ApplicationParameter
         if(!$?)
         {

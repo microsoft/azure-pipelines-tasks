@@ -165,7 +165,7 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
         argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
     }
 
-    if (isDebugEnabled()) {
+    if (utils.Helper.isDebugEnabled()) {
         if (vstestConfig.vsTestVersionDetails !== null && (vstestConfig.vsTestVersionDetails.vstestDiagSupported()
             || utils.Helper.isToolsInstallerFlow(vstestConfig))) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
@@ -175,15 +175,6 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
     }
 
     return argsArray;
-}
-
-function isDebugEnabled(): boolean {
-    const sysDebug = tl.getVariable('System.Debug');
-    if (sysDebug === undefined) {
-        return false;
-    }
-
-    return sysDebug.toLowerCase() === 'true';
 }
 
 function addVstestArgs(argsArray: string[], vstest: any) {

@@ -135,10 +135,10 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
         # Configure cluster connection pre-reqs
         if ($ConnectedServiceEndpoint.Auth.Scheme -ne "None")
         {
-            # Add server cert thumbprint (common to both auth-types)
+            # Add server cert thumbprint(s) (common to both auth-types)
             if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
             {
-                $clusterConnectionParameters["ServerCertThumbprint"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint
+                $clusterConnectionParameters["ServerCertThumbprint"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint -split ',' | ForEach-Object { $_.Trim() }
             }
 
             # Add auth-specific parameters
