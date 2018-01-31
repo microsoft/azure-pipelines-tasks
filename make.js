@@ -56,7 +56,7 @@ var legacyTestPath = path.join(__dirname, '_test', 'Tests-Legacy');
 var legacyTestTasksPath = path.join(__dirname, '_test', 'Tasks');
 
 // node min version
-var minNodeVer = '4.0.0';
+var minNodeVer = '8.9.1';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
@@ -106,8 +106,8 @@ target.build = function() {
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '3.0.0')) {
-            fail('expected 3.0.0 or higher');
+        if (semver.lt(output, '5.5.1')) {
+            fail('expected 5.5.1 or higher');
         }
     });
 
@@ -269,6 +269,11 @@ target.test = function() {
     if (!testsSpec.length && !process.env.TF_BUILD) {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
+
+    // install and use node 6 to run the tests
+    // temporarily use nvm use as a hack to get node 6, fix it after using existing code to dl/install node
+    //run('nvm use 6.12.0');
+    util.installNode('6.12.0', buildTestsPath);
 
     run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
 }
