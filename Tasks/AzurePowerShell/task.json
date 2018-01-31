@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 5
+        "Patch": 8
     },
     "demands": [
         "azureps"
@@ -125,6 +125,14 @@
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
             "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1"
+        },
+        {
+            "name": "FailOnStandardError",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "required": false,
+            "defaultValue": "true",
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure."
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",

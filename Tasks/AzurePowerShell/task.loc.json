@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 5
+    "Patch": 8
   },
   "demands": [
     "azureps"
@@ -135,6 +135,17 @@
       "required": true,
       "visibleRule": "TargetAzurePs = OtherVersion",
       "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
+    },
+    {
+      "name": "FailOnStandardError",
+      "aliases": [
+        "failOnStandardError"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.FailOnStandardError",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

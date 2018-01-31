@@ -8,6 +8,7 @@ $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
+$failOnStandardError = Get-VstsInput -Name FailOnStandardError
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -105,7 +106,7 @@ try {
             ,$_
 
             # Set the task result to failed if the object is an error record.
-            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            if ($_ -is [System.Management.Automation.ErrorRecord] -and $failOnStandardError -eq $true) {
                 "##vso[task.complete result=Failed]"
             }
         }
