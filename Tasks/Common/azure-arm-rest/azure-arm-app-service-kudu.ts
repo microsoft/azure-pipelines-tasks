@@ -401,7 +401,7 @@ export class Kudu {
         }
     }
 
-    public async zipDeploy(webPackage: string, queryParameters: Array<string>): Promise<any> {
+    public async zipDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'POST';
         httpRequest.uri = this._client.getRequestUri(`/api/zipdeploy`, queryParameters);
