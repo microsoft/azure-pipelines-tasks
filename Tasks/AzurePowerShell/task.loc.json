@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 6
   },
   "demands": [
     "azureps"
@@ -138,9 +138,6 @@
     },
     {
       "name": "FailOnStandardError",
-      "aliases": [
-        "failOnStandardError"
-      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.FailOnStandardError",
       "required": false,
