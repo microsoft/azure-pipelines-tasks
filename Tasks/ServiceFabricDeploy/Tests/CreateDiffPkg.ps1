@@ -33,7 +33,7 @@ Register-Mock Get-VstsInput { "false" } -- -Name skipUpgradeSameTypeAndVersion
 Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
 Register-Mock Get-VstsInput { "false" } -- -Name configureDockerSettings
-Register-Mock Get-VstsInput { $true }  --  -Name useDiffPackage
+Register-Mock Get-VstsInput { "true" } -- -Name useDiffPackage
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
