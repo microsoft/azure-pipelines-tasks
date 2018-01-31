@@ -23,6 +23,13 @@
     "azureps"
   ],
   "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceNameSelector",
@@ -142,7 +149,8 @@
       "label": "ms-resource:loc.input.label.FailOnStandardError",
       "required": false,
       "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError"
+      "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

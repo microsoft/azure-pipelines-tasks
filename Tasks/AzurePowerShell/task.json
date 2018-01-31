@@ -23,6 +23,13 @@
         "azureps"
     ],
     "minimumAgentVersion": "1.95.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "ConnectedServiceNameSelector",
@@ -132,7 +139,8 @@
             "label": "Fail on Standard Error",
             "required": false,
             "defaultValue": "true",
-            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream. Otherwise the task will rely on the exit code to determine failure."
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream.",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",
