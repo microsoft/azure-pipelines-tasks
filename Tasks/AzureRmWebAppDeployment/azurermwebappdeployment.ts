@@ -22,8 +22,8 @@ var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 
 async function main() {
     let zipDeploymentID: string;
-    var isDeploymentSuccess: boolean = true;
-    var kuduServiceUtility: KuduServiceUtility;
+    let isDeploymentSuccess: boolean = true;
+    let kuduServiceUtility: KuduServiceUtility;
 
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -130,6 +130,9 @@ async function main() {
             if(zipDeploymentID && activeDeploymentID && isDeploymentSuccess) {
                 await kuduServiceUtility.postZipDeployOperation(zipDeploymentID, activeDeploymentID);
             }
+        }
+        else {
+            tl.debug('Cannot update deployment status as Kudu is not initialized');
         }
     }
 }

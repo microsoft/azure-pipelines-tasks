@@ -10,7 +10,7 @@ var zipUtility = require('webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
-const VSTS_ZIP_DEPLOY = 'VSTS_ZIP_DEPLOY';
+const VSTS_ZIP_DEPLOY: string = 'VSTS_ZIP_DEPLOY';
 
 export class KuduServiceUtility {
     private _appServiceKuduService: Kudu;
