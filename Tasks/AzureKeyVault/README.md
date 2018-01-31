@@ -40,7 +40,7 @@ The parameters of the task are described below. The parameters listed with a \* 
 
  * **Azure Subscription**\*: Select the service endpoint for the Azure Subscription where the Azure Key vault instance is created. To configure new service endpoint, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Manage' link.
 
-Ensure the Azure endpoint has at least Get and List permissions for Secrets and Certificate Management on the vault. You can set these permissions in the Azure portal: Open the Settings blade for the vault, choose Access policies, then Add new. In the Add access policy blade, choose Select principal and select the service principal for your client account. In the Add access policy blade, choose `Secret permissions` and `Certificate permissions` and ensure that Get and List are checked (ticked) for both. Choose OK to save the changes.
+Ensure the Azure endpoint has at least Get and List permissions for Secrets on the vault. You can set these permissions in the Azure portal: Open the Settings blade for the vault, choose Access policies, then Add new. In the Add access policy blade, choose Select principal and select the service principal for your client account. In the Add access policy blade, choose `Secret permissions` and ensure that Get and List are checked (ticked). Choose OK to save the changes.
  
  * **Key Vault**\*: Select the name of the Key vault from which the secrets need to be downloaded.
  
