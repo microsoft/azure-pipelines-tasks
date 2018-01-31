@@ -229,8 +229,7 @@
           "dependencies": {
             "glob": {
               "version": "7.1.2",
-              "resolved": "https://registry.npmjs.org/glob/-/glob-7.1.2.tgz",
-              "integrity": "sha512-MJTUg1kjuLeQCJ+ccE4Vpa6kKVXkPYJ2mOCQyUuKLcLQsdrMCpBPUi8qVE6+YuaJkozeA9NusTAw3hLr8Xe5EQ==",
+              "bundled": true,
               "requires": {
                 "fs.realpath": "1.0.0",
                 "inflight": "1.0.6",
