@@ -258,7 +258,7 @@
             }
             else
             {
-                Write-Host (Get-VstsLocString -Key SFSDK_SkipUnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
+                Write-Warning (Get-VstsLocString -Key SFSDK_SkipUnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
             }
         }
         if(!$reg -or !$ApplicationTypeAlreadyRegistered)
