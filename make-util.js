@@ -284,10 +284,10 @@ exports.ensureTool = ensureTool;
 
 
 var installNode = function (nodeVersion, testPath) {
-    if (process.env['TF_BUILD']) {
-        // skip adding node 5.10.1 to the PATH. the CI definition tests against node 5 and 6.
-        return;
-    }
+    // if (process.env['TF_BUILD']) {
+    //     // skip adding node 5.10.1 to the PATH. the CI definition tests against node 5 and 6.
+    //     return;
+    // }
 
     // TODO: Check cache?
 
