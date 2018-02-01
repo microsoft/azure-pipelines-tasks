@@ -20,12 +20,6 @@ phases:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
-
   # npm install
   - script: npm install
     displayName: npm install
@@ -52,11 +46,17 @@ phases:
       artifactName: slice-$(system.jobPositionInPhase)
       artifactType: container
 
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
+
   # Test
-  - script: node make.js test
+  - script: node make.js test --runner ts
     displayName: Test
 
-  - script: node make.js testLegacy --task "$(task_pattern)"
+  - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
     displayName: Legacy tests
 
   # Use node 5
@@ -86,12 +86,6 @@ phases:
   # Clean
   - checkout: self
     clean: true
-
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
 
   # Use NuGet 4
   - task: NuGetToolInstaller@0
@@ -173,12 +167,6 @@ phases:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'), eq(variables['agent.os'], 'Windows_NT'))
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
-
   # npm install
   - script: npm install
     displayName: npm install
@@ -200,6 +188,12 @@ phases:
       pathToPublish: _package/hotfix-layout
       artifactName: hotfix
       artifactType: container
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
 
   # Test
   - script: node make.js test
@@ -242,12 +236,6 @@ phases:
   - checkout: self
     clean: true
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
-
   # npm install
   - script: npm install
     displayName: npm install
@@ -259,6 +247,12 @@ phases:
   # Build
   - script: node make.js build --task "$(task_pattern)"
     displayName: Build
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
 
   # Test
   - script: node make.js test --runner ts
@@ -292,12 +286,6 @@ phases:
   - checkout: self
     clean: true
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
-
   # npm install
   - script: npm install
     displayName: npm install
@@ -309,6 +297,12 @@ phases:
   # Build
   - script: node make.js build --task "$(task_pattern)"
     displayName: Build
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
 
   # Test
   - script: node make.js test --runner ts

@@ -283,24 +283,14 @@ var ensureTool = function (name, versionArgs, validate) {
 exports.ensureTool = ensureTool;
 
 
-var installNode = function (nodeVersion, testPath) {
-    // if (process.env['TF_BUILD']) {
-    //     // skip adding node 5.10.1 to the PATH. the CI definition tests against node 5 and 6.
-    //     return;
-    // }
-
-    // TODO: Check cache?
-
+var installNode = function (nodeVersion, path) {
     // determine the platform
     var platform = os.platform();
     if (platform != 'darwin' && platform != 'linux' && platform != 'win32') {
         throw new Error('Unexpected platform: ' + platform);
     }
 
-    // download the same version of node used by the agent
-    // and add node to the PATH
     var nodeUrl = 'https://nodejs.org/dist';
-
     switch (platform) {
         case 'darwin':
             var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
@@ -313,7 +303,7 @@ var installNode = function (nodeVersion, testPath) {
         case 'win32':
             var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
             var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
-            var nodeDirectory = path.join(testPath, 'node');
+            var nodeDirectory = path.join(path, 'node');
             mkdir('-p', nodeDirectory);
             cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
             cp(nodeLibPath, path.join(nodeDirectory, 'node.lib'));
