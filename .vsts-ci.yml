@@ -53,10 +53,10 @@ phases:
       versionSpec: "6.10.3"
 
   # Test
-  - script: node make.js test --runner ts
+  - script: node make.js test
     displayName: Test
 
-  - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
+  - script: node make.js testLegacy --task "$(task_pattern)"
     displayName: Legacy tests
 
   # Use node 5
