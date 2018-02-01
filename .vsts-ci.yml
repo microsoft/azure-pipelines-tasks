@@ -93,6 +93,12 @@ phases:
   - checkout: self
     clean: true
 
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
+
   # Use NuGet 4
   - task: NuGetToolInstaller@0
     displayName: Use NuGet 4
@@ -173,6 +179,12 @@ phases:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'), eq(variables['agent.os'], 'Windows_NT'))
 
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
+
   # npm install
   - script: npm install
     displayName: npm install
@@ -242,6 +254,12 @@ phases:
   - checkout: self
     clean: true
 
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
+
   # npm install
   - script: npm install
     displayName: npm install
@@ -291,6 +309,12 @@ phases:
   # Clean
   - checkout: self
     clean: true
+
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
 
   # npm install
   - script: npm install
