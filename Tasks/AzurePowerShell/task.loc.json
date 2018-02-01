@@ -33,7 +33,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
       "required": false,
       "helpMarkDown": "",
-      "defaultValue": "ConnectedServiceName",
+      "defaultValue": "ConnectedServiceNameARM",
       "options": {
         "ConnectedServiceName": "Azure Classic",
         "ConnectedServiceNameARM": "Azure Resource Manager"

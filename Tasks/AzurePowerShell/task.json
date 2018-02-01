@@ -31,7 +31,7 @@
             "label": "Azure Connection Type",
             "required": false,
             "helpMarkDown": "",
-            "defaultValue": "ConnectedServiceName",
+            "defaultValue": "ConnectedServiceNameARM",
             "options": {
                 "ConnectedServiceName": "Azure Classic",
                 "ConnectedServiceNameARM": "Azure Resource Manager"
