@@ -23,8 +23,6 @@ process.env['MOCK_TEMP_PATH'] = path.join(__dirname, '..', '..');
 process.env['MOCK_NORMALIZE_SLASHES'] = true;
 
 process.env['JAVA_HOME_8_X86'] = '/user/local/bin/Java8';
-process.env['ENDPOINT_URL_ID1'] = 'http://sonarqube/end/point';
-process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}';
 
 process.env['BUILD_BUILDNUMBER'] = '14';
 process.env['BUILD_SOURCESDIRECTORY'] = `${taskReportValidDir}`;
@@ -40,19 +38,17 @@ tr.setInput('publishJUnitResults', 'true');
 tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
 
 tr.setInput('sqAnalysisEnabled', 'true');
-tr.setInput('sqConnectedServiceName', 'ID1');
-tr.setInput('sqProjectName', 'test_sqProjectName');
-tr.setInput('sqProjectKey', 'test_sqProjectKey');
-tr.setInput('sqProjectVersion', 'test_sqProjectVersion');
+tr.setInput('sqGradlePluginVersionChoice', 'specify');
+tr.setInput('sqGradlePluginVersion', '2.6.1');
 
 //construct a string that is JSON, call JSON.parse(string), send that to ma.TaskLibAnswers
 let myAnswers: string = `{
    "exec":{
-      "gradlew build sonarqube -I /Gradle/node_modules/codeanalysis-common/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion":{
+      "gradlew build -I /Gradle/node_modules/codeanalysis-common/sonar.gradle sonarqube":{
          "code":0,
          "stdout":"Gradle build and SQ analysis done"
       },
-      "gradlew.bat build sonarqube -I /Gradle/node_modules/codeanalysis-common/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion":{
+      "gradlew.bat build -I /Gradle/node_modules/codeanalysis-common/sonar.gradle sonarqube":{
          "code":0,
          "stdout":"Gradle build and SQ analysis done"
       }
