@@ -40,7 +40,6 @@
         "DownloadSecureFile",
         "ExtractFiles",
         "FtpUpload",
-        "GoTool",
         "Gradle",
         "Grunt",
         "Gulp",
