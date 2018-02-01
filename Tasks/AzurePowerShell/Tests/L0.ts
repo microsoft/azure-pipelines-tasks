@@ -39,6 +39,9 @@ describe('AzurePowerShell Suite', function () {
         it('redirects errors', (done) => {
             psr.run(path.join(__dirname, 'RedirectsErrors.ps1'), done);
         })
+        it('does not fail if failonstandarderror is set to false', (done) => {
+            psr.run(path.join(__dirname, 'DoesNotFailOnStandardError.ps1'), done);
+        })
         it('removes functions and variables', (done) => {
             psr.run(path.join(__dirname, 'RemovesFunctionsAndVariables.ps1'), done);
         })
