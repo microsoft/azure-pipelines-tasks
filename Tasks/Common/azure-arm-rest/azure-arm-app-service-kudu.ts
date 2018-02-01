@@ -276,7 +276,7 @@ export class Kudu {
 
         try {
             var response = await this._client.beginRequest(httpRequest);
-            tl.debug(`getFileContent. Data: ${JSON.stringify(response)}`);
+            tl.debug(`getFileContent. Status code: ${response.statusCode} - ${response.statusMessage}`);
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }
