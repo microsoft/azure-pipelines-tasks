@@ -14,10 +14,11 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
-        "Minor": 128,
+        "Major": 2,
+        "Minor": 130,
         "Patch": 0
     },
+    "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
         "java"
     ],
@@ -227,49 +228,23 @@
             "name": "sqAnalysisEnabled",
             "aliases": [ "sonarQubeRunAnalysis" ],
             "type": "boolean",
-            "label": "Run SonarQube Analysis",
+            "label": "Run SonarQube or SonarCloud Analysis",
             "required": true,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Run a [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
+            "helpMarkDown": "This option has changed from version 1 of the **Gradle** task to use the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions. Enable this option to run [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing tasks in the **Tasks** field. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build definition before this Gradle task."
         },
         {
-            "name": "sqConnectedServiceName",
-            "aliases": [ "sonarQubeServiceEndpoint" ],
-            "type": "connectedService:Generic",
-            "label": "SonarQube Endpoint",
+            "name": "sqGradlePluginVersionChoice",
+            "type": "radio",
+            "label": "SonarQube Scanner for Gradle version",
             "required": true,
-            "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqProjectName",
-            "aliases": [ "sonarQubeProjectName" ],
-            "type": "string",
-            "label": "SonarQube Project Name",
-            "required": true,
-            "helpMarkDown": "The SonarQube project name, i.e. sonar.projectName.",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqProjectKey",
-            "aliases": [ "sonarQubeProjectKey" ],
-            "type": "string",
-            "label": "SonarQube Project Key",
-            "required": true,
-            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey.",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqProjectVersion",
-            "aliases": [ "sonarQubeProjectVersion" ],
-            "type": "string",
-            "label": "SonarQube Project Version",
-            "required": true,
-            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion.",
+            "defaultValue": "specify",
+            "options": {
+                "specify": "Specify version number",
+                "build": "Use plugin applied in your build.gradle"
+            },
+            "helpMarkDown": "The SonarQube Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },
@@ -277,75 +252,12 @@
             "name": "sqGradlePluginVersion",
             "aliases": [ "sonarQubeGradlePluginVersion" ],
             "type": "string",
-            "label": "SonarQube Gradle Plugin Version",
+            "label": "SonarQube Scanner for Gradle Plugin Version",
             "required": true,
-            "defaultValue": "2.0.1",
-            "helpMarkDown": "The SonarQube Gradle plugin version to use. Refer to https://plugins.gradle.org/plugin/org.sonarqube for all available versions.",
+            "defaultValue": "2.6.1",
+            "helpMarkDown": "Refer to https://plugins.gradle.org/plugin/org.sonarqube for all available versions.",
             "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqDbDetailsRequired",
-            "aliases": [ "sonarQubeSpecifyDB" ],
-            "type": "boolean",
-            "label": "The SonarQube server version is lower than 5.2",
-            "required": true,
-            "defaultValue": "false",
-            "groupName": "CodeAnalysis",
-            "helpMarkDown": "If using a SonarQube server 5.1 or lower, you must specify the database connection details.",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqDbUrl",
-            "aliases": [ "sonarQubeDBUrl" ],
-            "type": "string",
-            "label": "Db Connection String",
-            "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the database connection setting (i.e. sonar.jdbc.url). For example: jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqDbDetailsRequired = true"
-        },
-        {
-            "name": "sqDbUsername",
-            "aliases": [ "sonarQubeDBUsername" ],
-            "type": "string",
-            "label": "Db Username",
-            "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the username for the database user (i.e. sonar.jdbc.username).",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqDbDetailsRequired = true"
-        },
-        {
-            "name": "sqDbPassword",
-            "aliases": [ "sonarQubeDBPassword" ],
-            "type": "string",
-            "label": "Db User Password",
-            "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqDbDetailsRequired = true"
-        },
-        {
-            "name": "sqAnalysisIncludeFullReport",
-            "aliases": [ "sonarQubeIncludeFullReport" ],
-            "type": "boolean",
-            "defaultValue": "true",
-            "label": "Include full analysis report in the build summary (SQ 5.3+)",
-            "required": false,
-            "helpMarkDown": "This option will delay the build until the SonarQube analysis is completed.",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqAnalysisBreakBuildIfQualityGateFailed",
-            "aliases": [ "sonarQubeFailWhenQualityGateFails" ],
-            "type": "boolean",
-            "defaultValue": "",
-            "label": "Fail the build on quality gate failure (SQ 5.3+)",
-            "required": false,
-            "helpMarkDown": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
+            "visibleRule": "sqAnalysisEnabled = true && sqGradlePluginVersionChoice = specify"
         },
         {
             "name": "checkstyleAnalysisEnabled",
