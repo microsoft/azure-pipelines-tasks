@@ -14,11 +14,13 @@ import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import { ApplicationTokenCredentials } from 'azure-arm-rest/azure-arm-common';
 
 async function run() {
+    let azureMysqlTaskParameter: AzureMysqlTaskParameter;
+    let firewallAdded: boolean;
     try {
         task.debug('Task execution started');
         task.setResourcePath(path.join( __dirname, 'task.json'));
         // Get all task input parameters
-        const azureMysqlTaskParameter: AzureMysqlTaskParameter = new AzureMysqlTaskParameter();
+        azureMysqlTaskParameter = new AzureMysqlTaskParameter();
         task.debug('parsed task inputs');
         const endpoint: AzureEndpoint = await new AzureRMEndpoint(azureMysqlTaskParameter.getConnectedServiceName()).getEndpoint();
         if(!endpoint){
@@ -35,15 +37,9 @@ async function run() {
             const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName(), mysqlClientPath);
             const firewallOperations : FirewallOperations = new FirewallOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
             //Invoke firewall operation to validate user has permission for server or not. If not whitelist the IP
-            const firewallAdded: boolean = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer.getResourceGroupName());
+            firewallAdded = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer.getResourceGroupName());
             //Execute sql script entered by user
             await sqlClient.executeSqlCommand();
-            // Delete firewall rule in case of automatic added rule or either user wants to delete it
-            if(firewallAdded && azureMysqlTaskParameter.getDeleteFirewallRule()){
-                task.debug('Deleting firewall rule');
-                await firewallOperations.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
-                task.debug('Sucessfully deleted firewall rule');
-            }
         }else{
             throw new Error(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
         }
@@ -51,6 +47,14 @@ async function run() {
     catch(exception) {
         task.debug('Getting exception: '+exception);
         task.setResult(task.TaskResult.Failed, exception);
+    }
+    finally{
+        // Delete firewall rule in case of automatic added rule or either user wants to delete it
+        if(firewallAdded && azureMysqlTaskParameter && azureMysqlTaskParameter.getDeleteFirewallRule()){
+            task.debug('Deleting firewall rule');
+            await firewallOperations.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
+            task.debug('Sucessfully deleted firewall rule');
+        }
     }
 
     task.debug('Task completed sucessfully.');
