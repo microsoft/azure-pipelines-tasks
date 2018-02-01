@@ -283,7 +283,7 @@ var ensureTool = function (name, versionArgs, validate) {
 exports.ensureTool = ensureTool;
 
 
-var installNode = function (nodeVersion, path) {
+var installNode = function (nodeVersion, installPath) {
     // determine the platform
     var platform = os.platform();
     if (platform != 'darwin' && platform != 'linux' && platform != 'win32') {
@@ -303,7 +303,7 @@ var installNode = function (nodeVersion, path) {
         case 'win32':
             var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
             var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
-            var nodeDirectory = path.join(path, 'node');
+            var nodeDirectory = path.join(installPath, 'node');
             mkdir('-p', nodeDirectory);
             cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
             cp(nodeLibPath, path.join(nodeDirectory, 'node.lib'));
