@@ -39,6 +39,3 @@ Register-Mock Locate-HighestVersionSqlPackageInVS { $sqlPackageVsPath, 2 }
 $sqlpkgpath = Get-SqlPackageOnTargetMachine
 
 Assert-AreEqual  $sqlpkgpath $sqlPackageSqlServerPath
-
-
-
