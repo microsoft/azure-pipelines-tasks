@@ -20,6 +20,12 @@ phases:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
+
   # npm install
   - script: npm install
     displayName: npm install
