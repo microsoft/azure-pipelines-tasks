@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "devDependencies": {
-    "ltx": "2.7.1"
+    "ltx": "2.6.2"
   }
 }
