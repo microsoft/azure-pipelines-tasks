@@ -69,8 +69,9 @@ export class FirewallOperations{
     public async invokeFirewallOperations(azureMysqlTaskParameter: AzureMysqlTaskParameter, sqlClient: ISqlClient, resourceGroupName: string) : Promise<boolean> {
         var defer = Q.defer<boolean>();
         if(azureMysqlTaskParameter.getIpDetectionMethod() ==='IPAddressRange'){
-            this._preparefirewallRule(azureMysqlTaskParameter.getServerName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), resourceGroupName, "IPAddressRange" + uuidV4()).then(() =>{
+            this._preparefirewallRule(azureMysqlTaskParameter.getServerName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), resourceGroupName, "IPAddressRange_" + this._getFirewallRuleName()).then(() =>{
                 let firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
+                console.log(" firewall conf " +JSON.stringify(firewallConfiguration));
                 if(!firewallConfiguration.isIpAdressAlreadyAdded()){
                     task.debug("Agent Ip address not in added firewall rule: "+ firewallConfiguration.getIpAddress());
                     defer.reject(new Error(task.loc("AgentIpAddressIsMissingInAddedFirewallRule")));
@@ -84,7 +85,7 @@ export class FirewallOperations{
         }else {
             const firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
             if(!firewallConfiguration.isIpAdressAlreadyAdded()){
-                this._preparefirewallRule(azureMysqlTaskParameter.getServerName(), firewallConfiguration.getIpAddress(), firewallConfiguration.getIpAddress(), resourceGroupName, "AutoDetect" + uuidV4()).then(() =>{
+                this._preparefirewallRule(azureMysqlTaskParameter.getServerName(), firewallConfiguration.getIpAddress(), firewallConfiguration.getIpAddress(), resourceGroupName, "AutoDetect_" + this._getFirewallRuleName()).then(() =>{
                     defer.resolve(true);
                 },(error) =>{
                     task.debug("Error during adding firewall rule for IPAddressRange: "+ error);
@@ -112,5 +113,12 @@ export class FirewallOperations{
                 defer.reject(error)
             });
         return defer.promise;
+    }
+
+    private _getFirewallRuleName(): string {
+        let buildId = task.getVariable('build.buildId');
+        let releaseId = task.getVariable('release.releaseId');
+        let firewallRuleName: string = (releaseId ? releaseId : buildId) + Date.now().toString();
+        return firewallRuleName;
     }
 }

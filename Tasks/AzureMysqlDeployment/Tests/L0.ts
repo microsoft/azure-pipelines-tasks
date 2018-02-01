@@ -1,7 +1,10 @@
 import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
+import tmrm = require('vsts-task-lib/mock-run');
 import tl = require('vsts-task-lib');
 import * as path from 'path';
+import { MysqlClient } from '../sql/MysqlClient';
+import { FirewallConfiguration } from '../models/FirewallConfiguration';
 
 describe('AzureMySqlDeployment Suite', function() {
 
@@ -23,13 +26,13 @@ describe('AzureMySqlDeployment Suite', function() {
         }
     });
 
-    it('AzureMySqlDeployment FirewallOperationsLoTests', (done: MochaDone) => {
-        let tp = path.join(__dirname, 'FirewallOperationsL0Tests.js');
+    it('AzureMySqlDeployment FirewallOperationTests', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'FirewallOperationTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
             tr.run();
-            console.log(tr.stdout);
-            console.log(tr.stderr);
+            assert(tr.stdOutContained('FirewallOperationsL0Tests.addFirewallRuleTest should have succeeded.'), 'Should have printed: FirewallOperationsL0Tests.addFirewallRuleTest should have succeeded.');
+            assert(tr.stdOutContained('FirewallOperationsL0Tests.deleteFirewallRuleTest should have succeeded.'), 'Should have printed: FirewallOperationsL0Tests.deleteFirewallRuleTest should have succeeded.');
             done();
         }
         catch(error) {
@@ -37,5 +40,31 @@ describe('AzureMySqlDeployment Suite', function() {
         }
     });
 
+    it('AzureMySqlDeployment ToolPathOperationTests', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'ToolPathOperationTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+            assert(tr.stdOutContained('ToolPathOperationsL0Tests.getInstalledPathOfMysqlForLinux should has passed.'), 'Should have printed: ToolPathOperationsL0Tests.getInstalledPathOfMysqlForLinux should has passed.');
+            done();
+        }
+        catch(error) {
+            done(error);
+        }
+    });
+    
+    it('AzureMySqlDeployment MysqlClient', (done: MochaDone) => {
+        let tp = path.join(__dirname, 'MysqlClientTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+            assert(tr.stdOutContained('MysqlClientL0Tests.getFirewallConfiguration should has passed.'), 'Should have printed: MysqlClientL0Tests.getFirewallConfiguration should has passed.');
+            assert(tr.stdOutContained('MysqlClientL0Tests.executeSqlCommand should has passed'), 'Should have printed: MysqlClientL0Tests.executeSqlCommand should has passed.');
+            done();
+        }
+        catch(error) {
+            done(error);
+        }
+    });
 
 });

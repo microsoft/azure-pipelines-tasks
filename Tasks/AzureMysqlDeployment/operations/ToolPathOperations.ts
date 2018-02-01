@@ -12,41 +12,73 @@ export class ToolPathOperations {
         // To check either it is linux or windows platform
         if(process.platform !== 'win32'){
             // linux check
-            const path = task.which("mysql", true);
-            task.debug('Linux mysql executable path: '+path);
-            defer.resolve(path);
+            this.getInstalledPathOfMysqlForLinux().then((path) => {
+                defer.resolve(path);
+            },(error) =>{
+                defer.reject(error);
+            });
         }
         else{
-            // If user has installed 32 bit mysql client in 64 bit machine
-            this.getInstalledLocationFromPath("\\Software\\Wow6432Node\\MySQL AB").then((path) => {
-                task.debug('Window Wow6432 mysql executable path: '+path);
-                defer.resolve(path + "bin\\mysql.exe");
+            this.getInstalledPathOfMysqlForWindow().then((path) => {
+                defer.resolve(path);
             },(error) =>{
-                task.debug("Error during finding of Window Wow6432 mysql executable path: "+ error);
-                this.getInstalledLocationFromPath("\\Software\\MySQL AB").then((path) => {
-                    task.debug('Window mysql executable path: '+path);
-                    defer.resolve(path + "bin\\mysql.exe");
-                },(error) =>{
-                    task.debug("Error during finding of Window mysql executable path: "+ error);
-                    try{
-                        const path = task.which("mysql", true);
-                        if(path){
-                            task.debug('Window mysql executable path from enviroment variable: '+path);
-                            defer.resolve(path + "bin\\mysql.exe");
-                        }else{
-                            defer.reject(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
-                        } 
-                    }
-                    catch(exception){
-                        task.debug("Error during finding of Window mysql executable path from environment path: "+ exception);
-                        defer.reject(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
-                    }            
-                });
+                defer.reject(error);
             });
         }
 
         return defer.promise;
     }
+
+
+    /**
+     * Get installed path of mysql for Linux  
+     */
+    public async getInstalledPathOfMysqlForLinux(): Promise<string> {
+        let defer = Q.defer<string>();
+        try{
+            const path = task.which("mysql", true);
+            defer.resolve(path);
+        }catch(error){
+            defer.reject(error);
+        }
+
+        return defer.promise;
+    }
+
+     /**
+     * Get installed path of mysql for windows 
+     */
+    public async getInstalledPathOfMysqlForWindow(): Promise<string> {
+        let defer = Q.defer<string>();
+        // If user has installed 32 bit mysql client in 64 bit machine
+        this.getInstalledLocationFromPath("\\Software\\Wow6432Node\\MySQL AB").then((path) => {
+            task.debug('Window Wow6432 mysql executable path: '+path);
+            defer.resolve(path + "bin\\mysql.exe");
+        },(error) =>{
+            task.debug("Error during finding of Window Wow6432 mysql executable path: "+ error);
+            this.getInstalledLocationFromPath("\\Software\\MySQL AB").then((path) => {
+                task.debug('Window mysql executable path: '+path);
+                defer.resolve(path + "bin\\mysql.exe");
+            },(error) =>{
+                task.debug("Error during finding of Window mysql executable path: "+ error);
+                try{
+                    const path = task.which("mysql", true);
+                    if(path){
+                        task.debug('Window mysql executable path from enviroment variable: '+path);
+                        defer.resolve(path + "bin\\mysql.exe");
+                    }else{
+                        defer.reject(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
+                    } 
+                }
+                catch(exception){
+                    task.debug("Error during finding of Window mysql executable path from environment path: "+ exception);
+                    defer.reject(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
+                }            
+            });
+        });
+        return defer.promise;
+    }
+
 
     /**
      * Get installed location from path
