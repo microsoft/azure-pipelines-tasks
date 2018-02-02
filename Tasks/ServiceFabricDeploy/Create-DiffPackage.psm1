@@ -142,13 +142,11 @@ function Copy-DiffPackage
 
         $localPkgPath = Join-Path $localParentPkgPath $localPackage.Name
         $diffPkgPath = Join-Path $diffParentPkgPath $localPackage.Name
-        $localZipPkgPath = $localPkgPath + ".zip"
-        $diffZipPkgPath = $diffPkgPath + ".zip"
 
-        if (Test-Path -Path $localZipPkgPath)
+        if (Test-Path -Path ($localPkgPath + ".zip"))
         {
-            $localPkgPath = $localZipPkgPath
-            $diffPkgPath = $diffZipPkgPath
+            $localPkgPath += ".zip"
+            $diffPkgPath += ".zip"
         }
 
         Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localPkgPath, $diffPkgPath))
