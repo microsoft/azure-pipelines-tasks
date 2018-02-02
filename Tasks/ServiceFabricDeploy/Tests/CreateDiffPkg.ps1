@@ -22,6 +22,10 @@ $serviceManifestPath2 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless2Pkg\S
 $serviceManifestDiffPath2 = $diffPackagePath + "\Stateless2Pkg\ServiceManifest.xml"
 $codePkg2 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless2Pkg\Code"
 $codeDiffPkg2 = $diffPackagePath + "\Stateless2Pkg\Code"
+$serviceManifestPath3 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless3Pkg\ServiceManifest.xml"
+$serviceManifestDiffPath3 = $diffPackagePath + "\Stateless3Pkg\ServiceManifest.xml"
+$codePkg3 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless3Pkg\Code.zip"
+$codeDiffPkg3 = $diffPackagePath + "\Stateless3Pkg\Code.zip"
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
@@ -75,7 +79,10 @@ $serviceType1 = @{
 $serviceType2 = @{
     "ServiceManifestName" = "Stateless2Pkg"
 }
-$serviceTypes = @($serviceType1, $serviceType2)
+$serviceType3 = @{
+    "ServiceManifestName" = "Stateless3Pkg"
+}
+$serviceTypes = @($serviceType1, $serviceType2, $serviceType3)
 $serviceManifest1 = '<ServiceManifest Name="Stateless1Pkg" Version="1.0.0">' +
   '<ServiceTypes>' +
     '<StatelessServiceType ServiceTypeName="Stateless1Type" />' +
@@ -92,12 +99,22 @@ $serviceManifest2 = '<ServiceManifest Name="Stateless2Pkg" Version="1.0.0">' +
   '</CodePackage>' +
   '<ConfigPackage Name="Config" Version="1.0.0" />' +
 '</ServiceManifest>'
+$serviceManifest3 = '<ServiceManifest Name="Stateless3Pkg" Version="1.0.0">' +
+  '<ServiceTypes>' +
+    '<StatelessServiceType ServiceTypeName="Stateless3Type" />' +
+  '</ServiceTypes>' +
+  '<CodePackage Name="Code" Version="1.0.0">' +
+  '</CodePackage>' +
+  '<ConfigPackage Name="Config" Version="1.0.0" />' +
+'</ServiceManifest>'
 
 Register-Mock Get-ServiceFabricServiceType {$serviceTypes} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion
 Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest1} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless1Pkg"
 Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest2} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless2Pkg"
+Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest3} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless3Pkg"
 
 Register-Mock Copy-Item {} $appManifestPath $appManifestDiffPath -Force
+Register-Mock Test-Path { $true } -Path $codePkg3
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Create-DiffPackage.psm1"
 
@@ -109,6 +126,8 @@ Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Create-DiffPackage.psm
 Assert-WasCalled Copy-Item $appManifestPath $appManifestDiffPath -Force
 Assert-WasCalled Copy-Item $serviceManifestPath1 $serviceManifestDiffPath1 -Force -Times 0
 Assert-WasCalled Copy-Item $serviceManifestPath2 $serviceManifestDiffPath2 -Force
+Assert-WasCalled Copy-Item $serviceManifestPath3 $serviceManifestDiffPath3 -Force
 Assert-WasCalled Copy-Item $codePkg1 $codeDiffPkg1 -Recurse -Times 0
 Assert-WasCalled Copy-Item $codePkg2 $codeDiffPkg2 -Recurse
+Assert-WasCalled Copy-Item $codePkg3 $codeDiffPkg3 -Recurse
 Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs
