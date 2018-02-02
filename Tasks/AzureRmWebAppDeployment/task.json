@@ -324,7 +324,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "WebAppKind = applinux || WebAppKind = linux",
-            "helpMarkDown": "Enter the start up command."
+            "helpMarkDown": "Provide an optional startup command that will be run as part of container startup."
         },
         {
             "name": "WebAppUri",
