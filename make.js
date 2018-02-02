@@ -200,7 +200,10 @@ target.build = function() {
 
                     // Copy the common files to the node_modules folder for the current task
                     // We need to do a copy because npm install in npm5 uses sym links and breaks our builds
-                    cp('-r', modOutDir, currentTaskNodeModulesPath)
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////
+                    //cp('-r', modOutDir, currentTaskNodeModulesPath)
+                    //run('npm install ' + modOutDir);
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     cd(originalDir);
                 }
