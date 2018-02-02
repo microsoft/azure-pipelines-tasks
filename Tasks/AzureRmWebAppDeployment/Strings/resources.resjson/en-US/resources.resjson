@@ -54,7 +54,7 @@
   "loc.input.label.RuntimeStack": "Runtime Stack",
   "loc.input.help.RuntimeStack": "Select the framework and version.",
   "loc.input.label.StartupCommand": "Startup command ",
-  "loc.input.help.StartupCommand": "Enter the start up command.",
+  "loc.input.help.StartupCommand": "Provide an optional startup command that will be run as part of container startup.",
   "loc.input.label.WebAppUri": "App Service URL",
   "loc.input.help.WebAppUri": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks.",
   "loc.input.label.ScriptType": "Deployment script type",
