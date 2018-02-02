@@ -61,11 +61,11 @@ export class MysqlClient implements ISqlClient {
         task.debug('Started execution of mysql script');
         let argument: string = this._getArgumentString() + this._getFileSourceArgument() + this._getAdditionalArgument();
         task.exec(this._toolPath, argument).then((resultCode)=>{
-            task.debug('Script execution on mysql server result: '+JSON.stringify(resultCode));
+            task.debug('Script execution on mysql server result: '+ resultCode);
             if(resultCode === 0){
                 defer.resolve(resultCode);
             }else{
-                defer.reject(new Error(task.loc("SqlExecutionException")));
+                defer.reject(new Error(task.loc("SqlExecutionException", error)));
             }
         },(error) => {
             defer.reject(error);

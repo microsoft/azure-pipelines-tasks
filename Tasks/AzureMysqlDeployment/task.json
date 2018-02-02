@@ -224,7 +224,7 @@
         "UnableToFindTheLocationOfMysqlFromRegistryOnMachineError": "Unable to find the location of mysql from registry on machine error. Error: %s .",
         "AzureMysqlTaskParameterCannotBeEmpty": "Azure mysql task parameter cannot be null.",
         "ToolPathCannotBeNull": "Tool path cannot be null.",
-        "SqlExecutionException": "Sql execution exception. Please Check the sql script.",
+        "SqlExecutionException": "Sql execution exception. Please Check the sql script. Error: %s .",
         "AzureEndpointCannotBeNull": "Invalid subscription name. Azure endpoint can't be null.",
         "CallbackCannotBeNull": "callback cannot be null."
     }
