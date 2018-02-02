@@ -4,14 +4,10 @@ class Utils {
         return (!!str && !!str.trim());
     }
 
-    public static getError(error: any): string {
+    public static getError(error: any) {
         if (error && error.message) {
-            if (typeof error.message === 'object') {
-                return JSON.stringify(error.message);
-            }
             return error.message;
         }
-
         return error;
     }
 }
