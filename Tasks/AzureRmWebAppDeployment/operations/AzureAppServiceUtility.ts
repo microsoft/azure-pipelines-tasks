@@ -180,11 +180,11 @@ export class AzureAppServiceUtility {
 
     public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> {
         var configDetails = await this._appService.getConfiguration();
+        startupCommand = (!!startupCommand) ? startupCommand  : "";
         var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
 
-        if (!(!!appCommandLine == !!startupCommand && appCommandLine == startupCommand)
-        || runtimeStack != linuxFxVersion) {
+        if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
             await this.updateConfigurationSettings({linuxFxVersion: runtimeStack, appCommandLine: startupCommand});
         }
         else {
