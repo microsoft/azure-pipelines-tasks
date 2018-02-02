@@ -40,7 +40,7 @@ async function main() {
         let appServiceUtility: AzureAppServiceUtility = new AzureAppServiceUtility(appService);
 
         await appServiceUtility.pingApplication();
-        var kuduService: Kudu = await appServiceUtility.getKuduService();
+        let kuduService: Kudu = await appServiceUtility.getKuduService();
         kuduServiceUtility = new KuduServiceUtility(kuduService);
         if(taskParams.WebAppUri) {
             tl.setVariable(taskParams.WebAppUri, await appServiceUtility.getApplicationURL());
