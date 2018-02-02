@@ -1,20 +1,20 @@
 import tl = require("vsts-task-lib/task");
 
 export class AzureMysqlTaskParameter {
-
-    private connectedServiceName: string; 
-    private serverName: string;
-    private databaseName: string;
-    private sqlUserName: string;
-    private sqlPassword: string;
-    private taskNameSelector: string;
-    private sqlFile: string;
-    private sqlInline: string;
-    private sqlAdditionalArguments: string;
-    private inlineAdditionalArguments;
-    private ipDetectionMethod: string;
-    private startIpAddress: string;
-    private endIpAddress: string;
+	
+	private connectedServiceName: string; 
+	private serverName: string;
+	private databaseName: string;
+	private sqlUserName: string;
+	private sqlPassword: string;
+	private taskNameSelector: string;
+	private sqlFile: string;
+	private sqlInline: string;
+	private sqlAdditionalArguments: string;
+	private inlineAdditionalArguments;
+	private ipDetectionMethod: string;
+	private startIpAddress: string;
+	private endIpAddress: string;
 	private deleteFirewallRule: boolean;
 
     constructor() {
