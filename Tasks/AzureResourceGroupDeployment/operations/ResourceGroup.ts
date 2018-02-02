@@ -379,14 +379,16 @@ export class ResourceGroup {
     private sanitizeParameters(parameters: Map<string, ParameterValue>): Map<string, ParameterValue> {
         var result: Map<string, ParameterValue> = {} as Map<string, ParameterValue>;
         for (var key in parameters) {
-            if (!!parameters[key].value) {
-                result[key] = {
-                    value: parameters[key].value
-                } as ParameterValue;
-            } else if (!!parameters[key].reference) {
-                result[key] = {
-                    reference: parameters[key].reference
-                } as ParameterValue;
+            if (!!parameters[key]) {
+                if (parameters[key].hasOwnProperty("value")) {
+                    result[key] = {
+                        value: parameters[key].value
+                    } as ParameterValue;
+                } else if (parameters[key].hasOwnProperty("reference")) {
+                    result[key] = {
+                        reference: parameters[key].reference
+                    } as ParameterValue;
+                }
             }
         }
 
