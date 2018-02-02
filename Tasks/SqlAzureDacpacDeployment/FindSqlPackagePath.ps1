@@ -33,17 +33,19 @@
         $vsVersionNumber = 0
     }
 
-    if (($vsVersionNumber -ge $sqlVersionNumber) -and ($vsVersionNumber -ge $sqlMsiVersionNumber))
+    $maximumVersion = [decimal]$(@($vsVersionNumber, $sqlVersionNumber, $sqlMsiVersionNumber) | Measure-Object -Maximum).Maximum 
+
+    if ($sqlMsiVersion -eq $maximumVersion)
+    {
+        $dacPath = $sqlMsiDacPath
+    }
+    elseif ($vsVersionNumber -eq $maximumVersion)
     {
         $dacPath = $vsDacPath
     }
-	elseif ($sqlVersionNumber -ge $sqlMsiVersionNumber)
+    elseif ($sqlVersionNumber -eq $maximumVersion) 
     {
         $dacPath = $sqlDacPath
-    }
-    else
-    {
-        $dacPath = $sqlMsiDacPath
     }
 
     if ($dacPath -eq $null)
