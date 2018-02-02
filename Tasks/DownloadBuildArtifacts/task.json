@@ -9,7 +9,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 130,
+    "Minor": 131,
     "Patch": 7
   },
   "groups": [
@@ -73,13 +73,21 @@
       "type": "pickList",
       "label": "Build",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "visibleRule": "buildType == specific",
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True"
       },
-      "helpMarkDown": "The build from which to download the artifacts"
+      "helpMarkDown": "The build from which to download the artifacts - if left empty the latest build is used (optionally filtered by branch)"
+    },
+    {
+      "name": "branchName",
+      "type": "string",
+      "label": "Branch name", 
+      "visibleRule": "buildType == specific && buildId == \"\"",
+      "required": false,
+      "helpMarkDown": "When no buildId is given the latest successful build is used where branch equals this value, for example: refs/heads/develop. Leave empty for latest build from any branch"
     },
     {
       "name": "downloadType",

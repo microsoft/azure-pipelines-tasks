@@ -6,6 +6,7 @@ import * as tl from 'vsts-task-lib/task';
 import { IBuildApi } from './vso-node-api/BuildApi';
 import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
 import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
+import { BuildStatus, BuildResult, BuildQueryOrder } from './vso-node-api/interfaces/BuildInterfaces';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
@@ -64,6 +65,7 @@ async function main(): Promise<void> {
         var definitionIdSpecified: string = null;
         var definitionIdTriggered: string = null;
         var buildId: number = null;
+        var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
 
@@ -126,12 +128,26 @@ async function main(): Promise<void> {
                 // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
                 definitionId = definitionIdSpecified;
-                buildId = parseInt(tl.getInput("buildId", true));
+                buildId = parseInt(tl.getInput("buildId", false));
             }
         }
 
         // verify that buildId belongs to the definition selected
         if (definitionId) {
+            if (!buildId){ 
+                // get latest successful build filtered by branch
+                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchName), 4).catch((reason) => {
+                    reject(reason);
+                    return;
+                }); 
+
+                if (!buildsForThisDefinition || buildsForThisDefinition.length == 0){
+                    reject(tl.loc("BuildNotFound", buildId));
+                    return;
+                }
+                buildId = buildsForThisDefinition[0].id
+            } 
+            
             var build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), 4).catch((reason) => {
                 reject(reason);
                 return;
