@@ -58,7 +58,6 @@ async function run() {
     }
 
     task.debug('Task completed sucessfully.');
-    task.setResult(task.TaskResult.Succeeded, "Task is Sucessfully completed");
 }
 
 run();
