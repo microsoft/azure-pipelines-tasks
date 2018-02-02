@@ -34,23 +34,25 @@ export class KuduServiceUtility {
         }
     }
 
-    public async runPostDeploymentScript(taskParams: TaskParameters): Promise<void> {
+    public async runPostDeploymentScript(taskParams: TaskParameters, directoryPath?: string): Promise<void> {
         try {
+            directoryPath = (!!directoryPath) ? directoryPath : physicalRootPath.substring(1);
+
             if(taskParams.TakeAppOfflineFlag) {
-                await this._appOfflineKuduService(physicalRootPath, true);
+                await this._appOfflineKuduService(directoryPath, true);
             }
 
             var scriptFile = this._getPostDeploymentScript(taskParams.ScriptType, taskParams.InlineScript, taskParams.ScriptPath, taskParams.isLinuxApp);
             var uniqueID = this.getDeploymentID();
             var fileExtension : string = taskParams.isLinuxApp ? '.sh' : '.cmd';
             var mainCmdFilePath = path.join(__dirname, '..', 'postDeploymentScript', 'mainCmdFile' + fileExtension);
-            await this._appServiceKuduService.uploadFile(physicalRootPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
-            await this._appServiceKuduService.uploadFile(physicalRootPath, 'kuduPostDeploymentScript_' + uniqueID + fileExtension, scriptFile.filePath);
+            await this._appServiceKuduService.uploadFile(directoryPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
+            await this._appServiceKuduService.uploadFile(directoryPath, 'kuduPostDeploymentScript_' + uniqueID + fileExtension, scriptFile.filePath);
             console.log(tl.loc('ExecuteScriptOnKudu'));
-            await this.runCommand('site\\wwwroot',
+            await this.runCommand(directoryPath,
              'mainCmdFile_' + uniqueID + fileExtension + ' ' + uniqueID,
               30, 'script_result_' +  uniqueID + '.txt');
-            await this._printPostDeploymentLogs(physicalRootPath, uniqueID);
+            await this._printPostDeploymentLogs(directoryPath, uniqueID);
 
         }
         catch(error) {
@@ -58,14 +60,14 @@ export class KuduServiceUtility {
         }
         finally {
             try {
-                await this._appServiceKuduService.uploadFile(physicalRootPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
-                await this.runCommand('site\\wwwroot', 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
+                await this._appServiceKuduService.uploadFile(directoryPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
+                await this.runCommand(directoryPath, 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
             }
             catch(error) {
                 tl.debug('Unable to delete log files : ' + error);
             }
             if(taskParams.TakeAppOfflineFlag) {
-                await this._appOfflineKuduService(physicalRootPath, false);
+                await this._appOfflineKuduService(directoryPath, false);
             }
         }
     }

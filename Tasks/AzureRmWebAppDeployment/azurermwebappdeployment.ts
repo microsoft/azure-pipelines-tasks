@@ -27,7 +27,7 @@ async function main() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
-
+        var virtualApplicationPath: string;
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParams.WebAppName));
         if(!taskParams.DeployToSlotFlag) {
             taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(azureEndpoint, taskParams.WebAppName);
@@ -71,6 +71,7 @@ async function main() {
             if(taskParams.VirtualApplication) {
                 physicalPath = await appServiceUtility.getPhysicalPath(taskParams.VirtualApplication);
                 await kuduServiceUtility.createPathIfRequired(physicalPath);
+                virtualApplicationPath = physicalPath;
             }
 
             webPackage = await FileTransformsUtility.applyTransformations(webPackage, taskParams);
@@ -112,7 +113,7 @@ async function main() {
         }
 
         if(taskParams.ScriptType) {
-            await kuduServiceUtility.runPostDeploymentScript(taskParams);   
+            await kuduServiceUtility.runPostDeploymentScript(taskParams, virtualApplicationPath);   
         }
 
         await appServiceUtility.updateScmTypeAndConfigurationDetails();
