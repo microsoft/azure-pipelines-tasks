@@ -56,7 +56,7 @@ var legacyTestPath = path.join(__dirname, '_test', 'Tests-Legacy');
 var legacyTestTasksPath = path.join(__dirname, '_test', 'Tasks');
 
 // node min version
-var minNodeVer = '6.12.0';
+var minNodeVer = '6.10.3';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
