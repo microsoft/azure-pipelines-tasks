@@ -7,7 +7,6 @@ export class TaskParametersUtility {
             WebAppName: tl.getInput('WebAppName', true),
             WebAppKind: tl.getInput('WebAppKind', false),
             DeployToSlotFlag: tl.getBoolInput('DeployToSlotFlag', false),
-            ResourceGroupName: tl.getInput('ResourceGroupName', false),
             VirtualApplication: tl.getInput('VirtualApplication', false),
             Package: tl.getPathInput('Package', true),
             GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
@@ -33,6 +32,7 @@ export class TaskParametersUtility {
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("linux") >= 0;
         taskParameters.isBuiltinLinuxWebApp = taskParameters.ImageSource && taskParameters.ImageSource.indexOf("Builtin") >= 0;
         taskParameters.isContainerWebApp = taskParameters.isLinuxApp && taskParameters.ImageSource.indexOf("Registry") >= 0;
+        taskParameters.ResourceGroupName = taskParameters.DeployToSlotFlag ? tl.getInput('ResourceGroupName', false) : null;
         taskParameters.SlotName = taskParameters.DeployToSlotFlag ? tl.getInput('SlotName', false) : null;
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
