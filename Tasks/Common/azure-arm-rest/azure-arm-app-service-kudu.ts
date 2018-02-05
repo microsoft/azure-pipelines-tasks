@@ -416,8 +416,14 @@ export class Kudu {
             }
             else if(response.statusCode == 202) {
                 let pollableURL: string = response.headers.location;
-                tl.debug(`Polling for ZIP Deploy URL: ${pollableURL}`);
-                return await this._getDeploymentDetailsFromPollURL(pollableURL);
+                if(!!pollableURL) {
+                    tl.debug(`Polling for ZIP Deploy URL: ${pollableURL}`);
+                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
+                }
+                else {
+                    tl.debug('zip deploy returned 202 without pollable URL.');
+                    return null;
+                }
             }
             else {
                 throw response;
