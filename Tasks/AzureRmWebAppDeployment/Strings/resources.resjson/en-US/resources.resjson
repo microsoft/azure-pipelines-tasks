@@ -212,5 +212,6 @@
   "loc.messages.UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
-  "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated."
+  "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
 }

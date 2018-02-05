@@ -429,6 +429,42 @@ export class Kudu {
 
     }
 
+    public async getDeploymentDetails(deploymentID: string): Promise<any> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'GET';
+            httpRequest.uri = this._client.getRequestUri(`/api/deployments/${deploymentID}`); ;
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`getDeploymentDetails. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return response.body;
+            }
+
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetDeploymentLogs', this._getFormattedError(error)))
+        }
+    }
+
+    public async getDeploymentLogs(log_url: string): Promise<any> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'GET';
+            httpRequest.uri = log_url;
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`getDeploymentLogs. Data: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                return response.body;
+            }
+
+            throw response;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetDeploymentLogs', this._getFormattedError(error)))
+        }
+    }
+
     public async deleteFile(physicalPath: string, fileName: string): Promise<void> {
         physicalPath = physicalPath.replace(/[\\]/g, "/");
         physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
