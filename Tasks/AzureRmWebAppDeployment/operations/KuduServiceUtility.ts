@@ -157,9 +157,9 @@ export class KuduServiceUtility {
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
 
             try {
-                let logs = await this._appServiceKuduService.getFileContent(`${deploymentFolder}/${deploymentDetails.id}`, 'log.log');
-                tl.debug(`logs from ZIP deploy`);
-                console.log(logs);
+                var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
+                tl.debug(`logs from ZIP deploy: ${kuduDeploymentDetails.log_url}`);
+                await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
             }
             catch(error) {
                 tl.debug(`Unable to fetch logs for kudu ZIP Deploy: ${JSON.stringify(error)}`)
@@ -182,7 +182,6 @@ export class KuduServiceUtility {
         }
     }
 
-
     public async postZipDeployOperation(oldDeploymentID: string, activeDeploymentID: string): Promise<void> {
         try {
             tl.debug(`ZIP DEPLOY - Performing post zip-deploy operation: ${oldDeploymentID} => ${activeDeploymentID}`);
@@ -196,6 +195,20 @@ export class KuduServiceUtility {
         }
         catch(error) {
             tl.debug(`Failed to execute post zip-deploy operation: ${JSON.stringify(error)}.`);
+        }
+    }
+
+    private async _printZipDeployLogs(log_url: string): Promise<void> {
+        if(!log_url) {
+            return;
+        }
+
+        var deploymentLogs = await this._appServiceKuduService.getDeploymentLogs(log_url);
+        for(var deploymentLog of deploymentLogs) {
+            console.log(`${deploymentLog.message}`);
+            if(deploymentLog.details_url) {
+                await this._printZipDeployLogs(deploymentLog.details_url);
+            }
         }
     }
 

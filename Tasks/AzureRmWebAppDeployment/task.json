@@ -740,6 +740,7 @@
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
-        "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated."
+        "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+        "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
     }
 }
