@@ -231,8 +231,9 @@ export class KuduServiceUtility {
                 else {
                     tl.debug('Manifest file present in active deployment directory. Skip creating a new one.');
                 }
-                tl.debug('ZIP DEPLOY - Performed pre-zipdeploy operation.');
             }
+
+            tl.debug('ZIP DEPLOY - Performed pre-zipdeploy operation.');
         }
         catch(error) {
             tl.debug(`Failed to execute pre zip-deploy operation: ${JSON.stringify(error)}.`);
