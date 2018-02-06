@@ -43,9 +43,7 @@ describe('PowerShellOnTargetMachine Suite', function () {
         it('Performs deployment on all machines and works correctly for valid input for Parallel run', (done) => {
             psr.run(path.join(__dirname, 'L0ValidParallelRun.ps1'), done);
         });
-        it('Throws if job fails for resources in parallel run', (done) => {
-            psr.run(path.join(__dirname, 'L0ParallelRunFail.ps1'), done);
-        });
+		
         it('Performs deployment on all machines with same resource name', (done) => {
             psr.run(path.join(__dirname, 'L0ParallelRunDuplicate.ps1'), done);
         });
