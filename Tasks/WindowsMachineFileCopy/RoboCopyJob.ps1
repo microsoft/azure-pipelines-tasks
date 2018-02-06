@@ -174,6 +174,16 @@ param (
         return 'net'
     }
     
+    function Write-DTLServiceDeprecationMessageIfRequired
+    {
+        param([string]$machine)
+
+        if(-not($machine.Contains('.')) -and -not($machine.Contains(':')) -and -not($machine.Contains(",")))
+        {
+                write-error "Deployments using 'test hub: machine groups' is no longer supported. Refer to https://go.microsoft.com/fwlink/?LinkID=799742&clcid=0x409 for more information or get help from Developer Community [https://developercommunity.visualstudio.com/spaces/21/index.html]."
+        }
+    }
+    
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
     
@@ -195,6 +205,8 @@ param (
         $dtl_mapOut = iex $command
         if ($LASTEXITCODE -ne 0) 
         {
+			Write-DTLServiceDeprecationMessageIfRequired $fqdn
+		
             $errorMessage = (Get-LocalizedString -Key "Failed to connect to the path {0} with the user {1} for copying.`n" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
             ThrowError -errorMessage $errorMessage -fqdn $fqdn
         }

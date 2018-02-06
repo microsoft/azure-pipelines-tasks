@@ -65,12 +65,37 @@ if ($enableDetailedLoggingString -ne "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
+# Import all the dlls and modules which have cmdlets we need
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+
+function Write-DTLServiceDeprecationMessageIfRequired
+{
+     param([string]$machine)
+
+    try
+    {
+        $jsonValue = ConvertFrom-Json $environmentName -ErrorAction Stop;
+        $validJson = $true;
+    }
+    catch
+    {
+        $validJson = $false;
+    }
+    
+    if(!$validJson)
+    {
+        if(-not($machine.Contains('.')) -and -not($machine.Contains(':')) -and -not($machine.Contains(",")))
+        {
+           write-error "Deployments using 'test hub: machine groups' is no longer supported. Refer to https://go.microsoft.com/fwlink/?LinkID=799742&clcid=0x409 for more information or get help from Developer Community [https://developercommunity.visualstudio.com/spaces/21/index.html]."
+        }
+    }
+}
+
 try
 {
-    $connection = Get-VssConnection -TaskContext $distributedTaskContext
-
     Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter"
-    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter
+    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -ResourceFilter $machineFilter
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName"
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $environmentName"
@@ -110,6 +135,9 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         {
             Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
             Write-Verbose $deploymentResponse.Error.ToString()
+            
+            Write-DTLServiceDeprecationMessageIfRequired $machine
+            
             $errorMessage =  $deploymentResponse.Error.Message
             throw $errorMessage
         }
@@ -168,6 +196,7 @@ if($envOperationStatus -ne "Passed")
       Write-Telemetry "DTLSDK_Error" $error
     }
     
+    Write-DTLServiceDeprecationMessageIfRequired $machine
     $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
     throw $errorMessage
 }

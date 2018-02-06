@@ -30,6 +30,10 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal" -ErrorAction Ignore
 
+# Import all the dlls and modules which have cmdlets we need
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+
 # keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
 $sourcePath = $sourcePath.Trim('"')
@@ -54,13 +58,9 @@ if([string]::IsNullOrWhiteSpace($environmentName))
 }
 else
 {
-
-    $connection = Get-VssConnection -TaskContext $distributedTaskContext
-
     Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter"
-    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -Connection $connection -TaskContext $distributedTaskContext -ResourceFilter $machineFilter
+    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -ResourceFilter $machineFilter
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName"
-
     $fetchedEnvironmentName = $environment.Name
 
     Write-Verbose "Starting Get-EnvironmentResources cmdlet call on environment name: $fetchedEnvironmentName"
