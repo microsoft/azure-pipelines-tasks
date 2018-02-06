@@ -59,7 +59,7 @@ if([string]::IsNullOrWhiteSpace($environmentName))
 else
 {
     Write-Verbose "Starting Register-Environment cmdlet call for environment : $environmentName with filter $machineFilter"
-    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -WinRmProtocol $protocol -TestCertificate ($testCertificate -eq "true") -ResourceFilter $machineFilter
+    $environment = Register-Environment -EnvironmentName $environmentName -EnvironmentSpecification $environmentName -UserName $adminUserName -Password $adminPassword -ResourceFilter $machineFilter
     Write-Verbose "Completed Register-Environment cmdlet call for environment : $environmentName"
     $fetchedEnvironmentName = $environment.Name
 
