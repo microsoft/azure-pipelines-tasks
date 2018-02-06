@@ -3,6 +3,6 @@
     "del": "2.2.0",
     "docker-common": "file:../../_build/Tasks/Common/docker-common",
     "js-yaml": "3.6.1",
-    "vsts-task-lib": "2.0.1-preview"
+    "vsts-task-lib": "2.0.5"
   }
 }
