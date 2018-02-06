@@ -105,7 +105,6 @@
         "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
         "signaturePropertyKey": "$(signatureKey)",
         "messageProperties": {
-          "Content-Type": "application/json",
           "PlanUrl": "$(system.CollectionUri)",
           "ProjectId": "$(system.TeamProjectId)",
           "HubName": "$(system.HostType)",
