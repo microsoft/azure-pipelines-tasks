@@ -185,10 +185,10 @@ export class KuduServiceUtility {
     public async postZipDeployOperation(oldDeploymentID: string, activeDeploymentID: string): Promise<void> {
         try {
             tl.debug(`ZIP DEPLOY - Performing post zip-deploy operation: ${oldDeploymentID} => ${activeDeploymentID}`);
-            let manifestFile = await this._appServiceKuduService.getFileContent(`${deploymentFolder}/${oldDeploymentID}`, manifestFileName);
-            if(!!manifestFile) {
+            let manifestFileContent = await this._appServiceKuduService.getFileContent(`${deploymentFolder}/${oldDeploymentID}`, manifestFileName);
+            if(!!manifestFileContent) {
                 let tempManifestFile: string = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), manifestFileName);
-                tl.writeFile(tempManifestFile, manifestFile);
+                tl.writeFile(tempManifestFile, manifestFileContent);
                 await this._appServiceKuduService.uploadFile(`${deploymentFolder}/${activeDeploymentID}`, manifestFileName, tempManifestFile);
             }
             tl.debug('ZIP DEPLOY - Performed post-zipdeploy operation.');
