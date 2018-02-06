@@ -1,0 +1,10 @@
+{ 
+        "rm": [ 
+            { 
+                "items": [ 
+                    "node_modules/vsts-task-lib" 
+                ], 
+                "options": "-Rf" 
+            } 
+        ] 
+    } 

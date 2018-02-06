@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "del": "2.2.0",
-    "docker-common": "file:node_modules/docker-common",
+    "docker-common": "file:../../_build/Tasks/Common/docker-common",
     "js-yaml": "3.6.1",
     "vsts-task-lib": "2.0.5"
   }
