@@ -314,6 +314,27 @@ export class KuduTests {
         }
     }
 
+    public static async zipDeploy() {
+        try {
+            let kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            let deploymentDetails = await kudu.zipDeploy(path.join(__dirname, 'package.json'), ['deployer=VSTS_ZIP_DEPLOY']);
+            console.log(`KUDU ZIP DEPLOY PASSED. ID: ${deploymentDetails.id}. STATUS: ${deploymentDetails.status}.`);
+        }
+        catch(error) {
+            tl.error(error);
+            tl.setResult(tl.TaskResult.Failed, 'KuduTests.zipDeploy() should have passed but failed');
+        }
+
+        try {
+            let kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            let deploymentDetails = await kudu.zipDeploy(path.join(__dirname, 'package.json'), ['deployer=VSTS_ZIP_DEPLOY']);
+            console.log(`KUDU ZIP DEPLOY FAILED. ID: ${deploymentDetails.id}. STATUS: ${deploymentDetails.status}.`);
+        }
+        catch(error) {
+            tl.error(error);
+        }
+    }
+
     public static async deleteFile() {
         try {
             var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
@@ -354,6 +375,7 @@ async function RUNTESTS() {
     await KuduTests.runCommand();
     await KuduTests.extractZIP();
     await KuduTests.deleteFile();
+    await KuduTests.zipDeploy();
 }
 
 RUNTESTS();

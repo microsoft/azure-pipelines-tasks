@@ -194,23 +194,28 @@ function updateXmlNodeAttribute(xmlDomNode, variableMap, replacableTokenValues):
 
         if(variableMap[attributeNameValue]) {
             var ConfigFileAppSettingsTokenName = ConfigFileAppSettingsToken + '(' + attributeNameValue + ')';
-            tl.debug('Updating value for key=' + attributeNameValue + 'with token_value: ' + ConfigFileAppSettingsTokenName);
-
-            if(xmlDomNode.getAttr(attributeName)) {
+            let isValueReplaced: boolean = false;
+            if(xmlDomNode.getAttr(attributeName) != undefined) {
+                tl.debug('Updating value for key= "' + attributeNameValue + '" with token_value: ' + ConfigFileAppSettingsTokenName);
                 xmlDomNode.attr(attributeName, ConfigFileAppSettingsTokenName);
+                isValueReplaced = true;
             } else {
                 var children = xmlDomNode.children;
                 for(var childNode of children) {
                     if(varUtility.isObject(childNode) && childNode.name == attributeName) {
                         if (childNode.children.length === 1) {
+                            tl.debug('Updating value for key= "' + attributeNameValue + '" with token_value: ' + ConfigFileAppSettingsTokenName);
                             childNode.children[0] = ConfigFileAppSettingsTokenName;
+                            isValueReplaced = true;
                         }
                     }
                 }
             }
 
-            replacableTokenValues[ConfigFileAppSettingsTokenName] =  variableMap[attributeNameValue].replace(/"/g, "'");
-            isSubstitutionApplied = true;
+            if(isValueReplaced) {
+                replacableTokenValues[ConfigFileAppSettingsTokenName] =  variableMap[attributeNameValue].replace(/"/g, "'");
+                isSubstitutionApplied = true;
+            }
         }
     }
     var children = xmlDomNode.children;

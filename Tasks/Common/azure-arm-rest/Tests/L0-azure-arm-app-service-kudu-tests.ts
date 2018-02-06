@@ -40,9 +40,10 @@ export function KuduServiceTests() {
             runCommand(tr);
             console.log("\tvalidating extractZIP");
             extractZIP(tr);
+            console.log("\tvalidating zipDeploy");
+            zipDeploy(tr);
             console.log("\tvalidating deleteFile");
             deleteFile(tr);
-            
         }
         catch(error) {
             passed = false;
@@ -184,4 +185,12 @@ function deleteFile(tr) {
 
     assert(tr.stdOutContained('FailedToDeleteFile site/wwwroot web.config null (CODE: 501)'),
         'Should have printed: Error: FailedToDeleteFile site/wwwroot web.config null (CODE: 501)');
+}
+
+function zipDeploy(tr) {
+    assert(tr.stdOutContained('KUDU ZIP DEPLOY PASSED. ID: ZIP_DEPLOY_PASSED_ID. STATUS: 4.'),
+    'Should have printed: KUDU ZIP DEPLOY PASSED. ID: ZIP_DEPLOY_PASSED_ID. STATUS: 4.');
+
+    assert(tr.stdOutContained('KUDU ZIP DEPLOY FAILED. ID: ZIP_DEPLOY_FAILED_ID. STATUS: 3.'),
+        'Should have printed: KUDU ZIP DEPLOY FAILED. ID: ZIP_DEPLOY_FAILED_ID. STATUS: 3.');
 }

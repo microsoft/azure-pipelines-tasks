@@ -29,7 +29,7 @@ Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
 Register-Mock Get-VstsInput { "true" } -- -Name configureDockerSettings
 Register-Mock Get-VstsInput { "AzureResourceManagerEndpoint" } -- -Name registryCredentials -Require
 Register-Mock Get-VstsInput { $azureSubscriptionEndpoint } -- -Name azureSubscriptionEndpoint -Require
-
+Register-Mock Get-VstsInput { "false" } -- -Name useDiffPackage
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
