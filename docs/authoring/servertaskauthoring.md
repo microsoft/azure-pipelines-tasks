@@ -26,8 +26,9 @@ This enables you to invoke a Http end-point. It takes 3 inputs.
     1.  TaskAssigned - External service raises to acknowledge that the ‘Execute’ event has been received (optional)
     2.  TaskStarted - Raised when the external service starts processing
     3.  TaskCompleted -Raised when the external system is done processing (indicates success/failure)
-         *Example*:  In below example once server picks task for execution, if server not receives the &#39;TaskStarted&#39; event within 5 minutes, server cancels the task. If server not receives the &#39;TaskCompleted&#39; event within 7 minutes, server cancels the task.
-"Events": { "TaskStarted": {"Timeout": "00:05:00"}, "TaskCompleted": {"Timeout": "00:07:00"}}
+    
+         *Example*:  In below example once server picks task for execution, if server not receives the &#39;TaskStarted&#39; event within 5 minutes, server cancels the task. If server not receives the &#39;TaskCompleted&#39; event within 7 minutes, server cancels the task.         
+   "Events": { "TaskStarted": {"Timeout": "00:05:00"}, "TaskCompleted": {"Timeout": "00:07:00"}}
 
     **Execute:** Configures the HTTP payload and properties for the Execute event raised from VSTS to the cloud service.  'HttpRequest' handler supports following properties.
     - EndpointId: - Specified endpointId details used while triggering below mentioned &#39;EndpointUrl&#39;. This input is optional
@@ -44,6 +45,7 @@ This enables you to invoke a Http end-point. It takes 3 inputs.
 This enables you to post a message to azure service bus queue. It takes 3 inputs.
 
     **Events:** Same set of events mentioned above are supported in ServerBus also.
+    
     **Execute:** Configures the servicebus message payload and properties for the Execute event raised from VSTS to the cloud service. ServiceBus handler has following properties.
     - EndpointId: - EndpointId details used while publishing the message
     - ConnectionString: - Azure service bus connection string
