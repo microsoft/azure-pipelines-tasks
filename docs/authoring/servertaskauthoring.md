@@ -21,12 +21,13 @@ Here are the possible actions you can do for server tasks.
 
 - **HttpRequest** :
 This enables you to invoke a Http end-point. It takes 3 inputs.
+
     **Events:** This property gives control on task execution. &#39;Events&#39; property is optional. External systems respond with these events to indicate state changes using the TaskHttpEvents API.  You can configure timeouts for these events. You can use [ServerTaskHelper](https://github.com/Microsoft/vsts-rm-extensions/tree/master/ServerTaskHelper) to post the events and task execution logs to VSTS/TFS server. The possible values for this property are as follows: -
     1.  TaskAssigned - External service raises to acknowledge that the ‘Execute’ event has been received (optional)
     2.  TaskStarted - Raised when the external service starts processing
     3.  TaskCompleted -Raised when the external system is done processing (indicates success/failure)
          *Example*:  In below example once server picks task for execution, if server not receives the &#39;TaskStarted&#39; event within 5 minutes, server cancels the task. If server not receives the &#39;TaskCompleted&#39; event within 7 minutes, server cancels the task.
-&quot;Events&quot;: { &quot;TaskStarted&quot;: {&quot;Timeout&quot;: &quot;0:05:00&quot;}, &quot;TaskCompleted&quot;: {&quot;Timeout&quot;: &quot;0:07:00&quot;}}
+"Events": { "TaskStarted": {"Timeout": "00:05:00"}, "TaskCompleted": {"Timeout": "00:07:00"}}
 
     **Execute:** Configures the HTTP payload and properties for the Execute event raised from VSTS to the cloud service.  'HttpRequest' handler supports following properties.
     - EndpointId: - Specified endpointId details used while triggering below mentioned &#39;EndpointUrl&#39;. This input is optional
@@ -41,6 +42,7 @@ This enables you to invoke a Http end-point. It takes 3 inputs.
 
 - **ServiceBus**
 This enables you to post a message to azure service bus queue. It takes 3 inputs.
+
     **Events:** Same set of events mentioned above are supported in ServerBus also.
     **Execute:** Configures the servicebus message payload and properties for the Execute event raised from VSTS to the cloud service. ServiceBus handler has following properties.
     - EndpointId: - EndpointId details used while publishing the message
