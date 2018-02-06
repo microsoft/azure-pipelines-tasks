@@ -16,8 +16,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 5,
-        "Patch": 1
+        "Minor": 6,
+        "Patch": 0
     },
     "demands": [
         "Cmd"
@@ -87,7 +87,7 @@
             "name": "useDiffPackage",
             "type": "boolean",
             "label": "Use Diff Package",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "required": false,
             "groupname": "advanced",
             "helpMarkDown": "Upgrade by using a diff package that contains only the updated application files, the updated application manifest, and the service manifest files."
