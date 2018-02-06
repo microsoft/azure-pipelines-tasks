@@ -1,11 +1,5 @@
 {
-  "common": [
-    {
-      "module": "../Common/Deployment/TelemetryHelper",
-      "type": "ps"
-    }
-  ],
-  "externals": {
+    "externals": {
         "archivePackages": [
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/DeploymentUtilities/M128.2/DeploymentUtilities.zip",
