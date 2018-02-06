@@ -21,7 +21,7 @@ Here are the possible actions you can do for server tasks.
 
 - **HttpRequest** :
 This enables you to invoke a Http end-point. It takes 3 inputs.
-**Events:** This property gives control on task execution. &#39;Events&#39; property is optional. External systems respond with these events to indicate state changes using the TaskHttpEvents API.  You can configure timeouts for these events. You can use [ServerTaskHelper](https://github.com/Microsoft/vsts-rm-extensions/tree/master/ServerTaskHelper) to post the events and task execution logs to VSTS/TFS server. The possible values for this property are as follows: -
+    **Events:** This property gives control on task execution. &#39;Events&#39; property is optional. External systems respond with these events to indicate state changes using the TaskHttpEvents API.  You can configure timeouts for these events. You can use [ServerTaskHelper](https://github.com/Microsoft/vsts-rm-extensions/tree/master/ServerTaskHelper) to post the events and task execution logs to VSTS/TFS server. The possible values for this property are as follows: -
     1.  TaskAssigned - External service raises to acknowledge that the ‘Execute’ event has been received (optional)
     2.  TaskStarted - Raised when the external service starts processing
     3.  TaskCompleted -Raised when the external system is done processing (indicates success/failure)
@@ -30,28 +30,28 @@ This enables you to invoke a Http end-point. It takes 3 inputs.
 
     **Execute:** Configures the HTTP payload and properties for the Execute event raised from VSTS to the cloud service.  'HttpRequest' handler supports following properties.
     - EndpointId: - Specified endpointId details used while triggering below mentioned &#39;EndpointUrl&#39;. This input is optional
-  - Endpoint URL: - Http Url to trigger on task execution
-  - Method: - Http method like PUT, GET, POST, PATCH, DELETE, OPTIONS, HEAD, TRACE.
-  - Body: - Body of http request
-  - Headers: - headers of Http request. Header should be in JSON format.
-  - WaitForCompletion: -  you can specify true or false. Default value false. If you specify &#39;true&#39;, server waits for TaskCompleted event happen from external. If task event not comes within task timeout, task will be canceled. This input is optional
-  - Expression: - Expression Criteria which defines when to pass the task. No expression means response content does not influence the result. Example: - For response {&quot;status&quot;: &quot;successful&quot;}, the expression can be eq(root[&#39;status&#39;], &#39;successful&#39;). More Information[https://go.microsoft.com/fwlink/?linkid=842996](https://go.microsoft.com/fwlink/?linkid=842996)
+    - Endpoint URL: - Http Url to trigger on task execution
+    - Method: - Http method like PUT, GET, POST, PATCH, DELETE, OPTIONS, HEAD, TRACE.
+    - Body: - Body of http request
+    - Headers: - headers of Http request. Header should be in JSON format.
+    - WaitForCompletion: -  you can specify true or false. Default value false. If you specify &#39;true&#39;, server waits for TaskCompleted event happen from external. If task event not comes within task timeout, task will be canceled. This input is optional
+    - Expression: - Expression Criteria which defines when to pass the task. No expression means response content does not influence the result. Example: - For response {&quot;status&quot;: &quot;successful&quot;}, the expression can be eq(root[&#39;status&#39;], &#39;successful&#39;). More Information[https://go.microsoft.com/fwlink/?linkid=842996](https://go.microsoft.com/fwlink/?linkid=842996)
 
-   **Cancel**: Configures the HTTP payload and properties for the Cancel event raised from VSTS to the external service. This property is optional.  You can configure these properties if you want call external service on user cancels the task. Properties are same as 'Execute' properties defined above.
+    **Cancel**: Configures the HTTP payload and properties for the Cancel event raised from VSTS to the external service. This property is optional.  You can configure these properties if you want call external service on user cancels the task. Properties are same as 'Execute' properties defined above.
 
 - **ServiceBus**
 This enables you to post a message to azure service bus queue. It takes 3 inputs.
-**Events:** Same set of events mentioned above are supported in ServerBus also.
-**Execute:** Configures the servicebus message payload and properties for the Execute event raised from VSTS to the cloud service. ServiceBus handler has following properties.
-  - EndpointId: - EndpointId details used while publishing the message
-  - ConnectionString: - Azure service bus connection string
-  - ServiceBusQueueName: - Queue name to publish message
-  - MessageBody: - Message body. Message body should be JSON format
-  - MessageProperties: - message properties. like Content-Type:\application/json&quot;
-  - CertificateString: -  used to encrypt the message. This input is optional
-  - SignaturePropertyKey: - used to encrypt the message. This input is optional
+    **Events:** Same set of events mentioned above are supported in ServerBus also.
+    **Execute:** Configures the servicebus message payload and properties for the Execute event raised from VSTS to the cloud service. ServiceBus handler has following properties.
+    - EndpointId: - EndpointId details used while publishing the message
+    - ConnectionString: - Azure service bus connection string
+    - ServiceBusQueueName: - Queue name to publish message
+    - MessageBody: - Message body. Message body should be JSON format
+    - MessageProperties: - message properties. like Content-Type:\application/json&quot;
+    - CertificateString: -  used to encrypt the message. This input is optional
+    - SignaturePropertyKey: - used to encrypt the message. This input is optional
   
-   **Cancel**:  configures the servicebus message payload and properties for the Cancel event raised from VSTS to the cloud service. This property is optional. Properties are same as 'Execute' properties defined above.
+    **Cancel**:  configures the servicebus message payload and properties for the Cancel event raised from VSTS to the cloud service. This property is optional. Properties are same as 'Execute' properties defined above.
 
 Task inputs, all well know system variables, user defined variables and endpoint variables can use in 'execute' properties. Example '"Body": "$method"', here 'method' is task input.
      
