@@ -620,4 +620,16 @@ export function mockKuduServiceTests() {
     nock('http://MOCK_SCM_WEBSITE').delete('/api/vfs/site/wwwroot/hello.txt').reply(200);
 
     nock('http://FAIL_MOCK_SCM_WEBSITE').delete('/api/vfs/site/wwwroot/web.config').reply(501, 'Internal error occured');
+
+    nock('http://MOCK_SCM_WEBSITE').
+    post('/api/zipdeploy?deployer=VSTS_ZIP_DEPLOY').reply(202, null, {'location': 'http://MOCK_SCM_WEBSITE.scm.azurewebsites.net/api/deployments/latest?deployer=VSTS_ZIP_DEPLOY'});
+
+    nock('http://MOCK_SCM_WEBSITE.scm.azurewebsites.net').
+    get('/api/deployments/latest?deployer=VSTS_ZIP_DEPLOY').reply(200, {id: "ZIP_DEPLOY_PASSED_ID", status: 4, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"});
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    post('/api/zipdeploy?deployer=VSTS_ZIP_DEPLOY').reply(202, null, {'location': 'http://FAIL_MOCK_SCM_WEBSITE.scm.azurewebsites.net/api/deployments/latest?deployer=VSTS_ZIP_DEPLOY'});
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE.scm.azurewebsites.net').
+    get('/api/deployments/latest?deployer=VSTS_ZIP_DEPLOY').reply(200, {id: "ZIP_DEPLOY_FAILED_ID", status: 3, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"});
 }

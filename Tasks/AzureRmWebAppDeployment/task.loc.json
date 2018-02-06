@@ -750,6 +750,9 @@
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
     "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
-    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService"
+    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
+    "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
+    "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
+    "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs"
   }
 }
