@@ -85,8 +85,6 @@ function Write-DTLServiceDeprecationMessageIfRequired
     
     if(!$validJson)
     {
-        $dtlServiceInValidChars = @('.',':',',')
-
         if(-not($machine.Contains('.')) -and -not($machine.Contains(':')) -and -not($machine.Contains(",")))
         {
            write-error "Deployments using 'test hub: machine groups' is no longer supported. Refer to https://go.microsoft.com/fwlink/?LinkID=799742&clcid=0x409 for more information or get help from Developer Community [https://developercommunity.visualstudio.com/spaces/21/index.html]."
