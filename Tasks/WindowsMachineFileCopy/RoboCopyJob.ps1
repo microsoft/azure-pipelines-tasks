@@ -177,23 +177,10 @@ param (
     function Write-DTLServiceDeprecationMessageIfRequired
     {
         param([string]$machine)
-    
-         try
-        {
-            $jsonValue = ConvertFrom-Json $machine -ErrorAction Stop;
-            $validJson = $true;
-        }
-        catch
-        {
-                $validJson = $false;
-        }
 
-        if(!$validJson)
+        if(-not($machine.Contains('.')) -and -not($machine.Contains(':')) -and -not($machine.Contains(",")))
         {
-            if(-not($machine.Contains('.')) -and -not($machine.Contains(':')) -and -not($machine.Contains(",")))
-            {
-                 write-error "Deployments using 'test hub: machine groups' is no longer supported. Refer to https://go.microsoft.com/fwlink/?LinkID=799742&clcid=0x409 for more information or get help from Developer Community [https://developercommunity.visualstudio.com/spaces/21/index.html]."
-            }
+                write-error "Deployments using 'test hub: machine groups' is no longer supported. Refer to https://go.microsoft.com/fwlink/?LinkID=799742&clcid=0x409 for more information or get help from Developer Community [https://developercommunity.visualstudio.com/spaces/21/index.html]."
         }
     }
     

@@ -75,7 +75,7 @@ function Write-DTLServiceDeprecationMessageIfRequired
 
     try
     {
-        $jsonValue = ConvertFrom-Json $machine -ErrorAction Stop;
+        $jsonValue = ConvertFrom-Json $environmentName -ErrorAction Stop;
         $validJson = $true;
     }
     catch
