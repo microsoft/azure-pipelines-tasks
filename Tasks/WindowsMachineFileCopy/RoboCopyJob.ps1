@@ -192,7 +192,6 @@ param (
                 $relativePath = $path.Substring($destPath.Length)
                 New-Item -ItemType Directory WFCPSDrive:$relativePath -Force
                 Write-Verbose "Created directory"
-                Remove-PSDrive -Name WFCPSDrive
             }
             catch 
             {
@@ -208,6 +207,13 @@ param (
                 {
                     $destPath = $parentPath
                     Write-Verbose "Check if parent path exists: $destPath"
+                }
+            }
+            finally
+            {
+                if($foundParentPath -eq $true)
+                {
+                    Remove-PSDrive -Name WFCPSDrive
                 }
             }
         }
