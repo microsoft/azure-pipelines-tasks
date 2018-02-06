@@ -65,9 +65,9 @@ Let us understand few concepts/tips &amp; tricks.
      *Example*: - For response {"status”: "successful"}, the expression can be eq(root['status'], 'successful'). In this example task succeeds only 'status' value 'successful'.  For response {“ActiveReleases”: [ “Release1”, “Release2”, “Release3”] }, the expression can be  ge(count(root[‘ActiveReleasesName’]), 3), here task succeeds only if ‘ActiveReleases’ array count greater than or equal to 3. More Information https://go.microsoft.com/fwlink/?linkid=842996
 
 ##### HttpReques handler task references: -
-  [https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/InvokeRestApi/task.json](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/InvokeRestApi/task.json)
-  [https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitor/task.json](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitor/task.json)
-  [https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureFunction/task.json](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureFunction/task.json)
+  [InvokeRestApi](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/InvokeRestApi/task.json)  
+  [AzureMonitor](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitor/task.json)  
+  [AzureFunction](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureFunction/task.json)
 
 ##### ServiceBushandler task references:-
-  [https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PublishToAzureServiceBus/task.json](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PublishToAzureServiceBus/task.json)
+  [PublishToAzureServiceBus](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PublishToAzureServiceBus/task.json)
