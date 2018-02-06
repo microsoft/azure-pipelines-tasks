@@ -16,7 +16,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 6,
+    "Minor": 7,
     "Patch": 1
   },
   "demands": [
@@ -87,7 +87,7 @@
       "name": "useDiffPackage",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.useDiffPackage",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage"
