@@ -8,6 +8,8 @@
   "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
   "loc.input.label.messageBody": "Message body",
   "loc.input.help.messageBody": "Enter the json messageBody.",
+  "loc.input.label.messageProperties": "Message properties",
+  "loc.input.help.messageProperties": "Enter the json message properties.",
   "loc.input.label.signPayload": "Sign the Message",
   "loc.input.help.signPayload": "If this is set to true, message will be signed provided a private certificate.",
   "loc.input.label.certificateString": "Certificate Variable",
