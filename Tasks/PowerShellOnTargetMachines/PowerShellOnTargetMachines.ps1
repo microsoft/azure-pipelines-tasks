@@ -71,8 +71,6 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 
 function Write-DTLServiceDeprecationMessageIfRequired
 {
-     param([string]$machine)
-
     try
     {
         $jsonValue = ConvertFrom-Json $environmentName -ErrorAction Stop;
@@ -85,7 +83,7 @@ function Write-DTLServiceDeprecationMessageIfRequired
     
     if(!$validJson)
     {
-        if(-not($machine.Contains('.')) -and -not($machine.Contains(':')) -and -not($machine.Contains(",")))
+        if(-not($environmentName.Contains('.')) -and -not($environmentName.Contains(':')) -and -not($environmentName.Contains(",")))
         {
            Write-Error "Deployments using 'test hub: machine groups' is no longer supported. Refer to https://go.microsoft.com/fwlink/?LinkID=799742&clcid=0x409 for more information or get help from Developer Community [https://developercommunity.visualstudio.com/spaces/21/index.html]." -ErrorAction Continue
         }
@@ -136,7 +134,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
             Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
             Write-Verbose $deploymentResponse.Error.ToString()
             
-            Write-DTLServiceDeprecationMessageIfRequired $machine
+            Write-DTLServiceDeprecationMessageIfRequired
             
             $errorMessage =  $deploymentResponse.Error.Message
             throw $errorMessage
@@ -196,7 +194,7 @@ if($envOperationStatus -ne "Passed")
       Write-Telemetry "DTLSDK_Error" $error
     }
     
-    Write-DTLServiceDeprecationMessageIfRequired $machine
+    Write-DTLServiceDeprecationMessageIfRequired
     $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
     throw $errorMessage
 }
