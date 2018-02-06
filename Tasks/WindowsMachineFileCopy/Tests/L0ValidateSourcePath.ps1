@@ -5,13 +5,12 @@ param()
 . $PSScriptRoot\..\Utility.ps1
 
 $invalidSourcePath = "Invalid"
-Unregister-Mock Test-Path
 Register-Mock Test-Path { return $false } -ParametersEvaluator { $LiteralPath -eq $invalidSourcePath }
 
 Assert-Throws {
     Validate-SourcePath -value ""
-} -MessagePattern "WFC_ParameterCannotBeNullorEmpty sourcePath"
+} -MessagePattern "Parameter 'sourcePath' cannot be null or empty."
 
 Assert-Throws {
     Validate-SourcePath -value "$invalidSourcePath"
-} -MessagePattern "WFC_SourcePathDoesNotExist Invalid"
+} -MessagePattern "Source path '$invalidSourcePath' does not exist."

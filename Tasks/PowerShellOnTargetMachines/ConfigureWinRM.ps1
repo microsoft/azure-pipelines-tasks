@@ -44,10 +44,13 @@ function Is-InputValid
 
 function Download-Files
 {
-    Write-Verbose -Verbose "Downloading makecert.exe file"
+    Write-Verbose -Verbose "Downloading makecert.exe and winrmconf.cmd files"
 
     $source="https://azurergtaskstorage.blob.core.windows.net/winrm/makecert.exe"
     Invoke-WebRequest $source -OutFile .\makecert.exe -ErrorAction Stop
+
+    $source="https://azurergtaskstorage.blob.core.windows.net/winrm/winrmconf.cmd"
+    Invoke-WebRequest $source -OutFile .\winrmconf.cmd -ErrorAction Stop
 }
 
 function Delete-WinRMListener
@@ -112,8 +115,7 @@ function Configure-WinRMHttpsListener
     }    
 
     # Configure WinRM
-    $WinrmCreate= "winrm create --% winrm/config/Listener?Address=*+Transport=HTTPS @{Hostname=`"$hostName`";CertificateThumbprint=`"$thumbPrint`"}"
-    invoke-expression $WinrmCreate
+    cmd.exe /c .\winrmconf.cmd $hostname $thumbprint
 }
 
 function Add-FirewallException

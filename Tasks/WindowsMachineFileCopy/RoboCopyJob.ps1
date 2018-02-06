@@ -5,20 +5,8 @@ param (
     [string]$targetPath,
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
-    [string]$additionalArguments,
-    [string]$scriptRoot
-    )
-
-    Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
-    Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
-
-    Write-Verbose "Entering script RobocopyJob.ps1"
-    Write-Verbose "fqdn = $fqdn"
-    Write-Verbose "sourcePath = $sourcePath"
-    Write-Verbose "targetPath = $targetPath"
-    Write-Verbose "credential = $credential"
-    Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
-    Write-Verbose "additionalArguments = $additionalArguments"
+    [string]$additionalArguments
+    )    
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
@@ -33,6 +21,23 @@ param (
         $sourceDirectory = Split-Path $sourcePath
         $filesToCopy = Split-Path $sourcePath -Leaf
     }
+
+    if(Test-Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
+    {
+        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
+        [void][reflection.assembly]::LoadFrom( $_.FullName )
+        Write-Verbose "Loading .NET assembly:`t$($_.name)" -Verbose
+        }
+    }
+    else
+    {
+        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
+        {
+            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
+        }
+    }
+    
+    import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
     
     function ThrowError
     {
@@ -41,7 +46,7 @@ param (
             [string]$fqdn
         )
         
-        $failMessage = (Get-VstsLocString -Key "WFC_CopyingFailedForResource" -ArgumentList $fqdn)
+        $failMessage = "Copying failed for resource : $fqdn"
         throw "$failMessage`n$errorMessage"
     }
     
@@ -53,7 +58,7 @@ param (
         $value = $value.Trim()    
         if(-not $value)
         {
-            ThrowError -errorMessage (Get-VstsLocString -Key "WFC_ParameterCannotBeNullorEmpty" -ArgumentList $variableName)
+            ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList $variableName)
         }
     }
     
@@ -67,7 +72,7 @@ param (
         }
         else
         {
-            ThrowError -errorMessage (Get-VstsLocString -Key "WFC_ParameterCannotBeNullorEmpty" -ArgumentList "credential")
+            ThrowError -errorMessage (Get-LocalizedString -Key "Parameter '{0}' cannot be null or empty." -ArgumentList "credential")
         }   
     }
 
@@ -98,16 +103,6 @@ param (
         return $text.Substring(0, $pos) + $replace + $text.Substring($pos + $search.Length);
     }
 
-    function Clean-Target
-    {
-        $cleanupArgument = "/NOCOPY /PURGE" 
-        $guid = [GUID]::NewGuid()
-        $tempDirectory = "$scriptRoot\temp$guid" 
-        New-Item -ItemType Directory -Force -Path $tempDirectory         
-        Invoke-Expression "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
-        Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
-    }
-
     function Get-DestinationNetworkPath(
         [string]$targetPath,
         [string]$machineShare
@@ -124,14 +119,21 @@ param (
 
     function Get-RoboCopyParameters(
         [string]$additionalArguments,
-        [switch]$fileCopy
-        )
+        [switch]$fileCopy,
+        [switch]$clean)
     {
-        $robocopyParameters = "/COPY:DAT "
+        $robocopyParameters = "/COPY:DAT"
 
         if(-not $fileCopy.IsPresent)
         {
-            $robocopyParameters += " /E"
+            if($clean.IsPresent)
+            {
+                $robocopyParameters += " /MIR"
+            }
+            else
+            {
+                $robocopyParameters += " /E"
+            }
         }       
         
         if (-not [string]::IsNullOrWhiteSpace($additionalArguments))
@@ -186,38 +188,44 @@ param (
         $command = "$netExeCommand use `"$machineShare`""
         if($userName)
         {
-            $command += " /user:`'$userName`' `'$($password -replace "['`]", '$&$&')`'"
+            $command += " /user:`"$userName`" `'$($password -replace "['`]", '$&$&')`'"
         }
         $command += " 2>&1"
         
         $dtl_mapOut = iex $command
         if ($LASTEXITCODE -ne 0) 
         {
-            $errorMessage = (Get-VstsLocString -Key "WFC_FailedToConnectToPathWithUser" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
+            $errorMessage = (Get-LocalizedString -Key "Failed to connect to the path {0} with the user {1} for copying.`n" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
             ThrowError -errorMessage $errorMessage -fqdn $fqdn
         }
     }
 
     try
     {
-        if($doCleanUp)
+        if($isFileCopy -and $doCleanUp -and (Test-Path -path $destinationNetworkPath -pathtype container))
         {
-           Clean-Target
+            Get-ChildItem -Path $destinationNetworkPath -Recurse -force | Remove-Item -force -recurse;
+            $output = Remove-Item -path $destinationNetworkPath -force -recurse 2>&1
+            $err = $output | ?{$_.gettype().Name -eq "ErrorRecord"}
+            if($err)
+            {
+                Write-Verbose -Verbose "Error occurred while deleting the destination folder: $err"
+            }
         }
 
-        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
+        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
 
         $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
         Invoke-Expression $command        
         
         if ($LASTEXITCODE -ge 8)
         {
-            $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
+            $errorMessage = Get-LocalizedString -Key "Copying failed. Consult the robocopy logs for more details."            
             ThrowError -errorMessage $errorMessage -fqdn $fqdn            
         }
         else
         {            
-            $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
+            $message = (Get-LocalizedString -Key "Copying recursively from {0} to {1} on machine {2} succeeded" -ArgumentList $sourcePath, $targetPath, $fqdn)
             Write-Output $message            
         }        
     }

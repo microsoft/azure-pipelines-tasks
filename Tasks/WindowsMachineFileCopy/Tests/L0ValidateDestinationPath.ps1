@@ -6,10 +6,12 @@ param()
 
 . $PSScriptRoot\..\Utility.ps1
 
+Register-Mock Get-ResourceFQDNTagKey { return $validResourceFQDNKeyName }
+
 Assert-Throws {
    Validate-DestinationPath -value "" -environmentName $validEnvironmentName
-} -Message "WFC_ParameterCannotBeNullorEmpty targetPath"
+} -Message "Parameter 'targetPath' cannot be null or empty."
 
 Assert-Throws {
     Validate-DestinationPath -value $invalidTargetPath -environmentName $validEnvironmentName
-} -Message "WFC_RemoteDestinationPathCannotContainEnvironmentVariables `$env:abc\123"
+} -Message "Remote destination path '$invalidTargetPath' cannot contain environment variables."

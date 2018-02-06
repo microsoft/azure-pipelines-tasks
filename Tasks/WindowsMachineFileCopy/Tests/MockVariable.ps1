@@ -35,7 +35,7 @@ $invalidEnvironmentNameForNoResourceProperty = "CopyFailWithNoResourceProperty"
 $environmentWithSkipCASet = "envWithSkipCAEnabled"
 $environmentWithSkipCANotSet = "envWithSkipCADisabled"
 $envWithBothProtocalsNotSet = "envWithBothProtocalsNotSet"
-$EnvironmentNameForFailedJob = "Test1, Test2"
+$EnvironmentNameForFailedJob = "JobFail"
 
 $machineNamesForFailCopy = "Test3"
 $machineNamesForFailDeploy = "Test4"
