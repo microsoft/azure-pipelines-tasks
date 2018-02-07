@@ -2,6 +2,7 @@
 var minimist = require('minimist');
 var mopts = {
     string: [
+        'node',
         'runner',
         'server',
         'suite',
@@ -56,7 +57,7 @@ var legacyTestPath = path.join(__dirname, '_test', 'Tests-Legacy');
 var legacyTestTasksPath = path.join(__dirname, '_test', 'Tasks');
 
 // node min version
-var minNodeVer = '4.0.0';
+var minNodeVer = '6.10.3';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
@@ -106,8 +107,8 @@ target.build = function() {
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '3.0.0')) {
-            fail('expected 3.0.0 or higher');
+        if (semver.lt(output, '5.5.1')) {
+            fail('expected 5.5.1 or higher');
         }
     });
 
@@ -144,7 +145,8 @@ target.build = function() {
         var taskMakePath = path.join(taskPath, 'make.json');
         var taskMake = test('-f', taskMakePath) ? require(taskMakePath) : {};
         if (taskMake.hasOwnProperty('externals')) {
-            console.log('Getting task externals');
+            console.log('');
+            console.log('> getting task externals');
             getExternals(taskMake.externals, outDir);
         }
 
@@ -158,6 +160,12 @@ target.build = function() {
                 var modPath = path.join(taskPath, mod['module']);
                 var modName = path.basename(modPath);
                 var modOutDir = path.join(commonPath, modName);
+
+                // determine the file path for the npm pack file
+                var modPackFile = null;
+                if (mod.type === 'node' && mod.compile == true) {
+                    modPackFile = util.getPackFileName(path.join(modPath, 'package.json'));
+                }
 
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + modPath, true);
@@ -184,24 +192,33 @@ target.build = function() {
 
                     // get externals
                     if (modMake.hasOwnProperty('externals')) {
-                        console.log('Getting module externals');
+                        console.log('');
+                        console.log('> getting module externals');
                         getExternals(modMake.externals, modOutDir);
+                    }
+
+                    if (modPackFile) {
+                        // assert the pack file does not already exist (name should be unique)
+                        if (test('-f', path.join(path.dirname(modOutDir), modPackFile))) {
+                            fail(`Pack file already exists: ${modPackFile}`);
+                        }
+
+                        // pack the Node module. a pack file is required for dedupe.
+                        // installing from a folder creates a symlink, and does not dedupe.
+                        cd(path.dirname(modOutDir));
+                        run(`npm pack ./${path.basename(modOutDir)}`);
                     }
                 }
 
                 // npm install the common module to the task dir
                 if (mod.type === 'node' && mod.compile == true) {
-                    mkdir('-p', path.join(taskPath, 'node_modules'));
-                    rm('-Rf', path.join(taskPath, 'node_modules', modName));
-                    var originalDir = pwd();
                     cd(taskPath);
-                    run('npm install ' + modOutDir);
-                    cd(originalDir);
+                    run(`npm install file://../../_build/Tasks/Common/${modPackFile}`);
                 }
                 // copy module resources to the task output dir
                 else if (mod.type === 'ps') {
                     console.log();
-                    console.log('> copying module resources to task');
+                    console.log('> copying ps module to task');
                     var dest;
                     if (mod.hasOwnProperty('dest')) {
                         dest = path.join(outDir, mod.dest, modName);
@@ -261,6 +278,9 @@ target.test = function() {
     if (!testsSpec.length && !process.env.TF_BUILD) {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
+
+    // setup the version of node to run the tests
+    util.installNode(options.node);
 
     run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
 }
@@ -356,6 +376,9 @@ target.testLegacy = function() {
     if (!testsSpec.length) {
         fail(`Unable to find tests using the pattern: ${path.join('**', '_suite.js')}`);
     }
+
+    // setup the version of node to run the tests
+    util.installNode(options.node);
 
     // mocha doesn't always return a non-zero exit code on test failure. when only
     // a single suite fails during a run that contains multiple suites, mocha does
