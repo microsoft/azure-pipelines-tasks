@@ -1,6 +1,6 @@
 "use strict";
 
-import * as tl from "vsts-task-lib/task";
+ import * as tl from "vsts-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as sourceUtils from "docker-common/sourceutils";
 import * as imageUtils from "docker-common/containerimageutils";
@@ -58,7 +58,7 @@ function addOtherTags(connection: DockerComposeConnection, imageName: string): a
 }
 
 export function run(connection: DockerComposeConnection): any {
-    var command = connection.createComposeCommand();
+    var command: any = connection.createComposeCommand();
     command.arg("build");
     return connection.execCommand(command)
     .then(() => connection.getImages(true))

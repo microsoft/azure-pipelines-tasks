@@ -144,6 +144,14 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
+    // Experiment, run dedupe
+    // if (taskPath.indexOf('common') === -1) {
+    //     run('npm dedupe');
+    // } else {
+    //     console.log('skipping dedupe for common package');
+    //     console.log('task path: ' + taskPath);
+    // }
+
     run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     cd(originalDir);
 }

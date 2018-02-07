@@ -4,7 +4,7 @@ import * as tl from "vsts-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 
 export function run(connection: DockerComposeConnection): any {
-    var command = connection.createComposeCommand();
+    var command: any = connection.createComposeCommand();
     command.arg("up");
 
     var detached = tl.getBoolInput("detached");
