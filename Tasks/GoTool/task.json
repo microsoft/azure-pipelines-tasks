@@ -3,7 +3,7 @@
     "name": "GoTool",
     "friendlyName": "Go Tool Installer",
     "description": "Finds or downloads and caches specified version of Go and adds it to the PATH.",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
     "category": "Tool",
     "preview": "true",
     "runsOn": [
