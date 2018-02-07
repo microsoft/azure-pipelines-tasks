@@ -3,8 +3,13 @@
   "loc.helpMarkDown": "",
   "loc.description": "Finds or downloads and caches specified version of Go and adds it to the PATH.",
   "loc.instanceNameFormat": "Use Go $(version)",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Go tool version to download and install.  Examples: 1.9.2",
-  "loc.messages.FailedToDownload": "Failed to download version %s: please check if it is a valid version or there might be a network issue. Error: %s",
+  "loc.input.help.version": "Go tool version to download and install.  Examples: 1.9.3",
+  "loc.input.label.goPath": "GOPATH",
+  "loc.input.help.goPath": "Value for the GOPATH environment variable.",
+  "loc.input.label.goBin": "GOBIN",
+  "loc.input.help.goBin": "Value for the GOBIN environment variable.",
+  "loc.messages.FailedToDownload": "Failed to download version %s. Please verify that the version is valid and resolve any other issues. Error: %s",
   "loc.messages.TempDirNotSet": "Expected Agent.TempDirectory to be set"
 }

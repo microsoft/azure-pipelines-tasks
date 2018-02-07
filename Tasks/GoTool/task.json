@@ -19,13 +19,35 @@
     "satisfies": ["GO"],
     "demands": [],
     "instanceNameFormat": "Use Go $(version)",
-    "inputs": [{
+    "groups":[
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
             "name": "version",
             "type": "string",
             "label": "Version",
-            "defaultValue": "1.9.2",
+            "defaultValue": "1.9.3",
             "required": true,
-            "helpMarkDown": "Go tool version to download and install.  Examples: 1.9.2"
+            "helpMarkDown": "Go tool version to download and install.  Examples: 1.9.3"
+        },
+        {
+            "name": "goPath",
+            "type": "string",
+            "label": "GOPATH",
+            "helpMarkDown": "Value for the GOPATH environment variable.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "goBin",
+            "type": "string",
+            "label": "GOBIN",
+            "helpMarkDown": "Value for the GOBIN environment variable.",
+            "groupName": "advanced"
         }
     ],
     "execution": {
