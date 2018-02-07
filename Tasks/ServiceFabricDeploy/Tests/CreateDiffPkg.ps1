@@ -130,6 +130,8 @@ Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest3} -- -Applicati
 Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest4} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless4Pkg"
 
 Register-Mock Copy-Item {} $appManifestPath $appManifestDiffPath -Force
+Register-Mock Test-Path { $true } -Path $codePkg1
+Register-Mock Test-Path { $true } -Path $codePkg2
 Register-Mock Test-Path { $true } -Path $codePkg3
 Register-Mock Test-Path { $true } -Path $codePkg4
 
