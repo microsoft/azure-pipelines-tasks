@@ -30,7 +30,7 @@
         {
             "name": "command",
             "label": "Command",
-            "helpMarkDown": "The go command to run. Select 'Custom' to add arguments or use a command not listed here.",
+            "helpMarkDown": "The go command to run. Select 'Custom' to use a command not listed here.",
             "type": "pickList",
             "required": true,
             "options": {
@@ -55,7 +55,7 @@
             "label": "Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Arguments to the selected command. For example, build configuration, output folder, runtime. The arguments depend on the command selected."
+            "helpMarkDown": "Arguments to the selected command. For example, build time arguments for go build command. The arguments depend on the command selected."
         },
         {
             "name": "workingDirectory",
