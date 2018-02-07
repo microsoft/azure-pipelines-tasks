@@ -272,7 +272,7 @@ target.test = function() {
     }
 
     // install and use node 6 to run the tests
-    util.installNode('v6.12.0', buildTestsPath);
+    util.installNode('v6.10.3', buildTestsPath);
 
     run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
 }
