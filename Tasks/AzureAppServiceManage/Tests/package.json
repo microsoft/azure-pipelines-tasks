@@ -18,6 +18,6 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "devDependencies": {
     "nock": "9.0.11",
-    "tunnel": "0.0.5"
+    "vsts-task-lib": "2.0.5"
   }
 }

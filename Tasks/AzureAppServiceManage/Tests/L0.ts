@@ -26,8 +26,9 @@ describe('Azure App Service Manage Suite', function() {
     after(function () {
     });
     
-    ApplicationInsightsTests.ApplicationInsightsTests();
-    AppServiceTests.AzureAppServiceMockTests();
-    KuduServiceTests.KuduServiceTests();
-    AppInsightsWebTests.ApplicationInsightsTests();
+    // TODO: Talk with task author about these tests, see if we can move to L0 for common packages.
+    // ApplicationInsightsTests.ApplicationInsightsTests();
+    // AppServiceTests.AzureAppServiceMockTests();
+    // KuduServiceTests.KuduServiceTests();
+    // AppInsightsWebTests.ApplicationInsightsTests();
 });
