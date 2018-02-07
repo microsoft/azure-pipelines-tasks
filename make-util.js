@@ -294,6 +294,7 @@ exports.ensureTool = ensureTool;
 var installNode = function (nodeVersion, installPath) {
     if (nodeVersion === run('node -v')) {
         console.log('skipping node install for tests since correct version is running');
+        return;
     }
 
     // determine the platform
