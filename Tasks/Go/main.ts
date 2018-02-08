@@ -12,7 +12,6 @@ export class goExe {
     private command: string = "";
     private argument: string = "";
     private workingDir: string = "";
-    private failOnStdErr: boolean = false;
 
     constructor() {
         this.command = tl.getInput("command", true).trim();
@@ -21,32 +20,18 @@ export class goExe {
         }
         this.argument = tl.getInput("arguments", false);
         this.workingDir = tl.getInput("workingDirectory", false);
-        if (this.workingDir == null) {
-            this.workingDir = tl.getVariable("System.DefaultWorkingDirectory");
-        }
-        this.failOnStdErr = tl.getBoolInput("failOnStandardError", false);
     }
 
     public async execute() {
-        return new Promise<string>(async (resolve, reject) => {
-            try {
-                let goPath = tl.which("go", true);
-                let go: tr.ToolRunner = tl.tool(goPath);
+        let goPath = tl.which("go", true);
+        let go: tr.ToolRunner = tl.tool(goPath);
 
-                go.arg(this.command);
-                go.line(this.argument);
+        go.arg(this.command);
+        go.line(this.argument);
 
-                var result = await go.exec(<tr.IExecOptions>{
-                    cwd: this.workingDir,
-                    failOnStdErr: this.failOnStdErr,
-                });
-                resolve(result);
-            }
-            catch (err) {
-                reject(err);
-            }
+        return await go.exec(<tr.IExecOptions>{
+            cwd: this.workingDir
         });
-
     }
 }
 

@@ -4,17 +4,20 @@
     "friendlyName": "Go",
     "description": "Get, build, test a go application, or run a custom go command.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867582)",
-    "category": "Package",
     "author": "Microsoft Corporation",
     "preview": true,
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
     "version": {
         "Major": 0,
         "Minor": 1,
         "Patch": 0
     },
     "runsOn": [
-        "Agent",
-        "DeploymentGroup"
+        "Agent"
     ],
     "demands": [
     ],
