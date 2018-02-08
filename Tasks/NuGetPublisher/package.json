@@ -17,6 +17,7 @@
     },
     "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
     "dependencies": {
+        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common",
         "vsts-task-lib": "2.0.2-preview",
         "xmlreader": "^0.2.3"
     }

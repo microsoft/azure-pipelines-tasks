@@ -110,6 +110,7 @@
         "module.json",
         "node_modules",
         "package.json",
+        "package-lock.json",
         "Strings",
         "task.json",
         "task.loc.json",

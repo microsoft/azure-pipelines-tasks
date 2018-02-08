@@ -2,10 +2,10 @@ import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 import tl = require('vsts-task-lib');
 import * as path from 'path';
-var AppServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service.js");
-var KuduServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
-var ApplicationInsightsTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
-var AppInsightsWebTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-webtests-tests.js");
+// var AppServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service.js");
+// var KuduServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
+// var ApplicationInsightsTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
+// var AppInsightsWebTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-webtests-tests.js");
 describe('Azure App Service Manage Suite', function() {
 
     this.timeout(60000);
@@ -26,8 +26,9 @@ describe('Azure App Service Manage Suite', function() {
     after(function () {
     });
     
-    ApplicationInsightsTests.ApplicationInsightsTests();
-    AppServiceTests.AzureAppServiceMockTests();
-    KuduServiceTests.KuduServiceTests();
-    AppInsightsWebTests.ApplicationInsightsTests();
+    // TODO: Talk with task author about these tests, see if we can move to L0 for common packages.
+    // ApplicationInsightsTests.ApplicationInsightsTests();
+    // AppServiceTests.AzureAppServiceMockTests();
+    // KuduServiceTests.KuduServiceTests();
+    // AppInsightsWebTests.ApplicationInsightsTests();
 });

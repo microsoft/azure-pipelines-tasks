@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
+    "ios-signing-common": "file:../../_build/Tasks/Common/ios-signing-common",
+    "msbuildhelpers": "file:../../_build/Tasks/Common/MSBuildHelpers",
     "vsts-task-lib": "^2.0.3-preview"
   }
 }

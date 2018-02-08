@@ -10,20 +10,20 @@ If you are creating tasks that you believe the community can benefit from consid
 
 **Linux**: Install [using package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
 
-From a terminal ensure at least node 4.2 and npm 3:
+From a terminal ensure at least node 6.12.0 and npm 5.5.1:
 
 ```bash
 $ node -v && npm -v
-v4.2.0
-3.5.0
+v6.12.0
+5.5.1
 ```
 
 To install npm separately:
 
 ```
-[sudo] npm install npm@3 -g
+[sudo] npm install npm@5 -g
 npm -v
-3.5.0
+5.5.1
 ```
 
 Note: On windows if it's still returning npm 2.x run `where npm`. Notice hits in program files. Rename those two npm files and the 3.5.0 in AppData will win.

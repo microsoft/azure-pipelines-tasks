@@ -144,6 +144,14 @@ var buildNodeTask = function (taskPath, outDir) {
         cd(taskPath);
     }
 
+    // Experiment, run dedupe
+    // if (taskPath.indexOf('common') === -1) {
+    //     run('npm dedupe');
+    // } else {
+    //     console.log('skipping dedupe for common package');
+    //     console.log('task path: ' + taskPath);
+    // }
+
     run('tsc --outDir ' + outDir + ' --rootDir ' + taskPath);
     cd(originalDir);
 }
@@ -281,6 +289,42 @@ var ensureTool = function (name, versionArgs, validate) {
     console.log(toolPath + '');
 }
 exports.ensureTool = ensureTool;
+
+
+var installNode = function (nodeVersion, installPath) {
+    if (nodeVersion === run('node -v')) {
+        console.log('skipping node install for tests since correct version is running');
+        return;
+    }
+
+    // determine the platform
+    var platform = os.platform();
+    if (platform != 'darwin' && platform != 'linux' && platform != 'win32') {
+        throw new Error('Unexpected platform: ' + platform);
+    }
+
+    var nodeUrl = 'https://nodejs.org/dist';
+    switch (platform) {
+        case 'darwin':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
+            break;
+        case 'linux':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
+            break;
+        case 'win32':
+            var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
+            var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
+            var nodeDirectory = path.join(installPath, 'node');
+            mkdir('-p', nodeDirectory);
+            cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
+            cp(nodeLibPath, path.join(nodeDirectory, 'node.lib'));
+            addPath(nodeDirectory);
+            break;
+    }
+}
+exports.installNode = installNode;
 
 var downloadFile = function (url) {
     // validate parameters

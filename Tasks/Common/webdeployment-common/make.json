@@ -4,5 +4,13 @@
             "source": "WebConfigTemplates",
             "options": "-R"
         }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
     ]
 }

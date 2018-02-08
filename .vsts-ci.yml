@@ -20,11 +20,11 @@ phases:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
 
   # npm install
   - script: npm install
@@ -51,6 +51,12 @@ phases:
       pathToPublish: _package/tasks.zip
       artifactName: slice-$(system.jobPositionInPhase)
       artifactType: container
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
 
   # Test
   - script: node make.js test
@@ -87,11 +93,11 @@ phases:
   - checkout: self
     clean: true
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
 
   # Use NuGet 4
   - task: NuGetToolInstaller@0
@@ -173,11 +179,11 @@ phases:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'), eq(variables['agent.os'], 'Windows_NT'))
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
 
   # npm install
   - script: npm install
@@ -200,6 +206,12 @@ phases:
       pathToPublish: _package/hotfix-layout
       artifactName: hotfix
       artifactType: container
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
 
   # Test
   - script: node make.js test
@@ -242,11 +254,11 @@ phases:
   - checkout: self
     clean: true
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
 
   # npm install
   - script: npm install
@@ -259,6 +271,12 @@ phases:
   # Build
   - script: node make.js build --task "$(task_pattern)"
     displayName: Build
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
 
   # Test
   - script: node make.js test --runner ts
@@ -292,11 +310,11 @@ phases:
   - checkout: self
     clean: true
 
-  # Use node 6, npm 3
-  - task: NodeTool@0
-    displayName: Use node 6.10.3
-    inputs:
-      versionSpec: "6.10.3"
+  # Use node 8, npm 5		
+  - task: NodeTool@0		
+    displayName: Use node 8.9.1		
+    inputs:		
+      versionSpec: "8.9.1"
 
   # npm install
   - script: npm install
@@ -309,6 +327,12 @@ phases:
   # Build
   - script: node make.js build --task "$(task_pattern)"
     displayName: Build
+
+  # Use node 6, npm 3
+  - task: NodeTool@0
+    displayName: Use node 6.10.3
+    inputs:
+      versionSpec: "6.10.3"
 
   # Test
   - script: node make.js test --runner ts

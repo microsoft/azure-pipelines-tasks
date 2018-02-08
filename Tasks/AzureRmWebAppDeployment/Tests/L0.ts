@@ -5,9 +5,9 @@ import tl = require('vsts-task-lib');
 var ltx = require('ltx');
 import fs = require('fs');
 
-var AppServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service.js");
-var KuduServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
-var ApplicationInsightsTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
+// var AppServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service.js");
+// var KuduServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
+// var ApplicationInsightsTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
 
 
 describe('AzureRmWebAppDeployment Suite', function() {
@@ -34,9 +34,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    ApplicationInsightsTests.ApplicationInsightsTests();
-    AppServiceTests.AzureAppServiceMockTests();
-    KuduServiceTests.KuduServiceTests();
+    // TODO: Talk with Task owner about moving these to LO tests for azure-arm-rest in common.
+    // ApplicationInsightsTests.ApplicationInsightsTests();
+    // AppServiceTests.AzureAppServiceMockTests();
+    // KuduServiceTests.KuduServiceTests();
 
     if (tl.osType().match(/^Win/)) {
         it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {

@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "archiver": "1.2.0",
+    "archiver": "2.1.1",
     "decompress-zip": "0.3.0",
     "ltx": "2.6.2",
     "q": "1.4.1",
