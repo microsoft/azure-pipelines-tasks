@@ -22,7 +22,7 @@ export class ContainerBasedDeploymentUtility {
     }
 
     public async deployWebAppImage(taskParameters: TaskParameters): Promise<void> {
-        var imageName = this._getImageName();
+        let imageName: string = this._getDockerHubImageName();
         tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
 
         tl.debug("Updating the webapp configuration.");

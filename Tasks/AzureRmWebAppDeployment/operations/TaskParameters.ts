@@ -23,15 +23,16 @@ export class TaskParametersUtility {
             ScriptPath : tl.getPathInput('ScriptPath', false),
             DockerNamespace: tl.getInput('DockerNamespace', false),
             AppSettings: tl.getInput('AppSettings', false),
-            ImageSource: tl.getInput('ImageSource', false),
             StartupCommand: tl.getInput('StartupCommand', false),
             WebAppUri: tl.getInput('WebAppUri', false),
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
         }
 
+        taskParameters.WebAppKind = taskParameters.WebAppKind.replace(/44/g, ',');
+        tl.debug(`Formatted web app kind : ${taskParameters.WebAppKind}`);
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("linux") >= 0;
-        taskParameters.isBuiltinLinuxWebApp = taskParameters.ImageSource && taskParameters.ImageSource.indexOf("Builtin") >= 0;
-        taskParameters.isContainerWebApp = taskParameters.isLinuxApp && taskParameters.ImageSource.indexOf("Registry") >= 0;
+        taskParameters.isBuiltinLinuxWebApp = taskParameters.WebAppKind == "app,linux";
+        taskParameters.isContainerWebApp =taskParameters.WebAppKind == "app,linux,container";
         taskParameters.ResourceGroupName = taskParameters.DeployToSlotFlag ? tl.getInput('ResourceGroupName', false) : null;
         taskParameters.SlotName = taskParameters.DeployToSlotFlag ? tl.getInput('SlotName', false) : null;
 
@@ -82,7 +83,6 @@ export interface TaskParameters {
     ScriptPath ?: string;
     DockerNamespace?: string;
     AppSettings?: string;
-    ImageSource?: string;
     StartupCommand?: string;
     BuiltinLinuxPackage?: string;
     RuntimeStack?: string;
