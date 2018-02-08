@@ -29,19 +29,21 @@ This enables you to invoke a Http end-point. It has 3 sections.
     - Body: - Body of http request.
     - Headers: - Headers of http request. Header should be in JSON format.
     - WaitForCompletion: -  Specifies whether VSTS/TFS server should wait for task completed event from external service. Default value is false which means that VSTS/TFS server will invoke the URL and once the response received, then it assumes that task is complete. This input is optional.
-    - Expression: - Expression criteria which defines when to mark the task as succeeded. No expression means response content does not influence the result. We support all task condition constructs in these expressions and you can read more about them [here](https://go.microsoft.com/fwlink/?linkid=842996).
+    - Expression: - Expression criteria which defines when to mark the task as succeeded. No expression means response content does not influence the result. We support all task condition constructs in these expressions and you can read more about them [here](https://go.microsoft.com/fwlink/?linkid=842996).   
     
       Here are some example of the expression: -
-      |      Expression        | Response | Result | 
-      |------------------|------|------|
-      | eq(root['status'], 'successful') | {"id": 5, "name": 'myObject', "description": 'this is my object description', "status": 'successful'}| true |
-      | ge(count(root[‘ActiveReleasesName’]), 3) | {“ActiveReleases”: [ “Release1”, “Release2”, “Release3”] } | true |
-
       
+      
+         |      Expression        | Response | Result | 
+         |------------------------|----------|--------|
+         | ``` eq(root['status'], 'successful') ``` | ``` {"id": 5, "name": "myObject", "description": "this is my object description", "status": "successful"} ``` | true |
+         | ``` ge(count(root['ActiveReleaseNames']), 3) ``` | ``` {"ActiveReleaseNames": [ "Release1", "Release2", "Release3"] } ``` | true |
+         | ``` and(eq(count(jsonpath('Items[?(@.price<50)]')), 1), eq(count(jsonpath('Items[?(@.price>60)]')), 2)) ``` | ``` {"Items":[{"name":"item1","price":100},{"name":"item2","price":40},{"name":"item3","price":70}]} ``` | true |      
       
     **Cancel**: This section specifies what should happen when the task is canceled. Here also you can define the endpoint that should be invoked on cancelation, the http message body that should be sent etc. All the properties, except WaitForCompletion and Expression, that we support in execute section are supported. This is an optional section and if you dont specify this section, then VSTS/TFS will not send you cancelation request but will cancel the task in its layer. 
 
-    **Events:** This section is useful when you have a long running task which needs to run asynchronously (waitForCompletion = true). So in that flow, VSTS/TFS will invoke your endpoint as defined in the above execute section but your endpoint should send status update events to VSTS/TFS. Your can use the [TaskHttpClient](https://github.com/Microsoft/vsts-rm-extensions/tree/master/ServerTaskHelper) to send the events as well as logs to VSTS/TFS server. You can configure timeouts for these events which defines how long VSTS/TFS should wait for that event to come before timing out the workflow. Max timeout is 72 hours.     
+    **Events:** This section is useful when you have a long running task which needs to run asynchronously (waitForCompletion = true). So in that flow, VSTS/TFS will invoke your endpoint as defined in the above execute section but your endpoint should send status update events to VSTS/TFS. Your can use the [TaskHttpClient](https://github.com/Microsoft/vsts-rm-extensions/tree/master/ServerTaskHelper) to send the events as well as logs to VSTS/TFS server. You can configure timeouts for these events which defines how long VSTS/TFS should wait for that event to come before timing out the workflow. Max timeout is 72 hours.
+    
     Here are all the event types that are supported: -  
     1.  TaskAssigned - Raise this event to acknowledge that the ‘execute’ call has been received (optional).
     2.  TaskStarted - Raise this event when task has started.
@@ -59,7 +61,7 @@ This enables you to invoke a Http end-point. It has 3 sections.
                {
                   "Timeout": "00:07:00"
                }
-       }
+            }
        
 - **ServiceBus**
 This enables you to post a message to azure service bus queue. It has 3 sections.
@@ -81,7 +83,12 @@ This enables you to post a message to azure service bus queue. It has 3 sections
 Let us understand few concepts/tips & tricks.
 
 - You can use task inputs, system variables, user defined variables and endpoint variables in 'execute'/'cancel' sections.
-   Example: - '"Body": "$method"', here 'method' is task input.
+   Example: - ``` {...   
+            "Body": "$(method)", 
+            "Expression": "le(count(root['workItems']), $(maxThreshold))",
+            "Headers": "{ \"ProjectId\": \"$(system.TeamProjectId)\" }"
+            ...
+             },  here 'method' is task input, maxThreshold is user defined variable,  system.TeamProjectId is system variable.```
 
 - A task which runs on agent less phase can't run on agent phase or deployment group.
 
