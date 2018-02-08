@@ -32,51 +32,87 @@ This enables you to invoke a Http end-point. It has 3 sections.
     - Expression: - Expression criteria which defines when to mark the task as succeeded. No expression means response content does not influence the result. 
     
     Here are some example of the expression: -
-    
-    
-    For response {&quot;status&quot;: &quot;successful&quot;}, the expression can be eq(root[&#39;status&#39;], &#39;successful&#39;). [More Information](https://go.microsoft.com/fwlink/?linkid=842996).
-    
-    **Events:** This property gives control on task execution. &#39;Events&#39; property is optional. External systems respond with these events to indicate state changes using the [TaskHttpClient](https://github.com/Microsoft/vsts-rm-extensions/tree/master/ServerTaskHelper) to post the events and task execution logs to VSTS/TFS server. You can configure timeouts for these events. The possible values for this property are as follows: -
-    1.  TaskAssigned - External service raises to acknowledge that the ‘Execute’ event has been received (optional).
-    2.  TaskStarted - Raised when the external service starts processing.
-    3.  TaskCompleted -Raised when the external system is done processing (indicates success/failure).
-    
-         *Example*: "Events": { "TaskStarted": {"Timeout": "00:05:00"}, "TaskCompleted": {"Timeout": "00:07:00"}}, In this example once server picks task for execution, if server does not receive the &#39;TaskStarted&#39; event within 5 minutes, server cancels the task. If server not receives the &#39;TaskCompleted&#39; event within 7 minutes, server cancels the task.
 
-    **Cancel**: Configures the HTTP payload and properties for the Cancel event raised from VSTS to the external service. This property is optional.  You can configure these properties if you want call to external service on user canceling the task. Properties are same as 'Execute' properties defined above.
-
-- **ServiceBus**
-This enables you to post a message to azure service bus queue. It takes 3 inputs.
-
-    **Execute:** Configures the servicebus message payload and properties for the Execute event raised from VSTS to the cloud service. ServiceBus handler has following properties.
-    - EndpointId: - EndpointId details used while publishing the message.
-    - ConnectionString: - Azure service bus connection string.
-    - ServiceBusQueueName: - Queue name to publish message.
-    - MessageBody: - Message body. Message body should be JSON format.
-    - MessageProperties: - Message properties. like Content-Type:"application/json".
-    - CertificateString: -  Certificate that can be used to encrypt the message. This input is optional.
-    - SignaturePropertyKey: - Specifies the key of the service bus message properties in which the signed payload should be kept. Default is signature.
+|      Expression        | Response | Result | 
+|------------------|------|------|
+| ```eq(root['status'], 'successful')``` | ```{
+                                                "id": 5
+                                                "name": 'myObject'
+                                                "description": 'this is my object description'
+                                                "status": 'successful'
+                                              } ```| true |
     
-    **Events:** Same set of events mentioned above are supported in ServerBus also.  
-  
-    **Cancel**:  configures the servicebus message payload and properties for the Cancel event raised from VSTS to the cloud service. This property is optional. Properties are same as 'Execute' properties defined above.
-
-Task inputs, all well know system variables, user defined variables and endpoint variables can be used in 'execute' properties. Example '"Body": "$method"', here 'method' is task input.
-     
-Let us understand few concepts/tips &amp; tricks.
-
-- A task which runs on agent less phase can&#39;t run on agent phase or deployment group.
-- Async/Sync mode.
-  - You can invoke Http request sync mode and async mode. If http request takes more than 20 secs to complete, you should execute in async mode. &#39;WaitForCompletion&#39; in &#39;Execute&#39; property defines this. You can set &#39;WaitForCompletion&#39; true to execute http request in async mode. In async mode VSTS/TFS server wait for taskcompleted event from external service.
-- Expression evaluation.
-  - You can specify an expression based on the http response to define when to pass the task. You can set &#39;Expression&#39; property to define task result. No expression means response content does not influence the result.
+      - You can specify an expression based on the http response to define when to pass the task. You can set &#39;Expression&#39; property to define task result. No expression means response content does not influence the result.
      *Example*: - For response {"status”: "successful"}, the expression can be eq(root['status'], 'successful'). In this example task succeeds only 'status' value 'successful'.  For response {“ActiveReleases”: [ “Release1”, “Release2”, “Release3”] }, the expression can be  ge(count(root[‘ActiveReleasesName’]), 3), here task succeeds only if ‘ActiveReleases’ array count greater than or equal to 3. [More Information](https://go.microsoft.com/fwlink/?linkid=842996).
 
-##### HttpReques handler task references: -
+
+ We support all task condition constructs in these expressions and you can read more about them [here] (https://go.microsoft.com/fwlink/?linkid=842996).
+    
+    **Cancel**: This section specifies what should happen when the task is canceled. Here also you can define the endpoint that should be invoked on cancelation, the http message body that should be sent etc. All the properties, except WaitForCompletion and Expression, that we support in execute section are supported. This is an optional section and if you dont specify this section, then VSTS/TFS will not send you cancelation request but will cancel the task in its layer. 
+
+    **Events:** This section is useful when you have a long running task which needs to run asynchronously (waitForCompletion = true). So in that flow, VSTS/TFS will invoke your endpoint as defined in the above execute section but your endpoint should send status update events to VSTS/TFS. Your can use the [TaskHttpClient](https://github.com/Microsoft/vsts-rm-extensions/tree/master/ServerTaskHelper) to send the events as well as logs to VSTS/TFS server. You can configure timeouts for these events which defines how long VSTS/TFS should wait for that event to come before timing out the workflow. Max timeout is 72 hours. 
+  
+  Here are all the event types that are supported: -
+  
+    1.  TaskAssigned - Raise this event to acknowledge that the ‘execute’ call has been received (optional).
+    2.  TaskStarted - Raise this event when task has started.
+    3.  TaskCompleted - Raise this event when task is completed (indicates success/failure).
+ 
+ Here is how an example of the event section. 
+ 
+```Events: 
+            { 
+               "TaskStarted": 
+               {
+                  "Timeout": "00:05:00"
+               }, 
+               "TaskCompleted": 
+               {
+                  "Timeout": "00:07:00"
+               }
+             }```
+             
+
+
+- **ServiceBus**
+This enables you to post a message to azure service bus queue. It has 3 sections.
+
+    **Execute:** This section specifies what should happen when the task is executed. You can define the endpoint on which message should be published, the message body/properties that should be sent etc. Here are the complete list of  properties that are supported. 
+    
+    - EndpointId: - EndpointId details used while publishing the message.
+    - ConnectionString: - Azure service bus connection string.
+    - ServiceBusQueueName: - Queue name on which the message should be published.
+    - MessageBody: - Message body. It should be JSON format.
+    - MessageProperties: - Message properties. It should be JSON format.
+    - CertificateString: -  Certificate that can be used to encrypt the message. This input is optional.
+    - SignaturePropertyKey: - Key of the service bus message properties in which the signed payload should be kept. Default is signature.
+    
+    **Cancel**:  This section specifies what should happen when the task is canceled. Here also you can define the endpoint on which message should be sent on cancelation, the message body/properties that should be sent etc. All the properties that we support in execute section are supported. This is an optional section and if you dont specify this section, then VSTS/TFS will not send you cancelation request but will cancel the task in its layer.
+
+**Events:** It  supports the same set of events as specified above [LINK] in the http task section. 
+  
+Let us understand few concepts/tips &amp; tricks.
+
+- You can use task inputs, system variables, user defined variables and endpoint variables in 'execute'/'cancel' sections.
+
+Example
+
+SPECIFY A COMPLEX EXAMPLE 
+
+'"Body": "$method"', here 'method' is task input.
+
+- A task which runs on agent less phase can&#39;t run on agent phase or deployment group.
+
+- Async/Sync mode.
+  - You can invoke Http requests in sync mode or  async mode. If http request takes more than 20 secs to complete, then you should use  async mode which means that 'WaitForCompletion' property is set to true.
+  
+
+##### Built-in server tasks making http requests : -
   [InvokeRestApi](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/InvokeRestApi/task.json)  
   [AzureMonitor](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitor/task.json)   
   [AzureFunction](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureFunction/task.json)   
   [QueryWorkItems](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/QueryWorkItems/task.json)   
 
-##### ServiceBushandler task references:-
+##### Built-in server tasks publishing serviceBus messages : -
+
   [PublishToAzureServiceBus](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PublishToAzureServiceBus/task.json)
