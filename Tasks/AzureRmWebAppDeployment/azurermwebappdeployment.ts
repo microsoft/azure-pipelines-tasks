@@ -47,23 +47,20 @@ async function main() {
         }
 
         if(taskParams.isLinuxApp) {
-            switch(taskParams.ImageSource) {
-                case 'Builtin': {
-                    var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
-                    tl.debug('Performing Linux built-in package deployment');
-                    zipDeploymentID = await kuduServiceUtility.zipDeploy(webPackage, taskParams.TakeAppOfflineFlag, { slotName: appService.getSlot() });
-                    await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
-                    break;
-                }
-                case 'Registry': {
-                    tl.debug("Performing container based deployment.");
-                    let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(appService);
-                    await containerDeploymentUtility.deployWebAppImage(taskParams);
-                    break;
-                }
-                default: {
-                    throw new Error('Invalid Image source Type');
-                }
+            
+            if(taskParams.isBuiltinLinuxWebApp) {
+                var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
+                tl.debug('Performing Linux built-in package deployment');
+                zipDeploymentID = await kuduServiceUtility.zipDeploy(webPackage, taskParams.TakeAppOfflineFlag, { slotName: appService.getSlot() });
+                await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
+            }
+            else if(taskParams.isContainerWebApp) {
+                tl.debug("Performing container based deployment.");
+                let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(appService);
+                await containerDeploymentUtility.deployWebAppImage(taskParams);
+            }
+            else {
+                throw new Error('Invalid Image source Type');
             }
         }
         else {

@@ -9,14 +9,15 @@
     "Build",
     "Release"
   ],
+  "preview": "true",
   "runsOn": [
     "Agent"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
-    "Minor": 3,
-    "Patch": 40
+    "Major": 4,
+    "Minor": 0,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -25,13 +26,13 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != app44linux && WebAppKind != app44linux44container && WebAppKind != \"\""
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != app44linux && WebAppKind != app44linux44container && WebAppKind != \"\""
     },
     {
       "name": "PostDeploymentAction",
@@ -73,14 +74,12 @@
       "defaultValue": "app",
       "required": true,
       "options": {
-        "app": "Web App",
-        "applinux": "Linux Web App",
+        "app": "Web App on Windows",
+        "app44linux": "Web App on Linux with built-In Images",
+        "app44linux44container": "Web App for Containers with Container Registry",
         "functionapp": "Function App",
         "api": "API App",
         "mobileapp": "Mobile App"
-      },
-      "properties": {
-        "EditableOptions": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },
@@ -143,7 +142,7 @@
         "PopulateDefaultValue": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
-      "visibleRule": "WebAppKind = applinux || WebAppKind = linux"
+      "visibleRule": "WebAppKind = invalidWebAppkind"
     },
     {
       "name": "AzureContainerRegistry",
@@ -249,7 +248,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = app44linux44container",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -258,7 +257,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = app44linux44container",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -267,7 +266,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = app44linux44container",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -276,7 +275,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != app44linux && WebAppKind != app44linux44container && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -285,7 +284,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux &&  WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != app44linux && WebAppKind != app44linux44container && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -297,7 +296,7 @@
       "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin",
+      "visibleRule": "WebAppKind = app44linux",
       "helpMarkDown": "ms-resource:loc.input.help.BuiltinLinuxPackage"
     },
     {
@@ -323,7 +322,7 @@
         "ruby|2.3": "Ruby 2.3"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin"
+      "visibleRule": "WebAppKind = app44linux"
     },
     {
       "name": "StartupCommand",
@@ -331,7 +330,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = applinux || WebAppKind = linux",
+      "visibleRule": "WebAppKind = app44linux || WebAppKind = app44linux44container",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
@@ -379,21 +378,11 @@
       "visibleRule": "ScriptType == File Path"
     },
     {
-      "name": "GenerateWebConfig",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.GenerateWebConfig",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfig"
-    },
-    {
       "name": "WebConfigParameters",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.WebConfigParameters",
-      "required": true,
+      "required": false,
       "defaultValue": "",
-      "visibleRule": "GenerateWebConfig == true",
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
       "properties": {
@@ -530,7 +519,7 @@
     {
       "target": "WebAppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppNamesByType",
+      "dataSourceName": "AzureRMWebAppNamesByType2",
       "parameters": {
         "WebAppKind": "$(WebAppKind)"
       }
