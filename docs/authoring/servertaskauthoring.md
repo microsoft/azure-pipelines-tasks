@@ -15,21 +15,26 @@ This property in task.json specifies where the task should run. The possible val
 The default value of this property is Agent, but you can change it to Server to specify that the task should run on VSTS/TFS server.
 
 #### Execution section:
-This property defines how the task should be executed. For agent-based tasks, you can specify use powershell/node handlers to run your custom powershell/node scripts but we don&#39;t support running them on VSTS/TFS server.
+This property defines how the task should be executed. For agent-based tasks, you can specify powershell/node handlers to run your custom powershell/node scripts but we don&#39;t support running them on VSTS/TFS server.
 
 Here are the possible actions you can do for server tasks.
 
 - **HttpRequest** :
-This enables you to invoke a Http end-point. It takes 3 inputs.
+This enables you to invoke a Http end-point. It has 3 sections.
 
-    **Execute:** Configures the HTTP payload and properties for the Execute event raised from VSTS to the cloud service.  'HttpRequest' handler supports following properties.
-    - EndpointId: - Specifies the endpointId which should be used to generate the authentication header. This input is optional.
-    - Endpoint URL: - Http Url to trigger on task execution.
-    - Method: - Http method like PUT, GET, POST, PATCH, DELETE, OPTIONS, HEAD, TRACE.
+    **Execute:** This section specifies what should happen when the task is executed. You can define the endpoint that should be invoked, the http message body that should be sent etc. Here are the complete list of  properties that are supported.
+    - EndpointId: - EndpointId that should be used to generate the authentication header. This input is optional.
+    - Endpoint URL: - Http Url that should be invoked.
+    - Method: - Http verbs like PUT, GET, POST, PATCH, DELETE, OPTIONS, HEAD, TRACE.
     - Body: - Body of http request.
     - Headers: - Headers of http request. Header should be in JSON format.
-    - WaitForCompletion: -  You can specify true or false. Default value false. If you specify &#39;true&#39;, server waits for TaskCompleted event happen from external. If task event not comes within task timeout, task will be canceled. This input is optional.
-    - Expression: - Expression Criteria which defines when to pass the task. No expression means response content does not influence the result. Example: - For response {&quot;status&quot;: &quot;successful&quot;}, the expression can be eq(root[&#39;status&#39;], &#39;successful&#39;). [More Information](https://go.microsoft.com/fwlink/?linkid=842996).
+    - WaitForCompletion: -  Specifies whether VSTS/TFS server should wait for task completed event from external service. Default value is false which means that we will invoke the URL and once we have received the response, then we assume that task is complete. This input is optional.
+    - Expression: - Expression criteria which defines when to mark the task as succeeded. No expression means response content does not influence the result. 
+    
+    Here are some example of the expression: -
+    
+    
+    For response {&quot;status&quot;: &quot;successful&quot;}, the expression can be eq(root[&#39;status&#39;], &#39;successful&#39;). [More Information](https://go.microsoft.com/fwlink/?linkid=842996).
     
     **Events:** This property gives control on task execution. &#39;Events&#39; property is optional. External systems respond with these events to indicate state changes using the [TaskHttpClient](https://github.com/Microsoft/vsts-rm-extensions/tree/master/ServerTaskHelper) to post the events and task execution logs to VSTS/TFS server. You can configure timeouts for these events. The possible values for this property are as follows: -
     1.  TaskAssigned - External service raises to acknowledge that the ‘Execute’ event has been received (optional).
