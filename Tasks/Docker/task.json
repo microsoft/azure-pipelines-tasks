@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 6
+        "Patch": 7
     },
     "demands": [],
     "preview": "false",
@@ -293,6 +293,14 @@
             "label": "Working Directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "helpMarkDown": "Working directory for the Docker command.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "memory",
+            "type": "string",
+            "label": "Memory limit",
+            "visibleRule": "action = Build an image || action = Run an image",
+            "helpMarkDown": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
             "groupName": "advanced"
         }
     ],
