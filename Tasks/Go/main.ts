@@ -41,7 +41,7 @@ export class goExe {
                     cwd: this.workingDir,
                     failOnStdErr: this.failOnStdErr,
                 });
-                resolve("");
+                resolve(result);
             }
             catch (err) {
                 reject(err);
