@@ -148,7 +148,7 @@ function Copy-DiffPackage
             $localPkgPath += ".zip"
             $diffPkgPath += ".zip"
         }
-        elseif (!(Test-Path -Path ($localPkgPath)))
+        elseif (!(Test-Path -Path $localPkgPath))
         {
             continue
         }
