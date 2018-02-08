@@ -40,6 +40,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
 
     if (tl.osType().match(/^Win/)) {
         it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {
+            this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
             let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L1XdtTransform.js");
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             tr.run();
