@@ -391,8 +391,21 @@ var downloadArchive = function (url, omitExtensionCheck) {
         throw new Error('Parameter "url" must be set.');
     }
 
-    if (!omitExtensionCheck && !url.match(/\.zip$/)) {
-        throw new Error('Expected .zip');
+    var isZip;
+    var isTargz;
+    if (omitExtensionCheck) {
+        isZip = true;
+    }
+    else {
+        if (url.match(/\.zip$/)) {
+            isZip = true;
+        }
+        else if (url.match(/\.tar\.gz$/) && (process.platform == 'darwin' || process.platform == 'linux')) {
+            isTargz = true;
+        }
+        else {
+            throw new Error('Unexpected archive extension');
+        }
     }
 
     // skip if already downloaded and extracted
@@ -411,8 +424,20 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
         // extract
         mkdir('-p', targetPath);
-        var zip = new admZip(archivePath);
-        zip.extractAllTo(targetPath);
+        if (isZip) {
+            var zip = new admZip(archivePath);
+            zip.extractAllTo(targetPath);
+        }
+        else if (isTargz) {
+            var originalCwd = process.cwd();
+            cd(targetPath);
+            try {
+                run(`tar -xzf "${archivePath}"`);
+            }
+            finally {
+                cd(originalCwd);
+            }
+        }
 
         // write the completed marker
         fs.writeFileSync(marker, '');
@@ -542,6 +567,9 @@ var removeGroups = function (groups, pathRoot) {
 exports.removeGroups = removeGroups;
 
 var addPath = function (directory) {
+    console.log('');
+    console.log(`> prepending PATH ${directory}`);
+
     var separator;
     if (os.platform() == 'win32') {
         separator = ';';
