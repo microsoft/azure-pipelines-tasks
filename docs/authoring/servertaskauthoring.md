@@ -48,7 +48,7 @@ This enables you to post a message to azure service bus queue. It takes 3 inputs
     - ConnectionString: - Azure service bus connection string.
     - ServiceBusQueueName: - Queue name to publish message.
     - MessageBody: - Message body. Message body should be JSON format.
-    - MessageProperties: - Message properties. like Content-Type:&quotapplication/json&quot;.
+    - MessageProperties: - Message properties. like Content-Type:"application/json".
     - CertificateString: -  Certificate that can be used to encrypt the message. This input is optional.
     - SignaturePropertyKey: - Specifies the key of the service bus message properties in which the signed payload should be kept. Default is signature.
     
@@ -65,13 +65,13 @@ Let us understand few concepts/tips &amp; tricks.
   - You can invoke Http request sync mode and async mode. If http request takes more than 20 secs to complete, you should execute in async mode. &#39;WaitForCompletion&#39; in &#39;Execute&#39; property defines this. You can set &#39;WaitForCompletion&#39; true to execute http request in async mode. In async mode VSTS/TFS server wait for taskcompleted event from external service.
 - Expression evaluation.
   - You can specify an expression based on the http response to define when to pass the task. You can set &#39;Expression&#39; property to define task result. No expression means response content does not influence the result.
-     *Example*: - For response {"status”: "successful"}, the expression can be eq(root['status'], 'successful'). In this example task succeeds only 'status' value 'successful'.  For response {“ActiveReleases”: [ “Release1”, “Release2”, “Release3”] }, the expression can be  ge(count(root[‘ActiveReleasesName’]), 3), here task succeeds only if ‘ActiveReleases’ array count greater than or equal to 3. [More Information](https://go.microsoft.com/fwlink/?linkid=842996)
+     *Example*: - For response {"status”: "successful"}, the expression can be eq(root['status'], 'successful'). In this example task succeeds only 'status' value 'successful'.  For response {“ActiveReleases”: [ “Release1”, “Release2”, “Release3”] }, the expression can be  ge(count(root[‘ActiveReleasesName’]), 3), here task succeeds only if ‘ActiveReleases’ array count greater than or equal to 3. [More Information](https://go.microsoft.com/fwlink/?linkid=842996).
 
 ##### HttpReques handler task references: -
   [InvokeRestApi](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/InvokeRestApi/task.json)  
-  [AzureMonitor](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitor/task.json)
-  [AzureFunction](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureFunction/task.json)
-  [QueryWorkItems](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/QueryWorkItems/task.json)
+  [AzureMonitor](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitor/task.json)   
+  [AzureFunction](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureFunction/task.json)   
+  [QueryWorkItems](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/QueryWorkItems/task.json)   
 
 ##### ServiceBushandler task references:-
   [PublishToAzureServiceBus](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PublishToAzureServiceBus/task.json)
