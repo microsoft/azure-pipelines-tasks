@@ -35,3 +35,14 @@ steps:
     pathToPublish: '$(build.artifactStagingDirectory)'
     artifactName: 'artifact'
     artifactType: 'container'
+
+## Release to the Apple App Store
+## This task requires the Apple App Store extension:
+## https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store
+#- task: ms-vsclient.app-store.app-store-release.AppStoreRelease@1
+#  inputs:
+#    serviceEndpoint: 'Enter your Apple App Store service endpoint name here'
+#    #appIdentifier: com.myapp.etc
+#    #releaseNotes: 'Optionally enter the path to release notes here'
+#    distributedToExternalTesters: false
+#    externalTestersGroups: 'Optionally enter your external tester groups here'
