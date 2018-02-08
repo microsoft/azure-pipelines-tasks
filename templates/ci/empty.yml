@@ -1,0 +1,12 @@
+# Empty
+# Start with a pipeline that has no steps.
+# https://aka.ms/yaml
+
+queue: 'Hosted VS2017'
+
+#variables:
+#  system.debug: 'true'
+
+steps:
+#- script: |
+#    'echo Write your commands here'

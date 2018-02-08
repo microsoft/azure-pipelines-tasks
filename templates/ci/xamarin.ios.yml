@@ -1,0 +1,37 @@
+# Xamarin.iOS
+# Build a Xamarin.iOS app and Xamarin.UITest assembly.
+# https://aka.ms/yaml
+
+queue: 'Hosted macOS Preview'
+
+variables:
+  buildConfiguration: 'Release'
+  solution: '**/*.sln'
+  # system.debug: 'true'
+
+steps:
+- task: XamarinComponentRestore@0
+  displayName: 'Xamarin component restore'
+  inputs:
+    solutionFile: '$(solution)'
+  enabled: false
+
+- task: XamariniOS@1
+  displayName: 'Build Xamarin.iOS solution'
+  inputs:
+    solutionFile: $(solution)
+    configuration: $(buildConfiguration)
+    buildForSimulator: true
+
+- task: CopyFiles@2
+  displayName: 'Copy artifacts'
+  inputs:
+    contents: '**/*.ipa'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: 'artifact'
+    artifactType: 'container'

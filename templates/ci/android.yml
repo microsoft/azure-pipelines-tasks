@@ -1,0 +1,28 @@
+# Android
+# Build your Android projects, run tests, and sign and align Android App Package files.
+# https://aka.ms/yaml
+
+queue: 'Hosted VS2017'
+
+#variables:
+#  system.debug: 'true'
+
+steps:
+- task: Gradle@2
+  displayName: 'Build the APK'
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'assembleRelease' # Common tasks: assembleDebug, assembleRelease
+
+- task: CopyFiles@2
+  displayName: 'Copy artifacts'
+  inputs:
+    contents: '**/*.apk'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: 'artifact'
+    artifactType: 'container'
