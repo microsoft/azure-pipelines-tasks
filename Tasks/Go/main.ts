@@ -36,7 +36,6 @@ export class goExe {
                 go.arg(this.command);
                 go.line(this.argument);
 
-
                 var result = await go.exec(<tr.IExecOptions>{
                     cwd: this.workingDir,
                     failOnStdErr: this.failOnStdErr,
