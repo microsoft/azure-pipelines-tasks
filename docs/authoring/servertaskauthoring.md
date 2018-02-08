@@ -63,7 +63,7 @@ This enables you to invoke a Http end-point. It has 3 sections.
                }
             }
        
-- **ServiceBus**
+- **ServiceBus**:
 This enables you to post a message to azure service bus queue. It has 3 sections.
 
     **Execute:** This section specifies what should happen when the task is executed. You can define the endpoint on which message should be published, the message body/properties that should be sent etc. Here are the complete list of  properties that are supported. 
