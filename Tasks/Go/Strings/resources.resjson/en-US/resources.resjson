@@ -11,5 +11,6 @@
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Arguments to the selected command. For example, build time arguments for go build command. The arguments depend on the command selected.",
   "loc.input.label.workingDirectory": "Working Directory",
-  "loc.input.help.workingDirectory": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)"
+  "loc.input.help.workingDirectory": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+  "loc.messages.TaskFailedWithError": "Go task failed with error: %s"
 }

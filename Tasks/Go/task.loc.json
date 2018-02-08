@@ -71,5 +71,7 @@
       "target": "main.js"
     }
   },
-  "messages": {}
+  "messages": {
+    "TaskFailedWithError": "ms-resource:loc.messages.TaskFailedWithError"
+  }
 }
