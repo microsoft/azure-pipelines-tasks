@@ -148,6 +148,7 @@ function Copy-DiffPackage
             $localPkgPath += ".zip"
             $diffPkgPath += ".zip"
         }
+        # The Code package for containerized service does not exist, but we want to continue the deployment
         elseif (!(Test-Path -Path $localPkgPath))
         {
             continue
