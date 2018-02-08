@@ -1,11 +1,5 @@
 {
   "dependencies": {
-    "docker-common": {
-        "version": "file:../../_build/Tasks/Common/docker-common"
-    },
-     "utility-common": {
-        "version": "file:../../_build/Tasks/Common/utility-common"
-    },
     "argparse": {
       "version": "1.0.9",
       "from": "argparse@>=1.0.7 <2.0.0",
