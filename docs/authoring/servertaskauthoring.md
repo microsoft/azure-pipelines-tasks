@@ -47,11 +47,9 @@ This enables you to invoke a Http end-point. It has 3 sections.
     Here are all the event types that are supported: -  
     1.  TaskAssigned - Raise this event to acknowledge that the ‘execute’ call has been received (optional).
     2.  TaskStarted - Raise this event when task has started.
-    3.  TaskCompleted - Raise this event when task is completed (indicates success/failure).
+    3.  TaskCompleted - Raise this event when task is completed (indicates success/failure). Here is how an example of the event section. 
  
-      Here is how an example of the event section. 
- 
-        Events: 
+        ```Events: 
             { 
                "TaskStarted": 
                {
