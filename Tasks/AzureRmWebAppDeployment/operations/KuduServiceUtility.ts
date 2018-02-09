@@ -6,7 +6,7 @@ import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-arm-rest/constants';
 import webClient = require('azure-arm-rest/webClient');
 import { TaskParameters } from './TaskParameters';
 var deployUtility = require('webdeployment-common/utility.js');
-var zipUtility = require('webdeployment-common/ziputility.js');
+import  { ZipUtility }  from 'webdeployment-common/ziputility.js';
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
 const manifestFileName: string = 'manifest';
@@ -111,9 +111,10 @@ export class KuduServiceUtility {
             }
 
             if(tl.stats(packagePath).isDirectory()) {
-                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
-                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
-                tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
+                let tempPackagePath = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), 'TEMP_WEB_PACKAGE.zip');
+                ZipUtility.archive(packagePath, tempPackagePath);
+                tl.debug("Compressed folder " + packagePath + " into zip : " +  tempPackagePath);
+                tempPackagePath = packagePath;
             }
             else if(packagePath.toLowerCase().endsWith('.war')) {
                 physicalPath = await this._warFileDeployment(packagePath, physicalPath, virtualPath);
@@ -138,9 +139,10 @@ export class KuduServiceUtility {
             await this._preZipDeployOperation();
 
             if(tl.stats(packagePath).isDirectory()) {
-                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
-                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
-                tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
+                let tempPackagePath = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), 'TEMP_WEB_PACKAGE.zip');
+                ZipUtility.archive(packagePath, tempPackagePath);
+                tl.debug("Compressed folder " + packagePath + " into zip : " +  tempPackagePath);
+                tempPackagePath = packagePath;
             }
 
             if(appOffline) {

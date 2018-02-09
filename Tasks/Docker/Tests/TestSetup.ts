@@ -23,6 +23,7 @@ tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
 tr.setInput('additionalImageTags', process.env[shared.TestEnvVars.additionalImageTags] || '');
 tr.setInput('enforceDockerNamingConvention', process.env[shared.TestEnvVars.enforceDockerNamingConvention]);
+tr.setInput('memory', process.env[shared.TestEnvVars.memory] || '');
 
 console.log("Inputs have been set");
 
@@ -60,6 +61,10 @@ let a = {
            "code": 0,
             "stdout": "successfully ran test/test:2 image"
        },
+       "docker run --rm -m 2GB test/test:2": {
+           "code": 0,
+           "stdout": "successfully ran test/test:2 image"
+       },
        "docker pull test/test:2": {
            "code": 0,
            "stdout": "successfully pulled test/test:2 image"
@@ -71,6 +76,10 @@ let a = {
 a.exist[DockerFilePath] = true;
 
 a.exec[`docker build -f ${DockerFilePath} -t test/test:2`] = {
+    "code": 0,
+    "stdout": "successfully build test/test:2 image"
+};
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -m 2GB`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 image"
 };
