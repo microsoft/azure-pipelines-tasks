@@ -53,7 +53,7 @@
             "name": "outputDir",
             "aliases": [ "outputDirectory" ],
             "type": "string",
-            "label": "Output Directory",
+            "label": "Output directory",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally provide the output directory for the build. Example: $(build.binariesDirectory)/bin/Release."
@@ -68,7 +68,7 @@
         {
             "name": "createAppPackage",
             "type": "boolean",
-            "label": "Create App Package",
+            "label": "Create app package",
             "defaultValue": "true",
             "required": false,
             "helpMarkDown": "Passes the target (/t:PackageForAndroid) during build to generate an APK."
@@ -98,7 +98,7 @@
             "name": "msbuildVersion",
             "aliases": [ "msbuildVersionOption" ],
             "type": "pickList",
-            "label": "MSBuild Version",
+            "label": "MSBuild version",
             "required": false,
             "groupName": "msbuildOptions",
             "defaultValue": "15.0",
@@ -116,7 +116,7 @@
             "name": "msbuildLocation",
             "aliases": [ "msbuildFile" ],
             "type": "string",
-            "label": "MSBuild Location",
+            "label": "MSBuild location",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Optionally supply the path to MSBuild (on Windows) or xbuild (on macOS).",
@@ -127,7 +127,7 @@
             "name": "msbuildArchitecture",
             "aliases": [ "msbuildArchitectureOption" ],
             "type": "pickList",
-            "label": "MSBuild Architecture",
+            "label": "MSBuild architecture",
             "defaultValue": "x86",
             "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
@@ -141,7 +141,7 @@
         {
             "name": "msbuildArguments",
             "type": "string",
-            "label": "Additional Arguments",
+            "label": "Additional arguments",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Additional arguments passed to MSBuild (on Windows) or xbuild (on macOS).",
@@ -165,7 +165,7 @@
             "name": "jdkVersion",
             "aliases": [ "jdkVersionOption" ],
             "type": "pickList",
-            "label": "JDK Version",
+            "label": "JDK version",
             "required": false,
             "groupName": "jdkOptions",
             "defaultValue": "default",
@@ -183,7 +183,7 @@
             "name": "jdkUserInputPath",
             "aliases": [ "jdkDirectory" ],
             "type": "string",
-            "label": "JDK Path",
+            "label": "JDK path",
             "required": true,
             "groupName": "jdkOptions",
             "defaultValue": "",
@@ -194,7 +194,7 @@
             "name": "jdkArchitecture",
             "aliases": [ "jdkArchitectureOption" ],
             "type": "pickList",
-            "label": "JDK Architecture",
+            "label": "JDK architecture",
             "defaultValue": "x64",
             "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of JDK.",
@@ -206,7 +206,7 @@
             }
         }
     ],
-    "instanceNameFormat": "Build Xamarin.Android Project $(project)",
+    "instanceNameFormat": "Build Xamarin.Android project $(project)",
     "execution": {
         "PowerShell3": {
             "target": "XamarinAndroid.ps1",

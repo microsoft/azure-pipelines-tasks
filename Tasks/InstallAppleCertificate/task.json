@@ -43,7 +43,7 @@
         {
             "name": "certPwd",
             "type": "string",
-            "label": "Certificate (P12) Password",
+            "label": "Certificate (P12) password",
             "required": false,
             "helpMarkDown": "Password to the Apple certificate (.p12). Use a new build variable with its lock enabled on the `Variables` tab to encrypt this value."
         },
@@ -64,7 +64,7 @@
         {
             "name": "keychainPassword",
             "type": "string",
-            "label": "Keychain Password",
+            "label": "Keychain password",
             "required": false,
             "helpMarkDown": "Password to unlock the keychain. Use a new build variable with its lock enabled on the `Variables` tab to encrypt this value. A password is generated for the temporary keychain if not specified.",
             "groupName": "advanced"
@@ -72,7 +72,7 @@
         {
             "name": "customKeychainPath",
             "type": "string",
-            "label": "Custom Keychain Path",
+            "label": "Custom keychain path",
             "required": true,
             "helpMarkDown": "Full path to a custom keychain file. The keychain will be created if it does not exist.",
             "visibleRule": "keychain = custom",
@@ -81,7 +81,7 @@
         {
             "name": "deleteCert",
             "type": "boolean",
-            "label": "Delete Certificate from Keychain",
+            "label": "Delete certificate from keychain",
             "required": false,
             "helpMarkDown": "Select to delete the certificate from the keychain after the build or release is complete.",
             "visibleRule": "keychain = custom || keychain = default",
@@ -90,7 +90,7 @@
         {
             "name": "deleteCustomKeychain",
             "type": "boolean",
-            "label": "Delete Custom Keychain",
+            "label": "Delete custom keychain",
             "required": false,
             "helpMarkDown": "Select to delete the custom keychain from the agent after the build or release is complete.",
             "visibleRule": "keychain = custom",
@@ -99,7 +99,7 @@
         {
             "name": "signingIdentity",
             "type": "string",
-            "label": "Certificate Signing Identity",
+            "label": "Certificate signing identity",
             "required": false,
             "helpMarkDown": "The Common Name of the subject in the signing certificate.  Will attempt to parse the Common Name if this is left empty.",
             "groupName": "advanced"

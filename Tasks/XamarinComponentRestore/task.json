@@ -18,7 +18,7 @@
             "name": "solution",
             "aliases": [ "solutionFile" ],
             "type": "filePath",
-            "label": "Path to Solution",
+            "label": "Path to solution",
             "defaultValue": "**/*.sln",
             "helpMarkDown": "The path to the Visual Studio Solution file",
             "required": "true"
