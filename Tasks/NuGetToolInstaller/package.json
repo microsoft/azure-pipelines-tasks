@@ -22,6 +22,5 @@
     },
     "homepage": "https://github.com/microsoft/vsts-tasks#readme",
     "dependencies": {
-        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common-1.0.1.tgz"
     }
 }
