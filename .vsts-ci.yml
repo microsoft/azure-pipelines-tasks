@@ -20,11 +20,11 @@ phases:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-  # Use node 6, npm 3
+  # Use node 8, npm 5
   - task: NodeTool@0
-    displayName: Use node 6.10.3
+    displayName: Use node 8
     inputs:
-      versionSpec: "6.10.3"
+      versionSpec: "8.x"
 
   # npm install
   - script: npm install
@@ -54,21 +54,17 @@ phases:
 
   # Test
   - script: node make.js test
-    displayName: Test
+    displayName: Test with node 6
 
   - script: node make.js testLegacy --task "$(task_pattern)"
-    displayName: Legacy tests
-
-  # Use node 5
-  - powershell: .\ci\use-node-5.ps1 # switch to NodeTool task when bug fix is deployed
-    displayName: Use node 5.10.1
+    displayName: Legacy tests with node 6
 
   # Test
-  - script: node make.js test --runner ts
-    displayName: Test
+  - script: node make.js test --node 5 --runner ts
+    displayName: Test with node 5
 
-  - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
-    displayName: Legacy tests
+  - script: node make.js testLegacy --node 5 --runner ts --task "$(task_pattern)"
+    displayName: Legacy tests with node 5
 
   # Stop collect diagnostics
   - powershell: .\ci\stop-collect-diagnostics.ps1
@@ -87,11 +83,11 @@ phases:
   - checkout: self
     clean: true
 
-  # Use node 6, npm 3
+  # Use node 8, npm 5
   - task: NodeTool@0
-    displayName: Use node 6.10.3
+    displayName: Use node 8
     inputs:
-      versionSpec: "6.10.3"
+      versionSpec: "8.x"
 
   # Use NuGet 4
   - task: NuGetToolInstaller@0
@@ -173,11 +169,11 @@ phases:
     displayName: Start collect diagnostics
     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'), eq(variables['agent.os'], 'Windows_NT'))
 
-  # Use node 6, npm 3
+  # Use node 8, npm 5
   - task: NodeTool@0
-    displayName: Use node 6.10.3
+    displayName: Use node 8
     inputs:
-      versionSpec: "6.10.3"
+      versionSpec: "8.x"
 
   # npm install
   - script: npm install
@@ -203,25 +199,15 @@ phases:
 
   # Test
   - script: node make.js test
-    displayName: Test
+    displayName: Test with node 6
   - script: node make.js testLegacy --task "$(task)"
-    displayName: Legacy tests
-
-  # Use node 5
-  - powershell: .\ci\use-node-5.ps1 # switch to NodeTool task when bug fix is deployed
-    displayName: Use node 5.10.1
-    condition: and(succeeded(), eq(variables['agent.os'], 'Windows_NT'))
-  - task: NodeTool@0
-    displayName: Use node 5.10.1
-    condition: and(succeeded(), ne(variables['agent.os'], 'Windows_NT'))
-    inputs:
-      versionSpec: "5.10.1"
+    displayName: Legacy tests with node 6
 
   # Test
-  - script: node make.js test --runner ts
-    displayName: Test
-  - script: node make.js testLegacy --runner ts --task "$(task)"
-    displayName: Legacy tests
+  - script: node make.js test --node 5 --runner ts
+    displayName: Test with node 5
+  - script: node make.js testLegacy --node 5 --runner ts --task "$(task)"
+    displayName: Legacy tests with node 5
 
   # Stop collect diagnostics
   - powershell: .\ci\stop-collect-diagnostics.ps1
@@ -242,11 +228,11 @@ phases:
   - checkout: self
     clean: true
 
-  # Use node 6, npm 3
+  # Use node 8, npm 5
   - task: NodeTool@0
-    displayName: Use node 6.10.3
+    displayName: Use node 8
     inputs:
-      versionSpec: "6.10.3"
+      versionSpec: "8.x"
 
   # npm install
   - script: npm install
@@ -262,21 +248,15 @@ phases:
 
   # Test
   - script: node make.js test --runner ts
-    displayName: Test
+    displayName: Test with node 6
   - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
-    displayName: Legacy tests
-
-  # Use node 5
-  - task: NodeTool@0
-    displayName: Use node 5.10.1
-    inputs:
-      versionSpec: "5.10.1"
+    displayName: Legacy tests with node 6
 
   # Test
-  - script: node make.js test
-    displayName: Test
-  - script: node make.js testLegacy --task "$(task_pattern)"
-    displayName: Legacy tests
+  - script: node make.js test --node 5
+    displayName: Test with node 5
+  - script: node make.js testLegacy --node 5 --task "$(task_pattern)"
+    displayName: Legacy tests with node 5
 
 ################################################################################
 - phase: buildAll_darwin
@@ -292,11 +272,11 @@ phases:
   - checkout: self
     clean: true
 
-  # Use node 6, npm 3
+  # Use node 8, npm 5
   - task: NodeTool@0
-    displayName: Use node 6.10.3
+    displayName: Use node 8
     inputs:
-      versionSpec: "6.10.3"
+      versionSpec: "8.x"
 
   # npm install
   - script: npm install
@@ -312,18 +292,12 @@ phases:
 
   # Test
   - script: node make.js test --runner ts
-    displayName: Test
+    displayName: Test with node 6
   - script: node make.js testLegacy --runner ts --task "$(task_pattern)"
-    displayName: Legacy tests
+    displayName: Legacy tests with node 6
 
-  # Use node 5
-  - task: NodeTool@0
-    displayName: Use node 5.10.1
-    inputs:
-      versionSpec: "5.10.1"
-
-  # Test
-  - script: node make.js test
-    displayName: Test
-  - script: node make.js testLegacy --task "$(task_pattern)"
-    displayName: Legacy tests
+  # Test with node 5
+  - script: node make.js test --node 5
+    displayName: Test with node 5
+  - script: node make.js testLegacy --node 5 --task "$(task_pattern)"
+    displayName: Legacy tests with node 5

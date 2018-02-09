@@ -125,6 +125,25 @@ var pathExists = function (checkPath) {
 }
 exports.pathExists = pathExists;
 
+/**
+ * Given a package.json path, determines the pack file name (name-version.tgz)
+ */
+var getPackFileName = function (packageJsonPath) {
+    // assert the module has a package.json
+    if (!test('-f', packageJsonPath)) {
+        fail(`Common module package.json does not exist: '${packageJsonPath}'`);
+    }
+
+    // assert the package name and version
+    var packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+    if (!packageJson || !packageJson.name || !packageJson.version) {
+        fail(`The common module's package.json must define a name and version: ${packageJsonPath}`);
+    }
+
+    return `${packageJson.name}-${packageJson.version}.tgz`;
+}
+exports.getPackFileName = getPackFileName
+
 var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
@@ -282,6 +301,59 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
+var installNode = function (nodeVersion) {
+    switch (nodeVersion || '') {
+        case '':
+        case '6':
+            nodeVersion = 'v6.10.3';
+            break;
+        case '5':
+            nodeVersion = 'v5.10.1';
+            break;
+        default:
+            fail(`Unexpected node version '${nodeVersion}'. Expected 5 or 6.`);
+    }
+
+    if (nodeVersion === run('node -v')) {
+        console.log('skipping node install for tests since correct version is running');
+        return;
+    }
+
+    // determine the platform
+    var platform = os.platform();
+    if (platform != 'darwin' && platform != 'linux' && platform != 'win32') {
+        throw new Error('Unexpected platform: ' + platform);
+    }
+
+    var nodeUrl = 'https://nodejs.org/dist';
+    switch (platform) {
+        case 'darwin':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
+            break;
+        case 'linux':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
+            break;
+        case 'win32':
+            var nodeDirectory = path.join(downloadPath, `node-${nodeVersion}`);
+            var marker = nodeDirectory + '.completed';
+            if (!test('-f', marker)) {
+                var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
+                var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
+                rm('-Rf', nodeDirectory);
+                mkdir('-p', nodeDirectory);
+                cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
+                cp(nodeLibPath, path.join(nodeDirectory, 'node.lib'));
+                fs.writeFileSync(marker, '');
+            }
+
+            addPath(nodeDirectory);
+            break;
+    }
+}
+exports.installNode = installNode;
+
 var downloadFile = function (url) {
     // validate parameters
     if (!url) {
@@ -319,8 +391,21 @@ var downloadArchive = function (url, omitExtensionCheck) {
         throw new Error('Parameter "url" must be set.');
     }
 
-    if (!omitExtensionCheck && !url.match(/\.zip$/)) {
-        throw new Error('Expected .zip');
+    var isZip;
+    var isTargz;
+    if (omitExtensionCheck) {
+        isZip = true;
+    }
+    else {
+        if (url.match(/\.zip$/)) {
+            isZip = true;
+        }
+        else if (url.match(/\.tar\.gz$/) && (process.platform == 'darwin' || process.platform == 'linux')) {
+            isTargz = true;
+        }
+        else {
+            throw new Error('Unexpected archive extension');
+        }
     }
 
     // skip if already downloaded and extracted
@@ -339,8 +424,20 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
         // extract
         mkdir('-p', targetPath);
-        var zip = new admZip(archivePath);
-        zip.extractAllTo(targetPath);
+        if (isZip) {
+            var zip = new admZip(archivePath);
+            zip.extractAllTo(targetPath);
+        }
+        else if (isTargz) {
+            var originalCwd = process.cwd();
+            cd(targetPath);
+            try {
+                run(`tar -xzf "${archivePath}"`);
+            }
+            finally {
+                cd(originalCwd);
+            }
+        }
 
         // write the completed marker
         fs.writeFileSync(marker, '');
@@ -470,6 +567,9 @@ var removeGroups = function (groups, pathRoot) {
 exports.removeGroups = removeGroups;
 
 var addPath = function (directory) {
+    console.log('');
+    console.log(`> prepending PATH ${directory}`);
+
     var separator;
     if (os.platform() == 'win32') {
         separator = ';';
