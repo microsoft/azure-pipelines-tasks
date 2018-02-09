@@ -155,6 +155,7 @@ target.build = function() {
         //--------------------------------
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
+            var modPackFiles = [];
 
             common.forEach(function(mod) {
                 var modPath = path.join(taskPath, mod['module']);
@@ -165,6 +166,7 @@ target.build = function() {
                 var modPackFile = null;
                 if (mod.type === 'node' && mod.compile == true) {
                     modPackFile = util.getPackFileName(path.join(modPath, 'package.json'));
+                    modPackFiles.push(modPackFile);
                 }
 
                 if (!test('-d', modOutDir)) {
@@ -210,13 +212,8 @@ target.build = function() {
                     }
                 }
 
-                // npm install the common module to the task dir
-                if (mod.type === 'node' && mod.compile == true) {
-                    cd(taskPath);
-                    run(`npm install file://../../_build/Tasks/Common/${modPackFile}`);
-                }
-                // copy module resources to the task output dir
-                else if (mod.type === 'ps') {
+                // copy ps module resources to the task output dir
+                if (mod.type === 'ps') {
                     console.log();
                     console.log('> copying ps module to task');
                     var dest;
@@ -230,6 +227,12 @@ target.build = function() {
                     matchCopy('!Tests', modOutDir, dest, { noRecurse: true, matchBase: true });
                 }
             });
+
+            // npm install the common module to the task dir
+            cd(taskPath);
+            modPackFiles.forEach(function(modPackFile) {
+                run(`npm install --save-exact file://../../_build/Tasks/Common/${modPackFile}`);
+            })
         }
 
         // build Node task
