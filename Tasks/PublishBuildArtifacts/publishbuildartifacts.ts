@@ -50,31 +50,38 @@ async function run() {
         // PathtoPublish is a folder that contains the files
         let pathtoPublish: string = tl.getPathInput('PathtoPublish', true, true);
         let artifactName: string = tl.getInput('ArtifactName', true);
-        let artifactType: string = tl.getInput('ArtifactType', true);
+        let publishLocation: string = tl.getInput('publishLocation', true);
 
 
         let hostType = tl.getVariable('system.hostType');
-        if ((hostType && hostType.toUpperCase() != 'BUILD') && (artifactType.toUpperCase() !== "FILEPATH")) {
+        if ((hostType && hostType.toUpperCase() != 'BUILD') && (publishLocation.toUpperCase() !== "FILEPATH")) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('ErrorHostTypeNotSupported'));
             return;
         }
 
 
-        artifactType = artifactType.toLowerCase();
-        let data = {
-            artifacttype: artifactType,
-            artifactname: artifactName
-        };
+        publishLocation = publishLocation.toLowerCase();
+        let data = { };
+
+        // Artifact type (publish location)
+        if (publishLocation === "server") {
+            data["artifacttype"] = "container";
+        }
+        else {
+            data["artifacttype"] = publishLocation;
+        }
+
+        data["artifactname"] = artifactName;
 
         // upload or copy
-        if (artifactType === "container") {
+        if (publishLocation === "server") {
             data["containerfolder"] = artifactName;
 
             // add localpath to ##vso command's properties for back compat of old Xplat agent
             data["localpath"] = pathtoPublish;
             tl.command("artifact.upload", data, pathtoPublish);
         }
-        else if (artifactType === "filepath") {
+        else if (publishLocation === "filepath") {
             let targetPath: string = tl.getInput('TargetPath', true);
             let artifactPath: string = path.join(targetPath, artifactName);
             data['artifactlocation'] = targetPath; // artifactlocation for back compat with old xplat agent
