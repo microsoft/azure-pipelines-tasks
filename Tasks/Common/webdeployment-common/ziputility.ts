@@ -67,3 +67,47 @@ export async function getArchivedEntries(archivedPackage: string)  {
     return deferred.promise;
 }
 
+
+export class ZipUtility {
+    public static archive(folderPath: string, archivePath: string) {
+        let filesToArchive: Array<string> = this.findFiles(folderPath);
+        let isWindowsAgent: boolean = !!(tl.osType().match(/^Win/));
+        let zipToolPath: string;
+        let addtionalArguments: Array<string> = [];
+        if(isWindowsAgent) {
+            zipToolPath = path.join(__dirname, '7zip', '7zip.exe');
+            addtionalArguments.concat(['a', '-tzip']);
+        }
+        else {
+            zipToolPath = tl.which('zip', true);
+            addtionalArguments.push('-r');
+        }
+
+        addtionalArguments.push(archivePath);
+        addtionalArguments.concat(filesToArchive);
+        let taskResult = tl.execSync(zipToolPath, addtionalArguments, <any> {
+            silent: true,
+            failOnStdErr: true,
+            windowsVerbatimArguments: isWindowsAgent
+        });
+
+        if(taskResult.code != 0) {
+            throw new Error(taskResult.error.toString());
+        }
+    }
+
+    public static extract() {
+        
+    }
+
+    private static findFiles(folderPath: string): Array<string> {
+        let fullPaths: string[] = tl.ls('-A', [folderPath]);
+        let baseNames: string[] = [];
+        for(var fullPath of fullPaths) {
+            baseNames.push(path.basename(fullPath));
+        }
+
+        tl.debug(`no. of files found: ${baseNames.length}`);
+        return baseNames;
+    }
+}
