@@ -32,7 +32,7 @@
   "loc.messages.NoResponseFromServer": "No response from server.",
   "loc.messages.FailedToUploadFile": "Failed to complete file upload.",
   "loc.messages.NoApiTokenFound": "No API token found on Visual Studio App Center connection.",
-  "loc.messages.Succeeded": "App Center distribute task succeeded",
+  "loc.messages.Succeeded": "App Center Distribute task succeeded",
   "loc.messages.CannotFindAnyFile": "Cannot find any file based on %s.",
   "loc.messages.FoundMultipleFiles": "Found multiple files matching %s.",
   "loc.messages.FailedToCreateFile": "Failed to create %s with error: %s.",

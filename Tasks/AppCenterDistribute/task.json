@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 131,
-        "Patch": 0
+        "Minor": 127,
+        "Patch": 1
     },
     "groups": [
         {
@@ -163,7 +163,7 @@
         "NoResponseFromServer": "No response from server.",
         "FailedToUploadFile": "Failed to complete file upload.",
         "NoApiTokenFound": "No API token found on Visual Studio App Center connection.",
-        "Succeeded": "App Center distribute task succeeded",
+        "Succeeded": "App Center Distribute task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
         "FailedToCreateFile": "Failed to create %s with error: %s.",
