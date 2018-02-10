@@ -30,8 +30,13 @@ var shellAssert = function () {
 }
 
 var cd = function (dir) {
-    shell.cd(dir);
-    shellAssert();
+    var cwd = process.cwd();
+    if (cwd != dir) {
+        console.log('');
+        console.log(`> cd ${path.relative(cwd, dir)}`);
+        shell.cd(dir);
+        shellAssert();
+    }
 }
 exports.cd = cd;
 
@@ -95,7 +100,6 @@ var banner = function (message, noBracket) {
     if (!noBracket) {
         console.log('------------------------------------------------------------');
     }
-    console.log();
 }
 exports.banner = banner;
 
@@ -144,14 +148,48 @@ var getPackFileName = function (packageJsonPath) {
 }
 exports.getPackFileName = getPackFileName
 
-var buildNodeTask = function (taskPath, outDir) {
+var buildNodeTask = function (taskPath, outDir, skipNpm, syncBundleDeps) {
     var originalDir = pwd();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
-    if (test('-f', packageJsonPath)) {
-        var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-        if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
+    if (!skipNpm && test('-f', packageJsonPath)) {
+        // verify no dev dependencies
+        var package = JSON.parse(fs.readFileSync(packageJsonPath).toString());
+        if (package.devDependencies && Object.keys(package.devDependencies).length != 0) {
             fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
+        }
+
+        if (syncBundleDeps) {
+            // record the dependencies
+            var deps = [];
+            if (package.dependencies) {
+                Object.keys(package.dependencies).forEach(function (dep) {
+                    deps.push(dep);
+                });
+            }
+
+            // compare the dependencies to the bundled dependencies
+            var bundleDeps = package.bundledDependencies || package.bundleDependencies || [];
+            var writeBundleDeps = false;
+            if (deps.length != bundleDeps.length) {
+                writeBundleDeps = true;
+            }
+            else {
+                for (var i = 0; i < deps.length; i++) {
+                    if (deps[i] != bundleDeps[i]) {
+                        writeBundleDeps = true;
+                        break;
+                    }
+                }
+            }
+
+            // rewrite the bundled dependencies
+            if (writeBundleDeps) {
+                delete package.bundledDependencies;
+                delete package.bundleDependencies;
+                package.bundledDependencies = deps;
+                fs.writeFileSync(packageJsonPath, JSON.stringify(package, null, '  '));
+            }
         }
 
         run('npm install');
