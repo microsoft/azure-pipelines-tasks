@@ -150,6 +150,12 @@ target.build = function() {
             getExternals(taskMake.externals, outDir);
         }
 
+        // npm install
+        if (test('-f', path.join(taskPath, 'package.json'))) {
+            cd(taskPath);
+            run('npm install');
+        }
+
         //--------------------------------
         // Common: build, copy, install 
         //--------------------------------
@@ -182,7 +188,7 @@ target.build = function() {
 
                     // npm install and compile
                     if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
-                        buildNodeTask(modPath, modOutDir);
+                        buildNodeTask(modPath, modOutDir, /*skipNpm*/ false, /*syncBundleDeps*/ true);
                     }
 
                     // copy default resources and any additional resources defined in the module's make.json
@@ -228,16 +234,20 @@ target.build = function() {
                 }
             });
 
-            // npm install the common module to the task dir
-            cd(taskPath);
-            modPackFiles.forEach(function(modPackFile) {
-                run(`npm install --save-exact file://../../_build/Tasks/Common/${modPackFile}`);
-            })
+            // npm install the common modules to the task dir
+            if (modPackFiles.length) {
+                cd(taskPath);
+                var modPackPaths = modPackFiles.map(function (val) {
+                    return `file:../../_build/Tasks/Common/${val}`;
+                });
+                run(`npm install --no-save ${modPackPaths.join(' ')}`);
+                run('npm dedupe');
+            }
         }
 
         // build Node task
         if (shouldBuildNode) {
-            buildNodeTask(taskPath, outDir);
+            buildNodeTask(taskPath, outDir, /*skipNpm*/ true);
         }
 
         // copy default resources and any additional resources defined in the task's make.json
