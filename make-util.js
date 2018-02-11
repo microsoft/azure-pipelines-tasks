@@ -130,10 +130,11 @@ var pathExists = function (checkPath) {
 exports.pathExists = pathExists;
 
 /**
- * Given a package.json path, determines the pack file name (name-version.tgz)
+ * Given a module path, gets the info used for generating a pack file
  */
-var getPackFileName = function (packageJsonPath) {
+var getCommonPackInfo = function (modOutDir) {
     // assert the module has a package.json
+    var packageJsonPath = path.join(modOutDir, 'package.json');
     if (!test('-f', packageJsonPath)) {
         fail(`Common module package.json does not exist: '${packageJsonPath}'`);
     }
@@ -144,52 +145,23 @@ var getPackFileName = function (packageJsonPath) {
         fail(`The common module's package.json must define a name and version: ${packageJsonPath}`);
     }
 
-    return `${packageJson.name}-${packageJson.version}.tgz`;
+    var packFileName = `${packageJson.name}-${packageJson.version}.tgz`;
+    return {
+        "packageName": packageJson.name,
+        "packFilePath": path.join(path.dirname(modOutDir), packFileName)
+    };
 }
-exports.getPackFileName = getPackFileName
+exports.getCommonPackInfo = getCommonPackInfo;
 
-var buildNodeTask = function (taskPath, outDir, skipNpm, syncBundleDeps) {
+var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
-    if (!skipNpm && test('-f', packageJsonPath)) {
+    if (test('-f', packageJsonPath)) {
         // verify no dev dependencies
-        var package = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-        if (package.devDependencies && Object.keys(package.devDependencies).length != 0) {
+        var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
+        if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
             fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
-        }
-
-        if (syncBundleDeps) {
-            // record the dependencies
-            var deps = [];
-            if (package.dependencies) {
-                Object.keys(package.dependencies).forEach(function (dep) {
-                    deps.push(dep);
-                });
-            }
-
-            // compare the dependencies to the bundled dependencies
-            var bundleDeps = package.bundledDependencies || package.bundleDependencies || [];
-            var writeBundleDeps = false;
-            if (deps.length != bundleDeps.length) {
-                writeBundleDeps = true;
-            }
-            else {
-                for (var i = 0; i < deps.length; i++) {
-                    if (deps[i] != bundleDeps[i]) {
-                        writeBundleDeps = true;
-                        break;
-                    }
-                }
-            }
-
-            // rewrite the bundled dependencies
-            if (writeBundleDeps) {
-                delete package.bundledDependencies;
-                delete package.bundleDependencies;
-                package.bundledDependencies = deps;
-                fs.writeFileSync(packageJsonPath, JSON.stringify(package, null, '  '));
-            }
         }
 
         run('npm install');
