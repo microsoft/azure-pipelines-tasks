@@ -211,8 +211,8 @@ target.build = function() {
                             fail(`Pack file already exists: ${modPackFile}`);
                         }
 
-                        // pack the Node module. a pack file is required for dedupe.
-                        // installing from a folder creates a symlink, and does not dedupe.
+                        // pack the Node module. installing from a folder creates a symlink,
+                        // which we do not want.
                         cd(path.dirname(modOutDir));
                         run(`npm pack ./${path.basename(modOutDir)}`);
                     }
@@ -241,7 +241,6 @@ target.build = function() {
                     return `file:../../_build/Tasks/Common/${val}`;
                 });
                 run(`npm install --no-save ${modPackPaths.join(' ')}`);
-                run('npm dedupe');
             }
         }
 
