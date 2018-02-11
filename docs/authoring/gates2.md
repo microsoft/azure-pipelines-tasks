@@ -1,4 +1,4 @@
-
+Serv
 You can take a look at this document to learn about how you can add a new [server task](https://github.com/Microsoft/vsts-tasks/blob/master/docs/authoring/servertaskauthoring.md). Assuming that you are aware of the process for an adding a server task, then to make it a gate, you should do the following. change the runsOn property of your task.
 
 #### Change the RunsOn property :
@@ -17,5 +17,13 @@ In case you are using http request executions in your task, then you should prov
 
 #### Understand the model difference between gate and server task:
 
+Server task can be used to do 2 kinds of activities.
 
+- Create a new resource on external system. 
+- Query an external system. 
 
+For example: - You can have 2 Chef server tasks, one which creates a new deployment on chef and another which queries the status of an existing deployment.
+
+Gate tasks, in a typical usage will primarily do a query on an external system and will not create a new resource because gates run N times in a deployment and creating a new resource N times in a single deployment does not look natural.
+
+For example: - Querying work items is a good gate because the result of the query can change in between runs. Similarly querying azure monitors is a good gate because the health of the monitors of a live system can change in between runs. But creation of new work item is not a good gate as you dont want to create N work items in a run given that work item is a long lived object. 
