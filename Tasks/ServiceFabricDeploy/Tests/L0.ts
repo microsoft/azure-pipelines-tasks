@@ -45,5 +45,8 @@ describe('ServiceFabricDeploy Suite', function () {
         it('Deploy with diff pkg', (done) => {
             psr.run(path.join(__dirname, 'CreateDiffPkg.ps1'), done);
         })
+        it('Deploy with diff pkg', (done) => {
+            psr.run(path.join(__dirname, 'CreateDiffPkg.ps1'), done);
+        })
     }
 });
