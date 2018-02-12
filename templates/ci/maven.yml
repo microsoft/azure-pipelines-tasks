@@ -1,0 +1,28 @@
+# Maven
+# Build your Java projects and run tests with Apache Maven.
+# https://aka.ms/yaml
+
+queue: 'Hosted VS2017'
+
+#variables:
+#  system.debug: 'true'
+
+steps:
+- task: Maven@2
+  displayName: 'Build with Maven'
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'package'
+
+- task: CopyFiles@2
+  displayName: 'Copy artifacts'
+  inputs:
+    contents: '**/*.jar'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: 'artifact'
+    artifactType: 'container'

@@ -6,8 +6,6 @@ import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('codeanalysis-common/SonarQube/common');
-import sqMaven = require('codeanalysis-common/mavensonar');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
 import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
@@ -34,7 +32,6 @@ var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
 var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
 var codeCoverageFailed: boolean = false;
-var isSonarQubeEnabled:boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
 var reportPOMFile: string = null;
@@ -224,7 +221,7 @@ async function execBuild() {
             mvnRun.arg(mavenGoals);
 
             // 2. Apply any goals for static code analysis tools selected by the user.
-            mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
+            mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             // Read Maven standard output
@@ -253,10 +250,7 @@ async function execBuild() {
 
             // Otherwise, start uploading relevant build summaries.
             tl.debug('Processing code analysis results');
-            return sqMaven.processSonarQubeIntegration()
-                .then(() => {
-                    return codeAnalysisOrchestrator.publishCodeAnalysisResults();
-                });
+            return codeAnalysisOrchestrator.publishCodeAnalysisResults();
         })
         .fail(function (err) {
             console.error(err.message);
@@ -286,6 +280,28 @@ async function execBuild() {
 
             // Do not force an exit as publishing results is async and it won't have finished 
         });
+}
+
+function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
+    if (!tl.getBoolInput('sqAnalysisEnabled', false)) {
+        return mvnsq;
+    }
+
+    // Apply argument for the JaCoCo tool, if enabled
+    if (typeof execFileJacoco != "undefined" && execFileJacoco) {
+        mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
+    }
+
+    switch (tl.getInput('sqMavenPluginVersionChoice')) {
+        case 'latest':
+            mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar`);
+            break;
+        case 'pom':
+            mvnsq.arg(`sonar:sonar`);
+            break;
+    }
+
+    return mvnsq;
 }
 
 // Configure the JVM associated with this run.

@@ -1,0 +1,22 @@
+{
+  "name": "go-runner-task",
+  "version": "0.1.0",
+  "description": "VSTS GO Task",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "vsts-task-lib": "2.1.0"
+  }
+}

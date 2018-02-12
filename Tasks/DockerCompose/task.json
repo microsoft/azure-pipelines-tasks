@@ -285,7 +285,7 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": ["currentWorkingDirectory"],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",

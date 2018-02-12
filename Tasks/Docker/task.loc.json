@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [],
   "preview": "false",
@@ -299,6 +299,14 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "memory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.memory",
+      "visibleRule": "action = Build an image || action = Run an image",
+      "helpMarkDown": "ms-resource:loc.input.help.memory",
       "groupName": "advanced"
     }
   ],
