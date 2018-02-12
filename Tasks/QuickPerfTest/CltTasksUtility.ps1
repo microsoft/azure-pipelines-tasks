@@ -184,12 +184,12 @@ function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName, $
     $invalidPattern2 = "[^A-Za-z0-9 \._-]"
 
     # find illegal characters
-    $invalidchars1 = [regex]::Matches($pathToCheck, $invalidPattern1, 'IgnoreCase').Value | Sort-Object -Unique 
-    $invalidchars2 =[regex]::Matches($pathToCheck, $invalidPattern2, 'IgnoreCase').Value | Sort-Object -Unique 
+    $invalidchars1 = [regex]::Matches($testName, $invalidPattern1, 'IgnoreCase').Value | Sort-Object -Unique 
+    $invalidchars2 =[regex]::Matches($testName, $invalidPattern2, 'IgnoreCase').Value | Sort-Object -Unique 
     
     if ($invalidchars1 -ne $null -or $invalidchars2 -ne $null)
     {
-      "Do not use these characters in load test name: $invalidchars1 $invalidchars2"
+		throw "Do not use these characters in load test name: $invalidchars1 $invalidchars2"
     }
 }
 
