@@ -54,15 +54,15 @@ async function run() {
     finally{
         // Delete firewall rule in case of automatic added rule or either user wants to delete it
         if(firewallAdded && azureMysqlTaskParameter && azureMysqlTaskParameter.getDeleteFirewallRule()){
-            task.debug('Deleting firewall rule');
+            task.debug('Deleting firewall rule.');
             if(firewallOperations && mysqlServer){
                 await firewallOperations.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
             }
-            task.debug('Sucessfully deleted firewall rule');
+            task.debug('Sucessfully deleted firewall rule.');
         }
     }
 
-    task.debug('Task completed sucessfully.');
+    task.debug('Task completed.');
 }
 
 run();
