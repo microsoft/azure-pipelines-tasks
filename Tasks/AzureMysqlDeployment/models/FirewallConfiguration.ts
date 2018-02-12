@@ -2,6 +2,7 @@ export class FirewallConfiguration {
 
     private ipAdressAlreadyAdded: boolean;
     private ipAddress: string;
+    
     constructor(ipAdressAlreadyAdded: boolean, iPAddress?: string) {
         this.ipAdressAlreadyAdded = ipAdressAlreadyAdded;
         this.ipAddress = iPAddress;

@@ -28,7 +28,8 @@ async function run() {
         if(!endpoint){
             task.debug('Azure Endpoint is null');
             throw new Error(task.loc("AzureEndpointCannotBeNull"));
-        }       
+        }
+               
         const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
         // Get mysql server data entered by user 
         mysqlServer = await mysqlServerOperations.getMysqlServerFromServerName(azureMysqlTaskParameter.getServerName());

@@ -8,7 +8,7 @@ import { ISqlClient } from '../sql/ISqlClient';
 import Q = require('q');
 var uuidV4 = require('uuid/v4');
 
-export class FirewallOperations{
+export class FirewallOperations {
 
     private _azureMysqManagementClient: AzureMysqlManagementClient;
     private _firewallName: string;
@@ -72,6 +72,7 @@ export class FirewallOperations{
             this._preparefirewallRule(azureMysqlTaskParameter.getServerName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), resourceGroupName, "IPAddressRange_" + this._getFirewallRuleName()).then(() =>{
                 let firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
                 console.log(" firewall conf " +JSON.stringify(firewallConfiguration));
+                
                 if(!firewallConfiguration.isIpAdressAlreadyAdded()){
                     task.debug("Agent Ip address not in added firewall rule: "+ firewallConfiguration.getIpAddress());
                     defer.reject(new Error(task.loc("AgentIpAddressIsMissingInAddedFirewallRule")));
@@ -101,7 +102,7 @@ export class FirewallOperations{
     /**
      * Prepare firewall rule for mysql server
      */
-    private async _preparefirewallRule(serverName: string, startIpAddress: string, endIpAddress: string, resourceGroupName: string, ruleName: string): Promise<void>{
+    private async _preparefirewallRule(serverName: string, startIpAddress: string, endIpAddress: string, resourceGroupName: string, ruleName: string): Promise<void> {
         var defer = Q.defer<void>();
         this._firewallName = ruleName;
         const firewallAddressRange: FirewallAddressRange = new FirewallAddressRange(startIpAddress, endIpAddress);
