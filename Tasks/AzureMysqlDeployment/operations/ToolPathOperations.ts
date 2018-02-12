@@ -65,7 +65,7 @@ export class ToolPathOperations {
                     const path = task.which("mysql", true);
                     if(path){
                         task.debug('Window mysql executable path from enviroment variable: '+path);
-                        defer.resolve(path + "bin\\mysql.exe");
+                        defer.resolve(path);
                     }else{
                         defer.reject(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
                     } 
