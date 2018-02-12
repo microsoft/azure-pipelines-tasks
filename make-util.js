@@ -30,8 +30,13 @@ var shellAssert = function () {
 }
 
 var cd = function (dir) {
-    shell.cd(dir);
-    shellAssert();
+    var cwd = process.cwd();
+    if (cwd != dir) {
+        console.log('');
+        console.log(`> cd ${path.relative(cwd, dir)}`);
+        shell.cd(dir);
+        shellAssert();
+    }
 }
 exports.cd = cd;
 
@@ -95,7 +100,6 @@ var banner = function (message, noBracket) {
     if (!noBracket) {
         console.log('------------------------------------------------------------');
     }
-    console.log();
 }
 exports.banner = banner;
 
@@ -126,10 +130,11 @@ var pathExists = function (checkPath) {
 exports.pathExists = pathExists;
 
 /**
- * Given a package.json path, determines the pack file name (name-version.tgz)
+ * Given a module path, gets the info used for generating a pack file
  */
-var getPackFileName = function (packageJsonPath) {
+var getCommonPackInfo = function (modOutDir) {
     // assert the module has a package.json
+    var packageJsonPath = path.join(modOutDir, 'package.json');
     if (!test('-f', packageJsonPath)) {
         fail(`Common module package.json does not exist: '${packageJsonPath}'`);
     }
@@ -140,15 +145,20 @@ var getPackFileName = function (packageJsonPath) {
         fail(`The common module's package.json must define a name and version: ${packageJsonPath}`);
     }
 
-    return `${packageJson.name}-${packageJson.version}.tgz`;
+    var packFileName = `${packageJson.name}-${packageJson.version}.tgz`;
+    return {
+        "packageName": packageJson.name,
+        "packFilePath": path.join(path.dirname(modOutDir), packFileName)
+    };
 }
-exports.getPackFileName = getPackFileName
+exports.getCommonPackInfo = getCommonPackInfo;
 
 var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
     if (test('-f', packageJsonPath)) {
+        // verify no dev dependencies
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
             fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);

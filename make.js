@@ -107,8 +107,8 @@ target.build = function() {
 
     ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '5.5.1')) {
-            fail('expected 5.5.1 or higher');
+        if (semver.lt(output, '5.6.0')) {
+            fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
         }
     });
 
@@ -153,6 +153,7 @@ target.build = function() {
         //--------------------------------
         // Common: build, copy, install 
         //--------------------------------
+        var commonPacks = [];
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
 
@@ -160,12 +161,6 @@ target.build = function() {
                 var modPath = path.join(taskPath, mod['module']);
                 var modName = path.basename(modPath);
                 var modOutDir = path.join(commonPath, modName);
-
-                // determine the file path for the npm pack file
-                var modPackFile = null;
-                if (mod.type === 'node' && mod.compile == true) {
-                    modPackFile = util.getPackFileName(path.join(modPath, 'package.json'));
-                }
 
                 if (!test('-d', modOutDir)) {
                     banner('Building module ' + modPath, true);
@@ -197,10 +192,12 @@ target.build = function() {
                         getExternals(modMake.externals, modOutDir);
                     }
 
-                    if (modPackFile) {
+                    if (mod.type === 'node' && mod.compile == true) {
+                        var commonPack = util.getCommonPackInfo(modOutDir);
+
                         // assert the pack file does not already exist (name should be unique)
-                        if (test('-f', path.join(path.dirname(modOutDir), modPackFile))) {
-                            fail(`Pack file already exists: ${modPackFile}`);
+                        if (test('-f', commonPack.packFilePath)) {
+                            fail(`Pack file already exists: ${commonPack.packFilePath}`);
                         }
 
                         // pack the Node module. a pack file is required for dedupe.
@@ -210,12 +207,11 @@ target.build = function() {
                     }
                 }
 
-                // npm install the common module to the task dir
+                // store the npm pack file info
                 if (mod.type === 'node' && mod.compile == true) {
-                    cd(taskPath);
-                    run(`npm install file://../../_build/Tasks/Common/${modPackFile}`);
+                    commonPacks.push(util.getCommonPackInfo(modOutDir));
                 }
-                // copy module resources to the task output dir
+                // copy ps module resources to the task output dir
                 else if (mod.type === 'ps') {
                     console.log();
                     console.log('> copying ps module to task');
@@ -230,11 +226,37 @@ target.build = function() {
                     matchCopy('!Tests', modOutDir, dest, { noRecurse: true, matchBase: true });
                 }
             });
+
+            // npm install the common modules to the task dir
+            if (commonPacks.length) {
+                cd(taskPath);
+                var installPaths = commonPacks.map(function (commonPack) {
+                    return `file:${path.relative(taskPath, commonPack.packFilePath)}`;
+                });
+                run(`npm install --save-exact ${installPaths.join(' ')}`);
+            }
         }
 
         // build Node task
         if (shouldBuildNode) {
             buildNodeTask(taskPath, outDir);
+        }
+
+        // remove the hashes for the common packages, they change every build
+        if (commonPacks.length) {
+            var lockFilePath = path.join(taskPath, 'package-lock.json');
+            if (!test('-f', lockFilePath)) {
+                lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
+            }
+            var packageLock = JSON.parse(fs.readFileSync(lockFilePath).toString());
+            Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
+                commonPacks.forEach(function (commonPack) {
+                    if (dependencyName == commonPack.packageName) {
+                        delete packageLock.dependencies[dependencyName].integrity;
+                    }
+                });
+            });
+            fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
         }
 
         // copy default resources and any additional resources defined in the task's make.json
