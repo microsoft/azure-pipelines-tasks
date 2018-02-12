@@ -92,7 +92,7 @@ Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
-ValidateInputs $websiteUrl $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName
+ValidateInputs $websiteUrl $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $testName
 
 #Process Threshold Rules
 Write-Output "Initializing threshold rule for avg. response time with value(ms) : $avgResponseTimeThreshold "
