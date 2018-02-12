@@ -219,6 +219,7 @@ try {
                 Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $upgradeStatus.UpgradeState )
             }
             Start-Sleep -Seconds 3
+
             $upgradeStatus = Get-ServiceFabricComposeDeploymentUpgradeHelper -ApiVersion $apiVersion -GetUpgradeParameters $getStatusParameters
         }
         Write-Host (Get-VstsLocString -Key CurrentStatus -ArgumentList $upgradeStatus.UpgradeState)
