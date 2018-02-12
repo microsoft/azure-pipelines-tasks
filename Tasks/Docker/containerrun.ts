@@ -66,7 +66,12 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-w", workDir]);
     }
 
-    var imageName = imageUtils.getImageName();
+    var memory = tl.getInput("memory");
+    if (memory) {
+        command.arg(["-m", memory]);
+    }
+
+    var imageName = utils.getImageName();
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);

@@ -26,7 +26,7 @@ Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
 Register-Mock Get-VstsInput { "true" } -- -Name configureDockerSettings
 Register-Mock Get-VstsInput { "AzureResourceManagerEndpoint" } -- -Name registryCredentials -Require
 Register-Mock Get-VstsInput { $azureSubscriptionEndpoint } -- -Name azureSubscriptionEndpoint -Require
-
+Register-Mock Get-VstsInput { "false" } -- -Name useDiffPackage
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -34,7 +34,10 @@ Register-Mock Find-VstsFiles { $applicationPackagePath } -- -LegacyPattern $appl
 
 Register-Mock Assert-VstsPath
 Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
-Register-Mock Get-Item { "dummyvalue" } -- "Cert:\CurrentUser\My\$serverCertThumbprint" -ErrorAction SilentlyContinue
+$fakeCert = @{
+    "Thumbprint" = $serverCertThumbprint
+}
+Register-Mock Get-Item { $fakeCert } -- "Cert:\CurrentUser\My\$serverCertThumbprint" -ErrorAction SilentlyContinue
 
 # Setup mock VSTS service endpoint
 # NOTE: The value defined here is a Base64 encoding of a self-signed certificate created specifically for this test.

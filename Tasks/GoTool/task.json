@@ -1,0 +1,63 @@
+{
+    "id": "334727F4-9495-4F9D-A391-FC621D671474",
+    "name": "GoTool",
+    "friendlyName": "Go Tool Installer",
+    "description": "Finds or downloads and caches specified version of Go and adds it to the PATH.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
+    "category": "Tool",
+    "preview": "true",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "satisfies": ["GO"],
+    "demands": [],
+    "instanceNameFormat": "Use Go $(version)",
+    "groups":[
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "1.9.3",
+            "required": true,
+            "helpMarkDown": "Go tool version to download and install.  Examples: 1.9.3"
+        },
+        {
+            "name": "goPath",
+            "type": "string",
+            "label": "GOPATH",
+            "helpMarkDown": "Value for the GOPATH environment variable.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "goBin",
+            "type": "string",
+            "label": "GOBIN",
+            "helpMarkDown": "Value for the GOBIN environment variable.",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "gotool.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "FailedToDownload": "Failed to download version %s. Please verify that the version is valid and resolve any other issues. Error: %s",
+        "TempDirNotSet": "Expected Agent.TempDirectory to be set"
+    }
+}

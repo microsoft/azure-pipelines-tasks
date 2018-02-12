@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 122,
+        "Minor": 131,
         "Patch": 0
     },
     "demands": [],
@@ -25,7 +25,7 @@
         {
             "name": "codeCoverageTool",
             "type": "pickList",
-            "label": "Code Coverage Tool",
+            "label": "Code coverage tool",
             "required": true,
             "defaultValue": "JaCoCo",
             "helpMarkDown": "The tool with which code coverage results are generated.",
@@ -37,7 +37,7 @@
         {
             "name": "summaryFileLocation",
             "type": "string",
-            "label": "Summary File",
+            "label": "Summary file",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Path of the summary file containing code coverage statistics, such as line, method, and class coverage. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml`"
@@ -45,7 +45,7 @@
         {
             "name": "reportDirectory",
             "type": "string",
-            "label": "Report Directory",
+            "label": "Report directory",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path of the code coverage HTML report directory. The report directory is published for later viewing as an artifact of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura`"
@@ -53,7 +53,7 @@
         {
             "name": "additionalCodeCoverageFiles",
             "type": "string",
-            "label": "Additional Files",
+            "label": "Additional files",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "File path pattern specifying any additional code coverage files to be published as artifacts of the build. The value may contain minimatch patterns. For example: `$(System.DefaultWorkingDirectory)/**/*.exec`"
@@ -61,7 +61,7 @@
         {
             "name": "failIfCoverageEmpty",
             "type": "boolean",
-            "label": "Fail When Code Coverage Results Are Missing",
+            "label": "Fail when code coverage results are missing",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Fail the task if code coverage did not produce any results to publish."

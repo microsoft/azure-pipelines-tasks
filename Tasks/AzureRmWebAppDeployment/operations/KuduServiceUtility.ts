@@ -8,6 +8,9 @@ import { TaskParameters } from './TaskParameters';
 var deployUtility = require('webdeployment-common/utility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
+const deploymentFolder: string = 'site/deployments';
+const manifestFileName: string = 'manifest';
+const VSTS_ZIP_DEPLOY: string = 'VSTS_ZIP_DEPLOY';
 
 export class KuduServiceUtility {
     private _appServiceKuduService: Kudu;
@@ -24,33 +27,35 @@ export class KuduServiceUtility {
         }
     }
 
-    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<void> {
+    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<string> {
         try {
-            var requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
-            await this._appServiceKuduService.updateDeployment(requestBody);
+            let requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
+            return await this._appServiceKuduService.updateDeployment(requestBody);
         }
         catch(error) {
             tl.warning(error);
         }
     }
 
-    public async runPostDeploymentScript(taskParams: TaskParameters): Promise<void> {
+    public async runPostDeploymentScript(taskParams: TaskParameters, directoryPath?: string): Promise<void> {
         try {
+            directoryPath = (!!directoryPath) ? directoryPath : physicalRootPath.substring(1);
+
             if(taskParams.TakeAppOfflineFlag) {
-                await this._appOfflineKuduService(physicalRootPath, true);
+                await this._appOfflineKuduService(directoryPath, true);
             }
 
             var scriptFile = this._getPostDeploymentScript(taskParams.ScriptType, taskParams.InlineScript, taskParams.ScriptPath, taskParams.isLinuxApp);
             var uniqueID = this.getDeploymentID();
             var fileExtension : string = taskParams.isLinuxApp ? '.sh' : '.cmd';
             var mainCmdFilePath = path.join(__dirname, '..', 'postDeploymentScript', 'mainCmdFile' + fileExtension);
-            await this._appServiceKuduService.uploadFile(physicalRootPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
-            await this._appServiceKuduService.uploadFile(physicalRootPath, 'kuduPostDeploymentScript_' + uniqueID + fileExtension, scriptFile.filePath);
+            await this._appServiceKuduService.uploadFile(directoryPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
+            await this._appServiceKuduService.uploadFile(directoryPath, 'kuduPostDeploymentScript_' + uniqueID + fileExtension, scriptFile.filePath);
             console.log(tl.loc('ExecuteScriptOnKudu'));
-            await this.runCommand('site\\wwwroot',
+            await this.runCommand(directoryPath,
              'mainCmdFile_' + uniqueID + fileExtension + ' ' + uniqueID,
               30, 'script_result_' +  uniqueID + '.txt');
-            await this._printPostDeploymentLogs(physicalRootPath, uniqueID);
+            await this._printPostDeploymentLogs(directoryPath, uniqueID);
 
         }
         catch(error) {
@@ -58,14 +63,14 @@ export class KuduServiceUtility {
         }
         finally {
             try {
-                await this._appServiceKuduService.uploadFile(physicalRootPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
-                await this.runCommand('site\\wwwroot', 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
+                await this._appServiceKuduService.uploadFile(directoryPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
+                await this.runCommand(directoryPath, 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
             }
             catch(error) {
                 tl.debug('Unable to delete log files : ' + error);
             }
             if(taskParams.TakeAppOfflineFlag) {
-                await this._appOfflineKuduService(physicalRootPath, false);
+                await this._appOfflineKuduService(directoryPath, false);
             }
         }
     }
@@ -96,7 +101,7 @@ export class KuduServiceUtility {
         return deploymentID;
     }
 
-    public async deployWebPackage(packagePath: string, physicalPath: string, virtualPath: string, appOffline: boolean): Promise<void> {
+    public async deployWebPackage(packagePath: string, physicalPath: string, virtualPath: string, appOffline?: boolean): Promise<void> {
         physicalPath = physicalPath ? physicalPath : physicalRootPath;
         try {
             if(appOffline) {
@@ -124,6 +129,112 @@ export class KuduServiceUtility {
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
             throw Error(error);
+        }
+    }
+
+    public async zipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
+        try {
+            console.log(tl.loc('PackageDeploymentInitiated'));
+            await this._preZipDeployOperation();
+
+            if(tl.stats(packagePath).isDirectory()) {
+                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
+                tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
+            }
+
+            if(appOffline) {
+                await this._appOfflineKuduService(physicalRootPath, true);
+                tl.debug('Wait for 10 seconds for app_offline to take effect');
+                await webClient.sleepFor(10);
+            }
+
+            let queryParameters: Array<string> = [
+                'isAsync=true',
+                'deployer=' + VSTS_ZIP_DEPLOY
+            ];
+
+            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+
+            try {
+                var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
+                tl.debug(`logs from ZIP deploy: ${kuduDeploymentDetails.log_url}`);
+                await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
+            }
+            catch(error) {
+                tl.debug(`Unable to fetch logs for kudu ZIP Deploy: ${JSON.stringify(error)}`)
+            }
+
+            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
+                throw tl.loc('PackageDeploymentUsingZipDeployFailed');
+            }
+
+            if(appOffline) {
+                await this._appOfflineKuduService(physicalRootPath, false);
+            }
+
+            console.log(tl.loc('PackageDeploymentSuccess'));
+            return deploymentDetails.id;
+        }
+        catch(error) {
+            tl.error(tl.loc('PackageDeploymentFailed'));
+            throw Error(error);
+        }
+    }
+
+    public async postZipDeployOperation(oldDeploymentID: string, activeDeploymentID: string): Promise<void> {
+        try {
+            tl.debug(`ZIP DEPLOY - Performing post zip-deploy operation: ${oldDeploymentID} => ${activeDeploymentID}`);
+            let manifestFileContent = await this._appServiceKuduService.getFileContent(`${deploymentFolder}/${oldDeploymentID}`, manifestFileName);
+            if(!!manifestFileContent) {
+                let tempManifestFile: string = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), manifestFileName);
+                tl.writeFile(tempManifestFile, manifestFileContent);
+                await this._appServiceKuduService.uploadFile(`${deploymentFolder}/${activeDeploymentID}`, manifestFileName, tempManifestFile);
+            }
+            tl.debug('ZIP DEPLOY - Performed post-zipdeploy operation.');
+        }
+        catch(error) {
+            tl.debug(`Failed to execute post zip-deploy operation: ${JSON.stringify(error)}.`);
+        }
+    }
+
+    private async _printZipDeployLogs(log_url: string): Promise<void> {
+        if(!log_url) {
+            return;
+        }
+
+        var deploymentLogs = await this._appServiceKuduService.getDeploymentLogs(log_url);
+        for(var deploymentLog of deploymentLogs) {
+            console.log(`${deploymentLog.message}`);
+            if(deploymentLog.details_url) {
+                await this._printZipDeployLogs(deploymentLog.details_url);
+            }
+        }
+    }
+
+    private async _preZipDeployOperation(): Promise<void> {
+        try {
+            tl.debug('ZIP DEPLOY - Performing pre-zipdeploy operation.');
+            let activeDeploymentID: string = await this._appServiceKuduService.getFileContent(deploymentFolder, 'active');
+            if(!!activeDeploymentID) {
+                let activeDeploymentFolder: string = `${deploymentFolder}/${activeDeploymentID}`;
+                tl.debug(`Active Deployment ID: '${activeDeploymentID}'. Deployment Folder: '${activeDeploymentFolder}'`);
+                let manifestFileContent: string = await this._appServiceKuduService.getFileContent(activeDeploymentFolder, manifestFileName);
+                if(!manifestFileContent) {
+                    tl.debug(`No Manifest file present. Creating a empty manifest file in '${activeDeploymentFolder}' directory.`);
+                    var tempManifestFile: string = path.join(tl.getVariable('AGENT.TEMPDIRECTORY'), manifestFileName);
+                    tl.writeFile(tempManifestFile, '');
+                    await this._appServiceKuduService.uploadFile(`${activeDeploymentFolder}`, manifestFileName, tempManifestFile);
+                    tl.debug(`Manifest file created in '${activeDeploymentFolder}' directory.`);
+                }
+                else {
+                    tl.debug('Manifest file present in active deployment directory. Skip creating a new one.');
+                }
+                tl.debug('ZIP DEPLOY - Performed pre-zipdeploy operation.');
+            }
+        }
+        catch(error) {
+            tl.debug(`Failed to execute pre zip-deploy operation: ${JSON.stringify(error)}.`);
         }
     }
 
@@ -294,7 +405,7 @@ export class KuduServiceUtility {
         }
     
         var message = {
-            type : customMessage? customMessage.type : "",
+            type : "deployment",
             commitId : commitId,
             buildId : buildId,
             releaseId : releaseId,
@@ -305,17 +416,20 @@ export class KuduServiceUtility {
             collectionUrl : collectionUrl,
             teamProject : teamProject
         };
-        // Append Custom Messages to original message
-        for(var attribute in customMessage) {
-            message[attribute] = customMessage[attribute];
+
+        if(!!customMessage) {
+            // Append Custom Messages to original message
+            for(var attribute in customMessage) {
+                message[attribute] = customMessage[attribute];
+            }
+            
         }
-    
         var deploymentLogType: string = message['type'];
         var active: boolean = false;
         if(deploymentLogType.toLowerCase() === "deployment" && isDeploymentSuccess) {
             active = true;
         }
-    
+
         return {
             id: deploymentID,
             active : active,
