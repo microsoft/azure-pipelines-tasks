@@ -1,4 +1,4 @@
-# Server Task Authoring
+ # Server Task Authoring
 
 In this document, we will talk about how you can author a new server tasks and how it is different from an agent task.
 
@@ -12,7 +12,7 @@ This property in task.json specifies where the task should run. The possible val
 - Server
 - ServerGate
 
-The default value of this property is Agent, but you can change it to Server to specify that the task should run on VSTS/TFS server.
+The default value of this property is Agent, but you can change it to Server to specify that the task should run on VSTS/TFS server. In case you want the task to appear in both server tasks as well as gate tasks, you should specify the value as Server | ServerGate. In case you want to learn more about gate tasks, have a look at this [document](https://github.com/Microsoft/vsts-tasks/blob/master/docs/authoring/gates.md).
 
 #### Execution section:
 This property defines how the task should be executed. For agent-based tasks, you can specify powershell/node handlers to run your custom powershell/node scripts but we don&#39;t support running them on VSTS/TFS server.
