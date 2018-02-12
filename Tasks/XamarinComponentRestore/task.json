@@ -8,7 +8,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 126,
+        "Minor": 131,
         "Patch": 0
     },
     "minimumAgentVersion": "1.96.0",
@@ -18,7 +18,7 @@
             "name": "solution",
             "aliases": [ "solutionFile" ],
             "type": "filePath",
-            "label": "Path to Solution",
+            "label": "Path to solution",
             "defaultValue": "**/*.sln",
             "helpMarkDown": "The path to the Visual Studio Solution file",
             "required": "true"
