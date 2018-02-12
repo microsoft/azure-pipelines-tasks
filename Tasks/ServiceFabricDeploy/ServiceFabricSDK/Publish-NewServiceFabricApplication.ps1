@@ -214,7 +214,7 @@
 			    }
 				catch [System.TimeoutException]
 				{
-					# Catch operation timeout and continue with force remove replica.
+					$app | Remove-ServiceFabricApplication -ForceRemove
 				}
 
                 foreach ($node in Get-ServiceFabricNode)
