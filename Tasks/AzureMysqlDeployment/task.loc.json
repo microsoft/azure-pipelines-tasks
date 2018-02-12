@@ -19,7 +19,9 @@
     "Minor": 0,
     "Patch": 0
   },
-  "demands": [],
+  "demands": [
+    "mysql"
+  ],
   "minimumAgentVersion": "1.100.0",
   "preview": true,
   "groups": [
@@ -194,7 +196,7 @@
     {
       "target": "ServerName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureMysqlDbServers"
+      "dataSourceName": "AzureMysqlServers"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

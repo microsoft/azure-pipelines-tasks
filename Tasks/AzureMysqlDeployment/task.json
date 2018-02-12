@@ -20,6 +20,7 @@
         "Patch": 0
     },
     "demands": [
+        "mysql"
     ],
     "minimumAgentVersion": "1.100.0",
     "preview": true,
@@ -193,7 +194,7 @@
         {
             "target": "ServerName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureMysqlDbServers"
+            "dataSourceName": "AzureMysqlServers"
         }  
     ],
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",

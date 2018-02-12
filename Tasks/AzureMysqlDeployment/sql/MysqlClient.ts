@@ -65,7 +65,7 @@ export class MysqlClient implements ISqlClient {
             if(resultCode === 0){
                 defer.resolve(resultCode);
             }else{
-                defer.reject(new Error(task.loc("SqlExecutionException", error)));
+                defer.reject(new Error(task.loc("SqlExecutionException", resultCode)));
             }
         },(error) => {
             defer.reject(error);

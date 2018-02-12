@@ -11,19 +11,19 @@ export class ToolPathOperations {
         let defer = Q.defer<string>(); 
         // To check either it is linux or windows platform
         if(task.osType().match(/^Win/)){
-            // linux check
-            this.getInstalledPathOfMysqlForLinux().then((path) => {
+            this.getInstalledPathOfMysqlForWindow().then((path) => {
                 defer.resolve(path);
             },(error) =>{
                 defer.reject(error);
             });
         }
         else{
-            this.getInstalledPathOfMysqlForWindow().then((path) => {
+            // linux check
+            this.getInstalledPathOfMysqlForLinux().then((path) => {
                 defer.resolve(path);
             },(error) =>{
                 defer.reject(error);
-            });
+            });  
         }
 
         return defer.promise;
