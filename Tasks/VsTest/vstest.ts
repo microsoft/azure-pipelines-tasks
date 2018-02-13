@@ -63,7 +63,7 @@ export function startTest() {
         var consolidatedCiData = {
             agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
             codeCoverageEnabled: vstestConfig.codeCoverageEnabled,
-            overrideTestrunParameters: vstestConfig.overrideTestrunParameters,
+            overrideTestrunParameters: utils.Helper.isNullOrUndefined(vstestConfig.overrideTestrunParameters) ? 'false' : 'true',
             pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
             runTestsInIsolation: vstestConfig.runTestsInIsolation,
             task: 'VsTestConsoleFlow',
