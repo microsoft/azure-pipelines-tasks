@@ -177,7 +177,7 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
 
     // Call out a warning if the agent work folder path is longer than 50 characters as anything longer may cause the download to fail
     // Note: This upper limit was calculated for a particular test platform package version and is subject to change
-    if (tl.getVariable('Agent.WorkDirectory').length > 50) {
+    if (tl.getVariable('Agent.WorkFolder') && tl.getVariable('Agent.WorkFolder').length > 50) {
         tl.warning(tl.loc('AgentWorkDirectoryPathTooLong'));
     }
 
