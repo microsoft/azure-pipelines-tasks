@@ -209,13 +209,13 @@
                 Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @($ApplicationName, $app.ApplicationTypeName, $app.ApplicationTypeVersion))
 
                 try
-				{
+                {
                     $app | Remove-ServiceFabricApplication -Force
-			    }
-				catch [System.TimeoutException]
-				{
-					$app | Remove-ServiceFabricApplication -Force -ForceRemove
-				}
+                }
+                catch [System.TimeoutException]
+                {
+                    $app | Remove-ServiceFabricApplication -Force -ForceRemove
+                }
 
                 if($OverwriteBehavior.Equals("Always"))
                 {
