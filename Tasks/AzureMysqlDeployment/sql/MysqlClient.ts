@@ -1,6 +1,8 @@
 import { ISqlClient } from './ISqlClient';
 import { FirewallConfiguration } from '../models/FirewallConfiguration';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
+import { Utility } from '../operations/MysqlUtiliy';
+import * as telemetry from 'utility-common/telemetry';
 import task = require("vsts-task-lib/task");
 import Q = require('q');
 
@@ -32,7 +34,7 @@ export class MysqlClient implements ISqlClient {
         let firewallConfiguration: FirewallConfiguration = new FirewallConfiguration(true);
         // Regex to extract Ip Address from string
         const regexToGetIpAddress = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
-        const result = task.execSync(this._toolPath, this._getArgumentString());
+        const result = task.execSync(this._toolPath, this._getArgumentString() +" "+ this._getAdditionalArgument());
         task.debug('Mysql server connection check result: '+JSON.stringify(result));
         // If agent is not whitelisted it will throw error with ip address 
         if(result && result.stderr){
@@ -49,7 +51,6 @@ export class MysqlClient implements ISqlClient {
      */
     private _getArgumentString(): string{
         let argumentString = "-h" + this._hostName + " -u" + this._azureMysqlTaskParameter.getSqlUserName() + " -p" + this._azureMysqlTaskParameter.getSqlPassword();
-        argumentString += this._azureMysqlTaskParameter.getDatabaseName() ? " -d" + this._azureMysqlTaskParameter.getDatabaseName() : "";
         return argumentString;
     }
 
@@ -58,8 +59,40 @@ export class MysqlClient implements ISqlClient {
      */
     public async executeSqlCommand() : Promise<number> {
         let defer = Q.defer<number>();
+        let argument: string = this._getArgumentString() +" "+ this._getAdditionalArgument();
+        telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())); 
+        if(this._azureMysqlTaskParameter.getDatabaseName()){
+            // Creating databse if it doesn't exist 
+            this._executeSqlScript(argument + this._createDatabaseScriptIfItDoesnotExist()).then((resultCode)=>{
+                argument += this._azureMysqlTaskParameter.getDatabaseName() ? " -D" + this._azureMysqlTaskParameter.getDatabaseName() : "";
+                // Running sql script passes by user
+                this._executeSqlScript(argument + this._getFileSourceArgument()).then((resultCode)=>{
+                    defer.resolve(resultCode);
+                },(error) => {
+                    defer.reject(error);
+                });
+            },(error) => {
+                defer.reject(new Error(task.loc("UnableToCreateDatabaseException")));
+            });
+        }else{
+            argument += this._azureMysqlTaskParameter.getDatabaseName() ? " -D" + this._azureMysqlTaskParameter.getDatabaseName() : "";
+            this._executeSqlScript(argument + this._getFileSourceArgument()).then((resultCode)=>{
+                defer.resolve(resultCode);
+            },(error) => {
+                defer.reject(error);
+            });
+        }
+
+        return defer.promise;
+    }
+
+    private _createDatabaseScriptIfItDoesnotExist() : string {
+        return " -e" + '"' + "CREATE DATABASE IF NOT EXISTS " + this._azureMysqlTaskParameter.getDatabaseName() + " ; "  + '"' ;
+    } 
+
+    private async _executeSqlScript(argument: string): Promise<number> {
+        let defer = Q.defer<number>();
         task.debug('Started execution of mysql script');
-        let argument: string = this._getArgumentString() + this._getFileSourceArgument() + this._getAdditionalArgument();
         task.exec(this._toolPath, argument).then((resultCode)=>{
             task.debug('Script execution on mysql server result: '+ resultCode);
             if(resultCode === 0){
@@ -90,7 +123,7 @@ export class MysqlClient implements ISqlClient {
      */
     private _getFileSourceArgument() : string{
         return this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask' ? 
-            " -e" + "\"" + this._azureMysqlTaskParameter.getSqlInline() + "\"" : 
-            " -e" + "\" source " + this._azureMysqlTaskParameter.getSqlFile() + "\"";
+            " -e" + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"' : 
+            " -e" + '" source ' + this._azureMysqlTaskParameter.getSqlFile() + '"';
     }
 }

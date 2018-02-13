@@ -93,10 +93,19 @@ export class FirewallRules {
         this.client.beginRequest(httpRequest).then(async (response) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
+            tl.debug("Response for add firewall rule " +statusCode);
             if (statusCode != 200 && statusCode != 201 && statusCode != 202) {
                 // Generate Error
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
-            }else {
+            }
+            else if(statusCode === 202){
+                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 3).then((response) => {
+                    deferred.resolve(new azureServiceClient.ApiResult(null, response));
+                },(error) => {
+                    deferred.reject(error);
+                });
+            }
+            else {
                 // Generate Response
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
@@ -146,6 +155,7 @@ export class FirewallRules {
         this.client.beginRequest(httpRequest).then(async (response) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
+            tl.debug("Response for delete firewall rule " +statusCode);
             if (statusCode != 200 && statusCode != 202 && statusCode !=204) {
                 // Generate Error
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
@@ -157,6 +167,90 @@ export class FirewallRules {
             return deferred.promise;
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
             (error) => callback(error));
+    }
+
+    /**
+     * Get firewall rule of mysql server
+     * @param resourceGroupName     resource group name of mysql server 
+     * @param serverName            mysql server name
+     * @param firewallRuleName      firewall rule name to be deleted 
+     * @param callback              response callback 
+     */
+    public get(resourceGroupName: string, serverName: string, firewallRuleName: string, callback?:  azureServiceClient.ApiCallback) {
+        var client = this.client;
+        if (!callback) {
+            throw new Error(tl.loc("CallbackCannotBeNull"));
+        }
+
+        // Validate
+        try {
+            this.client.isValidResourceGroupName(resourceGroupName);
+            if(!this.isNameValid(serverName)){
+                throw new Error(tl.loc("MysqlServerNameCannotBeEmpty"));
+            }
+            if(!this.isNameValid(firewallRuleName)){
+                throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));
+            }
+        }
+        catch (error) {
+            return callback(error);
+        }
+
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'GET';
+        httpRequest.headers = {};
+        httpRequest.uri = this.client.getRequestUri(
+            '//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DBforMySQL/servers/{serverName}/firewallRules/{firewallRuleName}',
+            {
+                '{resourceGroupName}': resourceGroupName,
+                '{serverName}': serverName,
+                '{firewallRuleName}': firewallRuleName
+            });
+        tl.debug("Calling get firewall ");
+        this.client.beginRequest(httpRequest).then(async (response) => {
+            var deferred = Q.defer<azureServiceClient.ApiResult>();
+            var statusCode = response.statusCode;
+            tl.debug("Response for get firewall rule " +statusCode);
+            if (statusCode === 200) {
+                // Generate Response
+                tl.debug("Response for get firewall rule " + JSON.stringify(response));
+                deferred.resolve(new azureServiceClient.ApiResult(null, response));
+            }
+            else {
+                // Generate exception
+                deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
+            }
+            return deferred.promise;
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
+    }
+
+
+    /**
+     * Retry get call to check firewall rule has added or not
+     * @param resourceGroupName     resource group name of mysql server 
+     * @param serverName            mysql server name
+     * @param firewallRuleName      firewall rule name to be deleted 
+     * @param retryOption           no of time to retry
+     */
+    private _recursiveGetCall(resourceGroupName: string, serverName: string, firewallRuleName: string, retryOption: number) : Q.Promise<azureServiceClient.ApiResult>{
+        var deferred = Q.defer<azureServiceClient.ApiResult>();
+        setTimeout(() => {
+            this.get(resourceGroupName, serverName, firewallRuleName, (error, result, request, response) => {
+                if(error){
+                    if(retryOption > 0){
+                        deferred.resolve(this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, retryOption--));
+                    }else{
+                        deferred.reject(new Error(tl.loc("NotAbleToCreateFirewallRule", error)));
+                    }
+                }
+                else{
+                    deferred.resolve(new azureServiceClient.ApiResult(null, result));
+                }
+            });
+        }, 500); 
+
+        return deferred.promise;
     }
 
     /**

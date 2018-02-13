@@ -225,6 +225,7 @@
         "ToolPathCannotBeNull": "Tool path cannot be null.",
         "SqlExecutionException": "Sql execution exception. Please Check the sql script. Error: %s .",
         "AzureEndpointCannotBeNull": "Invalid subscription name. Azure endpoint can't be null.",
-        "CallbackCannotBeNull": "callback cannot be null."
+        "CallbackCannotBeNull": "callback cannot be null.",
+        "UnableToCreateDatabaseException": "Unable to create database."
     }
 }

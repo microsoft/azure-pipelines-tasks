@@ -227,6 +227,7 @@
     "ToolPathCannotBeNull": "ms-resource:loc.messages.ToolPathCannotBeNull",
     "SqlExecutionException": "ms-resource:loc.messages.SqlExecutionException",
     "AzureEndpointCannotBeNull": "ms-resource:loc.messages.AzureEndpointCannotBeNull",
-    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull"
+    "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
+    "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException"
   }
 }

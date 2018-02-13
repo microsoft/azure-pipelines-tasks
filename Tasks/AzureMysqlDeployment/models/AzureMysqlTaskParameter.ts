@@ -76,7 +76,7 @@ export class AzureMysqlTaskParameter {
 	}
 
 	public getInlineAdditionalArguments(): string {
-		return this.sqlAdditionalArguments;
+		return this.inlineAdditionalArguments;
 	}
 
 	public getIpDetectionMethod(): string {
