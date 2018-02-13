@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Más información](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Compile, inserte o ejecute imágenes de Docker, o bien ejecute un comando de Docker",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Build, tag, push, or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Opciones avanzadas",
   "loc.input.label.containerregistrytype": "Tipo de Container Registry",
@@ -23,7 +23,9 @@
   "loc.input.label.context": "Contexto de compilación",
   "loc.input.help.context": "Ruta de acceso del contexto de compilación.",
   "loc.input.label.imageName": "Nombre de la imagen",
-  "loc.input.help.imageName": "Nombre de la imagen de Docker que se debe compilar, insertar o ejecutar.",
+  "loc.input.help.imageName": "Name of the Docker image to build, push, or run.",
+  "loc.input.label.imageNamesPath": "Image Names Path",
+  "loc.input.help.imageNamesPath": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line.",
   "loc.input.label.qualifyImageName": "Completar el nombre de la imagen",
   "loc.input.help.qualifyImageName": "Completa el nombre de la imagen con el nombre de host de la conexión de registro de Docker si no se ha especificado otra cosa.",
   "loc.input.label.additionalImageTags": "Etiquetas de imagen adicionales",
@@ -58,9 +60,14 @@
   "loc.input.help.customCommand": "Comando de Docker que se debe ejecutar, con argumentos. Por ejemplo, \"rmi -f nombre-de-imagen\" para forzar la eliminación de una imagen.",
   "loc.input.label.dockerHostEndpoint": "Conexión de host de Docker",
   "loc.input.help.dockerHostEndpoint": "Seleccione una conexión de host de Docker. El valor predeterminado es el host del agente.",
+  "loc.input.label.enforceDockerNamingConvention": "Force image name to follow Docker naming convention",
+  "loc.input.help.enforceDockerNamingConvention": "If enabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
   "loc.input.label.cwd": "Directorio de trabajo",
   "loc.input.help.cwd": "Directorio de trabajo del comando de Docker.",
-  "loc.messages.ContainerPatternFound": "Patrón encontrado en el parámetro dockerfilepath",
-  "loc.messages.ContainerPatternNotFound": "No se ha encontrado ningún patrón en el parámetro dockerfilepath",
-  "loc.messages.ContainerDockerFileNotFound": "No se encuentra ningún archivo de Docker que coincida con %s."
+  "loc.input.label.memory": "Memory limit",
+  "loc.input.help.memory": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
+  "loc.messages.ContainerPatternFound": "Pattern found in docker filepath parameter",
+  "loc.messages.ContainerPatternNotFound": "No pattern found in docker filepath parameter",
+  "loc.messages.ContainerDockerFileNotFound": "No se encuentra ningún archivo de Docker que coincida con %s.",
+  "loc.messages.NoImagesInImageNamesFile": "At least one image name is expected in file '%s'."
 }

@@ -7,5 +7,7 @@
   "loc.messages.ErrorOnAcquireToken": "嘗試取得 Azure Active Directory 權杖時發生錯誤。請確定您的服務端點已正確設定有效的認證。錯誤訊息: {0}",
   "loc.messages.ErrorOnCertificateImport": "嘗試匯入憑證時發生錯誤。請確定您的服務端點已正確設定正確的憑證值，如果憑證受密碼保護，則確定密碼有效。錯誤訊息: {0}",
   "loc.messages.ImportedCertificate": "已匯入指紋為 '{0}' 的叢集用戶端憑證。",
-  "loc.messages.ServiceFabricSDKNotInstalled": "組建代理程式上未安裝 Service Fabric SDK。請前往 https://aka.ms/servicefabric 加以下載並安裝。"
+  "loc.messages.ServiceFabricSDKNotInstalled": "組建代理程式上未安裝 Service Fabric SDK。請前往 https://aka.ms/servicefabric 加以下載並安裝。",
+  "loc.messages.UseWindowsSecurity": "已指定 Windows 安全性。連線時將使用 -WindowsCredential 參數。",
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "The cluster's server certificate with thumbprint '{0}' is required in order to encrypt text but the certificate could not be found on the agent machine in the 'CurrentUser\\My' certificate store location."
 }

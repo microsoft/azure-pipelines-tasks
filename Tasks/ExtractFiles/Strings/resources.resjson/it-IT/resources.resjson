@@ -27,7 +27,7 @@
   "loc.messages.TempDir": "Cartella temporanea = %s",
   "loc.messages.DecompressedTempTar": "Il file TAR temporaneo è stato decompresso da %s in %s",
   "loc.messages.RemoveTempDir": "Rimozione della cartella temporanea: %s",
-  "loc.messages.ExtractFailedCannotCreate": "L'estrazione del file %s perché il percorso temporaneo non è stato trovato: %s",
+  "loc.messages.ExtractFailedCannotCreate": "L'estrazione del file %s perché non è stato possibile trovare il percorso temporaneo: %s",
   "loc.messages.FoundFiles": "Sono stati trovati %d file da estrarre:",
   "loc.messages.CleanDestDir": "Pulizia della cartella di destinazione prima dell'estrazione: %s",
   "loc.messages.CreateDestDir": "Creazione della cartella di destinazione: %s",

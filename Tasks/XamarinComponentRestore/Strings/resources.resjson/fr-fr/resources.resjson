@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=786653)",
   "loc.description": "Restaure les composants Xamarin pour la solution spécifiée",
   "loc.instanceNameFormat": "Restauration des composants Xamarin $(solution)",
-  "loc.input.label.solution": "Chemin d'accès de la solution",
+  "loc.input.label.solution": "Path to solution",
   "loc.input.help.solution": "Chemin d'accès du fichier de la solution Visual Studio",
   "loc.input.label.email": "Messagerie",
   "loc.input.help.email": "Adresse e-mail du compte Xamarin.",

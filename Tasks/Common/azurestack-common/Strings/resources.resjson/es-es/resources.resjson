@@ -1,0 +1,4 @@
+{
+  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "La dirección URL del punto de conexión de AzureRM especificada ({0}) no es válida.",
+  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data. Error Code: %s"
+}

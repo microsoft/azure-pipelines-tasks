@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet パッケージャー",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=627416)",
-  "loc.description": "csproj ファイルまたは nuspec ファイルから nupkg 出力を作成します",
+  "loc.description": "使用されていません。代わりに \"NuGet\" タスクをご利用ください。新しい Tool インストーラー フレームワークで機能するため、タスクの更新を待たずに新しいバージョンの NuGet を簡単に利用できます。このアカウント/コレクション外の認証されたフィードのサポートが強化され、既定で NuGet 4 を使用できます。",
   "loc.instanceNameFormat": "NuGet パッケージャー $(solution)",
   "loc.group.displayName.versioning": "パック オプション",
   "loc.group.displayName.advanced": "詳細設定",
@@ -10,7 +10,7 @@
   "loc.input.label.outputdir": "パッケージ フォルダー",
   "loc.input.help.outputdir": "パッケージが作成されるフォルダー。空の場合、パッケージは、csproj ファイルまたは nuspec ファイルと共に作成されます。",
   "loc.input.label.includeReferencedProjects": "参照プロジェクトを含む",
-  "loc.input.help.includeReferencedProjects": "依存関係として、またはパッケージの一部として参照プロジェクトが含まれます。自動パッケージのバージョン管理では使用できません。プロジェクトと同じ名前を持つ、対応する nuspec ファイルが参照プロジェクトにある場合は、その参照プロジェクトは依存関係として追加されます。それ以外の場合は、参照プロジェクトはパッケージの一部として追加されます。[詳細](https://docs.nuget.org/consume/command-line-reference#pack-command (NuGet.org))",
+  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.versionByBuild": "自動パッケージ バージョン管理",
   "loc.input.help.versionByBuild": "参照を含むプロジェクトでは使用できません。[日付と時刻を使用する] を選ぶと、`X.Y.Z-ci-datetime` の書式で設定された [SemVer](http://semver.org/spec/v1.0.0.html) 対応バージョンが生成されます (X、Y、Z は自分で選択)。\n\n[環境変数を使用する] を選ぶ場合は、環境変数を選んで、使用するバージョン番号がそれに含まれていることを確認する必要があります。\n\n[ビルド番号を使用する] を選ぶと、パッケージするバージョンに対してビルド番号が使用されます。**注:** 一般セットでは、ビルドの形式は '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)' となります。",
   "loc.input.label.versionEnvVar": "環境変数",
@@ -26,7 +26,7 @@
   "loc.input.label.buildProperties": "追加のビルド プロパティ",
   "loc.input.help.buildProperties": "パッケージのビルドで使用されるセミコロン区切りのプロパティ リスト。",
   "loc.input.label.nuGetAdditionalArgs": "NuGet の引数",
-  "loc.input.help.nuGetAdditionalArgs": "NuGet.exe パックに渡される追加引数。[詳細] (https://docs.nuget.org/consume/command-line-reference#user-content-pack-command)。",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.nuGetPath": "NuGet.exe へのパス",
   "loc.input.help.nuGetPath": "必要に応じて、NuGet.exe へのパスを指定します"
 }

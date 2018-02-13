@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "安装 SSH 密钥",
+  "loc.helpMarkDown": "",
+  "loc.description": "在生成或发布之前安装 SSH 密钥",
+  "loc.instanceNameFormat": "安装 SSH 密钥",
+  "loc.input.label.hostName": "已知主机输入",
+  "loc.input.help.hostName": "为 known_hosts 文件输入此 SSH 密钥。",
+  "loc.input.label.sshPublicKey": "SSH 公钥",
+  "loc.input.help.sshPublicKey": "公共 SSH 密钥的内容。",
+  "loc.input.label.sshPassphrase": "SSH 密码",
+  "loc.input.help.sshPassphrase": "SSH 密钥的密码(如有)。",
+  "loc.input.label.sshKeySecureFile": "SSH 密钥",
+  "loc.input.help.sshKeySecureFile": "选择已上传到“安全文件”的 SSH 密钥，将其安装到代理上。",
+  "loc.messages.SSHKeyAlreadyInstalled": "已安装 SSH 密钥。",
+  "loc.messages.SSHPublicKeyMalformed": "未能获取公共 SSH 密钥的 base64 部分。",
+  "loc.messages.SSHKeyInstallFailed": "未能安装 SSH 密钥。",
+  "loc.messages.CannotResetKnownHosts": "无法将 known_hosts 文件重置为其初始值。"
+}
