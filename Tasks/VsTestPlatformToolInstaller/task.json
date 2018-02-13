@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "preview": true,
     "satisfies": ["VsTest"],
@@ -59,6 +59,7 @@
       "InstallationSuccessful": "VsTest will use the Test Platform package found in %s",
       "TestPlatformDownloadFailed": "Failed to download version %s of the test platform. Looking in the cache for the latest available stable version.",
       "LookingForLatestStableVersion": "Looking for the latest stable version of the Microsoft.Testplatform.",
-      "LookingForLatestPreReleaseVersion" : "Looking for the latest pre-release version of the Microsoft.Testplatform."
+      "LookingForLatestPreReleaseVersion" : "Looking for the latest pre-release version of the Microsoft.Testplatform.",
+      "AgentWorkDirectoryPathTooLong": "Please ensure that the agent work directory path is less than 50 chatacters to guarantee successful download of the test platform package."
     }
 }

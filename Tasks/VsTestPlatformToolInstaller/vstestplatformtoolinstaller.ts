@@ -169,16 +169,26 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
     testPlatformVersion = toolLib.cleanVersion(testPlatformVersion);
     const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
     let downloadPath = tl.getVariable('Agent.TempDirectory');
+
+    // Ensure Agent.TempDirectory is set
     if (!downloadPath) {
         throw new Error('Expected Agent.TempDirectory to be set');
     }
-    // use as short a path as possible due to nested folders in the package that may potentially exceed the 255 char windows path limit
+
+    // Call out a warning if the agent work folder path is longer than 50 characters as anything longer may cause the download to fail
+    // Note: This upper limit was calculated for a particular test platform package version and is subject to change
+    if (tl.getVariable('Agent.WorkFolder') && tl.getVariable('Agent.WorkFolder').length > 50) {
+        tl.warning(tl.loc('AgentWorkDirectoryPathTooLong'));
+    }
+
+    // Use as short a path as possible due to nested folders in the package that may potentially exceed the 255 char windows path limit
     downloadPath = path.join(downloadPath, 'VsTest');
     nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload');
 
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     let startTime = perf();
     await nugetTool.exec();
+
     ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: startTime, endTime: perf() } );
 
     // Install into the local tool cache
