@@ -23,7 +23,7 @@
         {
             "name": "versionSpec",
             "type": "string",
-            "label": "Python Version",
+            "label": "Python version",
             "required": true,
             "helpMarkDown": "Human-readable name for the Python version you are installing."
         },
@@ -44,10 +44,10 @@
             "label": "Installation Source",
             "required": true,
             "options": {
-                "AzureStorage": "Azure Storage",
-                "LocalDirectory": "Local Directory"
+                "AzureStorage": "Azure storage",
+                "LocalDirectory": "Local directory"
             },
-            "helpMarkDown": "Source for the compressed JDK."
+            "helpMarkDown": "Source for the compressed Python distribution."
         },
         {
             "name": "zipFile",
@@ -60,7 +60,7 @@
         {
             "name": "azureResourceManagerEndpoint",
             "type": "connectedService:AzureRM",
-            "label": "Azure Subscription",
+            "label": "Azure subscription",
             "required": true,
             "visibleRule": "installationSource == AzureStorage",
             "helpMarkDown": "Choose the Azure Resource Manager subscription for the JDK."
@@ -68,21 +68,21 @@
         {
             "name": "azureStorageAccountName",
             "type": "pickList",
-            "label": "Storage Account Name",
+            "label": "Storage account name",
             "required": true,
             "properties": {
                 "EditableOptions":"True"
             },
             "visibleRule": "installationSource == AzureStorage",
-            "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the Storage account name in which the JDK is located."
+            "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the storage account name in which the Python distribution is located."
         },
         {
             "name": "azureContainerName",
             "type": "string",
-            "label": "Container Name",
+            "label": "Container name",
             "required": true,
             "visibleRule": "installationSource == AzureStorage",
-            "helpMarkDown": "Name of the container in the storage account in which the JDK is located."
+            "helpMarkDown": "Name of the container in which the Python distribution is located."
         },
         {
             "name": "azureCommonVirtualFile",
@@ -90,7 +90,7 @@
             "label": "Common Virtual Path",
             "required": true,
             "visibleRule": "installationSource == AzureStorage",
-            "helpMarkDown": "Path to the JDK inside the Azure storage container."
+            "helpMarkDown": "Path to the Python distribution inside the Azure storage container."
         },
         {
             "name": "jdkDestinationDirectory",
@@ -98,7 +98,7 @@
             "label": "Destination directory",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Destination directory into which JDK should be extracted."
+            "helpMarkDown": "Destination directory into which the Python distribution should be extracted."
         },
         {
             "name": "cleanDestinationDirectory",
@@ -106,7 +106,7 @@
             "label": "Clean destination directory",
             "required": true,
             "defaultValue": "true",
-            "helpMarkDown": "Select this option to clean the destination directory before JDK is extracted into it."
+            "helpMarkDown": "Select this option to clean the destination directory before the Python distribution is extracted into it."
         }
     ],
     "dataSourceBindings": [
