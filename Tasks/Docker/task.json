@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [],
     "preview": "false",
@@ -299,7 +299,6 @@
             "name": "memory",
             "type": "string",
             "label": "Memory limit",
-            "visibleRule": "action = Build an image || action = Run an image",
             "helpMarkDown": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
             "groupName": "advanced"
         }
