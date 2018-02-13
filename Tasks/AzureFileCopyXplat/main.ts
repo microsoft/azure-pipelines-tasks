@@ -3,19 +3,21 @@ import path = require("path");
 
 import validateInputs = require("./ValidateInputs");
 import storageAccount = require("./StorageAccount");
-import vrtualMachine = require("./VirtualMachine");
+import virtualMachine = require("./VirtualMachine");
 
 function run(): Promise<void> {
     var azureRGTaskParameters = new validateInputs.AzureFileCopyXplatTaskParameters();
     return azureRGTaskParameters.getAzureFileCopyTaskParameters().then((taskParameters) => {
         var storageAccountOperations = new storageAccount.StorageAccount(taskParameters);
-        var virtualMachineOperations = new vrtualMachine.VirtualMachine(taskParameters);
+        var virtualMachineOperations = new virtualMachine.VirtualMachine(taskParameters);
         switch (taskParameters.action) {
             case "ToAzureBlob":
                 return storageAccountOperations.uploadFilesToStorageBlob(taskParameters);
             case "ToAzureVMs":
-                return storageAccountOperations.uploadFilesToStorageBlob(taskParameters).
-                then(virtualMachineOperations.copyFromBlobFilesToVMs(taskParameters));
+                return storageAccountOperations.uploadFilesToStorageBlob(taskParameters, taskParameters.sourcePath, taskParameters.containerName).
+                    then(storageAccountOperations.uploadScriptsToStorageBlob(taskParameters)).
+                    then(virtualMachineOperations.copyFromBlobFilesToVMs(taskParameters)).
+                    then(storageAccountOperations.deleteTemporaryContainer(taskParameters));
             case "FromAzureBlob":
                 return storageAccountOperations.downloadFilesFromStorageBlob(taskParameters);
         }

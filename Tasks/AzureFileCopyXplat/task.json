@@ -85,12 +85,12 @@
             "visibleRule": "Action = ToAzureBlob || Action = FromAzureBlob"
         },
         {
-            "name": "CloudService",
+            "name": "ResourceGroup",
             "type": "pickList",
-            "label": "Cloud Service",
+            "label": "Resource Group",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Name of the target Cloud Service for copying files to.",
+            "helpMarkDown": "Name of the target Resource Group for copying files to.",
             "properties": {
                 "EditableOptions": "True"
             },
@@ -131,13 +131,30 @@
             "visibleRule": "Action = ToAzureVMs"
         },
         {
-            "name": "TargetPath",
+            "name": "TargetPathWin",
             "type": "string",
-            "label": "Destination Folder",
+            "label": "Destination Folder for Windows",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
+            "required": false,
+            "helpMarkDown": "Local path on the target Windows machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
             "visibleRule": "Action = ToAzureVMs"
+        },
+        {
+            "name": "TargetPathLinux",
+            "type": "string",
+            "label": "Destination Folder for Linux",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Local path on the target Linux machines for copying the files from the source.",
+            "visibleRule": "Action = ToAzureVMs"
+        },
+        {
+            "name": "AdditionalArguments",
+            "type": "multiLine",
+            "label": "Additional Arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Additional azcopy xplat arguments that will be applied when uploading to blob."
         },
         {
             "name": "CleanTargetBeforeCopy",
@@ -183,18 +200,12 @@
             "dataSourceName": "AzureStorageAccountRMandClassic"
         },
         {
-            "target": "CloudService",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureHostedServiceNames"
-        },
-        {
             "target": "ResourceGroup",
             "endpointId": "$(ConnectedServiceNameARM)",
-            "dataSourceName": "AzureVirtualMachinesV2Id",
-            "resultTemplate": "{\"Value\":\"{{{ #extractResource resourceGroups}}}\",\"DisplayValue\":\"{{{ #extractResource resourceGroups}}}\"}"
+            "dataSourceName": "AzureResourceGroups"
         }
     ],
-    "instanceNameFormat": "$(Action) File Copy",
+    "instanceNameFormat": "File Copy $(Action)",
     "execution": {
         "Node": {
             "target": "main.js"

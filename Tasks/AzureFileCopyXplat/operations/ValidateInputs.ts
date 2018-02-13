@@ -8,20 +8,25 @@ export class AzureFileCopyXplatTaskParameters {
     public sourcePath: string;
     public storageAccount: string;
     public containerName: string;
+    public containerNameScripts: string;
     public blobPrefix: string;
     public cloudService: string;
-    public resourceGroup: string;
+    public resourceGroupName: string;
     public resourceFilteringMethod: string;
     public machineNamesOrTags: string;
-    public targetPath: string;
+    public targetPathWin: string;
+    public targetPathLinux: string;
+    public additionalArguments: string;
     public cleanTargetBeforeCopy: boolean;
     public destinationPath: string;
     public outputStorageUri: string;
     public outputStorageContainerSasToken: string;
+    public subscriptionId: string;
 
     private getARMCredentials(connectedService: string): msRestAzure.ApplicationTokenCredentials {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
@@ -40,12 +45,18 @@ export class AzureFileCopyXplatTaskParameters {
             this.action = tl.getInput("Action", true);
             this.storageAccount = tl.getInput("StorageAccount", true);
             this.containerName = tl.getInput("ContainerName");
+            if(this.action === "To Azure VMs"){
+                this.containerName = Math.random().toString(36).substring(2);
+                this.containerNameScripts = Math.random().toString(36).substring(2);
+            }
             this.blobPrefix = tl.getInput("BlobPrefix");
             this.cloudService = tl.getInput("CloudService");
-            this.resourceGroup = tl.getInput("ResourceGroup");
+            this.resourceGroupName = tl.getInput("ResourceGroup");
             this.resourceFilteringMethod = tl.getInput("ResourceFilteringMethod");
             this.machineNamesOrTags = tl.getInput("MachineNamesOrTags");
-            this.targetPath = tl.getInput("TargetPath");
+            this.targetPathWin = tl.getInput("TargetPathWin");
+            this.targetPathLinux = tl.getInput("TargetPathLinux");
+            this.additionalArguments = tl.getInput("AdditionalArguments");
             this.cleanTargetBeforeCopy = tl.getBoolInput("CleanTargetBeforeCopy");
             this.destinationPath = tl.getInput("Destination");
             this.outputStorageUri = tl.getInput("OutputStorageUri");
