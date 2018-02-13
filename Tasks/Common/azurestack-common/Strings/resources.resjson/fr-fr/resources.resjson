@@ -1,0 +1,4 @@
+{
+  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "L'URL spécifiée pour le point de terminaison AzureRM, '{0}', est non valide.",
+  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data. Error Code: %s"
+}

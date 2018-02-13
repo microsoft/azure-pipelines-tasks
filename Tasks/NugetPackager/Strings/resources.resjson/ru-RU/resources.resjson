@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Упаковщик NuGet",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=627416)",
-  "loc.description": "Создание выходных NUPKG-файлов из CSPROJ- или NUSPEC-файлов",
+  "loc.description": "Не рекомендуется: используйте вместо этого задачу NuGet. Она работает с новой платформой установщика средств, что позволяет легко использовать новые версии NuGet, не дожидаясь обновления задачи, и обеспечивает улучшенную поддержку прошедших проверку подлинности веб-каналов вне данной учетной записи или коллекции. По умолчанию используется версия NuGet 4.",
   "loc.instanceNameFormat": "Упаковщик NuGet $(solution)",
   "loc.group.displayName.versioning": "Параметры пакета",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -10,7 +10,7 @@
   "loc.input.label.outputdir": "Папка пакета",
   "loc.input.help.outputdir": "Папка, в которой будут создаваться пакеты. Если значение пустое, пакеты будут созданы в каталоге файла CSPROJ или NUSPEC.",
   "loc.input.label.includeReferencedProjects": "Включить ссылаемые проекты",
-  "loc.input.help.includeReferencedProjects": "Включить упоминаемые проекты как зависимости или как часть пакета. Не может использоваться с автоматическим определением версий пакетов. Если для упоминаемого проекта есть соответствующий файл NUSPEC с тем же именем, что и у проекта, то этот проект добавляется как зависимость. В противном случае проект добавляется как часть пакета. [Подробности](https://docs.nuget.org/consume/command-line-reference#pack-command) на сайте NuGet.org.",
+  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.versionByBuild": "Автоматическое присвоение номеров версий пакетам",
   "loc.input.help.versionByBuild": "Не может использоваться с упоминаемыми проектами. Если вы выбрали \"Использовать дату и время\", будет создана соответствующая требованиям [SemVer](http://semver.org/spec/v1.0.0.html) версия в формате \"X.Y.Z-ci-дата-время\", где X, Y и Z можно указать.\n\nЕсли вы выбрали \"Использовать переменную среды\", необходимо выбрать переменную среды и убедиться, что она содержит номер версии, который вы хотите использовать.\n\nЕсли вы выбрали \"Использовать номер сборки\", в качестве версии пакета будет использоваться номер сборки. **Примечание:** В разделе \"Общие\" установите следующий формат сборки: [$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416).",
   "loc.input.label.versionEnvVar": "Переменная среды",
@@ -26,7 +26,7 @@
   "loc.input.label.buildProperties": "Дополнительные свойства сборки",
   "loc.input.help.buildProperties": "Разделенный точками с запятой список свойств, используемых для сборки пакета.",
   "loc.input.label.nuGetAdditionalArgs": "Аргументы NuGet",
-  "loc.input.help.nuGetAdditionalArgs": "Дополнительные аргументы, передаваемые в пакет NuGet.exe. [Подробнее...](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command).",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.nuGetPath": "Путь к NuGet.exe",
   "loc.input.help.nuGetPath": "При необходимости укажите путь к NuGet.exe"
 }
