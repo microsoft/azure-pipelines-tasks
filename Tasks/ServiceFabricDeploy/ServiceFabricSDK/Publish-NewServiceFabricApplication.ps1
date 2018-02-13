@@ -210,17 +210,12 @@
 
                 try
 				{
-				    $app | Remove-ServiceFabricApplication -Force
+                    $app | Remove-ServiceFabricApplication -Force
 			    }
 				catch [System.TimeoutException]
 				{
-					$app | Remove-ServiceFabricApplication -ForceRemove
+					$app | Remove-ServiceFabricApplication -Force -ForceRemove
 				}
-
-                foreach ($node in Get-ServiceFabricNode)
-                {
-                    [void](Get-ServiceFabricDeployedReplica -NodeName $node.NodeName -ApplicationName $ApplicationName | Remove-ServiceFabricReplica -NodeName $node.NodeName -ForceRemove)
-                }
 
                 if($OverwriteBehavior.Equals("Always"))
                 {
