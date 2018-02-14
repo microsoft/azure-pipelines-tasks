@@ -41,7 +41,10 @@ if ($targetAzurePs -eq $latestVersion) {
 } elseif (-not($regex.IsMatch($targetAzurePs))) {
     throw (Get-VstsLocString -Key InvalidAzurePsVersion -ArgumentList $targetAzurePs)
 }
+
 . "$PSScriptRoot\Utility.ps1"
+$targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
+
 Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 
 try {

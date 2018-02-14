@@ -12,6 +12,8 @@
   "loc.input.help.commands": "シェル コマンドがリモート コンピューター上で実行されるように指定します。新しい行に各コマンドとその引数を入力します。複数のコマンドを一緒に実行する場合、それらを同じ行に入力してセミコロンで区切ります。(例: cd /home/user/myFolder;build)。",
   "loc.input.label.scriptPath": "シェル スクリプト パス",
   "loc.input.help.scriptPath": "リモート コンピューター上で実行するシェル スクリプト ファイルへのパス。",
+  "loc.input.label.inline": "インライン スクリプト",
+  "loc.input.help.inline": "リモート マシン上で実行するシェル スクリプトを記述します。",
   "loc.input.label.args": "引数",
   "loc.input.help.args": "シェル スクリプトに渡す引数。",
   "loc.input.label.failOnStdErr": "STDERR でのエラー",

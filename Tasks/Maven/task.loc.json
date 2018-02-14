@@ -15,10 +15,11 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 128,
+    "Major": 2,
+    "Minor": 131,
     "Patch": 0
   },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "maven"
   ],
@@ -311,125 +312,16 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
     },
     {
-      "name": "sqConnectedServiceName",
-      "aliases": [
-        "sonarQubeServiceEndpoint"
-      ],
-      "type": "connectedService:Generic",
-      "label": "ms-resource:loc.input.label.sqConnectedServiceName",
+      "name": "sqMavenPluginVersionChoice",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.sqMavenPluginVersionChoice",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqProjectName",
-      "aliases": [
-        "sonarQubeProjectName"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqProjectName",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqProjectName",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqProjectKey",
-      "aliases": [
-        "sonarQubeProjectKey"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqProjectKey",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqProjectKey",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqProjectVersion",
-      "aliases": [
-        "sonarQubeProjectVersion"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqProjectVersion",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqProjectVersion",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqDbDetailsRequired",
-      "aliases": [
-        "sonarQubeSpecifyDB"
-      ],
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
-      "required": true,
-      "defaultValue": "false",
-      "groupName": "CodeAnalysis",
-      "helpMarkDown": "ms-resource:loc.input.help.sqDbDetailsRequired",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqDbUrl",
-      "aliases": [
-        "sonarQubeDBUrl"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqDbUrl",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqDbUrl",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqDbDetailsRequired = true"
-    },
-    {
-      "name": "sqDbUsername",
-      "aliases": [
-        "sonarQubeDBUsername"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqDbUsername",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqDbUsername",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqDbDetailsRequired = true"
-    },
-    {
-      "name": "sqDbPassword",
-      "aliases": [
-        "sonarQubeDBPassword"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqDbPassword",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqDbDetailsRequired = true"
-    },
-    {
-      "name": "sqAnalysisIncludeFullReport",
-      "aliases": [
-        "sonarQubeIncludeFullReport"
-      ],
-      "type": "boolean",
-      "defaultValue": "true",
-      "label": "ms-resource:loc.input.label.sqAnalysisIncludeFullReport",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisIncludeFullReport",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqAnalysisBreakBuildIfQualityGateFailed",
-      "aliases": [
-        "sonarQubeFailWhenQualityGateFails"
-      ],
-      "type": "boolean",
-      "defaultValue": "",
-      "label": "ms-resource:loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed",
+      "defaultValue": "latest",
+      "options": {
+        "latest": "Use latest release",
+        "pom": "Use version declared in your pom.xml"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.sqMavenPluginVersionChoice",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
     },

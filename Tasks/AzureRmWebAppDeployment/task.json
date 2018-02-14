@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 35
+        "Patch": 42
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -25,13 +25,13 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "PostDeploymentAction",
@@ -40,16 +40,15 @@
             "visibleRule": "WebAppKind != \"\""
         },
         {
+            "name": "ApplicationAndConfigurationSettings",
+            "displayName": "Application and Configuration Settings",
+            "isExpanded": false
+        },
+        {
             "name": "output",
             "displayName": "Output",
             "isExpanded": true,
             "visibleRule": "WebAppKind != \"\""
-        },
-        {
-            "name": "ApplicationSettings",
-            "displayName": "Application Settings",
-            "isExpanded": true,
-            "visibleRule": "WebAppKind = applinux"
         }
     ],
     "inputs": [
@@ -77,7 +76,7 @@
                 "mobileapp": "Mobile App"
             },
             "properties": {
-                "EditableOptions": "false"
+                "EditableOptions": "true"
             },
             "helpMarkDown": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments."
         },
@@ -140,7 +139,7 @@
                 "PopulateDefaultValue": "true"
             },
             "helpMarkDown": "App Service on Linux offers two different options to publish your application <br/> Custom image deployment or App deployment with a built-in platform image. [Learn More](https://go.microsoft.com/fwlink/?linkid=862490)", 
-            "visibleRule": "WebAppKind = applinux"
+            "visibleRule": "WebAppKind = applinux || WebAppKind = linux"
         },
         {
             "name": "AzureContainerRegistry",
@@ -244,7 +243,7 @@
             "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -253,7 +252,7 @@
             "label": "Image",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -262,7 +261,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
@@ -271,7 +270,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\"",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
@@ -280,8 +279,8 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind != applinux &&  WebAppKind != \"\"",
-            "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed archive file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux &&  WebAppKind != \"\"",
+            "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed zip or war file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip or $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war."
         },
         {
             "name": "BuiltinLinuxPackage",
@@ -290,8 +289,8 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
-            "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed archive file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip."
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin",
+            "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed zip or war file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip or $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war."
         },
         {
             "name": "RuntimeStack",
@@ -311,12 +310,13 @@
                 "node|8.1": "Node.js 8.1",
                 "php|5.6": "PHP 5.6",
                 "php|7.0": "PHP 7.0",
-                "dotnetcore|1.0": ".Net Core 1.0",
-                "dotnetcore|1.1": ".Net Core 1.1",
+                "dotnetcore|1.0": ".NET Core 1.0",
+                "dotnetcore|1.1": ".NET Core 1.1",				
+                "dotnetcore|2.0": ".NET Core 2.0",
                 "ruby|2.3": "Ruby 2.3"
             },
             "helpMarkDown": "Select the framework and version.",
-            "visibleRule": "WebAppKind = applinux && ImageSource = Builtin"
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin"
         },
         {
             "name": "StartupCommand",
@@ -324,7 +324,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux",
+            "visibleRule": "WebAppKind = applinux || WebAppKind = linux",
             "helpMarkDown": "Enter the start up command."
         },
         {
@@ -355,6 +355,7 @@
             "label": "Inline Script",
             "defaultValue": ":: You can provide your deployment commands here. One command per line.",
             "groupName": "PostDeploymentAction",
+            "required": true,
             "visibleRule": "ScriptType == Inline Script",
             "properties": {
                 "resizable": "true",
@@ -398,8 +399,20 @@
             "label": "App settings",
             "defaultValue": "",
             "required": false,
-            "groupName": "ApplicationSettings",
+            "groupName": "ApplicationAndConfigurationSettings",
             "helpMarkDown": "Edit web app application settings following the syntax -key value .<br /> Example : -Port 5000 -RequestTimeout 5000",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
+        },
+        {
+            "name": "ConfigurationSettings",
+            "type": "multiLine",
+            "label": "Configuration settings",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationAndConfigurationSettings",
+            "helpMarkDown": "Edit web app configuration settings following the syntax -key value.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             }
@@ -614,7 +627,7 @@
         "UnabletoretrieveResourceID": "Unable to retrieve connection details for Azure Resource:'%s'. Status Code: %s",
         "CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch access token for Azure. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
-        "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
+        "Failedtoupdatedeploymenthistory": "Failed to update deployment history. Error: %s",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
         "Unabletoretrievewebconfigdetails": "Unable to retrieve App Service configuration details. Status Code: '%s'",
         "Unabletoretrievewebappsettings": "Unable to retrieve App Service application settings. [Status Code: '%s', Error Message: '%s']",
@@ -630,8 +643,8 @@
         "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated packages are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
-        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
-        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern. Please restrain the search pattern.",
+        "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern: %s",
+        "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "More than one package matched with specified pattern: %s. Please restrain the search pattern.",
         "Trytodeploywebappagainwithappofflineoptionselected": "Try to deploy app service again with Take application offline option selected.",
         "Trytodeploywebappagainwithrenamefileoptionselected": "Try to deploy app service again with Rename locked files option selected.",
         "NOJSONfilematchedwithspecificpattern": "NO JSON file matched with specific pattern: %s.",
@@ -653,7 +666,7 @@
         "RequestedURLforkuduphysicalpath": "Requested URL for kudu physical path : %s",
         "Physicalpathalreadyexists": "Physical path '%s' already exists",
         "KuduPhysicalpathCreatedSuccessfully": "Kudu physical path created successfully : %s",
-        "FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. Error Code: %s",
+        "FailedtocreateKuduPhysicalPath": "Failed to create kudu physical path. Error : %s",
         "FailedtocheckphysicalPath": "Failed to check kudu physical path. Error Code: %s",
         "VirtualApplicationDoesNotExist": "Virtual application doesn't exists : %s",
         "JSONParseError": "Unable to parse JSON file: %s. Error: %s",
@@ -661,8 +674,8 @@
         "XMLvariablesubstitutionappliedsuccessfully": "XML variable substitution applied successfully.",
         "failedtoUploadFileToKudu": "Unable to upload file: %s to Kudu (%s). Status Code: %s",
         "failedtoUploadFileToKuduError": "Unable to upload file: %s to Kudu (%s). Error: %s",
-        "ExecuteScriptOnKudu": "Executing given script on Kudu: %s",
-        "FailedToRunScriptOnKuduError": "Unable to run the script on Kudu: %s. Error: %s",
+        "ExecuteScriptOnKudu": "Executing given script on Kudu service.",
+        "FailedToRunScriptOnKuduError": "Unable to run the script on Kudu Service. Error: %s",
         "FailedToRunScriptOnKudu": "Unable to run the script on Kudu: %s. Status Code: %s",
         "ScriptExecutionOnKuduSuccess": "Successfully executed script on Kudu.",
         "ScriptExecutionOnKuduFailed": "Executed script returned '%s' as return code. Error: %s",
@@ -701,6 +714,34 @@
         "UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
         "AddingReleaseAnnotation": "Adding release annotation for the Application Insights resource '%s'",
         "SuccessfullyAddedReleaseAnnotation": "Successfully added release annotation to the Application Insight : %s",
-        "FailedAddingReleaseAnnotation": "Failed to add release annotation. %s"
+        "FailedAddingReleaseAnnotation": "Failed to add release annotation. %s",
+        "RenameLockedFilesEnabled": "Rename locked files enabled for App Service.",
+        "FailedToEnableRenameLockedFiles": "Failed to enable rename locked files. Error: %s",
+        "WebJobsInProgressIssue": "Few WebJobs in running state prevents the deployment from removing the files. You can disable 'Remove additional files at destinaton' option or Stop continuous Jobs before deployment.",
+        "FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s",
+        "FailedToCreatePath": "Failed to create path '%s' from Kudu. Error: %s",
+        "FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
+        "FailedToUploadFile": "Failed to upload file '%s/%s' from Kudu. Error: %s",
+        "FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
+        "FailedToListPath": "Failed to list path '%s' from Kudu. Error: %s",
+        "RetryToDeploy": "Retrying to deploy the package.",
+        "FailedToGetAppServiceDetails": "Failed to fetch App Service '%s' details. Error: %s",
+        "FailedToGetAppServicePublishingProfile": "Failed to fetch App Service '%s' publishing profile. Error: %s",
+        "FailedToUpdateAppServiceMetadata": "Failed to update App service '%s' Meta data. Error: %s",
+        "FailedToGetAppServiceMetadata": "Failed to get App service '%s' Meta data. Error: %s",
+        "FailedToPatchAppServiceConfiguration": "Failed to patch App Service '%s' configuration. Error: %s",
+        "FailedToUpdateAppServiceConfiguration": "Failed to update App service '%s' configuration. Error: %s",
+        "FailedToGetAppServiceConfiguration": "Failed to get App service '%s' configuration. Error: %s",
+        "FailedToGetAppServicePublishingCredentials": "Failed to fetch App Service '%s' publishing credentials. Error: %s",
+        "FailedToGetAppServiceApplicationSettings": "Failed to get App service '%s' application settings. Error: %s",
+        "FailedToUpdateAppServiceApplicationSettings": "Failed to update App service '%s' application settings. Error: %s",
+        "UpdatingAppServiceConfigurationSettings": "Updating App Service Configuration settings. Data: %s",
+        "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
+        "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
+        "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
+        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
+        "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
+        "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+        "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
     }
 }

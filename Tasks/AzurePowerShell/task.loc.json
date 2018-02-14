@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 6
   },
   "demands": [
     "azureps"
@@ -33,7 +33,7 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
       "required": false,
       "helpMarkDown": "",
-      "defaultValue": "ConnectedServiceName",
+      "defaultValue": "ConnectedServiceNameARM",
       "options": {
         "ConnectedServiceName": "Azure Classic",
         "ConnectedServiceNameARM": "Azure Resource Manager"
@@ -116,7 +116,7 @@
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TargetAzurePs",
-      "defaultValue": "LatestVersion",
+      "defaultValue": "OtherVersion",
       "required": false,
       "options": {
         "LatestVersion": "Latest installed version",
@@ -146,6 +146,7 @@
   "messages": {
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
-    "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion"
+    "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
+    "OverrideAzurePowerShellVersion": "ms-resource:loc.messages.OverrideAzurePowerShellVersion"
   }
 }

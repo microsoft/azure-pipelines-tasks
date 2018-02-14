@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 26
   },
   "demands": [
     "msbuild",
@@ -43,6 +43,41 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.LoadTest"
+    },
+    {
+      "name": "activeRunSettings",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.activeRunSettings",
+      "defaultValue": "useFile",
+      "required": false,
+      "options": {
+        "useFile": "As specified in the load test file",
+        "changeActive": "Change the active run settings"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.activeRunSettings"
+    },
+    {
+      "name": "runSettingName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runSettingName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.runSettingName",
+      "visibleRule": "activeRunSettings = changeActive"
+    },
+    {
+      "name": "testContextParameters",
+      "type": "multiline",
+      "label": "ms-resource:loc.input.label.testContextParameters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.testContextParameters",
+      "properties": {
+        "rows": "3",
+        "resizable": "true",
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "visibleRule": "activeRunSettings = useFile"
     },
     {
       "name": "TestSettings",

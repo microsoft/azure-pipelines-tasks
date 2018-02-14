@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "叫用 REST API",
+  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.description": "在程序中叫用 REST API。",
+  "loc.instanceNameFormat": "叫用 REST API: $(method)",
+  "loc.group.displayName.completionOptions": "進階",
+  "loc.input.label.connectedServiceName": "Generic endpoint",
+  "loc.input.help.connectedServiceName": "選取應該用來為 HTTP 要求挑選 URL 和建構授權標頭的泛型端點。",
+  "loc.input.label.method": "方法",
+  "loc.input.help.method": "選取叫用 API 時要使用的 HTTP 方法。",
+  "loc.input.label.headers": "標頭",
+  "loc.input.help.headers": "使用 JSON 格式定義標頭。標頭應附加在要傳送的要求上。",
+  "loc.input.label.body": "本文",
+  "loc.input.label.urlSuffix": "Url suffix and parameters",
+  "loc.input.help.urlSuffix": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
+  "loc.input.label.waitForCompletion": "Completion event",
+  "loc.input.help.waitForCompletion": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
+  "loc.input.label.successCriteria": "Success criteria",
+  "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​"
+}

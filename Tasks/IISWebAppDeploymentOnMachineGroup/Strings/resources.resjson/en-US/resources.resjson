@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "IIS Web App Deploy",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/iiswebappdeployreadme)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Deploy a Website or Web Application using WebDeploy",
   "loc.instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "File Transforms & Variable Substitution Options",

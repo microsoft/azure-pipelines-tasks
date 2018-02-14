@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 126,
-        "Patch": 1
+        "Minor": 131,
+        "Patch": 0
     },
     "runsOn": [
         "Agent",
@@ -28,7 +28,7 @@
         {
             "name": "provisioningProfileLocation",
             "type": "pickList",
-            "label": "Provisioning Profile Location",
+            "label": "Provisioning profile location",
             "defaultValue": "secureFiles",
             "required": true,
             "options": {
@@ -40,7 +40,7 @@
         {
             "name": "provProfileSecureFile",
             "type": "secureFile",
-            "label": "Provisioning Profile",
+            "label": "Provisioning profile",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the provisioning profile that was uploaded to `Secure Files` to install on the macOS agent.",
@@ -49,7 +49,7 @@
         {
             "name": "provProfileSourceRepository",
             "type": "filePath",
-            "label": "Provisioning Profile",
+            "label": "Provisioning profile",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the provisioning profile from the source repository or specify the local path to a provisioning profile on the macOS agent.",
@@ -58,7 +58,7 @@
         {
             "name": "removeProfile",
             "type": "boolean",
-            "label": "Remove Profile After Build",
+            "label": "Remove profile after build",
             "defaultValue": true,
             "required": false,
             "helpMarkDown": "Select to specify that the provisioning profile should be removed from the agent after the build or release is complete."

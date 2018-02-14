@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 35
+    "Patch": 42
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -25,13 +25,13 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
     },
     {
       "name": "PostDeploymentAction",
@@ -40,16 +40,15 @@
       "visibleRule": "WebAppKind != \"\""
     },
     {
+      "name": "ApplicationAndConfigurationSettings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
+      "isExpanded": false
+    },
+    {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
       "isExpanded": true,
       "visibleRule": "WebAppKind != \"\""
-    },
-    {
-      "name": "ApplicationSettings",
-      "displayName": "ms-resource:loc.group.displayName.ApplicationSettings",
-      "isExpanded": true,
-      "visibleRule": "WebAppKind = applinux"
     }
   ],
   "inputs": [
@@ -81,7 +80,7 @@
         "mobileapp": "Mobile App"
       },
       "properties": {
-        "EditableOptions": "false"
+        "EditableOptions": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },
@@ -144,7 +143,7 @@
         "PopulateDefaultValue": "true"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
-      "visibleRule": "WebAppKind = applinux"
+      "visibleRule": "WebAppKind = applinux || WebAppKind = linux"
     },
     {
       "name": "AzureContainerRegistry",
@@ -250,7 +249,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -259,7 +258,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -268,7 +267,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -277,7 +276,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -286,7 +285,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != applinux &&  WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != linux && WebAppKind != applinux &&  WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -298,7 +297,7 @@
       "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
+      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin",
       "helpMarkDown": "ms-resource:loc.input.help.BuiltinLinuxPackage"
     },
     {
@@ -319,12 +318,13 @@
         "node|8.1": "Node.js 8.1",
         "php|5.6": "PHP 5.6",
         "php|7.0": "PHP 7.0",
-        "dotnetcore|1.0": ".Net Core 1.0",
-        "dotnetcore|1.1": ".Net Core 1.1",
+        "dotnetcore|1.0": ".NET Core 1.0",
+        "dotnetcore|1.1": ".NET Core 1.1",
+        "dotnetcore|2.0": ".NET Core 2.0",
         "ruby|2.3": "Ruby 2.3"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
-      "visibleRule": "WebAppKind = applinux && ImageSource = Builtin"
+      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin"
     },
     {
       "name": "StartupCommand",
@@ -332,7 +332,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = applinux",
+      "visibleRule": "WebAppKind = applinux || WebAppKind = linux",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
@@ -363,6 +363,7 @@
       "label": "ms-resource:loc.input.label.InlineScript",
       "defaultValue": ":: You can provide your deployment commands here. One command per line.",
       "groupName": "PostDeploymentAction",
+      "required": true,
       "visibleRule": "ScriptType == Inline Script",
       "properties": {
         "resizable": "true",
@@ -406,8 +407,20 @@
       "label": "ms-resource:loc.input.label.AppSettings",
       "defaultValue": "",
       "required": false,
-      "groupName": "ApplicationSettings",
+      "groupName": "ApplicationAndConfigurationSettings",
       "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
+    },
+    {
+      "name": "ConfigurationSettings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.ConfigurationSettings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationAndConfigurationSettings",
+      "helpMarkDown": "ms-resource:loc.input.help.ConfigurationSettings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       }
@@ -713,6 +726,34 @@
     "UnableToUpdateWebAppConfigDetails": "ms-resource:loc.messages.UnableToUpdateWebAppConfigDetails",
     "AddingReleaseAnnotation": "ms-resource:loc.messages.AddingReleaseAnnotation",
     "SuccessfullyAddedReleaseAnnotation": "ms-resource:loc.messages.SuccessfullyAddedReleaseAnnotation",
-    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation"
+    "FailedAddingReleaseAnnotation": "ms-resource:loc.messages.FailedAddingReleaseAnnotation",
+    "RenameLockedFilesEnabled": "ms-resource:loc.messages.RenameLockedFilesEnabled",
+    "FailedToEnableRenameLockedFiles": "ms-resource:loc.messages.FailedToEnableRenameLockedFiles",
+    "WebJobsInProgressIssue": "ms-resource:loc.messages.WebJobsInProgressIssue",
+    "FailedToFetchKuduAppSettings": "ms-resource:loc.messages.FailedToFetchKuduAppSettings",
+    "FailedToCreatePath": "ms-resource:loc.messages.FailedToCreatePath",
+    "FailedToDeleteFile": "ms-resource:loc.messages.FailedToDeleteFile",
+    "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
+    "FailedToGetFileContent": "ms-resource:loc.messages.FailedToGetFileContent",
+    "FailedToListPath": "ms-resource:loc.messages.FailedToListPath",
+    "RetryToDeploy": "ms-resource:loc.messages.RetryToDeploy",
+    "FailedToGetAppServiceDetails": "ms-resource:loc.messages.FailedToGetAppServiceDetails",
+    "FailedToGetAppServicePublishingProfile": "ms-resource:loc.messages.FailedToGetAppServicePublishingProfile",
+    "FailedToUpdateAppServiceMetadata": "ms-resource:loc.messages.FailedToUpdateAppServiceMetadata",
+    "FailedToGetAppServiceMetadata": "ms-resource:loc.messages.FailedToGetAppServiceMetadata",
+    "FailedToPatchAppServiceConfiguration": "ms-resource:loc.messages.FailedToPatchAppServiceConfiguration",
+    "FailedToUpdateAppServiceConfiguration": "ms-resource:loc.messages.FailedToUpdateAppServiceConfiguration",
+    "FailedToGetAppServiceConfiguration": "ms-resource:loc.messages.FailedToGetAppServiceConfiguration",
+    "FailedToGetAppServicePublishingCredentials": "ms-resource:loc.messages.FailedToGetAppServicePublishingCredentials",
+    "FailedToGetAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToGetAppServiceApplicationSettings",
+    "FailedToUpdateAppServiceApplicationSettings": "ms-resource:loc.messages.FailedToUpdateAppServiceApplicationSettings",
+    "UpdatingAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatingAppServiceConfigurationSettings",
+    "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
+    "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
+    "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
+    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
+    "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
+    "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
+    "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs"
   }
 }

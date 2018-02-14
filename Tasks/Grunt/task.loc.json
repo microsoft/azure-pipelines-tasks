@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 5,
-    "Patch": 27
+    "Minor": 130,
+    "Patch": 0
   },
   "demands": [
     "node.js"
@@ -67,6 +67,9 @@
     },
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",

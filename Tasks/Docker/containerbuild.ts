@@ -45,7 +45,7 @@ export function run(connection: ContainerConnection): any {
         command.arg(["--build-arg", buildArgument]);
     });
 
-    var imageName = imageUtils.getImageName(); 
+    var imageName = utils.getImageName(); 
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     if (qualifyImageName) {
         imageName = connection.qualifyImageName(imageName);
@@ -68,6 +68,11 @@ export function run(connection: ContainerConnection): any {
     var includeLatestTag = tl.getBoolInput("includeLatestTag");
     if (baseImageName !== imageName && includeLatestTag) {
         command.arg(["-t", baseImageName]);
+    }
+
+    var memory = tl.getInput("memory");
+    if (memory) {
+        command.arg(["-m", memory]);
     }
 
     var context: string;

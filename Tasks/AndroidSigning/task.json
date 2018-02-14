@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 126,
+        "Minor": 131,
         "Patch": 0
     },
     "demands": [
@@ -34,9 +34,10 @@
     "inputs": [
         {
             "name": "files",
+            "aliases": ["apkFiles"],
             "type": "filePath",
-            "label": "APK Files",
-            "defaultValue": "",
+            "label": "APK files",
+            "defaultValue": "**/*.apk",
             "required": true,
             "helpMarkDown": "Relative path from the repo root to the APK(s) you want to sign. You can use wildcards to specify multiple files. For example, `**/bin/*.apk` for all .APK files in the 'bin' subfolder."
         },
@@ -53,7 +54,7 @@
             "name": "keystoreFile",
             "aliases": ["jarsignerKeystoreFile"],
             "type": "secureFile",
-            "label": "Keystore File",
+            "label": "Keystore file",
             "defaultValue": "",
             "required": true,
             "visibleRule": "jarsign = true",
@@ -64,7 +65,7 @@
             "name": "keystorePass",
             "aliases": ["jarsignerKeystorePassword"],
             "type": "string",
-            "label": "Keystore Password",
+            "label": "Keystore password",
             "defaultValue": "",
             "required": false,
             "visibleRule": "jarsign = true",
@@ -86,7 +87,7 @@
             "name": "keyPass",
             "aliases": ["jarsignerKeyPassword"],
             "type": "string",
-            "label": "Key Password",
+            "label": "Key password",
             "defaultValue": "",
             "required": false,
             "visibleRule": "jarsign = true",
@@ -96,7 +97,7 @@
         {
             "name": "jarsignerArguments",
             "type": "string",
-            "label": "Jarsigner Arguments",
+            "label": "Jarsigner arguments",
             "defaultValue": "-verbose -sigalg MD5withRSA -digestalg SHA1",
             "required": false,
             "visibleRule": "jarsign = true",
@@ -116,7 +117,7 @@
             "name": "zipalignLocation",
             "aliases": ["zipalignFile"],
             "type": "string",
-            "label": "Zipalign Location",
+            "label": "Zipalign location",
             "defaultValue": "",
             "required": false,
             "visibleRule": "zipalign = true",

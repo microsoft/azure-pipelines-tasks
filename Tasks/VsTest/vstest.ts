@@ -63,7 +63,7 @@ export function startTest() {
         var consolidatedCiData = {
             agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
             codeCoverageEnabled: vstestConfig.codeCoverageEnabled,
-            overrideTestrunParameters: vstestConfig.overrideTestrunParameters,
+            overrideTestrunParameters: utils.Helper.isNullOrUndefined(vstestConfig.overrideTestrunParameters) ? 'false' : 'true',
             pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
             runTestsInIsolation: vstestConfig.runTestsInIsolation,
             task: 'VsTestConsoleFlow',
@@ -165,7 +165,7 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
         argsArray.push('/TestAdapterPath:\"' + vstestConfig.pathtoCustomTestAdapters + '\"');
     }
 
-    if (isDebugEnabled()) {
+    if (utils.Helper.isDebugEnabled()) {
         if (vstestConfig.vsTestVersionDetails !== null && (vstestConfig.vsTestVersionDetails.vstestDiagSupported()
             || utils.Helper.isToolsInstallerFlow(vstestConfig))) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
@@ -175,15 +175,6 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
     }
 
     return argsArray;
-}
-
-function isDebugEnabled(): boolean {
-    const sysDebug = tl.getVariable('System.Debug');
-    if (sysDebug === undefined) {
-        return false;
-    }
-
-    return sysDebug.toLowerCase() === 'true';
 }
 
 function addVstestArgs(argsArray: string[], vstest: any) {

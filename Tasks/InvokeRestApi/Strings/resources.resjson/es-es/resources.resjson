@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Invocar API de REST",
+  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.description": "Invoque la API de REST como parte del proceso.",
+  "loc.instanceNameFormat": "Invocar la API de REST: $(method)",
+  "loc.group.displayName.completionOptions": "Avanzado",
+  "loc.input.label.connectedServiceName": "Generic endpoint",
+  "loc.input.help.connectedServiceName": "Elija un punto de conexión genérico que debe usarse para seleccionar la dirección URL y construir un encabezado de autorización para la solicitud HTTP.",
+  "loc.input.label.method": "Método",
+  "loc.input.help.method": "Seleccione el método HTTP con el que debe invocarse la API.",
+  "loc.input.label.headers": "Encabezados",
+  "loc.input.help.headers": "Defina el encabezado con formato JSON. El encabezado se adjuntará a la solicitud que se enviará.",
+  "loc.input.label.body": "Cuerpo",
+  "loc.input.label.urlSuffix": "Url suffix and parameters",
+  "loc.input.help.urlSuffix": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
+  "loc.input.label.waitForCompletion": "Completion event",
+  "loc.input.help.waitForCompletion": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
+  "loc.input.label.successCriteria": "Success criteria",
+  "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​"
+}
