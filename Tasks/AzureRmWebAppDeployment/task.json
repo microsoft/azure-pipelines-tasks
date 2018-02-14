@@ -311,8 +311,8 @@
                 "php|5.6": "PHP 5.6",
                 "php|7.0": "PHP 7.0",
                 "dotnetcore|1.0": ".NET Core 1.0",
-                "dotnetcore|1.1": ".NET Core 1.1",
-				"dotnetcore|2.0": ".NET Core 2.0",
+                "dotnetcore|1.1": ".NET Core 1.1",				
+                "dotnetcore|2.0": ".NET Core 2.0",
                 "ruby|2.3": "Ruby 2.3"
             },
             "helpMarkDown": "Select the framework and version.",
