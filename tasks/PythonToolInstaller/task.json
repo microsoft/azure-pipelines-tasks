@@ -32,8 +32,8 @@
             "type": "pickList",
             "label": "Architecture",
             "options": {
-                "x64": "X64",
-                "x86": "X86"
+                "x64": "x64",
+                "x86": "x86"
             },
             "required": true,
             "helpMarkDown": "The bitness of the Python version."
@@ -41,7 +41,7 @@
         {
             "name": "installationSource",
             "type": "pickList",
-            "label": "Installation Source",
+            "label": "Installation source",
             "required": true,
             "options": {
                 "AzureStorage": "Azure storage",
@@ -87,7 +87,7 @@
         {
             "name": "azureCommonVirtualFile",
             "type": "string",
-            "label": "Common Virtual Path",
+            "label": "Common virtual path",
             "required": true,
             "visibleRule": "installationSource == AzureStorage",
             "helpMarkDown": "Path to the Python distribution inside the Azure storage container."
