@@ -35,6 +35,7 @@ $codeDiffPkg4 = $diffPackagePath + "\Stateless4Pkg\Code.zip"
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
 Register-Mock Get-VstsInput { $applicationPackagePath } -- -Name applicationPackagePath -Require
 Register-Mock Get-VstsInput { $serviceConnectionName } -- -Name serviceConnectionName -Require
+Register-Mock Get-VstsInput { "RegisterAndCreate" } -- -Name action -Require
 Register-Mock Get-VstsInput { "false" } -- -Name compressPackage
 Register-Mock Get-VstsInput { $overwriteBehavior } -- -Name overwriteBehavior
 Register-Mock Get-VstsInput { "false" } -- -Name skipUpgradeSameTypeAndVersion

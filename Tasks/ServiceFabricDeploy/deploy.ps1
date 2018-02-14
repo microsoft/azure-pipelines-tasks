@@ -27,6 +27,7 @@ try {
     $serviceConnectionName = Get-VstsInput -Name serviceConnectionName -Require
     $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
 
+    $action = Get-VstsInput -Name action -Require
     $copyPackageTimeoutSec = Get-VstsInput -Name copyPackageTimeoutSec
     $registerPackageTimeoutSec = Get-VstsInput -Name registerPackageTimeoutSec
     $compressPackage = [System.Boolean]::Parse((Get-VstsInput -Name compressPackage))
@@ -150,7 +151,7 @@ try {
     # Do an upgrade if configured to do so and the app actually exists
     if ($isUpgrade -and $app)
     {
-        $publishParameters['Action'] = "RegisterAndUpgrade"
+        $publishParameters['Action'] = ($action -replace 'Create', 'Upgrade')
         $publishParameters['UpgradeParameters'] = $upgradeParameters
         $publishParameters['UnregisterUnusedVersions'] = $unregisterUnusedVersions
         $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
@@ -159,7 +160,7 @@ try {
     }
     else
     {
-        $publishParameters['Action'] = "RegisterAndCreate"
+        $publishParameters['Action'] = $action
         $publishParameters['OverwriteBehavior'] = Get-VstsInput -Name overwriteBehavior
 
         Publish-NewServiceFabricApplication @publishParameters

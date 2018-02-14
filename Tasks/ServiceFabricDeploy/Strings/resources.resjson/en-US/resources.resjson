@@ -14,6 +14,8 @@
   "loc.input.help.publishProfilePath": "Path to the publish profile that defines the settings to use. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.applicationParameterPath": "Application Parameters",
   "loc.input.help.applicationParameterPath": "Path to the application parameters file. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path. If specified, this will override the value in the publish profile.",
+  "loc.input.label.action": "Action",
+  "loc.input.help.action": "Determines the action performed by this task. **Register**: Registers the application type in the cluster. **Create**: Creates or upgrades an application instance.",
   "loc.input.label.compressPackage": "Compress Package",
   "loc.input.help.compressPackage": "Indicates whether the application package should be compressed before copying to the image store. If enabled, this will override the value in the publish profile.",
   "loc.input.label.useDiffPackage": "Use Diff Package",
