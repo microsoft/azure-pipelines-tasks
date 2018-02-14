@@ -34,7 +34,7 @@ export class MysqlClient implements ISqlClient {
         let firewallConfiguration: FirewallConfiguration = new FirewallConfiguration(true);
         // Regex to extract Ip Address from string
         const regexToGetIpAddress = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
-        const result = task.execSync(this._toolPath, this._getArgumentString() +" "+ this._getAdditionalArgument());
+        const result = task.execSync(this._toolPath, Utility.argStringToArray(this._getArgumentString() +" "+ this._getAdditionalArgument()));
         task.debug('Mysql server connection check result: '+JSON.stringify(result));
         // If agent is not whitelisted it will throw error with ip address 
         if(result && result.stderr){
@@ -93,7 +93,7 @@ export class MysqlClient implements ISqlClient {
     private async _executeSqlScript(argument: string): Promise<number> {
         let defer = Q.defer<number>();
         task.debug('Started execution of mysql script');
-        task.exec(this._toolPath, argument).then((resultCode)=>{
+        task.exec(this._toolPath, Utility.argStringToArray(argument)).then((resultCode)=>{
             task.debug('Script execution on mysql server result: '+ resultCode);
             if(resultCode === 0){
                 defer.resolve(resultCode);
@@ -111,11 +111,7 @@ export class MysqlClient implements ISqlClient {
      * Additional connection argument passed by user
      */
     private _getAdditionalArgument() : string{
-        let additionalArguments: string = ""
-        additionalArguments = this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask' ?
-            this._azureMysqlTaskParameter.getSqlAdditionalArguments() : 
-            this._azureMysqlTaskParameter.getInlineAdditionalArguments();
-        return additionalArguments = additionalArguments ? additionalArguments : "";
+        return this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : " ";
     }
 
     /**

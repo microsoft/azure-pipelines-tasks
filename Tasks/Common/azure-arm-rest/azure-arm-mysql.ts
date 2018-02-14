@@ -65,10 +65,10 @@ export class FirewallRules {
         // Validate
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
-            if(!this.isNameValid(serverName)){
+            if(!this.client.isNameValid(serverName)){
                 throw new Error(tl.loc("MysqlServerNameCannotBeEmpty"));
             }
-            if(!this.isNameValid(firewallRuleName)){
+            if(!this.client.isNameValid(firewallRuleName)){
                 throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));
             }
         }
@@ -131,10 +131,10 @@ export class FirewallRules {
         // Validate
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
-            if(!this.isNameValid(serverName)){
+            if(!this.client.isNameValid(serverName)){
                 throw new Error(tl.loc("MysqlServerNameCannotBeEmpty"));
             }
-            if(!this.isNameValid(firewallRuleName)){
+            if(!this.client.isNameValid(firewallRuleName)){
                 throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));
             }
         }
@@ -186,10 +186,10 @@ export class FirewallRules {
         // Validate
         try {
             this.client.isValidResourceGroupName(resourceGroupName);
-            if(!this.isNameValid(serverName)){
+            if(!this.client.isNameValid(serverName)){
                 throw new Error(tl.loc("MysqlServerNameCannotBeEmpty"));
             }
-            if(!this.isNameValid(firewallRuleName)){
+            if(!this.client.isNameValid(firewallRuleName)){
                 throw new Error(tl.loc("FirewallRuleNameCannotBeNull"));
             }
         }
@@ -253,16 +253,6 @@ export class FirewallRules {
         return deferred.promise;
     }
 
-    /**
-     * Is name valid or not
-     */
-    private isNameValid(name: string): boolean{
-        if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
-            return false;
-        }else{
-            return true;
-        }
-    }
 }
 
 export class  MysqlServers {

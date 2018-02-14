@@ -11,7 +11,6 @@ export class AzureMysqlTaskParameter {
 	private sqlFile: string;
 	private sqlInline: string;
 	private sqlAdditionalArguments: string;
-	private inlineAdditionalArguments;
 	private ipDetectionMethod: string;
 	private startIpAddress: string;
 	private endIpAddress: string;
@@ -28,7 +27,6 @@ export class AzureMysqlTaskParameter {
             this.sqlFile = tl.getInput('SqlFile', false);
             this.sqlInline = tl.getInput('SqlInline', false);
             this.sqlAdditionalArguments = tl.getInput('SqlAdditionalArguments', false);
-            this.inlineAdditionalArguments = tl.getInput('InlineAdditionalArguments', false);
             this.ipDetectionMethod  = tl.getInput('IpDetectionMethod', false);
             this.startIpAddress = tl.getInput('StartIpAddress', false);
             this.endIpAddress = tl.getInput('EndIpAddress', false);
@@ -73,10 +71,6 @@ export class AzureMysqlTaskParameter {
 
 	public getSqlAdditionalArguments(): string {
 		return this.sqlAdditionalArguments;
-	}
-
-	public getInlineAdditionalArguments(): string {
-		return this.inlineAdditionalArguments;
 	}
 
 	public getIpDetectionMethod(): string {

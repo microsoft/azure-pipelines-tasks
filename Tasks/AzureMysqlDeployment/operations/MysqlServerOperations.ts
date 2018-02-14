@@ -49,7 +49,7 @@ export class MysqlServerOperations{
         let mysqlServer: MysqlServer;
         if(result && result.length > 0){
             result.forEach((resultObject) => {
-                if(resultObject && resultObject.name === serverName){
+                if(resultObject && resultObject.properties && resultObject.properties.fullyQualifiedDomainName === serverName){
                     mysqlServer = new MysqlServer(resultObject.name, resultObject.properties.fullyQualifiedDomainName, this._getResourceGroupNameFromUrl(resultObject.id));
                 }
             });

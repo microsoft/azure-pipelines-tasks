@@ -56,7 +56,7 @@
             "required": true,
             "defaultValue": "",
             "groupName": "target",
-            "helpMarkDown": "Server name of 'Azure DB for Mysql'. Example: fabrikam.mysql.database.azure.com​.",
+            "helpMarkDown": "Server name of 'Azure DB for Mysql'.Example: fabrikam.mysql.database.azure.com. When you connect using Mysql Workbench, this is the same value that is used for 'Hostname' in 'Parameters'",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -68,22 +68,22 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "The name of database on which the script is needed to be run​."
+            "helpMarkDown": "The name of database, if you already have one, on which the below script is needed to be run, else the script itself can be used to create the database."
         },
         {
             "name": "SqlUsername",
             "type": "string",
             "label": "Server Admin Login",
-            "required": false,
+            "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Azure Database for MySQL server supports native MySQL authentication.<br>You can connect and authenticate to a server with the server's admin login. Example:  bbo1@fabrikam."
+            "helpMarkDown": "Azure Database for MySQL server supports native MySQL authentication. You can connect and authenticate to a server with the server's admin login. Example:  bbo1@fabrikam. When you connect using Mysql Workbench, this is the same value that is used for 'Username' in 'Parameters'."
         },
         {
             "name": "SqlPassword",
             "type": "string",
             "label": "Password",
-            "required": false,
+            "required": true,
             "groupName": "target",
             "defaultValue": "",
             "helpMarkDown": "Administrator password for Azure DB for Mysql. In case you don’t recall the password you can change the password from [Azure portal](https://docs.microsoft.com/en-us/azure/mysql/howto-create-manage-server-portal).<br>It can be variable defined in the definition. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
@@ -93,7 +93,7 @@
             "type": "pickList",
             "label": "Type",
             "required": false,
-            "helpMarkDown": "",
+            "helpMarkDown": "Select one of the options between Script File & Inline Script.",
             "groupName": "taskDetails",
             "defaultValue": "SqlTaskFile",
             "options": {
@@ -132,18 +132,7 @@
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Additional options supported by mysql simple SQL shell.  These options will be applied when executing the given file on the Azure DB for Mysql.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​",
-            "visibleRule": "TaskNameSelector = SqlTaskFile"
-        },
-        {
-            "name": "InlineAdditionalArguments",
-            "type": "string",
-            "label": "Additional Mysql Arguments",
-            "required": false,
-            "groupName": "taskDetails",
-            "defaultValue": "",
-            "helpMarkDown": "Additional options supported by mysql simple SQL shell.  These options will be applied when executing the given file on the Azure DB for Mysql.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​",
-            "visibleRule": "TaskNameSelector = InlineSqlTask"
+            "helpMarkDown": "Additional options supported by mysql simple SQL shell.  These options will be applied when executing the given file on the Azure DB for Mysql.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​"
         },
         {
             "name": "IpDetectionMethod",
@@ -193,7 +182,7 @@
             "target": "ServerName",
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureMysqlServers",
-            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+            "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
         }  
     ],
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",

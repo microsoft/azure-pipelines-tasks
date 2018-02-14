@@ -76,7 +76,7 @@
       "name": "SqlUsername",
       "type": "string",
       "label": "ms-resource:loc.input.label.SqlUsername",
-      "required": false,
+      "required": true,
       "groupName": "target",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
@@ -85,7 +85,7 @@
       "name": "SqlPassword",
       "type": "string",
       "label": "ms-resource:loc.input.label.SqlPassword",
-      "required": false,
+      "required": true,
       "groupName": "target",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
@@ -95,7 +95,7 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TaskNameSelector",
       "required": false,
-      "helpMarkDown": "",
+      "helpMarkDown": "ms-resource:loc.input.help.TaskNameSelector",
       "groupName": "taskDetails",
       "defaultValue": "SqlTaskFile",
       "options": {
@@ -134,18 +134,7 @@
       "required": false,
       "groupName": "taskDetails",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments",
-      "visibleRule": "TaskNameSelector = SqlTaskFile"
-    },
-    {
-      "name": "InlineAdditionalArguments",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.InlineAdditionalArguments",
-      "required": false,
-      "groupName": "taskDetails",
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.InlineAdditionalArguments",
-      "visibleRule": "TaskNameSelector = InlineSqlTask"
+      "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments"
     },
     {
       "name": "IpDetectionMethod",
@@ -195,7 +184,7 @@
       "target": "ServerName",
       "endpointId": "$(ConnectedServiceName)",
       "dataSourceName": "AzureMysqlServers",
-      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
