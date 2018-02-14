@@ -21,7 +21,8 @@ export class Utility {
         var args = [];
         var options = Utility.getMysqlOptions();
         options.forEach((option) => {
-            if(argString.match(option).length > 0 ){
+            var matched = argString.match(option);
+            if(matched && matched.length > 0 ){
                 args.push(option);
             }
         });
