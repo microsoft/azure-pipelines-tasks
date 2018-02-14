@@ -45,6 +45,41 @@
             "helpMarkDown": "The load test filename to be used from the load test files folder specified."
         },
         {
+            "name": "activeRunSettings",
+            "type": "radio",
+            "label": "Active Run Settings",
+            "defaultValue": "useFile",
+            "required": false,
+            "options": {
+                "useFile": "As specified in the load test file",
+                "changeActive": "Change the active run settings"
+            },
+            "helpMarkDown": "Use the active run settings as specified in the file (values can be overriden) or change the active run setting for the load test file."
+        },
+        {
+            "name": "runSettingName",
+            "type": "string",
+            "label": "Specify the name of the Run Settings",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of the run setting that will be made active",
+            "visibleRule": "activeRunSettings = changeActive"
+        },
+        {
+            "name": "testContextParameters",
+            "type": "multiline",
+            "label": "Override load test context parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Override test context parameters defined in the load test. For example: `-parameter1 value1 -parameter2 \"value with spaces\"",
+            "properties": {
+                "rows": "3",
+                "resizable": "true",
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            },
+            "visibleRule": "activeRunSettings = useFile"
+        },
+        {
             "name": "TestSettings",
             "type": "string",
             "label": "Test settings file",
