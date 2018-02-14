@@ -139,7 +139,7 @@
             },
             "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
             "visibleRule": "WebAppKind = invalidWebAppkind"
-          },
+        },
         {
             "name": "AzureContainerRegistry",
             "type": "pickList",
