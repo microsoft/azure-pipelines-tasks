@@ -192,7 +192,8 @@
         {
             "target": "ServerName",
             "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureMysqlServers"
+            "dataSourceName": "AzureMysqlServers",
+            "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }  
     ],
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",

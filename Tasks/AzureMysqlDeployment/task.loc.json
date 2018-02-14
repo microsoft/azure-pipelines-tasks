@@ -97,9 +97,9 @@
       "required": false,
       "helpMarkDown": "",
       "groupName": "taskDetails",
-      "defaultValue": "SqlTask",
+      "defaultValue": "SqlTaskFile",
       "options": {
-        "SqlTask": "MySQL Script File",
+        "SqlTaskFile": "MySQL Script File",
         "InlineSqlTask": "Inline MySQL Script"
       }
     },
@@ -111,7 +111,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlFile",
-      "visibleRule": "TaskNameSelector = SqlTask"
+      "visibleRule": "TaskNameSelector = SqlTaskFile"
     },
     {
       "name": "SqlInline",
@@ -135,7 +135,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments",
-      "visibleRule": "TaskNameSelector = SqlTask"
+      "visibleRule": "TaskNameSelector = SqlTaskFile"
     },
     {
       "name": "InlineAdditionalArguments",
@@ -194,7 +194,8 @@
     {
       "target": "ServerName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureMysqlServers"
+      "dataSourceName": "AzureMysqlServers",
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
