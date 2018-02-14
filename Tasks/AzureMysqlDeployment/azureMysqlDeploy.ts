@@ -25,17 +25,16 @@ async function run() {
         azureMysqlTaskParameter = new AzureMysqlTaskParameter();
         task.debug('parsed task inputs');
         const endpoint: AzureEndpoint = await new AzureRMEndpoint(azureMysqlTaskParameter.getConnectedServiceName()).getEndpoint();
-        if(!endpoint){
-            task.debug('Azure Endpoint is null');
+        if(!endpoint) {
             throw new Error(task.loc("AzureEndpointCannotBeNull"));
         }
                
         const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
         // Get mysql server data entered by user 
         mysqlServer = await mysqlServerOperations.getMysqlServerFromServerName(azureMysqlTaskParameter.getServerName());
-        task.debug('Mysql server details from server name: '+JSON.stringify(mysqlServer));
+        task.debug('Mysql server details from server name: ' + JSON.stringify(mysqlServer));
         const mysqlClientPath: string = await new ToolPathOperations().getInstalledPathOfMysql();
-        if(mysqlClientPath){
+        if(mysqlClientPath) {
              // Mysql client
             const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName(), mysqlClientPath);
             firewallOperations = new FirewallOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
@@ -43,7 +42,8 @@ async function run() {
             firewallAdded = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer.getResourceGroupName());
             //Execute sql script entered by user
             await sqlClient.executeSqlCommand();
-        }else{
+        }
+        else {
             throw new Error(task.loc("NotAbleToGetInstalledLocationOfMysqlFromPath"));
         }
     }
@@ -53,9 +53,9 @@ async function run() {
     }
     finally{
         // Delete firewall rule in case of automatic added rule or either user wants to delete it
-        if(firewallAdded && azureMysqlTaskParameter && azureMysqlTaskParameter.getDeleteFirewallRule()){
+        if(firewallAdded && azureMysqlTaskParameter && azureMysqlTaskParameter.getDeleteFirewallRule()) {
             task.debug('Deleting firewall rule.');
-            if(firewallOperations && mysqlServer){
+            if(firewallOperations && mysqlServer) {
                 await firewallOperations.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
             }
             task.debug('Sucessfully deleted firewall rule.');

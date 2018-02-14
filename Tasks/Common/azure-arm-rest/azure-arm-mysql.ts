@@ -4,6 +4,7 @@ import tl = require('vsts-task-lib/task');
 import util = require("util");
 import azureServiceClient = require("./AzureServiceClient");
 import Q = require("q");
+import constants = require('./constants');
 
 export class AzureMysqlManagementClient extends azureServiceClient.ServiceClient {
     public firewallRules: FirewallRules;
@@ -12,7 +13,7 @@ export class AzureMysqlManagementClient extends azureServiceClient.ServiceClient
     constructor(credentials: msRestAzure.ApplicationTokenCredentials, subscriptionId, baseUri?: any, options?: any) {
         super(credentials, subscriptionId);
 
-        this.apiVersion = '2017-04-30-preview';
+        this.apiVersion = constants.mysqlApiVersion;
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
 
@@ -210,10 +211,9 @@ export class FirewallRules {
         this.client.beginRequest(httpRequest).then(async (response) => {
             var deferred = Q.defer<azureServiceClient.ApiResult>();
             var statusCode = response.statusCode;
-            tl.debug("Response for get firewall rule " +statusCode);
+            tl.debug("Response for get firewall rule " + JSON.stringify(response));
             if (statusCode === 200) {
                 // Generate Response
-                tl.debug("Response for get firewall rule " + JSON.stringify(response));
                 deferred.resolve(new azureServiceClient.ApiResult(null, response));
             }
             else {
@@ -239,7 +239,7 @@ export class FirewallRules {
             this.get(resourceGroupName, serverName, firewallRuleName, (error, result, request, response) => {
                 if(error){
                     if(retryOption > 0){
-                        deferred.resolve(this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, retryOption--));
+                        deferred.resolve(this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, retryOption - 1));
                     }else{
                         deferred.reject(new Error(tl.loc("NotAbleToCreateFirewallRule", error)));
                     }

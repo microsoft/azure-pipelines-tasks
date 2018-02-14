@@ -95,9 +95,9 @@
             "required": false,
             "helpMarkDown": "",
             "groupName": "taskDetails",
-            "defaultValue": "SqlTask",
+            "defaultValue": "SqlTaskFile",
             "options": {
-                "SqlTask": "MySQL Script File",
+                "SqlTaskFile": "MySQL Script File",
                 "InlineSqlTask": "Inline MySQL Script"
             }
         },
@@ -109,7 +109,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Full path of the script file on the automation agent or on a UNC path accessible to the automation agent like,  \\\\\\\\BudgetIT\\DeployBuilds\\script.sql. Also, predefined system variables like, $(agent.releaseDirectory) can also be used here. A file containing SQL statements can be used here.​",
-            "visibleRule": "TaskNameSelector = SqlTask"
+            "visibleRule": "TaskNameSelector = SqlTaskFile"
         },
         {
             "name": "SqlInline",
@@ -133,7 +133,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional options supported by mysql simple SQL shell.  These options will be applied when executing the given file on the Azure DB for Mysql.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​",
-            "visibleRule": "TaskNameSelector = SqlTask"
+            "visibleRule": "TaskNameSelector = SqlTaskFile"
         },
         {
             "name": "InlineAdditionalArguments",

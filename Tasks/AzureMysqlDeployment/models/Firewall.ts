@@ -5,7 +5,7 @@ export class FirewallRule {
     private name: string;
 
     constructor(name: string, firewallAddressRange: FirewallAddressRange){
-        if ( !name ||typeof name.valueOf() !== 'string') {
+        if ( !name || typeof name.valueOf() !== 'string') {
             throw new Error(tl.loc("FirewallRuleNameCannotBeEmpty"));
         }
         if (!firewallAddressRange) {
