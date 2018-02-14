@@ -1,0 +1,51 @@
+# Xamarin.Android
+# Build a Xamarin.Android app and Xamarin.UITest assembly.
+# https://aka.ms/yaml
+
+queue: 'Hosted VS2017'
+
+variables:
+  apkFiles: '$(outputDirectory)'
+  buildConfiguration: 'Release'
+  outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+  solution: '**/*.sln'
+  # system.debug: 'true'
+
+steps:
+- task: XamarinComponentRestore@0
+  displayName: 'Xamarin component restore'
+  inputs:
+    solutionFile: '$(solution)'
+  enabled: false
+
+- task: NuGetToolInstaller@0
+  displayName: 'Install NuGet'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore packages'
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: XamarinAndroid@1
+  displayName: 'Build Xamarin.Android projects'
+  inputs:
+    projectFile: '**/*Droid*.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    pathtoPublish: '$(apkFiles)'
+    artifactName: 'artifact'
+    artifactType: 'container'
+
+## Release to Google Play
+## This task requires the Google Play extension:
+## https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play
+#- task: ms-vsclient.google-play.google-play-release.GooglePlayRelease@1
+#  inputs:
+#    serviceEndpoint: 'Enter your Google Play service endpoint name here'
+#    apkFile: '**/*.apk'
+#    shouldAttachMetadata: false
+#    metadataRootPath: 'Optionally enter your metadata root path here'

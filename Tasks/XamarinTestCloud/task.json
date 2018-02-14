@@ -2,7 +2,7 @@
     "id": "049918CB-1488-48EB-85E8-C318ECCAAA74",
     "name": "XamarinTestCloud",
     "friendlyName": "Xamarin Test Cloud",
-    "description": "Test mobile apps with Xamarin Test Cloud using Xamarin.UITest",
+    "description": "[Depreciated] Testing mobile apps with Xamarin Test Cloud using Xamarin.UITest - recommended task is now AppCenterTest",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613744)",
     "category": "Test",
     "visibility": [
@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 126,
+        "Minor": 131,
         "Patch": 0
     },
     "demands": [],
@@ -24,12 +24,13 @@
             "isExpanded": true
         }
     ],
+    "deprecated": true,
     "inputs": [
         {
             "name": "app",
             "aliases": [ "appFile" ],
             "type": "filePath",
-            "label": "App File",
+            "label": "App file",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders."
@@ -38,7 +39,7 @@
             "name": "dsym",
             "aliases": [ "dsymFile" ],
             "type": "string",
-            "label": "dSYM File (iOS only)",
+            "label": "dSYM file (iOS only)",
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM"
@@ -46,7 +47,7 @@
         {
             "name": "teamApiKey",
             "type": "string",
-            "label": "Team API Key",
+            "label": "Team API key",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Your Xamarin Test Cloud Team API key can be found under \"Teams & Apps\" at https://testcloud.xamarin.com/account."
@@ -55,7 +56,7 @@
             "name": "user",
             "aliases": [ "email" ],
             "type": "string",
-            "label": "User Email",
+            "label": "User email",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "User name this test will run under."
@@ -80,7 +81,7 @@
             "name": "testDir",
             "aliases": [ "testAssemblyDirectory" ],
             "type": "filePath",
-            "label": "Test Assembly Directory",
+            "label": "Test assembly directory",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Relative path to the folder containing the test assemblies, such as: SolutionName/TestsProjectName/bin/Release"
@@ -103,7 +104,7 @@
             "name": "locale",
             "aliases": [ "localeOption" ],
             "type": "pickList",
-            "label": "System Language",
+            "label": "System language",
             "defaultValue": "en_US",
             "required": true,
             "groupName": "advanced",
@@ -125,7 +126,7 @@
         {
             "name": "userDefinedLocale",
             "type": "string",
-            "label": "Other Locale",
+            "label": "Other locale",
             "groupName": "advanced",
             "defaultValue": "",
             "required": false,
@@ -136,7 +137,7 @@
             "name": "testCloudLocation",
             "aliases": [ "testCloudFile" ],
             "type": "filePath",
-            "label": "test-cloud.exe Location",
+            "label": "test-cloud.exe location",
             "groupName": "advanced",
             "defaultValue": "**/packages/**/tools/test-cloud.exe",
             "required": true
@@ -144,7 +145,7 @@
         {
             "name": "optionalArgs",
             "type": "string",
-            "label": "Optional Arguments",
+            "label": "Optional arguments",
             "required": false,
             "defaultValue": "",
             "groupName": "advanced",

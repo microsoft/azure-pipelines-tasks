@@ -23,7 +23,7 @@ export class Helper {
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
         if (!this.isNullEmptyOrUndefined(value)) {
             if (!name.includes('AccessToken')) {
-                tl.debug('Setting the process env var :' + name + ' to :' + value);
+                tl.debug('Setting the process env var: ' + name + ' to: ' + value);
             }
             envVars[name] = value;
         }
@@ -67,6 +67,14 @@ export class Helper {
 
     public static pathExistsAsDirectory(path: string) {
         return tl.exist(path) && tl.stats(path).isDirectory();
+    }
+
+    public static isDebugEnabled(): boolean {
+        const sysDebug = tl.getVariable('System.Debug');
+        if (sysDebug === undefined) {
+            return false;
+        }
+        return sysDebug.toLowerCase() === 'true';
     }
 
     public static publishEventToCi(areaCode: string, message: string, tracePoint: number, isUserError: boolean) {

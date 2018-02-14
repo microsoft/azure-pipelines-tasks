@@ -20,11 +20,6 @@ export function imageNameWithoutTag(imageName: string): string {
     return generateValidImageName(endIndex < 0 ? imageName : imageName.substr(0, endIndex));
 }
 
-export function getImageName(): string {
-    var imageName = tl.getInput("imageName", true);
-    return generateValidImageName(imageName);
-}
-
 export function generateValidImageName(imageName: string): string {
     imageName = imageName.toLowerCase();
     imageName = imageName.replace(/ /g,"");

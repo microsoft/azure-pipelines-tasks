@@ -1,0 +1,3 @@
+{
+  "loc.messages.TokenUnavailable": "無法擷取用於 TFS/Team Services 封裝的權杖認證。"
+}

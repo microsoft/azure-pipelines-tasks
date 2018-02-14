@@ -57,7 +57,7 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
     }
     return resultAppTypeParams;
 }
-export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirectoryPath: string) {
+export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirectoryPath?: string) {
     //Generate the web.config file if it does not already exist.
     var webConfigPath = path.join(folderPath, "web.config");
     if (!tl.exist(webConfigPath)) {

@@ -69,8 +69,7 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.MiniMatchTestSourcesFile', this.testSourcesFile);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.LocalTestDropPath', this.dtaTestConfig.testDropLocation);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableConsoleLogs', 'true');
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProceedAfterAbortedTestCase',
-            this.dtaTestConfig.proceedAfterAbortedTestCase.toString());
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.ProceedAfterAbortedTestCase',this.dtaTestConfig.proceedAfterAbortedTestCase.toString());
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.UseVsTestConsole', this.dtaTestConfig.useVsTestConsole);
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.TestPlatformVersion', this.dtaTestConfig.vsTestVersion);
         utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
@@ -79,6 +78,10 @@ export class DistributedTest {
             utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_32', this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation);
             utils.Helper.addToProcessEnvVars(envVars, 'COR_PROFILER_PATH_64', this.dtaTestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation);
             utils.Helper.addToProcessEnvVars(envVars, 'DTA.ForcePlatformV2', 'true');
+        }
+
+        if (utils.Helper.isDebugEnabled()) {
+            utils.Helper.addToProcessEnvVars(envVars, 'DTA.EnableDiagLogs', 'true');
         }
 
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {

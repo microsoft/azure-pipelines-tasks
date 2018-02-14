@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet Packager",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=627416)",
-  "loc.description": "Crée des sorties nupkg des fichiers csproj ou nuspec",
+  "loc.description": "Déconseillé : utilisez la tâche \"NuGet\" à la place. Fonctionne avec le nouveau framework d'installation d'outils. Ainsi, vous pouvez facilement utiliser les nouvelles versions de NuGet sans devoir attendre une mise à jour de tâche. Offre une meilleure prise en charge des flux authentifiés en dehors de ce compte/cette collection, et utilise NuGet 4 par défaut.",
   "loc.instanceNameFormat": "NuGet Packager $(solution)",
   "loc.group.displayName.versioning": "Options de pack",
   "loc.group.displayName.advanced": "Avancé",
@@ -10,7 +10,7 @@
   "loc.input.label.outputdir": "Dossier du package",
   "loc.input.help.outputdir": "Dossier dans lequel les packages sont créés. S'il est vide, les packages sont créés au même endroit que le fichier csproj ou nuspec.",
   "loc.input.label.includeReferencedProjects": "Inclure les projets référencés",
-  "loc.input.help.includeReferencedProjects": "Incluez les projets référencés sous forme de dépendances ou dans le cadre du package. Ils ne peuvent pas être utilisés avec le contrôle de version de package automatique. Si un projet référencé a un fichier nuspec correspondant dont le nom est le même que celui du projet, ce projet référencé est ajouté sous forme de dépendance. Sinon, le projet référencé est ajouté dans le cadre du package. [En savoir plus](https://docs.nuget.org/consume/command-line-reference#pack-command) sur NuGet.org.",
+  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.versionByBuild": "Gestion de version du package automatique",
   "loc.input.help.versionByBuild": "Ne peut pas être utilisé avec les projets référencés inclus. Si vous choisissez 'Utiliser la date et l'heure', cela génère une version compatible [SemVer](http://semver.org/spec/v1.0.0.html) au format `X.Y.Z-ci-datetime` où vous choisissez X, Y et Z.\n\nSi vous choisissez 'Utiliser une variable d'environnement', vous devez sélectionner une variable d'environnement et vérifier qu'elle contient le numéro de version à utiliser.\n\nSi vous choisissez 'Utiliser le numéro de build', le numéro de build est utilisé comme version du package. **Remarque :** Sous Général, définissez le format de build de la façon suivante : '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'.",
   "loc.input.label.versionEnvVar": "Variable d'environnement",
@@ -26,7 +26,7 @@
   "loc.input.label.buildProperties": "Propriétés de build supplémentaires",
   "loc.input.help.buildProperties": "Liste des propriétés, séparées par des points-virgules, utilisées pour générer le package.",
   "loc.input.label.nuGetAdditionalArgs": "Arguments NuGet",
-  "loc.input.help.nuGetAdditionalArgs": "Arguments supplémentaires passés à la commande pack de NuGet.exe. [Plus d'informations](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command).",
+  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.nuGetPath": "Chemin de NuGet.exe",
   "loc.input.help.nuGetPath": "Indiquez éventuellement le chemin de NuGet.exe"
 }

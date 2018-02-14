@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "クラウド ベースの Apache JMeter ロード テスト",
-  "loc.helpMarkDown": "このタスクは、Visual Studio Team Services を使用したクラウド上での Apache JMeter ロード テストをトリガーするのに使用できます。[詳細](https://go.microsoft.com/fwlink/?LinkId=784929)。",
+  "loc.helpMarkDown": "このタスクは、Visual Studio Team Services を使用したクラウド上での Apache JMeter ロード テストをトリガーするのに使用できます。[詳細](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "クラウドで Apache JMeter ロード テストを実行します",
   "loc.instanceNameFormat": "Apache JMeter テスト $(LoadTest)",
   "loc.input.label.connectedServiceName": "VS Team Services 接続",

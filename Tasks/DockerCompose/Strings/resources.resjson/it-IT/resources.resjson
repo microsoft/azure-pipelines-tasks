@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Altre informazioni](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Consente di compilare, effettuare il push o eseguire applicazioni Docker con più contenitori",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Consente di compilare, effettuare il push o eseguire applicazioni Docker con più contenitori. È possibile usare l'attività con il registro contenitori di Azure o Docker.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Opzioni avanzate",
   "loc.input.label.containerregistrytype": "Tipo di registro contenitori",
@@ -41,7 +41,7 @@
   "loc.input.label.workDir": "Directory di lavoro",
   "loc.input.help.workDir": "Directory di lavoro per il contenitore dei servizi specifico.",
   "loc.input.label.entrypoint": "Override punto di ingresso",
-  "loc.input.help.entrypoint": "Esegue l'override del punto di ingresso predefinito per il contenitore dei servizi specifico.",
+  "loc.input.help.entrypoint": "Override the default entry point for the specific service container.",
   "loc.input.label.containerCommand": "Comando",
   "loc.input.help.containerCommand": "Comando da eseguire nel contenitore dei servizi specifico. Se ad esempio l'immagine contiene un'applicazione Web Python Flask semplice, è possibile specificare 'python app.py' per avviarla.",
   "loc.input.label.detached": "Esegui in background",
@@ -66,7 +66,8 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produce un errore se i file Docker Compose aggiuntivi non esistono. Sostituisce il comportamento predefinito, in cui un file inesistente viene ignorato.",
   "loc.input.label.cwd": "Directory di lavoro",
   "loc.input.help.cwd": "Directory di lavoro per il comando di Docker Compose.",
-  "loc.messages.ContainerPatternFound": "Il criterio è stato trovato nel parametro dockerfilepath",
-  "loc.messages.ContainerPatternNotFound": "Non è stato trovato alcun criterio nel parametro dockerfilepath",
-  "loc.messages.ContainerDockerFileNotFound": "Non è stato trovato alcun file Docker corrispondente a %s."
+  "loc.messages.ContainerPatternFound": "Pattern found in docker compose filepath parameter",
+  "loc.messages.ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
+  "loc.messages.ContainerDockerFileNotFound": "Non è stato trovato alcun file Docker corrispondente a %s.",
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists."
 }

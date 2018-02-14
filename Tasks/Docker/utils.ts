@@ -7,12 +7,23 @@ import * as imageUtils from "docker-common/containerimageutils";
 
 export function getImageNames(): string[] {
     let imageNamesFilePath = tl.getPathInput("imageNamesPath", /* required */ true, /* check exists */ true);
+    var enforceDockerNamingConvention = tl.getBoolInput("enforceDockerNamingConvention");
     let imageNames = fs.readFileSync(imageNamesFilePath, "utf-8").trim().replace("\r\n", "\n").split("\n");
     if (!imageNames.length) {
         throw new Error(tl.loc("NoImagesInImageNamesFile", imageNamesFilePath));
     }
 
-    return imageNames.map(n => imageUtils.generateValidImageName(n));
+    return imageNames.map(n => (enforceDockerNamingConvention === true)? imageUtils.generateValidImageName(n): n);
+}
+
+export function getImageName(): string {
+    var enforceDockerNamingConvention = tl.getBoolInput("enforceDockerNamingConvention"); 
+    var imageName = tl.getInput("imageName", true);
+    if(enforceDockerNamingConvention === true) {
+        return imageUtils.generateValidImageName(imageName);
+    }
+
+    return imageName;
 }
 
 export function getImageMappings(connection: ContainerConnection, imageNames: string[]): ImageMapping[] {

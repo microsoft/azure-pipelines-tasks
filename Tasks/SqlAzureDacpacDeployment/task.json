@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 25
+        "Patch": 26
     },
     "demands": [
         "sqlpackage"
@@ -47,7 +47,7 @@
             "label": "Azure Connection Type",
             "required": false,
             "helpMarkDown": "",
-            "defaultValue": "ConnectedServiceName",
+            "defaultValue": "ConnectedServiceNameARM",
             "options": {
                 "ConnectedServiceName": "Azure Classic",
                 "ConnectedServiceNameARM": "Azure Resource Manager"

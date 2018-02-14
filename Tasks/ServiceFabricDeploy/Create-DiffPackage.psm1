@@ -143,6 +143,12 @@ function Copy-DiffPackage
         $localPkgPath = Join-Path $localParentPkgPath $localPackage.Name
         $diffPkgPath = Join-Path $diffParentPkgPath $localPackage.Name
 
+        if (Test-Path -Path ($localPkgPath + ".zip"))
+        {
+            $localPkgPath += ".zip"
+            $diffPkgPath += ".zip"
+        }
+
         Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localPkgPath, $diffPkgPath))
         # Copy the package on this level to diff package which is considered to be Leaf
         Copy-Item $localPkgPath $diffPkgPath -Recurse

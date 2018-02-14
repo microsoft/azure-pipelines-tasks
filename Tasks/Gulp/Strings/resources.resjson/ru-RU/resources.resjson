@@ -15,7 +15,7 @@
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Текущий рабочий каталог при выполнении сценария. По умолчанию используется папка, в которой находится сценарий.",
   "loc.input.label.gulpjs": "Расположение gulp.js",
-  "loc.input.help.gulpjs": "Gulp.js, подлежащий выполнению, если агент не может найти глобально установленный gulp. Значение по умолчанию — файл gulp.js в папке node_modules в cwd.",
+  "loc.input.help.gulpjs": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of the working directory.",
   "loc.input.label.publishJUnitResults": "Опубликовать в TFS или Team Services",
   "loc.input.help.publishJUnitResults": "Выберите этот параметр, чтобы опубликовать результаты тестов JUnit, созданные сборкой Gulp, в TFS или Team Services.",
   "loc.input.label.testResultsFiles": "Файлы результатов тестов",

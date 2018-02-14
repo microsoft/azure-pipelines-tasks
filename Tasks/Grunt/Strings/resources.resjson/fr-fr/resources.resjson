@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Grunt",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=627413)",
-  "loc.description": "The JavaScript Task Runner",
+  "loc.description": "Exécuteur de tâches JavaScript",
   "loc.instanceNameFormat": "grunt $(targets)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.group.displayName.junitTestResults": "Résultats du test JUnit",
@@ -15,7 +15,7 @@
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script.",
   "loc.input.label.gruntCli": "Emplacement de grunt-cli",
-  "loc.input.help.gruntCli": "grunt-cli à exécuter quand l'agent ne trouve pas de grunt-cli global installé. Correspond par défaut à grunt-cli sous le dossier node_modules de cwd.",
+  "loc.input.help.gruntCli": "grunt-cli to run when agent can't find global installed grunt-cli  Defaults to the grunt-cli under node_modules folder of the working directory.",
   "loc.input.label.publishJUnitResults": "Publier sur TFS/Team Services",
   "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats des tests JUnit produits par la build Grunt sur TFS/Team Services.",
   "loc.input.label.testResultsFiles": "Fichiers des résultats des tests",

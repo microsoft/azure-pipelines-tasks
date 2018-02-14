@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 126,
+        "Minor": 131,
         "Patch": 0
     },
     "groups": [
@@ -31,7 +31,7 @@
             "name": "cwd",
             "aliases": ["workingDirectory"],
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specify the working directory in which to execute this step. If left empty, the repository directory will be used."
@@ -39,7 +39,7 @@
         {
             "name": "forceRepoUpdate",
             "type": "boolean",
-            "label": "Force Repo Update",
+            "label": "Force repo update",
             "defaultValue": false,
             "required": true,
             "helpMarkDown": "Selecting this option will force running 'pod repo update' before install.",
@@ -48,7 +48,7 @@
         {
             "name": "projectDirectory",
             "type": "filePath",
-            "label": "Project Directory",
+            "label": "Project directory",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally specify the path to the root of the project directory. If left empty, the project specified in the Podfile will be used. If no project is specified, then a search for an Xcode project will be made. If more than one Xcode project is found, an error will occur.",

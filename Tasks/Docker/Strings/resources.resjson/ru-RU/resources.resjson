@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Подробнее](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Создание, отправка или запуск образов Docker или выполнение команд Docker",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Build, tag, push, or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.containerregistrytype": "Тип реестра контейнеров",
@@ -23,7 +23,9 @@
   "loc.input.label.context": "Контекст сборки",
   "loc.input.help.context": "Путь к контексту сборки.",
   "loc.input.label.imageName": "Имя образа",
-  "loc.input.help.imageName": "Имя образа Docker для сборки, отправки или выполнения.",
+  "loc.input.help.imageName": "Name of the Docker image to build, push, or run.",
+  "loc.input.label.imageNamesPath": "Image Names Path",
+  "loc.input.help.imageNamesPath": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line.",
   "loc.input.label.qualifyImageName": "Определить имя образа",
   "loc.input.help.qualifyImageName": "Определение имени образа с помощью имени узла подключения к реестру Docker, если не указано иное.",
   "loc.input.label.additionalImageTags": "Дополнительные теги образов",
@@ -58,9 +60,14 @@
   "loc.input.help.customCommand": "Команда Docker для выполнения (с аргументами). Например, \"rmi -f image-name\" для принудительного удаления образа.",
   "loc.input.label.dockerHostEndpoint": "Подключение к узлу Docker",
   "loc.input.help.dockerHostEndpoint": "Выберите подключение к узлу Docker. По умолчанию используется узел агента.",
+  "loc.input.label.enforceDockerNamingConvention": "Force image name to follow Docker naming convention",
+  "loc.input.help.enforceDockerNamingConvention": "If enabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Рабочий каталог для команды Docker.",
-  "loc.messages.ContainerPatternFound": "В параметре \"dockerfilepath\" обнаружен шаблон.",
-  "loc.messages.ContainerPatternNotFound": "В параметре \"dockerfilepath\" не обнаружен шаблон.",
-  "loc.messages.ContainerDockerFileNotFound": "Отсутствуют файлы Docker, соответствующие %s."
+  "loc.input.label.memory": "Memory limit",
+  "loc.input.help.memory": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
+  "loc.messages.ContainerPatternFound": "Pattern found in docker filepath parameter",
+  "loc.messages.ContainerPatternNotFound": "No pattern found in docker filepath parameter",
+  "loc.messages.ContainerDockerFileNotFound": "Отсутствуют файлы Docker, соответствующие %s.",
+  "loc.messages.NoImagesInImageNamesFile": "At least one image name is expected in file '%s'."
 }

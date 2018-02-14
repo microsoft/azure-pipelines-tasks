@@ -506,4 +506,72 @@ describe('DotNetCoreExe Suite', function () {
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
         done();
     });
+
+    it('custom command fails when no project match found', (done: MochaDone) => {
+        process.env["__command__"] = "custom";
+        process.env["__custom__"] = "test";
+        process.env["__projects__"] = "*nomatch*/project.json";
+
+        let tp = path.join(__dirname, 'customInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 0, 'should not have invoked tool');
+        assert(tr.failed, 'task should have failed');
+        assert.equal(tr.errorIssues.length, 1, "should have thrown an error");
+        done();
+    });
+
+    it('custom command executes without projects if none supplied', (done: MochaDone) => {
+        process.env["__command__"] = "custom";
+        process.env["__custom__"] = "vstest";
+        process.env["__projects__"] = "";
+        process.env["__arguments__"] = "supplied/in/arguments.dll --framework netcoreapp2.0"
+
+        let tp = path.join(__dirname, 'customInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.ran('c:\\path\\dotnet.exe vstest supplied/in/arguments.dll --framework netcoreapp2.0'), 'it should have run dotnet with expected arguments');
+        assert(tr.stdOutContained('vstest succeeded'), "should have dotnet output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
+    it('custom command fails if dotnet returns error', (done: MochaDone) => {
+        process.env["__command__"] = "custom";
+        process.env["__custom__"] = "test";
+        process.env["__projects__"] = "fails/project.json";
+        process.env["__arguments__"] = "--no-build --no-restore"
+
+        let tp = path.join(__dirname, 'customInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool');
+        assert(tr.ran('c:\\path\\dotnet.exe test fails/project.json --no-build --no-restore'), 'it should have run dotnet with expected arguments');
+        assert(tr.stdOutContained('test failed'), "should have dotnet output");
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues.length > 0, "error reason should have been recorded");
+        done();
+    });
+
+    it('custom command runs once for each matched project', (done: MochaDone) => {
+        process.env["__command__"] = "custom";
+        process.env["__custom__"] = "test";
+        process.env["__projects__"] = "**/project.json";
+        process.env["__arguments__"] = ""
+
+        let tp = path.join(__dirname, 'customInputs.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.invokedToolCount == 4, 'should not have invoked tool 4 times');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
 });

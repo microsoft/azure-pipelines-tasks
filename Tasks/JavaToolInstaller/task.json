@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 126,
-        "Patch": 1
+        "Minor": 131,
+        "Patch": 0
     },
     "preview": true,
     "satisfies": ["Java"],
@@ -30,7 +30,7 @@
         {
             "name": "versionSpec",
             "type": "string",
-            "label": "JDK Version",
+            "label": "JDK version",
             "defaultValue": "1.8",
             "required": true,
             "helpMarkDown": "A number that specifies the JDK version to make available on the path."
@@ -38,13 +38,13 @@
         {
             "name": "jdkArchitectureOption",
             "type": "pickList",
-            "label": "JDK Architecture",
+            "label": "JDK architecture",
             "options": {
                 "x64": "X64",
                 "x86": "X86"
             },
             "required": true,
-            "helpMarkDown": "The bit version of the JDK."
+            "helpMarkDown": "The architecture (x86, x64) of the JDK."
         },
         {
             "name": "jdkSourceOption",
@@ -68,7 +68,7 @@
         {
             "name": "azureResourceManagerEndpoint",
             "type": "connectedService:AzureRM",
-            "label": "Azure Subscription",
+            "label": "Azure subscription",
             "required": true,
             "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Choose the Azure Resource Manager subscription for the JDK."
@@ -76,18 +76,18 @@
         {
             "name": "azureStorageAccountName",
             "type": "pickList",
-            "label": "Storage Account Name",
+            "label": "Storage account name",
             "required": true,
             "properties": {
                 "EditableOptions":"True"
             },
             "visibleRule": "jdkSourceOption == AzureStorage",
-            "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the Storage account name in which the JDK is located."
+            "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the storage account name in which the JDK is located."
         },
         {
             "name": "azureContainerName",
             "type": "string",
-            "label": "Container Name",
+            "label": "Container name",
             "required": true,
             "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Name of the container in the storage account in which the JDK is located."
@@ -95,7 +95,7 @@
         {
             "name": "azureCommonVirtualFile",
             "type": "string",
-            "label": "Common Virtual Path",
+            "label": "Common virtual path",
             "required": true,
             "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Path to the JDK inside the Azure storage container."
@@ -131,7 +131,7 @@
         }
     },
     "messages": {
-        "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure Blob Storage, Container Name: %s",
+        "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure blob storage, Container Name: %s",
         "SuccessFullyFetchedItemList": "Successfully fetched list of items",
         "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
         "UnzipExtractFile": "Extracting file: %s",
