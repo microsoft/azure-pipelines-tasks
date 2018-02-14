@@ -3,7 +3,7 @@
     "name": "PythonToolInstaller",
     "friendlyName": "Python Tool Installer",
     "description": "Acquires a specific version of Python from a user supplied Azure blob or a local directory and adds it to the build agent.",
-    "helpMarkDown": "[More Information]()",
+    "helpMarkDown": "",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -50,12 +50,12 @@
             "helpMarkDown": "Source for the compressed Python distribution."
         },
         {
-            "name": "zipFile",
+            "name": "compressedFile",
             "type": "filePath",
-            "label": "Zip file",
+            "label": "Compressed file",
             "required": true,
             "visibleRule": "installationSource == LocalDirectory",
-            "helpMarkDown": "Path to a zip file containing the compiled Python distribution. The path could be in your source repository or a local path on the agent."
+            "helpMarkDown": "Path to a compressed file containing the compiled Python distribution. The path could be in your source repository or a local path on the agent."
         },
         {
             "name": "azureResourceManagerEndpoint",
