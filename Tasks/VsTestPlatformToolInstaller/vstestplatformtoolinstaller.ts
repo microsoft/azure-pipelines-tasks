@@ -11,7 +11,7 @@ const perf = require('performance-now');
 const executionStartTime = perf();
 const osPlat: string = os.platform();
 const packageName = 'Microsoft.TestPlatform';
-const packageSource = 'https://api.nuget.org/v3/index.json';
+let packageSource = 'https://api.nuget.org/v3/index.json';
 
 async function startInstaller() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -27,13 +27,21 @@ async function startInstaller() {
         console.log(tl.loc('StartingInstaller'));
         console.log('==============================================================================');
 
-        // Read inputs
+        // Read task inputs
         const versionSelectorInput = tl.getInput('versionSelector', true);
         const testPlatformVersion = tl.getInput('testPlatformVersion', false);
 
+        // Read backdoor variables used to tweak the task for testing/development purposes
+        // Change the package source, mainly used to get the latest from the myget feed
+        const overridenPackageSource = tl.getVariable('overridePackageSource');
+        if (overridenPackageSource && overridenPackageSource !== '') {
+            packageSource = overridenPackageSource;
+            ci.publishEvent('PackageSourceOverridden', {packageSource: packageSource} );
+        }
+
         ci.publishEvent('Options', { versionSelectorInput: versionSelectorInput, testPlatformVersion: testPlatformVersion } );
 
-        //TODO: Add an input for cleaning up the tool cache?
+        // TODO: Add an input for cleaning up the tool cache?
 
         // Get the required version of the platform and make necessary preparation to allow its consumption down the phase
         await getVsTestPlatformTool(testPlatformVersion, versionSelectorInput);
