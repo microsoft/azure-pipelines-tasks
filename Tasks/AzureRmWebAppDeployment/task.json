@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 40
+        "Patch": 41
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -312,6 +312,7 @@
                 "php|7.0": "PHP 7.0",
                 "dotnetcore|1.0": ".Net Core 1.0",
                 "dotnetcore|1.1": ".Net Core 1.1",
+                "dotnetcore|2.0": ".NET Core 2.0",
                 "ruby|2.3": "Ruby 2.3"
             },
             "helpMarkDown": "Select the framework and version.",
