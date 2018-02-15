@@ -280,24 +280,15 @@
     },
     {
       "name": "Package",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.Package",
-      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
-      "required": true,
-      "visibleRule": "WebAppKind != app44linux && WebAppKind != app44linux44container && WebAppKind != \"\"",
-      "helpMarkDown": "ms-resource:loc.input.help.Package"
-    },
-    {
-      "name": "BuiltinLinuxPackage",
       "aliases": [
         "packageForLinux"
       ],
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
+      "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind = app44linux",
-      "helpMarkDown": "ms-resource:loc.input.help.BuiltinLinuxPackage"
+      "visibleRule": "WebAppKind != app44linux44container && WebAppKind != \"\"",
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
       "name": "RuntimeStack",

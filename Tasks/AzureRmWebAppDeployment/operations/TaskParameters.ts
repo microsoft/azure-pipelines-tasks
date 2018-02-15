@@ -37,10 +37,7 @@ export class TaskParametersUtility {
         taskParameters.SlotName = taskParameters.DeployToSlotFlag ? tl.getInput('SlotName', false) : null;
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
-            taskParameters.BuiltinLinuxPackage = tl.getInput('BuiltinLinuxPackage', true);
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
-            tl.debug('Change package path to Linux package path');
-            taskParameters.Package = tl.getInput('BuiltinLinuxPackage', true);
         }
 
         taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') ?
@@ -84,7 +81,6 @@ export interface TaskParameters {
     DockerNamespace?: string;
     AppSettings?: string;
     StartupCommand?: string;
-    BuiltinLinuxPackage?: string;
     RuntimeStack?: string;
     WebAppUri?: string;
     ConfigurationSettings?: string;
