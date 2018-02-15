@@ -34,11 +34,11 @@ export class JavaFilesExtractor {
             const escapedFile = file.replace(/'/g, "''").replace(/"|\n|\r/g, ''); // double-up single quotes, remove double quotes and newlines
             const escapedDest = destinationFolder.replace(/'/g, "''").replace(/"|\n|\r/g, '');
             const command: string = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
-    
+
             // change the console output code page to UTF-8.
             const chcpPath = path.join(process.env.windir, "system32", "chcp.com");
             await taskLib.exec(chcpPath, '65001');
-    
+
             // run powershell
             const powershell: tr.ToolRunner = taskLib.tool('powershell')
                 .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
@@ -81,7 +81,7 @@ export class JavaFilesExtractor {
         if (this.win) {
             if ('.tar' === fileEnding) { // a simple tar
                 this.sevenZipExtract(file, this.destinationFolder);
-            } else if ('.tar.gz' === fileEnding) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
+            } else if ('.tar.gz' === fileEnding || '.tgz' === fileEnding) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
                 // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
                 const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
                 // e.g. 'destinationFolder/_test.tar.gz_'
@@ -96,7 +96,7 @@ export class JavaFilesExtractor {
                 console.log(taskLib.loc('TempDir', tempFolder));
                 const tempTar = tempFolder + path.sep + taskLib.ls('-A', [tempFolder])[0]; // should be only one
                 console.log(taskLib.loc('DecompressedTempTar', file, tempTar));
-                    
+
                 // 2 expand extracted tar
                 this.sevenZipExtract(tempTar, this.destinationFolder);
 
@@ -131,12 +131,12 @@ export class JavaFilesExtractor {
             } else if (path.extname(fsPath).toLowerCase() === '.pack') {
                 // Unpack the pack file synchonously
                 const p = path.parse(fsPath);
-                const toolName = process.platform.match(/^win/i) ? 'unpack200.exe' : 'unpack200'; 
-                const args = process.platform.match(/^win/i) ? '-r -v -l ""' : '';            
+                const toolName = process.platform.match(/^win/i) ? 'unpack200.exe' : 'unpack200';
+                const args = process.platform.match(/^win/i) ? '-r -v -l ""' : '';
                 const name = path.join(p.dir, p.name);
-                taskLib.execSync(path.join(javaBinPath, toolName), `${args} "${name}.pack" "${name}.jar"`); 
+                taskLib.execSync(path.join(javaBinPath, toolName), `${args} "${name}.pack" "${name}.jar"`);
             }
-        }    
+        }
     }
 
     public unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): string {
@@ -164,5 +164,4 @@ export class JavaFilesExtractor {
             return jdkDirectory;
         }
     }
-
 }

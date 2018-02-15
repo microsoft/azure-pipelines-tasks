@@ -14,7 +14,7 @@ async function run() {
     } catch (error) {
         taskLib.error(error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
-    } 
+    }
 }
 
 async function getJava(versionSpec: string) {
@@ -45,11 +45,15 @@ async function getJava(versionSpec: string) {
     } else if (fromAzure) { //Download JDK from an Azure blob storage location and extract.
         console.log(taskLib.loc('RetrievingJdkFromAzure', version));
         compressedFileExtension = getFileEnding(taskLib.getInput('azureCommonVirtualFile', true));
-    
-        const azureDownloader = new AzureStorageArtifactDownloader(taskLib.getInput('azureResourceManagerEndpoint', true), 
-            taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), taskLib.getInput('azureCommonVirtualFile', false));
+
+        const azureDownloader = new AzureStorageArtifactDownloader(
+            taskLib.getInput('azureResourceManagerEndpoint', true),
+            taskLib.getInput('azureStorageAccountName', true),
+            taskLib.getInput('azureContainerName', true),
+            taskLib.getInput('azureCommonVirtualFile', false));
+
         await azureDownloader.downloadArtifacts(extractLocation, '*' + compressedFileExtension);
-        await sleepFor(250); //Wait for the file to be released before extracting it.
+        await sleep(250); //Wait for the file to be released before extracting it.
 
         const extractSource = buildFilePath(extractLocation, compressedFileExtension);
         jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(extractSource, compressedFileExtension, extractLocation);
@@ -64,11 +68,11 @@ async function getJava(versionSpec: string) {
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable('JAVA_HOME', jdkDirectory);
     taskLib.setVariable(extendedJavaHome, jdkDirectory);
-} 
+}
 
-function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {
-    return new Promise((resolve, reeject) => {
-        setTimeout(resolve, sleepDurationInMillisecondsSeconds);
+function sleep(milliseconds: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        setTimeout(resolve, milliseconds);
     });
 }
 
@@ -87,6 +91,8 @@ function getFileEnding(file: string): string {
         fileEnding = '.tar';
     } else if (file.endsWith('.tar.gz')) {
         fileEnding = '.tar.gz';
+    } else if (file.endsWith('.tgz')) {
+        fileEnding = '.tgz';
     } else if (file.endsWith('.zip')) {
         fileEnding = '.zip';
     } else if (file.endsWith('.7z')) {
@@ -98,4 +104,4 @@ function getFileEnding(file: string): string {
     return fileEnding;
 }
 
-run();  
+run();
