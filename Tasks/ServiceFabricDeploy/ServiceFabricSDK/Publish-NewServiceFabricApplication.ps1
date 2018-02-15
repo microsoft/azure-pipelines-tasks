@@ -209,12 +209,17 @@
                 Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @($ApplicationName, $app.ApplicationTypeName, $app.ApplicationTypeVersion))
 
                 try
+				{
+				    $app | Remove-ServiceFabricApplication -Force
+			    }
+				catch [System.TimeoutException]
+				{
+					# Catch operation timeout and continue with force remove replica.
+				}
+
+                foreach ($node in Get-ServiceFabricNode)
                 {
-                    $app | Remove-ServiceFabricApplication -Force
-                }
-                catch [System.TimeoutException]
-                {
-                    $app | Remove-ServiceFabricApplication -Force -ForceRemove
+                    [void](Get-ServiceFabricDeployedReplica -NodeName $node.NodeName -ApplicationName $ApplicationName | Remove-ServiceFabricReplica -NodeName $node.NodeName -ForceRemove)
                 }
 
                 if($OverwriteBehavior.Equals("Always"))
