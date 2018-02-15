@@ -151,6 +151,7 @@ function Copy-DiffPackage
         # The Code package for containerized service does not exist, but we want to continue the deployment
         elseif (!(Test-Path -Path $localPkgPath))
         {
+            Write-Host (Get-VstsLocString -Key DIFFPKG_PackageDoesNotExist -ArgumentList @($localPkgPath))
             continue
         }
 
