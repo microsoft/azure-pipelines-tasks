@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 131,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "satisfies": [
@@ -42,8 +42,8 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitectureOption",
       "options": {
-        "x64": "X64",
-        "x86": "X86"
+        "x64": "x64",
+        "x86": "x86"
       },
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitectureOption"

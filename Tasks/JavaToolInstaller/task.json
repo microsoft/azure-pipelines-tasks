@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 131,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": true,
     "satisfies": ["Java"],
@@ -40,8 +40,8 @@
             "type": "pickList",
             "label": "JDK architecture",
             "options": {
-                "x64": "X64",
-                "x86": "X86"
+                "x64": "x64",
+                "x86": "x86"
             },
             "required": true,
             "helpMarkDown": "The architecture (x86, x64) of the JDK."
