@@ -102,8 +102,15 @@ try {
     $useDiffPackage = [System.Boolean]::Parse((Get-VstsInput -Name useDiffPackage))
     if ($useDiffPackage)
     {
-        Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
-        $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
+        if (Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath)
+        {
+            Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
+            $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
+        }
+        else
+        {
+            Write-Host (Get-VstsLocString -Key DIFFPKG_TestAppPkgFailed)
+        }
     }
     $publishParameters = @{
         'ApplicationPackagePath' = if (!$diffPackagePath) {$applicationPackagePath} else {[string]$diffPackagePath}
