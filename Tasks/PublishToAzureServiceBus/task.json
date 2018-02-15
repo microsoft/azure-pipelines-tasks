@@ -1,0 +1,116 @@
+{
+  "id": "BA761F24-CBD6-48CB-92F3-FC13396405B1",
+  "name": "PublishToAzureServiceBus",
+  "friendlyName": "Publish To Azure Service Bus",
+  "description": "Sends a message to azure service bus using a service connection (no agent required).",
+  "category": "Utility",
+  "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/publish-to-azure-service-bus)",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+      "Server"
+   ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 3
+  },
+  "groups": [
+      {
+          "name": "signingDetails",
+          "displayName": "Certificate Details",
+          "isExpanded": true
+      }
+  ],
+  "inputs": [
+  {
+    "name": "connectedServiceName",
+    "aliases": ["azureSubscription"],
+    "type": "connectedService:AzureServiceBus",
+    "label": "Azure service bus connection",
+    "defaultValue": "",
+    "required": true,
+    "helpMarkDown": "Select a Azure Service Bus connection."
+  },
+  {
+    "name": "messageBody",
+    "type": "multiLine",
+    "label": "Message body",
+    "required": false,
+    "defaultValue": "",
+    "helpMarkDown": "Enter the json messageBody.",
+    "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000",
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+    }
+  },
+  {
+    "name": "signPayload",
+    "type": "boolean",
+    "label": "Sign the Message",
+    "defaultValue": "false",
+    "required": true,
+    "helpMarkDown": "If this is set to true, message will be signed provided a private certificate.",
+    "groupName": "signingDetails"
+  },
+  {
+    "name": "certificateString",
+    "type": "string",
+    "label": "Certificate Variable",
+    "required": true,
+    "defaultValue": "",
+    "helpMarkDown": "Certificate pulled in from Key Vault store. Please create a variable group that is linked to an Azure Key Vault, which contains a variable, whose value is the certificate. You can do this by going to Library -> Variable group -> + Variable group -> Select 'Link secrets from an Azure key vault as variables' -> Select your Azure subscription -> Select the key vault name -> Ensure that the variable with the certificate is selected. You can also define regular/secret variable which will contain certificate content as string.",
+    "visibleRule": "signPayload = true",
+    "groupName": "signingDetails"
+  },
+  {
+    "name": "signatureKey",
+    "type": "string",
+    "label": "Signature Property Key",
+    "required": false,
+    "defaultValue": "",
+    "helpMarkDown": "Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties",
+    "visibleRule": "signPayload = true",
+    "groupName": "signingDetails"
+  },
+  {
+        "name": "waitForCompletion",
+        "type": "boolean",
+        "label": "Wait for task completion",
+        "defaultValue": "false",
+        "required": true,
+        "helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+  }
+  ],
+  "instanceNameFormat": "Publish to Azure Service Bus",
+  "execution": {
+    "ServiceBus": {
+      "events": {
+        "taskCompleted": { "enabled": "$(waitForCompletion)" }
+      },
+      "execute": {
+        "endpointId": "$(connectedServiceName)",
+        "connectionString": "$(endpoint.serviceBusConnectionString)",
+        "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
+        "messageBody": "$(messageBody)",
+        "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
+        "signaturePropertyKey": "$(signatureKey)",
+        "messageProperties": {
+            "PlanUrl": "$(system.CollectionUri)",
+            "ProjectId": "$(system.TeamProjectId)",
+            "HubName": "$(system.HostType)",
+            "PlanId": "$(system.PlanId)",
+            "JobId": "$(system.JobId)",
+            "TimelineId": "$(system.TimelineId)",
+            "TaskInstanceId": "$(system.TaskInstanceId)",
+            "AuthToken": "$(system.AccessToken)"
+        }
+      }
+    }
+  }
+}

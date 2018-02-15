@@ -36,21 +36,29 @@ try {
 
     # Import the helpers.
     . $PSScriptRoot\Get-VSPath.ps1
-    . $PSScriptRoot\Select-MSBuildLocation.ps1
     . $PSScriptRoot\Select-VSVersion.ps1
     Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
 
     # Resolve match patterns.
     $solutionFiles = Get-SolutionFiles -Solution $Solution
 
-    # Only search Willow installs if 15.0 was explicitly chosen.
-    $searchCom = $vsVersion -eq "15.0"
-
     # Resolve a VS version.
-    $vsVersion = Select-VSVersion -PreferredVersion $vsVersion -SearchCom:$searchCom
+    $vsVersion = Select-VSVersion -PreferredVersion $vsVersion
+
+    # Translate to MSBuild version.
+    $msBuildVersion = $null;
+    switch ("$vsVersion") {
+        '' { $msBuildVersion = '14.0' ; break } # VS wasn't found. Attempt to find MSBuild 14.0 or lower.
+        '15.0' { $msBuildVersion = '15.0' ; break }
+        '14.0' { $msBuildVersion = '14.0' ; break }
+        '12.0' { $msBuildVersion = '12.0' ; break }
+        '11.0' { $msBuildVersion = '4.0' ; break }
+        '10.0' { $msBuildVersion = '4.0' ; break }
+        default { throw (Get-VstsLocString -Key UnexpectedVSVersion0 -ArgumentList $vsVersion) }
+    }
 
     # Resolve the corresponding MSBuild location.
-    $msBuildLocation = Select-MSBuildLocation -VSVersion $vsVersion -Architecture $msBuildArchitecture -SearchCom:$searchCom
+    $msBuildLocation = Select-MSBuildPath -PreferredVersion $msBuildVersion -Architecture $msBuildArchitecture
 
     # Format the MSBuild args.
     $MSBuildArgs = Format-MSBuildArguments -MSBuildArguments $MSBuildArgs -Platform $Platform -Configuration $Configuration -VSVersion $VSVersion -MaximumCpuCount:$maximumCpuCount

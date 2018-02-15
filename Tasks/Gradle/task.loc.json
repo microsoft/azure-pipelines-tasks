@@ -8,12 +8,17 @@
   "visibility": [
     "Build"
   ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 67
+    "Major": 2,
+    "Minor": 131,
+    "Patch": 0
   },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "java"
   ],
@@ -43,6 +48,9 @@
   "inputs": [
     {
       "name": "wrapperScript",
+      "aliases": [
+        "gradleWrapperFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.wrapperScript",
       "defaultValue": "gradlew",
@@ -65,6 +73,9 @@
     },
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
@@ -103,6 +114,9 @@
     },
     {
       "name": "codeCoverageTool",
+      "aliases": [
+        "codeCoverageToolOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.codeCoverageTool",
       "required": false,
@@ -117,6 +131,9 @@
     },
     {
       "name": "classFilesDirectories",
+      "aliases": [
+        "codeCoverageClassFilesDirectories"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.classFilesDirectories",
       "defaultValue": "build/classes/main/",
@@ -127,6 +144,9 @@
     },
     {
       "name": "classFilter",
+      "aliases": [
+        "codeCoverageClassFilter"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.classFilter",
       "defaultValue": "",
@@ -136,7 +156,23 @@
       "visibleRule": "codeCoverageTool != None"
     },
     {
+      "name": "failIfCoverageEmpty",
+      "aliases": [
+        "codeCoverageFailIfEmpty"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
       "name": "javaHomeSelection",
+      "aliases": [
+        "javaHomeOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.javaHomeSelection",
       "required": true,
@@ -150,6 +186,9 @@
     },
     {
       "name": "jdkVersion",
+      "aliases": [
+        "jdkVersionOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
       "required": false,
@@ -159,6 +198,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.9": "JDK 9",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
         "1.6": "JDK 6"
@@ -166,6 +206,9 @@
     },
     {
       "name": "jdkUserInputPath",
+      "aliases": [
+        "jdkDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.jdkUserInputPath",
       "required": true,
@@ -176,11 +219,15 @@
     },
     {
       "name": "jdkArchitecture",
+      "aliases": [
+        "jdkArchitectureOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
-      "defaultValue": "x86",
+      "defaultValue": "x64",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
+      "visibleRule": "jdkVersion != default",
       "groupName": "advanced",
       "options": {
         "x86": "x86",
@@ -189,6 +236,9 @@
     },
     {
       "name": "gradleOpts",
+      "aliases": [
+        "gradleOptions"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.gradleOpts",
       "required": false,
@@ -198,6 +248,9 @@
     },
     {
       "name": "sqAnalysisEnabled",
+      "aliases": [
+        "sonarQubeRunAnalysis"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.sqAnalysisEnabled",
       "required": true,
@@ -206,100 +259,37 @@
       "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisEnabled"
     },
     {
-      "name": "sqConnectedServiceName",
-      "type": "connectedService:Generic",
-      "label": "ms-resource:loc.input.label.sqConnectedServiceName",
+      "name": "sqGradlePluginVersionChoice",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.sqGradlePluginVersionChoice",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.sqConnectedServiceName",
+      "defaultValue": "specify",
+      "options": {
+        "specify": "Specify version number",
+        "build": "Use plugin applied in your build.gradle"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.sqGradlePluginVersionChoice",
       "groupName": "CodeAnalysis",
       "visibleRule": "sqAnalysisEnabled = true"
     },
     {
-      "name": "sqProjectName",
+      "name": "sqGradlePluginVersion",
+      "aliases": [
+        "sonarQubeGradlePluginVersion"
+      ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.sqProjectName",
+      "label": "ms-resource:loc.input.label.sqGradlePluginVersion",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.sqProjectName",
+      "defaultValue": "2.6.1",
+      "helpMarkDown": "ms-resource:loc.input.help.sqGradlePluginVersion",
       "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqProjectKey",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqProjectKey",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.sqProjectKey",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqProjectVersion",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqProjectVersion",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.sqProjectVersion",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqDbDetailsRequired",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.sqDbDetailsRequired",
-      "required": true,
-      "defaultValue": "false",
-      "groupName": "CodeAnalysis",
-      "helpMarkDown": "ms-resource:loc.input.help.sqDbDetailsRequired",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqDbUrl",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqDbUrl",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqDbUrl",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqDbDetailsRequired = true"
-    },
-    {
-      "name": "sqDbUsername",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqDbUsername",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqDbUsername",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqDbDetailsRequired = true"
-    },
-    {
-      "name": "sqDbPassword",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.sqDbPassword",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqDbPassword",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqDbDetailsRequired = true"
-    },
-    {
-      "name": "sqAnalysisIncludeFullReport",
-      "type": "boolean",
-      "defaultValue": "true",
-      "label": "ms-resource:loc.input.label.sqAnalysisIncludeFullReport",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisIncludeFullReport",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
-    },
-    {
-      "name": "sqAnalysisBreakBuildIfQualityGateFailed",
-      "type": "boolean",
-      "defaultValue": "",
-      "label": "ms-resource:loc.input.label.sqAnalysisBreakBuildIfQualityGateFailed",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.sqAnalysisBreakBuildIfQualityGateFailed",
-      "groupName": "CodeAnalysis",
-      "visibleRule": "sqAnalysisEnabled = true"
+      "visibleRule": "sqAnalysisEnabled = true && sqGradlePluginVersionChoice = specify"
     },
     {
       "name": "checkstyleAnalysisEnabled",
+      "aliases": [
+        "checkStyleRunAnalysis"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.checkstyleAnalysisEnabled",
       "required": false,
@@ -309,6 +299,9 @@
     },
     {
       "name": "findbugsAnalysisEnabled",
+      "aliases": [
+        "findBugsRunAnalysis"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.findbugsAnalysisEnabled",
       "required": false,
@@ -318,6 +311,9 @@
     },
     {
       "name": "pmdAnalysisEnabled",
+      "aliases": [
+        "pmdRunAnalysis"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.pmdAnalysisEnabled",
       "required": false,
@@ -363,6 +359,7 @@
     "codeAnalysisArtifactSummaryTitle": "ms-resource:loc.messages.codeAnalysisArtifactSummaryTitle",
     "codeAnalysisDisabled": "ms-resource:loc.messages.codeAnalysisDisabled",
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
-    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM"
+    "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
   }
 }

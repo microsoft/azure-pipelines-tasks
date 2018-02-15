@@ -24,6 +24,131 @@ Function CmdletHasMember($memberName) {
     return $cmdletParameter
 }
 
+Function Split-Parameters
+{
+    param 
+    ( 
+        [String] 
+        $OverridingParameters,
+
+        [String] 
+        $Separator,
+
+        [Char]
+        $EscapeCharacter
+    )
+   
+    $inputStr = $OverridingParameters
+    $parameterStrings = New-Object System.Collections.Generic.List[String]
+    $startOfSegment = 0
+    $index = 0
+
+    while ($index -ilt $inputStr.Length)
+    {
+        $index = $inputStr.indexOf($Separator, $index)
+        if ($index -gt 0 -and $inputStr[$index - 1] -eq $EscapeCharacter)
+        {
+            $index += $Separator.Length
+            continue
+        }
+        if ($index -eq -1)
+        {
+            break
+        }
+        $parameterStrings.Add($inputStr.Substring($startOfSegment, $index - $startOfSegment).Replace($EscapeCharacter + $Separator, $Separator))
+        $index += $Separator.Length
+        $startOfSegment = $index
+    }
+    $parameterStrings.Add($inputStr.Substring($startOfSegment).Replace($EscapeCharacter + $Separator, $Separator))
+
+    return $parameterStrings
+}
+
+Function Get-PropertiesMapping 
+{
+    param 
+    ( 
+        [String] 
+        $OverridingParameters 
+    )
+        
+    $parameterStrings = Split-Parameters -OverridingParameters $OverridingParameters -Separator ";" -EscapeCharacter '\'
+    $properties = New-Object 'system.collections.generic.dictionary[string,string]'
+    
+    foreach ($s in $parameterStrings)
+    {
+        $pair = $s.Split('=', 2)
+        if ($pair.Length -eq 2)
+        {
+            if (!$properties.ContainsKey($pair[0]))
+            {
+                $properties.Add($pair[0], $pair[1])
+            }
+        }
+    }
+    
+    return $properties
+}
+    
+Function Override-TestSettingProperties 
+{
+    param 
+    (
+        [String]
+        $OverridingParameters, 
+       
+        [System.Xml.XmlDocument] 
+        $TestSettingsXmlDoc
+    )
+    
+    $properties = Get-PropertiesMapping -OverridingParameters $OverridingParameters
+    $propertyNodes = $TestSettingsXmlDoc.TestSettings.Properties.ChildNodes
+    $hasOverridenProperties  = $false
+    
+    foreach($property in $propertyNodes)
+    {       
+        if ([string]::CompareOrdinal($property.LocalName, "Property") -ne 0 ) 
+        { 
+            continue 
+        } 
+
+        $nameAttribute = $property.name
+        $valueAttribute = $property.value
+        
+        if(-not $nameAttribute) 
+        { 
+            $nameAttribute = $property.Name 
+        }
+
+        if(-not $valueAttribute) 
+        { 
+            $valueAttribute = $property.Value 
+        }
+            
+        if (-not ($nameAttribute -and $valueAttribute))
+        { 
+            continue 
+        }
+             
+        if ($properties.ContainsKey($nameAttribute))
+        {
+            $hasOverridenProperties = $true
+            Write-Verbose "Overriding value for parameter : $nameAttribute" 
+            if($property.value)
+            {
+                $property.value = $properties[$nameAttribute]
+            }
+            elseif($property.Value)
+            {
+                $property.Value = $properties[$nameAttribute]
+            }
+        }
+    }
+    
+    return $hasOverridenProperties
+}
+
+Write-Warning "This task and it’s companion task (Visual Studio Test Agent Deployment) are now deprecated. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent phase setting. Use the ‘Visual Studio Test Platform’ task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests. Visit https://aka.ms/testingwithphases for more information."
 Write-Verbose "Entering script RunDistributedTests.ps1"
 Write-Verbose "TestMachineGroup = $testMachineGroup"
 Write-Verbose "Test Drop Location = $dropLocation"
@@ -58,6 +183,39 @@ $checkTestAgentCompatScriptLocationMemberExists  = CmdletHasMember "CheckTestAge
 $checkCustomSlicingEnabledMemberExists  = CmdletHasMember "CustomSlicingEnabled"
 $taskContextMemberExists  = CmdletHasMember "TaskContext"
 
+if($overrideRunParams -and $runSettingsFile -and (Test-Path $runSettingsFile))
+{
+    if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".testsettings", $True) -eq 0)) 
+    {
+        $settingsXML = $null 
+        try
+        {
+            $settingsXML = [xml](Get-Content $runSettingsFile)
+        }
+        catch 
+        {
+            Write-Verbose "Exception occurred reading provided testsettings $_.Exception.message "
+        }
+        if($settingsXML -eq $null -or (-not $settingsXML.TestSettings) )
+        {
+            Write-Warning "The specified testsettings file $runSettingsFile is invalid or does not exist. Provide a valid settings file or clear the field."
+        }
+        else
+        {
+            $hasOverridenProperties = Override-TestSettingProperties -OverridingParameters $overrideRunParams -TestSettingsXmlDoc $settingsXML
+            if($hasOverridenProperties)
+            {
+                $newTestSettingsFile = [io.path]::Combine($env:TEMP, ([GUID]::NewGuid()).toString() + ".testsettings" )
+                $settingsXML.Save($newTestSettingsFile)
+                Write-Verbose "Task will be using new TestSettings file created after overriding properties : $newTestSettingsFile"
+                $runSettingsFile = $newTestSettingsFile
+            }
+        }
+        # Resetting overrideRunParams as we have already overriden them. Also needed to avoid not supported error of cmdlet.
+        $overrideRunParams = $null
+    }
+}
+
 $suites = $testSuite.Split(",")
 $testSuites = @()
 foreach ($suite in $suites)
@@ -86,7 +244,7 @@ if([string]::Equals($testSelection, "testPlan"))
         {	
             Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
     
-            Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation -CustomSlicingEnabled $customSlicingEnabledFlag
+            Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter "*.dll" -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation -CustomSlicingEnabled $customSlicingEnabledFlag
 	    }
         catch
         {
@@ -106,13 +264,13 @@ if([string]::Equals($testSelection, "testPlan"))
             {
                 Write-Verbose "Invoking Run Distributed Tests with Register Environment support"
     
-                Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
+                Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter "*.dll" -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFile -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabled -TestRunParams $overrideRunParams -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -TaskContext $distributedTaskContext -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
             }
             else
             {
                 Write-Verbose "Invoking Run Distributed Tests with Machine Group Confg"
             
-                Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter $sourcefilters -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFilePreview -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabledPreview -TestRunParams $overrideRunParamsPreview -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
+                Invoke-RunDistributedTests -TestMachineGroup $testMachineGroup -SourceFilter "*.dll" -TestCaseFilter $testFilterCriteria -RunSettingsPath $runSettingsFilePreview -Platform $platform -Configuration $configuration -CodeCoverageEnabled $codeCoverageEnabledPreview -TestRunParams $overrideRunParamsPreview -TestDropLocation $dropLocation -Connection $connection -TestConfiguration $testConfigurations -AutMachineGroup $autMachineGroup -UnregisterTestAgentScriptLocation $unregisterTestAgentScriptLocation -TestRunTitle $testRunTitle -TestSelection $testSelection -TestPlan $testPlanId -TestSuites $testSuites -TestConfig $testConfigurationId -CheckTestAgentCompatScriptLocation $checkTaCompatScriptLocation
             }  
 	    }
         catch
@@ -171,8 +329,8 @@ else
     }
 }
 
-if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".tmp", $True) -eq 0))
+if (([string]::Compare([io.path]::GetExtension($runSettingsFile), ".tmp", $True) -eq 0) -or $hasOverridenProperties)
 {
-    Write-Host "Removing temp settings file"
+    Write-Host "Removing temp settings file : $runSettingsFile"
     Remove-Item $runSettingsFile
 }

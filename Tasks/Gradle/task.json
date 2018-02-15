@@ -8,12 +8,17 @@
     "visibility": [
         "Build"
     ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 67
+        "Major": 2,
+        "Minor": 131,
+        "Patch": 0
     },
+    "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
         "java"
     ],
@@ -43,8 +48,9 @@
     "inputs": [
         {
             "name": "wrapperScript",
+            "aliases": [ "gradleWrapperFile" ],
             "type": "filePath",
-            "label": "Gradle Wrapper",
+            "label": "Gradle wrapper",
             "defaultValue": "gradlew",
             "required": true,
             "helpMarkDown": "Relative path from the repository root to the Gradle Wrapper script."
@@ -65,8 +71,9 @@
         },
         {
             "name": "cwd",
+            "aliases": [ "workingDirectory" ],
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Working directory in which to run the Gradle build. If not specified, the repository root directory is used.",
@@ -84,7 +91,7 @@
         {
             "name": "testResultsFiles",
             "type": "filePath",
-            "label": "Test Results Files",
+            "label": "Test results files",
             "defaultValue": "**/build/test-results/TEST-*.xml",
             "required": true,
             "groupName": "junitTestResults",
@@ -94,7 +101,7 @@
         {
             "name": "testRunTitle",
             "type": "string",
-            "label": "Test Run Title",
+            "label": "Test run title",
             "defaultValue": "",
             "required": false,
             "groupName": "junitTestResults",
@@ -103,8 +110,9 @@
         },
         {
             "name": "codeCoverageTool",
+            "aliases": [ "codeCoverageToolOption" ],
             "type": "pickList",
-            "label": "Code Coverage Tool",
+            "label": "Code coverage tool",
             "required": false,
             "groupName": "codeCoverage",
             "defaultValue": "None",
@@ -117,8 +125,9 @@
         },
         {
             "name": "classFilesDirectories",
+            "aliases": [ "codeCoverageClassFilesDirectories" ],
             "type": "string",
-            "label": "Class Files Directories",
+            "label": "Class files directories",
             "defaultValue": "build/classes/main/",
             "required": true,
             "groupName": "codeCoverage",
@@ -127,8 +136,9 @@
         },
         {
             "name": "classFilter",
+            "aliases": [ "codeCoverageClassFilter" ],
             "type": "string",
-            "label": "Class Inclusion/Exclusion Filters",
+            "label": "Class inclusion/exclusion filters",
             "defaultValue": "",
             "required": false,
             "groupName": "codeCoverage",
@@ -136,7 +146,19 @@
             "visibleRule": "codeCoverageTool != None"
         },
         {
+            "name": "failIfCoverageEmpty",
+            "aliases": [ "codeCoverageFailIfEmpty" ],
+            "type": "boolean",
+            "label": "Fail when code coverage results are missing",
+            "defaultValue": "false",
+            "required": false,
+            "groupName": "codeCoverage",
+            "helpMarkDown": "Fail the build if code coverage did not produce any results to publish.",
+            "visibleRule": "codeCoverageTool != None"
+        },
+        {
             "name": "javaHomeSelection",
+            "aliases": [ "javaHomeOption" ],
             "type": "radio",
             "label": "Set JAVA_HOME by",
             "required": true,
@@ -150,8 +172,9 @@
         },
         {
             "name": "jdkVersion",
+            "aliases": [ "jdkVersionOption" ],
             "type": "pickList",
-            "label": "JDK Version",
+            "label": "JDK version",
             "required": false,
             "groupName": "advanced",
             "defaultValue": "default",
@@ -159,6 +182,7 @@
             "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
+                "1.9": "JDK 9",
                 "1.8": "JDK 8",
                 "1.7": "JDK 7",
                 "1.6": "JDK 6"
@@ -166,8 +190,9 @@
         },
         {
             "name": "jdkUserInputPath",
+            "aliases": [ "jdkDirectory" ],
             "type": "string",
-            "label": "JDK Path",
+            "label": "JDK path",
             "required": true,
             "groupName": "advanced",
             "defaultValue": "",
@@ -176,11 +201,13 @@
         },
         {
             "name": "jdkArchitecture",
+            "aliases": [ "jdkArchitectureOption" ],
             "type": "pickList",
-            "label": "JDK Architecture",
-            "defaultValue": "x86",
+            "label": "JDK architecture",
+            "defaultValue": "x64",
             "required": false,
             "helpMarkDown": "Optionally supply the architecture (x86, x64) of the JDK.",
+            "visibleRule": "jdkVersion != default",
             "groupName": "advanced",
             "options": {
                 "x86": "x86",
@@ -189,117 +216,52 @@
         },
         {
             "name": "gradleOpts",
+            "aliases": [ "gradleOptions" ],
             "type": "string",
             "label": "Set GRADLE_OPTS",
             "required": false,
             "groupName": "advanced",
             "defaultValue": "-Xmx1024m",
-            "helpMarkDown": "Sets the GRADLE_OPTS enviroment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
+            "helpMarkDown": "Sets the GRADLE_OPTS environment variable, which is used to send command-line arguments to start the JVM. The xmx flag specifies the maximum memory available to the JVM."
         },
         {
             "name": "sqAnalysisEnabled",
+            "aliases": [ "sonarQubeRunAnalysis" ],
             "type": "boolean",
-            "label": "Run SonarQube Analysis",
+            "label": "Run SonarQube or SonarCloud Analysis",
             "required": true,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "Run a [SonarQube analysis](https://go.microsoft.com/fwlink/?LinkID=708598) after executing the current goals. 'install' or 'package' goals should be executed first."
+            "helpMarkDown": "This option has changed from version 1 of the **Gradle** task to use the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions. Enable this option to run [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing tasks in the **Tasks** field. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build definition before this Gradle task."
         },
         {
-            "name": "sqConnectedServiceName",
-            "type": "connectedService:Generic",
-            "label": "SonarQube Endpoint",
+            "name": "sqGradlePluginVersionChoice",
+            "type": "radio",
+            "label": "SonarQube scanner for Gradle version",
             "required": true,
-            "helpMarkDown": "The endpoint that specifies the SonarQube server to use",
+            "defaultValue": "specify",
+            "options": {
+                "specify": "Specify version number",
+                "build": "Use plugin applied in your build.gradle"
+            },
+            "helpMarkDown": "The SonarQube Gradle plugin version to use. You can declare it in your Gradle configuration file, or specify a version here.",
             "groupName": "CodeAnalysis",
             "visibleRule": "sqAnalysisEnabled = true"
         },
         {
-            "name": "sqProjectName",
+            "name": "sqGradlePluginVersion",
+            "aliases": [ "sonarQubeGradlePluginVersion" ],
             "type": "string",
-            "label": "SonarQube Project Name",
+            "label": "SonarQube scanner for Gradle plugin version",
             "required": true,
-            "helpMarkDown": "The SonarQube project name, i.e. sonar.projectName.",
+            "defaultValue": "2.6.1",
+            "helpMarkDown": "Refer to https://plugins.gradle.org/plugin/org.sonarqube for all available versions.",
             "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqProjectKey",
-            "type": "string",
-            "label": "SonarQube Project Key",
-            "required": true,
-            "helpMarkDown": "The SonarQube project unique key, i.e. sonar.projectKey.",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqProjectVersion",
-            "type": "string",
-            "label": "SonarQube Project Version",
-            "required": true,
-            "helpMarkDown": "The SonarQube project version, i.e. sonar.projectVersion.",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqDbDetailsRequired",
-            "type": "boolean",
-            "label": "The SonarQube server version is lower than 5.2",
-            "required": true,
-            "defaultValue": "false",
-            "groupName": "CodeAnalysis",
-            "helpMarkDown": "If using a SonarQube server 5.1 or lower, you must specify the database connection details.",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqDbUrl",
-            "type": "string",
-            "label": "Db Connection String",
-            "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the database connection setting (i.e. sonar.jdbc.url). For example: jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqDbDetailsRequired = true"
-        },
-        {
-            "name": "sqDbUsername",
-            "type": "string",
-            "label": "Db Username",
-            "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the username for the database user (i.e. sonar.jdbc.username).",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqDbDetailsRequired = true"
-        },
-        {
-            "name": "sqDbPassword",
-            "type": "string",
-            "label": "Db User Password",
-            "required": false,
-            "helpMarkDown": "SonarQube server 5.1 and lower only. Enter the password for the database user i.e. sonar.jdbc.password",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqDbDetailsRequired = true"
-        },
-        {
-            "name": "sqAnalysisIncludeFullReport",
-            "type": "boolean",
-            "defaultValue": "true",
-            "label": "Include full analysis report in the build summary (SQ 5.3+)",
-            "required": false,
-            "helpMarkDown": "This option will delay the build until the SonarQube analysis is completed.",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
-        },
-        {
-            "name": "sqAnalysisBreakBuildIfQualityGateFailed",
-            "type": "boolean",
-            "defaultValue": "",
-            "label": "Fail the build on quality gate failure (SQ 5.3+)",
-            "required": false,
-            "helpMarkDown": "This option is only available when using a SonarQube server 5.3 or above. It will introduce delays as the build must wait for SonarQube to complete the analysis. [More information](https://go.microsoft.com/fwlink/?LinkId=722407)",
-            "groupName": "CodeAnalysis",
-            "visibleRule": "sqAnalysisEnabled = true"
+            "visibleRule": "sqAnalysisEnabled = true && sqGradlePluginVersionChoice = specify"
         },
         {
             "name": "checkstyleAnalysisEnabled",
+            "aliases": [ "checkStyleRunAnalysis" ],
             "type": "boolean",
             "label": "Run Checkstyle",
             "required": false,
@@ -309,6 +271,7 @@
         },
         {
             "name": "findbugsAnalysisEnabled",
+            "aliases": [ "findBugsRunAnalysis" ],
             "type": "boolean",
             "label": "Run FindBugs",
             "required": false,
@@ -318,6 +281,7 @@
         },
         {
             "name": "pmdAnalysisEnabled",
+            "aliases": [ "pmdRunAnalysis" ],
             "type": "boolean",
             "label": "Run PMD",
             "required": false,
@@ -361,8 +325,9 @@
         "codeAnalysisBuildSummaryLine_NoViolations": "%s found no violations.",
         "codeAnalysisBuildSummaryTitle": "Code Analysis Report",
         "codeAnalysisArtifactSummaryTitle": "Code Analysis Results",
-        "codeAnalysisDisabled": "Code analysis is disabled outside of the build enviroment. Could not find a value for: %s",
+        "codeAnalysisDisabled": "Code analysis is disabled outside of the build environment. Could not find a value for: %s",
         "LocateJVMBasedOnVersionAndArch": "Locate JAVA_HOME for Java %s %s",
-        "FailedToLocateSpecifiedJVM": "Failed to find specified JDK version. Please make sure environment variable '%s' exists and is set to the location of a corresponding JDK."
+        "FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
+        "NoCodeCoverage": "No code coverage results were found to publish."
     }
 }

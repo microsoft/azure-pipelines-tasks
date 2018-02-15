@@ -9,6 +9,7 @@ try {
     [string]$project = Get-VstsInput -Name project -Require
     [string]$target = Get-VstsInput -Name target
     [string]$configuration = Get-VstsInput -Name configuration
+    [bool]$createAppPackage = Get-VstsInput -Name createAppPackage -AsBool
     [bool]$clean = Get-VstsInput -Name clean -AsBool
     [string]$outputDir = Get-VstsInput -Name outputDir
     [string]$msbuildLocationMethod = Get-VstsInput -Name msbuildLocationMethod
@@ -20,7 +21,6 @@ try {
     [string]$jdkArchitecture = Get-VstsInput -Name jdkArchitecture
 
     # Import the helpers.
-    . $PSScriptRoot\Select-MSBuildLocation.ps1
     Import-Module -Name $PSScriptRoot\ps_modules\MSBuildHelpers\MSBuildHelpers.psm1
     . $PSScriptRoot\Get-JavaDevelopmentKitPath.ps1
 
@@ -35,11 +35,23 @@ try {
     if($target) {
         $msBuildArguments = "$msBuildArguments /t:$target"
     }
-    # Always build the APK file
-    $msBuildArguments = "$msBuildArguments /t:PackageForAndroid"
-    if ($outputDir) {
-        $msBuildArguments = "$msBuildArguments /p:OutputPath=""$outputDir"""
+    # Build the APK file if createAppPackage is set to true
+    if($createAppPackage) {
+        $msBuildArguments = "$msBuildArguments /t:PackageForAndroid"
     }
+    if ($outputDir) {
+        $msBuildArguments = "$msBuildArguments /p:OutputPath=`"$outputDir`""
+    }
+    
+    try {
+        Assert-VstsAgent -Minimum '2.120.0'
+        $javaTelemetryData = "{`"jdkVersion`":`"$jdkVersion`"}"
+
+        Write-Host "##vso[telemetry.publish area=Tasks.CrossPlatform;feature=XamarinAndroid]$javaTelemetryData"
+    } catch {
+        Write-Verbose "Failed to publish java telemetry: $errors"
+    }
+
     if ($jdkVersion -and $jdkVersion -ne "default")
     {
         $jdkPath = Get-JavaDevelopmentKitPath -Version $jdkVersion -Arch $jdkArchitecture
@@ -54,20 +66,7 @@ try {
         Write-Verbose "msBuildArguments = $msBuildArguments"
     }
 
-    # Resolve the MSBuild location.
-    if ($msbuildLocationMethod.ToLower() -eq 'location') {
-        $msbuildLocationMethod = "location"
-    }
-    ElseIf ($msbuildLocation -and $msbuildVersion.ToLower() -eq 'latest') {
-        # Use location if msbuildLocation is set and verison is 'latest' for back compat
-        $msbuildLocationMethod = "location"
-    }
-    else {
-        $msbuildLocationMethod = "version"
-    }
-    Write-Verbose "msbuildLocationMethod = $msbuildLocationMethod"
-
-    $msbuildLocation = Select-MSBuildLocation -Method $msbuildLocationMethod -Location $msbuildLocation -Version $msbuildVersion -Architecture $msbuildArchitecture
+    $msbuildLocation = Select-MSBuildPath -Method $msbuildLocationMethod -Location $msbuildLocation -PreferredVersion $msbuildVersion -Architecture $msbuildArchitecture
 
     # build each project file
     Invoke-BuildTools -SolutionFiles $projectFiles -MSBuildLocation $msbuildLocation -MSBuildArguments $msBuildArguments -Clean:$clean

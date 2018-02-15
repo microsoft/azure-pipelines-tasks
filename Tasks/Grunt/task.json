@@ -8,11 +8,15 @@
     "visibility": [
         "Build"
     ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 5,
-        "Patch": 24
+        "Minor": 130,
+        "Patch": 0
     },
     "demands": [
         "node.js"
@@ -63,6 +67,7 @@
         },
         {
             "name": "cwd",
+            "aliases": ["workingDirectory"],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "",
@@ -76,7 +81,7 @@
             "label": "grunt-cli location",
             "defaultValue": "node_modules/grunt-cli/bin/grunt",
             "required": true,
-            "helpMarkDown": "grunt-cli to run when agent can't find global installed grunt-cli  Defaults to the grunt-cli under node_modules folder of cwd.",
+            "helpMarkDown": "grunt-cli to run when agent can't find global installed grunt-cli  Defaults to the grunt-cli under node_modules folder of the working directory.",
             "groupName": "advanced"
         },
         {

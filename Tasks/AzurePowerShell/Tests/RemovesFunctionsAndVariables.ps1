@@ -5,7 +5,11 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
 # Arrange the task inputs.
-Register-Mock Get-VstsInput { "$PSScriptRoot/RemovesFunctionsAndVariables_TargetScript.ps1" } -- -Name ScriptPath -Require
+$targetAzurePs = "4.1.0"
+Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
+Register-Mock Get-VstsInput { "$PSScriptRoot/RemovesFunctionsAndVariables_TargetScript.ps1" } -- -Name ScriptPath
+Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
+Register-Mock Update-PSModulePathForHostedAgent
 
 # Arrange the mock task SDK module.
 New-Module -Name VstsTaskSdk -ScriptBlock {
@@ -39,6 +43,5 @@ Assert-AreEqual $false $actual.FunctionNames.ContainsKey('SomeAzureHelpersFuncti
 Assert-AreEqual $false $actual.FunctionNames.ContainsKey('SomeAzureHelpersFunction2')
 
 # Assert the local variables from the task script were removed.
-Assert-AreEqual $false $actual.VariableNames.ContainsKey('scriptPath')
 Assert-AreEqual $false $actual.VariableNames.ContainsKey('scriptArguments')
 Assert-AreEqual $false $actual.VariableNames.ContainsKey('scriptCommand')

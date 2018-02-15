@@ -1,0 +1,62 @@
+{
+  "which": {
+    "bash": "/usr/local/bin/bash",
+    "az": "/usr/local/bin/az",
+    "scriptfail.bat" : "scriptfail.bat",
+    "scriptfail.sh" : "scriptfail.sh"
+  },
+  "exec": {
+    "/usr/local/bin/bash scriptfail.sh arg1": {
+      "code": 1,
+      "stdout":"bash execution failed",
+      "stderr": "bash stderr"
+    },
+    "scriptfail.bat arg1": {
+      "code": 1,
+      "stdout":"cmd execution failed",
+      "stderr": "cmd stderr"
+    },
+    "scriptfail.sh arg1": {
+      "code": 1,
+      "stdout":"cmd execution failed",
+      "stderr": "cmd stderr"
+    },
+    "/usr/local/bin/az account import subscriptions.publishsettings": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/az login --service-principal -u id -p key --tenant tenant": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/az login --service-principal -u idf -p keyf --tenant tenantf": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/az account set --subscription sName": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/az account clear": {
+      "code": 0,
+      "stdout": "azure output here"
+    }
+  },
+  "checkPath" : {
+    "/usr/local/bin/bash": true,
+    "/usr/local/bin/az": true,
+    "scriptfail.sh" : true,
+    "scriptfail.bat" : true
+  },
+  "getVariable": {
+    "ENDPOINT_AUTH_AzureClassic": "{\"parameters\":{\"certificate\":\"cert\"},\"scheme\":\"Certificate\"}",
+    "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONNAME": "sName",
+    "ENDPOINT_DATA_AzureClassic_SUBSCRIPTIONID": "sId",
+    "ENDPOINT_URL_AzureClassic":"https://www.sampleServiceUrl.net/",
+    "ENDPOINT_AUTH_AzureRM": "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID": "id",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY": "key",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID": "tenant",
+    "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName"
+  }
+}

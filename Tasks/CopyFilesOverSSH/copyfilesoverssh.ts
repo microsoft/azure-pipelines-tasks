@@ -116,7 +116,7 @@ async function run() {
         var sshEndpoint = tl.getInput('sshEndpoint', true);
         var username:string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
         var password:string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
-        var privateKey:string = tl.getEndpointDataParameter(sshEndpoint, 'privateKey', true); //private key is optional, password can be used for connecting
+        var privateKey:string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
         var hostname:string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
         var port:string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
         if (!port || port === '') {
@@ -149,11 +149,19 @@ async function run() {
         // contents is a multiline input containing glob patterns
         var contents:string[] = tl.getDelimitedInput('contents', '\n', true);
         var sourceFolder:string = tl.getPathInput('sourceFolder', true, true);
-        var targetFolder:string = tl.getInput('targetFolder', true);
+        var targetFolder:string = tl.getInput('targetFolder');
+
+        if (!targetFolder) {
+            targetFolder = "./";
+        } else {
+            // '~/' is unsupported
+            targetFolder = targetFolder.replace(/^~\//, "./");
+        }
 
         // read the copy options
         var cleanTargetFolder:boolean = tl.getBoolInput('cleanTargetFolder', false);
         var overwrite:boolean = tl.getBoolInput('overwrite', false);
+        var failOnEmptySource:boolean = tl.getBoolInput('failOnEmptySource', false);
         var flattenFolders:boolean = tl.getBoolInput('flattenFolders', false);
 
         if(!tl.stats(sourceFolder).isDirectory()) {
@@ -211,6 +219,8 @@ async function run() {
                 await sshHelper.uploadFile(fileToCopy, targetPath);
             }
             tl._writeLine(tl.loc('CopyCompleted', filesToCopy.length));
+        } else if(failOnEmptySource) {
+            throw tl.loc('NothingToCopy');
         } else {
             tl.warning(tl.loc('NothingToCopy'));
         }

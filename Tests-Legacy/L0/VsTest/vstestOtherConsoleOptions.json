@@ -1,0 +1,62 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
+        "VS140COMNTools": "/vs/path",
+        "VSTest_14.0": "/vs/IDE/CommonExtensions/Microsoft/TestWindow"
+    },
+    "match": {
+        "**\\packages\\**\\*TestAdapter.dll": []
+    },
+    "findMatch": {
+        "/source/dir/some/*pattern": [
+            "/source/dir/someFile2",
+            "/source/dir/someFile1"
+        ],
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"
+        ]
+    },
+    "exec": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /UseVsixExtensions": {
+            "code": 0,
+            "stdout": "running vstest with other console params single.."
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx /UseVsixExtensions /Enablecodecoverage": {
+            "code": 0,
+            "stdout": "running vstest with other console params multiple.."
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /EnableCodeCoverage /logger:trx /Enablecodecoverage": {
+            "code": 1,
+            "stdout": "running vstest with other console duplicate params..",
+            "stderr": "The parameter \"/EnableCodeCoverage\" should be provided only once."
+        },
+        "wmic datafile where name='\\\\vs\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
+			"code": 0,
+			"stdout" : "version=14.0.0.0"
+        },
+        "C:\\WINDOWS\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\Windows\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\windows\\system32\\chcp.com 65001": {
+            "code": 0
+        }
+    },
+    "rmRF": {
+        "\\source\\dir\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "exist": {        
+        "/source/dir":true
+    },
+    "stats": {        
+        "/source/dir": {
+            "isDirectory":true
+        } 
+    }
+}

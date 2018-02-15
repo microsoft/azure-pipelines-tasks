@@ -1,0 +1,9 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/someDir"
+    },
+    "find": {
+    },
+    "findMatch": {
+    }
+}

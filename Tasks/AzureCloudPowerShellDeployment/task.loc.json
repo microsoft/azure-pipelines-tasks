@@ -9,11 +9,14 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 31
+    "Minor": 1,
+    "Patch": 5
   },
   "demands": [
     "azureps"
@@ -29,6 +32,9 @@
   "inputs": [
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureClassicSubscription"
+      ],
       "type": "connectedService:Azure:Certificate,UsernamePassword",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -52,6 +58,7 @@
       "label": "ms-resource:loc.input.label.ServiceName",
       "defaultValue": "",
       "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ServiceName",
       "properties": {
         "EditableOptions": "True"
       }
@@ -85,6 +92,9 @@
     },
     {
       "name": "Slot",
+      "aliases": [
+        "slotName"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.Slot",
       "defaultValue": "Production",
@@ -112,7 +122,31 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.AllowUpgrade",
       "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.AllowUpgrade",
       "required": true
+    },
+    {
+      "name": "ForceUpgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ForceUpgrade",
+      "defaultValue": "false",
+      "visibleRule": "AllowUpgrade == true",
+      "helpMarkDown": "ms-resource:loc.input.help.ForceUpgrade",
+      "required": false
+    },
+    {
+      "name": "DiagnosticStorageAccountKeys",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.DiagnosticStorageAccountKeys",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DiagnosticStorageAccountKeys",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "resizable": "true",
+        "rows": "6",
+        "maxLength": "500"
+      }
     },
     {
       "name": "NewServiceAdditionalArguments",
@@ -170,6 +204,9 @@
     "Applyinganyconfigureddiagnosticsextensions": "ms-resource:loc.messages.Applyinganyconfigureddiagnosticsextensions",
     "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
     "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
-    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
+    "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
+    "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription",
+    "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics"
   }
 }

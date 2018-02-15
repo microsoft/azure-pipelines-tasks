@@ -8,11 +8,15 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 15
+    "Minor": 131,
+    "Patch": 0
   },
   "groups": [
     {
@@ -54,6 +58,9 @@
     },
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",

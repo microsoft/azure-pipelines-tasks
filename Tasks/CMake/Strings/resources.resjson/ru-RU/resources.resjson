@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613719)",
   "loc.description": "Сборка с помощью кроссплатформенной системы сборок CMake",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
-  "loc.input.label.cwd": "Рабочая папка",
+  "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Текущий рабочий каталог при выполнении CMake.",
   "loc.input.label.cmakeArgs": "Аргументы",
   "loc.input.help.cmakeArgs": "Аргументы, передаваемые в CMake",

@@ -9,13 +9,18 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 2
+    "Minor": 121,
+    "Patch": 0
   },
   "demands": [],
+  "minimumAgentVersion": "2.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
@@ -41,7 +46,8 @@
       "defaultValue": "commands",
       "options": {
         "commands": "Commands",
-        "script": "Shell script"
+        "script": "Script File",
+        "inline": "Inline Script"
       },
       "helpMarkDown": "ms-resource:loc.input.help.runOptions"
     },
@@ -66,6 +72,19 @@
       "required": true,
       "visibleRule": "runOptions = script",
       "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
+    },
+    {
+      "name": "inline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.inline",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "runOptions = inline",
+      "helpMarkDown": "ms-resource:loc.input.help.inline",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      }
     },
     {
       "name": "args",
@@ -95,6 +114,7 @@
   "messages": {
     "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
     "SettingUpSshConnection": "ms-resource:loc.messages.SettingUpSshConnection",
+    "SshConnectionSuccessful": "ms-resource:loc.messages.SshConnectionSuccessful",
     "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
     "RemoteCopyFailed": "ms-resource:loc.messages.RemoteCopyFailed",
     "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",

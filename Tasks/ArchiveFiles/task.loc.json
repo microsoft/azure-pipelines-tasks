@@ -10,11 +10,15 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "demands": [],
   "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 7
+    "Major": 2,
+    "Minor": 127,
+    "Patch": 0
   },
   "groups": [
     {
@@ -26,12 +30,12 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "rootFolder",
+      "name": "rootFolderOrFile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.rootFolder",
+      "label": "ms-resource:loc.input.label.rootFolderOrFile",
       "defaultValue": "$(Build.BinariesDirectory)",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.rootFolder"
+      "helpMarkDown": "ms-resource:loc.input.help.rootFolderOrFile"
     },
     {
       "name": "includeRootFolder",
@@ -46,11 +50,11 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.archiveType",
       "required": true,
-      "defaultValue": "default",
+      "defaultValue": "zip",
       "helpMarkDown": "ms-resource:loc.input.help.archiveType",
       "groupName": "archive",
       "options": {
-        "default": "zip",
+        "zip": "zip",
         "7z": "7z",
         "tar": "tar",
         "wim": "wim"
@@ -66,7 +70,7 @@
       "groupName": "archive",
       "visibleRule": "archiveType = tar",
       "options": {
-        "default": "gz",
+        "gz": "gz",
         "bz2": "bz2",
         "xz": "xz",
         "none": "None"
@@ -96,5 +100,14 @@
       "target": "archivefiles.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "Filename": "ms-resource:loc.messages.Filename",
+    "TarExists": "ms-resource:loc.messages.TarExists",
+    "RemoveBeforeCreation": "ms-resource:loc.messages.RemoveBeforeCreation",
+    "AlreadyExists": "ms-resource:loc.messages.AlreadyExists",
+    "ArchiveCreationFailedWithError": "ms-resource:loc.messages.ArchiveCreationFailedWithError",
+    "ArchiveFileExistsButNotAFile": "ms-resource:loc.messages.ArchiveFileExistsButNotAFile",
+    "FailedArchiveFile": "ms-resource:loc.messages.FailedArchiveFile"
   }
 }

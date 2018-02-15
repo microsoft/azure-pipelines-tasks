@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Xcode-Paket (iOS)",
+  "loc.friendlyName": "Xcode packen (iOS)",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613731)",
-  "loc.description": "IPA-Datei aus Xcode-Buildausgabe generieren",
+  "loc.description": "Generate an .ipa file from Xcode build output using xcrun (Xcode 7 or below)",
   "loc.instanceNameFormat": "Xcode-Paket $(appName)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.appName": "Name von \".app\"",

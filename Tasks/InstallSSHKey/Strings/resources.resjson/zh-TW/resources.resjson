@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "安裝 SSH 金鑰",
+  "loc.helpMarkDown": "",
+  "loc.description": "請在組建或版本之前安裝 SSH 金鑰",
+  "loc.instanceNameFormat": "安裝 SSH 金鑰",
+  "loc.input.label.hostName": "已知主機輸入",
+  "loc.input.help.hostName": "這份 SSH 金鑰的輸入，用於 known_hosts 檔案。",
+  "loc.input.label.sshPublicKey": "SSH 公開金鑰",
+  "loc.input.help.sshPublicKey": "公開 SSH 金鑰的內容。",
+  "loc.input.label.sshPassphrase": "SSH 複雜密碼",
+  "loc.input.help.sshPassphrase": "SSH 金鑰的複雜密碼 (如果有的話)。",
+  "loc.input.label.sshKeySecureFile": "SSH 金鑰",
+  "loc.input.help.sshKeySecureFile": "請選取已上傳到 [安全檔案] 的 SSH 金鑰，以安裝在代理程式上。",
+  "loc.messages.SSHKeyAlreadyInstalled": "已安裝 SSH 金鑰。",
+  "loc.messages.SSHPublicKeyMalformed": "無法取得公開 SSH 金鑰的 base64 部份。",
+  "loc.messages.SSHKeyInstallFailed": "無法安裝 SSH 金鑰。",
+  "loc.messages.CannotResetKnownHosts": "無法將 known_hosts 檔案重設為其原始值。"
+}

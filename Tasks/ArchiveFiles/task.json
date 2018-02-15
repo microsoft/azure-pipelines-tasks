@@ -2,7 +2,7 @@
     "id": "d8b84976-e99a-4b86-b885-4849694435b0",
     "name": "ArchiveFiles",
     "friendlyName": "Archive Files",
-    "description": "Archive files using a variety of compression formats such as .7z, .rar, .tar.gz, and .zip.",
+    "description": "Archive files using compression formats such as .7z, .rar, .tar.gz, and .zip.",
     "author": "Microsoft Corporation",
     "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkId=809083)",
     "category": "Utility",
@@ -10,11 +10,15 @@
         "Build",
         "Release"
     ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
     "demands": [],
     "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 7
+        "Major": 2,
+        "Minor": 127,
+        "Patch": 0
     },
     "groups": [
         {
@@ -23,34 +27,34 @@
             "isExpanded": true
         }
     ],
-    "instanceNameFormat": "Archive files $(message)",
+    "instanceNameFormat": "Archive $(rootFolderOrFile)",
     "inputs": [
         {
-            "name": "rootFolder",
+            "name": "rootFolderOrFile",
             "type": "filePath",
-            "label": "Root folder (or file) to archive",
+            "label": "Root folder or file to archive",
             "defaultValue": "$(Build.BinariesDirectory)",
             "required": true,
-            "helpMarkDown": "The root folder to add to the archive.  Everything under this folder will be added to the resulting archive."
+            "helpMarkDown": "Enter the root folder or file path to add to the archive. If a folder, everything under the folder will be added to the resulting archive."
         },
         {
             "name": "includeRootFolder",
             "type": "boolean",
-            "label": "Prefix root folder name to archive paths",
+            "label": "Prepend root folder name to archive paths",
             "defaultValue": true,
             "required": true,
-            "helpMarkDown": "If selected, the root folder name will be prefixed to file paths within the archive.  Otherwise, all file paths will start one level lower.<p>For example, suppose the selected root folder is: <b>`/home/user/output/classes/`</b>, and contains: <b>`com/acme/Main.class`</b>. <ul><li>If selected, the resulting archive would contain: <b>`classes/com/acme/Main.class`</b>.</li><li>Otherwise, the resulting archive would contain: <b>`com/acme/Main.class`</b>.</li></ul>"
+            "helpMarkDown": "If selected, the root folder name will be prepended to file paths within the archive. Otherwise, all file paths will start one level lower.<p>For example, suppose the selected root folder is: <b>`/home/user/output/classes/`</b>, and contains: <b>`com/acme/Main.class`</b>. <ul><li>If selected, the resulting archive would contain: <b>`classes/com/acme/Main.class`</b>.</li><li>Otherwise, the resulting archive would contain: <b>`com/acme/Main.class`</b>.</li></ul>"
         },
         {
             "name": "archiveType",
             "type": "pickList",
             "label": "Archive type",
             "required": true,
-            "defaultValue": "default",
+            "defaultValue": "zip",
             "helpMarkDown": "Specify the compression scheme used.  To create <b>`foo.jar`</b>, for example, choose <b>`zip`</b> for the compression, and specify <b>`foo.jar`</b> as the archive file to create.  For all tar files (including compressed ones), choose <b>`tar`</b>.",
             "groupName": "archive",
             "options": {
-                "default": "zip",
+                "zip": "zip",
                 "7z": "7z",
                 "tar": "tar",
                 "wim": "wim"
@@ -62,11 +66,11 @@
             "label": "Tar compression",
             "required": false,
             "defaultValue": "gz",
-            "helpMarkDown": "Optionally choose compression scheme, or choose <b>`None`</b> to create an uncompressed tar file.",
+            "helpMarkDown": "Optionally choose a compression scheme, or choose <b>`None`</b> to create an uncompressed tar file.",
             "groupName": "archive",
             "visibleRule": "archiveType = tar",
             "options": {
-                "default": "gz",
+                "gz": "gz",
                 "bz2": "bz2",
                 "xz": "xz",
                 "none": "None"
@@ -78,7 +82,7 @@
             "label": "Archive file to create",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip",
             "required": true,
-            "helpMarkDown": "Specify the name of the archive file to create.  For example to create <b>`foo.tgz`</b>, select the <b>`tar`</b> archive type, <b>`gz`</b> for tar compression.",
+            "helpMarkDown": "Specify the name of the archive file to create.  For example, to create <b>`foo.tgz`</b>, select the <b>`tar`</b> archive type and <b>`gz`</b> for tar compression.",
             "groupName": "archive"
         },
         {
@@ -96,5 +100,14 @@
             "target": "archivefiles.js",
             "argumentFormat": ""
         }
+    },
+    "messages": {
+        "Filename": "files=%s",
+        "TarExists": "Intermediate tar: %s already exists.  Attempting to add files to it.",
+        "RemoveBeforeCreation": "Removing existing archive file before creation: %s",
+        "AlreadyExists": "Archive file: %s already exists.  Attempting to add files to it.",
+        "ArchiveCreationFailedWithError": "Archive creation failed for archive file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
+        "ArchiveFileExistsButNotAFile": "Specified archive file: %s already exists and is not a file.",
+        "FailedArchiveFile": "Specified archive file: %s cannot be created because it cannot be accessed: %s"
     }
 }

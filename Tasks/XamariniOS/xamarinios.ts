@@ -1,66 +1,121 @@
 ﻿import path = require('path');
 import tl = require('vsts-task-lib/task');
 import sign = require('ios-signing-common/ios-signing-common');
+import msbuildhelpers = require('msbuildhelpers/msbuildhelpers');
 
-import {ToolRunner} from 'vsts-task-lib/toolrunner';
+import { ToolRunner } from 'vsts-task-lib/toolrunner';
+
+/**
+ * Find all filenames starting from `rootDirectory` that match a wildcard pattern.
+ * @param solutionPattern A filename pattern to evaluate, possibly containing wildcards.
+ */
+function expandSolutionWildcardPatterns(solutionPattern: string): string {
+    const matchedSolutionFiles = tl.findMatch(null, solutionPattern, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+    tl.debug(`Found ${matchedSolutionFiles ? matchedSolutionFiles.length : 0} solution files matching the pattern.`);
+
+    if (matchedSolutionFiles && matchedSolutionFiles.length > 0) {
+        const result = matchedSolutionFiles[0];
+        if (matchedSolutionFiles.length > 1) {
+            tl.warning(tl.loc('MultipleSolutionsFound', result));
+        }
+
+        return result;
+    } else {
+        throw tl.loc('SolutionDoesNotExist', solutionPattern);
+    }
+}
 
 async function run() {
+    let codesignKeychain: string;
+    let profileToDelete: string;
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Get build inputs
-        var solutionPath = tl.getPathInput('solution', true, true);
-        var configuration = tl.getInput('configuration', true);
-        var args = tl.getInput('args');
-        var packageApp = tl.getBoolInput('packageApp');
-        var buildForSimulator = tl.getBoolInput('forSimulator');
-        var device = (buildForSimulator) ? 'iPhoneSimulator' : 'iPhone';
+        const solutionInput: string = tl.getPathInput('solution', true, false);
+        const configuration: string = tl.getInput('configuration', true);
+        const clean: boolean = tl.getBoolInput('clean');
+        const args: string = tl.getInput('args');
+        const packageApp: boolean = tl.getBoolInput('packageApp');
+        const buildForSimulator: boolean = tl.getBoolInput('forSimulator');
+        const device: string = (buildForSimulator) ? 'iPhoneSimulator' : 'iPhone';
         tl.debug('device: ' + device);
-        var xbuildLocation = tl.getInput('mdtoolLocation', false);
-        var cwd = tl.getInput('cwd');
+        const cwd: string = tl.getPathInput('cwd', false, true);
+        const runNugetRestore: boolean = tl.getBoolInput('runNugetRestore');
 
-        // Get path to xbuild
-        var xbuildToolPath = undefined;
-        if (xbuildLocation) {
-            xbuildToolPath = path.join(xbuildLocation, 'xbuild');
-            tl.checkPath(xbuildToolPath, 'xbuild');
+        // find the build tool path based on the build tool and location inputs
+        const buildTool: string = tl.getInput('buildTool');
+        const buildToolLocation: string = tl.getInput('mdtoolLocation', false);
+        let buildToolPath: string;
+        if (buildToolLocation) {
+            // location is specified
+            buildToolPath = buildToolLocation;
+            if (buildTool === 'xbuild' && !buildToolLocation.toLowerCase().endsWith('xbuild')) {
+                buildToolPath = path.join(buildToolLocation, 'xbuild');
+            }
+            if (buildTool === 'msbuild' && !buildToolLocation.toLowerCase().endsWith('msbuild')) {
+                buildToolPath = path.join(buildToolLocation, 'msbuild');
+            }
         } else {
-            xbuildToolPath = tl.which('xbuild', true);
+            // no build tool path is supplied, check PATH
+            if (buildTool === 'msbuild') {
+                // check for msbuild 15 or higher, if not fall back to xbuild
+                buildToolPath = await msbuildhelpers.getMSBuildPath('15.0');
+            } else {
+                buildToolPath = tl.which('xbuild', true);
+            }
+        }
+        tl.checkPath(buildToolPath, 'build tool');
+        tl.debug('Build tool path = ' + buildToolPath);
+
+        const solutionPath = expandSolutionWildcardPatterns(solutionInput);
+
+        if (clean) {
+            const cleanBuildRunner: ToolRunner = tl.tool(buildToolPath);
+            cleanBuildRunner.arg(solutionPath);
+            cleanBuildRunner.argIf(configuration, '/p:Configuration=' + configuration);
+            cleanBuildRunner.argIf(device, '/p:Platform=' + device);
+            if (args) {
+                cleanBuildRunner.line(args);
+            }
+            cleanBuildRunner.arg('/t:Clean');
+            await cleanBuildRunner.exec();
         }
 
-        // Find location of nuget
-        var nugetPath = tl.which('nuget', true);
+        if (runNugetRestore) {
+            // Find location of nuget
+            const nugetPath: string = tl.which('nuget', true);
 
-        // Restore NuGet packages of the solution
-        var nugetRunner = tl.tool(nugetPath);
-        nugetRunner.arg(['restore', solutionPath]);
-        await nugetRunner.exec();
+            // Restore NuGet packages of the solution
+            const nugetRunner: ToolRunner = tl.tool(nugetPath);
+            nugetRunner.arg(['restore', solutionPath]);
+            await nugetRunner.exec();
+        }
 
         //Process working directory
-        var cwd = cwd || tl.getVariable('build.sourceDirectory') || tl.getVariable('build.sourcesDirectory');
-        tl.cd(cwd);
+        const workingDir: string = cwd || tl.getVariable('System.DefaultWorkingDirectory');
+        tl.cd(workingDir);
 
-        var signMethod:string = tl.getInput('signMethod', false);
-        var codesignKeychain:string;
-        var profileToDelete:string;
-        var provProfileUUID = null;
-        var signIdentity = null;
+        const signMethod: string = tl.getInput('signMethod', false);
+        let provProfileUUID: string = null;
+        let signIdentity: string = null;
 
         if (signMethod === 'file') {
-            var p12:string = tl.getPathInput('p12', false, false);
-            var p12pwd:string = tl.getInput('p12pwd', false);
-            var provProfilePath:string = tl.getPathInput('provProfile', false);
-            var removeProfile:boolean = tl.getBoolInput('removeProfile', false);
+            let p12: string = tl.getPathInput('p12', false, false);
+            const p12pwd: string = tl.getInput('p12pwd', false);
+            const provProfilePath: string = tl.getPathInput('provProfile', false);
+            const removeProfile: boolean = tl.getBoolInput('removeProfile', false);
 
             if (tl.filePathSupplied('p12') && tl.exist(p12)) {
                 p12 = tl.resolve(cwd, p12);
                 tl.debug('cwd = ' + cwd);
-                var keychain:string = tl.resolve(cwd, '_xamariniostasktmp.keychain');
-                var keychainPwd:string = '_xamariniostask_TmpKeychain_Pwd#1';
+                const keychain: string = tl.resolve(cwd, '_xamariniostasktmp.keychain');
+                const keychainPwd: string = '_xamariniostask_TmpKeychain_Pwd#1';
 
                 //create a temporary keychain and install the p12 into that keychain
-                tl.debug('installed cert in temp keychain');
-                await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd);
+                tl.debug('installing cert in temp keychain');
+                await sign.installCertInTemporaryKeychain(keychain, keychainPwd, p12, p12pwd, false);
                 codesignKeychain = keychain;
 
                 //find signing identity
@@ -76,10 +131,10 @@ async function run() {
                 }
             }
         } else if (signMethod === 'id') {
-            var unlockDefaultKeychain:boolean = tl.getBoolInput('unlockDefaultKeychain');
-            var defaultKeychainPassword:string = tl.getInput('defaultKeychainPassword');
+            const unlockDefaultKeychain: boolean = tl.getBoolInput('unlockDefaultKeychain');
+            const defaultKeychainPassword: string = tl.getInput('defaultKeychainPassword');
             if (unlockDefaultKeychain) {
-                var defaultKeychain:string = await sign.getDefaultKeychainPath();
+                const defaultKeychain: string = await sign.getDefaultKeychainPath();
                 await sign.unlockKeychain(defaultKeychain, defaultKeychainPassword);
             }
 
@@ -88,20 +143,28 @@ async function run() {
         }
 
         // Prepare xbuild build command line
-        var xbuildRunner = tl.tool(xbuildToolPath);
-        xbuildRunner.arg(solutionPath);
-        xbuildRunner.argIf(configuration, '/p:Configuration=' + configuration);
-        xbuildRunner.argIf(device, '/p:Platform=' + device);
-        xbuildRunner.argIf(packageApp, '/p:BuildIpa=true');
+        const buildRunner: ToolRunner = tl.tool(buildToolPath);
+        buildRunner.arg(solutionPath);
+        buildRunner.argIf(configuration, '/p:Configuration=' + configuration);
+        buildRunner.argIf(device, '/p:Platform=' + device);
+        buildRunner.argIf(packageApp, '/p:BuildIpa=true');
         if (args) {
-            xbuildRunner.line(args);
+            buildRunner.line(args);
         }
-        xbuildRunner.argIf(codesignKeychain, '/p:CodesignKeychain=' + codesignKeychain);
-        xbuildRunner.argIf(signIdentity, '/p:Codesignkey=' + signIdentity);
-        xbuildRunner.argIf(provProfileUUID, '/p:CodesignProvision=' + provProfileUUID);
+        buildRunner.argIf(codesignKeychain, '/p:CodesignKeychain=' + codesignKeychain);
+        if (buildTool === 'msbuild' && signIdentity && signIdentity.indexOf(',') > 0) {
+            // Escape the input to workaround msbuild bug https://github.com/Microsoft/msbuild/issues/471
+            tl.debug('Escaping , in arg /p:Codesignkey to workaround msbuild bug.');
+            const signIdentityEscaped = signIdentity.replace(/[,]/g, '%2C');
+            buildRunner.arg('/p:Codesignkey=' + signIdentityEscaped);
+        } else {
+            tl.debug('Passing in arg /p:Codesignkey as is without escpaing any characters.')
+            buildRunner.argIf(signIdentity, '/p:Codesignkey=' + signIdentity);
+        }
+        buildRunner.argIf(provProfileUUID, '/p:CodesignProvision=' + provProfileUUID);
 
         // Execute build
-        await xbuildRunner.exec();
+        await buildRunner.exec();
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('XamariniOSSucceeded'));
 

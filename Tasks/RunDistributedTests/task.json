@@ -2,7 +2,7 @@
     "id": "D353D6A2-E361-4A8F-8D8C-123BEBB71028",
     "name": "RunVisualStudioTestsusingTestAgent",
     "friendlyName": "Run Functional Tests",
-    "description": "Run Coded UI/Selenium/Functional tests on a set of machines (using Test Agent)",
+    "description": "Deprecated: This task and it’s companion task (Visual Studio Test Agent Deployment) are deprecated. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent phase setting. Use the 'Visual Studio Test Platform' task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
     "category": "Test",
     "visibility": [
@@ -13,8 +13,12 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 46
+        "Patch": 56
     },
+    "deprecated": true,
+    "runsOn": [
+        "Agent"
+    ],
     "demands": [],
     "minimumAgentVersion": "1.104.0",
     "groups": [
@@ -71,7 +75,7 @@
             "type": "pickList",
             "label": "Test Plan",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "DisableManageLink": "True"
             },
@@ -84,7 +88,7 @@
             "type": "pickList",
             "label": "Test Suite",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "MultiSelect": "True",
                 "DisableManageLink": "True"
@@ -98,7 +102,7 @@
             "type": "pickList",
             "label": "Test Configuration",
             "defaultValue": "",
-            "required": false,
+            "required": true,
             "properties": {
                 "DisableManageLink": "True"
             },
@@ -132,7 +136,7 @@
             "label": "Run Settings File",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests. Use `$(agent.BuildDirectory)\\$(system.teamProject)` to access the Project folder.",
+            "helpMarkDown": "Path to runsettings or testsettings file to use with the tests.",
             "groupName": "executionOptions"
         },
         {
@@ -141,7 +145,7 @@
             "label": "Override Test Run Parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Override parameters defined in the TestRunParameters section of runsettings file. For example: `AppURL=$(DeployURL);Port=8080`",
+            "helpMarkDown": "Override parameters defined in the `TestRunParameters` section of runsettings file or `Properties` section of testsettings file. For example: `AppURL=$(DeployURL);Port=8080`. Note: Properties specified in testsettings file can be accessed via the TestContext using Test Agent 2017 Update 4 or higher.",
             "groupName": "executionOptions"
         },
         {
@@ -195,7 +199,7 @@
             "label": "Test Configurations",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally associate a testcase filter against a testconfiguration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
+            "helpMarkDown": "Optionally associate a test case filter against a test configuration ID. Syntax: &lt;Filter1&gt;:&lt;Id1&gt;;DefaultTestConfiguration:&lt;Id3&gt;. For example: `FullyQualifiedName~Chrome:12`",
             "groupName": "reportingOptions"
         },
         {
@@ -211,21 +215,21 @@
     "sourceDefinitions": [
         {
             "target": "testPlan",
-            "endpoint": "/$(system.teamProject)/_apis/test/plans",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans?api-version=3.0-preview.2",
             "selector": "jsonpath:$.value[*].name",
             "keySelector": "jsonpath:$.value[*].id",
             "authKey": "tfs:teamfoundation"
         },
         {
             "target": "testConfiguration",
-            "endpoint": "/$(system.teamProject)/_apis/test/configurations",
+            "endpoint": "/$(system.teamProject)/_apis/test/configurations?api-version=3.0-preview.1",
             "selector": "jsonpath:$.value[*].name",
             "keySelector": "jsonpath:$.value[*].id",
             "authKey": "tfs:teamfoundation"
         },
         {
             "target": "testSuite",
-            "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true",
+            "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true&api-version=3.0-preview.2",
             "selector": "jsonpath:$.value[*]",
             "authKey": "tfs:teamfoundation"
         }

@@ -4,23 +4,16 @@ function Add-DbghelpLibrary {
 
     Trace-VstsEnteringInvocation $MyInvocation
     
-    $dbgAssembly = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\externals\symstore\dbghelp.dll"
-    $legacyDbgAssembly = "$(Get-VstsTaskVariable -Name Agent.HomeDirectory -Require)\Agent\Worker\Tools\Symstore\dbghelp.dll"
-    if (!([System.IO.File]::Exists($dbgAssembly)) -and
-        ([System.IO.File]::Exists($legacyDbgAssembly)))
-    {
-        $dbgAssembly = $legacyDbgAssembly
-    }
+    $dbghelpPath = Get-DbghelpPath
     
-    [string]$filePath = Assert-VstsPath -LiteralPath $dbgAssembly -PathType Leaf -PassThru
     [bool]$isLoaded = $false
     foreach ($module in (Get-CurrentProcess).Modules) {
         if ($module.ModuleName -eq 'dbghelp.dll') {
             $isLoaded = $true
-            if ($module.FileName -eq $filePath) {
-                Write-Verbose "Module dbghelp.dll is already loaded from the expected file path."
+            if ($module.FileName -eq $dbghelpPath) {
+                Write-Verbose "Module dbghelp.dll is already loaded from the expected file path: $dbghelpPath"
             } else {
-                Write-Warning (Get-VstsLocString -Key UnexpectedDbghelpdllExpected0Actual1 -ArgumentList $filePath, $module.FileName)
+                Write-Warning (Get-VstsLocString -Key UnexpectedDbghelpdllExpected0Actual1 -ArgumentList $dbghelpPath, $module.FileName)
             }
 
             # Don't short-circuit the loop. The module could be loaded more
@@ -29,10 +22,10 @@ function Add-DbghelpLibrary {
     }
 
     if (!$isLoaded) {
-        $hModule = Invoke-LoadLibrary -LiteralPath $filePath
+        $hModule = Invoke-LoadLibrary -LiteralPath $dbghelpPath
         if ($hModule -eq [System.IntPtr]::Zero) {
             $errorCode = Get-LastWin32Error
-            Write-Warning (Get-VstsLocString -Key "FailedToLoadDbghelpDllFrom0ErrorCode1" -ArgumentList $filePath, $errorCode)
+            Write-Warning (Get-VstsLocString -Key "FailedToLoadDbghelpDllFrom0ErrorCode1" -ArgumentList $dbghelpPath, $errorCode)
             return
         }
 

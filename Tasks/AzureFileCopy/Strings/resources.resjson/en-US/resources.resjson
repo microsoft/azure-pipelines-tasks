@@ -9,7 +9,7 @@
   "loc.input.label.ConnectedServiceNameSelector": "Azure Connection Type",
   "loc.input.label.ConnectedServiceName": "Azure Classic Subscription",
   "loc.input.help.ConnectedServiceName": "Azure Classic subscription to target for copying the files.",
-  "loc.input.label.ConnectedServiceNameARM": "Azure RM Subscription",
+  "loc.input.label.ConnectedServiceNameARM": "Azure Subscription",
   "loc.input.help.ConnectedServiceNameARM": "Azure Resource Manager subscription to target for copying the files.",
   "loc.input.label.Destination": "Destination Type",
   "loc.input.help.Destination": "Select the destination, either Azure Blob or Azure VMs.",
@@ -65,9 +65,9 @@
   "loc.messages.AFC_ClassicStorageAccountNotFound": "Storage account: {0} not found. Selected Connection 'Certificate' supports storage account of Azure Classic type only.",
   "loc.messages.AFC_GenericStorageAccountNotFound": "Storage account: {0} not found. Please specify existing storage account",
   "loc.messages.AFC_AzureFileCopyMoreHelp": "For more info please refer to {0}",
-  "loc.messages.AFC_UploadFilesStorageAccount": "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'",
-  "loc.messages.AFC_UploadContainerStorageAccount": "Upload to container: '{0}' in storage account: '{1}' with blobprefix: '{2}' failed with error: '{3}'",
-  "loc.messages.AFC_UploadFileSuccessful": "Uploaded files successfully from source path: '{0}' to storage account: '{1}' in container: '{2}' with blobprefix: '{3}'",
+  "loc.messages.AFC_UploadFilesStorageAccount": "Uploading files from source path: '{0}' to storage account: '{1}' in container: '{2}' with blob prefix: '{3}'",
+  "loc.messages.AFC_UploadContainerStorageAccount": "Upload to container: '{0}' in storage account: '{1}' with blob prefix: '{2}' failed with error: '{3}'",
+  "loc.messages.AFC_UploadFileSuccessful": "Uploaded files successfully from source path: '{0}' to storage account: '{1}' in container: '{2}' with blob prefix: '{3}'",
   "loc.messages.AFC_IncorrectTags": "Tags have been incorrectly specified. They have to be in the format Role:Web,DB;Location:East US;Dept.:Finance,HR",
   "loc.messages.AFC_MachineDoesNotExist": "The following machines either do not exist in the resource group or their names have not been specified correctly: {0}. Provide the exact same machine names present in the resource group. Use comma to separate multiple machine names.",
   "loc.messages.AFC_MachineNameFromIdErrorAllResources": "Unable to get {0} for all resources in ResourceGroup : '{1}'",
@@ -87,5 +87,6 @@
   "loc.messages.AFC_AddNetworkSecurityRuleFailed": "Failed to add the network security rule: {0}",
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "Unable to set the custom script extension '{0}' for virtual machine '{1}': {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Failed to enable copy prerequisites. {0}",
-  "loc.messages.AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account"
+  "loc.messages.AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account",
+  "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers."
 }

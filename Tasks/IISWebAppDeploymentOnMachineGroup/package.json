@@ -1,0 +1,23 @@
+{
+  "name": "vsts-tasks-iiswebappdeploymentonmachinegroup",
+  "version": "1.0.0",
+  "description": "VSTS  IIS WebApp Deployment On Machine Group",
+  "main": "DeployIISWebApp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "q": "1.4.1",
+    "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common-1.0.0.tgz"
+  }
+}

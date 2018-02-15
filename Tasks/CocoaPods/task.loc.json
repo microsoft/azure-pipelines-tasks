@@ -8,21 +8,53 @@
   "visibility": [
     "Build"
   ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 18
+    "Minor": 131,
+    "Patch": 0
   },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd"
+    },
+    {
+      "name": "forceRepoUpdate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceRepoUpdate",
+      "defaultValue": false,
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.forceRepoUpdate",
+      "groupName": "advanced"
+    },
+    {
+      "name": "projectDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.projectDirectory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.projectDirectory",
+      "groupName": "advanced"
     }
   ],
   "execution": {

@@ -26,6 +26,13 @@ declare module 'ios-signing-common/ios-signing-common' {
     export function getProvisioningProfileUUID(provProfilePath: string) : string;
 
     /**
+     * Find the type of the provisioning profile - development, app-store or ad-hoc
+     * @param provProfilePath
+     * @returns {string} type
+     */
+    export function getProvisioningProfileType(provProfilePath: string) : string;
+
+    /**
      * Delete specified iOS keychain
      * @param keychainPath
      */
@@ -48,4 +55,12 @@ declare module 'ios-signing-common/ios-signing-common' {
      * Gets the path to the iOS default keychain
      */
     export function getDefaultKeychainPath() : string;
+
+    /**
+     * Get Cloud entitlement type Production or Development according to the export method - if entitlement doesn't exists in provisioning profile returns null 
+     * @param provisioningProfilePath
+     * @param exportMethod
+     * @returns {string} 
+     */
+    export function getCloudEntitlement(provisioningProfilePath: string, exportMethod: string): Promise<string>
 }

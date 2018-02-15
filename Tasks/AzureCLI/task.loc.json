@@ -5,59 +5,41 @@
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "category": "Deploy",
   "visibility": [
     "Build",
     "Release"
   ],
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "demands": [],
   "version": {
-    "Major": 0,
-    "Minor": 2,
-    "Patch": 3
+    "Major": 1,
+    "Minor": 130,
+    "Patch": 0
   },
-  "minimumAgentVersion": "1.95.0",
+  "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "isExpanded": true
     }
   ],
   "inputs": [
     {
-      "name": "connectedServiceNameSelector",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.connectedServiceNameSelector",
-      "defaultValue": "connectedServiceNameARM",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameSelector",
-      "options": {
-        "connectedServiceName": "Azure Classic",
-        "connectedServiceNameARM": "Azure Resource Manager"
-      }
-    },
-    {
       "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
-      "defaultValue": "",
-      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
-    },
-    {
-      "name": "connectedServiceName",
-      "type": "connectedService:Azure",
-      "label": "ms-resource:loc.input.label.connectedServiceName",
-      "defaultValue": "",
-      "visibleRule": "connectedServiceNameSelector = connectedServiceName",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
       "name": "scriptLocation",
@@ -67,8 +49,8 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.scriptLocation",
       "options": {
-        "inlineScript": "Inline Script",
-        "scriptPath": "Script Path"
+        "inlineScript": "Inline script",
+        "scriptPath": "Script path"
       }
     },
     {
@@ -91,19 +73,28 @@
       "properties": {
         "resizable": "true",
         "rows": "10",
-        "maxLength": "500"
+        "maxLength": "4000"
       }
     },
     {
       "name": "args",
+      "aliases": [
+        "arguments"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.args",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.args"
+      "helpMarkDown": "ms-resource:loc.input.help.args",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      }
     },
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "",
@@ -130,6 +121,8 @@
   "messages": {
     "ScriptReturnCode": "ms-resource:loc.messages.ScriptReturnCode",
     "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
-    "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme"
+    "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme",
+    "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
+    "FailedToLogout": "ms-resource:loc.messages.FailedToLogout"
   }
 }

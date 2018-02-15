@@ -1,22 +1,29 @@
 ########################################
 # Public functions.
 ########################################
+$script:visualStudioCache = @{ }
+
+########################################
+# Public functions.
+########################################
 function Get-MSBuildPath {
     [CmdletBinding()]
     param(
         [string]$Version,
-        [string]$Architecture,
-        [switch]$SearchCom)
+        [string]$Architecture)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        # Attempt to find Microsoft.Build.Utilities.Core.dll from a VS 15 Willow install.
+        # Only attempt to find Microsoft.Build.Utilities.Core.dll from a VS 15 Willow install
+        # when "15.0" or latest is specified. In 15.0, the method GetPathToBuildToolsFile(...)
+        # has regressed. When it is called for a version that is not found, the latest version
+        # found is returned instead.
         [System.Reflection.Assembly]$msUtilities = $null
-        if ($SearchCom -and
+        if (($Version -eq "15.0" -or !$Version) -and # !$Version indicates "latest"
             ($visualStudio15 = Get-VisualStudio_15_0) -and
-            $visualStudio15.Path) {
+            $visualStudio15.installationPath) {
 
-            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio15.Path, "MSBuild\15.0\Bin\Microsoft.Build.Utilities.Core.dll")
+            $msbuildUtilitiesPath = [System.IO.Path]::Combine($visualStudio15.installationPath, "MSBuild\15.0\Bin\Microsoft.Build.Utilities.Core.dll")
             if (Test-Path -LiteralPath $msbuildUtilitiesPath -PathType Leaf) {
                 Write-Verbose "Loading $msbuildUtilitiesPath"
                 $msUtilities = [System.Reflection.Assembly]::LoadFrom($msbuildUtilitiesPath)
@@ -168,168 +175,122 @@ function Get-VisualStudio_15_0 {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        # Short-circuit if the setup configuration class ID isn't registered.
-        Write-Verbose "Testing for class ID."
-        if (!(Test-Path -LiteralPath 'REGISTRY::HKEY_CLASSES_ROOT\CLSID\{177F0C4A-1CD3-4DE7-A32C-71DBBB9FA36D}')) {
-            return
-        }
-
-        # If the type has already been loaded once, then it is not loaded again.
-        Write-Verbose "Adding Visual Studio setup helpers."
-        Add-Type -Debug:$false -TypeDefinition @'
-namespace MSBuildHelpers.VisualStudio.Setup
-{
-    using System;
-    using System.Collections.Generic;
-    using MSBuildHelpers.VisualStudio.Setup.Com;
-
-    public sealed class Instance
-    {
-        public string Description { get; set; }
-
-        public string DisplayName { get; set; }
-
-        public string Id { get; set; }
-
-        public System.Runtime.InteropServices.ComTypes.FILETIME InstallDate { get; set; }
-
-        public string Name { get; set; }
-
-        public string Path { get; set; }
-
-        public Version Version
-        {
-            get
-            {
-                try
-                {
-                    return new Version(VersionString);
+        if (!$script:visualStudioCache.ContainsKey('15.0')) {
+            try {
+                # Query for the latest 15.* version.
+                #
+                # Note, the capability is registered as VisualStudio_15.0, however the actual version
+                # may be something like 15.2.
+                Write-Verbose "Getting latest Visual Studio 15 setup instance."
+                $output = New-Object System.Text.StringBuilder
+                Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -latest -format json" -RequireExitCodeZero 2>&1 |
+                    ForEach-Object {
+                        if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                            Write-Verbose "STDERR: $($_.Exception.Message)"
+                        }
+                        else {
+                            Write-Verbose $_
+                            $null = $output.AppendLine($_)
+                        }
+                    }
+                $script:visualStudioCache['15.0'] = (ConvertFrom-Json -InputObject $output.ToString()) |
+                    Select-Object -First 1
+                if (!$script:visualStudioCache['15.0']) {
+                    # Query for the latest 15.* BuildTools.
+                    #
+                    # Note, whereas VS 15.x version number is always 15.0.*, BuildTools does not follow the
+                    # the same scheme. It appears to follow the 15.<UPDATE_NUMBER>.* versioning scheme.
+                    Write-Verbose "Getting latest BuildTools 15 setup instance."
+                    $output = New-Object System.Text.StringBuilder
+                    Invoke-VstsTool -FileName "$PSScriptRoot\vswhere.exe" -Arguments "-version [15.0,16.0) -products Microsoft.VisualStudio.Product.BuildTools -latest -format json" -RequireExitCodeZero 2>&1 |
+                        ForEach-Object {
+                            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                                Write-Verbose "STDERR: $($_.Exception.Message)"
+                            }
+                            else {
+                                Write-Verbose $_
+                                $null = $output.AppendLine($_)
+                            }
+                        }
+                    $script:visualStudioCache['15.0'] = (ConvertFrom-Json -InputObject $output.ToString()) |
+                        Select-Object -First 1
                 }
-                catch (Exception)
-                {
-                    return new Version(0, 0);
-                }
+            } catch {
+                Write-Verbose ($_ | Out-String)
+                $script:visualStudioCache['15.0'] = $null
             }
         }
 
-        public string VersionString { get; set; }
+        return $script:visualStudioCache['15.0']
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
 
-        public static List<Instance> GetInstances()
-        {
-            List<Instance> list = new List<Instance>();
-            ISetupConfiguration config = new SetupConfiguration() as ISetupConfiguration;
-            IEnumSetupInstances enumInstances = config.EnumInstances();
-            ISetupInstance[] instances = new ISetupInstance[1];
-            int fetched = 0;
-            enumInstances.Next(1, instances, out fetched);
-            while (fetched > 0)
-            {
-                ISetupInstance instance = instances[0];
-                list.Add(new Instance()
-                {
-                    Description = instance.GetDescription(),
-                    DisplayName = instance.GetDisplayName(),
-                    Id = instance.GetInstanceId(),
-                    InstallDate = instance.GetInstallDate(),
-                    Name = instance.GetInstallationName(),
-                    Path = instance.GetInstallationPath(),
-                    VersionString = instance.GetInstallationVersion(),
-                });
+function Select-MSBuildPath {
+    [CmdletBinding()]
+    param(
+        [string]$Method,
+        [string]$Location,
+        [string]$PreferredVersion,
+        [string]$Architecture)
 
-                enumInstances.Next(1, instances, out fetched);
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        # Default the msbuildLocationMethod if not specified. The input msbuildLocationMethod
+        # was added to the definition after the input msbuildLocation.
+        if ("$Method".ToUpperInvariant() -ne 'LOCATION' -and "$Method".ToUpperInvariant() -ne 'VERSION') {
+            # Infer the msbuildLocationMethod based on the whether msbuildLocation is specified.
+            if ($Location) {
+                $Method = 'location'
+            } else {
+                $Method = 'version'
             }
 
-            return list;
+            Write-Verbose "Defaulted MSBuild location method to: $Method"
         }
-    }
-}
 
-namespace MSBuildHelpers.VisualStudio.Setup.Com
-{
-    using System;
-    using System.Runtime.InteropServices;
+        if ("$Method".ToUpperInvariant() -eq 'LOCATION') {
+            # Return the location.
+            if ($Location) {
+                return $Location
+            }
 
-    [ComImport]
-    [Guid("6380BCFF-41D3-4B2E-8B2E-BF8A6810C848")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IEnumSetupInstances
-    {
-        void Next(
-            [In, MarshalAs(UnmanagedType.U4)] int celt,
-            [Out, MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.Interface)] ISetupInstance[] rgelt,
-            [Out, MarshalAs(UnmanagedType.U4)] out int pceltFetched);
+            # Fallback to version lookup.
+            Write-Verbose "Location not specified. Looking up by version instead."
+        }
 
-        void Skip([In, MarshalAs(UnmanagedType.U4)] int celt);
+        $specificVersion = $PreferredVersion -and $PreferredVersion -ne 'latest'
+        $versions = '15.0', '14.0', '12.0', '4.0' | Where-Object { $_ -ne $PreferredVersion }
 
-        void Reset();
+        # Look for a specific version of MSBuild.
+        if ($specificVersion) {
+            if (($path = Get-MSBuildPath -Version $PreferredVersion -Architecture $Architecture)) {
+                return $path
+            }
 
-        [return: MarshalAs(UnmanagedType.Interface)]
-        IEnumSetupInstances Clone();
-    }
+            # Attempt to fallback.
+            Write-Verbose "Specified version '$PreferredVersion' and architecture '$Architecture' not found. Attempting to fallback."
+        }
 
-    [ComImport]
-    [Guid("42843719-DB4C-46C2-8E7C-64F1816EFD5B")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface ISetupConfiguration
-    {
-        [return: MarshalAs(UnmanagedType.Interface)]
-        IEnumSetupInstances EnumInstances();
-    }
+        # Look for the latest version of MSBuild.
+        foreach ($version in $versions) {
+            if (($path = Get-MSBuildPath -Version $version -Architecture $Architecture)) {
+                # Warn falling back.
+                if ($specificVersion) {
+                    Write-Warning (Get-VstsLocString -Key 'MSB_UnableToFindMSBuildVersion0Architecture1FallbackVersion2' -ArgumentList $PreferredVersion, $Architecture, $version)
+                }
 
-    [ComImport]
-    [Guid("B41463C3-8866-43B5-BC33-2B0676F7F42E")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface ISetupInstance
-    {
-        [return: MarshalAs(UnmanagedType.BStr)]
-        string GetInstanceId();
+                return $path
+            }
+        }
 
-        [return: MarshalAs(UnmanagedType.Struct)]
-        System.Runtime.InteropServices.ComTypes.FILETIME GetInstallDate();
-
-        [return: MarshalAs(UnmanagedType.BStr)]
-        string GetInstallationName();
-
-        [return: MarshalAs(UnmanagedType.BStr)]
-        string GetInstallationPath();
-
-        [return: MarshalAs(UnmanagedType.BStr)]
-        string GetInstallationVersion();
-
-        [return: MarshalAs(UnmanagedType.BStr)]
-        string GetDisplayName([In, MarshalAs(UnmanagedType.U4)] int lcid = default(int));
-
-        [return: MarshalAs(UnmanagedType.BStr)]
-        string GetDescription([In, MarshalAs(UnmanagedType.U4)] int lcid = default(int));
-    }
-
-    [ComImport]
-    [Guid("42843719-DB4C-46C2-8E7C-64F1816EFD5B")]
-    [CoClass(typeof(SetupConfigurationClass))]
-    [TypeLibImportClass(typeof(SetupConfigurationClass))]
-    public interface SetupConfiguration : ISetupConfiguration
-    {
-    }
-
-    [ComImport]
-    [Guid("177F0C4A-1CD3-4DE7-A32C-71DBBB9FA36D")]
-    [ClassInterface(ClassInterfaceType.None)]
-    public class SetupConfigurationClass
-    {
-    }
-}
-'@
-
-        Write-Verbose "Getting Visual Studio setup instances."
-        $instances = @( [MSBuildHelpers.VisualStudio.Setup.Instance]::GetInstances() )
-        Write-Verbose "Found $($instances.Count) instances."
-        Write-Verbose ($instances | Format-List * | Out-String)
-        return $instances |
-            Where-Object { $_.Version.Major -eq 15 -and $_.Version.Minor -eq 0 } |
-            Sort-Object -Descending -Property Version |
-            Select-Object -First 1
-    } catch {
-        Write-Verbose ($_ | Out-String)
+        # Error. Not found.
+        if ($specificVersion) {
+            Write-Error (Get-VstsLocString -Key 'MSB_MSBuildNotFoundVersion0Architecture1' -ArgumentList $PreferredVersion, $Architecture)
+        } else {
+            Write-Error (Get-VstsLocString -Key 'MSB_MSBuildNotFound')
+        }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }

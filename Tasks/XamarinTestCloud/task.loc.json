@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 28
+    "Minor": 131,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.83.0",
@@ -24,9 +24,13 @@
       "isExpanded": true
     }
   ],
+  "deprecated": true,
   "inputs": [
     {
       "name": "app",
+      "aliases": [
+        "appFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.app",
       "defaultValue": "",
@@ -35,6 +39,9 @@
     },
     {
       "name": "dsym",
+      "aliases": [
+        "dsymFile"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.dsym",
       "required": false,
@@ -51,6 +58,9 @@
     },
     {
       "name": "user",
+      "aliases": [
+        "email"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.user",
       "defaultValue": "",
@@ -75,6 +85,9 @@
     },
     {
       "name": "testDir",
+      "aliases": [
+        "testAssemblyDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testDir",
       "defaultValue": "",
@@ -83,6 +96,9 @@
     },
     {
       "name": "parallelization",
+      "aliases": [
+        "parallelizationOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.parallelization",
       "required": true,
@@ -96,6 +112,9 @@
     },
     {
       "name": "locale",
+      "aliases": [
+        "localeOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.locale",
       "defaultValue": "en_US",
@@ -128,6 +147,9 @@
     },
     {
       "name": "testCloudLocation",
+      "aliases": [
+        "testCloudFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testCloudLocation",
       "groupName": "advanced",

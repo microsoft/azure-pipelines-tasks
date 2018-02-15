@@ -1,0 +1,49 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "VS140COMNTools": "/vs/path",
+        "tia.enabled": "true"
+    },
+    "findMatch": {
+        "*.trx": [
+            "a.trx"
+        ]
+    },
+    "exec": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe path/to/file /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "C:\\WINDOWS\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\Windows\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\windows\\system32\\chcp.com 65001": {
+            "code": 0
+        }
+    },
+    "rmRF": {
+        "\\source\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "exist": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true,
+        "settings.runsettings": true,
+        "settings.testsettings": true
+    },
+    "stats": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
+            "isFile": true
+        },
+        "settings.runsettings": {
+            "isFile": true
+        },
+        "settings.testsettings": {
+            "isFile": true
+        }
+    }
+}

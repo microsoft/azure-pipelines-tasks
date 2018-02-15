@@ -12,9 +12,9 @@
   "author": "Microsoft",
   "demands": [],
   "version": {
-    "Major": 1,
-    "Minor": 1,
-    "Patch": 3
+    "Major": 2,
+    "Minor": 131,
+    "Patch": 0
   },
   "groups": [
     {
@@ -42,6 +42,23 @@
       "helpMarkDown": "ms-resource:loc.input.help.jobName"
     },
     {
+      "name": "isMultibranchJob",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isMultibranchJob",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.isMultibranchJob"
+    },
+    {
+      "name": "multibranchPipelineBranch",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.multibranchPipelineBranch",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "isMultibranchJob = true",
+      "helpMarkDown": "ms-resource:loc.input.help.multibranchPipelineBranch"
+    },
+    {
       "name": "captureConsole",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.captureConsole",
@@ -60,6 +77,9 @@
     },
     {
       "name": "parameterizedJob",
+      "aliases": [
+        "isParameterizedJob"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.parameterizedJob",
       "defaultValue": false,
@@ -82,10 +102,33 @@
       }
     }
   ],
+  "outputVariables": [
+    {
+      "name": "JENKINS_JOB_ID",
+      "description": "The ID of the Jenkins job instance queued by this task. Use this variable in the Jenkins Download Artifacts task to download the artifacts for this particular job instance."
+    }
+  ],
   "execution": {
     "Node": {
       "target": "jenkinsqueuejobtask.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "FailedToGenerateSummary": "ms-resource:loc.messages.FailedToGenerateSummary",
+    "succeeded": "ms-resource:loc.messages.succeeded",
+    "unstable": "ms-resource:loc.messages.unstable",
+    "failed": "ms-resource:loc.messages.failed",
+    "notbuilt": "ms-resource:loc.messages.notbuilt",
+    "aborted": "ms-resource:loc.messages.aborted",
+    "unknown": "ms-resource:loc.messages.unknown",
+    "console": "ms-resource:loc.messages.console",
+    "JenkinsPipelineComplete": "ms-resource:loc.messages.JenkinsPipelineComplete",
+    "JenkinsJobComplete": "ms-resource:loc.messages.JenkinsJobComplete",
+    "JenkinsJobQueued": "ms-resource:loc.messages.JenkinsJobQueued",
+    "JenkinsPipelineFailed": "ms-resource:loc.messages.JenkinsPipelineFailed",
+    "JenkinsJobFailed": "ms-resource:loc.messages.JenkinsJobFailed",
+    "JenkinsJobFailedtoQueue": "ms-resource:loc.messages.JenkinsJobFailedtoQueue",
+    "JenkinsJobQueueUriInvalid": "ms-resource:loc.messages.JenkinsJobQueueUriInvalid"
   }
 }

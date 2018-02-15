@@ -14,14 +14,17 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 24
+    "Minor": 130,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.91.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "build",

@@ -1,11 +1,20 @@
 import * as path from "path";
-
 import * as tl from "vsts-task-lib/task";
+import * as ngToolRunner from "./NuGetToolRunner";
+import * as vsts from "vso-node-api/WebApi";
+import {VersionInfo} from "./pe-parser/VersionResource";
+import locationHelpers = require("./LocationHelpers");
+import * as url from "url";
+
+export function getPatternsArrayFromInput(pattern: string): string[]
+{
+    // make sure to remove any empty entries, or else we'll accidentally match the current directory.
+    return pattern.split(";").map(x => x.trim()).filter(x => !!x);
+}
 
 // Attempts to resolve paths the same way the legacy PowerShell's Find-Files worked
-export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean): string[] {
-    // make sure to remove any empty entries, or else we'll accidentally match the current directory.
-    let patterns = filterSpec.split(";").map(x => x.trim()).filter(x => !!x);
+export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean, includeFolders?: boolean): string[] {
+    let patterns = getPatternsArrayFromInput(filterSpec);
     let result = new Set<string>();
 
     patterns.forEach(pattern => {
@@ -24,7 +33,7 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
         tl.debug(`pattern: ${pattern}, isNegative: ${isNegative}`);
 
-        let thisPatternFiles = resolveWildcardPath(pattern, true);
+        let thisPatternFiles = resolveWildcardPath(pattern, true, includeFolders);
         thisPatternFiles.forEach(file => {
             if (isNegative) {
                 result.delete(file);
@@ -37,13 +46,13 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
     // Fail if no matching files were found
     if (!allowEmptyMatch && (!result || result.size === 0)) {
-        throw new Error("No matching files were found with search pattern: " + filterSpec);
+        throw new Error(tl.loc("Error_NoMatchingFilesFoundForPattern", filterSpec));
     }
 
     return Array.from(result);
 }
 
-export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean): string[] {
+export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean, includeFolders?: boolean): string[] {
     let isWindows = tl.osType() === 'Windows_NT';
 
     // Resolve files for the specified value or pattern
@@ -80,7 +89,11 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         // First find the most complete path without any matching patterns
         let idx = firstWildcardIndex(pattern);
         tl.debug("Index of first wildcard: " + idx);
-        let findPathRoot = path.dirname(pattern.slice(0, idx));
+
+        // include the wildcard character because:
+        //  dirname(c:\foo\bar\) => c:\foo (which will make find() return a bunch of stuff we know we'll discard)
+        //  dirname(c:\foo\bar\*) => c:\foo\bar
+        let findPathRoot = path.dirname(pattern.slice(0, idx + 1));
 
         tl.debug("find root dir: " + findPathRoot);
 
@@ -103,11 +116,14 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         filesList = allFiles.filter(patternFilter);
 
         // Avoid matching anything other than files
-        filesList = filesList.filter(x => tl.stats(x).isFile());
+        if (!includeFolders)
+            filesList = filesList.filter(x => tl.stats(x).isFile());
+        else
+            filesList = filesList.filter(x => tl.stats(x).isFile() || tl.stats(x).isDirectory());
 
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length === 0)) {
-            throw new Error("No matching files were found with search pattern: " + pattern);
+            throw new Error(tl.loc("Error_NoMatchingFilesFoundForPattern", pattern));
         }
     }
 
@@ -138,14 +154,32 @@ export function stripLeadingAndTrailingQuotes(path: string): string {
     return path.substring(left, right + 1);
 }
 
-export function getBundledNuGetLocation(version: string): string {
-    if (version === "3.5.0.1829"){
-        return path.join(__dirname, 'NuGet/3.5.0.1829/NuGet.exe')
+export function getBundledNuGetLocation(uxOption: string): string {
+    let nuGetDir;
+    if (uxOption === "4.0.0.2283") {
+        nuGetDir = "NuGet/4.0.0";
     }
-    else if (version === "3.3.0"){
-        return path.join(__dirname, 'NuGet/3.3.0/NuGet.exe');
+    else if (uxOption === "3.5.0.1829") {
+        nuGetDir = "NuGet/3.5.0";
     }
-    throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
+    else if (uxOption === "3.3.0") {
+        nuGetDir = "NuGet/3.3.0";
+    }
+    else {
+        throw new Error(tl.loc("NGCommon_UnabletoDetectNuGetVersion"));
+    }
+
+    const toolPath = ngToolRunner.locateTool("NuGet", {
+        root: __dirname,
+        searchPath: [nuGetDir],
+        toolFilenames: ["NuGet.exe", "nuget.exe"],
+    });
+
+    if (!toolPath) {
+        throw new Error(tl.loc("NGCommon_UnableToFindTool", "NuGet"));
+    }
+
+    return toolPath;
 }
 
 export function locateCredentialProvider(): string {
@@ -158,3 +192,58 @@ export function setConsoleCodePage() {
         tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
     }
 }
+
+export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string, nuGetVersion: VersionInfo): Promise<string>
+{
+    const ApiVersion = "3.0-preview.1";
+    let PackagingAreaName: string = "nuget";
+    // If no version is received, V3 is assumed
+    let PackageAreaId: string = nuGetVersion && nuGetVersion.productVersion.a < 3 ? "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA" : "9D3A4E8E-2F8F-4AE1-ABC2-B461A51CB3B3";
+
+    let credentialHandler = vsts.getBearerHandler(accessToken);
+    let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+    // The second element contains the transformed packaging URL
+    let packagingCollectionUrl = (await locationHelpers.assumeNuGetUriPrefixes(collectionUrl))[1];
+
+    if (!packagingCollectionUrl)
+    {
+        packagingCollectionUrl = collectionUrl;
+    }
+
+    const overwritePackagingCollectionUrl = tl.getVariable("NuGet.OverwritePackagingCollectionUrl");
+    if (overwritePackagingCollectionUrl) {
+        tl.debug("Overwriting packaging collection URL");
+        packagingCollectionUrl = overwritePackagingCollectionUrl;
+    }
+
+    let vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
+    let coreApi = vssConnection.getCoreApi();
+
+    let data = await Retry(async () => {
+        return await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
+    }, 4, 100);
+    return data.requestUrl;
+}
+
+// This should be replaced when retry is implemented in vso client.
+async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
+    try {
+        return await cb();
+    } catch(exception) {
+        tl.debug(JSON.stringify(exception));
+        if(max_retry > 0)
+        {
+            tl.debug("Waiting " + retry_delay + "ms...");
+            await delay(retry_delay);
+            tl.debug("Retrying...");
+            return await Retry<T>(cb, max_retry-1, retry_delay*2);
+        } else {
+            throw exception;
+        }
+    }
+}
+function delay(delayMs:number) {
+    return new Promise(function(resolve) { 
+        setTimeout(resolve, delayMs);
+    });
+ }

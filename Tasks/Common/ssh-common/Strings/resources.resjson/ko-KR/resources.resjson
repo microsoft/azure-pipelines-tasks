@@ -1,9 +1,9 @@
 {
-  "loc.messages.SettingUpSSHConnection": "Setting up SSH connection to remote host %s.",
-  "loc.messages.ConnectionNotSetup": "SSH connection is not setup.",
-  "loc.messages.ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. %s.",
-  "loc.messages.RemoteCmdExecutionErr": "Command %s failed with errors on remote machine. %s.",
-  "loc.messages.CheckLogForStdErr": "Check the build log for STDERR from the command.",
-  "loc.messages.RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
-  "loc.messages.UploadFileFailed": "Failed to upload %s to %s on remote machine. %s."
+  "loc.messages.SettingUpSSHConnection": "원격 호스트 %s에 대한 SSH 연결을 설정하는 중입니다.",
+  "loc.messages.ConnectionNotSetup": "SSH 연결이 설정되지 않았습니다.",
+  "loc.messages.ConnectionFailed": "원격 컴퓨터에 연결하지 못했습니다. SSH 끝점 정보를 확인하세요. %s.",
+  "loc.messages.RemoteCmdExecutionErr": "원격 컴퓨터에서 오류가 발생하여 %s 명령이 실패했습니다. %s.",
+  "loc.messages.CheckLogForStdErr": "명령에서 STDERR에 대한 빌드 로그를 확인하세요.",
+  "loc.messages.RemoteCmdNonZeroExitCode": "%s 명령이 종료되었습니다(코드: %s).",
+  "loc.messages.UploadFileFailed": "%s을(를) 원격 컴퓨터에 있는 %s에 업로드하지 못했습니다. %s."
 }

@@ -1,0 +1,28 @@
+# Gradle
+# Build your Java projects and run tests with Gradle using a Gradle wrapper script.
+# https://aka.ms/yaml
+
+queue: 'Hosted VS2017'
+
+#variables:
+#  system.debug: 'true'
+
+steps:
+- task: Gradle@2
+  displayName: 'Build with Gradle'
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build'
+
+- task: CopyFiles@2
+  displayName: 'Copy artifacts'
+  inputs:
+    contents: '**/*.jar'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: 'artifact'
+    artifactType: 'container'

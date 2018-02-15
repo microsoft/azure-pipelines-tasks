@@ -1,0 +1,56 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/source/dir",
+        "build.sourcesdirectory": "/source/dir",
+        "VS140COMNTools": "/vs/path"
+    },
+    "findMatch": {
+        "\\source\\dir\\TestResults\\*.trx": [
+            "a.trx"
+        ],
+        "/source/dir/someFile1": [
+            "/source/dir/someFile1"
+        ]
+    },
+    "exec": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "wmic datafile where name='\\\\vs\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
+			"code": 0,
+			"stdout" : "version=14.0.25421.0"
+        },
+        "[^~]*logger:trx$": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "C:\\WINDOWS\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\Windows\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\windows\\system32\\chcp.com 65001": {
+            "code": 0
+        }
+	},
+    "rmRF": {
+        "\\source\\dir\\TestResults": {
+            "success": true,
+            "message": "success"
+        }
+    },
+    "exist": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true,
+        "^(?:[\\w]\\:|\\\\)(\\\\[A-z_\\-\\s0-9\\.]+)+\\.(runsettings)$": true
+    },
+    "stats": {
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
+            "isFile": true
+        },
+        "^(?:[\\w]\\:|\\\\)(\\\\[A-z_\\-\\s0-9\\.]+)+\\.(runsettings)$": {
+            "isFile": true
+        }
+    }
+}

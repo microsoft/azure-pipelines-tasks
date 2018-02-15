@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 45
+        "Minor": 126,
+        "Patch": 0
     },
     "demands": [
         "msbuild",
@@ -36,6 +36,21 @@
             "helpMarkDown": "Relative path from repo root of the solution(s) or MSBuild project to run.  Wildcards can be used.  For example, `**\\*.sln` for all sln files in all sub folders."
         },
         {
+            "name": "vsVersion",
+            "type": "pickList",
+            "label": "Visual Studio Version",
+            "required": false,
+            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
+            "defaultValue": "latest",
+            "options": {
+                "latest": "Latest",
+                "15.0": "Visual Studio 2017",
+                "14.0": "Visual Studio 2015",
+                "12.0": "Visual Studio 2013",
+                "11.0": "Visual Studio 2012"
+            }
+        },
+        {
             "name": "msbuildArgs",
             "type": "string",
             "label": "MSBuild Arguments",
@@ -47,6 +62,7 @@
             "name": "platform",
             "type": "string",
             "label": "Platform",
+            "helpMarkDown": "Specify the platform you want to build such as Win32, x86, x64 or any cpu.",
             "defaultValue": "",
             "required": false
         },
@@ -54,6 +70,7 @@
             "name": "configuration",
             "type": "string",
             "label": "Configuration",
+            "helpMarkDown": "Specify the configuration you want to build such as debug or release.",
             "defaultValue": "",
             "required": false
         },
@@ -61,6 +78,7 @@
             "name": "clean",
             "type": "boolean",
             "label": "Clean",
+            "helpMarkDown": "Set to False if you want to make this an incremental build.",
             "defaultValue": "false",
             "required": false
         },
@@ -81,21 +99,6 @@
             "required": false,
             "groupName": "advanced",
             "helpMarkDown": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build."
-        },
-        {
-            "name": "vsVersion",
-            "type": "pickList",
-            "label": "Visual Studio Version",
-            "required": false,
-            "helpMarkDown": "If the preferred version cannot be found, the latest version found will be used instead.",
-            "defaultValue": "14.0",
-            "options": {
-                "latest": "Latest",
-                "15.0": "Visual Studio \"15\" (preview)",
-                "14.0": "Visual Studio 2015",
-                "12.0": "Visual Studio 2013",
-                "11.0": "Visual Studio 2012"
-            }
         },
         {
             "name": "msbuildArchitecture",
@@ -137,11 +140,12 @@
     },
     "messages": {
         "MSBuildLocationDeprecated0": "The MSBuild location parameter has been deprecated. Ignoring value '{0}'",
-        "MSBuildNotFoundVersion0Architecture1": "MSBuild not found for version '{0}' and architecture '{1}'.",
         "MSBuildVersionDeprecated0": "The MSBuild version parameter has been deprecated. Ignoring value '{0}'.",
         "UnexpectedVSVersion0": "Unexpected Visual Studio version '{0}'.",
         "VSLocationDeprecated0": "The Visual Studio location parameter has been deprecated. Ignoring value '{0}'",
-        "VSNotFoundTry": "Visual Studio not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
-        "VSVersion0NotFoundLookingForLatest": "Visual Studio version '{0}' not found. Looking for the latest version."
+        "VSNotFoundTry": "Visual Studio was not found. Try installing a supported version of Visual Studio. See the task definition for a list of supported versions.",
+        "VSVersion0NotFound": "Visual Studio version '{0}' not found.",
+        "VSVersion0NotFoundFallbackVersion1": "Visual Studio version '{0}' not found. Falling back to version '{1}'.",
+        "VSVersion15NotFound": "Visual Studio 2017 was not found."
     }
 }

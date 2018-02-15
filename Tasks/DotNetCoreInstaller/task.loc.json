@@ -1,0 +1,69 @@
+{
+  "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+  "name": "DotNetCoreInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 7
+  },
+  "satisfies": [
+    "DotNetCore"
+  ],
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageType",
+      "defaultValue": "sdk",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageType",
+      "options": {
+        "runtime": "Runtime",
+        "sdk": "SDK (contains runtime)"
+      }
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "1.0.4",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "dotnetcoreinstaller.js"
+    }
+  },
+  "messages": {
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported",
+    "PrimaryUrlDownloadFailed": "ms-resource:loc.messages.PrimaryUrlDownloadFailed",
+    "LegacyUrlDownloadFailed": "ms-resource:loc.messages.LegacyUrlDownloadFailed",
+    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
+    "getDownloadUrlsFailed": "ms-resource:loc.messages.getDownloadUrlsFailed",
+    "UsingCachedTool": "ms-resource:loc.messages.UsingCachedTool",
+    "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
+    "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
+    "GettingDownloadUrls": "ms-resource:loc.messages.GettingDownloadUrls",
+    "NullDownloadUrls": "ms-resource:loc.messages.NullDownloadUrls",
+    "DownloadingPrimaryUrl": "ms-resource:loc.messages.DownloadingPrimaryUrl",
+    "DownloadingSecondaryUrl": "ms-resource:loc.messages.DownloadingSecondaryUrl",
+    "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
+    "CachingTool": "ms-resource:loc.messages.CachingTool",
+    "SuccessfullyInstalled": "ms-resource:loc.messages.SuccessfullyInstalled",
+    "ToolToInstall": "ms-resource:loc.messages.ToolToInstall"
+  }
+}

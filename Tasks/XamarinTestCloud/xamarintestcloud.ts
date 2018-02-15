@@ -229,7 +229,10 @@ var submitToTestCloud = function (index) {
     // For an iOS .ipa app, look for an accompanying dSYM file
     if (dsym && path.extname(appFiles[index]) == '.ipa') {
         // Find dSYM files matching the specified pattern
-        var alldsymFiles = tl.find(path.dirname(appFiles[index]));
+        // Check in one folder up since IPAs are now generated under a timestamped folder
+        var ipaFolder = path.dirname(path.dirname(appFiles[index]));
+        tl.debug('Checking for dSYM files under: ' + ipaFolder);
+        var alldsymFiles = tl.find(ipaFolder);
         var dsymFiles = tl.match(alldsymFiles, dsym, {matchBase: true});
 
         if (!dsymFiles || dsymFiles.length == 0) {

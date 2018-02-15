@@ -9,8 +9,11 @@ param (
     [string]$httpProtocolOption,
     [string]$skipCACheckOption,
     [string]$enableDetailedLogging,
-    [string]$sessionVariables
+    [string]$sessionVariables,
+    [string]$scriptRoot
     )
+
+    Import-Module "$scriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
     Write-Verbose "fqdn = $fqdn"
     Write-Verbose "scriptPath = $scriptPath"
@@ -20,26 +23,6 @@ param (
     Write-Verbose "protocolOption = $httpProtocolOption"
     Write-Verbose "skipCACheckOption = $skipCACheckOption"
     Write-Verbose "enableDetailedLogging = $enableDetailedLogging"
-
-    if(Test-Path "$env:AGENT_HOMEDIRECTORY\Agent\Worker")
-    {
-        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\*.dll | % {
-        [void][reflection.assembly]::LoadFrom( $_.FullName )
-        Write-Verbose "Loading .NET assembly:`t$($_.name)"
-        }
-
-        Get-ChildItem $env:AGENT_HOMEDIRECTORY\Agent\Worker\Modules\Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs\*.dll | % {
-        [void][reflection.assembly]::LoadFrom( $_.FullName )
-        Write-Verbose "Loading .NET assembly:`t$($_.name)"
-        }
-    }
-    else
-    {
-        if(Test-Path "$env:AGENT_HOMEDIRECTORY\externals\vstshost")
-        {
-            [void][reflection.assembly]::LoadFrom("$env:AGENT_HOMEDIRECTORY\externals\vstshost\Microsoft.TeamFoundation.DistributedTask.Task.LegacySDK.dll")
-        }
-    }
 
     $enableDetailedLoggingOption = ''
     if ($enableDetailedLogging -eq "true")

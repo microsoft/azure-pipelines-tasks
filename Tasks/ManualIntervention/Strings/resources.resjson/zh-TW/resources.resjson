@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "手動操作",
+  "loc.helpMarkDown": "[更多資訊](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.description": "暫停部署並等候操作",
+  "loc.instanceNameFormat": "手動操作",
+  "loc.input.label.instructions": "指示",
+  "loc.input.help.instructions": "使用者會看見這些繼續或拒絕手動操作的相關指示。使用者可依據這些指示對手動操作做出明智的決策。",
+  "loc.input.label.emailRecipients": "通知使用者",
+  "loc.input.help.emailRecipients": "將手動操作的待處理電子郵件傳送給特定使用者 (或群組)。只有具備管理部署權限的使用者可對手動操作執行動作。",
+  "loc.input.label.onTimeout": "逾時時",
+  "loc.input.help.onTimeout": "當手動操作暫止時間超過指定的逾時或 60 天 (以先達到的時間為準) 時，自動拒絕或繼續此手動操作。"
+}

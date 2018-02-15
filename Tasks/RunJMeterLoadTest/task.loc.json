@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 8
+    "Patch": 19
   },
   "demands": [
     "azureps"
@@ -25,7 +25,6 @@
       "type": "connectedService:Generic",
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
     },
     {
@@ -78,7 +77,8 @@
       "name": "machineType",
       "type": "radio",
       "label": "ms-resource:loc.input.label.machineType",
-      "required": true,
+      "required": false,
+      "visibleRule": "runDuration = 0",
       "defaultValue": "0",
       "options": {
         "0": "Automatically provisioned agents",

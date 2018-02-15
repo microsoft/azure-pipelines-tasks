@@ -1,6 +1,6 @@
-#Build your code using Gradle in VSTS
+# Build your code using Gradle in VSTS
 
-###Parameters for Gradle build task are explained below
+### Parameters for Gradle build task are explained below
 
 - **Gradle Wrapper :** This is a Required field. The location in the repository of the gradlew wrapper used for the build. Note that on Windows build agents (including the hosted pool), you must use the `gradlew.bat` wrapper. Xplat build agents use the `gradlew` shell script. To Know more [click here](https://docs.gradle.org/current/userguide/gradle_wrapper.html)
 
@@ -8,7 +8,7 @@
 
 - **Goal(s) :** The task(s) for Gradle to execute. A list of tasks can be taken from `gradlew tasks` issued from a command prompt. To know more [click here](https://docs.gradle.org/current/userguide/tutorial_using_tasks.html)
 
-####JUnit Test Results
+#### JUnit Test Results
 Use the next three options to manage your JUnit test results in VSTS
 
 - **Publish to VSTS :** Select this option to publish JUnit Test results produced by the Gradle build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS.
@@ -17,7 +17,7 @@ Use the next three options to manage your JUnit test results in VSTS
 
 - **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
 
-####Code Coverage
+#### Code Coverage
 Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
 
 - **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported.
@@ -25,7 +25,7 @@ Use the next options to manage your code coverage options. If your Build file al
 - **Class Inclusion/Exclusion Filters :** This option is enabled only when you select one tool in the above option. Provide a 
 comma separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*.
 
-####Advanced
+#### Advanced
 Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Path
 
 - **Working Directory :** Directory on the build agent where the Gradle wrapper will be invoked from. Defaults to the repository root.
@@ -36,9 +36,19 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 - **JDK Architecture :** Select the approriate JDK Architecture. By default it is set to `x86`
 
-###Q&A
+#### Code Analysis
 
-####How do I generate a wrapper from my Gradle project?
+- **Run SonarQube Analysis :** You can choose to run SonarQube analysis after executing the current goals. 'install' or 'package' goals should be executed first. To know more about this option [click here](https://blogs.msdn.com/b/visualstudioalm/archive/2015/10/08/the-maven-build-task-now-simplifies-sonarqube-analysis.aspx)
+
+- **Run Checkstyle :** You can choose to run the Checkstyle static code analysis tool, which checks the compliance of your source code with coding rules. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
+
+- **Run PMD :** You can choose to run the PMD static code analysis tool, which examines your source code for possible bugs. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
+
+- **Run FindBugs :** You can choose to run the FindBugs static code analysis tool, which examines the bytecode of your program for possible bugs. You will receive a code analysis report with the number of violations detected, as well as the original report files if there were any violations.
+
+### Q&A
+
+#### How do I generate a wrapper from my Gradle project?
 
 The Gradle wrapper allows the build agent to download and configure the exact Gradle environment that is checked into the repoistory without having any software configuration on the build agent itself other than the JVM.
 

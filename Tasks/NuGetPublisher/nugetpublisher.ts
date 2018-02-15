@@ -31,9 +31,11 @@ async function main(): Promise<void> {
 
         // read inputs
         let searchPattern = tl.getPathInput("searchPattern", true, false);
+        let allowEmptyNupkgMatch = tl.getBoolInput("continueOnEmptyNupkgMatch");
         let filesList = nutil.resolveFilterSpec(
             searchPattern,
-            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+            tl.getVariable("System.DefaultWorkingDirectory") || process.cwd(),
+            allowEmptyNupkgMatch);
         filesList.forEach(packageFile => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("NotARegularFile", packageFile));
@@ -58,12 +60,12 @@ async function main(): Promise<void> {
         // due to a bug where we accidentally allowed nuGetPath to be surrounded by quotes before,
         // locateNuGetExe() will strip them and check for existence there.
         let nuGetPath = tl.getPathInput("nuGetPath", false, false);
-        let nugetVersion = tl.getInput("nuGetversion");
+        let nugetUxOption = tl.getInput("nuGetversion");
         let userNuGetProvided = false;
         if (nuGetPath !== null && tl.filePathSupplied("nuGetPath")) {
             nuGetPath = nutil.stripLeadingAndTrailingQuotes(nuGetPath);
             userNuGetProvided = true;
-            if (nugetVersion !== "custom")
+            if (nugetUxOption !== "custom")
             {
                 // For back compat, if a path has already been specified then use it.
                 // However, warn the user in the build of this behavior.
@@ -71,11 +73,11 @@ async function main(): Promise<void> {
             }
         }
         else {
-            if (nugetVersion === "custom")
+            if (nugetUxOption === "custom")
             {
                 throw new Error(tl.loc("NoNuGetSpecified"))
             }
-            nuGetPath = nutil.getBundledNuGetLocation(nugetVersion);
+            nuGetPath = nutil.getBundledNuGetLocation(nugetUxOption);
         }
 
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
@@ -116,9 +118,9 @@ async function main(): Promise<void> {
         if (nuGetFeedType == "internal") {
             if (useCredConfig) {
                 let nuGetConfigHelper = new NuGetConfigHelper(nuGetPath, null, authInfo, environmentSettings);
-                nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }]);
+                nuGetConfigHelper.setSources([{ feedName: "internalFeed", feedUri: internalFeedUri }], true);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;
-                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath, true);
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
             }
 
             apiKey = "VSTS";
@@ -185,7 +187,7 @@ function publishPackageAsync(packageFile: string, options: PublishOptions): Q.Pr
     }
 
     if (options.extraArgs) {
-        nugetTool.argString(options.extraArgs);
+        nugetTool.line(options.extraArgs);
     }
 
     return nugetTool.exec();

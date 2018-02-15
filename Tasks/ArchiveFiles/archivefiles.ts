@@ -1,9 +1,9 @@
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 
-var repoRoot: string = tl.getVariable('build.sourcesDirectory');
+var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
 
-var rootFolder: string = makeAbsolute(path.normalize(tl.getPathInput('rootFolder', true, false).trim()));
+var rootFolderOrFile: string = makeAbsolute(path.normalize(tl.getPathInput('rootFolderOrFile', true, false).trim()));
 var includeRootFolder: boolean = tl.getBoolInput('includeRootFolder', true);
 var archiveType: string = tl.getInput('archiveType', true);
 var archiveFile: string = path.normalize(tl.getPathInput('archiveFile', true, false).trim());
@@ -34,9 +34,9 @@ function getSevenZipLocation(): string {
 
 function findFiles(): string[] {
     if (includeRootFolder) {
-        return [path.basename(rootFolder)];
+        return [path.basename(rootFolderOrFile)];
     } else {
-        var fullPaths: string[] = tl.ls(null, [rootFolder]);
+        var fullPaths: string[] = tl.ls('-A', [rootFolderOrFile]);
         var baseNames: string[] = [];
         for (var i = 0; i < fullPaths.length; i++) {
             baseNames[i] = path.basename(fullPaths[i]);
@@ -59,15 +59,15 @@ function makeAbsolute(normalizedPath: string): string {
 function getOptions() {
     var dirName: string;
     if (includeRootFolder) {
-        dirName = path.dirname(rootFolder);
+        dirName = path.dirname(rootFolderOrFile);
         tl.debug("cwd (include root folder)= " + dirName);
         return { cwd: dirName };
     } else {
-        var stats: tl.FsStats = tl.stats(rootFolder);
+        var stats: tl.FsStats = tl.stats(rootFolderOrFile);
         if (stats.isFile()) {
-            dirName = path.dirname(rootFolder);
+            dirName = path.dirname(rootFolderOrFile);
         } else {
-            dirName = rootFolder;
+            dirName = rootFolderOrFile;
         }
         tl.debug("cwd (exclude root folder)= " + dirName);
         return { cwd: dirName };
@@ -97,7 +97,7 @@ function zipArchive(archive: string, files: string[]) {
     zip.arg(archive);
     for (var i = 0; i < files.length; i++) {
         zip.arg(files[i]);
-        console.log('files=' + files[i]);
+        console.log(tl.loc('Filename', files[i]));
     }
     return handleExecResult(zip.execSync(getOptions()), archive);
 }
@@ -128,12 +128,7 @@ function tarArchive(archive: string, compression: string, files: string[]) {
 function handleExecResult(execResult, archive) {
     if (execResult.code != tl.TaskResult.Succeeded) {
         tl.debug('execResult: ' + JSON.stringify(execResult));
-        var message = 'Archive creation failed for archive file: ' + archive +
-            '\ncode: ' + execResult.code +
-            '\nstdout: ' + execResult.stdout +
-            '\nstderr: ' + execResult.stderr +
-            '\nerror: ' + execResult.error;
-        failTask(message);
+        failTask(tl.loc('ArchiveCreationFailedWithError', archive, execResult.code, execResult.stdout, execResult.stderr, execResult.error));
     }
 }
 
@@ -207,7 +202,7 @@ function createArchive(files: string[]) {
                 var tarExists = tl.exist(tarFile);
                 try {
                     if (tarExists) {
-                        console.log('Intermediate tar: ' + tarFile + ' already exists.  Attempting to add files to it.');
+                        console.log(tl.loc('TarExists', tarFile));
                     }
 
                     // this file could already exist, but not checking because by default files will be added to it
@@ -255,6 +250,7 @@ function createArchive(files: string[]) {
 
 function doWork() {
     try {
+        tl.setResourcePath(path.join( __dirname, 'task.json'));
         // Find matching archive files
         var files: string[] = findFiles();
         tl.debug('Found: ' + files.length + ' files to archive:');
@@ -268,15 +264,15 @@ function doWork() {
                 try {
                     var stats: tl.FsStats = tl.stats(archiveFile);
                     if (stats.isFile()) {
-                        console.log('removing existing archive file before creation: ' + archiveFile);
+                        console.log(tl.loc('RemoveBeforeCreation', archiveFile));
                     } else {
-                        failTask('Specified archive file: ' + archiveFile + ' already exists and is not a file.');
+                        failTask(tl.loc('ArchiveFileExistsButNotAFile', archiveFile));
                     }
                 } catch (e) {
-                    failTask('Specified archive file: ' + archiveFile + ' can not be created because it can not be accessed: ' + e);
+                    failTask(tl.loc('FailedArchiveFile', archiveFile, e));
                 }
             } else {
-                console.log('Archive file: ' + archiveFile + ' already exists.  Attempting to add files to it.');
+                console.log(tl.loc('AlreadyExists', archiveFile));
             }
         }
 

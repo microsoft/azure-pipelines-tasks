@@ -8,6 +8,7 @@ describe('NuGetPublisher Suite', function () {
 
     after(() => {
     });
+    
     it('publish single package internally', (done: MochaDone) => {
         this.timeout(1000);
 

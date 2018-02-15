@@ -1,0 +1,4 @@
+{
+  "loc.messages.ActionTimedOut": "Exceeded max retries. Timing out.",
+  "loc.messages.RetryAfterMessage": "Retrying after {0} second(s)..."
+}

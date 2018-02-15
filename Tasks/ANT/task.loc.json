@@ -9,11 +9,15 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 57
+    "Minor": 131,
+    "Patch": 0
   },
   "demands": [
     "ant"
@@ -26,6 +30,11 @@
       "isExpanded": true
     },
     {
+      "name": "codeCoverage",
+      "displayName": "ms-resource:loc.group.displayName.codeCoverage",
+      "isExpanded": true
+    },
+    {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
@@ -35,6 +44,9 @@
   "inputs": [
     {
       "name": "antBuildFile",
+      "aliases": [
+        "buildFile"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.antBuildFile",
       "defaultValue": "build.xml",
@@ -87,7 +99,79 @@
       "visibleRule": "publishJUnitResults = true"
     },
     {
+      "name": "codeCoverageTool",
+      "aliases": [
+        "codeCoverageToolOptions"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.codeCoverageTool",
+      "required": false,
+      "groupName": "codeCoverage",
+      "defaultValue": "None",
+      "helpMarkDown": "ms-resource:loc.input.help.codeCoverageTool",
+      "options": {
+        "None": "None",
+        "Cobertura": "Cobertura",
+        "JaCoCo": "JaCoCo"
+      }
+    },
+    {
+      "name": "classFilesDirectories",
+      "aliases": [
+        "codeCoverageClassFilesDirectories"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilesDirectories",
+      "defaultValue": ".",
+      "required": true,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilesDirectories",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "classFilter",
+      "aliases": [
+        "codeCoverageClassFilter"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.classFilter",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.classFilter",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "srcDirectories",
+      "aliases": [
+        "codeCoverageSourceDirectories"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.srcDirectories",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.srcDirectories",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
+      "name": "failIfCoverageEmpty",
+      "aliases": [
+        "codeCoverageFailIfEmpty"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failIfCoverageEmpty",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "codeCoverage",
+      "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty",
+      "visibleRule": "codeCoverageTool != None"
+    },
+    {
       "name": "antHomeUserInputPath",
+      "aliases": [
+        "antHomeDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.antHomeUserInputPath",
       "required": false,
@@ -97,6 +181,9 @@
     },
     {
       "name": "javaHomeSelection",
+      "aliases": [
+        "javaHomeOption"
+      ],
       "type": "radio",
       "label": "ms-resource:loc.input.label.javaHomeSelection",
       "required": true,
@@ -110,6 +197,9 @@
     },
     {
       "name": "jdkVersion",
+      "aliases": [
+        "jdkVersionOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkVersion",
       "required": false,
@@ -119,6 +209,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.9": "JDK 9",
         "1.8": "JDK 8",
         "1.7": "JDK 7",
         "1.6": "JDK 6"
@@ -126,6 +217,9 @@
     },
     {
       "name": "jdkUserInputPath",
+      "aliases": [
+        "jdkUserInputDirectory"
+      ],
       "type": "string",
       "label": "ms-resource:loc.input.label.jdkUserInputPath",
       "required": true,
@@ -136,11 +230,15 @@
     },
     {
       "name": "jdkArchitecture",
+      "aliases": [
+        "jdkArchitectureOption"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.jdkArchitecture",
-      "defaultValue": "x86",
+      "defaultValue": "x64",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.jdkArchitecture",
+      "visibleRule": "jdkVersion != default",
       "groupName": "advanced",
       "options": {
         "x86": "x86",
@@ -157,6 +255,7 @@
   "messages": {
     "LocateJVMBasedOnVersionAndArch": "ms-resource:loc.messages.LocateJVMBasedOnVersionAndArch",
     "FailedToLocateSpecifiedJVM": "ms-resource:loc.messages.FailedToLocateSpecifiedJVM",
-    "DiscontinueAntCodeCoverage": "ms-resource:loc.messages.DiscontinueAntCodeCoverage"
+    "DiscontinueAntCodeCoverage": "ms-resource:loc.messages.DiscontinueAntCodeCoverage",
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
   }
 }

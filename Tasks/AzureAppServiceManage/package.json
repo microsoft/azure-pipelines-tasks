@@ -1,0 +1,24 @@
+{
+  "name": "vsts-tasks-azurewebappslotswap",
+  "version": "0.1.0",
+  "description": "VSTS Azure WebApp Slot Swap",
+  "main": "azurewebappslotswap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
+    "q": "1.4.1",
+    "xml2js": "0.4.13"
+  }
+}

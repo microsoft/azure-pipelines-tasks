@@ -1,5 +1,0 @@
-projectKey=prca3
-serverUrl=http://localhost:9000
-dashboardUrl=http://localhost:9000/dashboard/index/prca3
-ceTaskId=AVQFkrko8fxuJtveJbjv
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AVQFkrko8fxuJtveJbjv

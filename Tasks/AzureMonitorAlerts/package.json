@@ -1,0 +1,21 @@
+{
+  "name": "vsts-tasks-azuremonitoralerts",
+  "version": "0.0.1",
+  "description": "Azure monitor alerts",
+  "main": "azuremonitoralerts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "azurestack-common": "file:../../_build/Tasks/Common/azurestack-common-1.0.0.tgz",
+    "q": "1.5.0",
+    "typed-rest-client": "0.12.0",
+    "vsts-task-lib": "2.1.0"
+  }
+}

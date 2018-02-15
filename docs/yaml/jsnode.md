@@ -1,3 +1,6 @@
+Refer to [https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/yamlgettingstarted.md](https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/yamlgettingstarted.md)
+
+<!--
 # jsnode
 
 ```yaml
@@ -25,3 +28,4 @@ my build job:
     - gulp test
 
 ```
+-->

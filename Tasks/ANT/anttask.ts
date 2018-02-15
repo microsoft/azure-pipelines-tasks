@@ -4,6 +4,8 @@ import fs = require('fs');
 import os = require('os');
 import * as Q from "q";
 import javacommons = require('java-common/java-common');
+import ccUtils = require('codecoverage-tools/codecoverageutilities');
+import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -78,7 +80,103 @@ function processAntOutputLine(line) {
 }
 
 
+
 async function doWork() {
+
+    function execEnableCodeCoverage(): Q.Promise<string> {
+        return enableCodeCoverage()
+            .then(function (resp) {
+                tl.debug("Enabled code coverage successfully");
+                return "CodeCoverage_9064e1d0";
+            }).catch(function (err) {
+                tl.warning("Failed to enable code coverage: " + err);
+                return "";
+            });
+    };
+
+    function enableCodeCoverage(): Q.Promise<any> {
+        if (!isCodeCoverageOpted) {
+            return Q.resolve(true);
+        }
+
+        var classFilter: string = tl.getInput('classFilter');
+        var classFilesDirectories: string = tl.getInput('classFilesDirectories', true);
+        var sourceDirectories: string = tl.getInput('srcDirectories');
+        // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
+        var reportDirectoryName = "CCReport43F6D5EF";
+        reportDirectory = path.join(buildRootPath, reportDirectoryName);
+        var reportBuildFileName = "CCReportBuildA4D283EG.xml";
+        reportBuildFile = path.join(buildRootPath, reportBuildFileName);
+        var summaryFileName = "";
+        if (ccTool.toLowerCase() == "jacoco") {
+            summaryFileName = "summary.xml";
+        }else if (ccTool.toLowerCase() == "cobertura") {
+            summaryFileName = "coverage.xml";
+        }
+        summaryFile = path.join(buildRootPath, reportDirectoryName, summaryFileName);
+        var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
+        var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
+
+        // clean any previous reports.
+        try {
+            tl.rmRF(coberturaCCFile, true);
+            tl.rmRF(reportDirectory, true);
+            tl.rmRF(reportBuildFile, true);
+            tl.rmRF(instrumentedClassesDirectory, true);
+        } catch (err) {
+            tl.debug("Error removing previous cc files: " + err);
+        }
+
+        var buildProps: { [key: string]: string } = {};
+        buildProps['buildfile'] = antBuildFile;
+        buildProps['classfilter'] = classFilter
+        buildProps['classfilesdirectories'] = classFilesDirectories;
+        buildProps['sourcedirectories'] = sourceDirectories;
+        buildProps['summaryfile'] = summaryFileName;
+        buildProps['reportdirectory'] = reportDirectory;
+        buildProps['ccreporttask'] = "CodeCoverage_9064e1d0"
+        buildProps['reportbuildfile'] = reportBuildFile;
+
+        let ccEnabler = new CodeCoverageEnablerFactory().getTool("ant", ccTool.toLowerCase());
+        return ccEnabler.enableCodeCoverage(buildProps);
+    }
+
+    async function publishCodeCoverage(codeCoverageOpted: boolean, ccReportTask: string) {
+        tl.debug("publishCodeCoverage f=" + failIfCodeCoverageEmpty + " opt=" + codeCoverageOpted + " task=" + ccReportTask);
+        if (failIfCodeCoverageEmpty && codeCoverageOpted && !ccReportTask) {
+            throw tl.loc('NoCodeCoverage'); 
+        }
+        else if (codeCoverageOpted && ccReportTask) {
+            tl.debug("Collecting code coverage reports");
+            var antRunner = tl.tool(anttool);
+            antRunner.arg('-buildfile');
+            if (pathExistsAsFile(reportBuildFile)) {
+                antRunner.arg(reportBuildFile);
+                antRunner.arg(ccReportTask);
+            }
+            else {
+                antRunner.arg(antBuildFile);
+                antRunner.arg(ccReportTask);
+            }
+            antRunner.exec().then(async function (code) {
+                if (failIfCodeCoverageEmpty && await ccUtils.isCodeCoverageFileEmpty(summaryFile, ccTool)) {
+                    throw tl.loc('NoCodeCoverage'); 
+                }
+                if (pathExistsAsFile(summaryFile)) {
+                    tl.debug("Summary file = " + summaryFile);
+                    tl.debug("Report directory = " + reportDirectory);
+                    tl.debug("Publishing code coverage results to TFS");
+                    var ccPublisher = new tl.CodeCoveragePublisher();
+                    ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
+                }
+                else {
+                    tl.warning("No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details.");
+                }
+            }).fail(function (err) {
+                tl.warning("No code coverage results found to be published. This could occur if there were no tests executed or there was a build failure. Check the ant output for details.");
+            });
+        }
+    }
 
     try {
         var anttool = tl.which('ant', true);
@@ -111,12 +209,13 @@ async function doWork() {
         // update JAVA_HOME if user selected specific JDK version or set path manually
         var javaHomeSelection = tl.getInput('javaHomeSelection', true);
         var specifiedJavaHome = null;
-
+        var javaTelemetryData = null;
         if (javaHomeSelection == 'JDKVersion') {
             tl.debug('Using JDK version to find and set JAVA_HOME');
             var jdkVersion = tl.getInput('jdkVersion');
             var jdkArchitecture = tl.getInput('jdkArchitecture');
-
+            javaTelemetryData = { "jdkVersion": jdkVersion };
+            
             if (jdkVersion != 'default') {
                 specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
             }
@@ -125,8 +224,10 @@ async function doWork() {
             tl.debug('Using path from user input to set JAVA_HOME');
             var jdkUserInputPath = tl.getPathInput('jdkUserInputPath', true, true);
             specifiedJavaHome = jdkUserInputPath;
+            javaTelemetryData = { "jdkVersion": "custom" };
         }
-
+        javacommons.publishJavaTelemetry('Ant', javaTelemetryData);
+        
         if (specifiedJavaHome) {
             tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
             process.env['JAVA_HOME'] = specifiedJavaHome;
@@ -134,13 +235,19 @@ async function doWork() {
 
         var ccTool = tl.getInput('codeCoverageTool');
         var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
+        var failIfCodeCoverageEmpty: boolean = tl.getBoolInput('failIfCoverageEmpty');
         var buildRootPath = path.dirname(antBuildFile);
+
+        var summaryFile: string = null;
+        var reportDirectory: string = null;
+        var ccReportTask: string = null;
+        var reportBuildFile: string = null;
+        var publishJUnitResults = tl.getInput('publishJUnitResults');
+        var testResultsFiles = tl.getInput('testResultsFiles', true);
         var publishJUnitResults = tl.getInput('publishJUnitResults');
         var testResultsFiles = tl.getInput('testResultsFiles', true);
 
-        if(isCodeCoverageOpted){
-            tl.warning(tl.loc('DiscontinueAntCodeCoverage'));
-        }
+        ccReportTask = await execEnableCodeCoverage();
 
         await antv.exec();
         var buffer;
@@ -157,13 +264,15 @@ async function doWork() {
             }
         });
 
-        antb.exec()
-            .then(function (code) {
+        await antb.exec()
+            .then(async function (code) {
                 publishTestResults(publishJUnitResults, testResultsFiles);
+                await publishCodeCoverage(isCodeCoverageOpted, ccReportTask);
                 tl.setResult(tl.TaskResult.Succeeded, "Task succeeded");
             })
             .fail(function (err) {
                 console.error(err.message);
+                publishTestResults(publishJUnitResults, testResultsFiles);
                 tl.debug('taskRunner fail');
                 tl.setResult(tl.TaskResult.Failed, err);
             });

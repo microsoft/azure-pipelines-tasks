@@ -17,7 +17,7 @@ foreach ($variableSet in $variableSets) {
 }
 Register-Mock Get-SolutionFiles
 Register-Mock Select-VSVersion
-Register-Mock Select-MSBuildLocation
+Register-Mock Select-MSBuildPath
 Register-Mock Format-MSBuildArguments
 Register-Mock Invoke-BuildTools { 'Some build output' }
 Register-Mock Write-Warning

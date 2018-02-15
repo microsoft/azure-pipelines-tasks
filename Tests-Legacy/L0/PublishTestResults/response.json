@@ -1,0 +1,15 @@
+{
+    "findMatch": {
+        "**\\TEST-*.xml": [
+            "jUnit1TEST.xml",
+            "jUnit2TEST.xml"
+        ],
+        "/invalid/*pattern": [],
+        "TEST.xml": [
+            "jUnit1TEST.xml"
+        ],
+        "**\\n-files*.xml": [
+            "n-files0.xml", "n-files1.xml", "n-files2.xml", "n-files3.xml", "n-files4.xml", "n-files5.xml", "n-files6.xml", "n-files7.xml", "n-files8.xml", "n-files9.xml", "n-files10.xml", "n-files11.xml", "n-files12.xml", "n-files13.xml", "n-files14.xml", "n-files15.xml", "n-files16.xml", "n-files17.xml", "n-files18.xml", "n-files19.xml", "n-files20.xml", "n-files21.xml", "n-files22.xml", "n-files23.xml", "n-files24.xml", "n-files25.xml", "n-files26.xml", "n-files27.xml", "n-files28.xml", "n-files29.xml", "n-files30.xml", "n-files31.xml", "n-files32.xml", "n-files33.xml", "n-files34.xml", "n-files35.xml", "n-files36.xml", "n-files37.xml", "n-files38.xml", "n-files39.xml", "n-files40.xml", "n-files41.xml", "n-files42.xml", "n-files43.xml", "n-files44.xml", "n-files45.xml", "n-files46.xml", "n-files47.xml", "n-files48.xml", "n-files49.xml", "n-files50.xml", "n-files51.xml", "n-files52.xml", "n-files53.xml", "n-files54.xml", "n-files55.xml", "n-files56.xml", "n-files57.xml", "n-files58.xml", "n-files59.xml", "n-files60.xml", "n-files61.xml", "n-files62.xml", "n-files63.xml", "n-files64.xml", "n-files65.xml", "n-files66.xml", "n-files67.xml", "n-files68.xml", "n-files69.xml", "n-files70.xml", "n-files71.xml", "n-files72.xml", "n-files73.xml", "n-files74.xml", "n-files75.xml", "n-files76.xml", "n-files77.xml", "n-files78.xml", "n-files79.xml", "n-files80.xml", "n-files81.xml", "n-files82.xml", "n-files83.xml", "n-files84.xml", "n-files85.xml", "n-files86.xml", "n-files87.xml", "n-files88.xml", "n-files89.xml", "n-files90.xml", "n-files91.xml", "n-files92.xml", "n-files93.xml", "n-files94.xml", "n-files95.xml", "n-files96.xml", "n-files97.xml", "n-files98.xml", "n-files99.xml", "n-files100.xml"
+        ]
+    }
+}

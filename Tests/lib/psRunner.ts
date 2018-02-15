@@ -14,6 +14,18 @@ function debug(message) {
     }
 }
 
+export function testSupported() {
+    if (!shell.which('powershell.exe')) {
+        return false;
+    }
+
+    return (process.env['TASK_TEST_RUNNER'] || 'ps')
+        .split(',')
+        .some(function (x) {
+            return x == 'ps';
+        });
+}
+
 export class PSRunner extends events.EventEmitter {
 	constructor() {
 		super();

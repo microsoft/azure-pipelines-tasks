@@ -1,80 +1,32 @@
 # Utility Functions used by AzureFileCopy.ps1 (other than azure calls) #
 
 $ErrorActionPreference = 'Stop'
-
-# Telemetry
-$telemetryCodes = 
-@{
-  "PREREQ_NoWinRMHTTP_Port" = "PREREQ001";
-  "PREREQ_NoWinRMHTTPSPort" = "PREREQ002";
-  "PREREQ_NoResources" = "PREREQ003";
-  "PREREQ_NoOutputVariableForSelectActionInAzureRG" = "PREREQ004";
-  "PREREQ_InvalidServiceConnectionType" = "PREREQ_InvalidServiceConnectionType";
-  "PREREQ_AzureRMModuleNotFound" = "PREREQ_AzureRMModuleNotFound";
-  "PREREQ_InvalidFilePath" = "PREREQ_InvalidFilePath";
-  "PREREQ_StorageAccountNotFound" = "PREREQ_StorageAccountNotFound";
-  "PREREQ_NoVMResources" = "PREREQ_NoVMResources";
-  "PREREQ_UnsupportedAzurePSVersion" = "PREREQ_UnsupportedAzurePSVersion";
-  "PREREQ_ClassicStorageAccountNotFound" = "PREREQ_ClassicStorageAccountNotFound";
-  "PREREQ_RMStorageAccountNotFound" = "PREREQ_RMStorageAccountNotFound";
-  "PREREQ_NoClassicVMResources" = "PREREQ_NoClassicVMResources";
-  "PREREQ_NoRMVMResources" = "PREREQ_NoRMVMResources";
-  "PREREQ_ResourceGroupNotFound" = "PREREQ_ResourceGroupNotFound";
-
-  "AZUREPLATFORM_BlobUploadFailed" = "AZUREPLATFORM_BlobUploadFailed";
-  "AZUREPLATFORM_UnknownGetRMVMError" = "AZUREPLATFORM_UnknownGetRMVMError";
-
-  "UNKNOWNPREDEP_Error" = "UNKNOWNPREDEP001";
-  "UNKNOWNDEP_Error" = "UNKNOWNDEP_Error";
-
-  "DEPLOYMENT_Failed" = "DEP001";
-  "DEPLOYMENT_FetchPropertyFromMap" = "DEPLOYMENT_FetchPropertyFromMap";
-  "DEPLOYMENT_CSMDeploymentFailed" = "DEPLOYMENT_CSMDeploymentFailed";  
-  "DEPLOYMENT_PerformActionFailed" = "DEPLOYMENT_PerformActionFailed";
-
-  "ENABLEWINRM_ProvisionVmCustomScriptFailed" = "ENABLEWINRM_ProvisionVmCustomScriptFailed"
-  "ENABLEWINRM_ExecutionOfVmCustomScriptFailed" = "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"
-  "ADDWINRM_NetworkSecurityRuleConfigFailed" = "ADDWINRM_NetworkSecurityRuleConfigFailed"
-
-  "FILTERING_IncorrectFormat" = "FILTERING_IncorrectFormat";
-  "FILTERING_NoVMResources" = "FILTERING_NoVMResources";
-  "FILTERING_MachinesNotPresentInRG" = "FILTERING_MachinesNotPresentInRG"
- }
-
-function Write-Telemetry
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory=$True,Position=1)]
-        [string]$codeKey,
-        [Parameter(Mandatory=$True,Position=2)]
-        [string]$taskId
-    )
-
-    if($telemetrySet)
-    {
-        return
-    }
-
-    $code = $telemetryCodes[$codeKey]
-    $telemetryString = "##vso[task.logissue type=error;code=" + $code + ";TaskId=" + $taskId + ";]"
-
-    Write-Host $telemetryString
-    $telemetrySet = $true
-}
-
-function Write-TaskSpecificTelemetry
-{
-    param([string]$codeKey)
-
-    Write-Telemetry "$codeKey" "EB72CB01-A7E5-427B-A8A1-1B31CCAC8A43"
-}
+$azureStackEnvironment = "AzureStack"
+$jobId = $env:SYSTEM_JOBID;
 
 function Get-DeploymentModulePath
 {
     Write-Output "$PSScriptRoot\DeploymentUtilities"
 }
+
+function Publish-Azure-Telemetry
+ {
+   param([object] $deploymentResponse, [string] $jobId)
+    if($deploymentResponse){
+       $jsonString = -join("{" , 
+       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
+       "," , 
+       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
+       "," , 
+       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
+       "," ,
+       "`"JobId`" : `"$jobId`"" ,
+       "}")
+    }
+
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=AzureFileCopy]$jsonString"
+    Write-Host $telemetryString
+ }
 
 function Get-AzureCmdletsVersion
 {
@@ -159,7 +111,7 @@ function Validate-AzurePowershellVersion
 
     if(!$versionCompatible)
     {
-        Write-TaskSpecificTelemetry "PREREQ_UnsupportedAzurePSVersion"
+        Write-Telemetry "Task_InternalError" "UnsupportedAzurePSVersion"
         Throw (Get-VstsLocString -Key "AFC_AzurePSNotInstalled" -ArgumentList $minimumAzureVersion)
     }
 
@@ -188,7 +140,7 @@ function Get-StorageKey
 
             if($connectionType -eq 'Certificate')
             {
-                Write-TaskSpecificTelemetry "PREREQ_ClassicStorageAccountNotFound"
+                Write-Telemetry "Task_InternalError" "ClassicStorageAccountNotFound"                
                 Throw (Get-VstsLocString -Key "AFC_ClassicStorageAccountNotFound" -ArgumentList $storageAccountName)
             }
             # Since authentication is UserNamePassword we will check whether storage is non-classic
@@ -206,7 +158,7 @@ function Get-StorageKey
                 catch
                 {
                     #since authentication was UserNamePassword so we cant suggest user whether storage should be classic or non-classic
-                    Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
+                    Write-Telemetry "Task_InternalError" "StorageAccountNotFound"
                     Throw (Get-VstsLocString -Key "AFC_GenericStorageAccountNotFound" -ArgumentList $storageAccountName)
                 }
             }
@@ -243,7 +195,7 @@ function Get-blobStorageEndpoint
         {
             $exceptionMessage = $_.Exception.Message.ToString()
             Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage"
-            Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
+            Write-Telemetry "Task_InternalError" "StorageAccountNotFound"
             Throw (Get-VstsLocString -Key "AFC_BlobStorageNotFound" -ArgumentList $storageAccountName)
         }
     }
@@ -275,7 +227,7 @@ function Get-StorageAccountType
         {
             $exceptionMessage = $_.Exception.Message.ToString()
             Write-Verbose "[Azure Call](RDFE) ExceptionMessage: $exceptionMessage"
-            Write-TaskSpecificTelemetry "PREREQ_StorageAccountNotFound"
+            Write-Telemetry "Task_InternalError" "StorageAccountNotFound"
             Throw (Get-VstsLocString -Key "AFC_BlobStorageNotFound" -ArgumentList $storageAccountName)
         }
     }
@@ -344,7 +296,7 @@ function Upload-FilesToAzureContainer
         Write-Verbose "ExceptionMessage: $exceptionMessage"
 
         $errorMessage = (Get-VstsLocString -Key "AFC_UploadContainerStorageAccount" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $exceptionMessage)
-        Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
+        Write-Telemetry "Task_InternalError" "BlobUploadFailed"
         ThrowError -errorMessage $errorMessage
     }
     finally
@@ -364,7 +316,7 @@ function Upload-FilesToAzureContainer
             Write-Verbose "UploadResponseLog: $uploadResponseLog"
 
             $errorMessage = (Get-VstsLocString -Key "AFC_UploadContainerStorageAccount" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $uploadErrorMessage)
-            Write-TaskSpecificTelemetry "AZUREPLATFORM_BlobUploadFailed"
+             Write-Telemetry "Task_InternalError" "BlobUploadFailed"
             ThrowError -errorMessage $errorMessage
         }
         elseif ($uploadResponse.Status -eq "Succeeded")
@@ -396,7 +348,7 @@ function Does-AzureVMMatchTagFilterCriteria
 
             if($tagKeyValue.Length -ne 2 -or [string]::IsNullOrWhiteSpace($tagKey) -or [string]::IsNullOrWhiteSpace($tagValues))
             {
-                Write-TaskSpecificTelemetry "FILTERING_IncorrectFormat"
+                Write-Telemetry "Input_Validation" "FILTERING_IncorrectFormat"
                 throw (Get-VstsLocString -Key "AFC_IncorrectTags")
             }
 
@@ -471,7 +423,7 @@ function Get-MachineBasedFilteredAzureVMs
 
             if($commaSeparatedMachinesNotPresentInRG -ne $null)
             {
-                Write-TaskSpecificTelemetry "FILTERING_MachinesNotPresentInRG"
+                Write-Telemetry "Input_Validation" "FILTERING_MachinesNotPresentInRG"
                 throw (Get-VstsLocString -Key "AFC_MachineDoesNotExist" -ArgumentList $commaSeparatedMachinesNotPresentInRG)
             }
         }
@@ -813,9 +765,34 @@ function Get-AzureRMVMsConnectionDetailsInResourceGroup
     [hashtable]$azureRMVMsDetails = @{}
     $debugLogsFlag= $env:system_debug
 
+    # Getting endpoint used for the task
+    if($connectedServiceName)
+    {
+        $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
+    }
+    
+    $isAzureStackEnvironment = $false
+    if($endpoint -and $endpoint.Data -and $endpoint.Data.Environment) {
+        $environmentName = $Endpoint.Data.Environment
+        if($environmentName -eq $azureStackEnvironment)
+        {
+            $isAzureStackEnvironment = $true
+        }
+    }
+
     if (-not [string]::IsNullOrEmpty($resourceGroupName) -and $azureRMVMResources)
     {
-        $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+        
+        if($isAzureStackEnvironment) 
+        {
+            Write-Verbose "Fetching resource group resources details for Azure Stack environment."
+            $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetailsForAzureStack -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources -endpoint $endpoint
+        }
+        else 
+        {
+            Write-Verbose "Fetching resource group resources details for Azure/National cloud environments."
+            $azureRGResourcesDetails = Get-AzureRMResourceGroupResourcesDetails -resourceGroupName $resourceGroupName -azureRMVMResources $azureRMVMResources
+        }
 
         $networkInterfaceResources = $azureRGResourcesDetails["networkInterfaceResources"]
         $publicIPAddressResources = $azureRGResourcesDetails["publicIPAddressResources"]
@@ -893,7 +870,7 @@ function Check-AzureCloudServiceExists
             # throwing only in case of Certificate authentication, Since userNamePassword authentication works with ARM resources also
             if($connectionType -eq 'Certificate')
             {
-                Write-TaskSpecificTelemetry "PREREQ_ResourceGroupNotFound"
+                Write-Telemetry "Input_Validation" "PREREQ_ResourceGroupNotFound"
                 throw (Get-VstsLocString -Key "AFC_ResourceGroupNotFoundForSelectedConnection" -ArgumentList $connectionType, $cloudServiceName)
             }
         }
@@ -944,23 +921,23 @@ function Get-AzureVMResourcesProperties
             {
                 if($connectionType -eq 'Certificate')
                 {
-                    Write-TaskSpecificTelemetry "PREREQ_NoClassicVMResources"
+                    Write-Telemetry "Input_Validation" "PREREQ_NoClassicVMResources"
                     throw (Get-VstsLocString -Key "AFC_NoClassicVMResources" -ArgumentList $resourceGroupName, $connectionType)
                 }
                 elseif($connectionType -eq 'ServicePrincipal')
                 {
-                    Write-TaskSpecificTelemetry "PREREQ_NoRMVMResources"
+                    Write-Telemetry "Input_Validation" "PREREQ_NoRMVMResources"
                     throw (Get-VstsLocString -Key "AFC_NoARMVMResources" -ArgumentList $resourceGroupName, $connectionType)
                 }
                 else
                 {
-                     Write-TaskSpecificTelemetry "PREREQ_NoVMResources"
+                     Write-Telemetry "Input_Validation" "PREREQ_NoVMResources"
                      throw (Get-VstsLocString -Key "AFC_NoGenericVMResources" -ArgumentList $resourceGroupName)
                 }
             }
             else
             {
-                Write-TaskSpecificTelemetry "FILTERING_NoVMResources"
+                Write-Telemetry "Input_Validation" "FILTERING_NoVMResources"
                 throw (Get-VstsLocString -Key "AFC_FilteringNoVMResources" -ArgumentList $resourceGroupName, $resourceFilteringMethod, $machineNames)
             }
         }
@@ -1012,7 +989,7 @@ function Copy-FilesSequentiallyToAzureVMs
           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$connectionType)
@@ -1035,7 +1012,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
         Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $copyResponse
         Write-Output (Get-VstsLocString -Key "AFC_CopyCompleted" -ArgumentList $resourceName, $status)
-
+        Publish-Azure-Telemetry -deploymentResponse $copyResponse -jobId $jobId
         if ($status -ne "Passed")
         {
             $winrmHelpMsg = Get-VstsLocString -Key "AFC_WinRMHelpMessage"
@@ -1047,7 +1024,7 @@ function Copy-FilesSequentiallyToAzureVMs
 
             Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
 
-            Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
+            Write-Telemetry "DTLSDK_Error" $copyResponse.DeploymentSummary
             ThrowError -errorMessage $copyErrorMessage
         }
     }
@@ -1065,12 +1042,13 @@ function Copy-FilesParallellyToAzureVMs
           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$connectionType)
 
     [hashtable]$Jobs = @{}
+    $dtlsdkErrors = @()
     $deploymentUtilitiesLocation = Get-DeploymentModulePath
     foreach ($resource in $azureVMResourcesProperties.Keys)
     {
@@ -1103,7 +1081,7 @@ function Copy-FilesParallellyToAzureVMs
 
                 Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $output
                 Write-Output (Get-VstsLocString -Key "AFC_CopyCompleted" -ArgumentList $resourceName, $status)
-
+                Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
                 if ($status -ne "Passed")
                 {
                     $parallelOperationStatus = "Failed"
@@ -1117,6 +1095,7 @@ function Copy-FilesParallellyToAzureVMs
                             $errorMessage = $errorMessage + $winrmHelpMsg
                         }
                     }
+                    $dtlsdkErrors += $output.DeploymentSummary
 
                     Write-Output (Get-VstsLocString -Key "AFC_CopyFailed" -ArgumentList $resourceName, $errorMessage)
                 }
@@ -1128,8 +1107,10 @@ function Copy-FilesParallellyToAzureVMs
     # While copying parallelly, if copy failed on one or more azure VMs then throw
     if ($parallelOperationStatus -eq "Failed")
     {
-        $errorMessage = (Get-VstsLocString -Key "AFC_ParallelCopyFailed")
-        Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
+        foreach ($error in $dtlsdkErrors) {
+            Write-Telemetry "DTLSDK_Error" $error
+        }
+        $errorMessage = (Get-VstsLocString -Key "AFC_ParallelCopyFailed")      
         ThrowError -errorMessage $errorMessage
     }
 }
@@ -1147,7 +1128,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
           [string]$communicationProtocol,
-          [string][Parameter(Mandatory=$true)]$skipCACheckOption,
+          [string]$skipCACheckOption,
           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$copyFilesInParallel,
@@ -1315,7 +1296,7 @@ function Add-WinRMHttpsNetworkSecurityRuleConfig
     }
     catch
     {
-        Write-TaskSpecificTelemetry "ADDWINRM_NetworkSecurityRuleConfigFailed"
+        Write-Telemetry "Task_InternalError" "NetworkSecurityRuleConfigFailed"
         Write-Warning (Get-VstsLocString -Key "AFC_AddNetworkSecurityRuleFailed" -ArgumentList $_.exception.message)
     }
 }
@@ -1329,9 +1310,8 @@ function Add-AzureVMCustomScriptExtension
           [string]$location,
           [string]$connectedServiceName)
 
-    $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/ConfigureWinRM.ps1"
-    $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/makecert.exe"
-    $winrmConfFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/201-vm-winrm-windows/winrmconf.cmd"
+    $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/ConfigureWinRM.ps1"
+    $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/makecert.exe"
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
     $ruleName = "VSO-Custom-WinRM-Https-Port"
@@ -1356,13 +1336,13 @@ function Add-AzureVMCustomScriptExtension
             return
         }
 
-        $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile, $winrmConfFile  -run $scriptToRun -argument $dnsName -location $location
+        $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile  -run $scriptToRun -argument $dnsName -location $location
         $resultDetails = $result | ConvertTo-Json
         Write-Verbose "Set-AzureMachineCustomScriptExtension completed with response : $resultDetails"
 
         if($result.Status -ne "Succeeded")
         {
-            Write-TaskSpecificTelemetry "ENABLEWINRM_ProvisionVmCustomScriptFailed"			
+            Write-Telemetry "Task_InternalError" "ProvisionVmCustomScriptFailed"			
 
             $response = Remove-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -endpoint $endpoint
             throw (Get-VstsLocString -Key "AFC_UnableToSetCustomScriptExtension" -ArgumentList $extensionName, $vmName, $result.Error.Message)
@@ -1373,9 +1353,21 @@ function Add-AzureVMCustomScriptExtension
     }
     catch
     {
-         Write-TaskSpecificTelemetry "ENABLEWINRM_ExecutionOfVmCustomScriptFailed"    
+         Write-Telemetry "Task_InternalError" "ExecutionOfVmCustomScriptFailed"    
          throw (Get-VstsLocString -Key "AFC_CopyPrereqsFailed" -ArgumentList $_.exception.message)
     }
 
     Write-Verbose "Successfully added the custom script extension '$extensionName' for virtual machine '$vmName'"
+}
+
+function Check-ContainerNameAndArgs
+{
+    param([string]$containerName,
+          [string]$additionalArguments)
+    
+    $additionalArguments = ' ' + $additionalArguments + ' '
+    if($containerName -eq '$root' -and $additionalArguments -like '* /S *')
+    {
+        Write-Warning (Get-vstsLocString -Key "AFC_RootContainerAndDirectory")
+    }
 }

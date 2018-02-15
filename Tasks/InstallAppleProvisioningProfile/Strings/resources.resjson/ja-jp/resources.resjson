@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Apple プロビジョニング プロファイルのインストール",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862068)",
+  "loc.description": "macOS エージェントでのビルドに必要な Apple プロビジョニング プロファイルのインストール",
+  "loc.instanceNameFormat": "Apple プロビジョニング プロファイルのインストール",
+  "loc.input.label.provisioningProfileLocation": "Provisioning profile location",
+  "loc.input.help.provisioningProfileLocation": "Select the location of the provisioning profile to install. The provisioning profile can be uploaded to `Secure Files` or stored in your source repository or a local path on the agent.",
+  "loc.input.label.provProfileSecureFile": "Provisioning profile",
+  "loc.input.help.provProfileSecureFile": "macOS エージェントにインストールするため、`セキュア ファイル` にアップロードされたプロビジョニング プロファイルを選択します。",
+  "loc.input.label.provProfileSourceRepository": "Provisioning profile",
+  "loc.input.help.provProfileSourceRepository": "Select the provisioning profile from the source repository or specify the local path to a provisioning profile on the macOS agent.",
+  "loc.input.label.removeProfile": "Remove profile after build",
+  "loc.input.help.removeProfile": "ビルドまたはリリースが完了した後でエージェントからプロビジョニング プロファイルを削除するよう指定する場合に選択します。",
+  "loc.messages.InputProvisioningProfileNotFound": "Provisioning profile to be installed was not found at %s. Specify the full file path to a provisioning profile."
+}

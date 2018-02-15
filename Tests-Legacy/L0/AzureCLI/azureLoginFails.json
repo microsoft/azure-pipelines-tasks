@@ -1,0 +1,52 @@
+{
+  "which": {
+    "bash": "/usr/local/bin/bash",
+    "az": "/usr/local/bin/az",
+    "script.sh" : "script.sh"
+  },
+  "exec": {
+    "/usr/local/bin/az account import subscriptions.publishsettings": {
+      "code": 1,
+      "stderr": "azure error"
+    },
+    "/usr/local/bin/az login --service-principal -u id -p key --tenant tenant": {
+      "code": 0,
+      "stdout": "azure output here"
+    },
+    "/usr/local/bin/az login --service-principal -u idf -p keyf --tenant tenantf": {
+      "code": 1,
+      "stderr": "azure error"
+    },
+    "/usr/local/bin/az account set --subscription sName": {
+      "code": 1,
+      "stderr": "azure error"
+    },
+    "/usr/local/bin/az account clear": {
+      "code": 0,
+      "stdout": "azure output here"
+    }
+  },
+  "checkPath" : {
+    "/usr/local/bin/bash": true,
+    "/usr/local/bin/az": true,
+    "/usr/local/bin/node": true,
+    "script.sh" : true,
+    "scriptfail.sh" : true
+  },
+  "getVariable": {
+    "ENDPOINT_AUTH_AzureClassicFail": "{\"parameters\":{\"certificate\":\"cert\"},\"scheme\":\"Certificate\"}",
+    "ENDPOINT_DATA_AzureClassicFail_SUBSCRIPTIONNAME": "sName",
+    "ENDPOINT_DATA_AzureClassicFail_SUBSCRIPTIONID": "sId",
+    "ENDPOINT_URL_AzureClassicFail":"https://www.sampleServiceUrl.net/",
+    "ENDPOINT_AUTH_AzureRM": "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
+    "ENDPOINT_AUTH_AzureRMFail": "{\"parameters\":{\"serviceprincipalid\":\"idf\",\"serviceprincipalkey\":\"keyf\",\"tenantid\":\"tenantf\"},\"scheme\":\"ServicePrincipal\"}",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID": "id",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY": "key",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID": "tenant",
+    "ENDPOINT_AUTH_PARAMETER_AzureRMFail_SERVICEPRINCIPALID": "idf",
+    "ENDPOINT_AUTH_PARAMETER_AzureRMFail_SERVICEPRINCIPALKEY": "keyf",
+    "ENDPOINT_AUTH_PARAMETER_AzureRMFail_TENANTID": "tenantf",
+    "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName",
+    "ENDPOINT_DATA_AzureRMFail_SUBSCRIPTIONNAME": "sName"
+}
+  }

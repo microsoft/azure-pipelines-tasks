@@ -6,15 +6,14 @@ import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
-import sqCommon = require('./CodeAnalysis/SonarQube/common');
-import sqMaven = require('./CodeAnalysis/mavensonar');
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
-import {CodeAnalysisOrchestrator} from "./CodeAnalysis/Common/CodeAnalysisOrchestrator";
-import {BuildOutput, BuildEngine} from './CodeAnalysis/Common/BuildOutput';
-import {CheckstyleTool} from './CodeAnalysis/Common/CheckstyleTool';
-import {PmdTool} from './CodeAnalysis/Common/PmdTool';
-import {FindbugsTool} from './CodeAnalysis/Common/FindbugsTool';
+import {CodeAnalysisOrchestrator} from "codeanalysis-common/Common/CodeAnalysisOrchestrator";
+import {BuildOutput, BuildEngine} from 'codeanalysis-common/Common/BuildOutput';
+import {CheckstyleTool} from 'codeanalysis-common/Common/CheckstyleTool';
+import {PmdTool} from 'codeanalysis-common/Common/PmdTool';
+import {FindbugsTool} from 'codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
+import util = require('./mavenutil');
 
 var isWindows = os.type().match(/^Win/);
 
@@ -29,15 +28,17 @@ var mavenOptions: string = tl.getInput('options', false); // Options can have sp
 var publishJUnitResults: string = tl.getInput('publishJUnitResults');
 var testResultsFiles: string = tl.getInput('testResultsFiles', true);
 var ccTool = tl.getInput('codeCoverageTool');
+var authenticateFeed = tl.getBoolInput('mavenFeedAuthenticate', true);
 var isCodeCoverageOpted = (typeof ccTool != "undefined" && ccTool && ccTool.toLowerCase() != 'none');
-var isSonarQubeEnabled:boolean = false;
+var failIfCoverageEmptySetting: boolean = tl.getBoolInput('failIfCoverageEmpty');
+var codeCoverageFailed: boolean = false;
 var summaryFile: string = null;
 var reportDirectory: string = null;
 var reportPOMFile: string = null;
 var execFileJacoco: string = null;
 var ccReportTask: string = null;
 
-let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('build.sourcesDirectory'), BuildEngine.Maven);
+let buildOutput: BuildOutput = new BuildOutput(tl.getVariable('System.DefaultWorkingDirectory'), BuildEngine.Maven);
 var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestrator(
     [new CheckstyleTool(buildOutput, 'checkstyleAnalysisEnabled'),
         new FindbugsTool(buildOutput, 'findbugsAnalysisEnabled'),
@@ -45,6 +46,7 @@ var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestr
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
+
 if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
     tl.debug('Using Maven path from user input');
@@ -91,12 +93,13 @@ tl.debug('Maven executable: ' + mvnExec);
 
 // Set JAVA_HOME to the JDK version (default, 1.7, 1.8, etc.) or the path specified by the user
 var specifiedJavaHome: string = null;
+var javaTelemetryData = null;
 if (javaHomeSelection == 'JDKVersion') {
     // Set JAVA_HOME to the specified JDK version (default, 1.7, 1.8, etc.)
     tl.debug('Using the specified JDK version to find and set JAVA_HOME');
     var jdkVersion: string = tl.getInput('jdkVersion');
     var jdkArchitecture: string = tl.getInput('jdkArchitecture');
-
+    javaTelemetryData = { "jdkVersion": jdkVersion };
     if (jdkVersion != 'default') {
          specifiedJavaHome = javacommons.findJavaHome(jdkVersion, jdkArchitecture);
     }
@@ -106,7 +109,9 @@ else {
     tl.debug('Setting JAVA_HOME to the path specified by user input');
     var jdkUserInputPath: string = tl.getPathInput('jdkUserInputPath', true, true);
     specifiedJavaHome = jdkUserInputPath;
+    javaTelemetryData = { "jdkVersion": "custom" };      
 }
+javacommons.publishJavaTelemetry('Maven', javaTelemetryData);
 
 // Set JAVA_HOME as determined above (if different than default)
 if (specifiedJavaHome) {
@@ -134,6 +139,7 @@ async function execBuild() {
     configureMavenOpts();
 
     // 1. Check that Maven exists by executing it to retrieve its version.
+    let settingsXmlFile: string = null;
     mvnGetVersion.exec()
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
@@ -142,9 +148,72 @@ async function execBuild() {
         })
         .then(function (code) {
             // Setup tool runner to execute Maven goals
+            if (authenticateFeed) {
+                var mvnRun = tl.tool(mvnExec);
+                mvnRun.arg('-f');
+                mvnRun.arg(mavenPOMFile);
+                mvnRun.arg('help:effective-pom');
+                if(mavenOptions) {
+                    mvnRun.line(mavenOptions);
+                }
+                return util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout'])
+                .then(function (repositories) {
+                    if (!repositories || !repositories.length) {
+                        tl.debug('No built-in repositories were found in pom.xml');
+                        util.publishMavenInfo(tl.loc('AuthenticationNotNecessary'));
+                        return Q.resolve(true);
+                    }
+                    tl.debug('Repositories: ' + JSON.stringify(repositories));
+                    let mavenFeedInfo:string = '';
+                    for (let i = 0; i < repositories.length; ++i) {
+                        if (repositories[i].id) {
+                            mavenFeedInfo = mavenFeedInfo.concat(tl.loc('UsingAuthFeed')).concat(repositories[i].id + '\n');
+                        }
+                    }
+                    util.publishMavenInfo(mavenFeedInfo);
+
+                    settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+                    tl.debug('checking to see if there are settings.xml in use');
+                    let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
+                    if (options) {
+                        mavenOptions = '';
+                        for (let i = 0; i < options.length; ++i) {
+                            if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
+                                i++; // increment to the file name
+                                let suppliedSettingsXml: string = options[i];
+                                tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
+                                tl.debug('using settings file: ' + settingsXmlFile);
+                            } else {
+                                if (mavenOptions) {
+                                    mavenOptions = mavenOptions.concat(' ');
+                                }
+                                mavenOptions = mavenOptions.concat(options[i]);
+                            }
+                        }
+                    }
+                    return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
+                })
+                .fail(function (err) {
+                    return Q.reject(err);
+                });
+            } else {
+                tl.debug('Built-in Maven feed authentication is disabled');
+                return Q.resolve(true);
+            }
+        })
+        .fail(function (err) {
+            tl.error(err.message);
+            userRunFailed = true; // Record the error and continue
+        })
+        .then(function (code) {            
+            // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
             mvnRun.arg(mavenPOMFile);
+            if (settingsXmlFile) {
+                mvnRun.arg('-s');
+                mvnRun.arg(settingsXmlFile);
+            }
             mvnRun.line(mavenOptions);
             if (isCodeCoverageOpted && mavenGoals.indexOf('clean') == -1) {
                 mvnRun.arg('clean');
@@ -152,8 +221,8 @@ async function execBuild() {
             mvnRun.arg(mavenGoals);
 
             // 2. Apply any goals for static code analysis tools selected by the user.
-            mvnRun = sqMaven.applySonarQubeArgs(mvnRun, execFileJacoco);
-             mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
+            mvnRun = applySonarQubeArgs(mvnRun, execFileJacoco);
+            mvnRun = codeAnalysisOrchestrator.configureBuild(mvnRun);
 
             // Read Maven standard output
             mvnRun.on('stdout', function (data) {
@@ -161,13 +230,16 @@ async function execBuild() {
             });
 
             // 3. Run Maven. Compilation or test errors will cause this to fail.
-            return mvnRun.exec(); // Run Maven with the user specified goals
+            return mvnRun.exec(util.getExecOptions());
         })
         .fail(function (err) {
             console.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
         .then(function (code) {
+            if (code && code['code'] != 0) {
+                userRunFailed = true;
+            }
             // 4. Attempt to collate and upload static code analysis build summaries and artifacts.
 
             // The files won't be created if the build failed, and the user should probably fix their build first.
@@ -178,10 +250,7 @@ async function execBuild() {
 
             // Otherwise, start uploading relevant build summaries.
             tl.debug('Processing code analysis results');
-            return sqMaven.processSonarQubeIntegration()
-                .then(() => {
-                    return codeAnalysisOrchestrator.publishCodeAnalysisResults();
-                });
+            return codeAnalysisOrchestrator.publishCodeAnalysisResults();
         })
         .fail(function (err) {
             console.error(err.message);
@@ -194,18 +263,45 @@ async function execBuild() {
             if (publishJUnitResults == 'true') {
                 publishJUnitTestResults(testResultsFiles);
             }
-            publishCodeCoverage(isCodeCoverageOpted);
+            publishCodeCoverage(isCodeCoverageOpted).then(function() {
+                tl.debug('publishCodeCoverage userRunFailed=' + userRunFailed);
 
-            // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
-            if (userRunFailed || codeAnalysisFailed) {
+                // 6. If #3 or #4 above failed, exit with an error code to mark the entire step as failed.
+                if (userRunFailed || codeAnalysisFailed || codeCoverageFailed) {
+                    tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
+                }
+                else {
+                    tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
+                }
+            })
+            .fail(function (err) {
                 tl.setResult(tl.TaskResult.Failed, "Build failed."); // Set task failure
-            }
-            else {
-                tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded."); // Set task success
-            }
+            });
 
             // Do not force an exit as publishing results is async and it won't have finished 
         });
+}
+
+function applySonarQubeArgs(mvnsq: ToolRunner | any, execFileJacoco?: string): ToolRunner | any {
+    if (!tl.getBoolInput('sqAnalysisEnabled', false)) {
+        return mvnsq;
+    }
+
+    // Apply argument for the JaCoCo tool, if enabled
+    if (typeof execFileJacoco != "undefined" && execFileJacoco) {
+        mvnsq.arg('-Dsonar.jacoco.reportPaths=' + execFileJacoco);
+    }
+
+    switch (tl.getInput('sqMavenPluginVersionChoice')) {
+        case 'latest':
+            mvnsq.arg(`org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar`);
+            break;
+        case 'pom':
+            mvnsq.arg(`sonar:sonar`);
+            break;
+    }
+
+    return mvnsq;
 }
 
 // Configure the JVM associated with this run.
@@ -306,7 +402,8 @@ function enableCodeCoverage() : Q.Promise<any> {
     return ccEnabler.enableCodeCoverage(buildProps);
 }
 
-function publishCodeCoverage(isCodeCoverageOpted: boolean) {
+function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
+    var defer = Q.defer<boolean>();
     if (isCodeCoverageOpted && ccReportTask) {
         tl.debug("Collecting code coverage reports");
 
@@ -316,22 +413,32 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean) {
             if (tl.exist(reportPOMFile)) {
                 // multi module project
                 mvnReport.arg(reportPOMFile);
-                mvnReport.arg("verify");
             }
             else {
                 mvnReport.arg(mavenPOMFile);
-                mvnReport.arg("verify");
             }
+            mvnReport.line(mavenOptions);
+            mvnReport.arg("verify");
             mvnReport.exec().then(function (code) {
                 publishCCToTfs();
+                defer.resolve(true);
             }).fail(function (err) {
-                tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");
+                sendCodeCoverageEmptyMsg();
+                defer.reject(err);
             });
         }
-        else if (ccTool.toLowerCase() == "cobertura") {
-            publishCCToTfs();
+        else {
+            if (ccTool.toLowerCase() == "cobertura") {
+                publishCCToTfs();
+            }
+            defer.resolve(true);
         }
     }
+    else {
+        defer.resolve(true);
+    }
+
+    return defer.promise;
 }
 
 function publishCCToTfs() {
@@ -341,6 +448,16 @@ function publishCCToTfs() {
         tl.debug("Publishing code coverage results to TFS");
         var ccPublisher = new tl.CodeCoveragePublisher();
         ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
+    }
+    else {
+        sendCodeCoverageEmptyMsg();
+    }
+}
+
+function sendCodeCoverageEmptyMsg() {
+    if (failIfCoverageEmptySetting) {
+        tl.error(tl.loc('NoCodeCoverage'));
+        codeCoverageFailed = true;
     }
     else {
         tl.warning("No code coverage found to publish. There might be a build failure resulting in no code coverage or there might be no tests.");

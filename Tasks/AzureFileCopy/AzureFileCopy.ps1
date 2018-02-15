@@ -44,6 +44,7 @@ $isPremiumStorage = $false
 
 $sourcePath = $sourcePath.Trim('"')
 $storageAccount = $storageAccount.Trim()
+$containerName = $containerName.Trim().ToLower()
 
 # azcopy location on automation agent
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
@@ -70,6 +71,9 @@ if ($enableDetailedLoggingString -ne "true")
 {
     $enableDetailedLoggingString = "false"
 }
+
+# Telemetry
+Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try
@@ -111,15 +115,11 @@ try
 }
 catch
 {
-    if(-not $telemetrySet)
-    {
-        Write-TaskSpecificTelemetry "UNKNOWNPREDEP_Error"
-    }
-
+    Write-Telemetry "Task_InternalError" $_.Exception.Message
     throw
 }
 
-if($isPremiumStorage)
+if($isPremiumStorage -and $additionalArguments -notLike "*/BlobType:page*")
 {
     Write-Verbose "Setting BlobType to page for Premium Storage account."
     $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"
@@ -128,6 +128,8 @@ else
 {
     $uploadAdditionalArguments = $additionalArguments
 }
+
+Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArguments
 
 # Uploading files to container
 Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -blobStorageEndpoint $blobStorageEndpoint -storageKey $storageKey `
@@ -154,6 +156,11 @@ if ($destination -eq "AzureBlob")
 # Copying files to Azure VMs
 try
 {
+    # Normalize admin username
+    if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1))
+    {
+        $vmsAdminUserName = ".\" + $vmsAdminUserName 
+    }
     # getting azure vms properties(name, fqdn, winrmhttps port)
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
     -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
@@ -175,7 +182,7 @@ catch
 {
     Write-Verbose $_.Exception.ToString() -Verbose
 
-    Write-TaskSpecificTelemetry "UNKNOWNDEP_Error"
+    Write-Telemetry "Task_InternalError" $_.Exception.Message
     throw
 }
 finally

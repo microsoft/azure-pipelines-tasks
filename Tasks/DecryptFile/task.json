@@ -8,11 +8,15 @@
         "Build",
         "Release"
     ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 15
+        "Minor": 131,
+        "Patch": 0
     },
     "groups": [
         {
@@ -34,7 +38,7 @@
         {
             "name": "inFile",
             "type": "filePath",
-            "label": "Encrypted File",
+            "label": "Encrypted file",
             "required": true,
             "helpMarkDown": "Relative path of file to decrypt."
         },
@@ -48,14 +52,15 @@
         {
             "name": "outFile",
             "type": "filePath",
-            "label": "Decrypted File Path",
+            "label": "Decrypted file path",
             "required": false,
             "helpMarkDown": "Optional filename for decrypted file. Defaults to the Encrypted File with a \".out\" extension"
         },
         {
             "name": "cwd",
+            "aliases": ["workingDirectory"],
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Working directory for decryption. Defaults to the root of the repository.",

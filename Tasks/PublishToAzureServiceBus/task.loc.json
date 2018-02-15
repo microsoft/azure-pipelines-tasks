@@ -1,0 +1,120 @@
+{
+  "id": "BA761F24-CBD6-48CB-92F3-FC13396405B1",
+  "name": "PublishToAzureServiceBus",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Utility",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Server"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 3
+  },
+  "groups": [
+    {
+      "name": "signingDetails",
+      "displayName": "ms-resource:loc.group.displayName.signingDetails",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureServiceBus",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "messageBody",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.messageBody",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.messageBody",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000",
+        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+      }
+    },
+    {
+      "name": "signPayload",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.signPayload",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.signPayload",
+      "groupName": "signingDetails"
+    },
+    {
+      "name": "certificateString",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.certificateString",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.certificateString",
+      "visibleRule": "signPayload = true",
+      "groupName": "signingDetails"
+    },
+    {
+      "name": "signatureKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.signatureKey",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.signatureKey",
+      "visibleRule": "signPayload = true",
+      "groupName": "signingDetails"
+    },
+    {
+      "name": "waitForCompletion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForCompletion",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.waitForCompletion"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "ServiceBus": {
+      "events": {
+        "taskCompleted": {
+          "enabled": "$(waitForCompletion)"
+        }
+      },
+      "execute": {
+        "endpointId": "$(connectedServiceName)",
+        "connectionString": "$(endpoint.serviceBusConnectionString)",
+        "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
+        "messageBody": "$(messageBody)",
+        "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
+        "signaturePropertyKey": "$(signatureKey)",
+        "messageProperties": {
+          "PlanUrl": "$(system.CollectionUri)",
+          "ProjectId": "$(system.TeamProjectId)",
+          "HubName": "$(system.HostType)",
+          "PlanId": "$(system.PlanId)",
+          "JobId": "$(system.JobId)",
+          "TimelineId": "$(system.TimelineId)",
+          "TaskInstanceId": "$(system.TaskInstanceId)",
+          "AuthToken": "$(system.AccessToken)"
+        }
+      }
+    }
+  }
+}

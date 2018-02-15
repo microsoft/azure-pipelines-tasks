@@ -10,16 +10,33 @@
     "Build",
     "Release"
   ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
   "version": {
     "Major": 1,
-    "Minor": 1,
+    "Minor": 7,
     "Patch": 2
   },
+  "demands": [
+    "Cmd"
+  ],
   "minimumAgentVersion": "1.95.0",
   "groups": [
     {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
+    {
       "name": "upgrade",
       "displayName": "ms-resource:loc.group.displayName.upgrade",
+      "isExpanded": false
+    },
+    {
+      "name": "docker",
+      "displayName": "ms-resource:loc.group.displayName.docker",
       "isExpanded": false
     }
   ],
@@ -58,6 +75,74 @@
       "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
     },
     {
+      "name": "compressPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.compressPackage",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.compressPackage"
+    },
+    {
+      "name": "useDiffPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useDiffPackage",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage"
+    },
+    {
+      "name": "copyPackageTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.copyPackageTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.copyPackageTimeoutSec"
+    },
+    {
+      "name": "registerPackageTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registerPackageTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec"
+    },
+    {
+      "name": "overwriteBehavior",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.overwriteBehavior",
+      "defaultValue": "SameAppTypeAndVersion",
+      "required": true,
+      "options": {
+        "Always": "Always",
+        "Never": "Never",
+        "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+      },
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteBehavior"
+    },
+    {
+      "name": "skipUpgradeSameTypeAndVersion",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipUpgradeSameTypeAndVersion",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipUpgradeSameTypeAndVersion"
+    },
+    {
+      "name": "skipPackageValidation",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.skipPackageValidation",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.skipPackageValidation"
+    },
+    {
       "name": "overridePublishProfileSettings",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.overridePublishProfileSettings",
@@ -74,6 +159,15 @@
       "required": false,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true"
+    },
+    {
+      "name": "unregisterUnusedVersions",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.unregisterUnusedVersions",
+      "defaultValue": "true",
+      "required": false,
+      "groupname": "upgrade",
+      "helpMarkDown": "ms-resource:loc.input.help.unregisterUnusedVersions"
     },
     {
       "name": "upgradeMode",
@@ -126,15 +220,6 @@
       "label": "ms-resource:loc.input.label.TimeoutSec",
       "defaultValue": "",
       "required": false,
-      "groupname": "upgrade",
-      "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-    },
-    {
-      "name": "Force",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.Force",
-      "defaultValue": "true",
-      "required": true,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
     },
@@ -227,6 +312,83 @@
       "required": false,
       "groupname": "upgrade",
       "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+    },
+    {
+      "name": "configureDockerSettings",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.configureDockerSettings",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.configureDockerSettings",
+      "groupname": "docker"
+    },
+    {
+      "name": "registryCredentials",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.registryCredentials",
+      "defaultValue": "AzureResourceManagerEndpoint",
+      "required": true,
+      "options": {
+        "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
+        "ContainerRegistryEndpoint": "Container Registry Endpoint",
+        "UsernamePassword": "Username and Password"
+      },
+      "visibleRule": "configureDockerSettings = true",
+      "groupName": "docker",
+      "helpMarkDown": "ms-resource:loc.input.help.registryCredentials"
+    },
+    {
+      "name": "dockerRegistryEndpoint",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
+      "type": "connectedService:dockerregistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = ContainerRegistryEndpoint",
+      "required": true,
+      "groupname": "docker"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
+      "required": true,
+      "groupname": "docker"
+    },
+    {
+      "name": "registryUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registryUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.registryUserName",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+    },
+    {
+      "name": "registryPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registryPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.registryPassword",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+    },
+    {
+      "name": "passwordEncrypted",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.passwordEncrypted",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.passwordEncrypted",
+      "groupName": "docker",
+      "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
     }
   ],
   "execution": {
@@ -235,26 +397,27 @@
     }
   },
   "messages": {
+    "DIFFPKG_ApplicationDoesNotExist": "ms-resource:loc.messages.DIFFPKG_ApplicationDoesNotExist",
+    "DIFFPKG_ApplicationIsNotChanged": "ms-resource:loc.messages.DIFFPKG_ApplicationIsNotChanged",
+    "DIFFPKG_CopyingToDiffPackge": "ms-resource:loc.messages.DIFFPKG_CopyingToDiffPackge",
+    "DIFFPKG_CreatingDiffPackage": "ms-resource:loc.messages.DIFFPKG_CreatingDiffPackage",
+    "DIFFPKG_CreatingDiffPackageForService": "ms-resource:loc.messages.DIFFPKG_CreatingDiffPackageForService",
+    "DIFFPKG_NoServicesRunning": "ms-resource:loc.messages.DIFFPKG_NoServicesRunning",
+    "DIFFPKG_ServiceDoesNotExist": "ms-resource:loc.messages.DIFFPKG_ServiceDoesNotExist",
+    "DIFFPKG_ServiceIsNotChanged": "ms-resource:loc.messages.DIFFPKG_ServiceIsNotChanged",
     "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
     "FoundPath": "ms-resource:loc.messages.FoundPath",
-    "ConnectedToCluster": "ms-resource:loc.messages.ConnectedToCluster",
-    "AadAuthority": "ms-resource:loc.messages.AadAuthority",
-    "ClusterAppId": "ms-resource:loc.messages.ClusterAppId",
-    "ClientAppId": "ms-resource:loc.messages.ClientAppId",
     "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
-    "ServiceFabricSDKNotInstalled": "ms-resource:loc.messages.ServiceFabricSDKNotInstalled",
-    "ErrorOnCertificateImport": "ms-resource:loc.messages.ErrorOnCertificateImport",
-    "ErrorOnAcquireToken": "ms-resource:loc.messages.ErrorOnAcquireToken",
-    "ImportedCertificate": "ms-resource:loc.messages.ImportedCertificate",
+    "EmptyApplicationName": "ms-resource:loc.messages.EmptyApplicationName",
     "ServiceEndpointUpgradeWarning": "ms-resource:loc.messages.ServiceEndpointUpgradeWarning",
     "OverrideApplicationParameterFile": "ms-resource:loc.messages.OverrideApplicationParameterFile",
     "OverrideUpgradeSettings": "ms-resource:loc.messages.OverrideUpgradeSettings",
     "PublishProfileRequiredServerThumbprint": "ms-resource:loc.messages.PublishProfileRequiredServerThumbprint",
     "PublishProfileRequiredAppParams": "ms-resource:loc.messages.PublishProfileRequiredAppParams",
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
-    "DefaultPortWarning": "ms-resource:loc.messages.DefaultPortWarning",
+    "UnsupportedDockerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedDockerRegistryAuthScheme",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",
@@ -262,6 +425,7 @@
     "SFSDK_AppAlreadyExistsError": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsError",
     "SFSDK_AppAlreadyExistsInfo": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsInfo",
     "SFSDK_UnregisteringExistingAppType": "ms-resource:loc.messages.SFSDK_UnregisteringExistingAppType",
+    "SFSDK_SkipUnregisteringExistingAppType": "ms-resource:loc.messages.SFSDK_SkipUnregisteringExistingAppType",
     "SFSDK_UnableToUnregisterAppType": "ms-resource:loc.messages.SFSDK_UnableToUnregisterAppType",
     "SFSDK_CopyingAppToImageStore": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStore",
     "SFSDK_CopyingAppToImageStoreFailed": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStoreFailed",
@@ -281,6 +445,9 @@
     "SFSDK_UpgradeSuccess": "ms-resource:loc.messages.SFSDK_UpgradeSuccess",
     "SFSDK_UpgradeRolledBack": "ms-resource:loc.messages.SFSDK_UpgradeRolledBack",
     "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
-    "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError"
+    "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
+    "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
+    "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
+    "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning"
   }
 }

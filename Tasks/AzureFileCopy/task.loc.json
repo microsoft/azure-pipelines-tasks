@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 80
+    "Patch": 107
   },
   "demands": [
     "azureps"
@@ -37,11 +37,14 @@
     },
     {
       "name": "ConnectedServiceNameSelector",
+      "aliases": [
+        "azureConnectionType"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameSelector",
       "required": false,
       "helpMarkDown": "",
-      "defaultValue": "ConnectedServiceName",
+      "defaultValue": "ConnectedServiceNameARM",
       "options": {
         "ConnectedServiceName": "Azure Classic",
         "ConnectedServiceNameARM": "Azure Resource Manager"
@@ -49,6 +52,9 @@
     },
     {
       "name": "ConnectedServiceName",
+      "aliases": [
+        "azureClassicSubscription"
+      ],
       "type": "connectedService:Azure",
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
@@ -58,6 +64,9 @@
     },
     {
       "name": "ConnectedServiceNameARM",
+      "aliases": [
+        "azureSubscription"
+      ],
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
       "defaultValue": "",
@@ -79,6 +88,9 @@
     },
     {
       "name": "StorageAccount",
+      "aliases": [
+        "classicStorage"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccount",
       "defaultValue": "",
@@ -91,6 +103,9 @@
     },
     {
       "name": "StorageAccountRM",
+      "aliases": [
+        "storage"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.StorageAccountRM",
       "defaultValue": "",
@@ -121,6 +136,9 @@
     },
     {
       "name": "EnvironmentName",
+      "aliases": [
+        "cloudService"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.EnvironmentName",
       "defaultValue": "",
@@ -133,6 +151,9 @@
     },
     {
       "name": "EnvironmentNameRM",
+      "aliases": [
+        "resourceGroup"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.EnvironmentNameRM",
       "defaultValue": "",
@@ -323,6 +344,7 @@
     "AFC_AddNetworkSecurityRuleFailed": "ms-resource:loc.messages.AFC_AddNetworkSecurityRuleFailed",
     "AFC_UnableToSetCustomScriptExtension": "ms-resource:loc.messages.AFC_UnableToSetCustomScriptExtension",
     "AFC_CopyPrereqsFailed": "ms-resource:loc.messages.AFC_CopyPrereqsFailed",
-    "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound"
+    "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound",
+    "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory"
   }
 }

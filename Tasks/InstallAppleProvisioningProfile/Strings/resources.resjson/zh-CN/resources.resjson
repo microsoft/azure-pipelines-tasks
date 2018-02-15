@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "安装 Apple 预配配置文件",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862068)",
+  "loc.description": "将生成所需的 apple 预配配置文件安装到 macOS 代理上",
+  "loc.instanceNameFormat": "安装 apple 预配配置文件",
+  "loc.input.label.provisioningProfileLocation": "Provisioning profile location",
+  "loc.input.help.provisioningProfileLocation": "Select the location of the provisioning profile to install. The provisioning profile can be uploaded to `Secure Files` or stored in your source repository or a local path on the agent.",
+  "loc.input.label.provProfileSecureFile": "Provisioning profile",
+  "loc.input.help.provProfileSecureFile": "选择已上传到“安全文件”的预配配置文件，将其安装到 macOS 代理上。",
+  "loc.input.label.provProfileSourceRepository": "Provisioning profile",
+  "loc.input.help.provProfileSourceRepository": "Select the provisioning profile from the source repository or specify the local path to a provisioning profile on the macOS agent.",
+  "loc.input.label.removeProfile": "Remove profile after build",
+  "loc.input.help.removeProfile": "选择指定在生成或发布完成后应从代理中删除预配配置文件。",
+  "loc.messages.InputProvisioningProfileNotFound": "Provisioning profile to be installed was not found at %s. Specify the full file path to a provisioning profile."
+}

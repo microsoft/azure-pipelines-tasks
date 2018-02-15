@@ -81,11 +81,6 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
     protected addCodeCoverageNodes(buildJsonContent: any): Q.Promise<any> {
         let _this = this;
 
-        if (!buildJsonContent.project.build) {
-            tl.debug("Build tag is not present");
-            buildJsonContent.project.build = {};
-        }
-
         let buildNode = _this.getBuildDataNode(buildJsonContent);
         let pluginsNode = _this.getPluginDataNode(buildNode);
         let ccContent = ccc.jacocoMavenPluginEnable(_this.includeFilter, _this.excludeFilter, _this.reportDir);
@@ -98,9 +93,7 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
         if (!buildJsonContent.project.build || typeof buildJsonContent.project.build === "string") {
             buildNode = {};
             buildJsonContent.project.build = buildNode;
-        }
-
-        if (buildJsonContent.project.build instanceof Array) {
+        } else if (buildJsonContent.project.build instanceof Array) {
             if (typeof buildJsonContent.project.build[0] === "string") {
                 buildNode = {};
                 buildJsonContent.project.build[0] = buildNode;
@@ -129,17 +122,6 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
             } else {
                 pluginsNode = buildNode.plugins;
             }
-            /* if plugins node doesn't exist look for pluginManagement */
-        } else if (buildNode.pluginManagement) {
-            if (typeof buildNode.pluginManagement === "string") {
-                buildNode.pluginManagement = {};
-            }
-            if (buildNode.pluginManagement instanceof Array) {
-                pluginsNode = buildNode.pluginManagement[0].plugins;
-            } else {
-                pluginsNode = buildNode.pluginManagement.plugins;
-            }
-            /* if both doesn't exist, create plugins */
         } else {
             buildNode.plugins = {};
             pluginsNode = buildNode.plugins;

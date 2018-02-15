@@ -35,7 +35,7 @@ Here it will run the ArchiveFiles task with the specified input arguments:
             ],
             "env": {
                 "NODE_ENV": "development",
-                "INPUT_rootFolder" : "C:\\agents\\latest\\_work\\21\\s",
+                "INPUT_rootFolderOrFile" : "C:\\agents\\latest\\_work\\21\\s",
                 "INPUT_includeRootFolder" : true,
                 "INPUT_archiveType": "tar",
                 "INPUT_tarCompression": "gz",

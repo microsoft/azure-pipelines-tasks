@@ -118,17 +118,6 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
             } else {
                 pluginsNode = buildNode.plugins;
             }
-            /* if plugins node doesn't exist look for pluginManagement */
-        } else if (buildNode.pluginManagement) {
-            if (typeof buildNode.pluginManagement === "string") {
-                buildNode.pluginManagement = {};
-            }
-            if (buildNode.pluginManagement instanceof Array) {
-                pluginsNode = buildNode.pluginManagement[0].plugins;
-            } else {
-                pluginsNode = buildNode.pluginManagement.plugins;
-            }
-            /* if both doesn't exist, create plugins */
         } else {
             buildNode.plugins = {};
             pluginsNode = buildNode.plugins;

@@ -1,0 +1,23 @@
+{
+  "name": "vsts-tasks-bash",
+  "version": "1.0.0",
+  "description": "VSTS Bash Task",
+  "main": "bash.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "uuid": "^3.0.1",
+    "vsts-task-lib": "2.0.5"
+  }
+}

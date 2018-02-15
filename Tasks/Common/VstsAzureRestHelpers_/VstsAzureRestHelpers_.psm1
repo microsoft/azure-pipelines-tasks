@@ -1,8 +1,8 @@
 ﻿# Private module-scope variables.
 $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
-$script:azureRmUri = "https://management.azure.com"
-$script:authUri = "https://login.microsoftonline.com/"
+$script:defaultAuthUri = "https://login.microsoftonline.com/"
+$script:defaultEnvironmentAuthUri = "https://login.windows.net/"
 
 # Connection Types
 $certificateConnection = 'Certificate'
@@ -14,6 +14,10 @@ $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
 
 # API-Version(s)
 $apiVersion = "2014-04-01"
+$azureStackapiVersion = "2015-06-15"
+
+# Constants
+$azureStack = "AzureStack"
 
 # Override the DebugPreference.
 if ($global:DebugPreference -eq 'Continue') {
@@ -36,17 +40,47 @@ function Get-AzureUri
     return $url
 }
 
+function Get-AzureActiverDirectoryResourceId
+{
+    param([object] [Parameter(Mandatory=$true)] $endpoint)
+    $activeDirectoryResourceid = $null;
+   
+    if(($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack))
+    {
+        if(!$endpoint.Data.ActiveDirectoryServiceEndpointResourceId) {
+            $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
+        }
+        $activeDirectoryResourceid =  $endpoint.Data.ActiveDirectoryServiceEndpointResourceId
+    }
+    else
+    {
+        $activeDirectoryResourceid =  $endpoint.url
+        if($activeDirectoryResourceid -ne $null -and $activeDirectoryResourceid[-1] -ne '/') 
+        {
+            $activeDirectoryResourceid = $activeDirectoryResourceid + "/"
+        }
+    }
+
+    return $activeDirectoryResourceid
+}
+
 function Get-ProxyUri
 {
     param([String] [Parameter(Mandatory=$true)] $serverUrl)
+    
+    $proxyUri = [System.Uri]($env:AGENT_PROXYURL)
+    Write-Verbose -Verbose ("Reading proxy from the AGENT_PROXYURL environment variable. Proxy url specified={0}" -f $proxyUri.OriginalString)
 
-    $proxyUri = [Uri]$null
-    $proxy = [System.Net.WebRequest]::GetSystemWebProxy()
-
-    if ($proxy)
+    if($proxyUri -eq $null)
     {
-        $proxy.Credentials = [System.Net.CredentialCache]::DefaultCredentials
+        $proxy = [System.Net.WebRequest]::GetSystemWebProxy()
         $proxyUri = $proxy.GetProxy("$serverUrl")
+        Write-Verbose -Verbose ("Reading proxy from IE. Proxy url specified={0}" -f $proxyUri.OriginalString)
+    }
+
+    if($serverUrl -eq $null -or ([System.Uri]$serverUrl).Host -eq $proxyUri.Host)
+    {
+        return $null
     }
 
     return $proxyUri
@@ -103,8 +137,13 @@ function Get-UsernamePasswordAccessToken {
     # Well known Client-Id
     $password = $endpoint.Auth.Parameters.Password
     $username = $endpoint.Auth.Parameters.UserName
+    $authUrl = $script:defaultAuthUri
+    if($endpoint.Data.activeDirectoryAuthority)
+    {
+        $authUrl = $endpoint.Data.activeDirectoryAuthority
+    }
 
-    $authUri = "$script:authUri/common/oauth2/token"
+    $authUri = "$authUrl/common/oauth2/token"
     $body = @{
         resource=$script:azureUri
         client_id=$azurePsClientId
@@ -126,6 +165,161 @@ function Get-UsernamePasswordAccessToken {
     }
 }
 
+function Get-EnvironmentAuthUrl {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $endpoint)
+
+    if($endpoint.Data.environmentAuthorityUrl)
+    {
+        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+    }
+    else
+    {
+        if(($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack))
+        {
+            $endpoint = Add-AzureStackDependencyData -Endpoint $endpoint
+            $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+        } 
+        else 
+        {
+            $envAuthUrl = $script:defaultEnvironmentAuthUri
+        }
+    }
+
+    return $envAuthUrl
+}
+
+<#
+    Adds Azure Stack environment to use with AzureRM command-lets when targeting Azure Stack
+#>
+function Add-AzureStackDependencyData {
+    param (
+        [Parameter(mandatory=$true, HelpMessage="The Admin ARM endpoint of the Azure Stack Environment")]
+        $endpoint
+    )
+
+    $EndpointURI = $endpoint.Url.TrimEnd("/")
+
+    $Domain = ""
+    try {
+        $uriendpoint = [System.Uri] $EndpointURI
+        $i = $EndpointURI.IndexOf('.')
+        $Domain = ($EndpointURI.Remove(0,$i+1)).TrimEnd('/')
+    }
+    catch 
+    {
+        Write-Error "The specified Azure Resource Manager endpoint is invalid"
+    }
+
+    $ResourceManagerEndpoint = $EndpointURI
+    $stackdomain = $Domain
+    $AzureKeyVaultDnsSuffix="vault.$($stackdomain)".ToLowerInvariant()
+    $AzureKeyVaultServiceEndpointResourceId= $("https://vault.$stackdomain".ToLowerInvariant())
+    $StorageEndpointSuffix = ($stackdomain).ToLowerInvariant()
+    
+    $azureStackEndpointUri = $EndpointURI.ToString().TrimEnd('/')+"/metadata/endpoints?api-version=2015-01-01"
+    $proxyUri = Get-ProxyUri $azureStackEndpointUri
+
+    Write-Verbose "Retrieving endpoints from the $ResourceManagerEndpoint"
+    if ($proxyUri -eq $null)
+    {
+        Write-Verbose "No proxy settings"
+        $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -ErrorAction Stop
+    }
+    else
+    {
+        Write-Verbose "Using Proxy settings"
+        $endpointData = Invoke-RestMethod -Uri $azureStackEndpointUri -Method Get -Proxy $proxyUri -ErrorAction Stop 
+    }
+    
+    if ($endpointData) {
+        $graphEndpoint = $endpointData.graphEndpoint
+        $galleryEndpoint = $endpointData.galleryEndpoint
+        $authenticationData = $endpointData.authentication;
+        if($authenticationData)
+        {
+             $loginEndpoint = $authenticationData.loginEndpoint
+             if($loginEndpoint)
+             {
+                  $activeDirectoryEndpoint = $loginEndpoint.TrimEnd('/') + "/"
+             }
+
+             $audiences = $authenticationData.audiences
+             if($audiences.Count -gt 0)
+             {
+                  $activeDirectoryServiceEndpointResourceId = $audiences[0]
+             }
+        }
+
+        if($Endpoint.Data -ne $null)
+        {
+            if(-not (Has-ObjectProperty $Endpoint.Data "galleryUrl"))
+            {
+                $Endpoint.Data | Add-Member "galleryUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "resourceManagerUrl"))
+            {
+                $Endpoint.Data | Add-Member "resourceManagerUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "activeDirectoryAuthority"))
+            {
+                $Endpoint.Data | Add-Member "activeDirectoryAuthority" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "environmentAuthorityUrl"))
+            {
+                $Endpoint.Data | Add-Member "environmentAuthorityUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "graphUrl"))
+            {
+                $Endpoint.Data | Add-Member "graphUrl" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "activeDirectoryServiceEndpointResourceId"))
+            {
+                $Endpoint.Data | Add-Member "activeDirectoryServiceEndpointResourceId" $null
+            }
+
+            if(-not (Has-ObjectProperty $Endpoint.Data "AzureKeyVaultDnsSuffix"))
+            {
+                $Endpoint.Data | Add-Member "AzureKeyVaultDnsSuffix" $null
+            }
+
+            $Endpoint.Data.galleryUrl = $galleryEndpoint
+            $Endpoint.Data.resourceManagerUrl = $ResourceManagerEndpoint
+            $Endpoint.Data.activeDirectoryAuthority = $activeDirectoryEndpoint
+            $Endpoint.Data.environmentAuthorityUrl = $activeDirectoryEndpoint
+            $Endpoint.Data.graphUrl = $graphEndpoint
+            $Endpoint.Data.activeDirectoryServiceEndpointResourceId = $activeDirectoryServiceEndpointResourceId
+            $Endpoint.Data.AzureKeyVaultDnsSuffix = $AzureKeyVaultDnsSuffix
+        }
+    } 
+    else 
+    {
+        throw "Unable to fetch Azure Stack Dependency Data."
+    }
+    return $Endpoint
+}
+
+function Has-ObjectProperty {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $object,
+    [Parameter(Mandatory=$true)] $propertyName) 
+
+    if(Get-Member -inputobject $object -name $propertyName -Membertype Properties)
+    {
+        return $true
+    }
+    else
+    {
+        return $false
+    }
+}
+
+
 # Get the Bearer Access Token from the Endpoint
 function Get-SpnAccessToken {
     [CmdletBinding()]
@@ -134,14 +328,20 @@ function Get-SpnAccessToken {
     $principalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
     $principalKey = $endpoint.Auth.Parameters.ServicePrincipalKey
+    $envAuthUrl = $script:defaultEnvironmentAuthUri
+    if($endpoint.Data.environmentAuthorityUrl)
+    {
+        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+    }
 
-    $azureUri = Get-AzureUri $endpoint
+    $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
+    $azureActiveDirectoryResourceId = Get-AzureActiverDirectoryResourceId -endpoint $endpoint
 
     # Prepare contents for POST
     $method = "POST"
-    $authUri = "https://login.windows.net/$tenantId/oauth2/token"
+    $authUri = "$envAuthUrl" + "$tenantId/oauth2/token"
     $body = @{
-        resource=$azureUri+"/"
+        resource=$azureActiveDirectoryResourceId
         client_id=$principalId
         grant_type='client_credentials'
         client_secret=$principalKey
@@ -153,7 +353,7 @@ function Get-SpnAccessToken {
     try
     {
         $proxyUri = Get-ProxyUri $authUri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $authUri))
+        if ($proxyUri -eq $null)
         {
             Write-Verbose "No proxy settings"
             $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Body $body -ContentType $script:formContentType
@@ -168,6 +368,8 @@ function Get-SpnAccessToken {
     }
     catch
     {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-SpnAccessToken)"
         throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
     }
 }
@@ -202,7 +404,7 @@ function Get-AzStorageKeys
         $certificate = Get-Certificate $endpoint
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
             Write-Verbose "No Proxy settings"
@@ -238,12 +440,12 @@ function Get-AzRMStorageKeys
         $resourceGroupId = $resourceGroupDetails.id
 
         $method = "POST"
-        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
+        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName/listKeys" + '?api-version=2015-06-15'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $storageKeys=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
@@ -278,14 +480,23 @@ function Get-AzRmVmCustomScriptExtension
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
+        if(($endpoint.Data.Environment) -and ($endpoint.Data.Environment -eq $azureStack))
+        {
+             $vmExtensionApiVersion = '2015-06-15'
+        }
+        else
+        {
+             $vmExtensionApiVersion = '2016-03-30'
+        }
+
         $method="GET"
-        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=' + $vmExtensionApiVersion
 
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $customScriptExt=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
@@ -321,13 +532,13 @@ function Remove-AzRmVmCustomScriptExtension
         $resourceGroupId = $resourceGroupDetails.id
 
         $method="DELETE"
-        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
+        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Compute/virtualMachines/$vmName/extensions/$Name" + '?api-version=2016-03-30'
 
         $headers = @{"accept-language" = "en-US"}
         $headers.Add("Authorization", ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token))
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $response=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No proxy settings"
@@ -366,7 +577,7 @@ function Get-AzStorageAccount
         $certificate = Get-Certificate $endpoint
 
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $storageAccount=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -Certificate $certificate
             Write-Verbose "No Proxy settings"
@@ -401,13 +612,13 @@ function Get-AzRmStorageAccount
         $resourceGroupId = $resourceGroupDetails.id
 
         $method="GET"
-        $uri = "$script:azureRmUri$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName" + '?api-version=2016-01-01'
+        $uri = "$($endpoint.Url)$resourceGroupId/providers/Microsoft.Storage/storageAccounts/$storageAccountName" + '?api-version=2016-01-01'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $storageAccountUnformatted = $null
         $proxyUri = Get-ProxyUri $uri
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $storageAccountUnformatted=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
@@ -455,13 +666,12 @@ function Get-AzRmResourceGroup
         $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
         $method="GET"
-        $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName" + '?api-version=2016-02-01'
+        $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName" + '?api-version=2016-02-01'
 
         $headers = @{"Authorization" = ("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
         $proxyUri = Get-ProxyUri $uri
-
-        if (($proxyUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $null) -or ($proxyUri.AbsoluteUri -eq $uri))
+        if ($proxyUri -eq $null)
         {
             $resourceGroup=Invoke-RestMethod -Uri $uri -Method $method -Headers $headers
             Write-Verbose "No Proxy settings"
@@ -495,17 +705,21 @@ function Get-AzureSqlDatabaseServerResourceId
 
     Write-Verbose "[Azure Rest Call] Get Resource Groups"
     $method = "GET"
-    $uri = "$script:azureRmUri/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resources?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
-    $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
-    foreach ($resourceDetail in $ResourceDetails.Value)
-    {
-        if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
+    do {
+        Write-Verbose "Fetching Resources from $uri"
+        $ResourceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+        foreach ($resourceDetail in $ResourceDetails.Value)
         {
-            return $resourceDetail.id
+            if ($resourceDetail.name -eq $serverName -and $resourceDetail.type -eq $serverType)
+            {
+                return $resourceDetail.id
+            }
         }
-    }
+        $uri = $ResourceDetails.nextLink
+    } until([string]::IsNullOrEmpty($ResourceDetails.nextLink))
 
     throw (Get-VstsLocString -Key AZ_NoValidResourceIdFound -ArgumentList $serverName, $serverType, $subscriptionId)
 }
@@ -562,7 +776,7 @@ function Add-AzureRmSqlServerFirewall
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
     $body = "{
             'properties' : {
             'startIpAddress':'$startIPAddress',
@@ -615,7 +829,7 @@ function Remove-AzureRmSqlServerFirewall
     # Fetch Azure SQL server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
-    $uri = "$script:azureRmUri/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
+    $uri = "$($endpoint.Url)/$azureResourceId/firewallRules/$firewallRuleName\?api-version=$apiVersion"
     $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
 
     Invoke-RestMethod -Uri $uri -Method Delete -Headers $headers
@@ -632,25 +846,38 @@ function Add-AzureSqlDatabaseServerFirewallRule
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
     
     Trace-VstsEnteringInvocation $MyInvocation
-    Write-Verbose "Creating firewall rule $firewallRuleName"
 
-    $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
-
-    if(IsLegacyAzureConnection $connectionType)
+    try
     {
-        Add-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress -firewallRuleName $firewallRuleName
-    }
-    elseif (IsAzureRmConnection $connectionType)
-    {
+        Write-Verbose "Creating firewall rule $firewallRuleName"
 
-        Add-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress -firewallRuleName $firewallRuleName
-    }
-    else
-    {
-        throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
-    }
+        $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
 
-    Write-Verbose "Firewall rule $firewallRuleName created"
+        if(IsLegacyAzureConnection $connectionType)
+        {
+            Add-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress -firewallRuleName $firewallRuleName
+        }
+        elseif (IsAzureRmConnection $connectionType)
+        {
+
+            Add-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -startIPAddress $startIPAddress -endIPAddress $endIPAddress -firewallRuleName $firewallRuleName
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
+        }
+
+        Write-Verbose "Firewall rule $firewallRuleName created"
+    }
+    catch 
+    {
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            throw  $parsedException
+        }
+        throw $_.Exception.ToString()
+    }
 }
 
 function Remove-AzureSqlDatabaseServerFirewallRule
@@ -661,24 +888,266 @@ function Remove-AzureSqlDatabaseServerFirewallRule
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
     Trace-VstsEnteringInvocation $MyInvocation
-    Write-Verbose "Removing firewall rule $firewallRuleName on azure database server: $serverName"
 
-    $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
-
-    if(IsLegacyAzureConnection $connectionType)
+    try
     {
-        Remove-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
+        Write-Verbose "Removing firewall rule $firewallRuleName on azure database server: $serverName"
+
+        $connectionType = Get-ConnectionType -serviceEndpoint $endpoint
+
+        if(IsLegacyAzureConnection $connectionType)
+        {
+            Remove-LegacyAzureSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
+        }
+        elseif (IsAzureRmConnection $connectionType)
+        {
+            Remove-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
+        }
+
+        Write-Verbose "Removed firewall rule $firewallRuleName on azure database server: $serverName"
     }
-    elseif (IsAzureRmConnection $connectionType)
+    catch 
     {
-        Remove-AzureRmSqlServerFirewall -endpoint $endpoint -serverName $serverName -firewallRuleName $firewallRuleName
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            throw  $parsedException
+        }
+        throw $_.Exception.ToString()
+    }
+}
+
+function Parse-Exception($exception){
+    if($exception) {
+        Write-Verbose "Exception message - $($exception.ToString())"
+        $response = $exception.Response
+        if($response) {
+            $responseStream =  $response.GetResponseStream()
+            $streamReader = New-Object System.IO.StreamReader($responseStream)
+            $streamReader.BaseStream.Position = 0
+            $streamReader.DiscardBufferedData()
+            $responseBody = $streamReader.ReadToEnd()
+            $streamReader.Close()
+            Write-Verbose "Exception message extracted from response $responseBody"
+            $exceptionMessage = "";
+            try
+            {
+                if($responseBody)
+                {
+                    $exceptionJson = $responseBody | ConvertFrom-Json
+                    $exceptionMessage = $exceptionJson.Message
+                }
+            }
+            catch{
+                $exceptionMessage = $responseBody
+            }
+            if($response.statusCode -eq 404 -or (-not $exceptionMessage)){
+                $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
+            }
+            return $exceptionMessage
+        }
+    }
+    return $null
+}
+
+function Get-AzureNetworkInterfaceDetails
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    $accessToken = Get-SpnAccessToken $endpoint
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
+
+    Write-Verbose "[Azure Rest Call] Get Network Interface Details"
+    
+    $method = "GET"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/networkInterfaces?api-version=$azureStackapiVersion"
+    $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+    $proxyUri = Get-ProxyUri $uri
+
+    if($proxyUri)
+    {
+        $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
     }
     else
     {
-        throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $connectionType)
+        $networkInterfaceDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    }
+    
+    if(-not $networkInterfaceDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchNetworkInterfacesDetails)
     }
 
-    Write-Verbose "Removed firewall rule $firewallRuleName on azure database server: $serverName"
+    if($networkInterfaceDetails.value) 
+    {
+        return $networkInterfaceDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+    
+    return $networkInterfaceDetails.value
+}
+
+function Get-AzurePublicIpAddressDetails
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    $accessToken = Get-SpnAccessToken $endpoint
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
+
+    Write-Verbose "[Azure Rest Call] Get Public IP Addresses Details"
+
+    $method = "GET"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/publicIPAddresses?api-version=$azureStackapiVersion"
+    $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+    $proxyUri = Get-ProxyUri $uri
+
+    if($proxyUri)
+    {
+        $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
+    }
+    else
+    {
+        $publicIPAddressesDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    }
+
+    if(-not $publicIPAddressesDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchPublicIPAddressesDetails)
+    }
+
+    if($publicIPAddressesDetails.value) 
+    {
+        return $publicIPAddressesDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+
+    return $publicIPAddressesDetails.value
+}
+
+function Get-AzureLoadBalancersDetails
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    $accessToken = Get-SpnAccessToken $endpoint
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
+
+    Write-Verbose "[Azure Rest Call] Get Load Balancers details"
+
+    $method = "GET"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers?api-version=$azureStackapiVersion"
+    $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+    $proxyUri = Get-ProxyUri $uri
+
+    if($proxyUri)
+    {
+        $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
+    }
+    else
+    {
+        $loadBalancersDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    }
+
+    if(-not $loadBalancersDetails) 
+    {
+        throw (Get-VstsLocString -Key AZ_UnableToFetchLoadbalancerDetails)
+    }
+
+    if($loadBalancersDetails.value) 
+    {
+        return $loadBalancersDetails.value | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+
+    return $loadBalancersDetails.value
+}
+
+function Get-AzureLoadBalancerDetails
+{
+    [CmdletBinding()]
+    param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
+          [String] [Parameter(Mandatory = $true)] $name,
+          [Object] [Parameter(Mandatory = $true)] $endpoint)
+
+    $accessToken = Get-SpnAccessToken $endpoint
+    $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
+    
+    Write-Verbose "[Azure Rest Call] Get Load balancer details with name : $name"
+
+    $method = "GET"
+    $uri = "$($endpoint.Url)/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/loadBalancers/" + $name + "?api-version=$azureStackapiVersion"
+    $headers = @{Authorization=("{0} {1}" -f $accessToken.token_type, $accessToken.access_token)}
+
+    $proxyUri = Get-ProxyUri $uri
+
+    if($proxyUri)
+    {
+        $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType -Proxy $proxyUri)
+    }
+    else
+    {
+        $loadBalancerDetails = (Invoke-RestMethod -Uri $uri -Method $method -Headers $headers -ContentType $script:jsonContentType)
+    }
+    
+    if($loadBalancerDetails)
+    {
+        return $loadBalancersDetails | % { Add-PropertiesToRoot -rootObject $_ }
+    }
+    
+    return $loadBalancerDetails
+}
+
+function Get-AzureRMLoadBalancerFrontendIpConfigDetails
+{
+    [CmdletBinding()]
+    param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
+
+    $frontendIPConfigurations = $loadBalancer.frontendIPConfigurations
+
+    if($frontendIPConfigurations)
+    {
+        return Add-PropertiesToRoot -rootObject $frontendIPConfigurations
+    }
+
+    return $frontendIPConfigurations
+}
+
+function Get-AzureRMLoadBalancerInboundNatRuleConfigDetails
+{
+    [CmdletBinding()]
+    param([Object] [Parameter(Mandatory = $true)] $loadBalancer)
+
+    $inboundNatRules = $loadBalancer.inboundNatRules
+    
+    if($inboundNatRules)
+    {
+        return Add-PropertiesToRoot -rootObject $inboundNatRules
+    }
+
+    return $inboundNatRules
+}
+
+function Add-PropertiesToRoot
+{
+    [CmdletBinding()]
+    param([Object] [Parameter(Mandatory = $true)] $rootObject)
+
+    if($rootObject -and $rootObject.properties)
+    {
+        $rootObject.properties.psObject.Properties | % { $rootObject | Add-Member -MemberType $_.MemberType -Name $_.Name -Value $_.Value -Force}
+        $rootObject.psObject.properties.remove("properties");
+    }
+
+    return $rootObject
 }
 
 # Export only the public function.
@@ -691,3 +1160,9 @@ Export-ModuleMember -Function Remove-AzRmVmCustomScriptExtension
 Export-ModuleMember -Function Get-AzStorageAccount
 Export-ModuleMember -Function Get-AzRmStorageAccount
 Export-ModuleMember -Function Get-AzRmResourceGroup
+Export-ModuleMember -Function Get-AzureNetworkInterfaceDetails
+Export-ModuleMember -Function Get-AzurePublicIpAddressDetails
+Export-ModuleMember -Function Get-AzureLoadBalancersDetails
+Export-ModuleMember -Function Get-AzureLoadBalancerDetails
+Export-ModuleMember -Function Get-AzureRMLoadBalancerFrontendIpConfigDetails
+Export-ModuleMember -Function Get-AzureRMLoadBalancerInboundNatRuleConfigDetails
