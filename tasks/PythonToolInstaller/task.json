@@ -93,7 +93,7 @@
             "helpMarkDown": "Path to the Python distribution inside the Azure storage container."
         },
         {
-            "name": "jdkDestinationDirectory",
+            "name": "destinationDirectory",
             "type": "filePath",
             "label": "Destination directory",
             "defaultValue": "",

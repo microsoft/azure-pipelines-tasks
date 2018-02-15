@@ -32,8 +32,8 @@
       "type": "pickList",
       "label": "ms-resource:loc.input.label.architectureOption",
       "options": {
-        "x64": "X64",
-        "x86": "X86"
+        "x64": "x64",
+        "x86": "x86"
       },
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.architectureOption"
@@ -50,12 +50,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.installationSource"
     },
     {
-      "name": "zipFile",
+      "name": "compressedFile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.zipFile",
+      "label": "ms-resource:loc.input.label.compressedFile",
       "required": true,
       "visibleRule": "installationSource == LocalDirectory",
-      "helpMarkDown": "ms-resource:loc.input.help.zipFile"
+      "helpMarkDown": "ms-resource:loc.input.help.compressedFile"
     },
     {
       "name": "azureResourceManagerEndpoint",
@@ -93,12 +93,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureCommonVirtualFile"
     },
     {
-      "name": "jdkDestinationDirectory",
+      "name": "destinationDirectory",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.jdkDestinationDirectory",
+      "label": "ms-resource:loc.input.label.destinationDirectory",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
+      "helpMarkDown": "ms-resource:loc.input.help.destinationDirectory"
     },
     {
       "name": "cleanDestinationDirectory",
