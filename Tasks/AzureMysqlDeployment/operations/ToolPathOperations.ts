@@ -14,7 +14,8 @@ export class ToolPathOperations {
             this.getInstalledPathOfMysqlForWindow().then((path) => {
                 defer.resolve(path);
             },(error) =>{
-                defer.reject(error);
+                task.debug("Error during window mysql path finding: "+ error);
+                defer.reject("WindowMysqlClientMissingError");
             });
         }
         else{
@@ -39,7 +40,8 @@ export class ToolPathOperations {
             const path = task.which("mysql", true);
             defer.resolve(path);
         }catch(error){
-            defer.reject(error);
+            task.debug("Error during mysql path finding: "+ error);
+            defer.reject("LinuxMysqlClientMissingError");
         }
 
         return defer.promise;
