@@ -153,29 +153,29 @@ export class FileExtractor {
      */
     public async extractCompressedFile(compressedFile: string, destination: string): Promise<string> {
         compressedFile = path.normalize(compressedFile);
-        const stats = fs.statSync(compressedFile);
 
-        if (!stats) {
+        if (!fs.existsSync(compressedFile)) {
             throw new Error(taskLib.loc('ExtractNonExistFile', compressedFile));
-        } else if (!stats.isFile()) {
+        } else if (!fs.statSync(compressedFile).isFile()) {
             throw new Error(taskLib.loc('ExtractNonFileFailed', compressedFile));
         }
 
         // Create the destination folder if it doesn't exist
-        if (!taskLib.exist(destination)) {
+        if (!fs.existsSync(destination)) {
             console.log(taskLib.loc('CreateDestDir', destination));
             taskLib.mkdirP(destination);
         }
+
+        // Take a snapshot of the directories we have right now
+        const initialDirectoriesList = fs.readdirSync(destination).filter(x => fs.statSync(x).isDirectory());
 
         const fileType = compressedFileType(compressedFile)
         const extractor = this.pickExtractor(fileType);
         await extractor(compressedFile, destination);
 
-        const finalDirectoriesList = taskLib.find(destination).filter(x => taskLib.stats(x).isDirectory());
-        taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
+        const finalDirectoriesList = fs.readdirSync(destination).filter(x => fs.statSync(x).isDirectory());
 
         // Find the first one that wasn't there to begin with
-        const initialDirectoriesList = taskLib.find(destination).filter(x => taskLib.stats(x).isDirectory());
         return finalDirectoriesList.filter(x => initialDirectoriesList.indexOf(x) < 0)[0];
     }
 }

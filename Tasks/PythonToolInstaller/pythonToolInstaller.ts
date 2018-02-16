@@ -28,7 +28,7 @@ async function getPython(): Promise<void> {
     const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
 
      // Clean the destination folder before downloading and extracting?
-     if (cleanDestination && taskLib.exist(destination) && fs.statSync(destination).isDirectory()) {
+     if (cleanDestination && fs.existsSync(destination) && fs.statSync(destination).isDirectory()) {
         console.log(taskLib.loc('CleanDestDir', destination));
 
         // delete the contents of the destination directory but leave the directory in place
@@ -73,7 +73,8 @@ async function getPython(): Promise<void> {
     })();
 
     const extractedContents = await new FileExtractor().extractCompressedFile(compressedFile, destination);
-    console.log(`Extracted contents: ${extractedContents}`);
+    toolLib.debug(`Extracted contents: ${extractedContents}`);
+    taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
 
     // TODO
     // taskLib.debug(`Set output variable ${x} to ${y}`);
