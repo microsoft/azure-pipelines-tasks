@@ -139,8 +139,8 @@
     "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
     "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
-    "RetrievingJdkFromAzure": "ms-resource:loc.messages.RetrievingJdkFromAzure",
-    "RetrievingJdkFromLocalPath": "ms-resource:loc.messages.RetrievingJdkFromLocalPath",
+    "RetrievingPythonFromAzure": "ms-resource:loc.messages.RetrievingPythonFromAzure",
+    "RetrievingPythonFromLocalPath": "ms-resource:loc.messages.RetrievingPythonFromLocalPath",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   }
 }
