@@ -12,7 +12,7 @@ steps:
   inputs:
     versionSpec: '1.8'
     jdkArchitectureOption: 'x64' # x64, x86
-    jdkSourceOption: 'LocalDirectory' # AzureStorage, LocalDirectory
+    jdkSourceOption: 'localDirectory' # azureStorage, localDirectory
     jdkFile: # Enter JDK archive file path
     jdkDestinationDirectory: # Enter JDK archive extraction directory
     cleanDestinationDirectory: true
