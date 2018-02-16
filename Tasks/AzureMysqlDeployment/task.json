@@ -217,7 +217,7 @@
         "AzureEndpointCannotBeNull": "Invalid subscription name. Azure endpoint can't be null.",
         "CallbackCannotBeNull": "callback cannot be null.",
         "UnableToCreateDatabaseException": "Unable to create database.",
-        "WindowMysqlClientMissingError": "Mysql Client is missing in window agent box. Please install it by running mysql client installer 'https://aka.ms/window-mysqlcli-installer' in your agent box.",
-        "LinuxMysqlClientMissingError": "Mysql Client is missing in linux agent box. Please install it by running 'apt-get update && apt-get install mysql-client -y'."
+        "WindowMysqlClientMissingError": "Mysql Client is missing in window agent box. Please install it by running mysql client installer 'https://aka.ms/window-mysqlcli-installer' script file in your agent box.",
+        "LinuxMysqlClientMissingError": "Mysql Client is missing in linux agent box. Please install it by running 'apt-get install mysql-client'."
     }
 }

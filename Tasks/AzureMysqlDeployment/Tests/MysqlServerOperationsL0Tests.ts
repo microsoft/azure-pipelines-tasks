@@ -19,7 +19,7 @@ export class MysqlServerOperationsL0Tests  {
 
     public static async testForCorrectId(){
         try{
-            const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("testserver");
+            const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("testserver.test-vm1.onebox.xdb.mscds.com");
             tl.setResult(tl.TaskResult.Succeeded, 'MysqlServerOperationsTests.MysqlServerFromServerName should has passed.');
         }catch(error){
             tl.setResult(tl.TaskResult.Failed, 'MysqlServerOperationsTests.MysqlServerFromServerName should have passed but failed.');
@@ -28,7 +28,7 @@ export class MysqlServerOperationsL0Tests  {
     
     public static async testWithoutId(){
         try{
-            const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("serverWithoutId");
+            const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("serverWithoutId.test-vm1.onebox.xdb.mscds.com");
             tl.setResult(tl.TaskResult.Succeeded, 'MysqlServerOperationsTests.MysqlServerFromServerName should have failed due to without id in mysql server but passed .');
         }catch(error){
             tl.setResult(tl.TaskResult.Failed, 'MysqlServerOperationsTests.MysqlServerFromServerName should have failed due to without id in mysql server.');
@@ -37,7 +37,7 @@ export class MysqlServerOperationsL0Tests  {
 
     public static async testForInvalidId(){
         try{
-            const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("serverWithInvalidId");
+            const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("serverWithInvalidId.test-vm1.onebox.xdb.mscds.com");
             tl.setResult(tl.TaskResult.Succeeded, 'MysqlServerOperationsTests.MysqlServerFromServerName should have failed due to invalid id in mysql server but passed.');
         }catch(error){
             tl.setResult(tl.TaskResult.Failed, 'MysqlServerOperationsTests.MysqlServerFromServerName should have failed due to invalid id in mysql server.');
@@ -46,7 +46,7 @@ export class MysqlServerOperationsL0Tests  {
 
     public static async testForNotFound(){
         try{
-            const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("serverNotFound");
+            const mysqlServer: MysqlServer = await MysqlServerOperationsL0Tests.getServerDeatils("serverNotFound.test-vm1.onebox.xdb.mscds.com");
             if(mysqlServer){
                 tl.setResult(tl.TaskResult.Succeeded, 'MysqlServerOperationsTests.MysqlServerFromServerName should have failed due to invalid mysql server name but passed.');
             }else{

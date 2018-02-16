@@ -218,6 +218,8 @@
     "SqlExecutionException": "ms-resource:loc.messages.SqlExecutionException",
     "AzureEndpointCannotBeNull": "ms-resource:loc.messages.AzureEndpointCannotBeNull",
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
-    "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException"
+    "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",
+    "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",
+    "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError"
   }
 }

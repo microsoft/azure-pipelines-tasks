@@ -56,5 +56,7 @@
   "loc.messages.SqlExecutionException": "Sql execution exception. Please Check the sql script. Error: %s .",
   "loc.messages.AzureEndpointCannotBeNull": "Invalid subscription name. Azure endpoint can't be null.",
   "loc.messages.CallbackCannotBeNull": "callback cannot be null.",
-  "loc.messages.UnableToCreateDatabaseException": "Unable to create database."
+  "loc.messages.UnableToCreateDatabaseException": "Unable to create database.",
+  "loc.messages.WindowMysqlClientMissingError": "Mysql Client is missing in window agent box. Please install it by running mysql client installer 'https://aka.ms/window-mysqlcli-installer' script file in your agent box.",
+  "loc.messages.LinuxMysqlClientMissingError": "Mysql Client is missing in linux agent box. Please install it by running 'apt-get install mysql-client'."
 }
