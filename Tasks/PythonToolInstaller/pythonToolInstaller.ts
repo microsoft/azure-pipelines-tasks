@@ -19,7 +19,7 @@ async function run(): Promise<void> {
 async function getPython(): Promise<void> {
     const versionSpec = taskLib.getInput('versionSpec', true);
     const architecture = taskLib.getInput('architectureOption', true);
-    const fromAzure = taskLib.getInput('installationSource', true) === 'AzureStorage';
+    const installationSource = taskLib.getInput('installationSource', true);
     const destination = taskLib.getPathInput('destinationDirectory', true);
     const cleanDestination = taskLib.getBoolInput('cleanDestinationDirectory', false);
 
@@ -38,11 +38,14 @@ async function getPython(): Promise<void> {
         }
     }
 
-    const extractedContents: Promise<string | null> = (async () => {
-        if (version) { // Tool cache
-            console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
-            return Promise.resolve<string>(null);
-        } else if (fromAzure) { // download from Azure
+    if (version) {
+        // Found in tool cache. Don't set output variable.
+        console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
+        return;
+    }
+
+    const compressedFile: string = await (async () => {
+        if (installationSource === 'AzureStorage') {
             console.log(taskLib.loc('RetrievingPythonFromAzure', versionSpec, architecture));
             const file = taskLib.getInput('azureCommonVirtualFile', true);
 
@@ -53,20 +56,24 @@ async function getPython(): Promise<void> {
                 file);
 
             await azureDownloader.downloadArtifacts(destination, '*' + path.extname(file));
-            await sleep(250); // Wait for the file to be released before extracting it
+            await sleep(250); // Wait for the file to be released before trying to extract it
 
-            const compressedFile = buildFilePath(destination, file);
-            return await new FileExtractor().extractCompressedFile(compressedFile, destination);
-        } else { // file path
+            const filename = file.split(/[\\\/]/).pop();
+            return path.join(destination, filename);
+        } else if (installationSource === 'FilePath') {
             console.log(taskLib.loc('RetrievingPythonFromFilePath', versionSpec, architecture));
-
-            const compressedFile = taskLib.getInput('compressedFile', true)
-            return await new FileExtractor().extractCompressedFile(compressedFile, destination);
+            return taskLib.getInput('compressedFile', true);
+        } else if (installationSource === 'Url') {
+            // TODO download from URL
+            throw new Error("Not implemented");
+        } else {
+            // TODO error
+            throw new Error();
         }
     })();
 
-    console.log(`Extracted contents: ${await extractedContents}`);
-    // .then(extractedContents => console.log(`Extracted contents: ${extractedContents}`));
+    const extractedContents = await new FileExtractor().extractCompressedFile(compressedFile, destination);
+    console.log(`Extracted contents: ${extractedContents}`);
 
     // TODO
     // taskLib.debug(`Set output variable ${x} to ${y}`);
@@ -77,11 +84,6 @@ function sleep(milliseconds: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         setTimeout(resolve, milliseconds);
     });
-}
-
-function buildFilePath(root: string, file: string): string {
-    const fileName = file.split(/[\\\/]/).pop();
-    return path.join(root, fileName);
 }
 
 run();
