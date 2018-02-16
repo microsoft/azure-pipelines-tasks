@@ -5,6 +5,7 @@
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Tool",
+  "preview": "true",
   "runsOn": [
     "Agent",
     "DeploymentGroup"
@@ -12,22 +13,43 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 0,
-    "Patch": 1
+    "Minor": 1,
+    "Patch": 0
   },
   "satisfies": [
     "GO"
   ],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.9.2",
+      "defaultValue": "1.9.3",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "goPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.goPath",
+      "helpMarkDown": "ms-resource:loc.input.help.goPath",
+      "groupName": "advanced"
+    },
+    {
+      "name": "goBin",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.goBin",
+      "helpMarkDown": "ms-resource:loc.input.help.goBin",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -37,7 +59,7 @@
     }
   },
   "messages": {
-    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
-    "VersionNotSupported": "ms-resource:loc.messages.VersionNotSupported"
+    "FailedToDownload": "ms-resource:loc.messages.FailedToDownload",
+    "TempDirNotSet": "ms-resource:loc.messages.TempDirNotSet"
   }
 }

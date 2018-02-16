@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[자세한 정보](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Docker 이미지를 빌드, 푸시 또는 실행하거나 Docker 명령을 실행합니다.",
+  "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Build, tag, push, or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "고급 옵션",
   "loc.input.label.containerregistrytype": "Container Registry 유형",
@@ -23,7 +23,9 @@
   "loc.input.label.context": "빌드 컨텍스트",
   "loc.input.help.context": "빌드 컨텍스트에 대한 경로입니다.",
   "loc.input.label.imageName": "이미지 이름",
-  "loc.input.help.imageName": "빌드하거나, 푸시하거나, 실행할 Docker 이미지의 이름입니다.",
+  "loc.input.help.imageName": "Name of the Docker image to build, push, or run.",
+  "loc.input.label.imageNamesPath": "Image Names Path",
+  "loc.input.help.imageNamesPath": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line.",
   "loc.input.label.qualifyImageName": "이미지 이름 한정",
   "loc.input.help.qualifyImageName": "달리 지정되지 않은 경우 이미지 이름을 Docker 레지스트리 연결의 호스트 이름으로 한정합니다.",
   "loc.input.label.additionalImageTags": "추가 이미지 태그",
@@ -58,9 +60,14 @@
   "loc.input.help.customCommand": "인수와 함께 실행할 Docker 명령입니다. 예를 들어 이미지를 강제로 제거하려는 경우 'rmi -f image-name'입니다.",
   "loc.input.label.dockerHostEndpoint": "Docker 호스트 연결",
   "loc.input.help.dockerHostEndpoint": "Docker 호스트 연결을 선택합니다. 기본값은 에이전트의 호스트로 지정됩니다.",
+  "loc.input.label.enforceDockerNamingConvention": "Force image name to follow Docker naming convention",
+  "loc.input.help.enforceDockerNamingConvention": "If enabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
   "loc.input.label.cwd": "작업 디렉터리",
   "loc.input.help.cwd": "Docker 명령에 대한 작업 디렉터리입니다.",
-  "loc.messages.ContainerPatternFound": "dockerfilepath 매개 변수에 패턴이 있음",
-  "loc.messages.ContainerPatternNotFound": "dockerfilepath 매개 변수에 패턴이 없음",
-  "loc.messages.ContainerDockerFileNotFound": "%s과(와) 일치하는 Docker 파일을 찾을 수 없습니다."
+  "loc.input.label.memory": "Memory limit",
+  "loc.input.help.memory": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
+  "loc.messages.ContainerPatternFound": "Pattern found in docker filepath parameter",
+  "loc.messages.ContainerPatternNotFound": "No pattern found in docker filepath parameter",
+  "loc.messages.ContainerDockerFileNotFound": "%s과(와) 일치하는 Docker 파일을 찾을 수 없습니다.",
+  "loc.messages.NoImagesInImageNamesFile": "At least one image name is expected in file '%s'."
 }

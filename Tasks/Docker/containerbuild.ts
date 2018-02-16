@@ -70,6 +70,11 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-t", baseImageName]);
     }
 
+    var memory = tl.getInput("memory");
+    if (memory) {
+        command.arg(["-m", memory]);
+    }
+
     var context: string;
     var defaultContext = tl.getBoolInput("defaultContext");
     if (defaultContext) {

@@ -99,7 +99,7 @@ try {
     $applicationName = Get-ApplicationNameFromApplicationParameterFile $applicationParameterFile
     $app = Get-ServiceFabricApplication -ApplicationName $applicationName
 
-    $useDiffPackage = Get-VstsInput -Name useDiffPackage
+    $useDiffPackage = [System.Boolean]::Parse((Get-VstsInput -Name useDiffPackage))
     if ($useDiffPackage)
     {
         Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"

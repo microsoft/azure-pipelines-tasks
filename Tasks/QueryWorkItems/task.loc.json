@@ -1,5 +1,5 @@
 {
-  "id": "f1e4b0e6-017e-4819-8a48-ef19ae96e289",
+  "id": "F1E4B0E6-017E-4819-8A48-EF19AE96E289",
   "name": "queryWorkItems",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -8,6 +8,7 @@
   "category": "Utility",
   "preview": true,
   "visibility": [
+    "Build",
     "Release"
   ],
   "runsOn": [
@@ -17,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

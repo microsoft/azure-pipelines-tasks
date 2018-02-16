@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 126,
-    "Patch": 1
+    "Minor": 131,
+    "Patch": 0
   },
   "groups": [
     {
@@ -145,7 +145,7 @@
       "properties": {
         "resizable": "true",
         "rows": "10",
-        "maxLength": "5000"	
+        "maxLength": "5000"
       }
     },
     {
