@@ -8,7 +8,6 @@ queue: 'Hosted VS2017'
 #  system.debug: 'true'
 
 steps:
-
 - task: JavaToolInstaller@0
   inputs:
     versionSpec: '1.8'
