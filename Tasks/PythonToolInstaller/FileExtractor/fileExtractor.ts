@@ -97,16 +97,7 @@ export class FileExtractor {
     }
 
     /** Choose an extractor function based on the file type and agent's operating system. */
-    private pickExtractor(file: string, destination: string): Extractor {
-        const stats = taskLib.stats(file);
-        if (!stats) {
-            throw new Error(taskLib.loc('ExtractNonExistFile', file));
-        } else if (stats.isDirectory()) {
-            throw new Error(taskLib.loc('ExtractDirFailed', file));
-        }
-
-        const fileType = compressedFileType(file);
-
+    private pickExtractor(fileType: CompressedFile): Extractor {
         if (this.isWindows) {
             switch (fileType) {
                 case CompressedFile.Tar:
@@ -126,7 +117,7 @@ export class FileExtractor {
                         // extract compressed tar
                         await this.sevenZipExtract(file, tempFolder);
                         console.log(taskLib.loc('TempDir', tempFolder));
-                        const tempTar = tempFolder + path.sep + taskLib.ls('-A', [tempFolder])[0]; // should be only one TODO
+                        const tempTar = path.join(tempFolder, taskLib.ls('-A', [tempFolder])[0]); // should be only one
                         console.log(taskLib.loc('DecompressedTempTar', file, tempTar));
 
                         // expand extracted tar
@@ -162,6 +153,13 @@ export class FileExtractor {
      */
     public async extractCompressedFile(compressedFile: string, destination: string): Promise<string> {
         compressedFile = path.normalize(compressedFile);
+        const stats = fs.statSync(compressedFile);
+
+        if (!stats) {
+            throw new Error(taskLib.loc('ExtractNonExistFile', compressedFile));
+        } else if (!stats.isFile()) {
+            throw new Error(taskLib.loc('ExtractNonFileFailed', compressedFile));
+        }
 
         // Create the destination folder if it doesn't exist
         if (!taskLib.exist(destination)) {
@@ -169,16 +167,15 @@ export class FileExtractor {
             taskLib.mkdirP(destination);
         }
 
-        if (taskLib.stats(compressedFile).isFile()) {
-            const extractor = this.pickExtractor(compressedFile, destination);
-            await extractor(compressedFile, destination);
+        const fileType = compressedFileType(compressedFile)
+        const extractor = this.pickExtractor(fileType);
+        await extractor(compressedFile, destination);
 
-            const finalDirectoriesList = taskLib.find(destination).filter(x => taskLib.stats(x).isDirectory());
-            taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
+        const finalDirectoriesList = taskLib.find(destination).filter(x => taskLib.stats(x).isDirectory());
+        taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
 
-            // Find the first one that wasn't there to begin with
-            const initialDirectoriesList = taskLib.find(destination).filter(x => taskLib.stats(x).isDirectory());
-            return finalDirectoriesList.filter(x => initialDirectoriesList.indexOf(x) < 0)[0];
-        }
+        // Find the first one that wasn't there to begin with
+        const initialDirectoriesList = taskLib.find(destination).filter(x => taskLib.stats(x).isDirectory());
+        return finalDirectoriesList.filter(x => initialDirectoriesList.indexOf(x) < 0)[0];
     }
 }

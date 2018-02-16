@@ -33,7 +33,7 @@
   "loc.messages.TarExtractFile": "Extracting file: %s",
   "loc.messages.ExtractFileFailedMsg": "Extraction failed for file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
   "loc.messages.ExtractNonExistFile": "Extraction failed for file: %s because it does not exist.",
-  "loc.messages.ExtractDirFailed": "Extraction failed for file: %s because it is a directory.",
+  "loc.messages.ExtractNonFileFailed": "Extraction failed for file: %s because it is not a file.",
   "loc.messages.CreateTempDir": "Creating temp folder: %s to decompress: %s",
   "loc.messages.TempDir": "tempFolder = %s",
   "loc.messages.DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",

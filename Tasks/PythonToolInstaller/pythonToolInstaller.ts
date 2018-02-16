@@ -6,28 +6,29 @@ import * as toolLib from 'vsts-task-tool-lib/tool';
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { FileExtractor } from './FileExtractor/FileExtractor';
 
-async function run() {
+async function run(): Promise<void> {
     try {
         taskLib.setResourcePath(path.join(__dirname, 'task.json'));
-        await getPython(
-            taskLib.getInput('versionSpec', true),
-            taskLib.getInput('architectureOption', true),
-            taskLib.getInput('installationSource', true) === 'AzureStorage',
-            taskLib.getPathInput('destinationDirectory', true),
-            taskLib.getBoolInput('cleanDestinationDirectory', false));
+        await getPython();
     } catch (error) {
         taskLib.error(error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
     }
 }
 
-async function getPython(versionSpec: string, architecture: string, fromAzure: boolean, destination: string, cleanDestination: boolean) {
+async function getPython(): Promise<void> {
+    const versionSpec = taskLib.getInput('versionSpec', true);
+    const architecture = taskLib.getInput('architectureOption', true);
+    const fromAzure = taskLib.getInput('installationSource', true) === 'AzureStorage';
+    const destination = taskLib.getPathInput('destinationDirectory', true);
+    const cleanDestination = taskLib.getBoolInput('cleanDestinationDirectory', false);
+
     toolLib.debug('Trying to get tool from local cache first');
     const localVersions: string[] = toolLib.findLocalToolVersions('Python');
     const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
 
      // Clean the destination folder before downloading and extracting?
-     if (cleanDestination && taskLib.exist(destination) && taskLib.stats(destination).isDirectory) {
+     if (cleanDestination && taskLib.exist(destination) && fs.statSync(destination).isDirectory()) {
         console.log(taskLib.loc('CleanDestDir', destination));
 
         // delete the contents of the destination directory but leave the directory in place
@@ -52,7 +53,7 @@ async function getPython(versionSpec: string, architecture: string, fromAzure: b
                 file);
 
             await azureDownloader.downloadArtifacts(destination, '*' + path.extname(file));
-            await sleep(250); // Wait for the file to be released before extracting it.
+            await sleep(250); // Wait for the file to be released before extracting it
 
             const compressedFile = buildFilePath(destination, file);
             return await new FileExtractor().extractCompressedFile(compressedFile, destination);
@@ -64,7 +65,8 @@ async function getPython(versionSpec: string, architecture: string, fromAzure: b
         }
     })();
 
-    extractedContents.then(extractedContents => console.log(`Extracted contents: ${extractedContents}`));
+    console.log(`Extracted contents: ${await extractedContents}`);
+    // .then(extractedContents => console.log(`Extracted contents: ${extractedContents}`));
 
     // TODO
     // taskLib.debug(`Set output variable ${x} to ${y}`);

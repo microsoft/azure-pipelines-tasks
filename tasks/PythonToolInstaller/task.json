@@ -140,7 +140,7 @@
         "TarExtractFile": "Extracting file: %s",
         "ExtractFileFailedMsg": "Extraction failed for file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
         "ExtractNonExistFile": "Extraction failed for file: %s because it does not exist.",
-        "ExtractDirFailed": "Extraction failed for file: %s because it is a directory.",
+        "ExtractNonFileFailed": "Extraction failed for file: %s because it is not a file.",
         "CreateTempDir": "Creating temp folder: %s to decompress: %s",
         "TempDir": "tempFolder = %s",
         "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",

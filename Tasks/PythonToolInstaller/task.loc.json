@@ -140,7 +140,7 @@
     "TarExtractFile": "ms-resource:loc.messages.TarExtractFile",
     "ExtractFileFailedMsg": "ms-resource:loc.messages.ExtractFileFailedMsg",
     "ExtractNonExistFile": "ms-resource:loc.messages.ExtractNonExistFile",
-    "ExtractDirFailed": "ms-resource:loc.messages.ExtractDirFailed",
+    "ExtractNonFileFailed": "ms-resource:loc.messages.ExtractNonFileFailed",
     "CreateTempDir": "ms-resource:loc.messages.CreateTempDir",
     "TempDir": "ms-resource:loc.messages.TempDir",
     "DecompressedTempTar": "ms-resource:loc.messages.DecompressedTempTar",
