@@ -58,8 +58,8 @@ async function getJava(versionSpec: string) {
 
         const extractSource = buildFilePath(extractLocation, compressedFileExtension);
         jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(extractSource, compressedFileExtension, extractLocation);
-    } else { //JDK is in a local directory. Extract to specified target directory.
-        console.log(taskLib.loc('RetrievingJdkFromLocalPath', versionSpec, architecture));
+    } else { //JDK is in a local directory or file share. Extract to specified target directory.
+        console.log(taskLib.loc('RetrievingJdkFromFilePath', versionSpec, architecture));
         compressedFileExtension = getFileEnding(taskLib.getInput('jdkFile', true));
         jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(taskLib.getInput('jdkFile', true), compressedFileExtension, extractLocation);
     }

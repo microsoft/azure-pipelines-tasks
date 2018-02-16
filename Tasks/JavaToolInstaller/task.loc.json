@@ -55,7 +55,7 @@
       "required": true,
       "options": {
         "AzureStorage": "Azure Storage",
-        "LocalDirectory": "Local Directory"
+        "FilePath": "File path"
       },
       "helpMarkDown": "ms-resource:loc.input.help.jdkSourceOption"
     },
@@ -64,7 +64,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.jdkFile",
       "required": true,
-      "visibleRule": "jdkSourceOption == LocalDirectory",
+      "visibleRule": "jdkSourceOption == FilePath",
       "helpMarkDown": "ms-resource:loc.input.help.jdkFile"
     },
     {
@@ -150,7 +150,7 @@
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
     "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
     "RetrievingJdkFromAzure": "ms-resource:loc.messages.RetrievingJdkFromAzure",
-    "RetrievingJdkFromLocalPath": "ms-resource:loc.messages.RetrievingJdkFromLocalPath",
+    "RetrievingJdkFromFilePath": "ms-resource:loc.messages.RetrievingJdkFromFilePath",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
     "SetJavaHome": "ms-resource:loc.messages.SetJavaHome",
     "SetExtendedJavaHome": "ms-resource:loc.messages.SetExtendedJavaHome",
