@@ -1,14 +1,14 @@
-import fs = require('fs');
-import path = require('path');
-import taskLib = require('vsts-task-lib/task');
-import toolLib = require('vsts-task-tool-lib/tool');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as taskLib from 'vsts-task-lib/task';
+import * as toolLib from 'vsts-task-tool-lib/tool';
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { JavaFilesExtractor } from './FileExtractor/JavaFilesExtractor';
-taskLib.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function run() {
     try {
+        taskLib.setResourcePath(path.join(__dirname, 'task.json'));
         let versionSpec = taskLib.getInput('versionSpec', true);
         await getJava(versionSpec);
     } catch (error) {
@@ -21,6 +21,7 @@ async function getJava(versionSpec: string) {
     const fromAzure: boolean = ('AzureStorage' == taskLib.getInput('jdkSourceOption', true));
     const extractLocation: string = taskLib.getPathInput('jdkDestinationDirectory', true);
     const cleanDestinationDirectory: boolean = taskLib.getBoolInput('cleanDestinationDirectory', false);
+    const architecture = taskLib.getInput('jdkArchitectureOption', true);
     let compressedFileExtension: string;
     let jdkDirectory: string;
 
@@ -43,7 +44,7 @@ async function getJava(versionSpec: string) {
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (fromAzure) { //Download JDK from an Azure blob storage location and extract.
-        console.log(taskLib.loc('RetrievingJdkFromAzure'));
+        console.log(taskLib.loc('RetrievingJdkFromAzure', versionSpec, architecture));
         compressedFileExtension = getFileEnding(taskLib.getInput('azureCommonVirtualFile', true));
 
         const azureDownloader = new AzureStorageArtifactDownloader(
@@ -58,12 +59,12 @@ async function getJava(versionSpec: string) {
         const extractSource = buildFilePath(extractLocation, compressedFileExtension);
         jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(extractSource, compressedFileExtension, extractLocation);
     } else { //JDK is in a local directory. Extract to specified target directory.
-        console.log(taskLib.loc('RetrievingJdkFromLocalPath'));
+        console.log(taskLib.loc('RetrievingJdkFromLocalPath', versionSpec, architecture));
         compressedFileExtension = getFileEnding(taskLib.getInput('jdkFile', true));
         jdkDirectory = new JavaFilesExtractor().unzipJavaDownload(taskLib.getInput('jdkFile', true), compressedFileExtension, extractLocation);
     }
 
-    let extendedJavaHome = 'JAVA_HOME_' + versionSpec + '_' + taskLib.getInput('jdkArchitectureOption', true);
+    let extendedJavaHome = 'JAVA_HOME_' + versionSpec + '_' + architecture;
     console.log(taskLib.loc('SetJavaHome', jdkDirectory));
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable('JAVA_HOME', jdkDirectory);
