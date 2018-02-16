@@ -70,8 +70,8 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
             const epId = tl.getInput("externalendpoint");
             if (epId) {
                 externalendpoint = {
-                    feedName: tl.getEndpointUrl(epId, true).replace(/\W/g, ''),
-                    feedUri: tl.getEndpointUrl(epId, true),
+                    feedName: tl.getEndpointUrl(epId, false).replace(/\W/g, ''),
+                    feedUri: tl.getEndpointUrl(epId, false),
                 };
             }
         }
@@ -79,10 +79,10 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
         let externalendpoints = tl.getDelimitedInput('externalendpoints', ',');
         if (externalendpoints) {
             externalendpoints = externalendpoints.reduce((ary, id) => {
-                let te = {
-                    feedName: tl.getEndpointUrl(id, true).replace(/\W/g, ''),
-                    feedUri: tl.getEndpointUrl(id, true)
-                }
+                const te = {
+                    feedName: tl.getEndpointUrl(id, false).replace(/\W/g, ''),
+                    feedUri: tl.getEndpointUrl(id, false),
+                };
                 ary.push(te);
                 return ary;
             }, []);
