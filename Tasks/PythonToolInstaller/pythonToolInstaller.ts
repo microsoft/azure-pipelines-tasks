@@ -51,18 +51,16 @@ async function getPython(versionSpec: string, architecture: string, fromAzure: b
                 taskLib.getInput('azureContainerName', true),
                 file);
 
-            const compressedFileExtension = getFileEnding(file);
-            await azureDownloader.downloadArtifacts(destination, '*' + compressedFileExtension);
+            await azureDownloader.downloadArtifacts(destination, '*' + path.extname(file));
             await sleep(250); // Wait for the file to be released before extracting it.
 
             const compressedFile = buildFilePath(destination, file);
-            return await new FileExtractor().extractCompressedFile(compressedFile, compressedFileExtension, destination);
+            return await new FileExtractor().extractCompressedFile(compressedFile, destination);
         } else { // local directory
             console.log(taskLib.loc('RetrievingPythonFromLocalPath', versionSpec, architecture));
 
             const compressedFile = taskLib.getInput('compressedFile', true)
-            const compressedFileExtension = getFileEnding(compressedFile);
-            return await new FileExtractor().extractCompressedFile(compressedFile, compressedFileExtension, destination);
+            return await new FileExtractor().extractCompressedFile(compressedFile, destination);
         }
     })();
 
@@ -82,26 +80,6 @@ function sleep(milliseconds: number): Promise<void> {
 function buildFilePath(localPathRoot: string, file: string): string {
     const fileName = file.split(/[\\\/]/).pop();
     return path.join(localPathRoot, fileName);
-}
-
-function getFileEnding(file: string): string {
-    let fileEnding = '';
-
-    if (file.endsWith('.tar')) {
-        fileEnding = '.tar';
-    } else if (file.endsWith('.tar.gz')) {
-        fileEnding = '.tar.gz';
-    } else if (file.endsWith('.tgz')) {
-        fileEnding = '.tgz';
-    } else if (file.endsWith('.zip')) {
-        fileEnding = '.zip';
-    } else if (file.endsWith('.7z')) {
-        fileEnding = '.7z';
-    } else {
-        throw new Error(taskLib.loc('UnsupportedFileExtension'));
-    }
-
-    return fileEnding;
 }
 
 run();

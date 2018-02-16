@@ -6,6 +6,27 @@ import * as tr from 'vsts-task-lib/toolrunner';
 
 type Extractor = (file: string, destination: string) => Promise<void>;
 
+enum CompressedFile {
+    Tar,
+    Tarball,
+    Zip,
+    SevenZip
+}
+
+function compressedFileType(file: string): CompressedFile {
+    if (file.endsWith('.tar')) {
+        return CompressedFile.Tar;
+    } else if (file.endsWith('.tar.gz') || file.endsWith('.tgz')) {
+        return CompressedFile.Tarball;
+    } else if (file.endsWith('.zip')) {
+        return CompressedFile.Zip;
+    } else if (file.endsWith('.7z')) {
+        CompressedFile.SevenZip;
+    } else {
+        throw new Error(taskLib.loc('UnsupportedFileExtension'));
+    }
+}
+
 export class FileExtractor {
     private isWindows: boolean;
 
@@ -76,7 +97,7 @@ export class FileExtractor {
     }
 
     /** Choose an extractor function based on the file type and agent's operating system. */
-    private pickExtractor(file: string, fileEnding: string, destination: string): Extractor {
+    private pickExtractor(file: string, destination: string): Extractor {
         const stats = taskLib.stats(file);
         if (!stats) {
             throw new Error(taskLib.loc('ExtractNonExistFile', file));
@@ -84,13 +105,14 @@ export class FileExtractor {
             throw new Error(taskLib.loc('ExtractDirFailed', file));
         }
 
+        const fileType = compressedFileType(file);
+
         if (this.isWindows) {
-            switch (fileEnding) {
-                case '.tar':
-                case '.7z':
+            switch (fileType) {
+                case CompressedFile.Tar:
+                case CompressedFile.SevenZip:
                     return this.sevenZipExtract;
-                case '.tar.gz':
-                case '.tgz':
+                case CompressedFile.Tarball:
                     return async (file: string, destination: string) => {
                         // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
                         const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
@@ -114,20 +136,19 @@ export class FileExtractor {
                         console.log(taskLib.loc('RemoveTempDir', tempFolder));
                         taskLib.rmRF(tempFolder);
                     };
-                case '.zip':
+                case CompressedFile.Zip:
                     return this.powershellExtract;
                 default:
-                    throw new Error(taskLib.loc('UnrecognizedCompressedFileType', fileEnding)); // TODO
+                    throw new Error(taskLib.loc('UnsupportedFileExtension'));
             }
         } else { // not Windows
-            switch (fileEnding) {
-                case '.tar':
-                case '.tar.gz':
-                case '.tgz':
+            switch (fileType) {
+                case CompressedFile.Tar:
+                case CompressedFile.Tarball:
                     return this.tarExtract;
-                case '.zip':
+                case CompressedFile.Zip:
                     return this.unzipExtract;
-                case '.7z':
+                case CompressedFile.SevenZip:
                     return this.sevenZipExtract;
                 default:
                     throw new Error(taskLib.loc('UnsupportedFileExtension'));
@@ -135,7 +156,11 @@ export class FileExtractor {
         }
     }
 
-    public async extractCompressedFile(compressedFile: string, fileEnding: string, destination: string): Promise<string> {
+    /**
+     * Decompress `compressedFile` to `destination`.
+     * This method will choose an appropriate decompression tool based on the file type and host OS.
+     */
+    public async extractCompressedFile(compressedFile: string, destination: string): Promise<string> {
         compressedFile = path.normalize(compressedFile);
 
         // Create the destination folder if it doesn't exist
@@ -145,7 +170,7 @@ export class FileExtractor {
         }
 
         if (taskLib.stats(compressedFile).isFile()) {
-            const extractor = this.pickExtractor(compressedFile, fileEnding, destination);
+            const extractor = this.pickExtractor(compressedFile, destination);
             await extractor(compressedFile, destination);
 
             const finalDirectoriesList = taskLib.find(destination).filter(x => taskLib.stats(x).isDirectory());
