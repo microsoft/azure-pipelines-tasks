@@ -136,7 +136,9 @@ async function main(): Promise<void> {
         if (definitionId) {
             if (!buildId){ 
                 // get latest successful build filtered by branch
-                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchName), 4).catch((reason) => {
+                var branchNameFilter = (branchName == "*") ? null : branchName;
+                
+                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchNameFilter), 4).catch((reason) => {
                     reject(reason);
                     return;
                 }); 
