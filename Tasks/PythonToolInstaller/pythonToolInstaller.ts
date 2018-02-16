@@ -37,7 +37,7 @@ async function getPython(versionSpec: string, architecture: string, fromAzure: b
         }
     }
 
-    const extractedContents = (async () => {
+    const extractedContents: Promise<string | null> = (async () => {
         if (version) { // Tool cache
             console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
             return Promise.resolve<string>(null);
@@ -56,17 +56,17 @@ async function getPython(versionSpec: string, architecture: string, fromAzure: b
             await sleep(250); // Wait for the file to be released before extracting it.
 
             const compressedFile = buildFilePath(destination, file);
-            return new FileExtractor().extractCompressedFile(compressedFile, compressedFileExtension, destination);
+            return await new FileExtractor().extractCompressedFile(compressedFile, compressedFileExtension, destination);
         } else { // local directory
             console.log(taskLib.loc('RetrievingPythonFromLocalPath', versionSpec, architecture));
 
             const compressedFile = taskLib.getInput('compressedFile', true)
             const compressedFileExtension = getFileEnding(compressedFile);
-            return new FileExtractor().extractCompressedFile(compressedFile, compressedFileExtension, destination);
+            return await new FileExtractor().extractCompressedFile(compressedFile, compressedFileExtension, destination);
         }
     })();
 
-    console.log(extractedContents);
+    extractedContents.then(extractedContents => console.log(`Extracted contents: ${extractedContents}`));
 
     // TODO
     // taskLib.debug(`Set output variable ${x} to ${y}`);
