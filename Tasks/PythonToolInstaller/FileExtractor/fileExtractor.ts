@@ -39,7 +39,7 @@ export class FileExtractor {
             catch { };
             [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
 
-        // change the console output code page to UTF-8.
+        // change the console output code page to UTF-8
         const chcpPath = path.join(process.env.windir, "system32", "chcp.com");
         await taskLib.exec(chcpPath, '65001');
 
@@ -50,6 +50,7 @@ export class FileExtractor {
         await powershell.exec();
     }
 
+    /** Extract a file using 7zip. */
     private async sevenZipExtract(file: string, destination: string): Promise<void> {
         console.log(taskLib.loc('SevenZipExtractFile', file));
 
