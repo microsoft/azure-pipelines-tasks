@@ -4,8 +4,6 @@ import * as path from 'path';
 import * as taskLib from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 
-type Extractor = (file: string, destination: string) => Promise<void>;
-
 enum CompressedFile {
     Tar,
     Tarball,
@@ -26,6 +24,8 @@ function compressedFileType(file: string): CompressedFile {
         throw new Error(taskLib.loc('UnsupportedFileExtension'));
     }
 }
+
+type Extractor = (file: string, destination: string) => Promise<void>;
 
 export class FileExtractor {
     private isWindows: boolean;

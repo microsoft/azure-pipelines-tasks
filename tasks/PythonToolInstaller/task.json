@@ -2,7 +2,7 @@
     "id": "BAEC6142-29F9-4BB2-A808-B6432199DB3C",
     "name": "PythonToolInstaller",
     "friendlyName": "Python Tool Installer",
-    "description": "Acquires a specific version of Python from a user supplied Azure blob or a local directory and adds it to the build agent.",
+    "description": "Acquires a specific version of Python from Azure storage, the local file system or file share, or URL and adds it to the build agent.",
     "helpMarkDown": "",
     "category": "Tool",
     "runsOn": [
@@ -45,7 +45,8 @@
             "required": true,
             "options": {
                 "AzureStorage": "Azure storage",
-                "LocalDirectory": "Local directory"
+                "FilePath": "File path",
+                "Url": "URL"
             },
             "helpMarkDown": "Source for the compressed Python distribution."
         },
@@ -54,8 +55,8 @@
             "type": "filePath",
             "label": "Compressed file",
             "required": true,
-            "visibleRule": "installationSource == LocalDirectory",
-            "helpMarkDown": "Path to a compressed file containing the compiled Python distribution. The path could be in your source repository or a local path on the agent."
+            "visibleRule": "installationSource == FilePath",
+            "helpMarkDown": "Path to a compressed file containing the compiled Python distribution. The path can be in your source repository, a local path on the agent, or a file share accessible by the agent. Supported file types are .tar, .tar.gz / .tgz, .zip, and .7z."
         },
         {
             "name": "azureResourceManagerEndpoint",
@@ -63,7 +64,7 @@
             "label": "Azure subscription",
             "required": true,
             "visibleRule": "installationSource == AzureStorage",
-            "helpMarkDown": "Choose the Azure Resource Manager subscription for the JDK."
+            "helpMarkDown": "Choose the Azure Resource Manager subscription."
         },
         {
             "name": "azureStorageAccountName",
@@ -91,6 +92,14 @@
             "required": true,
             "visibleRule": "installationSource == AzureStorage",
             "helpMarkDown": "Path to the Python distribution inside the Azure storage container."
+        },
+        {
+            "name": "url",
+            "type": "string",
+            "label": "URL",
+            "required": true,
+            "visibleRule": "installationSource == Url",
+            "helpMarkDown": "URL pointing to the compressed Python distribution for download. Supported file types are .tar, .tar.gz / .tgz, .zip, and .7z."
         },
         {
             "name": "destinationDirectory",
@@ -140,7 +149,7 @@
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
         "CreateDestDir": "Creating destination folder: %s",
         "RetrievingPythonFromAzure": "Retrieving Python %s (%s) from Azure blob storage.",
-        "RetrievingPythonFromLocalPath": "Retrieving Python %s (%s) from local path.",
+        "RetrievingPythonFromFilePath": "Retrieving Python %s (%s) from file path.",
         "SucceedMsg": "Successfully extracted all files."
     }
 }

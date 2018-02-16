@@ -45,7 +45,8 @@
       "required": true,
       "options": {
         "AzureStorage": "Azure storage",
-        "LocalDirectory": "Local directory"
+        "FilePath": "File path",
+        "Url": "URL"
       },
       "helpMarkDown": "ms-resource:loc.input.help.installationSource"
     },
@@ -54,7 +55,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.compressedFile",
       "required": true,
-      "visibleRule": "installationSource == LocalDirectory",
+      "visibleRule": "installationSource == FilePath",
       "helpMarkDown": "ms-resource:loc.input.help.compressedFile"
     },
     {
@@ -91,6 +92,14 @@
       "required": true,
       "visibleRule": "installationSource == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureCommonVirtualFile"
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.url",
+      "required": true,
+      "visibleRule": "installationSource == Url",
+      "helpMarkDown": "ms-resource:loc.input.help.url"
     },
     {
       "name": "destinationDirectory",
@@ -140,7 +149,7 @@
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
     "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
     "RetrievingPythonFromAzure": "ms-resource:loc.messages.RetrievingPythonFromAzure",
-    "RetrievingPythonFromLocalPath": "ms-resource:loc.messages.RetrievingPythonFromLocalPath",
+    "RetrievingPythonFromFilePath": "ms-resource:loc.messages.RetrievingPythonFromFilePath",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
   }
 }

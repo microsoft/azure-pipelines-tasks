@@ -10,7 +10,7 @@ async function run() {
     try {
         taskLib.setResourcePath(path.join(__dirname, 'task.json'));
         await getPython(
-            taskLib.getInput('versionSpec', true), // TODO: shouldn't actually accept a versionspec here
+            taskLib.getInput('versionSpec', true),
             taskLib.getInput('architectureOption', true),
             taskLib.getInput('installationSource', true) === 'AzureStorage',
             taskLib.getPathInput('destinationDirectory', true),
@@ -56,8 +56,8 @@ async function getPython(versionSpec: string, architecture: string, fromAzure: b
 
             const compressedFile = buildFilePath(destination, file);
             return await new FileExtractor().extractCompressedFile(compressedFile, destination);
-        } else { // local directory
-            console.log(taskLib.loc('RetrievingPythonFromLocalPath', versionSpec, architecture));
+        } else { // file path
+            console.log(taskLib.loc('RetrievingPythonFromFilePath', versionSpec, architecture));
 
             const compressedFile = taskLib.getInput('compressedFile', true)
             return await new FileExtractor().extractCompressedFile(compressedFile, destination);
@@ -77,9 +77,9 @@ function sleep(milliseconds: number): Promise<void> {
     });
 }
 
-function buildFilePath(localPathRoot: string, file: string): string {
+function buildFilePath(root: string, file: string): string {
     const fileName = file.split(/[\\\/]/).pop();
-    return path.join(localPathRoot, fileName);
+    return path.join(root, fileName);
 }
 
 run();
