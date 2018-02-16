@@ -58,14 +58,10 @@ export async function run(): Promise<void> {
         }
 
         // Setting up auth info
-        let externalAuthArr = commandHelper.GetExternalAuthInfoArray("externalEndpoint");
-
         let accessToken = auth.getSystemAccessToken();
         const isInternalFeed: boolean = nugetFeedType === "internal";
         let useCredConfig = useCredentialConfiguration(isInternalFeed);
         let internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, useCredConfig);
-
-        let authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo, externalAuthArr);
 
         let configFile = null;
         let apiKey: string;
@@ -78,17 +74,21 @@ export async function run(): Promise<void> {
         const tempNuGetPath = path.join(tempNuGetConfigDirectory, "nuget.config");
         tl.mkdirP(tempNuGetConfigDirectory);
 
-        const nuGetConfigHelper = new NuGetConfigHelper2(
-            null,
-            null, /* nugetConfigPath */
-            authInfo,
-            { credProviderFolder: null, extensionsDisabled: true },
-            tempNuGetPath,
-            false /* useNugetToModifyConfigFile */);
-
         let feedUri: string = undefined;
 
+        let authInfo: auth.NuGetExtendedAuthInfo;
+        let nuGetConfigHelper: NuGetConfigHelper2;
+
         if (isInternalFeed) {
+            authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo);
+            nuGetConfigHelper = new NuGetConfigHelper2(
+                null,
+                null, /* nugetConfigPath */
+                authInfo,
+                { credProviderFolder: null, extensionsDisabled: true },
+                tempNuGetPath,
+                false /* useNugetToModifyConfigFile */);
+
             const internalFeedId = tl.getInput("feedPublish");
             feedUri = await nutil.getNuGetFeedRegistryUrl(accessToken, internalFeedId, null);
             nuGetConfigHelper.addSourcesToTempNuGetConfig([<IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
@@ -98,7 +98,17 @@ export async function run(): Promise<void> {
             apiKey = "VSTS";
         }
         else {
-            let externalAuth = externalAuthArr[0];
+            const externalAuthArr = commandHelper.GetExternalAuthInfoArray("externalEndpoint");
+            authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo, externalAuthArr);
+            nuGetConfigHelper = new NuGetConfigHelper2(
+                null,
+                null, /* nugetConfigPath */
+                authInfo,
+                { credProviderFolder: null, extensionsDisabled: true },
+                tempNuGetPath,
+                false /* useNugetToModifyConfigFile */);
+
+            const externalAuth = externalAuthArr[0];
 
             if (!externalAuth) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForPush"));
