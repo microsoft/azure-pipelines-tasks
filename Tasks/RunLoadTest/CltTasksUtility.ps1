@@ -301,7 +301,7 @@ function StopTestRun($headers, $run, $CltAccountUrl)
 
 }
 
-function ComposeTestRunJson($name, $tdid, $machineType)
+function ComposeTestRunJson($name, $tdid, $machineType, $selfProvisionedRig, $numOfSelfProvisionedAgents)
 {
     $processPlatform = "x64"
     $setupScript=""
@@ -329,16 +329,40 @@ function ComposeTestRunJson($name, $tdid, $machineType)
         }
     }
 
-    $trjson = @"
-    {
-        "name":"$name",
-        "description":"Load Test queued from build",
-        "testSettings":{"cleanupCommand":"$cleanupScript", "hostProcessPlatform":"$processPlatform", "setupCommand":"$setupScript"},
-        "superSedeRunSettings":{"loadGeneratorMachinesType":"$machineType"},
-        "testDrop":{"id":"$tdid"},
-        "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
-    }
+    if ($MachineType -eq "2"){
+        Write-Host ">>> Self-Provisioned Rig Test Run"
+        $trjson = @"
+        {
+            "name":"$name",
+            "description":"Load Test queued from build",
+            "testSettings":{"cleanupCommand":"$cleanupScript", "hostProcessPlatform":"$processPlatform", "setupCommand":"$setupScript"},
+            "superSedeRunSettings": {
+                "loadGeneratorMachinesType": "$MachineType",
+                "staticAgentRunSettings": {
+                    "loadGeneratorMachinesType": "userLoadAgent",
+                    "staticAgentGroupName": "$selfProvisionedRig"
+                }
+            },
+            "runSpecificDetails" : {
+                "agentCount": $numOfSelfProvisionedAgents,
+                "loadGeneratorMachinesType": "userLoadAgent"
+            },
+            "testDrop":{"id":"$tdid"},
+            "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+        }
 "@
+    } else {
+        $trjson = @"
+        {
+            "name":"$name",
+            "description":"Load Test queued from build",
+            "testSettings":{"cleanupCommand":"$cleanupScript", "hostProcessPlatform":"$processPlatform", "setupCommand":"$setupScript"},
+            "superSedeRunSettings":{"loadGeneratorMachinesType":"$machineType"},
+            "testDrop":{"id":"$tdid"},
+            "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+        }
+"@
+    }
     return $trjson
 }
 

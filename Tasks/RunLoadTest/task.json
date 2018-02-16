@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 26
+        "Patch": 27
     },
     "demands": [
         "msbuild",
@@ -104,6 +104,22 @@
                 "0": "Automatically provisioned agents",
                 "2": "Self-provisioned agents"
             }
+        },
+        {
+            "name": "selfProvisionedRig",
+            "type": "string",
+            "label": "Load test rig",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Name of self-provisioned rig of load test agents."
+        },
+        {
+            "name": "numOfSelfProvisionedAgents",
+            "type": "int",
+            "label": "No. of agents to use",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Number of self provisioned agents to use for this test."
         }
     ],
     "instanceNameFormat": "Cloud Load Test $(LoadTest)",

@@ -213,7 +213,8 @@ function ComposeTestRunJson($name, $tdid, $vuLoad, $runDuration, $machineType, $
             "runSpecificDetails" : {
                 "virtualUserCount": $vuLoad,
                 "duration": $runDuration,
-                "agentCount": $numOfSelfProvisionedAgents
+                "agentCount": $numOfSelfProvisionedAgents,
+                "loadGeneratorMachinesType": "userLoadAgent"
             },
             "testDrop":{"id":"$tdid"},
             "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"

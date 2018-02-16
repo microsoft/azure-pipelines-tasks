@@ -19,6 +19,10 @@ $LoadTest,
 $ThresholdLimit,
 [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
 $MachineType,
+[String] [Parameter(Mandatory = $false)]
+$selfProvisionedRig,
+[String] [Parameter(Mandatory = $false)]
+$numOfSelfProvisionedAgents,
 [ValidateSet('changeActive', 'useFile', '')]
 $activeRunSettings,
 [String]
@@ -95,6 +99,8 @@ Write-Output "Run Settings Name = $runSettingName"
 Write-Output "Active Run Settings = $activeRunSettings"
 Write-Output "Run Test Parameters $testContextParameters"
 Write-Output "Load generator machine type = $MachineType"
+Write-Output "Self-provisioned rig = $selfProvisionedRig"
+Write-Output "Num of agents = $numOfSelfProvisionedAgents"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
@@ -142,7 +148,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	WriteTaskMessages ("Uploading test files took {0}. Queuing the test run." -f $($elapsed.Elapsed.ToString()))
 
 	#Queue the test run
-	$runJson = ComposeTestRunJson $LoadTest $drop.id $MachineType
+	$runJson = ComposeTestRunJson $LoadTest $drop.id $MachineType $selfProvisionedRig $numOfSelfProvisionedAgents
 
 	$run = QueueTestRun $headers $runJson $CltAccountUrl
 	MonitorAcquireResource $headers $run $CltAccountUrl
