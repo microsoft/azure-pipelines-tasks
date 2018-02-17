@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import * as taskLib from 'vsts-task-lib/task';
+import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 
 enum CompressedFile {
@@ -21,7 +21,7 @@ function compressedFileType(file: string): CompressedFile {
     } else if (file.endsWith('.7z')) {
         CompressedFile.SevenZip;
     } else {
-        throw new Error(taskLib.loc('UnsupportedFileExtension'));
+        throw new Error(tl.loc('UnsupportedFileExtension'));
     }
 }
 
@@ -32,21 +32,21 @@ export class FileExtractor {
 
     constructor() {
         this.isWindows = os.type() === 'Windows_NT';
-        taskLib.debug('isWindows: ' + this.isWindows);
+        tl.debug('isWindows: ' + this.isWindows);
     }
 
     /** Extract a zip file with the 'unzip' utility. */
     private async unzipExtract(file: string, destination: string): Promise<void> {
-        console.log(taskLib.loc('UnzipExtractFile', file));
+        console.log(tl.loc('UnzipExtractFile', file));
 
-        const unzip: tr.ToolRunner = taskLib.tool('unzip');
+        const unzip: tr.ToolRunner = tl.tool('unzip');
         unzip.arg(file);
         await unzip.exec(<tr.IExecOptions>{ cwd: destination });
     }
 
     /** Extract a zip file using PowerShell. */
     private async powershellExtract(file: string, destination: string): Promise<void> {
-        console.log(taskLib.loc('UnzipExtractFile', file));
+        console.log(tl.loc('UnzipExtractFile', file));
 
         // build the powershell command
         const escapedFile = file.replace(/'/g, "''").replace(/"|\n|\r/g, ''); // double-up single quotes, remove double quotes and newlines
@@ -62,10 +62,10 @@ export class FileExtractor {
 
         // change the console output code page to UTF-8
         const chcpPath = path.join(process.env.windir, "system32", "chcp.com");
-        await taskLib.exec(chcpPath, '65001');
+        await tl.exec(chcpPath, '65001');
 
         // run powershell
-        const powershell: tr.ToolRunner = taskLib.tool('powershell')
+        const powershell: tr.ToolRunner = tl.tool('powershell')
             .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
             .arg(command);
         await powershell.exec();
@@ -73,25 +73,25 @@ export class FileExtractor {
 
     /** Extract a file using 7zip. */
     private async sevenZipExtract(file: string, destination: string): Promise<void> {
-        console.log(taskLib.loc('SevenZipExtractFile', file));
+        console.log(tl.loc('SevenZipExtractFile', file));
 
-        const sevenZipLocation = this.isWindows ? path.join(__dirname, '7zip/7z.exe') : taskLib.which('7z', true);
-        const sevenZip = taskLib.tool(sevenZipLocation);
+        const sevenZipLocation = this.isWindows ? path.join(__dirname, '7zip/7z.exe') : tl.which('7z', true);
+        const sevenZip = tl.tool(sevenZipLocation);
 
         sevenZip.arg('x');
         sevenZip.arg('-o' + destination);
         sevenZip.arg(file);
 
         const execResult = sevenZip.execSync();
-        if (execResult.code !== taskLib.TaskResult.Succeeded) {
-            taskLib.debug('execResult: ' + JSON.stringify(execResult));
+        if (execResult.code !== tl.TaskResult.Succeeded) {
+            tl.debug('execResult: ' + JSON.stringify(execResult));
         }
     }
 
     /* Extract a compressed tar archive using the 'tar' utiltity. */
     private async tarExtract(file: string, destination: string): Promise<void> {
-        console.log(taskLib.loc('TarExtractFile', file));
-        const tr: tr.ToolRunner = taskLib.tool('tar');
+        console.log(tl.loc('TarExtractFile', file));
+        const tr: tr.ToolRunner = tl.tool('tar');
         tr.arg(['xzC', destination, '-f', file]);
         tr.exec();
     }
@@ -109,28 +109,28 @@ export class FileExtractor {
                         const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
                         // e.g. 'destination/_test.tar.gz_'
                         const tempFolder = path.normalize(path.join(destination, `_${shortFileName}_`));
-                        console.log(taskLib.loc('CreateTempDir', tempFolder, file));
+                        console.log(tl.loc('CreateTempDir', tempFolder, file));
 
                         // create temp folder
-                        taskLib.mkdirP(tempFolder);
+                        tl.mkdirP(tempFolder);
 
                         // extract compressed tar
                         await this.sevenZipExtract(file, tempFolder);
-                        console.log(taskLib.loc('TempDir', tempFolder));
-                        const tempTar = path.join(tempFolder, taskLib.ls('-A', [tempFolder])[0]); // should be only one
-                        console.log(taskLib.loc('DecompressedTempTar', file, tempTar));
+                        console.log(tl.loc('TempDir', tempFolder));
+                        const tempTar = path.join(tempFolder, tl.ls('-A', [tempFolder])[0]); // should be only one
+                        console.log(tl.loc('DecompressedTempTar', file, tempTar));
 
                         // expand extracted tar
                         await this.sevenZipExtract(tempTar, destination);
 
                         // clean up temp folder
-                        console.log(taskLib.loc('RemoveTempDir', tempFolder));
-                        taskLib.rmRF(tempFolder);
+                        console.log(tl.loc('RemoveTempDir', tempFolder));
+                        tl.rmRF(tempFolder);
                     };
                 case CompressedFile.Zip:
                     return this.powershellExtract;
                 default:
-                    throw new Error(taskLib.loc('UnsupportedFileExtension'));
+                    throw new Error(tl.loc('UnsupportedFileExtension'));
             }
         } else { // not Windows
             switch (fileType) {
@@ -142,7 +142,7 @@ export class FileExtractor {
                 case CompressedFile.SevenZip:
                     return this.sevenZipExtract;
                 default:
-                    throw new Error(taskLib.loc('UnsupportedFileExtension'));
+                    throw new Error(tl.loc('UnsupportedFileExtension'));
             }
         }
     }
@@ -155,27 +155,28 @@ export class FileExtractor {
         compressedFile = path.normalize(compressedFile);
 
         if (!fs.existsSync(compressedFile)) {
-            throw new Error(taskLib.loc('ExtractNonExistFile', compressedFile));
+            throw new Error(tl.loc('ExtractNonExistFile', compressedFile));
         } else if (!fs.statSync(compressedFile).isFile()) {
-            throw new Error(taskLib.loc('ExtractNonFileFailed', compressedFile));
+            throw new Error(tl.loc('ExtractNonFileFailed', compressedFile));
         }
 
         // Create the destination folder if it doesn't exist
         if (!fs.existsSync(destination)) {
-            console.log(taskLib.loc('CreateDestDir', destination));
-            taskLib.mkdirP(destination);
+            console.log(tl.loc('CreateDestDir', destination));
+            tl.mkdirP(destination);
         }
 
         // Take a snapshot of the directories we have right now
-        const initialDirectoriesList = taskLib.find(destination).filter(x => fs.statSync(x).isDirectory());
-        taskLib.debug(`initial directories list: ${initialDirectoriesList}`);
+        // TODO have `Extractor` return `Promise<string>` with the directory containing the extracted files
+        const initialDirectoriesList = tl.find(destination).filter(x => fs.statSync(x).isDirectory());
+        tl.debug(`initial directories list: ${initialDirectoriesList}`);
 
-        const fileType = compressedFileType(compressedFile)
+        const fileType = compressedFileType(compressedFile);
         const extractor = this.pickExtractor(fileType);
         await extractor(compressedFile, destination);
 
-        const finalDirectoriesList = taskLib.find(destination).filter(x => fs.statSync(x).isDirectory());
-        taskLib.debug(`final directories list: ${finalDirectoriesList}`);
+        const finalDirectoriesList = tl.find(destination).filter(x => fs.statSync(x).isDirectory());
+        tl.debug(`final directories list: ${finalDirectoriesList}`);
 
         // Find the first one that wasn't there to begin with
         return finalDirectoriesList.filter(x => initialDirectoriesList.indexOf(x) < 0)[0];

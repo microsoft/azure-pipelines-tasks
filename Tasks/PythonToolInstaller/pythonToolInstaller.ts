@@ -4,7 +4,7 @@ import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
-import { FileExtractor } from './FileExtractor/FileExtractor';
+import { FileExtractor } from 'compression-common/FileExtractor';
 
 async function run(): Promise<void> {
     try {
