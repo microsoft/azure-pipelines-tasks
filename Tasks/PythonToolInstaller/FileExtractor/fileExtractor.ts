@@ -108,7 +108,7 @@ export class FileExtractor {
                         // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
                         const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
                         // e.g. 'destination/_test.tar.gz_'
-                        const tempFolder = path.normalize(destination + path.sep + '_' + shortFileName + '_');
+                        const tempFolder = path.normalize(path.join(destination, `_${shortFileName}_`));
                         console.log(taskLib.loc('CreateTempDir', tempFolder, file));
 
                         // create temp folder
@@ -167,13 +167,15 @@ export class FileExtractor {
         }
 
         // Take a snapshot of the directories we have right now
-        const initialDirectoriesList = fs.readdirSync(destination).filter(x => fs.statSync(x).isDirectory());
+        const initialDirectoriesList = taskLib.find(destination).filter(x => fs.statSync(x).isDirectory());
+        taskLib.debug(`initial directories list: ${initialDirectoriesList}`);
 
         const fileType = compressedFileType(compressedFile)
         const extractor = this.pickExtractor(fileType);
         await extractor(compressedFile, destination);
 
-        const finalDirectoriesList = fs.readdirSync(destination).filter(x => fs.statSync(x).isDirectory());
+        const finalDirectoriesList = taskLib.find(destination).filter(x => fs.statSync(x).isDirectory());
+        taskLib.debug(`final directories list: ${finalDirectoriesList}`);
 
         // Find the first one that wasn't there to begin with
         return finalDirectoriesList.filter(x => initialDirectoriesList.indexOf(x) < 0)[0];
