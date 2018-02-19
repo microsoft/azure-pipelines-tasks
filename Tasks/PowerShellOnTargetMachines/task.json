@@ -44,7 +44,7 @@
             "label": "Admin Login",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Administrator login for the target machines."
+            "helpMarkDown": "Administrator login for the target machines. <br> Eg: Format: Domain\\Admin User, Admin User@Domain, .\\Admin User"
         },
         {
             "name": "AdminPassword",

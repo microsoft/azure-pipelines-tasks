@@ -64,6 +64,8 @@
   "loc.input.help.enforceDockerNamingConvention": "If enabled docker image name will be modified to follow Docker naming convention. Converts upper case character to lower case and removes spaces in image name.",
   "loc.input.label.cwd": "Working Directory",
   "loc.input.help.cwd": "Working directory for the Docker command.",
+  "loc.input.label.memory": "Memory limit",
+  "loc.input.help.memory": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
   "loc.messages.ContainerPatternFound": "Pattern found in docker filepath parameter",
   "loc.messages.ContainerPatternNotFound": "No pattern found in docker filepath parameter",
   "loc.messages.ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",

@@ -8,8 +8,8 @@
   "category": "Utility",
   "preview": "true",
   "visibility": [
-	"Build",
-	"Release"
+    "Build",
+    "Release"
   ],
   "runsOn": [
     "Server",

@@ -63,7 +63,7 @@ export function startTest() {
         var consolidatedCiData = {
             agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
             codeCoverageEnabled: vstestConfig.codeCoverageEnabled,
-            overrideTestrunParameters: vstestConfig.overrideTestrunParameters,
+            overrideTestrunParameters: utils.Helper.isNullOrUndefined(vstestConfig.overrideTestrunParameters) ? 'false' : 'true',
             pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
             runTestsInIsolation: vstestConfig.runTestsInIsolation,
             task: 'VsTestConsoleFlow',
@@ -402,18 +402,24 @@ function uploadVstestDiagFile(): void {
 }
 
 function uploadFile(file: string): void {
-    if (utils.Helper.pathExistsAsFile(file)) {
-        const stats = fs.statSync(file);
-        tl.debug('File exists. Size: ' + stats.size + ' Bytes');
-        console.log('##vso[task.uploadfile]' + file);
+    try {
+        if (utils.Helper.pathExistsAsFile(file)) {
+            const stats = fs.statSync(file);
+            tl.debug('File exists. Size: ' + stats.size + ' Bytes');
+            console.log('##vso[task.uploadfile]' + file);
 
-        const files = tl.findMatch(os.tmpdir(), ['*host.*.txt', '*datacollector.*.txt']);
-        if (files) {
-            files.forEach(file => {
-                tl.debug('Uploading file: ' + file);
-                console.log('##vso[task.uploadfile]' + file);
-            });
+            const files = tl.findMatch(os.tmpdir(), ['*host.*.txt', '*datacollector.*.txt']);
+            if (files) {
+                files.forEach(file => {
+                    tl.debug('Uploading file: ' + file);
+                    console.log('##vso[task.uploadfile]' + file);
+                });
+            }
         }
+    }
+    catch (err) {
+        utils.Helper.publishEventToCi(AreaCodes.GETVSTESTTESTSLIST, err.message, 1029, false);
+        tl.debug(err);
     }
 }
 

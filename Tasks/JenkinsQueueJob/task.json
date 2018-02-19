@@ -13,8 +13,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 128,
-        "Patch": 2
+        "Minor": 131,
+        "Patch": 0
     },
     "groups": [
         {
@@ -23,7 +23,7 @@
             "isExpanded": true
         }
     ],
-    "instanceNameFormat": "Queue Jenkins Job: $(jobName)",
+    "instanceNameFormat": "Queue Jenkins job: $(jobName)",
     "inputs": [
         {
             "name": "serverEndpoint",
@@ -44,19 +44,19 @@
         {
             "name": "isMultibranchJob",
             "type": "boolean",
-            "label": "Job is of Multibranch Pipeline type",
+            "label": "Job is of multibranch pipeline type",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "This job is of Multibranch Pipeline type.  If selected, enter the appropriate branch name. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
+            "helpMarkDown": "This job is of multibranch pipeline type.  If selected, enter the appropriate branch name. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
         },
         {
             "name": "multibranchPipelineBranch",
             "type": "string",
-            "label": "Multibranch Pipeline Branch",
+            "label": "Multibranch pipeline branch",
             "defaultValue": "",
             "required": true,
             "visibleRule": "isMultibranchJob = true",
-            "helpMarkDown": "Queue this Multibranch Pipeline job on the specified branch. Requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
+            "helpMarkDown": "Queue this multibranch pipeline job on the specified branch. This requires Team Foundation Server Plugin for Jenkins v5.3.4 or later."
         },
         {
             "name": "captureConsole",

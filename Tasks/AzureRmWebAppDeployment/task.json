@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 39
+        "Patch": 42
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -310,8 +310,9 @@
                 "node|8.1": "Node.js 8.1",
                 "php|5.6": "PHP 5.6",
                 "php|7.0": "PHP 7.0",
-                "dotnetcore|1.0": ".Net Core 1.0",
-                "dotnetcore|1.1": ".Net Core 1.1",
+                "dotnetcore|1.0": ".NET Core 1.0",
+                "dotnetcore|1.1": ".NET Core 1.1",				
+                "dotnetcore|2.0": ".NET Core 2.0",
                 "ruby|2.3": "Ruby 2.3"
             },
             "helpMarkDown": "Select the framework and version.",
@@ -738,6 +739,9 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
-        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'."
+        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
+        "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
+        "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+        "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
     }
 }

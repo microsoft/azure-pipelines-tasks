@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Plus d'informations](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Effectuez la génération, le Push ou l'exécution d'applications Docker à plusieurs conteneurs",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Effectuez la build, le Push ou l'exécution d'applications Docker à plusieurs conteneurs. La tâche peut être utilisée avec le registre de conteneurs Docker ou Azure.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Options avancées",
   "loc.input.label.containerregistrytype": "Type de registre de conteneurs",
@@ -66,7 +66,8 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produit une erreur si les fichiers Docker Compose supplémentaires n'existent pas. Ceci remplace le comportement par défaut qui consiste à ignorer un fichier inexistant.",
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail de la commande Docker Compose.",
-  "loc.messages.ContainerPatternFound": "Modèle trouvé dans le paramètre dockerfilepath",
-  "loc.messages.ContainerPatternNotFound": "Modèle introuvable dans le paramètre dockerfilepath",
-  "loc.messages.ContainerDockerFileNotFound": "Le fichier Docker correspondant à %s est introuvable."
+  "loc.messages.ContainerPatternFound": "Modèle trouvé dans le paramètre filepath Docker Compose",
+  "loc.messages.ContainerPatternNotFound": "Modèle introuvable dans le paramètre filepath Docker Compose",
+  "loc.messages.ContainerDockerFileNotFound": "Le fichier Docker correspondant à %s est introuvable.",
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Le fichier Docker Compose supplémentaire %s n'existe pas."
 }

@@ -12,6 +12,8 @@
   "loc.input.help.commands": "Especifique los comandos de shell que deben ejecutarse en la máquina remota. Escriba cada comando con sus argumentos en una línea nueva. Para ejecutar varios comandos juntos, escríbalos en la misma línea separados con punto y coma (por ejemplo: cd /home/user/myFolder;build).",
   "loc.input.label.scriptPath": "Ruta de acceso del script de shell",
   "loc.input.help.scriptPath": "Ruta de acceso al archivo de script de shell que debe ejecutarse en la máquina remota.",
+  "loc.input.label.inline": "Script alineado",
+  "loc.input.help.inline": "Escriba el script de shell que debe ejecutarse en la máquina remota.",
   "loc.input.label.args": "Argumentos",
   "loc.input.help.args": "Argumentos que se pasan al script de shell.",
   "loc.input.label.failOnStdErr": "Error en STDERR",

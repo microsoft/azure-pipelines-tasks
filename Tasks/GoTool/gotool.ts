@@ -97,11 +97,18 @@ function getDownloadUrl(filename: string): string {
 }
 
 function setGoEnvironmentVariables(goRoot: string) {
-
-    let defaultDirectory = tl.getVariable('System.DefaultWorkingDirectory');
     tl.setVariable('GOROOT', goRoot);
-    tl.setVariable('GOPATH', defaultDirectory);
-    tl.setVariable('GOBIN', path.join(defaultDirectory, 'bin'));
+
+    let goPath: string = tl.getInput("goPath", false);
+    let goBin: string = tl.getInput("goBin", false);
+
+    // set GOPATH and GOBIN as user value
+    if (!util.isNullOrUndefined(goPath)) {
+        tl.setVariable("GOPATH", goPath);
+    }
+    if (!util.isNullOrUndefined(goBin)) {
+        tl.setVariable("GOBIN", goBin);
+    }
 }
 
 run();

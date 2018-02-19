@@ -16,7 +16,7 @@
   "version": {
     "Major": 3,
     "Minor": 3,
-    "Patch": 39
+    "Patch": 42
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -318,8 +318,9 @@
         "node|8.1": "Node.js 8.1",
         "php|5.6": "PHP 5.6",
         "php|7.0": "PHP 7.0",
-        "dotnetcore|1.0": ".Net Core 1.0",
-        "dotnetcore|1.1": ".Net Core 1.1",
+        "dotnetcore|1.0": ".NET Core 1.0",
+        "dotnetcore|1.1": ".NET Core 1.1",
+        "dotnetcore|2.0": ".NET Core 2.0",
         "ruby|2.3": "Ruby 2.3"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
@@ -750,6 +751,9 @@
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
     "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
-    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService"
+    "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
+    "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
+    "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
+    "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs"
   }
 }
