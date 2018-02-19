@@ -35,7 +35,7 @@ For Azure MSDN accounts, one can either use a [Service Principal](https://go.mic
 
 #### Azure PowerShell
 
-The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
+The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2](https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.
 
 ### Parameters of the task:
 
@@ -109,8 +109,8 @@ Tasks like Azure File Copy, PowerShell on Target Machines, Visual Studio Test Ag
 ### Supported Azure and AzureRM module versions:
 |  VSTS/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |
 |:------------------:|:---------------------------:|:-------------------------:|
-|  VSTS              |  [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
-|  TFS 2015 Update 3  | [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
-|  TFS 2015 Update 2  | [v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
-|  TFS 2015 Update 1  | [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
-|  TFS 2015 RTM       | [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
+|  VSTS              |  [v1.3.2](https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 3  | [v1.3.2](https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 2  | [v1.0.2](https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  TFS 2015 Update 1  | [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
+|  TFS 2015 RTM       | [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |
