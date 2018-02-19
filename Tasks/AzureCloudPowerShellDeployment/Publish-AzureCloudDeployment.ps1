@@ -16,6 +16,7 @@ try{
     $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
+	$NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
 
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
@@ -59,6 +60,10 @@ try{
         $azureService += " $NewServiceAdditionalArguments"
         Write-Host "$azureService"
         $azureService = Invoke-Expression -Command $azureService
+
+        #Add the custom certificates to the newly created Azure Cloud Service
+        $customCertificatesMap = Parse-CustomCertificates -CustomCertificates $NewServiceCustomCertificates
+        Add-CustomCertificates $serviceName $customCertificatesMap
     }
 
     $diagnosticExtensions = Get-DiagnosticsExtensions $StorageAccount $serviceConfigFile $storageAccountKeysMap

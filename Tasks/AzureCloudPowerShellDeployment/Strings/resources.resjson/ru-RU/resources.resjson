@@ -32,6 +32,8 @@
   "loc.input.help.NewServiceAdditionalArguments": "Передайте дополнительные аргументы во время создания службы. Они будут переданы в командлет New-AzureService. Пример: -Label 'MyTestService'",
   "loc.input.label.NewServiceAffinityGroup": "Территориальная группа",
   "loc.input.help.NewServiceAffinityGroup": "При создании новой службы будет учитываться эта территориальная группа, а не расположение службы.",
+  "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
+  "loc.input.help.NewServiceCustomCertificates": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
   "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Не удалось получить первичный ключ к хранилищу данных для учетной записи хранения \"{0}\". Не удается применить расширения диагностики.",
   "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Не удалось получить первичный ключ к хранилищу данных для учетной записи общедоступного хранилища конфигураций \"{0}\". Не удается применить расширения диагностики.",
   "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Применение настроенных расширений диагностики.",
@@ -40,5 +42,7 @@
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Найдено несколько файлов для развертывания с шаблоном поиска \"{0}\". Файл может быть только один.",
   "loc.messages.Storagekeysaredefinedininvalidformat": "Формат ключей к хранилищу данных недопустим.",
   "loc.messages.Unabletofind0usingprovidedsubscription": "Не удается найти {0} с использованием указанной подписки.",
-  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Текущая версия Azure PowerShell не поддерживает настройку диагностики с использованием внешней учетной записи хранения."
+  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Текущая версия Azure PowerShell не поддерживает настройку диагностики с использованием внешней учетной записи хранения.",
+  "loc.messages.Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
+  "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format."
 }

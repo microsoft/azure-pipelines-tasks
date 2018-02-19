@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [
         "azureps"
@@ -142,6 +142,20 @@
                 "resizable": "true",
                 "rows": "6",
                 "maxLength": "500"
+            }
+        },
+        {
+            "name": "NewServiceCustomCertificates",
+            "type": "multiLine",
+            "label": "Custom certificates to import",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "resizable": "true",
+                "rows": "6",
+                "maxLength": "20000"
             }
         },
         {

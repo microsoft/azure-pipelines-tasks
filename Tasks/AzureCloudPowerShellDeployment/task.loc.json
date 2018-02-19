@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [
     "azureps"
@@ -146,6 +146,20 @@
         "resizable": "true",
         "rows": "6",
         "maxLength": "500"
+      }
+    },
+    {
+      "name": "NewServiceCustomCertificates",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.NewServiceCustomCertificates",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.NewServiceCustomCertificates",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "resizable": "true",
+        "rows": "6",
+        "maxLength": "20000"
       }
     },
     {
