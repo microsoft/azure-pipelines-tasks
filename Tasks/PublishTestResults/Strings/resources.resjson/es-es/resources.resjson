@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613742)",
   "loc.description": "Publicar los resultados de pruebas en VSTS/TFS",
   "loc.instanceNameFormat": "Publicar resultados de pruebas $(testResultsFiles)",
+  "loc.releaseNotes": "<ul><li>Compatibilidad con NUnit3</li><li>Compatibilidad con patrones de archivos de minimatch</li></ul>",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.testRunner": "Formato del resultado de las pruebas",
   "loc.input.help.testRunner": "Formato de los archivos de resultados de pruebas generados por el ejecutor de pruebas de su elección; por ejemplo, JUnit, VSTest, XUnit V2 y NUnit.",
@@ -11,7 +12,7 @@
   "loc.input.label.searchFolder": "Carpeta de búsqueda",
   "loc.input.help.searchFolder": "Carpeta para buscar los archivos de resultados de pruebas. El valor predeterminado es $(System.DefaultWorkingDirectory).",
   "loc.input.label.mergeTestResults": "Fusionar mediante combinación los resultados de las pruebas",
-  "loc.input.help.mergeTestResults": "Seleccione esta opción para combinar los resultados de todos los archivos de resultados de pruebas en una única serie de pruebas de VSTS/TFS. No la seleccione si quiere crear una serie de pruebas por cada archivo de resultados de pruebas.",
+  "loc.input.help.mergeTestResults": "Se crea una serie de pruebas para cada archivo de resultados. Active esta opción para fusionar los resultados en una sola serie de pruebas. Para optimizar el rendimiento, los resultados se fusionarán en una sola serie si hay más de 100 archivos de resultados, independientemente de esta opción.",
   "loc.input.label.testRunTitle": "Título de la serie de pruebas",
   "loc.input.help.testRunTitle": "Proporcione un nombre para la serie de pruebas.",
   "loc.input.label.platform": "Plataforma",
@@ -19,5 +20,8 @@
   "loc.input.label.configuration": "Configuración",
   "loc.input.help.configuration": "Configuración para la que se ejecutan las pruebas.",
   "loc.input.label.publishRunAttachments": "Cargar archivos de resultados de pruebas",
-  "loc.input.help.publishRunAttachments": "Participar o no participar en la publicación de datos adjuntos en el nivel de serie de pruebas. Si selecciona esta opción, los archivos de resultados de pruebas se cargarán y adjuntarán a la serie de pruebas."
+  "loc.input.help.publishRunAttachments": "Se crea una serie de pruebas para cada archivo de resultados. Active esta opción para fusionar los resultados en una sola serie de pruebas. Para optimizar el rendimiento, los resultados se fusionarán en una sola serie si hay más de 100 archivos de resultados, independientemente de esta opción.",
+  "loc.messages.mergeFiles": "El número de archivos de resultados es superior a %d. Por lo tanto, se van a fusionar todos los archivos para publicar los resultados en una sola serie de pruebas.",
+  "loc.messages.NoMatchingFilesFound": "No se encontró ningún archivo de resultados de pruebas que coincida con \"%s\".",
+  "loc.messages.ErrorTestResultsPublisher": "Error al ejecutar TestResultsPublisher: %s."
 }

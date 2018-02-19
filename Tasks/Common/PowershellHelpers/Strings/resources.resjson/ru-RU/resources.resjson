@@ -1,0 +1,4 @@
+{
+  "loc.messages.ActionTimedOut": "Превышено максимальное количество попыток. Пауза...",
+  "loc.messages.RetryAfterMessage": "Повторная попытка через {0} с..."
+}

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Пакет Xcode для iOS",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613731)",
-  "loc.description": "Создание IPA-файла из выходных данных сборки Xcode",
+  "loc.description": "Generate an .ipa file from Xcode build output using xcrun (Xcode 7 or below)",
   "loc.instanceNameFormat": "Пакет Xcode $(appName)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.appName": "Имя APP-файла",

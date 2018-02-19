@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkId=786653)",
   "loc.description": "還原指定解決方案的 Xamarin 元件",
   "loc.instanceNameFormat": "Xamarin 元件還原 $(solution)",
-  "loc.input.label.solution": "方案的路徑",
+  "loc.input.label.solution": "Path to solution",
   "loc.input.help.solution": "Visual Studio 方案檔案的路徑",
   "loc.input.label.email": "電子郵件",
   "loc.input.help.email": "Xamarin 帳戶電子郵件地址。",

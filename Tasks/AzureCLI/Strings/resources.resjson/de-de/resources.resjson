@@ -1,8 +1,9 @@
 {
-  "loc.friendlyName": "Azure CLI-Vorschau",
+  "loc.friendlyName": "Azure CLI",
   "loc.helpMarkDown": "[Weitere Informationen](http://go.microsoft.com/fwlink/?LinkID=827160)",
   "loc.description": "Führt eine Shell oder ein Batchskript mit Azure CLI-Befehlen für ein Azure-Abonnement aus.",
   "loc.instanceNameFormat": "Azure CLI $(scriptPath)",
+  "loc.releaseNotes": "What's new in Version 1.0:\n- Supports the new Azure CLI 2.0 which is Python based\n- Works with cross-platform agents (Linux, macOS, or Windows)\n- For working with Azure CLI 1.0 (node.js-based), switch to task version 0.0\n- Limitations:\n - No support for Azure Classic subscriptions. Azure CLI 2.0 supports only Azure Resource Manager (ARM) subscriptions.",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.connectedServiceNameARM": "Azure-Abonnement",
   "loc.input.help.connectedServiceNameARM": "Wählen Sie ein Azure Resource Manager-Abonnement für die Bereitstellung aus.",
@@ -17,10 +18,10 @@
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Das aktuelle Arbeitsverzeichnis, in dem das Skript ausgeführt wird. Wenn keine Angabe erfolgt, wird der Stamm des Repositorys (Build) oder der Artefakte (Release) verwendet, das \"$(System.DefaultWorkingDirectory)\" lautet.",
   "loc.input.label.failOnStandardError": "Fehler bei Standardfehler.",
-  "loc.input.help.failOnStandardError": "Wenn dieser Wert TRUE ist, führt dieser Task zu einem Fehler, wenn Fehler in den StandardError-Datenstrom geschrieben werden.",
+  "loc.input.help.failOnStandardError": "If this is true, this task will fail when any errors are written to the StandardError stream. Unselect the checkbox to ignore standard errors and rely on exit codes to determine the status",
   "loc.messages.ScriptReturnCode": "Skript wurde mit Rückgabecode beendet: %d",
   "loc.messages.ScriptFailed": "Skriptfehler: %s",
   "loc.messages.UnsupportedEndpointScheme": "Nicht unterstütztes Endpunkt-Autorisierungsschema: Dienstprinzipal für AzureRM",
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x ist nicht auf diesem Computer installiert.",
-  "loc.messages.FailedToLogout": "Fehler beim Abmelden: %s"
+  "loc.messages.FailedToLogout": "Beim Abmelden ist der folgende Fehler aufgetreten: %s"
 }

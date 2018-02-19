@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Установить ключ SSH",
+  "loc.helpMarkDown": "",
+  "loc.description": "Установка ключа SSH до сборки или выпуска",
+  "loc.instanceNameFormat": "Установка ключа SSH",
+  "loc.input.label.hostName": "Запись известных узлов",
+  "loc.input.help.hostName": "Запись для этого ключа SSH для файла known_hosts.",
+  "loc.input.label.sshPublicKey": "Открытый ключ SSH",
+  "loc.input.help.sshPublicKey": "Содержимое открытого ключа SSH.",
+  "loc.input.label.sshPassphrase": "Парольная фраза SSH",
+  "loc.input.help.sshPassphrase": "Парольная фраза для SSH-ключа при наличии.",
+  "loc.input.label.sshKeySecureFile": "SSH-ключ",
+  "loc.input.help.sshKeySecureFile": "Выберите ключ SSH, отправленный в \"Защитные файлы\", для установки на агент.",
+  "loc.messages.SSHKeyAlreadyInstalled": "Ключ SSH уже установлен.",
+  "loc.messages.SSHPublicKeyMalformed": "Не удалось получить часть base64 открытого ключа SSH.",
+  "loc.messages.SSHKeyInstallFailed": "Не удалось установить ключ SSH.",
+  "loc.messages.CannotResetKnownHosts": "Не удается вернуть файл known_hosts к исходным значениям."
+}

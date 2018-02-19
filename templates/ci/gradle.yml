@@ -8,6 +8,16 @@ queue: 'Hosted VS2017'
 #  system.debug: 'true'
 
 steps:
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '1.8'
+    jdkArchitectureOption: 'x64' # x64, x86
+    jdkSourceOption: 'localDirectory' # azureStorage, localDirectory
+    jdkFile: # Enter JDK archive file path
+    jdkDestinationDirectory: # Enter JDK archive extraction directory
+    cleanDestinationDirectory: true
+  enabled: false
+
 - task: Gradle@2
   displayName: 'Build with Gradle'
   inputs:

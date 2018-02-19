@@ -1,0 +1,3 @@
+{
+  "loc.messages.TokenUnavailable": "No se pueden recuperar credenciales de token para el empaquetado de TFS o Team Services."
+}
