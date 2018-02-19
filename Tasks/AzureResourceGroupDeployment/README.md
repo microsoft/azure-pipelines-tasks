@@ -12,7 +12,7 @@ This task is used to create or update a resource group in Azure using the [Azure
  - "Resource group" field is now renamed as "VM details for  WinRM" and is included into the section "Advanced deployment options for virtual machines".
  - "Enable prerequisites" dropdown now includes the option to configure [deployment group](https://www.visualstudio.com/en-us/docs/build/concepts/definitions/release/deployment-groups/) agents on to each of the virtual machines provisioned in the resource group.
  - Limitations:
-  - No support for Classic subscriptions. Only [ARM] (https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) subscriptions are supported.
+  - No support for Classic subscriptions. Only [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) subscriptions are supported.
   - No support for PowerShell syntax as the task is now node.js based. Ensure the case sensitivity of the parameter names match, when you override the template parameters. Also, remove the PowerShell cmdlets like "ConvertTo-SecureString" when you migrate from version 1.0 to version 2.0.
 
 
