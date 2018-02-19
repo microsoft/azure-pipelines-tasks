@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Azure Key Vault 비밀 다운로드",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
-  "loc.releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
+  "loc.releaseNotes": "플랫폼 간 에이전트(Linux, macOS 또는 Windows)에서 작동",
   "loc.input.label.ConnectedServiceName": "Azure 구독",
   "loc.input.help.ConnectedServiceName": "Key Vault에 대한 Azure 구독 선택",
   "loc.input.label.KeyVaultName": "Key Vault",
@@ -34,10 +34,10 @@
   "loc.messages.NumberOfSecretsFound": "%s에서 검색된 비밀의 수: %s",
   "loc.messages.NumberOfEnabledSecretsFound": "%s에서 검색된 사용 가능하고 만료되지 않은 비밀의 수: %s",
   "loc.messages.DownloadingSecretValue": "%s에 대한 비밀 값을 다운로드하는 중입니다.",
-  "loc.messages.AccessDeniedError": "%s. Specified Azure endpoint needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download ProvisionKeyVaultPermissions.ps1 script from build/release logs and execute it OR set them from Azure portal.",
+  "loc.messages.AccessDeniedError": "%s. 지정한 Azure 끝점에 선택한 키 자격 증명 모음에 대한 Get, List 비밀 관리 권한이 있어야 합니다. 이러한 권한을 설정하려면 빌드/릴리스 로그에서 ProvisionKeyVaultPermissions.ps1 스크립트를 다운로드하여 실행하거나 Azure Portal에서 설정하세요.",
   "loc.messages.GetSecretValueFailed": "%s에 대한 비밀 값을 가져오지 못했습니다. 오류: %s.",
   "loc.messages.ConflictingVariableFound": "이름이 %s인 변수가 환경과 Key Vault에서 모두 정의되었습니다.",
-  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Cannot find the secret with name: %s. Secret name must be a string 1-127 characters in length containing only 0-9, a-z, A-Z, and -",
-  "loc.messages.UploadingAttachment": "Uploading %s as attachment",
-  "loc.messages.CouldNotWriteToFile": "Could not save content to file. Failed with an error %s"
+  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "이름이 %s인 비밀을 찾을 수 없습니다. 비밀 이름은 길이가 1-127자이고 0-9, a-z, A-Z, -만 포함하는 문자열이어야 합니다.",
+  "loc.messages.UploadingAttachment": "%s을(를) 첨부 파일로 업로드하는 중",
+  "loc.messages.CouldNotWriteToFile": "콘텐츠를 파일에 저장할 수 없습니다. %s 오류가 발생하여 실패했습니다."
 }

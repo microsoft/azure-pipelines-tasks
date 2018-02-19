@@ -22,7 +22,7 @@
   "loc.input.label.registryPassword": "레지스트리 암호",
   "loc.input.help.registryPassword": "Docker 레지스트리의 암호입니다. 암호가 암호화되지 않은 경우 사용자 지정 릴리스 정의 암호 변수를 사용하여 암호를 저장하는 것이 좋습니다.",
   "loc.input.label.passwordEncrypted": "암호가 암호화됨",
-  "loc.input.help.passwordEncrypted": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+  "loc.input.help.passwordEncrypted": "[Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets)를 사용하여 암호를 암호화하는 것이 좋습니다. 암호화하지 않을 경우 클러스터 연결의 서버 인증서 지문과 일치하는 인증서가 빌드 에이전트에 설치되어 있으면 이 인증서가 암호를 암호화하는 데 사용되고, 그렇지 않으면 오류가 발생합니다.",
   "loc.input.label.deployTimeoutSec": "배포 제한 시간(초)",
   "loc.input.help.deployTimeoutSec": "응용 프로그램을 배포하는 제한 시간(초)입니다.",
   "loc.input.label.removeTimeoutSec": "제거 시간 제한(초)",
@@ -43,6 +43,6 @@
   "loc.messages.CurrentStatus": "현재 상태: {0}",
   "loc.messages.DeployFailed": "배포 실패\n상태: {0}\n세부 정보: {1}",
   "loc.messages.CheckingComposeFile": "Compose 파일을 확인하는 중",
-  "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
-  "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
+  "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK 버전 {0}은(는) 지원되지 않습니다.",
+  "loc.messages.UsingAPIVersion": "Service Fabric SDK 버전 {0}용 cmdlet을 사용합니다."
 }

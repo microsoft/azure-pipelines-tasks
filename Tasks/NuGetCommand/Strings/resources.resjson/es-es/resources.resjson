@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613747)",
-  "loc.description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Package Management and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
+  "loc.description": "Restaure, empaquete o inserte paquetes NuGet o bien ejecute un comando NuGet. Admite NuGet.org y fuentes autenticadas, como Administración de paquetes y MyGet. Usa NuGet.exe y trabaja con las aplicaciones de .NET Framework. Para las aplicaciones de .NET Core y .NET Standard, use la tarea de .NET Core.",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.group.displayName.restoreAuth": "Fuentes y autenticación",
   "loc.group.displayName.restoreAdvanced": "Avanzadas",
@@ -48,7 +48,7 @@
   "loc.input.label.versioningScheme": "Control de versiones de paquete automático",
   "loc.input.help.versioningScheme": "No se puede usar con \"Incluir proyectos a los que se hace referencia\". Si elige \"Usar la fecha y hora\", se generará una versión compatible con [SemVer](http://semver.org/spec/v1.0.0.html) con el formato \"X.Y.Z-ci-datetime\" donde elige X, Y y Z.\n\nSi elige \"Usar una variable de entorno\", debe seleccionar una y asegurarse de que contenga el número de versión que quiere usar.\n\nSi elige \"Usar el número de compilación\", se usará el número de compilación para la versión del paquete. **Nota:** En Opciones, establezca el formato de compilación para que sea \"[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)\".",
   "loc.input.label.includeReferencedProjects": "Incluir proyectos a los que se hace referencia",
-  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
+  "loc.input.help.includeReferencedProjects": "Incluya los proyectos de referencia como dependencias o como parte del paquete. No se pueden usar con control de versiones de paquete automáticas. Si un proyecto de referencia tiene un archivo nuspec correspondiente con el mismo nombre que el proyecto, dicho proyecto se agrega como dependencia. De lo contrario, se agrega como parte del paquete. [Más información](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
   "loc.input.label.versionEnvVar": "Variable de entorno",
   "loc.input.help.versionEnvVar": "Escriba el nombre de la variable sin $, $env o %.",
   "loc.input.label.requestedMajorVersion": "Principal",
@@ -61,8 +61,8 @@
   "loc.input.help.packTimezone": "Especifica la zona horaria deseada que se usa para producir la versión del paquete. Se recomienda seleccionar UTC si utiliza agentes de compilación hospedados, porque su fecha y hora pueden diferir.",
   "loc.input.label.includeSymbols": "Crear paquete de símbolos",
   "loc.input.help.includeSymbols": "Especifica que el paquete contiene orígenes y símbolos. Cuando se usa con un archivo .nuspec, este crea un archivo de paquete NuGet normal y el correspondiente paquete de símbolos.",
-  "loc.input.label.toolPackage": "Tool Package",
-  "loc.input.help.toolPackage": "Determines if the output files of the project should be in the tool folder.",
+  "loc.input.label.toolPackage": "Paquete de herramientas",
+  "loc.input.help.toolPackage": "Determina si los archivos de salida del proyecto deben estar en la carpeta de herramientas.",
   "loc.input.label.buildProperties": "Propiedades adicionales de compilación",
   "loc.input.help.buildProperties": "Especifica una lista de pares \"token=valor\" separados por punto y coma, donde cada entrada de $token$ en el archivo .nuspec se reemplazará por el valor dado. Los valores pueden ser cadenas entre comillas.",
   "loc.input.label.verbosityPack": "Nivel de detalle",
@@ -92,7 +92,7 @@
   "loc.messages.PackagesFailedToPublish": "Error al publicar los paquetes.",
   "loc.messages.UnknownFeedType": "Tipo de fuente '%s' desconocido.",
   "loc.messages.Error_NoSourceSpecifiedForPush": "No se ha especificado ningún origen para la inserción",
-  "loc.messages.Error_UnexpectedErrorVstsNuGetPush": "An unexpected error occurred while trying to push the package with VstsNuGetPush.exe. Exit code(%s) and error(%s)",
+  "loc.messages.Error_UnexpectedErrorVstsNuGetPush": "Error inesperado al intentar insertar el paquete con VstsNuGetPush.exe. Código de salida (%s) y error (%s)",
   "loc.messages.Warning_FallBackToNuGet": "No se encontró VstsNuGetPush.exe, se usará NuGet.exe.",
   "loc.messages.Info_NoPackagesMatchedTheSearchPattern": "No hay paquetes que coincidan con el patrón de búsqueda.",
   "loc.messages.Warning_ForceNuGetCannotSkipConflicts": "Se forzó el uso de NuGet.exe para la publicación. Si se producen conflictos de inserción, la operación dará error.",
@@ -101,7 +101,7 @@
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "Actualmente, la opción \"Permitir omisión de duplicados\" solo está disponible en agentes de Windows. Si NuGet.exe encuentra un conflicto, la tarea dará error.",
   "loc.messages.Error_CommandNotRecognized": "No se reconoce el comando %s.",
   "loc.messages.Error_ApiKeyNotSupported": "Actualmente, DotNetCore no admite el uso de una clave de API cifrada.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "XML no válido. Se esperaba un elemento denominado \"configuration\".",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "No se encontraron archivos coincidentes con el patrón de búsqueda: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "No se encontró ninguna dirección URL de descarga para %s.",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "No se encontró ninguna versión que coincida con la entrada %s",
@@ -126,5 +126,5 @@
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Se seleccionó una versión de NuGet desconocida.",
   "loc.messages.NGCommon_UnableToFindTool": "No se encuentra la herramienta %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "Se está actualizando la versión de NuGet.exe a %s desde %s. Pueden producirse cambios de comportamiento o drásticos cuando NuGet se actualiza a una nueva versión. Si no desea que esto ocurra, desactive la opción \"Comprobar la última versión\" en la tarea.",
-  "loc.messages.Error_NugetFailedWithCodeAndErr": "The nuget command failed with exit code(%s) and error(%s)"
+  "loc.messages.Error_NugetFailedWithCodeAndErr": "Error del comando nuget con el código de salida (%s) y el error (%s)."
 }

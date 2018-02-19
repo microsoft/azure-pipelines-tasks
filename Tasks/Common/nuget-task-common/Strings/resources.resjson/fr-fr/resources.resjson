@@ -1,6 +1,6 @@
 {
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore ne prend pas en charge l'utilisation d'une clé API chiffrée.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "Contenu xml non valide. L'élément nommé 'configuration' est attendu.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Il n'existe aucun fichier correspondant au modèle de recherche : %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "URL de téléchargement introuvable pour %s",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Il n'existe aucune version correspondant à l'entrée %s",

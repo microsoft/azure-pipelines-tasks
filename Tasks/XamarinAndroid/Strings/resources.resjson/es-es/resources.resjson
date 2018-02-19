@@ -33,7 +33,7 @@
   "loc.input.help.jdkUserInputPath": "Use la versión del JDK en la ruta de acceso especificada durante la compilación.",
   "loc.input.label.jdkArchitecture": "JDK architecture",
   "loc.input.help.jdkArchitecture": "Indique opcionalmente la arquitectura (x86, x64) de JDK.",
-  "loc.messages.JDKNotFound": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
+  "loc.messages.JDKNotFound": "No se encontró la versión de JDK especificada. Asegúrese de que dicha versión está instalada en el agente y de que la variable de entorno \"%s\" existe y está establecida en la ubicación de un JDK correspondiente. En caso contrario, use la tarea de [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) para instalar el JDK deseado.",
   "loc.messages.NoMatchingProjects": "No se han encontrado archivos que coincidan con %s.",
   "loc.messages.XamarinAndroidBuildFailed": "%s\nVea https://go.microsoft.com/fwlink/?LinkId=760847.",
   "loc.messages.XamarinAndroidSucceeded": "La ejecución de la tarea de Xamarin.Android ha finalizado sin errores.",

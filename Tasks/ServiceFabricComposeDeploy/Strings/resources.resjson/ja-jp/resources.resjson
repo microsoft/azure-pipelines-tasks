@@ -22,7 +22,7 @@
   "loc.input.label.registryPassword": "レジストリのパスワード",
   "loc.input.help.registryPassword": "Docker レジストリのパスワード。パスワードを暗号化しない場合は、カスタム リリース定義の秘密の変数に格納することをお勧めします。",
   "loc.input.label.passwordEncrypted": "パスワードの暗号化",
-  "loc.input.help.passwordEncrypted": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+  "loc.input.help.passwordEncrypted": "パスワードを暗号化するには、[Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/ja-jp/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets) を使うことをお勧めします。それを使わない場合、クラスター接続内のサーバー証明書の拇印に一致する証明書がビルド エージェントにインストールされている場合は、パスワードを暗号化するためにその証明書が使われます。それ以外の場合は、エラーが発生します。",
   "loc.input.label.deployTimeoutSec": "配置のタイムアウト (秒)",
   "loc.input.help.deployTimeoutSec": "アプリケーションを配置するときのタイムアウト (秒)。",
   "loc.input.label.removeTimeoutSec": "削除のタイムアウト (秒)",
@@ -43,6 +43,6 @@
   "loc.messages.CurrentStatus": "現在の状態: {0}",
   "loc.messages.DeployFailed": "配置が失敗しました\n状態: {0}\n詳細: {1}",
   "loc.messages.CheckingComposeFile": "Compose ファイルを確認しています",
-  "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
-  "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
+  "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK バージョン {0} はサポートされていません。",
+  "loc.messages.UsingAPIVersion": "Service Fabric SDK バージョン {0} 用のコマンドレットを使用しています。"
 }

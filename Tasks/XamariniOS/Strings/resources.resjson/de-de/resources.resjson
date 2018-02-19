@@ -19,7 +19,7 @@
   "loc.input.help.runNugetRestore": "Führen Sie optional \"nuget restore\" in der Xamarin iOS-Lösung aus, um vor dem Build alle referenzierten Pakete zu installieren. Hierbei wird das Tool \"nuget\" im Pfad des Buildagentcomputers verwendet. Um eine andere NuGet-Version zu verwenden oder weitere Argumente festzulegen, verwenden Sie die [NuGet-Installationsaufgabe](https://www.visualstudio.com/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "Argumente",
   "loc.input.help.args": "Zusätzliche Befehlszeilenargumente, die beim Erstellen verwendet werden sollen.",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Das Arbeitsverzeichnis für Buildausführungen. Erfolgt hier keine Eingabe, wird der Stamm des Repositorys verwendet.",
   "loc.input.label.buildTool": "Build tool",
   "loc.input.label.mdtoolLocation": "Build tool path",

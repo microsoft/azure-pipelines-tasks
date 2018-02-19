@@ -19,7 +19,7 @@
   "loc.input.help.runNugetRestore": "(選擇性) 對 Xamarin iOS 解決方案執行 'nuget restore'，以在建置之前，先安裝所有參考的套件。將會使用組建代理程式電腦上 PATH 中的 'nuget' 工具。若要使用其他版本的 NuGet 或設定其他引數，請使用 [NuGet 安裝程式工作] (https://www.visualstudio.com/docs/build/steps/package/nuget-installer)。",
   "loc.input.label.args": "引數",
   "loc.input.help.args": "應該用於建置的其他命令列引數。",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "工作目錄",
   "loc.input.help.cwd": "組建會在其中執行的工作目錄。若為空白，會使用存放庫的根目錄。",
   "loc.input.label.buildTool": "Build tool",
   "loc.input.label.mdtoolLocation": "Build tool path",

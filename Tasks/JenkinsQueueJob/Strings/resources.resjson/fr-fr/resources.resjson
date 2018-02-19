@@ -34,5 +34,5 @@
   "loc.messages.JenkinsPipelineFailed": "Échec du pipeline Jenkins",
   "loc.messages.JenkinsJobFailed": "Échec du travail Jenkins",
   "loc.messages.JenkinsJobFailedtoQueue": "Échec de la mise en file d'attente du travail Jenkins",
-  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
+  "loc.messages.JenkinsJobQueueUriInvalid": "L'URI de la file d'attente des travaux retournée par Jenkins est inaccessible (%s). Vérifiez qu'il existe une 'URL Jenkins' correctement configurée sur votre serveur Jenkins sous 'Gérer Jenkins', 'Configurer le système'. Détails de l'erreur : %s"
 }

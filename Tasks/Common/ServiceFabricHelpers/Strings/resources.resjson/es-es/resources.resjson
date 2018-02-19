@@ -9,5 +9,5 @@
   "loc.messages.ImportedCertificate": "Certificado de cliente de clúster importado con la huella digital '{0}'.",
   "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK no está instalado en el agente de compilación. Vaya a https://aka.ms/servicefabric para descargarlo e instalarlo.",
   "loc.messages.UseWindowsSecurity": "Se ha especificado seguridad de Windows. Se usará el modificador -WindowsCredential durante la conexión.",
-  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "The cluster's server certificate with thumbprint '{0}' is required in order to encrypt text but the certificate could not be found on the agent machine in the 'CurrentUser\\My' certificate store location."
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "El certificado de servidor del clúster con la huella digital \"{0}\" es obligatorio para cifrar texto, pero el certificado no se encontró en la máquina del agente en la ubicación del almacén de certificados \"CurrentUser\\My\"."
 }

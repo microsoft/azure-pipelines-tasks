@@ -8,7 +8,7 @@
   "loc.input.label.checkLatest": "一致する最新のバージョンを常にダウンロードする",
   "loc.input.help.checkLatest": "バージョン仕様を満たす最新バージョンの NuGet.exe が利用可能かどうかを常に確認し、ダウンロードします。このオプションでは、選択したバージョンの NuGet が既にキャッシュに入っていても、常にダウンロード時間がかかります。\n\nこのオプションを有効にすると、新しいバージョンの NuGet がリリースされたときに、予期しないビルド ブレークが発生する可能性があります。",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore は、現在、暗号化された API キーの使用をサポートしていません。",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "無効な xml です。'configuration' という要素が必要です。",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "次の検索パターンと一致するファイルが見つかりませんでした: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "%s のダウンロード URL が見つかりませんでした",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "入力 %s に一致するバージョンは見つかりませんでした",

@@ -10,7 +10,7 @@
   "loc.input.label.jarsign": "Firmar el APK",
   "loc.input.help.jarsign": "Seleccione esta opción para firmar el APK con un archivo de almacén de claves proporcionado. Los APK sin firma solo se pueden ejecutar en un emulador. Deben estar firmados para poder ejecutarlos en un dispositivo.",
   "loc.input.label.keystoreFile": "Keystore file",
-  "loc.input.help.keystoreFile": "Select the keystore file that was uploaded to `Secure Files` to be used to sign the APK.",
+  "loc.input.help.keystoreFile": "Seleccione el archivo de almacén de claves que se cargó en \"Archivos seguros\" a fin de usarlo para firmar el APK.",
   "loc.input.label.keystorePass": "Keystore password",
   "loc.input.help.keystorePass": "Escriba la contraseña del archivo de almacén de claves proporcionado. Utilice una variable nueva con el bloqueo habilitado en la ficha Variables para cifrar este valor.",
   "loc.input.label.keystoreAlias": "Alias",
@@ -28,5 +28,5 @@
   "loc.messages.CouldNotFindZipalignInAndroidHome": "No se encuentra la herramienta zipalign en ANDROID_HOME: %s",
   "loc.messages.JavaHomeNotSet": "La variable de entorno JAVA_HOME no está definida para el usuario actual.",
   "loc.messages.NoMatchingFiles": "No se encontraron archivos coincidentes con el patrón de búsqueda: %s",
-  "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "No se pudo eliminar el archivo de almacén de claves descargado del servidor: %s"
 }

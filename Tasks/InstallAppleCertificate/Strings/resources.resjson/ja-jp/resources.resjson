@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Apple 証明書のインストール",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "macOS エージェント上でビルドを行うために必要な Apple 証明書をインストールします",
   "loc.instanceNameFormat": "Apple 証明書のインストール",
   "loc.group.displayName.advanced": "詳細設定",
@@ -21,5 +21,5 @@
   "loc.input.label.signingIdentity": "Certificate signing identity",
   "loc.input.help.signingIdentity": "署名証明書の件名の共通名。これが空のままの場合、共通名の解析を試行します。",
   "loc.messages.INVALID_P12": "証明書の SHA1 ハッシュと共通名 (CN) が見つかりません。証明書が有効な P12 であることを確認してください。",
-  "loc.messages.NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon)."
+  "loc.messages.NoP12PwdWarning": "P12 パスワードが指定されていません。P12 ファイルにはパスワードが必要です。ベスト プラクティスは、それをプロセス変数として指定し、秘密のマーク (ロック アイコン) を付けることです。"
 }

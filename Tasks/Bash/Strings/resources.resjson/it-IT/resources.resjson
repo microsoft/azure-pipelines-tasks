@@ -19,7 +19,7 @@
   "loc.messages.JS_ExitCode": "Bash terminato con codice '%s'.",
   "loc.messages.JS_FormattedCommand": "Comando formattato: %s",
   "loc.messages.JS_InvalidFilePath": "Il percorso file '%s' non è valido.",
-  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_ScriptContents": "Contenuto dello script:",
   "loc.messages.JS_Stderr": "Bash ha scritto una o più righe nel flusso di errore standard.",
   "loc.messages.JS_TranslatePathFailed": "Non è possibile convertire il percorso '%s' per il file system Linux."
 }

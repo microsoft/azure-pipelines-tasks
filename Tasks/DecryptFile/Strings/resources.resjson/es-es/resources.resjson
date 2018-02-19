@@ -11,7 +11,7 @@
   "loc.input.help.passphrase": "Frase de contraseña que se usará para el descifrado. **Use una variable para cifrar la frase de contraseña.**",
   "loc.input.label.outFile": "Decrypted file path",
   "loc.input.help.outFile": "Nombre de archivo opcional para el archivo descifrado. Se establece de manera predeterminada con el nombre del archivo cifrado y la extensión \".out\"",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Directorio de trabajo",
   "loc.input.help.cwd": "Directorio de trabajo para el descifrado. Se establece de manera predeterminada en la raíz del repositorio.",
   "loc.messages.OpenSSLReturnCode": "Se cerró openssl con el código de devolución: %d",
   "loc.messages.OpenSSLFailed": "Error de openssl: %s"

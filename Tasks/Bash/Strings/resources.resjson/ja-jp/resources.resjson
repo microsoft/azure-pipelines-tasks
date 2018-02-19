@@ -19,7 +19,7 @@
   "loc.messages.JS_ExitCode": "bash がコード '%s' で終了しました。",
   "loc.messages.JS_FormattedCommand": "フォーマット後のコマンド: %s",
   "loc.messages.JS_InvalidFilePath": "'%s' は、無効なファイル パスです。",
-  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_ScriptContents": "スクリプト コンテンツ:",
   "loc.messages.JS_Stderr": "bash が標準エラー ストリームに 1 行以上を書き込みました。",
   "loc.messages.JS_TranslatePathFailed": "パス '%s' は、Linux ファイル システムに変換できません。"
 }

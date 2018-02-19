@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
   "loc.description": "Finds or downloads and caches specified version of Go and adds it to the PATH.",
   "loc.instanceNameFormat": "Use Go $(version)",
-  "loc.group.displayName.advanced": "Advanced",
+  "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "Go tool version to download and install.  Examples: 1.9.3",
   "loc.input.label.goPath": "GOPATH",

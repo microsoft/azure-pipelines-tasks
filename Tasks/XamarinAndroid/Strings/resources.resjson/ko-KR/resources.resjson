@@ -33,7 +33,7 @@
   "loc.input.help.jdkUserInputPath": "빌드하는 동안 지정된 경로에 JDK 버전을 사용합니다.",
   "loc.input.label.jdkArchitecture": "JDK architecture",
   "loc.input.help.jdkArchitecture": "원하는 경우 JDK의 아키텍처(x86, x64)를 제공하세요.",
-  "loc.messages.JDKNotFound": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
+  "loc.messages.JDKNotFound": "지정한 JDK 버전을 찾지 못했습니다. 지정한 JDK 버전이 에이전트에 설치되어 있으며 환경 변수 '%s'이(가) 있고 해당 JDK의 위치로 설정되었는지 확인하거나, [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) 작업을 사용하여 원하는 JDK를 설치하세요.",
   "loc.messages.NoMatchingProjects": "일치하는 파일을 찾을 수 없음: %s.",
   "loc.messages.XamarinAndroidBuildFailed": "%s\nhttps://go.microsoft.com/fwlink/?LinkId=760847을 참조하세요.",
   "loc.messages.XamarinAndroidSucceeded": "Xamarin.Android 작업 실행이 오류 없이 완료되었습니다.",

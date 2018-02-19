@@ -11,7 +11,7 @@
   "loc.input.help.passphrase": "Phrase secrète à utiliser pour le déchiffrement. **Utilisez une variable pour chiffrer la phrase secrète.**",
   "loc.input.label.outFile": "Decrypted file path",
   "loc.input.help.outFile": "Nom facultatif du fichier déchiffré. Le nom par défaut est celui du fichier chiffré avec une extension \".out\"",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail pour le déchiffrement. Le répertoire par défaut est la racine du dépôt.",
   "loc.messages.OpenSSLReturnCode": "Sortie de openssl avec le code de retour : %d",
   "loc.messages.OpenSSLFailed": "Échec de openssl avec l'erreur : %s"

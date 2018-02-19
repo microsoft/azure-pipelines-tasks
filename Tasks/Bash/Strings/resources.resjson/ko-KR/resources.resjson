@@ -19,7 +19,7 @@
   "loc.messages.JS_ExitCode": "Bash가 코드 '%s'(으)로 종료되었습니다.",
   "loc.messages.JS_FormattedCommand": "형식이 지정된 명령: %s",
   "loc.messages.JS_InvalidFilePath": "파일 경로 '%s'이(가) 잘못되었습니다.",
-  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_ScriptContents": "스크립트 내용:",
   "loc.messages.JS_Stderr": "Bash가 표준 오류 스트림에 하나 이상의 줄을 썼습니다.",
   "loc.messages.JS_TranslatePathFailed": "'%s' 경로를 Linux 파일 시스템으로 변환할 수 없습니다."
 }

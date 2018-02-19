@@ -34,5 +34,5 @@
   "loc.messages.JenkinsPipelineFailed": "Pipeline Jenkins non riuscita",
   "loc.messages.JenkinsJobFailed": "Processo Jenkins non riuscito",
   "loc.messages.JenkinsJobFailedtoQueue": "Processo Jenkins non accodato",
-  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
+  "loc.messages.JenkinsJobQueueUriInvalid": "Non è stato possibile raggiungere l'URI della coda processi restituito da Jenkins (%s). Verificare che l'opzione 'URL di Jenkins' sia configurata correttamente nel server Jenkins in `Gestisci Jenkins`, `Configura sistema`. Dettagli errore: %s"
 }

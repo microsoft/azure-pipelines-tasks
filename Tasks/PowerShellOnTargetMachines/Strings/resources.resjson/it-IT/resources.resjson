@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=627414)",
   "loc.description": "Consente di eseguire script PowerShell nei computer remoti",
   "loc.instanceNameFormat": "Esegui PowerShell in $(EnvironmentName)",
-  "loc.releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
+  "loc.releaseNotes": "Novità della versione 2.0: <br/>&nbsp;&nbsp; Rimozione del supporto per computer DTL legacy.",
   "loc.group.displayName.deployment": "Distribuzione",
   "loc.group.displayName.advanced": "Opzioni avanzate",
   "loc.input.label.EnvironmentName": "Computer",
@@ -30,11 +30,11 @@
   "loc.input.help.ResourceFilteringMethod": "Selezionare, facoltativamente, un sottoinsieme di computer specificando nomi o tag dei computer.",
   "loc.input.label.MachineNames": "Criteri di filtro",
   "loc.input.help.MachineNames": "Questo input è valido solo per gruppi di computer o variabili di output e non è ancora supportato per l'elenco semplice di computer. Consente di specificare un elenco di computer come dbserver.fabrikam.com, webserver.fabrikam.com, 192.168.12.34 o tag come Role:DB; OS:Win8.1. Se vengono specificati più tag, l'attività verrà eseguita in tutti i computer con i tag specificati. Con l'impostazione predefinita l'attività viene eseguita in tutti i computer.",
-  "loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
-  "loc.messages.PS_TM_DeploymentStartedForMachine0": "Deployment started for machine: '{0}'",
-  "loc.messages.PS_TM_DeploymentStatusForMachine01": "Deployment status for machine '{0}' : '{1}'",
-  "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "Deployment failed on machine '{0}' with following message : '{1}'",
-  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "Resource: '{0}' does not have WinRM service configured. Configure WinRM service on the Azure VM Resources. Refer for more details '{1}'",
-  "loc.messages.PS_TM_0PortWasNotProvidedForResource1": "{0} port was not provided for resource '{1}'",
-  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "Deployment on one or more machines failed."
+  "loc.messages.PS_TM_NoMachineExistsUnderEnvironment0ForDeployment": "Nell'ambiente '{0}' non esiste alcun computer per la distribuzione",
+  "loc.messages.PS_TM_DeploymentStartedForMachine0": "Distribuzione avviata per il computer: '{0}'",
+  "loc.messages.PS_TM_DeploymentStatusForMachine01": "Stato della distribuzione per il computer '{0}': '{1}'",
+  "loc.messages.PS_TM_DeploymentFailedOnMachine0WithFollowingMessage1": "La distribuzione nel computer '{0}' non è riuscita. Messaggio: '{1}'",
+  "loc.messages.PS_TM_ResourceDoesnotHaveWinRMServiceConfigured": "Il servizio WinRM non è configurato per la risorsa '{0}'. Configurarlo in Risorse macchine virtuali di Azure. Per maggiori dettagli, vedere '{1}'",
+  "loc.messages.PS_TM_0PortWasNotProvidedForResource1": "Non è stata specificata la porta {0} per la risorsa '{1}'",
+  "loc.messages.PS_TM_DeploymentOnOneOrMoreMachinesFailed": "La distribuzione in uno o più computer non è riuscita."
 }

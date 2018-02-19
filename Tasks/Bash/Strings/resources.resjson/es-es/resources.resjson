@@ -19,7 +19,7 @@
   "loc.messages.JS_ExitCode": "Bash se cerró con el código \"%s\".",
   "loc.messages.JS_FormattedCommand": "Comando con formato: %s",
   "loc.messages.JS_InvalidFilePath": "Ruta de acceso de archivo no válida: %s.",
-  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_ScriptContents": "Contenido del script:",
   "loc.messages.JS_Stderr": "Bash escribió una o varias líneas en la secuencia de error estándar.",
   "loc.messages.JS_TranslatePathFailed": "La ruta de acceso \"%s\" no se puede traducir al sistema de archivos de Linux."
 }
