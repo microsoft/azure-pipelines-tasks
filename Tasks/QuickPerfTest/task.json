@@ -125,6 +125,7 @@
             "label": "Load test rig",
             "required": false,
             "defaultValue": "",
+            "visibleRule": "machineType == 2",
             "helpMarkDown": "Name of self-provisioned rig of load test agents."
         },
         {
@@ -133,6 +134,7 @@
             "label": "No. of agents to use",
             "required": false,
             "defaultValue": "",
+            "visibleRule": "machineType == 2",
             "helpMarkDown": "Number of self provisioned agents to use for this test."
         },
         {
