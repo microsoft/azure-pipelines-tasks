@@ -10,7 +10,7 @@
   "loc.input.label.jarsign": "APK 서명",
   "loc.input.help.jarsign": "제공된 키 저장소 파일을 사용하여 APK에 서명하려면 이 옵션을 선택합니다. 서명되지 않은 APK는 에뮬레이터에서만 실행할 수 있습니다. 장치에서 실행하려면 APK가 서명되어야 합니다.",
   "loc.input.label.keystoreFile": "Keystore file",
-  "loc.input.help.keystoreFile": "Select the keystore file that was uploaded to `Secure Files` to be used to sign the APK.",
+  "loc.input.help.keystoreFile": "APK 서명에 사용하기 위해 '보안 파일'에 업로드한 키 저장소 파일을 선택합니다.",
   "loc.input.label.keystorePass": "Keystore password",
   "loc.input.help.keystorePass": "제공된 키 저장소 파일에 대한 암호를 입력합니다. 이 값을 암호화하려면 [변수] 탭에서 잠금이 사용 설정된 새 변수를 사용하세요.",
   "loc.input.label.keystoreAlias": "별칭",
@@ -28,5 +28,5 @@
   "loc.messages.CouldNotFindZipalignInAndroidHome": "ANDROID_HOME 내에서 Zipalign 도구를 찾을 수 없습니다. %s",
   "loc.messages.JavaHomeNotSet": "실행 중인 사용자에 대해 JAVA_HOME 환경 변수가 설정되어 있지 않습니다.",
   "loc.messages.NoMatchingFiles": "다음 검색 패턴과 일치하는 파일을 찾을 수 없습니다. %s",
-  "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "서버에서 다운로드된 키 저장소 파일을 삭제하지 못함: %s"
 }

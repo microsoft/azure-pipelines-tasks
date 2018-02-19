@@ -4,7 +4,7 @@
   "loc.description": "CocoaPods es el administrador de dependencias para proyectos Swift y Objective-C de Cocoa. Esta tarea ejecuta \"pod install\".",
   "loc.instanceNameFormat": "instalación de pod",
   "loc.group.displayName.advanced": "Avanzado",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Directorio de trabajo",
   "loc.input.help.cwd": "Especifique el directorio de trabajo en el cual ejecutar este paso. Si se deja en blanco, se usará el directorio de repositorio.",
   "loc.input.label.forceRepoUpdate": "Force repo update",
   "loc.input.help.forceRepoUpdate": "Al seleccionar esta opción, se fuerza la ejecución de \"pod repo update\" antes de instalar.",

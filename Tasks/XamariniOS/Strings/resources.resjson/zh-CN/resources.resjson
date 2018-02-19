@@ -19,7 +19,7 @@
   "loc.input.help.runNugetRestore": "根据需要在 Xamarin iOS 解决方案上运行“nuget 还原”，在生成前安装所有引用包。将使用生成代理计算机的路径中的 \"nuget\" 工具。若要使用其他版本的 NuGet 或设置其他参数，请使用 [NuGet 安装程序任务](https://www.visualstudio.com/docs/build/steps/package/nuget-installer)。",
   "loc.input.label.args": "参数",
   "loc.input.help.args": "将用于生成的其他命令行参数。",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "用于运行生成的工作目录。该目录为空时，将使用存储库的根目录。",
   "loc.input.label.buildTool": "Build tool",
   "loc.input.label.mdtoolLocation": "Build tool path",

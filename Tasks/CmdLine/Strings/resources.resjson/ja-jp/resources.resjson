@@ -14,5 +14,5 @@
   "loc.messages.JS_Stderr": "bash が標準エラー ストリームに 1 行以上を書き込みました。",
   "loc.messages.PS_ExitCode": "cmd.exe がコード '{0}' で終了しました。",
   "loc.messages.PS_UnableToDetermineExitCode": "予期しない例外が発生しました。cmd.exe からの終了コードを判別できません。",
-  "loc.messages.ScriptContents": "Script contents:"
+  "loc.messages.ScriptContents": "スクリプト コンテンツ:"
 }

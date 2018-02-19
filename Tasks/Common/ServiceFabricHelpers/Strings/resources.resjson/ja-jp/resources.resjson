@@ -9,5 +9,5 @@
   "loc.messages.ImportedCertificate": "拇印 '{0}' を含むインポートされたクラスター クライアント証明書。",
   "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK がビルド エージェントにインストールされていません。https://aka.ms/servicefabric にアクセスしてダウンロードし、インストールしてください。",
   "loc.messages.UseWindowsSecurity": "Windows セキュリティが指定されました。接続中に -WindowsCredential スイッチが使用されます。",
-  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "The cluster's server certificate with thumbprint '{0}' is required in order to encrypt text but the certificate could not be found on the agent machine in the 'CurrentUser\\My' certificate store location."
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "テキストを暗号化するには拇印 '{0}' の付いたクラスターのサーバー証明書が必要ですが、'CurrentUser\\My' 証明書の保存場所のエージェント マシン上で証明書が見つかりませんでした。"
 }

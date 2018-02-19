@@ -14,9 +14,9 @@
   "loc.input.help.targets": "作成するターゲットのオプションのスペース区切り一覧。指定しない場合、`既定` のターゲットが使用されます。`既定` のターゲットが定義されていない場合は、Ant 1.6.0 以降で最上位レベルのすべてのタスクが作成されます。",
   "loc.input.label.publishJUnitResults": "TFS/Team Services に発行する",
   "loc.input.help.publishJUnitResults": "Ant のビルドによって生成された JUnit のテスト結果を TFS/Team Services に発行するには、このオプションを選びます。`テスト結果ファイル` と一致する各テスト結果ファイルが、TFS/Team Services のテストの実行として発行されます。",
-  "loc.input.label.testResultsFiles": "Test results files",
+  "loc.input.label.testResultsFiles": "テスト結果ファイル",
   "loc.input.help.testResultsFiles": "テスト結果ファイルのパス。ワイルドカードを使用できます。たとえば、名前が TEST- で始まるすべての XML ファイルの場合は `**/TEST-*.xml` です。",
-  "loc.input.label.testRunTitle": "Test run title",
+  "loc.input.label.testRunTitle": "テストの実行のタイトル",
   "loc.input.help.testRunTitle": "テストの実行の名前を指定します。",
   "loc.input.label.codeCoverageTool": "Code coverage tool",
   "loc.input.help.codeCoverageTool": "コード カバレッジ ツールを選びます。オンプレミスのエージェントのサポートについては、以下の `詳細` リンクをご覧ください。",
@@ -39,7 +39,7 @@
   "loc.input.label.jdkArchitecture": "JDK architecture",
   "loc.input.help.jdkArchitecture": "(省略可能) JDK のアーキテクチャ (x86、x64) を指定します。",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s の JAVA_HOME を検索する",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
+  "loc.messages.FailedToLocateSpecifiedJVM": "指定された JDK バージョンが見つかりませんでした。指定された JDK バージョンがエージェントにインストールされていることと、環境変数 '%s' が存在し、対応する JDK の場所に設定されていることを確認するか、[Java ツール インストーラー](https://docs.microsoft.com/ja-JP/vsts/build-release/tasks/tool/java-tool-installer) タスクを使用して必要な JDK をインストールしてください。",
   "loc.messages.DiscontinueAntCodeCoverage": "We are discontinuing the support of automated code coverage report generation for Ant projects. Please refer https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md for more details.",
   "loc.messages.NoCodeCoverage": "コード カバレッジで発行するべき結果が見つかりませんでした。"
 }

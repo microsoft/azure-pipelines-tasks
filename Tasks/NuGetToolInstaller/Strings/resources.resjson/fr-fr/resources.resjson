@@ -8,7 +8,7 @@
   "loc.input.label.checkLatest": "Télécharger toujours la dernière version correspondante",
   "loc.input.help.checkLatest": "Recherche et télécharge toujours la dernière version disponible de NuGet.exe qui répond à la spécification de version. Cette option implique toujours un temps de téléchargement, même si la version sélectionnée de NuGet est déjà mise en cache.\n\nL'activation de cette option peut provoquer des échecs de build inattendus quand une nouvelle de version de NuGet est disponible.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore ne prend pas en charge l'utilisation d'une clé API chiffrée.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "Contenu xml non valide. L'élément nommé 'configuration' est attendu.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Il n'existe aucun fichier correspondant au modèle de recherche : %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "URL de téléchargement introuvable pour %s",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Il n'existe aucune version correspondant à l'entrée %s",

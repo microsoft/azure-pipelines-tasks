@@ -15,7 +15,7 @@
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script.",
   "loc.input.label.gulpjs": "Emplacement de gulp.js",
-  "loc.input.help.gulpjs": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of the working directory.",
+  "loc.input.help.gulpjs": "Fichier gulp.js à exécuter quand l'agent ne trouve pas le gulp installé global. Correspond par défaut au fichier gulp.js sous le dossier node_modules du répertoire de travail.",
   "loc.input.label.publishJUnitResults": "Publier sur TFS/Team Services",
   "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats des tests JUnit produits par la build Gulp sur TFS/Team Services.",
   "loc.input.label.testResultsFiles": "Fichiers des résultats des tests",

@@ -19,7 +19,7 @@
   "loc.input.help.runNugetRestore": "При необходимости выполните команду \"nuget restore\" в решении Xamarin iOS, чтобы установить все пакеты по ссылкам перед сборкой. Будет использовано средство nuget по пути из переменной PATH на компьютере агента. Чтобы использовать другую версию NuGet или задать дополнительные аргументы, используйте [задачу установщика NuGet](https://www.visualstudio.com/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "Аргументы",
   "loc.input.help.args": "Дополнительные аргументы командной строки, которые должны использоваться для сборки.",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Рабочий каталог для запуска сборок. Если значение пусто, используется корень репозитория.",
   "loc.input.label.buildTool": "Build tool",
   "loc.input.label.mdtoolLocation": "Build tool path",

@@ -22,7 +22,7 @@
   "loc.input.label.registryPassword": "Contraseña del Registro",
   "loc.input.help.registryPassword": "Contraseña del Registro de Docker. Si no está cifrada, se recomienda usar una variable secreta de la definición de versión personalizada para almacenarla.",
   "loc.input.label.passwordEncrypted": "Contraseña cifrada",
-  "loc.input.help.passwordEncrypted": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+  "loc.input.help.passwordEncrypted": "Se recomienda cifrar la contraseña mediante [Invoke-ServiceFabricEncryptText] (https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). Si no lo hace, pero el agente de compilación tiene instalado un certificado que coincide con la huella digital del certificado de servidor en la conexión del clúster, este se usará para cifrar la contraseña. De lo contrario, se producirá un error.",
   "loc.input.label.deployTimeoutSec": "Tiempo de espera de implementación (s)",
   "loc.input.help.deployTimeoutSec": "Tiempo de espera en segundos para implementar la aplicación.",
   "loc.input.label.removeTimeoutSec": "Tiempo de espera de eliminación (s)",
@@ -43,6 +43,6 @@
   "loc.messages.CurrentStatus": "Estado actual: {0}",
   "loc.messages.DeployFailed": "Error de implementación.\nEstado: {0}\nDetalles: {1}",
   "loc.messages.CheckingComposeFile": "Comprobando archivo de Compose",
-  "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
-  "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
+  "loc.messages.UnsupportedAPIVersion": "No se admite la versión {0} del SDK de Service Fabric.",
+  "loc.messages.UsingAPIVersion": "Uso de cmdlets para la versión {0} del SDK de Service Fabric."
 }

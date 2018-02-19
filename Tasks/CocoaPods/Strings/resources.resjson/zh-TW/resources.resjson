@@ -4,7 +4,7 @@
   "loc.description": "CocoaPods 是 Swift 及 Objective-C Cocoa 專案的相依性管理員。此工作會執行 'pod install'。",
   "loc.instanceNameFormat": "pod 安裝",
   "loc.group.displayName.advanced": "進階",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "工作目錄",
   "loc.input.help.cwd": "指定要在其中執行此步驟的工作目錄。若為空白則會使用存放庫目錄。",
   "loc.input.label.forceRepoUpdate": "Force repo update",
   "loc.input.help.forceRepoUpdate": "選取此選項會在安裝前強制執行 'pod repo update'。",

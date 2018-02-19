@@ -9,7 +9,7 @@
   "loc.messages.Info_NuGetSupportedAfter3_5": "La versione di NuGet in uso è la %s, ma in questa attività sono supportate solo le versioni uguali o successive alla 3.5.0. ",
   "loc.messages.BuildIdentityPermissionsHint": "Per i feed interni assicurarsi che l'identità '%s' [%s] del servizio di compilazione abbia accesso al feed.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore non supporta attualmente una chiave API crittografata.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "XML non valido. È previsto un elemento denominato 'configuration'.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Non sono stati trovati file corrispondenti con il criterio di ricerca: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "Non è stato trovato alcun URL di download per %s",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Non è stata trovata alcuna versione corrispondente all'input %s",
@@ -31,7 +31,7 @@
   "loc.messages.NGCommon_NuGetConfigIsPackagesConfig": "In %s è previsto un file NuGet.config, ma il contenuto del file sembra essere quello di un file packages.config. Verificare le impostazioni dell'attività %s e confermare di aver selezionato NuGet.config invece di packages.config.",
   "loc.messages.NGCommon_RemovingSources": "Preparazione dell'impostazione delle credenziali in NuGet.config",
   "loc.messages.NGCommon_SpsNotFound": "L'area '%s' [%s] non è stata trovata. Potrebbe essersi verificato un problema con l'installazione di Team Foundation Server.",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersio": "Unknown NuGet version selected.",
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersio": "È stata selezionata una versione di NuGet sconosciuta.",
   "loc.messages.NGCommon_UnableToFindTool": "Lo strumento %s non è stato trovato",
   "loc.messages.Warning_UpdatingNuGetVersion": "Aggiornamento della versione di NuGet.exe a %s da %s. In seguito all'aggiornamento di NuGet a una nuova versione è possibile riscontrare modifiche al comportamento o modifiche di rilievo. Per evitare queste modifiche, deselezionare l'opzione 'Controlla disponibilità di versioni più recenti' nell'attività."
 }

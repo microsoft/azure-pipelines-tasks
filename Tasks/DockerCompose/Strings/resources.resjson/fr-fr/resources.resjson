@@ -41,7 +41,7 @@
   "loc.input.label.workDir": "Répertoire de travail",
   "loc.input.help.workDir": "Répertoire de travail du conteneur de service spécifique.",
   "loc.input.label.entrypoint": "Substitution du point d'entrée",
-  "loc.input.help.entrypoint": "Override the default entry point for the specific service container.",
+  "loc.input.help.entrypoint": "Remplacez le point d'entrée par défaut du conteneur de service spécifique.",
   "loc.input.label.containerCommand": "Commande",
   "loc.input.help.containerCommand": "Commande à exécuter dans le conteneur de service spécifique. Par exemple, si l'image contient une simple application web Python Flask, vous pouvez spécifier 'python app.py' pour lancer l'application web.",
   "loc.input.label.detached": "Exécuter en arrière-plan",
@@ -66,8 +66,8 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produit une erreur si les fichiers Docker Compose supplémentaires n'existent pas. Ceci remplace le comportement par défaut qui consiste à ignorer un fichier inexistant.",
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail de la commande Docker Compose.",
-  "loc.messages.ContainerPatternFound": "Pattern found in docker compose filepath parameter",
-  "loc.messages.ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
+  "loc.messages.ContainerPatternFound": "Modèle trouvé dans le paramètre filepath Docker Compose",
+  "loc.messages.ContainerPatternNotFound": "Modèle introuvable dans le paramètre filepath Docker Compose",
   "loc.messages.ContainerDockerFileNotFound": "Le fichier Docker correspondant à %s est introuvable.",
-  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists."
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Le fichier Docker Compose supplémentaire %s n'existe pas."
 }

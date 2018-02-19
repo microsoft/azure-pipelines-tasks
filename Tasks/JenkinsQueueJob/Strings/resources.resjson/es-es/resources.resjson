@@ -34,5 +34,5 @@
   "loc.messages.JenkinsPipelineFailed": "No se pudo ejecutar la canalización de Jenkins",
   "loc.messages.JenkinsJobFailed": "No se pudo ejecutar el trabajo de Jenkins",
   "loc.messages.JenkinsJobFailedtoQueue": "No se pudo poner en cola el trabajo de Jenkins",
-  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
+  "loc.messages.JenkinsJobQueueUriInvalid": "No se pudo acceder al URI de la cola de trabajos que devolvió Jenkins (%s). Compruebe que \"Jenkins URL\" se ha configurado correctamente en el servidor de Jenkins bajo \"Manage Jenkins\", \"Configure System\". Detalles del error: %s"
 }

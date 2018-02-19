@@ -19,7 +19,7 @@
   "loc.messages.JS_ExitCode": "Arrêt de Bash. Code de sortie : '%s'.",
   "loc.messages.JS_FormattedCommand": "Commande mise en forme : %s",
   "loc.messages.JS_InvalidFilePath": "Chemin de fichier non valide : '%s'.",
-  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_ScriptContents": "Contenu du script :",
   "loc.messages.JS_Stderr": "Bash a écrit une ou plusieurs lignes dans le flux d'erreurs standard.",
   "loc.messages.JS_TranslatePathFailed": "Impossible de traduire le chemin '%s' vers le système de fichiers Linux."
 }

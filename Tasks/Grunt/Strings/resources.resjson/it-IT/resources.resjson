@@ -15,7 +15,7 @@
   "loc.input.label.cwd": "Directory di lavoro",
   "loc.input.help.cwd": "Directory di lavoro corrente durante l'esecuzione dello script. Per impostazione predefinita, corrisponde alla cartella in cui si trova lo script.",
   "loc.input.label.gruntCli": "Percorso grunt-cli",
-  "loc.input.help.gruntCli": "grunt-cli to run when agent can't find global installed grunt-cli  Defaults to the grunt-cli under node_modules folder of the working directory.",
+  "loc.input.help.gruntCli": "File grunt-cli da eseguire quando l'agente non riesce a trovare il file grunt-cli installato globale. Per impostazione predefinita, viene usato il file grunt-cli presente nella cartella node_modules della directory di lavoro.",
   "loc.input.label.publishJUnitResults": "Pubblica in TFS/Team Services",
   "loc.input.help.publishJUnitResults": "Selezionare questa opzione per pubblicare in TFS/Team Services i risultati di test JUnit ottenuti con la compilazione Grunt.",
   "loc.input.label.testResultsFiles": "File dei risultati del test",

@@ -15,7 +15,7 @@
   "loc.input.label.publishWebProjects": "發佈 Web 專案",
   "loc.input.help.publishWebProjects": "若為 true，工作會嘗試在存放庫中尋找 Web 專案，並對其執行 publish 命令。目錄中有 web.config 檔案或 wwwroot 資料夾，即表示有 Web 專案。",
   "loc.input.label.projects": "專案的路徑",
-  "loc.input.help.projects": "要使用之 csproj 檔案的路徑。您可以使用萬用字元 (例如 */.csproj 即表示所有子資料夾中的所有 .csproj 檔案)。",
+  "loc.input.help.projects": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/.csproj for all .csproj files in all subfolders).",
   "loc.input.label.custom": "自訂命令",
   "loc.input.help.custom": "要傳遞至 dotnet.exe 以加以執行的命令。",
   "loc.input.label.arguments": "引數",

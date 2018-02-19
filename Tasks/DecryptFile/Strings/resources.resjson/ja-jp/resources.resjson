@@ -11,7 +11,7 @@
   "loc.input.help.passphrase": "暗号化解除に使用するパスフレーズ。**変数を使用してパスフレーズを暗号化します。**",
   "loc.input.label.outFile": "Decrypted file path",
   "loc.input.help.outFile": "暗号化解除されているファイルのファイル名 (省略可能)。既定値は暗号化ファイルの拡張子を \".out\" にしたものです。",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "暗号化解除の作業ディレクトリ。既定値はリポジトリのルートです。",
   "loc.messages.OpenSSLReturnCode": "openssl が次のリターン コードで終了しました: %d",
   "loc.messages.OpenSSLFailed": "openssl に失敗し、次のエラーが発生しました: %s"

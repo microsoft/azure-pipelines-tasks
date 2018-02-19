@@ -3,7 +3,7 @@
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "테넌트 ID {0}에 대한 토큰을 가져올 수 없습니다.",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "지정된 사용자에 대한 토큰을 가져올 수 없습니다.",
   "loc.messages.AZ_NoValidResourceIdFound": "구독 {2}에서 serverName이 {0}이고 serverType이 {1}인 리소스를 찾을 수 없습니다. 올바른 serverName/serverType을 지정하고 다시 시도하세요.",
-  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Unable to fetch load balancer details",
-  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Unable to fetch public IP Addresses details",
-  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Unable to fetch network interfaces details"
+  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "부하 분산 장치 정보를 페치할 수 없음",
+  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "공용 IP 주소 정보를 페치할 수 없음",
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "네트워크 인터페이스 정보를 페치할 수 없음"
 }

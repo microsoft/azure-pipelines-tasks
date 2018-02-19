@@ -7,7 +7,7 @@
   "loc.group.displayName.publishRegistries": "宛先レジストリと認証",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.command": "コマンド",
-  "loc.input.help.command": "The command and arguments which will be passed to npm for execution.\n\nIf your arguments contain double quotes (\"), escape them with a slash (\\), and surround the escaped string with double quotes (\").",
+  "loc.input.help.command": "実行のため npm に渡されるコマンドと引数です。\n\n引数に二重引用符 (\") が含まれている場合、スラッシュ (\\) を使用してエスケープし、エスケープした文字列を二重引用符 (\") で囲みます。",
   "loc.input.label.workingDir": "package.json のある作業フォルダー",
   "loc.input.help.workingDir": "ターゲット パッケージの .json および .npmrc ファイルの入っているフォルダーへのパスを選択します。ファイルではなく、フォルダー (例: \"/packages/mypackage\") を選択してください。",
   "loc.input.label.verbose": "詳細なログ",
