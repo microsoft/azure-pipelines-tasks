@@ -6,7 +6,7 @@ export class TaskParametersUtility {
             connectedServiceName: tl.getInput('ConnectedServiceName', true),
             WebAppName: tl.getInput('WebAppName', true),
             WebAppKind: tl.getInput('WebAppKind', false),
-            DeployToSlotFlag: tl.getBoolInput('DeployToSlotFlag', false),
+            DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
             VirtualApplication: tl.getInput('VirtualApplication', false),
             Package: tl.getPathInput('Package', true),
             GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
@@ -33,8 +33,8 @@ export class TaskParametersUtility {
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("linux") >= 0;
         taskParameters.isBuiltinLinuxWebApp = taskParameters.WebAppKind == "app,linux";
         taskParameters.isContainerWebApp =taskParameters.WebAppKind == "app,linux,container";
-        taskParameters.ResourceGroupName = taskParameters.DeployToSlotFlag ? tl.getInput('ResourceGroupName', false) : null;
-        taskParameters.SlotName = taskParameters.DeployToSlotFlag ? tl.getInput('SlotName', false) : null;
+        taskParameters.ResourceGroupName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('ResourceGroupName', false) : null;
+        taskParameters.SlotName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('SlotName', false) : null;
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
@@ -58,7 +58,7 @@ export interface TaskParameters {
     connectedServiceName: string;
     WebAppName: string;
     WebAppKind?: string;
-    DeployToSlotFlag?: boolean;
+    DeployToSlotOrASEFlag?: boolean;
     ResourceGroupName?: string;
     SlotName?: string;
     VirtualApplication?: string;

@@ -31,7 +31,7 @@ async function main() {
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
         var virtualApplicationPath: string;
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParams.WebAppName));
-        if(!taskParams.DeployToSlotFlag) {
+        if(!taskParams.DeployToSlotOrASEFlag) {
             taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(azureEndpoint, taskParams.WebAppName);
         }
 

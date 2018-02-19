@@ -91,9 +91,9 @@
             "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
         },
         {
-            "name": "DeployToSlotFlag",
+            "name": "DeployToSlotOrASEFlag",
             "type": "boolean",
-            "label": "Deploy to slot",
+            "label": "Specify Deployment Slot or App Service Environment details",
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
@@ -115,7 +115,7 @@
             "name": "SlotName",
             "type": "pickList",
             "label": "Slot",
-            "defaultValue": "",
+            "defaultValue": "production",
             "required": true,
             "properties": {
                 "EditableOptions": "True"

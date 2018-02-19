@@ -95,12 +95,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
-      "name": "DeployToSlotFlag",
+      "name": "DeployToSlotOrASEFlag",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployToSlotFlag",
+      "label": "ms-resource:loc.input.label.DeployToSlotOrASEFlag",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
+      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotOrASEFlag",
       "visibleRule": "WebAppKind != \"\""
     },
     {
@@ -119,7 +119,7 @@
       "name": "SlotName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.SlotName",
-      "defaultValue": "",
+      "defaultValue": "production",
       "required": true,
       "properties": {
         "EditableOptions": "True"
