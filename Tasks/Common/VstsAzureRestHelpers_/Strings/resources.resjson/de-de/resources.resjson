@@ -3,7 +3,7 @@
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "Das Token für Mandanten-ID \"{0}\" konnte nicht abgerufen werden.",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "Das Token für den angegebenen Benutzer konnte nicht abgerufen werden.",
   "loc.messages.AZ_NoValidResourceIdFound": "Keine Ressource mit serverName \"{0}\", serverType \"{1}\" im Abonnement \"{2}\" gefunden. Geben Sie den richtigen serverName/serverType an, und versuchen Sie es noch mal.",
-  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Unable to fetch load balancer details",
-  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Unable to fetch public IP Addresses details",
-  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Unable to fetch network interfaces details"
+  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Load Balancer-Details können nicht abgerufen werden.",
+  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Details zu öffentlichen IP-Adressen können nicht abgerufen werden.",
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Details zu Netzwerkschnittstellen können nicht abgerufen werden."
 }

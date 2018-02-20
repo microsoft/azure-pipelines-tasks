@@ -34,5 +34,5 @@
   "loc.messages.JenkinsPipelineFailed": "Fehler bei der Jenkins-Pipeline.",
   "loc.messages.JenkinsJobFailed": "Fehler beim Jenkins-Auftrag.",
   "loc.messages.JenkinsJobFailedtoQueue": "Fehler beim Einfügen des Jenkins-Auftrags in eine Warteschlange.",
-  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
+  "loc.messages.JenkinsJobQueueUriInvalid": "Der von Jenkins zurückgegebene URI der Auftragswarteschlange ist nicht erreichbar (%s). Überprüfen Sie, ob die Jenkins-URL auf Ihrem Jenkins-server unter \"Jenkins verwalten\" > \"System konfigurieren\" ordnungsgemäß konfiguriert ist. Fehlerdetails: %s"
 }
