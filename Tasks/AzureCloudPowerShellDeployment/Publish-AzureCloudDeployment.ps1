@@ -16,7 +16,7 @@ try{
     $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
-	$NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
+    $NewServiceCustomCertificates = Get-VstsInput -Name NewServiceCustomCertificates
 
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
