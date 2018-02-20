@@ -7,12 +7,6 @@ import * as util from 'util';
 let osPlat: string = os.platform();
 let osArch: string = os.arch();
 
-try {
-    tl.setResourcePath(path.join(__dirname, "task.json"));
-} catch (error) {
-    tl.setResult(tl.TaskResult.Failed, error);
-}
-
 async function run() {
     try {
         let version = tl.getInput('version', true).trim();
@@ -26,7 +20,7 @@ async function run() {
 async function getGo(version: string) {
     // check cache
     let toolPath: string;
-    toolPath = toolLib.findLocalTool('go', version);
+    toolPath = toolLib.findLocalTool('go', fixVersion(version));
 
     if (!toolPath) {
         // download, extract, cache
@@ -55,7 +49,11 @@ async function acquireGo(version: string): Promise<string> {
         downloadPath = await toolLib.downloadTool(downloadUrl);
     } catch (error) {
         tl.debug(error);
-        throw (tl.loc("FailedToDownload", version, error));
+
+        // cannot localized the string here because to localize we need to set the resource file.
+        // which can be set only once. vsts-task-tool-lib/tool, is already setting it to different file.
+        // So left with no option but to hardcode the string. Other tasks are doing the same.
+        throw (util.format("Failed to download version %s. Please verify that the version is valid and resolve any other issues. %s", version, error));
     }
 
     //make sure agent version is latest then 2.115.0
@@ -67,7 +65,7 @@ async function acquireGo(version: string): Promise<string> {
     let extPath: string;
     extPath = tl.getVariable('Agent.TempDirectory');
     if (!extPath) {
-        throw new Error(tl.loc("TempDirNotSet"));
+        throw new Error("Expected Agent.TempDirectory to be set");
     }
 
     if (osPlat == 'win32') {
@@ -81,6 +79,7 @@ async function acquireGo(version: string): Promise<string> {
     // Install into the local tool cache - node extracts with a root folder that matches the fileName downloaded
     //
     let toolRoot = path.join(extPath, "go");
+    version = fixVersion(version);
     return await toolLib.cacheDir(toolRoot, 'go', version);
 }
 
@@ -109,6 +108,17 @@ function setGoEnvironmentVariables(goRoot: string) {
     if (!util.isNullOrUndefined(goBin)) {
         tl.setVariable("GOBIN", goBin);
     }
+}
+
+// This function is required to convert the version 1.10 to 1.10.0.
+// Because caching utility accept only sementic version,
+// which have patch number as well.
+function fixVersion(version: string): string {
+    let versionPart = version.split(".");
+    if(versionPart == null) {
+        return version.concat(".0");
+    } 
+    return version;
 }
 
 run();

@@ -31,7 +31,7 @@
             "name": "version",
             "type": "string",
             "label": "Version",
-            "defaultValue": "1.9.3",
+            "defaultValue": "1.10",
             "required": true,
             "helpMarkDown": "Go tool version to download and install.  Examples: 1.9.3"
         },

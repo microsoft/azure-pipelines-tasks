@@ -33,7 +33,7 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "1.9.3",
+      "defaultValue": "1.10",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.version"
     },
