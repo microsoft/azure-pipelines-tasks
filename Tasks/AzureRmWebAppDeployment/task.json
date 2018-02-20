@@ -109,7 +109,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
-            "visibleRule": "DeployToSlotFlag = true"
+            "visibleRule": "DeployToSlotOrASEFlag = true"
         },
         {
             "name": "SlotName",
@@ -121,7 +121,7 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Enter or Select an existing Slot other than the Production slot.",
-            "visibleRule": "DeployToSlotFlag = true"
+            "visibleRule": "DeployToSlotOrASEFlag = true"
         },
         {
             "name": "DockerNamespace",

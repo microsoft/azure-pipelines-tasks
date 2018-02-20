@@ -113,7 +113,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "DeployToSlotFlag = true"
+      "visibleRule": "DeployToSlotOrASEFlag = true"
     },
     {
       "name": "SlotName",
@@ -125,7 +125,7 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.SlotName",
-      "visibleRule": "DeployToSlotFlag = true"
+      "visibleRule": "DeployToSlotOrASEFlag = true"
     },
     {
       "name": "DockerNamespace",
