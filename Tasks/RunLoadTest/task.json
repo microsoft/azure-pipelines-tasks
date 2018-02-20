@@ -106,13 +106,13 @@
             }
         },
         {
-            "name": "selfProvisionedRig",
+            "name": "resourceGroupName",
             "type": "string",
-            "label": "Load test rig",
+            "label": "Resource group rig",
             "required": false,
             "defaultValue": "",
             "visibleRule": "MachineType == 2",
-            "helpMarkDown": "Name of self-provisioned rig of load test agents."
+            "helpMarkDown": "Name of Resource group hosting the self-provisioned rig of load test agents."
         },
         {
             "name": "numOfSelfProvisionedAgents",
