@@ -4,7 +4,7 @@ import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
-import { FileExtractor } from 'compression-common/FileExtractor';
+import { extractCompressedFile } from 'compression-common/FileExtractor';
 
 async function run(): Promise<void> {
     try {
@@ -72,7 +72,7 @@ async function getPython(): Promise<void> {
         }
     })();
 
-    const extractedContents = await new FileExtractor().extractCompressedFile(compressedFile, destination);
+    const extractedContents = await extractCompressedFile(compressedFile, destination, process.platform);
     toolLib.debug(`Extracted contents: ${extractedContents}`);
     taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
 
