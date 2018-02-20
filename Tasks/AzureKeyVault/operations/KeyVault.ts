@@ -79,6 +79,9 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
         console.log(tl.loc("SubscriptionIdLabel", this.taskParameters.subscriptionId));
         console.log(tl.loc("KeyVaultNameLabel", this.taskParameters.keyVaultName));
 
+        // mask new line chars so that they don't get printed (in debug logs) for multi-line secrets
+        console.log("##vso[task.setvariable variable=" + this.taskParameters.keyVaultName + "_NewLine" + ";issecret=true;]" + "%0D%0A");
+
         if (downloadAllSecrets) {
             return this.downloadAllSecrets(secretsToErrorsMap);
         } else {
@@ -154,12 +157,24 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
                 else {
+                    this.maskMultiLineSecrets(secretName, secretValue);
                     tl.setVariable(secretName, secretValue, true);
                 }
                 
                 return resolve();
             });
         });
+    }
+
+    private maskMultiLineSecrets(secretName: string, secretValue: string) {
+        if (secretValue)  {
+            const lines = secretValue.toString().split('\n');
+            if (lines.length > 1) {
+                lines.forEach((line: string, index: number) => {
+                    console.log("##vso[task.setvariable variable=" + secretName + "_Line" + index + ";issecret=true;]" + line);
+                });
+            }
+        }
     }
 
     private getError(error: any): any {
