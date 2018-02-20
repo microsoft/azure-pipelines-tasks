@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 24
+        "Patch": 25
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -64,7 +64,7 @@
         {
             "name": "SpecifySlot",
             "type": "boolean",
-            "label": "Specify Slot",
+            "label": "Specify Deployment Slot or App Service Environment details",
             "defaultValue": "false",
             "required": false,
             "visibleRule": "Action != Swap Slots"
@@ -127,7 +127,7 @@
             "name": "Slot",
             "type": "pickList",
             "label": "Slot",
-            "defaultValue": "",
+            "defaultValue": "production",
             "properties": {
                 "EditableOptions": "True"
             },
