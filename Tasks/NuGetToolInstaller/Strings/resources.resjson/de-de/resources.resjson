@@ -8,7 +8,7 @@
   "loc.input.label.checkLatest": "Immer die neueste passende Version herunterladen",
   "loc.input.help.checkLatest": "Suchen Sie immer nach der neuesten verfügbaren Version von \"NuGet.exe\", die die Versionsangabe erfüllt, und laden Sie sie herunter. Bei dieser Option ist immer eine gewissen Zeit zum Herunterladen erforderlich, auch wenn die ausgewählte Version von NuGet bereits zwischengespeichert wurde.\n\nWenn Sie diese Option aktivieren, kann dies zu einem unerwarteten Anhalten des Builds kommen, wenn eine neue Version von NuGet veröffentlicht wird.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore unterstützt die Verwendung eines verschlüsselten API-Schlüssels derzeit nicht.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "Ungültiges XML. Es wurde ein Element mit dem Namen \"configuration\" erwartet.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Es wurden keine mit dem Suchmuster übereinstimmenden Dateien gefunden: %s.",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "Keine Download-URL für %s gefunden",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Keine Version gefunden, die mit der Eingabe %s übereinstimmt",

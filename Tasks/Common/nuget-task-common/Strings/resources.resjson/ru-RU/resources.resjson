@@ -1,6 +1,6 @@
 {
   "loc.messages.Error_ApiKeyNotSupported": ".NET Core сейчас не поддерживает использование зашифрованных ключей API.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "Недопустимый код XML. Ожидается элемент \"configuration\".",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Не найдены файлы, соответствующие шаблону поиска: %s.",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "URL-адрес скачивания для %s не найден.",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Не найдена версия, соответствующая входному параметру %s.",

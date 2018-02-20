@@ -14,5 +14,5 @@
   "loc.messages.JS_Stderr": "Оболочка Bash записала одну или несколько строк в стандартный поток ошибок.",
   "loc.messages.PS_ExitCode": "Программа Cmd.exe завершила работу с кодом \"{0}\".",
   "loc.messages.PS_UnableToDetermineExitCode": "Непредвиденное исключение. Не удается определить код выхода из cmd.exe.",
-  "loc.messages.ScriptContents": "Script contents:"
+  "loc.messages.ScriptContents": "Содержимое скрипта:"
 }

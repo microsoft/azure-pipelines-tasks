@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Подробнее](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Собрать образ компьютера с помощью Packer. Этот образ можно использовать для развертывания масштабируемого набора виртуальных машин Azure",
   "loc.instanceNameFormat": "Собрать неизменяемый образ",
-  "loc.releaseNotes": "- Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
+  "loc.releaseNotes": "- Поддержка кроссплатформенных агентов (Linux, macOS и Windows).\n- Поддержка создания образов для Windows и Linux. Эти образы можно использовать для развертывания масштабируемого набора виртуальных машин Azure.",
   "loc.group.displayName.AzureDetails": "Сведения об Azure",
   "loc.group.displayName.DeploymentInputs": "Входные данные развертывания",
   "loc.group.displayName.Advanced": "Дополнительно",

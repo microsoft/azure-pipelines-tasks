@@ -19,7 +19,7 @@
   "loc.messages.JS_ExitCode": "Bash wurde mit dem Code \"%s\" beendet.",
   "loc.messages.JS_FormattedCommand": "Formatierter Befehl: %s",
   "loc.messages.JS_InvalidFilePath": "Ungültiger Dateipfad \"%s\".",
-  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_ScriptContents": "Skriptinhalte:",
   "loc.messages.JS_Stderr": "Bash hat mindestens eine Zeile in den Standardfehlerstream geschrieben.",
   "loc.messages.JS_TranslatePathFailed": "Der Pfad \"%s\" kann nicht in das Linux-Dateisystem übersetzt werden."
 }

@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Azure Key Vault-Geheimnisse herunterladen",
   "loc.instanceNameFormat": "Azure Key Vault: $(KeyVaultName)",
-  "loc.releaseNotes": "Works with cross-platform agents (Linux, macOS, or Windows)",
+  "loc.releaseNotes": "Funktioniert mit plattformübergreifenden Agents (Linux, macOS, Windows)",
   "loc.input.label.ConnectedServiceName": "Azure-Abonnement",
   "loc.input.help.ConnectedServiceName": "Wählen Sie das Azure-Abonnement für den Schlüsseltresor aus.",
   "loc.input.label.KeyVaultName": "Schlüsseltresor",
@@ -34,10 +34,10 @@
   "loc.messages.NumberOfSecretsFound": "Anzahl von Geheimnissen, die in %s gefunden wurden: %s",
   "loc.messages.NumberOfEnabledSecretsFound": "Anzahl aktivierter und nicht abgelaufener Geheimnisse, die in %s gefunden wurden: %s",
   "loc.messages.DownloadingSecretValue": "Der Geheimniswert für %s wird heruntergeladen.",
-  "loc.messages.AccessDeniedError": "%s. Specified Azure endpoint needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download ProvisionKeyVaultPermissions.ps1 script from build/release logs and execute it OR set them from Azure portal.",
+  "loc.messages.AccessDeniedError": "%s. Der angegebene Azure-Endpunkt muss über die Berechtigungen \"Get\" und \"List\" für die Verwaltung von Geheimnissen für den ausgewählten Schlüsseltresor verfügen. Um diese Berechtigungen festzulegen, laden Sie das Skript \"ProvisionKeyVaultPermissions.ps1\" aus den Build-/Releaseprotokollen herunter und führen es aus, oder Sie legen die Berechtigungen über das Azure-Portal fest.",
   "loc.messages.GetSecretValueFailed": "Fehler beim Abrufen des Geheimniswerts für %s. Fehler: %s.",
   "loc.messages.ConflictingVariableFound": "Die Variable mit dem Namen %s ist sowohl in der Umgebung als auch dem Schlüsseltresor definiert.",
-  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Cannot find the secret with name: %s. Secret name must be a string 1-127 characters in length containing only 0-9, a-z, A-Z, and -",
-  "loc.messages.UploadingAttachment": "Uploading %s as attachment",
-  "loc.messages.CouldNotWriteToFile": "Could not save content to file. Failed with an error %s"
+  "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Das Geheimnis mit dem Namen \"%s\" wurde nicht gefunden. Der Geheimnisname muss eine 1–127 Zeichen lange Zeichenfolge sein, die nur folgende Zeichen enthalten darf: 0–9, a–z, A–Z, Bindestriche (-)",
+  "loc.messages.UploadingAttachment": "\"%s\" wird als Anlage hochgeladen",
+  "loc.messages.CouldNotWriteToFile": "Inhalt konnte nicht in Datei gespeichert werden. Fehler: %s"
 }
