@@ -8,7 +8,7 @@ Azure NLB Management incorporates third party material from the projects listed 
 2.	brace-expansion (https://github.com/juliangruber/brace-expansion)
 3.	concat-map  (https://github.com/substack/node-concat-map)
 4.	Glob (https://github.com/isaacs/node-glob)
-5.  inflight (https://github.com/npm/inflight)
+5.	inflight (https://github.com/npm/inflight)
 6.	inherits (https://github.com/isaacs/inherits)
 7.	minimatch (https://github.com/isaacs/minimatch)
 8.	Mockery (https://github.com/mfncooper/mockery)
