@@ -45,6 +45,7 @@ export class KeyVault {
     private taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters;
     private keyVaultClient: armKeyVault.KeyVaultClient;
     private provisionKeyVaultSecretsScript: string;
+    private maskedNewLineChars: boolean = false;
 
     constructor(taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters) {
         this.taskParameters = taskParameters;
@@ -154,12 +155,31 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
                 else {
+                    this.maskMultiLineSecrets(secretName, secretValue);
                     tl.setVariable(secretName, secretValue, true);
                 }
                 
                 return resolve();
             });
         });
+    }
+
+    private maskMultiLineSecrets(secretName: string, secretValue: string): void {
+        if (secretValue)  {
+            const lines = secretValue.toString().split('\n');
+            if (lines.length > 1) {
+                lines.forEach((line: string, index: number) => {
+                    console.log("##vso[task.setsecret]" + line);
+                });
+
+                if (!this.maskedNewLineChars) {
+                    // mask new line chars so that they don't get printed (in debug logs) for multi-line secrets
+                    //console.log("##vso[task.setsecret]%0D%0A"); -- this is not working
+                    tl.setVariable(this.taskParameters.keyVaultName + "_NewlineChars", "%0D%0A", true);
+                    this.maskedNewLineChars = true;
+                }
+            }
+        }
     }
 
     private getError(error: any): any {
