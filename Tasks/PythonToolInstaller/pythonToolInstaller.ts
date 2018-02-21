@@ -69,6 +69,7 @@ async function getPython(): Promise<void> {
             return taskLib.getInput('compressedFile', true);
         } else if (installationSource === 'Url') {
             console.log(taskLib.loc('RetrievingPythonFromUrl', versionSpec, architecture));
+
             const downloadUrl = url.parse(taskLib.getInput('url')); // TODO Node v6.13: use new URL API
             if (!downloadUrl.protocol) {
                 throw new Error(taskLib.loc('UrlNoProtocol', downloadUrl.href));
@@ -87,7 +88,7 @@ async function getPython(): Promise<void> {
                 throw new Error(taskLib.loc('UrlNoFile', downloadUrl.href));
             }
 
-            request(downloadUrl.href!).pipe(fs.createWriteStream(outputFile));
+            await toPromise(request(downloadUrl.href!).pipe(fs.createWriteStream(outputFile)));
             return outputFile;
         } else {
             throw new Error(taskLib.loc("InstallationSourceUnknown", installationSource));
@@ -106,6 +107,14 @@ async function getPython(): Promise<void> {
 function sleep(milliseconds: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         setTimeout(resolve, milliseconds);
+    });
+}
+
+function toPromise(stream: fs.WriteStream): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        stream.on('close', resolve);
+        stream.on('finish', resolve);
+        stream.on('error', reject);
     });
 }
 
