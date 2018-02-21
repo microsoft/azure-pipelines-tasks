@@ -63,6 +63,8 @@ export class DistributedTest {
 
         let inputDataContract = {};
 
+        this.testSourcesFile = this.createTestSourcesFile();
+
         inputDataContract['TestSelectionSettings'] = {};
         inputDataContract['TestReportingSettings'] = {};
         inputDataContract['TfsSpecificSettings'] = {};
