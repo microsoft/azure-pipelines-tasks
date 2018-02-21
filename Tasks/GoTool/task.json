@@ -2,7 +2,7 @@
     "id": "334727F4-9495-4F9D-A391-FC621D671474",
     "name": "GoTool",
     "friendlyName": "Go Tool Installer",
-    "description": "Finds or downloads and caches specified version of Go and adds it to the PATH.",
+    "description": "Finds or downloads specific version of Go tool into tools cache and adds it to the PATH. Use this task to change the version of Go Lang used in subsequent tasks",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
     "category": "Tool",
     "preview": "true",
@@ -33,7 +33,7 @@
             "label": "Version",
             "defaultValue": "1.9.3",
             "required": true,
-            "helpMarkDown": "Go tool version to download and install.  Examples: 1.9.3"
+            "helpMarkDown": "Go tool version to download and install. Example: 1.9.3"
         },
         {
             "name": "goPath",
