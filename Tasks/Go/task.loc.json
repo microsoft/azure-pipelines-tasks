@@ -17,7 +17,8 @@
     "Patch": 0
   },
   "runsOn": [
-    "Agent"
+    "Agent",
+    "DeploymentGroup"
   ],
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
