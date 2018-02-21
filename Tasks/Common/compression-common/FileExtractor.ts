@@ -18,7 +18,7 @@ function compressedFileType(file: string): CompressedFile {
     } else if (file.endsWith('.zip')) {
         return CompressedFile.Zip;
     } else if (file.endsWith('.7z')) {
-        CompressedFile.SevenZip;
+        return CompressedFile.SevenZip;
     } else {
         throw new Error(tl.loc('UnsupportedFileExtension'));
     }
