@@ -134,24 +134,14 @@
         "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure blob storage, Container Name: %s",
         "SuccessFullyFetchedItemList": "Successfully fetched list of items",
         "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
-        "UnzipExtractFile": "Extracting file: %s",
-        "SevenZipExtractFile": "Extracting file: %s",
-        "TarExtractFile": "Extracting file: %s",
         "ExtractFileFailedMsg": "Extraction failed for file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
-        "ExtractNonExistFile": "Extraction failed for file: %s because it does not exist.",
         "ExtractDirFailed": "Extraction failed for file: %s because it is a directory.",
-        "CreateTempDir": "Creating temp folder: %s to decompress: %s",
-        "TempDir": "tempFolder = %s",
-        "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
-        "RemoveTempDir": "Removing temp folder: %s",
         "ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
-        "CreateDestDir": "Creating destination folder: %s",
         "RetrievingJdkFromAzure": "Retrieving the JDK %s (%s) from Azure blob storage.",
         "RetrievingJdkFromFilePath": "Retrieving the JDK  %s (%s) from file path.",
         "SucceedMsg": "Successfully extracted all files.",
         "SetJavaHome": "JAVA_HOME is being set to: %s",
-        "SetExtendedJavaHome": "%s is being set to: %s",
-        "UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension."
+        "SetExtendedJavaHome": "%s is being set to: %s"
     }
 }

@@ -1,13 +1,13 @@
 {
-  "loc.messages.UnsupportedFileExtension": "",
-  "loc.messages.UnzipExtractFile": "Extracting file: %s",
-  "loc.messages.SevenZipExtractFile": "Extracting file: %s",
-  "loc.messages.TarExtractFile": "Extracting file: %s",
+  "loc.messages.CreateDestDir": "Creating destination folder: %s",
   "loc.messages.CreateTempDir": "Creating temp folder: %s to decompress: %s",
-  "loc.messages.TempDir": "tempFolder = %s",
   "loc.messages.DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
-  "loc.messages.RemoveTempDir": "Removing temp folder: %s",
   "loc.messages.ExtractNonExistFile": "Extraction failed for file: %s because it does not exist.",
   "loc.messages.ExtractNonFileFailed": "Extraction failed for file: %s because it is not a file.",
-  "loc.messages.CreateDestDir": "Creating destination folder: %s"
+  "loc.messages.RemoveTempDir": "Removing temp folder: %s",
+  "loc.messages.SevenZipExtractFile": "Extracting file: %s",
+  "loc.messages.TarExtractFile": "Extracting file: %s",
+  "loc.messages.TempDir": "tempFolder = %s",
+  "loc.messages.UnsupportedFileExtension": "File extension of compressed file is not a supported file type.",
+  "loc.messages.UnzipExtractFile": "Extracting file: %s"
 }

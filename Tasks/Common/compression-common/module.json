@@ -1,15 +1,15 @@
 {
     "messages": {
-        "UnsupportedFileExtension": "",
-        "UnzipExtractFile": "Extracting file: %s",
-        "SevenZipExtractFile": "Extracting file: %s",
-        "TarExtractFile": "Extracting file: %s",
+        "CreateDestDir": "Creating destination folder: %s",
         "CreateTempDir": "Creating temp folder: %s to decompress: %s",
-        "TempDir": "tempFolder = %s",
         "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
-        "RemoveTempDir": "Removing temp folder: %s",
         "ExtractNonExistFile": "Extraction failed for file: %s because it does not exist.",
         "ExtractNonFileFailed": "Extraction failed for file: %s because it is not a file.",
-        "CreateDestDir": "Creating destination folder: %s"
+        "RemoveTempDir": "Removing temp folder: %s",
+        "SevenZipExtractFile": "Extracting file: %s",
+        "TarExtractFile": "Extracting file: %s",
+        "TempDir": "tempFolder = %s",
+        "UnsupportedFileExtension": "File extension of compressed file is not a supported file type.",
+        "UnzipExtractFile": "Extracting file: %s"
     }
 }

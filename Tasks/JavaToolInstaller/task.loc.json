@@ -136,24 +136,14 @@
     "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
-    "UnzipExtractFile": "ms-resource:loc.messages.UnzipExtractFile",
-    "SevenZipExtractFile": "ms-resource:loc.messages.SevenZipExtractFile",
-    "TarExtractFile": "ms-resource:loc.messages.TarExtractFile",
     "ExtractFileFailedMsg": "ms-resource:loc.messages.ExtractFileFailedMsg",
-    "ExtractNonExistFile": "ms-resource:loc.messages.ExtractNonExistFile",
     "ExtractDirFailed": "ms-resource:loc.messages.ExtractDirFailed",
-    "CreateTempDir": "ms-resource:loc.messages.CreateTempDir",
-    "TempDir": "ms-resource:loc.messages.TempDir",
-    "DecompressedTempTar": "ms-resource:loc.messages.DecompressedTempTar",
-    "RemoveTempDir": "ms-resource:loc.messages.RemoveTempDir",
     "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
-    "CreateDestDir": "ms-resource:loc.messages.CreateDestDir",
     "RetrievingJdkFromAzure": "ms-resource:loc.messages.RetrievingJdkFromAzure",
     "RetrievingJdkFromFilePath": "ms-resource:loc.messages.RetrievingJdkFromFilePath",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
     "SetJavaHome": "ms-resource:loc.messages.SetJavaHome",
-    "SetExtendedJavaHome": "ms-resource:loc.messages.SetExtendedJavaHome",
-    "UnsupportedFileExtension": "ms-resource:loc.messages.UnsupportedFileExtension"
+    "SetExtendedJavaHome": "ms-resource:loc.messages.SetExtendedJavaHome"
   }
 }
