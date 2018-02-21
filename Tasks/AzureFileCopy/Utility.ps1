@@ -1275,6 +1275,17 @@ function Is-WinRMCustomScriptExtensionExists
     $isExtensionExists
 }
 
+function Get-TargetUriFromFwdLink {
+    param(
+        [string]$fwdLink
+    )   
+
+    Write-Verbose "Trying to get the target uri from the fwdLink: $fwdLink"
+    $targetUri =  $(Invoke-WebRequest $fwdLink).BaseResponse.Uri.AbsoluteUri
+    Write-Verbose "The target uri is: $targetUri"
+    return $targetUri
+}
+
 function Add-WinRMHttpsNetworkSecurityRuleConfig
 {
     param([string]$resourceGroupName,
@@ -1310,8 +1321,8 @@ function Add-AzureVMCustomScriptExtension
           [string]$location,
           [string]$connectedServiceName)
 
-    $configWinRMScriptFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/ConfigureWinRM.ps1"
-    $makeCertFile="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/makecert.exe"
+    $configWinRMScriptFileFwdLink ="https://aka.ms/vstsconfigurewinrm"
+    $makeCertFileFwdLink ="https://aka.ms/vstsmakecertexe"
     $scriptToRun="ConfigureWinRM.ps1"
     $extensionName="WinRMCustomScriptExtension"
     $ruleName = "VSO-Custom-WinRM-Https-Port"
@@ -1335,6 +1346,9 @@ function Add-AzureVMCustomScriptExtension
             Write-Verbose "Skipping the addition of custom script extension '$extensionName' as it already exists"
             return
         }
+
+        $configWinRMScriptFile = Get-TargetUriFromFwdLink -fwdLink $configWinRMScriptFileFwdLink
+        $makeCertFile = Get-TargetUriFromFwdLink -fwdLink $makeCertFileFwdLink
 
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile  -run $scriptToRun -argument $dnsName -location $location
         $resultDetails = $result | ConvertTo-Json
