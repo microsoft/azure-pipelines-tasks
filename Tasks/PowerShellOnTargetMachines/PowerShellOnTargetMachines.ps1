@@ -54,6 +54,7 @@ $ErrorActionPreference = 'Stop'
 $deploymentOperation = 'Deployment'
 
 $envOperationStatus = "Passed"
+$jobId = $env:SYSTEM_JOBID;
 
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
@@ -91,6 +92,25 @@ function Write-DTLServiceDeprecationMessageIfRequired
         }
     }
 }
+
+function Publish-Azure-Telemetry
+ {
+   param([object] $deploymentResponse, [string] $jobId)
+    if($deploymentResponse){
+       $jsonString = -join("{" , 
+       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
+       "," , 
+       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
+       "," , 
+       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
+       "," ,
+       "`"JobId`" : `"$jobId`"" ,
+       "}")
+    }
+
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$jsonString"
+    Write-Host $telemetryString
+ }
 
 try
 {
@@ -130,6 +150,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+        Publish-Azure-Telemetry -deploymentResponse $deploymentResponse -jobId $jobId
 
         if ($status -ne "Passed")
         {
@@ -173,6 +194,8 @@ else
 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                 Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+                Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
+
                 if($status -ne "Passed")
                 {
                     $envOperationStatus = "Failed"
