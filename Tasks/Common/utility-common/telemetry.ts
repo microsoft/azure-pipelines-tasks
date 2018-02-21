@@ -48,8 +48,6 @@ export function emitTelemetry(area: string, feature: string, taskSpecificTelemet
                 'BUILD_REPOSITORY_NAME': tl.getVariable('BUILD_REPOSITORY_NAME'),
                 'BUILD_REPOSITORY_PROVIDER': tl.getVariable('BUILD_REPOSITORY_PROVIDER'),
                 'BUILD_REPOSITORY_URI': tl.getVariable('BUILD_REPOSITORY_URI'),
-                'BUILD_SOURCEBRANCH': tl.getVariable('BUILD_SOURCEBRANCH'),
-                'BUILD_SOURCEBRANCHNAME': tl.getVariable('BUILD_SOURCEBRANCHNAME'),
                 'BUILD_SOURCESDIRECTORY': tl.getVariable('BUILD_SOURCESDIRECTORY'),
                 'BUILD_SOURCEVERSION': tl.getVariable('BUILD_SOURCEVERSION'),
                 'BUILD_STAGINGDIRECTORY': tl.getVariable('BUILD_STAGINGDIRECTORY'),
