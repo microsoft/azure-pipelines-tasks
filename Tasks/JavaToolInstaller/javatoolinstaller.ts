@@ -19,9 +19,9 @@ async function run() {
 
 async function getJava() {
     const versionSpec = taskLib.getInput('versionSpec', true);
-    const architecture = taskLib.getInput('architectureOption', true);
-    const installationSource = taskLib.getInput('installationSource', true);
-    const destination = taskLib.getPathInput('destinationDirectory', true);
+    const architecture = taskLib.getInput('jdkArchitectureOption', true);
+    const installationSource = taskLib.getInput('jdkSourceOption', true);
+    const destination = taskLib.getPathInput('jdkDestinationDirectory', true);
     const cleanDestination = taskLib.getBoolInput('cleanDestinationDirectory', false);
 
     toolLib.debug('Trying to get tool from local cache first');
@@ -63,7 +63,7 @@ async function getJava() {
             return path.join(destination, filename || "");
         } else if (installationSource === 'FilePath') {
             console.log(taskLib.loc('RetrievingJdkFromFilePath', versionSpec, architecture));
-            return taskLib.getInput('compressedFile', true);
+            return taskLib.getInput('jdkFile', true);
         } else {
             throw new Error(taskLib.loc("InstallationSourceUnknown", installationSource));
         }
