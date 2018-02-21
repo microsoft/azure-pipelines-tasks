@@ -2,7 +2,7 @@
   "loc.messages.SettingUpSSHConnection": "Configuration de la connexion SSH à l'hôte distant %s.",
   "loc.messages.ConnectionNotSetup": "La connexion SSH n'est pas configurée.",
   "loc.messages.ConnectionFailed": "Échec de la connexion à la machine distante. Vérifiez les détails du point de terminaison SSH. %s.",
-  "loc.messages.RemoteCmdExecutionErr": "Échec de la commande %s : erreurs sur la machine distante. %s.",
+  "loc.messages.RemoteCmdExecutionErr": "La commande %s a échoué avec des erreurs sur la machine distante. %s.",
   "loc.messages.CheckLogForStdErr": "Recherchez dans le journal de génération un STDERR de la commande.",
   "loc.messages.RemoteCmdNonZeroExitCode": "Arrêt de la commande %s. Code %s.",
   "loc.messages.UploadFileFailed": "Échec du chargement de %s vers %s sur la machine distante. %s."

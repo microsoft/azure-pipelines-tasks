@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker",
-  "loc.helpMarkDown": "[Подробнее](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Создание, отправка или запуск образов Docker или выполнение команд Docker",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Создание, отправка или запуск образов Docker, создание меток для образов Docker или выполнение команд Docker. Эту задачу можно использовать в Docker или реестре контейнеров Azure.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.containerregistrytype": "Тип реестра контейнеров",
@@ -24,6 +24,8 @@
   "loc.input.help.context": "Путь к контексту сборки.",
   "loc.input.label.imageName": "Имя образа",
   "loc.input.help.imageName": "Имя образа Docker для сборки, отправки или выполнения.",
+  "loc.input.label.imageNamesPath": "Путь к именам образов",
+  "loc.input.help.imageNamesPath": "Путь к текстовому файлу, содержащему имена образов Docker для публикации или добавления меток. Каждое имя указывается на отдельной строке.",
   "loc.input.label.qualifyImageName": "Определить имя образа",
   "loc.input.help.qualifyImageName": "Определение имени образа с помощью имени узла подключения к реестру Docker, если не указано иное.",
   "loc.input.label.additionalImageTags": "Дополнительные теги образов",
@@ -58,9 +60,14 @@
   "loc.input.help.customCommand": "Команда Docker для выполнения (с аргументами). Например, \"rmi -f image-name\" для принудительного удаления образа.",
   "loc.input.label.dockerHostEndpoint": "Подключение к узлу Docker",
   "loc.input.help.dockerHostEndpoint": "Выберите подключение к узлу Docker. По умолчанию используется узел агента.",
+  "loc.input.label.enforceDockerNamingConvention": "Принудительно использовать соглашение об именовании Docker в имени образа",
+  "loc.input.help.enforceDockerNamingConvention": "Если этот параметр установлен, имя будет изменено в соответствии с соглашением об именовании Docker. Прописные буквы будут преобразованы в строчные, а пробелы в имени образа будут удалены.",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Рабочий каталог для команды Docker.",
-  "loc.messages.ContainerPatternFound": "В параметре \"dockerfilepath\" обнаружен шаблон.",
-  "loc.messages.ContainerPatternNotFound": "В параметре \"dockerfilepath\" не обнаружен шаблон.",
-  "loc.messages.ContainerDockerFileNotFound": "Отсутствуют файлы Docker, соответствующие %s."
+  "loc.input.label.memory": "Memory limit",
+  "loc.input.help.memory": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
+  "loc.messages.ContainerPatternFound": "Обнаружен шаблон в параметре filepath в Docker",
+  "loc.messages.ContainerPatternNotFound": "Не найден шаблон в параметре filepath в Docker",
+  "loc.messages.ContainerDockerFileNotFound": "Отсутствуют файлы Docker, соответствующие %s.",
+  "loc.messages.NoImagesInImageNamesFile": "В файле \"%s\" должно быть указано по меньшей мере одно имя образа."
 }

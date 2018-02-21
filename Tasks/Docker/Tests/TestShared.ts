@@ -7,7 +7,9 @@ export let TestEnvVars = {
     qualifyImageName: "__qualifyImageName__",
     includeLatestTag: "__includeLatestTag__",
     imageName: "__imageName__",
-    additionalImageTags: "__additionalImageTags__"
+    additionalImageTags: "__additionalImageTags__",
+    enforceDockerNamingConvention: "__enforceDockerNamingConvention__",
+    memory: "__memory__"
 };
 
 export let OperatingSystems = {

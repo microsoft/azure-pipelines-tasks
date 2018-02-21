@@ -1,0 +1,37 @@
+# Universal Windows Platform
+# Build Universal Windows Platform applications using Visual Studio.
+# https://aka.ms/yaml
+
+queue: 'Hosted VS2017'
+
+variables:
+  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\'
+  buildConfiguration: 'Release'
+  buildPlatform: 'x86|x64|ARM'
+  solution: '**/*.sln'
+  # system.debug: 'true'
+
+steps:
+- task: NuGetToolInstaller@0
+  displayName: 'Install NuGet'
+
+- task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: '$(solution)'
+    vsVersion: '15.0'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    platform: 'x86'
+    configuration: '$(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    pathToPublish: '$(appxPackageDir)'
+    artifactName: 'artifact'
+    artifactType: 'container'

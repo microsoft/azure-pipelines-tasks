@@ -1,0 +1,4 @@
+{
+  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Die festgelegte AzureRm-Endpunkt-URL \"{0}\" ist ungültig.",
+  "loc.messages.FailedToFetchAzureStackDependencyData": "Fehler beim Abrufen von Daten zu Azure-Stapelabhängigkeiten. Fehlercode: %s"
+}

@@ -1,4 +1,4 @@
 {
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Найдите JAVA_HOME для Java %s %s",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Не удалось найти указанную версию JDK. Убедитесь, что переменная среды \"%s\" существует и содержит расположение соответствующего пакета JDK."
+  "loc.messages.FailedToLocateSpecifiedJVM": "Не удалось найти указанную версию JDK. Убедитесь, что она установлена на агенте, а переменная среды \"%s\" создана и содержит путь к соответствующей версии JDK, или установите необходимую версию JDK с помощью [установщика инструментов Java](https://docs.microsoft.com/ru-ru/vsts/build-release/tasks/tool/java-tool-installer)."
 }

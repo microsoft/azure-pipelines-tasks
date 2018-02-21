@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 36
+        "Patch": 42
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -25,13 +25,13 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\""
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
         },
         {
             "name": "PostDeploymentAction",
@@ -76,7 +76,7 @@
                 "mobileapp": "Mobile App"
             },
             "properties": {
-                "EditableOptions": "false"
+                "EditableOptions": "true"
             },
             "helpMarkDown": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments."
         },
@@ -139,7 +139,7 @@
                 "PopulateDefaultValue": "true"
             },
             "helpMarkDown": "App Service on Linux offers two different options to publish your application <br/> Custom image deployment or App deployment with a built-in platform image. [Learn More](https://go.microsoft.com/fwlink/?linkid=862490)", 
-            "visibleRule": "WebAppKind = applinux"
+            "visibleRule": "WebAppKind = applinux || WebAppKind = linux"
         },
         {
             "name": "AzureContainerRegistry",
@@ -243,7 +243,7 @@
             "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -252,7 +252,7 @@
             "label": "Image",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -261,7 +261,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux && ImageSource  = Registry",
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
@@ -270,7 +270,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind != applinux && WebAppKind != \"\"",
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\"",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
@@ -279,7 +279,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind != applinux &&  WebAppKind != \"\"",
+            "visibleRule": "WebAppKind != linux && WebAppKind != applinux &&  WebAppKind != \"\"",
             "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed zip or war file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip or $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war."
         },
         {
@@ -289,7 +289,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind = applinux &&  ImageSource = Builtin",
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin",
             "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed zip or war file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip or $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war."
         },
         {
@@ -310,12 +310,13 @@
                 "node|8.1": "Node.js 8.1",
                 "php|5.6": "PHP 5.6",
                 "php|7.0": "PHP 7.0",
-                "dotnetcore|1.0": ".Net Core 1.0",
-                "dotnetcore|1.1": ".Net Core 1.1",
+                "dotnetcore|1.0": ".NET Core 1.0",
+                "dotnetcore|1.1": ".NET Core 1.1",				
+                "dotnetcore|2.0": ".NET Core 2.0",
                 "ruby|2.3": "Ruby 2.3"
             },
             "helpMarkDown": "Select the framework and version.",
-            "visibleRule": "WebAppKind = applinux && ImageSource = Builtin"
+            "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin"
         },
         {
             "name": "StartupCommand",
@@ -323,7 +324,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = applinux",
+            "visibleRule": "WebAppKind = applinux || WebAppKind = linux",
             "helpMarkDown": "Enter the start up command."
         },
         {
@@ -399,7 +400,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Edit web app application settings following the syntax -key value .<br /> Example : -Port 5000 -RequestTimeout 5000",
+            "helpMarkDown": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             }
@@ -411,7 +412,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "ApplicationAndConfigurationSettings",
-            "helpMarkDown": "Edit web app configuration settings following the syntax -key value.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+            "helpMarkDown": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             }
@@ -738,6 +739,9 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
-        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'."
+        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
+        "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
+        "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+        "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
     }
 }

@@ -166,7 +166,7 @@ function ComposeAccountUrl($connectedServiceUrl, $headers)
 	return $elsUrl
 }
 
-function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName)
+function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName, $testName)
 {
 	if (![System.Uri]::IsWellFormedUriString($websiteUrl, [System.UriKind]::Absolute))
 	{
@@ -177,6 +177,20 @@ function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName)
 	{
 		throw "VS Team Services Connection is mandatory for using performance test tasks on non hosted TFS builds.Please specify a VS Team Services connection and try again "
 	}
+
+    # validate load test name
+    # code taken from definitionNameInvalid    
+    $invalidPattern1 = "(^\\.$|^\\.\\.$|^-$|^_$)"
+    $invalidPattern2 = "[^A-Za-z0-9 \._-]"
+
+    # find illegal characters
+    $invalidchars1 = [regex]::Matches($testName, $invalidPattern1, 'IgnoreCase').Value | Sort-Object -Unique 
+    $invalidchars2 =[regex]::Matches($testName, $invalidPattern2, 'IgnoreCase').Value | Sort-Object -Unique 
+    
+    if ($invalidchars1 -ne $null -or $invalidchars2 -ne $null)
+    {
+		throw "Do not use these characters in load test name: $invalidchars1 $invalidchars2"
+    }
 }
 
 function UploadSummaryMdReport($summaryMdPath)

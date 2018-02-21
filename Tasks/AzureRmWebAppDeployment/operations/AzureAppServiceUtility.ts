@@ -73,8 +73,6 @@ export class AzureAppServiceUtility {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;
-            tl.debug('pausing for 5 seconds before request');
-            await webClient.sleepFor(5);
             var response = await webClient.sendRequest(webRequest);
             tl.debug(`App Service status Code: '${response.statusCode}'. Status Message: '${response.statusMessage}'`);
         }
@@ -113,7 +111,7 @@ export class AzureAppServiceUtility {
 
     public async updateConfigurationSettings(properties: any) : Promise<void> {
         for(var property in properties) {
-            if(properties[property].value !== undefined) {
+            if(!!properties[property] && properties[property].value !== undefined) {
                 properties[property] = properties[property].value;
             }
         }
@@ -125,7 +123,7 @@ export class AzureAppServiceUtility {
 
     public async updateAndMonitorAppSettings(properties: any): Promise<void> {
         for(var property in properties) {
-            if(properties[property].value !== undefined) {
+            if(!!properties[property] && properties[property].value !== undefined) {
                 properties[property] = properties[property].value;
             }
         }
@@ -180,11 +178,11 @@ export class AzureAppServiceUtility {
 
     public async updateStartupCommandAndRuntimeStack(runtimeStack: string, startupCommand?: string): Promise<void> {
         var configDetails = await this._appService.getConfiguration();
+        startupCommand = (!!startupCommand) ? startupCommand  : "";
         var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
 
-        if (!(!!appCommandLine == !!startupCommand && appCommandLine == startupCommand)
-        || runtimeStack != linuxFxVersion) {
+        if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
             await this.updateConfigurationSettings({linuxFxVersion: runtimeStack, appCommandLine: startupCommand});
         }
         else {

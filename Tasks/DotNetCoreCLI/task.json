@@ -16,7 +16,7 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 130,
+        "Minor": 131,
         "Patch": 0
     },
     "minimumAgentVersion": "2.0.0",
@@ -103,7 +103,7 @@
             "defaultValue": "",
             "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || publishWebProjects = false",
             "required": false,
-            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. */.csproj for all .csproj files in all subfolders)."
+            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/.csproj for all .csproj files in all subfolders)."
         },
         {
             "name": "custom",

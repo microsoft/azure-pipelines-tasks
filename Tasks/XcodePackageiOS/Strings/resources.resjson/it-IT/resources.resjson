@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xcode - Creazione del pacchetto iOS",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613731)",
-  "loc.description": "Consente di generare un file con estensione ipa dall'output della compilazione Xcode",
+  "loc.description": "Consente di generare un file con estensione ipa dall'output della compilazione Xcode usando xcrun (Xcode 7 o versione precedente)",
   "loc.instanceNameFormat": "Pacchetto Xcode $(appName)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.appName": "Nome del file con estensione app",

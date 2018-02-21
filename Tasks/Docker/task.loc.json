@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 5
+    "Patch": 8
   },
   "demands": [],
   "preview": "false",
@@ -282,6 +282,15 @@
       "groupName": "advanced"
     },
     {
+      "name": "enforceDockerNamingConvention",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enforceDockerNamingConvention",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.enforceDockerNamingConvention",
+      "groupName": "advanced"
+    },
+    {
       "name": "cwd",
       "aliases": [
         "workingDirectory"
@@ -290,6 +299,13 @@
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "memory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.memory",
+      "helpMarkDown": "ms-resource:loc.input.help.memory",
       "groupName": "advanced"
     }
   ],

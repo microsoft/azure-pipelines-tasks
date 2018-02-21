@@ -45,7 +45,7 @@ export function run(connection: ContainerConnection): any {
     if (useMultiImageMode) {
         imageNames = utils.getImageNames();
     } else {
-        imageNames = [imageUtils.getImageName()];
+        imageNames = [utils.getImageName()];
     }
     
     let imageMappings = utils.getImageMappings(connection, imageNames);

@@ -7,5 +7,7 @@
   "loc.messages.ErrorOnAcquireToken": "Azure Active Directory トークンの取得中にエラーが発生しました。サービス エンドポイントが有効な資格情報で適切に構成されていることを確認してください。エラー メッセージ: {0}",
   "loc.messages.ErrorOnCertificateImport": "証明書のインポート中にエラーが発生しました。サービス エンドポイントが正しい証明書の値で適切に構成されていること、また証明書がパスワードで保護されている場合は、有効なパスワードで適切に構成されていることを確認してください。エラー メッセージ: {0}",
   "loc.messages.ImportedCertificate": "拇印 '{0}' を含むインポートされたクラスター クライアント証明書。",
-  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK がビルド エージェントにインストールされていません。https://aka.ms/servicefabric にアクセスしてダウンロードし、インストールしてください。"
+  "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK がビルド エージェントにインストールされていません。https://aka.ms/servicefabric にアクセスしてダウンロードし、インストールしてください。",
+  "loc.messages.UseWindowsSecurity": "Windows セキュリティが指定されました。接続中に -WindowsCredential スイッチが使用されます。",
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "テキストを暗号化するには拇印 '{0}' の付いたクラスターのサーバー証明書が必要ですが、'CurrentUser\\My' 証明書の保存場所のエージェント マシン上で証明書が見つかりませんでした。"
 }

@@ -7,7 +7,6 @@ import os = require('os');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 import { IExecOptions } from 'vsts-task-lib/toolrunner';
 
-import sqCommon = require('codeanalysis-common/SonarQube/common');
 import sqGradle = require('codeanalysis-common/gradlesonar');
 import { CodeAnalysisOrchestrator } from 'codeanalysis-common/Common/CodeAnalysisOrchestrator';
 import { BuildOutput, BuildEngine } from 'codeanalysis-common/Common/BuildOutput';
@@ -254,13 +253,11 @@ async function run() {
             new PmdTool(buildOutput, 'pmdAnalysisEnabled')]);
 
         // Enable SonarQube Analysis (if desired)
-        let isSonarQubeEnabled: boolean = sqCommon.isSonarQubeAnalysisEnabled();
+        let isSonarQubeEnabled: boolean = tl.getBoolInput('sqAnalysisEnabled', false);
         if (isSonarQubeEnabled) {
             // Looks like: 'SonarQube analysis is enabled.'
-            console.log(tl.loc('codeAnalysis_ToolIsEnabled'), sqCommon.toolName);
-
+            console.log(tl.loc('codeAnalysis_ToolIsEnabled'), 'SonarQube');
             gradleRunner = <ToolRunner> sqGradle.applyEnabledSonarQubeArguments(gradleRunner);
-            gradleRunner = <ToolRunner> sqGradle.applySonarQubeCodeCoverageArguments(gradleRunner, isCodeCoverageOpted, codeCoverageTool, summaryFile);
         }
         gradleRunner = codeAnalysisOrchestrator.configureBuild(gradleRunner);
 
@@ -270,7 +267,6 @@ async function run() {
         let analysisError: any;
         try {
             gradleResult = await gradleRunner.exec(getExecOptions());
-            sqGradle.processSonarQubeIntegration();
             tl.debug(`Gradle result: ${gradleResult}`);
         } catch (err) {
             console.error(err);
