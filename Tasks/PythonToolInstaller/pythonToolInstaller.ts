@@ -99,9 +99,9 @@ async function getPython(): Promise<void> {
     toolLib.debug(`Extracted contents: ${extractedContents}`);
     taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
 
-    // TODO
-    // taskLib.debug(`Set output variable ${x} to ${y}`);
-    // taskLib.setVariable(x, y);
+    const outputVariable = taskLib.getInput('outputVariable');
+    taskLib.debug(`Set output variable ${outputVariable} to ${extractedContents}`);
+    taskLib.setVariable(outputVariable, extractedContents);
 }
 
 function sleep(milliseconds: number): Promise<void> {

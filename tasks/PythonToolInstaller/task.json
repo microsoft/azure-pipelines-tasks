@@ -72,7 +72,7 @@
             "label": "Storage account name",
             "required": true,
             "properties": {
-                "EditableOptions":"True"
+                "EditableOptions": "True"
             },
             "visibleRule": "installationSource == AzureStorage",
             "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the storage account name in which the Python distribution is located."
@@ -116,15 +116,23 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Select this option to clean the destination directory before the Python distribution is extracted into it."
+        },
+        {
+            "name": "outputVariable",
+            "type": "string",
+            "label": "Output variable",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Set a name for the build variable that will contain the directory of the decompressed Python distribution. You can use this in subsequent tasks to access your installation of Python."
         }
     ],
     "dataSourceBindings": [
         {
-            "endpointId":"$(ConnectedServiceNameARM)",
+            "endpointId": "$(ConnectedServiceNameARM)",
             "target": "storageAccountName",
             "dataSourceName": "AzureStorageAccountRMandClassic"
         }
-      ],
+    ],
     "execution": {
         "Node": {
             "target": "pythontoolinstaller.js",

@@ -25,6 +25,8 @@
   "loc.input.help.destinationDirectory": "Destination directory into which the Python distribution should be extracted.",
   "loc.input.label.cleanDestinationDirectory": "Clean destination directory",
   "loc.input.help.cleanDestinationDirectory": "Select this option to clean the destination directory before the Python distribution is extracted into it.",
+  "loc.input.label.outputVariable": "Output variable",
+  "loc.input.help.outputVariable": "Set a name for the build variable that will contain the directory of the decompressed Python distribution. You can use this in subsequent tasks to access your installation of Python.",
   "loc.messages.CleanDestDir": "Cleaning destination folder before extraction: %s",
   "loc.messages.DownloadFromAzureBlobStorage": "Downloading artifacts from Azure Blob Storage, Container Name: %s",
   "loc.messages.InstallationSourceUnknown": "Unknown installation source %s",

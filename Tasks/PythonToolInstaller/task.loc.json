@@ -116,6 +116,14 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
+    },
+    {
+      "name": "outputVariable",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputVariable",
+      "required": true,
+      "defaultValue": "Python.$(versionSpec)",
+      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     }
   ],
   "dataSourceBindings": [
