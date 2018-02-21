@@ -471,6 +471,7 @@
   },
   "messages": {
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
+    "CouldNotSetCodePaging": "ms-resource:loc.messages.CouldNotSetCodePaging",
     "Error_AutomaticallyVersionReleases": "ms-resource:loc.messages.Error_AutomaticallyVersionReleases",
     "Error_CommandNotRecognized": "ms-resource:loc.messages.Error_CommandNotRecognized",
     "Error_NoSourceSpecifiedForPush": "ms-resource:loc.messages.Error_NoSourceSpecifiedForPush",

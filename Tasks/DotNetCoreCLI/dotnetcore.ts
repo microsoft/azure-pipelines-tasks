@@ -62,10 +62,15 @@ export class dotNetExe {
         }
     }
 
-    private  setConsoleCodePage() {
+    private setConsoleCodePage() {
         // set the console code page to "UTF-8"
         if (tl.osType() === 'Windows_NT') {
-            tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
+            try {
+                tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
+            } 
+            catch (ex) {
+                tl.warning(tl.loc("CouldNotSetCodePaging", JSON.stringify(ex)))
+            }
         }
     }
 
