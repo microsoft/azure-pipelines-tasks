@@ -19,7 +19,7 @@
   "dependencies": {
     "glob": "^7.0.6",
     "appcenter-cli": "1.0.7",
-    "vso-node-api": "^6.2.2-preview",
+    "vso-node-api": "6.2.2-preview",
     "vsts-task-lib": "2.0.5"
   }
 }
