@@ -63,7 +63,7 @@ async function getPython(): Promise<void> {
             await sleep(250); // Wait for the file to be released before trying to extract it
 
             const filename = file.split(/[\\\/]/).pop();
-            return path.join(destination, filename || "");
+            return path.join(destination, filename!);
         } else if (installationSource === 'FilePath') {
             console.log(taskLib.loc('RetrievingPythonFromFilePath', versionSpec, architecture));
             return taskLib.getInput('compressedFile', true);

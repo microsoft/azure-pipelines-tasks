@@ -60,7 +60,7 @@ async function getJava() {
             await sleep(250); // Wait for the file to be released before trying to extract it
 
             const filename = file.split(/[\\\/]/).pop();
-            return path.join(destination, filename || "");
+            return path.join(destination, filename!);
         } else if (installationSource === 'FilePath') {
             console.log(taskLib.loc('RetrievingJdkFromFilePath', versionSpec, architecture));
             return taskLib.getInput('jdkFile', true);
