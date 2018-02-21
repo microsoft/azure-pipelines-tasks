@@ -115,7 +115,7 @@ function setGoEnvironmentVariables(goRoot: string) {
 // which have patch number as well.
 function fixVersion(version: string): string {
     let versionPart = version.split(".");
-    if(versionPart == null) {
+    if(versionPart[2] == null) {
         return version.concat(".0");
     } 
     return version;
