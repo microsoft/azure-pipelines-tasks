@@ -15,6 +15,6 @@
     "ini": "^1.3.4",
     "q": "^1.5.0",
     "vsts-task-lib": "2.0.6",
-    "vso-node-api": "^6.2.2-preview"
+    "vso-node-api": "6.2.2-preview"
   }
 }
