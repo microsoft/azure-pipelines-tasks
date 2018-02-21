@@ -54,6 +54,7 @@ $ErrorActionPreference = 'Stop'
 $deploymentOperation = 'Deployment'
 
 $envOperationStatus = "Passed"
+$jobId = $env:SYSTEM_JOBID;
 
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
@@ -64,7 +65,52 @@ if ($enableDetailedLoggingString -ne "true")
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+# Import all the dlls and modules which have cmdlets we need
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
+function Write-DTLServiceDeprecationMessageIfRequired
+{
+     param([string]$machine)
+
+    try
+    {
+        $jsonValue = ConvertFrom-Json $environmentName -ErrorAction Stop;
+        $validJson = $true;
+    }
+    catch
+    {
+        $validJson = $false;
+    }
+    
+    if(!$validJson)
+    {
+        if(-not($machine.Contains('.')) -and -not($machine.Contains(':')) -and -not($machine.Contains(",")))
+        {
+           write-error "Deployments using 'test hub: machine groups' is no longer supported. Refer to https://go.microsoft.com/fwlink/?LinkID=799742&clcid=0x409 for more information or get help from Developer Community [https://developercommunity.visualstudio.com/spaces/21/index.html]."
+        }
+    }
+}
+
+function Publish-Azure-Telemetry
+ {
+   param([object] $deploymentResponse, [string] $jobId)
+    if($deploymentResponse){
+       $jsonString = -join("{" , 
+       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
+       "," , 
+       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
+       "," , 
+       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
+       "," ,
+       "`"JobId`" : `"$jobId`"" ,
+       "}")
+    }
+
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$jsonString"
+    Write-Host $telemetryString
+ }
+ 
 try
 {
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
@@ -105,6 +151,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+        Publish-Azure-Telemetry -deploymentResponse $deploymentResponse -jobId $jobId
 
         if ($status -ne "Passed")
         {
@@ -145,6 +192,8 @@ else
 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                 Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+                Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
+
                 if($status -ne "Passed")
                 {
                     $envOperationStatus = "Failed"
