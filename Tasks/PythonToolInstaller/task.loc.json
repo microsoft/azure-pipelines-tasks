@@ -132,12 +132,17 @@
     }
   },
   "messages": {
-    "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
-    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
-    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
+    "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
+    "InstallationSourceUnknown": "ms-resource:loc.messages.InstallationSourceUnknown",
     "RetrievingPythonFromAzure": "ms-resource:loc.messages.RetrievingPythonFromAzure",
     "RetrievingPythonFromFilePath": "ms-resource:loc.messages.RetrievingPythonFromFilePath",
-    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg"
+    "RetrievingPythonFromUrl": "ms-resource:loc.messages.RetrievingPythonFromUrl",
+    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
+    "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
+    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
+    "UrlNoFile": "ms-resource:loc.messages.UrlNoFile",
+    "UrlNoHost": "ms-resource:loc.messages.UrlNoHost",
+    "UrlNoProtocol": "ms-resource:loc.messages.UrlNoProtocol"
   }
 }

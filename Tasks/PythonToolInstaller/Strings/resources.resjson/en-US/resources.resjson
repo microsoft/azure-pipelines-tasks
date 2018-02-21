@@ -25,11 +25,16 @@
   "loc.input.help.destinationDirectory": "Destination directory into which the Python distribution should be extracted.",
   "loc.input.label.cleanDestinationDirectory": "Clean destination directory",
   "loc.input.help.cleanDestinationDirectory": "Select this option to clean the destination directory before the Python distribution is extracted into it.",
-  "loc.messages.DownloadFromAzureBlobStorage": "Downloading artifacts from Azure Blob Storage, Container Name: %s",
-  "loc.messages.SuccessFullyFetchedItemList": "Successfully fetched list of items",
-  "loc.messages.StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
   "loc.messages.CleanDestDir": "Cleaning destination folder before extraction: %s",
+  "loc.messages.DownloadFromAzureBlobStorage": "Downloading artifacts from Azure Blob Storage, Container Name: %s",
+  "loc.messages.InstallationSourceUnknown": "Unknown installation source %s",
   "loc.messages.RetrievingPythonFromAzure": "Retrieving Python %s (%s) from Azure blob storage.",
   "loc.messages.RetrievingPythonFromFilePath": "Retrieving Python %s (%s) from file path.",
-  "loc.messages.SucceedMsg": "Successfully extracted all files."
+  "loc.messages.RetrievingPythonFromUrl": "Retrieving Python %s (%s) from URL",
+  "loc.messages.StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+  "loc.messages.SucceedMsg": "Successfully extracted all files.",
+  "loc.messages.SuccessFullyFetchedItemList": "Successfully fetched list of items",
+  "loc.messages.UrlNoFile": "Could not determine the file type of the file at the download URL %s",
+  "loc.messages.UrlNoHost": "Could not parse a host from the download URL %s",
+  "loc.messages.UrlNoProtocol": "The download URL %s does not have a protocol"
 }

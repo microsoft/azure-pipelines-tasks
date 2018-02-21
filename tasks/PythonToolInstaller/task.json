@@ -132,12 +132,17 @@
         }
     },
     "messages": {
-        "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure Blob Storage, Container Name: %s",
-        "SuccessFullyFetchedItemList": "Successfully fetched list of items",
-        "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
+        "DownloadFromAzureBlobStorage": "Downloading artifacts from Azure Blob Storage, Container Name: %s",
+        "InstallationSourceUnknown": "Unknown installation source %s",
         "RetrievingPythonFromAzure": "Retrieving Python %s (%s) from Azure blob storage.",
         "RetrievingPythonFromFilePath": "Retrieving Python %s (%s) from file path.",
-        "SucceedMsg": "Successfully extracted all files."
+        "RetrievingPythonFromUrl": "Retrieving Python %s (%s) from URL",
+        "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
+        "SucceedMsg": "Successfully extracted all files.",
+        "SuccessFullyFetchedItemList": "Successfully fetched list of items",
+        "UrlNoFile": "Could not determine the file type of the file at the download URL %s",
+        "UrlNoHost": "Could not parse a host from the download URL %s",
+        "UrlNoProtocol": "The download URL %s does not have a protocol"
     }
 }

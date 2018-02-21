@@ -1,5 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as url from 'url';
+
+import request = require('request');
+
 import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
@@ -59,16 +63,34 @@ async function getPython(): Promise<void> {
             await sleep(250); // Wait for the file to be released before trying to extract it
 
             const filename = file.split(/[\\\/]/).pop();
-            return path.join(destination, filename);
+            return path.join(destination, filename || "");
         } else if (installationSource === 'FilePath') {
             console.log(taskLib.loc('RetrievingPythonFromFilePath', versionSpec, architecture));
             return taskLib.getInput('compressedFile', true);
         } else if (installationSource === 'Url') {
-            // TODO download from URL
-            throw new Error("Not implemented");
+            console.log(taskLib.loc('RetrievingPythonFromUrl', versionSpec, architecture));
+            const downloadUrl = url.parse(taskLib.getInput('url')); // TODO Node v6.13: use new URL API
+            if (!downloadUrl.protocol) {
+                throw new Error(taskLib.loc('UrlNoProtocol', downloadUrl.href));
+            }
+            if (!downloadUrl.host) {
+                throw new Error(taskLib.loc('UrlNoHost', downloadUrl.href));
+            }
+
+            const path = downloadUrl.pathname;
+            if (!path) {
+                throw new Error(taskLib.loc('UrlNoFile', downloadUrl.href));
+            }
+
+            const outputFile = path.split('/').pop();
+            if (!outputFile) {
+                throw new Error(taskLib.loc('UrlNoFile', downloadUrl.href));
+            }
+
+            request(downloadUrl.href!).pipe(fs.createWriteStream(outputFile));
+            return outputFile;
         } else {
-            // TODO error
-            throw new Error();
+            throw new Error(taskLib.loc("InstallationSourceUnknown", installationSource));
         }
     })();
 
