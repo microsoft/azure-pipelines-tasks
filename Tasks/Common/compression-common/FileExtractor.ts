@@ -63,7 +63,7 @@ async function powershellExtract(file: string, destination: string): Promise<voi
 }
 
 /** Extract a file using 7zip. */
-async function sevenZipExtract(isWindows: boolean, file: string, destination: string): Promise<void> {
+const sevenZipExtract = (isWindows: boolean) => async (file: string, destination: string): Promise<void> => {
     console.log(tl.loc('SevenZipExtractFile', file));
 
     const sevenZipLocation = isWindows ? path.join(__dirname, '7zip/7z.exe') : tl.which('7z', true);
@@ -90,15 +90,14 @@ async function tarExtract(file: string, destination: string): Promise<void> {
 /** Choose an extractor function based on the file type and agent's operating system. */
 function pickExtractor(fileType: CompressedFile, hostOS: string): Extractor {
     const isWindows = hostOS === 'win32';
-    const hostSevenZip = this.sevenZipExtract.bind(null, isWindows);
 
     if (isWindows) {
         switch (fileType) {
             case CompressedFile.Tar:
             case CompressedFile.SevenZip:
-                return hostSevenZip;
+                return sevenZipExtract(isWindows);
             case CompressedFile.Tarball:
-                return async (file: string, destination: string) => {
+                return async (file: string, destination: string): Promise<void> => {
                     // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
                     const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
                     // e.g. 'destination/_test.tar.gz_'
@@ -109,20 +108,20 @@ function pickExtractor(fileType: CompressedFile, hostOS: string): Extractor {
                     tl.mkdirP(tempFolder);
 
                     // extract compressed tar
-                    await hostSevenZip(file, tempFolder);
+                    await sevenZipExtract(isWindows)(file, tempFolder);
                     console.log(tl.loc('TempDir', tempFolder));
                     const tempTar = path.join(tempFolder, tl.ls('-A', [tempFolder])[0]); // should be only one
                     console.log(tl.loc('DecompressedTempTar', file, tempTar));
 
                     // expand extracted tar
-                    await hostSevenZip(tempTar, destination);
+                    await sevenZipExtract(isWindows)(tempTar, destination);
 
                     // clean up temp folder
                     console.log(tl.loc('RemoveTempDir', tempFolder));
                     tl.rmRF(tempFolder);
                 };
             case CompressedFile.Zip:
-                return this.powershellExtract;
+                return powershellExtract;
             default:
                 throw new Error(tl.loc('UnsupportedFileExtension'));
         }
@@ -130,11 +129,11 @@ function pickExtractor(fileType: CompressedFile, hostOS: string): Extractor {
         switch (fileType) {
             case CompressedFile.Tar:
             case CompressedFile.Tarball:
-                return this.tarExtract;
+                return tarExtract;
             case CompressedFile.Zip:
-                return this.unzipExtract;
+                return unzipExtract;
             case CompressedFile.SevenZip:
-                return hostSevenZip(isWindows);
+                return sevenZipExtract(isWindows);
             default:
                 throw new Error(tl.loc('UnsupportedFileExtension'));
         }
@@ -169,7 +168,7 @@ export async function extractCompressedFile(compressedFile: string, destination:
     tl.debug(`initial directories list: ${initialDirectoriesList}`);
 
     const fileType = compressedFileType(compressedFile);
-    const extractor = this.pickExtractor(fileType);
+    const extractor = pickExtractor(fileType, hostOS);
     await extractor(compressedFile, destination);
 
     const finalDirectoriesList = tl.find(destination).filter(x => fs.statSync(x).isDirectory());
