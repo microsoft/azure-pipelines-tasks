@@ -177,41 +177,11 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
 
     // Rerun information
-    //TODO close the experience/UI text
     testConfiguration.rerunFailedTests = tl.getBoolInput('rerunFailedTests');
     console.log(tl.loc('rerunFailedTests', testConfiguration.rerunFailedTests));
 
     if (testConfiguration.rerunFailedTests) {
-        testConfiguration.rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
-
-        if (testConfiguration.rerunType === 'basedOnTestFailureCount') {
-            testConfiguration.rerunFailedTestCasesMaxLimit = 5; //default value in case of error
-            const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
-            if (!isNaN(rerunFailedTestCasesMaxLimit) && rerunFailedTestCasesMaxLimit > 0 && rerunFailedTestCasesMaxLimit <= 100) {
-                testConfiguration.rerunFailedTestCasesMaxLimit = rerunFailedTestCasesMaxLimit;
-                console.log(tl.loc('rerunFailedTestCasesMaxLimit', testConfiguration.rerunFailedTestCasesMaxLimit));
-            } else {
-                tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
-            }
-        } else {
-            testConfiguration.rerunFailedThreshold = 30; //default value in case of error
-            const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
-            if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
-                testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
-                console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
-            } else {
-                tl.warning(tl.loc('invalidRerunFailedThreshold'));
-            }
-        }
-
-        testConfiguration.rerunMaxAttempts = 3; //default values incase of error
-        const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
-        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0 && rerunMaxAttempts <= 10) {
-            testConfiguration.rerunMaxAttempts = rerunMaxAttempts;
-            console.log(tl.loc('rerunMaxAttempts', testConfiguration.rerunMaxAttempts));
-        } else {
-            tl.warning(tl.loc('invalidRerunMaxAttempts'));
-        }
+        parseRerunConfiguration();
     }
 
     testConfiguration.vsTestLocationMethod = tl.getInput('vstestLocationMethod');
@@ -268,6 +238,50 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     // Get proxy details
     testConfiguration.proxyConfiguration = getProxyConfiguration();
+
+    function parseRerunConfiguration() {
+        testConfiguration.rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
+
+        if (testConfiguration.rerunType === 'basedOnTestFailureCount') {
+            testConfiguration.rerunFailedTestCasesMaxLimit = 5; //default value in case of error
+            const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
+            if (!isNaN(rerunFailedTestCasesMaxLimit) && rerunFailedTestCasesMaxLimit > 0 && rerunFailedTestCasesMaxLimit <= 100) {
+                testConfiguration.rerunFailedTestCasesMaxLimit = rerunFailedTestCasesMaxLimit;
+                console.log(tl.loc('rerunFailedTestCasesMaxLimit', testConfiguration.rerunFailedTestCasesMaxLimit));
+            } else {
+                if (rerunFailedTestCasesMaxLimit === 0) {
+                    tl.warning(tl.loc('disabledRerun', rerunFailedTestCasesMaxLimit));
+                    testConfiguration.rerunFailedTests = false;
+                    return;
+                } else {
+                    tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
+                }
+            }
+        } else {
+            testConfiguration.rerunFailedThreshold = 30; //default value in case of error
+            const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
+            if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
+                testConfiguration.rerunFailedThreshold = rerunFailedThreshold;
+                console.log(tl.loc('rerunFailedThreshold', testConfiguration.rerunFailedThreshold));
+            } else {
+                if (rerunFailedThreshold === 0) {
+                    tl.warning(tl.loc('disabledRerun', rerunFailedThreshold));
+                    testConfiguration.rerunFailedTests = false;
+                    return;
+                } else {
+                    tl.warning(tl.loc('invalidRerunFailedThreshold'));
+                }
+            }
+        }
+        testConfiguration.rerunMaxAttempts = 3; //default values incase of error
+        const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
+        if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0 && rerunMaxAttempts <= 10) {
+            testConfiguration.rerunMaxAttempts = rerunMaxAttempts;
+            console.log(tl.loc('rerunMaxAttempts', testConfiguration.rerunMaxAttempts));
+        } else {
+            tl.warning(tl.loc('invalidRerunMaxAttempts'));
+        }
+    }
 }
 
 function getProxyConfiguration(): models.ProxyConfiguration {
