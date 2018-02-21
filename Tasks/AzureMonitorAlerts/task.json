@@ -6,15 +6,14 @@
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=859947)",
 	"category": "Deploy",
-	"preview": true, 
 	"visibility": [
 		"Build",
 		"Release"
 	],
 	"version": {
 		"Major": 0,
-		"Minor": 0,
-		"Patch": 4
+		"Minor": 1,
+		"Patch": 0
 	},
 	"minimumAgentVersion": "2.111.0",
 	"instanceNameFormat": "Configure Azure Alerts : $(ResourceName)",
