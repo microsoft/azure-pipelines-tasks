@@ -166,5 +166,6 @@
   "loc.messages.OverrideUseVerifiableInstrumentation": "Overriding UseVerifiableInstrumentation field to false in the runsettings file.",
   "loc.messages.NoTestResultsDirectoryFound": "Test results directory not found.",
   "loc.messages.OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
-  "loc.messages.MultiConfigNotSupportedWithOnDemand": "On demand runs are not supported with Multi-Configuration option. Please use 'None' or 'Multi-agent' parallelism option."
+  "loc.messages.MultiConfigNotSupportedWithOnDemand": "On demand runs are not supported with Multi-Configuration option. Please use 'None' or 'Multi-agent' parallelism option.",
+  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
 }
