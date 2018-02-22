@@ -289,8 +289,12 @@ export class WinRMExtensionHelper {
 
     private async AddWinRMExtension(vmId: string, vmName: string, dnsName: string, location: string) {
         var extensionName: string = "WinRMCustomScriptExtension";
-        var configWinRMScriptFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/ConfigureWinRM.ps1";
-        var makeCertFile: string = "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/501dc7d24537e820df7c80bce51aba9674233b2b/201-vm-winrm-windows/makecert.exe";
+        var configWinRMScriptFileFwdLink: string = "https://aka.ms/vstsconfigurewinrm";
+        var makeCertFileFwdLink: string = "https://aka.ms/vstsmakecertexe";
+
+        var configWinRMScriptFile: string = await utils.getTargetUriFromFwdLink(configWinRMScriptFileFwdLink);
+        var makeCertFile: string = await utils.getTargetUriFromFwdLink(makeCertFileFwdLink);
+        
         var fileUris = [configWinRMScriptFile, makeCertFile];
 
         tl.debug("Adding custom script extension for virtual machine " + vmName);
