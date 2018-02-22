@@ -75,7 +75,7 @@ export class DistributedTest {
         inputDataContract['Logging'] = {};
         inputDataContract['TestSelectionSettings']['AssemblyBasedTestSelection'] = {};
         inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings'] = {};
-        inputDataContract['TfsSpecificSettings']['TestSpecificSettings'] = {};
+        inputDataContract['TestSpecificSettings'] = {};
         inputDataContract['ExecutionSettings']['RerunSettings'] = {};
         inputDataContract['ExecutionSettings']['TiaSettings'] = {};
 
@@ -85,11 +85,13 @@ export class DistributedTest {
         inputDataContract['ExecutionSettings']['TiaSettings']['SourcesDirectory'] = this.dtaTestConfig.tiaConfig.sourcesDir;
         inputDataContract['ExecutionSettings']['TiaSettings']['FileLevel'] = this.dtaTestConfig.tiaConfig.fileLevel;
         inputDataContract['ExecutionSettings']['TiaSettings']['FilterPaths'] = this.dtaTestConfig.tiaConfig.tiaFilterPaths;
-        inputDataContract['ExecutionSettings']['TiaSettings']['UseNewCollector'] = this.dtaTestConfig.tiaConfig.useNewCollector;
-        inputDataContract['ExecutionSettings']['TiaSettings']['IsPrFlow'] = this.dtaTestConfig.tiaConfig.isPrFlow;
-        inputDataContract['ExecutionSettings']['TiaSettings']['UseTestCaseFilterInResponseFile'] = this.dtaTestConfig.tiaConfig.useTestCaseFilterInResponseFile;
-        inputDataContract['ExecutionSettings']['TiaSettings']['UserMapFile'] = this.dtaTestConfig.tiaConfig.userMapFile;
-        inputDataContract['ExecutionSettings']['TiaSettings']['DisableEnablingDataCollector'] = this.dtaTestConfig.tiaConfig.disableEnablingDataCollector;
+
+        inputDataContract['UseNewCollector'] = this.dtaTestConfig.tiaConfig.useNewCollector;
+        inputDataContract['IsPrFlow'] = this.dtaTestConfig.tiaConfig.isPrFlow;
+        inputDataContract['UseTestCaseFilterInResponseFile'] = this.dtaTestConfig.tiaConfig.useTestCaseFilterInResponseFile;
+        inputDataContract['UserMapFile'] = this.dtaTestConfig.tiaConfig.userMapFile;
+        inputDataContract['DisableEnablingDataCollector'] = this.dtaTestConfig.tiaConfig.disableEnablingDataCollector;
+
         inputDataContract['ExecutionSettings']['VideoDataCollectorEnabled'] = this.dtaTestConfig.videoCoverageEnabled;
         inputDataContract['TiaBaseLineBuildIdFile'] = this.dtaTestConfig.tiaConfig.baseLineBuildIdFile;
         inputDataContract['VsVersionMajorVersion'] = this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber;
@@ -97,17 +99,20 @@ export class DistributedTest {
         inputDataContract['IsToolsInstallerFlow'] = utils.Helper.isToolsInstallerFlow(this.dtaTestConfig);
         inputDataContract['ExecutionSettings']['OverridenParameters'] = this.dtaTestConfig.overrideTestrunParameters;
 
-        inputDataContract['AccessToken'] = this.dtaTestConfig.dtaEnvironment.patToken;
+
+        inputDataContract['AccessToken'] = this.dtaTestConfig.dtaEnvironment.patToken; // TODO: shrer: remove this and pass via ENV var and add login in the agent to read from both with preference to input file
+
+
         inputDataContract['AgentName'] = this.dtaTestConfig.dtaEnvironment.agentName;
         inputDataContract['EnvironmentUri'] = this.dtaTestConfig.dtaEnvironment.environmentUri;
         inputDataContract['CollectionUri'] = this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl;
         inputDataContract['MiniMatchTestSourcesFile'] = this.testSourcesFile;
         inputDataContract['SearchFolder'] = this.dtaTestConfig.testDropLocation;
-        inputDataContract['EnableConsoleLogs'] = true;
+        inputDataContract['Logging']['EnableConsoleLogs'] = true;
         inputDataContract['ExecutionSettings']['ProceedAfterAbortedTestCase'] = this.dtaTestConfig.proceedAfterAbortedTestCase;
         inputDataContract['UseVsTestConsole'] = this.dtaTestConfig.useVsTestConsole === 'true';
         inputDataContract['TestPlatformVersion'] = this.dtaTestConfig.vsTestVersion;
-        inputDataContract['TfsSpecificSettings']['TestSpecificSettings']['TestCaseAccessToken'] = tl.getVariable('Test.TestCaseAccessToken');
+        inputDataContract['TestSpecificSettings']['TestCaseAccessToken'] = tl.getVariable('Test.TestCaseAccessToken');
 
         if (utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
             inputDataContract['COR_PROFILER_PATH_32'] = this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation;
