@@ -29,7 +29,7 @@ describe('Kubernetes Suite', function() {
     after(function () {
     });
 
-    it('Run sucessfully when the user provides a specific location for kubectl', (done:MochaDone) => {
+    it('Run successfully when the user provides a specific location for kubectl', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -37,17 +37,18 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.versionOrLocation] = "location";
         process.env[shared.TestEnvVars.specifyLocation] = shared.formatPath("newUserDir/kubectl.exe");
         process.env[shared.isKubectlPresentOnMachine] = "false";
-
         tr.run();
+
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`Set kubectlPath to ${shared.formatPath("newUserDir/kubectl.exe")} and added permissions`) != -1, "Kubectl path should be set to the correct location");
         assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
 
-    it('Run sucessfully when the user provides the version for kubectl with checkLatest as false', (done:MochaDone) => {
+    it('Run successfully when the user provides the version for kubectl with checkLatest as false and version that dosent have a v prefix', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -60,18 +61,20 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl apply should run");
+        assert(tr.stdout.indexOf(`Got kubectl version v1.7.0`) != -1, "Got the specific version of kubectl");
+        assert(tr.stdout.indexOf(`Downloaded kubectl`) != -1, "Downloaded correct version of kubectl");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
 
-    it('Run sucessfully when the user provides the version for kubectl with checkLatest as true', (done:MochaDone) => {
+    it('Run successfully when the user provides the version for kubectl with checkLatest as true', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
         process.env[shared.TestEnvVars.arguments] = "pods";    
         process.env[shared.TestEnvVars.versionOrLocation] = "version";
-        process.env[shared.TestEnvVars.versionSpec] = "1.7.0";
+        process.env[shared.TestEnvVars.versionSpec] = "1.5.0";
         process.env[shared.TestEnvVars.checkLatest] = "true";
         process.env[shared.isKubectlPresentOnMachine] = "false";
         tr.run();
@@ -79,30 +82,15 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl apply should run");
+        assert(tr.stdout.indexOf(`Get stable kubectl version`) != -1, "Stable version of kubectl is downloaded");
+        assert(tr.stdout.indexOf(`Got kubectl version v1.6.6`) != -1, "Got the latest version of kubectl");
+        assert(tr.stdout.indexOf(`Downloaded kubectl`) != -1, "Downloaded correct version of kubectl");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
 
-    it('Run sucessfully when the user provides the version for kubectl with checkLatest as false and version that dosent have a v prefix ', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.get;
-        process.env[shared.TestEnvVars.arguments] = "pods";    
-        process.env[shared.TestEnvVars.versionOrLocation] = "version";
-        process.env[shared.TestEnvVars.versionSpec] = "1.7.0";
-        process.env[shared.isKubectlPresentOnMachine] = "false";
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl apply should run");
-        console.log(tr.stderr);
-        done();
-    });
-
-    it('Run sucessfully when the user provides the version 1.7 for kubectl with checkLatest as false', (done:MochaDone) => {
+    it('Run successfully when the user provides the version 1.7 for kubectl with checkLatest as false', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -115,7 +103,10 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl apply should run");
+        assert(tr.stdout.indexOf(`Get stable kubectl version`) != -1, "Stable version of kubectl is downloaded");
+        assert(tr.stdout.indexOf(`Got kubectl version v1.6.6`) != -1, "Got the latest version of kubectl");
+        assert(tr.stdout.indexOf(`Downloaded kubectl`) != -1, "Downloaded correct version of kubectl");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -143,8 +134,8 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.apply;
         process.env[shared.TestEnvVars.useConfigurationFile] = "true";    
-
         tr.run();
+
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -152,39 +143,6 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);
         done();
     });
-
-    it('Runs successfully for kubectl delete', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.delete;
-        process.env[shared.TestEnvVars.arguments] = "pod -all";
-
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} delete pod -all`) != -1, "kubectl delete should run");
-        console.log(tr.stderr);
-        done();
-    });
-
-    it('Runs successfully for kubectl exec', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.exec;
-        process.env[shared.TestEnvVars.arguments] = "nginx date";
-
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} exec nginx date`) != -1, "kubectl exec should run");
-        console.log(tr.stderr);
-        done();
-    });
-
 
     it('Runs successfully for kubectl expose with configuration file and arguments', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -207,7 +165,6 @@ describe('Kubernetes Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
         process.env[shared.TestEnvVars.arguments] = "pods";
-
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -230,69 +187,6 @@ describe('Kubernetes Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get -n kube-system pods`) != -1, "kubectl get should run");
-        console.log(tr.stderr);
-        done();
-    });
-
-    it('Runs successfully for kubcetl logs', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.logs;
-        process.env[shared.TestEnvVars.arguments] = "nginx";
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} logs nginx`) != -1, "kubectl logs should run");
-        console.log(tr.stderr);
-        done();
-    });
-
-    it('Runs successfully for kubectl run', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.run;
-        process.env[shared.TestEnvVars.arguments] = "nginx --image=nginx";
-
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} run nginx --image=nginx`) != -1, "kubectl run command should run");
-        console.log(tr.stderr);
-        done();
-    });
-
-    it('Runs successfully for kubectl set', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.set;
-        process.env[shared.TestEnvVars.arguments] = "env pods --all --list";
-
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} set env pods --all --list`) != -1, "kubectl set should run");
-        console.log(tr.stderr);
-        done();
-    });
-
-    it('Runs successfully for kubectl top', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.top;
-        process.env[shared.TestEnvVars.arguments] = "node";
-
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} top node`) != -1, "kubectl top should run");
         console.log(tr.stderr);
         done();
     });

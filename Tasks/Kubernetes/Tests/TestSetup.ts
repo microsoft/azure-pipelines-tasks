@@ -16,24 +16,22 @@ tr.setInput('containerregistrytype', process.env[shared.TestEnvVars.containerTyp
 tr.setInput('command', process.env[shared.TestEnvVars.command] || shared.Commands.apply);
 tr.setInput('useConfigurationFile', process.env[shared.TestEnvVars.useConfigurationFile] || "false");
 tr.setInput('configuration', ConfigurationFilePath);
+tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
 tr.setInput('namespace', process.env[shared.TestEnvVars.namespace] || '');
+tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('forceUpdate', process.env[shared.TestEnvVars.forceUpdate] || "true");
 tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocation] || 'version');
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.7.0");
 tr.setInput('checkLatest', process.env[shared.TestEnvVars.checkLatest] || "false");
 tr.setInput('specifyLocation', process.env[shared.TestEnvVars.specifyLocation] || "");
-
+tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || 'json');
+tr.setInput('kubectlOutput', process.env[shared.TestEnvVars.kubectlOutput] || '');
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('kubernetesServiceEndpoint', 'kubernetesEndpoint');
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
-tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
-tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
-tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || 'json');
-tr.setInput('kubectlOutput', process.env[shared.TestEnvVars.kubectlOutput] || '');
 console.log("Inputs have been set");
 
-process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
@@ -56,7 +54,7 @@ let a = {
         [ConfigurationFilePath]: true
     },
     "exist": {
-        [ConfigurationFilePath]: true
+        [KubconfigFile]: true
     },
     "exec": {
     }
@@ -64,14 +62,11 @@ let a = {
 
 // Add extra answer definitions that need to be dynamically generated
 a.exist[ConfigurationFilePath] = true;
-a.exist[KubconfigFile] = true;
 a.exist[KubectlPath] = true;
 
 if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
 {
     a.which["kubectl"] = "kubectl";
-    a.exist["kubectl"] = true;
-    a.checkPath["kubectl"] = true;
 }
 
 a.exec[`${KubectlPath} --kubeconfig ${KubconfigFile} get pods`] = {
@@ -82,46 +77,18 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} apply -f ${ConfigurationFilePath}`
     "code": 0,
     "stdout": "successfully applied the configuration deployment.yaml"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret generic my-secret --from-literal=key1=\"some value\"`] = {
+a.exec[`kubectl --kubeconfig ${KubconfigFile} get pods`] = {
     "code": 0,
-    "stdout": "successfully ran the create command with the given arguments"
+    "stdout": "successfully ran get pods command"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} delete pod -all`] = {
-    "code": 0,
-    "stdout": "successfully deleted all pods"
-};
-a.exec[`kubectl --kubeconfig ${KubconfigFile} exec nginx date`] = {
-    "code": 0,
-    "stdout": "successfully got the output from running date from pod nginx using exec command"
-},
 a.exec[`kubectl --kubeconfig ${KubconfigFile} expose -f ${ConfigurationFilePath} --port=80 --target-port=8000`] = {
     "code": 0,
     "stdout": "successfully created a service for deployment in deployment.yaml using expose command "
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get pods`] = {
-    "code": 0,
-     "stdout": "successfully ran get pods command"
-},
 a.exec[`kubectl --kubeconfig ${KubconfigFile} get -n kube-system pods`] = {
     "code": 0,
-    "stdout": "sucessfully fetched the pods in the namespace"
+    "stdout": "successfully fetched the pods in the namespace"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} logs nginx`] = {
-    "code": 0,
-    "stdout": "successfully returned snapshot logs from pod nginx with only container"
-},
-a.exec[`kubectl --kubeconfig ${KubconfigFile} run nginx --image=nginx`] = {
-    "code": 0,
-    "stdout": "successfully started a single instance of nginx using run command"
-}
-a.exec[`kubectl --kubeconfig ${KubconfigFile} set env pods --all --list`] = {
-    "code": 0,
-    "stdout": "successfully listed the environment variables defined on all pods"
-},
-a.exec[`kubectl --kubeconfig ${KubconfigFile} top node`] = {
-    "code": 0,
-    "stdout": "successfully showed metrics for all nodes"
-},
 a.exec[`kubectl --kubeconfig ${KubconfigFile} delete secret my-secret`] = {
     "code": 0
 };
@@ -144,24 +111,19 @@ let fsClone = Object.assign({}, fs);
 fsClone.existsSync = function(filePath) {
     switch (filePath) {
         case "kubectl":
-            if(JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
+            if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
             {
                 return true;
             }
             else
             {
                 return false;
-            } 
-        case KubectlPath:
-            return true;     
-        case KubconfigFile:
-            return true;
-        case ConfigurationFilePath:
-            return true;
+            }
         default:
             return fs.existsSync(filePath);
     }
 };
+
 fsClone.writeFileSync = function(fileName, data) {
     switch (fileName) {
         case KubconfigFile:
@@ -175,12 +137,13 @@ fsClone.writeFileSync = function(fileName, data) {
 fsClone.chmod = function(path, mode) {
       switch(path){
           case KubectlPath:
-            console.log("Added permissions to kubectlPath");
+            console.log(`Set kubectlPath to ${KubectlPath} and added permissions`);
             break;
           default:
             fs.chmod(path, mode);        
       }
 };
+
 tr.registerMock('fs', fsClone);
 
 var ut = require('../src/utilities');
@@ -198,18 +161,20 @@ tr.registerMock('./utilities', {
     },
     getNewUserDirPath: function() {
         return newUserDirPath;
-    },
+    },   
     getStableKubectlVersion: function(){
+        console.log("Get stable kubectl version");
         return "v1.6.6";
     },
-    getKubectlVersion: async function(versionSpec, checkLatest) : Promise<string> {
-        let version: string = "v1.6.6";   
+    getKubectlVersion: function(versionSpec, checkLatest) {
+         let version: string = "v1.6.6";   
 
         if(checkLatest) {
             version = this.getStableKubectlVersion();
         }
         else if (versionSpec) {
             if(versionSpec === "1.7") {
+                console.log("Get stable kubectl version");
                 version = this.getStableKubectlVersion();
             } 
             else if(!versionSpec.startsWith("v")) {
@@ -229,7 +194,7 @@ tr.registerMock('./utilities', {
     },
     assertFileExists: function(path) {
         return true;
-    }    
+    }   
 });
 
 tr.run();
