@@ -1,6 +1,6 @@
 {
-  "id": "C0E0B74F-0931-47C7-AC27-7C5A19456A36",
-  "name": "JavaToolInstaller",
+  "id": "BAEC6142-29F9-4BB2-A808-B6432199DB3C",
+  "name": "PythonToolInstaller",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -13,66 +13,57 @@
   "version": {
     "Major": 0,
     "Minor": 131,
-    "Patch": 1
+    "Patch": 0
   },
   "preview": true,
-  "satisfies": [
-    "Java"
-  ],
   "demands": [],
-  "groups": [
-    {
-      "name": "JavaInAzureGroup",
-      "displayName": "ms-resource:loc.group.displayName.JavaInAzureGroup",
-      "isExpanded": true
-    }
-  ],
+  "groups": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "1.8",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
-      "name": "jdkArchitectureOption",
+      "name": "architectureOption",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.jdkArchitectureOption",
+      "label": "ms-resource:loc.input.label.architectureOption",
       "options": {
         "x64": "x64",
         "x86": "x86"
       },
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.jdkArchitectureOption"
+      "helpMarkDown": "ms-resource:loc.input.help.architectureOption"
     },
     {
-      "name": "jdkSourceOption",
+      "name": "installationSource",
       "type": "pickList",
-      "label": "ms-resource:loc.input.label.jdkSourceOption",
+      "label": "ms-resource:loc.input.label.installationSource",
       "required": true,
       "options": {
-        "AzureStorage": "Azure Storage",
-        "FilePath": "File path"
+        "AzureStorage": "Azure storage",
+        "FilePath": "File path",
+        "Url": "URL"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.jdkSourceOption"
+      "helpMarkDown": "ms-resource:loc.input.help.installationSource"
     },
     {
-      "name": "jdkFile",
+      "name": "compressedFile",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.jdkFile",
+      "label": "ms-resource:loc.input.label.compressedFile",
       "required": true,
-      "visibleRule": "jdkSourceOption == FilePath",
-      "helpMarkDown": "ms-resource:loc.input.help.jdkFile"
+      "visibleRule": "installationSource == FilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.compressedFile"
     },
     {
       "name": "azureResourceManagerEndpoint",
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureResourceManagerEndpoint",
       "required": true,
-      "visibleRule": "jdkSourceOption == AzureStorage",
+      "visibleRule": "installationSource == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureResourceManagerEndpoint"
     },
     {
@@ -83,7 +74,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "visibleRule": "jdkSourceOption == AzureStorage",
+      "visibleRule": "installationSource == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureStorageAccountName"
     },
     {
@@ -91,7 +82,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.azureContainerName",
       "required": true,
-      "visibleRule": "jdkSourceOption == AzureStorage",
+      "visibleRule": "installationSource == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerName"
     },
     {
@@ -99,16 +90,24 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.azureCommonVirtualFile",
       "required": true,
-      "visibleRule": "jdkSourceOption == AzureStorage",
+      "visibleRule": "installationSource == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureCommonVirtualFile"
     },
     {
-      "name": "jdkDestinationDirectory",
+      "name": "url",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.url",
+      "required": true,
+      "visibleRule": "installationSource == Url",
+      "helpMarkDown": "ms-resource:loc.input.help.url"
+    },
+    {
+      "name": "destinationDirectory",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.jdkDestinationDirectory",
+      "label": "ms-resource:loc.input.label.destinationDirectory",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
+      "helpMarkDown": "ms-resource:loc.input.help.destinationDirectory"
     },
     {
       "name": "cleanDestinationDirectory",
@@ -117,6 +116,14 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
+    },
+    {
+      "name": "outputVariable",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputVariable",
+      "required": true,
+      "defaultValue": "Python.$(versionSpec)",
+      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     }
   ],
   "dataSourceBindings": [
@@ -128,22 +135,22 @@
   ],
   "execution": {
     "Node": {
-      "target": "javatoolinstaller.js",
+      "target": "pythontoolinstaller.js",
       "argumentFormat": ""
     }
   },
   "messages": {
-    "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
-    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
-    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
-    "ExtractFileFailedMsg": "ms-resource:loc.messages.ExtractFileFailedMsg",
-    "ExtractDirFailed": "ms-resource:loc.messages.ExtractDirFailed",
-    "ExtractFailedCannotCreate": "ms-resource:loc.messages.ExtractFailedCannotCreate",
     "CleanDestDir": "ms-resource:loc.messages.CleanDestDir",
-    "RetrievingJdkFromAzure": "ms-resource:loc.messages.RetrievingJdkFromAzure",
-    "RetrievingJdkFromFilePath": "ms-resource:loc.messages.RetrievingJdkFromFilePath",
+    "DownloadFromAzureBlobStorage": "ms-resource:loc.messages.DownloadFromAzureBlobStorage",
+    "InstallationSourceUnknown": "ms-resource:loc.messages.InstallationSourceUnknown",
+    "RetrievingPythonFromAzure": "ms-resource:loc.messages.RetrievingPythonFromAzure",
+    "RetrievingPythonFromFilePath": "ms-resource:loc.messages.RetrievingPythonFromFilePath",
+    "RetrievingPythonFromUrl": "ms-resource:loc.messages.RetrievingPythonFromUrl",
+    "StorageAccountDoesNotExist": "ms-resource:loc.messages.StorageAccountDoesNotExist",
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
-    "SetJavaHome": "ms-resource:loc.messages.SetJavaHome",
-    "SetExtendedJavaHome": "ms-resource:loc.messages.SetExtendedJavaHome"
+    "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
+    "UrlNoFile": "ms-resource:loc.messages.UrlNoFile",
+    "UrlNoHost": "ms-resource:loc.messages.UrlNoHost",
+    "UrlNoProtocol": "ms-resource:loc.messages.UrlNoProtocol"
   }
 }

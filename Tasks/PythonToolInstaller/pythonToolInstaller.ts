@@ -1,31 +1,34 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import * as url from 'url';
+
+import request = require('request');
+
 import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { extractCompressedFile } from 'compression-common/FileExtractor';
 
-taskLib.setResourcePath(path.join(__dirname, 'task.json'));
-
-async function run() {
+async function run(): Promise<void> {
     try {
-        await getJava();
+        taskLib.setResourcePath(path.join(__dirname, 'task.json'));
+        await getPython();
     } catch (error) {
         taskLib.error(error.message);
         taskLib.setResult(taskLib.TaskResult.Failed, error.message);
     }
 }
 
-async function getJava() {
+async function getPython(): Promise<void> {
     const versionSpec = taskLib.getInput('versionSpec', true);
-    const architecture = taskLib.getInput('jdkArchitectureOption', true);
-    const installationSource = taskLib.getInput('jdkSourceOption', true);
-    const destination = taskLib.getPathInput('jdkDestinationDirectory', true);
+    const architecture = taskLib.getInput('architectureOption', true);
+    const installationSource = taskLib.getInput('installationSource', true);
+    const destination = taskLib.getPathInput('destinationDirectory', true);
     const cleanDestination = taskLib.getBoolInput('cleanDestinationDirectory', false);
 
     toolLib.debug('Trying to get tool from local cache first');
-    const localVersions: string[] = toolLib.findLocalToolVersions('Java');
+    const localVersions: string[] = toolLib.findLocalToolVersions('Python');
     const version: string = toolLib.evaluateVersions(localVersions, versionSpec);
 
      // Clean the destination folder before downloading and extracting?
@@ -47,7 +50,7 @@ async function getJava() {
 
     const compressedFile: string = await (async () => {
         if (installationSource === 'AzureStorage') {
-            console.log(taskLib.loc('RetrievingJdkFromAzure', versionSpec, architecture));
+            console.log(taskLib.loc('RetrievingPythonFromAzure', versionSpec, architecture));
             const file = taskLib.getInput('azureCommonVirtualFile', true);
 
             const azureDownloader = new AzureStorageArtifactDownloader(
@@ -62,8 +65,31 @@ async function getJava() {
             const filename = file.split(/[\\\/]/).pop();
             return path.join(destination, filename!);
         } else if (installationSource === 'FilePath') {
-            console.log(taskLib.loc('RetrievingJdkFromFilePath', versionSpec, architecture));
-            return taskLib.getInput('jdkFile', true);
+            console.log(taskLib.loc('RetrievingPythonFromFilePath', versionSpec, architecture));
+            return taskLib.getInput('compressedFile', true);
+        } else if (installationSource === 'Url') {
+            console.log(taskLib.loc('RetrievingPythonFromUrl', versionSpec, architecture));
+
+            const downloadUrl = url.parse(taskLib.getInput('url')); // TODO Node v6.13: use new URL API
+            if (!downloadUrl.protocol) {
+                throw new Error(taskLib.loc('UrlNoProtocol', downloadUrl.href));
+            }
+            if (!downloadUrl.host) {
+                throw new Error(taskLib.loc('UrlNoHost', downloadUrl.href));
+            }
+
+            const path = downloadUrl.pathname;
+            if (!path) {
+                throw new Error(taskLib.loc('UrlNoFile', downloadUrl.href));
+            }
+
+            const outputFile = path.split('/').pop();
+            if (!outputFile) {
+                throw new Error(taskLib.loc('UrlNoFile', downloadUrl.href));
+            }
+
+            await toPromise(request(downloadUrl.href!).pipe(fs.createWriteStream(outputFile)));
+            return outputFile;
         } else {
             throw new Error(taskLib.loc("InstallationSourceUnknown", installationSource));
         }
@@ -73,13 +99,9 @@ async function getJava() {
     toolLib.debug(`Extracted contents: ${extractedContents}`);
     taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
 
-    unpackJars(extractedContents, path.join(extractedContents, 'bin'));
-
-    const extendedJavaHome = 'JAVA_HOME_' + versionSpec + '_' + architecture;
-    console.log(taskLib.loc('SetJavaHome', extractedContents));
-    console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, extractedContents));
-    taskLib.setVariable('JAVA_HOME', extractedContents);
-    taskLib.setVariable(extendedJavaHome, extractedContents);
+    const outputVariable = taskLib.getInput('outputVariable');
+    taskLib.debug(`Set output variable ${outputVariable} to ${extractedContents}`);
+    taskLib.setVariable(outputVariable, extractedContents);
 }
 
 function sleep(milliseconds: number): Promise<void> {
@@ -88,25 +110,12 @@ function sleep(milliseconds: number): Promise<void> {
     });
 }
 
-/** Recursively find all .pack files under `rootDir` and unpack them with the unpack200 tool. */
-function unpackJars(rootDir: string, javaBinPath: string): void {
-    if (fs.existsSync(rootDir)) {
-        if (fs.lstatSync(rootDir).isDirectory()) {
-            for (let file of fs.readdirSync(rootDir)) {
-                const curPath = path.join(rootDir, file);
-                unpackJars(curPath, javaBinPath);
-            }
-        } else if (path.extname(rootDir).toLowerCase() === '.pack') {
-            // Unpack the pack file synchronously
-            const p = path.parse(rootDir);
-            const isWindows = process.platform === 'win32';
-
-            const toolName = isWindows ? 'unpack200.exe' : 'unpack200';
-            const args = isWindows ? '-r -v -l ""' : '';
-            const name = path.join(p.dir, p.name);
-            taskLib.execSync(path.join(javaBinPath, toolName), `${args} "${name}.pack" "${name}.jar"`);
-        }
-    }
+function toPromise(stream: fs.WriteStream): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        stream.on('close', resolve);
+        stream.on('finish', resolve);
+        stream.on('error', reject);
+    });
 }
 
 run();

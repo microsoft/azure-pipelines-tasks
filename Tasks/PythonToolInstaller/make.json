@@ -4,13 +4,13 @@
             "module": "../Common/azure-arm-rest",
             "type": "node",
             "dest": "./",
-            "compile" : true
+            "compile": true
         },
         {
             "module": "../Common/azure-blobstorage-artifactProvider",
             "type": "node",
             "dest": "./",
-            "compile" : true
+            "compile": true
         },
         {
             "module": "../Common/compression-common",

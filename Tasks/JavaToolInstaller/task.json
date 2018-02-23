@@ -2,8 +2,8 @@
     "id": "C0E0B74F-0931-47C7-AC27-7C5A19456A36",
     "name": "JavaToolInstaller",
     "friendlyName": "Java Tool Installer",
-    "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
-    "helpMarkDown": "[More Information]()",
+    "description": "Acquires a specific version of Java from from Azure storage, the local file system, or a file share and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
+    "helpMarkDown": "",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 131,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": true,
     "satisfies": ["Java"],
@@ -40,8 +40,8 @@
             "type": "pickList",
             "label": "JDK architecture",
             "options": {
-                "x64": "X64",
-                "x86": "X86"
+                "x64": "x64",
+                "x86": "x86"
             },
             "required": true,
             "helpMarkDown": "The architecture (x86, x64) of the JDK."
@@ -53,7 +53,7 @@
             "required": true,
             "options": {
                 "AzureStorage": "Azure Storage",
-                "LocalDirectory": "Local Directory"
+                "FilePath": "File path"
             },
             "helpMarkDown": "Source for the compressed JDK."
         },
@@ -62,8 +62,8 @@
             "type": "filePath",
             "label": "JDK file",
             "required": true,
-            "visibleRule": "jdkSourceOption == LocalDirectory",
-            "helpMarkDown": "Path to where the compressed JDK is located. The path could be in your source repository or a local path on the agent."
+            "visibleRule": "jdkSourceOption == FilePath",
+            "helpMarkDown": "Path to where the compressed JDK is located. The path can be in your source repository, a local path on the agent, or a file share accessible by the agent. Supported file types are .tar, .tar.gz / .tgz, .zip, and .7z."
         },
         {
             "name": "azureResourceManagerEndpoint",
@@ -98,7 +98,7 @@
             "label": "Common virtual path",
             "required": true,
             "visibleRule": "jdkSourceOption == AzureStorage",
-            "helpMarkDown": "Path to the JDK inside the Azure storage container."
+            "helpMarkDown": "Path to the JDK inside the Azure storage container. Supported file types are .tar, .tar.gz / .tgz, .zip, and .7z."
         },
         {
             "name": "jdkDestinationDirectory",
@@ -134,24 +134,14 @@
         "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure blob storage, Container Name: %s",
         "SuccessFullyFetchedItemList": "Successfully fetched list of items",
         "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
-        "UnzipExtractFile": "Extracting file: %s",
-        "SevenZipExtractFile": "Extracting file: %s",
-        "TarExtractFile": "Extracting file: %s",
         "ExtractFileFailedMsg": "Extraction failed for file: %s \ncode: %d \nstdout: %s \nstderr: %s \nerror: %s;",
-        "ExtractNonExistFile": "Extraction failed for file: %s because it does not exist.",
         "ExtractDirFailed": "Extraction failed for file: %s because it is a directory.",
-        "CreateTempDir": "Creating temp folder: %s to decompress: %s",
-        "TempDir": "tempFolder = %s",
-        "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
-        "RemoveTempDir": "Removing temp folder: %s",
         "ExtractFailedCannotCreate": "Extraction failed for file: %s because temporary location could not be created: %s",
         "CleanDestDir": "Cleaning destination folder before extraction: %s",
-        "CreateDestDir": "Creating destination folder: %s",
-        "RetrievingJdkFromAzure": "Retrieving the JDK from Azure blob storage.",
-        "RetrievingJdkFromLocalPath": "Retrieving the JDK from local path.",
+        "RetrievingJdkFromAzure": "Retrieving the JDK %s (%s) from Azure blob storage.",
+        "RetrievingJdkFromFilePath": "Retrieving the JDK  %s (%s) from file path.",
         "SucceedMsg": "Successfully extracted all files.",
         "SetJavaHome": "JAVA_HOME is being set to: %s",
-        "SetExtendedJavaHome": "%s is being set to: %s",
-        "UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension."
+        "SetExtendedJavaHome": "%s is being set to: %s"
     }
 }

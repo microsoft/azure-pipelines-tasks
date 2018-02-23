@@ -1,0 +1,15 @@
+{
+    "messages": {
+        "CreateDestDir": "Creating destination folder: %s",
+        "CreateTempDir": "Creating temp folder: %s to decompress: %s",
+        "DecompressedTempTar": "Decompressed temporary tar from: %s to: %s",
+        "ExtractNonExistFile": "Extraction failed for file: %s because it does not exist.",
+        "ExtractNonFileFailed": "Extraction failed for file: %s because it is not a file.",
+        "RemoveTempDir": "Removing temp folder: %s",
+        "SevenZipExtractFile": "Extracting file: %s",
+        "TarExtractFile": "Extracting file: %s",
+        "TempDir": "tempFolder = %s",
+        "UnsupportedFileExtension": "File extension of compressed file is not a supported file type.",
+        "UnzipExtractFile": "Extracting file: %s"
+    }
+}

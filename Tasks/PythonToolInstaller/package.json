@@ -1,11 +1,9 @@
 {
-    "name": "java-tool-installer",
-    "version": "0.126.0",
-    "description": "Java Tool Installer",
-    "main": "javaToolInstaller.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
+    "name": "python-tool-installer",
+    "version": "",
+    "description": "Python Tool Installer",
+    "main": "pythonToolInstaller.js",
+    "scripts": {},
     "repository": {
         "type": "git",
         "url": "git+https://github.com/microsoft/vsts-tasks.git"
@@ -13,7 +11,7 @@
     "keywords": [
         "VSTS",
         "Tasks",
-        "Java"
+        "Python"
     ],
     "author": "Microsoft Corporation",
     "license": "MIT",
@@ -22,12 +20,12 @@
     },
     "homepage": "https://github.com/microsoft/vsts-tasks#readme",
     "dependencies": {
-        "@types/mocha": "^2.2.48",
-        "@types/node": "^6.0.101",
-        "@types/q": "^1.0.7",
+        "@types/node": "^9.4.6",
+        "@types/request": "^2.47.0",
         "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
         "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-1.0.0.tgz",
         "compression-common": "file:../../_build/Tasks/Common/compression-common-1.0.0.tgz",
+        "request": "^2.83.0",
         "vsts-task-lib": "2.1.0",
         "vsts-task-tool-lib": "^0.4.1"
     }
