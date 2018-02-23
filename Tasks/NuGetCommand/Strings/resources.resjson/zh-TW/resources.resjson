@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613747)",
-  "loc.description": "Restore, pack, or push NuGet packages, or run a NuGet command. Supports NuGet.org and authenticated feeds like Package Management and MyGet. Uses NuGet.exe and works with .NET Framework apps. For .NET Core and .NET Standard apps, use the .NET Core task.",
+  "loc.description": "還原、打包或推送 NuGet 套件，或是執行 NuGet 命令。支援 NuGet.org 及套件管理與 MyGet 等已經過驗證的摘要。使用 NuGet.exe 且支援 .NET Framework 應用程式。若為 .NET Core 及 .NET Standard 應用程式，請使用 .NET Core 工作。",
   "loc.instanceNameFormat": "NuGet $(command)",
   "loc.group.displayName.restoreAuth": "摘要與驗證",
   "loc.group.displayName.restoreAdvanced": "進階",
@@ -48,7 +48,7 @@
   "loc.input.label.versioningScheme": "自動套件版本設定",
   "loc.input.help.versioningScheme": "無法與包含參考的專案一併使用。若選擇 [使用日期與時間]，如此會產生符合 [SemVer](http://semver.org/spec/v1.0.0.html) 規範的版本，格式為 `X.Y.Z-ci-datetime`，其中的 X、Y 和 Z 由您選擇。\n\n若您選擇 [使用環境變數]，則必須選取環境變數，並確認其包含您要使用的版本號碼。\n\n若您選擇 [使用組建編號]，這會用組建編號來設定您的套件版本。**注意:** 請在 [選項] 下，將組建編號格式設為 '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'。",
   "loc.input.label.includeReferencedProjects": "包含參考的專案",
-  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
+  "loc.input.help.includeReferencedProjects": "將參考專案加入為相依性或套件的一部份。無法搭配自動套件版本設定使用。如果參考專案的對應 nuspec 檔案名稱與專案相同，就會將該參考專案新增為相依性。否則，會將參考專案新增為套件的一部份。[深入了解](https://docs.microsoft.com/zh-tw/nuget/tools/cli-ref-pack)。",
   "loc.input.label.versionEnvVar": "環境變數",
   "loc.input.help.versionEnvVar": "輸入不具 $、$env 或 % 的變數名稱。",
   "loc.input.label.requestedMajorVersion": "主要",
@@ -61,8 +61,8 @@
   "loc.input.help.packTimezone": "指定要用來產生套件版本的時區。如果您使用託管的組建代理程式，由於其日期與時間可能有所不同，建議您選取 UTC。",
   "loc.input.label.includeSymbols": "建立符號套件",
   "loc.input.help.includeSymbols": "指定包含來源和符號的套件。搭配 .nuspec 檔案使用時，這會建立一般的 NuGet 套件檔案和對應的符號套件。",
-  "loc.input.label.toolPackage": "Tool Package",
-  "loc.input.help.toolPackage": "Determines if the output files of the project should be in the tool folder.",
+  "loc.input.label.toolPackage": "工具套件",
+  "loc.input.help.toolPackage": "決定專案的輸出檔案是否應在工具資料夾中。",
   "loc.input.label.buildProperties": "其他組建屬性",
   "loc.input.help.buildProperties": "指定分號分隔的權杖/值組清單，其中每個出現在 .nuspec 檔案中的 $token$，都會取代為指定的值。這些值可以是用引號括住的字串。",
   "loc.input.label.verbosityPack": "詳細資訊",
@@ -92,7 +92,7 @@
   "loc.messages.PackagesFailedToPublish": "無法發行套件",
   "loc.messages.UnknownFeedType": "未知的摘要類型 '%s'",
   "loc.messages.Error_NoSourceSpecifiedForPush": "未指定推送的來源",
-  "loc.messages.Error_UnexpectedErrorVstsNuGetPush": "An unexpected error occurred while trying to push the package with VstsNuGetPush.exe. Exit code(%s) and error(%s)",
+  "loc.messages.Error_UnexpectedErrorVstsNuGetPush": "嘗試使用 VstsNuGetPush.exe 推送套件時發生未預期的錯誤。結束代碼(%s) 和錯誤(%s)",
   "loc.messages.Warning_FallBackToNuGet": "找不到 VstsNuGetPush.exe，正在回復為 NuGet.exe。",
   "loc.messages.Info_NoPackagesMatchedTheSearchPattern": "沒有符合搜尋模式的套件。",
   "loc.messages.Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe 被強制用於發行。如果發生推送衝突，這會導致失敗。",
@@ -101,7 +101,7 @@
   "loc.messages.Warning_SkipConflictsNotSupportedUnixAgents": "目前僅在 Windows 代理程式提供 [允許跳過重複項] 選項。如果 NuGet.exe 遇到衝突，工作會失敗。",
   "loc.messages.Error_CommandNotRecognized": "無法辨認命令 %s。",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore 目前不支援使用加密的 API 金鑰。",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "XML 無效。應有名為 'configuration' 的元素。",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "使用下列搜尋模式找不到任何相符的檔案: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "找不到 %s 的下載 URL",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "找不到任何版本與輸入 %s 相符",
@@ -126,5 +126,5 @@
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "選取了不明的 NuGet 版本。",
   "loc.messages.NGCommon_UnableToFindTool": "找不到工具 %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "正在將 NuGet.exe 的版本更新為 %s (原始為 %s) 。當 NuGet 更新為新版本時，可能會發生行為變更或重大變更。如果這不是您想要的行為，請取消核取工作中的 [檢查最新版本] 選項。",
-  "loc.messages.Error_NugetFailedWithCodeAndErr": "The nuget command failed with exit code(%s) and error(%s)"
+  "loc.messages.Error_NugetFailedWithCodeAndErr": "Nuget 命令失敗，結束代碼: (%s)，錯誤: (%s)"
 }

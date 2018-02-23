@@ -17,11 +17,11 @@
   "loc.input.label.ScriptArguments": "指令碼引數",
   "loc.input.help.ScriptArguments": "傳遞至 PowerShell 的額外引數。可以是序數或具名參數。",
   "loc.input.label.TargetAzurePs": "Azure PowerShell 版本",
-  "loc.input.help.TargetAzurePs": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1 and 5.1.1(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\"",
+  "loc.input.help.TargetAzurePs": "若為裝載的代理程式，受支援的 Azure PowerShell 版本為: 2.1.0、3.8.0、4.2.1 及 5.1.1 (裝載 VS2017 佇列)、3.6.0 (裝載佇列)。\n若要選取代理程式上可用的最新版本，請選取 [Latest installed version]。\n\n若為私人 Agent，您可以使用 [Specify version] 來指定慣用的 Azure PowerShell 版本",
   "loc.input.label.CustomTargetAzurePs": "慣用的 Azure PowerShell 版本",
-  "loc.input.help.CustomTargetAzurePs": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1",
+  "loc.input.help.CustomTargetAzurePs": "慣用的 Azure PowerShell 版本必須為語意正確的版本，例如 1.2.3。不支援類似 2.\\*、2.3.\\* 的 Regex。裝載的 VS2017 集區目前支援的版本有: 2.1.0、3.8.0、4.2.1、5.1.1",
   "loc.messages.InvalidScriptArguments0": "指令碼引數 '{0}' 無效。不允許分行符號。",
   "loc.messages.InvalidScriptPath0": "指令碼路徑 '{0}' 無效。指定的路徑字元無效。",
   "loc.messages.InvalidAzurePsVersion": "指定的 Azure PowerShell 版本 '{0}' 格式不正確。請檢查格式。正確格式的範例為 1.0.1",
-  "loc.messages.OverrideAzurePowerShellVersion": "The Azure PowerShell version '{0}' is not supported for Hosted Agent. Overriding it with version '{1}'. Consider changing the version selected."
+  "loc.messages.OverrideAzurePowerShellVersion": "裝載的代理程式不支援 Azure PowerShell '{0}' 版。正在以 '{1}' 版予以覆寫。請考慮變更選取的版本。"
 }

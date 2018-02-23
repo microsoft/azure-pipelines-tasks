@@ -22,7 +22,7 @@
   "loc.input.label.registryPassword": "登錄密碼",
   "loc.input.help.registryPassword": "Docker 登錄的密碼。如果未加密密碼，建議您使用自訂發行定義密碼變數將它儲存。",
   "loc.input.label.passwordEncrypted": "已加密密碼",
-  "loc.input.help.passwordEncrypted": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+  "loc.input.help.passwordEncrypted": "建議您使用 [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/zh-tw/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets) 加密您的密碼。如果未執行此動作，且組建代理程式已安裝符合叢集連線中伺服器憑證指紋的憑證，則會用該憑證加密密碼; 否則會發生錯誤。",
   "loc.input.label.deployTimeoutSec": "部署逾時 (秒)",
   "loc.input.help.deployTimeoutSec": "部署應用程式時逾時 (秒)。",
   "loc.input.label.removeTimeoutSec": "移除逾時 (秒)",
@@ -43,6 +43,6 @@
   "loc.messages.CurrentStatus": "目前狀態: {0}",
   "loc.messages.DeployFailed": "部署失敗\n狀態: {0}\n詳細資料: {1}",
   "loc.messages.CheckingComposeFile": "正在檢查 Compose 檔案",
-  "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
-  "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
+  "loc.messages.UnsupportedAPIVersion": "不支援 Service Fabric SDK {0} 版。",
+  "loc.messages.UsingAPIVersion": "使用 Service Fabric SDK {0} 版的 cmdlet。"
 }

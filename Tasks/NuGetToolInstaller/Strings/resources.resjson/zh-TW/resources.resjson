@@ -8,7 +8,7 @@
   "loc.input.label.checkLatest": "一律下載最新的相符版本",
   "loc.input.help.checkLatest": "一律檢查並下載符合版本規格之最新可用的 NuGet.exe 版本。此選項也一律會產生下載時間，即使已快取選取的 NuGet 版本也一樣。\n\n啟用此選項可能會在發行新版 NuGet 時造成未預期的建置中斷。",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore 目前不支援使用加密的 API 金鑰。",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "XML 無效。應有名為 'configuration' 的元素。",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "使用下列搜尋模式找不到任何相符的檔案: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "找不到 %s 的下載 URL",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "找不到任何版本與輸入 %s 相符",

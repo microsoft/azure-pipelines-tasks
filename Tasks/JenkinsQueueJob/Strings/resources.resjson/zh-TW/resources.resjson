@@ -34,5 +34,5 @@
   "loc.messages.JenkinsPipelineFailed": "Jenkins 管線失敗",
   "loc.messages.JenkinsJobFailed": "Jenkins 作業失敗",
   "loc.messages.JenkinsJobFailedtoQueue": "Jenkins 作業無法排入佇列",
-  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
+  "loc.messages.JenkinsJobQueueUriInvalid": "無法連線至 Jenkins 所傳回之作業佇列的 URI (%s)。請驗證 Jenkins 伺服器 `Manage Jenkins` 與 `Configure System` 下的 'Jenkins URL' 設定正確。錯誤詳細資料: %s"
 }

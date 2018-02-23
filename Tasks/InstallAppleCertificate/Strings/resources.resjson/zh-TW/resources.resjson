@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "安裝 Apple 憑證",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "安裝在 macOS 代理程式上建置所需的 Apple 憑證",
   "loc.instanceNameFormat": "安裝 Apple 憑證",
   "loc.group.displayName.advanced": "進階",
@@ -21,5 +21,5 @@
   "loc.input.label.signingIdentity": "Certificate signing identity",
   "loc.input.help.signingIdentity": "簽署憑證中主體的一般名稱。若保留為空白，將會嘗試剖析一般名稱。",
   "loc.messages.INVALID_P12": "找不到憑證 SHA1 雜湊和一般名稱 (CN)。請確認憑證是有效的 P12。",
-  "loc.messages.NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon)."
+  "loc.messages.NoP12PwdWarning": "未提供 P12 密碼。若 P12 檔案要求密碼，最佳做法是將其作為處理序變數提供，並加以標記為祕密 (鎖定圖示)。"
 }

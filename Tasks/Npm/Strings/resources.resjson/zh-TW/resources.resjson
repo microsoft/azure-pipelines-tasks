@@ -7,7 +7,7 @@
   "loc.group.displayName.publishRegistries": "目的地登錄與驗證",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.command": "命令",
-  "loc.input.help.command": "The command and arguments which will be passed to npm for execution.\n\nIf your arguments contain double quotes (\"), escape them with a slash (\\), and surround the escaped string with double quotes (\").",
+  "loc.input.help.command": "將傳遞給 npm 執行的命令及引數。\n\n若引數包含雙引號 (\")，請以斜線 (\\) 逸出引數，並在逸出的字串前後括以雙引號 (\")。",
   "loc.input.label.workingDir": "包含 package.json 的工作資料夾",
   "loc.input.help.workingDir": "包含目標 package.json 與 .npmrc 檔案之資料夾的路徑。請選取資料夾而非檔案，例如 \"/packages/mypackage\"。",
   "loc.input.label.verbose": "詳細資訊記錄",
