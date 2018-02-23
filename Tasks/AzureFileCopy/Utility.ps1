@@ -1277,7 +1277,9 @@ function Is-WinRMCustomScriptExtensionExists
 
 function Get-TargetUriFromFwdLink { 
     param(
-        [string]$fwdLink
+        [string]$fwdLink,
+        [string]$extensionName,
+        [string]$vmName
     )   
     Write-Verbose "Trying to get the target uri from the fwdLink: $fwdLink"
     $proxy = Get-VstsWebProxy
@@ -1289,6 +1291,11 @@ function Get-TargetUriFromFwdLink {
     $response = $HttpClient.GetAsync($fwdLink)
     $response.Wait()
     $targetUri =  $response.Result.Headers.Location.AbsoluteUri
+    if([string]::IsNullOrEmpty($targetUri)) {
+        Write-Verbose "The target uri is null"
+        $errMessage = "targetUri = $targetUri"
+        throw (Get-VstsLocString -Key "AFC_SetCustomScriptExtensionFailed" -ArgumentList $extensionName, $vmName, $errMessage)
+    }
     Write-Verbose "The target uri is: $targetUri"
     return $targetUri
 }
@@ -1354,8 +1361,8 @@ function Add-AzureVMCustomScriptExtension
             return
         }
 
-        $configWinRMScriptFile = Get-TargetUriFromFwdLink -fwdLink $configWinRMScriptFileFwdLink
-        $makeCertFile = Get-TargetUriFromFwdLink -fwdLink $makeCertFileFwdLink
+        $configWinRMScriptFile = Get-TargetUriFromFwdLink -fwdLink $configWinRMScriptFileFwdLink -extensionName $extensionName -vmName $vmName
+        $makeCertFile = Get-TargetUriFromFwdLink -fwdLink $makeCertFileFwdLink -extensionName $extensionName -vmName $vmName
 
         $result = Set-AzureMachineCustomScriptExtension -resourceGroupName $resourceGroupName -vmName $vmName -name $extensionName -fileUri $configWinRMScriptFile, $makeCertFile  -run $scriptToRun -argument $dnsName -location $location
         $resultDetails = $result | ConvertTo-Json
