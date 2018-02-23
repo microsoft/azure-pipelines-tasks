@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 130,
-    "Patch": 0
+    "Minor": 131,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -106,7 +106,7 @@
       "name": "failOnStandardError",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnStandardError",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
       "groupName": "advanced"
