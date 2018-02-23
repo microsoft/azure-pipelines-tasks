@@ -22,9 +22,25 @@
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
-      "defaultValue": "3.6",
       "required": true,
+      "defaultValue": "3.6",
       "helpMarkDown": "ms-resource:loc.input.help.version"
+    },
+    {
+      "name": "outputVariable",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.outputVariable",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
+    },
+    {
+      "name": "addToPath",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addToPath",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addToPath"
     }
   ],
   "execution": {

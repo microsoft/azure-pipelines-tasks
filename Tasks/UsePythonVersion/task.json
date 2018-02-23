@@ -22,9 +22,25 @@
             "name": "version",
             "type": "string",
             "label": "Version Spec",
-            "defaultValue": "3.6",
             "required": true,
+            "defaultValue": "3.6",
             "helpMarkDown": "Major.minor version of Python you want to use."
+        },
+        {
+            "name": "outputVariable",
+            "type": "string",
+            "label": "Output variable",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Set a name for the build variable that will contain the directory of the decompressed Python distribution. You can use this in subsequent tasks to access your installation of Python."
+        },
+        {
+            "name": "addToPath",
+            "type": "boolean",
+            "label": "Add to PATH",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "Prepend this version to PATH so that it is available in subsequent tasks or scripts without using the output variable."
         }
     ],
     "execution": {

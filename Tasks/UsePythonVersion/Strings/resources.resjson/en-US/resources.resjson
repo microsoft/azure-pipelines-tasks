@@ -4,5 +4,9 @@
   "loc.description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
   "loc.instanceNameFormat": "Use Python $(version)",
   "loc.input.label.version": "Version Spec",
-  "loc.input.help.version": "Major.minor version of Python you want to use."
+  "loc.input.help.version": "Major.minor version of Python you want to use.",
+  "loc.input.label.outputVariable": "Output variable",
+  "loc.input.help.outputVariable": "Set a name for the build variable that will contain the directory of the decompressed Python distribution. You can use this in subsequent tasks to access your installation of Python.",
+  "loc.input.label.addToPath": "Add to PATH",
+  "loc.input.help.addToPath": "Prepend this version to PATH so that it is available in subsequent tasks or scripts without using the output variable."
 }
