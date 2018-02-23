@@ -1275,13 +1275,20 @@ function Is-WinRMCustomScriptExtensionExists
     $isExtensionExists
 }
 
-function Get-TargetUriFromFwdLink {
+function Get-TargetUriFromFwdLink { 
     param(
         [string]$fwdLink
     )   
-
     Write-Verbose "Trying to get the target uri from the fwdLink: $fwdLink"
-    $targetUri =  $(Invoke-WebRequest $fwdLink).BaseResponse.Uri.AbsoluteUri
+    $proxy = Get-VstsWebProxy
+    Add-Type -AssemblyName System.Net.Http
+    $HttpClientHandler = New-Object System.Net.Http.HttpClientHandler
+    $HttpClientHandler.Proxy = $proxy
+    $HttpClientHandler.AllowAutoRedirect = $false
+    $HttpClient = New-Object System.Net.Http.HttpClient -ArgumentList $HttpClientHandler
+    $response = $HttpClient.GetAsync($fwdLink)
+    $response.Wait()
+    $targetUri =  $response.Result.Headers.Location.AbsoluteUri
     Write-Verbose "The target uri is: $targetUri"
     return $targetUri
 }
