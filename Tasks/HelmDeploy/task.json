@@ -1,0 +1,121 @@
+{
+    "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
+    "name": "HelmDeploy",
+    "friendlyName": "Deploy to Kubernetes using Helm",
+    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 17
+    },
+    "demands": [],
+    "preview": "true",
+    "groups": [
+        {
+            "name": "cluster",
+            "displayName": "Kubernetes Cluster",
+            "isExpanded": true
+        },
+        {
+            "name": "commands",
+            "displayName": "Commands",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "connectionType",
+            "type": "pickList",
+            "label": "Connection Type",
+            "defaultValue": "Azure Resource Manager",
+            "required": true,
+            "options": {
+                "Azure Resource Manager": "Azure Resource Manager"
+            },
+            "helpMarkDown": "Select a Connection Type.",
+            "groupName": "cluster"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "kubernetesCluster",
+            "label": "Kubernetes cluster",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Managed Cluster.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "ls",
+            "required": true,
+            "options": {
+                "create": "create",
+                "delete": "delete",
+                "expose": "expose",
+                "get": "get",
+                "init": "init",
+                "install": "install",
+                "ls": "ls",
+                "rollback": "rollback",
+                "upgrade": "upgrade"
+            },
+            "helpMarkDown": "Select a heml command.",
+            "groupName": "commands",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "arguments",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Arguments",
+            "helpMarkDown": "Command arguments.",
+            "groupName": "commands"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "kubernetesCluster",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl":"{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{name}}}"
+        }
+    ],
+    "instanceNameFormat": "helm $(command)",
+    "execution": {
+        "Node": {
+            "target": "src//helm.js"
+        }
+    },
+    "messages": {
+        "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
+        "HelmNotFound": "Helm not installed on the machine.",
+        "KubernetesNotFound": "Kubernetes not installed on the machine."
+    }
+}

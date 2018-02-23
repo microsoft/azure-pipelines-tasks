@@ -1,0 +1,21 @@
+{
+  "loc.friendlyName": "Deploy to Kubernetes using Helm",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+  "loc.description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+  "loc.instanceNameFormat": "helm $(command)",
+  "loc.group.displayName.cluster": "Kubernetes Cluster",
+  "loc.group.displayName.commands": "Commands",
+  "loc.input.label.connectionType": "Connection Type",
+  "loc.input.help.connectionType": "Select a Connection Type.",
+  "loc.input.label.azureSubscriptionEndpoint": "Azure subscription",
+  "loc.input.help.azureSubscriptionEndpoint": "Select an Azure subscription, which has your Azure Container Registry.",
+  "loc.input.label.kubernetesCluster": "Kubernetes cluster",
+  "loc.input.help.kubernetesCluster": "Select an Azure Managed Cluster.",
+  "loc.input.label.command": "Command",
+  "loc.input.help.command": "Select a heml command.",
+  "loc.input.label.arguments": "Arguments",
+  "loc.input.help.arguments": "Command arguments.",
+  "loc.messages.AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
+  "loc.messages.HelmNotFound": "Helm not installed on the machine.",
+  "loc.messages.KubernetesNotFound": "Kubernetes not installed on the machine."
+}

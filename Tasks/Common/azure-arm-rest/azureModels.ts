@@ -272,3 +272,7 @@ export interface ApplicationInsights {
     etag?: string;
     properties?: {[key: string]: any};
 }
+
+export interface AKSCluster extends AzureBaseObject {
+    //TODO: Keep adding properties as you need
+}
