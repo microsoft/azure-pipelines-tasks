@@ -40,6 +40,9 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
             'PYTHON_PATH': 'D:\\home\\python353x86\\python.exe',
             'PYTHON_WFASTCGI_PATH': 'D:\\home\\python353x86\\wfastcgi.py',
             'STATIC_FOLDER_PATH': 'static'
+        },
+        'Go': {
+            'GoExeFileName': ''
         }
     };
 
@@ -62,7 +65,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
     var webConfigPath = path.join(folderPath, "web.config");
     if (!tl.exist(webConfigPath)) {
         try {
-            var supportedAppTypes = ['node', 'python_Bottle', 'python_Django', 'python_Flask']
+            var supportedAppTypes = ['node', 'python_Bottle', 'python_Django', 'python_Flask', 'Go']
             // Create web.config
             tl.debug('web.config file does not exist. Generating.');
             if(!webConfigParameters['appType']) {
@@ -77,7 +80,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
             delete webConfigParameters['appType'];
 
             var selectedAppTypeParams = addMissingParametersValue(appType, webConfigParameters);
-            if(appType != "node") {
+            if(appType != "node" && appType != "Go") {
                 rootDirectoryPath = "D:\\home\\" + (rootDirectoryPath ? rootDirectoryPath : "site\\wwwroot");
                 tl.debug('Root Directory path to be set on web.config: ' + rootDirectoryPath);
                 selectedAppTypeParams['KUDU_WORKING_DIRECTORY'] = rootDirectoryPath;
