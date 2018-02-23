@@ -1,0 +1,37 @@
+{
+  "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+  "name": "UsePythonVersion",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 132,
+    "Patch": 0
+  },
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "3.6",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "usepythonversion.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {}
+}

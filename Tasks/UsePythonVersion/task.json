@@ -1,0 +1,38 @@
+{
+    "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+    "name": "UsePythonVersion",
+    "friendlyName": "Use Python Version",
+    "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 132,
+        "Patch": 0
+    },
+    "demands": [],
+    "instanceNameFormat": "Use Python $(version)",
+    "inputs": [
+        {
+            "name": "version",
+            "type": "string",
+            "label": "Version Spec",
+            "defaultValue": "3.6",
+            "required": true,
+            "helpMarkDown": "Major.minor version of Python you want to use."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "usepythonversion.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+    }
+}
