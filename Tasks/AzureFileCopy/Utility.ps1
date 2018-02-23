@@ -1275,23 +1275,13 @@ function Is-WinRMCustomScriptExtensionExists
     $isExtensionExists
 }
 
-function Load-Assembly([string] $Assembly) {
-    try {
-        Add-Type -AssemblyName $Assembly | Out-Null
-    }
-    catch {
-        # On Nano Server, Powershell Core Edition is used.  Add-Type is unable to resolve base class assemblies because they are not GAC'd.
-        # Loading the base class assemblies is unnecessary as the types will automatically get resolved.
-    }
-}
-
 function Get-TargetUriFromFwdLink { 
     param(
         [string]$fwdLink
     )   
     Write-Verbose "Trying to get the target uri from the fwdLink: $fwdLink"
     $proxy = Get-VstsWebProxy
-    Load-Assembly -Assembly "System.Net.Http"
+    Add-Type -AssemblyName System.Net.Http
     $HttpClientHandler = New-Object System.Net.Http.HttpClientHandler
     $HttpClientHandler.Proxy = $proxy
     $HttpClientHandler.AllowAutoRedirect = $false
