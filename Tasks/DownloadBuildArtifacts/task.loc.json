@@ -9,7 +9,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 131,
+    "Minor": 132,
     "Patch": 0
   },
   "groups": [
@@ -197,6 +197,7 @@
     "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",
-    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound"
+    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound",
+    "FoundGitRefArtifactType": "ms-resource:loc.messages.FoundGitRefArtifactType"
   }
 }

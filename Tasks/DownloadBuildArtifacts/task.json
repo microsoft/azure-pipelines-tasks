@@ -9,7 +9,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 131,
+    "Minor": 132,
     "Patch": 0
   },
   "groups": [
@@ -197,6 +197,7 @@
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
     "RetryingOperation" : "Error : in %s, so retrying => retries pending  : %s",
     "OperationFailed": "Failed in %s with error: %s",
-    "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
+    "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
+    "FoundGitRefArtifactType": "If source is labeled from build it creates an additional GitRef artifact. We don't support downloading GitRef artifact. You can safely ignore this warning."
   }
 }
