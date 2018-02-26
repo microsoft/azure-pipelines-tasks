@@ -102,7 +102,12 @@ try {
     $useDiffPackage = [System.Boolean]::Parse((Get-VstsInput -Name useDiffPackage))
     if ($useDiffPackage)
     {
-        if (Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath)
+        $isPackageValid = $true
+        if (!$skipValidation)
+        {
+            $isPackageValid = Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath
+        }
+        if ($isPackageValid)
         {
             Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
             $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
