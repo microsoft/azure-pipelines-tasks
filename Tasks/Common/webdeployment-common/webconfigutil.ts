@@ -42,7 +42,7 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
             'STATIC_FOLDER_PATH': 'static'
         },
         'Go': {
-            'GoExeFileName': ''
+            'GoExeFilePath': ''
         }
     };
 
@@ -80,7 +80,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
             delete webConfigParameters['appType'];
 
             var selectedAppTypeParams = addMissingParametersValue(appType, webConfigParameters);
-            if(appType != "node" && appType != "Go") {
+            if(appType.startsWith("python")) {
                 rootDirectoryPath = "D:\\home\\" + (rootDirectoryPath ? rootDirectoryPath : "site\\wwwroot");
                 tl.debug('Root Directory path to be set on web.config: ' + rootDirectoryPath);
                 selectedAppTypeParams['KUDU_WORKING_DIRECTORY'] = rootDirectoryPath;
@@ -88,6 +88,9 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
                     tl.debug('Auto detecting settings.py to set DJANGO_SETTINGS_MODULE...');
                     selectedAppTypeParams['DJANGO_SETTINGS_MODULE'] = getDjangoSettingsFile(folderPath);
                 }
+            } else if(appType == 'Go') {
+                rootDirectoryPath = "D:\\home\\" + (rootDirectoryPath ? rootDirectoryPath : "site\\wwwroot");
+                selectedAppTypeParams['GoExeFilePath'] = rootDirectoryPath + "\\" + webConfigParameters['GoExeFileName'].value;
             }
             generateWebConfigFile(webConfigPath, appType, selectedAppTypeParams);
             console.log(tl.loc("SuccessfullyGeneratedWebConfig"));

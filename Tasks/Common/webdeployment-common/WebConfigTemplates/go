@@ -7,7 +7,7 @@
         <handlers>
             <add name="httpplatformhandler" path="*" verb="*" modules="httpPlatformHandler" resourceType="Unspecified" />
         </handlers>
-        <httpPlatform processPath="{GoExeFileName}" startupTimeLimit="60">
+        <httpPlatform processPath="{GoExeFilePath}" startupTimeLimit="60">
         </httpPlatform>
     </system.webServer>
 </configuration>
