@@ -188,9 +188,9 @@ tr.registerMock('./utilities', {
         console.log("Got kubectl version " + version);
         return Promise.resolve(version);
     },
-    downloadKubectl: function() {
-        console.log("Downloaded kubectl");
-        return KubectlPath;
+    downloadKubectl: function(version, kubectlPath) {
+        console.log("Downloaded kubectl version " + version);
+        return kubectlPath;
     },
     assertFileExists: function(path) {
         return true;
