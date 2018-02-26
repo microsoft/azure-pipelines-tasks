@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
+import util = require('util');
 
 export function generateWebConfigFile(webConfigTargetPath: string, appType: string, substitutionParameters: any) {
     // Get the template path for the given appType
@@ -88,7 +89,9 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
                     selectedAppTypeParams['DJANGO_SETTINGS_MODULE'] = getDjangoSettingsFile(folderPath);
                 }
             } else if(appType == 'Go') {
-                if(webConfigParameters['GoExeFileName'].value == null) {
+                if (util.isNullOrUndefined(webConfigParameters['GoExeFileName'])
+                        || util.isNullOrUndefined(webConfigParameters['GoExeFileName'].value) 
+                        || webConfigParameters['GoExeFileName'].value.length <=0) {
                     throw Error(tl.loc('GoExeNameNotPresent'));
                 }
                 selectedAppTypeParams['GoExeFilePath'] = rootDirectoryPath + "\\" + webConfigParameters['GoExeFileName'].value;
