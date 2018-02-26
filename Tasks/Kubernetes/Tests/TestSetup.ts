@@ -32,6 +32,8 @@ tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
 console.log("Inputs have been set");
 
+process.env["TASK_TRACE"] =  "1";
+
 process.env["SYSTEM.DEBUG"] =  "true";
 
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
