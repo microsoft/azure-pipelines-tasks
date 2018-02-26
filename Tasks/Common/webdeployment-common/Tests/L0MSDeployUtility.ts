@@ -10,7 +10,7 @@ function checkParametersIfPresent(argumentString: string, argumentCheckArray: Ar
     return true;
 }
 
-let defaultMSBuildPackageArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
+var defaultMSBuildPackageArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
 }, true, false, true, null, null, null, true, false, true);
 
@@ -33,7 +33,7 @@ else {
 }
 
 
-let packageWithSetParamArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
+var packageWithSetParamArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
 }, false, false, true, null, 'temp_param.xml', null, false, false, true);
 
@@ -41,14 +41,14 @@ let packageWithSetParamArgument: string = msdeployUtility.getMSDeployCmdArgs('pa
 console.log(` * PACKAGE WITh SET PARAMS: ${defaultMSBuildPackageArgument}`);
 
 
-if(checkParametersIfPresent(packageWithSetParamArgument, ['-setParamFile=temp_param.xml', "-dest:contentPath=\"'webapp_name'\"" , '-enableRule:DoNotDelete'])) {
+if(checkParametersIfPresent(packageWithSetParamArgument, ['-setParamFile=temp_param.xml', "-dest:contentPath=\"'webapp_name'\"" , '-enableRule:DoNotDevare'])) {
     console.log('ARGUMENTS WITH SET PARAMS PASSED');
 }
 else {
     throw Error('ARGUMENTS WITH SET PARAMS FAILED');
 }
 
-let folderPackageArgument: string = msdeployUtility.getMSDeployCmdArgs('c:/package/folder', 'webapp_name', {
+var folderPackageArgument: string = msdeployUtility.getMSDeployCmdArgs('c:/package/folder', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
 }, true, false, true, null, null, null, true, true, true);
 
@@ -64,7 +64,7 @@ else {
 }
 
 
-let packageWithExcludeAppDataArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
+var packageWithExcludeAppDataArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
 }, false, true, true, null, null, null, false, false, true);
 
@@ -78,7 +78,7 @@ else {
 }
 
 
-let warDeploymentArgument: string =  msdeployUtility.getMSDeployCmdArgs('package.war', 'webapp_name', {
+var warDeploymentArgument: string =  msdeployUtility.getMSDeployCmdArgs('package.war', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
 }, false, true, true, null, null, null, false, false, true);
 
@@ -93,7 +93,7 @@ else {
     throw new Error('ARGUMENT WITH WAR PACKAGE FAILED');
 }
 
-let overrideRetryArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
+var overrideRetryArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
 }, false, true, true, null, null, '-retryAttempts:11 -retryInterval:5000', false, false, true);
 
