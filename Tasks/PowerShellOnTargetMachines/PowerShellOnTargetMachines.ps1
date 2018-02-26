@@ -66,19 +66,61 @@ if ($enableDetailedLoggingString -ne "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
+<<<<<<< HEAD
 function Publish-Azure-Telemetry
+=======
+# Import all the dlls and modules which have cmdlets we need
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+
+function Write-DTLServiceDeprecationMessageIfRequired
+{
+     param([string]$machine)
+
+    try
+    {
+        $jsonValue = ConvertFrom-Json $environmentName -ErrorAction Stop;
+        $validJson = $true;
+    }
+    catch
+    {
+        $validJson = $false;
+    }
+    
+    if(!$validJson)
+    {
+        if(-not($machine.Contains('.')) -and -not($machine.Contains(':')) -and -not($machine.Contains(",")))
+        {
+           write-error "Deployments using 'test hub: machine groups' is no longer supported. Refer to https://go.microsoft.com/fwlink/?LinkID=799742&clcid=0x409 for more information or get help from Developer Community [https://developercommunity.visualstudio.com/spaces/21/index.html]."
+        }
+    }
+}
+
+function Publish-AzureTelemetry
+>>>>>>> 290ef914b... review incorporated
  {
-   param([object] $deploymentResponse, [string] $jobId)
+   param([object] $deploymentResponse, 
+            [string] $jobId )
     if($deploymentResponse){
-       $jsonString = -join("{" , 
-       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
-       "," , 
-       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
-       "," , 
-       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
-       "," ,
-       "`"JobId`" : `"$jobId`"" ,
-       "}")
+        $jsonString = -join("{")
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "IsAzureVm")){
+            $jsonString = -join( $jsonString,
+            "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" ,
+            ",")
+        }
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "VmUuidHash")){
+            $jsonString = -join( $jsonString,
+            "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"",
+            ",")
+        }
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "TelemetryError")){
+            $jsonString = -join( $jsonString,
+            "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"",
+            ",")
+        }
+    
+        $jsonString = -join( $jsonString,
+            "`"JobId`" : `"$jobId`"" , "}")
     }
 
     $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$jsonString"
@@ -125,7 +167,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
-        Publish-Azure-Telemetry -deploymentResponse $deploymentResponse -jobId $jobId
+        Publish-AzureTelemetry -deploymentResponse $deploymentResponse -jobId $jobId
 
         if ($status -ne "Passed")
         {
@@ -166,7 +208,7 @@ else
 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                 Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
-                Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
+                Publish-AzureTelemetry -deploymentResponse $output -jobId $jobId
 
                 if($status -ne "Passed")
                 {
