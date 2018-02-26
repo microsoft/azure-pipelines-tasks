@@ -1,10 +1,4 @@
 var msdeployUtility = require('webdeployment-common/msdeployutility.js');
-/*getMSDeployCmdArgs(webAppPackage: string, webAppName: string, publishingProfile,
-    removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
-    virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
-    isFolderBasedDeployment: boolean, useWebDeploy: boolean) 
-*/
-
 
 function checkParametersIfPresent(argumentString: string, argumentCheckArray: Array<string>) {
     for(var argument of argumentCheckArray) {
@@ -15,6 +9,7 @@ function checkParametersIfPresent(argumentString: string, argumentCheckArray: Ar
 
     return true;
 }
+
 let defaultMSBuildPackageArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
 }, true, false, true, null, null, null, true, false, true);
