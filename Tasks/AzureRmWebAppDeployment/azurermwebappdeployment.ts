@@ -42,9 +42,7 @@ async function main() {
         await appServiceUtility.pingApplication();
         let kuduService: Kudu = await appServiceUtility.getKuduService();
         kuduServiceUtility = new KuduServiceUtility(kuduService);
-        if(taskParams.WebAppUri) {
-            tl.setVariable(taskParams.WebAppUri, await appServiceUtility.getApplicationURL());
-        }
+        tl.setVariable('AppServiceApplicationUrl', await appServiceUtility.getApplicationURL());
 
         if(taskParams.isLinuxApp) {
             

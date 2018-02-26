@@ -24,7 +24,6 @@ export class TaskParametersUtility {
             DockerNamespace: tl.getInput('DockerNamespace', false),
             AppSettings: tl.getInput('AppSettings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
-            WebAppUri: tl.getInput('WebAppUri', false),
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
         }
 
@@ -81,7 +80,6 @@ export interface TaskParameters {
     AppSettings?: string;
     StartupCommand?: string;
     RuntimeStack?: string;
-    WebAppUri?: string;
     ConfigurationSettings?: string;
     /** Additional parameters */
     isLinuxApp?: boolean;

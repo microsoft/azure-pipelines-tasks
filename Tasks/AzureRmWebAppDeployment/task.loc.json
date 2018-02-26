@@ -44,12 +44,6 @@
       "name": "ApplicationAndConfigurationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
       "isExpanded": false
-    },
-    {
-      "name": "output",
-      "displayName": "ms-resource:loc.group.displayName.output",
-      "isExpanded": true,
-      "visibleRule": "WebAppKind != \"\""
     }
   ],
   "inputs": [
@@ -79,7 +73,7 @@
         "webAppContainer": "Web App for Containers",
         "functionApp": "Function App",
         "apiApp": "API App",
-        "mobileapp": "Mobile App"
+        "mobileApp": "Mobile App"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },
@@ -209,15 +203,6 @@
       "required": false,
       "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
-    },
-    {
-      "name": "WebAppUri",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.WebAppUri",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "output",
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
       "name": "ScriptType",
@@ -390,6 +375,12 @@
       "defaultValue": "",
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "AppServiceApplicationUrl",
+      "description": "Application URL for the selected App Service."
     }
   ],
   "dataSourceBindings": [

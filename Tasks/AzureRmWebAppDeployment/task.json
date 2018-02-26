@@ -44,12 +44,6 @@
             "name": "ApplicationAndConfigurationSettings",
             "displayName": "Application and Configuration Settings",
             "isExpanded": false
-        },
-        {
-            "name": "output",
-            "displayName": "Output",
-            "isExpanded": true,
-            "visibleRule": "WebAppKind != \"\""
         }
     ],
     "inputs": [
@@ -203,15 +197,6 @@
             "required": false,
             "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer",
             "helpMarkDown": "Enter the start up command."
-        },
-        {
-            "name": "WebAppUri",
-            "type": "string",
-            "label": "App Service URL",
-            "required": false,
-            "defaultValue": "",
-            "groupName": "output",
-            "helpMarkDown": "Specify a name for the output variable that is generated for the URL of the Azure App Service. The variable can be consumed in subsequent tasks."
         },
         {
             "name": "ScriptType",
@@ -380,6 +365,12 @@
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
             "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "AppServiceApplicationUrl",
+            "description": "Application URL for the selected App Service."
         }
     ],
     "dataSourceBindings": [
