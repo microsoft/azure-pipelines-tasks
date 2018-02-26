@@ -92,19 +92,30 @@ function Write-DTLServiceDeprecationMessageIfRequired
     }
 }
 
-function Publish-Azure-Telemetry
+function Publish-AzureTelemetry
  {
-   param([object] $deploymentResponse, [string] $jobId)
+   param([object] $deploymentResponse, 
+            [string] $jobId )
     if($deploymentResponse){
-       $jsonString = -join("{" , 
-       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
-       "," , 
-       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
-       "," , 
-       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
-       "," ,
-       "`"JobId`" : `"$jobId`"" ,
-       "}")
+        $jsonString = -join("{")
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "IsAzureVm")){
+            $jsonString = -join( $jsonString,
+            "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" ,
+            ",")
+        }
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "VmUuidHash")){
+            $jsonString = -join( $jsonString,
+            "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"",
+            ",")
+        }
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "TelemetryError")){
+            $jsonString = -join( $jsonString,
+            "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"",
+            ",")
+        }
+    
+        $jsonString = -join( $jsonString,
+            "`"JobId`" : `"$jobId`"" , "}")
     }
 
     $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$jsonString"
@@ -151,7 +162,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
-        Publish-Azure-Telemetry -deploymentResponse $deploymentResponse -jobId $jobId
+        Publish-AzureTelemetry -deploymentResponse $deploymentResponse -jobId $jobId
 
         if ($status -ne "Passed")
         {
@@ -192,7 +203,7 @@ else
 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                 Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
-                Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
+                Publish-AzureTelemetry -deploymentResponse $output -jobId $jobId
 
                 if($status -ne "Passed")
                 {
