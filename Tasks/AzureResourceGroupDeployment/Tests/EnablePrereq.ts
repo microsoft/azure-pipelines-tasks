@@ -43,6 +43,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 tr.setAnswers(a);
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
+tr.registerMock('azure-arm-rest/webRequestUtility', require('./mock_node_modules/webRequestUtility'));
 tr.registerMock('azure-arm-rest/azure-arm-compute', require('./mock_node_modules/azure-arm-compute'));
 tr.registerMock('azure-arm-rest/azure-arm-network', require('./mock_node_modules/azure-arm-network'));
 tr.registerMock('azure-arm-rest/azure-arm-resource', require('./mock_node_modules/azure-arm-resource'));
