@@ -26,13 +26,13 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != app44linux && WebAppKind != app44linux44container && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != app44linux && WebAppKind != app44linux44container && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
     },
     {
       "name": "PostDeploymentAction",
@@ -71,14 +71,14 @@
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
-      "defaultValue": "app",
+      "defaultValue": "webApp",
       "required": true,
       "options": {
-        "app": "Web App on Windows",
-        "app44linux": "Web App on Linux with built-In Images",
-        "app44linux44container": "Web App for Containers with Container Registry",
-        "functionapp": "Function App",
-        "api": "API App",
+        "webApp": "Web App on Windows",
+        "webAppLinux": "Web App on Linux",
+        "webAppContainer": "Web App for Containers",
+        "functionApp": "Function App",
+        "apiApp": "API App",
         "mobileapp": "Mobile App"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
@@ -133,7 +133,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = app44linux44container",
+      "visibleRule": "WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -142,7 +142,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = app44linux44container",
+      "visibleRule": "WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -151,7 +151,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = app44linux44container",
+      "visibleRule": "WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -160,7 +160,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != app44linux && WebAppKind != app44linux44container && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -172,7 +172,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != app44linux44container && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != webAppContainer && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -199,7 +199,7 @@
         "ruby|2.3": "Ruby 2.3"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
-      "visibleRule": "WebAppKind = app44linux"
+      "visibleRule": "WebAppKind = webAppLinux"
     },
     {
       "name": "StartupCommand",
@@ -207,7 +207,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = app44linux || WebAppKind = app44linux44container",
+      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
