@@ -56,7 +56,7 @@
   "loc.input.label.destinationDevices": "Устройство",
   "loc.input.help.destinationDevices": "Введите имя устройства для тестирования пользовательского интерфейса, например \"iPad Раисы\".",
   "loc.input.label.args": "Аргументы",
-  "loc.input.help.args": "(Необязательно) Введите дополнительные аргументы командной строки для сборки. Это позволяет определить аргументы \"-target\" или \"-project\" вместо указания рабочей области или проекта  и схемы. См. [страницу руководства xcodebuild](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
+  "loc.input.help.args": "(Необязательно) Введите дополнительные аргументы командной строки для сборки. Это позволяет определить аргументы \"-target\" или \"-project\" вместо указания рабочей области или проекта и схемы. См. [страницу руководства xcodebuild](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "(Необязательно) Укажите рабочий каталог, в котором будет вестись сборка. Если значение не указано, будет использоваться корневой каталог хранилища.",
   "loc.input.label.outputPattern": "Выходной каталог",

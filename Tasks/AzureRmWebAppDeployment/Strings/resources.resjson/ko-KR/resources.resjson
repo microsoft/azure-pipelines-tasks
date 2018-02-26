@@ -213,5 +213,6 @@
   "loc.messages.MultipleResourceGroupFoundForAppService": "App Service '%s'에 대한 리소스 그룹이 여러 개 있습니다.",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
   "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
+  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
+  "loc.messages.GoExeNameNotPresent": "Go exe name is not present"
 }

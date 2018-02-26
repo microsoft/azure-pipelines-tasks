@@ -15,7 +15,7 @@
   "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "脚本运行时的当前工作目录。默认为脚本所处的文件夹。",
   "loc.input.label.gulpjs": "gulp.js 位置",
-  "loc.input.help.gulpjs": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of the working directory.",
+  "loc.input.help.gulpjs": "代理找不到全局安装的 Gulp 时要运行的 gulp.js。默认为工作目录的 node_modules 文件夹下的 gulp.js。",
   "loc.input.label.publishJUnitResults": "发布到 TFS/Team Services",
   "loc.input.help.publishJUnitResults": "选择此选项将 Gulp 生成产生的 JUnit 测试结果发布到 TFS/Team Services。",
   "loc.input.label.testResultsFiles": "测试结果文件",

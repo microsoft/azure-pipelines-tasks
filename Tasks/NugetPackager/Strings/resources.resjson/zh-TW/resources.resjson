@@ -26,7 +26,7 @@
   "loc.input.label.buildProperties": "其他組建屬性",
   "loc.input.help.buildProperties": "用來建置封裝的屬性清單 (以分號分隔)。",
   "loc.input.label.nuGetAdditionalArgs": "NuGet 引數",
-  "loc.input.help.nuGetAdditionalArgs": "傳遞至 NuGet.exe 套件的其他引數。[詳細資訊](https://docs.nuget.org/consume/command-line-reference#user-content-pack-command)。",
+  "loc.input.help.nuGetAdditionalArgs": "傳遞至 NuGet.exe 套件的其他引數。[詳細資訊](https://docs.microsoft.com/zh-tw/nuget/tools/cli-ref-pack)。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路徑",
   "loc.input.help.nuGetPath": "選擇性地提供 NuGet.exe 的路徑"
 }

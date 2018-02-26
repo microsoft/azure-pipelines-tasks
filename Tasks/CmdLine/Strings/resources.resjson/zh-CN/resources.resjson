@@ -14,5 +14,5 @@
   "loc.messages.JS_Stderr": "Bash 向标准错误流写入一个或多个行。",
   "loc.messages.PS_ExitCode": "Cmd.exe 已退出，代码为“{0}”。",
   "loc.messages.PS_UnableToDetermineExitCode": "出现意外异常。无法确定 cmd.exe 的退出代码。",
-  "loc.messages.ScriptContents": "Script contents:"
+  "loc.messages.ScriptContents": "脚本内容:"
 }
