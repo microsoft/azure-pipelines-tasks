@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xcode 封裝 iOS",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613731)",
-  "loc.description": "Generate an .ipa file from Xcode build output using xcrun (Xcode 7 or below)",
+  "loc.description": "使用 xcrun 從 Xcode 建置輸出產生 .ipa 檔案 (Xcode 7 或更低版本)",
   "loc.instanceNameFormat": "Xcode 套件 $(appName)",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.appName": ".app 的名稱",

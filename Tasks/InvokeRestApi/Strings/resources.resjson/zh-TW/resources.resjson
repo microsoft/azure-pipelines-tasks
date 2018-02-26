@@ -1,20 +1,20 @@
 {
   "loc.friendlyName": "叫用 REST API",
-  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.helpMarkDown": "[詳細資訊](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/http-rest-api)",
   "loc.description": "在程序中叫用 REST API。",
   "loc.instanceNameFormat": "叫用 REST API: $(method)",
   "loc.group.displayName.completionOptions": "進階",
-  "loc.input.label.connectedServiceName": "Generic endpoint",
+  "loc.input.label.connectedServiceName": "泛型端點",
   "loc.input.help.connectedServiceName": "選取應該用來為 HTTP 要求挑選 URL 和建構授權標頭的泛型端點。",
   "loc.input.label.method": "方法",
   "loc.input.help.method": "選取叫用 API 時要使用的 HTTP 方法。",
   "loc.input.label.headers": "標頭",
   "loc.input.help.headers": "使用 JSON 格式定義標頭。標頭應附加在要傳送的要求上。",
   "loc.input.label.body": "本文",
-  "loc.input.label.urlSuffix": "Url suffix and parameters",
-  "loc.input.help.urlSuffix": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
-  "loc.input.label.waitForCompletion": "Completion event",
-  "loc.input.help.waitForCompletion": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
-  "loc.input.label.successCriteria": "Success criteria",
-  "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​"
+  "loc.input.label.urlSuffix": "URL 尾碼及參數",
+  "loc.input.help.urlSuffix": "附加至 URL 的指定字串。範例: 若端點 URL 為 https:...TestProj/_apis/Release/releases 且 URL 尾碼為 /2/environments/1，端點 URL 即為 https:.../TestProj/_apis/Release/releases/2/environments/1。若 URL 尾碼為 ?definitionId=1&releaseCount=1 則 URL 為 https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1。",
+  "loc.input.label.waitForCompletion": "完成事件",
+  "loc.input.help.waitForCompletion": "預設值 \"ApiResponse\"。可用的值 :  \"ApiResponse\" 和 \"Callback\" 呼叫，REST API 對其回呼以更新時間軸記錄。",
+  "loc.input.label.successCriteria": "成功準則",
+  "loc.input.help.successCriteria": "定義工作何時通過的準則。沒有準則表示回應內容不影響結果。範例:- 若要回應 {\"status\" : \"successful\"}，運算式可為 eq(root['status'], 'successful')。[詳細資訊](https://go.microsoft.com/fwlink/?linkid=842996)​"
 }

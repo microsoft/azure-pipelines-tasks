@@ -19,7 +19,7 @@
   "loc.messages.JS_ExitCode": "Bash 已結束，代碼為 '%s'。",
   "loc.messages.JS_FormattedCommand": "經過格式化的命令: %s",
   "loc.messages.JS_InvalidFilePath": "檔案路徑 '%s' 無效。",
-  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_ScriptContents": "指令碼內容:",
   "loc.messages.JS_Stderr": "Bash 已將一或多行寫入標準錯誤資料流。",
   "loc.messages.JS_TranslatePathFailed": "無法將路徑 '%s' 轉譯成 Linux 檔案系統。"
 }

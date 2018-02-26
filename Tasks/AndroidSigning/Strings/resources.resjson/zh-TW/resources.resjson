@@ -10,7 +10,7 @@
   "loc.input.label.jarsign": "簽署 APK",
   "loc.input.help.jarsign": "若要使用提供的金鑰儲存區檔案簽署 APK，請選取此選項。未經簽署的 APK 只可在模擬器中執行。APK 必須經過簽署，才能在裝置上執行。",
   "loc.input.label.keystoreFile": "Keystore file",
-  "loc.input.help.keystoreFile": "Select the keystore file that was uploaded to `Secure Files` to be used to sign the APK.",
+  "loc.input.help.keystoreFile": "選取上傳至 `Secure Files` 以用於簽署 APK 的金鑰儲存區檔案。",
   "loc.input.label.keystorePass": "Keystore password",
   "loc.input.help.keystorePass": "請輸入所提供之金鑰儲存區檔案的密碼。請使用新的變數，並在 [變數] 索引標籤上啟用其鎖定，以加密此變數。",
   "loc.input.label.keystoreAlias": "別名",
@@ -28,5 +28,5 @@
   "loc.messages.CouldNotFindZipalignInAndroidHome": "在 ANDROID_HOME 中找不到 zipalign 工具: %s",
   "loc.messages.JavaHomeNotSet": "未對正在執行中的使用者設定 JAVA_HOME 環境變數。",
   "loc.messages.NoMatchingFiles": "使用下列搜尋模式找不到任何相符的檔案: %s",
-  "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "無法刪除從伺服器 %s 下載的金鑰儲存區檔案"
 }
