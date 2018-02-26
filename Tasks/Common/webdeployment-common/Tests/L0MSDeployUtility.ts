@@ -38,10 +38,10 @@ var packageWithSetParamArgument: string = msdeployUtility.getMSDeployCmdArgs('pa
 }, false, false, true, null, 'temp_param.xml', null, false, false, true);
 
 
-console.log(` * PACKAGE WITh SET PARAMS: ${defaultMSBuildPackageArgument}`);
+console.log(` * PACKAGE WITh SET PARAMS: ${packageWithSetParamArgument}`);
 
 
-if(checkParametersIfPresent(packageWithSetParamArgument, ['-setParamFile=temp_param.xml', "-dest:contentPath=\"'webapp_name'\"" , '-enableRule:DoNotDevare'])) {
+if(checkParametersIfPresent(packageWithSetParamArgument, ['-setParamFile=temp_param.xml', "-dest:contentPath=\"'webapp_name'\"" , '-enableRule:DoNotDelete'])) {
     console.log('ARGUMENTS WITH SET PARAMS PASSED');
 }
 else {
