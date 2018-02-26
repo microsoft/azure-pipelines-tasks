@@ -7,7 +7,7 @@
   "loc.group.displayName.publishRegistries": "目标注册表和身份验证",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.command": "命令",
-  "loc.input.help.command": "The command and arguments which will be passed to npm for execution.\n\nIf your arguments contain double quotes (\"), escape them with a slash (\\), and surround the escaped string with double quotes (\").",
+  "loc.input.help.command": "将传递到 npm 执行的命令和参数。\n\n如果参数包含双引号(\")，以斜杠(\\)进行转义并使用双引号(\")将转义的字符串括起来。",
   "loc.input.label.workingDir": "含 package.json 的工作文件夹",
   "loc.input.help.workingDir": "包含目标 package.json 和 .npmrc 文件的文件夹的路径。选择文件夹，而不是文件，如 \"/packages/mypackage\"。",
   "loc.input.label.verbose": "详细日志记录",

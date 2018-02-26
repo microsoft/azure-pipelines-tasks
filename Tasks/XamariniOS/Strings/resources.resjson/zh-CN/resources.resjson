@@ -6,7 +6,7 @@
   "loc.group.displayName.sign": "签名和预配",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.solution": "解决方案",
-  "loc.input.help.solution": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards.",
+  "loc.input.help.solution": "要生成的 Xamarin.iOS 解决方案的存储库根路径的相对路径。可能包含通配符。",
   "loc.input.label.configuration": "配置",
   "loc.input.help.configuration": "标准配置是 Ad-Hoc、AppStore、Debug、Release。",
   "loc.input.label.clean": "清理",
@@ -55,6 +55,6 @@
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "使用搜索模式“{0}”找不到解决方案。",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "“还原 NuGet 包”选项已弃用。若要在生成中还原 NuGet 包，请将 NuGet 安装程序任务添加到生成定义中。",
   "loc.messages.MSB_BuildToolNotFound": "macOS 或 Linux 代理上找不到 MSBuild 或 xbuild (Mono)。",
-  "loc.messages.MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+  "loc.messages.MultipleSolutionsFound": "已找到多个解决方案文件匹配项。将使用第一个匹配项: %s",
+  "loc.messages.SolutionDoesNotExist": "虽然已指定解决方案文件，但它不存在: %s"
 }

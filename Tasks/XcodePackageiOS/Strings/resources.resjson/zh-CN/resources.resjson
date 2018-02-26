@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xcode iOS 打包",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613731)",
-  "loc.description": "Generate an .ipa file from Xcode build output using xcrun (Xcode 7 or below)",
+  "loc.description": "使用 xcrun 从 Xcode 生成输出生成 .ipa 文件(Xcode 7 或更低版本)",
   "loc.instanceNameFormat": "Xcode 包 $(appName)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.appName": ".app 的名称",
