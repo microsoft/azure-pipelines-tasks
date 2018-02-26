@@ -83,11 +83,13 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         if(excludeFilesFromAppDataFlag) {
             msDeployCmdArgs += ' -skip:Directory=App_Data';
         }
-        
-        if(additionalArguments) {
-            msDeployCmdArgs += ' ' + additionalArguments;
-        }
     }
+
+    additionalArguments = !!(additionalArguments) ? additionalArguments : ' ';
+    additionalArguments = additionalArguments.indexOf('-retryAttempts') != -1 ? additionalArguments : additionalArguments.concat(' -retryAttempts:6');
+    additionalArguments = additionalArguments.indexOf('-retryInterval') != -1 ? additionalArguments : additionalArguments.concat(' -retryInterval:10000');
+
+    msDeployCmdArgs += ' ' + additionalArguments;
 
     if(!(removeAdditionalFilesFlag && useWebDeploy)) {
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
