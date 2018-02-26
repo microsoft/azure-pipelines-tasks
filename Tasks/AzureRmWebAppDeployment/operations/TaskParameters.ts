@@ -28,11 +28,10 @@ export class TaskParametersUtility {
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
         }
 
-        taskParameters.WebAppKind = taskParameters.WebAppKind.replace(/44/g, ',');
-        tl.debug(`Formatted web app kind : ${taskParameters.WebAppKind}`);
-        taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("linux") >= 0;
-        taskParameters.isBuiltinLinuxWebApp = taskParameters.WebAppKind == "app,linux";
-        taskParameters.isContainerWebApp =taskParameters.WebAppKind == "app,linux,container";
+        taskParameters.WebAppKind = taskParameters.WebAppKind;
+        taskParameters.isLinuxApp = taskParameters.WebAppKind && (taskParameters.WebAppKind.indexOf("Linux") !=-1 || taskParameters.WebAppKind.indexOf("Container") != -1);
+        taskParameters.isBuiltinLinuxWebApp = taskParameters.WebAppKind.indexOf('Linux') != -1;
+        taskParameters.isContainerWebApp =taskParameters.WebAppKind.indexOf('Container') != -1;
         taskParameters.ResourceGroupName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('ResourceGroupName', false) : null;
         taskParameters.SlotName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('SlotName', false) : null;
 
