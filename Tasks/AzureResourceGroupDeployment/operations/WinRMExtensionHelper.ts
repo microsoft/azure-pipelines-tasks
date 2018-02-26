@@ -6,6 +6,7 @@ import azure_utils = require("./AzureUtil");
 import deployAzureRG = require("../models/DeployAzureRG");
 import az = require("azure-arm-rest/azureModels");
 import utils = require("./Utils");
+import webRequestUtility = require("azure-arm-rest/webRequestUtility");
 
 export class WinRMExtensionHelper {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
@@ -292,8 +293,8 @@ export class WinRMExtensionHelper {
         var configWinRMScriptFileFwdLink: string = "https://aka.ms/vstsconfigurewinrm";
         var makeCertFileFwdLink: string = "https://aka.ms/vstsmakecertexe";
 
-        var configWinRMScriptFile: string = await utils.getTargetUriFromFwdLink(configWinRMScriptFileFwdLink);
-        var makeCertFile: string = await utils.getTargetUriFromFwdLink(makeCertFileFwdLink);
+        var configWinRMScriptFile: string = await webRequestUtility.getTargetUriFromFwdLink(configWinRMScriptFileFwdLink);
+        var makeCertFile: string = await webRequestUtility.getTargetUriFromFwdLink(makeCertFileFwdLink);
         
         var fileUris = [configWinRMScriptFile, makeCertFile];
 
