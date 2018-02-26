@@ -60,7 +60,8 @@ export class MysqlClient implements ISqlClient {
     public async executeSqlCommand() : Promise<number> {
         let defer = Q.defer<number>();
         let argument: string = this._getArgumentString() +" "+ this._getAdditionalArgument();
-        telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())); 
+        let additionalArgumentTelemtry = {additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())};
+        telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', additionalArgumentTelemtry); 
         if(this._azureMysqlTaskParameter.getDatabaseName()){
             // Creating databse if it doesn't exist 
             this._executeSqlScript(argument + this._createDatabaseScriptIfItDoesnotExist()).then((resultCode)=>{

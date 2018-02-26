@@ -39,7 +39,7 @@ async function run() {
             const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName(), mysqlClientPath);
             firewallOperations = new FirewallOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
             //Invoke firewall operation to validate user has permission for server or not. If not whitelist the IP
-            firewallAdded = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer.getResourceGroupName());
+            firewallAdded = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer);
             //Execute sql script entered by user
             await sqlClient.executeSqlCommand();
         }

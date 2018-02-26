@@ -2,6 +2,7 @@ import task = require('vsts-task-lib/task');
 import { ApplicationTokenCredentials} from 'azure-arm-rest/azure-arm-common';
 import { AzureMysqlManagementClient } from 'azure-arm-rest/azure-arm-mysql';
 import { FirewallRule, FirewallAddressRange } from '../models/Firewall';
+import { MysqlServer } from '../models/MysqlServer';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { FirewallConfiguration } from '../models/FirewallConfiguration';
 import { ISqlClient } from '../sql/ISqlClient';
@@ -65,10 +66,10 @@ export class FirewallOperations {
      * 
      * @returns                          firewall rule added or not 
      */
-    public async invokeFirewallOperations(azureMysqlTaskParameter: AzureMysqlTaskParameter, sqlClient: ISqlClient, resourceGroupName: string) : Promise<boolean> {
+    public async invokeFirewallOperations(azureMysqlTaskParameter: AzureMysqlTaskParameter, sqlClient: ISqlClient, mysqlServer: MysqlServer) : Promise<boolean> {
         var defer = Q.defer<boolean>();
         if(azureMysqlTaskParameter.getIpDetectionMethod() ==='IPAddressRange'){
-            this._preparefirewallRule(azureMysqlTaskParameter.getServerName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), resourceGroupName, "IPAddressRange_" + this._getFirewallRuleName()).then(() =>{
+            this._preparefirewallRule(mysqlServer.getName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), mysqlServer.getResourceGroupName(), "IPAddressRange_" + this._getFirewallRuleName()).then(() =>{
                 let firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
                 console.log(" firewall conf " +JSON.stringify(firewallConfiguration));
 
@@ -85,7 +86,7 @@ export class FirewallOperations {
         }else {
             const firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
             if(!firewallConfiguration.isIpAdressAlreadyAdded()){
-                this._preparefirewallRule(azureMysqlTaskParameter.getServerName(), firewallConfiguration.getIpAddress(), firewallConfiguration.getIpAddress(), resourceGroupName, "AutoDetect_" + this._getFirewallRuleName()).then(() =>{
+                this._preparefirewallRule(mysqlServer.getName(), firewallConfiguration.getIpAddress(), firewallConfiguration.getIpAddress(), mysqlServer.getResourceGroupName(), "AutoDetect_" + this._getFirewallRuleName()).then(() =>{
                     defer.resolve(true);
                 },(error) =>{
                     task.debug("Error during adding firewall rule for IPAddressRange: "+ error);

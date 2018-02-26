@@ -6,6 +6,7 @@ import { FirewallRule, FirewallAddressRange } from '../models/Firewall';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { MysqlClient } from '../sql/MysqlClient';
 import { ISqlClient } from '../sql/ISqlClient';
+import { MysqlServer } from '../models/MysqlServer';
 var endpoint = getMockEndpoint();
 getMockFirewallRules();
 
@@ -23,7 +24,8 @@ export class FirewallOperationsL0Tests  {
         try{
             const azureMysqlTaskParameter: AzureMysqlTaskParameter = new AzureMysqlTaskParameter();
             const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, "MOCK_SERVER_NAME.test-vm1.onebox.xdb.mscds.com", "MOCK_MYSQL_CLIENT_PATH");
-            const response = await FirewallOperationsL0Tests.firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, "MOCK_RESOURCE_GROUP_NAME");
+            const mysqlServer: MysqlServer = new MysqlServer("MOCK_SERVER_NAME", "MOCK_SERVER_NAME.test-vm1.onebox.xdb.mscds.com", "MOCK_RESOURCE_GROUP_NAME");
+            const response = await FirewallOperationsL0Tests.firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer);
             if(response){
                 tl.setResult(tl.TaskResult.Succeeded, 'FirewallOperationsL0Tests.addFirewallRuleTest should have succeeded.');
             }else{
