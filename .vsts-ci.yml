@@ -8,6 +8,7 @@ phases:
   displayName: Build all tasks (Windows)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   queue:
+    name: Hosted VS2017
     parallel: $[ variables.build_windows_parallel ]
   steps:
 
@@ -77,6 +78,7 @@ phases:
   displayName: Publish
   dependsOn: buildAll_windows # TODO: also depend on buildAll_darwin buildAll_linux
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+  queue: Hosted VS2017
   steps:
 
   # Clean
@@ -220,7 +222,7 @@ phases:
   displayName: Build all tasks (Linux)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
   queue:
-    demands: agent.os -equals Linux
+    name: Hosted Linux Preview
     parallel: $[ variables.build_linux_parallel ]
   steps:
 
@@ -264,7 +266,7 @@ phases:
   displayName: Build all tasks (macOS)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
   queue:
-    demands: agent.os -equals Darwin
+    name: Hosted macOS Preview
     parallel: $[ variables.build_darwin_parallel ]
   steps:
 
