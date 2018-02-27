@@ -16,15 +16,15 @@
         "Patch": 0
     },
     "demands": [],
-    "instanceNameFormat": "Use Python $(version)",
+    "instanceNameFormat": "Use Python $(versionSpec)",
     "inputs": [
         {
-            "name": "version",
+            "name": "versionSpec",
             "type": "string",
-            "label": "Version Spec",
+            "label": "Version spec",
             "required": true,
             "defaultValue": "3.6",
-            "helpMarkDown": "Major.minor version of Python you want to use."
+            "helpMarkDown": "Version specifier of Python you want to use."
         },
         {
             "name": "outputVariable",
@@ -40,7 +40,7 @@
             "label": "Add to PATH",
             "required": true,
             "defaultValue": "true",
-            "helpMarkDown": "Prepend this version to PATH so that it is available in subsequent tasks or scripts without using the output variable."
+            "helpMarkDown": "Prepend the retrieved Python version to PATH so that it is available in subsequent tasks or scripts without using the output variable."
         }
     ],
     "execution": {

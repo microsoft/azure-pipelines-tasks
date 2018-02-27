@@ -19,12 +19,12 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "version",
+      "name": "versionSpec",
       "type": "string",
-      "label": "ms-resource:loc.input.label.version",
+      "label": "ms-resource:loc.input.label.versionSpec",
       "required": true,
       "defaultValue": "3.6",
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
       "name": "outputVariable",
