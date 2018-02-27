@@ -8,6 +8,7 @@ import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
 import * as imageUtils from "./containerimageutils";
 import AuthenticationToken from "./registryauthenticationprovider/registryauthenticationtoken"
+import * as fileutils from "./fileutils";
 import * as os from "os";
 
 export default class ContainerConnection {
@@ -111,7 +112,11 @@ export default class ContainerConnection {
                 process.env["DOCKER_CONFIG"] = this.configurationDirPath;
                 var json = authenticationToken.getDockerConfig();
                 var configurationFilePath = path.join(this.configurationDirPath, "config.json");
-                fs.writeFileSync(configurationFilePath, json);
+                if(fileutils.writeFileSync(configurationFilePath, json) == 0)
+                {
+                    tl.error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+                    throw new Error(tl.loc('NoDataWrittenOnFile', configurationFilePath));
+                }
             }
         }
     }
