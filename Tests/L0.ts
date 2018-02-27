@@ -262,7 +262,7 @@ describe('General Suite', function () {
             'ServiceBus',
             'HttpRequest'];
 			
-		var supportedServerGateExecutionHandlers: string[] = [
+	var supportedServerGateExecutionHandlers: string[] = [
             'ServiceBus',
             'HttpRequest'];
 
