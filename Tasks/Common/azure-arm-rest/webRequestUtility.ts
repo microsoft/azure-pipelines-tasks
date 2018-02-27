@@ -9,11 +9,11 @@ class WebRequestUtility {
         httpRequest.uri = fwdLink;
         var httpResponse = await webClient.sendRequest(httpRequest);
         if(HttpRedirectCodes.indexOf(httpResponse.statusCode) == -1) {
-            throw new Error(`HttpResponse statuscode: ${httpResponse.statusCode} is not a valid HTTP redirect code.`); 
+            throw new Error(tl.loc('ARG_RedirectResponseInvalidStatusCode', httpResponse.statusCode)); 
         }
         var targetLink: string = httpResponse.headers["location"];
         if(!targetLink) {
-            throw new Error(`Unable to find location header after HTTP ${httpResponse.statusCode} redirect.`);
+            throw new Error(tl.loc('ARG_RedirectResponseLocationHeaderIsNull', httpResponse.statusCode));
         }
         tl.debug("the target link is : " + targetLink);
         return targetLink;
