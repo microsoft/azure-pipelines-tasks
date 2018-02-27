@@ -2,7 +2,7 @@
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-Azure NLB Management incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.  
+Microsoft Azure CLI Task incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.  
 
 1.	balanced-match  (https://github.com/juliangruber/balanced-match)
 2.	brace-expansion (https://github.com/juliangruber/brace-expansion)
@@ -12,15 +12,16 @@ Azure NLB Management incorporates third party material from the projects listed 
 6.	inherits (https://github.com/isaacs/inherits)
 7.	minimatch (https://github.com/isaacs/minimatch)
 8.	Mockery (https://github.com/mfncooper/mockery)
-9.	node-uuid (https://github.com/broofa/node-uuid/)
-10.	once (https://github.com/isaacs/once)
-11.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
-12.	Q (https://github.com/kriskowal/q)
-13.	semver (https://github.com/npm/node-semver/)
-14.	ShellJS (https://github.com/shelljs/shelljs)
-15.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-16.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
-17.	wrappy (https://github.com/npm/wrappy)
+9.	Node.js  (https://nodejs.org/)
+10.	node-uuid (https://github.com/broofa/node-uuid/)
+11.	once (https://github.com/isaacs/once)
+12.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
+13.	Q (https://github.com/kriskowal/q)
+14.	semver (https://github.com/npm/node-semver/)
+15.	ShellJS (https://github.com/shelljs/shelljs)
+16.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
+17.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+18.	wrappy (https://github.com/npm/wrappy)
 
 %% balanced-match  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -185,6 +186,62 @@ terms:
  DEALINGS IN THE SOFTWARE.
 =========================================
 END OF Mockery NOTICES, INFORMATION, AND LICENSE
+
+%% Node.js  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Node.js is licensed for use as follows:
+
+"""
+Copyright Node.js contributors. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+"""
+
+This license applies to parts of Node.js originating from the
+https://github.com/joyent/node repository:
+
+"""
+Copyright Joyent, Inc. and other Node contributors. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+"""
+
+The Node.js license applies to all parts of Node.js that are not externally
+maintained libraries.
+=========================================
+END OF Node.js  NOTICES, INFORMATION, AND LICENSE
 
 %% node-uuid NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
