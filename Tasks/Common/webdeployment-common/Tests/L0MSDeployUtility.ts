@@ -12,12 +12,12 @@ function checkParametersIfPresent(argumentString: string, argumentCheckArray: Ar
 
 var defaultMSBuildPackageArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
-}, true, false, true, null, null, null, true, false, true);
+}, true, false, true, null, null, null, true, false, false);
 
 console.log(` * MSBUILD DEFAULT PARAMS: ${defaultMSBuildPackageArgument}`);
 if(checkParametersIfPresent(defaultMSBuildPackageArgument, ["-source:package=\"'package.zip'\"", 
     " -dest:auto,ComputerName=\"'https://http://webapp_name.scm.azurewebsites.net:443/msdeploy.axd?site=webapp_name'\",UserName=\"'$webapp_name'\",Password=\"'webapp_password'\",AuthType=\"'Basic'\"",
-    " -setParam:name=\"'IIS Web Application Name'\",value=\"'webapp_name'\"", '-enableRule:AppOffline'])) {
+    " -setParam:name=\"'IIS Web Application Name'\",value=\"'webapp_name'\"", '-enableRule:AppOffline']) && defaultMSBuildPackageArgument.indexOf('-setParamFile') == -1) {
     console.log("MSBUILD DEFAULT PARAMS PASSED");
 }
 else {
