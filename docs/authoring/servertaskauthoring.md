@@ -1,8 +1,7 @@
  # Agentless Task Authoring
 
-In this document, we will talk about how you can author a new agentless tasks and how it is different from an agent-based task.
-
-Assuming that you are aware of the [process](https://docs.microsoft.com/en-us/vsts/extend/develop/add-build-task) for authoring and adding an agent-based task, let us see what all is different in an agentless task.
+In this document, we will talk about how to author a new agentless tasks and how is it different from an agent-based task.
+The [process](https://docs.microsoft.com/en-us/vsts/extend/develop/add-build-task) for authoring and adding an agent-based task.
 
 #### RunsOn:
 This property in task.json specifies what type of phase can the task be included in and executed. The possible values for this property are as follows: -
