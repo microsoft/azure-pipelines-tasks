@@ -412,3 +412,39 @@ To invoke a logging command, simply emit the command via standard output. For ex
         </tr>
     </tbody>
 </table>
+
+
+#### Release Logging Commands:
+<table>
+    <thead>
+        <tr>
+            <th>Syntax</th>
+            <th>Property Name</th>
+            <th>Usage</th>
+            <th>Minimum Agent Version</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <p align="left">
+                    <code>##vso[release.updatereleasename]release name</code>
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                </p>
+            </td>
+            <td>
+                <p align="left">
+                    Update release name for current release.<br>
+                    <b>Example:</b> <br>
+                    <code>##vso[release.updatereleasename]my-new-release-name</code>
+                </p>
+            </td>
+            <td>
+                2.131
+            </td>
+        </tr>
+    </tbody>
+</table>
