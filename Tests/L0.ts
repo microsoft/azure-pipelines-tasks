@@ -261,6 +261,10 @@ describe('General Suite', function () {
             'Delay',
             'ServiceBus',
             'HttpRequest'];
+			
+		var supportedServerGateExecutionHandlers: string[] = [
+            'ServiceBus',
+            'HttpRequest'];
 
        var supportedTaskEvents: string[] = [
            'TaskAssigned', 
@@ -299,7 +303,7 @@ describe('General Suite', function () {
                 }
                 
                 var handlerName : string = handlers[0];
-                if (task['runsOn'].some(x => x.toLowerCase() == 'servergate') && handlerName.toLowerCase() != 'HttpRequest'.toLowerCase()) {
+                if (task['runsOn'].some(x => x.toLowerCase() == 'servergate') && !supportedServerGateExecutionHandlers.some(x => x.toLowerCase() == handlerName.toLowerCase())) {
                         assert(false, 'Found Invalid servergate handler name : ' + handlerName + ' in ' + taskjson + '.'); 
                 }
                 else if (!supportedServerExecutionHandlers.some(x => x.toLowerCase() == handlerName.toLowerCase())) {

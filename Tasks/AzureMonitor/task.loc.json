@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [],
@@ -71,7 +71,8 @@
       "defaultValue": "",
       "required": true,
       "properties": {
-        "MultiSelectFlatList": "True"
+        "MultiSelectFlatList": "True",
+        "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.alertRules"
     }
