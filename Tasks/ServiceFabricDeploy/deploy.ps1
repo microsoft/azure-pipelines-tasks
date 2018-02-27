@@ -151,6 +151,9 @@ try {
     # Do an upgrade if configured to do so and the app actually exists
     if ($isUpgrade -and $app)
     {
+        # Available options for create are Register, Create, RegisterAndCreate
+        # Available options for upgrade are Register, Upgrade, RegisterAndUpgrade
+        # The task parameter uses the create options, so convert between them
         $publishParameters['Action'] = ($action -replace 'Create', 'Upgrade')
         $publishParameters['UpgradeParameters'] = $upgradeParameters
         $publishParameters['UnregisterUnusedVersions'] = $unregisterUnusedVersions
