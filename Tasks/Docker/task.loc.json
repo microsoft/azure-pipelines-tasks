@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [],
   "preview": "false",
@@ -327,6 +327,9 @@
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
-    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile"
+    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
+    "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced"
   }
 }
