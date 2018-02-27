@@ -6,7 +6,6 @@
   "author": "Microsoft Corporation",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
-  "preview": "true",
   "visibility": [
     "Build",
     "Release"
@@ -18,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [

@@ -7,6 +7,7 @@ param()
 . $PSScriptRoot\MockHelper.ps1
 
 Register-Mock Write-Telemetry { }
+Register-Mock Get-TargetUriFromFwdLink { "http://externalFile" }
 
 # Test 1 "Should throw Resource group name is null"
 Assert-Throws {
