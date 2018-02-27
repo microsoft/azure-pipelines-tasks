@@ -18,6 +18,7 @@
     "Minor": 0,
     "Patch": 3
   },
+  "preview": "true",
   "groups": [
     {
       "name": "signingDetails",
