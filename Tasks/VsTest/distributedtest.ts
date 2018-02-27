@@ -94,7 +94,7 @@ export class DistributedTest {
 
         inputDataContract['ExecutionSettings']['VideoDataCollectorEnabled'] = this.dtaTestConfig.videoCoverageEnabled;
         inputDataContract['TiaBaseLineBuildIdFile'] = this.dtaTestConfig.tiaConfig.baseLineBuildIdFile;
-        inputDataContract['VsVersionMajorVersion'] = this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber;
+        inputDataContract['VsVersion'] = this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber;
         inputDataContract['VsVersionIsTestSettingsPropertiesSupported'] = this.dtaTestConfig.vsTestVersionDetails.isTestSettingsPropertiesSupported();
         inputDataContract['IsToolsInstallerFlow'] = utils.Helper.isToolsInstallerFlow(this.dtaTestConfig);
         inputDataContract['ExecutionSettings']['OverridenParameters'] = this.dtaTestConfig.overrideTestrunParameters;
