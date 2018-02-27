@@ -72,12 +72,12 @@
       "name": "specificBuildId",
       "type": "radio",
       "label": "Download artifacts produced by",
-      "defaultValue": "specificNumber",
+      "defaultValue": "specific",
       "visibleRule": "buildType == specific",
       "required": true,
       "options": {
-        "latest": "Latest",
-        "specificNumber": "Specific buildnumber"
+        "latest": "Latest build from specific branch",
+        "specific": "Specific build"
       },
       "helpMarkDown": "Download artifacts produced by the latest build or by a specific build-number "
     },
@@ -87,7 +87,7 @@
       "label": "Branch name", 
       "defaultValue": "*",
       "visibleRule": "buildType == specific && specificBuildId == latest",
-      "required": false,
+      "required": true,
       "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```. The default pattern (\\*) will download artifacts for all builds, not filtered by branch"
     },
     {
@@ -96,7 +96,7 @@
       "label": "Build",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "buildType == specific && specificBuildId == specificNumber",
+      "visibleRule": "buildType == specific && specificBuildId == specific",
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True"

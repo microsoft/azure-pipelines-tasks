@@ -65,6 +65,8 @@ async function main(): Promise<void> {
         var definitionIdSpecified: string = null;
         var definitionIdTriggered: string = null;
         var buildId: number = null;
+        var specificBuildId: string =  tl.getInput("specificBuildId", false);
+        var isSpecificBuildId: boolean = specificBuildId.toLowerCase() === 'specific';
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
@@ -128,13 +130,13 @@ async function main(): Promise<void> {
                 // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
                 definitionId = definitionIdSpecified;
-                buildId = parseInt(tl.getInput("buildId", false));
+                buildId = parseInt(tl.getInput("buildId", isSpecificBuildId));
             }
         }
 
         // verify that buildId belongs to the definition selected
         if (definitionId) {
-            if (!buildId){ 
+            if (!buildId && !isSpecificBuildId){ 
                 // get latest successful build filtered by branch
                 var branchNameFilter = (branchName == "*") ? null : branchName;
                 
