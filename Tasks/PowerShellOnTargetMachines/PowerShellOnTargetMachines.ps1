@@ -66,9 +66,13 @@ if ($enableDetailedLoggingString -ne "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
-# Import all the dlls and modules which have cmdlets we need
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+# If it is hosted then override module
+if(IsHosted){
+    # Import all the dlls and modules which have cmdlets we need
+    Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+    Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+}
+
 
 function Write-DTLServiceDeprecationMessageIfRequired
 {

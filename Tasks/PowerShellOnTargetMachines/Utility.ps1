@@ -182,3 +182,10 @@ function Get-ResourcesProperties
 
     return $resourcesPropertyBag
 }
+
+function IsHosted {
+    $tfsurl = $env:system_teamfoundationcollectionuri.ToLower()
+    $isHosted = ( $tfsurl.IndexOf(".visualstudio.com") -ne -1 ) -or ( $tfsurl.IndexOf(".tfsallin.net") -ne -1 ) -or ( $tfsurl.IndexOf(".vsts.me") -ne -1 ) -or ( $tfsurl.IndexOf(".vsallin.net") -ne -1 )
+    
+    return $isHosted
+}
