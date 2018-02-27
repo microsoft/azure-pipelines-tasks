@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Установить сертификат Apple",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "Установить сертификат Apple, необходимый для сборки, на агент macOS",
   "loc.instanceNameFormat": "Установить сертификат Apple",
   "loc.group.displayName.advanced": "Дополнительно",
@@ -21,5 +21,5 @@
   "loc.input.label.signingIdentity": "Certificate signing identity",
   "loc.input.help.signingIdentity": "Общее имя субъекта в сертификате для подписи. Если это поле оставить пустым, будет предпринята попытка проанализировать общее имя.",
   "loc.messages.INVALID_P12": "Не удается найти хэш SHA1 и общее имя сертификата. Убедитесь, что указан допустимый сертификат P12.",
-  "loc.messages.NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon)."
+  "loc.messages.NoP12PwdWarning": "Пароль P12 не указан. Если для файла P12 нужен пароль, укажите его в качестве переменной процесса и отметьте как секрет (значок замка)."
 }

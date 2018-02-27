@@ -6,7 +6,7 @@
   "loc.group.displayName.sign": "Подписывание и подготовка",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.solution": "Решение",
-  "loc.input.help.solution": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards.",
+  "loc.input.help.solution": "Относительный путь от корня репозитория к решению Xamarin.iOS, которое нужно собрать. Может включать подстановочные знаки.",
   "loc.input.label.configuration": "Конфигурация",
   "loc.input.help.configuration": "Стандартные конфигурации: Ad-Hoc, AppStore, Debug, Release.",
   "loc.input.label.clean": "Очистить",
@@ -19,7 +19,7 @@
   "loc.input.help.runNugetRestore": "При необходимости выполните команду \"nuget restore\" в решении Xamarin iOS, чтобы установить все пакеты по ссылкам перед сборкой. Будет использовано средство nuget по пути из переменной PATH на компьютере агента. Чтобы использовать другую версию NuGet или задать дополнительные аргументы, используйте [задачу установщика NuGet](https://www.visualstudio.com/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "Аргументы",
   "loc.input.help.args": "Дополнительные аргументы командной строки, которые должны использоваться для сборки.",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Рабочий каталог для запуска сборок. Если значение пусто, используется корень репозитория.",
   "loc.input.label.buildTool": "Build tool",
   "loc.input.label.mdtoolLocation": "Build tool path",
@@ -55,6 +55,6 @@
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Не удалось найти решение по шаблону поиска \"{0}\".",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "Параметр \"Восстановить пакеты NuGet\" использовать не рекомендуется. Чтобы восстановить пакеты NuGet в сборке, добавьте задание установщика NuGet в определение сборки.",
   "loc.messages.MSB_BuildToolNotFound": "В агенте macOS или Linux не удалось найти MSBuild или xbuild (Mono).",
-  "loc.messages.MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+  "loc.messages.MultipleSolutionsFound": "Обнаружено несколько соответствий для файла решения. Будет использовано первое соответствие: %s",
+  "loc.messages.SolutionDoesNotExist": "Указан несуществующий файл решения: %s"
 }

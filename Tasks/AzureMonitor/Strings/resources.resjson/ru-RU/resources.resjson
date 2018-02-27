@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-monitor)",
   "loc.description": "Observe the configured Azure monitor rules for active alerts.",
   "loc.instanceNameFormat": "Query Azure Monitor alerts",
-  "loc.input.label.connectedServiceNameARM": "Azure subscription",
+  "loc.input.label.connectedServiceNameARM": "Подписка Azure",
   "loc.input.help.connectedServiceNameARM": "Select an Azure Resource Manager subscription to monitor.",
   "loc.input.label.ResourceGroupName": "Resource group",
   "loc.input.help.ResourceGroupName": "Provide the name of a resource group to monitor.",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xcode 패키지 iOS",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613731)",
-  "loc.description": "Generate an .ipa file from Xcode build output using xcrun (Xcode 7 or below)",
+  "loc.description": "xcrun을 사용하여 Xcode 빌드 출력에서 .ipa 파일 생성(Xcode 7 이하)",
   "loc.instanceNameFormat": "Xcode 패키지 $(appName)",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.appName": ".app 이름",

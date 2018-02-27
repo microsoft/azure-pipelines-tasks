@@ -34,5 +34,5 @@
   "loc.messages.JenkinsPipelineFailed": "Jenkins 파이프라인 실패",
   "loc.messages.JenkinsJobFailed": "Jenkins 작업 실패",
   "loc.messages.JenkinsJobFailedtoQueue": "Jenkins 작업 큐 대기 실패",
-  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
+  "loc.messages.JenkinsJobQueueUriInvalid": "Jenkins에서 반환된 작업 큐의 URI에 연결할 수 없습니다(%s). Jenkins 서버의 'Jenkins 관리', '시스템 구성' 아래에서 'Jenkins URL'이 제대로 구성되었는지 확인하세요. 오류 정보: %s"
 }

@@ -14,9 +14,9 @@
   "loc.input.help.targets": "빌드할 대상의 공백으로 구분된 목록입니다(선택 사항). 지정되지 않은 경우 `기본` 대상이 사용됩니다. `기본` 대상이 정의되지 않은 경우 Ant 1.6.0 이상에서 모든 최상위 작업을 빌드합니다.",
   "loc.input.label.publishJUnitResults": "TFS/Team Services에 게시",
   "loc.input.help.publishJUnitResults": "Ant 빌드에서 생성된 JUnit 테스트 결과를 TFS/Team Services에 게시하려면 이 옵션을 선택하세요. `테스트 결과 파일`과 일치하는 각 테스트 결과 파일이 TFS/Team Services에서 테스트 실행으로 게시됩니다.",
-  "loc.input.label.testResultsFiles": "Test results files",
+  "loc.input.label.testResultsFiles": "테스트 결과 파일",
   "loc.input.help.testResultsFiles": "테스트 결과 파일 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어, 이름이 TEST-로 시작하는 모든 XML 파일을 표시하기 위해 `**/TEST-*.xml`을 사용할 수 있습니다.",
-  "loc.input.label.testRunTitle": "Test run title",
+  "loc.input.label.testRunTitle": "테스트 실행 제목",
   "loc.input.help.testRunTitle": "테스트 실행의 이름을 지정하세요.",
   "loc.input.label.codeCoverageTool": "Code coverage tool",
   "loc.input.help.codeCoverageTool": "코드 검사 도구를 선택하세요. 온-프레미스 에이전트 지원의 경우 아래의 '추가 정보' 링크를 참조하세요.",
@@ -39,7 +39,7 @@
   "loc.input.label.jdkArchitecture": "JDK architecture",
   "loc.input.help.jdkArchitecture": "선택적으로 JDK의 아키텍처(x86, x64)를 제공하세요.",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Java %s %s에 대해 JAVA_HOME 찾기",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
+  "loc.messages.FailedToLocateSpecifiedJVM": "지정한 JDK 버전을 찾지 못했습니다. 지정한 JDK 버전이 에이전트에 설치되어 있으며 환경 변수 '%s'이(가) 있고 해당 JDK의 위치로 설정되었는지 확인하거나, [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) 작업을 사용하여 원하는 JDK를 설치하세요.",
   "loc.messages.DiscontinueAntCodeCoverage": "We are discontinuing the support of automated code coverage report generation for Ant projects. Please refer https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md for more details.",
   "loc.messages.NoCodeCoverage": "게시할 코드 검사 결과를 찾을 수 없습니다."
 }

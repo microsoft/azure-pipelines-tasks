@@ -14,9 +14,9 @@
   "loc.input.help.targets": "Eine optionale, durch Leerzeichen getrennte Liste der zu erstellenden Ziele. Wenn keine Angabe erfolgt, wird das \"Standardziel\" verwendet. Wenn kein \"Standardziel\" definiert ist, wird Ant 1.6.0 verwendet, und alle Tasks auf oberster Ebene werden später erstellt.",
   "loc.input.label.publishJUnitResults": "In TFS/Team Services veröffentlichen",
   "loc.input.help.publishJUnitResults": "Wählen Sie diese Option aus, um vom Ant-Build generierte JUnit-Testergebnisse in TFS/Team Services zu veröffentlichen. Jede Testergebnisdatei, die mit \"Testergebnisdateien\" übereinstimmt, wird als Testlauf in TFS/Team Services veröffentlicht.",
-  "loc.input.label.testResultsFiles": "Test results files",
+  "loc.input.label.testResultsFiles": "Testergebnisdateien",
   "loc.input.help.testResultsFiles": "Der Pfad der Testergebnisdateien. Platzhalter können verwendet werden. Beispiel: \"**/TEST-*.xml\" für alle XML-Dateien, deren Name mit \"TEST-\" beginnt.",
-  "loc.input.label.testRunTitle": "Test run title",
+  "loc.input.label.testRunTitle": "Testlauftitel",
   "loc.input.help.testRunTitle": "Geben Sie einen Namen für den Testlauf an.",
   "loc.input.label.codeCoverageTool": "Code coverage tool",
   "loc.input.help.codeCoverageTool": "Wählen Sie das Code Coverage-Tool aus. Verwenden Sie den Link \"Weitere Informationen\" unten, um Support zum lokalen Agent zu erhalten.",
@@ -39,7 +39,7 @@
   "loc.input.label.jdkArchitecture": "JDK architecture",
   "loc.input.help.jdkArchitecture": "Geben Sie optional die JDK-Architektur an (x86, x64).",
   "loc.messages.LocateJVMBasedOnVersionAndArch": "JAVA_HOME für Java %s %s finden",
-  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK.",
+  "loc.messages.FailedToLocateSpecifiedJVM": "Fehler bei der Suche nach der angegebenen JDK-Version. Stellen Sie sicher, dass die angegebene JDK-Version auf dem Agent installiert und die Umgebungsvariable \"%s\" vorhanden und auf den Speicherort eines entsprechenden JDK festgelegt ist. Alternativ können Sie mit dem [Java-Toolinstaller](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) das gewünschte JDK installieren.",
   "loc.messages.DiscontinueAntCodeCoverage": "We are discontinuing the support of automated code coverage report generation for Ant projects. Please refer https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ANT/README.md for more details.",
   "loc.messages.NoCodeCoverage": "Keine zu veröffentlichenden Code Coverage-Ergebnisse wurden gefunden."
 }

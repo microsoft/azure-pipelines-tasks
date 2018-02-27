@@ -3,7 +3,7 @@
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "テナント ID {0} のトークンをフェッチできません。",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "指定のユーザーのトークンをフェッチできません。",
   "loc.messages.AZ_NoValidResourceIdFound": "serverName {0}、serverType {1} のリソースがサブスクリプション {2} にありません。正しい serverName/serverType を指定してからやり直してください。",
-  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Unable to fetch load balancer details",
-  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Unable to fetch public IP Addresses details",
-  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Unable to fetch network interfaces details"
+  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "ロード バランサーの詳細をフェッチできません",
+  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "パブリック IP アドレスの詳細をフェッチできません",
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "ネットワーク インターフェイスの詳細をフェッチできません"
 }

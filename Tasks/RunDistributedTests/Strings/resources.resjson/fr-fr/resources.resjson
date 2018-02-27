@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Exécuter les tests fonctionnels",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkId=624389)",
-  "loc.description": "Deprecated: This task and it’s companion task (Visual Studio Test Agent Deployment) are deprecated. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent phase setting. Use the 'Visual Studio Test Platform' task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests.",
+  "loc.description": "Déprécié : cette tâche et la tâche qui l'accompagne (Déploiement de Visual Studio Test Agent) sont dépréciées. Utilisez la tâche 'Visual Studio Test' à la place. La tâche VSTest peut exécuter des tests unitaires et des tests fonctionnels. Exécutez les tests sur un ou plusieurs agents à l'aide du paramètre de phase multiagent. Utilisez la tâche 'Visual Studio Test Platform' pour exécuter les tests sans avoir besoin de Visual Studio sur l'agent. La tâche VSTest apporte également de nouvelles fonctionnalités telles que la réexécution automatique des tests non réussis.",
   "loc.instanceNameFormat": "Exécuter les tests $(sourcefilters) sur $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Options de configuration",
   "loc.group.displayName.executionOptions": "Déploiement",

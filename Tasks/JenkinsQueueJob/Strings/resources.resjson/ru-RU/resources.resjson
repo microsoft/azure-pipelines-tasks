@@ -34,5 +34,5 @@
   "loc.messages.JenkinsPipelineFailed": "Сбой конвейера Jenkins",
   "loc.messages.JenkinsJobFailed": "Сбой выполнения задания Jenkins",
   "loc.messages.JenkinsJobFailedtoQueue": "Не удалось поместить задание Jenkins в очередь.",
-  "loc.messages.JenkinsJobQueueUriInvalid": "The URI of the job queue returned by Jenkins could not be reached (%s).  Verify the 'Jenkins URL' is configured correctly on your Jenkins server under `Manage Jenkins`, `Configure System`.  Error details: %s"
+  "loc.messages.JenkinsJobQueueUriInvalid": "Не удается разрешить URI очереди заданий, который был возвращен из Jenkins (%s). Убедитесь, что URL-адрес Jenkins настроен правильно. Для этого на сервере Jenkins откройте раздел \"Управление Jenkins\", \"Настройка системы\". Сведения об ошибке: %s"
 }

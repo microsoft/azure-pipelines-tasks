@@ -6,7 +6,7 @@
   "loc.group.displayName.sign": "署名およびプロビジョニング",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.solution": "ソリューション",
-  "loc.input.help.solution": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards.",
+  "loc.input.help.solution": "リポジトリのルートを基準に指定した、ビルドする Xamarin.iOS ソリューションの相対パス。ワイルドカードを含めることができます。",
   "loc.input.label.configuration": "構成",
   "loc.input.help.configuration": "標準構成は、Ad-Hoc、AppStore、Debug、Release です。",
   "loc.input.label.clean": "消去",
@@ -19,7 +19,7 @@
   "loc.input.help.runNugetRestore": "(省略可能) ビルドの前に、Xamarin iOS ソリューションで `nuget restore` を実行して、参照されているパッケージをすべてインストールします。ビルド エージェント マシンの PATH 内の 'nuget' ツールが使用されます。別のバージョンの NuGet を使用するか、追加の引数を設定するには、[NuGet インストーラーのタスク](https://www.visualstudio.com/docs/build/steps/package/nuget-installer) を使用します。",
   "loc.input.label.args": "引数",
   "loc.input.help.args": "ビルドに使用する必要のある追加のコマンド ライン引数。",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "ビルドが実行される作業ディレクトリ。空の場合は、リポジトリのルートが使用されます。",
   "loc.input.label.buildTool": "Build tool",
   "loc.input.label.mdtoolLocation": "Build tool path",
@@ -55,6 +55,6 @@
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "検索パターン '{0}' を使ってソリューションが見つかりませんでした。",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "'NuGet パッケージの復元' オプションは使用されなくなりました。ビルド内の NuGet パッケージを復元するには、NuGet インストーラーのタスクをビルド定義に追加します。",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild または xbuild (Mono) が macOS または Linux エージェントに見つかりませんでした。",
-  "loc.messages.MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+  "loc.messages.MultipleSolutionsFound": "ソリューション ファイルの複数の一致が見つかりました。最初の一致が使用されます: %s",
+  "loc.messages.SolutionDoesNotExist": "ソリューション ファイルが指定されましたが、存在しません: %s"
 }

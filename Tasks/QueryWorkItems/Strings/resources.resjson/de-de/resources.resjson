@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/work-item-query)",
   "loc.description": "Executes a work item query and checks for the number of items returned.",
   "loc.instanceNameFormat": "Query Work Items",
-  "loc.group.displayName.advanced": "Advanced",
+  "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.queryId": "Query",
   "loc.input.help.queryId": "Select a saved work query to execute.",
   "loc.input.label.maxThreshold": "Upper threshold",

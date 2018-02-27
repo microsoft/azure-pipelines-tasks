@@ -9,4 +9,4 @@ queue: 'Hosted VS2017'
 
 steps:
 #- script: |
-#    'echo Write your commands here'
+#    echo Write your commands here

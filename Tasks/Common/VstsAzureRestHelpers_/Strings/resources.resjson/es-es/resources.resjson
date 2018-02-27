@@ -3,7 +3,7 @@
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "No se puede obtener el token del id. de inquilino {0}.",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "No se puede obtener el token del usuario dado.",
   "loc.messages.AZ_NoValidResourceIdFound": "No se encontró ningún recurso con serverName {0} o serverType {1} en la suscripción {2}. Especifique el valor de serverName o serverType correcto y vuelva a intentarlo.",
-  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Unable to fetch load balancer details",
-  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Unable to fetch public IP Addresses details",
-  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Unable to fetch network interfaces details"
+  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "No se pueden capturar los detalles del equilibrador de carga.",
+  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "No se pueden capturar los detalles de las direcciones IP públicas.",
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "No se pueden capturar los detalles de las interfaces de red."
 }

@@ -4,7 +4,7 @@
   "loc.description": "CocoaPods — это диспетчер зависимостей для проектов Swift и Objective-C Cocoa. Эта задача запускает команду \"pod install\".",
   "loc.instanceNameFormat": "установка pod",
   "loc.group.displayName.advanced": "Дополнительно",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Укажите рабочий каталог для выполнения этого шага. Если значение пусто, используется каталог репозитория.",
   "loc.input.label.forceRepoUpdate": "Force repo update",
   "loc.input.help.forceRepoUpdate": "Выбор этого параметра приведет к принудительному запуску команды \"pod repo update\" перед установкой.",

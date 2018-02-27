@@ -6,7 +6,7 @@
   "loc.group.displayName.sign": "Signature et configuration",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.solution": "Solution",
-  "loc.input.help.solution": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards.",
+  "loc.input.help.solution": "Chemin relatif de la racine de dépôt de la solution Xamarin.iOS à générer. Il peut contenir des caractères génériques.",
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Les configurations standard sont Ad-Hoc, AppStore, Debug, Release.",
   "loc.input.label.clean": "Nettoyer",
@@ -19,7 +19,7 @@
   "loc.input.help.runNugetRestore": "Exécutez éventuellement 'nuget restore' sur la solution Xamarin iOS pour installer tous les packages référencés avant la génération. L'outil 'nuget' situé dans le CHEMIN de la machine d'agent de build est utilisé. Pour utiliser une autre version de NuGet ou définir des arguments supplémentaires, utilisez la [tâche du programme d'installation NuGet](https://www.visualstudio.com/docs/build/steps/package/nuget-installer).",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments de ligne de commande supplémentaires à utiliser pour la génération.",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail où les builds doivent s'exécuter. Quand cette valeur est vide, la racine du dépôt est utilisée.",
   "loc.input.label.buildTool": "Build tool",
   "loc.input.label.mdtoolLocation": "Build tool path",
@@ -55,6 +55,6 @@
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Solution introuvable à l'aide du modèle de recherche '{0}'.",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "L'option Restaurer des packages NuGet est déconseillée. Pour restaurer des packages NuGet dans votre build, ajoutez une tâche Programme d'installation de NuGet à la définition de votre build.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild ou xbuild (Mono) sont introuvables sur l'agent macOS ou Linux.",
-  "loc.messages.MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+  "loc.messages.MultipleSolutionsFound": "Plusieurs correspondances avec le fichier solution ont été trouvées. La première correspondance est utilisée : %s",
+  "loc.messages.SolutionDoesNotExist": "Le fichier solution a été spécifié, mais il n'existe pas : %s"
 }

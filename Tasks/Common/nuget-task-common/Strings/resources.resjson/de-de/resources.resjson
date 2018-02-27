@@ -1,6 +1,6 @@
 {
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore unterstützt die Verwendung eines verschlüsselten API-Schlüssels derzeit nicht.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "Ungültiges XML. Es wurde ein Element mit dem Namen \"configuration\" erwartet.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Es wurden keine mit dem Suchmuster übereinstimmenden Dateien gefunden: %s.",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "Keine Download-URL für %s gefunden",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Keine Version gefunden, die mit der Eingabe %s übereinstimmt",

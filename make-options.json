@@ -12,6 +12,7 @@
         "AzureFunction",
         "AzureKeyVault",
         "AzureMonitorAlerts",
+        "AzureMysqlDeployment",
         "AzureMonitor",		
         "AzureNLBManagement",
         "AzurePowerShell",

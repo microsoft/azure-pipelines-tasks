@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Instalar certificado de Apple",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "Instala un certificado de Apple necesario para compilar en un agente de macOS.",
   "loc.instanceNameFormat": "Instalar un certificado de Apple",
   "loc.group.displayName.advanced": "Avanzado",
@@ -21,5 +21,5 @@
   "loc.input.label.signingIdentity": "Certificate signing identity",
   "loc.input.help.signingIdentity": "Nombre común del firmante en el certificado de firma. Si se deja en blanco, se intentará analizar el nombre común.",
   "loc.messages.INVALID_P12": "No se encuentran el hash SHA1 y el nombre común del certificado. Compruebe que este es un certificado P12 válido.",
-  "loc.messages.NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon)."
+  "loc.messages.NoP12PwdWarning": "No se ha proporcionado ninguna contraseña P12. Si el archivo P12 requiere una contraseña, el procedimiento recomendado es proporcionarla como variable de proceso y marcarla como secreto (icono de bloqueo)."
 }

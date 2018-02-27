@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[追加情報](https://go.microsoft.com/fwlink/?linkid=845329)",
   "loc.description": "Packer を使ってマシン イメージをビルドします。このイメージは、Azure 仮想マシン スケール セットの配置に利用できます",
   "loc.instanceNameFormat": "不変イメージのビルド",
-  "loc.releaseNotes": "- Works with cross-platform agents (Linux, macOS, or Windows)\n- Supports building images for both Windows and Linux. These images can be used to deploy Azure Virtual machine scale set.",
+  "loc.releaseNotes": "- クロス プラットフォーム エージェント対応 (Linux、macOS、Windows)\n- Windows と Linux 両方のイメージのビルドをサポート。これらのイメージは Azure 仮想マシン スケール セットの配置に使用できます。",
   "loc.group.displayName.AzureDetails": "Azure の詳細",
   "loc.group.displayName.DeploymentInputs": "展開の入力",
   "loc.group.displayName.Advanced": "詳細設定",

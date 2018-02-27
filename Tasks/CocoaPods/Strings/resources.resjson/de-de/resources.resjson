@@ -4,7 +4,7 @@
   "loc.description": "CocoaPods ist der Abhängigkeits-Manager für Swift- und Objective-C-Cocoa-Projekte. Dieser Task führt \"pod install\" aus.",
   "loc.instanceNameFormat": "Pod-Installation",
   "loc.group.displayName.advanced": "Erweitert",
-  "loc.input.label.cwd": "Working directory",
+  "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Geben Sie das Arbeitsverzeichnis an, in dem dieser Schritt ausgeführt werden soll. Wenn Sie nichts angeben, wird das Repositoryverzeichnis verwendet.",
   "loc.input.label.forceRepoUpdate": "Force repo update",
   "loc.input.help.forceRepoUpdate": "Wenn Sie diese Option auswählen, wird vor der Installation die Ausführung von \"pod repo update\" erzwungen.",

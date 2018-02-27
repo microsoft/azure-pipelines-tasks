@@ -1,6 +1,6 @@
 {
   "loc.messages.Error_ApiKeyNotSupported": "Actualmente, DotNetCore no admite el uso de una clave de API cifrada.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "XML no válido. Se esperaba un elemento denominado \"configuration\".",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "No se encontraron archivos coincidentes con el patrón de búsqueda: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "No se encontró ninguna dirección URL de descarga para %s.",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "No se encontró ninguna versión que coincida con la entrada %s",

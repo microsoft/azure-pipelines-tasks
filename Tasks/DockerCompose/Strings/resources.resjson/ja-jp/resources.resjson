@@ -41,7 +41,7 @@
   "loc.input.label.workDir": "作業ディレクトリ",
   "loc.input.help.workDir": "特定のサービス コンテナーの作業ディレクトリです。",
   "loc.input.label.entrypoint": "エントリポイントの無視",
-  "loc.input.help.entrypoint": "Override the default entry point for the specific service container.",
+  "loc.input.help.entrypoint": "特定のサービス コンテナーの既定のエントリ ポイントを無視します。",
   "loc.input.label.containerCommand": "コマンド",
   "loc.input.help.containerCommand": "特定のサービス コンテナー内で実行するコマンドです。たとえば、イメージに単純な Python Flask Web アプリケーションが含まれている場合は、'python app.py' を指定して Web アプリケーションを起動することができます。",
   "loc.input.label.detached": "バックグラウンドで実行",
@@ -66,8 +66,8 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "追加の Docker Compose ファイルが存在しない場合に、エラーを生成します。これは、ファイルが存在しない場合にそのファイルを無視するという既定の動作を上書きします。",
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "Docker Compose コマンドの作業ディレクトリです。",
-  "loc.messages.ContainerPatternFound": "Pattern found in docker compose filepath parameter",
-  "loc.messages.ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
+  "loc.messages.ContainerPatternFound": "docker compose filepath パラメーターにパターンが見つかりました",
+  "loc.messages.ContainerPatternNotFound": "docker compose filepath パラメーターにパターンが見つかりませんでした ",
   "loc.messages.ContainerDockerFileNotFound": "%s に一致する Docker ファイルは見つかりませんでした。",
-  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists."
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "追加の Docker Compose ファイル %s は存在しません。"
 }

@@ -9,5 +9,5 @@
   "loc.messages.ImportedCertificate": "Импортированный клиентский сертификат кластера с отпечатком \"{0}\".",
   "loc.messages.ServiceFabricSDKNotInstalled": "Пакет SDK Service Fabric не установлен на агенте сборки. Перейдите на страницу https://aka.ms/servicefabric, чтобы скачать и установить его.",
   "loc.messages.UseWindowsSecurity": "Указана безопасность Windows. При подключении будет использоваться параметр -WindowsCredential.",
-  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "The cluster's server certificate with thumbprint '{0}' is required in order to encrypt text but the certificate could not be found on the agent machine in the 'CurrentUser\\My' certificate store location."
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "Для шифрования текста необходим сертификат сервера кластера с отпечатком \"{0}\". Не удалось найти сертификат на компьютере агента в расположении \"CurrentUser\\My\" хранилища сертификатов."
 }

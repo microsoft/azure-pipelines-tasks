@@ -22,7 +22,7 @@
   "loc.input.label.registryPassword": "Registrierungskennwort",
   "loc.input.help.registryPassword": "Kennwort für die Docker-Registrierung. Wenn das Kennwort nicht verschlüsselt ist, sollte zum Speichern eine benutzerdefinierte geheime Releasedefinitionsvariable verwendet werden.",
   "loc.input.label.passwordEncrypted": "Kennwort verschlüsselt",
-  "loc.input.help.passwordEncrypted": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+  "loc.input.help.passwordEncrypted": "Es wird empfohlen, Ihr Kennwort mit [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/de-de/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets) zu verschlüsseln. Wenn Sie keine Verschlüsselung durchführen und ein Zertifikat auf dem Build-Agent installiert ist, das mit dem Serverzertifikat-Fingerabdruck in der Clusterverbindung übereinstimmt, wird dieses Zertifikat zum Verschlüsseln des Kennworts verwendet. Andernfalls kommt es zu einem Fehler.",
   "loc.input.label.deployTimeoutSec": "Zeitlimit für Bereitstellung (s)",
   "loc.input.help.deployTimeoutSec": "Zeitlimit in Sekunden zum Bereitstellen der Anwendung.",
   "loc.input.label.removeTimeoutSec": "Zeitlimit entfernen (s)",
@@ -43,6 +43,6 @@
   "loc.messages.CurrentStatus": "Aktueller Status: {0}",
   "loc.messages.DeployFailed": "Fehler beim Bereitstellen\nStatus: {0}\nDetails: {1}",
   "loc.messages.CheckingComposeFile": "Compose-Datei wird geprüft",
-  "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
-  "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
+  "loc.messages.UnsupportedAPIVersion": "Service Fabric-SDK-Version {0} wird nicht unterstützt.",
+  "loc.messages.UsingAPIVersion": "Es werden Cmdlets für Service Fabric-SDK-Version {0} verwendet."
 }

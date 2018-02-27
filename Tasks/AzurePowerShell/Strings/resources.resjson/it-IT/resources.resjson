@@ -17,11 +17,11 @@
   "loc.input.label.ScriptArguments": "Argomenti script",
   "loc.input.help.ScriptArguments": "Parametri aggiuntivi da passare a PowerShell. Possono essere ordinali o denominati.",
   "loc.input.label.TargetAzurePs": "Versione di Azure PowerShell",
-  "loc.input.help.TargetAzurePs": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1 and 5.1.1(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\"",
+  "loc.input.help.TargetAzurePs": "In caso di agenti ospitati le versioni supportate di Azure PowerShell sono: 2.1.0, 3.8.0, 4.2.1 e 5.1.1(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nPer selezionare l'ultima versione disponibile per l'agente ospitato, selezionare \"Ultima versione installata\".\n\nPer gli agenti privati è possibile specificare la versione preferita di Azure PowerShell usando \"Specifica versione\"",
   "loc.input.label.CustomTargetAzurePs": "Versione preferita di Azure PowerShell",
-  "loc.input.help.CustomTargetAzurePs": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1",
+  "loc.input.help.CustomTargetAzurePs": "La versione preferita di Azure PowerShell deve essere una versione semantica valida, ad esempio 1.2.3. Espressioni regolari come 2.\\*,2.3.\\* non sono supportate. Il pool Hosted VS2017 supporta attualmente le versioni 2.1.0, 3.8.0, 4.2.1 e 5.1.1",
   "loc.messages.InvalidScriptArguments0": "Gli argomenti '{0}' dello script non sono validi. Le interruzioni di riga non sono consentite.",
   "loc.messages.InvalidScriptPath0": "Il percorso '{0}' dello script non è valido. Sono stati specificati caratteri non validi.",
   "loc.messages.InvalidAzurePsVersion": "Il formato della versione di Azure PowerShell '{0}' specificata non è corretto. Controllare il formato. Un esempio di formato corretto è 1.0.1",
-  "loc.messages.OverrideAzurePowerShellVersion": "The Azure PowerShell version '{0}' is not supported for Hosted Agent. Overriding it with version '{1}'. Consider changing the version selected."
+  "loc.messages.OverrideAzurePowerShellVersion": "La versione '{0}' di Azure PowerShell non è supportata per l'agente ospitato e verrà sostituita con la versione '{1}'. Provare a cambiare la versione selezionata."
 }
