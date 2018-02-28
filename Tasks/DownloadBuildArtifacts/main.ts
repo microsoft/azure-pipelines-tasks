@@ -232,7 +232,7 @@ async function main(): Promise<void> {
                     }));
                 }
                 else {
-                    tl.warning(tl.loc("UnsupportedArtifactType", artifact.resource.type));
+                    console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
                 }
             });
 
