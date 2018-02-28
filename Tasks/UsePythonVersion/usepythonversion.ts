@@ -56,7 +56,26 @@ async function usePythonVersion(parameters: TaskParameters, platform: Platform):
     task.setVariable(parameters.outputVariable, installDir);
     if (parameters.addToPath) {
         addToPath(installDir, platform);
-        addToPath(scriptsDirectory(platform), platform);
+
+        // Python has "scripts" directories where command-line tools that come with packages are installed.
+        // There are different directories for `pip install` and `pip install --user`.
+        // On Linux and macOS, pip will create the scripts directories and add them to PATH as needed.
+        // On Windows, these directories do not get added to PATH, so we will add them ourselves.
+        // For reference, these directories are as follows:
+        //   macOS / Linux:
+        //      /usr/local/bin
+        //      (--user) ~/.local/bin
+        //   Windows:
+        //      <Python installation dir>\Scripts
+        //      (--user) %APPDATA%\Python\PythonXY\Scripts
+        if (platform === Platform.Windows) {
+            const scriptsDir = path.join(installDir, 'Scripts');
+            addToPath(scriptsDir, platform);
+
+            const majorMinorDir = path.basename(installDir);
+            const userScriptsDir = path.join(task.getVariable('APPDATA'), 'Python', majorMinorDir, 'Scripts');
+            addToPath(userScriptsDir, platform);
+        }
     }
 }
 
@@ -80,17 +99,6 @@ function validateVersionSpec(input: string): void {
 async function findVersion(versionSpec: string, platform: Platform): Promise<string | null> {
     // TODO
     return Promise.resolve(null);
-}
-
-/**
- * Look up the directory where Pip will install command-line tools for `platform`.
- * @param platform OS the build agent is running on
- */
-function scriptsDirectory(platform: Platform): string {
-    // TODO
-    switch (platform) {
-        default: throw Error("Platform not recognized"); // TODO loc
-    }
 }
 
 /**
