@@ -47,7 +47,12 @@ interface TaskParameters {
 
 async function usePythonVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
     validateVersionSpec(parameters.versionSpec);
-    const installDir = await retrieveFromCache(parameters.versionSpec, platform);
+    const installDir = await findVersion(parameters.versionSpec, platform);
+    if (!installDir) {
+        // TODO List available versions
+        return;
+    }
+
     task.setVariable(parameters.outputVariable, installDir);
     if (parameters.addToPath) {
         addToPath(installDir, platform);
@@ -67,14 +72,14 @@ function validateVersionSpec(input: string): void {
 }
 
 /**
- * Retrieve from the cache the latest Python version matching `versionSpec`.
+ * Find where the latest Python version matching `versionSpec` is installed, or `null` if there is no version matching the version spec.
  * @param versionSpec A valid semver version specifier string (like 3.x)
  * @param platform OS the build agent is running on
  * @returns Path that Python was installed to
  */
-async function retrieveFromCache(versionSpec: string, platform: Platform): Promise<string> {
+async function findVersion(versionSpec: string, platform: Platform): Promise<string | null> {
     // TODO
-    return Promise.resolve("");
+    return Promise.resolve(null);
 }
 
 /**
@@ -84,15 +89,17 @@ async function retrieveFromCache(versionSpec: string, platform: Platform): Promi
 function scriptsDirectory(platform: Platform): string {
     // TODO
     switch (platform) {
-        default: return "";
+        default: throw Error("Platform not recognized"); // TODO loc
     }
 }
 
 /**
- * Add `directory` to the PATH variable for the platform.
+ * Prepend `directory` to the PATH variable for the platform.
  */
 function addToPath(directory: string, platform: Platform): void {
-    // TODO
+    const currentPath = task.getVariable('PATH');
+    const pathSeparator = platform === Platform.Windows ? ';' : ':';
+    task.setVariable('PATH', directory + pathSeparator + currentPath);
 }
 
 run();
