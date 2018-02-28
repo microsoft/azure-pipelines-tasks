@@ -55,7 +55,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         
         tr.run();
         
-		var expectedErr = 'Error: msdeploy failed with return code: 1';
+        var expectedErr = 'Error: msdeploy failed with return code: 1';
 		assert(tr.invokedToolCount == 3, 'should have invoked tool thrice despite failure');
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
