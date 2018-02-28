@@ -196,6 +196,7 @@
     "ArtifactsSuccessfullyDownloaded": "ms-resource:loc.messages.ArtifactsSuccessfullyDownloaded",
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",
-    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound"
+    "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound",
+    "FoundGitRefArtifactType": "ms-resource:loc.messages.FoundGitRefArtifactType"
   }
 }

@@ -231,6 +231,10 @@ async function main(): Promise<void> {
                         reject(reason);
                     }));
                 }
+                else if(artifact.resource.type.toLowerCase() === "gitref") {
+                    console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
+                    console.log(tl.loc("FoundGitRefArtifactType"));
+                }
                 else {
                     console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
                 }

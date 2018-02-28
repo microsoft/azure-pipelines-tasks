@@ -35,5 +35,6 @@
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
   "loc.messages.RetryingOperation": "Error : in %s, so retrying => retries pending  : %s",
   "loc.messages.OperationFailed": "Failed in %s with error: %s",
-  "loc.messages.ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
+  "loc.messages.ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
+  "loc.messages.FoundGitRefArtifactType": "If source is labeled from build it creates an additional GitRef artifact. We don't support downloading GitRef artifact. You can safely ignore this warning."
 }
