@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
 import * as semver from 'semver';
@@ -47,7 +48,7 @@ interface TaskParameters {
 
 async function usePythonVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
     validateVersionSpec(parameters.versionSpec);
-    const installDir = await findVersion(parameters.versionSpec, platform);
+    const installDir = findVersion(parameters.versionSpec, platform);
     if (!installDir) {
         // TODO List available versions
         return;
@@ -96,9 +97,26 @@ function validateVersionSpec(input: string): void {
  * @param platform OS the build agent is running on
  * @returns Path that Python was installed to
  */
-async function findVersion(versionSpec: string, platform: Platform): Promise<string | null> {
-    // TODO
-    return Promise.resolve(null);
+function findVersion(versionSpec: string, platform: Platform): string | null {
+    const { major, minor } = semver.parse(versionSpec)!; // TODO minor versions?
+    if (platform === Platform.Windows) {
+        // Python versions are installed as %LOCALAPPDATA%\Programs\Python\PythonXY\python.exe
+        const localAppData = task.getVariable('LOCALAPPDATA');
+        const installDir = path.join(localAppData, 'Programs', 'Python', `Python${major}${minor}`);
+        if (fs.existsSync(installDir)) {
+            return installDir;
+        } else {
+            return null;
+        }
+    } else {
+        // Python versions are installed as /usr/bin/pythonX.Y
+        const installDir = path.join('/', 'usr', 'bin');
+        if (fs.existsSync(path.join(installDir, `python${major}.${minor}`))) {
+            return installDir;
+        } else {
+            return null;
+        }
+    }
 }
 
 /**
