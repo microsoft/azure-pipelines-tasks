@@ -19,7 +19,7 @@
         "Minor": 0,
         "Patch": 0
     },
-    "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
+    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -60,7 +60,7 @@
             "name": "WebAppKind",
             "aliases": ["appType"],
             "type": "pickList",
-            "label": "App type",
+            "label": "App Service type",
             "defaultValue": "webApp",
             "required": true,
             "options": {
@@ -71,7 +71,7 @@
                 "apiApp": "API App",
                 "mobileApp": "Mobile App"
             },
-            "helpMarkDown": "Select type of web app to deploy. <br/> Note: Select Linux Web App for built-in platform images or custom container image deployments."
+            "helpMarkDown": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App and Mobile App."
         },
         {
             "name": "WebAppName",
@@ -86,11 +86,12 @@
         },
         {
             "name": "DeployToSlotOrASEFlag",
+            "aliases": ["deployToSlotOrASE"],
             "type": "boolean",
-            "label": "Specify Deployment Slot or App Service Environment details",
+            "label": "Deploy to Slot or App Service Environment",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Select the option to deploy to an existing slot other than the Production slot. If this option is not selected, then the Azure App Service will be deployed to the Production slot.",
+            "helpMarkDown": "Select the option to deploy to an existing deployment slot or Azure App Service Environment.<br />For both the targets, the task needs Resource group name.<br />In case the deployment target is a slot, by default the deployment is done to the production slot. Any other existing slot name can also be provided.<br />In case the deployment target is an Azure App Service environment, leave the slot name as ‘production’ and just specify the Resource group name.",
             "visibleRule": "WebAppKind != \"\""
         },
         {
@@ -102,7 +103,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
+            "helpMarkDown": "The Resource group name is required when the deployment target is either a deployment slot or an App Service Environment.<br />Enter or Select the Azure Resource group that contains the Azure App Service specified above.",
             "visibleRule": "DeployToSlotOrASEFlag = true"
         },
         {

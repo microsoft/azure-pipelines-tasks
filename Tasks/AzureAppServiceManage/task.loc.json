@@ -65,6 +65,9 @@
     },
     {
       "name": "SpecifySlot",
+      "aliases": [
+        "deployToSlotOrASE"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.SpecifySlot",
       "defaultValue": "false",

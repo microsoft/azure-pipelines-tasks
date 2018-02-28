@@ -90,6 +90,9 @@
     },
     {
       "name": "DeployToSlotOrASEFlag",
+      "aliases": [
+        "deployToSlotOrASE"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.DeployToSlotOrASEFlag",
       "defaultValue": "false",
