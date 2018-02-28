@@ -45,7 +45,6 @@ export class KeyVault {
     private taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters;
     private keyVaultClient: armKeyVault.KeyVaultClient;
     private provisionKeyVaultSecretsScript: string;
-    private maskedNewLineChars: boolean = false;
 
     constructor(taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters) {
         this.taskParameters = taskParameters;
@@ -155,8 +154,7 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
                 else {
-                    this.maskMultiLineSecrets(secretName, secretValue);
-                    tl.setVariable(secretName, secretValue, true);
+                    this.setVaultVariable(secretName, secretValue);
                 }
                 
                 return resolve();
@@ -164,20 +162,41 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
         });
     }
 
-    private maskMultiLineSecrets(secretName: string, secretValue: string): void {
-        if (secretValue)  {
-            const lines = secretValue.toString().split('\n');
-            if (lines.length > 1) {
+    private tryFlattenJson(jsonString: string): string {
+        try {
+            var o = JSON.parse(jsonString);
+
+            if (o && typeof o === "object") {
+                return JSON.stringify(o);
+            }
+        }
+        catch (e) { }
+
+        return null;
+    }
+
+    private setVaultVariable(secretName: string, secretValue: string): void {
+        if (!secretValue) {
+            return;
+        }
+
+        if (secretValue.indexOf('\n') < 0) {
+            // single-line case
+            tl.setVariable(secretName, secretValue, true);
+        }
+        else {
+            // multi-line case
+            let strVal = this.tryFlattenJson(secretValue);
+            if (strVal) {
+                console.log(util.format("Value of secret %s has been converted to single line.", secretName));
+                tl.setVariable(secretName, strVal, true);
+            }
+            else {
+                let lines = secretValue.split('\n');
                 lines.forEach((line: string, index: number) => {
                     console.log("##vso[task.setsecret]" + line);
                 });
-
-                if (!this.maskedNewLineChars) {
-                    // mask new line chars so that they don't get printed (in debug logs) for multi-line secrets
-                    //console.log("##vso[task.setsecret]%0D%0A"); -- this is not working
-                    tl.setVariable(this.taskParameters.keyVaultName + "_NewlineChars", "%0D%0A", true);
-                    this.maskedNewLineChars = true;
-                }
+                tl.setVariable(secretName, secretValue, true);
             }
         }
     }
