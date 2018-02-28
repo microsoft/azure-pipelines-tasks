@@ -6,7 +6,7 @@
   "loc.group.displayName.sign": "Signierung und Bereitstellung",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.solution": "Projektmappe",
-  "loc.input.help.solution": "Relative path from the repository root of the Xamarin.iOS solution to build. May contain wildcards.",
+  "loc.input.help.solution": "Der relative Pfad vom Repositorystamm der zu erstellenden Xamarin.iOS-Projektmappe. Kann Platzhalter enthalten.",
   "loc.input.label.configuration": "Konfiguration",
   "loc.input.help.configuration": "Standardkonfigurationen sind Ad-Hoc, AppStore, Debug und Release.",
   "loc.input.label.clean": "Bereinigen",
@@ -55,6 +55,6 @@
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Die Lösung wurde mithilfe des Suchmusters \"{0}\" nicht gefunden.",
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "Die Option \"NuGet-Pakete wiederherstellen\" ist veraltet. Fügen Sie Ihrer Builddefinition zum Wiederherstellen von NuGet-Paketen im Build einen NuGet-Installer-Task hinzu.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild oder Xbuild (Mono) wurden auf dem MacOS oder Linux-Agent nicht gefunden.",
-  "loc.messages.MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+  "loc.messages.MultipleSolutionsFound": "Es wurden Übereinstimmungen mit mehreren Projektmappendateien gefunden. Es wird die erste Übereinstimmung verwendet: %s",
+  "loc.messages.SolutionDoesNotExist": "Die Projektmappendatei wurde angegeben, ist aber nicht vorhanden: %s"
 }

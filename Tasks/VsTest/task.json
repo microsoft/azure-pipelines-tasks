@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 3,
-        "Patch": 25
+        "Patch": 26
     },
     "demands": [
         "vstest"
@@ -59,6 +59,9 @@
                 "testAssemblies": "Test assemblies",
                 "testPlan": "Test plan",
                 "testRun": "Test run"
+            },
+            "properties": {
+                "EditableOptions": "True"
             }
         },
         {
@@ -84,7 +87,8 @@
             "helpMarkDown": "Select a test plan containing test suites with automated test cases.",
             "groupName": "testSelection",
             "properties": {
-                "DisableManageLink": "True"
+                "DisableManageLink": "True",
+                "EditableOptions": "True"
             },
             "visibleRule": "testSelector = testPlan"
         },
@@ -98,7 +102,8 @@
             "groupName": "testSelection",
             "properties": {
                 "MultiSelect": "True",
-                "DisableManageLink": "True"
+                "DisableManageLink": "True",
+                "EditableOptions": "True"
             },
             "visibleRule": "testSelector = testPlan"
         },
@@ -111,7 +116,8 @@
             "helpMarkDown": "Select Test Configuration.",
             "groupName": "testSelection",
             "properties": {
-                "DisableManageLink": "True"
+                "DisableManageLink": "True",
+                "EditableOptions": "True"
             },
             "visibleRule": "testSelector = testPlan"
         },
@@ -203,6 +209,9 @@
                 "15.0": "Visual Studio 2017",
                 "14.0": "Visual Studio 2015",
                 "toolsInstaller": "Installed by Tools Installer"
+            },
+            "properties": {
+                "EditableOptions": "True"
             }
         },
         {
@@ -295,6 +304,9 @@
                 "basedOnTestCases": "Based on number of tests and agents",
                 "basedOnExecutionTime": "Based on past running time of tests",
                 "basedOnAssembly": "Based on test assemblies"
+            },
+            "properties": {
+                "EditableOptions": "True"
             }
         },
         {
@@ -332,6 +344,9 @@
             "options": {
                 "autoBatchSize": "Automatically determine the batch time",
                 "customTimeBatchSize": "Specify running time per batch"
+            },
+            "properties": {
+                "EditableOptions": "True"
             },
             "visibleRule": "distributionBatchType = basedOnExecutionTime"
         },
@@ -410,6 +425,9 @@
             "options": {
                 "basedOnTestFailurePercentage": "% failure",
                 "basedOnTestFailureCount": "# of failed tests"
+            },
+            "properties": {
+                "EditableOptions": "True"
             },
             "visibleRule": "rerunFailedTests = true"
         },
@@ -560,6 +578,7 @@
         "OverrideUseVerifiableInstrumentation": "Overriding UseVerifiableInstrumentation field to false in the runsettings file.",
         "NoTestResultsDirectoryFound": "Test results directory not found.",
         "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
-        "MultiConfigNotSupportedWithOnDemand": "On demand runs are not supported with Multi-Configuration option. Please use 'None' or 'Multi-agent' parallelism option."
+        "MultiConfigNotSupportedWithOnDemand": "On demand runs are not supported with Multi-Configuration option. Please use 'None' or 'Multi-agent' parallelism option.",
+        "disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
     }
 }

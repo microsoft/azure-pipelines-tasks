@@ -166,5 +166,6 @@
   "loc.messages.OverrideUseVerifiableInstrumentation": "Verrà eseguito l'override del campo UseVerifiableInstrumentation su false nel file runsettings.",
   "loc.messages.NoTestResultsDirectoryFound": "La directory dei risultati test non è stata trovata.",
   "loc.messages.OnlyWindowsOsSupported": "Questa attività è supportata solo in agenti Windows e non può essere usata su altre piattaforme.",
-  "loc.messages.MultiConfigNotSupportedWithOnDemand": "Le esecuzioni su richiesta non sono supportate con l'opzione Più configurazioni. Usare l'opzione di parallelismo 'Nessuno' o 'Più agenti'."
+  "loc.messages.MultiConfigNotSupportedWithOnDemand": "Le esecuzioni su richiesta non sono supportate con l'opzione Più configurazioni. Usare l'opzione di parallelismo 'Nessuno' o 'Più agenti'.",
+  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
 }

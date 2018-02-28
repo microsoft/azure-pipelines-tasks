@@ -6,7 +6,6 @@
   "author": "Microsoft Corporation",
   "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/work-item-query)",
   "category": "Utility",
-  "preview": true,
   "visibility": [
      "Build",
      "Release"
@@ -18,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 8
   },
   "instanceNameFormat": "Query Work Items",
   "groups": [

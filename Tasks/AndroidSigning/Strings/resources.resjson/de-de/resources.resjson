@@ -10,7 +10,7 @@
   "loc.input.label.jarsign": "APK signieren",
   "loc.input.help.jarsign": "Wählen Sie diese Option aus, wenn Sie die APK-Datei mit einer bereitgestellten KeyStore-Datei signieren möchten. Unsignierte APKs können nur in einem Emulator ausgeführt werden. APKs müssen signiert werden, um auf einem Gerät ausgeführt zu werden. ",
   "loc.input.label.keystoreFile": "Keystore file",
-  "loc.input.help.keystoreFile": "Select the keystore file that was uploaded to `Secure Files` to be used to sign the APK.",
+  "loc.input.help.keystoreFile": "Wählen Sie die Keystore-Datei aus, die zum Signieren des APK in \"Sichere Dateien\" hochgeladen wurde.",
   "loc.input.label.keystorePass": "Keystore password",
   "loc.input.help.keystorePass": "Geben Sie das Kennwort die KeyStore-Datei an. Verwenden Sie eine neue Variable, deren Sperre auf der Registerkarte \"Variablen\" aktiviert ist, um den Wert zu verschlüsseln.",
   "loc.input.label.keystoreAlias": "Alias",
@@ -28,5 +28,5 @@
   "loc.messages.CouldNotFindZipalignInAndroidHome": "Das Zipalign-Tool wurde nicht gefunden in ANDROID_HOME: %s.",
   "loc.messages.JavaHomeNotSet": "Die JAVA_HOME-Umgebungsvariable ist für den ausführenden Benutzer nicht festgelegt.",
   "loc.messages.NoMatchingFiles": "Keine mit dem Suchmuster übereinstimmenden Dateien wurden gefunden: %s",
-  "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "Fehler beim Löschen der Keystore-Datei, die vom Server heruntergeladen wurde: %s"
 }
