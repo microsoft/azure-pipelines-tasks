@@ -85,10 +85,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         }
     }
 
-    additionalArguments = !!(additionalArguments) ? additionalArguments : ' ';
-    additionalArguments = additionalArguments.indexOf('-retryAttempts') != -1 ? additionalArguments : additionalArguments.concat(' -retryAttempts:6');
-    additionalArguments = additionalArguments.indexOf('-retryInterval') != -1 ? additionalArguments : additionalArguments.concat(' -retryInterval:10000');
-
+    additionalArguments = additionalArguments ? additionalArguments : ' ';
     msDeployCmdArgs += ' ' + additionalArguments;
 
     if(!(removeAdditionalFilesFlag && useWebDeploy)) {

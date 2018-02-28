@@ -25,14 +25,6 @@ else {
 }
 
 
-if(checkParametersIfPresent(defaultMSBuildPackageArgument, ['-retryAttempts:6', '-retryInterval:10000'])) {
-    console.log('MSDEPLOY ARGUMENT RETRY FLAG PASSED');
-}
-else {
-    throw new Error('MSBUILD DEFAULT PARAMS FAILED: RETRY FLAG MISMATCH');
-}
-
-
 var packageWithSetParamArgument: string = msdeployUtility.getMSDeployCmdArgs('package.zip', 'webapp_name', {
     publishUrl: 'http://webapp_name.scm.azurewebsites.net:443', userName: '$webapp_name', userPWD: 'webapp_password'
 }, false, false, true, null, 'temp_param.xml', null, false, false, true);

@@ -53,8 +53,8 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
-		tr.run();
-
+        tr.run();
+        
 		var expectedErr = 'Error: msdeploy failed with return code: 1';
 		assert(tr.invokedToolCount == 3, 'should have invoked tool thrice despite failure');
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
@@ -233,7 +233,6 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         tr.run();
 
         assert(tr.stdout.search('MSBUILD DEFAULT PARAMS PASSED') > 0, 'should have printed MSBUILD DEFAULT PARAMS PASSED');
-        assert(tr.stdout.search('MSDEPLOY ARGUMENT RETRY FLAG PASSED') > 0, 'should have printed MSDEPLOY ARGUMENT RETRY FLAG PASSED');
         assert(tr.stdout.search('ARGUMENTS WITH SET PARAMS PASSED') > 0, 'should have printed ARGUMENTS WITH SET PARAMS PASSED');
         assert(tr.stdout.search('ARGUMENT WITH FOLDER PACKAGE PASSED') > 0, 'should have printed ARGUMENT WITH FOLDER PACKAGE PASSED');
         assert(tr.stdout.search('ARGUMENT WITH EXCLUDE APP DATA PASSED') > 0, 'should have printed ARGUMENT WITH EXCLUDE APP DATA PASSED');

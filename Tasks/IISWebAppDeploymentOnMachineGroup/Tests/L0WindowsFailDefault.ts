@@ -27,7 +27,7 @@ let a: any = <any>{
         "msdeploy": true
     },
     "exec": {
-    	"msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite' -retryAttempts:6 -retryInterval:10000 -enableRule:DoNotDeleteRule": {
+    	"msdeploy -verb:sync -source:package='webAppPkg.zip' -dest:auto -setParam:name='IIS Web Application Name',value='mytestwebsite' -enableRule:DoNotDeleteRule": {
             "code": 1,
             "stdout": "Failed to execute command"
         },

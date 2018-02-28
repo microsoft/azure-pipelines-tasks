@@ -49,7 +49,11 @@ export class TaskParametersUtility {
             taskParameters.RemoveAdditionalFilesFlag = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
             taskParameters.SetParametersFile = tl.getPathInput('SetParametersFile', false);
             taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
-            taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false);
+            taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
+        }
+        else {
+            // Retry Attempt is passed by default
+            taskParameters.AdditionalArguments = '-retryAttempts:6 -retryInterval:10000';
         }
 
         return taskParameters;

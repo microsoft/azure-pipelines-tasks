@@ -470,7 +470,7 @@
             "type": "string",
             "label": "Additional arguments",
             "required": false,
-            "defaultValue": "",
+            "defaultValue": "-retryAttempts:6 -retryInterval:10000",
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
             "helpMarkDown": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471)."

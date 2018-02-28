@@ -478,7 +478,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "required": false,
-      "defaultValue": "",
+      "defaultValue": "-retryAttempts:6 -retryInterval:10000",
       "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
