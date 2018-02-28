@@ -154,12 +154,51 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
                 else {
-                    tl.setVariable(secretName, secretValue, true);
+                    this.setVaultVariable(secretName, secretValue);
                 }
                 
                 return resolve();
             });
         });
+    }
+
+    private tryFlattenJson(jsonString: string): string {
+        try {
+            var o = JSON.parse(jsonString);
+
+            if (o && typeof o === "object") {
+                return JSON.stringify(o);
+            }
+        }
+        catch (e) { }
+
+        return null;
+    }
+
+    private setVaultVariable(secretName: string, secretValue: string): void {
+        if (!secretValue) {
+            return;
+        }
+
+        if (secretValue.indexOf('\n') < 0) {
+            // single-line case
+            tl.setVariable(secretName, secretValue, true);
+        }
+        else {
+            // multi-line case
+            let strVal = this.tryFlattenJson(secretValue);
+            if (strVal) {
+                console.log(util.format("Value of secret %s has been converted to single line.", secretName));
+                tl.setVariable(secretName, strVal, true);
+            }
+            else {
+                let lines = secretValue.split('\n');
+                lines.forEach((line: string, index: number) => {
+                    console.log("##vso[task.setsecret]" + line);
+                });
+                tl.setVariable(secretName, secretValue, true);
+            }
+        }
     }
 
     private getError(error: any): any {
