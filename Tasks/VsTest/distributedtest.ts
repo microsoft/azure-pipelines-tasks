@@ -185,9 +185,9 @@ export class DistributedTest {
         inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['TestPlanConfigId'] = this.dtaTestConfig.testPlanConfigId;
 
         if (this.dtaTestConfig.batchingType === models.BatchingType.AssemblyBased) {
-            inputDataContract['TestCaseLevelSlicingEnabled'] = false;
+            inputDataContract['DistributionSettings']['TestCaseLevelSlicingEnabled'] = false;
         } else {
-            inputDataContract['TestCaseLevelSlicingEnabled'] = true;
+            inputDataContract['DistributionSettings']['TestCaseLevelSlicingEnabled'] = true;
         }
 
         inputDataContract['DistributionSettings']['NumberOfTestAgents'] = this.dtaTestConfig.numberOfAgentsInPhase;
@@ -204,14 +204,14 @@ export class DistributedTest {
         }
 
         if (this.dtaTestConfig.rerunFailedTests) {
-            inputDataContract['RerunSettings"]["RerunFailedTests'] = true;
+            inputDataContract['ExecutionSettings']['RerunSettings']['RerunFailedTests'] = true;
             tl.debug("Type of rerun: " + this.dtaTestConfig.rerunType);
             if (this.dtaTestConfig.rerunType === 'basedOnTestFailureCount') {
-                inputDataContract['RerunSettings']['RerunFailedTestCasesMaxLimit'] = this.dtaTestConfig.rerunFailedTestCasesMaxLimit;
+                inputDataContract['ExecutionSettings']['RerunSettings']['RerunFailedTestCasesMaxLimit'] = this.dtaTestConfig.rerunFailedTestCasesMaxLimit;
             } else {
-                inputDataContract['RerunSettings']['RerunFailedThreshold'] = this.dtaTestConfig.rerunFailedThreshold;
+                inputDataContract['ExecutionSettings']['RerunSettings']['RerunFailedThreshold'] = this.dtaTestConfig.rerunFailedThreshold;
             }
-            inputDataContract['RerunSettings']['RerunMaxAttempts'] = this.dtaTestConfig.rerunMaxAttempts;
+            inputDataContract['ExecutionSettings']['RerunSettings']['RerunMaxAttempts'] = this.dtaTestConfig.rerunMaxAttempts;
         }
 
         // If we are setting the path version is not needed
