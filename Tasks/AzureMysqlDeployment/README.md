@@ -27,8 +27,8 @@ This tasks expects that the Azure resource for [Azure Database for Mysql](https:
 
 ##### Mysql Client in agent box
 This task expects mysql client must be in agent box
-For window agent you can install it by runing this [script file](https://aka.ms/window-mysqlcli-installer)
-For Linux you can install it by running 'apt-get install mysql-client'.
+- **Window Agent:** Use this [script file](https://aka.ms/window-mysqlcli-installer) to install mysql client.
+- **Linux Agent:** Run  command 'apt-get install mysql-client' to install mysql client.
  
 ### Parameters of the task: 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task: 
