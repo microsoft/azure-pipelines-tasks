@@ -28,7 +28,15 @@ function Update-PSModulePathForHostedAgent {
             $hostedAgentAzureRmModulePath = Get-LatestModule -patternToMatch "^azurerm_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$false
             $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$true
         }
+
+        $serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Default 'ConnectedServiceName'
+        $serviceName = Get-VstsInput -Name $serviceNameInput -Default (Get-VstsInput -Name DeploymentEnvironmentName)
+        if (!$serviceName) {
+            # Let the task SDK throw an error message if the input isn't defined.
+            Get-VstsInput -Name $serviceNameInput -Require
+        }
         $endpoint = Get-VstsEndpoint -Name $serviceName -Require
+        
         if($endpoint.Auth.Scheme -eq 'ServicePrincipal') {
             $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
             $env:PSModulePath = $env:PSModulePath.TrimStart(';')
