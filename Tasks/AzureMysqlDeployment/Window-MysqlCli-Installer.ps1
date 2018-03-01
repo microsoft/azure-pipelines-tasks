@@ -52,7 +52,6 @@ function ExtractFiles
         .DESCRIPTION
         Extracts the zip file to the location provided.
         It uses the latest command 'Expand-Archive' if available otherwise it fallsback to shell for extraction
-
         .PARAMETER ZipPath
         Path of the zip file to extract.
         
@@ -166,7 +165,12 @@ if ($exitCode -eq 0 -or $exitCode -eq 3010)
     Invoke-WebRequest -UseBasicParsing -Uri $uri -OutFile mysql.zip
 
     # Expand the zip
-    $sourcePath = $pwd.Path + "mysql.zip"
+    $pwdPath = $pwd.Path
+    if ( $pwdPath -notmatch '.+?\\$')
+    {
+    	$pwdPath += '\'
+    }
+    $sourcePath = $pwdPath + "mysql.zip"
     ExtractFiles  $sourcePath "C:\"
 
     # Deleting zip folder
