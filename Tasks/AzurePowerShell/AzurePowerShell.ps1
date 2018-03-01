@@ -8,7 +8,6 @@ $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
-$serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Default 'ConnectedServiceName'
 
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
@@ -50,6 +49,7 @@ $targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
 $authScheme = ''
 try
 {
+    $serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Default 'ConnectedServiceName'
     $serviceName = Get-VstsInput -Name $serviceNameInput -Default (Get-VstsInput -Name DeploymentEnvironmentName)
     if (!$serviceName)
     {
@@ -60,9 +60,10 @@ try
 
     if($endpoint)
     {
-        Write-Verbose "Unable to get the authScheme"
         $authScheme = $endpoint.Auth.Scheme 
     }
+
+     Write-Verbose "AuthScheme $authScheme" 
 }
 catch
 {
