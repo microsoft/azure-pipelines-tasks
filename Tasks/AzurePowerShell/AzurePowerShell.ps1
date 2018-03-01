@@ -60,8 +60,8 @@ try
 
     if($endpoint)
     {
-        Write-Verbose "Unable to get the authScheme"
         $authScheme = $endpoint.Auth.Scheme 
+        Write-Verbose "AuthScheme $authScheme" 
     }
 }
 catch
