@@ -27,7 +27,7 @@ export class KuduServiceManagementClient {
             retriableErrorCodes: reqOptions && reqOptions.retriableErrorCodes ? reqOptions.retriableErrorCodes : ["ETIMEDOUT"],
             retriableStatusCodes: reqOptions && reqOptions.retriableStatusCodes ? reqOptions.retriableStatusCodes :  [409, 500, 502, 503, 504]
         };
-
+        
         var httpResponse = webClient.sendRequest(request, options);
         return httpResponse;
     }
@@ -313,7 +313,7 @@ export class Kudu {
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }
-
+            
             throw response;
         }
         catch(error) {
@@ -337,7 +337,7 @@ export class Kudu {
             if([200, 201, 204].indexOf(response.statusCode) != -1) {
                 return response.body;
             }
-
+            
             throw response;
         }
         catch(error) {

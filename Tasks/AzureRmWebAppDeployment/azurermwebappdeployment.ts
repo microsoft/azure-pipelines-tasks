@@ -89,45 +89,33 @@ async function main() {
                     await appServiceUtility.enableRenameLockedFiles();
                 }
 
-
                 var msDeployPublishingProfile = await appServiceUtility.getWebDeployPublishingProfile();
                 // this is being done temporarily, to tackle war files not getting expanded (only for the first deployment to the web app) when done using MSDeploy.
                 if (webPackage.toString().toLowerCase().endsWith('.war')) {
                     // get list of files before deploying to the web app.
                     var listOfFilesBeforeDeployment = await kuduService.listDir('/site/wwwroot/webapps/');
 
-                    // deploying to web app
-                    await msDeploy.DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
-                        taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
-                        taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy);
-
-                    // waiting for war to expand
-                    await SleepFunction(10);
-
-                    // call deployed web app once and wait for its response.
-                    try {
-                        await CallDeployedWebApp(taskParams.WebAppName);
-                    }
-                    catch (ex) {
-                        // do nothing
-                    }
-
-                    // get list of files now, that the deployment has done
-                    var listOfFilesAfterDeployment = await kuduService.listDir('/site/wwwroot/webapps/');
-
-                    // verify if the war file has expanded
-                    // if not expanded, deploy using msdeploy once more, to make it work.
-                    if (!HasWarExpandedSuccessfully(listOfFilesBeforeDeployment, listOfFilesAfterDeployment, webPackage)) {
-
-                        // change the modified time of war file to be deployed as MSDeploy doesn't update the war file in webapp if the war file is exactly same.
-                        var currentTime = new Date(Date.now());
-                        var modifiedTime = new Date(Date.now());
-                        fs.utimesSync(webPackage, currentTime, modifiedTime);
-
-                        // deploy again
+                    var retryCount = 3;
+                    while (retryCount > 0) {
                         await msDeploy.DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
                             taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
                             taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy);
+
+                        // verify if the war file has expanded
+                        // if not expanded, deploy using msdeploy once more, to make it work.
+                        var hasWarExpandedSuccessfully: boolean = await HasWarExpandedSuccessfully(kuduService, listOfFilesBeforeDeployment, taskParams.WebAppName, webPackage)
+                        if (!hasWarExpandedSuccessfully) {
+                            // If the war file is exactly same, MSDeploy doesn't update the war file in webapp.
+                            // So by changing ModifiedTime, we ensure it will be updated.
+                            var currentTime = new Date(Date.now());
+                            var modifiedTime = new Date(Date.now());
+                            fs.utimesSync(webPackage, currentTime, modifiedTime);
+                        }
+                        else {
+                            break;
+                        }
+
+                        retryCount--;
                     }
                 }
                 else {
@@ -181,36 +169,53 @@ async function main() {
     }
 }
 
-async function SleepFunction(timeoutInSeconds: number) {
-    return new Promise(resolve => setTimeout(resolve, timeoutInSeconds * 1000))
+async function HasWarExpandedSuccessfully(kuduService, filesBeforeDeployment, webAppName: string, packageName: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+        // Waiting for war to expand
+        var sleep = SleepFunction(10);
+        sleep.then(() => {
+            // do a get call on the target web app.
+            var callWebApp = CallDeployedWebApp(webAppName);
+            callWebApp.then(() => {
+                var filesAfterDeployment = kuduService.listDir('/site/wwwroot/webapps/');
+                filesAfterDeployment.then((files) => {
+                    // Strip package path and only keep the package name.
+                    packageName = packageName.split('\\').find(x => x.toLowerCase().endsWith('.war')).split('.')[0];
+
+                    // Find if directory with same name as war file, existed before deployment
+                    var directoryWithSameNameBeforeDeployment;
+                    filesBeforeDeployment.some(item => {
+                        if (item.name == packageName) {
+                            directoryWithSameNameBeforeDeployment = item;
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    // Verify if the content of that war file has successfully expanded. This is can be concluded if
+                    // direcotry with same name as war file exists after deployment and if it existed before deployment, then the directorys should contain content of new war file
+                    // which can be concluded if the modified time of the directory has changed.
+                    resolve(files.some(item => { return item.name == packageName && item.mime == "inode/directory" && (!directoryWithSameNameBeforeDeployment || item.mtime != directoryWithSameNameBeforeDeployment.mtime) }));
+                })
+            });
+        });
+    });
 }
 
-async function CallDeployedWebApp(webAppName: string): Promise<{}> {
-    return new Promise((resolve => {
-        const req = http.get({ host: webAppName + 'azurewebsites.net' });
+async function SleepFunction(timeoutInSeconds: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => setTimeout(resolve, timeoutInSeconds * 1000));
+}
+
+async function CallDeployedWebApp(webAppName: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        const req = http.get({ host: webAppName + '.azurewebsites.net' });
         req.end();
         req.once('response', (res) => {
-            console.log(res);
-            resolve(res);
+            resolve();
         });
-    }));
-}
-
-function HasWarExpandedSuccessfully(filesBeforeDeployment, filesAfterDeployment, packageName: string): boolean {
-    // strip package path and only keep the package name.
-    packageName = packageName.split('\\').find(x => x.toLowerCase().endsWith('.war')).split('.')[0];
-    var directoryWithSameNameBeforeDeployment;
-
-    filesBeforeDeployment.some(item => {
-        if (item.name == packageName) {
-            directoryWithSameNameBeforeDeployment = item;
-            return true;
-        }
-        return false;
-    });
-
-    return filesAfterDeployment.some(item => {
-        return item.name == packageName && item.mime == "inode/directory" && (!directoryWithSameNameBeforeDeployment || item.mtime != directoryWithSameNameBeforeDeployment.mtime);
+        req.on('error', (err) => {
+            //do nothing
+        });
     });
 }
 
