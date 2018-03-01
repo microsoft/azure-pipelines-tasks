@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
 import * as semver from 'semver';
@@ -20,7 +21,7 @@ function getPlatform(): Platform {
         case 'win32': return Platform.Windows;
         case 'darwin': return Platform.MacOS;
         case 'linux': return Platform.Linux;
-        default: throw Error("Platform not recognized"); // TODO loc
+        default: throw Error(task.loc('PlatformNotRecognized'));
     }
 }
 
@@ -47,16 +48,22 @@ interface TaskParameters {
 }
 
 async function usePythonVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
-    validateVersionSpec(parameters.versionSpec);
-    const installDir = findVersion(parameters.versionSpec, platform);
+    if (!isValidPythonVersionSpec(parameters.versionSpec)) {
+        throw new Error(task.loc('InvalidVersionSpec', parameters.versionSpec));
+    }
+
+    const installDir: string | null = tool.findLocalTool('Python', parameters.versionSpec);
     if (!installDir) {
-        // TODO List available versions
+        // List available versions
+        task.error(task.loc('VersionNotFound', parameters.versionSpec));
+        console.log(task.loc('ListAvailableVersions'));
+        console.log(tool.findLocalToolVersions('Python').join(os.EOL));
         return;
     }
 
     task.setVariable(parameters.outputVariable, installDir);
     if (parameters.addToPath) {
-        addToPath(installDir, platform);
+        addToPath(installDir);
 
         // Python has "scripts" directories where command-line tools that come with packages are installed.
         // There are different directories for `pip install` and `pip install --user`.
@@ -71,23 +78,25 @@ async function usePythonVersion(parameters: TaskParameters, platform: Platform):
         //      (--user) %APPDATA%\Python\PythonXY\Scripts
         if (platform === Platform.Windows) {
             const scriptsDir = path.join(installDir, 'Scripts');
-            addToPath(scriptsDir, platform);
+            addToPath(scriptsDir);
 
             const majorMinorDir = path.basename(installDir);
             const userScriptsDir = path.join(task.getVariable('APPDATA'), 'Python', majorMinorDir, 'Scripts');
-            addToPath(userScriptsDir, platform);
+            addToPath(userScriptsDir);
         }
     }
 }
 
 /**
- * Throw an error if `input` is not a valid Python version specifier.
+ * Whether `input` is a valid Python version specifier.
  * @param input A string possibly representing a version specifier
  */
-function validateVersionSpec(input: string): void {
+function isValidPythonVersionSpec(input: string): boolean {
     // TODO Python prerelease specifiers?
     if (!semver.parse(input)) {
-        throw Error(); // TODO message
+        return false;
+    } else {
+        return true;
     }
 }
 
@@ -97,35 +106,42 @@ function validateVersionSpec(input: string): void {
  * @param platform OS the build agent is running on
  * @returns Path that Python was installed to
  */
-function findVersion(versionSpec: string, platform: Platform): string | null {
-    const { major, minor } = semver.parse(versionSpec)!; // TODO minor versions?
-    if (platform === Platform.Windows) {
-        // Python versions are installed as %LOCALAPPDATA%\Programs\Python\PythonXY\python.exe
-        const localAppData = task.getVariable('LOCALAPPDATA');
-        const installDir = path.join(localAppData, 'Programs', 'Python', `Python${major}${minor}`);
-        if (fs.existsSync(installDir)) {
-            return installDir;
-        } else {
-            return null;
-        }
-    } else {
-        // Python versions are installed as /usr/bin/pythonX.Y
-        const installDir = path.join('/', 'usr', 'bin');
-        if (fs.existsSync(path.join(installDir, `python${major}.${minor}`))) {
-            return installDir;
-        } else {
-            return null;
-        }
-    }
-}
+// function findPython(versionSpec: string, platform: Platform): string | null {
+//     const { major, minor } = semver.parse(versionSpec)!; // TODO minor versions?
+//     if (platform === Platform.Windows) {
+//         // Python versions are installed as %LOCALAPPDATA%\Programs\Python\PythonXY\python.exe
+//         const localAppData = task.getVariable('LOCALAPPDATA');
+//         const installDir = path.join(localAppData, 'Programs', 'Python', `Python${major}${minor}`);
+//         if (task.exist(installDir)) {
+//             return installDir;
+//         } else {
+//             return null;
+//         }
+//     } else {
+//         // Python versions are installed as /usr/bin/pythonX.Y or /usr/local/bin/pythonX.Y
+//         function hasPython(dir: string): boolean {
+//             return task.exist(path.join(dir, `python${major}.${minor}`));
+//         };
+
+//         const usrBin = path.join('/', 'usr', 'bin');
+//         const usrLocalBin = path.join('/', 'usr', 'local', 'bin');
+
+//         if (hasPython(usrBin)) {
+//             return usrBin;
+//         } else if (hasPython(usrLocalBin)) {
+//             return usrLocalBin;
+//         } else {
+//             return null;
+//         }
+//     }
+// }
 
 /**
  * Prepend `directory` to the PATH variable for the platform.
  */
-function addToPath(directory: string, platform: Platform): void {
+function addToPath(directory: string): void {
     const currentPath = task.getVariable('PATH');
-    const pathSeparator = platform === Platform.Windows ? ';' : ':';
-    task.setVariable('PATH', directory + pathSeparator + currentPath);
+    task.setVariable('PATH', directory + path.delimiter + currentPath);
 }
 
 run();
