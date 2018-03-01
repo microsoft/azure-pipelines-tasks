@@ -390,7 +390,7 @@
     {
       "target": "WebAppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppNamesByType2",
+      "dataSourceName": "AzureRMWebAppNamesByAppType",
       "parameters": {
         "WebAppKind": "$(WebAppKind)"
       }
