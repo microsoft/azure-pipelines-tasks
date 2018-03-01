@@ -383,7 +383,7 @@
   "outputVariables": [
     {
       "name": "AppServiceApplicationUrl",
-      "description": "Application URL for the selected App Service."
+      "description": "Application URL of the selected App Service."
     }
   ],
   "dataSourceBindings": [

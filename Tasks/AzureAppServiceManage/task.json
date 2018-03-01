@@ -63,9 +63,9 @@
         },
         {
             "name": "SpecifySlot",
-            "aliases": ["deployToSlotOrASE"],
+            "aliases": ["SpecifySlotOrASE"],
             "type": "boolean",
-            "label": "Deploy to Slot or App Service Environment",
+            "label": "Specify Slot or App Service Environment",
             "defaultValue": "false",
             "required": false,
             "visibleRule": "Action != Swap Slots"

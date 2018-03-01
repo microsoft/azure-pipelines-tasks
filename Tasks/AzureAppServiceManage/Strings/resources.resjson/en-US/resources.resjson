@@ -9,7 +9,7 @@
   "loc.input.help.Action": "Action to be performed on the App Service. You can Start, Stop, Restart, Slot swap, Install site extensions or enable Continuous Monitoring for an Azure App Service",
   "loc.input.label.WebAppName": "App Service name",
   "loc.input.help.WebAppName": "Enter or select the name of an existing Azure App Service",
-  "loc.input.label.SpecifySlot": "Deploy to Slot or App Service Environment",
+  "loc.input.label.SpecifySlot": "Specify Slot or App Service Environment",
   "loc.input.label.ResourceGroupName": "Resource group",
   "loc.input.help.ResourceGroupName": "Enter or Select the Azure Resource Group that contains the Azure App Service specified above",
   "loc.input.label.SourceSlot": "Source Slot",
