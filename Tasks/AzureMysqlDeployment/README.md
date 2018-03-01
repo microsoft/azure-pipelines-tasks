@@ -1,4 +1,4 @@
-# Azure Database for Mysql Deployment 
+﻿# Azure Database for Mysql Deployment 
  
  
 ### Overview: 
@@ -24,7 +24,11 @@ Use 'Azure Resource Manager'([ARM](https://azure.microsoft.com/en-in/documentati
  
 ##### Azure Database for Mysql resource 
 This tasks expects that the Azure resource for [Azure Database for Mysql](https://docs.microsoft.com/en-us/azure/mysql/overview) is already available in the [Azure portal](https://ms.portal.azure.com/?r=1#create/Microsoft.SQLDatabase.0.5.7-preview). The task can create a new database along with other Mysql commands but doesn't create the server. 
- 
+
+##### Mysql Client in agent box
+This task expects mysql client must be in agent box
+For window agent you can install it by runing this [script file](https://aka.ms/window-mysqlcli-installer)
+For Linux you can install it by running 'apt-get install mysql-client'.
  
 ### Parameters of the task: 
 The parameters of the task are described in details, including examples, to show how to input the parameters. The parameters listed with a \* are required parameters for the task: 
