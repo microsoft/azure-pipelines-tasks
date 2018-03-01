@@ -37,6 +37,8 @@ $variableSets = @(
 
 $temp = $env:PSModulePath
 
+Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal" }} }
+
 foreach ($variableSet in $variableSets) {
     $env:PSModulePath = $temp
     # Arrange
