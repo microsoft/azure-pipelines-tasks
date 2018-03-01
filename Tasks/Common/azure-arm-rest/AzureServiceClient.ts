@@ -204,6 +204,14 @@ export class ServiceClient {
         }
     }
 
+    public isNameValid(name: string): boolean {
+        if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     public getFormattedError(error: any): string {
         if(error && error.message) {
             if(error.statusCode) {

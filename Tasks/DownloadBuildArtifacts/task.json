@@ -6,10 +6,9 @@
   "helpMarkDown": "",
   "category": "Utility",
   "author": "Microsoft Corporation",
-  "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 131,
+    "Minor": 132,
     "Patch": 0
   },
   "groups": [
