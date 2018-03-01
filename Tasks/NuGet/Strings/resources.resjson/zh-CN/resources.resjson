@@ -9,7 +9,7 @@
   "loc.messages.Info_NuGetSupportedAfter3_5": "所用的 NuGet 版本为 %s，此任务仅支持 3.5.0 及以上版本。",
   "loc.messages.BuildIdentityPermissionsHint": "对于内部源，请确保生成服务标识“%s”[%s] 有权对其进行访问。",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore 目前不支持使用加密 API 密钥。",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "xml 无效。元素名应为“配置”。",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "在搜索模式 %s 下找不到匹配的文件",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "找不到 %s 的下载 URL",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "找不到与输入 %s 匹配的版本",
@@ -31,7 +31,7 @@
   "loc.messages.NGCommon_NuGetConfigIsPackagesConfig": "在 %s 处应有 NuGet.config 文件，但其内容似乎是 packages.config 文件。请检查 %s 任务的设置并确认选择的是 NuGet.config，而不是 packages.config。",
   "loc.messages.NGCommon_RemovingSources": "准备设置 NuGet.config 中的凭据",
   "loc.messages.NGCommon_SpsNotFound": "无法找到“%s”[%s] 区域。Team Foundation Server 安装可能存在问题。",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersio": "Unknown NuGet version selected.",
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersio": "已选择未知的 NuGet 版本。",
   "loc.messages.NGCommon_UnableToFindTool": "无法找到工具 %s",
   "loc.messages.Warning_UpdatingNuGetVersion": "正在将 NuGet.exe 版本更新到 %s (从 %s)。NuGet 更新到新版本时可能出现行为更改或重大更改。如果不希望发生这种情况，请在任务中取消选中“检查最新版本”选项。"
 }

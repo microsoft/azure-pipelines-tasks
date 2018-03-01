@@ -41,7 +41,7 @@
   "loc.input.label.workDir": "工作目录",
   "loc.input.help.workDir": "特定服务容器的工作目录。",
   "loc.input.label.entrypoint": "入口点替代",
-  "loc.input.help.entrypoint": "Override the default entry point for the specific service container.",
+  "loc.input.help.entrypoint": "替代特定服务容器的默认入口点。",
   "loc.input.label.containerCommand": "命令",
   "loc.input.help.containerCommand": "要在特定服务容器中运行的命令。例如，如果映像包含一个简单的 Python Flask Web 应用程序，则可以将 \"python app.py\" 指定为启动 Web 应用程序。",
   "loc.input.label.detached": "后台运行",
@@ -66,8 +66,8 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "不存在其他 Docker Compose 文件时发生错误。这会替代如果文件不存在则忽略该文件的默认行为。",
   "loc.input.label.cwd": "工作目录",
   "loc.input.help.cwd": "Docker Compose 命令的工作目录。",
-  "loc.messages.ContainerPatternFound": "Pattern found in docker compose filepath parameter",
-  "loc.messages.ContainerPatternNotFound": "No pattern found in docker compose filepath parameter",
+  "loc.messages.ContainerPatternFound": "Docker Compose 文件路径参数中找到的模式",
+  "loc.messages.ContainerPatternNotFound": "Docker Compose 文件路径参数中未找到任何模式",
   "loc.messages.ContainerDockerFileNotFound": "找不到匹配 %s 的任何 Docker 文件。",
-  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Additional Docker Compose File %s does not exists."
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "不存在其他 Docker Compose 文件 %s。"
 }

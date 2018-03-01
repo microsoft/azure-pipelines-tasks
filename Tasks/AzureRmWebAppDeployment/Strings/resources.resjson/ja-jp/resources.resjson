@@ -213,5 +213,6 @@
   "loc.messages.MultipleResourceGroupFoundForAppService": "App Service '%s' に複数のリソース グループが見つかりました。",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
   "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
+  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
+  "loc.messages.GoExeNameNotPresent": "Go exe name is not present"
 }

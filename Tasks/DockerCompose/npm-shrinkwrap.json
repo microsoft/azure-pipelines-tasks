@@ -63,7 +63,6 @@
     },
     "docker-common": {
       "version": "file:../../_build/Tasks/Common/docker-common-1.0.0.tgz",
-      "integrity": "sha1-26jEeKzuYeR/DTuIEbg1eIbm7G4=",
       "requires": {
         "del": "2.2.0",
         "q": "1.4.1",

@@ -10,7 +10,7 @@
   "loc.input.label.outputdir": "包文件夹",
   "loc.input.help.outputdir": "在其中创建包的文件夹。如果为空，则将在 csproj 或 nuspec 文件旁边创建包。",
   "loc.input.label.includeReferencedProjects": "包括引用项目",
-  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
+  "loc.input.help.includeReferencedProjects": "将引用项目作为依赖项或包的一部分包括在内。不能与自动包版本控制一起使用。如果引用项目对应的 nuspec 文件与项目同名，则将引用项目作为依赖项添加。否则，将引用项目作为包的一部分添加。[了解详细信息](https://docs.microsoft.com/zh-cn/nuget/tools/cli-ref-pack)。",
   "loc.input.label.versionByBuild": "自动确定包的版本",
   "loc.input.help.versionByBuild": "不能与包含的引用项目一起使用。如果选择“使用日期和时间”，这将生成符合 [SemVer](http://semver.org/spec/v1.0.0.html) 的版本，格式为 `X.Y.Z-ci-datetime`，其中选择 X、Y 和 Z。\n\n如果选择“使用环境变量”，则必须选择一个环境变量，确保它包含要用的版本号。\n\n如果选择“使用生成号”，则将使用生成号对包进行版本控制。**请注意:** 在“常规”下将生成格式设置为 \"[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)\"。",
   "loc.input.label.versionEnvVar": "环境变量",
@@ -26,7 +26,7 @@
   "loc.input.label.buildProperties": "其他生成属性",
   "loc.input.help.buildProperties": "用于生成包的属性列表，采用分号分隔。",
   "loc.input.label.nuGetAdditionalArgs": "NuGet 参数",
-  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
+  "loc.input.help.nuGetAdditionalArgs": "传递给 NuGet.exe pack 的其他参数。[详细信息](https://docs.microsoft.com/zh-cn/nuget/tools/cli-ref-pack)。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路径",
   "loc.input.help.nuGetPath": "可以选择提供 NuGet.exe 的路径"
 }
