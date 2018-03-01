@@ -8,6 +8,8 @@ $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
+$serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Default 'ConnectedServiceName'
+
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -45,7 +47,30 @@ if ($targetAzurePs -eq $latestVersion) {
 . "$PSScriptRoot\Utility.ps1"
 $targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
 
-Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
+$authScheme = ''
+try
+{
+    $serviceName = Get-VstsInput -Name $serviceNameInput -Default (Get-VstsInput -Name DeploymentEnvironmentName)
+    if (!$serviceName)
+    {
+            Get-VstsInput -Name $serviceNameInput -Require
+    }
+
+    $endpoint = Get-VstsEndpoint -Name $serviceName -Require
+
+    if($endpoint)
+    {
+        Write-Verbose "Unable to get the authScheme"
+        $authScheme = $endpoint.Auth.Scheme 
+    }
+}
+catch
+{
+   $error = $_.Exception.Message
+   Write-Verbose "Unable to get the authScheme $error" 
+}
+
+Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
 try {
     # Initialize Azure.
