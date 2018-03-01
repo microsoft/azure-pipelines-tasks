@@ -8,6 +8,7 @@ gulp-tsc-tmp-*
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js
 !Tasks/AzureResourceGroupDeployment/Tests/mock_node_modules/**/*.js
+!Tasks/Go/Tests/mock_node_modules/**/*.js
 .taskkey
 
 ## Ignore Visual Studio temporary files, build results, and

@@ -6,6 +6,8 @@ export const APPLICATION_INSIGHTS_EXTENSION_NAME: string = "Microsoft.Applicatio
 
 export const productionSlot: string = "production";
 
+export const mysqlApiVersion: string = '2017-04-30-preview';
+
 export const APIVersions = {
     azure_arm_appinsights: '2015-05-01'
 }
@@ -14,3 +16,4 @@ export const KUDU_DEPLOYMENT_CONSTANTS = {
     SUCCESS: 4,
     FAILED: 3
 }
+

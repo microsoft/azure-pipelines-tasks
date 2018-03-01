@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Apple-Zertifikat installieren",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "Das Installieren eines Apple-Zertifikats ist zum Erstellen auf einem macOS-Agent erforderlich.",
   "loc.instanceNameFormat": "Apple-Zertifikat installieren",
   "loc.group.displayName.advanced": "Erweitert",
@@ -21,5 +21,5 @@
   "loc.input.label.signingIdentity": "Certificate signing identity",
   "loc.input.help.signingIdentity": "Der allgemeine Name der Person im Signaturzertifikat. Wenn keine Angabe erfolgt, wird versucht, den allgemeinen Namen zu analysieren.",
   "loc.messages.INVALID_P12": "Der Zertifikat-SHA1-Hash und der allgemeine Name (CN) wurden nicht gefunden. Das Zertifikat muss eine gültige P12-Datei sein.",
-  "loc.messages.NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon)."
+  "loc.messages.NoP12PwdWarning": "Kein P12-Kennwort angegeben. Wenn die P12-Datei ein Kennwort erfordert, wird empfohlen, dieses als Prozessvariable anzugeben und als Geheimnis zu markieren (Schlosssymbol)."
 }

@@ -9,7 +9,7 @@
   "loc.messages.Info_NuGetSupportedAfter3_5": "Используемая версия NuGet — %s. Эта задача поддерживает только версии 3.5.0 и выше. ",
   "loc.messages.BuildIdentityPermissionsHint": "Для внутренних каналов удостоверение службы сборки \"%s\" [%s] должно иметь доступ к каналу.",
   "loc.messages.Error_ApiKeyNotSupported": ".NET Core сейчас не поддерживает использование зашифрованных ключей API.",
-  "loc.messages.Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
+  "loc.messages.Error_ExpectedConfigurationElement": "Недопустимый код XML. Ожидается элемент \"configuration\".",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Не найдены файлы, соответствующие шаблону поиска: %s.",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "URL-адрес скачивания для %s не найден.",
   "loc.messages.Error_NoVersionWasFoundWhichMatches": "Не найдена версия, соответствующая входному параметру %s",
@@ -31,7 +31,7 @@
   "loc.messages.NGCommon_NuGetConfigIsPackagesConfig": "Ожидался файл NuGet.config в \"%s\", однако похоже, что в нем содержатся данные packages.config. Проверьте параметры для задачи \"%s\" и подтвердите, что вы выбрали NuGet.config, а не packages.config.",
   "loc.messages.NGCommon_RemovingSources": "Подготовка к настройке учетных данных в NuGet.config",
   "loc.messages.NGCommon_SpsNotFound": "Не удается найти область \"%s\" [%s]. Возможно, возникла проблема с установкой Team Foundation Server.",
-  "loc.messages.NGCommon_UnabletoDetectNuGetVersio": "Unknown NuGet version selected.",
+  "loc.messages.NGCommon_UnabletoDetectNuGetVersio": "Выбрана неизвестная версия NuGet.",
   "loc.messages.NGCommon_UnableToFindTool": "Не удается найти средство \"%s\"",
   "loc.messages.Warning_UpdatingNuGetVersion": "Обновление версии NuGet.exe на %s с %s. При обновлении версии NuGet возможны изменения в поведении или критические изменения. Если это нежелательно, снимите флажок \"Проверить наличие последней версии\" в параметрах задачи."
 }

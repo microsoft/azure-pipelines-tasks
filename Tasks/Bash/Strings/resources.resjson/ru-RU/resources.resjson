@@ -19,7 +19,7 @@
   "loc.messages.JS_ExitCode": "Завершение работы Bash с кодом \"%s\".",
   "loc.messages.JS_FormattedCommand": "Отформатирована команда: %s",
   "loc.messages.JS_InvalidFilePath": "Недопустимый путь к файлу \"%s\".",
-  "loc.messages.JS_ScriptContents": "Script contents:",
+  "loc.messages.JS_ScriptContents": "Содержимое скрипта:",
   "loc.messages.JS_Stderr": "Оболочка Bash записала одну или несколько строк в стандартный поток ошибок.",
   "loc.messages.JS_TranslatePathFailed": "Не удалось преобразовать путь \"%s\" для файловой системы Linux."
 }

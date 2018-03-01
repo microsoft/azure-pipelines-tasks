@@ -10,7 +10,7 @@
   "loc.input.label.jarsign": "Подписать APK",
   "loc.input.help.jarsign": "Выберите этот параметр, чтобы подписать APK с помощью предоставленного файла хранилища ключей. Неподписанные APK можно выполнять только в эмуляторе. Для запуска на устройстве APK должны быть подписаны.",
   "loc.input.label.keystoreFile": "Keystore file",
-  "loc.input.help.keystoreFile": "Select the keystore file that was uploaded to `Secure Files` to be used to sign the APK.",
+  "loc.input.help.keystoreFile": "Выберите файл хранилища ключей, отправленный в разделе \"Безопасные файлы\" для подписывания APK.",
   "loc.input.label.keystorePass": "Keystore password",
   "loc.input.help.keystorePass": "Введите пароль для предоставленного файла хранилища ключей. Чтобы зашифровать это значение, используйте новую переменную сборки с включенной блокировкой на вкладке \"Переменные\".",
   "loc.input.label.keystoreAlias": "Псевдоним",
@@ -28,5 +28,5 @@
   "loc.messages.CouldNotFindZipalignInAndroidHome": "Не удалось найти средство zipalign в ANDROID_HOME: %s",
   "loc.messages.JavaHomeNotSet": "Переменная среды JAVA_HOME не задана для текущего пользователя.",
   "loc.messages.NoMatchingFiles": "Не найдены файлы, соответствующие шаблону поиска: %s",
-  "loc.messages.DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
+  "loc.messages.DeleteKeystoreFileFailed": "Не удалось удалить скачанный с сервера файл хранилища ключей: %s"
 }

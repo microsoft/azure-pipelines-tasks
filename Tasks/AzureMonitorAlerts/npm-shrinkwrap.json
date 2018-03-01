@@ -6,12 +6,10 @@
   "dependencies": {
     "azurestack-common": {
       "version": "file:../../_build/Tasks/Common/azurestack-common-1.0.0.tgz",
-      "integrity": "sha1-RJPyPR50zhnWoWUlhG3yJPuDDnw=",
       "requires": {
         "q": "1.4.1",
         "typed-rest-client": "0.12.0",
-        "vsts-task-lib": "2.0.1-preview",
-        "xml2js": "0.4.13"
+        "vsts-task-lib": "2.0.1-preview"
       },
       "dependencies": {
         "q": {
@@ -56,7 +54,7 @@
     "minimatch": {
       "version": "3.0.4",
       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
-      "integrity": "sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==",
+      "integrity": "sha1-UWbihkV/AzBgZL5Ul+jbsMPTIIM=",
       "requires": {
         "brace-expansion": "1.1.8"
       }
@@ -76,15 +74,10 @@
       "resolved": "https://registry.npmjs.org/q/-/q-1.5.0.tgz",
       "integrity": "sha1-3QG6ydBtMObyGa7LglPunr3DCPE="
     },
-    "sax": {
-      "version": "1.2.4",
-      "resolved": "https://registry.npmjs.org/sax/-/sax-1.2.4.tgz",
-      "integrity": "sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw=="
-    },
     "semver": {
       "version": "5.4.1",
       "resolved": "https://registry.npmjs.org/semver/-/semver-5.4.1.tgz",
-      "integrity": "sha512-WfG/X9+oATh81XtllIo/I8gOiY9EXRdv1cQdyykeXK17YcUW3EXUAi2To4pcH6nZtJPr7ZOpM5OMyWJZm+8Rsg=="
+      "integrity": "sha1-4FnAnYVx8FQII3M0M1BdOi8AsY4="
     },
     "shelljs": {
       "version": "0.3.0",
@@ -113,7 +106,7 @@
     "uuid": {
       "version": "3.1.0",
       "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.1.0.tgz",
-      "integrity": "sha512-DIWtzUkw04M4k3bf1IcpS2tngXEL26YUD2M0tMDUpnUrz2hgzUBlD55a4FjdLGPvfHxS6uluGWvaVEqgBcVa+g=="
+      "integrity": "sha1-PdPT55Crwk17DToDT/q6vijrvAQ="
     },
     "vsts-task-lib": {
       "version": "2.1.0",
@@ -127,20 +120,6 @@
         "shelljs": "0.3.0",
         "uuid": "3.1.0"
       }
-    },
-    "xml2js": {
-      "version": "0.4.13",
-      "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.4.13.tgz",
-      "integrity": "sha1-+EQ+B0Oeb/ktmVKPSbvTScyfMGs=",
-      "requires": {
-        "sax": "1.2.4",
-        "xmlbuilder": "9.0.6"
-      }
-    },
-    "xmlbuilder": {
-      "version": "9.0.6",
-      "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-9.0.6.tgz",
-      "integrity": "sha1-fIJtjYb0eISwWHLL6dJ7Ab7VA/Y="
     }
   }
 }

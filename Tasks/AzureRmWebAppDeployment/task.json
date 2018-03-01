@@ -485,7 +485,7 @@
         "ScriptStatusTimeout": "Unable to fetch script status due to timeout.",
         "PollingForFileTimeOut": "Unable to fetch script status due to timeout. You can increase the timeout limit by setting 'appservicedeploy.retrytimeout' variable to number of minutes required.",
         "InvalidPollOption": "Invalid polling option provided: %s.",
-        "MissingAppTypeWebConfigParameters": "Attribute '-appType' is missing in the Web.config parameters. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'.<br />For example, '-appType python_Bottle' (sans-quotes) in case of Python Bottle framework..",
+        "MissingAppTypeWebConfigParameters": "Attribute '-appType' is missing in the Web.config parameters. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask', 'node' and 'Go'.<br />For example, '-appType python_Bottle' (sans-quotes) in case of Python Bottle framework..",
         "AutoDetectDjangoSettingsFailed": "Unable to detect DJANGO_SETTINGS_MODULE 'settings.py' file path. Ensure that the 'settings.py' file exists or provide the correct path in Web.config parameter input in the following format '-DJANGO_SETTINGS_MODULE <folder_name>.settings'",
         "FailedToApplyTransformation": "Unable to apply transformation for the given package. Verify the following.",
         "FailedToApplyTransformationReason1": "1. Whether the Transformation is already applied for the MSBuild generated package during build. If yes, remove the <DependentUpon> tag for each config in the csproj file and rebuild. ",
@@ -533,6 +533,7 @@
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
-        "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
+        "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
+        "GoExeNameNotPresent": "Go exe name is not present"
     }
 }

@@ -545,6 +545,7 @@
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
-    "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs"
+    "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
+    "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent"
   }
 }
