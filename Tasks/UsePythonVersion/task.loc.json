@@ -45,7 +45,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "usepythonversion.js",
+      "target": "main.js",
       "argumentFormat": ""
     }
   },

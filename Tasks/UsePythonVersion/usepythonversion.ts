@@ -7,7 +7,7 @@ import * as semver from 'semver';
 import * as task from 'vsts-task-lib/task';
 import * as tool from 'vsts-task-tool-lib/tool';
 
-enum Platform {
+export enum Platform {
     Windows,
     MacOS,
     Linux
@@ -16,28 +16,12 @@ enum Platform {
 /**
  * Determine the operating system the build agent is running on.
  */
-function getPlatform(): Platform {
+export function getPlatform(): Platform {
     switch (process.platform) {
         case 'win32': return Platform.Windows;
         case 'darwin': return Platform.MacOS;
         case 'linux': return Platform.Linux;
         default: throw Error(task.loc('PlatformNotRecognized'));
-    }
-}
-
-async function run(): Promise<void> {
-    try {
-        task.setResourcePath(path.join(__dirname, 'task.json'));
-        await usePythonVersion({
-            versionSpec: task.getInput('versionSpec', true),
-            outputVariable: task.getInput('outputVariable', true),
-            addToPath: task.getBoolInput('addToPath', true)
-        },
-        getPlatform());
-        task.setResult(task.TaskResult.Succeeded, "");
-    } catch (error) {
-        task.error(error.message);
-        task.setResult(task.TaskResult.Failed, error.message);
     }
 }
 
@@ -47,7 +31,7 @@ interface TaskParameters {
     readonly addToPath: boolean
 }
 
-async function usePythonVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
+export async function usePythonVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
     if (!isValidPythonVersionSpec(parameters.versionSpec)) {
         throw new Error(task.loc('InvalidVersionSpec', parameters.versionSpec));
     }
@@ -143,5 +127,3 @@ function addToPath(directory: string): void {
     const currentPath = task.getVariable('PATH');
     task.setVariable('PATH', directory + path.delimiter + currentPath);
 }
-
-run();
