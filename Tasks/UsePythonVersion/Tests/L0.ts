@@ -23,12 +23,12 @@ describe('UsePythonVersion L0 Suite', function () {
         mockery.resetCache();
     })
 
-    it('finds version in cache', function () {
+    it('finds version in cache', async function () {
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => 'Python/3.6.4'
         });
 
-        const uut = require('../usepythonversion');
+        const uut = require('../usepythonversion'); // TODO TypeScript 2.4: `await ... import` to get type information
         const parameters = {
             versionSpec: '3.6',
             outputVariable: 'Python',
@@ -37,13 +37,11 @@ describe('UsePythonVersion L0 Suite', function () {
 
         assert.notEqual(process.env['PYTHON'], 'Python/3.6.4');
 
-        return uut.usePythonVersion(parameters, uut.Platform.Windows)
-            .then(() => {
-                assert.equal(process.env['PYTHON'], 'Python/3.6.4');
-            });
+        await uut.usePythonVersion(parameters, uut.Platform.Windows);
+        assert.equal(process.env['PYTHON'], 'Python/3.6.4');
     });
 
-    it('rejects version not in cache', function () {
+    it('rejects version not in cache', async function (done: MochaDone) {
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => null,
             findLocalToolVersions: () => ['2.7.13']
@@ -56,19 +54,19 @@ describe('UsePythonVersion L0 Suite', function () {
             addToPath: false
         };
 
-        return uut.usePythonVersion(parameters, uut.Platform.Windows)
-            .then(() => {
-                throw new Error('should not have succeeded');
-            },
-            (error: Error) => {
-                const expectedMessage = [
-                    'loc_mock_VersionNotFound 3.x',
-                    'loc_mock_ListAvailableVersions',
-                    '2.7.13'
-                ].join(EOL);
+        try {
+            await uut.usePythonVersion(parameters, uut.Platform.Windows);
+            done(new Error('should not have succeeded'));
+        } catch (e) {
+            const expectedMessage = [
+                'loc_mock_VersionNotFound 3.x',
+                'loc_mock_ListAvailableVersions',
+                '2.7.13'
+            ].join(EOL);
 
-                assert.equal(error.message, expectedMessage);
-            });
+            assert.equal(e.message, expectedMessage);
+            done();
+        }
     });
 
     // it('sets PATH correctly on Linux', function () {
