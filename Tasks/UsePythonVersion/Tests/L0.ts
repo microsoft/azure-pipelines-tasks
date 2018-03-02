@@ -1,6 +1,12 @@
 import * as assert from 'assert';
 import { EOL } from 'os';
 import * as mockery from 'mockery';
+import * as usePythonVersion from '../usepythonversion';
+
+/** Reload the unit under test to use mocks that have been registered. */
+function reload(): typeof usePythonVersion {
+    return require('../usepythonversion');
+}
 
 describe('UsePythonVersion L0 Suite', function () {
     before(function () {
@@ -28,7 +34,7 @@ describe('UsePythonVersion L0 Suite', function () {
             findLocalTool: () => '/Python/3.6.4'
         });
 
-        const uut = require('../usepythonversion');
+        const uut = reload();
         const parameters = {
             versionSpec: '3.6',
             outputVariable: 'Python',
@@ -47,7 +53,7 @@ describe('UsePythonVersion L0 Suite', function () {
             findLocalToolVersions: () => ['2.7.13']
         });
 
-        const uut = require('../usepythonversion');
+        const uut = reload();
         const parameters = {
             versionSpec: '3.x',
             outputVariable: 'Python',
@@ -74,7 +80,7 @@ describe('UsePythonVersion L0 Suite', function () {
             findLocalTool: () => '/Python/3.6.4'
         });
 
-        const uut = require('../usepythonversion');
+        const uut = reload();
         const parameters = {
             versionSpec: '3.6',
             outputVariable: 'Python',
@@ -91,7 +97,7 @@ describe('UsePythonVersion L0 Suite', function () {
             findLocalTool: () => 'C:\\Python\\3.6.4'
         });
 
-        const uut = require('../usepythonversion');
+        const uut = reload();
         const parameters = {
             versionSpec: '3.6',
             outputVariable: 'Python',
