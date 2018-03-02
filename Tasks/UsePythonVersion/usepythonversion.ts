@@ -44,7 +44,7 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
 
     task.setVariable(parameters.outputVariable, installDir);
     if (parameters.addToPath) {
-        addToPath(installDir);
+        addToPath(installDir, platform);
 
         // Python has "scripts" directories where command-line tools that come with packages are installed.
         // There are different directories for `pip install` and `pip install --user`.
@@ -59,55 +59,18 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
         //      (--user) %APPDATA%\Python\PythonXY\Scripts
         if (platform === Platform.Windows) {
             const scriptsDir = path.join(installDir, 'Scripts');
-            addToPath(scriptsDir);
+            addToPath(scriptsDir, platform);
 
-            const majorMinorDir = path.basename(installDir);
-            const userScriptsDir = path.join(task.getVariable('APPDATA'), 'Python', majorMinorDir, 'Scripts');
-            addToPath(userScriptsDir);
+            // TODO --user directory
         }
     }
 }
 
 /**
- * Find where the latest Python version matching `versionSpec` is installed, or `null` if there is no version matching the version spec.
- * @param versionSpec A valid semver version specifier string (like 3.x)
- * @param platform OS the build agent is running on
- * @returns Path that Python was installed to
- */
-// function findPython(versionSpec: string, platform: Platform): string | null {
-//     const { major, minor } = semver.parse(versionSpec)!; // TODO minor versions?
-//     if (platform === Platform.Windows) {
-//         // Python versions are installed as %LOCALAPPDATA%\Programs\Python\PythonXY\python.exe
-//         const localAppData = task.getVariable('LOCALAPPDATA');
-//         const installDir = path.join(localAppData, 'Programs', 'Python', `Python${major}${minor}`);
-//         if (task.exist(installDir)) {
-//             return installDir;
-//         } else {
-//             return null;
-//         }
-//     } else {
-//         // Python versions are installed as /usr/bin/pythonX.Y or /usr/local/bin/pythonX.Y
-//         function hasPython(dir: string): boolean {
-//             return task.exist(path.join(dir, `python${major}.${minor}`));
-//         };
-
-//         const usrBin = path.join('/', 'usr', 'bin');
-//         const usrLocalBin = path.join('/', 'usr', 'local', 'bin');
-
-//         if (hasPython(usrBin)) {
-//             return usrBin;
-//         } else if (hasPython(usrLocalBin)) {
-//             return usrLocalBin;
-//         } else {
-//             return null;
-//         }
-//     }
-// }
-
-/**
  * Prepend `directory` to the PATH variable for the platform.
  */
-function addToPath(directory: string): void {
+function addToPath(directory: string, platform: Platform): void {
     const currentPath = task.getVariable('PATH');
-    task.setVariable('PATH', directory + path.delimiter + currentPath);
+    const pathDelimiter = platform === Platform.Windows ? ';': ':'; // Use this instead of `path.delimiter` for testability
+    task.setVariable('PATH', directory + pathDelimiter + currentPath);
 }

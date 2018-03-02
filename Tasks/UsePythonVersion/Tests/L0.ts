@@ -25,20 +25,20 @@ describe('UsePythonVersion L0 Suite', function () {
 
     it('finds version in cache', async function () {
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => 'Python/3.6.4'
+            findLocalTool: () => '/Python/3.6.4'
         });
 
-        const uut = require('../usepythonversion'); // TODO TypeScript 2.4: `await ... import` to get type information
+        const uut = require('../usepythonversion');
         const parameters = {
             versionSpec: '3.6',
             outputVariable: 'Python',
             addToPath: false
         };
 
-        assert.notEqual(process.env['PYTHON'], 'Python/3.6.4');
+        assert.notEqual(process.env['PYTHON'], '/Python/3.6.4');
 
-        await uut.usePythonVersion(parameters, uut.Platform.Windows);
-        assert.equal(process.env['PYTHON'], 'Python/3.6.4');
+        await uut.usePythonVersion(parameters, uut.Platform.Linux);
+        assert.equal(process.env['PYTHON'], '/Python/3.6.4');
     });
 
     it('rejects version not in cache', async function (done: MochaDone) {
@@ -55,7 +55,7 @@ describe('UsePythonVersion L0 Suite', function () {
         };
 
         try {
-            await uut.usePythonVersion(parameters, uut.Platform.Windows);
+            await uut.usePythonVersion(parameters, uut.Platform.Linux);
             done(new Error('should not have succeeded'));
         } catch (e) {
             const expectedMessage = [
@@ -69,28 +69,38 @@ describe('UsePythonVersion L0 Suite', function () {
         }
     });
 
-    // it('sets PATH correctly on Linux', function () {
-    //     const uut = require('../usepythonversion');
-    //     // TODO
-    //     mockTask.setAnswers({
-            
-    //     });
-    // });
+    it('sets PATH correctly on Linux', async function () {
+        mockery.registerMock('vsts-task-tool-lib/tool', {
+            findLocalTool: () => '/Python/3.6.4'
+        });
 
-    // it('sets PATH correctly on Windows', function () {
-    //     const uut = require('../usepythonversion');
-    //     // TODO
-    //     mockTask.setAnswers({
-            
-    //     });
-    //     // On Windows, must add the "Scripts" directory to PATH as well
-    // });
+        const uut = require('../usepythonversion');
+        const parameters = {
+            versionSpec: '3.6',
+            outputVariable: 'Python',
+            addToPath: true
+        };
 
-    // it('does not set PATH when the option is not selected', function () {
-    //     const uut = require('../usepythonversion');
-    //     // TODO
-    //     mockTask.setAnswers({
-            
-    //     });
-    // });
+        const pathBefore = process.env['PATH'];
+        await uut.usePythonVersion(parameters, uut.Platform.Linux);
+        assert.equal(process.env['PATH'], `/Python/3.6.4:${pathBefore}`);
+    });
+
+    it('sets PATH correctly on Windows', async function () {
+        mockery.registerMock('vsts-task-tool-lib/tool', {
+            findLocalTool: () => 'C:\\Python\\3.6.4'
+        });
+
+        const uut = require('../usepythonversion');
+        const parameters = {
+            versionSpec: '3.6',
+            outputVariable: 'Python',
+            addToPath: true
+        };
+
+        const pathBefore = process.env['PATH'];
+        await uut.usePythonVersion(parameters, uut.Platform.Windows);
+        // On Windows, must add the "Scripts" directory to PATH as well
+        assert.equal(process.env['PATH'], `C:\\Python\\3.6.4\\Scripts;C:\\Python\\3.6.4;${pathBefore}`); 
+    });
 });
