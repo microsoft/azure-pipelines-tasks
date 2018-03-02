@@ -103,10 +103,12 @@ try {
     if ($useDiffPackage)
     {
         $isPackageValid = $true
+
         if (!$skipValidation)
         {
             $isPackageValid = Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath
         }
+
         if ($isPackageValid)
         {
             Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
@@ -114,7 +116,7 @@ try {
         }
         else
         {
-            Write-Host (Get-VstsLocString -Key DIFFPKG_TestAppPkgFailed)
+            Write-Warning (Get-VstsLocString -Key DIFFPKG_TestAppPkgFailed)
         }
     }
     $publishParameters = @{
