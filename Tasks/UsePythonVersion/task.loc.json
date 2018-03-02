@@ -50,7 +50,6 @@
     }
   },
   "messages": {
-    "InvalidVersionSpec": "ms-resource:loc.messages.InvalidVersionSpec",
     "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"

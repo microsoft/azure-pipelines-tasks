@@ -50,7 +50,6 @@
         }
     },
     "messages": {
-        "InvalidVersionSpec": "%s is not a valid version spec for Python's versioning scheme",
         "ListAvailableVersions": "Available versions:",
         "PlatformNotRecognized": "Platform not recognized",
         "VersionNotFound": "Version spec %s did not match any version in the tool cache."

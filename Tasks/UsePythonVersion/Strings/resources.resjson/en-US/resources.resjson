@@ -9,7 +9,6 @@
   "loc.input.help.outputVariable": "Set a name for the build variable that will contain the directory of the decompressed Python distribution. You can use this in subsequent tasks to access your installation of Python.",
   "loc.input.label.addToPath": "Add to PATH",
   "loc.input.help.addToPath": "Prepend the retrieved Python version to PATH so that it is available in subsequent tasks or scripts without using the output variable.",
-  "loc.messages.InvalidVersionSpec": "%s is not a valid version spec for Python's versioning scheme",
   "loc.messages.ListAvailableVersions": "Available versions:",
   "loc.messages.PlatformNotRecognized": "Platform not recognized",
   "loc.messages.VersionNotFound": "Version spec %s did not match any version in the tool cache."

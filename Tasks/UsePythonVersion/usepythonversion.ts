@@ -32,17 +32,14 @@ interface TaskParameters {
 }
 
 export async function usePythonVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
-    if (!isValidPythonVersionSpec(parameters.versionSpec)) {
-        throw new Error(task.loc('InvalidVersionSpec', parameters.versionSpec));
-    }
-
     const installDir: string | null = tool.findLocalTool('Python', parameters.versionSpec);
     if (!installDir) {
-        // List available versions
-        task.error(task.loc('VersionNotFound', parameters.versionSpec));
-        console.log(task.loc('ListAvailableVersions'));
-        console.log(tool.findLocalToolVersions('Python').join(os.EOL));
-        return;
+        // Fail and list available versions
+        throw new Error([
+            task.loc('VersionNotFound', parameters.versionSpec),
+            task.loc('ListAvailableVersions'),
+            tool.findLocalToolVersions('Python')
+        ].join(os.EOL));
     }
 
     task.setVariable(parameters.outputVariable, installDir);
@@ -68,19 +65,6 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
             const userScriptsDir = path.join(task.getVariable('APPDATA'), 'Python', majorMinorDir, 'Scripts');
             addToPath(userScriptsDir);
         }
-    }
-}
-
-/**
- * Whether `input` is a valid Python version specifier.
- * @param input A string possibly representing a version specifier
- */
-function isValidPythonVersionSpec(input: string): boolean {
-    // TODO Python prerelease specifiers?
-    if (!semver.parse(input)) {
-        return false;
-    } else {
-        return true;
     }
 }
 
