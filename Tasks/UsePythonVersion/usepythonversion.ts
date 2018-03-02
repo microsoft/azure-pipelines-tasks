@@ -44,7 +44,7 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
 
     task.setVariable(parameters.outputVariable, installDir);
     if (parameters.addToPath) {
-        addToPath(installDir, platform);
+        tool.prependPath(installDir);
 
         // Python has "scripts" directories where command-line tools that come with packages are installed.
         // There are different directories for `pip install` and `pip install --user`.
@@ -59,18 +59,9 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
         //      (--user) %APPDATA%\Python\PythonXY\Scripts
         if (platform === Platform.Windows) {
             const scriptsDir = path.join(installDir, 'Scripts');
-            addToPath(scriptsDir, platform);
+            tool.prependPath(scriptsDir);
 
             // TODO add --user directory once build image is updated
         }
     }
-}
-
-/**
- * Prepend `directory` to the PATH variable for the platform.
- */
-function addToPath(directory: string, platform: Platform): void {
-    const currentPath = task.getVariable('PATH');
-    const pathDelimiter = platform === Platform.Windows ? ';': ':'; // Use this instead of `path.delimiter` for testability
-    task.setVariable('PATH', directory + pathDelimiter + currentPath);
 }
