@@ -61,7 +61,7 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
             const scriptsDir = path.join(installDir, 'Scripts');
             addToPath(scriptsDir, platform);
 
-            // TODO --user directory
+            // TODO add --user directory once build image is updated
         }
     }
 }
