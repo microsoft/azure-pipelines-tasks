@@ -23,8 +23,8 @@
             "type": "string",
             "label": "Version spec",
             "required": true,
-            "defaultValue": "3.6",
-            "helpMarkDown": "Version specifier of Python you want to use."
+            "defaultValue": ">= 3.3",
+            "helpMarkDown": "Version range or exact version of a Python version you want to use."
         },
         {
             "name": "outputVariable",
