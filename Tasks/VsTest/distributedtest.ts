@@ -65,6 +65,7 @@ export class DistributedTest {
 
         this.testSourcesFile = this.createTestSourcesFile();
 
+        // Create empty sub nodes
         inputDataContract['TestSelectionSettings'] = {};
         inputDataContract['TestReportingSettings'] = {};
         inputDataContract['TfsSpecificSettings'] = {};
@@ -79,13 +80,14 @@ export class DistributedTest {
         inputDataContract['ExecutionSettings']['RerunSettings'] = {};
         inputDataContract['ExecutionSettings']['TiaSettings'] = {};
 
-        //Settings override inputs
+        // Settings override inputs
         inputDataContract['ExecutionSettings']['TiaSettings']['Enabled'] = this.dtaTestConfig.tiaConfig.tiaEnabled;
         inputDataContract['ExecutionSettings']['TiaSettings']['RebaseLimit'] = this.dtaTestConfig.tiaConfig.tiaRebaseLimit;
         inputDataContract['ExecutionSettings']['TiaSettings']['SourcesDirectory'] = this.dtaTestConfig.tiaConfig.sourcesDir;
         inputDataContract['ExecutionSettings']['TiaSettings']['FileLevel'] = this.dtaTestConfig.tiaConfig.fileLevel;
         inputDataContract['ExecutionSettings']['TiaSettings']['FilterPaths'] = this.dtaTestConfig.tiaConfig.tiaFilterPaths;
 
+        // Temporary settings override inputs
         inputDataContract['UseNewCollector'] = this.dtaTestConfig.tiaConfig.useNewCollector;
         inputDataContract['IsPrFlow'] = this.dtaTestConfig.tiaConfig.isPrFlow;
         inputDataContract['UseTestCaseFilterInResponseFile'] = this.dtaTestConfig.tiaConfig.useTestCaseFilterInResponseFile;
@@ -98,11 +100,6 @@ export class DistributedTest {
         inputDataContract['VsVersionIsTestSettingsPropertiesSupported'] = this.dtaTestConfig.vsTestVersionDetails.isTestSettingsPropertiesSupported();
         inputDataContract['IsToolsInstallerFlow'] = utils.Helper.isToolsInstallerFlow(this.dtaTestConfig);
         inputDataContract['ExecutionSettings']['OverridenParameters'] = this.dtaTestConfig.overrideTestrunParameters;
-
-
-        inputDataContract['AccessToken'] = this.dtaTestConfig.dtaEnvironment.patToken; // TODO: shrer: remove this and pass via ENV var and add login in the agent to read from both with preference to input file
-
-
         inputDataContract['AgentName'] = this.dtaTestConfig.dtaEnvironment.agentName;
         inputDataContract['EnvironmentUri'] = this.dtaTestConfig.dtaEnvironment.environmentUri;
         inputDataContract['CollectionUri'] = this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl;
@@ -141,21 +138,8 @@ export class DistributedTest {
         }
 
         inputDataContract['TestSelectionSettings']['AssemblyBasedTestSelection']['SourceFilter'] = this.dtaTestConfig.sourceFilter.join('|');
-        //Modify settings file to enable configurations and data collectors.
+
         let settingsFile = this.dtaTestConfig.settingsFile;
-        try {
-            settingsFile = await settingsHelper.updateSettingsFileAsRequired
-                (this.dtaTestConfig.settingsFile, this.dtaTestConfig.runInParallel, this.dtaTestConfig.tiaConfig,
-                this.dtaTestConfig.vsTestVersionDetails, false, this.dtaTestConfig.overrideTestrunParameters, true,
-                this.dtaTestConfig.codeCoverageEnabled && utils.Helper.isToolsInstallerFlow(this.dtaTestConfig));
-
-            //Reset override option so that it becomes a no-op in TaskExecutionHost
-            this.dtaTestConfig.overrideTestrunParameters = null;
-        } catch (error) {
-            tl.warning(tl.loc('ErrorWhileUpdatingSettings'));
-            tl.debug(error);
-        }
-
         if (utils.Helper.pathExistsAsFile(settingsFile)) {
             tl.debug('Final runsettings file being used:');
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
@@ -173,7 +157,7 @@ export class DistributedTest {
         inputDataContract['TestSelectionSettings']['TestSelectionType'] = this.dtaTestConfig.testSelection;
         inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['OnDemandTestRunId'] = this.dtaTestConfig.onDemandTestRunId;
         if (!utils.Helper.isNullOrUndefined(this.dtaTestConfig.testSuites)) {
-            inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['TestSuites'] = this.dtaTestConfig.testSuites; //TODO: shrer: list
+            inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['TestSuites'] = this.dtaTestConfig.testSuites;
         }
         inputDataContract['ExecutionSettings']['IgnoreTestFailures'] = this.dtaTestConfig.ignoreTestFailures;
 
@@ -229,16 +213,17 @@ export class DistributedTest {
         inputDataContract['TestWindowPath'] = exelocation;
         inputDataContract['TeamProject'] = tl.getVariable('System.TeamProject');
 
+        // Pass the acess token as an environment variable for security purposes
+        const envVars: { [key: string]: string; };
+        utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
+
         // Invoke DtaExecutionHost with the input json file
         const inputFilePath = path.join(tl.getVariable('temp'), 'input.json');
         DistributedTest.removeEmptyNodes(inputDataContract);
         writeFileSync(inputFilePath, JSON.stringify(inputDataContract));
-
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
-
-        dtaExecutionHostTool.line(inputFilePath);
-
-        var code = await dtaExecutionHostTool.exec();
+        dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
+        var code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ env: envVars });
 
         var consolidatedCiData = {
             agentFailure: false,
@@ -273,6 +258,7 @@ export class DistributedTest {
         return code;
     }
 
+    // Utility function used to remove empty or spurios nodes from the input json file
     public static removeEmptyNodes(obj: any) {
         if (obj === null || obj === undefined ) {
             return;
@@ -281,7 +267,6 @@ export class DistributedTest {
             return;
         }
         const keys = Object.keys(obj);
-
         for (var index in Object.keys(obj)) {
             if (obj[keys[index]] && obj[keys[index]] != {}) {
                 DistributedTest.removeEmptyNodes(obj[keys[index]]);
@@ -290,7 +275,6 @@ export class DistributedTest {
                 delete obj[keys[index]];
             }
         }
-
     }
 
     private cleanUpDtaExeHost() {
