@@ -10,6 +10,7 @@ Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Get-VstsInput { 'arg1 arg2' } -- -Name ScriptArguments
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Initialize-Azure
+Register-Mock Get-VstsEndpoint { @{auth = @{ scheme = "ServicePrincipal" }} }
 
 # Act.
 $actual = & $PSScriptRoot\..\AzurePowerShell.ps1
