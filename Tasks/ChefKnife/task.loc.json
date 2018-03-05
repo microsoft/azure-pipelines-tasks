@@ -16,8 +16,9 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
+  "deprecated": true,
   "demands": [
     "Chef",
     "DotNetFramework"
