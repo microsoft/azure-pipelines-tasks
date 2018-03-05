@@ -190,7 +190,5 @@
   "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
   "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
   "loc.messages.GoExeNameNotPresent": "Go exe name is not present",
-  "loc.messages.ExistingFilesBeforeDeployment": "Listing file structure of webapps folder before deployment starts.",
-  "loc.messages.FileExistingAfterDeployment": "Listing file structure of webapps folder after deployment has completed.",
   "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
 }

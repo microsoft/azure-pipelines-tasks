@@ -10,8 +10,23 @@ var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 
 export async function DeployWar(webPackage, taskParams: TaskParameters, msDeployPublishingProfile, kuduService: Kudu, appServiceUtility: AzureAppServiceUtility): Promise<void> {
     // get list of files before deploying to the web app.
-    var listOfFilesBeforeDeployment = await kuduService.listDir('/site/wwwroot/webapps/');
-    tl.debug(tl.loc("ExistingFilesBeforeDeployment") + JSON.stringify(listOfFilesBeforeDeployment));
+    var listOfFilesBeforeDeployment: any = await kuduService.listDir('/site/wwwroot/webapps/');
+    tl.debug("Listing file structure of webapps folder before deployment starts => " + JSON.stringify(listOfFilesBeforeDeployment));
+
+    // Strip package path and only keep the package name.
+    var warFileName = path.basename(webPackage).split('.war')[0];
+
+    // Find if directory with same name as war file, existed before deployment
+    var directoryWithSameNameBeforeDeployment;
+    if (listOfFilesBeforeDeployment) {
+        listOfFilesBeforeDeployment.some(item => {
+            if (item.name == warFileName && item.mime == "inode/directory") {
+                directoryWithSameNameBeforeDeployment = item;
+                return true;
+            }
+            return false;
+        });
+    }
 
     var retryCount = 3;
     while (retryCount > 0) {
@@ -21,7 +36,7 @@ export async function DeployWar(webPackage, taskParams: TaskParameters, msDeploy
 
         // verify if the war file has expanded
         // if not expanded, deploy using msdeploy once more, to make it work.
-        var hasWarExpandedSuccessfully: boolean = await HasWarExpandedSuccessfully(kuduService, listOfFilesBeforeDeployment, taskParams.WebAppName, webPackage, appServiceUtility);
+        var hasWarExpandedSuccessfully: boolean = await HasWarExpandedSuccessfully(kuduService, directoryWithSameNameBeforeDeployment, warFileName, appServiceUtility);
         if (!hasWarExpandedSuccessfully) {
             console.log(tl.loc("WarDeploymentRetry"));
             // If the war file is exactly same, MSDeploy doesn't update the war file in webapp.
@@ -38,30 +53,17 @@ export async function DeployWar(webPackage, taskParams: TaskParameters, msDeploy
     }
 }
 
-export async function HasWarExpandedSuccessfully(kuduService, filesBeforeDeployment, webAppName: string, packageName: string, appServiceUtility: AzureAppServiceUtility): Promise<boolean> {
+export async function HasWarExpandedSuccessfully(kuduService: Kudu, directoryWithSameNameBeforeDeployment: any, warFileName: string, appServiceUtility: AzureAppServiceUtility): Promise<boolean> {
     // Waiting for war to expand
     await sleepFor(10);
 
     // do a get call on the target web app.
     await appServiceUtility.pingApplication();
-    var filesAfterDeployment = await kuduService.listDir('/site/wwwroot/webapps/');
-    tl.debug(tl.loc("FileExistingAfterDeployment") + JSON.stringify(filesAfterDeployment));
-
-    // Strip package path and only keep the package name.
-    packageName = path.basename(packageName).split('.war')[0];
-
-    // Find if directory with same name as war file, existed before deployment
-    var directoryWithSameNameBeforeDeployment;
-    filesBeforeDeployment.some(item => {
-        if (item.name == packageName && item.mime == "inode/directory") {
-            directoryWithSameNameBeforeDeployment = item;
-            return true;
-        }
-        return false;
-    });
+    var filesAfterDeployment: any = await kuduService.listDir('/site/wwwroot/webapps/');
+    tl.debug("Listing file structure of webapps folder after deployment has completed => " + JSON.stringify(filesAfterDeployment));
 
     // Verify if the content of that war file has successfully expanded. This is can be concluded if
     // directory with same name as war file exists after deployment and if it existed before deployment, then the directory should contain content of new war file
     // which can be concluded if the modified time of the directory has changed.
-    return filesAfterDeployment.some(item => { return item.name == packageName && item.mime == "inode/directory" && (!directoryWithSameNameBeforeDeployment || item.mtime != directoryWithSameNameBeforeDeployment.mtime) });
+    return filesAfterDeployment.some(item => { return item.name == warFileName && item.mime == "inode/directory" && (!directoryWithSameNameBeforeDeployment || item.mtime != directoryWithSameNameBeforeDeployment.mtime) });
 }
