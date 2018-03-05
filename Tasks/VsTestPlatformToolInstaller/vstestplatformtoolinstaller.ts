@@ -191,7 +191,7 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
 
     // Use as short a path as possible due to nested folders in the package that may potentially exceed the 255 char windows path limit
     downloadPath = path.join(downloadPath, 'VsTest');
-    nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload');
+    nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory "' + downloadPath + '" -NoCache -DirectDownload');
 
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     let startTime = perf();
