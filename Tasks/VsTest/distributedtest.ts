@@ -214,7 +214,7 @@ export class DistributedTest {
         inputDataContract['TeamProject'] = tl.getVariable('System.TeamProject');
 
         // Pass the acess token as an environment variable for security purposes
-        const envVars: { [key: string]: string; };
+        let envVars: { [key: string]: string; };
         utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
 
         // Invoke DtaExecutionHost with the input json file
