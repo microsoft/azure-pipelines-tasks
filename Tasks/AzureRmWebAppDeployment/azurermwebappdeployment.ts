@@ -13,7 +13,7 @@ import { TaskParameters, TaskParametersUtility } from './operations/TaskParamete
 import { FileTransformsUtility } from './operations/FileTransformsUtility';
 import * as ParameterParser from './parameterparser'
 import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
-import { DeployWar } from './operations/WarDeploymentOperation'
+import { DeployWar } from './operations/WarDeploymentUtilities';
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
 
@@ -27,7 +27,7 @@ async function main() {
     let kuduServiceUtility: KuduServiceUtility;
 
     try {
-        tl.setResourcePath(path.join(__dirname, 'task.json'));
+        tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
         var virtualApplicationPath: string;
@@ -66,7 +66,7 @@ async function main() {
             var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
             var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webPackage);
             var physicalPath: string = '/site/wwwroot';
-            if (taskParams.VirtualApplication) {
+            if(taskParams.VirtualApplication) {
                 physicalPath = await appServiceUtility.getPhysicalPath(taskParams.VirtualApplication);
                 await kuduServiceUtility.createPathIfRequired(physicalPath);
                 virtualApplicationPath = physicalPath;
@@ -74,25 +74,24 @@ async function main() {
 
             webPackage = await FileTransformsUtility.applyTransformations(webPackage, taskParams);
 
-            if (deployUtility.canUseWebDeploy(taskParams.UseWebDeploy)) {
+            if(deployUtility.canUseWebDeploy(taskParams.UseWebDeploy)) {
                 tl.debug("Performing the deployment of webapp.");
-                if (!tl.osType().match(/^Win/)) {
+                if(!tl.osType().match(/^Win/)){
                     throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
                 }
 
-                if (taskParams.RenameFilesFlag) {
+                if(taskParams.RenameFilesFlag) {
                     await appServiceUtility.enableRenameLockedFiles();
                 }
 
                 var msDeployPublishingProfile = await appServiceUtility.getWebDeployPublishingProfile();
-                // this is being done temporarily, to tackle war files not getting expanded (only for the first deployment to the web app) when done using MSDeploy.
                 if (webPackage.toString().toLowerCase().endsWith('.war')) {
                     await DeployWar(webPackage, taskParams, msDeployPublishingProfile, kuduService, appServiceUtility);
                 }
                 else {
                     await msDeploy.DeployUsingMSDeploy(webPackage, taskParams.WebAppName, msDeployPublishingProfile, taskParams.RemoveAdditionalFilesFlag,
-                        taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
-                        taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy);
+                    taskParams.ExcludeFilesFromAppDataFlag, taskParams.TakeAppOfflineFlag, taskParams.VirtualApplication, taskParams.SetParametersFile,
+                    taskParams.AdditionalArguments, isFolderBasedDeployment, taskParams.UseWebDeploy);
                 }
             }
             else {
@@ -101,13 +100,13 @@ async function main() {
             }
         }
 
-        if (!taskParams.isContainerWebApp) {
-            if (taskParams.AppSettings) {
+        if(!taskParams.isContainerWebApp) {
+            if(taskParams.AppSettings) {
                 var customApplicationSettings = ParameterParser.parse(taskParams.AppSettings);
                 await appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);
             }
 
-            if (taskParams.ConfigurationSettings) {
+            if(taskParams.ConfigurationSettings) {
                 var customApplicationSettings = ParameterParser.parse(taskParams.ConfigurationSettings);
                 await appServiceUtility.updateConfigurationSettings(customApplicationSettings);
             }
@@ -116,21 +115,21 @@ async function main() {
             tl.debug('App Settings and config settings are already updated during container based deployment.')
         }
 
-        if (taskParams.ScriptType) {
+        if(taskParams.ScriptType) {
             await kuduServiceUtility.runPostDeploymentScript(taskParams, virtualApplicationPath);
         }
 
         await appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
-    catch (error) {
+    catch(error) {
         isDeploymentSuccess = false;
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        if (kuduServiceUtility) {
+        if(kuduServiceUtility) {
             await addReleaseAnnotation(azureEndpoint, appService, isDeploymentSuccess);
-            let activeDeploymentID: string = await kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, { 'type': 'Deployment', slotName: appService.getSlot() });
-            if (zipDeploymentID && activeDeploymentID && isDeploymentSuccess) {
+            let activeDeploymentID: string = await kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: appService.getSlot()});
+            if(zipDeploymentID && activeDeploymentID && isDeploymentSuccess) {
                 await kuduServiceUtility.postZipDeployOperation(zipDeploymentID, activeDeploymentID);
             }
         }

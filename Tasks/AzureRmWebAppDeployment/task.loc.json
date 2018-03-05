@@ -546,6 +546,9 @@
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
     "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
-    "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent"
+    "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
+    "ExistingFilesBeforeDeployment": "ms-resource:loc.messages.ExistingFilesBeforeDeployment",
+    "FileExistingAfterDeployment": "ms-resource:loc.messages.FileExistingAfterDeployment",
+    "WarDeploymentRetry": "ms-resource:loc.messages.WarDeploymentRetry"
   }
 }
