@@ -45,7 +45,32 @@ if ($targetAzurePs -eq $latestVersion) {
 . "$PSScriptRoot\Utility.ps1"
 $targetAzurePs = Get-RollForwardVersion -azurePowerShellVersion $targetAzurePs
 
-Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
+$authScheme = ''
+try
+{
+    $serviceNameInput = Get-VstsInput -Name ConnectedServiceNameSelector -Default 'ConnectedServiceName'
+    $serviceName = Get-VstsInput -Name $serviceNameInput -Default (Get-VstsInput -Name DeploymentEnvironmentName)
+    if (!$serviceName)
+    {
+            Get-VstsInput -Name $serviceNameInput -Require
+    }
+
+    $endpoint = Get-VstsEndpoint -Name $serviceName -Require
+
+    if($endpoint)
+    {
+        $authScheme = $endpoint.Auth.Scheme 
+    }
+
+     Write-Verbose "AuthScheme $authScheme"
+}
+catch
+{
+   $error = $_.Exception.Message
+   Write-Verbose "Unable to get the authScheme $error" 
+}
+
+Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs -authScheme $authScheme
 
 try {
     # Initialize Azure.
