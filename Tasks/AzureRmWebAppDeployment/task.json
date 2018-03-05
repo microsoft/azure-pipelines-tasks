@@ -743,6 +743,7 @@
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
-        "GoExeNameNotPresent": "Go exe name is not present"
+        "GoExeNameNotPresent": "Go exe name is not present",
+        "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
     }
 }
