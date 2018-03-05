@@ -24,7 +24,7 @@
             "label": "Version spec",
             "required": true,
             "defaultValue": ">= 3.3",
-            "helpMarkDown": "Version range or exact version of a Python version you want to use."
+            "helpMarkDown": "Version range or exact version of a Python version to use."
         },
         {
             "name": "outputVariable",
@@ -32,7 +32,7 @@
             "label": "Output variable",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "Set a name for the build variable that will contain the directory of the decompressed Python distribution. You can use this in subsequent tasks to access your installation of Python."
+            "helpMarkDown": "Set a name for the variable that will contain the directory of the decompressed Python distribution. Use this in subsequent tasks to access this installation of Python."
         },
         {
             "name": "addToPath",
@@ -40,7 +40,7 @@
             "label": "Add to PATH",
             "required": true,
             "defaultValue": "true",
-            "helpMarkDown": "Prepend the retrieved Python version to PATH so that it is available in subsequent tasks or scripts without using the output variable."
+            "helpMarkDown": "Prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
         }
     ],
     "execution": {
