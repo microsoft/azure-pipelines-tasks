@@ -10,22 +10,14 @@
     "type": "git",
     "url": "git+https://github.com/microsoft/vsts-tasks.git"
   },
-  "keywords": [
-    "VSTS",
-    "Tasks",
-    "Python"
-  ],
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/microsoft/vsts-tasks/issues"
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
-  "dependencies": {
-    "@types/mocha": "^2.2.48",
-    "@types/node": "^6.0.101",
-    "@types/q": "^1.0.7",
-    "vsts-task-lib": "^2.3.0",
-    "vsts-task-tool-lib": "^0.5.1"
+  "devDependencies": {
+    "@types/mockery": "^1.4.29",
+    "mockery": "^2.1.0"
   }
 }
