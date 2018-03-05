@@ -1,7 +1,9 @@
 import * as assert from 'assert';
 import { EOL } from 'os';
 import * as path from 'path';
+
 import * as mockery from 'mockery';
+import * as mockTask from 'vsts-task-lib/mock-task';
 import * as usePythonVersion from '../usepythonversion';
 
 /** Reload the unit under test to use mocks that have been registered. */
@@ -21,16 +23,21 @@ describe('UsePythonVersion L0 Suite', function () {
         mockery.disable();
     });
 
-    beforeEach(function () {
-        mockery.registerSubstitute('vsts-task-lib/task', 'vsts-task-lib/mock-task');
-    });
-
     afterEach(function () {
         mockery.deregisterAll();
         mockery.resetCache();
     })
 
     it('finds version in cache', async function () {
+        let buildVariables: any = {};
+        const mockBuildVariables = {
+            setVariable: (variable: string, value: string) => {
+                buildVariables[variable] = value;
+            },
+            getVariable: (variable: string) => buildVariables[variable]
+        };
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
+
         const toolPath = path.join('/', 'Python', '3.6.4');
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => toolPath
@@ -43,13 +50,14 @@ describe('UsePythonVersion L0 Suite', function () {
             addToPath: false
         };
 
-        assert.notStrictEqual(process.env['PYTHON'], toolPath);
+        assert.strictEqual(buildVariables['Python'], undefined);
 
         await uut.usePythonVersion(parameters, uut.Platform.Linux);
-        assert.strictEqual(process.env['PYTHON'], toolPath);
+        assert.strictEqual(buildVariables['Python'], toolPath);
     });
 
     it('rejects version not in cache', async function (done: MochaDone) {
+        mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => null,
             findLocalToolVersions: () => ['2.7.13']
@@ -78,6 +86,8 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('sets PATH correctly on Linux', async function () {
+        mockery.registerMock('vsts-task-lib/task', mockTask);
+
         const toolPath = path.join('/', 'Python', '3.6.4');
         let mockPath = '';
         mockery.registerMock('vsts-task-tool-lib/tool', {
@@ -99,6 +109,8 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('sets PATH correctly on Windows', async function () {
+        mockery.registerMock('vsts-task-lib/task', mockTask);
+
         const toolPath = path.join('/', 'Python', '3.6.4');
         let mockPath = '';
         mockery.registerMock('vsts-task-tool-lib/tool', {
