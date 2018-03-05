@@ -12,13 +12,13 @@ export function GetExternalAuthInfoArray(inputKey: string): auth.ExternalAuthInf
     let externalAuthArray: auth.ExternalAuthInfo[] = [];
     let endpointNames = tl.getDelimitedInput(inputKey, ',');
 
-    if (!endpointNames || endpointNames.length == 0)
+    if (!endpointNames || endpointNames.length === 0)
     {
         return externalAuthArray;
     }
 
     endpointNames.forEach((endpointName: string) => {
-        let feedUri = tl.getEndpointUrl(endpointName, true);
+        let feedUri = tl.getEndpointUrl(endpointName, false);
         let feedName = feedUri.replace(/\W/g, '');
         let externalAuth = tl.getEndpointAuthorization(endpointName, true);
         let scheme = tl.getEndpointAuthorizationScheme(endpointName, true).toLowerCase();

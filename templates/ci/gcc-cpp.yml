@@ -1,0 +1,25 @@
+# C++ with GCC
+# Build your C++ project with GNU GCC.
+# https://aka.ms/yaml
+
+queue: 'Hosted Linux'
+
+#variables:
+  outputFile: 'main'
+  # system.debug: 'true'
+
+steps:
+- script: 'g++ *.cpp -o $(outputFile)'
+
+- task: CopyFiles@2
+  displayName: 'Copy artifacts'
+  inputs:
+    contents: '$(outputFile)'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: 'artifact'
+    artifactType: 'container'

@@ -5,7 +5,7 @@ param()
 
 $publishProfilePath = "$PSScriptRoot\data\NoAuthPublishProfile.xml"
 $applicationPackagePath = "$PSScriptRoot\data\DiffPkgAssets\AppPkg"
-$diffPackagePath = $env:TEMP + "\DiffPackage"
+$diffPackagePath = (Get-Item $env:TEMP).FullName + "\DiffPackage"
 $serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
@@ -24,12 +24,20 @@ $codePkg2 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless2Pkg\Code"
 $codeDiffPkg2 = $diffPackagePath + "\Stateless2Pkg\Code"
 $serviceManifestPath3 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless3Pkg\ServiceManifest.xml"
 $serviceManifestDiffPath3 = $diffPackagePath + "\Stateless3Pkg\ServiceManifest.xml"
-$codePkg3 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless3Pkg\Code.zip"
-$codeDiffPkg3 = $diffPackagePath + "\Stateless3Pkg\Code.zip"
+$codeZippedPkg3 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless3Pkg\Code.zip"
+$codeZippedDiffPkg3 = $diffPackagePath + "\Stateless3Pkg\Code.zip"
 $serviceManifestPath4 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless4Pkg\ServiceManifest.xml"
 $serviceManifestDiffPath4 = $diffPackagePath + "\Stateless4Pkg\ServiceManifest.xml"
-$codePkg4 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless4Pkg\Code.zip"
-$codeDiffPkg4 = $diffPackagePath + "\Stateless4Pkg\Code.zip"
+$codeZippedPkg4 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless4Pkg\Code.zip"
+$codeZippedDiffPkg4 = $diffPackagePath + "\Stateless4Pkg\Code.zip"
+$configPkg4 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless4Pkg\Config"
+$configZippedPkg4 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless4Pkg\Config.zip"
+$configDiffPkg4 = $diffPackagePath + "\Stateless4Pkg\Config"
+$configZippedDiffPkg4 = $diffPackagePath + "\Stateless4Pkg\Config.zip"
+$dataPkg4 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless4Pkg\Data"
+$dataZippedPkg4 = "$PSScriptRoot\data\DiffPkgAssets\AppPkg\Stateless4Pkg\Data.zip"
+$dataDiffPkg4 = $diffPackagePath + "\Stateless4Pkg\Data"
+$dataZippedDiffPkg4 = $diffPackagePath + "\Stateless4Pkg\Data.zip"
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
@@ -118,11 +126,12 @@ $serviceManifest4 = '<ServiceManifest Name="Stateless4Pkg" Version="1.0.0">' +
   '<ServiceTypes>' +
     '<StatelessServiceType ServiceTypeName="Stateless4Type" />' +
   '</ServiceTypes>' +
-  '<CodePackage Name="Code" Version="1.0.0">' +
-  '</CodePackage>' +
+  '<CodePackage Name="Code" Version="1.0.0" />' +
   '<ConfigPackage Name="Config" Version="1.0.0" />' +
+  '<DataPackage Name="Data" Version="1.0.0" />' +
 '</ServiceManifest>'
 
+Register-Mock Test-ServiceFabricApplicationPackage {$true} -- -ApplicationPackagePath $applicationPackagePath
 Register-Mock Get-ServiceFabricServiceType {$serviceTypes} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion
 Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest1} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless1Pkg"
 Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest2} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless2Pkg"
@@ -130,8 +139,14 @@ Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest3} -- -Applicati
 Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest4} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless4Pkg"
 
 Register-Mock Copy-Item {} $appManifestPath $appManifestDiffPath -Force
-Register-Mock Test-Path { $true } -Path $codePkg3
-Register-Mock Test-Path { $true } -Path $codePkg4
+Register-Mock Test-Path { $true } -Path $codePkg1
+Register-Mock Test-Path { $true } -Path $codePkg2
+Register-Mock Test-Path { $true } -Path $codeZippedPkg3
+Register-Mock Test-Path { $true } -Path $codeZippedPkg4
+Register-Mock Test-Path { $false } -Path $configZippedPkg4
+Register-Mock Test-Path { $true } -Path $configPkg4
+Register-Mock Test-Path { $false } -Path $dataZippedPkg4
+Register-Mock Test-Path { $false } -Path $dataPkg4
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Create-DiffPackage.psm1"
 
@@ -147,6 +162,10 @@ Assert-WasCalled Copy-Item $serviceManifestPath3 $serviceManifestDiffPath3 -Forc
 Assert-WasCalled Copy-Item $serviceManifestPath4 $serviceManifestDiffPath4 -Force
 Assert-WasCalled Copy-Item $codePkg1 $codeDiffPkg1 -Recurse -Times 0
 Assert-WasCalled Copy-Item $codePkg2 $codeDiffPkg2 -Recurse
-Assert-WasCalled Copy-Item $codePkg3 $codeDiffPkg3 -Recurse -Times 0
-Assert-WasCalled Copy-Item $codePkg4 $codeDiffPkg4 -Recurse
+Assert-WasCalled Copy-Item $codeZippedPkg3 $codeZippedDiffPkg3 -Recurse -Times 0
+Assert-WasCalled Copy-Item $codeZippedPkg4 $codeZippedDiffPkg4 -Recurse
+Assert-WasCalled Copy-Item $configZippedPkg4 $configZippedDiffPkg4 -Recurse -Times 0
+Assert-WasCalled Copy-Item $configPkg4 $configDiffPkg4 -Recurse
+Assert-WasCalled Copy-Item $dataZippedPkg4 $dataZippedDiffPkg4 -Recurse -Times 0
+Assert-WasCalled Copy-Item $dataPkg4 $dataDiffPkg4 -Recurse -Times 0
 Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs

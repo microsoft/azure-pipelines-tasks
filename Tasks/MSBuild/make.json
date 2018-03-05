@@ -2,12 +2,12 @@
     "common": [
         {
             "module": "../Common/MSBuildHelpers",
-            "type": "ps"
+            "type": "node",
+            "compile": true
         },
         {
             "module": "../Common/MSBuildHelpers",
-            "type": "node",
-            "compile": true
+            "type": "ps"
         }
     ],
     "rm": [

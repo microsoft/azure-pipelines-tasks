@@ -31,7 +31,7 @@ async function main() {
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
         var virtualApplicationPath: string;
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParams.WebAppName));
-        if(!taskParams.DeployToSlotFlag) {
+        if(!taskParams.DeployToSlotOrASEFlag) {
             taskParams.ResourceGroupName = await AzureResourceFilterUtility.getResourceGroupName(azureEndpoint, taskParams.WebAppName);
         }
 
@@ -42,28 +42,23 @@ async function main() {
         await appServiceUtility.pingApplication();
         let kuduService: Kudu = await appServiceUtility.getKuduService();
         kuduServiceUtility = new KuduServiceUtility(kuduService);
-        if(taskParams.WebAppUri) {
-            tl.setVariable(taskParams.WebAppUri, await appServiceUtility.getApplicationURL());
-        }
+        tl.setVariable('AppServiceApplicationUrl', await appServiceUtility.getApplicationURL());
 
         if(taskParams.isLinuxApp) {
-            switch(taskParams.ImageSource) {
-                case 'Builtin': {
-                    var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
-                    tl.debug('Performing Linux built-in package deployment');
-                    zipDeploymentID = await kuduServiceUtility.zipDeploy(webPackage, taskParams.TakeAppOfflineFlag, { slotName: appService.getSlot() });
-                    await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
-                    break;
-                }
-                case 'Registry': {
-                    tl.debug("Performing container based deployment.");
-                    let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(appService);
-                    await containerDeploymentUtility.deployWebAppImage(taskParams);
-                    break;
-                }
-                default: {
-                    throw new Error('Invalid Image source Type');
-                }
+            
+            if(taskParams.isBuiltinLinuxWebApp) {
+                var webPackage = packageUtility.PackageUtility.getPackagePath(taskParams.Package);
+                tl.debug('Performing Linux built-in package deployment');
+                zipDeploymentID = await kuduServiceUtility.zipDeploy(webPackage, taskParams.TakeAppOfflineFlag, { slotName: appService.getSlot() });
+                await appServiceUtility.updateStartupCommandAndRuntimeStack(taskParams.RuntimeStack, taskParams.StartupCommand);
+            }
+            else if(taskParams.isContainerWebApp) {
+                tl.debug("Performing container based deployment.");
+                let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(appService);
+                await containerDeploymentUtility.deployWebAppImage(taskParams);
+            }
+            else {
+                throw new Error('Invalid Image source Type');
             }
         }
         else {

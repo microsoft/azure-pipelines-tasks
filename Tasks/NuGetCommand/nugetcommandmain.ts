@@ -62,24 +62,27 @@ async function main(): Promise<void> {
     }
 }
 
-
 function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
     try {
+        const nugetfeedtype = tl.getInput("nugetfeedtype");
         let externalendpoint = null;
-        let epId = tl.getInput('externalendpoint');
-        if (epId) {
-            externalendpoint = {
-                feedName: tl.getEndpointUrl(epId, true).replace(/\W/g, ''),
-                feedUri: tl.getEndpointUrl(epId, true)
+        if (nugetfeedtype != null && nugetfeedtype === "external") {
+            const epId = tl.getInput("externalendpoint");
+            if (epId) {
+                externalendpoint = {
+                    feedName: tl.getEndpointUrl(epId, false).replace(/\W/g, ''),
+                    feedUri: tl.getEndpointUrl(epId, false),
+                };
             }
         }
+
         let externalendpoints = tl.getDelimitedInput('externalendpoints', ',');
         if (externalendpoints) {
             externalendpoints = externalendpoints.reduce((ary, id) => {
-                let te = {
-                    feedName: tl.getEndpointUrl(id, true).replace(/\W/g, ''),
-                    feedUri: tl.getEndpointUrl(id, true)
-                }
+                const te = {
+                    feedName: tl.getEndpointUrl(id, false).replace(/\W/g, ''),
+                    feedUri: tl.getEndpointUrl(id, false),
+                };
                 ary.push(te);
                 return ary;
             }, []);
@@ -112,7 +115,7 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
                 'includenugetorg': tl.getInput('includenugetorg'),
                 'nocache': tl.getInput('nocache'),
                 'nugetconfigpath': tl.getInput('nugetconfigpath'),
-                'nugetfeedtype': tl.getInput('nugetfeedtype'),
+                'nugetfeedtype': nugetfeedtype,
                 'outputdir': tl.getInput('outputdir'),
                 'searchpatternpush': tl.getInput('searchpatternpush'),
                 'selectorconfig': tl.getInput('selectorconfig'),

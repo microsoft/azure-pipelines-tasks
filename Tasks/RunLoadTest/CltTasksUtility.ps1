@@ -188,6 +188,7 @@ function ValidateFiles($inputName, $loadtestDrop, $fileName, $testSettings)
     {
         # Check for fileName
         $global:ScopedTestDrop = $file.Directory.FullName;
+        $global:ScopedLoadTest = $file.FullName
         $global:RunTestSettingsFile = "";
         Write-Host -NoNewline ("Selected load test file is '{0}' under '{1}'"  -f $file.FullName, $global:ScopedTestDrop)
         Write-Host -NoNewline "Test Drop location used for the run is $global:ScopedTestDrop. Please ensure all required files (test dlls, plugin dlls, dependent files) are part of this output folder"
@@ -227,6 +228,20 @@ function ValidateFiles($inputName, $loadtestDrop, $fileName, $testSettings)
 function ValidateInputs($tfsCollectionUrl, $connectedServiceName, $testSettings, $loadtestDrop, $loadtest)
 {
     ValidateFiles "load test file" $loadtestDrop $loadTest $testSettings
+
+    # validate load test name
+    # code taken from definitionNameInvalid    
+    $invalidPattern1 = "(^\\.$|^\\.\\.$|^-$|^_$)"
+    $invalidPattern2 = "[^A-Za-z0-9 \._-]"
+
+    # find illegal characters
+    $invalidchars1 = [regex]::Matches($loadtest, $invalidPattern1, 'IgnoreCase').Value | Sort-Object -Unique 
+    $invalidchars2 =[regex]::Matches($loadtest, $invalidPattern2, 'IgnoreCase').Value | Sort-Object -Unique 
+    
+    if ($invalidchars1 -ne $null -or $invalidchars2 -ne $null)
+    {
+      throw "Do not use these characters in load test name: $invalidchars1 $invalidchars2"
+    }
 }
 
 function Get($headers, $uri)

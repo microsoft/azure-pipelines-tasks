@@ -2,7 +2,7 @@
   <ServiceTypes>
     <StatelessServiceType ServiceTypeName="Stateless4Type" />
   </ServiceTypes>
-  <CodePackage Name="Code" Version="2.0.0">
-  </CodePackage>
+  <CodePackage Name="Code" Version="2.0.0" />
   <ConfigPackage Name="Config" Version="2.0.0" />
+  <DataPackage Name="Data" Version="2.0.0" />
 </ServiceManifest>

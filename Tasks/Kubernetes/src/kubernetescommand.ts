@@ -16,7 +16,7 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
     command.arg(kubecommand)
     command.arg(getNameSpace());
     command.arg(getCommandConfigurationFile());
-    command.arg(getCommandArguments());
+    command.line(getCommandArguments());
     command.arg(getCommandOutputFormat());
     return connection.execCommand(command);
 }
@@ -49,14 +49,8 @@ function getCommandConfigurationFile() : string[] {
     return args;
 }
 
-function getCommandArguments(): string[] {
-    var args: string[] =[];
-    var argument = tl.getInput("arguments", false);
-    if(argument){
-        args = argument.split(" ");
-    }
-
-    return args;
+function getCommandArguments(): string {
+    return tl.getInput("arguments", false);
 }
 
 function getNameSpace(): string[] {

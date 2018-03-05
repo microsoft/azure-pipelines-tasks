@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Distribuzione WebApp IIS (anteprima)",
-  "loc.helpMarkDown": "[Altre informazioni](https://aka.ms/iiswebappdeployreadme)",
+  "loc.friendlyName": "Distribuzione app Web IIS",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=866789)",
   "loc.description": "Consente di distribuire un sito Web o un'applicazione Web con WebDeploy",
   "loc.instanceNameFormat": "Distribuisci sito Web/app IIS: $(WebDeployPackage)",
   "loc.group.displayName.FileTransformsAndVariableSubstitution": "Opzioni di trasformazioni di file e sostituzioni di variabili",
@@ -10,7 +10,7 @@
   "loc.input.label.VirtualApplication": "Applicazione virtuale",
   "loc.input.help.VirtualApplication": "Consente di specificare il nome di un'applicazione virtuale già esistente nei computer di destinazione",
   "loc.input.label.Package": "Pacchetto o cartella",
-  "loc.input.help.Package": "Percorso della cartella o del file del pacchetto dell'app Web. Sono supportate variabili ([Compilazione](https://www.visualstudio.com/docs/build/define/variables) | [Versione](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)) e caratteri jolly. <br/> Ad esempio, $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip.",
+  "loc.input.help.Package": "Percorso file del pacchetto o di una cartella generata da MSBuild oppure un file di archivio compresso.<br />Variabili ( [Compilazione](https://www.visualstudio.com/docs/build/define/variables) | [Versione](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)). I caratteri jolly sono supportati. <br/> Ad esempio, $(System.DefaultWorkingDirectory)\\\\\\*\\*\\\\\\*.zip.",
   "loc.input.label.SetParametersFile": "File SetParameters",
   "loc.input.help.SetParametersFile": "Facoltativo: percorso del file SetParameters.xml da usare.",
   "loc.input.label.RemoveAdditionalFilesFlag": "Rimuovi file aggiuntivi nella destinazione",
@@ -48,7 +48,7 @@
   "loc.messages.Isparameterfilepresentinwebpackage0": "File dei parametri presente nel pacchetto Web: %s",
   "loc.messages.Requestingconfigdetails": "Richiesta dei dettagli di configurazione: %s",
   "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "Distribuzione del pacchetto Web %s nel percorso virtuale (percorso fisico) %s (%s)",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "La distribuzione del pacchetto %s all'indirizzo %s con il servizio Kudu è riuscita",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "La distribuzione del pacchetto %s con il servizio Kudu all'indirizzo %s è riuscita",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Non è stato possibile distribuire il pacchetto dell'app Web con il servizio Kudu: %s",
   "loc.messages.Unabletodeploywebappresponsecode": "Non è possibile distribuire l'app Web a causa del codice errore: %s",
   "loc.messages.Unabletopackagecontentoffolder": "Non è possibile creare il pacchetto del contenuto della cartella: %s",
@@ -63,10 +63,14 @@
   "loc.messages.Configfiledoesntexists": "Il file di configurazione %s non esiste.",
   "loc.messages.Failedtowritetoconfigfilewitherror": "Non è stato possibile scrivere nel file config %s. Errore: %s",
   "loc.messages.NOJSONfilematchedwithspecificpattern": "Non sono stati trovati file JSON corrispondenti al criterio specificato: %s.",
-  "loc.messages.JSONvariablesubstitutioncanonlybeappliedforJSONfiles": "La sostituzione delle variabili JSON può essere applicata solo ai file JSON",
   "loc.messages.JSONParseError": "Non è possibile analizzare il file JSON: %s. Errore: %s",
   "loc.messages.XdtTransformationErrorWhileTransforming": "Si è verificato un errore di trasformazione XML durante la trasformazione di %s con %s.",
   "loc.messages.EncodeNotSupported": "La codifica rilevata del file %s è %s. La sostituzione delle variabili non è supportata con la codifica file %s. Le codifiche supportate sono UTF-8 e UTF-16 LE.",
   "loc.messages.UnknownFileEncodeError": "Non è possibile rilevare la codifica del file %s (typeCode: %s). Le codifiche supportate sono UTF-8 e UTF-16 LE.",
-  "loc.messages.ShortFileBufferError": "Il buffer di file è troppo piccolo per il rilevamento del tipo di codifica: %s"
+  "loc.messages.ShortFileBufferError": "Il buffer di file è troppo piccolo per il rilevamento del tipo di codifica: %s",
+  "loc.messages.FailedToApplyTransformation": "Non è possibile applicare la trasformazione per il pacchetto specificato. Eseguire le verifiche seguenti.",
+  "loc.messages.FailedToApplyTransformationReason1": "1. Verificare se la trasformazione è già stata applicata per il pacchetto generato da MSBuild durante la compilazione. In caso affermativo, rimuovere il tag <DependentUpon> per ogni file config nel file csproj e ricompilare. ",
+  "loc.messages.FailedToApplyTransformationReason2": "2. Assicurarsi che il file config e i file di trasformazione siano presenti nella stessa cartella all'interno del pacchetto.",
+  "loc.messages.AutoParameterizationMessage": "Per impostazione predefinita, agli attributi di ConnectionString in Web.config sono associati parametri. Si noti che la trasformazione non ha effetto sugli attributi di ConnectionString perché durante la distribuzione il valore viene sostituito dai file 'Parameters.xml' o 'SetParameters.xml'. Per disabilitare l'aggiunta automatica di parametri, impostare /p:AutoParameterizationWebConfigConnectionStrings=False durante la generazione del pacchetto MSBuild.",
+  "loc.messages.PackageDeploymentFailed": "Non è stato possibile distribuire il pacchetto Web nel sito Web IIS."
 }
