@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 24
+    "Patch": 25
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -65,6 +65,9 @@
     },
     {
       "name": "SpecifySlot",
+      "aliases": [
+        "SpecifySlotOrASE"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.SpecifySlot",
       "defaultValue": "false",
@@ -129,7 +132,7 @@
       "name": "Slot",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.Slot",
-      "defaultValue": "",
+      "defaultValue": "production",
       "properties": {
         "EditableOptions": "True"
       },

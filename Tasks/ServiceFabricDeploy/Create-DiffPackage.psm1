@@ -148,6 +148,12 @@ function Copy-DiffPackage
             $localPkgPath += ".zip"
             $diffPkgPath += ".zip"
         }
+        # The Code package for containerized service does not exist, but we want to continue the deployment
+        elseif (!(Test-Path -Path $localPkgPath))
+        {
+            Write-Host (Get-VstsLocString -Key DIFFPKG_PackageDoesNotExist -ArgumentList @($localPkgPath))
+            continue
+        }
 
         Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localPkgPath, $diffPkgPath))
         # Copy the package on this level to diff package which is considered to be Leaf
