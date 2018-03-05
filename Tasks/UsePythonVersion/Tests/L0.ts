@@ -43,10 +43,10 @@ describe('UsePythonVersion L0 Suite', function () {
             addToPath: false
         };
 
-        assert.notEqual(process.env['PYTHON'], toolPath);
+        assert.notStrictEqual(process.env['PYTHON'], toolPath);
 
         await uut.usePythonVersion(parameters, uut.Platform.Linux);
-        assert.equal(process.env['PYTHON'], toolPath);
+        assert.strictEqual(process.env['PYTHON'], toolPath);
     });
 
     it('rejects version not in cache', async function (done: MochaDone) {
@@ -72,7 +72,7 @@ describe('UsePythonVersion L0 Suite', function () {
                 '2.7.13'
             ].join(EOL);
 
-            assert.equal(e.message, expectedMessage);
+            assert.strictEqual(e.message, expectedMessage);
             done();
         }
     });
@@ -95,7 +95,7 @@ describe('UsePythonVersion L0 Suite', function () {
         };
 
         await uut.usePythonVersion(parameters, uut.Platform.Linux);
-        assert.equal(`${toolPath}:`, mockPath);
+        assert.strictEqual(`${toolPath}:`, mockPath);
     });
 
     it('sets PATH correctly on Windows', async function () {
@@ -117,6 +117,6 @@ describe('UsePythonVersion L0 Suite', function () {
 
         await uut.usePythonVersion(parameters, uut.Platform.Windows);
         // On Windows, must add the "Scripts" directory to PATH as well
-        assert.equal(`${path.join(toolPath, 'Scripts')};${toolPath};`, mockPath);
+        assert.strictEqual(`${path.join(toolPath, 'Scripts')};${toolPath};`, mockPath);
     });
 });
