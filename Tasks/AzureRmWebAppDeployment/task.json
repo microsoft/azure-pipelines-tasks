@@ -17,7 +17,7 @@
     "version": {
         "Major": 4,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -274,7 +274,7 @@
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
             "label": "Take App Offline",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
@@ -312,7 +312,7 @@
             "name": "ExcludeFilesFromAppDataFlag",
             "type": "boolean",
             "label": "Exclude files from the App_Data folder",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
@@ -332,7 +332,7 @@
             "name": "RenameFilesFlag",
             "type": "boolean",
             "label": "Rename locked files",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
