@@ -236,7 +236,7 @@ export class JenkinsRestClient {
                                 tl.debug(`Applying the handlebar source ${handlebarSource} on the result`);
                                 let template = handlebars.compile(handlebarSource);
                                 if (additionalHandlebarContext) {
-                                    for(let key in additionalHandlebarContext) {
+                                    for (let key in additionalHandlebarContext) {
                                         tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
                                             jsonResult[key] = additionalHandlebarContext[key];
                                         };
