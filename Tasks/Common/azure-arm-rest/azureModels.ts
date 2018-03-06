@@ -218,6 +218,20 @@ export interface AzureEndpoint {
     applicationTokenCredentials: ApplicationTokenCredentials;
 }
 
+export interface ServiceEndpoint {
+    data: { [key: string]: string };
+    name: string;
+    id: string;
+    type: string;
+    url: string;
+    authorization: EndpointAuthorization;
+}
+
+export interface EndpointAuthorization {
+    scheme: string;
+    parameters: { [key: string]: string };
+}
+
 export interface AzureAppServiceConfigurationDetails {
     id: string;
     name: string;
