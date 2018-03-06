@@ -52,7 +52,7 @@
   "loc.input.label.destinationTypeOption": "Конечный тип",
   "loc.input.help.destinationTypeOption": "Выберите тип назначения, который будет использоваться для тестирования пользовательского интерфейса. Устройства должны быть подключены к компьютеру Mac, на котором ведется сборка, с помощью кабеля или по сети. См. раздел <strong>Устройства и симуляторы</strong> в Xcode.",
   "loc.input.label.destinationSimulators": "Симулятор",
-  "loc.input.help.destinationSimulators": "Введите имя симулятора Xcode, используемого для тестирования пользовательского интерфейса. Например: введите \"iPhone X\" (iOS и watchOS) или \"Apple TV 4K\" (tvOS). Целевая версия ОС является необязательной и может быть указана в формате \"OS=<i>номер версии</i>\", например \"iPhone X,OS=11.1\". Список симуляторов, установленных в <strong>предварительной версии размещенного агента для macOS</strong>, см. [здесь](https://docs.microsoft.com/ru-ru/mobile-center/build/software).",
+  "loc.input.help.destinationSimulators": "Введите имя симулятора Xcode, используемого для тестирования пользовательского интерфейса. Например, введите \"iPhone X\" (iOS и watchOS) или \"Apple TV 4K\" (tvOS). Целевая версия ОС является необязательной и может быть указана в формате \"OS=<i>номер версии</i>\", например \"iPhone X,OS=11.1\". Список симуляторов, установленных в агенте <strong>Hosted macOS Preview</strong>, см. [здесь](https://docs.microsoft.com/ru-ru/mobile-center/build/software).",
   "loc.input.label.destinationDevices": "Устройство",
   "loc.input.help.destinationDevices": "Введите имя устройства для тестирования пользовательского интерфейса, например \"iPad Раисы\".",
   "loc.input.label.args": "Аргументы",

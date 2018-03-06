@@ -113,7 +113,7 @@
   "loc.messages.SwappedAppServiceSlotSlots": "Gli slot '%s' e '%s' del servizio app '%s' sono stati scambiati",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Non è stato possibile recuperare le credenziali di pubblicazione del servizio app '%s'. Errore: %s",
   "loc.messages.FailedToGetAppServicePublishingCredentialsSlot": "Non è stato possibile recuperare le credenziali di pubblicazione del servizio app '%s-%s'. Errore: %s",
-  "loc.messages.WarmingUpSlots": "Slot di riscaldamento",
+  "loc.messages.WarmingUpSlots": "Riscaldamento degli slot",
   "loc.messages.DeploymentIDCannotBeNull": "L'ID distribuzione non può essere Null o vuoto.",
   "loc.messages.DeploymentDataEntityCannotBeNull": "L'entità di dati di distribuzione non può essere Null o non definita.",
   "loc.messages.SiteExtensionInstalled": "L'estensione del sito '%s' è stata installata.",

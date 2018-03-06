@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "Каталог результатов теста не найден.",
   "loc.messages.OnlyWindowsOsSupported": "Эта задача поддерживается только агентами для Windows и не может использоваться на других платформах.",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "Запуск по требованию не поддерживается для параметра Multi-Configuration. Используйте вариант параллелизма \"Нет\" или \"Несколько агентов\".",
-  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
+  "loc.messages.disabledRerun": "Отключить перезапустите Неудачные тесты как повторно запустите пороговое значение, указанное %s"
 }

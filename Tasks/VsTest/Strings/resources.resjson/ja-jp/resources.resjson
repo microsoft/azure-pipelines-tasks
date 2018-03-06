@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "テスト結果のディレクトリが見つかりません。",
   "loc.messages.OnlyWindowsOsSupported": "このタスクは、Windows エージェントでのみサポートされ、他のプラットフォームでは使用できません。",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "オンデマンド実行は、複数構成オプションではサポートされていません。'None' または 'Multi-agent' 並列処理オプションをご使用ください。",
-  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
+  "loc.messages.disabledRerun": "失敗したテストの再実行を無効にします。指定された再実行のしきい値は %s です"
 }

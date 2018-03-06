@@ -69,5 +69,8 @@
   "loc.messages.ContainerPatternFound": "Se encontró un patrón en el parámetro filepath de Docker Compose.",
   "loc.messages.ContainerPatternNotFound": "No se encontró ningún patrón en el parámetro filepath de Docker Compose.",
   "loc.messages.ContainerDockerFileNotFound": "No se encontró ningún archivo de Docker que coincidiera con %s.",
-  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "El archivo adicional de Docker Compose %s no existe."
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "El archivo adicional de Docker Compose %s no existe.",
+  "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+  "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
+  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
 }

@@ -52,7 +52,7 @@
   "loc.input.label.destinationTypeOption": "Zieltyp",
   "loc.input.help.destinationTypeOption": "Wählen Sie den zu verwendenden Zieltyp für UI-Tests aus. Die Geräte müssen per Kabel- oder Netzwerkverbindung mit dem Mac für die Builderstellung verbunden sein. Siehe <strong>Geräte und Simulatoren</strong> in Xcode.",
   "loc.input.label.destinationSimulators": "Simulator",
-  "loc.input.help.destinationSimulators": "Geben Sie den Namen eines Xcode-Simulators ein, der für UI-Tests verwendet wird. Geben Sie beispielsweise \"iPhone X\" (iOS und watchOS) oder \"Apple TV 4K\" (tvOS) ein. Eine Zielbetriebssystemversion ist optional und kann im Format \"OS=<i>Versionsnummer</i>\" angegeben werden, wie etwa \"iPhone X,OS=11.1\". Eine Liste der Simulatoren, die für den Agent <strong>Gehostetes macOS (Vorschau)</strong> installiert sind, finden Sie [hier](https://docs.microsoft.com/de-de/mobile-center/build/software).",
+  "loc.input.help.destinationSimulators": "Geben Sie den Namen eines Xcode-Simulators ein, der für UI-Tests verwendet wird. Geben Sie beispielsweise \"iPhone X\" (iOS und watchOS) oder \"Apple TV 4K\" (tvOS) ein. Eine Zielbetriebssystemversion ist optional und kann im Format \"OS=<i>Versionsnummer</i>\" angegeben werden, wie etwa \"iPhone X,OS=11.1\". Eine Liste der Simulatoren, die für den Agent <strong>Hosted macOS Preview</strong> installiert sind, finden Sie [hier](https://docs.microsoft.com/de-de/mobile-center/build/software).",
   "loc.input.label.destinationDevices": "Gerät",
   "loc.input.help.destinationDevices": "Geben Sie den Namen des Geräts für die UI-Tests ein, z. B. \"iPad von Raisa\".",
   "loc.input.label.args": "Argumente",

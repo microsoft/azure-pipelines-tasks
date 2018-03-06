@@ -26,7 +26,7 @@
   "loc.input.label.csmParametersFile": "模板参数",
   "loc.input.help.csmParametersFile": "指定路径或指向 Azure 资源管理器模板的参数文件的模式。",
   "loc.input.label.overrideParameters": "替代模板参数",
-  "loc.input.help.overrideParameters": "若要查看网格中的模板参数，请单击“替代参数”文本框旁的 \"…\"。此功能需要在源启用 CORS 规则。如果模板位于 Azure 存储 blob 中，请参阅 [此文章](https://docs.microsoft.com/zh-cn/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)以启用 CORS。或键入文本框中重写的模板参数。例如，<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre。<br>如果正在使用的参数值具有多个词，请将它们括在引号中，即使将使用变量传递它们。例如 -name \"parameter value\" -name2 \"$(var)\"<br>若要替代对象类型参数，请使用 stringified JSON 对象。例如 -options [\"option1\"] -map {\"key1\": \"value1\" }。",
+  "loc.input.help.overrideParameters": "若要查看网格中的模板参数，请单击“替代参数”文本框旁的 \"…\"。此功能需要在源启用 CORS 规则。如果模板位于 Azure 存储 blob 中，请参阅 [此文章](https://docs.microsoft.com/zh-cn/rest/api/storageservices/fileservices/Cross-Origin-Resource-Sharing--CORS--Support-for-the-Azure-Storage-Services?redirectedfrom=MSDN#understanding-cors-requests)以启用 CORS。或键入文本框中重写的模板参数。例如，<br>–storageName fabrikam –adminUsername $(vmusername) -adminPassword $(password) –azureKeyVaultName $(fabrikamFibre)。<br>如果正在使用的参数值具有多个词，请将它们括在引号中，即使将使用变量传递它们。例如 -name \"parameter value\" -name2 \"$(var)\"<br>若要替代对象类型参数，请使用 stringified JSON 对象。例如 -options [\"option1\"] -map {\"key1\": \"value1\" }。",
   "loc.input.label.deploymentMode": "部署模式",
   "loc.input.help.deploymentMode": "增量模式以资源组增量更新的形式处理部署。它留下资源组中存在的但模板中未指定的未更改资源。\n\n完成模式删除不属于模板的资源。\n\n验证模式让你能在创建实际资源前发现问题。\n\n默认情况下，使用增量模式。",
   "loc.input.label.enableDeploymentPrerequisites": "启用必备组件",
