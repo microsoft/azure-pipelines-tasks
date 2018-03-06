@@ -32,6 +32,6 @@ Register-Mock Remove-Job { $testJobs.RemoveAt(0) }
 
 Assert-Throws {
     & "$remotePowershellRunnerPath" -environmentName $EnvironmentNameForFailedJob -machineNames $validMachineNames -scriptPath $validScriptPath -runPowershellInParallel $true
-} -MessagePattern "Deployment on one or more machines failed."
+} -MessagePattern "Deployments using 'test hub: machine groups' is no longer supported*"
 
 Assert-WasCalled Start-Job -Times 2
