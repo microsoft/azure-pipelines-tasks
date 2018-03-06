@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 41
+        "Patch": 42
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -138,7 +138,7 @@
                 "EditableOptions": "false",
                 "PopulateDefaultValue": "true"
             },
-            "helpMarkDown": "App Service on Linux offers two different options to publish your application <br/> Custom image deployment or App deployment with a built-in platform image. [Learn More](https://go.microsoft.com/fwlink/?linkid=862490)", 
+            "helpMarkDown": "App Service on Linux offers two different options to publish your application <br/> Custom image deployment or App deployment with a built-in platform image. [Learn More](https://go.microsoft.com/fwlink/?linkid=862490)",
             "visibleRule": "WebAppKind = applinux || WebAppKind = linux"
         },
         {
@@ -570,7 +570,7 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureContainerRegistryTags",
             "parameters": {
-                "AzureContainerRegistryLoginServer": "$(AzureContainerRegistryLoginServer)",                
+                "AzureContainerRegistryLoginServer": "$(AzureContainerRegistryLoginServer)",
                 "AzureContainerRegistryImage": "$(AzureContainerRegistryImage)"
             }
         },
@@ -601,14 +601,14 @@
             "endpointId": "$(RegistryConnectedServiceName)",
             "endpointUrl": "{{endpoint.url}}v2/_catalog",
             "resultSelector": "jsonpath:$.repositories[*]",
-            "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"     
+            "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
         },
         {
             "target": "PrivateRegistryTag",
             "endpointId": "$(RegistryConnectedServiceName)",
             "endpointUrl": "{{endpoint.url}}v2/$(PrivateRegistryImage)/tags/list",
             "resultSelector": "jsonpath:$.tags[*]",
-            "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"     
+            "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
         }
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
@@ -739,6 +739,7 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
-        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'."
+        "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
+        "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
     }
 }
