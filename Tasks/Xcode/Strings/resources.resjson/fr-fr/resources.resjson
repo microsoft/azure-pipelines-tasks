@@ -52,7 +52,7 @@
   "loc.input.label.destinationTypeOption": "Type de destination",
   "loc.input.help.destinationTypeOption": "Choisissez le type de destination à utiliser pour les tests d'IU. Les appareils doivent être connectés au Mac qui effectue la build via une connexion par câble ou réseau. Consultez <strong>Appareils et simulateurs</strong> dans Xcode.",
   "loc.input.label.destinationSimulators": "Simulateur",
-  "loc.input.help.destinationSimulators": "Entrez un nom de simulateur Xcode à utiliser pour les tests d'IU. Par exemple, entrez 'iPhone X' (iOS et watchOS) ou 'Apple TV 4K' (tvOS). La version du système d'exploitation cible est facultative et peut être spécifiée au format suivant 'OS=<i>numéro_version</i>', par exemple 'iPhone X,OS=11.1'. Vous trouverez une liste des simulateurs installés sur l'agent <strong>macOS hébergé (préversion)</strong> [ici](https://docs.microsoft.com/fr-fr/mobile-center/build/software).",
+  "loc.input.help.destinationSimulators": "Entrez un nom de simulateur Xcode à utiliser pour les tests d'IU. Par exemple, entrez 'iPhone X' (iOS et watchOS) ou 'Apple TV 4K' (tvOS). La version du système d'exploitation cible est facultative et peut être spécifiée au format suivant 'OS=<i>numéro_version</i>', par exemple 'iPhone X,OS=11.1'. Vous trouverez une liste des simulateurs installés sur l'agent <strong>Hosted macOS Preview</strong> [ici](https://docs.microsoft.com/fr-fr/mobile-center/build/software).",
   "loc.input.label.destinationDevices": "Appareil",
   "loc.input.help.destinationDevices": "Entrez le nom de l'appareil à utiliser pour les tests d'IU, par exemple 'iPad de Laurent'.",
   "loc.input.label.args": "Arguments",

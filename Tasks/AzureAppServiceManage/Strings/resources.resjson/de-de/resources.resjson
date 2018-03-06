@@ -113,7 +113,7 @@
   "loc.messages.SwappedAppServiceSlotSlots": "Slots für App Service \"%s\" getauscht: \"%s\" und \"%s\"'",
   "loc.messages.FailedToGetAppServicePublishingCredentials": "Fehler beim Abrufen der Anmeldeinformationen für die Veröffentlichung für App Service \"%s\". Fehler: %s",
   "loc.messages.FailedToGetAppServicePublishingCredentialsSlot": "Fehler beim Abrufen der Anmeldeinformationen für die Veröffentlichung für App Service \"%s-%s\". Fehler: %s",
-  "loc.messages.WarmingUpSlots": "Slots werden aufgewärmt",
+  "loc.messages.WarmingUpSlots": "Slots werden aufgewärmt.",
   "loc.messages.DeploymentIDCannotBeNull": "Die Bereitstellungs-ID darf nicht NULL oder leer sein.",
   "loc.messages.DeploymentDataEntityCannotBeNull": "Die Datenentität für die Bereitstellung darf nicht NULL oder undefiniert sein.",
   "loc.messages.SiteExtensionInstalled": "Die Websiteerweiterung \"%s\" wurde installiert.",

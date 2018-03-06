@@ -66,9 +66,9 @@
   "loc.input.label.WebConfigParameters": "Parámetros del archivo web.config",
   "loc.input.help.WebConfigParameters": "Edite valores como el archivo de inicio en el archivo web.config generado. Esta característica de edición es solo para el archivo web.config generado. [Más información](https://go.microsoft.com/fwlink/?linkid=843469).",
   "loc.input.label.AppSettings": "Configuración de la aplicación",
-  "loc.input.help.AppSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
+  "loc.input.help.AppSettings": "Editar configuración de la aplicación de aplicación web la sintaxis-valor de clave. Valor que contenga espacios debe incluirse entre comillas dobles. <br /> <b>Ejemplo</b> :-puerto 5000 - RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Hora estándar\"",
   "loc.input.label.ConfigurationSettings": "Opciones de configuración",
-  "loc.input.help.ConfigurationSettings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.help.ConfigurationSettings": "Editar opciones de configuración de aplicación web la sintaxis-valor de clave. Valor que contenga espacios debe incluirse entre comillas dobles. <br /> Ejemplo: - phpVersion 5.6 - linuxFxVersion: nodo|6.11",
   "loc.input.label.TakeAppOfflineFlag": "Desconectar la aplicación",
   "loc.input.help.TakeAppOfflineFlag": "Seleccione esta opción para poner sin conexión Azure App Service colocando el archivo app_offline.htm en el directorio raíz de App Service antes de que comience la operación de sincronización. El archivo se quitará cuando la operación de sincronización finalice correctamente.",
   "loc.input.label.UseWebDeploy": "Publicar usando Web Deploy",
@@ -211,8 +211,9 @@
   "loc.messages.UpdatingAppServiceApplicationSettings": "Actualizando la configuración de aplicación de App Service. Datos: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Se han actualizado la configuración de aplicación de App Service y la configuración de aplicación de Kudu.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Se encontraron varios grupos de recursos para la instancia de App Service \"%s\".",
-  "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
-  "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
-  "loc.messages.GoExeNameNotPresent": "Go exe name is not present"
+  "loc.messages.PackageDeploymentUsingZipDeployFailed": "Error al implementar el paquete mediante la implementación de ZIP. Consulte los registros para obtener más detalles.",
+  "loc.messages.PackageDeploymentInitiated": "Se ha iniciado la implementación del paquete mediante la implementación de ZIP.",
+  "loc.messages.FailedToGetDeploymentLogs": "No se pudieron obtener los registros de implementación. Error: %s",
+  "loc.messages.GoExeNameNotPresent": "Nombre de exe ir no está presente",
+  "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
 }

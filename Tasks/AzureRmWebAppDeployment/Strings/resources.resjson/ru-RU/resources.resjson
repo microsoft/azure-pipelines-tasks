@@ -66,9 +66,9 @@
   "loc.input.label.WebConfigParameters": "Параметры web.config",
   "loc.input.help.WebConfigParameters": "Измените значения в сгенерированном файле web.config (например, загрузочный файл). Данная функция изменения доступна только для сгенерированного файла web.config. [Подробнее](https://go.microsoft.com/fwlink/?linkid=843469).",
   "loc.input.label.AppSettings": "Параметры приложения",
-  "loc.input.help.AppSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
+  "loc.input.help.AppSettings": "Изменить параметры приложения веб-приложения синтаксис-значение ключа. Значение, которое содержит пробелы необходимо заключить в двойные кавычки. <br /> <b>Пример</b> :-порт 5000 - RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE «Восточное время (зима)»",
   "loc.input.label.ConfigurationSettings": "Параметры конфигурации",
-  "loc.input.help.ConfigurationSettings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.help.ConfigurationSettings": "Изменить параметры конфигурации веб-приложения синтаксис-значение ключа. Значение, которое содержит пробелы необходимо заключить в двойные кавычки. <br /> Пример: - phpVersion 5.6 - linuxFxVersion: узел|6.11",
   "loc.input.label.TakeAppOfflineFlag": "Перевести приложение в автономный режим",
   "loc.input.help.TakeAppOfflineFlag": "Выберите этот параметр, чтобы перевести службу приложений Azure в автономный режим путем размещения файла app_offline.htm в корневом каталоге службы приложений перед началом операции синхронизации. Файл будет удален после успешного завершения синхронизации.",
   "loc.input.label.UseWebDeploy": "Опубликовать при помощи веб-развертывания",
@@ -211,8 +211,9 @@
   "loc.messages.UpdatingAppServiceApplicationSettings": "Обновляются параметры приложений службы приложений. Данные: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Параметры приложений службы приложений и параметры приложений Kudu обновлены.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Для службы приложений \"%s\" найдено несколько групп ресурсов.",
-  "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
-  "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
-  "loc.messages.GoExeNameNotPresent": "Go exe name is not present"
+  "loc.messages.PackageDeploymentUsingZipDeployFailed": "Не удалось выполнить развертывание пакета с помощью развертывания ZIP-файла. Дополнительные сведения см. в журналах.",
+  "loc.messages.PackageDeploymentInitiated": "Инициировано развертывание пакета с помощью развертывания ZIP-файла.",
+  "loc.messages.FailedToGetDeploymentLogs": "Не удалось получить журналы развертывания. Ошибка: %s",
+  "loc.messages.GoExeNameNotPresent": "Отсутствует имя go exe-файла",
+  "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
 }

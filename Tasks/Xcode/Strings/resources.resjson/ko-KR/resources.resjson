@@ -52,7 +52,7 @@
   "loc.input.label.destinationTypeOption": "대상 유형",
   "loc.input.help.destinationTypeOption": "UI 테스트에 사용할 대상 유형을 선택합니다. 케이블 또는 네트워크 연결을 통해 장치가 빌드를 수행하는 Mac에 연결되어야 합니다. Xcode에서 <strong>장치 및 시뮬레이터</strong>를 참조하세요.",
   "loc.input.label.destinationSimulators": "시뮬레이터",
-  "loc.input.help.destinationSimulators": "UI 테스트에 사용할 Xcode 시뮬레이터 이름을 입력합니다. 예를 들어 'iPhone X'(iOS 및 watchOS) 또는 'Apple TV 4K'(tvOS)를 입력합니다. 대상 OS 버전은 선택 사항이며 'OS=<i>versionNumber</i>' 형식으로 지정할 수 있습니다(예: 'iPhone X,OS=11.1'). <strong>호스트된 macOS 미리 보기</strong> 에이전트에 설치된 시뮬레이터 목록은 [여기서 확인](https://docs.microsoft.com/en-us/mobile-center/build/software)할 수 있습니다.",
+  "loc.input.help.destinationSimulators": "UI 테스트에 사용할 Xcode 시뮬레이터 이름을 입력합니다. 예를 들어 'iPhone X'(iOS 및 watchOS) 또는 'Apple TV 4K'(tvOS)를 입력합니다. 대상 OS 버전은 선택 사항이며 'OS=<i>versionNumber</i>' 형식으로 지정할 수 있습니다(예: 'iPhone X,OS=11.1'). <strong>Hosted macOS Preview</strong> 에이전트에 설치된 시뮬레이터 목록은 [여기서 확인](https://docs.microsoft.com/en-us/mobile-center/build/software)할 수 있습니다.",
   "loc.input.label.destinationDevices": "장치",
   "loc.input.help.destinationDevices": "UI 테스트에 사용할 장치의 이름을 입력합니다(예: 'Raisa's iPad').",
   "loc.input.label.args": "인수",

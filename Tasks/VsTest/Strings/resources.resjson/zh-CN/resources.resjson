@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "找不到测试结果目录。",
   "loc.messages.OnlyWindowsOsSupported": "仅 Windows 代理上支持此任务，不能用于其他平台。",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "“多配置”选项不支持按需运行。请使用“无”或“多代理”并行选项。",
-  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
+  "loc.messages.disabledRerun": "由于提供的重新运行阈值为 %s，因此禁用重新运行失败的测试"
 }

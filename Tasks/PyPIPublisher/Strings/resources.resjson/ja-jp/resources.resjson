@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "PyPI Publisher",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/pypipublisher)",
-  "loc.description": "Publish Python packages to PyPI",
+  "loc.helpMarkDown": "[詳細](https://aka.ms/pypipublisher)",
+  "loc.description": "PyPI に Python パッケージを発行します",
   "loc.instanceNameFormat": "PyPI Publisher",
-  "loc.input.label.serviceEndpoint": "PyPI connection",
-  "loc.input.help.serviceEndpoint": "Select the generic service endpoint where PyPI server details are present. \n\nNote: To configure a new generic service endpoint, under your VSTS project, go to Settings -> Services -> New Service Endpoint -> Generic. \n\nConnection Name – Use a friendly connection name of your choice. \nServer URL – PyPI package server (for example: https://upload.pypi.org/legacy/). \nUser Name – PyPI registered username. \nPassword – password for your PyPI account",
-  "loc.input.label.wd": "Python package path",
-  "loc.input.help.wd": "Python package directory to be published, where setup.py is present.",
-  "loc.input.label.wheel": "Upload wheel",
-  "loc.input.help.wheel": "If checked, then task will additionally build and publish universal wheel (platform independent) of this package. For more information regarding universal wheel [see here](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
+  "loc.input.label.serviceEndpoint": "PyPI 接続",
+  "loc.input.help.serviceEndpoint": "PyPI サーバーに関する詳細情報がある汎用サービス エンドポイントを選択します。\n\n注: 新しい汎用サービス エンドポイントを構成するには、VSTS プロジェクトで、[設定] -> [サービス] -> [新しいサービス エンドポイント] -> [汎用] と移動します。\n\n接続名 – 選択した接続の表示名を使用します。\nサーバー URL – PyPI パッケージ サーバー (例: https://upload.pypi.org/legacy/)。\nユーザー名 – PyPI 登録ユーザー名。\nパスワード – PyPI アカウントのパスワード",
+  "loc.input.label.wd": "Python パッケージ パス",
+  "loc.input.help.wd": "setup.py がある、発行される Python パッケージ ディレクトリ。",
+  "loc.input.label.wheel": "ホイールのアップロード",
+  "loc.input.help.wheel": "選択すると、タスクによって、このパッケージの Universal Wheel (プラットフォームに依存しない) がさらにビルドおよび発行されます。Universal Wheel に関する詳細については、[こちら](https://packaging.python.org/tutorials/distributing-packages/#wheels) をご覧ください。"
 }
