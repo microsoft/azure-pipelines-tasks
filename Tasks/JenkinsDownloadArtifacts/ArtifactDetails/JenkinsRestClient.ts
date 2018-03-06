@@ -190,18 +190,9 @@ export class JenkinsRestClient {
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
 
         let requestOptions: IHttpRequestOptions = {
-            ignoreSslError: strictSSL
+            ignoreSslError: !strictSSL,
+            proxy: tl.getHttpProxyConfiguration()
         };
-
-        let proxyUrl: string = tl.getVariable("agent.proxyurl");
-        if (!!proxyUrl) {
-            requestOptions['proxy'] = {
-				proxyUrl: proxyUrl, 
-				proxyUsername: tl.getVariable("agent.proxyusername"), 
-				proxyPassword: tl.getVariable("agent.proxypassword"), 
-				proxyBypassHosts: tl.getVariable("agent.proxybypasslist") ? JSON.parse(tl.getVariable("agent.proxybypasslist")) : null 
-            }
-        }
 
         const username = tl.getEndpointAuthorizationParameter(endpoint, 'username', false);
         const password = tl.getEndpointAuthorizationParameter(endpoint, 'password', false);
@@ -221,48 +212,61 @@ export class JenkinsRestClient {
 
         let requestUrl: string = `${endpointUrl}${jobUrlInfix}/${urlPath}`;
         console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
+
         let httpClient: HttpClient = this.GetClient();
+        httpClient.get(requestUrl).then((response: HttpClientResponse) => {
+            response.readBody().then((body: string) => {
+                if (!!body && response.message.statusCode === 200)  {
+                    tl.debug(`Content received from server ${body}`);
+                    let jsonResult;
 
-        httpClient.get(requestUrl).then(async (response: HttpClientResponse) => {
-            let content: string = await response.readBody();
+                    try {
+                        jsonResult = JSON.parse(body);
+                    } catch(error) {
+                        jsonResult = "";
+                        defer.reject(error);
+                    }
 
-            if (!!content && response.message.statusCode === 200)  {
-                tl.debug(`Content received from server ${content}`);
-                let jsonResult = JSON.parse(content);
+                    if (jsonResult != "") {
+                        if (!handlebarSource) {
+                            defer.resolve(jsonResult);
+                        }
+                        else {
+                            try {
+                                tl.debug(`Applying the handlebar source ${handlebarSource} on the result`);
+                                let template = handlebars.compile(handlebarSource);
+                                if (additionalHandlebarContext) {
+                                    for(let key in additionalHandlebarContext) {
+                                        tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
+                                            jsonResult[key] = additionalHandlebarContext[key];
+                                        };
+                                }
 
-                if (!handlebarSource) {
-                    defer.resolve(jsonResult);
+                                var result = template(jsonResult);
+                                defer.resolve(result);
+                            }
+                            catch(err) {
+                                defer.reject(new Error(tl.loc("JenkinsArtifactDetailsParsingError", err)))
+                            }
+                        }
+                    }
                 }
                 else {
-                    try {
-                        tl.debug(`Applying the handlebar source ${handlebarSource} on the result`);
-                        let template = handlebars.compile(handlebarSource);
-                        if (additionalHandlebarContext) {
-                            for(let key in additionalHandlebarContext) {
-                                tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
-                                    jsonResult[key] = additionalHandlebarContext[key];
-                                };
-                        }
-
-                        var result = template(jsonResult);
-                        defer.resolve(result);
+                    if (response.message.statusCode) {
+                        console.log(tl.loc('ServerCallErrorCode', response.message.statusCode));
                     }
-                    catch(err) {
-                        defer.reject(new Error(tl.loc("JenkinsArtifactDetailsParsingError", err)))
+
+                    if (body) {
+                        tl.debug(body);
                     }
-                }
-            }
-            else {
-                if (response.message.statusCode) {
-                    console.log(tl.loc('ServerCallErrorCode', response.message.statusCode));
-                }
 
-                if (content) {
-                    tl.debug(content);
+                    defer.reject(new Error(tl.loc('ServerCallFailed')));
                 }
-
-                defer.reject(new Error(tl.loc('ServerCallFailed')));
-            }
+            }, (err) => {
+                defer.reject(err);
+            });
+        }, (err) => {
+            defer.reject(err);
         });
 
         return defer.promise;
