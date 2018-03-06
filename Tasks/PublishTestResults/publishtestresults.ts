@@ -44,9 +44,10 @@ async function run() {
         let matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
         const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
 
+        tl.debug(`Detected ${testResultsFilesCount} test result files`)
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
         if (forceMerge) {
-            tl.warning(tl.loc('mergeFiles', MERGE_THRESHOLD));
+            tl.debug('Detected large number of test result files. Merged all of them into a single file and published a single test run to optimize for test result publish performance instead of publishing hundreds of test runs');
         }
 
         if (testResultsFilesCount === 0) {
