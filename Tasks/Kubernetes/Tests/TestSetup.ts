@@ -18,6 +18,8 @@ tr.setInput('useConfigurationFile', process.env[shared.TestEnvVars.useConfigurat
 tr.setInput('configuration', ConfigurationFilePath);
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
 tr.setInput('namespace', process.env[shared.TestEnvVars.namespace] || '');
+tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || 'dockerRegistry');
+tr.setInput('secretArguments', process.env[shared.TestEnvVars.secretArguments] || '');
 tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('forceUpdate', process.env[shared.TestEnvVars.forceUpdate] || "true");
 tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocation] || 'version');
@@ -96,6 +98,9 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret docker-registry my-s
     "code": 0
 };
 a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret docker-registry my-secret --docker-server=https://index.docker.io/v1/ --docker-username=test --docker-password=regpassword --docker-email=test@microsoft.com`] = {
+    "code": 0
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`] = {
     "code": 0
 };
 a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = {

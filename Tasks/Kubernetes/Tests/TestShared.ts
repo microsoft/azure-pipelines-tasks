@@ -8,6 +8,8 @@ export let TestEnvVars = {
     configuration: "__configuration__",
     arguments: "__arguments__",
     namespace: "__namespace__",
+    secretType: "__secretType__",
+    secretArguments: "__secretArguments__",
     secretName: "__secretName__",
     forceUpdate: "__forceUpdate__",
     versionOrLocation: "__versionOrLocation__",
