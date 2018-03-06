@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 5,
-        "Patch": 31
+        "Minor": 130,
+        "Patch": 0
     },
     "demands": [
         "node.js"
@@ -67,6 +67,7 @@
         },
         {
             "name": "cwd",
+            "aliases": ["workingDirectory"],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "",
@@ -80,7 +81,7 @@
             "label": "gulp.js location",
             "defaultValue": "node_modules/gulp/bin/gulp.js",
             "required": true,
-            "helpMarkDown": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of cwd.",
+            "helpMarkDown": "gulp.js to run when agent can't find global installed gulp.  Defaults to the gulp.js under node_modules folder of the working directory.",
             "groupName": "advanced"
         },
         {

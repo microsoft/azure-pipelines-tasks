@@ -1,5 +1,3 @@
-var parseString = require('xml2js').parseString;
-
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import * as rm from "typed-rest-client/RestClient";

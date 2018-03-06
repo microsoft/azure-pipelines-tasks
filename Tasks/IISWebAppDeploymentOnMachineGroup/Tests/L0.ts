@@ -53,10 +53,10 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tp = path.join(__dirname, 'L0WindowsFailDefault.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
-		tr.run();
-
-		var expectedErr = 'Error: msdeploy failed with return code: 1';
-		assert(tr.invokedToolCount == 1, 'should have invoked tool once');
+        tr.run();
+        
+        var expectedErr = 'Error: msdeploy failed with return code: 1';
+		assert(tr.invokedToolCount == 3, 'should have invoked tool thrice despite failure');
         assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'E should have said: ' + expectedErr); 
         assert(tr.failed, 'task should have failed');
@@ -76,6 +76,8 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
     });
 
     it('Fails if parameters file provided by user is not present', (done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
         let tp = path.join(__dirname, 'L0WindowsFailSetParamFile.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         
@@ -93,8 +95,8 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         let tp = path.join(__dirname, 'L0WindowsManyPackage.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-		tr.run();
-		assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+        tr.run();
+	assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: loc_mock_MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern'; 
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
@@ -108,7 +110,7 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         
 		tr.run();
 
-		assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
+        assert(tr.invokedToolCount == 0, 'should not have invoked any tool');
         assert(tr.stderr.length > 0 || tr.errorIssues.length > 0, 'should have written to stderr');
         var expectedErr = 'Error: loc_mock_Nopackagefoundwithspecifiedpattern'; 
         assert(tr.stdErrContained(expectedErr) || tr.createdErrorIssue(expectedErr), 'should have said: ' + expectedErr); 
@@ -144,6 +146,8 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
         });
 
     it('Runs successfully with XDT Transformation (L1)', (done:MochaDone) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
         let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L1XdtTransform.js");
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         tr.run();
@@ -220,6 +224,20 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function() {
 
         assert(tr.stdout.search('## Copy Files Successful ##') >=0, 'should have copied the files');
         assert(tr.stdout.search('## mkdir Successful ##') >= 0, 'should have created dir including dest folder');
+        done();
+    });
+
+    it('Validate MSDeploy parameters', (done:MochaDone) => {
+        let tp = path.join(__dirname, "..", "node_modules","webdeployment-common","Tests","L0MSDeployUtility.js");
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.search('MSBUILD DEFAULT PARAMS PASSED') > 0, 'should have printed MSBUILD DEFAULT PARAMS PASSED');
+        assert(tr.stdout.search('ARGUMENTS WITH SET PARAMS PASSED') > 0, 'should have printed ARGUMENTS WITH SET PARAMS PASSED');
+        assert(tr.stdout.search('ARGUMENT WITH FOLDER PACKAGE PASSED') > 0, 'should have printed ARGUMENT WITH FOLDER PACKAGE PASSED');
+        assert(tr.stdout.search('ARGUMENT WITH EXCLUDE APP DATA PASSED') > 0, 'should have printed ARGUMENT WITH EXCLUDE APP DATA PASSED');
+        assert(tr.stdout.search('ARGUMENT WITH WAR PACKAGE PASSED') > 0, 'should have printed ARGUMENT WITH WAR PACKAGE PASSED');
+        assert(tr.stdout.search('ARGUMENT WITH OVERRIDE RETRY FLAG PASSED') > 0, 'should have printed ARGUMENT WITH OVERRIDE RETRY FLAG PASSED');
         done();
     });
 });

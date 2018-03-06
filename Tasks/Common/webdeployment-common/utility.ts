@@ -47,7 +47,7 @@ export function fileExists(path): boolean {
  */
 export function copySetParamFileIfItExists(setParametersFile: string) : string {
 
-    if(setParametersFile === null || (!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
+    if(!setParametersFile || (!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
         setParametersFile = null;
     }
     else if (!fileExists(setParametersFile)) {
@@ -119,7 +119,7 @@ export function findfiles(filepath){
         var allFiles = tl.find(findPathRoot);
 
         // Now matching the pattern against all files
-        filesList = tl.match(allFiles, filepath, '', {matchBase: true});
+        filesList = tl.match(allFiles, filepath, '', {matchBase: true, nocase: !!tl.osType().match(/^Win/) });
 
         // Fail if no matching files were found
         if (!filesList || filesList.length == 0) {

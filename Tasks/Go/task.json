@@ -1,0 +1,83 @@
+{
+    "id": "34B37FDD-BBF7-4EF1-B37C-9652CA7BB355",
+    "name": "Go",
+    "friendlyName": "Go",
+    "description": "Get, build, test a go application, or run a custom go command.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867582)",
+    "author": "Microsoft Corporation",
+    "preview": true,
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "demands": [
+    ],
+    "instanceNameFormat": "go $(command)",
+    "groups": [
+        {
+            "displayName": "Advanced",
+            "name": "advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "command",
+            "label": "Command",
+            "helpMarkDown": "Select a Go command to run. Select 'Custom' to use a command not listed here.",
+            "type": "pickList",
+            "required": true,
+            "options": {
+                "get": "get",
+                "build": "build",
+                "test": "test",
+                "custom": "custom"
+            },
+            "defaultValue": "get"
+        },
+        {
+            "name": "customCommand",
+            "label": "Custom command",
+            "helpMarkDown": "Custom Go command for execution. For example: to execute go version, enter version.",
+            "required": true,
+            "type": "string",
+            "visibleRule": "command == custom"
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Arguments to the selected command. For example, build time arguments for go build command."
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working Directory",
+            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "required": "false",
+            "groupName": "advanced"
+        }
+    ],
+    "dataSourceBindings": [
+    ],
+    "execution": {
+        "Node": {
+            "target": "main.js"
+        }
+    },
+    "messages": {
+        "TaskFailedWithError" : "Go task failed with error: %s"
+    }
+}

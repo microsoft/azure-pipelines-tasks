@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 127,
-        "Patch": 1
+        "Minor": 131,
+        "Patch": 0
     },
     "groups": [
         {
@@ -26,7 +26,7 @@
         {
             "name": "serverEndpoint",
             "type": "connectedService:vsmobilecenter",
-            "label": "App Center Connection",
+            "label": "App Center connection",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the service endpoint for your Visual Studio App Center connection. To create one, click the Manage link and create a new service endpoint."
@@ -34,7 +34,7 @@
         {
             "name": "appSlug",
             "type": "string",
-            "label": "App Slug",
+            "label": "App slug",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The app slug is in the format of **{username}/{app_identifier}**.  To locate **{username}** and **{app_identifier}** for an app, click on its name from https://appcenter.ms/apps, and the resulting URL is in the format of [https://appcenter.ms/users/<b>{username}</b>/apps/<b>{app_identifier}</b>](https://appcenter.ms/users/{username}/apps/{app_identifier}). If you are using orgs, the app slug is of the format **{orgname}/{app_identifier}**."
@@ -43,7 +43,7 @@
             "name": "app",
             "aliases": [ "appFile" ],
             "type": "filePath",
-            "label": "Binary File Path",
+            "label": "Binary file path",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Relative path from the repo root to the APK or IPA file you want to publish"
@@ -52,7 +52,7 @@
             "name": "symbolsType",
             "aliases": [ "symbolsOption" ],
             "type": "pickList",
-            "label": "Symbols Type",
+            "label": "Symbols type",
             "required": false,
             "defaultValue": "Apple",
             "groupName": "symbols",
@@ -63,7 +63,7 @@
         {
             "name": "symbolsPath",
             "type": "filePath",
-            "label": "Symbols Path",
+            "label": "Symbols path",
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to the symbols folder.",
@@ -73,7 +73,7 @@
             "name": "pdbPath",
             "aliases": [ "symbolsPdbFiles" ],
             "type": "filePath",
-            "label": "Symbols Path (*.pdb)",
+            "label": "Symbols path (*.pdb)",
             "defaultValue": "**/*.pdb",
             "groupName": "symbols",
             "required": false,
@@ -84,7 +84,7 @@
             "name": "dsymPath",
             "aliases": [ "symbolsDsymFiles" ],
             "type": "filePath",
-            "label": "dSYM Path",
+            "label": "dSYM path",
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to dSYM folder. Path may contain wildcards.",
@@ -94,7 +94,7 @@
             "name": "mappingTxtPath",
             "aliases": [ "symbolsMappingTxtFile" ],
             "type": "filePath",
-            "label": "Mapping File",
+            "label": "Mapping file",
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Relative path from the repo root to Android's mapping.txt file.",
@@ -104,7 +104,7 @@
             "name": "packParentFolder",
             "aliases": [ "symbolsIncludeParentDirectory" ],
             "type": "boolean",
-            "label": "Include All Items in Parent Folder",
+            "label": "Include all items in parent folder",
             "groupName": "symbols",
             "required": false,
             "helpMarkDown": "Upload the selected symbols file or folder and all other items inside the same parent folder. This is required for React Native apps."
@@ -113,7 +113,7 @@
             "name": "releaseNotesSelection",
             "aliases": [ "releaseNotesOption" ],
             "type": "radio",
-            "label": "Create Release Notes",
+            "label": "Create release notes",
             "required": true,
             "defaultValue": "input",
             "options": {
@@ -124,7 +124,7 @@
         {
             "name": "releaseNotesInput",
             "type": "multiLine",
-            "label": "Release Notes",
+            "label": "Release notes",
             "required": true,
             "helpMarkDown": "Release notes for this version.",
             "visibleRule": "releaseNotesSelection = input",
@@ -137,7 +137,7 @@
         {
             "name": "releaseNotesFile",
             "type": "filePath",
-            "label": "Release Notes File",
+            "label": "Release notes file",
             "required": true,
             "helpMarkDown": "Select a UTF-8 encoded text file which contains the Release Notes for this version.",
             "visibleRule": "releaseNotesSelection = file"
@@ -146,8 +146,8 @@
             "name": "distributionGroupId",
             "type": "string",
             "defaultValue": "",
-            "label": "Distribution Group ID",
-            "helpMarkDown": "ID of the distribution group app will deploy to. Leave it empty to use the default group.",
+            "label": "Distribution group ID",
+            "helpMarkDown": "ID of the distribution group the app will deploy to. Leave it empty to use the default group.",
             "required": false
         }
     ],
@@ -163,7 +163,7 @@
         "NoResponseFromServer": "No response from server.",
         "FailedToUploadFile": "Failed to complete file upload.",
         "NoApiTokenFound": "No API token found on Visual Studio App Center connection.",
-        "Succeeded": "Visual Studio App Center Upload Task succeeded",
+        "Succeeded": "App Center Distribute task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",
         "FailedToCreateFile": "Failed to create %s with error: %s.",

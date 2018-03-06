@@ -182,6 +182,20 @@ function ValidateInputs($tfsCollectionUrl, $connectedServiceName, $testDrop, $lo
         ErrorMessage "The path for the load test files does not exist. Please provide a valid path."
     }
 
+    # validate load test name
+    # code taken from definitionNameInvalid    
+    $invalidPattern1 = "(^\\.$|^\\.\\.$|^-$|^_$)"
+    $invalidPattern2 = "[^A-Za-z0-9 \._-]"
+
+    # find illegal characters
+    $invalidchars1 = [regex]::Matches($loadtest, $invalidPattern1, 'IgnoreCase').Value | Sort-Object -Unique 
+    $invalidchars2 =[regex]::Matches($loadtest, $invalidPattern2, 'IgnoreCase').Value | Sort-Object -Unique 
+    
+    if ($invalidchars1 -ne $null -or $invalidchars2 -ne $null)
+    {
+        throw "Do not use these characters in load test name: $invalidchars1 $invalidchars2"
+    }
+
     ValidateFiles "load test file" $loadTest
 }
 

@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "REST API の呼び出し",
+  "loc.helpMarkDown": "[詳細](https://docs.microsoft.com/ja-JP/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.description": "プロセスの一部として REST API を呼び出します。",
+  "loc.instanceNameFormat": "REST API $(method) の呼び出し",
+  "loc.group.displayName.completionOptions": "詳細設定",
+  "loc.input.label.connectedServiceName": "汎用エンドポイント",
+  "loc.input.help.connectedServiceName": "URL を取得して HTTP 要求用の Authorization ヘッダーを作成するために使う汎用エンドポイントを選択します。",
+  "loc.input.label.method": "メソッド",
+  "loc.input.help.method": "API を呼び出すときに使う HTTP メソッドを選択します。",
+  "loc.input.label.headers": "ヘッダー",
+  "loc.input.help.headers": "ヘッダーを JSON 形式で定義します。このヘッダーは、送信する要求にアタッチされます。",
+  "loc.input.label.body": "本文",
+  "loc.input.label.urlSuffix": "URL サフィックスとパラメーター",
+  "loc.input.help.urlSuffix": "指定した文字列が URL に追加されます。例: エンドポイント URL が https:...TestProj/_apis/Release/releases で URL のサフィックスが /2/environments/1 の場合、エンドポイント URL は https:.../TestProj/_apis/Release/releases/2/environments/1 になります。URL のサフィックスが ?definitionId=1&releaseCount=1 の場合、エンドポイント URL は https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1 になります。",
+  "loc.input.label.waitForCompletion": "完了イベント",
+  "loc.input.help.waitForCompletion": "既定値は \"ApiResponse\" です。使用可能な値: \"ApiResponse\"、\"Callback\" 呼び出し (REST API によってタイムライン レコードの更新をコールバックする場合)。",
+  "loc.input.label.successCriteria": "成功の条件",
+  "loc.input.help.successCriteria": "いつタスクを渡すかを定義する条件。条件を指定しない場合、応答の内容は結果には影響しません。例: - 応答 {\"status\" : \"successful\"} の場合、式は eq(root['status'], 'successful') とすることができます。[詳細](https://go.microsoft.com/fwlink/?linkid=842996)"
+}

@@ -18,7 +18,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 129,
+    "Minor": 132,
     "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
@@ -27,7 +27,7 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -106,7 +106,7 @@
       "name": "failOnStandardError",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnStandardError",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStandardError",
       "groupName": "advanced"

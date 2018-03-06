@@ -11,7 +11,7 @@ const perf = require('performance-now');
 const executionStartTime = perf();
 const osPlat: string = os.platform();
 const packageName = 'Microsoft.TestPlatform';
-const packageSource = 'https://api.nuget.org/v3/index.json';
+let packageSource = 'https://api.nuget.org/v3/index.json';
 
 async function startInstaller() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -27,13 +27,21 @@ async function startInstaller() {
         console.log(tl.loc('StartingInstaller'));
         console.log('==============================================================================');
 
-        // Read inputs
+        // Read task inputs
         const versionSelectorInput = tl.getInput('versionSelector', true);
         const testPlatformVersion = tl.getInput('testPlatformVersion', false);
 
+        // Read backdoor variables used to tweak the task for testing/development purposes
+        // Change the package source, mainly used to get the latest from the myget feed
+        const overridenPackageSource = tl.getVariable('overridePackageSource');
+        if (overridenPackageSource && overridenPackageSource !== '') {
+            packageSource = overridenPackageSource;
+            ci.publishEvent('PackageSourceOverridden', {packageSource: packageSource} );
+        }
+
         ci.publishEvent('Options', { versionSelectorInput: versionSelectorInput, testPlatformVersion: testPlatformVersion } );
 
-        //TODO: Add an input for cleaning up the tool cache?
+        // TODO: Add an input for cleaning up the tool cache?
 
         // Get the required version of the platform and make necessary preparation to allow its consumption down the phase
         await getVsTestPlatformTool(testPlatformVersion, versionSelectorInput);
@@ -169,16 +177,26 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
     testPlatformVersion = toolLib.cleanVersion(testPlatformVersion);
     const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
     let downloadPath = tl.getVariable('Agent.TempDirectory');
+
+    // Ensure Agent.TempDirectory is set
     if (!downloadPath) {
         throw new Error('Expected Agent.TempDirectory to be set');
     }
-    // use as short a path as possible due to nested folders in the package that may potentially exceed the 255 char windows path limit
+
+    // Call out a warning if the agent work folder path is longer than 50 characters as anything longer may cause the download to fail
+    // Note: This upper limit was calculated for a particular test platform package version and is subject to change
+    if (tl.getVariable('Agent.WorkFolder') && tl.getVariable('Agent.WorkFolder').length > 50) {
+        tl.warning(tl.loc('AgentWorkDirectoryPathTooLong'));
+    }
+
+    // Use as short a path as possible due to nested folders in the package that may potentially exceed the 255 char windows path limit
     downloadPath = path.join(downloadPath, 'VsTest');
-    nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload');
+    nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory "' + downloadPath + '" -NoCache -DirectDownload');
 
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     let startTime = perf();
     await nugetTool.exec();
+
     ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: startTime, endTime: perf() } );
 
     // Install into the local tool cache

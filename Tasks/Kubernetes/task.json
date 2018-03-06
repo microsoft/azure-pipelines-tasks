@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 9
+        "Patch": 14
     },
     "demands": [],
     "preview": "false",
@@ -30,8 +30,8 @@
         }, 
         {
             "name": "advanced",
-			"displayName": "Advanced",
-			"isExpanded": false
+            "displayName": "Advanced",
+            "isExpanded": false
         },
         {
             "name": "output",
@@ -95,7 +95,7 @@
             "properties": {
                 "resizable": "true",
                 "rows": "2",
-				"editorExtension": "ms.vss-services-azure.parameters-grid"
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
             },
             "label": "Arguments",
             "helpMarkDown": "Command arguments.",
@@ -185,7 +185,7 @@
             "type": "boolean",
             "label": "Check for Latest Version",
             "defaultValue": "false",
-			"helpMarkDown": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
+            "helpMarkDown": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
             "required": false,
 			"groupName": "advanced",
 			"visibleRule": "versionOrLocation = version"
@@ -211,6 +211,7 @@
         },
         {
             "name": "cwd",
+            "aliases": ["workingDirectory"],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",

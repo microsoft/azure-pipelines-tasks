@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Gulp",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613721)",
-  "loc.description": "Système de build basé sur les tâches de diffusion en continu Node.js",
+  "loc.description": "Système de build basé sur les tâches de streaming Node.js",
   "loc.instanceNameFormat": "gulp $(targets)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.group.displayName.junitTestResults": "Résultats du test JUnit",
@@ -15,7 +15,7 @@
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail actuel quand le script est exécuté. Il s'agit généralement du dossier dans lequel se trouve le script.",
   "loc.input.label.gulpjs": "Emplacement de gulp.js",
-  "loc.input.help.gulpjs": "Fichier gulp.js à exécuter quand l'agent ne trouve pas le gulp installé global. Correspond par défaut au fichier gulp.js sous le dossier node_modules de cwd.",
+  "loc.input.help.gulpjs": "Fichier gulp.js à exécuter quand l'agent ne trouve pas le gulp installé global. Correspond par défaut au fichier gulp.js sous le dossier node_modules du répertoire de travail.",
   "loc.input.label.publishJUnitResults": "Publier sur TFS/Team Services",
   "loc.input.help.publishJUnitResults": "Sélectionnez cette option pour publier les résultats des tests JUnit produits par la build Gulp sur TFS/Team Services.",
   "loc.input.label.testResultsFiles": "Fichiers des résultats des tests",

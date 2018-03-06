@@ -23,8 +23,6 @@ process.env['MOCK_TEMP_PATH'] = path.join(__dirname, '..', '..');
 process.env['MOCK_NORMALIZE_SLASHES'] = true;
 
 process.env['JAVA_HOME_8_X86'] = '/user/local/bin/Java8';
-process.env['ENDPOINT_URL_ID1'] = 'http://sonarqube/end/point';
-process.env['ENDPOINT_AUTH_ID1'] = '{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}';
 
 process.env['BUILD_BUILDNUMBER'] = '14';
 process.env['BUILD_SOURCESDIRECTORY'] = `${taskReportValidDir}`;
@@ -53,14 +51,6 @@ let myAnswers: string = `{
       "gradlew.bat build":{
          "code":0,
          "stdout":"Sample gradle output"
-      },
-      "gradlew build sonarqube -I /Gradle/node_modules/codeanalysis-common/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json":{
-         "code":0,
-         "stdout":"SonarQube analysis incremental mode in PR build"
-      },
-      "gradlew.bat build sonarqube -I /Gradle/node_modules/codeanalysis-common/sonar.gradle -Dsonar.host.url=http://sonarqube/end/point -Dsonar.login=uname -Dsonar.password=pword -Dsonar.projectName=test_sqProjectName -Dsonar.projectKey=test_sqProjectKey -Dsonar.projectVersion=test_sqProjectVersion -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json":{
-         "code":0,
-         "stdout":"SonarQube analysis incremental mode in PR build"
       }
    },
    "checkPath":{

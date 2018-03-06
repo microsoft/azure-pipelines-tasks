@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Go Tool Installer",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
+  "loc.description": "Finds or downloads specific version of Go tool into tools cache and adds it to the PATH. Use this task to change the version of Go Lang used in subsequent tasks",
+  "loc.instanceNameFormat": "Use Go $(version)",
+  "loc.group.displayName.advanced": "Avanzado",
+  "loc.input.label.version": "Version",
+  "loc.input.help.version": "Go tool version to download and install. Example: 1.9.3",
+  "loc.input.label.goPath": "GOPATH",
+  "loc.input.help.goPath": "Value for the GOPATH environment variable.",
+  "loc.input.label.goBin": "GOBIN",
+  "loc.input.help.goBin": "Value for the GOBIN environment variable.",
+  "loc.messages.FailedToDownload": "Failed to download version %s. Please verify that the version is valid and resolve any other issues. Error: %s",
+  "loc.messages.TempDirNotSet": "Expected Agent.TempDirectory to be set"
+}

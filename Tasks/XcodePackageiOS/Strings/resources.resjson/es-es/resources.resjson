@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Crear paquete Xcode (iOS)",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=613731)",
-  "loc.description": "Genere un archivo .ipa a partir de los resultados de la compilación de Xcode",
+  "loc.description": "Generar un archivo .ipa a partir de la salida de compilación de Xcode con xcrun (Xcode 7 o versiones anteriores)",
   "loc.instanceNameFormat": "Paquete XCode $(appName)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.appName": "Nombre de archivo .app",

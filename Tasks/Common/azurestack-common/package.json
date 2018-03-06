@@ -15,7 +15,6 @@
   "dependencies": {
     "q": "1.4.1",
     "typed-rest-client": "0.12.0",
-    "vsts-task-lib": "2.0.1-preview",
-    "xml2js": "0.4.13"
+    "vsts-task-lib": "2.0.1-preview"
   }
 }

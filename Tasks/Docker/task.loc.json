@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 4
+    "Patch": 9
   },
   "demands": [],
   "preview": "false",
@@ -282,11 +282,30 @@
       "groupName": "advanced"
     },
     {
+      "name": "enforceDockerNamingConvention",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enforceDockerNamingConvention",
+      "required": false,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.enforceDockerNamingConvention",
+      "groupName": "advanced"
+    },
+    {
       "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
+      "groupName": "advanced"
+    },
+    {
+      "name": "memory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.memory",
+      "helpMarkDown": "ms-resource:loc.input.help.memory",
       "groupName": "advanced"
     }
   ],
@@ -308,6 +327,9 @@
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
-    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile"
+    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
+    "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced"
   }
 }

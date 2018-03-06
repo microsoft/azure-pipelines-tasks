@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import fs = require('fs');
 import path = require('path');
+import util = require('util');
 
 export function generateWebConfigFile(webConfigTargetPath: string, appType: string, substitutionParameters: any) {
     // Get the template path for the given appType
@@ -40,6 +41,9 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
             'PYTHON_PATH': 'D:\\home\\python353x86\\python.exe',
             'PYTHON_WFASTCGI_PATH': 'D:\\home\\python353x86\\wfastcgi.py',
             'STATIC_FOLDER_PATH': 'static'
+        },
+        'Go': {
+            'GoExeFilePath': ''
         }
     };
 
@@ -62,7 +66,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
     var webConfigPath = path.join(folderPath, "web.config");
     if (!tl.exist(webConfigPath)) {
         try {
-            var supportedAppTypes = ['node', 'python_Bottle', 'python_Django', 'python_Flask']
+            var supportedAppTypes = ['node', 'python_Bottle', 'python_Django', 'python_Flask', 'Go']
             // Create web.config
             tl.debug('web.config file does not exist. Generating.');
             if(!webConfigParameters['appType']) {
@@ -77,14 +81,20 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
             delete webConfigParameters['appType'];
 
             var selectedAppTypeParams = addMissingParametersValue(appType, webConfigParameters);
-            if(appType != "node") {
-                rootDirectoryPath = "D:\\home\\" + (rootDirectoryPath ? rootDirectoryPath : "site\\wwwroot");
+            if(appType.startsWith("python")) {
                 tl.debug('Root Directory path to be set on web.config: ' + rootDirectoryPath);
                 selectedAppTypeParams['KUDU_WORKING_DIRECTORY'] = rootDirectoryPath;
                 if(appType === 'python_Django' && webConfigParameters['DJANGO_SETTINGS_MODULE'].value === '') {
                     tl.debug('Auto detecting settings.py to set DJANGO_SETTINGS_MODULE...');
                     selectedAppTypeParams['DJANGO_SETTINGS_MODULE'] = getDjangoSettingsFile(folderPath);
                 }
+            } else if(appType == 'Go') {
+                if (util.isNullOrUndefined(webConfigParameters['GoExeFileName'])
+                        || util.isNullOrUndefined(webConfigParameters['GoExeFileName'].value) 
+                        || webConfigParameters['GoExeFileName'].value.length <=0) {
+                    throw Error(tl.loc('GoExeNameNotPresent'));
+                }
+                selectedAppTypeParams['GoExeFilePath'] = rootDirectoryPath + "\\" + webConfigParameters['GoExeFileName'].value;
             }
             generateWebConfigFile(webConfigPath, appType, selectedAppTypeParams);
             console.log(tl.loc("SuccessfullyGeneratedWebConfig"));

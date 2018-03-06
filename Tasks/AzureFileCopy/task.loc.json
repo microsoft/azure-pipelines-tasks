@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 107
+    "Patch": 108
   },
   "demands": [
     "azureps"
@@ -345,6 +345,8 @@
     "AFC_UnableToSetCustomScriptExtension": "ms-resource:loc.messages.AFC_UnableToSetCustomScriptExtension",
     "AFC_CopyPrereqsFailed": "ms-resource:loc.messages.AFC_CopyPrereqsFailed",
     "AFC_BlobStorageNotFound": "ms-resource:loc.messages.AFC_BlobStorageNotFound",
-    "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory"
+    "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory",
+    "AFC_RedirectResponseInvalidStatusCode": "ms-resource:loc.messages.AFC_RedirectResponseInvalidStatusCode",
+    "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull"
   }
 }
