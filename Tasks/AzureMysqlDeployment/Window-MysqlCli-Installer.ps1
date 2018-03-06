@@ -4,11 +4,18 @@
 ##  Desc:  Install Mysql CLI
 ################################################################################
 
+param (
+	[string]$WorkingFolder,
+        [string]$VcredistName,
+        [string]$MysqlClientName
+    )
+
 # Install exe through url 
 function Install-EXE
 {
     Param
     (
+        [String]$FilePath,
         [String]$Url,
         [String]$Name,
         [String[]]$ArgumentList
@@ -18,10 +25,12 @@ function Install-EXE
 
     try
     {
-        Write-Host "Downloading $Name..."
-        $FilePath = "${env:Temp}\$Name"
-
-        Invoke-WebRequest -Uri $Url -OutFile $FilePath
+        if(!$FilePath){
+            Write-Host "Downloading $Name..."
+            $FilePath = "${env:Temp}\$Name"
+    
+            Invoke-WebRequest -Uri $Url -OutFile $FilePath
+        }
 
         Write-Host "Starting Install $Name..."
         $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -Wait -PassThru
@@ -149,33 +158,80 @@ function Add-MachinePathItem
     return Set-MachinePath -NewPath $newPath
 }
 
+$command = Get-Command -Name 'mysql' 
+if($command)
+{
+    return 0;
+}
+
+$InstallerURI = 'http://download.microsoft.com/download/0/5/6/056dcda9-d667-4e27-8001-8a0c6971d6b1/vcredist_x64.exe'
+$InstallerName = 'vcredist_x64.exe'
+$ArgumentList = ('/install', '/quiet', '/norestart' )
+if($WorkingFolder -and $VcredistName )
+{
+    # install vcredist from working folder
+    cd $WorkingFolder
+    $exitCode = Install-EXE -FilePath $VcredistName -Name $InstallerName -ArgumentList $ArgumentList
+}
+else
+{
+    $exitCode = Install-EXE -Url $InstallerURI -Name $InstallerName -ArgumentList $ArgumentList
+
+}
+
+
 ## Downloading mysql jar
 $uri = 'https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.21-winx64.zip'
 $mysqlPath = 'C:\mysql-5.7.21-winx64\bin'
 
-# Installing visual c++ redistibutable package.
-$InstallerURI = 'http://download.microsoft.com/download/0/5/6/056dcda9-d667-4e27-8001-8a0c6971d6b1/vcredist_x64.exe'
-$InstallerName = 'vcredist_x64.exe'
-$ArgumentList = ('/install', '/quiet', '/norestart' )
-
-$exitCode = Install-EXE -Url $InstallerURI -Name $InstallerName -ArgumentList $ArgumentList
 if ($exitCode -eq 0 -or $exitCode -eq 3010)
 {
-    # Get the latest mysql command line tools .
-    Invoke-WebRequest -UseBasicParsing -Uri $uri -OutFile mysql.zip
-
-    # Expand the zip
-    $pwdPath = $pwd.Path
-    if ( $pwdPath -notmatch '.+?\\$')
+    if($workingFolder -and $MysqlClientName )
     {
-    	$pwdPath += '\'
+        cd $workingFolder
+        # Expand the zip
+        $pwdPath = $pwd.Path
+        if ( $pwdPath -notmatch '.+?\\$')
+        {
+    	    $pwdPath += '\'
+        }
+
+        $sourcePath = $pwdPath + "mysql-5.7.21-winx64"
+        Copy-Item -Recurse -Path $sourcePath  -destination C:\
     }
-    $sourcePath = $pwdPath + "mysql.zip"
-    ExtractFiles  $sourcePath "C:\"
+    else
+    {
+        $retry = $false
+        $retryCount = 1;
+        do{
+            try
+            {
+                # Get the latest mysql command line tools .
+                Invoke-WebRequest -UseBasicParsing -Uri $uri -OutFile mysql.zip
+            }
+            catch
+            {
+                $retryCount += 1
+                $retry = $true
+                
+            }
+        }
+        while($retry -and $retryCount -lt 3)
+        
 
-    # Deleting zip folder
-    Remove-Item -Recurse -Force mysql.zip
+        # Expand the zip
+        $pwdPath = $pwd.Path
+        if ( $pwdPath -notmatch '.+?\\$')
+        {
+    	    $pwdPath += '\'
+        }
+        $sourcePath = $pwdPath + "mysql.zip"
+        ExtractFiles  $sourcePath "C:\"
 
+        # Deleting zip folder
+        Remove-Item -Recurse -Force mysql.zip
+    }
+   
     # Adding mysql in system environment path
     Add-MachinePathItem $mysqlPath
 
