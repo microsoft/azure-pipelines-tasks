@@ -148,6 +148,9 @@ Try
         $isFirewallConfigured = $firewallSettings.IsConfigured
     }
 
+    # Import SQLPS Module
+    Import-SqlPs
+
     if ($TaskNameSelector -eq "DacpacTask")
     {
         # Increase Timeout to 120 seconds in case its not provided by User
@@ -179,10 +182,7 @@ Try
     }
     else
     {
-        # Import SQLPS Module
-        Import-SqlPs
-
-        if($sqlUserName)
+         if($sqlUserName)
         {
             $SqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
         }

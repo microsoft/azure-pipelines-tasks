@@ -42,9 +42,6 @@ function Get-AgentIPRange
 
     [hashtable] $IPRange = @{}
 
-    $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
-    $env:SQLCMDPASSWORD = $sqlPassword
-
     $formattedSqlUsername = $sqlUserName
 
     if($sqlUserName)
@@ -52,16 +49,34 @@ function Get-AgentIPRange
         $formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
     }
 
-    $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
+    if (Test-CommandExists -commandName "Invoke-Sqlcmd") 
+    {
+		try {
+			Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
+			Write-Verbose "Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password ****** -Query `"select getdate()`" -ErrorVariable errors | Out-String"
+		
+            $output = Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password $sqlPassword -Query "select getdate()" -ErrorVariable errors | Out-String
+        }
+		catch {
+            Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
+		}
+    }
+    else 
+    {
+        $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
+        $env:SQLCMDPASSWORD = $sqlPassword
+
+        $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
+        
+        Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"    
+
+        $ErrorActionPreference = 'Continue'
+        
+        $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+        
+        $ErrorActionPreference = 'Stop'
+    }
     
-    Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
-
-    $ErrorActionPreference = 'Continue'
-
-    $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
-
-    $ErrorActionPreference = 'Stop'
-
     if($errors.Count -gt 0)
     {
         $errMsg = $errors[0].ToString()
@@ -250,3 +265,17 @@ function ConvertParamToSqlSupported
     return $param
 }
 
+function Test-CommandExists 
+{
+    param (
+        [String][Parameter(Mandatory=$true)] $commandName
+    )
+
+	try {
+		Get-Command -Name $commandName
+		return $true
+	}
+	catch {
+		return $false
+	}
+}
