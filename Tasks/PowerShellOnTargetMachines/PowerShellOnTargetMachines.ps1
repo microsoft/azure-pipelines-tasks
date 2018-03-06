@@ -54,6 +54,7 @@ $ErrorActionPreference = 'Stop'
 $deploymentOperation = 'Deployment'
 
 $envOperationStatus = "Passed"
+$jobId = $env:SYSTEM_JOBID;
 
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
@@ -65,9 +66,13 @@ if ($enableDetailedLoggingString -ne "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
-# Import all the dlls and modules which have cmdlets we need
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+# If it is hosted then override module
+if(IsHosted){
+    # Import all the dlls and modules which have cmdlets we need
+    Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
+    Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
+}
+
 
 function Write-DTLServiceDeprecationMessageIfRequired
 {
@@ -91,6 +96,36 @@ function Write-DTLServiceDeprecationMessageIfRequired
         }
     }
 }
+
+function Publish-AzureTelemetry
+ {
+   param([object] $deploymentResponse, 
+            [string] $jobId )
+    if($deploymentResponse){
+        $jsonString = -join("{")
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "IsAzureVm")){
+            $jsonString = -join( $jsonString,
+            "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" ,
+            ",")
+        }
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "VmUuidHash")){
+            $jsonString = -join( $jsonString,
+            "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"",
+            ",")
+        }
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "TelemetryError")){
+            $jsonString = -join( $jsonString,
+            "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"",
+            ",")
+        }
+    
+        $jsonString = -join( $jsonString,
+            "`"JobId`" : `"$jobId`"" , "}")
+    }
+
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$jsonString"
+    Write-Host $telemetryString
+ }
 
 try
 {
@@ -130,6 +165,7 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+        Publish-AzureTelemetry -deploymentResponse $deploymentResponse -jobId $jobId
 
         if ($status -ne "Passed")
         {
@@ -173,6 +209,8 @@ else
 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                 Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+                Publish-AzureTelemetry -deploymentResponse $output -jobId $jobId
+
                 if($status -ne "Passed")
                 {
                     $envOperationStatus = "Failed"
