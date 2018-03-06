@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 25
+        "Patch": 0
     },
     "demands": [],
     "preview": "true",
@@ -116,6 +116,12 @@
     "messages": {
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
         "HelmNotFound": "Helm not installed on the machine.",
-        "KubernetesNotFound": "Kubernetes not installed on the machine."
+        "KubernetesNotFound": "Kubernetes not installed on the machine.",
+        "CantDownloadKubeConfig": "Can not download kube config file for the cluster %s. Reason %s.",
+        "KubeConfigFilePath": "Kubeconfig file path: %s",
+        "KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",
+        "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
+        "ClusterNotProvisioned": "Cluster has not been provisioned successfully.",
+        "ClusterNotFound": "%s cluster does not exists"
     }
 }

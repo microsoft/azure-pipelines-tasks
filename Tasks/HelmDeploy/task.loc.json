@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 25
+    "Patch": 0
   },
   "demands": [],
   "preview": "true",
@@ -118,6 +118,12 @@
   "messages": {
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
     "HelmNotFound": "ms-resource:loc.messages.HelmNotFound",
-    "KubernetesNotFound": "ms-resource:loc.messages.KubernetesNotFound"
+    "KubernetesNotFound": "ms-resource:loc.messages.KubernetesNotFound",
+    "CantDownloadKubeConfig": "ms-resource:loc.messages.CantDownloadKubeConfig",
+    "KubeConfigFilePath": "ms-resource:loc.messages.KubeConfigFilePath",
+    "KubernetesClusterInfo": "ms-resource:loc.messages.KubernetesClusterInfo",
+    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
+    "ClusterNotProvisioned": "ms-resource:loc.messages.ClusterNotProvisioned",
+    "ClusterNotFound": "ms-resource:loc.messages.ClusterNotFound"
   }
 }

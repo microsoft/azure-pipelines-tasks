@@ -50,7 +50,7 @@ export class AzureAksService {
         }
     }
 
-    public GetKubeConfigFile(resourceGroup : string , clusterName : string ): Promise<Model.AKSClusterUser> {
+    public getKubeConfigFile(resourceGroup : string , clusterName : string ): Promise<Model.AKSClusterAccessProfile> {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
@@ -59,14 +59,14 @@ export class AzureAksService {
                 '{ClusterName}': clusterName
             }, null,'2017-08-31');
             
-            var result : Model.AKSClusterUser;
+            var result : Model.AKSClusterAccessProfile;
             return this._client.beginRequest(webRequest).then((response)=>{
                 if(response.statusCode >= 200 && response.statusCode < 300) {
                     //success
                     if (response.body) {
                         return response.body;
                     }
-                    
+
                     throw ToError(response);
                     
                 } else {

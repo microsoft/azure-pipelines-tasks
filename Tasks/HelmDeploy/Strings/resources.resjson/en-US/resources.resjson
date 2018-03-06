@@ -17,5 +17,10 @@
   "loc.input.help.arguments": "Command arguments.",
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
   "loc.messages.HelmNotFound": "Helm not installed on the machine.",
-  "loc.messages.KubernetesNotFound": "Kubernetes not installed on the machine."
+  "loc.messages.KubernetesNotFound": "Kubernetes not installed on the machine.",
+  "loc.messages.CantDownloadKubeConfig": "Can not download kube config file for the cluster %s. Reason %s.",
+  "loc.messages.KubeConfigFilePath": "Kubeconfig file path: %s",
+  "loc.messages.KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",
+  "loc.messages.KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
+  "loc.messages.ClusterNotProvisioned": "Cluster has not been provisioned successfully."
 }

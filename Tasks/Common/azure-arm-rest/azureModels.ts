@@ -273,14 +273,19 @@ export interface ApplicationInsights {
     properties?: {[key: string]: any};
 }
 
-export interface AKSCluster extends AzureBaseObject {
-    //TODO: Keep adding properties as you need
+export interface AKSClusterProperties {
+    provisioningState: string;
+    kubernetesVersion: string;
 }
 
-export interface AKSClusterUserProperties {
+export interface AKSCluster extends AzureBaseObject {
+    properties: AKSClusterProperties
+}
+
+export interface AKSClusterAccessProfileProperties {
     kubeConfig: string;
 }
 
-export interface AKSClusterUser extends AzureBaseObject {
-    properties: AKSClusterUserProperties
+export interface AKSClusterAccessProfile extends AzureBaseObject {
+    properties: AKSClusterAccessProfileProperties
 }
