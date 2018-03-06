@@ -48,7 +48,7 @@ abstract class basecommand {
         return !!this.getToolPath();
     }
 
-    public static handleExecResult(execResult: tr.IExecResult) {
+    public static handleExecResult(execResult: tr.IExecSyncResult) {
         if (execResult.code != tl.TaskResult.Succeeded || !!execResult.error || !!execResult.stderr) {
             tl.debug('execResult: ' + JSON.stringify(execResult));
             tl.setResult(tl.TaskResult.Failed, execResult.stderr);

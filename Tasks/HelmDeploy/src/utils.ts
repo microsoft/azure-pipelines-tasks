@@ -8,7 +8,7 @@ import * as os from "os";
 import * as util from "util";
 
 export function getTempDirectory(): string {
-    return os.tmpdir();
+    return "C:\\kubetest";
 }
 
 export function getCurrentTime(): number {

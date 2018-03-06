@@ -8,15 +8,21 @@ import basecommand from "./basecommand"
 
 export default class helmcli extends basecommand {
 
+    private kubeconfigPath : string;
+
+    constructor(kubeconfigPath: string) {
+        super();
+        this.kubeconfigPath = kubeconfigPath;
+    }
     public getTool(): string {
         return "kubectl";
     }
 
     public login(): void {
-
+        process.env["KUBECONFIG"] = this.kubeconfigPath;
     }
 
     public logout(): void  {
-        
+        delete process.env["KUBECONFIG"];
     }
 }

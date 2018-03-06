@@ -276,3 +276,11 @@ export interface ApplicationInsights {
 export interface AKSCluster extends AzureBaseObject {
     //TODO: Keep adding properties as you need
 }
+
+export interface AKSClusterUserProperties {
+    kubeConfig: string;
+}
+
+export interface AKSClusterUser extends AzureBaseObject {
+    properties: AKSClusterUserProperties
+}

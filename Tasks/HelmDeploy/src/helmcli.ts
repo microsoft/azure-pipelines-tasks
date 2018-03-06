@@ -10,23 +10,17 @@ export default class helmcli extends basecommand {
 
     private command : string;
     private argument : string;
-    private kubeconfigPath : string;
-
-    constructor(kubeconfigPath: string) {
-        super();
-        this.kubeconfigPath = kubeconfigPath;
-    }
     
     public getTool(): string {
         return "helm";
     }
 
     public login(): void {
-        process.env["KUBECONFIG"] = this.kubeconfigPath;
+        
     }
 
     public logout(): void  {
-        delete process.env["KUBECONFIG"];
+        
     }
 
     public setCommand(command: string): void {
