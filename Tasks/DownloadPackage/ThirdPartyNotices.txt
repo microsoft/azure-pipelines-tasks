@@ -18,21 +18,27 @@ This Visual Studio Team Services extension (DownloadPackage) is based on or inco
 12.	inflight (https://github.com/npm/inflight)
 13.	inherits (https://github.com/isaacs/inherits)
 14.	isarray (https://github.com/juliangruber/isarray/)
-15.	mkpath (https://github.com/jrajav/mkpath)
-16.	Mockery (https://github.com/mfncooper/mockery)
-17.	node-uuid (https://github.com/broofa/node-uuid/)
-18.	nopt (https://github.com/npm/nopt)
-19.	once (https://github.com/isaacs/once)
-20.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
-21.	Q (https://github.com/kriskowal/q)
-22.	readable-stream (https://github.com/isaacs/readable-stream)
-23.	semver (https://github.com/npm/node-semver/)
-24.	ShellJS (https://github.com/shelljs/shelljs)
-25.	string_decoder (https://github.com/rvagg/string_decoder)
-26.	touch (https://github.com/isaacs/node-touch)
-27.	traverse (https://github.com/substack/js-traverse)
-28.	VSTS-Task-Lib (https://github.com/Microsoft/vsts-task-lib)
-29.	wrappy (https://github.com/npm/wrappy)
+15.	minimatch (https://github.com/isaacs/minimatch)
+16.	mkpath (https://github.com/jrajav/mkpath)
+17.	Mockery (https://github.com/mfncooper/mockery)
+18.	node-uuid (https://github.com/broofa/node-uuid/)
+19.	nopt (https://github.com/npm/nopt)
+20.	once (https://github.com/isaacs/once)
+21.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
+22.	Q (https://github.com/kriskowal/q)
+23.	readable-stream (https://github.com/isaacs/readable-stream)
+24.	semver (https://github.com/npm/node-semver/)
+25.	ShellJS (https://github.com/shelljs/shelljs)
+26.	string_decoder (https://github.com/rvagg/string_decoder)
+27.	touch (https://github.com/isaacs/node-touch)
+28.	traverse (https://github.com/substack/js-traverse)
+29.	Tunnel (https://github.com/koichik/node-tunnel)
+30.	Underscore (https://github.com/jashkenas/underscore)
+		Includes:Normalize.css 
+31.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
+		Includes:httpntlm 
+32.	VSTS-Task-Lib (https://github.com/Microsoft/vsts-task-lib)
+33.	wrappy (https://github.com/npm/wrappy)
 
 
 %% abbrev NOTICES, INFORMATION, AND LICENSE BEGIN HERE
@@ -189,7 +195,7 @@ END OF core-util-is NOTICES, INFORMATION, AND LICENSE
 =========================================
 MIT 
 
-Copyright © Bower team
+Copyright Â© Bower team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: 
 
@@ -292,6 +298,26 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF isarray NOTICES, INFORMATION, AND LICENSE
+
+%% minimatch NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The ISC License
+
+Copyright (c) Isaac Z. Schlueter and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+=========================================
+END OF minimatch NOTICES, INFORMATION, AND LICENSE
 
 %% mkpath NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -456,7 +482,7 @@ END OF path-is-absolute  NOTICES, INFORMATION, AND LICENSE
 
 %% Q NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-Copyright 2009–2014 Kristopher Michael Kowal. All rights reserved.
+Copyright 2009â€“2014 Kristopher Michael Kowal. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -655,6 +681,120 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 =========================================
 END OF traverse NOTICES, INFORMATION, AND LICENSE
+
+%% Tunnel NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The MIT License (MIT)
+
+Copyright (c) 2012 Koichi Kobayashi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+=========================================
+END OF Tunnel NOTICES, INFORMATION, AND LICENSE
+
+%% Underscore NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative
+Reporters & Editors
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+Includes Normalize.css
+
+
+Copyright (c) Nicolas Gallagher and Jonathan Neal
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF Underscore NOTICES, INFORMATION, AND LICENSE
+
+%% vso-node-api NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Visual Studio Team Services Client for Node.js
+
+Copyright (c) Microsoft Corporation
+
+All rights reserved.
+
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+Includes httpntlm (https://github.com/SamDecrock/node-http-ntlm)
+
+The MIT License (MIT)
+
+Copyright (c) 2013 Sam (Sam Decrock)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
 %% VSTS-Task-Lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
