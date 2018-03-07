@@ -132,7 +132,7 @@
             },
             "label": "Arguments",
             "defaultValue":"",
-            "helpMarkDown": "Secret arguments.",
+            "helpMarkDown": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\". Please use double quotes to specify any literals that have spaces.",
             "visibleRule": "secretType = generic",
             "groupName": "secrets"
         },

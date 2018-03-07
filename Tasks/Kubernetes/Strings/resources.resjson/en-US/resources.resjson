@@ -22,7 +22,7 @@
   "loc.input.label.secretType": "Type of secret",
   "loc.input.help.secretType": "Select a type of secret",
   "loc.input.label.secretArguments": "Arguments",
-  "loc.input.help.secretArguments": "Secret arguments.",
+  "loc.input.help.secretArguments": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\". Please use double quotes to specify any literals that have spaces.",
   "loc.input.label.containerRegistryType": "Container Registry type",
   "loc.input.help.containerRegistryType": "Select a Container registry type.",
   "loc.input.label.dockerRegistryEndpoint": "Docker Registry Connection",
