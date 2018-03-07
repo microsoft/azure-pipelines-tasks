@@ -1,4 +1,7 @@
-/** Run from the root of the vsts-tasks repo. */
+/**
+ * Run from the root of the vsts-tasks repo.
+ * Usage: `node generate-third-party-notice.js <task name>`
+ */
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -144,17 +147,24 @@ function writeLines(writeStream, lines) {
 }
 
 function main(args) {
-    console.assert(args && args.length > 2);
-    const taskName = args[2];
-    const taskPath = path.join(__dirname, 'Tasks', taskName);
-    trace('task path', taskPath);
+    try {
+        if (!(args && args.length > 2)) {
+            throw new Error(`Usage: node generate-third-party-notice.js <task name>`);
+        }
 
-    const nodeModuleDir = path.join(taskPath, 'node_modules');
-    const licenseInfo = Array.from(collectLicenseInfo(nodeModuleDir));
+        const taskName = args[2];
+        const taskPath = path.join(__dirname, 'Tasks', taskName);
+        trace('task path', taskPath);
 
-    const writeStream = fs.createWriteStream(path.join(taskPath, 'ThirdPartyNotice.txt'));
-    writeLines(writeStream, thirdPartyNotice(taskName, licenseInfo));
-    writeStream.end();
+        const nodeModuleDir = path.join(taskPath, 'node_modules');
+        const licenseInfo = Array.from(collectLicenseInfo(nodeModuleDir));
+
+        const writeStream = fs.createWriteStream(path.join(taskPath, 'ThirdPartyNotice.txt'));
+        writeLines(writeStream, thirdPartyNotice(taskName, licenseInfo));
+        writeStream.end();
+    } catch (e) {
+        log.error(e.message);
+    }
 }
 
 main(process.argv);
