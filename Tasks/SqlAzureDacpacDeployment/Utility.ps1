@@ -49,33 +49,33 @@ function Get-AgentIPRange
         $formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
     }
 
-    if (Test-CommandExists -commandName "Invoke-Sqlcmd") 
-    {
+	if (Get-Command -Name "Invoke-Sqlcmd" -ErrorAction SilentlyContinue)
+	{
 		try {
 			Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
 			Write-Verbose "Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password ****** -Query `"select getdate()`" -ErrorVariable errors | Out-String"
-		
-            $output = Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password $sqlPassword -Query "select getdate()" -ErrorVariable errors | Out-String
-        }
-		catch {
-            Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
+
+			$output = Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password $sqlPassword -Query "select getdate()" -ErrorVariable errors | Out-String
 		}
-    }
-    else 
-    {
-        $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
-        $env:SQLCMDPASSWORD = $sqlPassword
+		catch {
+			Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
+		}
+	}
+	else 
+	{
+		$sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
+		$env:SQLCMDPASSWORD = $sqlPassword
 
-        $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
-        
-        Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"    
+		$sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
 
-        $ErrorActionPreference = 'Continue'
-        
-        $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
-        
-        $ErrorActionPreference = 'Stop'
-    }
+		Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"    
+
+		$ErrorActionPreference = 'Continue'
+
+		$output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+	
+		$ErrorActionPreference = 'Stop'
+	}
     
     if($errors.Count -gt 0)
     {
@@ -263,19 +263,4 @@ function ConvertParamToSqlSupported
     $param = $param.Replace('"', '\"')
 
     return $param
-}
-
-function Test-CommandExists 
-{
-    param (
-        [String][Parameter(Mandatory=$true)] $commandName
-    )
-
-	try {
-		Get-Command -Name $commandName
-		return $true
-	}
-	catch {
-		return $false
-	}
 }
