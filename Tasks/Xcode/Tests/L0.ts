@@ -38,7 +38,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.invokedToolCount === 11, 'should have run xcodebuild for version, build, archive and export and PlistBuddy to init and add export method.');
@@ -72,7 +72,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.invokedToolCount === 6, 'should have run xcodebuild for version, build, archive and export and PlistBuddy to init and add export method.');
@@ -106,7 +106,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist /user/build/exportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist /user/build/exportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.invokedToolCount === 4, 'should have run xcodebuild for version, build, archive and export.');
@@ -206,7 +206,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -239,7 +239,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -276,7 +276,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -314,7 +314,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -351,7 +351,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -388,7 +388,7 @@ describe('Xcode L0 Suite', function () {
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
             '-archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist ' +
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist ' +
             '-allowProvisioningUpdates'),
             'xcodebuild exportArchive should have been run with -allowProvisioningUpdates to export the IPA from the .xcarchive');
 
@@ -417,7 +417,7 @@ describe('Xcode L0 Suite', function () {
 
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -455,7 +455,7 @@ describe('Xcode L0 Suite', function () {
 
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -496,7 +496,7 @@ describe('Xcode L0 Suite', function () {
 
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -537,7 +537,7 @@ describe('Xcode L0 Suite', function () {
 
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive ' +
-            '-exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            '-exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -623,7 +623,7 @@ describe('Xcode L0 Suite', function () {
 
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive'
-            +' -exportPath /user/build/_XcodeTaskExport_funScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            +' -exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');
@@ -650,7 +650,7 @@ describe('Xcode L0 Suite', function () {
 
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive'
-            +' -exportPath /user/build/_XcodeTaskExport_funScheme -exportOptionsPlist _XcodeTaskExportOptions.plist'),
+            +' -exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist'),
             'xcodebuild exportArchive should have been run to export the IPA from the .xcarchive');
 
         assert(tr.stderr.length === 0, 'should not have written to stderr');

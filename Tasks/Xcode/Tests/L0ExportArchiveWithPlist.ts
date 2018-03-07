@@ -49,9 +49,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "build.sourcesDirectory": "/user/build",
         "HOME": "/users/test"
     },
-    "exist": {
-        "/user/build/_XcodeTaskExport_testScheme": false
-    },
     "stats": {
         "/user/build": {
             "isFile": false
@@ -84,7 +81,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },
-        "/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive -exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist /user/build/exportOptions.plist": {
+        "/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive -exportPath /user/build -exportOptionsPlist /user/build/exportOptions.plist": {
             "code": 0,
             "stdout": "xcodebuild export output here"
         }

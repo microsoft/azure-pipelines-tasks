@@ -48,9 +48,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "build.sourcesDirectory": "/user/build",
         "HOME": "/users/test"
     },
-    "exist": {
-        "/user/build/_XcodeTaskExport_testScheme": false
-    },
     "stats": {
         "/user/build": {
             "isFile": false

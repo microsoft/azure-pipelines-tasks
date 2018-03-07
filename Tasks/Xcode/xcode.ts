@@ -410,14 +410,7 @@ async function run() {
 
                 //export path
                 let exportPath: string = tl.getInput('exportPath');
-                if (!exportPath.endsWith('.ipa')) {
-                    exportPath = tl.resolve(exportPath, '_XcodeTaskExport_' + scheme);
-                }
-                // delete if it already exists, otherwise export will fail
-                if (tl.exist(exportPath)) {
-                    tl.rmRF(exportPath);
-                }
-
+                
                 for (var i = 0; i < archiveFolders.length; i++) {
                     let archive: string = archiveFolders.pop();
 
