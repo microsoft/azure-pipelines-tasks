@@ -65,11 +65,10 @@ async function getKubeConfigFile(azureSubscriptionEndpoint: string, clusterName:
     });
 }
 
-//confinure kubernetes
+//configure kubernetes
 function configureKubernetes(kubeconfigfilePath: string) :  kubernetescli {
     var kubectlCli = new kubernetescli(kubeconfigfilePath);
     if (!kubectlCli.IsInstalled()) {
-        kubectlCli.logout();
         throw new Error(tl.loc("KubernetesNotFound"));
     }
 
@@ -82,6 +81,7 @@ function configureHelm() : helmcli {
     if (!helmCli.IsInstalled()) {
        throw new Error(tl.loc("HelmNotFound"));
     }
+
     return helmCli;
 }
 
@@ -93,19 +93,16 @@ async function run() {
     var helmCli : helmcli = configureHelm();
     kubectlCli.login();
     helmCli.login();
-    
+
     try {
         runHelm(helmCli)
     } catch(err) {
         // not throw error so that we can logout from helm and kubernetes
         tl.setResult(tl.TaskResult.Failed, err.message);
-    }
-
-    if(kubectlCli) {
+    } 
+    finally {
+        helmutil.deleteFile(kubeconfigfilePath);
         kubectlCli.logout();
-    }
-
-    if(helmCli) {
         helmCli.logout();
     }
 }

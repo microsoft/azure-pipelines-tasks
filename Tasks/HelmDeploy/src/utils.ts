@@ -14,7 +14,7 @@ export function getCurrentTime(): number {
 }
 
 export function getTaskTempDir(): string {
-    var userDir = path.join(getTempDirectory(), "kubectlTask");
+    var userDir = path.join(getTempDirectory(), "helmTask");
     ensureDirExists(userDir);
 
     userDir = path.join(userDir, getCurrentTime().toString());
@@ -22,9 +22,13 @@ export function getTaskTempDir(): string {
 
     return userDir;
 } 
+export function deleteFile(filepath: string) : void {
+    if(fs.existsSync(filepath)) {
+        fs.unlinkSync(filepath);
+    }
+}
 
-function ensureDirExists(dirPath : string) : void
-{
+function ensureDirExists(dirPath : string) : void {
     if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath);
     }
