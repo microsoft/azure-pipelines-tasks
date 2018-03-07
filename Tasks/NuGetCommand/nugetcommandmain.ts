@@ -116,7 +116,6 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
                 'nocache': tl.getInput('nocache'),
                 'nugetconfigpath': tl.getInput('nugetconfigpath'),
                 'nugetfeedtype': nugetfeedtype,
-                'outputdir': tl.getInput('outputdir'),
                 'searchpatternpush': tl.getInput('searchpatternpush'),
                 'selectorconfig': tl.getInput('selectorconfig'),
                 'solution': tl.getInput('solution'),

@@ -68,7 +68,6 @@ async function _logNpmStartupVariables() {
             'command': command,
             'customCommand': tl.getInput(NpmTaskInput.CustomCommand),
             'verbose': tl.getInput(NpmTaskInput.Verbose),
-            'workingDir': tl.getInput(NpmTaskInput.WorkingDir),
             'customRegistry': tl.getInput(NpmTaskInput.CustomRegistry),
             'customFeed': tl.getInput(NpmTaskInput.CustomFeed),
             'customEndpoint': tl.getInput(NpmTaskInput.CustomEndpoint),

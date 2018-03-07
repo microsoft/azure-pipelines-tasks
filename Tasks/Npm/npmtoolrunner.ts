@@ -59,7 +59,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         const execResult = super.execSync(options);
         this._restoreProjectNpmrc();
         if (execResult.code !== 0) {
-            telemetry.logStderr('Packaging', 'npm', execResult.code, execResult.stderr);
+            telemetry.logResult('Packaging', 'npm', execResult.code);
             this._printDebugLogSync(this._getDebugLogPath(options));
             throw new Error(tl.loc('NpmFailed', execResult.code));
         }
