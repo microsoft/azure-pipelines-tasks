@@ -121,22 +121,6 @@ function MonitorTestRun($headers, $run, $CltAccountUrl)
 	Write-Output "------------------------------------"
 }
 
-function ComposeTestRunJson($name, $tdid, $machineType)
-{
-	$trjson = @"
-	{
-		"name":"$name",
-		"description":"Quick perf test from automation task",
-		"testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x64", "setupCommand":""},
-		"superSedeRunSettings":{"loadGeneratorMachinesType":"$machineType"},
-		"testDrop":{"id":"$tdid"},
-		"runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
-	}
-"@
-
-	return $trjson
-}
-
 function QueueTestRun($headers, $runJson, $CltAccountUrl)
 {
 	$uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
@@ -160,7 +144,7 @@ function ComposeAccountUrl($connectedServiceUrl, $headers)
 	#Load all dependent files for execution
 	. $PSScriptRoot/VssConnectionHelper.ps1
 	$connectedServiceUrl = $connectedServiceUrl.TrimEnd('/')
-	Write-Host "Getting Clt Endpoint:"
+    Write-Host -NoNewline "Getting Clt Endpoint:"
 	$elsUrl = Get-CltEndpoint $connectedServiceUrl $headers
 
 	return $elsUrl
@@ -209,4 +193,45 @@ function IsNumericValue ($str) {
 	return $isNum
 }
 
+
+function ComposeTestRunJson($name, $tdid, $vuLoad, $runDuration, $machineType, $selfProvisionedRig, $numOfSelfProvisionedAgents)
+{
+    if ($MachineType -eq "2"){
+        Write-Host ">>> Self-Provisioned Rig Test Run"
+        $trjson = @"
+        {
+            "name":"$name",
+            "description":"Quick perf test from automation task",
+            "testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x64", "setupCommand":""},
+            "superSedeRunSettings": {
+                "loadGeneratorMachinesType": "$MachineType",
+                "staticAgentRunSettings": {
+                    "loadGeneratorMachinesType": "userLoadAgent",
+                    "staticAgentGroupName": "$selfProvisionedRig"
+                }
+            },
+            "runSpecificDetails" : {
+                "virtualUserCount": $vuLoad,
+                "duration": $runDuration,
+                "agentCount": $numOfSelfProvisionedAgents,
+                "loadGeneratorMachinesType": "userLoadAgent"
+            },
+            "testDrop":{"id":"$tdid"},
+            "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+        }
+"@
+    } else {
+        $trjson = @"
+        {
+            "name":"$name",
+            "description":"Quick perf test from automation task",
+            "testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x64", "setupCommand":""},
+            "superSedeRunSettings":{"loadGeneratorMachinesType":"$machineType"},
+            "testDrop":{"id":"$tdid"},
+            "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+        }
+"@
+    }
+	return $trjson
+}
 

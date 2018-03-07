@@ -104,6 +104,24 @@
                 "0": "Automatically provisioned agents",
                 "2": "Self-provisioned agents"
             }
+        },
+        {
+            "name": "resourceGroupName",
+            "type": "string",
+            "label": "Resource group rig",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "MachineType == 2",
+            "helpMarkDown": "Name of Resource group hosting the self-provisioned rig of load test agents."
+        },
+        {
+            "name": "numOfSelfProvisionedAgents",
+            "type": "int",
+            "label": "No. of agents to use",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "MachineType == 2",
+            "helpMarkDown": "Number of self provisioned agents to use for this test."
         }
     ],
     "instanceNameFormat": "Cloud Load Test $(LoadTest)",
