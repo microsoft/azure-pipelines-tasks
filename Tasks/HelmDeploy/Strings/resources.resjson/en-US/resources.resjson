@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Deploy to Kubernetes using Helm",
+  "loc.friendlyName": "Package and deploy Helm charts",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
   "loc.description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
   "loc.instanceNameFormat": "helm $(command)",
@@ -12,15 +12,17 @@
   "loc.input.label.kubernetesCluster": "Kubernetes cluster",
   "loc.input.help.kubernetesCluster": "Select an Azure Managed Cluster.",
   "loc.input.label.command": "Command",
-  "loc.input.help.command": "Select a heml command.",
+  "loc.input.help.command": "Select a helm command.",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Command arguments.",
-  "loc.messages.AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
   "loc.messages.HelmNotFound": "Helm not installed on the machine.",
   "loc.messages.KubernetesNotFound": "Kubernetes not installed on the machine.",
-  "loc.messages.CantDownloadKubeConfig": "Can not download kube config file for the cluster %s. Reason %s.",
+  "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
   "loc.messages.KubeConfigFilePath": "Kubeconfig file path: %s",
   "loc.messages.KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",
   "loc.messages.KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
-  "loc.messages.ClusterNotProvisioned": "Cluster has not been provisioned successfully."
+  "loc.messages.ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
+  "loc.messages.ClusterNotFound": "%s cluster does not exists",
+  "loc.messages.FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
+  "loc.messages.RetryingRequest": "Retrying request after %s seconds."
 }

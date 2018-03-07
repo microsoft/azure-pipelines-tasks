@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "preview": "true",
@@ -116,14 +116,15 @@
     }
   },
   "messages": {
-    "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
     "HelmNotFound": "ms-resource:loc.messages.HelmNotFound",
     "KubernetesNotFound": "ms-resource:loc.messages.KubernetesNotFound",
-    "CantDownloadKubeConfig": "ms-resource:loc.messages.CantDownloadKubeConfig",
+    "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
     "KubeConfigFilePath": "ms-resource:loc.messages.KubeConfigFilePath",
     "KubernetesClusterInfo": "ms-resource:loc.messages.KubernetesClusterInfo",
     "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
     "ClusterNotProvisioned": "ms-resource:loc.messages.ClusterNotProvisioned",
-    "ClusterNotFound": "ms-resource:loc.messages.ClusterNotFound"
+    "ClusterNotFound": "ms-resource:loc.messages.ClusterNotFound",
+    "FailedToListClusters": "ms-resource:loc.messages.FailedToListClusters",
+    "RetryingRequest": "ms-resource:loc.messages.RetryingRequest"
   }
 }

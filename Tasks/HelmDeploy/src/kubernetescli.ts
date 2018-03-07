@@ -6,7 +6,7 @@ import os = require("os");
 import * as tr from "vsts-task-lib/toolrunner";
 import basecommand from "./basecommand"
 
-export default class helmcli extends basecommand {
+export default class kubernetescli extends basecommand {
 
     private kubeconfigPath : string;
 
@@ -24,5 +24,8 @@ export default class helmcli extends basecommand {
 
     public logout(): void  {
         delete process.env["KUBECONFIG"];
+        if(fs.existsSync(this.kubeconfigPath)) {
+            fs.unlinkSync(this.kubeconfigPath);
+        }
     }
 }

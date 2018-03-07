@@ -22,63 +22,39 @@ export class AzureAksService {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
     }
 
+    public beginRequest(uri: string,  parameters: {}) : Promise<webClient.WebResponse> {
+         var webRequest = new webClient.WebRequest();
+         webRequest.method = 'GET';
+         webRequest.uri = this._client.getRequestUri(uri, parameters, null,'2017-08-31');
+        return this._client.beginRequestExpBackoff(webRequest, 3).then((response)=>{
+            if(response.statusCode >= 200 && response.statusCode < 300) {
+                return response;
+            } else {
+                throw ToError(response);
+            }
+        });
+    } 
+
+    // list all the manages cluster. They don't have continuation token now, so only one call.
     public list(): Promise<Model.AKSCluster[]> {
-        try {
-            var webRequest = new webClient.WebRequest();
-            webRequest.method = 'GET';
-            webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/managedClusters`, {}, null,'2017-08-31');
-
-            var result = [];
-            return this._client.beginRequest(webRequest).then((response)=>{
-                if(response.statusCode >= 200 && response.statusCode < 300) {
-                    //success
-                    if (response.body.value) {
-                        let storageAccounts: Model.AKSCluster[] = response.body.value;
-                        result = result.concat(storageAccounts);
-                    }
-                    return result;
-                    
-                } else {
-                    throw ToError(response);
-                }
-            }, (response) => {
-                throw ToError(response);
-            });
-        }
-        catch(error) {
-            throw Error(tl.loc('FailedToListClusters', this._client.getFormattedError(error)));
-        }
+        return this.beginRequest(`//subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/managedClusters`, {}).then((response) => {
+            return  response.body.value;
+        }, (reason) => {
+            throw Error(tl.loc('FailedToListClusters', this._client.getFormattedError(reason)));
+        });
     }
 
-    public getKubeConfigFile(resourceGroup : string , clusterName : string ): Promise<Model.AKSClusterAccessProfile> {
-        try {
-            var webRequest = new webClient.WebRequest();
-            webRequest.method = 'GET';
-            webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.ContainerService/managedClusters/{ClusterName}/accessProfiles/clusterUser`, {
-                '{ResourceGroupName}': resourceGroup,
-                '{ClusterName}': clusterName
-            }, null,'2017-08-31');
-            
-            var result : Model.AKSClusterAccessProfile;
-            return this._client.beginRequest(webRequest).then((response)=>{
-                if(response.statusCode >= 200 && response.statusCode < 300) {
-                    //success
-                    if (response.body) {
-                        return response.body;
-                    }
-
-                    throw ToError(response);
-                    
-                } else {
-                    throw ToError(response);
-                }
-            }, (response) => {
-                throw ToError(response);
-            });
-
-        }
-        catch(error) {
-            throw Error(tl.loc('FailedToListClusters', this._client.getFormattedError(error)));
-        }
+    public getAccessProfile(resourceGroup : string , clusterName : string ): Promise<Model.AKSClusterAccessProfile> {
+        return this.beginRequest(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.ContainerService/managedClusters/{ClusterName}/accessProfiles/clusterUser`,
+        {
+            '{ResourceGroupName}': resourceGroup,
+            '{ClusterName}': clusterName
+        }).then((response) => {
+            return  response.body;
+        }, (reason) => {
+            throw Error(tl.loc('CantDownloadAccessProfile',clusterName,  this._client.getFormattedError(reason)));
+        });
     }
+
+
 }

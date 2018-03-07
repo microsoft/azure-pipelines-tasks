@@ -1,21 +1,19 @@
 "use strict";
 
-var https   = require('https');
 var fs      = require('fs');
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as os from "os";
-import * as util from "util";
 
 export function getTempDirectory(): string {
-    return "C:\\kubetest";
+    return tl.getVariable('agent.tempDirectory') || os.tmpdir();
 }
 
 export function getCurrentTime(): number {
     return new Date().getTime();
 }
 
-export function getNewUserDirPath(): string {
+export function getTaskTempDir(): string {
     var userDir = path.join(getTempDirectory(), "kubectlTask");
     ensureDirExists(userDir);
 
