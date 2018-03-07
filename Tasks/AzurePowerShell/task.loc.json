@@ -15,21 +15,22 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 2,
+    "Major": 3,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 2
   },
   "demands": [
     "azureps"
   ],
-  "minimumAgentVersion": "1.95.0",
+  "preview": true,
   "groups": [
     {
-      "name": "advanced",
-      "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "name": "AzurePowerShellVersionOptions",
+      "displayName": "ms-resource:loc.group.displayName.AzurePowerShellVersionOptions",
+      "isExpanded": true
     }
   ],
+  "minimumAgentVersion": "2.0.0",
   "inputs": [
     {
       "name": "ConnectedServiceNameSelector",
@@ -72,9 +73,9 @@
     },
     {
       "name": "ScriptType",
-      "type": "pickList",
+      "type": "radio",
       "label": "ms-resource:loc.input.label.ScriptType",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.ScriptType",
       "defaultValue": "FilePath",
       "options": {
@@ -110,6 +111,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
+      "visibleRule": "ScriptType = FilePath",
       "required": false,
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -117,11 +119,32 @@
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
     },
     {
+      "name": "errorActionPreference",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.errorActionPreference",
+      "required": false,
+      "defaultValue": "stop",
+      "options": {
+        "stop": "Stop",
+        "continue": "Continue",
+        "silentlyContinue": "SilentlyContinue"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.errorActionPreference"
+    },
+    {
+      "name": "FailOnStandardError",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.FailOnStandardError",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError"
+    },
+    {
       "name": "TargetAzurePs",
       "aliases": [
         "azurePowerShellVersion"
       ],
-      "type": "pickList",
+      "type": "radio",
       "label": "ms-resource:loc.input.label.TargetAzurePs",
       "defaultValue": "OtherVersion",
       "required": false,
@@ -129,6 +152,7 @@
         "LatestVersion": "Latest installed version",
         "OtherVersion": "Specify other version"
       },
+      "groupName": "AzurePowerShellVersionOptions",
       "helpMarkDown": "ms-resource:loc.input.help.TargetAzurePs"
     },
     {
@@ -141,16 +165,8 @@
       "defaultValue": "",
       "required": true,
       "visibleRule": "TargetAzurePs = OtherVersion",
+      "groupName": "AzurePowerShellVersionOptions",
       "helpMarkDown": "ms-resource:loc.input.help.CustomTargetAzurePs"
-    },
-    {
-      "name": "FailOnStandardError",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.FailOnStandardError",
-      "required": false,
-      "defaultValue": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.FailOnStandardError",
-      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

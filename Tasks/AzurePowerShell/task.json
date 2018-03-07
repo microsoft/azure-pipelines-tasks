@@ -15,21 +15,22 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 2,
+        "Major": 3,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 2
     },
     "demands": [
         "azureps"
     ],
-    "minimumAgentVersion": "1.95.0",
+    "preview": true,
     "groups": [
         {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
+            "name": "AzurePowerShellVersionOptions",
+            "displayName": "Azure PowerShell version options",
+            "isExpanded": true
         }
     ],
+    "minimumAgentVersion": "2.0.0",
     "inputs": [
         {
             "name": "ConnectedServiceNameSelector",
@@ -66,9 +67,9 @@
         },
         {
             "name": "ScriptType",
-            "type": "pickList",
+            "type": "radio",
             "label": "Script Type",
-            "required": true,
+            "required": false,
             "helpMarkDown": "Type of the script: File Path or Inline Script",
             "defaultValue": "FilePath",
             "options": {
@@ -104,6 +105,7 @@
             "type": "string",
             "label": "Script Arguments",
             "defaultValue": "",
+            "visibleRule": "ScriptType = FilePath",
             "required": false,
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -111,9 +113,30 @@
             "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
         },
         {
+            "name": "errorActionPreference",
+            "type": "pickList",
+            "label": "ErrorActionPreference",
+            "required": false,
+            "defaultValue": "stop",
+            "options": {
+                "stop": "Stop",
+                "continue": "Continue",
+                "silentlyContinue": "SilentlyContinue"
+            },
+            "helpMarkDown": "Select the value of the ErrorActionPreference variable for executing the script."
+        },
+        {
+            "name": "FailOnStandardError",
+            "type": "boolean",
+            "label": "Fail on Standard Error",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream."
+        },
+        {
             "name": "TargetAzurePs",
             "aliases": ["azurePowerShellVersion"],
-            "type": "pickList",
+            "type": "radio",
             "label": "Azure PowerShell Version",
             "defaultValue": "OtherVersion",
             "required": false,
@@ -121,6 +144,7 @@
                 "LatestVersion": "Latest installed version",
                 "OtherVersion": "Specify other version"
             },
+            "groupName": "AzurePowerShellVersionOptions",
             "helpMarkDown": "In case of hosted agents, the supported Azure PowerShell Versions are: 2.1.0, 3.8.0, 4.2.1 and 5.1.1(Hosted VS2017 Queue), 3.6.0(Hosted Queue).\nTo pick the latest version available on the agent, select \"Latest installed version\".\n\nFor private agents you can specify preferred version of Azure PowerShell using \"Specify version\""
         },
         {
@@ -131,16 +155,8 @@
             "defaultValue": "",
             "required": true,
             "visibleRule": "TargetAzurePs = OtherVersion",
+            "groupName": "AzurePowerShellVersionOptions",
             "helpMarkDown": "Preferred Azure PowerShell Version needs to be a proper semantic version eg. 1.2.3. Regex like 2.\\*,2.3.\\* is not supported. The Hosted VS2017 Pool currently supports versions: 2.1.0, 3.8.0, 4.2.1, 5.1.1"
-        },
-        {
-            "name": "FailOnStandardError",
-            "type": "boolean",
-            "label": "Fail on Standard Error",
-            "required": false,
-            "defaultValue": "true",
-            "helpMarkDown": "If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream.",
-            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Azure PowerShell script: $(ScriptType)",

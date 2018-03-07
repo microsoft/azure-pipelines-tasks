@@ -6,9 +6,10 @@ $scriptType = Get-VstsInput -Name ScriptType -Require
 $scriptPath = Get-VstsInput -Name ScriptPath
 $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
+$__vsts_input_errorActionPreference = $(Get-VstsInput -Name errorActionPreference).ToLower()
+$__vsts_input_failOnStandardError = $(Get-VstsInput -Name FailOnStandardError).ToLower()
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
-$failOnStandardError = Get-VstsInput -Name FailOnStandardError
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
@@ -51,10 +52,11 @@ Update-PSModulePathForHostedAgent -targetAzurePs $targetAzurePs
 try {
     # Initialize Azure.
     Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-    Initialize-Azure -azurePsVersion $targetAzurePs
+    Initialize-Azure -azurePsVersion $targetAzurePs -strict
     # Trace the expression as it will be invoked.
     $__vstsAzPSInlineScriptPath = $null
     If ($scriptType -eq "InlineScript") {
+        $scriptArguments = $null
         $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
         ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
         $scriptPath = $__vstsAzPSInlineScriptPath
@@ -94,20 +96,33 @@ try {
     # 2) The task result needs to be set to failed if an error record is encountered.
     #    As mentioned above, the requirement to handle this is an implication of changing
     #    the error action preference.
-    ([scriptblock]::Create($scriptCommand)) |
+    ([scriptblock]::Create($scriptCommand)) | 
         ForEach-Object {
             Remove-Variable -Name scriptCommand
             Write-Host "##[command]$_"
             . $_ 2>&1
-        } |
+        } | 
         ForEach-Object {
-            # Put the object back into the pipeline. When doing this, the object needs
-            # to be wrapped in an array to prevent unraveling.
-            ,$_
-
-            # Set the task result to failed if the object is an error record.
-            if ($_ -is [System.Management.Automation.ErrorRecord] -and $failOnStandardError -eq $true) {
-                "##vso[task.complete result=Failed]"
+            if($_ -is [System.Management.Automation.ErrorRecord]) {
+                if($_.FullyQualifiedErrorId -eq "NativeCommandError" -or $_.FullyQualifiedErrorId -eq "NativeCommandErrorMessage") {
+                    ,$_
+                    if($__vsts_input_failOnStandardError -eq $true) {
+                        "##vso[task.complete result=Failed]"
+                    }
+                }
+                else {
+                    if($__vsts_input_errorActionPreference -eq "continue") {
+                        ,$_
+                        if($__vsts_input_failOnStandardError -eq $true) {
+                            "##vso[task.complete result=Failed]"
+                        }
+                    }
+                    elseif($__vsts_input_errorActionPreference -eq "stop") {
+                        throw $_
+                    }
+                }
+            } else {
+                ,$_
             }
         }
 }
