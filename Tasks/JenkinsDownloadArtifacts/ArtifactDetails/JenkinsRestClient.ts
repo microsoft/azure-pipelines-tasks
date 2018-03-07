@@ -1,8 +1,15 @@
 import * as Q from 'q';
 import * as tl from 'vsts-task-lib/task';
+import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
+
+import { 
+    HttpClient, 
+    HttpClientResponse,
+} from "artifact-engine/Providers/typed-rest-client/HttpClient";
+
+import { IRequestOptions as IHttpRequestOptions } from "artifact-engine/Providers/typed-rest-client/Interfaces";
 
 var handlebars = require('handlebars');
-var request = require('request');
 
 export class JenkinsJobDetails {
     jobName: string;
@@ -176,59 +183,91 @@ export class JenkinsRestClient {
         });
     }
 
+    private GetClient(): HttpClient {
+        tl.debug(`Creating http client`);
+
+        const endpoint = tl.getInput("serverEndpoint", true);
+        const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
+
+        let requestOptions: IHttpRequestOptions = {
+            ignoreSslError: !strictSSL,
+            proxy: tl.getHttpProxyConfiguration()
+        };
+
+        const username = tl.getEndpointAuthorizationParameter(endpoint, 'username', false);
+        const password = tl.getEndpointAuthorizationParameter(endpoint, 'password', false);
+        var handler = new handlers.BasicCredentialHandler(username, password);
+
+        return new HttpClient("JenkinsRestClient", [handler], requestOptions);
+    }
+
     public DownloadJsonContent(urlPath: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any }): Q.Promise<any> {
         let defer = Q.defer<any>();
 
         const endpoint = tl.getInput("serverEndpoint", true);
         const endpointUrl = tl.getEndpointUrl(endpoint, false);
         const jobName = tl.getInput("jobName", true);
-        const username = tl.getEndpointAuthorizationParameter(endpoint, 'username', true);
-        const password = tl.getEndpointAuthorizationParameter(endpoint, 'password', true);
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
         const jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(jobName);
 
         let requestUrl: string = `${endpointUrl}${jobUrlInfix}/${urlPath}`;
         console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
 
-        request.get({url: requestUrl, strictSSL: strictSSL}, (err, res, body) => {
-            if (res && body && res.statusCode === 200)  {
-                tl.debug(`Content received from server ${body}`);
-                let jsonResult = JSON.parse(body);
+        let httpClient: HttpClient = this.GetClient();
+        httpClient.get(requestUrl).then((response: HttpClientResponse) => {
+            response.readBody().then((body: string) => {
+                if (!!body && response.message.statusCode === 200)  {
+                    tl.debug(`Content received from server ${body}`);
+                    let jsonResult;
 
-                if (!handlebarSource) {
-                    defer.resolve(jsonResult);
+                    try {
+                        jsonResult = JSON.parse(body);
+                    } catch(error) {
+                        jsonResult = "";
+                        defer.reject(error);
+                    }
+
+                    if (jsonResult != "") {
+                        if (!handlebarSource) {
+                            defer.resolve(jsonResult);
+                        }
+                        else {
+                            try {
+                                tl.debug(`Applying the handlebar source ${handlebarSource} on the result`);
+                                let template = handlebars.compile(handlebarSource);
+                                if (additionalHandlebarContext) {
+                                    for (let key in additionalHandlebarContext) {
+                                        tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
+                                            jsonResult[key] = additionalHandlebarContext[key];
+                                        };
+                                }
+
+                                var result = template(jsonResult);
+                                defer.resolve(result);
+                            }
+                            catch(err) {
+                                defer.reject(new Error(tl.loc("JenkinsArtifactDetailsParsingError", err)))
+                            }
+                        }
+                    }
                 }
                 else {
-                    try {
-                        tl.debug(`Applying the handlebar source ${handlebarSource} on the result`);
-                        let template = handlebars.compile(handlebarSource);
-                        if (additionalHandlebarContext) {
-                            for(let key in additionalHandlebarContext) {
-                                tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
-                                    jsonResult[key] = additionalHandlebarContext[key];
-                                };
-                        }
-
-                        var result = template(jsonResult);
-                        defer.resolve(result);
+                    if (response.message.statusCode) {
+                        console.log(tl.loc('ServerCallErrorCode', response.message.statusCode));
                     }
-                    catch(err) {
-                        defer.reject(new Error(tl.loc("JenkinsArtifactDetailsParsingError", err)))
+
+                    if (body) {
+                        tl.debug(body);
                     }
-                }
-            }
-            else {
-                if (res && res.statusCode) {
-                    console.log(tl.loc('ServerCallErrorCode', res.statusCode));
-                }
 
-                if (body) {
-                    tl.debug(body);
+                    defer.reject(new Error(tl.loc('ServerCallFailed')));
                 }
-
-                defer.reject(new Error(tl.loc('ServerCallFailed')));
-            }
-        }).auth(username, password, true);
+            }, (err) => {
+                defer.reject(err);
+            });
+        }, (err) => {
+            defer.reject(err);
+        });
 
         return defer.promise;
     }
