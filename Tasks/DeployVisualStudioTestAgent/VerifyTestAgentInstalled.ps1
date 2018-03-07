@@ -19,7 +19,7 @@ function RemoveTestAgentServiceIfExists([string] $ServiceName) {
 }
 
 function CheckTestAgentInstalled([string] $ProductVersion = "14.0") {
-    Write-Verbose "Query for Testplatfrom version: $ProductVersion"
+    Write-Verbose "Query for Testplatform version: $ProductVersion"
 
     $versionInstalled = Get-TestAgentInstalledVersion -ProductVersion $ProductVersion # Get installed test agent version as per user requested version
     if($versionInstalled -ne "0.0") {
