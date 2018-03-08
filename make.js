@@ -132,6 +132,7 @@ target.build = function() {
     
     run(`git config --global user.email "you@example.com"`);
     run(`git config --global user.name "Your Name"`);
+    run(`git status`);
     run(`git checkout master`);
     run(`git add .`);
     run(`git commit -am c`);
