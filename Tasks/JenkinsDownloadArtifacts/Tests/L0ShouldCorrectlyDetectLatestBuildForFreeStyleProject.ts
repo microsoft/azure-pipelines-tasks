@@ -24,11 +24,11 @@ process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 helper.RegisterArtifactEngineMock(tr);
 helper.RegisterHttpClientMock(tr, (url: string) => {
     if (url === "http://url/job/myfreestyleproject//api/json") {
-        return helper.GetSucceesExpectedResult('{ "_class": "hudson.model.FreeStyleProject" }');
+        return helper.GetSuccessExpectedResult('{ "_class": "hudson.model.FreeStyleProject" }');
     }
 
     if (url === "http://url/job/myfreestyleproject//api/json?tree=lastSuccessfulBuild[id,displayname]") {
-        return helper.GetSucceesExpectedResult('{"lastSuccessfulBuild": { "id": "100" } }');
+        return helper.GetSuccessExpectedResult('{"lastSuccessfulBuild": { "id": "100" } }');
     }
 });
 

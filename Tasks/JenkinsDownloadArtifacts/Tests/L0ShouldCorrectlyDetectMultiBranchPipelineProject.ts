@@ -24,7 +24,7 @@ process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 helper.RegisterArtifactEngineMock(tr);
 helper.RegisterHttpClientMock(tr, (url: string) => {
     if (url === "http://url/job/multibranchproject//api/json") {
-        return helper.GetSucceesExpectedResult('{ "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" }');
+        return helper.GetSuccessExpectedResult('{ "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" }');
     }
 });
 

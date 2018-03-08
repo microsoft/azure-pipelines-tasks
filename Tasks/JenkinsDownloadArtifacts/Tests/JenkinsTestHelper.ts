@@ -41,7 +41,7 @@ export function RegisterHttpClientMock(tr: tmrm.TaskMockRunner, getResultCallbac
     });
 }
 
-export function GetSucceesExpectedResult(result: string): ExpectedResult{
+export function GetSuccessExpectedResult(result: string): ExpectedResult{
     return {
         returnCode: 200,
         apiResult: result
