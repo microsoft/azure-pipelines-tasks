@@ -104,6 +104,24 @@
         "0": "Automatically provisioned agents",
         "2": "Self-provisioned agents"
       }
+    },
+    {
+      "name": "resourceGroupName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.resourceGroupName",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "MachineType == 2",
+      "helpMarkDown": "ms-resource:loc.input.help.resourceGroupName"
+    },
+    {
+      "name": "numOfSelfProvisionedAgents",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.numOfSelfProvisionedAgents",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "MachineType == 2",
+      "helpMarkDown": "ms-resource:loc.input.help.numOfSelfProvisionedAgents"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
