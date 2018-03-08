@@ -3,7 +3,7 @@
     "name": "ManualIntervention",
     "friendlyName": "Manual Intervention",
     "description": "Pause deployment and wait for intervention",
-    "helpMarkDown": "[More Information](http://go.microsoft.com/fwlink/?LinkID=825235)",
+    "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/manual-intervention)",
     "category": "Deploy",
     "visibility": [
         "Release"
@@ -15,7 +15,7 @@
     "version": {
         "Major": 8,
         "Minor": 2,
-        "Patch": 3
+        "Patch": 4
     },
     "inputs": [
         {
