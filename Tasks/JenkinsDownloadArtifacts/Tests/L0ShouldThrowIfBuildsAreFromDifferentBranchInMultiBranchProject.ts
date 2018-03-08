@@ -2,6 +2,7 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import mockTask = require('vsts-task-lib/mock-task');
+import helper = require("./JenkinsTestHelper");
 
 const taskPath = path.join(__dirname, '..', 'jenkinsdownloadartifacts.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -21,26 +22,11 @@ process.env['ENDPOINT_AUTH_PARAMETER_connection1_username'] = 'dummyusername';
 process.env['ENDPOINT_AUTH_PARAMETER_connection1_password'] = 'dummypassword';
 process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 
-tr.registerMock("artifact-engine/Engine" , { 
-    ArtifactEngine: function() {
-        return { 
-            processItems: function(A,B,C) {},
-        }
-    },
-    ArtifactEngineOptions: function() {
-    }
-});
-
-tr.registerMock("request", {
-    get: function(urlObject, callback) {
-        console.log(`Mock invoked for ${urlObject.url}`)
-
-        if (urlObject.url === "http://url/job/testmultibranchproject//api/json") {
-            callback(0, {statusCode: 200}, '{ "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" }');
-        }
-
-        return {auth: function(A,B,C) {}}
-    }
+helper.RegisterArtifactEngineMock(tr);
+helper.RegisterHttpClientMock(tr, (url: string) => {
+    if (url === "http://url/job/testmultibranchproject//api/json") {
+        return helper.GetSuccessExpectedResult('{ "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" }');
+    };
 });
 
 tr.run();
