@@ -84,7 +84,7 @@ export class DistributedTest {
         inputDataContract['ExecutionSettings']['TiaSettings']['Enabled'] = this.dtaTestConfig.tiaConfig.tiaEnabled;
         inputDataContract['ExecutionSettings']['TiaSettings']['RebaseLimit'] = this.dtaTestConfig.tiaConfig.tiaRebaseLimit;
         inputDataContract['ExecutionSettings']['TiaSettings']['SourcesDirectory'] = this.dtaTestConfig.tiaConfig.sourcesDir;
-        inputDataContract['ExecutionSettings']['TiaSettings']['FileLevel'] = this.dtaTestConfig.tiaConfig.fileLevel;
+        inputDataContract['ExecutionSettings']['TiaSettings']['FileLevel'] = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.tiaConfig.fileLevel) || this.dtaTestConfig.tiaConfig.fileLevel.toUpperCase() !== 'FALSE';
         inputDataContract['ExecutionSettings']['TiaSettings']['FilterPaths'] = this.dtaTestConfig.tiaConfig.tiaFilterPaths;
 
         // Temporary settings override inputs
@@ -98,7 +98,7 @@ export class DistributedTest {
         inputDataContract['TiaBaseLineBuildIdFile'] = this.dtaTestConfig.tiaConfig.baseLineBuildIdFile;
         inputDataContract['VsVersion'] = this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber;
         inputDataContract['VsVersionIsTestSettingsPropertiesSupported'] = this.dtaTestConfig.vsTestVersionDetails.isTestSettingsPropertiesSupported();
-        inputDataContract['IsToolsInstallerFlow'] = utils.Helper.isToolsInstallerFlow(this.dtaTestConfig);
+        inputDataContract['ExecutionSettings']['IsToolsInstallerFlow'] = utils.Helper.isToolsInstallerFlow(this.dtaTestConfig);
         inputDataContract['ExecutionSettings']['OverridenParameters'] = this.dtaTestConfig.overrideTestrunParameters;
         inputDataContract['AgentName'] = this.dtaTestConfig.dtaEnvironment.agentName;
         inputDataContract['EnvironmentUri'] = this.dtaTestConfig.dtaEnvironment.environmentUri;
@@ -160,10 +160,7 @@ export class DistributedTest {
             inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['TestSuites'] = this.dtaTestConfig.testSuites;
         }
         inputDataContract['ExecutionSettings']['IgnoreTestFailures'] = this.dtaTestConfig.ignoreTestFailures;
-
-        if (!utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
-            inputDataContract['ExecutionSettings']['CodeCoverageEnabled'] = this.dtaTestConfig.codeCoverageEnabled;
-        }
+        inputDataContract['ExecutionSettings']['CodeCoverageEnabled'] = this.dtaTestConfig.codeCoverageEnabled;
 
         inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['Testplan'] = this.dtaTestConfig.testplan;
         inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['TestPlanConfigId'] = this.dtaTestConfig.testPlanConfigId;
