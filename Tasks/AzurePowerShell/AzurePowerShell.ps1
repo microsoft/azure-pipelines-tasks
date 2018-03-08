@@ -6,8 +6,8 @@ $scriptType = Get-VstsInput -Name ScriptType -Require
 $scriptPath = Get-VstsInput -Name ScriptPath
 $scriptInline = Get-VstsInput -Name Inline
 $scriptArguments = Get-VstsInput -Name ScriptArguments
-$__vsts_input_errorActionPreference = $(Get-VstsInput -Name errorActionPreference).ToLower()
-$__vsts_input_failOnStandardError = $(Get-VstsInput -Name FailOnStandardError).ToLower()
+$__vsts_input_errorActionPreference = Get-VstsInput -Name errorActionPreference
+$__vsts_input_failOnStandardError = Get-VstsInput -Name FailOnStandardError
 $targetAzurePs = Get-VstsInput -Name TargetAzurePs
 $customTargetAzurePs = Get-VstsInput -Name CustomTargetAzurePs
 
