@@ -5,7 +5,7 @@ import path = require('path');
 
 import ClusterConnection from "./clusterconnection";
 import * as kubectl from "./kubernetescommand";
-import * as kubectlRegistrySecret from "./kubernetesregistrysecret";
+import * as kubectlSecret from "./kubernetessecret";
 
 import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
 import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
@@ -42,7 +42,7 @@ function run(clusterConnection: ClusterConnection, registryAuthenticationToken: 
     var secretName = tl.getInput("secretName", false);
 
     if(secretName) {
-        kubectlRegistrySecret.run(clusterConnection, registryAuthenticationToken, secretName).fin(function cleanup(){
+        kubectlSecret.run(clusterConnection, registryAuthenticationToken, secretName).fin(function cleanup(){
             clusterConnection.close();
         }).then(function success() {
             executeKubectlCommand(clusterConnection);
