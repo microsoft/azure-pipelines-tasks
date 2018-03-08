@@ -124,6 +124,9 @@ Try
     # Getting endpoint used for the task
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
+    # Import SQLPS Module
+    Import-SqlPs
+
     # Test and get IPRange for autoDetect IpDetectionMethod
     $ipAddressRange = @{}
     if($IpDetectionMethod -eq "AutoDetect")
@@ -147,9 +150,6 @@ Try
         $firewallRuleName = $firewallSettings.RuleName
         $isFirewallConfigured = $firewallSettings.IsConfigured
     }
-
-    # Import SQLPS Module
-    Import-SqlPs
 
     if ($TaskNameSelector -eq "DacpacTask")
     {

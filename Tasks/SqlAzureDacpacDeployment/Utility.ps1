@@ -53,9 +53,9 @@ function Get-AgentIPRange
 	{
 		try {
 			Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
-			Write-Verbose "Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password ****** -Query `"select getdate()`" -ErrorVariable errors | Out-String"
+			Write-Verbose "Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password ****** -Query `"select getdate()`" -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
 
-			$output = Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password $sqlPassword -Query "select getdate()" -ErrorVariable errors | Out-String
+			$output = Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password $sqlPassword -Query "select getdate()" -ErrorVariable errors -ConnectionTimeout 120 | Out-String
 		}
 		catch {
 			Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
