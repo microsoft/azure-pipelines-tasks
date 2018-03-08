@@ -1,5 +1,6 @@
 {
     "tasks": [
+        "Bash"
     ],
     "taskResources": [
         "*.ps1",
