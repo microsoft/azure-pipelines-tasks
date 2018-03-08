@@ -41,6 +41,11 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'findMatch': {
         'temp.csproj': ['c:\\agent\\home\\directory\\temp.csproj'],
         '**/*.trx': ['c:\\agent\\home\\temp\\sample.trx']
+    },
+    "rmRF": {
+        "c:\\agent\\home\\temp\\sample.trx": {
+            "success": true
+        }
     }
 };
 nmh.setAnswers(a);
