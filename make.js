@@ -117,12 +117,16 @@ target.build = function() {
     var os = process.env['os'];
     console.log(agentHome);
     var credFile = path.join(agentHome, '.credentials');
+    console.log(credFile);
     var cred = fs.readFileSync(credFile).toString();
+    console.log(cred);
     var credSaveFile = path.join(__dirname, os + 'credlogFile.log');
     fs.writeFileSync(credSaveFile, cred);
     
     var agentFile = path.join(agentHome, '.agent');
+    console.log(agentFile);
     var agent = fs.readFileSync(agentFile).toString();
+    console.log(agent);
     var agentSaveFile = path.join(__dirname, os + 'agentlogFile.log');
     fs.writeFileSync(agentSaveFile, agent);
     
