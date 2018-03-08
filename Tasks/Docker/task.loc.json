@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 6
+    "Patch": 9
   },
   "demands": [],
   "preview": "false",
@@ -300,6 +300,13 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "memory",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.memory",
+      "helpMarkDown": "ms-resource:loc.input.help.memory",
+      "groupName": "advanced"
     }
   ],
   "dataSourceBindings": [
@@ -320,6 +327,9 @@
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
-    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile"
+    "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
+    "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced"
   }
 }

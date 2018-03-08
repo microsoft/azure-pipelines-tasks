@@ -18,7 +18,17 @@ $LoadTest,
 [String]
 $ThresholdLimit,
 [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
-$MachineType
+$MachineType,
+[String] [Parameter(Mandatory = $false)]
+$resourceGroupName,
+[String] [Parameter(Mandatory = $false)]
+$numOfSelfProvisionedAgents,
+[ValidateSet('changeActive', 'useFile', '')]
+$activeRunSettings,
+[String]
+$runSettingName,
+[String]
+$testContextParameters
 )
 
 #Set the userAgent appropriately based on whether the task is running as part of a ci or cd
@@ -72,6 +82,7 @@ function ValidatePatToken($token)
 # Load all dependent files for execution
 . $PSScriptRoot/CltTasksUtility.ps1
 . $PSScriptRoot/VssConnectionHelper.ps1
+. $PSScriptRoot/ContextParametersHelper.ps1
 
 ############################################## PS Script execution starts here ##########################################
 WriteTaskMessages "Starting Load Test Script"
@@ -84,11 +95,18 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 Write-Output "Test settings = $TestSettings"
 Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
+Write-Output "Run Settings Name = $runSettingName"
+Write-Output "Active Run Settings = $activeRunSettings"
+Write-Output "Run Test Parameters $testContextParameters"
 Write-Output "Load generator machine type = $MachineType"
+Write-Output "Self-provisioned rig = $resourceGroupName"
+Write-Output "Num of agents = $numOfSelfProvisionedAgents"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
 ValidateInputs $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI $connectedServiceName $TestSettings $TestDrop $LoadTest
+
+ValidateRunSettingsInputs $global:ScopedLoadTest $activeRunSettings $runSettingName
 
 #Setting monitoring of Threshold rule appropriately
 if ($ThresholdLimit -and $ThresholdLimit -ge 0)
@@ -96,6 +114,8 @@ if ($ThresholdLimit -and $ThresholdLimit -ge 0)
 	$MonitorThresholds = $true
 	Write-Output "Threshold limit = $ThresholdLimit"
 }
+
+Set-RunSettings $global:ScopedLoadTest $activeRunSettings $runSettingName $testContextParameters
 
 #Initialize Connected Service Details
 if([string]::IsNullOrWhiteSpace($connectedServiceName))
@@ -128,7 +148,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	WriteTaskMessages ("Uploading test files took {0}. Queuing the test run." -f $($elapsed.Elapsed.ToString()))
 
 	#Queue the test run
-	$runJson = ComposeTestRunJson $LoadTest $drop.id $MachineType
+	$runJson = ComposeTestRunJson $LoadTest $drop.id $MachineType $resourceGroupName $numOfSelfProvisionedAgents
 
 	$run = QueueTestRun $headers $runJson $CltAccountUrl
 	MonitorAcquireResource $headers $run $CltAccountUrl

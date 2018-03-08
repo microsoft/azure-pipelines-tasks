@@ -64,15 +64,7 @@
             "stdout": "Running Maven...",
             "stderr": "FAILED"
         },
-        "/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword sonar:sonar": {
-            "code": 0,
-            "stdout": "Maven package and SQ analysis done"
-        },        
-        "/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.analysis.mode=issues -Dsonar.report.export.path=sonar-report.json sonar:sonar": {
-            "code": 0,
-            "stdout": "Maven package and SQ in issues mode"
-        },
-        "/home/bin/maven/bin/mvn -f pom.xml package -Dsonar.host.url=http://sonarqubeserver:9000 -Dsonar.login=uname -Dsonar.password=pword -Dsonar.jdbc.url=dbURL -Dsonar.jdbc.username=dbUser -Dsonar.jdbc.password=dbPass sonar:sonar": {
+        "/home/bin/maven/bin/mvn -f pom.xml package org.sonarsource.scanner.maven:sonar-maven-plugin:RELEASE:sonar": {
             "code": 0,
             "stdout": "Maven package and SQ analysis done"
         },

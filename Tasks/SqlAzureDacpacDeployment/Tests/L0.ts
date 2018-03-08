@@ -88,5 +88,15 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
         it('Validate Username (Get-FormattedSqlUsername)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityFormatUsername.ps1'), done);
         });
+        it('FindSqlPackagePath should give preference to msi installation over vs installation and sql server installation', (done) => {
+            this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+            psr.run(path.join(__dirname, 'L0FindSqlPackagePath.ps1'), done);
+        });
+        it('FindSqlPackagePath should select highest version', (done) => {
+            this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+            psr.run(path.join(__dirname, 'L0FindSqlPackagePathSelectHighestVersion.ps1'), done);
+        });
     }
 });

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Weitere Informationen](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Docker-Anwendungen mit mehreren Containern erstellen, mittels Push übertragen oder ausführen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Erstellen Sie Docker-Anwendungen mit mehreren Containern, übertragen Sie sie mithilfe von Push, oder führen Sie sie aus. Die Aufgabe kann mit Docker oder Azure Container Registry verwendet werden.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Erweiterte Optionen",
   "loc.input.label.containerregistrytype": "Containerregistrierungstyp",
@@ -30,7 +30,7 @@
   "loc.input.help.includeSourceTags": "Fügen Sie Git-Tags ein, wenn Sie Docker-Images erstellen oder mittels Push übertragen.",
   "loc.input.label.includeLatestTag": "Aktuelles Tag einschließen",
   "loc.input.help.includeLatestTag": "Fügen Sie das Tag \"latest\" (aktuell) ein, wenn Sie die Docker-Images erstellen oder mittels Push übertragen.",
-  "loc.input.label.buildImages": "Build Images",
+  "loc.input.label.buildImages": "Images erstellen",
   "loc.input.help.buildImages": "Erstellen Sie Images, bevor Sie Dienstcontainer starten.",
   "loc.input.label.serviceName": "Dienstname",
   "loc.input.help.serviceName": "Name des auszuführenden spezifischen Diensts.",
@@ -41,7 +41,7 @@
   "loc.input.label.workDir": "Arbeitsverzeichnis",
   "loc.input.help.workDir": "Das Arbeitsverzeichnis für den spezifischen Dienstcontainer.",
   "loc.input.label.entrypoint": "Einstiegspunkt überschreiben",
-  "loc.input.help.entrypoint": "Überschreiben des Standardeinstiegspunkts für den spezifischen Dienstcontainer.",
+  "loc.input.help.entrypoint": "Überschreiben Sie den Standardeinstiegspunkt für den spezifischen Dienstcontainer.",
   "loc.input.label.containerCommand": "Befehl",
   "loc.input.help.containerCommand": "Im spezifischen Dienstcontainer auszuführender Befehl. Wenn das Image beispielsweise eine einfache Python Flask-Webanwendung enthält, können Sie zum Starten der Webanwendung \"python app.py\" angeben.",
   "loc.input.label.detached": "Im Hintergrund ausführen",
@@ -54,7 +54,7 @@
   "loc.input.help.removeBuildOptions": "Entfernen Sie die Buildoptionen aus der Docker Compose-Ausgabedatei.",
   "loc.input.label.baseResolveDirectory": "Basisauflösungsverzeichnis",
   "loc.input.help.baseResolveDirectory": "Das Basisverzeichnis, in dem die entsprechenden Pfade in der Docker Compose-Ausgabedatei aufgelöst werden sollen.",
-  "loc.input.label.outputDockerComposeFile": "Output Docker Compose File",
+  "loc.input.label.outputDockerComposeFile": "Docker Compose-Datei ausgeben",
   "loc.input.help.outputDockerComposeFile": "Pfad zu einer Docker Compose-Ausgabedatei.",
   "loc.input.label.dockerComposeCommand": "Befehl",
   "loc.input.help.dockerComposeCommand": "Docker Compose-Befehl, der mit Argumenten ausgeführt werden soll. Beispielsweise \"rm --all\" entfernt alle angehaltenen Dienstcontainer.",
@@ -66,7 +66,8 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Erzeugt einen Fehler, wenn die zusätzlichen Docker Compose-Dateien nicht vorhanden sind. Dies überschreibt das Standardverhalten, das darin besteht, eine nicht vorhandene Datei zu ignorieren.",
   "loc.input.label.cwd": "Arbeitsverzeichnis",
   "loc.input.help.cwd": "Arbeitsverzeichnis für den Docker Compose-Befehl.",
-  "loc.messages.ContainerPatternFound": "Muster im dockerfilepath-Parameter gefunden",
-  "loc.messages.ContainerPatternNotFound": "Kein Muster im dockerfilepath-Parameter gefunden",
-  "loc.messages.ContainerDockerFileNotFound": "Es wurde keine Docker-Datei gefunden, die %s entspricht."
+  "loc.messages.ContainerPatternFound": "Muster in Docker Compose-Parameter \"filepath\" gefunden.",
+  "loc.messages.ContainerPatternNotFound": "Kein Muster in Docker Compose-Parameter \"filepath\" gefunden.",
+  "loc.messages.ContainerDockerFileNotFound": "Es wurde keine Docker-Datei gefunden, die %s entspricht.",
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Die zusätzliche Docker Compose-Datei \"%s\" ist nicht vorhanden."
 }

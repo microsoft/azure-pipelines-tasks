@@ -6,10 +6,9 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
-  "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 130,
+    "Minor": 132,
     "Patch": 0
   },
   "groups": [
@@ -58,6 +57,15 @@
         "DisableManageLink": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.definition"
+    },
+    {
+      "name": "specificBuildWithTriggering",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.specificBuildWithTriggering",
+      "defaultValue": "false",
+      "required": false,
+      "visibleRule": "buildType == specific",
+      "helpMarkDown": "ms-resource:loc.input.help.specificBuildWithTriggering"
     },
     {
       "name": "buildId",

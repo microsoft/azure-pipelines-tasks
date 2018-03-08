@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 4,
-    "Patch": 11
+    "Patch": 13
   },
   "demands": [],
   "preview": "false",
@@ -290,7 +290,7 @@
     {
       "name": "cwd",
       "aliases": [
-        "workingDirectory"
+        "currentWorkingDirectory"
       ],
       "type": "filePath",
       "label": "ms-resource:loc.input.label.cwd",
@@ -318,6 +318,9 @@
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
     "ContainerDockerFileNotFound": "ms-resource:loc.messages.ContainerDockerFileNotFound",
-    "AdditionalDockerComposeFileDoesNotExists": "ms-resource:loc.messages.AdditionalDockerComposeFileDoesNotExists"
+    "AdditionalDockerComposeFileDoesNotExists": "ms-resource:loc.messages.AdditionalDockerComposeFileDoesNotExists",
+    "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
+    "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced"
   }
 }

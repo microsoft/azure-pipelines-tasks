@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[詳細](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "複数コンテナーの Docker アプリケーションをビルド、プッシュ、実行します",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "複数コンテナーの Docker アプリケーションをビルド、プッシュ、実行します。タスクは、Docker または Azure Container Registry で使用できます。",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "詳細設定のオプション",
   "loc.input.label.containerregistrytype": "コンテナー レジストリの種類",
@@ -41,7 +41,7 @@
   "loc.input.label.workDir": "作業ディレクトリ",
   "loc.input.help.workDir": "特定のサービス コンテナーの作業ディレクトリです。",
   "loc.input.label.entrypoint": "エントリポイントの無視",
-  "loc.input.help.entrypoint": "特定のサービス コンテナーの既定のエントリポイントを無視します。",
+  "loc.input.help.entrypoint": "特定のサービス コンテナーの既定のエントリ ポイントを無視します。",
   "loc.input.label.containerCommand": "コマンド",
   "loc.input.help.containerCommand": "特定のサービス コンテナー内で実行するコマンドです。たとえば、イメージに単純な Python Flask Web アプリケーションが含まれている場合は、'python app.py' を指定して Web アプリケーションを起動することができます。",
   "loc.input.label.detached": "バックグラウンドで実行",
@@ -66,7 +66,8 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "追加の Docker Compose ファイルが存在しない場合に、エラーを生成します。これは、ファイルが存在しない場合にそのファイルを無視するという既定の動作を上書きします。",
   "loc.input.label.cwd": "作業ディレクトリ",
   "loc.input.help.cwd": "Docker Compose コマンドの作業ディレクトリです。",
-  "loc.messages.ContainerPatternFound": "dockerfilepath パラメーターにパターンが見つかりました",
-  "loc.messages.ContainerPatternNotFound": "dockerfilepath パラメーターにパターンが見つかりませんでした",
-  "loc.messages.ContainerDockerFileNotFound": "%s に一致する Docker ファイルは見つかりませんでした。"
+  "loc.messages.ContainerPatternFound": "docker compose filepath パラメーターにパターンが見つかりました",
+  "loc.messages.ContainerPatternNotFound": "docker compose filepath パラメーターにパターンが見つかりませんでした ",
+  "loc.messages.ContainerDockerFileNotFound": "%s に一致する Docker ファイルは見つかりませんでした。",
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "追加の Docker Compose ファイル %s は存在しません。"
 }

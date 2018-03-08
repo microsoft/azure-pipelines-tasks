@@ -206,7 +206,7 @@ function pack(file: string, options: PackOptions): IExecSyncResult {
 
     let execResult = nugetTool.execSync();
     if (execResult.code !== 0) {
-        telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
+        telemetry.logResult('Packaging', 'NuGetCommand', execResult.code);
         throw tl.loc("Error_NugetFailedWithCodeAndErr",
             execResult.code,
             execResult.stderr ? execResult.stderr.trim() : execResult.stderr);

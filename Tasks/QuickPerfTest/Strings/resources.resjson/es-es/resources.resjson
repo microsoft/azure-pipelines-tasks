@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Prueba de rendimiento de web basada en la nube",
-  "loc.helpMarkDown": "Desencadena una prueba de carga basada en la nube con Visual Studio Team Services. [Más información](https://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.helpMarkDown": "Desencadena una prueba de carga basada en la nube con Visual Studio Team Services. [Más información](https://go.microsoft.com/fwlink/?linkid=613203)",
   "loc.description": "Ejecuta una prueba rápida de rendimiento web en la nube con Visual Studio Team Services.",
   "loc.instanceNameFormat": "Prueba rápida de rendimiento web $(testName)",
   "loc.input.label.connectedServiceName": "Conexión de VS Team Services",
@@ -14,7 +14,7 @@
   "loc.input.label.runDuration": "Duración de la ejecución (seg.)",
   "loc.input.help.runDuration": "Duración de la prueba de carga en segundos.",
   "loc.input.label.geoLocation": "Cargar ubicación",
-  "loc.input.help.geoLocation": "Región geográfica desde la que se va a generar la carga. Consulte la sección de ayuda para obtener más información.",
+  "loc.input.help.geoLocation": "Región geográfica desde la que se va a generar la carga.",
   "loc.input.label.machineType": "Ejecutar la prueba de carga usando",
   "loc.input.label.avgResponseTimeThreshold": "Suspender prueba si el tiempo medio de respuesta (ms) es superior a",
   "loc.input.help.avgResponseTimeThreshold": "Tiempo medio de respuesta por encima del cual se considera incorrecto el resultado de la prueba de carga."

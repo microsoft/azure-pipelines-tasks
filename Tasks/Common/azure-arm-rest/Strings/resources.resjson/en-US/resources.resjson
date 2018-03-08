@@ -126,5 +126,8 @@
   "loc.messages.FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
   "loc.messages.FailedToUploadFile": "Failed to upload file '%s/%s from Kudu. Error: %s",
   "loc.messages.FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
-  "loc.messages.FailedToListPath": "Failed to list path '%s'. Error: %s"
+  "loc.messages.FailedToListPath": "Failed to list path '%s'. Error: %s",
+  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
 }

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 28
     },
     "demands": [
         "msbuild",
@@ -56,6 +56,9 @@
                 "50": "50",
                 "100": "100",
                 "250": "250"
+            },
+            "properties": {
+                "EditableOptions": "True"
             }
         },
         {
@@ -71,6 +74,9 @@
                 "180": "180",
                 "240": "240",
                 "300": "300"
+            },
+            "properties": {
+                "EditableOptions": "True"
             }
         },
         {
@@ -97,6 +103,9 @@
                 "Brazil South": "Brazil South (Sao Paulo State)",
                 "Australia East": "Australia East (New South Wales)",
                 "Australia Southeast": "Australia Southeast (Victoria)"
+            },
+            "properties": {
+                "EditableOptions": "True"
             }
         },
         {
@@ -109,6 +118,24 @@
                 "0": "Automatically provisioned agents",
                 "2": "Self-provisioned agents"
             }
+        },
+        {
+            "name": "resourceGroupName",
+            "type": "string",
+            "label": "Resource group rig",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "machineType == 2",
+            "helpMarkDown": "Name of Resource group hosting the self-provisioned rig of load test agents."
+        },
+        {
+            "name": "numOfSelfProvisionedAgents",
+            "type": "int",
+            "label": "No. of agents to use",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "machineType == 2",
+            "helpMarkDown": "Number of self provisioned agents to use for this test."
         },
         {
             "name": "avgResponseTimeThreshold",

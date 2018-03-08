@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Docker Compose",
-  "loc.helpMarkDown": "[Подробнее](http://aka.ms/dockertoolsforvsts)",
-  "loc.description": "Создание, отправка или запуск многоконейнерных приложений Docker",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=848006)",
+  "loc.description": "Создание, отправка или запуск многоконтейнерных приложений Docker. Задачу можно использовать в Docker или реестре контейнеров Azure.",
   "loc.instanceNameFormat": "$(action)",
   "loc.group.displayName.advanced": "Дополнительные параметры",
   "loc.input.label.containerregistrytype": "Тип реестра контейнеров",
@@ -41,7 +41,7 @@
   "loc.input.label.workDir": "Рабочий каталог",
   "loc.input.help.workDir": "Рабочий каталог для контейнера определенной службы.",
   "loc.input.label.entrypoint": "Переопределение точки входа",
-  "loc.input.help.entrypoint": "Переопределите точку входа по умолчанию для контейнера определенной службы.",
+  "loc.input.help.entrypoint": "Переопределение точки входа по умолчанию для контейнера указанной службы.",
   "loc.input.label.containerCommand": "Команда",
   "loc.input.help.containerCommand": "Команда для выполнения в контейнере определенной службы. Например, если в образе имеется простое веб-приложение Python Flask, можно указать параметр \"python app.py\" для запуска веб-приложения.",
   "loc.input.label.detached": "Запустить в фоновом режиме",
@@ -66,7 +66,8 @@
   "loc.input.help.requireAdditionalDockerComposeFiles": "Выдает ошибку, если дополнительные файлы Docker Compose не существуют. Данный параметр переопределяет поведение по умолчанию, при котором отсутствующий файл пропускается.",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Рабочий каталог для команды Docker Compose.",
-  "loc.messages.ContainerPatternFound": "Найден шаблон в параметре dockerfilepath",
-  "loc.messages.ContainerPatternNotFound": "Шаблон в параметре dockerfilepath не найден",
-  "loc.messages.ContainerDockerFileNotFound": "Файл Docker, соответствующий %s, не найден."
+  "loc.messages.ContainerPatternFound": "Обнаружен шаблон в параметре filepath в Docker Compose",
+  "loc.messages.ContainerPatternNotFound": "Не найден шаблон в параметре filepath в Docker Compose",
+  "loc.messages.ContainerDockerFileNotFound": "Файл Docker, соответствующий %s, не найден.",
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Дополнительный файл Docker Compose %s не существует."
 }

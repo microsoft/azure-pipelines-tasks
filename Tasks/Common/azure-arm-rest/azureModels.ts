@@ -272,3 +272,20 @@ export interface ApplicationInsights {
     etag?: string;
     properties?: {[key: string]: any};
 }
+
+export interface AKSClusterProperties {
+    provisioningState: string;
+    kubernetesVersion: string;
+}
+
+export interface AKSCluster extends AzureBaseObject {
+    properties: AKSClusterProperties
+}
+
+export interface AKSClusterAccessProfileProperties {
+    kubeConfig: string;
+}
+
+export interface AKSClusterAccessProfile extends AzureBaseObject {
+    properties: AKSClusterAccessProfileProperties
+}

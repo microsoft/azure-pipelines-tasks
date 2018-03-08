@@ -6,9 +6,7 @@ export class TaskParametersUtility {
             connectedServiceName: tl.getInput('ConnectedServiceName', true),
             WebAppName: tl.getInput('WebAppName', true),
             WebAppKind: tl.getInput('WebAppKind', false),
-            DeployToSlotFlag: tl.getBoolInput('DeployToSlotFlag', false),
-            ResourceGroupName: tl.getInput('ResourceGroupName', false),
-            SlotName: tl.getInput('SlotName', false),
+            DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
             VirtualApplication: tl.getInput('VirtualApplication', false),
             Package: tl.getPathInput('Package', true),
             GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
@@ -25,21 +23,19 @@ export class TaskParametersUtility {
             ScriptPath : tl.getPathInput('ScriptPath', false),
             DockerNamespace: tl.getInput('DockerNamespace', false),
             AppSettings: tl.getInput('AppSettings', false),
-            ImageSource: tl.getInput('ImageSource', false),
             StartupCommand: tl.getInput('StartupCommand', false),
-            WebAppUri: tl.getInput('WebAppUri', false),
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
         }
 
-        taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("linux") >= 0;
-        taskParameters.isBuiltinLinuxWebApp = taskParameters.ImageSource && taskParameters.ImageSource.indexOf("Builtin") >= 0;
-        taskParameters.isContainerWebApp = taskParameters.isLinuxApp && taskParameters.ImageSource.indexOf("Registry") >= 0;
+        taskParameters.WebAppKind = taskParameters.WebAppKind;
+        taskParameters.isLinuxApp = taskParameters.WebAppKind && (taskParameters.WebAppKind.indexOf("Linux") !=-1 || taskParameters.WebAppKind.indexOf("Container") != -1);
+        taskParameters.isBuiltinLinuxWebApp = taskParameters.WebAppKind.indexOf('Linux') != -1;
+        taskParameters.isContainerWebApp =taskParameters.WebAppKind.indexOf('Container') != -1;
+        taskParameters.ResourceGroupName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('ResourceGroupName', false) : null;
+        taskParameters.SlotName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('SlotName', false) : null;
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
-            taskParameters.BuiltinLinuxPackage = tl.getInput('BuiltinLinuxPackage', true);
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
-            tl.debug('Change package path to Linux package path');
-            taskParameters.Package = tl.getInput('BuiltinLinuxPackage', true);
         }
 
         taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') ?
@@ -49,7 +45,11 @@ export class TaskParametersUtility {
             taskParameters.RemoveAdditionalFilesFlag = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
             taskParameters.SetParametersFile = tl.getPathInput('SetParametersFile', false);
             taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
-            taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false);
+            taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
+        }
+        else {
+            // Retry Attempt is passed by default
+            taskParameters.AdditionalArguments = '-retryAttempts:6 -retryInterval:10000';
         }
 
         return taskParameters;
@@ -60,7 +60,7 @@ export interface TaskParameters {
     connectedServiceName: string;
     WebAppName: string;
     WebAppKind?: string;
-    DeployToSlotFlag?: boolean;
+    DeployToSlotOrASEFlag?: boolean;
     ResourceGroupName?: string;
     SlotName?: string;
     VirtualApplication?: string;
@@ -82,11 +82,8 @@ export interface TaskParameters {
     ScriptPath ?: string;
     DockerNamespace?: string;
     AppSettings?: string;
-    ImageSource?: string;
     StartupCommand?: string;
-    BuiltinLinuxPackage?: string;
     RuntimeStack?: string;
-    WebAppUri?: string;
     ConfigurationSettings?: string;
     /** Additional parameters */
     isLinuxApp?: boolean;

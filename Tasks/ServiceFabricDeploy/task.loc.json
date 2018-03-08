@@ -16,8 +16,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 5,
-    "Patch": 1
+    "Minor": 7,
+    "Patch": 2
   },
   "demands": [
     "Cmd"
@@ -87,7 +87,7 @@
       "name": "useDiffPackage",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.useDiffPackage",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage"
@@ -403,8 +403,10 @@
     "DIFFPKG_CreatingDiffPackage": "ms-resource:loc.messages.DIFFPKG_CreatingDiffPackage",
     "DIFFPKG_CreatingDiffPackageForService": "ms-resource:loc.messages.DIFFPKG_CreatingDiffPackageForService",
     "DIFFPKG_NoServicesRunning": "ms-resource:loc.messages.DIFFPKG_NoServicesRunning",
+    "DIFFPKG_PackageDoesNotExist": "ms-resource:loc.messages.DIFFPKG_PackageDoesNotExist",
     "DIFFPKG_ServiceDoesNotExist": "ms-resource:loc.messages.DIFFPKG_ServiceDoesNotExist",
     "DIFFPKG_ServiceIsNotChanged": "ms-resource:loc.messages.DIFFPKG_ServiceIsNotChanged",
+    "DIFFPKG_TestAppPkgFailed": "ms-resource:loc.messages.DIFFPKG_TestAppPkgFailed",
     "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
@@ -425,6 +427,7 @@
     "SFSDK_AppAlreadyExistsError": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsError",
     "SFSDK_AppAlreadyExistsInfo": "ms-resource:loc.messages.SFSDK_AppAlreadyExistsInfo",
     "SFSDK_UnregisteringExistingAppType": "ms-resource:loc.messages.SFSDK_UnregisteringExistingAppType",
+    "SFSDK_SkipUnregisteringExistingAppType": "ms-resource:loc.messages.SFSDK_SkipUnregisteringExistingAppType",
     "SFSDK_UnableToUnregisterAppType": "ms-resource:loc.messages.SFSDK_UnableToUnregisterAppType",
     "SFSDK_CopyingAppToImageStore": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStore",
     "SFSDK_CopyingAppToImageStoreFailed": "ms-resource:loc.messages.SFSDK_CopyingAppToImageStoreFailed",

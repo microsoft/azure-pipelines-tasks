@@ -145,7 +145,7 @@ function Run-SymbolCommand([string]$assemblyPath, [string]$arguments)
 {
     $exe = "$assemblyPath\symbol.exe"
     $traceLevel = if ($DetailedLog) { "verbose" } else { "info" }
-    $arguments += " --tracelevel $traceLevel"
+    $arguments += " --tracelevel $traceLevel --globalretrycount 2"
 
     Invoke-VstsTool -FileName $exe -Arguments $arguments | ForEach-Object { $_.Replace($arguments, $displayArgs) }
 

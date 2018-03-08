@@ -6,9 +6,9 @@
   "author": "Microsoft Corporation",
   "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/work-item-query)",
   "category": "Utility",
-  "preview": true,
   "visibility": [
-    "Release"
+     "Build",
+     "Release"
   ],
   "runsOn": [
     "Server",
@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 8
   },
   "instanceNameFormat": "Query Work Items",
   "groups": [
@@ -39,7 +39,7 @@
     {
       "name": "maxThreshold",
       "type": "string",
-      "label": "Maximum threshold",
+      "label": "Upper threshold",
       "defaultValue": "0",
       "required": "true",
       "properties": {
@@ -50,7 +50,7 @@
     {
       "name": "minThreshold",
       "type": "string",
-      "label": "Minimum threshold",
+      "label": "Lower threshold",
       "defaultValue": "0",
       "required": "true",
       "properties": {

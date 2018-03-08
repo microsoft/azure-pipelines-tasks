@@ -12,6 +12,8 @@
   "loc.input.help.commands": "Consente di specificare i comandi della shell da eseguire nel computer remoto. Immettere ogni comando unitamente ai relativi argomenti su una nuova riga. Per eseguire più comandi insieme, immetterli sulla stessa riga delimitandoli con punti e virgola, ad esempio cd /home/user/myFolder;build.",
   "loc.input.label.scriptPath": "Percorso dello script della shell",
   "loc.input.help.scriptPath": "Percorso del file di script della shell da eseguire nel computer remoto.",
+  "loc.input.label.inline": "Script inline",
+  "loc.input.help.inline": "Consente di scrivere lo script della shell da eseguire nel computer remoto.",
   "loc.input.label.args": "Argomenti",
   "loc.input.help.args": "Argomenti da passare allo script della shell.",
   "loc.input.label.failOnStdErr": "Interrompi in caso di STDERR",

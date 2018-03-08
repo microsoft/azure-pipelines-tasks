@@ -2,9 +2,10 @@
     "id": "334727F4-9495-4F9D-A391-FC621D671474",
     "name": "GoTool",
     "friendlyName": "Go Tool Installer",
-    "description": "Finds or Downloads and caches specified version spec of Go and adds it to the PATH.",
-    "helpMarkDown": "",
+    "description": "Finds or downloads specific version of Go tool into tools cache and adds it to the PATH. Use this task to change the version of Go Lang used in subsequent tasks",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
     "category": "Tool",
+    "preview": "true",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
@@ -12,19 +13,41 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 1
+        "Minor": 1,
+        "Patch": 0
     },
     "satisfies": ["GO"],
     "demands": [],
     "instanceNameFormat": "Use Go $(version)",
-    "inputs": [{
+    "groups":[
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
             "name": "version",
             "type": "string",
             "label": "Version",
-            "defaultValue": "1.9.2",
+            "defaultValue": "1.10",
             "required": true,
-            "helpMarkDown": "Go tool version to download and install.  Examples: 1.9.2"
+            "helpMarkDown": "Go tool version to download and install. Example: 1.9.3"
+        },
+        {
+            "name": "goPath",
+            "type": "string",
+            "label": "GOPATH",
+            "helpMarkDown": "Value for the GOPATH environment variable.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "goBin",
+            "type": "string",
+            "label": "GOBIN",
+            "helpMarkDown": "Value for the GOBIN environment variable.",
+            "groupName": "advanced"
         }
     ],
     "execution": {
@@ -34,7 +57,7 @@
         }
     },
     "messages": {
-        "ToolFailed": "Tool install failed: %s",
-        "VersionNotSupported": "Version '%s' is not available"
+        "FailedToDownload": "Failed to download version %s. Please verify that the version is valid and resolve any other issues. Error: %s",
+        "TempDirNotSet": "Expected Agent.TempDirectory to be set"
     }
 }

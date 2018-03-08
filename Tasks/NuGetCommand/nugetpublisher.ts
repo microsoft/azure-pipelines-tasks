@@ -96,7 +96,6 @@ export async function run(nuGetPath: string): Promise<void> {
         }
 
         // Setting up auth info
-        let externalAuthArr = commandHelper.GetExternalAuthInfoArray("externalEndpoint");
         let accessToken = auth.getSystemAccessToken();
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
         let credProviderPath = nutil.locateCredentialProvider();
@@ -104,26 +103,32 @@ export async function run(nuGetPath: string): Promise<void> {
         // is unconditionally displayed
         let useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
         let useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
-        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, useCredConfig), externalAuthArr);
+
+        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, useCredConfig);
 
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
-            extensionsDisabled: true
-            }
+            extensionsDisabled: true,
+            };
         let configFile = null;
         let apiKey: string;
-        let credCleanup = () => { return };
-        let nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, environmentSettings, null);
+        let credCleanup = () => { return; };
+
         let feedUri: string = undefined;
         let isInternalFeed: boolean = nugetFeedType === "internal";
 
+        let authInfo: auth.NuGetExtendedAuthInfo;
+        let nuGetConfigHelper: NuGetConfigHelper2;
+
         if (isInternalFeed)
         {
-            let internalFeedId = tl.getInput("feedPublish");
+            authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo);
+            nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, environmentSettings, null);
+
+            const internalFeedId = tl.getInput("feedPublish");
             const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
             feedUri = await nutil.getNuGetFeedRegistryUrl(accessToken, internalFeedId, nuGetVersion);
             if (useCredConfig) {
-
                 nuGetConfigHelper.addSourcesToTempNuGetConfig([<IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;
                 credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
@@ -132,7 +137,11 @@ export async function run(nuGetPath: string): Promise<void> {
             apiKey = "VSTS";
         }
         else {
-            let externalAuth = externalAuthArr[0];
+            const externalAuthArr = commandHelper.GetExternalAuthInfoArray("externalEndpoint");
+            authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo, externalAuthArr);
+            nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, environmentSettings, null);
+
+            const externalAuth = externalAuthArr[0];
 
             if (!externalAuth)
             {
@@ -253,7 +262,7 @@ function publishPackageNuGet(packageFile: string, options: PublishOptions, authI
 
     let execResult = nugetTool.execSync();
     if (execResult.code !== 0) {
-        telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
+        telemetry.logResult('Packaging', 'NuGetCommand', execResult.code);
         throw tl.loc("Error_NugetFailedWithCodeAndErr",
             execResult.code,
             execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
@@ -283,7 +292,7 @@ function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPus
         return;
     }
 
-    telemetry.logStderr('Packaging', 'NuGetCommand', execResult.code, execResult.stderr);
+    telemetry.logResult('Packaging', 'NuGetCommand', execResult.code);
     throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush",
         execResult.code,
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));

@@ -127,6 +127,9 @@
         "FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
         "FailedToUploadFile": "Failed to upload file '%s/%s from Kudu. Error: %s",
         "FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
-        "FailedToListPath": "Failed to list path '%s'. Error: %s"
+        "FailedToListPath": "Failed to list path '%s'. Error: %s",
+        "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
+        "ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
+        "ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
     }
 }

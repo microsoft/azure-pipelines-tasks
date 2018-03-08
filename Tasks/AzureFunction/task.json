@@ -6,8 +6,8 @@
 	"author": "Microsoft Corporation",
 	"helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-function)",
 	"category": "Utility",
-	"preview": "true",
 	"visibility": [
+		"Build",
 		"Release"
 	],
 	"runsOn": [
@@ -17,7 +17,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 0
+		"Patch": 2
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{

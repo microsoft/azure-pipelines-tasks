@@ -121,22 +121,6 @@ function MonitorTestRun($headers, $run, $CltAccountUrl)
 	Write-Output "------------------------------------"
 }
 
-function ComposeTestRunJson($name, $tdid, $machineType)
-{
-	$trjson = @"
-	{
-		"name":"$name",
-		"description":"Quick perf test from automation task",
-		"testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x64", "setupCommand":""},
-		"superSedeRunSettings":{"loadGeneratorMachinesType":"$machineType"},
-		"testDrop":{"id":"$tdid"},
-		"runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
-	}
-"@
-
-	return $trjson
-}
-
 function QueueTestRun($headers, $runJson, $CltAccountUrl)
 {
 	$uri = [String]::Format("{0}/_apis/clt/testruns?api-version=1.0", $CltAccountUrl)
@@ -160,13 +144,13 @@ function ComposeAccountUrl($connectedServiceUrl, $headers)
 	#Load all dependent files for execution
 	. $PSScriptRoot/VssConnectionHelper.ps1
 	$connectedServiceUrl = $connectedServiceUrl.TrimEnd('/')
-	Write-Host "Getting Clt Endpoint:"
+    Write-Host -NoNewline "Getting Clt Endpoint:"
 	$elsUrl = Get-CltEndpoint $connectedServiceUrl $headers
 
 	return $elsUrl
 }
 
-function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName)
+function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName, $testName)
 {
 	if (![System.Uri]::IsWellFormedUriString($websiteUrl, [System.UriKind]::Absolute))
 	{
@@ -177,6 +161,20 @@ function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName)
 	{
 		throw "VS Team Services Connection is mandatory for using performance test tasks on non hosted TFS builds.Please specify a VS Team Services connection and try again "
 	}
+
+    # validate load test name
+    # code taken from definitionNameInvalid    
+    $invalidPattern1 = "(^\\.$|^\\.\\.$|^-$|^_$)"
+    $invalidPattern2 = "[^A-Za-z0-9 \._-]"
+
+    # find illegal characters
+    $invalidchars1 = [regex]::Matches($testName, $invalidPattern1, 'IgnoreCase').Value | Sort-Object -Unique 
+    $invalidchars2 =[regex]::Matches($testName, $invalidPattern2, 'IgnoreCase').Value | Sort-Object -Unique 
+    
+    if ($invalidchars1 -ne $null -or $invalidchars2 -ne $null)
+    {
+		throw "Do not use these characters in load test name: $invalidchars1 $invalidchars2"
+    }
 }
 
 function UploadSummaryMdReport($summaryMdPath)
@@ -195,4 +193,45 @@ function IsNumericValue ($str) {
 	return $isNum
 }
 
+
+function ComposeTestRunJson($name, $tdid, $vuLoad, $runDuration, $machineType, $selfProvisionedRig, $numOfSelfProvisionedAgents)
+{
+    if ($MachineType -eq "2"){
+        Write-Host ">>> Self-Provisioned Rig Test Run"
+        $trjson = @"
+        {
+            "name":"$name",
+            "description":"Quick perf test from automation task",
+            "testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x64", "setupCommand":""},
+            "superSedeRunSettings": {
+                "loadGeneratorMachinesType": "$MachineType",
+                "staticAgentRunSettings": {
+                    "loadGeneratorMachinesType": "userLoadAgent",
+                    "staticAgentGroupName": "$selfProvisionedRig"
+                }
+            },
+            "runSpecificDetails" : {
+                "virtualUserCount": $vuLoad,
+                "duration": $runDuration,
+                "agentCount": $numOfSelfProvisionedAgents,
+                "loadGeneratorMachinesType": "userLoadAgent"
+            },
+            "testDrop":{"id":"$tdid"},
+            "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+        }
+"@
+    } else {
+        $trjson = @"
+        {
+            "name":"$name",
+            "description":"Quick perf test from automation task",
+            "testSettings":{"cleanupCommand":"", "hostProcessPlatform":"x64", "setupCommand":""},
+            "superSedeRunSettings":{"loadGeneratorMachinesType":"$machineType"},
+            "testDrop":{"id":"$tdid"},
+            "runSourceIdentifier":"build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
+        }
+"@
+    }
+	return $trjson
+}
 

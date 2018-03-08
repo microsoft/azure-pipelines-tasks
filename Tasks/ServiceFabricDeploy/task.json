@@ -16,8 +16,8 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 5,
-        "Patch": 1
+        "Minor": 7,
+        "Patch": 2
     },
     "demands": [
         "Cmd"
@@ -87,7 +87,7 @@
             "name": "useDiffPackage",
             "type": "boolean",
             "label": "Use Diff Package",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "required": false,
             "groupname": "advanced",
             "helpMarkDown": "Upgrade by using a diff package that contains only the updated application files, the updated application manifest, and the service manifest files."
@@ -398,9 +398,11 @@
         "DIFFPKG_CopyingToDiffPackge": "Copying {0} from full application package to {1} in diff package...",
         "DIFFPKG_CreatingDiffPackage": "Trying to create diff package...",
         "DIFFPKG_CreatingDiffPackageForService": "Creating diff package for service: {0}, clusterServiceManifest.Version: {1}, localServiceManifest.Version: {2}",
-        "DIFFPKG_NoServicesRunning": "No services of application {0} are running in the cluster {1}. Applying full application packge to do the deployment now...",
+        "DIFFPKG_NoServicesRunning": "No services of application {0} are running in the cluster {1}. Applying full application package to do the deployment now...",
+        "DIFFPKG_PackageDoesNotExist": "The package {0} does not exist in the full application package. Skip copying it to diff package.",
         "DIFFPKG_ServiceDoesNotExist": "The service {0} of application {1} to be upgraded by using diff package does not exist in the cluster {2}. Copying it to diff package now...",
         "DIFFPKG_ServiceIsNotChanged": "The service {0} of application {1} to be upgraded by using diff package has the same version {2} running in the cluster {3}. Skip upgrading it.",
+        "DIFFPKG_TestAppPkgFailed": "Testing application package failed before creating diff package. Skip creating diff package.",
         "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
         "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
         "SearchingForPath": "Searching for path: {0}",
@@ -421,6 +423,7 @@
         "SFSDK_AppAlreadyExistsError": "An application with name '{0}' already exists, its type is '{1}' and version is '{2}'. You must first remove the existing application before a new application can be deployed or provide a new name for the application.",
         "SFSDK_AppAlreadyExistsInfo": "An application with name '{0}' already exists in the cluster with application type '{1}' and version '{2}'. Removing it.",
         "SFSDK_UnregisteringExistingAppType": "Application type '{0}' and version '{1}' was already registered with the cluster, unregistering it...",
+        "SFSDK_SkipUnregisteringExistingAppType": "Application type '{0}' and version '{1}' is already registered with the cluster and currently is in use, hence skipping unregistering Application Type",
         "SFSDK_UnableToUnregisterAppType": "Unregistering the existing application type was unsuccessful.",
         "SFSDK_CopyingAppToImageStore": "Copying application to image store...",
         "SFSDK_CopyingAppToImageStoreFailed": "Copying of application package to image store failed. Cannot continue with registering the application.",
@@ -434,7 +437,7 @@
         "SFSDK_AppTypeMismatch": "Application type of application '{0}' doesn't match the application type in the application manifest of the new application package. Please ensure that the application being upgraded has the same application type.",
         "SFSDK_UpgradeInProgressError": "An upgrade for the application '{0}' is already in progress.",
         "SFSDK_StartAppUpgrade": "Start upgrading application...",
-        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}'...",
+        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}' failed",
         "SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
         "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
         "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
