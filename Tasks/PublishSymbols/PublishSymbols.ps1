@@ -56,6 +56,7 @@ try {
 
         # Get the inputs.
         [string]$SymbolsPath = Get-VstsInput -Name 'SymbolsPath'
+        $SymbolsPath = $SymbolsPath.TrimEnd('\')
 
         if ([string]$SourceFolder = (Get-VstsInput -Name 'SourceFolder') -and
             $SourceFolder -ne (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Require)) {
