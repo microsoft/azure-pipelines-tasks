@@ -124,6 +124,9 @@ Try
     # Getting endpoint used for the task
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
+    # Import SQLPS Module
+    Import-SqlPs
+
     # Test and get IPRange for autoDetect IpDetectionMethod
     $ipAddressRange = @{}
     if($IpDetectionMethod -eq "AutoDetect")
@@ -179,10 +182,7 @@ Try
     }
     else
     {
-        # Import SQLPS Module
-        Import-SqlPs
-
-        if($sqlUserName)
+         if($sqlUserName)
         {
             $SqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
         }
@@ -229,15 +229,18 @@ Catch [System.Management.Automation.CommandNotFoundException]
 }
 Catch [Exception]
 {
+    $errorMessage = Get-VstsLocString -Key "SAD_TroubleshootingLink"
+
     if($_.Exception.Message) 
     {
-        Write-Error ($_.Exception.Message)
+        $errorMessage = $_.Exception.Message + " " + $errorMessage
     }
     else 
     {
-        Write-Error ($_.Exception)
+        $errorMessage = $_.Exception.ToString() + " " + $errorMessage
     }
-    throw
+
+    throw $errorMessage
 }
 Finally
 {
