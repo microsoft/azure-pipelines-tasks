@@ -127,5 +127,7 @@
   "loc.messages.FailedToUploadFile": "Fehler beim Hochladen der Datei \"%s/%s\" aus Kudu. Fehler: %s",
   "loc.messages.FailedToGetFileContent": "Fehler beim Abrufen des Dateiinhalts \"%s/%s\" aus Kudu. Fehler: %s",
   "loc.messages.FailedToListPath": "Fehler beim Auflisten des Pfads \"%s\". Fehler: %s",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
+  "loc.messages.FailedToGetDeploymentLogs": "Fehler beim Abrufen von Bereitstellungsprotokollen. Fehler: %s",
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
 }

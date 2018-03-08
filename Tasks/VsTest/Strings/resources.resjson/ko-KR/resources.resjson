@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "테스트 결과 디렉터리가 없습니다.",
   "loc.messages.OnlyWindowsOsSupported": "이 작업은 Windows 에이전트에서만 지원되고 다른 플랫폼에서 사용할 수 없습니다.",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "주문형 실행은 다중 구성 옵션에서 지원되지 않습니다. '없음' 또는 '다중 에이전트' 병렬 처리 옵션을 사용하세요.",
-  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
+  "loc.messages.disabledRerun": "제공된 다시 실행 임계값이 %s이므로 실패한 테스트 다시 실행을 사용하지 않도록 설정하는 중"
 }

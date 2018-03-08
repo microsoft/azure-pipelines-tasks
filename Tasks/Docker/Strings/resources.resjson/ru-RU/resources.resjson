@@ -64,10 +64,13 @@
   "loc.input.help.enforceDockerNamingConvention": "Если этот параметр установлен, имя будет изменено в соответствии с соглашением об именовании Docker. Прописные буквы будут преобразованы в строчные, а пробелы в имени образа будут удалены.",
   "loc.input.label.cwd": "Рабочий каталог",
   "loc.input.help.cwd": "Рабочий каталог для команды Docker.",
-  "loc.input.label.memory": "Memory limit",
-  "loc.input.help.memory": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
+  "loc.input.label.memory": "Предельный объем памяти",
+  "loc.input.help.memory": "Максимальный объем памяти, доступный контейнеру, в виде целого числа с необязательными суффиксами, например \"2GB\".",
   "loc.messages.ContainerPatternFound": "Обнаружен шаблон в параметре filepath в Docker",
   "loc.messages.ContainerPatternNotFound": "Не найден шаблон в параметре filepath в Docker",
   "loc.messages.ContainerDockerFileNotFound": "Отсутствуют файлы Docker, соответствующие %s.",
-  "loc.messages.NoImagesInImageNamesFile": "В файле \"%s\" должно быть указано по меньшей мере одно имя образа."
+  "loc.messages.NoImagesInImageNamesFile": "В файле \"%s\" должно быть указано по меньшей мере одно имя образа.",
+  "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+  "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
+  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
 }

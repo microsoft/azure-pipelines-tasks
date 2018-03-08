@@ -88,5 +88,7 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "Die benutzerdefinierte Skripterweiterung \"{0}\" kann nicht für den virtuellen Computer \"{1}\" festgelegt werden: {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Fehler beim Aktivieren der Kopiervoraussetzungen. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "Das Speicherkonto \"{0}\" wurde nicht gefunden. Bitte geben Sie ein vorhandenes Speicherkonto an.",
-  "loc.messages.AFC_RootContainerAndDirectory": "Die Option \"/S\" gilt nicht für \"$root\"-Container."
+  "loc.messages.AFC_RootContainerAndDirectory": "Die Option \"/S\" gilt nicht für \"$root\"-Container.",
+  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
+  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
 }

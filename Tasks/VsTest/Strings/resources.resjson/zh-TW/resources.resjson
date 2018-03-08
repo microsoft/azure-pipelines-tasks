@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "找不到測試結果目錄。",
   "loc.messages.OnlyWindowsOsSupported": "只有 Windows 代理程式支援此工作，無法將其用於其他平台上。",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "不支援以 Multi-Configuration 選項配合進行指定的執行。請使用 'None' 或 'Multi-agent' 平行處理原則選項。",
-  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
+  "loc.messages.disabledRerun": "失敗的測試的重新執行重新執行的臨界值為停用，前提是 %s"
 }

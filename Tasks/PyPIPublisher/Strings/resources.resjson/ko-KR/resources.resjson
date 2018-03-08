@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "PyPI Publisher",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/pypipublisher)",
-  "loc.description": "Publish Python packages to PyPI",
-  "loc.instanceNameFormat": "PyPI Publisher",
-  "loc.input.label.serviceEndpoint": "PyPI connection",
-  "loc.input.help.serviceEndpoint": "Select the generic service endpoint where PyPI server details are present. \n\nNote: To configure a new generic service endpoint, under your VSTS project, go to Settings -> Services -> New Service Endpoint -> Generic. \n\nConnection Name – Use a friendly connection name of your choice. \nServer URL – PyPI package server (for example: https://upload.pypi.org/legacy/). \nUser Name – PyPI registered username. \nPassword – password for your PyPI account",
-  "loc.input.label.wd": "Python package path",
-  "loc.input.help.wd": "Python package directory to be published, where setup.py is present.",
-  "loc.input.label.wheel": "Upload wheel",
-  "loc.input.help.wheel": "If checked, then task will additionally build and publish universal wheel (platform independent) of this package. For more information regarding universal wheel [see here](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
+  "loc.friendlyName": "PyPI 게시자",
+  "loc.helpMarkDown": "[자세한 정보](https://aka.ms/pypipublisher)",
+  "loc.description": "PyPI에 Python 패키지 게시",
+  "loc.instanceNameFormat": "PyPI 게시자",
+  "loc.input.label.serviceEndpoint": "PyPI 연결",
+  "loc.input.help.serviceEndpoint": "PyPI 서버 세부 정보가 있는 일반 서비스 끝점을 선택합니다. \n\n참고: VSTS 프로젝트에서 새 제네릭 서비스 끝점을 구성하려면 [설정] -> [서비스] -> [새 서비스 끝점] -> [일반]으로 이동하세요. \n\n연결 이름 - 원하는 연결 이름 사용. \n서버 URL – PyPI 패키지 서버(예: https://upload.pypi.org/legacy/). \n사용자 이름 – PyPI에 등록된 사용자 이름. \n암호 – PyPI 계정의 암호",
+  "loc.input.label.wd": "Python 패키지 경로",
+  "loc.input.help.wd": "게시할 Python 패키지 디렉터리입니다. 여기에 setup.py가 있습니다.",
+  "loc.input.label.wheel": "휠 업로드",
+  "loc.input.help.wheel": "선택하는 경우 작업에서 이 패키지의 유니버설 휠(플랫폼 독립적)을 추가로 빌드 및 게시합니다. 유니버설 휠에 대한 자세한 내용은 [여기를 참조](https://packaging.python.org/tutorials/distributing-packages/#wheels)하세요."
 }

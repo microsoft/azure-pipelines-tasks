@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=786653)",
   "loc.description": "Stellt Xamarin-Komponenten für die angegebene Projektmappe wieder her.",
   "loc.instanceNameFormat": "Xamarin-Komponentenwiederherstellung $(solution)",
-  "loc.input.label.solution": "Path to solution",
+  "loc.input.label.solution": "Pfad zur Projektmappe",
   "loc.input.help.solution": "Der Pfad zur Visual Studio-Projektmappendatei",
   "loc.input.label.email": "E-Mail",
   "loc.input.help.email": "E-Mail-Adresse des Xamarin-Kontos.",

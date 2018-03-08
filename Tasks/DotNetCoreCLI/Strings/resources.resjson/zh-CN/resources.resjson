@@ -15,7 +15,7 @@
   "loc.input.label.publishWebProjects": "发布 Web 项目",
   "loc.input.help.publishWebProjects": "如果为 true，任务将尝试查找存储库中的 Web 项目，并对其运行发布命令。可通过目录中的 web.config 文件或 wwwroot 文件夹来识别 Web 项目。",
   "loc.input.label.projects": "项目路径",
-  "loc.input.help.projects": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/.csproj for all .csproj files in all subfolders).",
+  "loc.input.help.projects": "要使用的 csproj 文件的路径。可以使用通配符(例如，使用 **/.csproj 代表所有子文件夹中的所有 .csproj 文件)。",
   "loc.input.label.custom": "自定义命令",
   "loc.input.help.custom": "传递到 dotnet.exe 进行执行的命令。",
   "loc.input.label.arguments": "参数",

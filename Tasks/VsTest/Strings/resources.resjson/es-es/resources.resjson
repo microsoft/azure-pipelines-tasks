@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "No se encontró el directorio de resultados de pruebas.",
   "loc.messages.OnlyWindowsOsSupported": "Esta tarea solo se admite en los agentes de Windows y no se puede usar en otras plataformas.",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "No se admiten ejecuciones a petición con la opción Multiconfiguración. Use la opción de paralelismo \"Ninguno\" o \"Multiagente\".",
-  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
+  "loc.messages.disabledRerun": "Deshabilitar el volver a ejecutar pruebas con error como el umbral vuelva a ejecutar siempre es %s"
 }

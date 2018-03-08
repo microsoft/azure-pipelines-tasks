@@ -1,12 +1,12 @@
 {
-  "loc.friendlyName": "PyPI Publisher",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/pypipublisher)",
-  "loc.description": "Publish Python packages to PyPI",
-  "loc.instanceNameFormat": "PyPI Publisher",
-  "loc.input.label.serviceEndpoint": "PyPI connection",
-  "loc.input.help.serviceEndpoint": "Select the generic service endpoint where PyPI server details are present. \n\nNote: To configure a new generic service endpoint, under your VSTS project, go to Settings -> Services -> New Service Endpoint -> Generic. \n\nConnection Name – Use a friendly connection name of your choice. \nServer URL – PyPI package server (for example: https://upload.pypi.org/legacy/). \nUser Name – PyPI registered username. \nPassword – password for your PyPI account",
-  "loc.input.label.wd": "Python package path",
-  "loc.input.help.wd": "Python package directory to be published, where setup.py is present.",
-  "loc.input.label.wheel": "Upload wheel",
-  "loc.input.help.wheel": "If checked, then task will additionally build and publish universal wheel (platform independent) of this package. For more information regarding universal wheel [see here](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
+  "loc.friendlyName": "Éditeur PyPI",
+  "loc.helpMarkDown": "[Plus d'informations](https://aka.ms/pypipublisher)",
+  "loc.description": "Publier des packages Python sur PyPI",
+  "loc.instanceNameFormat": "Éditeur PyPI",
+  "loc.input.label.serviceEndpoint": "Connexion PyPI",
+  "loc.input.help.serviceEndpoint": "Sélectionnez le point de terminaison de service générique qui contient les détails du serveur PyPI. \n\nRemarque : Pour configurer un nouveau point de terminaison de service générique, sous votre projet VSTS, accédez à Paramètres -> Services -> Nouveau point de terminaison de service -> Générique. \n\nNom de connexion - Utilisez un nom de connexion convivial. \nURL du serveur - Serveur de packages PyPI (exemple : https://upload.pypi.org/legacy/). \nNom d'utilisateur - Nom d'utilisateur inscrit PyPI. \nMot de passe - Mot de passe de votre compte PyPI",
+  "loc.input.label.wd": "Chemin du package Python",
+  "loc.input.help.wd": "Répertoire de packages Python à publier, où se trouve setup.py.",
+  "loc.input.label.wheel": "Charger la roue",
+  "loc.input.help.wheel": "Si cette option est cochée, la tâche génère et publie également une roue universelle (indépendante de la plateforme) de ce package. Pour plus d'informations sur la roue universelle : [consulter ceci](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
 }

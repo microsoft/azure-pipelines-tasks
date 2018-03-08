@@ -52,7 +52,7 @@
   "loc.input.label.destinationTypeOption": "目的地類型",
   "loc.input.help.destinationTypeOption": "選擇要用於測試 UI 的目的地類型。裝置必須連線到透過纜線或網路連線執行組建的 Mac。請參閱 Xcode 中的<strong>裝置和模擬器</strong>。",
   "loc.input.label.destinationSimulators": "模擬器",
-  "loc.input.help.destinationSimulators": "輸入要用於測試 UI 的 Xcode 模擬器名稱。例如，輸入 'iPhone X' (iOS 和 watchOS) 或 `Apple TV 4K` (tvOS)。目標 OS 版本是選擇性項目，且可以 'OS=<i>versionNumber</i>' 格式指定，例如 `iPhone X,OS=11.1`。如需<strong>託管 macOS 預覽</strong>代理程式上安裝的模擬器清單，[請參閱這裡](https://docs.microsoft.com/en-us/mobile-center/build/software)。",
+  "loc.input.help.destinationSimulators": "輸入要用於 UI 測試的 Xcode 模擬器名稱。例如，輸入 `iPhone X` (iOS 和 watchOS) 或 `Apple TV 4K` (tvOS)。目標 OS 版本是選擇性項目，可使用 'OS=<i>versionNumber</i>' 格式指定，例如 `iPhone X,OS=11.1`。如需 <strong>Hosted macOS Preview</strong> 代理程式上安裝的模擬器清單，[請參閱這裡](https://docs.microsoft.com/en-us/mobile-center/build/software)。",
   "loc.input.label.destinationDevices": "裝置",
   "loc.input.help.destinationDevices": "輸入要用於測試 UI 的裝置名稱，例如 `Raisa's iPad`。",
   "loc.input.label.args": "引數",

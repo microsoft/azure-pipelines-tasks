@@ -64,10 +64,13 @@
   "loc.input.help.enforceDockerNamingConvention": "若啟用的 Docker 映像名稱將修改為遵循 Docker 命名慣例。請將大寫字元轉為小寫字元並移除映像名稱中的空格。",
   "loc.input.label.cwd": "工作目錄",
   "loc.input.help.cwd": "Docker 命令的工作目錄。",
-  "loc.input.label.memory": "Memory limit",
-  "loc.input.help.memory": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
+  "loc.input.label.memory": "記憶體限制",
+  "loc.input.help.memory": "容器可用的最大記憶體，值為整數，並可選擇加上尾碼，如 '2GB'。",
   "loc.messages.ContainerPatternFound": "在 docker filepath 參數中找到的模式",
   "loc.messages.ContainerPatternNotFound": "在 docker filepath 參數中找不到任何模式",
   "loc.messages.ContainerDockerFileNotFound": "找不到任何的 Docker 檔案符合 %s。",
-  "loc.messages.NoImagesInImageNamesFile": "檔案 '%s' 中至少應有一個映像名稱。"
+  "loc.messages.NoImagesInImageNamesFile": "檔案 '%s' 中至少應有一個映像名稱。",
+  "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+  "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
+  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
 }

@@ -66,9 +66,9 @@
   "loc.input.label.WebConfigParameters": "Web.config 參數",
   "loc.input.help.WebConfigParameters": "編輯所產生之 web.config 檔案中的值，例如啟動檔案。此功能只適用於所產生的 web.config。[深入了解](https://go.microsoft.com/fwlink/?linkid=843469)。",
   "loc.input.label.AppSettings": "應用程式設定",
-  "loc.input.help.AppSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
+  "loc.input.help.AppSettings": "編輯 web 應用程式應用程式設定，請使用下列語法-機碼值。包含空白的值應以雙引號括住。<br /> <b>範例</b>:-5000，連接埠 5000-RequestTimeout <br /> -WEBSITE_TIME_ZONE\"美國東部標準時間\"",
   "loc.input.label.ConfigurationSettings": "組態設定",
-  "loc.input.help.ConfigurationSettings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.help.ConfigurationSettings": "編輯 web 應用程式組態設定，請使用下列語法-機碼值。包含空白的值應以雙引號括住。<br />範例:-phpVersion 5.6 linuxFxVersion： 節點|6.11",
   "loc.input.label.TakeAppOfflineFlag": "將應用程式設為離線",
   "loc.input.help.TakeAppOfflineFlag": "選取此選項可在同步作業開始之前，將 app_offline.htm 檔案置於 App Service 的根目錄中而使此 Azure App Service 離線。此檔案將會在同步作業成功完成後移除。",
   "loc.input.label.UseWebDeploy": "使用 Web Deploy 發佈",
@@ -211,8 +211,9 @@
   "loc.messages.UpdatingAppServiceApplicationSettings": "正在更新 App Service 應用程式設定。資料: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "已更新 App Service 應用程式設定與 Kudu 應用程式設定。",
   "loc.messages.MultipleResourceGroupFoundForAppService": "找到 App Service '%s' 的多個資源群組。",
-  "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
-  "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
-  "loc.messages.GoExeNameNotPresent": "Go exe name is not present"
+  "loc.messages.PackageDeploymentUsingZipDeployFailed": "使用 ZIP Deploy 的套件部署失敗。如需詳細資料，請查看記錄。",
+  "loc.messages.PackageDeploymentInitiated": "使用 ZIP Deploy 的套件部署已起始。",
+  "loc.messages.FailedToGetDeploymentLogs": "無法取得部署記錄。錯誤: %s",
+  "loc.messages.GoExeNameNotPresent": "請移 exe 名稱不存在",
+  "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
 }

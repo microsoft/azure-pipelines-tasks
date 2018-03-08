@@ -127,5 +127,7 @@
   "loc.messages.FailedToUploadFile": "未能从 Kudu 上传文件“%s/%s”。错误: %s",
   "loc.messages.FailedToGetFileContent": "未能从 Kudu 获取文件内容“%s/%s”。错误: %s",
   "loc.messages.FailedToListPath": "未能列出路径“%s”。错误: %s",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
+  "loc.messages.FailedToGetDeploymentLogs": "未能获取部署日志。错误: %s",
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
 }

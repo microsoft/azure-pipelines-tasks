@@ -15,7 +15,7 @@
   "loc.input.label.publishWebProjects": "Pubblica progetti Web",
   "loc.input.help.publishWebProjects": "Se è impostato su true, l'attività proverà a trovare i progetti Web nel repository e a eseguire su di essi il comando publish. I progetti Web sono identificabili dalla presenza di un file web.config file o della cartella wwwroot nella directory.",
   "loc.input.label.projects": "Percorso dei progetti",
-  "loc.input.help.projects": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/.csproj for all .csproj files in all subfolders).",
+  "loc.input.help.projects": "Percorso dei file csproj da usare. È possibile usare i caratteri jolly, ad esempio **/.csproj per tutti i file con estensione csproj in tutte le sottocartelle.",
   "loc.input.label.custom": "Comando personalizzato",
   "loc.input.help.custom": "Comando da passare a dotnet.exe per l'esecuzione.",
   "loc.input.label.arguments": "Argomenti",

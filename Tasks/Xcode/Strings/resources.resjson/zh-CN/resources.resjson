@@ -52,7 +52,7 @@
   "loc.input.label.destinationTypeOption": "目标类型",
   "loc.input.help.destinationTypeOption": "选择要用于 UI 测试的目标类型。设备必须通过电缆或网络连接连接到执行生成的 Mac。请参阅 Xcode 中的<strong>设备和模拟器</strong>。",
   "loc.input.label.destinationSimulators": "模拟器",
-  "loc.input.help.destinationSimulators": "输入要用于 UI 测试的 Xcode 模拟器名称。例如，输入 \"iPhone X\" (iOS 和 watchOS)或 \"Apple TV 4K\" (tvOS)。目标 OS 版本可选，并且可按以下格式指定: \"OS=<i>versionNumber</i> \"，例如 \"iPhone X,OS=11.1\"。托管 macOS 预览<strong></strong>代理上安装的模拟器列表可在 [此处找到](https://docs.microsoft.com/zh-cn/mobile-center/build/software)。",
+  "loc.input.help.destinationSimulators": "输入要用于 UI 测试的 Xcode 模拟器名称。例如，输入 \"iPhone X\" (iOS 和 watchOS)或 \"Apple TV 4K\" (tvOS)。目标 OS 版本可选，并且可按以下格式指定: \"OS=<i>versionNumber</i> \"，例如 \"iPhone X,OS=11.1\"。<strong>Hosted macOS Preview</strong> 代理上安装的一系列模拟器可在[此处找到](https://docs.microsoft.com/zh-cn/mobile-center/build/software)。",
   "loc.input.label.destinationDevices": "设备",
   "loc.input.help.destinationDevices": "输入要用于 UI 测试的设备名称，例如 \"Raisa's iPad\"。",
   "loc.input.label.args": "参数",
