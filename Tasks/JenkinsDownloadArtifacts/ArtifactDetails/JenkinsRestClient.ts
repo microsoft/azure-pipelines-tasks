@@ -190,9 +190,13 @@ export class JenkinsRestClient {
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
 
         let requestOptions: IHttpRequestOptions = {
-            ignoreSslError: !strictSSL,
-            proxy: tl.getHttpProxyConfiguration()
+            ignoreSslError: !strictSSL
         };
+
+        let proxyUrl: string = tl.getVariable("agent.proxyurl");
+        if (!!proxyUrl) {
+            requestOptions.proxy = tl.getHttpProxyConfiguration();
+        }
 
         const username = tl.getEndpointAuthorizationParameter(endpoint, 'username', false);
         const password = tl.getEndpointAuthorizationParameter(endpoint, 'password', false);
