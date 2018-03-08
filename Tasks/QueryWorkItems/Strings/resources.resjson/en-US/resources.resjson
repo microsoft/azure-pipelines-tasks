@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Query Work Items",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.queryId": "Query",
-  "loc.input.help.queryId": "Select a saved work query to execute.",
+  "loc.input.help.queryId": "Select a saved work item query to execute.",
   "loc.input.label.maxThreshold": "Upper threshold",
   "loc.input.help.maxThreshold": "The maximum number of matching workitems from the query.",
   "loc.input.label.minThreshold": "Lower threshold",
