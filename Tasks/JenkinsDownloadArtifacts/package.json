@@ -11,7 +11,6 @@
     "artifact-engine": "0.1.17",
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
     "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-1.0.0.tgz",
-    "request": "2.74.0",
     "vsts-task-lib": "2.1.0"
   }
 }
