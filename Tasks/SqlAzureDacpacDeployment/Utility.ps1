@@ -42,9 +42,6 @@ function Get-AgentIPRange
 
     [hashtable] $IPRange = @{}
 
-    $sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
-    $env:SQLCMDPASSWORD = $sqlPassword
-
     $formattedSqlUsername = $sqlUserName
 
     if($sqlUserName)
@@ -52,16 +49,34 @@ function Get-AgentIPRange
         $formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
     }
 
-    $sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
+	if (Get-Command -Name "Invoke-Sqlcmd" -ErrorAction SilentlyContinue)
+	{
+		try {
+			Write-Verbose "Reaching SqlServer to check connection by running Invoke-SqlCmd"
+			Write-Verbose "Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password ****** -Query `"select getdate()`" -ErrorVariable errors -ConnectionTimeout 120 | Out-String"
+
+			$output = Invoke-Sqlcmd -ServerInstance $serverName -Username $formattedSqlUsername -Password $sqlPassword -Query "select getdate()" -ErrorVariable errors -ConnectionTimeout 120 | Out-String
+		}
+		catch {
+			Write-Verbose "Failed to reach SQL server $serverName. $($_.Exception.Message)"
+		}
+	}
+	else 
+	{
+		$sqlCmd = Join-Path -Path $PSScriptRoot -ChildPath "sqlcmd\SQLCMD.exe"
+		$env:SQLCMDPASSWORD = $sqlPassword
+
+		$sqlCmdArgs = "-S `"$serverName`" -U `"$formattedSqlUsername`" -Q `"select getdate()`""
+
+		Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"    
+
+		$ErrorActionPreference = 'Continue'
+
+		$output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
+	
+		$ErrorActionPreference = 'Stop'
+	}
     
-    Write-Verbose "Reaching SqlServer to check connection by running sqlcmd.exe $sqlCmdArgs"
-
-    $ErrorActionPreference = 'Continue'
-
-    $output = ( Invoke-Expression "& '$sqlCmd' --% $sqlCmdArgs" -ErrorVariable errors 2>&1 ) | Out-String
-
-    $ErrorActionPreference = 'Stop'
-
     if($errors.Count -gt 0)
     {
         $errMsg = $errors[0].ToString()
@@ -249,4 +264,3 @@ function ConvertParamToSqlSupported
 
     return $param
 }
-
