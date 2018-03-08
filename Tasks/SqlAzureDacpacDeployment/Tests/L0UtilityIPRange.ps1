@@ -44,7 +44,7 @@ Register-Mock Invoke-Sqlcmd { Write-Error $firewallException }
 
 $IPAddressRange = Get-AgentIPRange -serverName $serverName -sqlUserName $sqlUsername -sqlPassword $sqlPassword
 
-Assert-WasCalled Invoke-Sqlcmd -- -ServerInstance "a0nuel7r2k.database.windows.net" -Username "TestUser" -Password "TestPassword" -Query "select getdate()" -ErrorVariable errors
+Assert-WasCalled Invoke-Sqlcmd -- -ServerInstance "a0nuel7r2k.database.windows.net" -Username "TestUser" -Password "TestPassword" -Query "select getdate()" -ErrorVariable errors -ConnectionTimeout 120
 Assert-AreEqual  $startIP $IPAddressRange.StartIPAddress
 Assert-AreEqual $endIP $IPAddressRange.EndIPAddress
 
