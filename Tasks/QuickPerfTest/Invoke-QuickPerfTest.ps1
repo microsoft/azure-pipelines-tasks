@@ -22,6 +22,10 @@ $geoLocation,
 [String] [Parameter(Mandatory = $true)]
 $machineType,
 [String] [Parameter(Mandatory = $false)]
+$resourceGroupName,
+[String] [Parameter(Mandatory = $false)]
+$numOfSelfProvisionedAgents,
+[String] [Parameter(Mandatory = $false)]
 $avgResponseTimeThreshold
 )
 
@@ -89,6 +93,8 @@ Write-Output "Website Url = $websiteUrl"
 Write-Output "Virtual user load = $vuLoad"
 Write-Output "Load location = $geoLocation"
 Write-Output "Load generator machine type = $machineType"
+Write-Output "Self-provisioned rig = $resourceGroupName"
+Write-Output "Num of agents = $numOfSelfProvisionedAgents"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
 #Validate Input
@@ -123,7 +129,7 @@ $drop = CreateTestDrop $headers $dropjson $CltAccountUrl
 
 if ($drop.dropType -eq "InPlaceDrop")
 {
-	$runJson = ComposeTestRunJson $testName $drop.id $MachineType
+	$runJson = ComposeTestRunJson $testName $drop.id $vuLoad $runDuration $MachineType $resourceGroupName $numOfSelfProvisionedAgents
 	$run = QueueTestRun $headers $runJson $CltAccountUrl
 	MonitorTestRun $headers $run $CltAccountUrl
 	$webResultsUrl = GetTestRunUri $run.id $headers $CltAccountUrl

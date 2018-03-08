@@ -171,13 +171,68 @@ param (
         Write-Verbose "Unable to get the path for net.exe. Net command will be 'net'"
         return 'net'
     }
+
+    function Create-DestinationDirectory(
+        [string]$path
+    )
+    {
+        $psCredentialObject = New-Object PSCredential($credential.UserName, (ConvertTo-SecureString $credential.Password -AsPlainText -Force))
+        $destPath = $path
+        $foundParentPath = $false
+        $isRoot = $false
+
+        Write-Verbose "Creating path to directory: $path"
+        while($destPath -and (-not $foundParentPath))
+        {
+            try
+            {
+                New-PSDrive -Name WFCPSDrive -PSProvider FileSystem -Root $destPath -Credential $psCredentialObject
+                $foundParentPath = $true
+                Write-Verbose "Found parent path"
+                $relativePath = $path.Substring($destPath.Length)
+                New-Item -ItemType Directory WFCPSDrive:$relativePath -Force
+                Write-Verbose "Created directory"
+            }
+            catch 
+            {
+                Write-Verbose "Caught exception: $_.Exception.Message"
+                $parentPath = Split-Path -Path $destPath -Parent
+                if(($parentPath.Length -eq 0) -and ($isRoot -eq $false))
+                {
+                    $destPath = [IO.Path]::DirectorySeparatorChar + [IO.Path]::DirectorySeparatorChar + ([System.Uri]($destPath)).Host
+                    $isRoot = $true
+                    Write-Verbose "Check if root path exists: $destPath"
+                }
+                else
+                {
+                    $destPath = $parentPath
+                    Write-Verbose "Check if parent path exists: $destPath"
+                }
+            }
+            finally
+            {
+                if($foundParentPath -eq $true)
+                {
+                    Remove-PSDrive -Name WFCPSDrive
+                }
+            }
+        }
+    }
     
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
+
+    Write-Verbose "machine share= $machineShare"
+    Write-Verbose "destination network path= $destinationNetworkPath"
     
     Validate-Credential $credential
     $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
     $password = $($credential.Password) 
+
+    if([bool]([uri]$targetPath).IsUnc)
+    {
+        Create-DestinationDirectory -path $destinationNetworkPath
+    }
     
     $netExeCommand = Get-NetExeCommand
 

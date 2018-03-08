@@ -22,7 +22,7 @@ export class ContainerBasedDeploymentUtility {
     }
 
     public async deployWebAppImage(taskParameters: TaskParameters): Promise<void> {
-        var imageName = this._getImageName();
+        let imageName: string = this._getDockerHubImageName();
         tl.debug("Deploying an image " + imageName + " to the webapp " + this._appService.getName());
 
         tl.debug("Updating the webapp configuration.");
@@ -154,7 +154,7 @@ export class ContainerBasedDeploymentUtility {
     }
 
     private async _getContainerRegistrySettings(imageName, endPoint): Promise<string> {
-        var containerRegistryType: string = tl.getInput('ImageSource', true);
+        var containerRegistryType: string = 'Registry';
         var containerRegistrySettings: string = "-DOCKER_CUSTOM_IMAGE_NAME " + imageName;
         var containerRegistryAuthParamsFormatString: string = "-DOCKER_REGISTRY_SERVER_URL %s -DOCKER_REGISTRY_SERVER_USERNAME %s -DOCKER_REGISTRY_SERVER_PASSWORD %s";
     
