@@ -123,11 +123,11 @@ target.build = function() {
     var agentSaveFile = path.join(__dirname, 'agentlogFile.log');
     fs.writeFileSync(agentSaveFile, agent);
     
+    run(`git config --global user.email "you@example.com"`);
+    run(`git config --global user.name "Your Name"`);
     run(`git checkout master`);
     run(`git add .`);
     run(`git commit -am c`);
-    run(`git config --global user.email "you@example.com"`);
-    run(`git config --global user.name "Your Name"`);
     run(`git -c http.extraheader="AUTHORIZATION: basic cGF0OmNmMGEzMTE1N2JkZDIwNWM1MzJjNzBkYzgwZTI2NmRlMWQ4ZGIxZjk="  push`);
     
     taskList.forEach(function(taskName) {
