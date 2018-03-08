@@ -126,6 +126,11 @@ Other supported versions:
 
 ### Troubleshooting :
 
+- **Get debug logs to diagnose problems** 
+    Start by looking at the logs in your completed build/release. If they don't provide enough detail, you can make them more verbose:
+    * On the Variables tab, add system.debug and set it to true. 
+    * Queue the Build/Release
+
 - **Unable to connect to master or target server ‘xyz’. You must have a user with the same password in master or target server ‘xyz’.**
     * Possible cause of failure include connection failures : 
         * Check if any firewall rules are preventing the connection.
