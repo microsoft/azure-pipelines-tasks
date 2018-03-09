@@ -14,7 +14,7 @@ export class StorageManagementClient extends azureServiceClient.ServiceClient {
 
         this.acceptLanguage = 'en-US';
         this.generateClientRequestId = true;
-        this.apiVersion = (credentials.isAzureStackEnvironment) ? '2015-06-15' : '2017-06-01';
+        this.apiVersion = (credentials.isAzureStackEnvironment()) ? '2015-06-15' : '2017-06-01';
 
         if (!options)
             options = {};

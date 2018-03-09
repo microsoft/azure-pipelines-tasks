@@ -29,7 +29,7 @@ async function run() {
             throw new Error(task.loc("AzureEndpointCannotBeNull"));
         }
                
-        const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
+        const mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(new ApplicationTokenCredentials(endpoint), endpoint.subscriptionID);
         // Get mysql server data entered by user 
         mysqlServer = await mysqlServerOperations.getMysqlServerFromServerName(azureMysqlTaskParameter.getServerName());
         task.debug('Mysql server details from server name: ' + JSON.stringify(mysqlServer));
@@ -37,7 +37,7 @@ async function run() {
         if(mysqlClientPath) {
              // Mysql client
             const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName(), mysqlClientPath);
-            firewallOperations = new FirewallOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
+            firewallOperations = new FirewallOperations(new ApplicationTokenCredentials(endpoint), endpoint.subscriptionID);
             //Invoke firewall operation to validate user has permission for server or not. If not whitelist the IP
             firewallAdded = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer);
             //Execute sql script entered by user

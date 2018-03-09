@@ -17,8 +17,8 @@ export function getMockEndpoint() {
         url: "https://management.azure.com/",
         environmentAuthorityUrl: "https://login.windows.net/",
         activeDirectoryResourceID: "https://management.azure.com/",
-        applicationTokenCredentials: new ApplicationTokenCredentials("MOCK_SPN_ID", "MOCK_TENANT_ID", "MOCK_SPN_KEY", "https://management.azure.com/",
-        "https://login.windows.net/", "https://management.azure.com/", false)
+        scheme: "ServicePrincipal",
+        msiPort: '50342'
     }
     
     nock("https://login.windows.net", {

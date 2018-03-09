@@ -12,7 +12,7 @@ export class ApplicationInsightsWebTests {
     private _client: ServiceClient;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string) {
-        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient(new msRestAzure.ApplicationTokenCredentials(endpoint), endpoint.subscriptionID, 30);
         this._resourceGroupName = resourceGroup;
     }
 

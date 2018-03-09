@@ -19,7 +19,7 @@ export class AzureAksService {
     public _client: ServiceClient;
 
     constructor(endpoint: AzureEndpoint) {
-        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient(new msRestAzure.ApplicationTokenCredentials(endpoint), endpoint.subscriptionID, 30);
     }
 
     public beginRequest(uri: string,  parameters: {}) : Promise<webClient.WebResponse> {
