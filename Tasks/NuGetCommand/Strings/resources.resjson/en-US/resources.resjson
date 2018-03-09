@@ -65,6 +65,8 @@
   "loc.input.help.toolPackage": "Determines if the output files of the project should be in the tool folder.",
   "loc.input.label.buildProperties": "Additional build properties",
   "loc.input.help.buildProperties": "Specifies a list of token=value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
+  "loc.input.label.basePath": "Base path",
+  "loc.input.help.basePath": "The base path of the files defined in the nuspec file.",
   "loc.input.label.verbosityPack": "Verbosity",
   "loc.input.help.verbosityPack": "Specifies the amount of detail displayed in the output.",
   "loc.input.label.arguments": "Command and arguments",
