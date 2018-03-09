@@ -308,14 +308,6 @@
             "groupName": "advanced"
         },
         {
-            "name": "outputPattern",
-            "type": "string",
-            "label": "Output directory",
-            "required": false,
-            "helpMarkDown": "(Optional) Enter a path relative to the working directory where build output (binaries) will be placed. Examples: `output/$(SDK)/$(Configuration)` or `output/$(TestSDK)/$(TestConfiguration)`. Archive and export paths are configured separately.",
-            "groupName": "advanced"
-        },
-        {
             "name": "useXcpretty",
             "type": "boolean",
             "label": "Use xcpretty",

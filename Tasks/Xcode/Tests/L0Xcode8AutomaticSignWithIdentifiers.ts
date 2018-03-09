@@ -74,7 +74,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Xcode 8.0"
         },
-        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch CODE_SIGN_STYLE=Automatic": {
+        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build CODE_SIGN_STYLE=Automatic": {
             "code": 0,
             "stdout": "xcodebuild output here"
         },

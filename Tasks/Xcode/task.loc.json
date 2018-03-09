@@ -310,14 +310,6 @@
       "groupName": "advanced"
     },
     {
-      "name": "outputPattern",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.outputPattern",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.outputPattern",
-      "groupName": "advanced"
-    },
-    {
       "name": "useXcpretty",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.useXcpretty",

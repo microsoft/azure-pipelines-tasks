@@ -25,11 +25,7 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
@@ -59,11 +55,7 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
@@ -93,11 +85,7 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
@@ -127,11 +115,7 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
@@ -157,11 +141,7 @@ describe('Xcode L0 Suite', function () {
         assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
-            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch'),
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
@@ -192,10 +172,6 @@ describe('Xcode L0 Suite', function () {
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
             '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
             'CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
@@ -227,10 +203,7 @@ describe('Xcode L0 Suite', function () {
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
             '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch CODE_SIGN_STYLE=Automatic'),
+            'CODE_SIGN_STYLE=Automatic'),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
@@ -260,10 +233,6 @@ describe('Xcode L0 Suite', function () {
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
             '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
             'CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=testDevTeamId'),
             'xcodebuild for building the ios project/workspace should have been run.');
 
@@ -297,10 +266,6 @@ describe('Xcode L0 Suite', function () {
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
             '-project /user/build/fun.xcodeproj -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
             'CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=testDevTeamId'),
             'xcodebuild for building the ios project/workspace should have been run.');
 
@@ -335,10 +300,6 @@ describe('Xcode L0 Suite', function () {
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
             '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
             'CODE_SIGN_STYLE=Automatic'),
             'xcodebuild for building the ios project/workspace should have been run.');
 
@@ -372,10 +333,6 @@ describe('Xcode L0 Suite', function () {
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
             '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst ' +
-            'OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj ' +
-            'SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym ' +
-            'SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch ' +
             '-allowProvisioningUpdates CODE_SIGN_STYLE=Automatic'),
             'xcodebuild for building the ios project/workspace should have been run with -allowProvisioningUpdates.');
 
