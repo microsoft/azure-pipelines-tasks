@@ -65,8 +65,7 @@ async function main(): Promise<void> {
         var definitionIdSpecified: string = null;
         var definitionIdTriggered: string = null;
         var buildId: number = null;
-        var specificBuildId: string =  tl.getInput("specificBuildId", false);
-        var isSpecificBuildId: boolean = specificBuildId.toLowerCase() === 'specific';
+        var artifactVersion: string = tl.getInput("artifactVersion", false);
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
@@ -130,25 +129,27 @@ async function main(): Promise<void> {
                 // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
                 definitionId = definitionIdSpecified;
-                buildId = parseInt(tl.getInput("buildId", isSpecificBuildId));
+                buildId = parseInt(tl.getInput("buildId", artifactVersion == "specific"));
             }
         }
 
         // verify that buildId belongs to the definition selected
         if (definitionId) {
-            if (!buildId && !isSpecificBuildId){ 
-                // get latest successful build filtered by branch
-                var branchNameFilter = (branchName == "*") ? null : branchName;
+            if (artifactVersion != "specific"){ 
+                var branchNameFilter = (artifactVersion == "latest") ? null : branchName;
                 
+                // get latest successful build filtered by branch
                 var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchNameFilter), 4).catch((reason) => {
                     reject(reason);
                     return;
                 }); 
 
-                if (!buildsForThisDefinition || buildsForThisDefinition.length == 0){
-                    reject(tl.loc("BuildNotFound", buildId));
+                if (!buildsForThisDefinition || buildsForThisDefinition.length == 0){ 
+                    if (artifactVersion == "latestFromBranch") reject(tl.loc("LatestBuildFromBranchNotFound", branchNameFilter));
+                    else reject(tl.loc("LatestBuildNotFound"));
                     return;
                 }
+                console.log(tl.loc("LatestBuildFound", buildsForThisDefinition[0].id));
                 buildId = buildsForThisDefinition[0].id
             } 
             

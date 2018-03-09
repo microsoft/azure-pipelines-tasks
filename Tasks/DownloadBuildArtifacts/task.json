@@ -8,8 +8,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 132,
-    "Patch": 1
+    "Minor": 133,
+    "Patch": 0
   },
   "groups": [
     {
@@ -68,26 +68,26 @@
       "helpMarkDown": "If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build from the specified definition, it will download artifacts from the build specified in the options below."
     },
     {
-      "name": "specificBuildId",
-      "type": "radio",
-      "label": "Download artifacts produced by",
-      "defaultValue": "specific",
+      "name": "artifactVersion",
+      "type": "pickList",
+      "label": "Artifact version",
+      "defaultValue": "latest",
       "visibleRule": "buildType == specific",
       "required": true,
       "options": {
-        "latest": "Latest build from specific branch",
-        "specific": "Specific build"
-      },
-      "helpMarkDown": "Download artifacts produced by the latest build or by a specific build-number "
+        "latest": "Latest",
+        "latestFromBranch": "Latest from specific branch",
+        "specific": "Specific version"
+      }
     },
     {
       "name": "branchName",
       "type": "string",
       "label": "Branch name", 
-      "defaultValue": "*",
-      "visibleRule": "buildType == specific && specificBuildId == latest",
+      "defaultValue": "refs/heads/master",
+      "visibleRule": "buildType == specific && artifactVersion == latestFromBranch",
       "required": true,
-      "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```. The default pattern (\\*) will download artifacts for all builds, not filtered by branch"
+      "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```."
     },
     {
       "name": "buildId",
@@ -95,7 +95,7 @@
       "label": "Build",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "buildType == specific && specificBuildId == specific",
+      "visibleRule": "buildType == specific && artifactVersion == specific",
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True"
@@ -218,6 +218,9 @@
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
     "RetryingOperation" : "Error : in %s, so retrying => retries pending  : %s",
     "OperationFailed": "Failed in %s with error: %s",
-    "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s"
+    "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
+    "LatestBuildFound": "Latest build found:  %s",
+    "LatestBuildNotFound":"Latest build not found",
+    "LatestBuildFromBranchNotFound":"Latest build from branch %s not found"
   }
 }
