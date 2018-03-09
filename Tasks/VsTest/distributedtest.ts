@@ -4,6 +4,7 @@ import * as ps from 'child_process';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
+import * as inputdatacontract from './inputdatacontract';
 import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
 import * as ta from './testagent';
@@ -62,7 +63,7 @@ export class DistributedTest {
     private async startDtaExecutionHost(): Promise<number> {
         this.testSourcesFile = this.createTestSourcesFile();
 
-        const inputDataContract = <models.InputDataContract>{};
+        const inputDataContract = <inputdatacontract.InputDataContract>{};
 
         // CoreInputs
         inputDataContract.AgentName = this.dtaTestConfig.dtaEnvironment.agentName;
@@ -71,17 +72,17 @@ export class DistributedTest {
         inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
 
         // InputDataContract.TestSelectionSettings
-        inputDataContract.TestSelectionSettings = <models.TestSelectionSettings>{};
+        inputDataContract.TestSelectionSettings = <inputdatacontract.TestSelectionSettings>{};
         inputDataContract.TestSelectionSettings.TestCaseFilter = this.dtaTestConfig.testcaseFilter;
         inputDataContract.TestSelectionSettings.SearchFolder = this.dtaTestConfig.testDropLocation;
         inputDataContract.TestSelectionSettings.TestSelectionType = this.dtaTestConfig.testSelection;
 
         // InputDataContract.TestSelectionSettings.AssemblyBasedTestSelection
-        inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection = <models.AssemblyBasedTestSelection>{};
+        inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection = <inputdatacontract.AssemblyBasedTestSelection>{};
         inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection.SourceFilter = this.dtaTestConfig.sourceFilter.join('|');
 
         // InputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings
-        inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings = <models.TestPlanTestSuiteSettings>{};
+        inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings = <inputdatacontract.TestPlanTestSuiteSettings>{};
         inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.Testplan = this.dtaTestConfig.testplan;
         inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestPlanConfigId = this.dtaTestConfig.testPlanConfigId;
         inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.OnDemandTestRunId = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.onDemandTestRunId) ? null : Number(this.dtaTestConfig.onDemandTestRunId);
@@ -90,24 +91,24 @@ export class DistributedTest {
         }
 
         // InputDataContract.TestReportingSettings
-        inputDataContract.TestReportingSettings = <models.TestReportingSettings>{};
+        inputDataContract.TestReportingSettings = <inputdatacontract.TestReportingSettings>{};
         inputDataContract.TestReportingSettings.TestRunTitle = this.dtaTestConfig.testRunTitle;
 
         // InputDataContract.TfsSpecificSettings
-        inputDataContract.TfsSpecificSettings = <models.TfsSpecificSettings>{};
+        inputDataContract.TfsSpecificSettings = <inputdatacontract.TfsSpecificSettings>{};
         inputDataContract.TfsSpecificSettings.BuildId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Build.Buildid')) ? null : Number(tl.getVariable('Build.Buildid'));
         inputDataContract.TfsSpecificSettings.BuildUri = tl.getVariable('Build.BuildUri');
         inputDataContract.TfsSpecificSettings.ReleaseId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.ReleaseId')) ? null : Number(tl.getVariable('Release.ReleaseId'));
         inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
 
         // InputDataContract.TargetBinariesSettings
-        inputDataContract.TargetBinariesSettings = <models.TargetBinariesSettings>{};
+        inputDataContract.TargetBinariesSettings = <inputdatacontract.TargetBinariesSettings>{};
         inputDataContract.TargetBinariesSettings.BuildConfig = this.dtaTestConfig.buildConfig;
         inputDataContract.TargetBinariesSettings.BuildPlatform = this.dtaTestConfig.buildPlatform;
 
         // InputDataContract.TargetBinariesSettings
         if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyConfiguration.proxyUrl)) {
-            inputDataContract.ProxySettings = <models.ProxySettings>{};
+            inputDataContract.ProxySettings = <inputdatacontract.ProxySettings>{};
             inputDataContract.ProxySettings.ProxyUrl = this.dtaTestConfig.proxyConfiguration.proxyUrl;
             inputDataContract.ProxySettings.ProxyUsername = this.dtaTestConfig.proxyConfiguration.proxyUserName;
             inputDataContract.ProxySettings.ProxyPassword =  this.dtaTestConfig.proxyConfiguration.proxyPassword;
@@ -115,7 +116,7 @@ export class DistributedTest {
         }
 
         // InputDataContract.DistributionSettings
-        inputDataContract.DistributionSettings = <models.DistributionSettings>{};
+        inputDataContract.DistributionSettings = <inputdatacontract.DistributionSettings>{};
         if (this.dtaTestConfig.batchingType === models.BatchingType.AssemblyBased) {
             inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = false;
         } else {
@@ -135,7 +136,7 @@ export class DistributedTest {
         }
 
         // InputDataContract.ExecutionSettings
-        inputDataContract.ExecutionSettings = <models.ExecutionSettings>{};
+        inputDataContract.ExecutionSettings = <inputdatacontract.ExecutionSettings>{};
         inputDataContract.ExecutionSettings.VideoDataCollectorEnabled = this.dtaTestConfig.videoCoverageEnabled;
         inputDataContract.ExecutionSettings.IsToolsInstallerFlow = utils.Helper.isToolsInstallerFlow(this.dtaTestConfig);
         inputDataContract.ExecutionSettings.OverridenParameters = this.dtaTestConfig.overrideTestrunParameters;
@@ -152,7 +153,7 @@ export class DistributedTest {
         }
 
         // InputDataContract.ExecutionSettings.TiaSettings
-        inputDataContract.ExecutionSettings.TiaSettings = <models.TiaSettings>{};
+        inputDataContract.ExecutionSettings.TiaSettings = <inputdatacontract.TiaSettings>{};
         inputDataContract.ExecutionSettings.TiaSettings.Enabled = this.dtaTestConfig.tiaConfig.tiaEnabled;
         inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.tiaConfig.tiaRebaseLimit) ? null : Number(this.dtaTestConfig.tiaConfig.tiaRebaseLimit);
         inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory = this.dtaTestConfig.tiaConfig.sourcesDir;
@@ -161,7 +162,7 @@ export class DistributedTest {
         inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = this.dtaTestConfig.tiaConfig.userMapFile;
 
         // InputDataContract.ExecutionSettings.RerunSettings
-        inputDataContract.ExecutionSettings.RerunSettings = <models.RerunSettings>{};
+        inputDataContract.ExecutionSettings.RerunSettings = <inputdatacontract.RerunSettings>{};
         if (this.dtaTestConfig.rerunFailedTests) {
             inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = true;
             tl.debug('Type of rerun: ' + this.dtaTestConfig.rerunType);
@@ -174,11 +175,11 @@ export class DistributedTest {
         }
 
         // InputDataContract.TfsSpecificSettings
-        inputDataContract.TestSpecificSettings = <models.TestSpecificSettings>{};
+        inputDataContract.TestSpecificSettings = <inputdatacontract.TestSpecificSettings>{};
         inputDataContract.TestSpecificSettings.TestCaseAccessToken = tl.getVariable('Test.TestCaseAccessToken');
 
         // InputDataContract.Logging
-        inputDataContract.Logging = <models.Logging>{};
+        inputDataContract.Logging = <inputdatacontract.Logging>{};
         inputDataContract.Logging.EnableConsoleLogs = true;
         if (utils.Helper.isDebugEnabled()) {
             inputDataContract.Logging.DebugLogging = true;
