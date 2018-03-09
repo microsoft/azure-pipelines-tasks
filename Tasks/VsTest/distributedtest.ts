@@ -75,7 +75,6 @@ export class DistributedTest {
         inputDataContract.TestSelectionSettings.TestCaseFilter = this.dtaTestConfig.testcaseFilter;
         inputDataContract.TestSelectionSettings.SearchFolder = this.dtaTestConfig.testDropLocation;
         inputDataContract.TestSelectionSettings.TestSelectionType = this.dtaTestConfig.testSelection;
-        inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.OnDemandTestRunId = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.onDemandTestRunId) ? null : Number(this.dtaTestConfig.onDemandTestRunId);
 
         // InputDataContract.TestSelectionSettings.AssemblyBasedTestSelection
         inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection = <models.AssemblyBasedTestSelection>{};
@@ -85,6 +84,7 @@ export class DistributedTest {
         inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings = <models.TestPlanTestSuiteSettings>{};
         inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.Testplan = this.dtaTestConfig.testplan;
         inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestPlanConfigId = this.dtaTestConfig.testPlanConfigId;
+        inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.OnDemandTestRunId = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.onDemandTestRunId) ? null : Number(this.dtaTestConfig.onDemandTestRunId);
         if (!utils.Helper.isNullOrUndefined(this.dtaTestConfig.testSuites)) {
             inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestSuites = this.dtaTestConfig.testSuites;
         }
@@ -141,7 +141,7 @@ export class DistributedTest {
         inputDataContract.ExecutionSettings.OverridenParameters = this.dtaTestConfig.overrideTestrunParameters;
         inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = this.dtaTestConfig.proceedAfterAbortedTestCase;
         inputDataContract.ExecutionSettings.SettingsFile = this.dtaTestConfig.settingsFile;
-        inputDataContract.ExecutionSettings.IgnoreTestFailures = this.dtaTestConfig.ignoreTestFailures.toLowerCase() === 'true';
+        inputDataContract.ExecutionSettings.IgnoreTestFailures = utils.Helper.stringToBool(this.dtaTestConfig.ignoreTestFailures);
         inputDataContract.ExecutionSettings.CodeCoverageEnabled = this.dtaTestConfig.codeCoverageEnabled;
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
             const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
@@ -186,14 +186,14 @@ export class DistributedTest {
 
         // TemporaryInputs
         inputDataContract.UseNewCollector = this.dtaTestConfig.tiaConfig.useNewCollector;
-        inputDataContract.IsPrFlow = this.dtaTestConfig.tiaConfig.isPrFlow.toLowerCase() === 'true';
-        inputDataContract.UseTestCaseFilterInResponseFile = this.dtaTestConfig.tiaConfig.useTestCaseFilterInResponseFile.toLowerCase() === 'true';
+        inputDataContract.IsPrFlow = utils.Helper.stringToBool(this.dtaTestConfig.tiaConfig.isPrFlow);
+        inputDataContract.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(this.dtaTestConfig.tiaConfig.useTestCaseFilterInResponseFile);
         inputDataContract.DisableEnablingDataCollector = this.dtaTestConfig.tiaConfig.disableEnablingDataCollector;
         inputDataContract.TiaBaseLineBuildIdFile = this.dtaTestConfig.tiaConfig.baseLineBuildIdFile;
         inputDataContract.VsVersion = this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber;
         inputDataContract.VsVersionIsTestSettingsPropertiesSupported = this.dtaTestConfig.vsTestVersionDetails.isTestSettingsPropertiesSupported();
         inputDataContract.MiniMatchTestSourcesFile = this.testSourcesFile;
-        inputDataContract.UseVsTestConsole = this.dtaTestConfig.useVsTestConsole.toLowerCase() === 'true';
+        inputDataContract.UseVsTestConsole =  utils.Helper.stringToBool(this.dtaTestConfig.useVsTestConsole);
         inputDataContract.TestPlatformVersion = this.dtaTestConfig.vsTestVersion;
         if (utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
             inputDataContract.COR_PROFILER_PATH_32 = this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation;
