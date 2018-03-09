@@ -69,5 +69,8 @@
   "loc.messages.ContainerPatternFound": "Modèle trouvé dans le paramètre filepath Docker Compose",
   "loc.messages.ContainerPatternNotFound": "Modèle introuvable dans le paramètre filepath Docker Compose",
   "loc.messages.ContainerDockerFileNotFound": "Le fichier Docker correspondant à %s est introuvable.",
-  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Le fichier Docker Compose supplémentaire %s n'existe pas."
+  "loc.messages.AdditionalDockerComposeFileDoesNotExists": "Le fichier Docker Compose supplémentaire %s n'existe pas.",
+  "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+  "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
+  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
 }

@@ -52,7 +52,7 @@
   "loc.input.label.destinationTypeOption": "対象の種類",
   "loc.input.help.destinationTypeOption": "UI テストに使用する対象の種類を選択します。デバイスは、ケーブルまたはネットワーク接続を使用して、ビルドを実行する Mac に接続する必要があります。Xcode の [<strong>Devices and Simulators</strong>] を参照してください。",
   "loc.input.label.destinationSimulators": "シミュレーター",
-  "loc.input.help.destinationSimulators": "UI テストに使用する Xcode シミュレーター名を入力します。たとえば、「iPhone X」(iOS および watchOS) または「Apple TV 4 K」(tvOS) と入力します。対象となる OS バージョンは省略可能です。指定する場合は、'OS=<i>versionNumber</i>' という形式で「iPhone X,OS = 11.1」などと指定できます。<strong>ホステッド macOS プレビュー</strong> エージェントにインストール済みのシミュレーターの一覧は、[こちら](https://docs.microsoft.com/ja-JP/mobile-center/build/software) で確認できます。",
+  "loc.input.help.destinationSimulators": "UI テストに使用する Xcode シミュレーター名を入力します。たとえば、「iPhone X」(iOS および watchOS) または「Apple TV 4 K」(tvOS) と入力します。対象となる OS バージョンは省略可能です。指定する場合は、'OS=<i>versionNumber</i>' という形式で「iPhone X,OS = 11.1」などと指定できます。<strong>Hosted macOS Preview</strong> エージェントにインストール済みのシミュレーターの一覧は、[こちら](https://docs.microsoft.com/ja-JP/mobile-center/build/software) で確認できます。",
   "loc.input.label.destinationDevices": "デバイス",
   "loc.input.help.destinationDevices": "UI テストに使用するデバイスの名前を入力します。例: 「Raisa の iPad」など。",
   "loc.input.label.args": "引数",

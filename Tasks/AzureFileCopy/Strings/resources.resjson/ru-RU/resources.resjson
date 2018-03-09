@@ -88,5 +88,7 @@
   "loc.messages.AFC_UnableToSetCustomScriptExtension": "Не удается задать расширение настраиваемого скрипта \"{0}\" для виртуальной машины \"{1}\": {2}",
   "loc.messages.AFC_CopyPrereqsFailed": "Не удалось включить необходимые компоненты для копирования. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "Учетная запись хранения \"{0}\" не найдена. Укажите существующую учетную запись хранения.",
-  "loc.messages.AFC_RootContainerAndDirectory": "Параметр \"/S\" является недопустимым для контейнеров $root."
+  "loc.messages.AFC_RootContainerAndDirectory": "Параметр \"/S\" является недопустимым для контейнеров $root.",
+  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
+  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
 }

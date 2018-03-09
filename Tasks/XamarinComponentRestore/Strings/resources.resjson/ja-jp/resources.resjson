@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[詳細情報](https://go.microsoft.com/fwlink/?LinkId=786653)",
   "loc.description": "指定されたソリューションの Xamarin コンポーネントを復元します",
   "loc.instanceNameFormat": "Xamarin コンポーネントの復元 $(solution)",
-  "loc.input.label.solution": "Path to solution",
+  "loc.input.label.solution": "ソリューションへのパス",
   "loc.input.help.solution": "Visual Studio のソリューション ファイルへのパス",
   "loc.input.label.email": "電子メール",
   "loc.input.help.email": "Xamarin アカウントの電子メール アドレス。",

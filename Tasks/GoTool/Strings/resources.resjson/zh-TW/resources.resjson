@@ -1,15 +1,15 @@
 {
-  "loc.friendlyName": "Go Tool Installer",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "Finds or downloads specific version of Go tool into tools cache and adds it to the PATH. Use this task to change the version of Go Lang used in subsequent tasks",
-  "loc.instanceNameFormat": "Use Go $(version)",
+  "loc.friendlyName": "前往工具安裝程式",
+  "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=867581)",
+  "loc.description": "尋找或下載到工具的特定版本到工具的快取，並將它加入至路徑。若要變更用於後續的工作移蘭城的版本中使用這項工作",
+  "loc.instanceNameFormat": "使用 Go $(version)",
   "loc.group.displayName.advanced": "進階",
-  "loc.input.label.version": "Version",
-  "loc.input.help.version": "Go tool version to download and install. Example: 1.9.3",
+  "loc.input.label.version": "版本",
+  "loc.input.help.version": "請下載並安裝的工具版本。範例： 1.9.3",
   "loc.input.label.goPath": "GOPATH",
-  "loc.input.help.goPath": "Value for the GOPATH environment variable.",
+  "loc.input.help.goPath": "GOPATH 環境變數的值。",
   "loc.input.label.goBin": "GOBIN",
-  "loc.input.help.goBin": "Value for the GOBIN environment variable.",
-  "loc.messages.FailedToDownload": "Failed to download version %s. Please verify that the version is valid and resolve any other issues. Error: %s",
-  "loc.messages.TempDirNotSet": "Expected Agent.TempDirectory to be set"
+  "loc.input.help.goBin": "GOBIN 環境變數的值。",
+  "loc.messages.FailedToDownload": "無法下載版本 %s。請驗證該版本有效，並解決其他任何問題。錯誤: %s",
+  "loc.messages.TempDirNotSet": "應設定 Agent.TempDirectory"
 }

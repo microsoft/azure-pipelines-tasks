@@ -64,10 +64,13 @@
   "loc.input.help.enforceDockerNamingConvention": "Si l'option est activée, le nom de l'image Docker est modifié conformément à la convention de nommage Docker. Convertit les majuscules en minuscules, et supprime les espaces dans le nom de l'image.",
   "loc.input.label.cwd": "Répertoire de travail",
   "loc.input.help.cwd": "Répertoire de travail de la commande Docker.",
-  "loc.input.label.memory": "Memory limit",
-  "loc.input.help.memory": "The maximum amount of memory available to the container as a integer with optional suffixes like '2GB'.",
+  "loc.input.label.memory": "Limite de mémoire",
+  "loc.input.help.memory": "Quantité maximale de mémoire disponible pour le conteneur sous la forme d'un entier avec des suffixes facultatifs, par exemple '2 Go'.",
   "loc.messages.ContainerPatternFound": "Modèle trouvé dans le paramètre filepath Docker",
   "loc.messages.ContainerPatternNotFound": "Modèle introuvable dans le paramètre filepath Docker",
   "loc.messages.ContainerDockerFileNotFound": "Le fichier Docker correspondant à %s est introuvable.",
-  "loc.messages.NoImagesInImageNamesFile": "Au moins un nom d'image est attendu dans le fichier '%s'."
+  "loc.messages.NoImagesInImageNamesFile": "Au moins un nom d'image est attendu dans le fichier '%s'.",
+  "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
+  "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
+  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
 }

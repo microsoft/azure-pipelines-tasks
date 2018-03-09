@@ -52,7 +52,7 @@
   "loc.input.label.destinationTypeOption": "Tipo de destino",
   "loc.input.help.destinationTypeOption": "Elija el tipo de destino que se va a usar para las pruebas de IU. Los dispositivos deben conectarse al equipo Mac que realiza la compilación por cable o por red. Consulte <strong>Simuladores y dispositivos</strong> en Xcode.",
   "loc.input.label.destinationSimulators": "Simulador",
-  "loc.input.help.destinationSimulators": "Especifique un nombre de simulador de Xcode para usarlo en las pruebas de IU. Por ejemplo, escriba \"iPhone X\" (iOS y watchOS) o \"Apple TV 4K\" (tvOS). La versión del sistema operativo de destino es opcional y puede especificarse con el formato \"SO=<i>númeroVersión</i>\", como \"iPhone X,OS=11.1\". [Aquí puede encontrar](https://docs.microsoft.com/en-us/mobile-center/build/software) una lista de los simuladores instalados en el agente de <strong>macOS hospedado de versión preliminar</strong>.",
+  "loc.input.help.destinationSimulators": "Especifique un nombre de simulador de Xcode para usarlo en las pruebas de IU. Por ejemplo, escriba \"iPhone X\" (iOS y watchOS) o \"Apple TV 4K\" (tvOS). La versión del sistema operativo de destino es opcional y puede especificarse con el formato \"SO=<i>númeroVersión</i>\", como \"iPhone X,OS=11.1\". [Aquí puede encontrar](https://docs.microsoft.com/en-us/mobile-center/build/software) una lista de los simuladores instalados en el agente de <strong>Hosted macOS Preview</strong>.",
   "loc.input.label.destinationDevices": "Dispositivo",
   "loc.input.help.destinationDevices": "Especifique el nombre del dispositivo que se va a usar para las pruebas de IU, por ejemplo, \"iPad de Ana\".",
   "loc.input.label.args": "Argumentos",

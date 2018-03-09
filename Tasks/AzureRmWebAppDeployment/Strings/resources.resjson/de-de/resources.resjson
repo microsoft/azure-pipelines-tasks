@@ -66,9 +66,9 @@
   "loc.input.label.WebConfigParameters": "Web.config-Parameter",
   "loc.input.help.WebConfigParameters": "Bearbeiten Sie Werte wie die Startdatei in der erstellten web.config-Datei. Diese Bearbeitungsfunktion kann nur für die erstellte \"web.config\" verwendet werden. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=843469).",
   "loc.input.label.AppSettings": "App-Einstellungen",
-  "loc.input.help.AppSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
+  "loc.input.help.AppSettings": "Web-app-Anwendungseinstellungen folgt die Syntax bearbeiten-Wert. Wert, die Leerzeichen enthalten, muss in doppelte Anführungszeichen eingeschlossen werden. <br /> <b>Beispiel</b> :-Port 5000 - RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.ConfigurationSettings": "Konfigurationseinstellungen",
-  "loc.input.help.ConfigurationSettings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.help.ConfigurationSettings": "Bearbeiten Sie die Web-app-Clientkonfigurationseinstellungen folgt die Syntax-Wert. Wert, die Leerzeichen enthalten, muss in doppelte Anführungszeichen eingeschlossen werden. <br /> Beispiel: - PhpVersion 5.6 - LinuxFxVersion: Knoten|6.11",
   "loc.input.label.TakeAppOfflineFlag": "App offline schalten",
   "loc.input.help.TakeAppOfflineFlag": "Wählen Sie diese Option aus, um den Azure App Service offline zu schalten, indem vor dem Synchronisierungsvorgang eine Datei \"app_offline.htm\" im App Service-Stammverzeichnis platziert wird. Die Datei wird entfernt, nachdem der Synchronisierungsvorgang erfolgreich abgeschlossen wurde.",
   "loc.input.label.UseWebDeploy": "Mit Web Deploy veröffentlichen",
@@ -211,8 +211,9 @@
   "loc.messages.UpdatingAppServiceApplicationSettings": "Die App Service-Anwendungseinstellungen werden aktualisiert. Daten: %s",
   "loc.messages.UpdatedAppServiceApplicationSettings": "Die App Service-Anwendungseinstellungen und die Kudu-Anwendungseinstellungen wurden aktualisiert.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Mehrere Ressourcengruppen für App Service \"%s\" gefunden.",
-  "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
-  "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
-  "loc.messages.GoExeNameNotPresent": "Go exe name is not present"
+  "loc.messages.PackageDeploymentUsingZipDeployFailed": "Fehler bei der Paketbereitstellung über ZIP Deploy. Weitere Informationen finden Sie in den Protokollen.",
+  "loc.messages.PackageDeploymentInitiated": "Die Paketbereitstellung über ZIP Deploy wurde eingeleitet.",
+  "loc.messages.FailedToGetDeploymentLogs": "Fehler beim Abrufen von Bereitstellungsprotokollen. Fehler: %s",
+  "loc.messages.GoExeNameNotPresent": "Die Go Exe-Name ist nicht vorhanden",
+  "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
 }

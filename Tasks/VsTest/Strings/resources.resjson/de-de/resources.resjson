@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "Das Verzeichnis mit Testergebnissen wurde nicht gefunden.",
   "loc.messages.OnlyWindowsOsSupported": "Diese Aufgabe wird nur auf Windows-Agents unterstützt und kann nicht auf anderen Plattformen verwendet werden.",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "Bedarfsorientierte Ausführungen werden mit der Multikonfigurationsoption nicht unterstützt. Verwenden Sie die Parallelitätsoption \"Keine\" oder \"Multi-Agent\".",
-  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
+  "loc.messages.disabledRerun": "Deaktivieren die erneut ausführen von Tests mit Fehlern als führen Sie den Schwellenwert für die bereitgestellte ist %s"
 }
