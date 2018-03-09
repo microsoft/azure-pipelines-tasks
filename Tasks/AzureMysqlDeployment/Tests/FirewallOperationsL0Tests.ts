@@ -7,12 +7,13 @@ import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { MysqlClient } from '../sql/MysqlClient';
 import { ISqlClient } from '../sql/ISqlClient';
 import { MysqlServer } from '../models/MysqlServer';
+import { ApplicationTokenCredentials } from 'azure-arm-rest/azure-arm-common';
 var endpoint = getMockEndpoint();
 getMockFirewallRules();
 
 export class FirewallOperationsL0Tests  {
 
-    public static firewallOperations: FirewallOperations = new FirewallOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
+    public static firewallOperations: FirewallOperations = new FirewallOperations(new ApplicationTokenCredentials(endpoint), endpoint.subscriptionID);
     public static firewallRule: FirewallRule = new FirewallRule("MOCK_FIREWALL_RULE_NAME", new FirewallAddressRange("0.0.0.0", "255.255.255.255"));
 
     public static async testFirewallOperations() {

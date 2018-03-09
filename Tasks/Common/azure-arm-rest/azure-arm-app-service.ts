@@ -27,7 +27,7 @@ export class AzureAppService {
     private _appServiceApplicationSetings: AzureAppServiceConfigurationDetails;
 
     constructor(endpoint: AzureEndpoint, resourceGroup: string, name: string, slot?: string, appKind?: string) {
-        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient(new msRestAzure.ApplicationTokenCredentials(endpoint), endpoint.subscriptionID, 30);
         this._resourceGroup = resourceGroup;
         this._name = name;
         this._slot = (slot && slot.toLowerCase() == constants.productionSlot) ? null : slot;

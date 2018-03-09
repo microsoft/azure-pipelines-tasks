@@ -2,13 +2,11 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import webClient = require("./webClient");
 import { AzureEndpoint } from "./azureModels";
-import { ApplicationTokenCredentials } from './azure-arm-common';
 import constants = require('./constants');
 
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
     private _connectedServiceName: string;
-    private applicationTokenCredentials: ApplicationTokenCredentials;
 
     // Add an entry here and separate function for each new environment
     private _environments = {
@@ -34,7 +32,9 @@ export class AzureRMEndpoint {
                 tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
                 url: tl.getEndpointUrl(this._connectedServiceName, true),
                 environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
-                activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
+                activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true),
+                msiPort: tl.getEndpointDataParameter(this._connectedServiceName, 'msiPort', true),
+                scheme:  tl.getEndpointAuthorizationScheme(this._connectedServiceName, true)
             } as AzureEndpoint;
 
             if(this.endpoint.environment != null && this.endpoint.environment.toLowerCase() == this._environments.AzureStack && ( !this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID)) {
@@ -44,9 +44,6 @@ export class AzureRMEndpoint {
                 this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
                 this.endpoint.activeDirectoryResourceID = this.endpoint.url;
             }
-
-            this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
-                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack);
         }
 
         return this.endpoint;

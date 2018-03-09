@@ -56,7 +56,7 @@ export class ServiceClient {
 
         this.credentials = credentials;
         this.subscriptionId = subscriptionId
-        this.baseUri = this.credentials.baseUrl;
+        this.baseUri = this.credentials.getbaseUrl();
         this.longRunningOperationRetryTimeout = !!timeout ? timeout : 0; // In minutes
     }
 

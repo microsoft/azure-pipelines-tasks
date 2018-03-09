@@ -3,12 +3,13 @@ import * as querystring from 'querystring';
 import tl = require('vsts-task-lib');
 import { MysqlServerOperations } from '../operations/MysqlServerOperations';
 import { MysqlServer } from '../models/MysqlServer';
+import { ApplicationTokenCredentials } from 'azure-arm-rest/azure-arm-common';
 var endpoint = getMockEndpoint();
 getMockMysqlServers();
 
 export class MysqlServerOperationsL0Tests  {
 
-    public static mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
+    public static mysqlServerOperations: MysqlServerOperations = new MysqlServerOperations(new ApplicationTokenCredentials(endpoint), endpoint.subscriptionID);
 
     public static async getMysqlServerFromServerName() {
         await MysqlServerOperationsL0Tests.testForCorrectId();

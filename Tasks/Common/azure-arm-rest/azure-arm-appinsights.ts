@@ -15,7 +15,7 @@ export class AzureApplicationInsights {
     private _client: ServiceClient;
 
     constructor(endpoint: AzureEndpoint, resourceGroupName: string, name: string) {
-        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient(new msRestAzure.ApplicationTokenCredentials(endpoint), endpoint.subscriptionID, 30);
         this._endpoint = endpoint;
         this._resourceGroupName = resourceGroupName;
         this._name = name;
@@ -102,7 +102,7 @@ export class ApplicationInsightsResources {
     private _client: ServiceClient;
 
     constructor(endpoint: AzureEndpoint) {
-        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient(new msRestAzure.ApplicationTokenCredentials(endpoint), endpoint.subscriptionID, 30);
         this._endpoint = endpoint;
     }
 

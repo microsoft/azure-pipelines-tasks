@@ -30,8 +30,7 @@ export class Resources {
     private _client: ServiceClient;
     
     constructor(endpoint: AzureEndpoint) {
-        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
-            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
+        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint);
         this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
     }
 
