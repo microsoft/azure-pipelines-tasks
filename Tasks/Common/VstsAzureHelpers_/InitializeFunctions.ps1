@@ -124,6 +124,21 @@ function Initialize-AzureSubscription {
             }
 
             Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
+        }elseif ($Endpoint.Auth.Scheme -eq 'MSI') {
+            $msiUri =  "http://localhost:"+$Endpoint.Data.MsiPort+"/oauth2/token"
+            $response = Invoke-WebRequest -Uri $msiUri -Method GET -Body @{resource= $Endpoint.Url} -Headers @{Metadata="true"}
+            $content =$response.Content | ConvertFrom-Json
+            $access_token = $content.access_token
+            $accountId = "MSI@50342"
+            try {
+                Write-Host "##[command]Add-AzureAccount  -AccessToken $access_token -AccountId $accountId "
+                $null = Add-AzureAccount -AccessToken $access_token -AccountId $accountId
+            } catch {
+                # Provide an additional, custom, credentials-related error message.
+                Write-VstsTaskError -Message $_.Exception.Message
+                throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ManagedServiceIdentityError), $_.Exception))
+            }
+            Set-CurrentAzureSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -StorageAccount $StorageAccount
         } elseif ($script:azureModule) {
             # Throw if >=0.9.9 Azure.
             throw (Get-VstsLocString -Key "AZ_ServicePrincipalAuthNotSupportedAzureVersion0" -ArgumentList $script:azureModule.Version)
