@@ -5,6 +5,7 @@ import path = require('path');
 
 import ClusterConnection from "./clusterconnection";
 import * as kubectl from "./kubernetescommand";
+import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 
 import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
@@ -40,15 +41,24 @@ connection.open(tl.getInput("kubernetesServiceEndpoint")).then(
 function run(clusterConnection: ClusterConnection, registryAuthenticationToken: RegistryAuthenticationToken)
 {
     var secretName = tl.getInput("secretName", false);
+    var configMapName = tl.getInput("configMapName", false);
 
     if(secretName) {
         kubectlSecret.run(clusterConnection, registryAuthenticationToken, secretName).fin(function cleanup(){
             clusterConnection.close();
         }).then(function success() {
-            executeKubectlCommand(clusterConnection);
+            if (configMapName) {
+                executeCreateConfigMapCommand(clusterConnection, configMapName);
+            }
+            else {
+                executeKubectlCommand(clusterConnection);
+            }
         }, function failure(err) {
             tl.setResult(tl.TaskResult.Failed, err.message);
         }).done();
+    }
+    else if(configMapName) {
+        executeCreateConfigMapCommand(clusterConnection, configMapName); 
     }
     else {
         executeKubectlCommand(clusterConnection);
@@ -74,4 +84,16 @@ function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
         tl.setResult(tl.TaskResult.Failed, err.message);
     })
     .done();
+}
+
+// execute kubectl create configmap command
+function executeCreateConfigMapCommand(clusterConnection: ClusterConnection, configMapName: string) : any {
+   
+    kubectlConfigMap.run(clusterConnection, configMapName).fin(function cleanup(){
+        clusterConnection.close();
+    }).then(function success() {
+        executeKubectlCommand(clusterConnection);
+    }, function failure(err) {
+        tl.setResult(tl.TaskResult.Failed, err.message);
+    }).done();
 }
