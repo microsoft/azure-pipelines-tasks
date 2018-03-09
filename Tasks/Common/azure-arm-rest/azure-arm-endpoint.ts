@@ -34,6 +34,8 @@ export class AzureRMEndpoint {
                 tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
                 url: tl.getEndpointUrl(this._connectedServiceName, true),
                 environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
+                scheme: tl.getEndpointAuthorizationScheme(this._connectedServiceName, true),
+                msiPort:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiport', true),
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
