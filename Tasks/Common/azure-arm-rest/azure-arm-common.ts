@@ -11,19 +11,24 @@ export class ApplicationTokenCredentials {
     public authorityUrl: string;
     public activeDirectoryResourceId: string;
     public isAzureStackEnvironment: boolean;
+    public scheme: string;
+    public msiPort: string;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean) {
-        if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
-            throw new Error(tl.loc("ClientIdCannotBeEmpty"));
-        }
+    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiPort?: string) {
 
         if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
         }
 
-        if (!Boolean(secret) || typeof secret.valueOf() !== 'string') {
-            throw new Error(tl.loc("SecretCannotBeEmpty"));
+        if((!scheme ||scheme ==='ServicePrincipal')){
+            if (!Boolean(clientId) || typeof clientId.valueOf() !== 'string') {
+                throw new Error(tl.loc("ClientIdCannotBeEmpty"));
+            }
+    
+            if (!Boolean(secret) || typeof secret.valueOf() !== 'string') {
+                throw new Error(tl.loc("SecretCannotBeEmpty"));
+            }
         }
 
         if (!Boolean(baseUrl) || typeof baseUrl.valueOf() !== 'string') {
@@ -49,11 +54,20 @@ export class ApplicationTokenCredentials {
         this.authorityUrl = authorityUrl;
         this.activeDirectoryResourceId = activeDirectoryResourceId;
         this.isAzureStackEnvironment = isAzureStackEnvironment;
+        this.scheme = scheme;
+        this.msiPort = msiPort;
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
         if (!this.token_deferred || force) {
-            this.token_deferred = this.getAuthorizationToken();
+            if(this.scheme && this.scheme === "MSI")
+            {
+                this.token_deferred = this._getMSIAuthorizationToken();
+            }
+            else
+            {
+                this.token_deferred = this._getSPNAuthorizationToken();
+            }
         }
 
         return this.token_deferred;
@@ -67,9 +81,35 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-    private getAuthorizationToken(): Q.Promise<string> {
+    private _getMSIAuthorizationToken(): Q.Promise<string> {
         var deferred = Q.defer<string>();
+        let webRequest = new webClient.WebRequest();
+        webRequest.method = "GET";
+        let port = this.msiPort ? this.msiPort : '50342';
+        webRequest.uri = "http://localhost:"+ port + "/oauth2/token?resource="+ this.baseUrl;
+        webRequest.headers = {
+            "Metadata": true
+        };
 
+        webClient.sendRequest(webRequest).then(
+            (response: webClient.WebResponse) => {
+                if (response.statusCode == 200) {
+                    deferred.resolve(response.body.access_token);
+                }
+                else {
+                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
+                }
+            },
+            (error) => {
+                deferred.reject(error)
+            }
+        );
+
+        return deferred.promise;
+    }
+
+    private _getSPNAuthorizationToken(): Q.Promise<string> {
+        var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
         webRequest.uri = this.authorityUrl + this.domain + "/oauth2/token/";
