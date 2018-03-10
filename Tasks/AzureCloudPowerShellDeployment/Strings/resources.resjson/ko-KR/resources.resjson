@@ -32,6 +32,8 @@
   "loc.input.help.NewServiceAdditionalArguments": "새 서비스를 만드는 동안 추가 인수에서 전달합니다. 이러한 인수는 `New-AzureService` cmdlet에 전달됩니다. 예: `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "선호도 그룹",
   "loc.input.help.NewServiceAffinityGroup": "새 서비스를 만드는 동안 서비스 위치를 사용하는 대신 이 선호도 그룹이 고려됩니다.",
+  "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
+  "loc.input.help.NewServiceCustomCertificates": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
   "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "저장소 계정 '{0}'의 기본 저장소 키를 가져올 수 없습니다. 진단 확장을 적용할 수 없습니다.",
   "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "공용 구성 저장소 계정 '{0}'의 기본 저장소 키를 가져올 수 없습니다. 진단 확장을 적용할 수 없습니다.",
   "loc.messages.Applyinganyconfigureddiagnosticsextensions": "구성된 모든 진단 확장을 적용하는 중입니다.",
@@ -40,5 +42,7 @@
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "검색 패턴 {0}(으)로 배포할 파일을 두 개 이상 찾았습니다. 하나만 있을 수 있습니다.",
   "loc.messages.Storagekeysaredefinedininvalidformat": "저장소 키가 잘못된 형식으로 정의되어 있습니다.",
   "loc.messages.Unabletofind0usingprovidedsubscription": "제공한 구독을 사용하여 {0}을(를) 찾을 수 없습니다.",
-  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "현재 버전의 Azure Powershell에서는 외부 저장소 계정을 사용하여 진단을 구성할 수 없습니다."
+  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "현재 버전의 Azure Powershell에서는 외부 저장소 계정을 사용하여 진단을 구성할 수 없습니다.",
+  "loc.messages.Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
+  "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format."
 }
