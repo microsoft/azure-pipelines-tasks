@@ -200,6 +200,7 @@ function sevenZipExtract(file, destinationFolder) {
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
+    sevenZip.arg('-aoa'); // Overwrite All existing files without prompt.
     return handleExecResult(sevenZip.execSync(), file);
 }
 
