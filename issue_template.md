@@ -2,7 +2,7 @@
 Checkout how to troubleshoot failures and collect debug logs: https://docs.microsoft.com/en-us/vsts/build-release/actions/troubleshooting
 
 ## Diagnostic Logs
-In order to retrieve verbose diagnostic logs go to the build summary page and click the down arrow nexto to the "Queue new build" button then click "Queue new build with diagnostic logs" and press OK on the dialog. Visit https://aka.ms/vsts-build-diag-logs for more information.
+In order to retrieve verbose diagnostic logs go to the build summary page and click the down arrow next to to the "Queue new build" button, then click "Queue new build with diagnostic logs" and press OK on the dialog. Visit https://aka.ms/vsts-build-diag-logs for more information.
 
 Please provide the following information so we can retrieve these logs:
 
