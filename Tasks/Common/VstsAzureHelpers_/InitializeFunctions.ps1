@@ -130,15 +130,19 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.
             try {
-                if(CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName")
-                {
-                    Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
-                    $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                    if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
+                        Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
+                        $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                    }
+                    else {
+                        Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                        $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                    }
                 }
-                else
-                {
-                    Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                    $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                else {
+                    Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                    $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
                 }
             } catch {
                 # Provide an additional, custom, credentials-related error message.
@@ -182,8 +186,15 @@ function Set-CurrentAzureRMSubscription {
 
     $additional = @{ }
     if ($TenantId) { $additional['TenantId'] = $TenantId }
-    Write-Host "##[command]Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-    $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
+
+    if (Get-Command -Name "Select-AzureRmSubscription" -ErrorAction "SilentlyContinue") {
+        Write-Host "##[command] Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
+    }
+    else {
+        Write-Host "##[command] Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzureRmContext -SubscriptionId $SubscriptionId @additional
+    }
 }
 
 function Set-UserAgent {
@@ -225,7 +236,7 @@ function CmdletHasMember {
     }
     catch
     {
-        return false;
+        return $false;
     }
 }
 
