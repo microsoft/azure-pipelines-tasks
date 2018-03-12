@@ -18,9 +18,14 @@ export class SecureFileHelpers {
     /**
      * Download secure file contents to a temporary location for the build
      * @param secureFileId 
+     * @param targetFolder
      */
-    async downloadSecureFile(secureFileId: string) {
-        let tempDownloadPath: string = this.getSecureFileTempDownloadPath(secureFileId);
+    async downloadSecureFile(secureFileId: string, targetFolder: string = tl.getVariable('Agent.TempDirectory')) {
+        if (!(tl.exist(targetFolder))) {
+            tl.mkdirP(targetFolder);
+        }
+
+        let tempDownloadPath: string = this.getSecureFileTempDownloadPath(secureFileId, targetFolder);
 
         tl.debug('Downloading secure file contents to: ' + tempDownloadPath);
         let file: NodeJS.WritableStream = fs.createWriteStream(tempDownloadPath);
@@ -39,9 +44,10 @@ export class SecureFileHelpers {
     /**
      * Delete secure file from the temporary location for the build
      * @param secureFileId 
+     * @param targetFolder
      */
-    deleteSecureFile(secureFileId: string) {
-        let tempDownloadPath: string = this.getSecureFileTempDownloadPath(secureFileId);
+    deleteSecureFile(secureFileId: string, targetFolder: string = tl.getVariable('Agent.TempDirectory')) {
+        let tempDownloadPath: string = this.getSecureFileTempDownloadPath(secureFileId, targetFolder);
         if (tl.exist(tempDownloadPath)) {
             tl.debug('Deleting secure file at: ' + tempDownloadPath);
             tl.rmRF(tempDownloadPath);
@@ -51,13 +57,11 @@ export class SecureFileHelpers {
     /**
      * Returns the temporary download location for the secure file
      * @param secureFileId 
+     * @param targetFolder
      */
-    getSecureFileTempDownloadPath(secureFileId: string) {
+    getSecureFileTempDownloadPath(secureFileId: string, targetFolder: string) {
         let fileName: string = tl.getSecureFileName(secureFileId);
-        let tempDownloadPath: string = tl.resolve(tl.getVariable('Agent.TempDirectory'), fileName);
+        let tempDownloadPath: string = tl.resolve(targetFolder, fileName);
         return tempDownloadPath;
     }
 }
-
-
-

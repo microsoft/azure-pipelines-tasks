@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 126,
+        "Minor": 127,
         "Patch": 0
     },
     "runsOn": [
@@ -31,6 +31,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Select the secure file to download to a temporary location on the agent. The file will be cleaned up after the build or release."
+        },
+        {
+            "name": "secureFilePath",
+            "type": "secureFile",
+            "label": "Secure File Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify a custom location to download the secure file to."
         }
     ],
     "outputVariables": [
