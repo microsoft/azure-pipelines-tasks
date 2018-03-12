@@ -217,7 +217,7 @@
         "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
         "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
         "Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription",
-        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell don't support external storage account for configuring diagnostics.",
+        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell does not support external storage account for configuring diagnostics.",
         "Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format.",
         "Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates."
     }
