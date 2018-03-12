@@ -3,9 +3,11 @@ param()
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
+Register-Mock Get-TempDirectoryPath { "C:\some-path" }
+
 $publishProfilePath = "$PSScriptRoot\data\NoAuthPublishProfile.xml"
 $applicationPackagePath = "$PSScriptRoot\data\DiffPkgAssets\AppPkg"
-$diffPackagePath = (Get-Item $env:TEMP).FullName + "\DiffPackage"
+$diffPackagePath = (Get-TempDirectoryPath) + "\DiffPackage"
 $serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"

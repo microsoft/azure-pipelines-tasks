@@ -1,7 +1,7 @@
 ﻿function Expand-ToFolder
 {
     <#
-    .SYNOPSIS 
+    .SYNOPSIS
     Unzips the zip file to the specified folder.
 
     .PARAMETER From
@@ -16,7 +16,7 @@
     (
         [String]
         $File,
-        
+
         [String]
         $Destination
     )
@@ -24,8 +24,8 @@
     if (!(Test-Path $File))
     {
         return
-    }    
-    
+    }
+
     if (Test-Path $Destination)
     {
         Remove-Item -Path $Destination -Recurse -ErrorAction Stop | Out-Null
@@ -35,25 +35,25 @@
 
 
     Write-Verbose -Message (Get-VstsLocString -Key SFSDK_UnzipPackage -ArgumentList @($File, $Destination))
-    try 
+    try
     {
-        [System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null 
-        [System.IO.Compression.ZipFile]::ExtractToDirectory("$File", "$Destination") 
-    } 
-    catch 
-    { 
-        Write-Error -Message (Get-VstsLocString -Key SFSDK_UnexpectedError -ArgumentList $_.Exception.Message) 
-    } 
+        [System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+        [System.IO.Compression.ZipFile]::ExtractToDirectory("$File", "$Destination")
+    }
+    catch
+    {
+        Write-Error -Message (Get-VstsLocString -Key SFSDK_UnexpectedError -ArgumentList $_.Exception.Message)
+    }
 }
 
 function Get-NamesFromApplicationManifest
 {
     <#
-    .SYNOPSIS 
+    .SYNOPSIS
     Returns an object containing common information from the application manifest.
 
     .PARAMETER ApplicationManifestPath
-    Path to the application manifest file.    
+    Path to the application manifest file.
     #>
 
     [CmdletBinding()]
@@ -68,7 +68,7 @@ function Get-NamesFromApplicationManifest
         throw (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationManifestPath)
     }
 
-    
+
     $appXml = [xml] (Get-Content $ApplicationManifestPath)
     if (!$appXml)
     {
@@ -83,7 +83,7 @@ function Get-NamesFromApplicationManifest
         FabricNamespace = $FabricNamespace;
         ApplicationTypeName = $appMan.ApplicationTypeName;
         ApplicationTypeVersion = $appMan.ApplicationTypeVersion;
-    }   
+    }
 
     Write-Output (New-Object psobject -Property $h)
 }
@@ -91,7 +91,7 @@ function Get-NamesFromApplicationManifest
 function Get-ImageStoreConnectionStringFromClusterManifest
 {
     <#
-    .SYNOPSIS 
+    .SYNOPSIS
     Returns the value of the image store connection string from the cluster manifest.
 
     .PARAMETER ClusterManifest
@@ -113,7 +113,7 @@ function Get-ImageStoreConnectionStringFromClusterManifest
 function Get-ApplicationNameFromApplicationParameterFile
 {
     <#
-    .SYNOPSIS 
+    .SYNOPSIS
     Returns Application Name from ApplicationParameter xml file.
 
     .PARAMETER ApplicationParameterFilePath
@@ -126,7 +126,7 @@ function Get-ApplicationNameFromApplicationParameterFile
         [String]
         $ApplicationParameterFilePath
     )
-    
+
     if (!(Test-Path $ApplicationParameterFilePath))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
@@ -140,7 +140,7 @@ function Get-ApplicationNameFromApplicationParameterFile
 function Get-ApplicationParametersFromApplicationParameterFile
 {
     <#
-    .SYNOPSIS 
+    .SYNOPSIS
     Reads ApplicationParameter xml file and returns HashTable containing ApplicationParameters.
 
     .PARAMETER ApplicationParameterFilePath
@@ -153,12 +153,12 @@ function Get-ApplicationParametersFromApplicationParameterFile
         [String]
         $ApplicationParameterFilePath
     )
-    
+
     if (!(Test-Path $ApplicationParameterFilePath))
     {
         throw (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
     }
-    
+
     $ParametersXml = ([xml] (Get-Content $ApplicationParameterFilePath)).Application.Parameters
 
     $hash = @{}
@@ -174,14 +174,14 @@ function Get-ApplicationParametersFromApplicationParameterFile
 function Merge-HashTables
 {
     <#
-    .SYNOPSIS 
+    .SYNOPSIS
     Merges 2 hashtables. Key, value pairs form HashTableNew are preserved if any duplciates are found between HashTableOld & HashTableNew.
 
     .PARAMETER HashTableOld
     First Hashtable.
-    
+
     .PARAMETER HashTableNew
-    Second Hashtable 
+    Second Hashtable
     #>
 
     [CmdletBinding()]
@@ -189,11 +189,11 @@ function Merge-HashTables
     (
         [HashTable]
         $HashTableOld,
-        
+
         [HashTable]
         $HashTableNew
     )
-    
+
     $keys = $HashTableOld.getenumerator() | foreach-object {$_.key}
     $keys | foreach-object {
         $key = $_
@@ -204,4 +204,23 @@ function Merge-HashTables
     }
     $HashTableNew = $HashTableOld + $HashTableNew
     return $HashTableNew
+}
+
+function Get-TempDirectoryPath {
+    <#
+    .SYNOPSIS
+    Returns a temp directory path. Uses Agent.TempDirectory if available
+    #>
+
+    Param ()
+
+    $agentVersion = Get-VstsTaskVariable -Name 'agent.version'
+    if (!$agentVersion -or (([version]'2.115.0').CompareTo([version]$agentVersion) -ge 1))
+    {
+        return $env:Temp
+    }
+    else
+    {
+        return Get-VstsTaskVariable -Name 'Agent.TempDirectory'
+    }
 }
