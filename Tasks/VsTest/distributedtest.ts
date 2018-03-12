@@ -106,7 +106,7 @@ export class DistributedTest {
         inputDataContract.TargetBinariesSettings.BuildConfig = this.dtaTestConfig.buildConfig;
         inputDataContract.TargetBinariesSettings.BuildPlatform = this.dtaTestConfig.buildPlatform;
 
-        // InputDataContract.TargetBinariesSettings
+        // InputDataContract.ProxySettings
         if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyConfiguration.proxyUrl)) {
             inputDataContract.ProxySettings = <inputdatacontract.ProxySettings>{};
             inputDataContract.ProxySettings.ProxyUrl = this.dtaTestConfig.proxyConfiguration.proxyUrl;
@@ -225,7 +225,7 @@ export class DistributedTest {
 
         // Pass the acess token as an environment variable for security purposes
         // let envVars: { [key: string]: string; } = <{ [key: string]: string; }>{};
-        const envVars: { [key: string]: string; } = process.env;
+        const envVars: { [key: string]: string; } = process.env; // This is a temporary solutio where we are passing parent process env vars, we should get away from this
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
 
         // Invoke DtaExecutionHost with the input json file
