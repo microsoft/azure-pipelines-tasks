@@ -203,7 +203,13 @@ async function run() {
         xcb.argIf(xcode_provProfile, xcode_provProfile);
         xcb.argIf(xcode_devTeam, xcode_devTeam);
 
-        //--- Enable Xcpretty formatting if using xcodebuild ---
+        //--- Enable Xcpretty formatting ---
+        if (useXcpretty && !tl.which('xcpretty')) {
+            // user wants to enable xcpretty but it is not installed, fallback to xcodebuild raw output
+            useXcpretty = false;
+            tl.warning(tl.loc("XcprettyNotInstalled"));
+        }
+
         if (useXcpretty) {
             let xcPrettyPath: string = tl.which('xcpretty', true);
             let xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);

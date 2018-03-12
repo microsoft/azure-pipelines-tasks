@@ -547,6 +547,21 @@ describe('Xcode L0 Suite', function () {
         done();
     });
 
+    it('Test results publishing should fail if xcpretty is not installed', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0TestResultsPublishFailsIfXcprettyNotInstalled.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdout.indexOf('##vso[task.issue type=error;]loc_mock_XcprettyNotInstalled') > 0, 'error message should indicate that xcpretty has to be installed.')
+        assert(tr.failed, 'post xcode task should have failed');
+        done();
+    });
+
+    
+
     it('macOS auto export', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 

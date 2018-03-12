@@ -19,8 +19,12 @@ async function run() {
         
         if (publishResults) {
             if (!useXcpretty) {
-                tl.warning(tl.loc('UseXcprettyForTestPublishing'));
-            } else {
+                throw tl.loc('UseXcprettyForTestPublishing');
+            } else if (useXcpretty && !tl.which('xcpretty')) {
+                throw tl.loc("XcprettyNotInstalled");
+            }
+            else {
+                // xcpretty is enabled and installed
                 testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
 
                 if (testResultsFiles && 0 !== testResultsFiles.length) {
