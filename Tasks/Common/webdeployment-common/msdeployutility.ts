@@ -166,7 +166,7 @@ function useRequiredDotNetVersion(registryKey: string): Q.Promise<string> {
 
     regKey.keys(function(err, subRegKeys) {
         if(err) {
-            tl.debug(err);
+            defer.reject(tl.loc("UnabletofindthelocationofDotNetFrameworkfromregistryonmachineError", err));
         }
         var latestKeyVersion = 0 ;
         var latestSubKey;
