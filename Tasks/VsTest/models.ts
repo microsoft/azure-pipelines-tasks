@@ -43,7 +43,7 @@ export interface TestConfigurations {
     rerunFailedTestCasesMaxLimit: number;
     rerunMaxAttempts: number;
     toolsInstallerConfig: ToolsInstallerConfiguration;
-    proxyConfiguration: ProxyConfiguration;
+    proxyConfiguration: ProxyConfiguration
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
