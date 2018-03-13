@@ -197,7 +197,4 @@ export class Helper {
         chcp.execSync({ silent: true } as tr.IExecSyncOptions);
     }
 
-    public static stringToBool(inputString : string) : boolean {
-        return !this.isNullEmptyOrUndefined(inputString) && inputString.toLowerCase() === 'true';
-    }
 }
