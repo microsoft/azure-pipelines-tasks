@@ -38,31 +38,28 @@ connection.open(tl.getInput("kubernetesServiceEndpoint")).then(
 ).catch((error) => tl.setResult(tl.TaskResult.Failed, error) );
 
 
-function run(clusterConnection: ClusterConnection, registryAuthenticationToken: RegistryAuthenticationToken)
+async function run(clusterConnection: ClusterConnection, registryAuthenticationToken: RegistryAuthenticationToken)
 {
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
 
     if(secretName) {
-        kubectlSecret.run(clusterConnection, registryAuthenticationToken, secretName).fin(function cleanup(){
+        await kubectlSecret.run(clusterConnection, registryAuthenticationToken, secretName).fin(function cleanup(){
             clusterConnection.close();
-        }).then(function success() {
-            if (configMapName) {
-                executeCreateConfigMapCommand(clusterConnection, configMapName);
-            }
-            else {
-                executeKubectlCommand(clusterConnection);
-            }
         }, function failure(err) {
             tl.setResult(tl.TaskResult.Failed, err.message);
-        }).done();
+        });
     }
-    else if(configMapName) {
-        executeCreateConfigMapCommand(clusterConnection, configMapName); 
+
+    if(configMapName) {
+        await kubectlConfigMap.run(clusterConnection, configMapName).fin(function cleanup(){
+            clusterConnection.close();
+        }, function failure(err) {
+            tl.setResult(tl.TaskResult.Failed, err.message);
+        });
     }
-    else {
-        executeKubectlCommand(clusterConnection);
-    }
+    
+    executeKubectlCommand(clusterConnection);  
 }
 
 // execute kubectl command
@@ -84,16 +81,4 @@ function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
         tl.setResult(tl.TaskResult.Failed, err.message);
     })
     .done();
-}
-
-// execute kubectl create configmap command
-function executeCreateConfigMapCommand(clusterConnection: ClusterConnection, configMapName: string) : any {
-   
-    kubectlConfigMap.run(clusterConnection, configMapName).fin(function cleanup(){
-        clusterConnection.close();
-    }).then(function success() {
-        executeKubectlCommand(clusterConnection);
-    }, function failure(err) {
-        tl.setResult(tl.TaskResult.Failed, err.message);
-    }).done();
 }

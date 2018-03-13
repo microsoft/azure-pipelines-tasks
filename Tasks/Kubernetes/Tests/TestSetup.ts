@@ -120,6 +120,9 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --fro
 a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
     "code": 0
 };
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap existingConfigMap --from-file=${ConfigMapFilePath}`] = {
+    "code": 1
+};
 a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = {
     "code": 0,
     "stdout": "successfully got secret my-secret and printed it in the specified format"
