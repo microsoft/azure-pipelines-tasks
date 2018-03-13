@@ -80,8 +80,8 @@ function Get-NamesFromApplicationManifest
     $appTypeSuffix = 'Type'
 
     $h = @{
-        FabricNamespace = $FabricNamespace;
-        ApplicationTypeName = $appMan.ApplicationTypeName;
+        FabricNamespace        = $FabricNamespace;
+        ApplicationTypeName    = $appMan.ApplicationTypeName;
         ApplicationTypeVersion = $appMan.ApplicationTypeVersion;
     }
 
@@ -163,9 +163,10 @@ function Get-ApplicationParametersFromApplicationParameterFile
 
     $hash = @{}
     $ParametersXml.ChildNodes | foreach {
-       if ($_.LocalName -eq 'Parameter') {
-       $hash[$_.Name] = $_.Value
-       }
+        if ($_.LocalName -eq 'Parameter')
+        {
+            $hash[$_.Name] = $_.Value
+        }
     }
 
     return $hash
@@ -206,21 +207,25 @@ function Merge-HashTables
     return $HashTableNew
 }
 
-function Get-TempDirectoryPath {
+function Get-TempDirectoryPath
+{
     <#
     .SYNOPSIS
-    Returns a temp directory path. Uses Agent.TempDirectory if available
+    Returns a temp directory path. Uses Agent.TempDirectory if available if shorter than env temp
     #>
 
     Param ()
 
     $agentVersion = Get-VstsTaskVariable -Name 'agent.version'
-    if (!$agentVersion -or (([version]'2.115.0').CompareTo([version]$agentVersion) -ge 1))
+    $envTemp = $env:Temp
+    if ($agentVersion -and (([version]'2.115.0').CompareTo([version]$agentVersion) -lt 1))
     {
-        return $env:Temp
+        $agentTemp = Get-VstsTaskVariable -Name 'Agent.TempDirectory'
+        if ($agentTemp.Length -le $envTemp)
+        {
+            return $agentTemp
+        }
     }
-    else
-    {
-        return Get-VstsTaskVariable -Name 'Agent.TempDirectory'
-    }
+
+    return $envTemp
 }
