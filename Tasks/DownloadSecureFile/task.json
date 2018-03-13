@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 127,
+        "Minor": 132,
         "Patch": 0
     },
     "runsOn": [
@@ -38,7 +38,7 @@
             "label": "Secure File Path",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify a custom location to download the secure file to."
+            "helpMarkDown": "Optionally specify a custom location to which the secure file will be downloaded. If empty, the agent's temp directory will be used. The temp directory path is available in the environment variable Agent.TempDirectory."
         }
     ],
     "outputVariables": [
