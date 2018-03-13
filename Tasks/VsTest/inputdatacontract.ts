@@ -37,7 +37,7 @@ export interface InputDataContract {
 }
 
 export interface TestReportingSettings {
-    TestRunTitle : string;
+    TestRunTitle  : string;
     TestResultDirectory : string;
 }
 
