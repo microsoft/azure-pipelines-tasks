@@ -1,0 +1,106 @@
+{
+    "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7112",
+    "name": "SeleniumWebdriverInstaller",
+    "friendlyName": "Selenium WebDriver Installer",
+    "description": "Acquires and caches WebDriver for various browsers to run Selenium tests.",
+    "helpMarkDown": "[Supported versions of drivers](https://seleniumwebdrivers.azureedge.net/supportedversions/SupportedWebdrivers.json)",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.103.0",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 1
+    },
+    "preview": true,
+    "demands": [],
+    "instanceNameFormat": "Install Selenium WebDriver",
+    "inputs": [
+        {
+            "name": "chromeDriver",
+            "type": "boolean",
+            "label": "Chrome Driver",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Acquires the WebDriver for Chrome from <a href=\"https://sites.google.com/a/chromium.org/chromedriver/downloads\">here</a>. The driver can be referenced using the environment variable ChromeWebDriver."
+        },
+        {
+            "name": "chromeDriverVersion",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify a supported version from <a href=\"https://seleniumwebdrivers.azureedge.net/supportedversions/SupportedWebdrivers.json\">here</a>. Use the same semantic format as mentioned in the list.",
+            "visibleRule": "chromeDriver = true"
+        },
+        {
+            "name": "firefoxDriver",
+            "type": "boolean",
+            "label": "Firefox geckodriver",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Acquires the geckodriver for Firefox from <a href=\"https://github.com/mozilla/geckodriver\">here</a>. The driver can be referenced using the environment variable GeckoDriver."
+        },
+        {
+            "name": "firefoxDriverVersion",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify a supported version from <a href=\"https://seleniumwebdrivers.azureedge.net/supportedversions/SupportedWebdrivers.json\">here</a>. Use the same semantic format as mentioned in the list.",
+            "visibleRule": "firefoxDriver = true"
+        },
+        {
+            "name": "ieDriver",
+            "type": "boolean",
+            "label": "Internet Explorer Driver",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Acquires the WebDriver for Internet Explorer from <a href=\"http://selenium-release.storage.googleapis.com/index.html\">here</a>. The driver can be referenced using the environment variable IEWebDriver."
+        },
+        {
+            "name": "ieDriverVersion",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify a supported version from <a href=\"https://seleniumwebdrivers.azureedge.net/supportedversions/SupportedWebdrivers.json\">here</a>. Use the same semantic format as mentioned in the list.",
+            "visibleRule": "ieDriver = true"
+        },
+        {
+            "name": "edgeDriver",
+            "type": "boolean",
+            "label": "Microsoft Edge Driver",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Acquires the WebDriver for Microsoft Edge from <a href=\"https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads\">here</a>. The driver can be referenced using the environment variable EdgeWebDriver."
+        },
+        {
+            "name": "edgeDriverVersion",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify a supported version from <a href=\"https://seleniumwebdrivers.azureedge.net/supportedversions/SupportedWebdrivers.json\">here</a>. Use the same semantic format as mentioned in the list.",
+            "visibleRule": "edgeDriver = true"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "seleniumwebdriverinstaller.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+      "StartingInstaller": "Starting Selenium webdriver installer task.",
+      "FileExists": "File already exists at %s Skipping download.",
+      "FileDownloaded": "File downloaded to %s.",
+      "FailedToAcquireDriver": "Failed to acquire the required driver. It is possible that the version specified is not supported. Please check the version and try again.",
+      "InvalidVersion": "The version specified is invalid. Please specify a semantic version as mentioned and try again.",
+      "AcquiringDriver": "Trying to acquire %s of version %s."
+    }
+}
