@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 1
+    "Minor": 5,
+    "Patch": 6
   },
   "demands": [],
   "preview": "true",
@@ -26,6 +26,11 @@
     {
       "name": "commands",
       "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": false
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
     }
   ],
@@ -66,6 +71,14 @@
       "groupName": "cluster"
     },
     {
+      "name": "namespace",
+      "label": "ms-resource:loc.input.label.namespace",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace",
+      "defaultValue": "",
+      "groupName": "cluster"
+    },
+    {
       "name": "command",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.command",
@@ -89,6 +102,78 @@
       }
     },
     {
+      "name": "chart",
+      "label": "ms-resource:loc.input.label.chart",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.chart",
+      "defaultValue": "",
+      "visibleRule": "command = install",
+      "groupName": "commands"
+    },
+    {
+      "name": "version",
+      "label": "ms-resource:loc.input.label.version",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "defaultValue": "",
+      "visibleRule": "command = install",
+      "groupName": "commands"
+    },
+    {
+      "name": "releaseName",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName",
+      "defaultValue": "",
+      "visibleRule": "command = install",
+      "groupName": "commands"
+    },
+    {
+      "name": "overrideValues",
+      "label": "ms-resource:loc.input.label.overrideValues",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideValues",
+      "defaultValue": "",
+      "visibleRule": "command = install",
+      "groupName": "commands"
+    },
+    {
+      "name": "canaryimage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.canaryimage",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.canaryimage",
+      "visibleRule": "command = init",
+      "groupName": "commands"
+    },
+    {
+      "name": "upgradetiller",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.upgradetiller",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.upgradetiller",
+      "visibleRule": "command = init",
+      "groupName": "commands"
+    },
+    {
+      "name": "updatedependency",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.updatedependency",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.updatedependency",
+      "visibleRule": "command = install",
+      "groupName": "commands"
+    },
+    {
+      "name": "waitForExecution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForExecution",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.waitForExecution",
+      "visibleRule": "command = init || command = install",
+      "groupName": "commands"
+    },
+    {
       "name": "arguments",
       "type": "multiLine",
       "properties": {
@@ -98,6 +183,13 @@
       "label": "ms-resource:loc.input.label.arguments",
       "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "groupName": "commands"
+    },
+    {
+      "name": "tillernamespace",
+      "label": "ms-resource:loc.input.label.tillernamespace",
+      "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
+      "type": "string",
+      "groupName": "advanced"
     }
   ],
   "dataSourceBindings": [
