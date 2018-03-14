@@ -166,6 +166,7 @@
     "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "ms-resource:loc.messages.MSDeploygeneratedpackageareonlysupportedforWindowsplatform",
     "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "ms-resource:loc.messages.UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove",
     "UnabletofindthelocationofMSDeployfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofMSDeployfromregistryonmachineError",
+    "UnabletofindthelocationofDotNetFrameworkfromregistryonmachineError": "ms-resource:loc.messages.UnabletofindthelocationofDotNetFrameworkfromregistryonmachineError",
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern": "ms-resource:loc.messages.MorethanonepackagematchedwithspecifiedpatternPleaserestrainthesearchpattern",
     "Trytodeploywebappagainwithappofflineoptionselected": "ms-resource:loc.messages.Trytodeploywebappagainwithappofflineoptionselected",
