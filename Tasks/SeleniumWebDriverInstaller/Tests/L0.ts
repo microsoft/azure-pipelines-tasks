@@ -144,9 +144,6 @@ describe('SeleniumWebdriverInstaller Suite', function() {
         const tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         // Set the inputs
-        process.env[constants.ieDriver] = 'false';
-        process.env[constants.firefoxDriver] = 'false';
-        process.env[constants.chromeDriver] = 'false';
         process.env[constants.edgeDriver] = 'true';
         process.env[constants.edgeDriverVersion] = '2.3.0';
         process.env[constants.agentTempDirectory] = 'temp';
