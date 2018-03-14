@@ -1,0 +1,5 @@
+{
+    "messages": {
+        "UnabletofindthelocationofDotNetFrameworkfromregistryonmachineError": "Unable to find the location of Dot Net Framework from registry on machine (Error : %s)"        
+    }
+}
