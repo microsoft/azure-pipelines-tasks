@@ -18,7 +18,7 @@
                 ThrowAzureModuleNotFoundException -azurePsVersion $azurePsVersion -modules "Azure, AzureRM"
             }
         } elseif ($PreferredModule -contains 'Azure') {
-            # Attempt to import Azure but fallback to AzureRM.
+            # Attempt to import Azure but fallback to AzureRM unless strict is specified.
             if (!(Import-FromModulePath -Classic:$true -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$true -azurePsVersion $azurePsVersion))
             {
@@ -36,7 +36,7 @@
                 }
             }
         } else {
-            # Attempt to import AzureRM but fallback to Azure.
+            # Attempt to import AzureRM but fallback to Azure unless strict is specified
             if (!(Import-FromModulePath -Classic:$false -azurePsVersion $azurePsVersion) -and
                 !(Import-FromSdkPath -Classic:$false -azurePsVersion $azurePsVersion))
             {
