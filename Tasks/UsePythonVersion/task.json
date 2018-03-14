@@ -15,6 +15,7 @@
         "Minor": 132,
         "Patch": 0
     },
+    "preview": true,
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",
     "inputs": [
