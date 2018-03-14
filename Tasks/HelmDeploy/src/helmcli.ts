@@ -9,7 +9,7 @@ import basecommand from "./basecommand"
 export default class helmcli extends basecommand {
 
     private command : string;
-    private argument : string[] = [];
+    private arguments : string[] = [];
     
     public getTool(): string {
         return "helm";
@@ -32,17 +32,17 @@ export default class helmcli extends basecommand {
     }
 
     public addArgument(argument: string): void {
-        this.argument.push(argument);
+        this.arguments.push(argument);
     }
 
-    public getArgument(): string[] {
-        return this.argument;
+    public getArguments(): string[] {
+        return this.arguments;
     }
 
     public execHelmCommand() : void {
         var command = this.createCommand();
         command.arg(this.command);
-        this.argument.forEach((value) => {
+        this.arguments.forEach((value) => {
             command.line(value);
         })
         

@@ -12,6 +12,6 @@ export function addArguments(helmCli: helmcli) : void {
     }
 
     if(argumentsInput) {
-        helmCli.addArgument("argumentsInput");
+        helmCli.addArgument(argumentsInput);
     }
 }
