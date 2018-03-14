@@ -82,7 +82,7 @@ try {
     $__vstsAzPSInlineScriptPath = $null
     If ($scriptType -eq "InlineScript") {
         $scriptArguments = $null
-        $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
+        $__vstsAzPSInlineScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
         ($scriptInline | Out-File $__vstsAzPSInlineScriptPath)
         $scriptPath = $__vstsAzPSInlineScriptPath
     }
