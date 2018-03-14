@@ -443,7 +443,7 @@ To invoke a logging command, simply emit the command via standard output. For ex
                 </p>
             </td>
             <td>
-                2.131
+                2.132
             </td>
         </tr>
     </tbody>
