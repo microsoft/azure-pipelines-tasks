@@ -10,6 +10,7 @@ import helmcli from "./helmcli";
 import kubernetescli from "./kubernetescli"
 import * as helmutil from "./utils"
 import fs = require('fs');
+import * as commonCommandOptions from "./commoncommandoption"
 
 tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 
@@ -108,8 +109,28 @@ async function run() {
 }
 
 function runHelm(helmCli: helmcli) {
-    helmCli.setCommand(tl.getInput("command", true));
-    helmCli.setArgument(tl.getInput("arguments", false));    
+
+    var command = tl.getInput("command", true);
+    
+
+    var helmCommandMap ={
+        "init":"./helminit",
+        "install":"./helminstall"
+    }    
+
+    var commandImplementation = require("./uinotimplementedcommands");
+    if(command in helmCommandMap) {
+        commandImplementation = require(helmCommandMap[command]);
+    }
+
+    //set command
+    helmCli.setCommand(command);
+
+    // add arguments
+    commonCommandOptions.addArguments(helmCli);
+    commandImplementation.addArguments(helmCli);
+
+    // execute command
     helmCli.execHelmCommand();
 }
 
