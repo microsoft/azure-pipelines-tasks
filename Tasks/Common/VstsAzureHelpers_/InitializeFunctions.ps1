@@ -90,8 +90,13 @@ function Initialize-AzureSubscription {
         # Add account (AzureRM).
         if ($script:azureRMProfileModule) {
             try {
-                Write-Host "##[command]Add-AzureRMAccount -Credential $psCredential"
-                $null = Add-AzureRMAccount -Credential $psCredential
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                    Write-Host "##[command] Add-AzureRMAccount -Credential $psCredential"
+                    $null = Add-AzureRMAccount -Credential $psCredential
+                } else {
+                    Write-Host "##[command] Connect-AzureRMAccount -Credential $psCredential"
+                    $null = Connect-AzureRMAccount -Credential $psCredential
+                }
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
