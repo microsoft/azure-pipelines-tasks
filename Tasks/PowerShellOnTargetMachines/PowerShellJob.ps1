@@ -94,13 +94,13 @@ param (
                 } 
             }
         }
-        $deploymentResponse | Add-Member "IsAzureVm" $IsAzureVm 
-        $deploymentResponse | Add-Member "VmUuidHash" $VmUuidHash     
+        $deploymentResponse | Add-Member "IsAzureVm" $IsAzureVm -Force
+        $deploymentResponse | Add-Member "VmUuidHash" $VmUuidHash -Force   
     }
     catch
     {
         Write-Verbose "Error during fetching telemetry = $_"
-        $deploymentResponse | Add-Member "TelemetryError" $_    
+        $deploymentResponse | Add-Member "TelemetryError" $_ -Force 
     }
 
     Write-Output $deploymentResponse
