@@ -68,9 +68,9 @@
       "helpMarkDown": "If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build from the specified definition, it will download artifacts from the build specified in the options below."
     },
     {
-      "name": "artifactVersion",
+      "name": "buildVersionToDownload",
       "type": "pickList",
-      "label": "Artifact version",
+      "label": "Build version to download",
       "defaultValue": "latest",
       "visibleRule": "buildType == specific",
       "required": true,
@@ -85,7 +85,7 @@
       "type": "string",
       "label": "Branch name", 
       "defaultValue": "refs/heads/master",
-      "visibleRule": "buildType == specific && artifactVersion == latestFromBranch",
+      "visibleRule": "buildType == specific && buildVersionToDownload == latestFromBranch",
       "required": true,
       "helpMarkDown": "Specify to filter on branch/ref name, for example: ```refs/heads/develop```."
     },
@@ -95,7 +95,7 @@
       "label": "Build",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "buildType == specific && artifactVersion == specific",
+      "visibleRule": "buildType == specific && buildVersionToDownload == specific",
       "properties": {
         "EditableOptions": "True",
         "DisableManageLink": "True"
