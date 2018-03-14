@@ -258,6 +258,6 @@
         "SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided",
         "SAD_InvalidServerNameFormat": "Server name '{0}' is not in the right format. Use FQDN format like '{1}'",
         "SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed.",
-        "SAD_TroubleshootingLink": "Checkout how to troubleshoot failures https://aka.ms/sqlazuredeployreadme#troubleshooting."
+        "SAD_TroubleshootingLink": "Checkout how to troubleshoot failures https://aka.ms/sqlazuredeployreadme#troubleshooting-"
     }
 }
