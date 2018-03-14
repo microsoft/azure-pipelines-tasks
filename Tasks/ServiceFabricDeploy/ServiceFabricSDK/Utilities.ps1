@@ -220,8 +220,8 @@ function Get-TempDirectoryPath
     $envTemp = $env:Temp
     if ($agentVersion -and (([version]'2.115.0').CompareTo([version]$agentVersion) -lt 1))
     {
-        $agentTemp = Get-VstsTaskVariable -Name 'Agent.TempDirectory'
-        if ($agentTemp.Length -le $envTemp)
+        $agentTemp = Get-VstsTaskVariable -Name 'agent.tempDirectory'
+        if ($agentTemp.Length -le $envTemp.Length)
         {
             return $agentTemp
         }

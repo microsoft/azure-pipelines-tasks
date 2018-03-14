@@ -48,5 +48,8 @@ describe('ServiceFabricDeploy Suite', function () {
         it('Deploy with diff pkg', (done) => {
             psr.run(path.join(__dirname, 'CreateDiffPkg.ps1'), done);
         })
+        it('fet temp directory', (done) => {
+            psr.run(path.join(__dirname, 'SdkUtilities.ps1'), done);
+        })
     }
 });
