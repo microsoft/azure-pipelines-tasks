@@ -1,8 +1,6 @@
 export const agentTempDirectory = 'Agent.TempDirectory';
 export const downloadPath = 'downloadPath';
 export const cacheHitReturnValue = 'findLocalToolFirstCallReturnValue';
-export const findLocalToolSecondCallReturnValue = 'findLocalToolSecondCallReturnValue';
-export const secondCacheLookup = 'SecondCacheLookup';
 export const chromeDriver = 'chromeDriver';
 export const chromeDriverVersion = 'chromeDriverVersion';
 export const firefoxDriver = 'firefoxDriver';

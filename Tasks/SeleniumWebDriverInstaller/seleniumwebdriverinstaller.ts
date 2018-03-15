@@ -97,10 +97,10 @@ async function acquireAndCacheDriverVersion(driver: enums.Driver, driverVersion:
 
 function getDriverExeName(driver: enums.Driver) {
     switch (driver) {
-        case enums.Driver.ChromeWebDriver: return 'chromedriver.exe';
-        case enums.Driver.GeckoWebDriver: return 'geckodriver.exe';
-        case enums.Driver.IEWebDriver: return 'IEDriverSErver.exe';
-        case enums.Driver.EdgeWebDriver: return 'MicrosoftWebDriver.exe';
+        case enums.Driver.ChromeWebDriver: return ChromeDriverExeName;
+        case enums.Driver.GeckoWebDriver: return GeckoDriverExeName;
+        case enums.Driver.IEWebDriver: return IEDriverExeName;
+        case enums.Driver.EdgeWebDriver: return EdgeDriverExeName;
         default: return null;
     }
 }

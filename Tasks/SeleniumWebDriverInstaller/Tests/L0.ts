@@ -19,7 +19,6 @@ describe('SeleniumWebdriverInstaller Suite', function() {
         // Clear all inputs and other environment variables
         delete process.env[constants.downloadPath];
         delete process.env[constants.cacheHitReturnValue];
-        delete process.env[constants.findLocalToolSecondCallReturnValue];
         delete process.env[constants.ieDriver];
         delete process.env[constants.firefoxDriver];
         delete process.env[constants.chromeDriver];
@@ -153,6 +152,39 @@ describe('SeleniumWebdriverInstaller Suite', function() {
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained('Could not find version 2.3.0 of driver EdgeWebDriver, will download it'), 'Should have downloded edge driver.');
         assert(tr.stdOutContained('set EdgeWebDriver=EdgeWebDriver\\2.3.0'));
+        done();
+    });
+
+    it('Get all drivers acquires all driver', (done: MochaDone) => {
+        console.log('TestCaseName: Get all drivers acquires all driver');
+
+        // Setup the mock runner
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        // Set the inputs
+        process.env[constants.edgeDriver] = 'true';
+        process.env[constants.edgeDriverVersion] = '2.3.0';
+        process.env[constants.ieDriver] = 'true';
+        process.env[constants.ieDriverVersion] = '2.3.0';
+        process.env[constants.firefoxDriver] = 'true';
+        process.env[constants.firefoxDriverVersion] = '2.3.0';
+        process.env[constants.chromeDriver] = 'true';
+        process.env[constants.chromeDriverVersion] = '2.3.0';
+        process.env[constants.agentTempDirectory] = 'temp';
+        process.env[constants.downloadPath] = 'temp\\edgedriver';
+    
+        // Start the run
+        tr.run();
+
+        // Asserts
+        assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, `Task should have succeeded`);
+        assert(tr.stdOutContained('Could not find version 2.3.0 of driver EdgeWebDriver, will download it'), 'Should have downloded edge driver.');
+        assert(tr.stdOutContained('set EdgeWebDriver=EdgeWebDriver\\2.3.0'));
+        assert(tr.stdOutContained('set IEWebDriver=IEWebDriver\\2.3.0'));
+        assert(tr.stdOutContained('set GeckoWebDriver=GeckoWebDriver\\2.3.0'));
+        assert(tr.stdOutContained('set ChromeWebDriver=ChromeWebDriver\\2.3.0'));
         done();
     });
 });
