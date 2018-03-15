@@ -79,20 +79,16 @@ function Get-TempDirectoryPath
 {
     <#
     .SYNOPSIS
-    Returns a temp directory path. Uses Agent.TempDirectory if available if shorter than env temp
+    Returns a temp directory path. Uses Agent.TempDirectory if available and shorter than env temp
     #>
 
     Param ()
 
-    $agentVersion = Get-VstsTaskVariable -Name 'agent.version'
+    $agentTemp = Get-VstsTaskVariable -Name 'agent.tempDirectory'
     $envTemp = $env:Temp
-    if ($agentVersion -and (([version]'2.115.0').CompareTo([version]$agentVersion) -lt 1))
+    if ($agentTemp -and ($agentTemp.Length -le $envTemp.Length))
     {
-        $agentTemp = Get-VstsTaskVariable -Name 'agent.tempDirectory'
-        if ($agentTemp.Length -le $envTemp.Length)
-        {
-            return $agentTemp
-        }
+        return $agentTemp
     }
 
     return $envTemp

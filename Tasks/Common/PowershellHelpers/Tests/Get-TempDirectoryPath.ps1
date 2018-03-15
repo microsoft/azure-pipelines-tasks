@@ -1,13 +1,11 @@
 [CmdletBinding()]
 param()
 
-. $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 
 ## test 1
 Register-Mock Get-VstsTaskVariable { "C:\agent\temp" } -- -Name "agent.tempDirectory"
-Register-Mock Get-VstsTaskVariable { "2.120.3" } -- -Name "agent.version"
-
 $env:Temp = "C:\env\temp\longPath"
 
 # Act
@@ -22,8 +20,6 @@ Unregister-Mock Get-VstsTaskVariable
 
 ## test 2
 Register-Mock Get-VstsTaskVariable { "C:\agent\temp\longPath" } -- -Name "agent.tempDirectory"
-Register-Mock Get-VstsTaskVariable { "2.120.3" } -- -Name "agent.version"
-
 $env:Temp = "C:\env\temp"
 
 # Act
@@ -37,9 +33,7 @@ Unregister-Mock Get-VstsTaskVariable
 
 
 ## test 3
-Register-Mock Get-VstsTaskVariable { "C:\agent\temp" } -- -Name "agent.tempDirectory"
-Register-Mock Get-VstsTaskVariable { "2.114.3" } -- -Name "agent.version"
-
+Register-Mock Get-VstsTaskVariable { $null } -- -Name "agent.tempDirectory"
 $env:Temp = "C:\env\temp\longPath"
 
 # Act
