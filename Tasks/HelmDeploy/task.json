@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "preview": "true",
@@ -42,7 +42,8 @@
             "defaultValue": "Azure Resource Manager",
             "required": true,
             "options": {
-                "Azure Resource Manager": "Azure Resource Manager"
+                "Azure Resource Manager": "Azure Resource Manager",
+                "Kubernetes Service Connection": "Kubernetes Service Connection"
             },
             "helpMarkDown": "Select a Connection Type.",
             "groupName": "cluster"
@@ -65,6 +66,16 @@
             "helpMarkDown": "Select an Azure Managed Cluster.",
             "visibleRule": "connectionType = Azure Resource Manager",
             "defaultValue": "",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "kubernetesServiceEndpoint",
+            "aliases": ["kubernetesServiceConnection"],
+            "type": "connectedService:kubernetes",
+            "label": "Kubernetes Service Connection",
+            "helpMarkDown": "Select a Kubernetes service connection.",
+            "visibleRule": "connectionType = Kubernetes Service Connection",
             "required": true,
             "groupName": "cluster"
         },
