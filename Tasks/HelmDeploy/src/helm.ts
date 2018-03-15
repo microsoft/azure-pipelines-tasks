@@ -14,51 +14,23 @@ import * as commonCommandOptions from "./commoncommandoption"
 
 tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 
-function extractResourceGroup(id: string): string {
-        var array = id.split('/');
-        return array[array.findIndex(str=> str.toUpperCase() === "resourceGroups".toUpperCase()) + 1];
-}
-
 function getKubeConfigFilePath(): string {
     var userdir = helmutil.getTaskTempDir();
     return path.join(userdir, "config");
 }
 
-// Get cluster info
-async function getCluster(aks: AzureAksService, clusterName: string) : Promise<AKSCluster> {
-    var temp: AKSCluster[] = await aks.list();
-    var cluster = temp.find((element) => {
-        return element.name.toLowerCase() === clusterName.toLowerCase();
-    });
-
-    if(!cluster) {
-        tl.error(tl.loc("ClusterNotFound", clusterName)); 
-        throw new Error(tl.loc("ClusterNotFound", clusterName));
+function getClusterType(): any {
+    var connectionType = tl.getInput("connectionType", true);
+    if(connectionType === "Azure Resource Manager") {
+        return require("./clusters/armkubernetescluster")  
     }
-
-    tl.debug(tl.loc("KubernetesClusterInfo", cluster.id, cluster.properties.kubernetesVersion, cluster.properties.provisioningState));
-    if(cluster.properties.provisioningState.toLowerCase() !== "succeeded") {
-        tl.warning(tl.loc("ClusterNotProvisioned", clusterName, cluster.properties.provisioningState));        
-    }
-    return cluster;
-}
-
-// get kubeconfig file content
-async function getKubeConfig(azureSubscriptionEndpoint: string, clusterName: string) : Promise<string> {
-    var azureEndpoint: AzureEndpoint = await (new AzureRMEndpoint(azureSubscriptionEndpoint)).getEndpoint();
-    var aks = new AzureAksService(azureEndpoint);
-    var cluster = await getCluster(aks, clusterName);
-    var resourceGroup = extractResourceGroup(cluster.id);
-    tl.debug(tl.loc("KubernetesClusterResourceGroup", cluster.name, resourceGroup));
-
-    var clusterInfo : AKSClusterAccessProfile = await aks.getAccessProfile(resourceGroup, clusterName);
-    var Base64 = require('js-base64').Base64;
-    return Base64.decode(clusterInfo.properties.kubeConfig);
+    
+    return require("./clusters/generickubernetescluster")
 }
 
 // get kubeconfig file path
-async function getKubeConfigFile(azureSubscriptionEndpoint: string, clusterName: string): Promise<string> {
-    return getKubeConfig(azureSubscriptionEndpoint, clusterName).then((config) => {
+async function getKubeConfigFile(): Promise<string> {
+    return getClusterType().getKubeConfig().then((config) => {
         var configFilePath = getKubeConfigFilePath();
         tl.debug(tl.loc("KubeConfigFilePath", configFilePath));
         fs.writeFileSync(configFilePath, config);
@@ -87,9 +59,7 @@ function configureHelm() : helmcli {
 }
 
 async function run() {
-    var clusterName : string = tl.getInput("kubernetesCluster", true);
-    var azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint", true);
-    var kubeconfigfilePath = await getKubeConfigFile(azureSubscriptionEndpoint, clusterName);
+    var kubeconfigfilePath = await getKubeConfigFile();
     var kubectlCli: kubernetescli = configureKubernetes(kubeconfigfilePath);
     var helmCli : helmcli = configureHelm();
     kubectlCli.login();
@@ -112,13 +82,12 @@ function runHelm(helmCli: helmcli) {
 
     var command = tl.getInput("command", true);
     
-
     var helmCommandMap ={
-        "init":"./helminit",
-        "install":"./helminstall"
+        "init":"./helmcommands/helminit",
+        "install":"./helmcommands/helminstall"
     }    
 
-    var commandImplementation = require("./uinotimplementedcommands");
+    var commandImplementation = require("./helmcommands/uinotimplementedcommands");
     if(command in helmCommandMap) {
         commandImplementation = require(helmCommandMap[command]);
     }

@@ -12,6 +12,8 @@
   "loc.input.help.azureSubscriptionEndpoint": "Select an Azure subscription, which has your Azure Container Registry.",
   "loc.input.label.kubernetesCluster": "Kubernetes cluster",
   "loc.input.help.kubernetesCluster": "Select an Azure Managed Cluster.",
+  "loc.input.label.kubernetesServiceEndpoint": "Kubernetes Service Connection",
+  "loc.input.help.kubernetesServiceEndpoint": "Select a Kubernetes service connection.",
   "loc.input.label.namespace": "Namespace",
   "loc.input.help.namespace": "Specify K8 namespace to use. Use Tiller namespace in advance section to specify tiller namespace.",
   "loc.input.label.command": "Command",
