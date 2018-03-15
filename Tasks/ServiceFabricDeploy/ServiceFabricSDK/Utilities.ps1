@@ -206,26 +206,3 @@ function Merge-HashTables
     $HashTableNew = $HashTableOld + $HashTableNew
     return $HashTableNew
 }
-
-function Get-TempDirectoryPath
-{
-    <#
-    .SYNOPSIS
-    Returns a temp directory path. Uses Agent.TempDirectory if available if shorter than env temp
-    #>
-
-    Param ()
-
-    $agentVersion = Get-VstsTaskVariable -Name 'agent.version'
-    $envTemp = $env:Temp
-    if ($agentVersion -and (([version]'2.115.0').CompareTo([version]$agentVersion) -lt 1))
-    {
-        $agentTemp = Get-VstsTaskVariable -Name 'agent.tempDirectory'
-        if ($agentTemp.Length -le $envTemp.Length)
-        {
-            return $agentTemp
-        }
-    }
-
-    return $envTemp
-}
