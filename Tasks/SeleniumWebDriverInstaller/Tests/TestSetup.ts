@@ -9,8 +9,6 @@ const taskPath = path.join(__dirname, '..', 'seleniumwebdriverinstaller.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
-tr.setInput('versionSelector', process.env[constants.versionSelector]);
-tr.setInput('testPlatformVersion', process.env[constants.testPlatformVersion]);
 
 tr.setInput('chromeDriver', process.env[constants.chromeDriver]);
 tr.setInput('chromeDriverVersion', process.env[constants.chromeDriverVersion]);
@@ -23,41 +21,19 @@ tr.setInput('edgeDriverVersion', process.env[constants.edgeDriverVersion]);
 
 const downloadPath = process.env[constants.downloadPath];
 
-
-// Construct the answers object
-const answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    'which': {
-    },
-    'checkPath': {
-    },
-    'exec': {
-    }
-};
-
 // Mock task-tool-lib
 const taskToolLibMock: any = {};
 taskToolLibMock.findLocalTool = function(tool: string, version: string): string {
 
-    if (process.env[constants.findLocalToolFirstCallReturnValue] !== constants.secondCacheLookup && process.env[constants.findLocalToolFirstCallReturnValue]) {
+    if (process.env[constants.cacheHitReturnValue]) {
         tl.debug(`Cache hit for ${version}`);
-        const retValue = process.env[constants.findLocalToolFirstCallReturnValue];
-        process.env[constants.findLocalToolFirstCallReturnValue] = constants.secondCacheLookup;
+        const retValue = process.env[constants.cacheHitReturnValue];
         return retValue;
     }
-
-    if (process.env[constants.findLocalToolFirstCallReturnValue] === constants.secondCacheLookup && process.env[constants.findLocalToolSecondCallReturnValue]) {
-        tl.debug(`Cache hit for ${version}`);
-        return process.env[constants.findLocalToolSecondCallReturnValue];
-    }
-
-    process.env[constants.findLocalToolFirstCallReturnValue] = constants.secondCacheLookup;
 
     tl.debug(`Cache miss for ${version}`);
 
     return null;
-};
-taskToolLibMock.isExplicitVersion = function(version: string): boolean {
-    return true;
 };
 taskToolLibMock.cleanVersion = function(version: string): string {
     return version;

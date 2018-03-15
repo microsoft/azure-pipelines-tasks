@@ -97,10 +97,11 @@
     },
     "messages": {
       "StartingInstaller": "Starting Selenium webdriver installer task.",
-      "FileExists": "File already exists at %s Skipping download.",
+      "FileExists": "File already exists at %s. Skipping download.",
       "FileDownloaded": "File downloaded to %s.",
       "FailedToAcquireDriver": "Failed to acquire the required driver. It is possible that the version specified is not supported. Please check the version and try again.",
       "InvalidVersion": "The version specified is invalid. Please specify a semantic version as mentioned and try again.",
-      "AcquiringDriver": "Trying to acquire %s of version %s."
+      "AcquiringDriver": "Trying to acquire %s of version %s.",
+      "SettingVariable": "Setting Environment variable %s=%s"
     }
 }

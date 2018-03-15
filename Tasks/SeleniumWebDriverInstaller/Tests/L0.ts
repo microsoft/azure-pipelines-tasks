@@ -17,15 +17,9 @@ describe('SeleniumWebdriverInstaller Suite', function() {
 
     beforeEach((done) => {
         // Clear all inputs and other environment variables
-        delete process.env[constants.vsTestToolsInstallerInstalledToolLocation];
-        delete process.env[constants.versionSelector];
-        delete process.env[constants.testPlatformVersion];
         delete process.env[constants.downloadPath];
-        delete process.env[constants.expectedTestPlatformVersion];
-        delete process.env[constants.findLocalToolFirstCallReturnValue];
+        delete process.env[constants.cacheHitReturnValue];
         delete process.env[constants.findLocalToolSecondCallReturnValue];
-        delete process.env[constants.listPackagesReturnCode];
-        delete process.env[constants.listPackagesOutput];
         delete process.env[constants.ieDriver];
         delete process.env[constants.firefoxDriver];
         delete process.env[constants.chromeDriver];
@@ -49,7 +43,7 @@ describe('SeleniumWebdriverInstaller Suite', function() {
         // Set the inputs
         process.env[constants.chromeDriver] = 'true';
         process.env[constants.chromeDriverVersion] = '2.3.0';
-        process.env[constants.findLocalToolFirstCallReturnValue] = `chromedriver\\${process.env[constants.chromeDriverVersion]}`;
+        process.env[constants.cacheHitReturnValue] = `chromedriver\\${process.env[constants.chromeDriverVersion]}`;
         process.env[constants.agentTempDirectory] = 'temp';
         process.env[constants.downloadPath] = 'temp\\chromedriver';
         
@@ -60,7 +54,7 @@ describe('SeleniumWebdriverInstaller Suite', function() {
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained(`Found version 2.3.0 of driver ChromeWebDriver in cache`), `Should have been cache hit scenario.`);
-        assert(tr.stdOutContained(`Setting Environment variable ChromeWebDriver=chromedriver\\2.3.0`), `Should have set chrome driver env var.`);
+        assert(tr.stdOutContained(`set ChromeWebDriver=chromedriver\\2.3.0`), `Should have set chrome driver env var.`);
         done();
     });
 
@@ -79,12 +73,13 @@ describe('SeleniumWebdriverInstaller Suite', function() {
 
         // Start the run
         tr.run();
-
+        
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained('Could not find version 2.3.0 of driver ChromeWebDriver, will download it'), 'Should have been cache miss scenario.');
-        assert(tr.stdOutContained('Setting Environment variable ChromeWebDriver=ChromeWebDriver\\2.3.0'));
+        assert(tr.stdOutContained('set ChromeWebDriver=ChromeWebDriver\\2.3.0'));
+
         done();
     });
 
@@ -105,10 +100,11 @@ describe('SeleniumWebdriverInstaller Suite', function() {
         tr.run();
 
         // Asserts
+        
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained('Could not find version 2.3.0 of driver GeckoWebDriver, will download it'), 'Should have downloded firefox driver.');
-        assert(tr.stdOutContained('Setting Environment variable GeckoWebDriver=GeckoWebDriver\\2.3.0'));
+        assert(tr.stdOutContained('set GeckoWebDriver=GeckoWebDriver\\2.3.0'));
         done();
     });
 
@@ -132,7 +128,7 @@ describe('SeleniumWebdriverInstaller Suite', function() {
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained('Could not find version 2.3.0 of driver IEWebDriver, will download it'), 'Should have downloded ie driver.');
-        assert(tr.stdOutContained('Setting Environment variable IEWebDriver=IEWebDriver\\2.3.0'));
+        assert(tr.stdOutContained('set IEWebDriver=IEWebDriver\\2.3.0'));
         done();
     });
 
@@ -156,7 +152,7 @@ describe('SeleniumWebdriverInstaller Suite', function() {
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained('Could not find version 2.3.0 of driver EdgeWebDriver, will download it'), 'Should have downloded edge driver.');
-        assert(tr.stdOutContained('Setting Environment variable EdgeWebDriver=EdgeWebDriver\\2.3.0'));
+        assert(tr.stdOutContained('set EdgeWebDriver=EdgeWebDriver\\2.3.0'));
         done();
     });
 });

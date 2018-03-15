@@ -20,9 +20,10 @@
   "loc.input.label.edgeDriverVersion": "Version",
   "loc.input.help.edgeDriverVersion": "Specify a supported version from <a href=\"https://seleniumwebdrivers.azureedge.net/supportedversions/SupportedWebdrivers.json\">here</a>. Use the same semantic format as mentioned in the list.",
   "loc.messages.StartingInstaller": "Starting Selenium webdriver installer task.",
-  "loc.messages.FileExists": "File already exists at %s Skipping download.",
+  "loc.messages.FileExists": "File already exists at %s. Skipping download.",
   "loc.messages.FileDownloaded": "File downloaded to %s.",
   "loc.messages.FailedToAcquireDriver": "Failed to acquire the required driver. It is possible that the version specified is not supported. Please check the version and try again.",
   "loc.messages.InvalidVersion": "The version specified is invalid. Please specify a semantic version as mentioned and try again.",
-  "loc.messages.AcquiringDriver": "Trying to acquire %s of version %s."
+  "loc.messages.AcquiringDriver": "Trying to acquire %s of version %s.",
+  "loc.messages.SettingVariable": "Setting Environment variable %s=%s"
 }

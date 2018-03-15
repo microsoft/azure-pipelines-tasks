@@ -101,6 +101,7 @@
     "FileDownloaded": "ms-resource:loc.messages.FileDownloaded",
     "FailedToAcquireDriver": "ms-resource:loc.messages.FailedToAcquireDriver",
     "InvalidVersion": "ms-resource:loc.messages.InvalidVersion",
-    "AcquiringDriver": "ms-resource:loc.messages.AcquiringDriver"
+    "AcquiringDriver": "ms-resource:loc.messages.AcquiringDriver",
+    "SettingVariable": "ms-resource:loc.messages.SettingVariable"
   }
 }

@@ -83,7 +83,7 @@
         "RunDistributedTests",
         "RunJMeterLoadTest",
         "RunLoadTest",
-		"SeleniumWebDriverInstaller",
+        "SeleniumWebDriverInstaller",
         "ServiceFabricComposeDeploy",
         "ServiceFabricDeploy",
         "ServiceFabricPowerShell",
