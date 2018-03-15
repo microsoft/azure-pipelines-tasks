@@ -73,6 +73,10 @@ async function run() {
             }
         }
 
+        //upload detailed logs from xcodebuild if using xcpretty
+        utils.uploadLogFile(utils.getTaskState('XCODEBUILD_LOG'));
+        utils.uploadLogFile(utils.getTaskState('XCODEBUILD_ARCHIVE_LOG'));
+        utils.uploadLogFile(utils.getTaskState('XCODEBUILD_EXPORT_LOG'));
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }

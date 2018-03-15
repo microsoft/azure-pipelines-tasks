@@ -187,6 +187,26 @@ export function pathExistsAsFile(path: string) {
     }
 }
 
+export function pipeOutputToFile(firstTool: ToolRunner, secondTool: ToolRunner, logPrefix: string) : string {
+    //find a unique log file name
+    let filePath: string = tl.resolve(tl.getVariable('Agent.TempDirectory'), logPrefix + '.log');
+    let index = 1;
+    while (tl.exist(filePath)) {
+        filePath = tl.resolve(tl.getVariable('Agent.TempDirectory'), logPrefix + index.toString() + '.log');
+        index++;
+    }
+
+    firstTool.pipeExecOutputToTool(secondTool);
+    //firstTool.pipeExecOutputToTool(secondTool, filePath);
+    return filePath;
+}
+
+export function uploadLogFile(logFile: string) {
+    if (tl.exist(logFile)) {
+        console.log(`##vso[task.uploadfile]${logFile}`);
+    }
+}
+
 function agentSupportsTaskState() {
     let agentSupportsTaskState = true;
     try {

@@ -215,7 +215,8 @@ async function run() {
             let xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
             xcPrettyTool.arg(['-r', 'junit', '--no-color']);
 
-            xcb.pipeExecOutputToTool(xcPrettyTool);
+            let logFile: string = utils.pipeOutputToFile(xcb, xcPrettyTool, 'xcodebuild');
+            utils.setTaskState('XCODEBUILD_LOG', logFile);
         }
 
         //--- Xcode Build ---
@@ -282,7 +283,8 @@ async function run() {
             if (useXcpretty) {
                 let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                 xcPrettyTool.arg('--no-color');
-                xcodeArchive.pipeExecOutputToTool(xcPrettyTool);
+                let logFile: string = utils.pipeOutputToFile(xcodeArchive, xcPrettyTool, 'xcodebuild_archive');
+                utils.setTaskState('XCODEBUILD_ARCHIVE_LOG', logFile);
             }
             await xcodeArchive.exec();
 
@@ -427,7 +429,8 @@ async function run() {
                     if (useXcpretty) {
                         let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                         xcPrettyTool.arg('--no-color');
-                        xcodeExport.pipeExecOutputToTool(xcPrettyTool);
+                        let logFile: string = utils.pipeOutputToFile(xcodeExport, xcPrettyTool, 'xcodebuild_export');
+                        utils.setTaskState('XCODEBUILD_EXPORT_LOG', logFile);
                     }
                     await xcodeExport.exec();
                 }
