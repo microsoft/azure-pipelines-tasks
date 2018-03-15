@@ -6,6 +6,7 @@ param()
 $serviceConnectionName = "random connection name"
 $composeFilePath = "docker-compose.yml"
 $applicationName = "fabric:/Application1"
+$sanitizedApplicationName = "Application1"
 $serverCertThumbprint = "random thumbprint"
 $userName = "random user"
 $password = "random password"
@@ -29,13 +30,13 @@ Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SD
 
 # Setup mock VSTS service endpoint
 $vstsEndpoint = @{
-    "url" = $connectionEndpointFullUrl
+    "url"  = $connectionEndpointFullUrl
     "Auth" = @{
-        "Scheme" = "UserNamePassword"
+        "Scheme"     = "UserNamePassword"
         "Parameters" = @{
             "ServerCertThumbprint" = $serverCertThumbprint
-            "Username" = $userName
-            "Password" = $password
+            "Username"             = $userName
+            "Password"             = $password
         }
     }
 }
@@ -51,9 +52,9 @@ Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsof
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
 $serviceFabricComposeDeploymentStatus = @{
-    "DeploymentName"        = $applicationName
-    "ComposeDeploymentStatus"    = "Created"
-    "StatusDetails" = ""
+    "DeploymentName"          = $sanitizedApplicationName
+    "ComposeDeploymentStatus" = "Created"
+    "StatusDetails"           = ""
 }
 
 # Need to store the bool in an object so the lambdas will share the reference
@@ -69,17 +70,17 @@ Register-Mock Get-ServiceFabricComposeDeploymentStatus {
     {
         return $serviceFabricComposeDeploymentStatus
     }
-} -DeploymentName: $applicationName
+} -DeploymentName: $sanitizedApplicationName
 
 Register-Mock Remove-ServiceFabricComposeDeployment {
     $removed.Value = $true
-} -DeploymentName: $applicationName -Force: True
+} -DeploymentName: $sanitizedApplicationName -Force: True
 
 Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath: $composeFilePath -ErrorAction: Stop
 
 Register-Mock New-ServiceFabricComposeDeployment {
     $removed.Value = $false
-} -- -DeploymentName: $applicationName -Compose: $composeFilePath
+} -- -DeploymentName: $sanitizedApplicationName -Compose: $composeFilePath
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1

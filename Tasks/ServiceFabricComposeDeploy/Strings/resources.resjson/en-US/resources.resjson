@@ -44,5 +44,6 @@
   "loc.messages.DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
   "loc.messages.CheckingComposeFile": "Checking compose file",
   "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
-  "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
+  "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}.",
+  "loc.messages.SanitizingApplicationName": "Service Fabric SDK version {0} does not support compose application name starting with 'fabric:/'. Hence re-naming application to {1}."
 }

@@ -5,7 +5,8 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
-try {
+try
+{
     # Import the localized strings.
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
@@ -30,20 +31,25 @@ try {
         {
             $regExVersion = $matches[0]
 
-            switch ($regExVersion) {
+            switch ($regExVersion)
+            {
                 '2.7' { $apiVersion = '2.7' }
                 '2.8' { $apiVersion = '2.8' }
                 '255.255' { $apiVersion = '255.255' }
-                Default {
+                Default
+                {
                     $sdkVersion = New-Object Version
-                    if ([Version]::TryParse($matches[0], [ref]$sdkVersion)) {
+                    if ([Version]::TryParse($matches[0], [ref]$sdkVersion))
+                    {
                         $minVersion = New-Object -TypeName Version -ArgumentList '2.7'
-                        if ($sdkVersion -lt $minVersion) {
+                        if ($sdkVersion -lt $minVersion)
+                        {
                             Write-Error (Get-VstsLocString -Key UnsupportedAPIVersion -ArgumentList $regKey.FabricSDKVersion)
                             return;
                         }
                     }
-                    else {
+                    else
+                    {
                         Write-Error (Get-VstsLocString -Key UnsupportedAPIVersion -ArgumentList $regKey.FabricSDKVersion)
                         return;
                     }
@@ -58,15 +64,17 @@ try {
     }
     Write-Verbose (Get-VstsLocString -Key UsingAPIVersion -ArgumentList $apiVersion)
 
+    $applicationName = Get-SanitizedApplicationName -ApiVersion $apiVersion -ApplicationName $applicationName
+
     if ($apiVersion -eq '2.8')
     {
         $deployParameters = @{
             'DeploymentName' = $applicationName
-            'Compose' = $composeFilePath
+            'Compose'        = $composeFilePath
         }
         $removeParameters = @{
             'DeploymentName' = $applicationName
-            'Force' = $true
+            'Force'          = $true
         }
         $getStatusParameters = @{
             'DeploymentName' = $applicationName
@@ -76,11 +84,11 @@ try {
     {
         $deployParameters = @{
             'ApplicationName' = $applicationName
-            'Compose' = $composeFilePath
+            'Compose'         = $composeFilePath
         }
         $removeParameters = @{
             'ApplicationName' = $applicationName
-            'Force' = $true
+            'Force'           = $true
         }
         $getStatusParameters = @{
             'ApplicationName' = $applicationName
@@ -96,7 +104,8 @@ try {
     Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     $registryCredentials = Get-VstsInput -Name registryCredentials -Require
-    switch ($registryCredentials) {
+    switch ($registryCredentials)
+    {
         "ContainerRegistryEndpoint"
         {
             $dockerRegistryEndpointName = Get-VstsInput -Name dockerRegistryEndpointName -Require
@@ -185,8 +194,8 @@ try {
     Write-Host (Get-VstsLocString -Key WaitingForDeploy)
     $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
     while (($newApplication -eq $null) -or `
-           ($newApplication.Status -eq 'Provisioning') -or `
-           ($newApplication.Status -eq 'Creating'))
+        ($newApplication.Status -eq 'Provisioning') -or `
+        ($newApplication.Status -eq 'Creating'))
     {
         if ($newApplication -eq $null)
         {
@@ -205,6 +214,8 @@ try {
     {
         Write-Error (Get-VstsLocString -Key DeployFailed -ArgumentList @($newApplication.Status.ToString(), $newApplication.StatusDetails))
     }
-} finally {
+}
+finally
+{
     Trace-VstsLeavingInvocation $MyInvocation
 }
