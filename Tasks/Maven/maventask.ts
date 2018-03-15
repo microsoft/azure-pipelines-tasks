@@ -181,7 +181,7 @@ async function execBuild() {
                             if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
                                 i++; // increment to the file name
                                 let suppliedSettingsXml: string = options[i];
-                                tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
+                                tl.cp(path.resolve(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
                                 tl.debug('using settings file: ' + settingsXmlFile);
                             } else {
                                 if (mavenOptions) {
