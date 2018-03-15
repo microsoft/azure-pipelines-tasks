@@ -143,6 +143,10 @@ try{
 
 
 } finally {
+	        Write-Host "Validate-ServiceStatus -ServiceName $ServiceName -Slot $Slot"
+			Validate-ServiceStatus -ServiceName $ServiceName -Slot $Slot
+			
+			Write-Host "Service is online ready to use, Validate-ServiceStatus -ServiceName $ServiceName returned CurrentStatus as 'ReadyRole' "
     Trace-VstsLeavingInvocation $MyInvocation
 }
 
