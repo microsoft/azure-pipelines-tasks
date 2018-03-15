@@ -137,7 +137,7 @@
             },
             "label": "Arguments",
             "defaultValue":"",
-            "helpMarkDown": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\". Please use double quotes to specify any literals that have spaces.",
+            "helpMarkDown": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
             "visibleRule": "secretType = generic",
             "groupName": "secrets"
         },
@@ -243,7 +243,7 @@
                 "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
             },
             "label": "Arguments",
-            "helpMarkDown": "Specify keys and literal values to insert in configMap.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\". Please use double quotes to specify any literals that have spaces.",
+            "helpMarkDown": "Specify keys and literal values to insert in configMap.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
             "visibleRule": "useConfigMapFile = false",
             "groupName": "configMaps"
         },

@@ -72,7 +72,7 @@ function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
     var command = tl.getInput("command", true);
     var result = "";
     var ouputVariableName =  tl.getInput("kubectlOutput", false);  
-    kubectl.run(clusterConnection, command, (data) => result += data)
+    return kubectl.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
         if(ouputVariableName) {
             tl.setVariable(ouputVariableName, result);
