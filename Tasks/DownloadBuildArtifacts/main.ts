@@ -150,11 +150,12 @@ async function main(): Promise<void> {
                     else reject(tl.loc("LatestBuildNotFound"));
                     return;
                 }
+                
                 build = buildsForThisDefinition[0];
                 console.log(tl.loc("LatestBuildFound", build.id));
                 buildId = build.id
             } 
-            
+
             if (!build){
                 build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), 4).catch((reason) => {
                     reject(reason);
