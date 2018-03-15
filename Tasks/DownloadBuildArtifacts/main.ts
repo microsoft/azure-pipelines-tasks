@@ -154,6 +154,7 @@ async function main(): Promise<void> {
                 console.log(tl.loc("LatestBuildFound", build.id));
                 buildId = build.id
             } 
+            
             if (!build){
                 build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), 4).catch((reason) => {
                     reject(reason);
