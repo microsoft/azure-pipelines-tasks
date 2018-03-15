@@ -175,6 +175,7 @@
     "FileChanged": "ms-resource:loc.messages.FileChanged",
     "NoChanges": "ms-resource:loc.messages.NoChanges",
     "PdbWarning": "ms-resource:loc.messages.PdbWarning",
-    "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue"
+    "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue",
+    "CouldNotFindSubPath": "ms-resource:loc.messages.CouldNotFindSubPath"
   }
 }

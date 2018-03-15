@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [],
     "preview": "true",
@@ -27,6 +27,11 @@
             "name": "commands",
             "displayName": "Commands",
             "isExpanded": false
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -37,7 +42,8 @@
             "defaultValue": "Azure Resource Manager",
             "required": true,
             "options": {
-                "Azure Resource Manager": "Azure Resource Manager"
+                "Azure Resource Manager": "Azure Resource Manager",
+                "Kubernetes Service Connection": "Kubernetes Service Connection"
             },
             "helpMarkDown": "Select a Connection Type.",
             "groupName": "cluster"
@@ -64,6 +70,24 @@
             "groupName": "cluster"
         },
         {
+            "name": "kubernetesServiceEndpoint",
+            "aliases": ["kubernetesServiceConnection"],
+            "type": "connectedService:kubernetes",
+            "label": "Kubernetes Service Connection",
+            "helpMarkDown": "Select a Kubernetes service connection.",
+            "visibleRule": "connectionType = Kubernetes Service Connection",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "namespace",
+            "label": "Namespace",
+            "type": "string",
+            "helpMarkDown": "Specify K8 namespace to use. Use Tiller namespace in advance section to specify tiller namespace.",
+            "defaultValue": "",
+            "groupName": "cluster"
+        },
+        {
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -87,6 +111,78 @@
             }
         },
         {
+            "name": "chart",
+            "label": "Chart",
+            "type": "string",
+            "helpMarkDown": "Name of the chart to install.",
+            "defaultValue": "",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "version",
+            "label": "Version",
+            "type": "string",
+            "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed.",
+            "defaultValue": "",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "releaseName",
+            "label": "Release Name",
+            "type": "string",
+            "helpMarkDown": "Release name. If unspecified, it will autogenerate one for you.",
+            "defaultValue": "",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "overrideValues",
+            "label": "Set Values",
+            "type": "string",
+            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).",
+            "defaultValue": "",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "canaryimage",
+            "type": "boolean",
+            "label": "Use canary image version.",
+            "defaultValue": "false",
+            "helpMarkDown": "Use the canary Tiller image. Will install the latest pre-release version of Tiller.",
+            "visibleRule": "command = init",
+            "groupName": "commands"
+        },
+        {
+            "name": "upgradetiller",
+            "type": "boolean",
+            "label": "Upgrade Tiller",
+            "defaultValue": "true",
+            "helpMarkDown": "Upgrade if Tiller is already installed.",
+            "visibleRule": "command = init",
+            "groupName": "commands"
+        },
+        {
+            "name": "updatedependency",
+            "type": "boolean",
+            "label": "Update Dependency",
+            "defaultValue": "false",
+            "helpMarkDown": "Run helm dependency update before installing the chart.",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "waitForExecution",
+            "type": "boolean",
+            "label": "Wait",
+            "defaultValue": "true",
+            "helpMarkDown": "Block till command execution completes and Tiller is ready.",
+            "visibleRule": "command = init || command = install",
+            "groupName": "commands"
+        },
+        {
             "name": "arguments",
             "type": "multiLine",
             "properties": {
@@ -96,6 +192,13 @@
             "label": "Arguments",
             "helpMarkDown": "Command arguments.",
             "groupName": "commands"
+        },
+        {
+            "name": "tillernamespace",
+            "label": "Tiller namespace",
+            "helpMarkDown": "Specify K8 namespace of tiller.",
+            "type": "string",
+            "groupName": "advanced"
         }
     ],
     "dataSourceBindings": [
