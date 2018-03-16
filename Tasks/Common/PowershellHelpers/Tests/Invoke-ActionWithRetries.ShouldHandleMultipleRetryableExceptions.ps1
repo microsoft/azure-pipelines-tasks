@@ -7,11 +7,16 @@ $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $global:retriesAttempted = 0
 $action = {
     $global:retriesAttempted++
-    if($global:retriesAttempted -eq 5) {
+    if ($global:retriesAttempted -eq 5)
+    {
         return $true
-    } elseif($global:retriesAttempted -eq 2) {
+    }
+    elseif ($global:retriesAttempted -eq 2)
+    {
         throw [System.IO.FileNotFoundException] "File not found error!"
-    } else {
+    }
+    else
+    {
         throw [System.IO.DirectoryNotFoundException] "dir not found error!"
     }
 }
