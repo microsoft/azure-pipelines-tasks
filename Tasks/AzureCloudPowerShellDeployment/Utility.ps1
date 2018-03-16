@@ -255,3 +255,80 @@ function Add-CustomCertificates($serviceName, $customCertificatesMap)
         }
     }
 }
+
+function Validate-ServiceStatus ($ServiceName, $Slot)
+{
+		$RoleInstances=$null;
+		$deployment =$null;
+	    $retryCount = 0;
+		$readyIntsance =0;
+	    $timeout = 0;
+	try{
+		Write-Verbose 'First find the Azure Service exists'
+		if (Test-AzureName -Service -Name $ServiceName){
+			do{
+				Write-Host "##[command]Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError"
+				$azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError
+				if($azureDeploymentError){
+					$azureDeploymentError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
+				}
+				Write-Host "Service: Status=$($azureDeployment.Status)"
+				if ($azureDeployment.Status -eq "Running"){
+				Write-Host 'Found that Azure Service exists with ' $ServiceName
+				
+				Write-Host "##[command]Get-AzureRole -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError"
+				$RoleInstances = Get-AzureRole -ServiceName $ServiceName -Slot $Slot -InstanceDetails -ErrorAction SilentlyContinue -ErrorVariable azureRoleError
+				if($azureRoleError){
+					$azureRoleError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
+				}
+				if($RoleInstances){
+					write-host "instances count: " $RoleInstances.Count
+					Write-Verbose "Loop untill the role instance status is ReadyRole "
+					foreach($instance in $RoleInstances)
+					{
+						$readyIntsance=0
+						Write-Host "Status for role " $instance.InstanceName "is:" $instance.InstanceStatus
+						if($instance.InstanceStatus -ne "ReadyRole")
+						{ 
+							write-Host "InstanceStatus is not in 'ReadyRole' state." 
+							Write-Warning (Get-VstsLocString -Key Unabletofind0servicestatus -ArgumentList $instance.InstanceStatus)
+						}
+						else
+						{
+							Write-Host (Get-VstsLocString -Key EachInstancesName0AndStatus -ArgumentList $instance.InstanceName  $instance.InstanceStatus)
+							$readyIntsance = $readyIntsance + 1
+						}
+					}
+					if($readyIntsance -eq $RoleInstances.Count )
+					{
+						    Write-Host (Get-VstsLocString -Key ReadyRole0servicestatus -ArgumentList $readyIntsance $RoleInstances.Count)
+							break; 
+					}
+				}
+				else{
+					Write-Warning "Either Role or RoleInstanceList not found"
+				}
+			}
+			else{
+				Write-Host (Get-VstsLocString -Key WaitingForInstance0Beforefindstatus -ArgumentList $ServiceName)
+				Start-Sleep -Seconds 120
+				$timeout = $timeout + 120
+				if($timeout -gt 360)
+				{
+					Write-Host (Get-VstsLocString -Key WaitingForService0Available)
+					break;
+				}
+				$retryCount =$retryCount+1
+			}
+		  } while($true)
+		}
+		else{
+			Write-Warning "Either Service not found or Test-AzureName -Service -Name" $ServiceName "returned nothing"
+		}
+	}
+	catch [Exception]{
+		$msg = $_.Exception.Message;
+		Write-host $msg
+		throw $_.Exception
+	}
+}
