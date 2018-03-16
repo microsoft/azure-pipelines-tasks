@@ -71,12 +71,12 @@
                 $artifactPath = Join-Path $agentTmpFolder $PkgArtifactName
                 $downloadArtifact = $true
 
-                if (Test-Path $artifactPath)
+                if (Test-Path -LiteralPath $artifactPath)
                 {
                     if ($OverwritePkgArtifact -eq $true)
                     {
                         # If a previous artifact with the same name was already downloaded to the agent's temp folder, delete it
-                        Remove-Item $artifactPath -Recurse -Force | Out-Null
+                        Remove-Item -LiteralPath $artifactPath -Recurse -Force | Out-Null
                     }
                     else
                     {
@@ -84,7 +84,7 @@
                         $downloadArtifact = $false
                     }
                 }
-                elseif (!(Test-Path $agentTmpFolder))
+                elseif (!(Test-Path -LiteralPath $agentTmpFolder))
                 {
                     # Create the agent's temp folder if it doesn't exist
                     New-Item $agentTmpFolder -ItemType Directory | Out-Null

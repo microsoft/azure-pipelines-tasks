@@ -90,7 +90,7 @@ Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Update-DockerSettings.psm1"
 
-Copy-Item "$PSScriptRoot\data\DockerSupportAssets\AppPkg\" -Destination $applicationPackagePath -Container -Recurse
+Copy-Item -LiteralPath "$PSScriptRoot\data\DockerSupportAssets\AppPkg\" -Destination $applicationPackagePath -Container -Recurse
 
 try
 {
@@ -102,7 +102,7 @@ try
     # Assert
     Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs
 
-    $appManifestXml = [xml](Get-Content "$applicationPackagePath\ApplicationManifest.xml")
+    $appManifestXml = [xml](Get-Content -LiteralPath "$applicationPackagePath\ApplicationManifest.xml")
     Assert-AreEqual 2 $appManifestXml.ApplicationManifest.ServiceManifestImport.Length
     foreach ($serviceManifestImport in $appManifestXml.ApplicationManifest.ServiceManifestImport)
     {
@@ -131,5 +131,5 @@ finally
         $store.Dispose()
     }
 
-    Remove-Item -Recurse -Force $applicationPackagePath
+    Remove-Item -Recurse -Force -LiteralPath $applicationPackagePath
 }
