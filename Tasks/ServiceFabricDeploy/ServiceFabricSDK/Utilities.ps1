@@ -28,7 +28,7 @@
 
     if (Test-Path -LiteralPath $Destination)
     {
-        Remove-Item -Path $Destination -Recurse -ErrorAction Stop | Out-Null
+        Remove-Item -LiteralPath $Destination -Recurse -ErrorAction Stop | Out-Null
     }
 
     New-Item $Destination -ItemType directory | Out-Null

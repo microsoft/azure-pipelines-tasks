@@ -104,7 +104,7 @@ function Read-PublishProfile
         }
     }
 
-    $publishProfileFolder = (Split-Path $PublishProfileFile)
+    $publishProfileFolder = (Split-Path -LiteralPath $PublishProfileFile)
     $publishProfile.ApplicationParameterFile = [System.IO.Path]::Combine($publishProfileFolder, $publishProfileElement.ApplicationParameterFile.Path)
 
     return $publishProfile

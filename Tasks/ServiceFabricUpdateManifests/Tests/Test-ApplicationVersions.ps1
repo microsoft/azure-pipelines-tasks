@@ -71,5 +71,5 @@ try
 }
 finally
 {
-    Remove-Item -Recurse -Force $pkgPath
+    Remove-Item -Recurse -Force -LiteralPath $pkgPath
 }

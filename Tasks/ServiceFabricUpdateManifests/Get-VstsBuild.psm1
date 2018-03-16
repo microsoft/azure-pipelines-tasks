@@ -76,7 +76,7 @@
                     if ($OverwritePkgArtifact -eq $true)
                     {
                         # If a previous artifact with the same name was already downloaded to the agent's temp folder, delete it
-                        Remove-Item $artifactPath -Recurse -Force | Out-Null
+                        Remove-Item -LiteralPath $artifactPath -Recurse -Force | Out-Null
                     }
                     else
                     {

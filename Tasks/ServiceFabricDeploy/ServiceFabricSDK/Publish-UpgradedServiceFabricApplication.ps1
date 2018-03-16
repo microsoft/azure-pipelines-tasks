@@ -117,9 +117,9 @@ function Publish-UpgradedServiceFabricApplication
 
     if (Test-Path -LiteralPath $ApplicationPackagePath -PathType Leaf)
     {
-        if((Get-Item $ApplicationPackagePath).Extension -eq ".sfpkg")
+        if((Get-Item -LiteralPath $ApplicationPackagePath).Extension -eq ".sfpkg")
         {
-            $AppPkgPathToUse = [io.path]::combine((Get-TempDirectoryPath), (Get-Item $ApplicationPackagePath).BaseName)
+            $AppPkgPathToUse = [io.path]::combine((Get-TempDirectoryPath), (Get-Item -LiteralPath $ApplicationPackagePath).BaseName)
             Expand-ToFolder $ApplicationPackagePath $AppPkgPathToUse
         }
         else

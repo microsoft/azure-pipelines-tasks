@@ -43,7 +43,7 @@ function Create-DiffPackage
         $diffPackagePath = Join-Path (Get-TempDirectoryPath) "DiffPackage"
         if (Test-Path -PathType Container -LiteralPath $diffPackagePath)
         {
-            Remove-Item -Path $diffPackagePath -Recurse -Force
+            Remove-Item -LiteralPath $diffPackagePath -Recurse -Force
         }
         $diffPackagePath = New-Item -ItemType Directory -Path $diffPackagePath -Force
         $diffPkgAppManifestPath = Join-Path $diffPackagePath $appManifestName

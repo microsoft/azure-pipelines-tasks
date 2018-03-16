@@ -131,5 +131,5 @@ finally
         $store.Dispose()
     }
 
-    Remove-Item -Recurse -Force $applicationPackagePath
+    Remove-Item -Recurse -Force -LiteralPath $applicationPackagePath
 }
