@@ -21,12 +21,12 @@
         $Destination
     )
 
-    if (!(Test-Path $File))
+    if (!(Test-Path -LiteralPath $File))
     {
         return
     }
 
-    if (Test-Path $Destination)
+    if (Test-Path -LiteralPath $Destination)
     {
         Remove-Item -Path $Destination -Recurse -ErrorAction Stop | Out-Null
     }
@@ -63,7 +63,7 @@ function Get-NamesFromApplicationManifest
         $ApplicationManifestPath
     )
 
-    if (!(Test-Path $ApplicationManifestPath))
+    if (!(Test-Path -LiteralPath $ApplicationManifestPath))
     {
         throw (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationManifestPath)
     }
@@ -127,7 +127,7 @@ function Get-ApplicationNameFromApplicationParameterFile
         $ApplicationParameterFilePath
     )
 
-    if (!(Test-Path $ApplicationParameterFilePath))
+    if (!(Test-Path -LiteralPath $ApplicationParameterFilePath))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
         throw $errMsg
@@ -154,7 +154,7 @@ function Get-ApplicationParametersFromApplicationParameterFile
         $ApplicationParameterFilePath
     )
 
-    if (!(Test-Path $ApplicationParameterFilePath))
+    if (!(Test-Path -LiteralPath $ApplicationParameterFilePath))
     {
         throw (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
     }

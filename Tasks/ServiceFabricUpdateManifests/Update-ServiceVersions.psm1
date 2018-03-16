@@ -15,7 +15,7 @@
         $ServiceName,
 
         [Parameter(Mandatory=$true)]
-        [ValidateScript({Test-Path $_})]
+        [ValidateScript({Test-Path -LiteralPath $_})]
         [string]
         $NewPackageRoot,
 
@@ -62,12 +62,12 @@
 
             $oldPackagePath = Join-Path $OldPackageRoot $ServiceName
             $oldManifestPath = Join-Path $oldPackagePath $serviceManifestName
-            if (Test-Path $oldManifestPath)
+            if (Test-Path -LiteralPath $oldManifestPath)
             {
                 $oldManifest = [XML](Get-Content $oldManifestPath)
 
                 # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
-                # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive. 
+                # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.
                 $newManifest.ServiceManifest.Version = $oldManifest.ServiceManifest.Version
 
                 $oldPackagesXml = @()

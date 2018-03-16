@@ -2,14 +2,15 @@ function Create-DiffPackage
 {
     [CmdletBinding()]
     param(
-        [parameter(Mandatory=$true)][String] $ApplicationName,
-        [parameter(Mandatory=$true)][String] $ApplicationPackagePath,
-        [parameter(Mandatory=$true)] $ConnectedServiceEndpoint,
-        [parameter(Mandatory=$true)][Hashtable] $ClusterConnectionParameters
+        [parameter(Mandatory = $true)][String] $ApplicationName,
+        [parameter(Mandatory = $true)][String] $ApplicationPackagePath,
+        [parameter(Mandatory = $true)] $ConnectedServiceEndpoint,
+        [parameter(Mandatory = $true)][Hashtable] $ClusterConnectionParameters
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
+    try
+    {
         Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackage)
 
         Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
@@ -40,7 +41,7 @@ function Create-DiffPackage
         }
 
         $diffPackagePath = Join-Path (Get-TempDirectoryPath) "DiffPackage"
-        if (Test-Path -PathType Container -Path $diffPackagePath)
+        if (Test-Path -PathType Container -LiteralPath $diffPackagePath)
         {
             Remove-Item -Path $diffPackagePath -Recurse -Force
         }
@@ -109,7 +110,9 @@ function Create-DiffPackage
 
         Return $diffPackagePath
 
-    } finally {
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -143,13 +146,13 @@ function Copy-DiffPackage
         $localPkgPath = Join-Path $localParentPkgPath $localPackage.Name
         $diffPkgPath = Join-Path $diffParentPkgPath $localPackage.Name
 
-        if (Test-Path -Path ($localPkgPath + ".zip"))
+        if (Test-Path -LiteralPath ($localPkgPath + ".zip"))
         {
             $localPkgPath += ".zip"
             $diffPkgPath += ".zip"
         }
         # The Code package for containerized service does not exist, but we want to continue the deployment
-        elseif (!(Test-Path -Path $localPkgPath))
+        elseif (!(Test-Path -LiteralPath $localPkgPath))
         {
             Write-Host (Get-VstsLocString -Key DIFFPKG_PackageDoesNotExist -ArgumentList @($localPkgPath))
             continue

@@ -50,7 +50,7 @@
                 $oldDropLocation = $null
             }
 
-            if ($oldDropLocation -and (Test-Path $oldDropLocation))
+            if ($oldDropLocation -and (Test-Path -LiteralPath $oldDropLocation))
             {
                 # Gather information on the previous application type
                 Write-Host (Get-VstsLocString -Key PreviousBuildLocationLabel -ArgumentList $oldDropLocation)
@@ -66,7 +66,7 @@
                 }
                 $relativePath.Trim([System.IO.Path]::DirectorySeparatorChar)
                 $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
-                while(!(Test-Path $oldAppPackagePath))
+                while(!(Test-Path -LiteralPath $oldAppPackagePath))
                 {
                     $firstSlash = $relativePath.IndexOf([System.IO.Path]::DirectorySeparatorChar)
                     if ($firstSlash -lt 0)
@@ -83,7 +83,7 @@
                 if ($oldAppPackagePath)
                 {
                     $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
-                    if (Test-Path $oldAppManifestPath)
+                    if (Test-Path -LiteralPath $oldAppManifestPath)
                     {
                         $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
 
