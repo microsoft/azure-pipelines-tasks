@@ -66,7 +66,7 @@
             elseif ($artifact.resource.type -eq "container") # The artifact is in a hosted server and must be downloaded into a temp folder
             {
                 Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
-                $agentTmpFolder = Join-Path (Get-TempDirectory) $build.buildNumber
+                $agentTmpFolder = Join-Path (Get-TempDirectoryPath) $build.buildNumber
                 $artifactZipFile = Join-Path $agentTmpFolder "$PkgArtifactName.zip"
                 $artifactPath = Join-Path $agentTmpFolder $PkgArtifactName
                 $downloadArtifact = $true
