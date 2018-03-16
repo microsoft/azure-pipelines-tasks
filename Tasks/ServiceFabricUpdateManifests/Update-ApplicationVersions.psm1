@@ -15,7 +15,7 @@
 
         $appManifestName = "ApplicationManifest.xml"
         $newAppManifestPath = Join-Path $newAppPackagePath $appManifestName
-        $newAppManifestXml = [XML](Get-Content $newAppManifestPath)
+        $newAppManifestXml = [XML](Get-Content -LiteralPath $newAppManifestPath)
         $appTypeName = $newAppManifestXml.ApplicationManifest.ApplicationTypeName
 
         $updateAllVersions = ((Get-VstsInput -Name updateOnlyChanged -Require) -ne "true")
@@ -85,7 +85,7 @@
                     $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
                     if (Test-Path -LiteralPath $oldAppManifestPath)
                     {
-                        $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
+                        $oldAppManifestXml = [XML](Get-Content -LiteralPath $oldAppManifestPath)
 
                         # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
                         # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.

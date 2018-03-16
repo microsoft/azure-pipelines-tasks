@@ -17,7 +17,7 @@ try
     # Arrange.
 
     # Setup working package folder
-    Copy-Item "$PSScriptRoot\data\CurrentPkg\" -Destination $pkgPath -Container -Recurse
+    Copy-Item -LiteralPath "$PSScriptRoot\data\CurrentPkg\" -Destination $pkgPath -Container -Recurse
 
     $suffix = ".TestSuffix"
 
@@ -35,18 +35,18 @@ try
     . $taskPath\Update-Manifests.ps1
 
     # Assert
-    $appManifest = [xml](Get-Content "$pkgPath\ApplicationManifest.xml")
+    $appManifest = [xml](Get-Content -LiteralPath "$pkgPath\ApplicationManifest.xml")
     Assert-AreEqual "1.0.0$suffix" $appManifest.ApplicationManifest.ApplicationTypeVersion "App type version was not updated."
     Assert-AreEqual "1.0.0$suffix" $appManifest.ApplicationManifest.ServiceManifestImport[0].ServiceManifestRef.ServiceManifestVersion "Service 1 version was not updated in app manifest."
     Assert-AreEqual "1.0.0$suffix" $appManifest.ApplicationManifest.ServiceManifestImport[1].ServiceManifestRef.ServiceManifestVersion "Service 2 version was not updated in app manifest."
 
-    $service1Manifest = [xml](Get-Content "$pkgPath\Service1Pkg\ServiceManifest.xml")
+    $service1Manifest = [xml](Get-Content -LiteralPath "$pkgPath\Service1Pkg\ServiceManifest.xml")
     Assert-AreEqual "1.0.0$suffix" $service1Manifest.ServiceManifest.Version "Service version was not updated in service 1 manifest."
     Assert-AreEqual "1.0.0$suffix" $service1Manifest.ServiceManifest.CodePackage.Version "Code package version was not updated in service 1 manifest."
     Assert-AreEqual "1.0.0$suffix" $service1Manifest.ServiceManifest.ConfigPackage.Version "Config package version was not updated in service 1 manifest."
     Assert-AreEqual "1.0.0$suffix" $service1Manifest.ServiceManifest.DataPackage.Version "Data package version was not updated in service 1 manifest."
 
-    $service2Manifest = [xml](Get-Content "$pkgPath\Service2Pkg\ServiceManifest.xml")
+    $service2Manifest = [xml](Get-Content -LiteralPath "$pkgPath\Service2Pkg\ServiceManifest.xml")
     Assert-AreEqual "1.0.0$suffix" $service2Manifest.ServiceManifest.Version "Service version was not updated in service 2 manifest."
     Assert-AreEqual "1.0.0$suffix" $service2Manifest.ServiceManifest.CodePackage.Version "Code package version was not updated in service 2 manifest."
     Assert-AreEqual "1.0.0$suffix" $service2Manifest.ServiceManifest.ConfigPackage.Version "Config package version was not updated in service 2 manifest."

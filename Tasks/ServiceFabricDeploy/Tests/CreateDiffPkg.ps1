@@ -140,7 +140,7 @@ Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest2} -- -Applicati
 Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest3} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless3Pkg"
 Register-Mock Get-ServiceFabricServiceManifest {$serviceManifest4} -- -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $applicationTypeVersion -ServiceManifestName "Stateless4Pkg"
 
-Register-Mock Copy-Item {} $appManifestPath $appManifestDiffPath -Force
+Register-Mock Copy-Item {} -LiteralPath $appManifestPath $appManifestDiffPath -Force
 Register-Mock Test-Path { $true } -- -LiteralPath $codePkg1
 Register-Mock Test-Path { $true } -- -LiteralPath $codePkg2
 Register-Mock Test-Path { $true } -- -LiteralPath $codeZippedPkg3
@@ -157,17 +157,17 @@ Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Create-DiffPackage.psm
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricDeploy/deploy.ps1 )
 
 # Assert
-Assert-WasCalled Copy-Item $appManifestPath $appManifestDiffPath -Force
-Assert-WasCalled Copy-Item $serviceManifestPath1 $serviceManifestDiffPath1 -Force -Times 0
-Assert-WasCalled Copy-Item $serviceManifestPath2 $serviceManifestDiffPath2 -Force
-Assert-WasCalled Copy-Item $serviceManifestPath3 $serviceManifestDiffPath3 -Force -Times 0
-Assert-WasCalled Copy-Item $serviceManifestPath4 $serviceManifestDiffPath4 -Force
-Assert-WasCalled Copy-Item $codePkg1 $codeDiffPkg1 -Recurse -Times 0
-Assert-WasCalled Copy-Item $codePkg2 $codeDiffPkg2 -Recurse
-Assert-WasCalled Copy-Item $codeZippedPkg3 $codeZippedDiffPkg3 -Recurse -Times 0
-Assert-WasCalled Copy-Item $codeZippedPkg4 $codeZippedDiffPkg4 -Recurse
-Assert-WasCalled Copy-Item $configZippedPkg4 $configZippedDiffPkg4 -Recurse -Times 0
-Assert-WasCalled Copy-Item $configPkg4 $configDiffPkg4 -Recurse
-Assert-WasCalled Copy-Item $dataZippedPkg4 $dataZippedDiffPkg4 -Recurse -Times 0
-Assert-WasCalled Copy-Item $dataPkg4 $dataDiffPkg4 -Recurse -Times 0
+Assert-WasCalled Copy-Item -LiteralPath $appManifestPath $appManifestDiffPath -Force
+Assert-WasCalled Copy-Item -LiteralPath $serviceManifestPath1 $serviceManifestDiffPath1 -Force -Times 0
+Assert-WasCalled Copy-Item -LiteralPath $serviceManifestPath2 $serviceManifestDiffPath2 -Force
+Assert-WasCalled Copy-Item -LiteralPath $serviceManifestPath3 $serviceManifestDiffPath3 -Force -Times 0
+Assert-WasCalled Copy-Item -LiteralPath $serviceManifestPath4 $serviceManifestDiffPath4 -Force
+Assert-WasCalled Copy-Item -LiteralPath $codePkg1 $codeDiffPkg1 -Recurse -Times 0
+Assert-WasCalled Copy-Item -LiteralPath $codePkg2 $codeDiffPkg2 -Recurse
+Assert-WasCalled Copy-Item -LiteralPath $codeZippedPkg3 $codeZippedDiffPkg3 -Recurse -Times 0
+Assert-WasCalled Copy-Item -LiteralPath $codeZippedPkg4 $codeZippedDiffPkg4 -Recurse
+Assert-WasCalled Copy-Item -LiteralPath $configZippedPkg4 $configZippedDiffPkg4 -Recurse -Times 0
+Assert-WasCalled Copy-Item -LiteralPath $configPkg4 $configDiffPkg4 -Recurse
+Assert-WasCalled Copy-Item -LiteralPath $dataZippedPkg4 $dataZippedDiffPkg4 -Recurse -Times 0
+Assert-WasCalled Copy-Item -LiteralPath $dataPkg4 $dataDiffPkg4 -Recurse -Times 0
 Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs

@@ -1,11 +1,11 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     [string]
     $ExpectedServiceSuffix,
 
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     [string]
     $PreviousPkgName,
@@ -30,7 +30,7 @@ try
     # Arrange.
 
     # Setup working package folder
-    Copy-Item "$PSScriptRoot\data\CurrentPkg\" -Destination $appPkgPath -Container -Recurse
+    Copy-Item -LiteralPath "$PSScriptRoot\data\CurrentPkg\" -Destination $appPkgPath -Container -Recurse
 
     $newSuffix = ".NewSuffix"
     $oldSuffix = ".OldSuffix"
@@ -50,10 +50,10 @@ try
 
     # Act
     $result = Update-ServiceVersions -VersionValue $newSuffix -ServiceName $serviceName -NewPackageRoot $appPkgPath -OldPackageRoot "$PSScriptRoot\data\$PreviousPkgName\pkg"
-    
+
     # Assert
     Assert-AreEqual "1.0.0$ExpectedServiceSuffix" $result "Function returned incorrect result."
-    $serviceManifest = [xml](Get-Content "$appPkgPath\$serviceName\ServiceManifest.xml")
+    $serviceManifest = [xml](Get-Content -LiteralPath "$appPkgPath\$serviceName\ServiceManifest.xml")
     Assert-AreEqual "1.0.0$ExpectedServiceSuffix" $serviceManifest.ServiceManifest.Version "Service version in manifest did not match."
     Assert-AreEqual "1.0.0$expectedCodeSuffix" $serviceManifest.ServiceManifest.CodePackage.Version "Code package version in manifest did not match."
     Assert-AreEqual "1.0.0$oldSuffix" $serviceManifest.ServiceManifest.ConfigPackage.Version "Config package version in manifest did not match."

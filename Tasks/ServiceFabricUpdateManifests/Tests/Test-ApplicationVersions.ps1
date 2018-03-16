@@ -26,7 +26,7 @@ try
     # Arrange.
 
     # Setup working package folder
-    Copy-Item "$PSScriptRoot\data\CurrentPkg\" -Destination $pkgPath -Container -Recurse
+    Copy-Item -LiteralPath "$PSScriptRoot\data\CurrentPkg\" -Destination $pkgPath -Container -Recurse
 
     $newSuffix = ".NewSuffix"
     $oldSuffix = ".OldSuffix"
@@ -60,7 +60,7 @@ try
     Update-ApplicationVersions
 
     # Assert
-    $appManifest = [xml](Get-Content "$pkgPath\ApplicationManifest.xml")
+    $appManifest = [xml](Get-Content -LiteralPath "$pkgPath\ApplicationManifest.xml")
     Assert-AreEqual "1.0.0$newSuffix" $appManifest.ApplicationManifest.ApplicationTypeVersion "App type version did not match."
     Assert-AreEqual $expectedService1Version $appManifest.ApplicationManifest.ServiceManifestImport[0].ServiceManifestRef.ServiceManifestVersion "Service 1 version did not match."
     Assert-AreEqual "1.0.0$oldSuffix" $appManifest.ApplicationManifest.ServiceManifestImport[1].ServiceManifestRef.ServiceManifestVersion "Service 2 version did not match."

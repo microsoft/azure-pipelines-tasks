@@ -18,7 +18,7 @@ function Create-DiffPackage
 
         $appManifestName = "ApplicationManifest.xml"
         $localAppManifestPath = Join-Path $ApplicationPackagePath $appManifestName
-        $localAppManifestXml = [XML](Get-Content $localAppManifestPath)
+        $localAppManifestXml = [XML](Get-Content -LiteralPath $localAppManifestPath)
         $applicationTypeName = $localAppManifestXml.ApplicationManifest.ApplicationTypeName
         $localAppTypeVersion = $localAppManifestXml.ApplicationManifest.ApplicationTypeVersion
 
@@ -61,7 +61,7 @@ function Create-DiffPackage
         }
 
         Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localAppManifestPath, $diffPkgAppManifestPath))
-        Copy-Item $localAppManifestPath $diffPkgAppManifestPath -Force
+        Copy-Item -LiteralPath $localAppManifestPath $diffPkgAppManifestPath -Force
 
         # Get the service manifests from the cluster
         $clusterServiceManifestByName = @{}
@@ -79,7 +79,7 @@ function Create-DiffPackage
             $localServiceManifestVersion = $serviceManifestImport.ServiceManifestRef.ServiceManifestVersion
             $localServicePkgPath = Join-Path $ApplicationPackagePath $localServiceManifestName
             $localServiceManifestPath = [System.IO.Path]::Combine($localServicePkgPath, $serviceManifestName)
-            $localServiceManifest = ([XML](Get-Content $localServiceManifestPath)).ServiceManifest
+            $localServiceManifest = ([XML](Get-Content -LiteralPath $localServiceManifestPath)).ServiceManifest
             $diffServicePkgPath = [System.IO.Path]::Combine($diffPackagePath, $localServiceManifestName)
             $clusterServiceManifest = $clusterServiceManifestByName[$localServiceManifestName].ServiceManifest
 
@@ -88,7 +88,7 @@ function Create-DiffPackage
             {
                 # Copy this service and all the children
                 Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceDoesNotExist -ArgumentList @($localServiceManifestName, $ApplicationName, $ConnectedServiceEndpoint.Url))
-                Copy-Item $localServicePkgPath $diffServicePkgPath -Recurse
+                Copy-Item -LiteralPath $localServicePkgPath $diffServicePkgPath -Recurse
                 continue
             }
 
@@ -105,7 +105,7 @@ function Create-DiffPackage
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.DataPackage -localPackages $localServiceManifest.DataPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
 
             Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localServiceManifestPath, (Join-Path $diffServicePkgPath $serviceManifestName)))
-            Copy-Item $localServiceManifestPath (Join-Path $diffServicePkgPath $serviceManifestName) -Force
+            Copy-Item -LiteralPath $localServiceManifestPath (Join-Path $diffServicePkgPath $serviceManifestName) -Force
         }
 
         Return $diffPackagePath
@@ -160,7 +160,7 @@ function Copy-DiffPackage
 
         Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localPkgPath, $diffPkgPath))
         # Copy the package on this level to diff package which is considered to be Leaf
-        Copy-Item $localPkgPath $diffPkgPath -Recurse
+        Copy-Item -LiteralPath $localPkgPath $diffPkgPath -Recurse
     }
     return
 }

@@ -28,9 +28,9 @@ function Get-SinglePathOfType
         $path = $null
     }
 
-    if (@($path).Length -gt 1) 
+    if (@($path).Length -gt 1)
     {
-        throw (Get-VstsLocString -Key ItemSearchMoreThanOneFound -ArgumentList $Pattern) 
+        throw (Get-VstsLocString -Key ItemSearchMoreThanOneFound -ArgumentList $Pattern)
     }
     elseif ($path -eq $null -or @($path).Length -eq 0)
     {
@@ -63,17 +63,19 @@ function Read-XmlElementAsHashtable
     $hashtable = @{}
     if ($Element.Attributes)
     {
-        $Element.Attributes | 
+        $Element.Attributes |
             ForEach-Object {
-                # Only boolean values are strongly-typed.  All other values are treated as strings.
-                $boolVal = $null
-                if ([bool]::TryParse($_.Value, [ref]$boolVal)) {
-                    $hashtable[$_.Name] = $boolVal
-                }
-                else {
-                    $hashtable[$_.Name] = $_.Value
-                }
+            # Only boolean values are strongly-typed.  All other values are treated as strings.
+            $boolVal = $null
+            if ([bool]::TryParse($_.Value, [ref]$boolVal))
+            {
+                $hashtable[$_.Name] = $boolVal
             }
+            else
+            {
+                $hashtable[$_.Name] = $_.Value
+            }
+        }
     }
 
     return $hashtable
@@ -101,7 +103,7 @@ function Read-PublishProfile
             $publishProfile.UpgradeDeployment.Parameters[$publishProfile.UpgradeDeployment["Mode"]] = $true
         }
     }
-    
+
     $publishProfileFolder = (Split-Path $PublishProfileFile)
     $publishProfile.ApplicationParameterFile = [System.IO.Path]::Combine($publishProfileFolder, $publishProfileElement.ApplicationParameterFile.Path)
 

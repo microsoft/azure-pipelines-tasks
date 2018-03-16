@@ -69,7 +69,7 @@ function Get-NamesFromApplicationManifest
     }
 
 
-    $appXml = [xml] (Get-Content $ApplicationManifestPath)
+    $appXml = [xml] (Get-Content -LiteralPath $ApplicationManifestPath)
     if (!$appXml)
     {
         return
@@ -133,7 +133,7 @@ function Get-ApplicationNameFromApplicationParameterFile
         throw $errMsg
     }
 
-    return ([xml] (Get-Content $ApplicationParameterFilePath)).Application.Name
+    return ([xml] (Get-Content -LiteralPath $ApplicationParameterFilePath)).Application.Name
 }
 
 
@@ -159,7 +159,7 @@ function Get-ApplicationParametersFromApplicationParameterFile
         throw (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
     }
 
-    $ParametersXml = ([xml] (Get-Content $ApplicationParameterFilePath)).Application.Parameters
+    $ParametersXml = ([xml] (Get-Content -LiteralPath $ApplicationParameterFilePath)).Application.Parameters
 
     $hash = @{}
     $ParametersXml.ChildNodes | foreach {
