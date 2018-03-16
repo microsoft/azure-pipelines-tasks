@@ -75,13 +75,28 @@
       "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
     },
     {
+      "name": "action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "RegisterAndCreate",
+      "required": true,
+      "options": {
+        "RegisterAndCreate": "RegisterAndCreate",
+        "Register": "Register",
+        "Create": "Create"
+      },
+      "groupname": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.action"
+    },
+    {
       "name": "compressPackage",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.compressPackage",
       "defaultValue": "false",
       "required": false,
       "groupname": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.compressPackage"
+      "helpMarkDown": "ms-resource:loc.input.help.compressPackage",
+      "visibleRule": "action = Register || action = RegisterAndCreate"
     },
     {
       "name": "useDiffPackage",
@@ -90,7 +105,8 @@
       "defaultValue": "false",
       "required": false,
       "groupname": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage"
+      "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage",
+      "visibleRule": "action = Register || action = RegisterAndCreate"
     },
     {
       "name": "copyPackageTimeoutSec",
@@ -99,7 +115,8 @@
       "defaultValue": "",
       "required": false,
       "groupname": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.copyPackageTimeoutSec"
+      "helpMarkDown": "ms-resource:loc.input.help.copyPackageTimeoutSec",
+      "visibleRule": "action = Register || action = RegisterAndCreate"
     },
     {
       "name": "registerPackageTimeoutSec",
@@ -108,7 +125,8 @@
       "defaultValue": "",
       "required": false,
       "groupname": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec"
+      "helpMarkDown": "ms-resource:loc.input.help.registerPackageTimeoutSec",
+      "visibleRule": "action = Register || action = RegisterAndCreate"
     },
     {
       "name": "overwriteBehavior",
@@ -131,7 +149,8 @@
       "defaultValue": "false",
       "required": false,
       "groupname": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.skipUpgradeSameTypeAndVersion"
+      "helpMarkDown": "ms-resource:loc.input.help.skipUpgradeSameTypeAndVersion",
+      "visibleRule": "action = Create || action = RegisterAndCreate"
     },
     {
       "name": "skipPackageValidation",
@@ -140,7 +159,8 @@
       "defaultValue": "false",
       "required": false,
       "groupname": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.skipPackageValidation"
+      "helpMarkDown": "ms-resource:loc.input.help.skipPackageValidation",
+      "visibleRule": "action = Register || action = RegisterAndCreate"
     },
     {
       "name": "overridePublishProfileSettings",

@@ -75,13 +75,28 @@
             "helpMarkDown": "Path to the application parameters file. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path. If specified, this will override the value in the publish profile."
         },
         {
+            "name": "action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "RegisterAndCreate",
+            "required": true,
+            "options": {
+                "RegisterAndCreate": "RegisterAndCreate",
+                "Register": "Register",
+                "Create": "Create"
+            },
+            "groupname": "advanced",
+            "helpMarkDown": "Determines the action performed by this task. **Register**: Registers the application type in the cluster. **Create**: Creates or upgrades an application instance."
+        },
+        {
             "name": "compressPackage",
             "type": "boolean",
             "label": "Compress Package",
             "defaultValue": "false",
             "required": false,
             "groupname": "advanced",
-            "helpMarkDown": "Indicates whether the application package should be compressed before copying to the image store. If enabled, this will override the value in the publish profile."
+            "helpMarkDown": "Indicates whether the application package should be compressed before copying to the image store. If enabled, this will override the value in the publish profile.",
+            "visibleRule": "action = Register || action = RegisterAndCreate"
         },
         {
             "name": "useDiffPackage",
@@ -90,7 +105,8 @@
             "defaultValue": "false",
             "required": false,
             "groupname": "advanced",
-            "helpMarkDown": "Upgrade by using a diff package that contains only the updated application files, the updated application manifest, and the service manifest files."
+            "helpMarkDown": "Upgrade by using a diff package that contains only the updated application files, the updated application manifest, and the service manifest files.",
+            "visibleRule": "action = Register || action = RegisterAndCreate"
         },
         {
             "name": "copyPackageTimeoutSec",
@@ -99,7 +115,8 @@
             "defaultValue": "",
             "required": false,
             "groupname": "advanced",
-            "helpMarkDown": "Timeout in seconds for copying application package to image store. If specified, this will override the value in the publish profile."
+            "helpMarkDown": "Timeout in seconds for copying application package to image store. If specified, this will override the value in the publish profile.",
+            "visibleRule": "action = Register || action = RegisterAndCreate"
         },
         {
             "name": "registerPackageTimeoutSec",
@@ -108,7 +125,8 @@
             "defaultValue": "",
             "required": false,
             "groupname": "advanced",
-            "helpMarkDown": "Timeout in seconds for registering application package."
+            "helpMarkDown": "Timeout in seconds for registering application package.",
+            "visibleRule": "action = Register || action = RegisterAndCreate"
         },
         {
             "name": "overwriteBehavior",
@@ -131,7 +149,8 @@
             "defaultValue": "false",
             "required": false,
             "groupname": "advanced",
-            "helpMarkDown": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent."
+            "helpMarkDown": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent.",
+            "visibleRule": "action = Create || action = RegisterAndCreate"
         },
         {
             "name": "skipPackageValidation",
@@ -140,7 +159,8 @@
             "defaultValue": "false",
             "required": false,
             "groupname": "advanced",
-            "helpMarkDown": "Indicates whether the package should be validated or not before deployment."
+            "helpMarkDown": "Indicates whether the package should be validated or not before deployment.",
+            "visibleRule": "action = Register || action = RegisterAndCreate"
         },
         {
             "name": "overridePublishProfileSettings",
