@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 3
+        "Minor": 7,
+        "Patch": 0
     },
     "demands": [],
     "preview": "true",
@@ -32,6 +32,11 @@
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false
+        },
+        {
+            "name": "tsl",
+            "displayName": "TLS",
+            "isExpanded": false            
         }
     ],
     "inputs": [
@@ -199,6 +204,33 @@
             "helpMarkDown": "Specify K8 namespace of tiller.",
             "type": "string",
             "groupName": "advanced"
+        },
+        {
+            "name": "cacert",
+            "type": "secureFile",
+            "label": "CA certificate",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "CA cert used to issue certificate for tiller clinets and servers.",
+            "groupName": "tls"
+        },
+        {
+            "name": "certificate",
+            "type": "secureFile",
+            "label": "Certificate",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Certificate",
+            "groupName": "tls"
+        },
+        {
+            "name": "key",
+            "type": "secureFile",
+            "label": "Key",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Certificate Key",
+            "groupName": "tls"
         }
     ],
     "dataSourceBindings": [
