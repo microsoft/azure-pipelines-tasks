@@ -59,7 +59,7 @@ export class AzureAppServiceUtility {
 
     public async getApplicationURL(virtualApplication?: string): Promise<string> {
         let webDeployProfile: any =  await this.getWebDeployPublishingProfile();
-        return await webDeployProfile.destinationAppUrl + "/" + (virtualApplication ? virtualApplication : "");
+        return await webDeployProfile.destinationAppUrl + ( virtualApplication ? "/" + virtualApplication : "" );
     }
 
     public async pingApplication(): Promise<void> {
