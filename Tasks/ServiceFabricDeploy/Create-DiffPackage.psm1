@@ -39,7 +39,7 @@ function Create-DiffPackage
             Return
         }
 
-        $diffPackagePath = Join-Path $env:Temp "DiffPackage"
+        $diffPackagePath = Join-Path (Get-TempDirectoryPath) "DiffPackage"
         if (Test-Path -PathType Container -Path $diffPackagePath)
         {
             Remove-Item -Path $diffPackagePath -Recurse -Force
@@ -82,7 +82,7 @@ function Create-DiffPackage
             $diffServicePkgPath = [System.IO.Path]::Combine($diffPackagePath, $localServiceManifestName)
             $clusterServiceManifest = $clusterServiceManifestByName[$localServiceManifestName].ServiceManifest
 
-            # If there's no matching manifest from the cluster it means this is a newly added service that doesn't exist yet on the cluster. 
+            # If there's no matching manifest from the cluster it means this is a newly added service that doesn't exist yet on the cluster.
             if (!$clusterServiceManifest)
             {
                 # Copy this service and all the children
@@ -90,7 +90,7 @@ function Create-DiffPackage
                 Copy-Item $localServicePkgPath $diffServicePkgPath -Recurse
                 continue
             }
-        
+
             # If the Version of the Service is not changed, don't include the service in the diff package
             if ($clusterServiceManifest.Version -eq $localServiceManifestVersion)
             {
