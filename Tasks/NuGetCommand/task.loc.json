@@ -157,6 +157,15 @@
       "groupName": "restoreAdvanced"
     },
     {
+      "name": "disableParallelProcessing",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.disableParallelProcessing",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.disableParallelProcessing",
+      "required": "false",
+      "groupName": "restoreAdvanced"
+    },
+    {
       "name": "packagesDirectory",
       "aliases": [
         "restoreDirectory"

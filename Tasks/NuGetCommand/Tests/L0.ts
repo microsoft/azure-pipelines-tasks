@@ -76,6 +76,22 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
+    it('restore single solution with disableParallelProcessing', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './RestoreTests/singleslnDisableParallelProcessing.js')
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -DisableParallelProcessing -NonInteractive'), 'it should have run NuGet');
+        assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
+        assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, "should have no errors");
+        done();
+    });
+
     it('restore single solution with nuget config', (done: MochaDone) => {
         this.timeout(1000);
 

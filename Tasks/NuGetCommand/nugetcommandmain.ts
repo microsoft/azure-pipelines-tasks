@@ -114,6 +114,7 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
                 'allowpackageconflicts': tl.getInput('allowpackageconflicts'),
                 'includenugetorg': tl.getInput('includenugetorg'),
                 'nocache': tl.getInput('nocache'),
+                'disableparallelprocessing': tl.getInput('disableParallelProcessing'),
                 'nugetconfigpath': tl.getInput('nugetconfigpath'),
                 'nugetfeedtype': nugetfeedtype,
                 'searchpatternpush': tl.getInput('searchpatternpush'),

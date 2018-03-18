@@ -148,6 +148,15 @@
             "groupName": "restoreAdvanced"
         },
         {
+            "name": "disableParallelProcessing",
+            "type": "boolean",
+            "label": "Disable parallel processing",
+            "defaultValue": "false",
+            "helpMarkDown": "Prevents NuGet from installing multiple packages in parallel.",
+            "required": "false",
+            "groupName": "restoreAdvanced"
+        },
+        {
             "name": "packagesDirectory",
             "aliases": ["restoreDirectory"],
             "type": "string",
