@@ -56,6 +56,7 @@
         "M2_HOME": "/home/bin/maven",
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
         "agent.buildDirectory": "/user/build",
+        "Agent.TempDirectory": "/tmp",
         "ENDPOINT_URL_ID1": "http://sonarqube/end/point",
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
         "ENDPOINT_AUTH_SYSTEMVSSCONNECTION": "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}",
