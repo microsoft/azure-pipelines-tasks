@@ -57,20 +57,45 @@
 
                 Write-Host (Get-VstsLocString -Key SearchingApplicationType -ArgumentList $appTypeName)
 
-                $oldAppPackagePath = Join-Path $oldDropLocation $newAppPackagePath.SubString((Get-VstsTaskVariable -Name Build.SourcesDirectory -Require).Length + 1)
-                $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
-                if (Test-Path $oldAppManifestPath)
+                # Try and find the old app package path by finding the largest substring of the path that exists in the artifact path
+                $relativePath = $newAppPackagePath
+                $pathRoot = [System.IO.Path]::GetPathRoot($relativePath)
+                if(![System.String]::IsNullOrEmpty($pathRoot))
                 {
-                    $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
-
-                    # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
-                    # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive. 
-                    $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion
+                    $relativePath = $relativePath.SubString($pathRoot.Length)
                 }
-                else
+                $relativePath.Trim([System.IO.Path]::DirectorySeparatorChar)
+                $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
+                while(!(Test-Path $oldAppPackagePath))
                 {
-                    Write-Warning (Get-VstsLocString -Key NoManifestInPreviousBuild)
-                    $updateAllVersions = $true 
+                    $firstSlash = $relativePath.IndexOf([System.IO.Path]::DirectorySeparatorChar)
+                    if ($firstSlash -lt 0)
+                    {
+                        Write-Warning (Get-VstsLocString -Key CouldNotFindSubPath -ArgumentList @($newAppPackagePath, $oldDropLocation))
+                        $updateAllVersions = $true
+                        $oldAppPackagePath = $null
+                        break;
+                    }
+                    $relativePath = $relativePath.SubString($firstSlash + 1)
+                    $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
+                }
+
+                if ($oldAppPackagePath)
+                {
+                    $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
+                    if (Test-Path $oldAppManifestPath)
+                    {
+                        $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
+
+                        # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
+                        # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.
+                        $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion
+                    }
+                    else
+                    {
+                        Write-Warning (Get-VstsLocString -Key NoManifestInPreviousBuild)
+                        $updateAllVersions = $true
+                    }
                 }
             }
             else
@@ -85,7 +110,7 @@
         $logIndent = "".PadLeft(2)
         foreach ($serviceManifestImport in $newAppManifestXml.ApplicationManifest.ServiceManifestImport)
         {
-            $serviceVersion = Update-ServiceVersions -VersionValue $versionValue -ServiceName $serviceManifestImport.ServiceManifestRef.ServiceManifestName -NewPackageRoot $newAppPackagePath -OldPackageRoot $oldAppPackagePath -LogIndent $logIndent -UpdateAllVersions:$updateAllVersions -LogAllChanges:$logAllChanges -ReplaceVersion:$replaceVersion 
+            $serviceVersion = Update-ServiceVersions -VersionValue $versionValue -ServiceName $serviceManifestImport.ServiceManifestRef.ServiceManifestName -NewPackageRoot $newAppPackagePath -OldPackageRoot $oldAppPackagePath -LogIndent $logIndent -UpdateAllVersions:$updateAllVersions -LogAllChanges:$logAllChanges -ReplaceVersion:$replaceVersion
             $serviceManifestImport.ServiceManifestRef.ServiceManifestVersion = $serviceVersion
         }
 

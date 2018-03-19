@@ -33,8 +33,14 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         it('(Update-ApplicationVersions) no changes', (done) => {
             psr.run(path.join(__dirname, 'Update-ApplicationVersions.NoChanges.ps1'), done);
         })
+        it('(Update-ApplicationVersions) no changes (package in sub path)', (done) => {
+            psr.run(path.join(__dirname, 'Update-ApplicationVersions.NoChanges.SubPath.ps1'), done);
+        })
         it('(Update-ApplicationVersions) service changed', (done) => {
             psr.run(path.join(__dirname, 'Update-ApplicationVersions.ServiceChanged.ps1'), done);
+        })
+        it('(Update-ApplicationVersions) service changed (package in sub path)', (done) => {
+            psr.run(path.join(__dirname, 'Update-ApplicationVersions.ServiceChanged.SubPath.ps1'), done);
         })
         it('(Update-ApplicationVersions) app manifest xml changed', (done) => {
             psr.run(path.join(__dirname, 'Update-ApplicationVersions.XmlChanged.ps1'), done);

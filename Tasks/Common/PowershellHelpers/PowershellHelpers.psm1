@@ -3,6 +3,6 @@ param()
 Import-VstsLocStrings "$PSScriptRoot\module.json"
 
 # Dot-source all script files
-. $PSScriptRoot\Invoke-ActionWithRetries.ps1
+. $PSScriptRoot\Helpers.ps1
 
-Export-ModuleMember -Function Invoke-ActionWithRetries
+Export-ModuleMember -Function @("Invoke-ActionWithRetries", "Get-TempDirectoryPath")

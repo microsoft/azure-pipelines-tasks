@@ -119,7 +119,7 @@ function Publish-UpgradedServiceFabricApplication
     {
         if((Get-Item $ApplicationPackagePath).Extension -eq ".sfpkg")
         {
-            $AppPkgPathToUse=[io.path]::combine($env:Temp, (Get-Item $ApplicationPackagePath).BaseName)
+            $AppPkgPathToUse = [io.path]::combine((Get-TempDirectoryPath), (Get-Item $ApplicationPackagePath).BaseName)
             Expand-ToFolder $ApplicationPackagePath $AppPkgPathToUse
         }
         else
