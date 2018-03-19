@@ -172,7 +172,7 @@ async function execBuild() {
                     }
                     util.publishMavenInfo(mavenFeedInfo);
 
-                    settingsXmlFile = path.join(os.tmpdir(), 'settings.xml');
+                    settingsXmlFile = path.join(tl.getVariable('Agent.TempDirectory'), 'settings.xml');
                     tl.debug('checking to see if there are settings.xml in use');
                     let options: RegExpMatchArray = mavenOptions ? mavenOptions.match(/([^" ]*("([^"\\]*(\\.[^"\\]*)*)")[^" ]*)|[^" ]+/g) : undefined;
                     if (options) {
@@ -181,7 +181,7 @@ async function execBuild() {
                             if ((options[i] === '--settings' || options[i] === '-s') && (i + 1) < options.length) {
                                 i++; // increment to the file name
                                 let suppliedSettingsXml: string = options[i];
-                                tl.cp(path.join(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '');
+                                tl.cp(path.resolve(tl.cwd(), suppliedSettingsXml), settingsXmlFile, '-f');
                                 tl.debug('using settings file: ' + settingsXmlFile);
                             } else {
                                 if (mavenOptions) {
@@ -205,7 +205,7 @@ async function execBuild() {
             tl.error(err.message);
             userRunFailed = true; // Record the error and continue
         })
-        .then(function (code) {            
+        .then(function (code) {
             // Setup tool runner to execute Maven goals
             var mvnRun = tl.tool(mvnExec);
             mvnRun.arg('-f');
