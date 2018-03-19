@@ -4,16 +4,16 @@
     [OutputType([string])]
     Param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]
         $PkgArtifactName,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [boolean]
         $OverwritePkgArtifact,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet("Specific", "LastSuccessful")]
         [string]
         $CompareType,
@@ -23,7 +23,8 @@
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
+    try
+    {
         $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
         $authHeader = @{ Authorization = "Bearer $($vstsEndpoint.auth.parameters.AccessToken)" }
         $projectId = Get-VstsTaskVariable -Name System.TeamProjectId -Require
@@ -34,9 +35,9 @@
         {
             if ([string]::IsNullOrEmpty($BuildNumber))
             {
-                throw (Get-VstsLocString -Key BuildNumberNotSpecified) 
+                throw (Get-VstsLocString -Key BuildNumberNotSpecified)
             }
-            
+
             $escapedBuildNumber = [System.Uri]::EscapeDataString($BuildNumber)
 
             # Query for a specific build number (regardless of build status or result)
@@ -64,7 +65,8 @@
             }
             elseif ($artifact.resource.type -eq "container") # The artifact is in a hosted server and must be downloaded into a temp folder
             {
-                $agentTmpFolder = Join-Path $ENV:AGENT_TEMPDIRECTORY $build.buildNumber
+                Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
+                $agentTmpFolder = Join-Path (Get-TempDirectoryPath) $build.buildNumber
                 $artifactZipFile = Join-Path $agentTmpFolder "$PkgArtifactName.zip"
                 $artifactPath = Join-Path $agentTmpFolder $PkgArtifactName
                 $downloadArtifact = $true
@@ -109,7 +111,9 @@
                 throw (Get-VstsLocString -Key UnrecognizedArtifactType -ArgumentList $artifact.resource.type)
             }
         }
-    } finally {
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -119,24 +123,25 @@ function Get-FileWithProgress
     [CmdletBinding()]
     Param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]
         $Url,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]
         $FileName,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]
         $AuthorizationHeader
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
+    try
+    {
         $webClient = New-Object System.Net.WebClient
 
         try
@@ -170,7 +175,9 @@ function Get-FileWithProgress
             Remove-Event -SourceIdentifier FinishedDownload
             Unregister-Event -SourceIdentifier FinishedDownload
         }
-    } finally {
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
