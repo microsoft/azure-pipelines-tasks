@@ -19,7 +19,7 @@
       "code": 0,
       "stdout": "Xcode 7.3.1"
     },
-    "/home/bin/xcodebuild -sdk iphone -configuration Release -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun clean build DSTROOT=/user/build/output/iphone/release/build.dst OBJROOT=/user/build/output/iphone/release/build.obj SYMROOT=/user/build/output/iphone/release/build.sym SHARED_PRECOMPS_DIR=/user/build/output/iphone/release/build.pch -exportArchive -exportPath /user/build/output/iphone/release": {
+    "/home/bin/xcodebuild -sdk iphone -configuration Release -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun clean build -exportArchive -exportPath /user/build/output/iphone/release": {
       "code": 0,
       "stdout": "xcodebuild output here"
     }

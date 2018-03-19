@@ -32,6 +32,8 @@
   "loc.input.help.NewServiceAdditionalArguments": "Pase argumentos adicionales al crear un servicio completamente nuevo. Estos se pasarán al cmdlet \"New-AzureService\". Por ejemplo: \"-Label 'MiServicioDePrueba'\"",
   "loc.input.label.NewServiceAffinityGroup": "Grupo de afinidad",
   "loc.input.help.NewServiceAffinityGroup": "Mientras se crea el nuevo servicio, se tendrá en cuenta este grupo de afinidad en lugar de utilizar la ubicación del servicio.",
+  "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
+  "loc.input.help.NewServiceCustomCertificates": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
   "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "No se puedo obtener la clave de almacenamiento principal para la cuenta de almacenamiento '{0}'. No se pueden aplicar las extensiones de diagnóstico.",
   "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "No se puedo obtener la clave de almacenamiento principal para la cuenta de almacenamiento de configuración pública '{0}'. No se pueden aplicar las extensiones de diagnóstico.",
   "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Aplicando todas las extensiones de diagnóstico configuradas.",
@@ -40,5 +42,7 @@
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Se encontró más de un archivo para implementar con el patrón de búsqueda {0}. Solo puede haber uno.",
   "loc.messages.Storagekeysaredefinedininvalidformat": "El formato de las claves de almacenamiento no está definido correctamente.",
   "loc.messages.Unabletofind0usingprovidedsubscription": "No se puede encontrar {0} con la suscripción proporcionada",
-  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "La versión actual de Azure PowerShell no admite una cuenta de almacenamiento externa para configurar el diagnóstico."
+  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "La versión actual de Azure PowerShell no admite una cuenta de almacenamiento externa para configurar el diagnóstico.",
+  "loc.messages.Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
+  "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format."
 }

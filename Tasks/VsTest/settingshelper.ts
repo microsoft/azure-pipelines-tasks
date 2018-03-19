@@ -330,14 +330,13 @@ function isDataCollectorPresent(dataCollectorArray, dataCollectorFriendlyName: s
 function setUseVerifiableInstrumentationToFalse(dataCollectorArray: any) {
     for (const node of dataCollectorArray) {
         if (node.$.friendlyName && node.$.friendlyName.toUpperCase() === codeCoverageFriendlyName.toUpperCase()) {
-            if (!utils.Helper.isNullEmptyOrUndefined(node.Configuration)) {
+            if (utils.Helper.isNullEmptyOrUndefined(node.Configuration)) {
                 tl.debug('Updating runsettings file from CodeCoverage node');
                 node.Configuration = { CodeCoverage: { UseVerifiableInstrumentation: 'False' } };
-            } else if (!utils.Helper.isNullEmptyOrUndefined(node.Configuration[0].CodeCoverage)) {
+            } else if (utils.Helper.isNullEmptyOrUndefined(node.Configuration[0].CodeCoverage)) {
                 node.Configuration.CodeCoverage = { UseVerifiableInstrumentation: 'False' };
                 tl.debug('Updating runsettings file from UseVerifiableInstrumentation node');
-            }
-            else {
+            } else {
                 node.Configuration[0].CodeCoverage[0].UseVerifiableInstrumentation = 'False';
                 console.log(tl.loc('OverrideUseVerifiableInstrumentation'));
             }

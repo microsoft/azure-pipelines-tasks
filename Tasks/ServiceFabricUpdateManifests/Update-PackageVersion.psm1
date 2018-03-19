@@ -20,7 +20,7 @@
         $NewPackageXml,
 
         [Parameter(Mandatory=$true)]
-        [ValidateScript({Test-Path $_})]
+        [ValidateScript({Test-Path -LiteralPath $_})]
         [string]
         $NewPackageRoot,
 
@@ -61,7 +61,7 @@
             if ($oldPackageXml)
             {
                 # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
-                # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive. 
+                # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.
                 $NewPackageXml.Version = $oldPackageXml.Version
 
                 $updatePackageVersion = $false
@@ -78,9 +78,9 @@
                     $newPackagePath = Join-Path $NewPackageRoot $packageName
                     $oldPackagePath = Join-Path $OldPackageRoot $packageName
 
-                    if (Test-Path $newPackagePath)
+                    if (Test-Path -LiteralPath $newPackagePath)
                     {
-                        if (-not (Test-Path $oldPackagePath) -or (Find-FileChanges $newPackagePath $oldPackagePath $LogIndent -LogAllChanges:$LogAllChanges))
+                        if (-not (Test-Path -LiteralPath $oldPackagePath) -or (Find-FileChanges $newPackagePath $oldPackagePath $LogIndent -LogAllChanges:$LogAllChanges))
                         {
                             # The package has changed because one or more files has changed
                             $updatePackageVersion = $true

@@ -28,18 +28,8 @@ async function run() {
         let tool: string = tl.which('xcodebuild', true);
         tl.debug('Tool selected: ' + tool);
 
-        //--------------------------------------------------------
-        // Paths
-        //--------------------------------------------------------
         let workingDir: string = tl.getPathInput('cwd');
         tl.cd(workingDir);
-
-        let outPath: string;
-        let outputPattern: string = tl.getInput('outputPattern', false);
-        if (outputPattern) {
-            outPath = tl.resolve(workingDir, outputPattern); //use posix implementation to resolve paths to prevent unit test failures on Windows
-            tl.mkdirP(outPath);
-        }
 
         //--------------------------------------------------------
         // Xcode args
@@ -161,19 +151,6 @@ async function run() {
             });
         }
         xcb.arg(actions);
-        if (outPath) {
-            if (actions.toString().indexOf('archive') < 0) {
-                // redirect build output if archive action is not passed
-                // xcodebuild archive produces an invalid archive if output is redirected
-                xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
-                xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
-                xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
-                xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
-            }
-            else {
-                tl.warning(tl.loc('OutputDirectoryIgnored', 'archive'));
-            }
-        }
         if (args) {
             xcb.line(args);
         }
@@ -410,14 +387,7 @@ async function run() {
 
                 //export path
                 let exportPath: string = tl.getInput('exportPath');
-                if (!exportPath.endsWith('.ipa')) {
-                    exportPath = tl.resolve(exportPath, '_XcodeTaskExport_' + scheme);
-                }
-                // delete if it already exists, otherwise export will fail
-                if (tl.exist(exportPath)) {
-                    tl.rmRF(exportPath);
-                }
-
+                
                 for (var i = 0; i < archiveFolders.length; i++) {
                     let archive: string = archiveFolders.pop();
 

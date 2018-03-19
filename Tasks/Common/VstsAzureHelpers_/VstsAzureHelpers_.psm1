@@ -18,7 +18,8 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 # This is the only public function.
 function Initialize-Azure {
     [CmdletBinding()]
-    param( [string] $azurePsVersion )
+    param( [string] $azurePsVersion,
+           [switch] $strict )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Get the inputs.
@@ -36,7 +37,7 @@ function Initialize-Azure {
         $preferredModules = @( )
         if ($endpoint.Auth.Scheme -eq 'ServicePrincipal') {
             $preferredModules += 'AzureRM'
-        } elseif ($endpoint.Auth.Scheme -eq 'UserNamePassword') {
+        } elseif ($endpoint.Auth.Scheme -eq 'UserNamePassword' -and $strict -eq $false) {
             $preferredModules += 'Azure'
             $preferredModules += 'AzureRM'
         } else {
@@ -44,7 +45,7 @@ function Initialize-Azure {
         }
 
         # Import/initialize the Azure module.
-        Import-AzureModule -PreferredModule $preferredModules -azurePsVersion $azurePsVersion
+        Import-AzureModule -PreferredModule $preferredModules -azurePsVersion $azurePsVersion -strict:$strict
         Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $storageAccount
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

@@ -51,5 +51,8 @@ describe('PowershellHelpers Suite', function () {
         it('(Invoke-ActionWithRetries) should handle multiple retryable exceptions', (done) => {
             psr.run(path.join(__dirname, 'Invoke-ActionWithRetries.ShouldHandleMultipleRetryableExceptions.ps1'), done);
         })
+        it('(Get-TempDirectoryPath) get temp directory', (done) => {
+            psr.run(path.join(__dirname, 'Get-TempDirectoryPath.ps1'), done);
+        })
     }
 });

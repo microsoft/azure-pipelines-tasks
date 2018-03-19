@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 131,
+    "Minor": 133,
     "Patch": 0
   },
   "demands": [],
@@ -52,8 +52,8 @@
       "name": "TargetPath",
       "type": "string",
       "label": "ms-resource:loc.input.label.TargetPath",
-      "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
-      "required": false,
+      "defaultValue": "",
+      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
       "visibleRule": "ArtifactType = FilePath"
     },
