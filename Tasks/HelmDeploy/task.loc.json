@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 3
+    "Minor": 9,
+    "Patch": 6
   },
   "demands": [],
   "preview": "true",
@@ -31,6 +31,11 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    },
+    {
+      "name": "tls",
+      "displayName": "ms-resource:loc.group.displayName.tls",
       "isExpanded": false
     }
   ],
@@ -203,6 +208,33 @@
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
       "groupName": "advanced"
+    },
+    {
+      "name": "cacert",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.cacert",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cacert",
+      "groupName": "tls"
+    },
+    {
+      "name": "certificate",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.certificate",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.certificate",
+      "groupName": "tls"
+    },
+    {
+      "name": "key",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.key",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.key",
+      "groupName": "tls"
     }
   ],
   "dataSourceBindings": [
@@ -230,6 +262,12 @@
     "ClusterNotProvisioned": "ms-resource:loc.messages.ClusterNotProvisioned",
     "ClusterNotFound": "ms-resource:loc.messages.ClusterNotFound",
     "FailedToListClusters": "ms-resource:loc.messages.FailedToListClusters",
-    "RetryingRequest": "ms-resource:loc.messages.RetryingRequest"
+    "RetryingRequest": "ms-resource:loc.messages.RetryingRequest",
+    "CertificateNotFound": "ms-resource:loc.messages.CertificateNotFound",
+    "CertificateKeyNotFound": "ms-resource:loc.messages.CertificateKeyNotFound",
+    "CA": "ms-resource:loc.messages.CA",
+    "Tiller": "ms-resource:loc.messages.Tiller",
+    "Client": "ms-resource:loc.messages.Client",
+    "NotAllTlsInputsProvided": "ms-resource:loc.messages.NotAllTlsInputsProvided"
   }
 }

@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 7,
-        "Patch": 0
+        "Minor": 9,
+        "Patch": 6
     },
     "demands": [],
     "preview": "true",
@@ -34,7 +34,7 @@
             "isExpanded": false
         },
         {
-            "name": "tsl",
+            "name": "tls",
             "displayName": "TLS",
             "isExpanded": false            
         }
@@ -211,7 +211,7 @@
             "label": "CA certificate",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "CA cert used to issue certificate for tiller clinets and servers.",
+            "helpMarkDown": "CA cert used to issue certificate for tiller clients and servers.",
             "groupName": "tls"
         },
         {
@@ -258,6 +258,12 @@
         "ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
         "ClusterNotFound": "%s cluster does not exists",
         "FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
-        "RetryingRequest": "Retrying request after %s seconds."
+        "RetryingRequest": "Retrying request after %s seconds.",
+        "CertificateNotFound": "%s certificate not found at location %s",
+        "CertificateKeyNotFound": "%s certificate key not found at location %s",
+        "CA": "CA",
+        "Tiller": "Tiller",
+        "Client": "Client",
+        "NotAllTlsInputsProvided": "All the inputs to enable tls connection is not provided."
     }
 }
