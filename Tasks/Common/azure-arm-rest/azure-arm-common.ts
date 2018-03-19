@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import querystring = require('querystring');
 import webClient = require("./webClient");
+import AzureModels = require("./azureModels");
 
 export class ApplicationTokenCredentials {
     private clientId: string;
@@ -55,12 +56,12 @@ export class ApplicationTokenCredentials {
         this.activeDirectoryResourceId = activeDirectoryResourceId;
         this.isAzureStackEnvironment = isAzureStackEnvironment;
         this.scheme = scheme;
-        this.msiPort = msiPort;
+        this.msiPort = msiPort ? msiPort : '50342';
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
         if (!this.token_deferred || force) {
-            if(this.scheme && this.scheme === "MSI")
+            if(this.scheme && this.scheme === AzureModels.scheme.ManagedServiceIdentity.toString())
             {
                 this.token_deferred = this._getMSIAuthorizationToken();
             }
@@ -85,8 +86,7 @@ export class ApplicationTokenCredentials {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "GET";
-        let port = this.msiPort ? this.msiPort : '50342';
-        webRequest.uri = "http://localhost:"+ port + "/oauth2/token?resource="+ this.baseUrl;
+        webRequest.uri = "http://localhost:"+ this.msiPort + "/oauth2/token?resource="+ this.baseUrl;
         webRequest.headers = {
             "Metadata": true
         };
