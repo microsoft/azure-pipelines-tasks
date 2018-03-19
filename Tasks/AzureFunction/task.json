@@ -4,7 +4,7 @@
 	"friendlyName": "Invoke Azure Function",
 	"description": "Invoke Azure function as a part of your process.",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-function)",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870235)",
 	"category": "Utility",
 	"visibility": [
 		"Build",

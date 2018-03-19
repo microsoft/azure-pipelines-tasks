@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Manual Intervention",
-  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/manual-intervention)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "Pause deployment and wait for intervention",
   "loc.instanceNameFormat": "Manual Intervention",
   "loc.input.label.instructions": "Instructions",

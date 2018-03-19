@@ -4,7 +4,7 @@
   "friendlyName": "Query Work Items",
   "description": "Executes a work item query and checks for the number of items returned.",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/work-item-query)",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870238)",
   "category": "Utility",
   "visibility": [
      "Build",
