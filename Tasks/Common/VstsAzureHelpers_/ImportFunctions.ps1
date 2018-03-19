@@ -108,14 +108,19 @@ function Import-FromModulePath {
         } else {
             # The AzureRM module was imported.
             # Validate the AzureRM.profile module can be found.
-            $profileModule = (Get-Module -Name AzureRM).NestedModules | Where-Object { $_.Name.toLower() -eq "azurerm.profile" }
-            if (!$profileModule) {
-                throw (Get-VstsLocString -Key AZ_AzureRMProfileModuleNotFound)
+            $profileModule = Get-Module -Name AzureRm.Profile
+            if(!$profileModule) {
+                $profileModule = (Get-Module -Name AzureRM).NestedModules | Where-Object { $_.Name.toLower() -eq "azurerm.profile" }
+                if (!$profileModule) {
+                    throw (Get-VstsLocString -Key AZ_AzureRMProfileModuleNotFound)
+                }
+                # Import and then store the AzureRM.profile module. 
+                Write-Host "##[command]Import-Module -Name $($profileModule.Path) -Global" 
+                $script:azureRMProfileModule = Import-Module -Name $profileModule.Path -Global -PassThru 
+            } else {
+                $script:azureRMProfileModule = $profileModule
             }
-            # Import and then store the AzureRM.profile module. 
-            Write-Host "##[command]Import-Module -Name $($profileModule.Path) -Global" 
-            $script:azureRMProfileModule = Import-Module -Name $profileModule.Path -Global -PassThru 
-            Write-Verbose "Imported module version: $($script:azureRMProfileModule.Version)" 
+            Write-Verbose "Imported module version: $($script:azureRMProfileModule.Version)"
         }
 
         return $true
