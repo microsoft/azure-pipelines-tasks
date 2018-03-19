@@ -59,6 +59,7 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.versionSpec] = "1.7.0";
         process.env[shared.isKubectlPresentOnMachine] = "false";
         tr.run();
+        console.log(tr.stdout);
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -80,6 +81,7 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.checkLatest] = "true";
         process.env[shared.isKubectlPresentOnMachine] = "false";
         tr.run();
+        console.log(tr.stdout);
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -101,6 +103,7 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.versionSpec] = "1.7";
         process.env[shared.isKubectlPresentOnMachine] = "false";
         tr.run();
+        console.log(tr.stdout);
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
