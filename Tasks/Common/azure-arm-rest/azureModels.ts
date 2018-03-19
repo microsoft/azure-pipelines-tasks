@@ -166,6 +166,11 @@ export enum ComputeResourceType {
     VirtualMachineScaleSet
 }
 
+export enum scheme {
+    ManagedServiceIdentity,
+    SPN
+}
+
 export interface StorageAccountSku {
     name: string;
     tier?: string;

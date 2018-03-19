@@ -28,14 +28,14 @@ export class AzureRMEndpoint {
             this.endpoint = {
                 subscriptionID: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionid', true),
                 subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
-                servicePrincipalClientID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalid', false),
-                servicePrincipalKey: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', false),
+                servicePrincipalClientID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalid', true),
+                servicePrincipalKey: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', true),
                 environmentAuthorityUrl: tl.getEndpointDataParameter(this._connectedServiceName, 'environmentAuthorityUrl', true),
                 tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
                 url: tl.getEndpointUrl(this._connectedServiceName, true),
                 environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
                 scheme: tl.getEndpointAuthorizationScheme(this._connectedServiceName, true),
-                msiPort:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiport', false),
+                msiPort:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiport', true),
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
