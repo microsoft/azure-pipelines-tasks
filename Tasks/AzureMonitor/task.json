@@ -4,7 +4,7 @@
 	"friendlyName": "Query Azure Monitor Alerts",
 	"description": "Observe the configured Azure monitor rules for active alerts.",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-monitor)",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
 	"category": "Utility",
 	"visibility": [
 		"Build",

@@ -4,7 +4,7 @@
   "friendlyName": "Publish To Azure Service Bus",
   "description": "Sends a message to azure service bus using a service connection (no agent required).",
   "category": "Utility",
-  "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/publish-to-azure-service-bus)",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870237)",
   "visibility": [
     "Build",
     "Release"

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Query Work Items",
-  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/work-item-query)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870238)",
   "loc.description": "Executes a work item query and checks for the number of items returned.",
   "loc.instanceNameFormat": "Query Work Items",
   "loc.group.displayName.advanced": "Advanced",
