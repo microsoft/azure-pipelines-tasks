@@ -1,0 +1,107 @@
+{
+  "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7112",
+  "name": "SeleniumWebdriverInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.103.0",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "preview": true,
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "chromeDriver",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.chromeDriver",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.chromeDriver"
+    },
+    {
+      "name": "chromeDriverVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.chromeDriverVersion",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.chromeDriverVersion",
+      "visibleRule": "chromeDriver = true"
+    },
+    {
+      "name": "firefoxDriver",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.firefoxDriver",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.firefoxDriver"
+    },
+    {
+      "name": "firefoxDriverVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.firefoxDriverVersion",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.firefoxDriverVersion",
+      "visibleRule": "firefoxDriver = true"
+    },
+    {
+      "name": "ieDriver",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ieDriver",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ieDriver"
+    },
+    {
+      "name": "ieDriverVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ieDriverVersion",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ieDriverVersion",
+      "visibleRule": "ieDriver = true"
+    },
+    {
+      "name": "edgeDriver",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.edgeDriver",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.edgeDriver"
+    },
+    {
+      "name": "edgeDriverVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.edgeDriverVersion",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.edgeDriverVersion",
+      "visibleRule": "edgeDriver = true"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "seleniumwebdriverinstaller.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "StartingInstaller": "ms-resource:loc.messages.StartingInstaller",
+    "FileExists": "ms-resource:loc.messages.FileExists",
+    "FileDownloaded": "ms-resource:loc.messages.FileDownloaded",
+    "FailedToAcquireDriver": "ms-resource:loc.messages.FailedToAcquireDriver",
+    "InvalidVersion": "ms-resource:loc.messages.InvalidVersion",
+    "AcquiringDriver": "ms-resource:loc.messages.AcquiringDriver",
+    "SettingVariable": "ms-resource:loc.messages.SettingVariable"
+  }
+}
