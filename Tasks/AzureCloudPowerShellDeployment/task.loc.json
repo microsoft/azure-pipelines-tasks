@@ -135,6 +135,15 @@
       "required": false
     },
     {
+      "name": "SimultaneousUpgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SimultaneousUpgrade",
+      "defaultValue": "false",
+      "visibleRule": "AllowUpgrade == true",
+      "helpMarkDown": "ms-resource:loc.input.help.SimultaneousUpgrade",
+      "required": false
+    },
+    {
       "name": "DiagnosticStorageAccountKeys",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.DiagnosticStorageAccountKeys",
