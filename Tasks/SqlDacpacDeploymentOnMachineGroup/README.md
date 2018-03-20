@@ -16,7 +16,7 @@ The task runs on the deployment target machine(s) registered with the Deployment
 
 ## Contact Information
 
-Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, share feedback about the task, and the new features that you would like to see in it.
+Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
 
 ## Pre-requisites for the task
 
