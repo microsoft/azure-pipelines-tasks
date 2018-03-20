@@ -51,7 +51,16 @@ async function run() {
 
         let remotePath: string = tl.getInput('remotePath', false);
         if (remotePath) {
-            url = url + '/' + remotePath.replace(/\\/gi, "/").trim();
+            if (url.charAt(url.length - 1) != '/') {
+                url = url + '/';
+            }
+            while (remotePath.charAt(url.length - 2) == '/') {
+                url = url.substr(0, url.length - 1);
+            }
+            while (remotePath.charAt(0) == '/') {
+                remotePath = remotePath.substr(1);
+            }
+            url = url + remotePath.replace(/\\/gi, "/").trim();
         }
 
         // Find location of curl 
