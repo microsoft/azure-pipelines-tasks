@@ -1,0 +1,231 @@
+{
+    "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
+    "name": "HelmDeploy",
+    "friendlyName": "Package and deploy Helm charts",
+    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 3
+    },
+    "demands": [],
+    "preview": "true",
+    "groups": [
+        {
+            "name": "cluster",
+            "displayName": "Kubernetes Cluster",
+            "isExpanded": true
+        },
+        {
+            "name": "commands",
+            "displayName": "Commands",
+            "isExpanded": false
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "connectionType",
+            "type": "pickList",
+            "label": "Connection Type",
+            "defaultValue": "Azure Resource Manager",
+            "required": true,
+            "options": {
+                "Azure Resource Manager": "Azure Resource Manager",
+                "Kubernetes Service Connection": "Kubernetes Service Connection"
+            },
+            "helpMarkDown": "Select a Connection Type.",
+            "groupName": "cluster"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "kubernetesCluster",
+            "label": "Kubernetes cluster",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Managed Cluster.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "kubernetesServiceEndpoint",
+            "aliases": ["kubernetesServiceConnection"],
+            "type": "connectedService:kubernetes",
+            "label": "Kubernetes Service Connection",
+            "helpMarkDown": "Select a Kubernetes service connection.",
+            "visibleRule": "connectionType = Kubernetes Service Connection",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "namespace",
+            "label": "Namespace",
+            "type": "string",
+            "helpMarkDown": "Specify K8 namespace to use. Use Tiller namespace in advance section to specify tiller namespace.",
+            "defaultValue": "",
+            "groupName": "cluster"
+        },
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "ls",
+            "required": true,
+            "options": {
+                "create": "create",
+                "delete": "delete",
+                "expose": "expose",
+                "get": "get",
+                "init": "init",
+                "install": "install",
+                "ls": "ls",
+                "rollback": "rollback",
+                "upgrade": "upgrade"
+            },
+            "helpMarkDown": "Select a helm command.",
+            "groupName": "commands",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "chart",
+            "label": "Chart",
+            "type": "string",
+            "helpMarkDown": "Name of the chart to install.",
+            "defaultValue": "",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "version",
+            "label": "Version",
+            "type": "string",
+            "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed.",
+            "defaultValue": "",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "releaseName",
+            "label": "Release Name",
+            "type": "string",
+            "helpMarkDown": "Release name. If unspecified, it will autogenerate one for you.",
+            "defaultValue": "",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "overrideValues",
+            "label": "Set Values",
+            "type": "string",
+            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).",
+            "defaultValue": "",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "canaryimage",
+            "type": "boolean",
+            "label": "Use canary image version.",
+            "defaultValue": "false",
+            "helpMarkDown": "Use the canary Tiller image. Will install the latest pre-release version of Tiller.",
+            "visibleRule": "command = init",
+            "groupName": "commands"
+        },
+        {
+            "name": "upgradetiller",
+            "type": "boolean",
+            "label": "Upgrade Tiller",
+            "defaultValue": "true",
+            "helpMarkDown": "Upgrade if Tiller is already installed.",
+            "visibleRule": "command = init",
+            "groupName": "commands"
+        },
+        {
+            "name": "updatedependency",
+            "type": "boolean",
+            "label": "Update Dependency",
+            "defaultValue": "false",
+            "helpMarkDown": "Run helm dependency update before installing the chart.",
+            "visibleRule": "command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "waitForExecution",
+            "type": "boolean",
+            "label": "Wait",
+            "defaultValue": "true",
+            "helpMarkDown": "Block till command execution completes and Tiller is ready.",
+            "visibleRule": "command = init || command = install",
+            "groupName": "commands"
+        },
+        {
+            "name": "arguments",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Arguments",
+            "helpMarkDown": "Command arguments.",
+            "groupName": "commands"
+        },
+        {
+            "name": "tillernamespace",
+            "label": "Tiller namespace",
+            "helpMarkDown": "Specify K8 namespace of tiller.",
+            "type": "string",
+            "groupName": "advanced"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "kubernetesCluster",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl":"{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{name}}}"
+        }
+    ],
+    "instanceNameFormat": "helm $(command)",
+    "execution": {
+        "Node": {
+            "target": "src//helm.js"
+        }
+    },
+    "messages": {
+        "HelmNotFound": "Helm not installed on the machine.",
+        "KubernetesNotFound": "Kubernetes not installed on the machine.",
+        "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
+        "KubeConfigFilePath": "Kubeconfig file path: %s",
+        "KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",
+        "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
+        "ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
+        "ClusterNotFound": "%s cluster does not exists",
+        "FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
+        "RetryingRequest": "Retrying request after %s seconds."
+    }
+}

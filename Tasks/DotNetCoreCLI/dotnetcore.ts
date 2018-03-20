@@ -116,6 +116,9 @@ export class dotNetExe {
         if (enablePublishTestResults && enablePublishTestResults === true) {
             this.arguments = this.arguments.concat(` --logger trx --results-directory ${resultsDirectory}`);
         }
+        
+        // Remove old trx files
+        this.removeOldTestResultFiles(resultsDirectory);
 
         // Use empty string when no project file is specified to operate on the current directory
         const projectFiles = this.getProjectFiles();
@@ -158,6 +161,19 @@ export class dotNetExe {
             const tp: tl.TestPublisher = new tl.TestPublisher('VSTest');
             tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true');
             //refer https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts#L1620
+        }
+    }
+
+    private removeOldTestResultFiles(resultsDir:string): void {
+        const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
+            tl.debug("No old result files found.");
+            return;
+        }
+        for (const fileIndex of Object.keys(matchingTestResultsFiles)) {
+            const resultFile = matchingTestResultsFiles[fileIndex];            
+            tl.rmRF(resultFile)
+            tl.debug("Successfuly removed: " + resultFile);
         }
     }
 

@@ -16,5 +16,5 @@ foreach ($variableSet in $variableSets) {
     Write-Verbose ('-' * 80)
 
     # Act/Assert.
-    Assert-Throws { & $module Import-AzureModule -PreferredModule $variableSet.PreferredModule -azurePsVersion "4.1.0" } -MessagePattern "AZ_ModuleNotFound 4.1.0"
+    Assert-Throws { & $module Import-AzureModule -PreferredModule $variableSet.PreferredModule -azurePsVersion "4.1.0" } -MessagePattern "AZ_ModuleNotFound 4.1.0 Azure, AzureRM"
 }

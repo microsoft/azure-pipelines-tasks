@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 5
+    "Minor": 2,
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -149,6 +149,20 @@
       }
     },
     {
+      "name": "NewServiceCustomCertificates",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.NewServiceCustomCertificates",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.NewServiceCustomCertificates",
+      "groupName": "newServiceAdvancedOptions",
+      "properties": {
+        "resizable": "true",
+        "rows": "6",
+        "maxLength": "20000"
+      }
+    },
+    {
       "name": "NewServiceAdditionalArguments",
       "type": "string",
       "label": "ms-resource:loc.input.label.NewServiceAdditionalArguments",
@@ -207,6 +221,8 @@
     "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
     "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
     "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription",
-    "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics"
+    "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics",
+    "Customcertificatesaredefinedininvalidformat": "ms-resource:loc.messages.Customcertificatesaredefinedininvalidformat",
+    "Addinganyconfiguredcustomcertificates": "ms-resource:loc.messages.Addinganyconfiguredcustomcertificates"
   }
 }

@@ -109,17 +109,17 @@ function Publish-UpgradedServiceFabricApplication
         [Switch]$SkipUpgradeSameTypeAndVersion
     )
 
-    if (!(Test-Path $ApplicationPackagePath))
+    if (!(Test-Path -LiteralPath $ApplicationPackagePath))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationPackagePath)
         throw $errMsg
     }
 
-    if (Test-Path $ApplicationPackagePath -PathType Leaf)
+    if (Test-Path -LiteralPath $ApplicationPackagePath -PathType Leaf)
     {
-        if((Get-Item $ApplicationPackagePath).Extension -eq ".sfpkg")
+        if((Get-Item -LiteralPath $ApplicationPackagePath).Extension -eq ".sfpkg")
         {
-            $AppPkgPathToUse=[io.path]::combine($env:Temp, (Get-Item $ApplicationPackagePath).BaseName)
+            $AppPkgPathToUse = [io.path]::combine((Get-TempDirectoryPath), (Get-Item -LiteralPath $ApplicationPackagePath).BaseName)
             Expand-ToFolder $ApplicationPackagePath $AppPkgPathToUse
         }
         else
@@ -133,7 +133,7 @@ function Publish-UpgradedServiceFabricApplication
         $AppPkgPathToUse = $ApplicationPackagePath
     }
 
-    if ($PSBoundParameters.ContainsKey('ApplicationParameterFilePath') -and !(Test-Path $ApplicationParameterFilePath -PathType Leaf))
+    if ($PSBoundParameters.ContainsKey('ApplicationParameterFilePath') -and !(Test-Path -LiteralPath $ApplicationParameterFilePath -PathType Leaf))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
         throw $errMsg

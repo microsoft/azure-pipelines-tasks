@@ -6,7 +6,7 @@ The task is used to deploy Azure SQL Database to an existing Azure SQL Server, e
 
 ### Contact Information
 
-Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, if you would like to share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, then do send an email to the alias.
+Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
 
 ### Pre-requisites for the task
 
@@ -123,3 +123,19 @@ Other supported versions:
 [Azure PowerShell Installer v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)
 
 #1 https://msdn.microsoft.com/en-us/library/hh550080\(v=vs.103\).aspx
+
+### Troubleshooting :
+
+- **Get debug logs to diagnose problems** 
+    Start by looking at the logs in your completed build/release. If they don't provide enough detail, you can make them more verbose:
+    * On the Variables tab, add system.debug and set it to true. 
+    * Queue the Build/Release
+
+- **Unable to connect to master or target server ‘xyz’. You must have a user with the same password in master or target server ‘xyz’.**
+    * Possible cause of failure include connection failures : 
+        * Check if any firewall rules are preventing the connection.
+        * Check if the supplied credentials have appropriate permission to either the master DB or the specific DB.
+        * Check if the SQL server name resolution succeeds.
+- **Connection timed out**
+    * Consider using /TargetTimeout: property for connections that times out
+    

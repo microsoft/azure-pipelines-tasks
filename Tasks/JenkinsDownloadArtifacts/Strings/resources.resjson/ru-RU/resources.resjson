@@ -24,7 +24,7 @@
   "loc.input.label.startJenkinsBuildNumber": "Откуда скачивать фиксации и рабочие элементы:",
   "loc.input.help.startJenkinsBuildNumber": "Необязательный начальный номер сборки для скачивания фиксаций и рабочих элементов. Если параметр указан, будут скачаны все фиксации и рабочие элементы между начальным номером сборки и номером сборки, указанным во входных данных для скачивания артефактов.",
   "loc.input.label.artifactDetailsFileNameSuffix": "Имя файла фиксаций и рабочих элементов",
-  "loc.input.help.artifactDetailsFileNameSuffix": "Необязательный суффикс имени файла для вложений фиксаций и рабочих элементов. Вложения будут созданы в файлах commits_{suffix}.json и  workitem_{suffix}.json. Если этот параметр не указан, вложения будут созданы в файлах commits.json и workitems.json",
+  "loc.input.help.artifactDetailsFileNameSuffix": "Необязательный суффикс имени файла для вложений фиксаций и рабочих элементов. Вложения будут созданы в файлах commits_{suffix}.json и workitem_{suffix}.json. Если этот параметр не указан, вложения будут созданы в файлах commits.json и workitems.json",
   "loc.input.label.propagatedArtifacts": "Артефакты распространяются в Azure",
   "loc.input.help.propagatedArtifacts": "Установите этот флажок, если артефакты Jenkins распространялись в Azure. Чтобы отправить артефакты Jenkins в Azure, используйте следующий [подключаемый модуль Jenkins](https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin)",
   "loc.input.label.artifactProvider": "Поставщик артефактов",

@@ -4,9 +4,8 @@
   "friendlyName": "Query Work Items",
   "description": "Executes a work item query and checks for the number of items returned.",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/work-item-query)",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870238)",
   "category": "Utility",
-  "preview": true,
   "visibility": [
      "Build",
      "Release"
@@ -18,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 7
+    "Patch": 9
   },
   "instanceNameFormat": "Query Work Items",
   "groups": [
@@ -35,7 +34,7 @@
       "label": "Query",
       "defaultValue": "",
       "required": "true",
-      "helpMarkDown": "Select a saved work query to execute."
+      "helpMarkDown": "Select a saved work item query to execute."
     },
     {
       "name": "maxThreshold",

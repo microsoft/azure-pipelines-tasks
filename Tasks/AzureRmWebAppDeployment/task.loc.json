@@ -9,14 +9,15 @@
     "Build",
     "Release"
   ],
+  "preview": "true",
   "runsOn": [
     "Agent"
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
-    "Minor": 3,
-    "Patch": 42
+    "Major": 4,
+    "Minor": 0,
+    "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -25,13 +26,13 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
     },
     {
       "name": "PostDeploymentAction",
@@ -43,12 +44,6 @@
       "name": "ApplicationAndConfigurationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
       "isExpanded": false
-    },
-    {
-      "name": "output",
-      "displayName": "ms-resource:loc.group.displayName.output",
-      "isExpanded": true,
-      "visibleRule": "WebAppKind != \"\""
     }
   ],
   "inputs": [
@@ -70,17 +65,15 @@
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.WebAppKind",
-      "defaultValue": "app",
+      "defaultValue": "webApp",
       "required": true,
       "options": {
-        "app": "Web App",
-        "applinux": "Linux Web App",
-        "functionapp": "Function App",
-        "api": "API App",
-        "mobileapp": "Mobile App"
-      },
-      "properties": {
-        "EditableOptions": "true"
+        "webApp": "Web App on Windows",
+        "webAppLinux": "Web App on Linux",
+        "webAppContainer": "Web App for Containers",
+        "functionApp": "Function App",
+        "apiApp": "API App",
+        "mobileApp": "Mobile App"
       },
       "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
     },
@@ -96,12 +89,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
     },
     {
-      "name": "DeployToSlotFlag",
+      "name": "DeployToSlotOrASEFlag",
+      "aliases": [
+        "deployToSlotOrASE"
+      ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.DeployToSlotFlag",
+      "label": "ms-resource:loc.input.label.DeployToSlotOrASEFlag",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotFlag",
+      "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotOrASEFlag",
       "visibleRule": "WebAppKind != \"\""
     },
     {
@@ -114,134 +110,19 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
-      "visibleRule": "DeployToSlotFlag = true"
+      "visibleRule": "DeployToSlotOrASEFlag = true"
     },
     {
       "name": "SlotName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.SlotName",
-      "defaultValue": "",
+      "defaultValue": "production",
       "required": true,
       "properties": {
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.SlotName",
-      "visibleRule": "DeployToSlotFlag = true"
-    },
-    {
-      "name": "ImageSource",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.ImageSource",
-      "defaultValue": "Registry",
-      "options": {
-        "Registry": "Container Registry",
-        "Builtin": "Built-in Image"
-      },
-      "required": false,
-      "properties": {
-        "EditableOptions": "false",
-        "PopulateDefaultValue": "true"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.ImageSource",
-      "visibleRule": "WebAppKind = applinux || WebAppKind = linux"
-    },
-    {
-      "name": "AzureContainerRegistry",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.AzureContainerRegistry",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistry",
-      "visibleRule": "ImageSource = AzureContainerRegistry"
-    },
-    {
-      "name": "AzureContainerRegistryLoginServer",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.AzureContainerRegistryLoginServer",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
-        "EditableOptions": "False",
-        "PopulateDefaultValue": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryLoginServer",
-      "visibleRule": "ImageSource = invalidimagesource"
-    },
-    {
-      "name": "AzureContainerRegistryImage",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.AzureContainerRegistryImage",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryImage",
-      "visibleRule": "ImageSource = AzureContainerRegistry"
-    },
-    {
-      "name": "AzureContainerRegistryTag",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.AzureContainerRegistryTag",
-      "defaultValue": "",
-      "required": false,
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.AzureContainerRegistryTag",
-      "visibleRule": "ImageSource = AzureContainerRegistry"
-    },
-    {
-      "name": "DockerRepositoryAccess",
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.DockerRepositoryAccess",
-      "required": true,
-      "options": {
-        "private": "Private",
-        "public": "Public"
-      },
-      "defaultValue": "public",
-      "helpMarkDown": "ms-resource:loc.input.help.DockerRepositoryAccess",
-      "visibleRule": "ImageSource = invalidImage"
-    },
-    {
-      "name": "RegistryConnectedServiceName",
-      "aliases": [
-        "dockerRegistryConnection"
-      ],
-      "type": "connectedService:dockerregistry",
-      "label": "ms-resource:loc.input.label.RegistryConnectedServiceName",
-      "required": true,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.RegistryConnectedServiceName",
-      "visibleRule": "DockerRepositoryAccess = private || ImageSource = PrivateRegistry"
-    },
-    {
-      "name": "PrivateRegistryImage",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.PrivateRegistryImage",
-      "defaultValue": "",
-      "required": true,
-      "visibleRule": "ImageSource = PrivateRegistry",
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.PrivateRegistryImage"
-    },
-    {
-      "name": "PrivateRegistryTag",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.PrivateRegistryTag",
-      "defaultValue": "",
-      "required": false,
-      "visibleRule": "ImageSource = PrivateRegistry",
-      "properties": {
-        "EditableOptions": "True"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.PrivateRegistryTag"
+      "visibleRule": "DeployToSlotOrASEFlag = true"
     },
     {
       "name": "DockerNamespace",
@@ -249,7 +130,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -258,7 +139,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -267,7 +148,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource  = Registry",
+      "visibleRule": "WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -276,29 +157,20 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
       "name": "Package",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.Package",
-      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
-      "required": true,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux &&  WebAppKind != \"\"",
-      "helpMarkDown": "ms-resource:loc.input.help.Package"
-    },
-    {
-      "name": "BuiltinLinuxPackage",
       "aliases": [
         "packageForLinux"
       ],
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.BuiltinLinuxPackage",
+      "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin",
-      "helpMarkDown": "ms-resource:loc.input.help.BuiltinLinuxPackage"
+      "visibleRule": "WebAppKind != webAppContainer && WebAppKind != \"\"",
+      "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
       "name": "RuntimeStack",
@@ -318,13 +190,13 @@
         "node|8.1": "Node.js 8.1",
         "php|5.6": "PHP 5.6",
         "php|7.0": "PHP 7.0",
-        "dotnetcore|1.0": ".NET Core 1.0",
-        "dotnetcore|1.1": ".NET Core 1.1",
-        "dotnetcore|2.0": ".NET Core 2.0",
+        "dotnetcore|1.0": ".Net Core 1.0",
+        "dotnetcore|1.1": ".Net Core 1.1",
+        "dotnetcore|2.0": ".Net Core 2.0",
         "ruby|2.3": "Ruby 2.3"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
-      "visibleRule": "WebAppKind != app && WebAppKind != functionapp && WebAppKind != api && WebAppKind != mobileapp && ImageSource = Builtin"
+      "visibleRule": "WebAppKind = webAppLinux"
     },
     {
       "name": "StartupCommand",
@@ -332,17 +204,8 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = applinux || WebAppKind = linux",
+      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
-    },
-    {
-      "name": "WebAppUri",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.WebAppUri",
-      "required": false,
-      "defaultValue": "",
-      "groupName": "output",
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppUri"
     },
     {
       "name": "ScriptType",
@@ -380,21 +243,11 @@
       "visibleRule": "ScriptType == File Path"
     },
     {
-      "name": "GenerateWebConfig",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.GenerateWebConfig",
-      "defaultValue": "false",
-      "required": false,
-      "groupName": "FileTransformsAndVariableSubstitution",
-      "helpMarkDown": "ms-resource:loc.input.help.GenerateWebConfig"
-    },
-    {
       "name": "WebConfigParameters",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.WebConfigParameters",
-      "required": true,
+      "required": false,
       "defaultValue": "",
-      "visibleRule": "GenerateWebConfig == true",
       "groupName": "FileTransformsAndVariableSubstitution",
       "helpMarkDown": "ms-resource:loc.input.help.WebConfigParameters",
       "properties": {
@@ -429,7 +282,7 @@
       "name": "TakeAppOfflineFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
@@ -467,7 +320,7 @@
       "name": "ExcludeFilesFromAppDataFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ExcludeFilesFromAppDataFlag",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
@@ -478,7 +331,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.AdditionalArguments",
       "required": false,
-      "defaultValue": "",
+      "defaultValue": "-retryAttempts:6 -retryInterval:10000",
       "groupName": "AdditionalDeploymentOptions",
       "visibleRule": "UseWebDeploy == true",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
@@ -487,7 +340,7 @@
       "name": "RenameFilesFlag",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.RenameFilesFlag",
-      "defaultValue": "false",
+      "defaultValue": "true",
       "required": false,
       "visibleRule": "UseWebDeploy == true",
       "groupName": "AdditionalDeploymentOptions",
@@ -527,11 +380,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.JSONFiles"
     }
   ],
+  "outputVariables": [
+    {
+      "name": "AppServiceApplicationUrl",
+      "description": "Application URL of the selected App Service."
+    }
+  ],
   "dataSourceBindings": [
     {
       "target": "WebAppName",
       "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppNamesByType",
+      "dataSourceName": "AzureRMWebAppNamesByAppType",
       "parameters": {
         "WebAppKind": "$(WebAppKind)"
       }
@@ -553,74 +412,6 @@
         "ResourceGroupName": "$(ResourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-    },
-    {
-      "target": "AzureContainerRegistry",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMContainerRegistries",
-      "resultTemplate": "{\"Value\":\"{{{ name }}}\",\"DisplayValue\":\"{{{ name }}}\"}"
-    },
-    {
-      "target": "AzureContainerRegistryLoginServer",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureContainerRegistryLoginServer",
-      "parameters": {
-        "AzureContainerRegistry": "$(AzureContainerRegistry)"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ #stringReplace '.azurecr.io' '' loginServer }}}\",\"DisplayValue\":\"{{{ #stringReplace '.azurecr.io' '' loginServer }}}\"}"
-    },
-    {
-      "target": "AzureContainerRegistryImage",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureContainerRegistryImages",
-      "parameters": {
-        "AzureContainerRegistryLoginServer": "$(AzureContainerRegistryLoginServer)"
-      }
-    },
-    {
-      "target": "AzureContainerRegistryTag",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureContainerRegistryTags",
-      "parameters": {
-        "AzureContainerRegistryLoginServer": "$(AzureContainerRegistryLoginServer)",
-        "AzureContainerRegistryImage": "$(AzureContainerRegistryImage)"
-      }
-    },
-    {
-      "target": "DockerNamespace",
-      "endpointId": "$(RegistryConnectedServiceName)",
-      "dataSourceName": "Namespaces"
-    },
-    {
-      "target": "DockerRepository",
-      "endpointId": "$(RegistryConnectedServiceName)",
-      "dataSourceName": "Repos",
-      "parameters": {
-        "namespaces": "$(DockerNamespace)"
-      }
-    },
-    {
-      "target": "DockerImageTag",
-      "endpointId": "$(RegistryConnectedServiceName)",
-      "dataSourceName": "Tags",
-      "parameters": {
-        "DockerNamespace": "$(DockerNamespace)",
-        "DockerRepository": "$(DockerRepository)"
-      }
-    },
-    {
-      "target": "PrivateRegistryImage",
-      "endpointId": "$(RegistryConnectedServiceName)",
-      "endpointUrl": "{{endpoint.url}}v2/_catalog",
-      "resultSelector": "jsonpath:$.repositories[*]",
-      "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
-    },
-    {
-      "target": "PrivateRegistryTag",
-      "endpointId": "$(RegistryConnectedServiceName)",
-      "endpointUrl": "{{endpoint.url}}v2/$(PrivateRegistryImage)/tags/list",
-      "resultSelector": "jsonpath:$.tags[*]",
-      "authorizationHeader": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -754,6 +545,8 @@
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
-    "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs"
+    "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
+    "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
+    "WarDeploymentRetry": "ms-resource:loc.messages.WarDeploymentRetry"
   }
 }

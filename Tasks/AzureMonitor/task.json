@@ -4,7 +4,7 @@
 	"friendlyName": "Query Azure Monitor Alerts",
 	"description": "Observe the configured Azure monitor rules for active alerts.",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-monitor)",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
 	"category": "Utility",
 	"visibility": [
 		"Build",
@@ -17,9 +17,8 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 6
+		"Patch": 9
 	},
-	"preview": "true",
 	"instanceNameFormat": "Query Azure Monitor alerts",
 	"groups": [],
 	"inputs": [{
@@ -67,7 +66,8 @@
 			"defaultValue": "",
 			"required": true,
 			"properties": {
-				"MultiSelectFlatList": "True"
+				"MultiSelectFlatList": "True",
+				"EditableOptions": "True"
 			},
 			"helpMarkDown": "List of Azure alert rules to monitor."
 		}

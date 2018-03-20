@@ -166,5 +166,6 @@
   "loc.messages.OverrideUseVerifiableInstrumentation": "Remplacement de la valeur du champ UseVerifiableInstrumentation par la valeur false dans le fichier runsettings.",
   "loc.messages.NoTestResultsDirectoryFound": "Le répertoire de résultats des tests est introuvable.",
   "loc.messages.OnlyWindowsOsSupported": "Cette tâche est prise en charge uniquement sur les agents Windows et ne peut pas être utilisée sur d'autres plateformes.",
-  "loc.messages.MultiConfigNotSupportedWithOnDemand": "Les exécutions à la demande ne sont pas prises en charge avec l'option Multiconfiguration. Utilisez l'option de parallélisme 'Aucun' ou 'Multiagent'."
+  "loc.messages.MultiConfigNotSupportedWithOnDemand": "Les exécutions à la demande ne sont pas prises en charge avec l'option Multiconfiguration. Utilisez l'option de parallélisme 'Aucun' ou 'Multiagent'.",
+  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
 }

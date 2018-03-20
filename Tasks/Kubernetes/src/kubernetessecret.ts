@@ -8,19 +8,32 @@ import ClusterConnection from "./clusterconnection";
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 
 export function run(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
-
+   
     if(tl.getBoolInput("forceUpdate") == true) {
         return deleteSecret(connection, secret).fin(() =>{
             return createSecret(connection, authenticationToken, secret);
         });
     } else {
         return createSecret(connection, authenticationToken, secret);
+    } 
+}
+
+function createSecret(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
+    var typeOfSecret = tl.getInput("secretType", true);
+    if (typeOfSecret === "dockerRegistry")
+    {
+        return createDockerRegistrySecret(connection, authenticationToken, secret);
+    }
+    else if (typeOfSecret === "generic")
+    {
+        return createGenericSecret(connection, secret);
     }
 }
 
 function deleteSecret(connection: ClusterConnection, secret: string): any {
     tl.debug(tl.loc('DeleteSecret', secret));
     var command = connection.createCommand();
+    command.arg(getNameSpace());
     command.arg("delete");
     command.arg("secret");
     command.arg(secret);
@@ -33,12 +46,13 @@ function deleteSecret(connection: ClusterConnection, secret: string): any {
     return connection.execCommand(command, executionOption);
 }
 
-function createSecret(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
+function createDockerRegistrySecret(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
 
     if(authenticationToken)
     {
         tl.debug(tl.loc('CreatingSecret', secret));
         var command = connection.createCommand();
+        command.arg(getNameSpace());
         command.arg("create")
         command.arg("secret");
         command.arg("docker-registry");
@@ -47,6 +61,7 @@ function createSecret(connection: ClusterConnection, authenticationToken: Authen
         command.arg("--docker-username="+ authenticationToken.getUsername());
         command.arg("--docker-password="+ authenticationToken.getPassword());
         command.arg("--docker-email="+ authenticationToken.getEmail());
+       
         return connection.execCommand(command);
     }
     else
@@ -55,4 +70,33 @@ function createSecret(connection: ClusterConnection, authenticationToken: Authen
         throw new Error(tl.loc("DockerRegistryConnectionNotSpecified"));
     }
 
+}
+
+function createGenericSecret(connection: ClusterConnection, secret: string): any {
+
+    tl.debug(tl.loc('CreatingSecret', secret));
+    var command = connection.createCommand();
+    command.arg(getNameSpace());
+    command.arg("create")
+    command.arg("secret");
+    command.arg("generic");
+    command.arg(secret);
+    var secretArguments = tl.getInput("secretArguments", false);
+    if (secretArguments)
+    {
+        command.line(secretArguments);
+    }
+
+    return connection.execCommand(command);
+}
+
+function getNameSpace(): string[] {
+    var args: string[] =[];   
+    var namespace = tl.getInput("namespace", false);	
+    if(namespace) {
+        args[0] = "-n";
+        args[1] = namespace;
+    }
+
+	return args;
 }

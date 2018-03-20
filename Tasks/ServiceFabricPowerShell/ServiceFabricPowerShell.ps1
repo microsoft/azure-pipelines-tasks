@@ -12,17 +12,21 @@ $scriptArguments = Get-VstsInput -Name ScriptArguments
 
 # Validate the script path and args do not contains new-lines. Otherwise, it will
 # break invoking the script via Invoke-Expression.
-if ($scriptType -eq "FilePath") {
-    if ($scriptPath -match '[\r\n]' -or [string]::IsNullOrWhitespace($scriptPath)) {
+if ($scriptType -eq "FilePath")
+{
+    if ($scriptPath -match '[\r\n]' -or [string]::IsNullOrWhitespace($scriptPath))
+    {
         throw (Get-VstsLocString -Key InvalidScriptPath0 -ArgumentList $scriptPath)
     }
 }
 
-if ($scriptArguments -match '[\r\n]') {
+if ($scriptArguments -match '[\r\n]')
+{
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
 
-try {
+try
+{
     # Initialize Service Fabric.
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
     $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
@@ -32,7 +36,8 @@ try {
     Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     # Trace the expression as it will be invoked.
-    If ($scriptType -eq "InlineScript") {
+    If ($scriptType -eq "InlineScript")
+    {
         $tempFileName = [guid]::NewGuid().ToString() + ".ps1";
         $scriptPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $tempFileName);
         ($scriptInline | Out-File $scriptPath)
@@ -45,10 +50,10 @@ try {
     # Remove all commands imported from ServiceFabricHelpers.
     Get-ChildItem -LiteralPath function: |
         Where-Object {
-            ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
-            ($_.Name -eq 'Invoke-VstsTaskScript') -or
-            ($_.ModuleName -eq 'ServiceFabricHelpers' )
-        } |
+        ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
+        ($_.Name -eq 'Invoke-VstsTaskScript') -or
+        ($_.ModuleName -eq 'ServiceFabricHelpers' )
+    } |
         Remove-Item
 
     # For compatibility with the legacy handler implementation, set the error action
@@ -66,24 +71,27 @@ try {
     #    the error action preference.
     ([scriptblock]::Create($scriptCommand)) |
         ForEach-Object {
-            Remove-Variable -Name scriptCommand
-            Write-Host "##[command]$_"
-            . $_ 2>&1
-        } |
+        Remove-Variable -Name scriptCommand
+        Write-Host "##[command]$_"
+        . $_ 2>&1
+    } |
         ForEach-Object {
-            # Put the object back into the pipeline. When doing this, the object needs
-            # to be wrapped in an array to prevent unraveling.
-            ,$_
+        # Put the object back into the pipeline. When doing this, the object needs
+        # to be wrapped in an array to prevent unraveling.
+        , $_
 
-            # Set the task result to failed if the object is an error record.
-            if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                "##vso[task.complete result=Failed]"
-            }
+        # Set the task result to failed if the object is an error record.
+        if ($_ -is [System.Management.Automation.ErrorRecord])
+        {
+            "##vso[task.complete result=Failed]"
         }
+    }
 }
-Finally {
-    If ($scriptType -eq "InlineScript" -and (Test-Path $scriptPath) -eq $true ) {
-        Remove-Item $scriptPath -ErrorAction 'SilentlyContinue'
+Finally
+{
+    If ($scriptType -eq "InlineScript" -and (Test-Path -LiteralPath $scriptPath) -eq $true )
+    {
+        Remove-Item -LiteralPath $scriptPath -ErrorAction 'SilentlyContinue'
     }
 
     Remove-Variable -Name scriptPath

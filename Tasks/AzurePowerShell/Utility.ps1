@@ -17,7 +17,8 @@ function Get-SavedModulePath {
 
 function Update-PSModulePathForHostedAgent {
     [CmdletBinding()]
-    param([string] $targetAzurePs)
+    param([string] $targetAzurePs,
+          [string] $authScheme)
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         if ($targetAzurePs) {
@@ -28,10 +29,22 @@ function Update-PSModulePathForHostedAgent {
             $hostedAgentAzureRmModulePath = Get-LatestModule -patternToMatch "^azurerm_[0-9]+\.[0-9]+\.[0-9]+$" -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$false
             $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$true
         }
-        $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
-        $env:PSModulePath = $env:PSModulePath.TrimStart(';')
-        $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
-        $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+
+        if($authScheme -eq 'ServicePrincipal' -or $authScheme -eq '')
+        {
+            $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
+            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+            $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
+            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+        }
+        else
+        {
+            $env:PSModulePath = $hostedAgentAzureRmModulePath + ";" + $env:PSModulePath
+            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+            $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
+            $env:PSModulePath = $env:PSModulePath.TrimStart(';')
+        }
+       
     } finally {
         Write-Verbose "The updated value of the PSModulePath is: $($env:PSModulePath)"
         Trace-VstsLeavingInvocation $MyInvocation

@@ -166,5 +166,6 @@
   "loc.messages.OverrideUseVerifiableInstrumentation": "Переопределение поля UseVerifiableInstrumentation значением false в файле runsettings.",
   "loc.messages.NoTestResultsDirectoryFound": "Каталог результатов теста не найден.",
   "loc.messages.OnlyWindowsOsSupported": "Эта задача поддерживается только агентами для Windows и не может использоваться на других платформах.",
-  "loc.messages.MultiConfigNotSupportedWithOnDemand": "Запуск по требованию не поддерживается для параметра Multi-Configuration. Используйте вариант параллелизма \"Нет\" или \"Несколько агентов\"."
+  "loc.messages.MultiConfigNotSupportedWithOnDemand": "Запуск по требованию не поддерживается для параметра Multi-Configuration. Используйте вариант параллелизма \"Нет\" или \"Несколько агентов\".",
+  "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s"
 }
