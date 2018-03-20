@@ -187,8 +187,8 @@ if($testCloudResults)
     $mdReportFile = Join-Path $testDir "xamarintestcloud_$buildId.md"
     foreach($result in $testCloudResults)
     {
-       Write-Output $result | Out-File $mdReportFile -Append
-       Write-Output [Environment]::NewLine | Out-File $mdReportFile -Append
+       Write-Output "[$result]($result)" | Out-File $mdReportFile -Append
+       Write-Output "" | Out-File $mdReportFile -Append
     }
     Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Xamarin Test Cloud Results;]$mdReportFile"
 }
