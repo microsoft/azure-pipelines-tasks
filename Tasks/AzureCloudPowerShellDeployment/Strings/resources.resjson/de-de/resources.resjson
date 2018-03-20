@@ -24,6 +24,8 @@
   "loc.input.help.AppendDateTimeToLabel": "Fügt das aktuelle Datum und die aktuelle Uhrzeit an die Bereitstellungsbezeichnung an",
   "loc.input.label.AllowUpgrade": "Upgrade zulassen",
   "loc.input.help.AllowUpgrade": "Auswahl ermöglicht ein Upgrade auf die Microsoft Azure-Bereitstellung",
+  "loc.input.label.SimultaneousUpgrade": "Simultaneous upgrade",
+  "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Upgrade erzwingen",
   "loc.input.help.ForceUpgrade": "Auswahl legt ein erzwungenes Upgrade fest, das zum Verlust lokaler Daten führen kann.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Schlüssel für Diagnosespeicherkonto",
