@@ -122,6 +122,15 @@
             "required": true
         },
         {
+            "name": "SimultaneousUpgrade",
+            "type": "boolean",
+            "label": "Simultaneous upgrade",
+            "defaultValue": "false",
+            "visibleRule": "AllowUpgrade == true",
+            "helpMarkDown": "Updates all instances at once. Your cloud service will be unavailable during update.",
+            "required": false
+        },
+        {
             "name": "ForceUpgrade",
             "type": "boolean",
             "label": "Force upgrade",
