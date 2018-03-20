@@ -4,6 +4,8 @@
     "del": "2.2.0",
     "js-base64": "2.4.3",
     "js-yaml": "3.6.1",
-    "vsts-task-tool-lib": "0.4.0"
+    "securefiles-common": "file:../../_build/Tasks/Common/securefiles-common-1.0.0.tgz",
+    "vso-node-api": "6.1.2-preview",
+    "vsts-task-lib": "2.1.0"
   }
 }

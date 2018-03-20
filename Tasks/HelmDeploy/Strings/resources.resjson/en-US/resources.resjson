@@ -6,6 +6,7 @@
   "loc.group.displayName.cluster": "Kubernetes Cluster",
   "loc.group.displayName.commands": "Commands",
   "loc.group.displayName.advanced": "Advanced",
+  "loc.group.displayName.tls": "TLS",
   "loc.input.label.connectionType": "Connection Type",
   "loc.input.help.connectionType": "Select a Connection Type.",
   "loc.input.label.azureSubscriptionEndpoint": "Azure subscription",
@@ -38,6 +39,12 @@
   "loc.input.help.arguments": "Command arguments.",
   "loc.input.label.tillernamespace": "Tiller namespace",
   "loc.input.help.tillernamespace": "Specify K8 namespace of tiller.",
+  "loc.input.label.cacert": "CA certificate",
+  "loc.input.help.cacert": "CA cert used to issue certificate for tiller clients and servers.",
+  "loc.input.label.certificate": "Certificate",
+  "loc.input.help.certificate": "Certificate",
+  "loc.input.label.key": "Key",
+  "loc.input.help.key": "Certificate Key",
   "loc.messages.HelmNotFound": "Helm not installed on the machine.",
   "loc.messages.KubernetesNotFound": "Kubernetes not installed on the machine.",
   "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
@@ -47,5 +54,11 @@
   "loc.messages.ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
   "loc.messages.ClusterNotFound": "%s cluster does not exists",
   "loc.messages.FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
-  "loc.messages.RetryingRequest": "Retrying request after %s seconds."
+  "loc.messages.RetryingRequest": "Retrying request after %s seconds.",
+  "loc.messages.CertificateNotFound": "%s certificate not found at location %s",
+  "loc.messages.CertificateKeyNotFound": "%s certificate key not found at location %s",
+  "loc.messages.CA": "CA",
+  "loc.messages.Tiller": "Tiller",
+  "loc.messages.Client": "Client",
+  "loc.messages.NotAllTlsInputsProvided": "All the inputs to enable tls connection is not provided."
 }

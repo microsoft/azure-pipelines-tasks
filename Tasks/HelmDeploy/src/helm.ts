@@ -11,6 +11,7 @@ import kubernetescli from "./kubernetescli"
 import * as helmutil from "./utils"
 import fs = require('fs');
 import * as commonCommandOptions from "./commoncommandoption"
+import * as tls from "./tls"
 
 tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 
@@ -66,7 +67,7 @@ async function run() {
     helmCli.login();
 
     try {
-        runHelm(helmCli)
+        await runHelm(helmCli)
     } catch(err) {
         // not throw error so that we can logout from helm and kubernetes
         tl.setResult(tl.TaskResult.Failed, err.message);
@@ -78,7 +79,7 @@ async function run() {
     }
 }
 
-function runHelm(helmCli: helmcli) {
+async function runHelm(helmCli: helmcli) {
 
     var command = tl.getInput("command", true);
     
@@ -94,6 +95,15 @@ function runHelm(helmCli: helmcli) {
 
     //set command
     helmCli.setCommand(command);
+
+    // enable tls
+    if(tls.isTlsEnabled()) {
+        var cacertPathPath = await tls.downloadSecuredFile(tl.getInput("cacert", true));
+        var certificatePath = await tls.downloadSecuredFile(tl.getInput("certificate", true));
+        var keyPath = await tls.downloadSecuredFile(tl.getInput("key", true));
+
+        tls.addArguments(helmCli, cacertPathPath, certificatePath, keyPath);
+    }
 
     // add arguments
     commonCommandOptions.addArguments(helmCli);
