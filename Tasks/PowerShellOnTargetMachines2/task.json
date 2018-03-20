@@ -27,6 +27,11 @@
             "isExpanded": false
         },
         {
+            "name": "SessionOptions",
+            "displayName": "PSSession options",
+            "isExpanded": true
+        },
+        {
             "name": "ErrorHandlingOptions",
             "displayName": "Error handling options",
             "isExpanded": true
@@ -58,27 +63,6 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it."
-        },
-        {
-            "name": "Protocol",
-            "type": "radio",
-            "label": "Protocol",
-            "required": false,
-            "defaultValue": "Https",
-            "options": {
-                "Http": "HTTP",
-                "Https": "HTTPS"
-            },
-            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS."
-        },
-        {
-            "name": "TestCertificate",
-            "type": "boolean",
-            "label": "Test Certificate",
-            "defaultValue": "true",
-            "visibleRule": "Protocol = Https",
-            "required": false,
-            "helpMarkDown": "Select the option to skip validating the authenticity of the machine's certificate by a trusted certification authority. The parameter is required for the WinRM HTTPS protocol."
         },
         {
             "name": "ScriptType",
@@ -129,6 +113,28 @@
             },
             "helpMarkDown": "",
             "groupName": "ScriptOptions"
+        },
+        {
+            "name": "Protocol",
+            "type": "radio",
+            "label": "Protocol",
+            "required": false,
+            "defaultValue": "Https",
+            "options": {
+                "Http": "HTTP",
+                "Https": "HTTPS"
+            },
+            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
+            "groupName": "SessionOptions"
+        },
+        {
+            "name": "NewPsSessionOptionArguments",
+            "type": "multiLine",
+            "label": "New-PSSessionOption arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Arguments to be used for creating a New-PSSessionOption object. To be used with New-PSSession",
+            "groupName": "SessionOptions"
         },
         {
             "name": "ErrorActionPreference",
