@@ -5,6 +5,6 @@
   "loc.instanceNameFormat": "Download secure file",
   "loc.input.label.secureFile": "Secure File",
   "loc.input.help.secureFile": "Select the secure file to download to a temporary location on the agent. The file will be cleaned up after the build or release.",
-  "loc.input.label.secureFilePath": "Secure File Path",
-  "loc.input.help.secureFilePath": "Optionally specify a custom location to which the secure file will be downloaded. If empty, the agent's temp directory will be used. The temp directory path is available in the environment variable Agent.TempDirectory."
+  "loc.input.label.secureFileDownloadPath": "Download Location",
+  "loc.input.help.secureFileDownloadPath": "Optionally specify a custom location to which the secure file will be downloaded. If empty, the agent's temp directory will be used. The temp directory path is available in the environment variable Agent.TempDirectory."
 }

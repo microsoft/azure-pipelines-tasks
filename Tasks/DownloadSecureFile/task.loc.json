@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 132,
+    "Minor": 133,
     "Patch": 0
   },
   "runsOn": [
@@ -32,12 +32,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.secureFile"
     },
     {
-      "name": "secureFilePath",
-      "type": "secureFile",
-      "label": "ms-resource:loc.input.label.secureFilePath",
+      "name": "secureFileDownloadPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.secureFileDownloadPath",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.secureFilePath"
+      "helpMarkDown": "ms-resource:loc.input.help.secureFileDownloadPath"
     }
   ],
   "outputVariables": [

@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 132,
+        "Minor": 133,
         "Patch": 0
     },
     "runsOn": [
@@ -33,9 +33,9 @@
             "helpMarkDown": "Select the secure file to download to a temporary location on the agent. The file will be cleaned up after the build or release."
         },
         {
-            "name": "secureFilePath",
-            "type": "secureFile",
-            "label": "Secure File Path",
+            "name": "secureFileDownloadPath",
+            "type": "filePath",
+            "label": "Download Location",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Optionally specify a custom location to which the secure file will be downloaded. If empty, the agent's temp directory will be used. The temp directory path is available in the environment variable Agent.TempDirectory."
