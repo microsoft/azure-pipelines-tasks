@@ -65,7 +65,7 @@
             "stdout": "extracted mockedBuildSources/subdir/foo.jar",
             "stderr": ""
         },
-        "/usr/bin/7z x -ooutput mockedBuildSources/subdir/subdir/foo.7z": {
+        "/usr/bin/7z x -ooutput mockedBuildSources/subdir/subdir/foo.7z -aoa": {
             "code": 0,
             "stdout": "extracted mockedBuildSources/subdir/subdir/foo.7z",
             "stderr": ""
