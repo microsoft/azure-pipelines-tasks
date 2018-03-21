@@ -83,8 +83,10 @@ function runHelm(helmCli: helmcli) {
     var command = tl.getInput("command", true);
     
     var helmCommandMap ={
-        "init":"./helmcommands/helminit",
-        "install":"./helmcommands/helminstall"
+        "init": "./helmcommands/helminit",
+        "install": "./helmcommands/helminstall",
+        "package": "./helmcommands/helmpackage",
+        "upgrade": "./helmcommands/helmupgrade"
     }    
 
     var commandImplementation = require("./helmcommands/uinotimplementedcommands");

@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "preview": "true",
@@ -26,7 +26,7 @@
         {
             "name": "commands",
             "displayName": "Commands",
-            "isExpanded": false
+            "isExpanded": true
         },
         {
             "name": "advanced",
@@ -101,6 +101,7 @@
                 "init": "init",
                 "install": "install",
                 "ls": "ls",
+                "package": "package",
                 "rollback": "rollback",
                 "upgrade": "upgrade"
             },
@@ -111,21 +112,49 @@
             }
         },
         {
-            "name": "chart",
-            "label": "Chart",
+            "name": "chartType",
+            "type": "pickList",
+            "label": "Chart Type",
+            "required": true,
+            "options": {
+                "Name" : "Name",
+                "FilePath": "File Path"
+            },
+            "helpMarkDown": "Select how you want to enter chart info. You can either provide name of the chart or folder/file path to the chart.",
+            "groupName": "commands",
+            "visibleRule": "command == install || command == upgrade",
+            "defaultValue": "Name",
+            "properties": {
+                "EditableOptions": "False"
+            }
+        },
+        {
+            "name": "chartName",
+            "label": "Chart Name",
             "type": "string",
-            "helpMarkDown": "Name of the chart to install.",
+            "helpMarkDown": "Name of the chart to install or upgrade.",
             "defaultValue": "",
-            "visibleRule": "command = install",
+            "visibleRule": "chartType == Name",
+            "required":  "true",
+            "groupName": "commands"
+        },
+        {
+            "name": "chartPath",
+            "label": "Chart Path",
+            "type": "filePath",
+            "helpMarkDown": "Path to the chart to install or upgrade.",
+            "defaultValue": "",
+            "visibleRule": "chartType == FilePath || command == package",
+            "required":  "true",
             "groupName": "commands"
         },
         {
             "name": "version",
             "label": "Version",
             "type": "string",
-            "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed.",
+            "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
             "defaultValue": "",
-            "visibleRule": "command = install",
+            "visibleRule": "command == package",
             "groupName": "commands"
         },
         {
@@ -134,7 +163,7 @@
             "type": "string",
             "helpMarkDown": "Release name. If unspecified, it will autogenerate one for you.",
             "defaultValue": "",
-            "visibleRule": "command = install",
+            "visibleRule": "command == install || command == upgrade",
             "groupName": "commands"
         },
         {
@@ -143,8 +172,26 @@
             "type": "string",
             "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).",
             "defaultValue": "",
-            "visibleRule": "command = install",
+            "visibleRule": "command == install || command == upgrade",
             "groupName": "commands"
+        },
+        {
+            "name": "valueFile",
+            "label": "Value File",
+            "type": "filePath",
+            "defaultValue": "",
+            "helpMarkDown": "Specify values in a YAML file or a URL.",
+            "visibleRule": "command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "destination",
+            "label":"Destination",
+            "type": "string",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)",
+            "helpMarkDown": "Specify values in a YAML file or a URL.",
+            "visibleRule": "command == package",
+            "groupName": "commands"   
         },
         {
             "name": "canaryimage",
@@ -152,7 +199,7 @@
             "label": "Use canary image version.",
             "defaultValue": "false",
             "helpMarkDown": "Use the canary Tiller image. Will install the latest pre-release version of Tiller.",
-            "visibleRule": "command = init",
+            "visibleRule": "command == init",
             "groupName": "commands"
         },
         {
@@ -161,7 +208,7 @@
             "label": "Upgrade Tiller",
             "defaultValue": "true",
             "helpMarkDown": "Upgrade if Tiller is already installed.",
-            "visibleRule": "command = init",
+            "visibleRule": "command == init",
             "groupName": "commands"
         },
         {
@@ -169,8 +216,53 @@
             "type": "boolean",
             "label": "Update Dependency",
             "defaultValue": "false",
-            "helpMarkDown": "Run helm dependency update before installing the chart.",
-            "visibleRule": "command = install",
+            "helpMarkDown": "Run helm dependency update before installing the chart. Update dependencies from 'requirements.yaml' to dir 'charts/' before packaging",
+            "visibleRule": "command == install || command == package",
+            "groupName": "commands"
+        },
+        {
+            "name": "save",
+            "type": "boolean",
+            "label": "Save",
+            "defaultValue": "true",
+            "helpMarkDown": "Save packaged chart to local chart repository (default true)​",
+            "visibleRule": "command == package",
+            "groupName": "commands"
+        },
+        {
+            "name": "install",
+            "type": "boolean",
+            "label": "Install if release not present.",
+            "defaultValue": "true",
+            "helpMarkDown": "If a release by this name doesn't already exist, run an install​.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "recreate",
+            "type": "boolean",
+            "label": "Recreate Pods.",
+            "defaultValue": "false",
+            "helpMarkDown": "Performs pods restart for the resource if applicable.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "resetValues",
+            "type": "boolean",
+            "label": "Reset Values.",
+            "defaultValue": "false",
+            "helpMarkDown": "Reset the values to the ones built into the chart.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "force",
+            "type": "boolean",
+            "label": "Force",
+            "defaultValue": "false",
+            "helpMarkDown": "Force resource update through delete/recreate if needed​",
+            "visibleRule": "command == upgrade",
             "groupName": "commands"
         },
         {
@@ -178,8 +270,8 @@
             "type": "boolean",
             "label": "Wait",
             "defaultValue": "true",
-            "helpMarkDown": "Block till command execution completes and Tiller is ready.",
-            "visibleRule": "command = init || command = install",
+            "helpMarkDown": "Block till command execution completes.",
+            "visibleRule": "command == init || command == install || command == upgrade",
             "groupName": "commands"
         },
         {
@@ -226,6 +318,9 @@
         "ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
         "ClusterNotFound": "%s cluster does not exists",
         "FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
-        "RetryingRequest": "Retrying request after %s seconds."
+        "RetryingRequest": "Retrying request after %s seconds.",
+        "PatternNotFoundInFilePath": "Pattern not found in file path %s.",
+        "CantResolvePatternInPath": "Can not resolve pattern in file path %s.",
+        "PatternFoundInPath": "Pattern found in file path %s."
     }
 }
