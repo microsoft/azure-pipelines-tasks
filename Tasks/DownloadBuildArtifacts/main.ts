@@ -138,6 +138,8 @@ async function main(): Promise<void> {
                 else {
                     buildId = parseInt(buildIdInput);
                 }
+
+                console.log(tl.loc("BuildIDFound", buildId));
             }
         }
 
