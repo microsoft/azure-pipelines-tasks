@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 132,
+    "Minor": 133,
     "Patch": 0
   },
   "groups": [
@@ -78,7 +78,7 @@
         "EditableOptions": "True",
         "DisableManageLink": "True"
       },
-      "helpMarkDown": "The build from which to download the artifacts"
+      "helpMarkDown": "The build from which to download the artifacts. Type 'latest' to get the last successful build."
     },
     {
       "name": "downloadType",
@@ -87,8 +87,8 @@
       "defaultValue": "single",
       "required": true,
       "options": {
-          "single": "Specific artifact",
-          "specific": "Specific files"
+        "single": "Specific artifact",
+        "specific": "Specific files"
       },
       "helpMarkDown": "Download a specific artifact or specific files from the build."
     },

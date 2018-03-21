@@ -5,6 +5,7 @@ var fs = require('fs');
 import * as tl from 'vsts-task-lib/task';
 import { IBuildApi } from './vso-node-api/BuildApi';
 import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
+import { BuildResult } from './vso-node-api/interfaces/BuildInterfaces';
 import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
 
 import * as models from 'artifact-engine/Models';
@@ -126,7 +127,17 @@ async function main(): Promise<void> {
                 // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
                 definitionId = definitionIdSpecified;
-                buildId = parseInt(tl.getInput("buildId", true));
+                var buildIdInput: string = tl.getInput("buildId", true);
+                if (buildIdInput == "latest") {
+                    var buildIds = await executeWithRetries("getBuilds", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], undefined, undefined, undefined, undefined, undefined, undefined, undefined, BuildResult.Succeeded, undefined, undefined, 1, undefined, 1), 4).catch((reason) => {
+                        reject(reason);
+                        return;
+                    });
+                    buildId = buildIds[0];
+                }
+                else {
+                    buildId = parseInt(buildIdInput);
+                }
             }
         }
 
