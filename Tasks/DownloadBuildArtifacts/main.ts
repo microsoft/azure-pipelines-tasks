@@ -128,7 +128,7 @@ async function main(): Promise<void> {
                 projectId = tl.getInput("project", true);
                 definitionId = definitionIdSpecified;
                 var buildIdInput: string = tl.getInput("buildId", true);
-                if (buildIdInput == "latest") {
+                if (buildIdInput.toUpperCase() == "LATEST") {
                     var buildIds = await executeWithRetries("getBuilds", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], undefined, undefined, undefined, undefined, undefined, undefined, undefined, BuildResult.Succeeded, undefined, undefined, 1, undefined, 1), 4).catch((reason) => {
                         reject(reason);
                         return;
