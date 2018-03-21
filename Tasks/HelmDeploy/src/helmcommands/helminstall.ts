@@ -34,7 +34,7 @@ export function addArguments(helmCli: helmcli) : void {
 
     if(valueFile && valueFile != rootFolder) {
         helmCli.addArgument("--values");
-        helmCli.addArgument("\"" +valueFile + "\"");
+        helmCli.addArgument("\"" + helmutil.resolvePath(valueFile)+ "\"");
     }
 
     if(overrideValues) {
