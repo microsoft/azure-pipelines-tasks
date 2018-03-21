@@ -7,7 +7,7 @@ var archiveFilePatterns: string[] = tl.getDelimitedInput('archiveFilePatterns', 
 var destinationFolder: string = path.normalize(tl.getPathInput('destinationFolder', true, false).trim());
 var cleanDestinationFolder: boolean = tl.getBoolInput('cleanDestinationFolder', false);
 
-var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
+var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory'); 
 tl.debug('repoRoot: ' + repoRoot);
 
 var win = tl.osType().match(/^Win/);
@@ -200,6 +200,7 @@ function sevenZipExtract(file, destinationFolder) {
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
+    sevenZip.arg('-aoa'); // Overwrite All existing files without prompt.
     return handleExecResult(sevenZip.execSync(), file);
 }
 
