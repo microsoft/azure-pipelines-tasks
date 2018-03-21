@@ -1,13 +1,13 @@
 $ExecutePsScript = {
     Param(
         [string] $scriptPath,
-        [string] $scriptArguments,
+        [string] $scriptArguments = "",
         [string] $inlineScript,
         [switch] $inline,
-        [string] $workingDirectory,
-        [string] $_errorActionPreference,
+        [string] $workingDirectory = "",
+        [string] $_errorActionPreference = "Continue",
         [switch] $ignoreLASTEXITCODE,
-        [switch] $failOnStdErr
+        [switch] $failOnStdErr = $true
     )
 
     function Invoke-Tool {
@@ -18,11 +18,27 @@ $ExecutePsScript = {
         Invoke-Expression "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim())"
     }
 
+    function Remove-TemporaryFile {
+        Param(
+            [string] $filePath
+        )
+        if(![string]::IsNullOrEmpty($filePath) -and ((Test-Path -LiteralPath $filePath -PathType Leaf) -eq $true)) {
+            Remove-Item -Path $filePath -Force -ErrorAction "SilentlyContinue"
+        }
+    }
+
     try {
 
+        $result = @{
+            "VstsTaskName" = $true;
+            "Status" = "Failed";
+            "Message" = "PS_TM_ExitCode";
+            "ExitCode" = 0;
+        }
+
         if( $inline -eq $true ) {
-            $tempScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
-            $scriptPath = $tempScriptPath
+            $inlineScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
+            $scriptPath = $inlineScriptPath
             $scriptArguments = ""
             ($inlineScript | Out-File $scriptPath)
         }
@@ -37,12 +53,14 @@ $ExecutePsScript = {
 
         $script = [scriptblock]::Create("
             try {
-                pushd .
+                Push-Location .
                 if(![string]::IsNullOrEmpty(`"$workingDirectory`")) {
                     cd '$($workingDirectory.Replace("'","''"))'
                 }
                 `$ErrorActionPreference = `"$_errorActionPreference`"
-                & '$($_scriptPath.Replace("'","''"))' $($_scriptArguments.Trim())
+                & '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
+            } finally {
+                Pop-Location
                 if(`"$ignoreLASTEXITCODE`" -eq `$false) {
                     if(!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {
                         Write-Output `"LASTEXITCODE is not set`"
@@ -51,26 +69,32 @@ $ExecutePsScript = {
                         exit `$LASTEXITCODE
                     }
                 }
-            } finally {
-                popd
             }
         ");
 
+        $tempScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
+        $script | Out-File $tempScriptPath
+
         $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-        $powershellArguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command { $script }"
-        
+        $powershellArguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($tempScriptPath.Replace("'", "''"))'`""
+
         Invoke-Tool -toolPath $powershellPath -toolArgs $powershellArguments 2>&1 |
             ForEach-Object {
-                ,$_
+                $_
                 if($_ -is [System.Management.Automation.ErrorRecord] -and $failOnStdErr -eq $true) {
                     "##vso[task.complete result=Failed]"
                 }
             }
-       
+        $result.Status = "Passed";            
+    } catch {
+        $result.Status = "Failed";
+        $result.Message = "$($_.Exception.Message)"
+        throw
     } finally {
-        if((Test-Path -LiteralPath $tempScriptPath -PathType Leaf) -eq $true) {
-            Remove-Item -Path $tempScriptPath -Force
-        }
+        Remove-TemporaryFile -filePath $inlineScriptPath
+        Remove-TemporaryFile -filePath $tempScriptPath
+        $result.ExitCode = $LASTEXITCODE
     }
-}
 
+    return $result
+}

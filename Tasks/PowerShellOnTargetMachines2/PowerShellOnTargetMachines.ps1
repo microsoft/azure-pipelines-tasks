@@ -3,6 +3,7 @@ try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
     
     . "$PSScriptRoot\Utility.ps1"
+    . "$PSScriptRoot\SessionHelper.ps1"
 
     # Get all inputs for the task
     $input_Machines = Get-VstsInput -Name "Machines" -Require -ErrorAction "Stop"
@@ -31,6 +32,8 @@ try {
     $credential = Get-TargetMachineCredential -userName $input_UserName -securePassword $input_UserPassword -variableNames "input_UserName","input_UserPassword"
 
     $PSSessionOption = Get-NewPSSessionOption -args $input_NewPsSessionOptionArguments
+
+    Create-PSSessionToRemoteMachines
 
     
     
