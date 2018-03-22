@@ -2,11 +2,11 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://testselector.blob.core.windows.net/testselector/4808807/TestSelector.zip",
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/Hydra/TestSelector.zip",
                 "dest": "./"
             },
             {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/5312315/TestExecution.zip",
+                "url": "https://testexecution.blob.core.windows.net/testexecution/hydra/TestAgent.zip",
                 "dest": "./Modules"
             }
         ],
