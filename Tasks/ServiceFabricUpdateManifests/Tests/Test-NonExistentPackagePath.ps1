@@ -17,10 +17,10 @@ Microsoft.PowerShell.Core\Import-Module "$taskPath\Update-PackageVersion.psm1"
 Microsoft.PowerShell.Core\Import-Module "$taskPath\Test-XmlEqual.psm1"
 
 # Arrange.
-Register-Mock Test-Path { $true } -- "$PSScriptRoot\data\CurrentPkg"
-Register-Mock Test-Path { $true } -- "$PSScriptRoot\data\PreviousPkg"
-Register-Mock Test-Path { $CurrentCodePackageExists } -- "$PSScriptRoot\data\CurrentPkg\Code"
-Register-Mock Test-Path { $PreviousCodePackageExists } -- "$PSScriptRoot\data\PreviousPkg\Code"
+Register-Mock Test-Path { $true } -- -LiteralPath "$PSScriptRoot\data\CurrentPkg"
+Register-Mock Test-Path { $true } -- -LiteralPath "$PSScriptRoot\data\PreviousPkg"
+Register-Mock Test-Path { $CurrentCodePackageExists } -- -LiteralPath "$PSScriptRoot\data\CurrentPkg\Code"
+Register-Mock Test-Path { $PreviousCodePackageExists } -- -LiteralPath "$PSScriptRoot\data\PreviousPkg\Code"
 Register-Mock Find-FileChanges { $false } -- "$PSScriptRoot\data\CurrentPkg\Config" "$PSScriptRoot\data\PreviousPkg\Config" "  " -LogAllChanges:$false
 Register-Mock Find-FileChanges { $false } -- "$PSScriptRoot\data\CurrentPkg\Data" "$PSScriptRoot\data\PreviousPkg\Data" "  " -LogAllChanges:$false
 

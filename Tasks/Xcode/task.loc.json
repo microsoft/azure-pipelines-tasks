@@ -10,8 +10,8 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 4,
-    "Minor": 130,
+    "Major": 5,
+    "Minor": 133,
     "Patch": 0
   },
   "demands": [
@@ -307,14 +307,6 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
-      "groupName": "advanced"
-    },
-    {
-      "name": "outputPattern",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.outputPattern",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.outputPattern",
       "groupName": "advanced"
     },
     {

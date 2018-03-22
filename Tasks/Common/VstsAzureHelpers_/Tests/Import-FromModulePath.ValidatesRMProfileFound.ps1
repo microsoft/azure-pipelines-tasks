@@ -14,7 +14,8 @@ $rmModule = @{ Name = 'AzureRM' ;
                     @{
                         Name = "AzureRM.Compute"
                     }
-                )
+                );
+               RequiredModules = @()
 }
 Register-Mock Get-Module { $rmModule } -- -Name $rmModule.Name -ListAvailable
 Register-Mock Get-Module { $rmModule } -- -Name $rmModule.Name

@@ -10,8 +10,8 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 4,
-        "Minor": 130,
+        "Major": 5,
+        "Minor": 133,
         "Patch": 0
     },
     "demands": [
@@ -305,14 +305,6 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository will be used.",
-            "groupName": "advanced"
-        },
-        {
-            "name": "outputPattern",
-            "type": "string",
-            "label": "Output directory",
-            "required": false,
-            "helpMarkDown": "(Optional) Enter a path relative to the working directory where build output (binaries) will be placed. Examples: `output/$(SDK)/$(Configuration)` or `output/$(TestSDK)/$(TestConfiguration)`. Archive and export paths are configured separately.",
             "groupName": "advanced"
         },
         {

@@ -71,9 +71,9 @@
       }
     },
     "esprima": {
-      "version": "2.7.3",
-      "resolved": "https://registry.npmjs.org/esprima/-/esprima-2.7.3.tgz",
-      "integrity": "sha1-luO3DVd59q1JzQMmc9HDEnZ7pYE="
+      "version": "2.7.1",
+      "resolved": "https://registry.npmjs.org/esprima/-/esprima-2.7.1.tgz",
+      "integrity": "sha1-KrfRVJ7dBtFNaabBoXVKygLpZX4="
     },
     "fs.realpath": {
       "version": "1.0.0",
@@ -146,7 +146,7 @@
       "integrity": "sha1-bl/mfYsgXOTSL60Ft3geja3MSzA=",
       "requires": {
         "argparse": "1.0.9",
-        "esprima": "2.7.3"
+        "esprima": "2.7.1"
       }
     },
     "minimatch": {

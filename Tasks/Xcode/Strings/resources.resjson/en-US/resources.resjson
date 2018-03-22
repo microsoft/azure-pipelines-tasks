@@ -59,8 +59,6 @@
   "loc.input.help.args": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
   "loc.input.label.cwd": "Working directory",
   "loc.input.help.cwd": "(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository will be used.",
-  "loc.input.label.outputPattern": "Output directory",
-  "loc.input.help.outputPattern": "(Optional) Enter a path relative to the working directory where build output (binaries) will be placed. Examples: `output/$(SDK)/$(Configuration)` or `output/$(TestSDK)/$(TestConfiguration)`. Archive and export paths are configured separately.",
   "loc.input.label.useXcpretty": "Use xcpretty",
   "loc.input.help.useXcpretty": "Specify whether to use xcpretty to format xcodebuild output and generate JUnit test results. Enabling this requires xcpretty to be installed on the agent machine. It is preinstalled on VSTS hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
   "loc.input.label.publishJUnitResults": "Publish test results to VSTS/TFS",

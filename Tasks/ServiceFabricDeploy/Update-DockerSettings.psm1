@@ -54,14 +54,14 @@ function Update-DockerSettings
         }
 
         $appManifestPath = Join-Path $ApplicationPackagePath "ApplicationManifest.xml"
-        $appManifestXml = [xml](Get-Content $appManifestPath)
+        $appManifestXml = [xml](Get-Content -LiteralPath $appManifestPath)
 
         $serviceManifestImports = @($appManifestXml.ApplicationManifest.ServiceManifestImport)
         foreach ($serviceManifestImport in $serviceManifestImports)
         {
             # Open the service manifest associated with the current ServiceManifestImport element
             $serviceManifestPath = [System.IO.Path]::Combine($ApplicationPackagePath, $serviceManifestImport.ServiceManifestRef.ServiceManifestName, "ServiceManifest.xml")
-            $serviceManifestXml = [xml](Get-Content $serviceManifestPath)
+            $serviceManifestXml = [xml](Get-Content -LiteralPath $serviceManifestPath)
 
             # Enumerate through the code packages of the service manifest and find those that are associated with an image name. For each
             # of those code packages, we're going to setup the app manifest with ContainerHostPolicies for those code packages so that they

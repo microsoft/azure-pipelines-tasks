@@ -36,6 +36,7 @@
     },
     "getVariable": {
         "JAVA_HOME_8_X86": "/user/local/bin/Java8",
+        "Agent.TempDirectory": "/tmp",
         "System.DefaultWorkingDirectory": "/user/build/s",
         "ENDPOINT_URL_ID1": "http://sonarqubeserver:9000",
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",

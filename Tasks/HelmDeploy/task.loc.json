@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 1
+    "Patch": 4
   },
   "demands": [],
   "preview": "true",
@@ -26,6 +26,11 @@
     {
       "name": "commands",
       "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
     }
   ],
@@ -37,7 +42,8 @@
       "defaultValue": "Azure Resource Manager",
       "required": true,
       "options": {
-        "Azure Resource Manager": "Azure Resource Manager"
+        "Azure Resource Manager": "Azure Resource Manager",
+        "Kubernetes Service Connection": "Kubernetes Service Connection"
       },
       "helpMarkDown": "ms-resource:loc.input.help.connectionType",
       "groupName": "cluster"
@@ -66,6 +72,26 @@
       "groupName": "cluster"
     },
     {
+      "name": "kubernetesServiceEndpoint",
+      "aliases": [
+        "kubernetesServiceConnection"
+      ],
+      "type": "connectedService:kubernetes",
+      "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
+      "visibleRule": "connectionType = Kubernetes Service Connection",
+      "required": true,
+      "groupName": "cluster"
+    },
+    {
+      "name": "namespace",
+      "label": "ms-resource:loc.input.label.namespace",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.namespace",
+      "defaultValue": "",
+      "groupName": "cluster"
+    },
+    {
       "name": "command",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.command",
@@ -79,6 +105,7 @@
         "init": "init",
         "install": "install",
         "ls": "ls",
+        "package": "package",
         "rollback": "rollback",
         "upgrade": "upgrade"
       },
@@ -87,6 +114,169 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "chartType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.chartType",
+      "required": true,
+      "options": {
+        "Name": "Name",
+        "FilePath": "File Path"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.chartType",
+      "groupName": "commands",
+      "visibleRule": "command == install || command == upgrade",
+      "defaultValue": "Name",
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "chartName",
+      "label": "ms-resource:loc.input.label.chartName",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.chartName",
+      "defaultValue": "",
+      "visibleRule": "chartType == Name",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "chartPath",
+      "label": "ms-resource:loc.input.label.chartPath",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.chartPath",
+      "defaultValue": "",
+      "visibleRule": "chartType == FilePath || command == package",
+      "required": "true",
+      "groupName": "commands"
+    },
+    {
+      "name": "version",
+      "label": "ms-resource:loc.input.label.version",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "defaultValue": "",
+      "visibleRule": "command == package",
+      "groupName": "commands"
+    },
+    {
+      "name": "releaseName",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName",
+      "defaultValue": "",
+      "visibleRule": "command == install || command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "overrideValues",
+      "label": "ms-resource:loc.input.label.overrideValues",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.overrideValues",
+      "defaultValue": "",
+      "visibleRule": "command == install || command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "valueFile",
+      "label": "ms-resource:loc.input.label.valueFile",
+      "type": "filePath",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.valueFile",
+      "visibleRule": "command == install || command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "destination",
+      "label": "ms-resource:loc.input.label.destination",
+      "type": "string",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)",
+      "helpMarkDown": "ms-resource:loc.input.help.destination",
+      "visibleRule": "command == package",
+      "groupName": "commands"
+    },
+    {
+      "name": "canaryimage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.canaryimage",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.canaryimage",
+      "visibleRule": "command == init",
+      "groupName": "commands"
+    },
+    {
+      "name": "upgradetiller",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.upgradetiller",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.upgradetiller",
+      "visibleRule": "command == init",
+      "groupName": "commands"
+    },
+    {
+      "name": "updatedependency",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.updatedependency",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.updatedependency",
+      "visibleRule": "command == install || command == package",
+      "groupName": "commands"
+    },
+    {
+      "name": "save",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.save",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.save",
+      "visibleRule": "command == package",
+      "groupName": "commands"
+    },
+    {
+      "name": "install",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.install",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.install",
+      "visibleRule": "command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "recreate",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.recreate",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.recreate",
+      "visibleRule": "command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "resetValues",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.resetValues",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.resetValues",
+      "visibleRule": "command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "force",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.force",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.force",
+      "visibleRule": "command == upgrade",
+      "groupName": "commands"
+    },
+    {
+      "name": "waitForExecution",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.waitForExecution",
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.waitForExecution",
+      "visibleRule": "command == init || command == install || command == upgrade",
+      "groupName": "commands"
     },
     {
       "name": "arguments",
@@ -98,6 +288,13 @@
       "label": "ms-resource:loc.input.label.arguments",
       "helpMarkDown": "ms-resource:loc.input.help.arguments",
       "groupName": "commands"
+    },
+    {
+      "name": "tillernamespace",
+      "label": "ms-resource:loc.input.label.tillernamespace",
+      "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
+      "type": "string",
+      "groupName": "advanced"
     }
   ],
   "dataSourceBindings": [
@@ -125,6 +322,9 @@
     "ClusterNotProvisioned": "ms-resource:loc.messages.ClusterNotProvisioned",
     "ClusterNotFound": "ms-resource:loc.messages.ClusterNotFound",
     "FailedToListClusters": "ms-resource:loc.messages.FailedToListClusters",
-    "RetryingRequest": "ms-resource:loc.messages.RetryingRequest"
+    "RetryingRequest": "ms-resource:loc.messages.RetryingRequest",
+    "PatternNotFoundInFilePath": "ms-resource:loc.messages.PatternNotFoundInFilePath",
+    "CantResolvePatternInPath": "ms-resource:loc.messages.CantResolvePatternInPath",
+    "PatternFoundInPath": "ms-resource:loc.messages.PatternFoundInPath"
   }
 }
