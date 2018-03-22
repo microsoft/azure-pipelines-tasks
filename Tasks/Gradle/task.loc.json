@@ -58,6 +58,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.wrapperScript"
     },
     {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
+    },
+    {
       "name": "options",
       "type": "string",
       "label": "ms-resource:loc.input.label.options",
@@ -70,18 +81,6 @@
       "label": "ms-resource:loc.input.label.tasks",
       "defaultValue": "build",
       "required": true
-    },
-    {
-      "name": "cwd",
-      "aliases": [
-        "workingDirectory"
-      ],
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.cwd",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.cwd",
-      "groupName": "advanced"
     },
     {
       "name": "publishJUnitResults",

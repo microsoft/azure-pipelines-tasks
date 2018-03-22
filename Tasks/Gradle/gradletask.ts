@@ -173,9 +173,6 @@ async function run() {
 
         // Set working directory
         let workingDirectory: string = tl.getPathInput('cwd', false, true);
-        if (!workingDirectory || !tl.filePathSupplied('cwd')) {
-            workingDirectory = path.dirname(wrapperScript);
-        }
         tl.cd(workingDirectory);
 
         let javaHomeSelection: string = tl.getInput('javaHomeSelection', true);
