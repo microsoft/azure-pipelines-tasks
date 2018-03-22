@@ -6,7 +6,6 @@ param()
 $serviceConnectionName = "random connection name"
 $composeFilePath = "docker-compose.yml"
 $applicationName = "fabric:/Application1"
-$sanitizedApplicationName = "Application1"
 $serverCertThumbprint = "random thumbprint"
 $userName = "random user"
 $password = "random password"
@@ -52,7 +51,7 @@ Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsof
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
 $serviceFabricComposeDeploymentStatus = @{
-    "DeploymentName"          = $sanitizedApplicationName
+    "DeploymentName"          = $applicationName
     "ComposeDeploymentStatus" = "Created"
     "StatusDetails"           = ""
 }
@@ -70,17 +69,17 @@ Register-Mock Get-ServiceFabricComposeDeploymentStatus {
     {
         return $serviceFabricComposeDeploymentStatus
     }
-} -DeploymentName: $sanitizedApplicationName
+} -DeploymentName: $applicationName
 
 Register-Mock Remove-ServiceFabricComposeDeployment {
     $removed.Value = $true
-} -DeploymentName: $sanitizedApplicationName -Force: True
+} -DeploymentName: $applicationName -Force: True
 
 Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath: $composeFilePath -ErrorAction: Stop
 
 Register-Mock New-ServiceFabricComposeDeployment {
     $removed.Value = $false
-} -- -DeploymentName: $sanitizedApplicationName -Compose: $composeFilePath
+} -- -DeploymentName: $applicationName -Compose: $composeFilePath
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
