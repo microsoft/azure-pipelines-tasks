@@ -8,7 +8,12 @@
             {
                 "url": "https://testexecution.blob.core.windows.net/testexecution/5568144/TestAgent.zip",
                 "dest": "./Modules"
+            },
+            {
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/InputDataContractParityTool/InputDataContractParityTool.zip",
+                "dest": "./Tests"
             }
+            
         ],
         "files": [
             {
