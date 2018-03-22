@@ -183,6 +183,6 @@
         "CheckingComposeFile": "Checking compose file",
         "UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
         "UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}.",
-        "SanitizingApplicationName": "Service Fabric SDK version {0} does not support compose application name starting with 'fabric:/'. Hence re-naming application to {1}."
+        "InvalidApplicationNameWarning": "Latest Service Fabric has stopped supporting compose application name starting with 'fabric:/' and hence compose deployment might fail with ServiceDnsName error for application name '{0}'. You can provide a different application name and re-run if required."
     }
 }

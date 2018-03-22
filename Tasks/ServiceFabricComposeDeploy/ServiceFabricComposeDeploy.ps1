@@ -64,7 +64,7 @@ try
     }
     Write-Verbose (Get-VstsLocString -Key UsingAPIVersion -ArgumentList $apiVersion)
 
-    $applicationName = Get-SanitizedApplicationName -ApiVersion $apiVersion -ApplicationName $applicationName
+    Test-ApplicationName -ApiVersion $apiVersion -ApplicationName $applicationName
 
     if ($apiVersion -eq '2.8')
     {

@@ -173,7 +173,7 @@ function New-ServiceFabricComposeApplicationHelper
     }
 }
 
-function Get-SanitizedApplicationName
+function Test-ApplicationName
 {
     Param (
         [Parameter(Mandatory = $True)]
@@ -189,23 +189,20 @@ function Get-SanitizedApplicationName
     {
         "255.255"
         {
-            return $ApplicationName
+            return
         }
         "2.7"
         {
-            return $ApplicationName
+            return
         }
         Default
-        {
-            $fabricPrefix = "fabric:/"
-            if ($ApplicationName.StartsWith($fabricPrefix, [StringComparison]::OrdinalIgnoreCase))
+        { 
+            if ($ApplicationName.StartsWith("fabric:/", [StringComparison]::OrdinalIgnoreCase))
             {
-                $sanitizedName = $ApplicationName.Substring($fabricPrefix.Length)
-                Write-Warning (Get-VstsLocString -Key SanitizingApplicationName -ArgumentList @($ApiVersion, $sanitizedName))
-                return $sanitizedName
+                Write-Warning (Get-VstsLocString -Key InvalidApplicationNameWarning -ArgumentList $ApplicationName)
             }
 
-            return $ApplicationName
+            return
         }
     }
 }
