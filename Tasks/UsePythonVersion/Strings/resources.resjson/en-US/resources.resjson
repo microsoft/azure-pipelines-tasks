@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Use Python Version",
+  "loc.helpMarkDown": "",
+  "loc.description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
+  "loc.instanceNameFormat": "Use Python $(versionSpec)",
+  "loc.input.label.versionSpec": "Version spec",
+  "loc.input.help.versionSpec": "Version range or exact version of a Python version to use.",
+  "loc.input.label.outputVariable": "Output variable",
+  "loc.input.help.outputVariable": "Set a name for the variable that will contain the directory of the decompressed Python distribution. Use this in subsequent tasks to access this installation of Python.",
+  "loc.input.label.addToPath": "Add to PATH",
+  "loc.input.help.addToPath": "Prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.",
+  "loc.messages.ListAvailableVersions": "Available versions:",
+  "loc.messages.PlatformNotRecognized": "Platform not recognized",
+  "loc.messages.VersionNotFound": "Version spec %s did not match any version in the tool cache."
+}
