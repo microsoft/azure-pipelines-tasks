@@ -535,6 +535,7 @@
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "GoExeNameNotPresent": "Go exe name is not present",
-        "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
+        "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
+        "Updatemachinetoenablesecuretlsprotocol" : "The machine is not TLS 1.2 enabled. Please follow the instructions in the link to make it compatible: https://support.microsoft.com/en-us/help/3206898/enabling-iis-manager-and-web-deploy-after-disabling-ssl3-and-tls-1-0"
     }
 }
