@@ -32,6 +32,7 @@ process.env['BUILD_REPOSITORY_PROVIDER'] = 'TFSGit';
 process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = '/user/build/s';
 
 tr.setInput('wrapperScript', 'gradlew');
+tr.setInput('cwd', '/home/repo/src');
 tr.setInput('options', '');
 tr.setInput('tasks', 'build');
 tr.setInput('javaHomeSelection', 'JDKVersion');
