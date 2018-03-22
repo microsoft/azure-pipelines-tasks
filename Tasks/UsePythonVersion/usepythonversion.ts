@@ -32,7 +32,7 @@ interface TaskParameters {
 }
 
 export function pythonVersionToSemantic(versionSpec: string) {
-    const prereleaseVersion = /(\d\.\d\.\d)([a|b|rc]\d?)/;
+    const prereleaseVersion = /(\d\.\d\.\d)([a|b|rc]\d?)/g;
     return versionSpec.replace(prereleaseVersion, '$1-$2');
 }
 
