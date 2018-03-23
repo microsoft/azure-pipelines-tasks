@@ -31,9 +31,56 @@ try {
         Write-Host "Get-SymStorePath: $symstorePath"
     }
 
-    [string]$SymbolServerType = Get-VstsInput -Name 'SymbolServerType' -Require
     [bool]$DetailedLog = Get-VstsInput -Name 'DetailedLog' -AsBool
+    [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
+    [bool]$NeedsPublishSymbols = Get-VstsInput -Name 'PublishSymbols' -Require -AsBool
+    [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
+    [string]$defaultSymbolFolder = (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Default "")
+    [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default $defaultSymbolFolder
     
+    # Index the sources.
+    if ( -not $SkipIndexing ) {
+        # Get the PDB file paths.
+        [string]$SearchPattern = Get-VstsInput -Name 'SearchPattern' -Default "**\bin\**\*.pdb"
+        if ($SearchPattern.Contains("`n")) {
+            [string[]]$SearchPattern = $SearchPattern -split "`n"
+        }
+        if (-not $SymbolsFolder) { # Both SymbolsFolder and Build.SourcesDirectory are not present 
+            throw "Please provide value for SymbolFolder."
+        }
+
+        $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
+        $fileList = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
+
+        Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $fileList.Count)
+        
+        if (-not $fileList) {
+            if ($SearchPattern.Contains(';') ) {
+                throw "No files found. Use newlines instead of ';' to separate search patterns."
+            }
+            elseif ($matches) {
+                Write-Host "No files present in matchList, the match had $($matches.Count) directories"
+            }
+        }
+
+        Import-Module -Name $PSScriptRoot\IndexHelpers\IndexHelpers.psm1
+        $pdbFiles = $fileList | Where-Object { $_.EndsWith(".pdb", [StringComparison]::OrdinalIgnoreCase) }
+        Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
+    }
+    else
+    {
+        Write-Host (Get-VstsLocString -Key SkippingIndexing)
+    }
+    
+    if (-not $NeedsPublishSymbols) {
+        if ($SkipIndexing) {
+            throw "Either IndexSources or PublishSymbols should be checked"
+        }
+        return
+    }
+
+    # Publish the symbols.
+    [string]$SymbolServerType = Get-VstsInput -Name 'SymbolServerType' -Require
     if ($SymbolServerType -eq "FileShare") {
         # Get common inputs.
         [int]$SymbolsMaximumWaitTime = Get-VstsInput -Name 'SymbolsMaximumWaitTime' -Default '0' -AsInt
@@ -66,54 +113,7 @@ try {
         [string]$SymbolsVersion = Get-VstsInput -Name 'SymbolsVersion' -Default (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)
         [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
     }
-    [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
-    [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
-    [string]$defaultSymbolFolder = (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Default "")
-    [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default $defaultSymbolFolder
 
-    if ( ($SymbolServerType -eq "FileShare") -or ($SymbolServerType -eq "TeamServices") -or (-not $SkipIndexing) ) {
-        # Get the PDB file paths.
-        [string]$SearchPattern = Get-VstsInput -Name 'SearchPattern' -Default "**\bin\**\*.pdb"
-        if ($SearchPattern.Contains("`n")) {
-            [string[]]$SearchPattern = $SearchPattern -split "`n"
-        }
-        if (-not $SymbolsFolder) { # Both SymbolsFolder and Build.SourcesDirectory are not present 
-            throw "Please provide value for SymbolFolder."
-        }
-
-        $matches = @(Find-VstsMatch -DefaultRoot $SymbolsFolder -Pattern $SearchPattern)
-        $fileList = $matches | Where-Object { -not ( Test-Path -LiteralPath $_ -PathType Container ) }  # Filter out directories
-
-        Write-Host (Get-VstsLocString -Key Found0Files -ArgumentList $fileList.Count)
-        
-        if (-not $fileList) {
-            if ($SearchPattern.Contains(';') ) {
-                throw "No files found. Use newlines instead of ';' to separate search patterns."
-            }
-            elseif ($matches) {
-                Write-Host "No files present in matchList, the match had $($matches.Count) directories"
-            }
-        }
-    }
-
-    # Index the sources.
-    if ($SkipIndexing) {
-        Write-Host (Get-VstsLocString -Key SkippingIndexing)
-    } else {
-        Import-Module -Name $PSScriptRoot\IndexHelpers\IndexHelpers.psm1
-        $pdbFiles = $fileList | Where-Object { $_.EndsWith(".pdb", [StringComparison]::OrdinalIgnoreCase) }
-        Invoke-IndexSources -SymbolsFilePaths $pdbFiles -TreatNotIndexedAsWarning:$TreatNotIndexedAsWarning
-    }
-
-    [bool]$NeedsPublishSymbols = Get-VstsInput -Name 'PublishSymbols' -Require -AsBool
-    if (-not $NeedsPublishSymbols) {
-        if ($SkipIndexing) {
-            throw "Either IndexSources or PublishSymbols should be checked"
-        }
-        return
-    }
-
-    # Publish the symbols.
     if ($SymbolServerType -eq "FileShare") {
         if ($SymbolsPath) {
             # Construct the semaphore message.
