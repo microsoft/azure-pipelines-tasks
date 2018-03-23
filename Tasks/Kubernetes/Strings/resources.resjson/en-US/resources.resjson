@@ -64,6 +64,8 @@
   "loc.messages.DeleteSecret": "Executing delete %s secret",
   "loc.messages.CreatingConfigMap": "Executing create %s configmap.",
   "loc.messages.DeleteConfigMap": "Executing delete %s configmap",
+  "loc.messages.ConfigMapExists": "ConfigMap %s already exists",
+  "loc.messages.GetConfigMap": "Executing get %s configmap",
   "loc.messages.DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
   "loc.messages.FileNotFoundException": "Can not find file at location: %s",
   "loc.messages.DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",

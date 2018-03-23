@@ -212,7 +212,7 @@
             "name": "forceUpdateConfigMap",
             "type": "boolean",
             "label": "Force update configmap",
-            "defaultValue": "true",
+            "defaultValue": "false",
             "helpMarkDown": "Delete the configmap if it exists and create a new one with updated values.",
             "groupName": "configMaps"
         },
@@ -343,6 +343,8 @@
         "DeleteSecret": "Executing delete %s secret",
         "CreatingConfigMap": "Executing create %s configmap.",
         "DeleteConfigMap": "Executing delete %s configmap",
+        "ConfigMapExists": "ConfigMap %s already exists",
+        "GetConfigMap": "Executing get %s configmap",
         "DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
         "FileNotFoundException": "Can not find file at location: %s",
         "DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",

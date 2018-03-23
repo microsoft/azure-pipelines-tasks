@@ -218,7 +218,7 @@
       "name": "forceUpdateConfigMap",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.forceUpdateConfigMap",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.forceUpdateConfigMap",
       "groupName": "configMaps"
     },
@@ -351,6 +351,8 @@
     "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
     "CreatingConfigMap": "ms-resource:loc.messages.CreatingConfigMap",
     "DeleteConfigMap": "ms-resource:loc.messages.DeleteConfigMap",
+    "ConfigMapExists": "ms-resource:loc.messages.ConfigMapExists",
+    "GetConfigMap": "ms-resource:loc.messages.GetConfigMap",
     "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified",
     "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
     "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",

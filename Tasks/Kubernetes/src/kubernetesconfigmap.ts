@@ -5,14 +5,20 @@ import * as tr from "vsts-task-lib/toolrunner";
 import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
 
-export function run(connection: ClusterConnection, configMapName: string): any {
-    if(tl.getBoolInput("forceUpdateConfigMap") == true) {
+export function run(connection: ClusterConnection, configMapName: string): Promise<any> {
+    if(tl.getBoolInput("forceUpdateConfigMap") == false)
+    {
+        return executeKubetclGetConfigmapCommand(connection, configMapName).then(function success() {
+            tl.debug(tl.loc('ConfigMapExists', configMapName));
+        }, function failure() {
+            return createConfigMap(connection, configMapName);
+        });
+    }    
+    else if(tl.getBoolInput("forceUpdateConfigMap") == true) {
         return deleteConfigMap(connection, configMapName).fin(() =>{
             return createConfigMap(connection, configMapName);
         });
-    } else {
-        return createConfigMap(connection, configMapName);
-    } 
+    }
 }
 
 function deleteConfigMap(connection: ClusterConnection, configMapName: string): any {
@@ -55,4 +61,17 @@ function createConfigMap(connection: ClusterConnection, configMapName: string): 
     command.arg(configMapName);
     command.line(getConfigMapArguments());
     return connection.execCommand(command);
+}
+
+function executeKubetclGetConfigmapCommand(connection: ClusterConnection, configMapName: string): any {
+    tl.debug(tl.loc('GetConfigMap', configMapName));
+    var command = connection.createCommand();
+    command.arg(kubernetesCommand.getNameSpace());
+    command.arg("get")
+    command.arg("configmap");
+    command.arg(configMapName);
+    var executionOption : tr.IExecOptions = <any> {
+        silent: true
+    };
+    return connection.execCommand(command, executionOption);
 }
