@@ -249,13 +249,13 @@ async function main(): Promise<void> {
 
 function executeWithRetries(operationName: string, operation: () => Promise<any>, retryCount): Promise<any> {
     var executePromise = new Promise((resolve, reject) => {
-        executeWithRetriesImplementaion(operationName, operation, retryCount, resolve, reject);
+        executeWithRetriesImplementation(operationName, operation, retryCount, resolve, reject);
     });
 
     return executePromise;
 }
 
-function executeWithRetriesImplementaion(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
+function executeWithRetriesImplementation(operationName: string, operation: () => Promise<any>, currentRetryCount, resolve, reject) {
     operation().then((result) => {
         resolve(result);
     }).catch((error) => {
@@ -266,7 +266,7 @@ function executeWithRetriesImplementaion(operationName: string, operation: () =>
         else {
             console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
             currentRetryCount = currentRetryCount - 1;
-            setTimeout(() => executeWithRetriesImplementaion(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
+            setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject), 4 * 1000);
         }
     });
 }
