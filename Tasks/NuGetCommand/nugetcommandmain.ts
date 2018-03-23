@@ -103,6 +103,7 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
                 'requestedPatchVersion': tl.getInput('requestedPatchVersion'),
                 'packTimezone': tl.getInput('packTimezone'),
                 'buildProperties': tl.getInput('buildProperties'),
+                'basePath': tl.getInput('basePath'),
                 'verbosityPack': tl.getInput('verbosityPack'),
                 'includeSymbols': tl.getBoolInput('includeSymbols'),
                 'NuGet.UseLegacyFindFiles': tl.getVariable('NuGet.UseLegacyFindFiles'),

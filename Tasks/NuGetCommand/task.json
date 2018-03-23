@@ -374,6 +374,15 @@
             "groupName": "packAdvanced"
         },
         {
+            "name": "basePath",
+            "type": "string",
+            "label": "Base path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The base path of the files defined in the nuspec file.",
+            "groupName": "packAdvanced"
+        },
+        {
             "name": "verbosityPack",
             "type": "pickList",
             "label": "Verbosity",

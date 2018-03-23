@@ -401,6 +401,15 @@
       "groupName": "packAdvanced"
     },
     {
+      "name": "basePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.basePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.basePath",
+      "groupName": "packAdvanced"
+    },
+    {
       "name": "verbosityPack",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.verbosityPack",
