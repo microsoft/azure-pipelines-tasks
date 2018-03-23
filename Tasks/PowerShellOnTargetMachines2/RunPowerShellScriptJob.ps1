@@ -36,6 +36,7 @@ $ExecutePsScript = {
             "Status" = "Failed";
             "Message" = "PS_TM_ExitCode";
             "ExitCode" = 0;
+            "ComputerName" = $env:COMPUTERNAME
         }
 
         if( $inline -eq $true ) {

@@ -25,8 +25,13 @@ try {
 
     $sessions = Create-PSSessionToRemoteMachines -targetMachineNames $targetMachineNames -targetMachineCredential $credential -protocol $input_Protocol
     $remoteScriptJobArguments = Get-RemoteScriptJobArguments
-    Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArguments $remoteScriptJobArguments
-    
+    if($input_RunPowershellInParallel -eq $true) {
+        Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArguments $remoteScriptJobArguments
+    } else {
+        ForEach($session in $sessions) {
+            Run-RemoteScriptJobs -sessions $session -script $ExecutePsScript -scriptArguments $remoteScriptJobArguments            
+        }
+    }
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }

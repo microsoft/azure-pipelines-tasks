@@ -23,7 +23,7 @@ function Run-RemoteScriptJobs {
 
     ForEach($jobResult in $jobResults) {
         if($jobResult.ExitCode -ne 0) {
-            throw (Get-VstsLocString -Key "PS_TM_NonZeroExitCode" -ArgumentList $jobResult.Location.ToString(),$jobResult.ExitCode)
+            Write-VstsSetResult -Result 'Failed' -Message (Get-VstsLocString -Key "PS_TM_NonZeroExitCode" -ArgumentList $jobResult.ComputerName, $jobResult.ExitCode) -DoNotThrow
         }
     }
 }

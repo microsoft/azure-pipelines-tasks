@@ -28,6 +28,7 @@ function Create-PSSessionToRemoteMachines {
         }
         $connectedMachineNames = $sessions | Select-Object ComputerName | ForEach-Object { $_.ComputerName.ToLowerInvariant() }
         if($connectedMachineNames.Count -eq $targetMachineNames.Count) {
+            $remainingMachines = @();
             break;
         }
         $remainingMachines = $remainingMachines | Where-Object { -not ($connectedMachineNames -contains $_) }

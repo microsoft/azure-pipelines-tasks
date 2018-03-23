@@ -13,8 +13,9 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 6
   },
+  "preview": true,
   "groups": [
     {
       "name": "ScriptOptions",
