@@ -7,8 +7,10 @@ $ExecutePsScript = {
         [string] $workingDirectory = "",
         [string] $_errorActionPreference = "Continue",
         [switch] $ignoreLASTEXITCODE,
-        [switch] $failOnStdErr = $true
+        [switch] $failOnStdErr
     )
+
+    $Global:ErrorActionPreference = "Continue";
 
     function Invoke-Tool {
         Param(
@@ -30,7 +32,7 @@ $ExecutePsScript = {
     try {
 
         $result = @{
-            "VstsTaskName" = $true;
+            "VstsTask" = $true;
             "Status" = "Failed";
             "Message" = "PS_TM_ExitCode";
             "ExitCode" = 0;
@@ -47,7 +49,7 @@ $ExecutePsScript = {
             throw [System.IO.DirectoryNotFoundException]::New($workingDirectory)
         }
 
-        if(!(Test-Path -Path $scriptPath -PathType Leaf)) {
+        if([string]::IsNullOrEmpty($scriptPath) -or !(Test-Path -Path $scriptPath -PathType Leaf)) {
             throw [System.IO.FileNotFoundException]::New($scriptPath)
         }
 
