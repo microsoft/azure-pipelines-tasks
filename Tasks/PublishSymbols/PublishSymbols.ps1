@@ -197,7 +197,12 @@ try {
         [string] $encodedRequestName = [System.Web.HttpUtility]::UrlEncode($RequestName)
         # Use hash prefix for now to be compatible with older/current agents, RequestType is still different (than SymbolStore)
         [string] $requestUrl = "#$SymbolServiceUri/_apis/Symbol/requests?requestName=$encodedRequestName"
-        Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
+        [string] $hostType = (Get-VstsTaskVariable -Name 'System.HostType' -Require)
+        # Only create VSTS build artifact asociation when run during build.
+        if ($hostType -eq "BUILD")
+        {
+            Write-VstsAssociateArtifact -Name "$RequestName" -Path $requestUrl -Type "SymbolRequest" -Properties @{}
+        }
 
         & "$PSScriptRoot\Publish-Symbols.ps1" -SymbolServiceUri $SymbolServiceUri -RequestName $RequestName -SourcePath $SourcePath -SourcePathListFileName $tmpFileName -PersonalAccessToken $PersonalAccessToken -ExpirationInDays 36530 -DetailedLog $DetailedLog
 
