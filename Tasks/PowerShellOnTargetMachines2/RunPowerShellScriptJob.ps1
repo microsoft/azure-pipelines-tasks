@@ -3,11 +3,11 @@ $ExecutePsScript = {
         [string] $scriptPath,
         [string] $scriptArguments = "",
         [string] $inlineScript,
-        [switch] $inline,
+        [bool] $inline,
         [string] $workingDirectory = "",
         [string] $_errorActionPreference = "Continue",
-        [switch] $ignoreLASTEXITCODE,
-        [switch] $failOnStdErr
+        [bool] $ignoreLASTEXITCODE,
+        [bool] $failOnStdErr
     )
 
     $Global:ErrorActionPreference = "Continue";
@@ -54,22 +54,19 @@ $ExecutePsScript = {
         }
 
         $script = [scriptblock]::Create("
-            try {
-                Push-Location .
-                if(![string]::IsNullOrEmpty(`"$workingDirectory`")) {
-                    cd '$($workingDirectory.Replace("'","''"))'
-                }
-                `$ErrorActionPreference = `"$_errorActionPreference`"
-                & '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
-            } finally {
-                Pop-Location
-                if(`"$ignoreLASTEXITCODE`" -eq `$false) {
-                    if(!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {
-                        Write-Output `"LASTEXITCODE is not set`"
-                    } else {
-                        Write-Output `"LASTEXITCODE is `$LASTEXITCODE`"
-                        exit `$LASTEXITCODE
-                    }
+            if(![string]::IsNullOrEmpty(`"$workingDirectory`")) {
+                cd '$($workingDirectory.Replace("'","''"))'
+            }
+
+            `$ErrorActionPreference = `"$_errorActionPreference`"
+            & '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
+
+            if(`"$ignoreLASTEXITCODE`" -eq `$false) {
+                if(!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {
+                    Write-Output `"LASTEXITCODE is not set`"
+                } else {
+                    Write-Output `"LASTEXITCODE is `$LASTEXITCODE`"
+                    exit `$LASTEXITCODE
                 }
             }
         ");
@@ -82,7 +79,7 @@ $ExecutePsScript = {
 
         Invoke-Tool -toolPath $powershellPath -toolArgs $powershellArguments 2>&1 |
             ForEach-Object {
-                $_
+                ,$_
                 if($_ -is [System.Management.Automation.ErrorRecord] -and $failOnStdErr -eq $true) {
                     "##vso[task.complete result=Failed]"
                 }
