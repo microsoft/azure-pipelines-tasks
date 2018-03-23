@@ -120,6 +120,7 @@ export async function getMSDeployFullPath() {
     }
     catch(error) {
         tl.debug(error);
+        await useRequiredDotNetVersion("\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP");
         return path.join(__dirname, "..", "..", "MSDeploy3.6", "msdeploy.exe"); 
     }
 }
@@ -152,6 +153,41 @@ function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
             defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove", latestKeyVersion));
         }
          defer.resolve(latestSubKey);
+    });
+    return defer.promise;
+}
+
+function useRequiredDotNetVersion(registryKey: string): Q.Promise<string> {
+    var defer = Q.defer<string>();
+    var regKey = new winreg({
+      hive: winreg.HKLM,
+      key:  registryKey
+    })
+
+    regKey.keys(function(err, subRegKeys) {
+        if(err) {
+            defer.reject(tl.loc("UnabletofindthelocationofDotNetFrameworkfromregistryonmachineError", err));
+        }
+        var latestKeyVersion = 0 ;
+        var latestSubKey;
+        for(var index in subRegKeys) {
+            var subRegKey = subRegKeys[index].key;
+            var subKeyVersion = subRegKey.substr(subRegKey.lastIndexOf('\\') + 2, subRegKey.length - 1);
+            if(!isNaN(subKeyVersion)){
+                var subKeyVersionNumber = parseFloat(subKeyVersion);
+                if(subKeyVersionNumber > latestKeyVersion) {
+                    latestKeyVersion = subKeyVersionNumber;
+                    latestSubKey = subRegKey;
+                    if(latestKeyVersion == 3.5) {
+                        break;
+                    }
+                }
+            }
+        }
+        if(latestKeyVersion != 3.5) {
+            tl.cp(path.join(__dirname,"msdeploy.exe.config"), path.join(__dirname, "..", "..", "MSDeploy3.6", "msdeploy.exe.config"), "-f", false)
+        }
+         defer.resolve();
     });
     return defer.promise;
 }
