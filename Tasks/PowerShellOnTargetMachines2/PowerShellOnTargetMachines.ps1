@@ -1,5 +1,11 @@
 Trace-VstsEnteringInvocation $MyInvocation
 $global:ErrorActionPreference = 'Continue'
+
+# Undocumented VstsTaskSdk variable so Verbose/Debug isn't converted to ##vso[task.debug].
+# Otherwise any content the ad-hoc script writes to the verbose pipeline gets dropped by
+# the agent when System.Debug is not set.
+$global:__vstsNoOverrideVerbose = $true
+
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
     
