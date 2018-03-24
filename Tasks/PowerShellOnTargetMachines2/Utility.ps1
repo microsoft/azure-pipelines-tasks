@@ -82,13 +82,13 @@ function Get-RemoteScriptJobArguments {
     
     if ($input_ScriptType -eq "FilePath") {
         $input_ScriptPath = Get-VstsInput -Name "ScriptPath" -ErrorAction "Stop"
-        $input_ScriptArguments = Get-VstsInput -Name "ScriptArguments"
         $inline = $false
     } else {
         $input_InlineScript = Get-VstsInput -Name "InlineScript"
         $inline = $true
     }
 
+    $input_ScriptArguments = Get-VstsInput -Name "ScriptArguments"
     $input_ErrorActionPreference = Get-VstsInput -Name "ErrorActionPreference" -Require -ErrorAction "Stop"
     $input_failOnStderr = Get-VstsInput -Name "failOnStderr" -AsBool
     $input_ignoreLASTEXITCODE = Get-VstsInput -Name "ignoreLASTEXITCODE" -AsBool

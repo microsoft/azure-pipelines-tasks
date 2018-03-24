@@ -42,7 +42,6 @@ $ExecutePsScript = {
         if( $inline -eq $true ) {
             $inlineScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
             $scriptPath = $inlineScriptPath
-            $scriptArguments = ""
             ($inlineScript | Out-File $scriptPath)
         }
 
