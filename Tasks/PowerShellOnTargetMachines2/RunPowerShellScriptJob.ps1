@@ -78,7 +78,7 @@ $ExecutePsScript = {
         $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
         $powershellArguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($tempScriptPath.Replace("'", "''"))'`""
 
-        Invoke-Tool -toolPath $powershellPath -toolArgs $powershellArguments 2>&1 |
+        Invoke-Tool -toolPath $powershellPath -toolArgs $powershellArguments *>&1 |
             ForEach-Object {
                 ,$_
                 if($_ -is [System.Management.Automation.ErrorRecord] -and $failOnStdErr -eq $true) {

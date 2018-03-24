@@ -1,5 +1,6 @@
 Trace-VstsEnteringInvocation $MyInvocation
 $global:ErrorActionPreference = 'Continue'
+$global:__vstsNoOverrideVerbose = $true
 try {
     Import-VstsLocStrings "$PSScriptRoot\task.json"
     
