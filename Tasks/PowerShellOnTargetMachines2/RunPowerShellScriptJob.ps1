@@ -63,9 +63,9 @@ $ExecutePsScript = {
 
             if(`"$ignoreLASTEXITCODE`" -eq `$false) {
                 if(!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {
-                    Write-Output `"LASTEXITCODE is not set`"
+                    Write-Output `"##vso[task.debug]LASTEXITCODE is not set`"
                 } else {
-                    Write-Output `"LASTEXITCODE is `$LASTEXITCODE`"
+                    Write-Output `"##vso[task.debug]LASTEXITCODE is `$LASTEXITCODE`"
                     exit `$LASTEXITCODE
                 }
             }
