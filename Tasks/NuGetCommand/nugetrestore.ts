@@ -23,6 +23,7 @@ class RestoreOptions implements INuGetCommandOptions {
         public nuGetPath: string,
         public configFile: string,
         public noCache: boolean,
+        public disableParallelProcessing: boolean,
         public verbosity: string,
         public packagesDirectory: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings,
@@ -56,6 +57,7 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         });
         let noCache = tl.getBoolInput("noCache");
+        let disableParallelProcessing = tl.getBoolInput("disableParallelProcessing");
         let verbosity = tl.getInput("verbosityRestore");
         let packagesDirectory = tl.getPathInput("packagesDirectory");
         if (!tl.filePathSupplied("packagesDirectory")) {
@@ -169,6 +171,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 nuGetPath,
                 configFile,
                 noCache,
+                disableParallelProcessing,
                 verbosity,
                 packagesDirectory,
                 environmentSettings,
@@ -206,6 +209,10 @@ function restorePackages(solutionFile: string, options: RestoreOptions): IExecSy
 
     if (options.noCache) {
         nugetTool.arg("-NoCache");
+    }
+
+    if (options.disableParallelProcessing) {
+        nugetTool.arg("-DisableParallelProcessing");
     }
 
     if (options.verbosity && options.verbosity !== "-") {

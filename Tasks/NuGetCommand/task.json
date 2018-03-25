@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 26
     },
     "runsOn": [
         "Agent",
@@ -144,6 +144,15 @@
             "label": "Disable local cache",
             "defaultValue": "false",
             "helpMarkDown": "Prevents NuGet from using packages from local machine caches.",
+            "required": "false",
+            "groupName": "restoreAdvanced"
+        },
+        {
+            "name": "disableParallelProcessing",
+            "type": "boolean",
+            "label": "Disable parallel processing",
+            "defaultValue": "false",
+            "helpMarkDown": "Prevents NuGet from installing multiple packages in parallel.",
             "required": "false",
             "groupName": "restoreAdvanced"
         },
