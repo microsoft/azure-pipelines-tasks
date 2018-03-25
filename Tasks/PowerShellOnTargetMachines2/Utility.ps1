@@ -77,32 +77,36 @@ function New-CommandString {
 }
 
 function Get-RemoteScriptJobArguments {
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $input_ScriptType = Get-VstsInput -Name "ScriptType" -Require -ErrorAction "Stop"
     
-    $input_ScriptType = Get-VstsInput -Name "ScriptType" -Require -ErrorAction "Stop"
+        if ($input_ScriptType -eq "FilePath") {
+            $input_ScriptPath = Get-VstsInput -Name "ScriptPath" -ErrorAction "Stop"
+            $inline = $false
+        } else {
+            $input_InlineScript = Get-VstsInput -Name "InlineScript"
+            $inline = $true
+        }
     
-    if ($input_ScriptType -eq "FilePath") {
-        $input_ScriptPath = Get-VstsInput -Name "ScriptPath" -ErrorAction "Stop"
-        $inline = $false
-    } else {
-        $input_InlineScript = Get-VstsInput -Name "InlineScript"
-        $inline = $true
+        $input_ScriptArguments = Get-VstsInput -Name "ScriptArguments"
+        $input_ErrorActionPreference = Get-VstsInput -Name "ErrorActionPreference" -Require -ErrorAction "Stop"
+        $input_failOnStderr = Get-VstsInput -Name "failOnStderr" -AsBool
+        $input_ignoreLASTEXITCODE = Get-VstsInput -Name "ignoreLASTEXITCODE" -AsBool
+    
+        $input_WorkingDirectory = Get-VstsInput -Name "WorkingDirectory"
+    
+        return @(
+            $input_ScriptPath,
+            $input_ScriptArguments,
+            $input_InlineScript,
+            $inline,
+            $input_WorkingDirectory,
+            $input_ErrorActionPreference,
+            $input_ignoreLASTEXITCODE,
+            $input_failOnStderr
+        )
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
     }
-
-    $input_ScriptArguments = Get-VstsInput -Name "ScriptArguments"
-    $input_ErrorActionPreference = Get-VstsInput -Name "ErrorActionPreference" -Require -ErrorAction "Stop"
-    $input_failOnStderr = Get-VstsInput -Name "failOnStderr" -AsBool
-    $input_ignoreLASTEXITCODE = Get-VstsInput -Name "ignoreLASTEXITCODE" -AsBool
-
-    $input_WorkingDirectory = Get-VstsInput -Name "WorkingDirectory"
-
-    return @(
-        $input_ScriptPath,
-        $input_ScriptArguments,
-        $input_InlineScript,
-        $inline,
-        $input_WorkingDirectory,
-        $input_ErrorActionPreference,
-        $input_ignoreLASTEXITCODE,
-        $input_failOnStderr
-    )
 }
