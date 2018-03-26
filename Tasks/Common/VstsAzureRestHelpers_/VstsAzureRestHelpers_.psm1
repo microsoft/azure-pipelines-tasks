@@ -320,17 +320,18 @@ function Has-ObjectProperty {
     }
 }
 
-function Get-AzureRMAccessToken (
+function Get-AzureRMAccessToken {
     [CmdletBinding()]
-    param([Parameter(Mandatory=$true)] $endpoint) {
-        if($endpoint.Auth.Scheme -eq $MsiConnection )
-        {
-            Get-MsiAccessToken $endpoint
-        }
-        else
-        {
-            Get-SpnAccessToken $endpoint
-        }   
+    param([Parameter(Mandatory=$true)] $endpoint) 
+
+    if($endpoint.Auth.Scheme -eq $MsiConnection )
+    {
+        Get-MsiAccessToken $endpoint
+    }
+    else
+    {
+        Get-SpnAccessToken $endpoint
+    }   
 }
 
 # Get the Bearer Access Token from the Endpoint
