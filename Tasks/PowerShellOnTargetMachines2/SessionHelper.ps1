@@ -6,7 +6,7 @@ function Create-PSSessionToRemoteMachines {
         [ValidateSet("http", "https")]
         [string] $protocol,
         [ValidateRange(2,10)]
-        [int] $maxRetry = 3
+        [int] $maxRetryLimit = 3
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -14,16 +14,11 @@ function Create-PSSessionToRemoteMachines {
         $retryCount = 0;
         $sessions = @();
     
-        if($protocol -eq "https") {
-            $useSsl = $true
-        } else {
-            $useSsl = $false
-        }
-    
+        $useSsl = ($protocol -eq "https")
         $remainingMachines = $targetMachineNames | ForEach-Object { $_.ToLowerInvariant() }
     
-        while ($retryCount -lt $maxRetry) {
-            Write-Verbose "Retry attempt #$($retryCount + 1)"
+        while ($retryCount -lt $maxRetryLimit) {
+            Write-Verbose "Attempting to establish connection: Attempt #$($retryCount + 1)"
             $sessions += New-PSSession -ComputerName $remainingMachines -Credential $targetMachineCredential -UseSSL:$useSsl -ErrorAction "SilentlyContinue" -ErrorVariable sessionErrors
             foreach ($sessionError in $sessionErrors) {
                 Write-Verbose $("New-PSSession Error: " + $sessionError.Exception.Message)

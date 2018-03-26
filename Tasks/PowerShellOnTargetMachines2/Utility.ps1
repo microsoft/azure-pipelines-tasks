@@ -101,6 +101,8 @@ function ConvertTo-HashTable {
     try {
         $result = @{}
         if (![string]::IsNullOrEmpty($tokenSequence))  {
+            # Matches all keys and values present in a comma separated list of key value pairs. Key-Values are separated
+            # by '=' and a pair is separated by ','. Parsed values can be of form : val, "val val2", val"val2"val3.
             $tokenPattern = "([^`" =,]*(`"[^`"]*`")[^`" =,]*)|[^`" =,]+"
             $tokens = Get-TokensFromSequence -tokenPattern $tokenPattern -tokenSequence $tokenSequence
             $currentKey = [string]::Empty
@@ -126,9 +128,12 @@ function ConvertTo-HashTable {
                 throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList [string]::Empty, $currentKey)
             }
     
+            # Matches keys in the list. A key begins with '$' and ends with '='. It cannot contain spaces, double quotes.
             $keyTokenPattern = "(\$[^`" =]+)[ ]*="
             $allKeyTokens_SemiParsed = Get-TokensFromSequence -tokenPattern $keyTokenPattern -tokenSequence $tokenSequence
 
+            # Matches values in the list. A value begins after '=' and ends with either ',' or end of string. Values containing
+            # spaces must be enclosed in double quotes.
             $valueTokenPattern = "=[ ]*([^`" ]*(`"[^`"]*`")[^`" ]*|[^`" ,]+)[ ]*(,|$)"
             $allValueTokens_SemiParsed = Get-TokensFromSequence -tokenPattern $valueTokenPattern -tokenSequence $tokenSequence
             
