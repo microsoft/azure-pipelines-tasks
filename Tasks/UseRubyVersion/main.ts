@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as task from 'vsts-task-lib/task';
-import { getPlatform, useRubyVersion } from './userubyversion';
+import { useRubyVersion } from './userubyversion';
 
 (async () => {
     try {
@@ -8,9 +8,9 @@ import { getPlatform, useRubyVersion } from './userubyversion';
         await useRubyVersion({
             versionSpec: task.getInput('versionSpec', true),
             outputVariable: task.getInput('outputVariable', true),
-            addToPath: task.getBoolInput('addToPath', true)
-        },
-        getPlatform());
+            addToPath: task.getBoolInput('addToPath', true),
+            installDevKit: task.getBoolInput('installDevKit', true)
+        });
         task.setResult(task.TaskResult.Succeeded, '');
     } catch (error) {
         task.error(error.message);

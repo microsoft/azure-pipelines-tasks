@@ -42,6 +42,14 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addToPath"
+    },
+    {
+      "name": "installDevKit",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.installDevKit",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.installDevKit"
     }
   ],
   "execution": {

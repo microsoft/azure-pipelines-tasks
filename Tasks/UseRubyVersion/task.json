@@ -42,6 +42,14 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+        },
+        {
+            "name": "installDevKit",
+            "type": "boolean",
+            "label": "Install DevKit",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "Installs DevKit (currently this task only supports Ruby versions >= 2.4)."
         }
     ],
     "execution": {

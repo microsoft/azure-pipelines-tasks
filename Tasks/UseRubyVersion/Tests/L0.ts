@@ -47,12 +47,13 @@ describe('UseRubyVersion L0 Suite', function () {
         const parameters = {
             versionSpec: '2.5',
             outputVariable: 'Ruby',
-            addToPath: false
+            addToPath: false,
+            installDevKit: false
         };
 
         assert.strictEqual(buildVariables['Ruby'], undefined);
 
-        await uut.useRubyVersion(parameters, uut.Platform.Linux);
+        await uut.useRubyVersion(parameters);
         assert.strictEqual(buildVariables['Ruby'], toolPath);
     });
 
@@ -67,11 +68,12 @@ describe('UseRubyVersion L0 Suite', function () {
         const parameters = {
             versionSpec: '3.x',
             outputVariable: 'Ruby',
-            addToPath: false
+            addToPath: false,
+            installDevKit: false
         };
 
         try {
-            await uut.useRubyVersion(parameters, uut.Platform.Linux);
+            await uut.useRubyVersion(parameters);
             done(new Error('should not have succeeded'));
         } catch (e) {
             const expectedMessage = [
@@ -85,50 +87,39 @@ describe('UseRubyVersion L0 Suite', function () {
         }
     });
 
-    it('sets PATH correctly on Linux', async function () {
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-
-        const toolPath = path.join('/', 'Ruby', '3.6.4');
-        let mockPath = '';
+    it('install DevKit', async function () {
+        const runDevKit = path.join('/', 'Ruby', '2.4.4');
+        let ranDevKitInstall: boolean = false;
+        mockery.registerMock('vsts-task-lib/task', {
+            mockTask
+        });
+        mockery.registerMock('vsts-task-lib/task', {
+            execSync: (tool: any, args: any, options?: any) => {
+                if (tool && tool.indexOf('ridk') >= 0) {
+                    ranDevKitInstall = true;
+                }
+            },
+            loc: (s: string) => {
+                return s;
+            },
+            setVariable: (variable: string, value: string) => {}
+        });
+        const toolPath = path.join('/', 'Ruby', '2.4.4');
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
-                mockPath = s + ':' + mockPath;
-            }
+            findLocalToolVersions: () => ['2.4.4'],
+            prependPath: (path: string) => {}
         });
 
         const uut = reload();
         const parameters = {
-            versionSpec: '3.6',
+            versionSpec: '2.4',
             outputVariable: 'Ruby',
-            addToPath: true
+            addToPath: true,
+            installDevKit: true
         };
 
-        await uut.useRubyVersion(parameters, uut.Platform.Linux);
-        assert.strictEqual(`${toolPath}:`, mockPath);
-    });
-
-    it('sets PATH correctly on Windows', async function () {
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-
-        const toolPath = path.join('/', 'Ruby', '3.6.4');
-        let mockPath = '';
-        mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
-                mockPath = s + ';' + mockPath;
-            }
-        });
-
-        const uut = reload();
-        const parameters = {
-            versionSpec: '3.6',
-            outputVariable: 'Ruby',
-            addToPath: true
-        };
-
-        await uut.useRubyVersion(parameters, uut.Platform.Windows);
-        // On Windows, must add the "Scripts" directory to PATH as well
-        assert.strictEqual(`${path.join(toolPath, 'Scripts')};${toolPath};`, mockPath);
+        await uut.useRubyVersion(parameters);
+        assert.equal(true, ranDevKitInstall);
     });
 });

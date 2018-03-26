@@ -13,25 +13,14 @@ export enum Platform {
     Linux
 }
 
-/**
- * Determine the operating system the build agent is running on.
- */
-export function getPlatform(): Platform {
-    switch (process.platform) {
-        case 'win32': return Platform.Windows;
-        case 'darwin': return Platform.MacOS;
-        case 'linux': return Platform.Linux;
-        default: throw Error(task.loc('PlatformNotRecognized'));
-    }
-}
-
 interface TaskParameters {
     readonly versionSpec: string;
     readonly outputVariable: string;
     readonly addToPath: boolean;
+    readonly installDevKit: boolean;
 }
 
-export async function useRubyVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
+export async function useRubyVersion(parameters: TaskParameters): Promise<void> {
     const installDir: string | null = tool.findLocalTool('Ruby', parameters.versionSpec);
     if (!installDir) {
         // Fail and list available versions
@@ -45,9 +34,11 @@ export async function useRubyVersion(parameters: TaskParameters, platform: Platf
     task.setVariable(parameters.outputVariable, installDir);
     if (parameters.addToPath) {
         tool.prependPath(installDir);
-        if (platform === Platform.Windows) {
-            const scriptsDir = path.join(installDir, 'Scripts');
-            tool.prependPath(scriptsDir);
-        }
+    }
+
+    // Install DevKit
+    if (parameters.installDevKit) {
+        // TODO: handle < 2.4
+        task.execSync(path.resolve(installDir, 'bin/ridk'), ['install', '3']);
     }
 }
