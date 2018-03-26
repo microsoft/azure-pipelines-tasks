@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 23
+    "Patch": 24
   },
   "preview": true,
   "groups": [
@@ -112,6 +112,26 @@
         "editorExtension": "ms.vss-services-azure.parameters-grid"
       },
       "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "InitializationScript",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.InitializationScript",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ScriptType = FilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.InitializationScript",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SessionVariables",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ScriptType = FilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.SessionVariables",
       "groupName": "ScriptOptions"
     },
     {

@@ -83,6 +83,8 @@ function Get-RemoteScriptJobArguments {
     
         if ($input_ScriptType -eq "FilePath") {
             $input_ScriptPath = Get-VstsInput -Name "ScriptPath" -ErrorAction "Stop"
+            $input_initializationScriptPath = Get-VstsInput -Name "InitializationScript"
+            $input_sessionVariables = Get-VstsInput -Name "SessionVariables"
             $inline = $false
         } else {
             $input_InlineScript = Get-VstsInput -Name "InlineScript"
@@ -104,7 +106,9 @@ function Get-RemoteScriptJobArguments {
             $input_WorkingDirectory,
             $input_ErrorActionPreference,
             $input_ignoreLASTEXITCODE,
-            $input_failOnStderr
+            $input_failOnStderr,
+            $input_initializationScriptPath,
+            $input_sessionVariables
         )
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

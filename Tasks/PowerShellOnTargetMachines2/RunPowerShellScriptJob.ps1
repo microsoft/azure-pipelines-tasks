@@ -7,7 +7,9 @@ $ExecutePsScript = {
         [string] $workingDirectory = "",
         [string] $_errorActionPreference = "Continue",
         [bool] $ignoreLASTEXITCODE,
-        [bool] $failOnStdErr
+        [bool] $failOnStdErr,
+        [string] $initializationScriptPath,
+        [string] $sessionVariables
     )
 
     $Global:ErrorActionPreference = "Continue";
@@ -53,12 +55,24 @@ $ExecutePsScript = {
             throw [System.IO.FileNotFoundException]::New($scriptPath)
         }
 
+        if(![string]::IsNullOrEmpty($initializationScriptPath) -and !(Test-Path -LiteralPath $initializationScriptPath -PathType Leaf)) {
+            throw [System.IO.FileNotFoundException]::New($initializationScriptPath);
+        }
+
         $script = [scriptblock]::Create("
             if(![string]::IsNullOrEmpty(`"$workingDirectory`")) {
                 cd '$($workingDirectory.Replace("'","''"))'
             }
-
+            
+            # Set Error Action to Stop first, so that any errors while setting session variables can be caught.
+            `$ErrorActionPreference = 'Stop'
+            $sessionVariables
             `$ErrorActionPreference = `"$_errorActionPreference`"
+
+            if(![string]::IsNullOrEmpty(`"$initializationScriptPath`")) {
+                & '$($initializationScriptPath.Replace("'","''"))'
+            }
+
             & '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
 
             if(`"$ignoreLASTEXITCODE`" -eq `$false) {

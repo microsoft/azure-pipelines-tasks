@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 24
     },
     "preview": true,
     "groups": [
@@ -112,6 +112,26 @@
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             },
             "helpMarkDown": "Arguments for the PowerShell script. Can be ordinal parameters or named parameters like -testParam test",
+            "groupName": "ScriptOptions"
+        },
+        {
+            "name": "InitializationScript",
+            "type": "string",
+            "label": "Initialization script",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "ScriptType = FilePath",
+            "helpMarkDown": "Location of the data script for DSC on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
+            "groupName": "ScriptOptions"
+        },
+        {
+            "name": "SessionVariables",
+            "type": "multiLine",
+            "label": "Session Variables",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "ScriptType = FilePath",
+            "helpMarkDown": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\"",
             "groupName": "ScriptOptions"
         },
         {
