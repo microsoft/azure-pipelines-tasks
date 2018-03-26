@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 15
+    "Patch": 16
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -96,6 +96,7 @@
     "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound",
     "GetSecretFailedBecauseOfInvalidCharacters": "ms-resource:loc.messages.GetSecretFailedBecauseOfInvalidCharacters",
     "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
-    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile"
+    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile",
+    "CouldNotMaskSecret": "ms-resource:loc.messages.CouldNotMaskSecret"
   }
 }

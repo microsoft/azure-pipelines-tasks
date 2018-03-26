@@ -178,22 +178,8 @@
       "label": "ms-resource:loc.input.label.RuntimeStack",
       "defaultValue": "",
       "required": true,
-      "options": {
-        "node|4.4": "Node.js 4.4",
-        "node|4.5": "Node.js 4.5",
-        "node|6.2": "Node.js 6.2",
-        "node|6.6": "Node.js 6.6",
-        "node|6.9": "Node.js 6.9",
-        "node|6.10": "Node.js 6.10",
-        "node|6.11": "Node.js 6.11",
-        "node|8.0": "Node.js 8.0",
-        "node|8.1": "Node.js 8.1",
-        "php|5.6": "PHP 5.6",
-        "php|7.0": "PHP 7.0",
-        "dotnetcore|1.0": ".Net Core 1.0",
-        "dotnetcore|1.1": ".Net Core 1.1",
-        "dotnetcore|2.0": ".Net Core 2.0",
-        "ruby|2.3": "Ruby 2.3"
+      "properties": {
+        "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
       "visibleRule": "WebAppKind = webAppLinux"
@@ -412,6 +398,15 @@
         "ResourceGroupName": "$(ResourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+    },
+    {
+      "target": "RuntimeStack",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMWebAppRuntimeStacksByOsType",
+      "parameters": {
+        "osTypeSelected": "Linux"
+      },
+      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

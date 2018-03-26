@@ -131,8 +131,23 @@ async function acquireNode(version: string): Promise<string> {
 
     let downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
 
-    let downloadPath: string = await toolLib.downloadTool(downloadUrl);
+    let downloadPath: string;
 
+    try 
+    {
+        downloadPath = await toolLib.downloadTool(downloadUrl);
+    } 
+    catch (err)
+    {
+        if (err['httpStatusCode'] && 
+            err['httpStatusCode'] == '404')
+        {
+            return await acquireNodeFromFallbackLocation(version);
+        }
+
+        throw err;
+    }
+    
     //
     // Extract
     //
@@ -156,6 +171,30 @@ async function acquireNode(version: string): Promise<string> {
     //
     let toolRoot = path.join(extPath, fileName);
     return await toolLib.cacheDir(toolRoot, 'node', version);
+}
+
+// For non LTS versions of Node, the files we need (for Windows) are sometimes located
+// in a different folder than they normally are for other versions.
+// Normally the format is similar to: https://nodejs.org/dist/v5.10.1/node-v5.10.1-win-x64.7z
+// In this case, there will be two files located at:
+//      /dist/v5.10.1/win-x64/node.exe
+//      /dist/v5.10.1/win-x64/node.lib
+// This method attempts to download and cache the resources from this alternative location.
+// Note also that the files are normally zipped but in this case they are just an exe
+// and lib file in a folder, not zipped.
+async function acquireNodeFromFallbackLocation(version: string): Promise<string> {
+    let exeUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.exe`;
+    let libUrl: string = `https://nodejs.org/dist/v${version}/win-${os.arch()}/node.lib`;
+
+    // Create temporary folder to download in to
+    let tempDownloadFolder: string = 'temp_' + Math.floor(Math.random() * 2000000000);
+    let tempDir: string = path.join(taskLib.getVariable('agent.tempDirectory'), tempDownloadFolder);
+    taskLib.mkdirP(tempDir);
+
+    let exeDownloadPath: string = await toolLib.downloadTool(exeUrl, path.join(tempDir, "node.exe"));
+    let libDownloadPath: string = await toolLib.downloadTool(libUrl, path.join(tempDir, "node.lib"));
+
+    return await toolLib.cacheDir(tempDir, 'node', version);
 }
 
 run();

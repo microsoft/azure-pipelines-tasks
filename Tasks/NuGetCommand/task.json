@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 26
     },
     "runsOn": [
         "Agent",
@@ -144,6 +144,15 @@
             "label": "Disable local cache",
             "defaultValue": "false",
             "helpMarkDown": "Prevents NuGet from using packages from local machine caches.",
+            "required": "false",
+            "groupName": "restoreAdvanced"
+        },
+        {
+            "name": "disableParallelProcessing",
+            "type": "boolean",
+            "label": "Disable parallel processing",
+            "defaultValue": "false",
+            "helpMarkDown": "Prevents NuGet from installing multiple packages in parallel.",
             "required": "false",
             "groupName": "restoreAdvanced"
         },
@@ -371,6 +380,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Specifies a list of token=value pairs, separated by semicolons, where each occurrence of $token$ in the .nuspec file will be replaced with the given value. Values can be strings in quotation marks.",
+            "groupName": "packAdvanced"
+        },
+        {
+            "name": "basePath",
+            "type": "string",
+            "label": "Base path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The base path of the files defined in the nuspec file.",
             "groupName": "packAdvanced"
         },
         {
