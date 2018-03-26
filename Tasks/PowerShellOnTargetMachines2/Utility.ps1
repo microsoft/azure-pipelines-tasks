@@ -115,8 +115,7 @@ function Parse-SessionVariables {
             throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList [string]::Empty, $currentKey)
         }
 
-        <#
-        $keyPattern = "(\`$[^`" =]+)[ ]*="
+        $keyPattern = "(\$[^`" =]+)[ ]*="
         $valuePattern = "=[ ]*([^`" ]*(`"[^`"]*`")[^`" ]*|[^`" ,]+)[ ]*(,|$)"
         
         $keyRegex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $keyPattern, $regexOption
@@ -128,7 +127,6 @@ function Parse-SessionVariables {
         if(($keyMatches.Count -ne $sessionVariables.Count) -or ($valueMatches.Count -ne $sessionVariables.Count)) {
             throw (Get-VstsLocString -Key "PS_TM_InvalidSessionVariablesInputFormat")
         }
-        #>
 
         $sessionVariablesString = [string]::Empty
         foreach($key in $sessionVariables.Keys) {
