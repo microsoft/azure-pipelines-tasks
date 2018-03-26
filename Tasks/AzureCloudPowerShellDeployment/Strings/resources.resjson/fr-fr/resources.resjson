@@ -24,6 +24,8 @@
   "loc.input.help.AppendDateTimeToLabel": "Ajoute la date et l'heure actuelles à l'étiquette du déploiement",
   "loc.input.label.AllowUpgrade": "Autoriser la mise à niveau",
   "loc.input.help.AllowUpgrade": "L'option sélectionnée permet une mise à niveau du déploiement de Microsoft Azure",
+  "loc.input.label.SimultaneousUpgrade": "Simultaneous upgrade",
+  "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Forcer la mise à niveau",
   "loc.input.help.ForceUpgrade": "L'option sélectionnée définit une mise à niveau forcée, ce qui risque d'entraîner une perte des données locales.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Clés de compte de stockage de diagnostics",

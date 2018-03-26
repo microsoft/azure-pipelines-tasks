@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 2,
+        "Minor": 3,
         "Patch": 1
     },
     "demands": [
@@ -120,6 +120,15 @@
             "defaultValue": "true",
             "helpMarkDown": "When selected allows an upgrade to the Microsoft Azure deployment",
             "required": true
+        },
+        {
+            "name": "SimultaneousUpgrade",
+            "type": "boolean",
+            "label": "Simultaneous upgrade",
+            "defaultValue": "false",
+            "visibleRule": "AllowUpgrade == true",
+            "helpMarkDown": "Updates all instances at once. Your cloud service will be unavailable during update.",
+            "required": false
         },
         {
             "name": "ForceUpgrade",
