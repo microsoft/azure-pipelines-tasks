@@ -6,7 +6,7 @@ import * as tl from 'vsts-task-lib/task';
 import { IBuildApi } from './vso-node-api/BuildApi';
 import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
 import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
-import { BuildStatus, BuildResult, BuildQueryOrder, Build } from './vso-node-api/interfaces/BuildInterfaces';
+import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionReference } from './vso-node-api/interfaces/BuildInterfaces';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
@@ -133,6 +133,15 @@ async function main(): Promise<void> {
             }
         }
 
+        // if the definition name includes a variable then definitionIdSpecified is a name vs a number
+        if (Number.isNaN(parseInt(definitionIdSpecified))) {
+            var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), 4).catch((reason) => {
+                reject(reason);
+                return;
+            });
+            definitionId = String(definitions[0].id);
+            console.log(tl.loc("DefinitionIDFound", definitionIdSpecified, definitionId));
+        }
         // verify that buildId belongs to the definition selected
         if (definitionId) {
             var build : Build;
