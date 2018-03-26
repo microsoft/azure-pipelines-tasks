@@ -195,7 +195,7 @@ export function redirectMSDeployErrorToConsole() {
             else if(errorFileContent.indexOf("FILE_IN_USE") !== -1) {
                 tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
             }
-            else if(errorFileContent.indexOf("Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host.") != -1){
+            else if(errorFileContent.indexOf("transport connection") != -1){
                 errorFileContent = errorFileContent + tl.loc("Updatemachinetoenablesecuretlsprotocol");
             }
           

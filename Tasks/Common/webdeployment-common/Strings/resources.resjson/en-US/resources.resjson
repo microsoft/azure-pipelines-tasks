@@ -1,3 +1,3 @@
 {
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Stronger security protocol might be required. Please make sure the machine is using TLS 1.1 or higher. Check the link for more information https://support.microsoft.com/en-us/help/3206898/enabling-iis-manager-and-web-deploy-after-disabling-ssl3-and-tls-1-0"
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
 }

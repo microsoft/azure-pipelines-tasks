@@ -73,5 +73,5 @@
   "loc.messages.FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
   "loc.messages.AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
   "loc.messages.PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Stronger security protocol might be required. Please make sure the machine is using TLS 1.1 or higher. Check the link for more information https://support.microsoft.com/en-us/help/3206898/enabling-iis-manager-and-web-deploy-after-disabling-ssl3-and-tls-1-0"
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
 }
