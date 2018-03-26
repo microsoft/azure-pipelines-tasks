@@ -29,13 +29,13 @@ Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SD
 
 # Setup mock VSTS service endpoint
 $vstsEndpoint = @{
-    "url" = $connectionEndpointFullUrl
+    "url"  = $connectionEndpointFullUrl
     "Auth" = @{
-        "Scheme" = "UserNamePassword"
+        "Scheme"     = "UserNamePassword"
         "Parameters" = @{
             "ServerCertThumbprint" = $serverCertThumbprint
-            "Username" = $userName
-            "Password" = $password
+            "Username"             = $userName
+            "Password"             = $password
         }
     }
 }
@@ -51,9 +51,9 @@ Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsof
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
 $serviceFabricComposeDeploymentStatus = @{
-    "DeploymentName"        = $applicationName
-    "ComposeDeploymentStatus"    = "Created"
-    "StatusDetails" = ""
+    "DeploymentName"          = $applicationName
+    "ComposeDeploymentStatus" = "Created"
+    "StatusDetails"           = ""
 }
 
 # Need to store the bool in an object so the lambdas will share the reference
