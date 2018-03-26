@@ -15,7 +15,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 34
+    "Patch": 36
   },
   "demands": [],
   "minimumAgentVersion": "2.104.1",
@@ -181,6 +181,7 @@
     "FailedToApplyTransformationReason1": "ms-resource:loc.messages.FailedToApplyTransformationReason1",
     "FailedToApplyTransformationReason2": "ms-resource:loc.messages.FailedToApplyTransformationReason2",
     "AutoParameterizationMessage": "ms-resource:loc.messages.AutoParameterizationMessage",
-    "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed"
+    "PackageDeploymentFailed": "ms-resource:loc.messages.PackageDeploymentFailed",
+    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol"
   }
 }
