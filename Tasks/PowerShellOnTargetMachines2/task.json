@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 24
+        "Patch": 27
     },
     "preview": true,
     "groups": [
@@ -214,8 +214,11 @@
         }
     },
     "messages": {
-        "PS_TM_NonZeroExitCode": "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
-        "PS_TM_ConnectedMachines": "PSSession created for Machines:'{0}'",
-        "PS_TM_NotConnectedMachines": "PSSession could not be created for Machines:'{0}'"
+        "PS_TM_NonZeroExitCode" : "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
+        "PS_TM_ConnectedMachines" : "PSSession created for Machines:'{0}'",
+        "PS_TM_NotConnectedMachines" : "PSSession could not be created for Machines:'{0}'",
+        "PS_TM_ParseSessionVariablesValueNotFound" : "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
+        "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
+        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input"
     }
 }

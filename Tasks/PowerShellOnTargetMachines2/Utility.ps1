@@ -76,6 +76,71 @@ function New-CommandString {
     }
 }
 
+function Parse-SessionVariables {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string] $sessionVariablesString
+    )
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $sessionVariables = @{};
+        if([string]::IsNullOrEmpty($sessionVariablesString)) {
+            return $sessionVariablesString;
+        }
+
+        $pattern = "([^`" =,]*(`"[^`"]*`")[^`" =,]*)|[^`" =,]+"
+        $regexOption = [System.Text.RegularExpressions.RegexOptions]::Compiled
+        $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern,$regexOption
+        $tokens = $regex.Matches($sessionVariablesString)
+        $currentKey = [string]::Empty
+        foreach($token in $tokens) {
+            if($token.Value.StartsWith('$')) {
+                if(![string]::IsNullOrEmpty($currentKey)) {
+                    throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList $($token.Value), $currentKey)
+                }
+
+                $currentKey = $token.Value.Trim('$')
+                $sessionVariables.Add($currentKey, [string]::Empty)
+            } elseif(!$token.Value.StartsWith('$') -and ![string]::IsNullOrEmpty($currentKey)) {
+                $sessionVariables[$currentKey] = $token.Value
+                $currentKey = [string]::Empty
+            } else {
+                throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesKeyNotFound" -ArgumentList $($token.Value), $currentKey)
+            }
+        }
+
+        if(![string]::IsNullOrEmpty($currentKey)) {
+            throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList [string]::Empty, $currentKey)
+        }
+
+        <#
+        $keyPattern = "(\`$[^`" =]+)[ ]*="
+        $valuePattern = "=[ ]*([^`" ]*(`"[^`"]*`")[^`" ]*|[^`" ,]+)[ ]*(,|$)"
+        
+        $keyRegex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $keyPattern, $regexOption
+        $valueRegex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $valuePattern, $regexOption
+
+        $keyMatches = $keyRegex.Match($sessionVariablesString)
+        $valueMatches = $valueRegex.Match($sessionVariablesString)
+        
+        if(($keyMatches.Count -ne $sessionVariables.Count) -or ($valueMatches.Count -ne $sessionVariables.Count)) {
+            throw (Get-VstsLocString -Key "PS_TM_InvalidSessionVariablesInputFormat")
+        }
+        #>
+
+        $sessionVariablesString = [string]::Empty
+        foreach($key in $sessionVariables.Keys) {
+            $sessionVariablesString += New-CommandString -commandName "Set-Item" -arguments "-LiteralPath variable:\$key -Value $($sessionVariables[$key]) $([Environment]::NewLine)"
+        }
+
+        return $sessionVariablesString
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
 function Get-RemoteScriptJobArguments {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -85,6 +150,7 @@ function Get-RemoteScriptJobArguments {
             $input_ScriptPath = Get-VstsInput -Name "ScriptPath" -ErrorAction "Stop"
             $input_initializationScriptPath = Get-VstsInput -Name "InitializationScript"
             $input_sessionVariables = Get-VstsInput -Name "SessionVariables"
+            $input_sessionVariables = Parse-SessionVariables -sessionVariablesString $input_sessionVariables
             $inline = $false
         } else {
             $input_InlineScript = Get-VstsInput -Name "InlineScript"
