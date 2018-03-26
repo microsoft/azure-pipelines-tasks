@@ -76,64 +76,67 @@ function New-CommandString {
     }
 }
 
-function Parse-SessionVariables {
+function Get-TokensFromSequence {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [AllowEmptyString()]
-        [string] $sessionVariablesString
+        [string] $tokenPattern,
+        [Parameter(Mandatory = $true)]
+        [string] $tokenSequence,
+        [System.Text.RegularExpressions.RegexOptions] $regexOption = [System.Text.RegularExpressions.RegexOptions]::Compiled
+    )
+    $regex = New-Object regex -ArgumentList $tokenPattern, $regexOption
+    return ($regex.Matches($tokenSequence))
+}
+
+function ConvertTo-HashTable {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string] $tokenSequence
     )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        $sessionVariables = @{};
-        if([string]::IsNullOrEmpty($sessionVariablesString)) {
-            return $sessionVariablesString;
-        }
+        $result = @{}
+        if (![string]::IsNullOrEmpty($tokenSequence))  {
+            $tokenPattern = "([^`" =,]*(`"[^`"]*`")[^`" =,]*)|[^`" =,]+"
+            $tokens = Get-TokensFromSequence -tokenPattern $tokenPattern -tokenSequence $tokenSequence
+            $currentKey = [string]::Empty
 
-        $pattern = "([^`" =,]*(`"[^`"]*`")[^`" =,]*)|[^`" =,]+"
-        $regexOption = [System.Text.RegularExpressions.RegexOptions]::Compiled
-        $regex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $pattern, $regexOption
-        $tokens = $regex.Matches($sessionVariablesString)
-        $currentKey = [string]::Empty
-        foreach($token in $tokens) {
-            if($token.Value.StartsWith('$')) {
-                if(![string]::IsNullOrEmpty($currentKey)) {
-                    throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList $($token.Value), $currentKey)
+            foreach ($token in $tokens) {
+                if ($token.Value.StartsWith('$')) {
+                    if (![string]::IsNullOrEmpty($currentKey)) {
+                        throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList $($token.Value), $currentKey)
+                    }
+                    $currentKey = $token.Value.Trim('$')
+                    Write-Verbose "Adding Key:'$currentKey' Value:''"
+                    $result.Add($currentKey, [string]::Empty)
+                } elseif (!$token.Value.StartsWith('$') -and ![string]::IsNullOrEmpty($currentKey)) {
+                    Write-Verbose "Setting Key:'$currentKey' Value:'$($token.Value)'"
+                    $result[$currentKey] = $token.Value
+                    $currentKey = [string]::Empty
+                } else {
+                    throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesKeyNotFound" -ArgumentList $($token.Value), $currentKey)
                 }
+            }
+    
+            if (![string]::IsNullOrEmpty($currentKey)) {
+                throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList [string]::Empty, $currentKey)
+            }
+    
+            $keyTokenPattern = "(\$[^`" =]+)[ ]*="
+            $allKeyTokens_SemiParsed = Get-TokensFromSequence -tokenPattern $keyTokenPattern -tokenSequence $tokenSequence
 
-                $currentKey = $token.Value.Trim('$')
-                $sessionVariables.Add($currentKey, [string]::Empty)
-            } elseif(!$token.Value.StartsWith('$') -and ![string]::IsNullOrEmpty($currentKey)) {
-                $sessionVariables[$currentKey] = $token.Value
-                $currentKey = [string]::Empty
-            } else {
-                throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesKeyNotFound" -ArgumentList $($token.Value), $currentKey)
+            $valueTokenPattern = "=[ ]*([^`" ]*(`"[^`"]*`")[^`" ]*|[^`" ,]+)[ ]*(,|$)"
+            $allValueTokens_SemiParsed = Get-TokensFromSequence -tokenPattern $valueTokenPattern -tokenSequence $tokenSequence
+            
+            if (($allKeyTokens_SemiParsed.Count -ne $result.Count) -or ($allValueTokens_SemiParsed.Count -ne $result.Count)) {
+                throw (Get-VstsLocString -Key "PS_TM_InvalidSessionVariablesInputFormat")
             }
         }
-
-        if(![string]::IsNullOrEmpty($currentKey)) {
-            throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList [string]::Empty, $currentKey)
-        }
-
-        $keyPattern = "(\$[^`" =]+)[ ]*="
-        $valuePattern = "=[ ]*([^`" ]*(`"[^`"]*`")[^`" ]*|[^`" ,]+)[ ]*(,|$)"
-        
-        $keyRegex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $keyPattern, $regexOption
-        $valueRegex = New-Object -TypeName System.Text.RegularExpressions.Regex -ArgumentList $valuePattern, $regexOption
-
-        $keyMatches = $keyRegex.Matches($sessionVariablesString)
-        $valueMatches = $valueRegex.Matches($sessionVariablesString)
-        
-        if(($keyMatches.Count -ne $sessionVariables.Count) -or ($valueMatches.Count -ne $sessionVariables.Count)) {
-            throw (Get-VstsLocString -Key "PS_TM_InvalidSessionVariablesInputFormat")
-        }
-
-        $sessionVariablesString = [string]::Empty
-        foreach($key in $sessionVariables.Keys) {
-            $sessionVariablesString += New-CommandString -commandName "Set-Item" -arguments "-LiteralPath variable:\$key -Value $($sessionVariables[$key]) $([Environment]::NewLine)"
-        }
-
-        return $sessionVariablesString
+        return $result
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -148,7 +151,12 @@ function Get-RemoteScriptJobArguments {
             $input_ScriptPath = Get-VstsInput -Name "ScriptPath" -ErrorAction "Stop"
             $input_initializationScriptPath = Get-VstsInput -Name "InitializationScript"
             $input_sessionVariables = Get-VstsInput -Name "SessionVariables"
-            $input_sessionVariables = Parse-SessionVariables -sessionVariablesString $input_sessionVariables
+            $sessionVariables = ConvertTo-HashTable -tokenSequence $input_sessionVariables
+            $newVarCmds = @()
+            foreach ($key in $sessionVariables.Keys) {
+                $newVarCmds += New-CommandString -commandName "Set-Item" -arguments "-LiteralPath variable:\$key -Value $($sessionVariables[$key])"
+            }
+            $joinedCommand = [System.String]::Join([Environment]::NewLine, $newVarCmds)
             $inline = $false
         } else {
             $input_InlineScript = Get-VstsInput -Name "InlineScript"
@@ -172,7 +180,7 @@ function Get-RemoteScriptJobArguments {
             $input_ignoreLASTEXITCODE,
             $input_failOnStderr,
             $input_initializationScriptPath,
-            $input_sessionVariables
+            $joinedCommand
         )
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
