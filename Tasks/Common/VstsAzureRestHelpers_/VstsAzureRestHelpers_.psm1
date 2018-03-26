@@ -8,7 +8,7 @@ $script:defaultEnvironmentAuthUri = "https://login.windows.net/"
 $certificateConnection = 'Certificate'
 $usernameConnection = 'UserNamePassword'
 $spnConnection = 'ServicePrincipal'
-$MsiConnection = 'MSI'
+$MsiConnection = 'ManagedServiceIdentity'
 
 # Well-Known ClientId
 $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
@@ -323,7 +323,7 @@ function Has-ObjectProperty {
 function Get-AzureRMAccessToken (
     [CmdletBinding()]
     param([Parameter(Mandatory=$true)] $endpoint) {
-        if($endpoint.Auth.Scheme -eq 'MSI' )
+        if($endpoint.Auth.Scheme -eq $MsiConnection )
         {
             Get-MsiAccessToken $endpoint
         }
@@ -391,15 +391,16 @@ function Get-SpnAccessToken {
 function Get-MsiAccessToken {
     [CmdletBinding()]
     param([Parameter(Mandatory=$true)] $endpoint)
+
     $msiPort = 50342;
     if($endpoint.Data.MsiPort){
         $msiPort = $endpoint.Data.MsiPort
     }
     $tenantId = $endpoint.Auth.Parameters.TenantId
 
-    # Prepare contents for POST
+    # Prepare contents for GET
     $method = "GET"
-    $authUri = "http://localhost:" + "$msiPort/oauth2/token?resource="+$endpoint.Url
+    $authUri = "http://localhost:$msiPort/oauth2/token"
     
     # Call Rest API to fetch AccessToken
     Write-Verbose "Fetching Access Token For MSI"
@@ -412,13 +413,15 @@ function Get-MsiAccessToken {
         if ($proxyUri -eq $null)
         {
             Write-Verbose "No proxy settings"
-            $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Headers $headers
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Body @{resource=$endpoint.Url} -Headers @{Metadata="true"} -UseBasicParsing
+            $accessToken = $response.Content | ConvertFrom-Json
             return $accessToken
         }
         else
         {
             Write-Verbose "Using Proxy settings"
-            $accessToken = Invoke-RestMethod -Uri $authUri -Method $method -Headers $headers  -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Body @{resource=$endpoint.Url} -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
+            $accessToken = $response.Content | ConvertFrom-Json
             return $accessToken
         }
     }
