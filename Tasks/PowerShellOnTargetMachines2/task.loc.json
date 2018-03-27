@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 33
+    "Patch": 37
   },
   "preview": true,
   "groups": [
@@ -69,7 +69,7 @@
       "name": "ScriptType",
       "type": "radio",
       "label": "ms-resource:loc.input.label.ScriptType",
-      "defaultValue": "FilePath",
+      "defaultValue": "Inline",
       "options": {
         "FilePath": "File Path",
         "Inline": "Inline"
@@ -138,12 +138,11 @@
       "name": "Protocol",
       "type": "radio",
       "label": "ms-resource:loc.input.label.Protocol",
-      "required": false,
-      "defaultValue": "Https",
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
       },
+      "defaultValue": "Https",
       "helpMarkDown": "ms-resource:loc.input.help.Protocol",
       "groupName": "SessionOptions"
     },

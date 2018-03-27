@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 33
+        "Patch": 37
     },
     "preview": true,
     "groups": [
@@ -69,7 +69,7 @@
             "name": "ScriptType",
             "type": "radio",
             "label": "Script Type",
-            "defaultValue": "FilePath",
+            "defaultValue": "Inline",
             "options": {
                 "FilePath": "File Path",
                 "Inline": "Inline"
@@ -138,12 +138,11 @@
             "name": "Protocol",
             "type": "radio",
             "label": "Protocol",
-            "required": false,
-            "defaultValue": "Https",
             "options": {
                 "Http": "HTTP",
                 "Https": "HTTPS"
             },
+            "defaultValue": "Https",
             "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
             "groupName": "SessionOptions"
         },
