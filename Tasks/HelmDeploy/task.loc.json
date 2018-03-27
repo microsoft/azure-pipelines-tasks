@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [],
   "preview": "true",
@@ -62,6 +62,19 @@
       "groupName": "cluster"
     },
     {
+      "name": "azureResourceGroup",
+      "label": "ms-resource:loc.input.label.azureResourceGroup",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
+      "visibleRule": "connectionType = Azure Resource Manager",
+      "defaultValue": "",
+      "required": true,
+      "groupName": "cluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
       "name": "kubernetesCluster",
       "label": "ms-resource:loc.input.label.kubernetesCluster",
       "type": "pickList",
@@ -69,7 +82,10 @@
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
       "required": true,
-      "groupName": "cluster"
+      "groupName": "cluster",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "kubernetesServiceEndpoint",
@@ -301,9 +317,16 @@
     {
       "target": "kubernetesCluster",
       "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
       "resultSelector": "jsonpath:$.value[*]",
       "resultTemplate": "{{{name}}}"
+    },
+    {
+      "target": "azureResourceGroup",
+      "endpointId": "$(azureSubscriptionEndpoint)",
+      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
