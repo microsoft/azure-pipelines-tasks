@@ -29,7 +29,7 @@ For Azure MSDN accounts, one can either use a [Service Principal](https://go.mic
 
 ##### Azure SQL Server
 
-There should be a Azure SQL Server that is already pre-created in the [Azure portal](https://ms.portal.azure.com/?r=1#create/Microsoft.SQLDatabase.0.5.7-preview). The task deploys Azure SQL Databases but does not create Azure SQL Server.
+There should be a Azure SQL Server that is already pre-created in the [Azure portal](https://ms.portal.azure.com/#create/Microsoft.SQLServer). The task deploys Azure SQL Databases but does not create Azure SQL Server.
 
 ##### Automation Agent
 

@@ -24,6 +24,8 @@
   "loc.input.help.AppendDateTimeToLabel": "Anexa la fecha y hora actuales a la etiqueta de implementación",
   "loc.input.label.AllowUpgrade": "Permitir actualización",
   "loc.input.help.AllowUpgrade": "Si selecciona esta opción, se permite la actualización a la implementación en Microsoft Azure",
+  "loc.input.label.SimultaneousUpgrade": "Simultaneous upgrade",
+  "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Forzar actualización",
   "loc.input.help.ForceUpgrade": "Si selecciona esta opción, se fuerza la actualización, lo que podría dar lugar a la pérdida de datos locales.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Claves de la cuenta de almacenamiento de diagnóstico",

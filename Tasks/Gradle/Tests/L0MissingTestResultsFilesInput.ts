@@ -6,6 +6,7 @@ let taskPath = path.join(__dirname, '..', 'gradletask.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('wrapperScript', 'gradlew');
+tr.setInput('cwd', '/home/repo/src');
 tr.setInput('options', '/o "/p t i" /o /n /s');
 tr.setInput('tasks', 'build test deploy');
 tr.setInput('javaHomeSelection', 'JDKVersion');
@@ -18,7 +19,8 @@ tr.setInput('publishJUnitResults', 'true');
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'checkPath': {
         'gradlew': true,
-        'gradlew.bat': true
+        'gradlew.bat': true,
+        '/home/repo/src': true
     }
 };
 tr.setAnswers(a);

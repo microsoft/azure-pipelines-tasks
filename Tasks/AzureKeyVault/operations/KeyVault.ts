@@ -180,6 +180,12 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
             return;
         }
 
+        let doNotMaskMultilineSecrets = tl.getVariable("SYSTEM_DONOTMASKMULTILINESECRETS");
+        if (doNotMaskMultilineSecrets && doNotMaskMultilineSecrets.toUpperCase() === "TRUE") {
+            tl.setVariable(secretName, secretValue, true);
+            return;
+        }
+
         if (secretValue.indexOf('\n') < 0) {
             // single-line case
             tl.setVariable(secretName, secretValue, true);
@@ -194,10 +200,21 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
             else {
                 let lines = secretValue.split('\n');
                 lines.forEach((line: string, index: number) => {
-                    console.log("##vso[task.setsecret]" + line);
+                    this.trySetSecret(secretName, line);
                 });
                 tl.setVariable(secretName, secretValue, true);
             }
+        }
+    }
+
+    private trySetSecret(secretName: string, secretValue: string): void {
+        try {
+            let regExp = new RegExp(secretValue);
+
+            console.log("##vso[task.setsecret]" + secretValue);
+        }
+        catch (e) {
+            console.log(tl.loc("CouldNotMaskSecret", secretName));
         }
     }
 

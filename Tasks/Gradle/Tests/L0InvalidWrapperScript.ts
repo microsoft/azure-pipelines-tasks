@@ -6,13 +6,13 @@ let taskPath = path.join(__dirname, '..', 'gradletask.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('wrapperScript', '/home/gradlew');
+tr.setInput('cwd', '/home/repo/src2');
 tr.setInput('options', '');
 tr.setInput('tasks', 'build');
 tr.setInput('javaHomeSelection', 'JDKVersion');
 tr.setInput('jdkVersion', 'default');
 tr.setInput('publishJUnitResults', 'true');
 tr.setInput('testResultsFiles', '**/build/test-results/TEST-*.xml');
-tr.setInput('cwd', '/home/repo/src2');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

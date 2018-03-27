@@ -24,6 +24,8 @@
   "loc.input.help.AppendDateTimeToLabel": "Aggiunge la data e l'ora correnti all'etichetta della distribuzione",
   "loc.input.label.AllowUpgrade": "Consenti aggiornamento",
   "loc.input.help.AllowUpgrade": "Quando questa opzione è selezionata, consente di eseguire un aggiornamento alla distribuzione di Microsoft Azure",
+  "loc.input.label.SimultaneousUpgrade": "Simultaneous upgrade",
+  "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Forza aggiornamento",
   "loc.input.help.ForceUpgrade": "Quando questa opzione è selezionata, forza l'aggiornamento. Questa operazione potrebbe causare la perdita di dati locali.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Chiavi dell'account di archiviazione di diagnostica",

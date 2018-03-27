@@ -4,7 +4,7 @@
 
 The task is used to deploy a web application or a website to IIS web server, and the underlying technologies used by the task is [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy). Web Deploy packages the web application content, configuration and any other artifacts like registry, GAC assemblies etc. that can be used deployment. If the package needs to be redeployed to a different environment, configuration values within the package can be parameterized during deployment without requiring modifications to the packages themselves. Web deploy works with IIS 7, IIS 7.5, IIS 8, and IIS 8.5. 
 
-The task runs on the deployment target machine(s) registered with the Machine Group configured for the task/phase. Machine Groups are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring VSTS Release definition, you can specify the deployments targets for a Phase using the machine group. 
+The task runs on the deployment target machine(s) registered with the Deployment Group configured for the task/phase. Deployment Groups are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring VSTS Release definition, you can specify the deployments targets for a Phase using the deployment group. 
 
 
 ## Contact Information
@@ -23,10 +23,10 @@ Web Deploy (msdeploy.exe) is used to deploy the web application on the IIS serve
 
 There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. The task updates websites and application pools, and deploys IIS web applications but does not install or configure IIS web server on the machines.
 
-### Pre-existing Machine Group
+### Pre-existing Deployment Group
 
-This task requires a machine group to execute. If the web application is being deployed on pre-existing machines (physical or virtual machines) then download the agent installer on each of the machines and register them with an existing machine group by following these [instructions](). If there is no pre-existing machine group, you can create one in the Machine groups hub. 
-Note that the IP Address or the FDQN of Azure virtual machines can be also added in the machine group. 
+This task requires a deployment group to execute. If the web application is being deployed on pre-existing machines (physical or virtual machines) then download the agent installer on each of the machines and register them with an existing deployment group by following these [instructions](). If there is no pre-existing deployment group, you can create one in the deployment groups hub. 
+Note that the IP Address or the FDQN of Azure virtual machines can be also added in the deployment group. 
 The difference between using the domain-joined/workgroup machines and the Azure virtual machines is that copying files to them uses separate tasks wiz. [Windows Machine File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/WindowsMachineFileCopy) for the domain-joined/workgroup machines and [Azure File Copy](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzureFileCopy) for the Azure virtual machines. Note that the IIS Web Application Deployment task expects the web application's package zip files to be available on the machines or on a UNC path that is accessible by the machine administrator's login. Prior to using the IIS Web Application Deployment task ensure that the zip files are available for the deployment by copying them to the machines using the Windows Machine File Copy or the Azure File Copy tasks.
 
 ## Parameters of the task
