@@ -49,7 +49,8 @@ function Generate-TlsError {
         $innerException = $innerException.InnerException
         if ($innerException -eq $null)
         {
-            $isWebException = $false;
+            $isWebException = $false
+            break
         }
     }
 
