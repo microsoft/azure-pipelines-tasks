@@ -25,8 +25,8 @@ tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('forceUpdate', process.env[shared.TestEnvVars.forceUpdate] || "true");
 tr.setInput('configMapName', process.env[shared.TestEnvVars.configMapName] || '');
 tr.setInput('forceUpdateConfigMap', process.env[shared.TestEnvVars.forceUpdateConfigMap] || "false");
-tr.setInput('useConfigMapFile', process.env[shared.TestEnvVars.useConfigMapFile] || "false");
-tr.setInput('configMapFile', ConfigMapFilePath);
+//tr.setInput('useConfigMapFile', process.env[shared.TestEnvVars.useConfigMapFile] || "false");
+//tr.setInput('configMapFile', ConfigMapFilePath);
 tr.setInput('configMapArguments', process.env[shared.TestEnvVars.configMapArguments] || '');
 tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocation] || 'version');
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.7.0");
@@ -129,7 +129,7 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --fro
 a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap someConfigMap --from-file=${ConfigMapFilePath}`] = {
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap someConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
     "code": 1,
     "stdout" : "Error in configMap creation"
 };

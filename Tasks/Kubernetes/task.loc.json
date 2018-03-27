@@ -223,24 +223,6 @@
       "groupName": "configMaps"
     },
     {
-      "name": "useConfigMapFile",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.useConfigMapFile",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.useConfigMapFile",
-      "groupName": "configMaps"
-    },
-    {
-      "name": "configMapFile",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.configMapFile",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.configMapFile",
-      "visibleRule": "useConfigMapFile = true",
-      "groupName": "configMaps"
-    },
-    {
       "name": "configMapArguments",
       "type": "multiLine",
       "properties": {
@@ -250,7 +232,6 @@
       },
       "label": "ms-resource:loc.input.label.configMapArguments",
       "helpMarkDown": "ms-resource:loc.input.help.configMapArguments",
-      "visibleRule": "useConfigMapFile = false",
       "groupName": "configMaps"
     },
     {

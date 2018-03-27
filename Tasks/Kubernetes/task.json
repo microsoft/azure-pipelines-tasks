@@ -217,24 +217,6 @@
             "groupName": "configMaps"
         },
         {
-            "name": "useConfigMapFile",
-            "type": "boolean",
-            "label": "Use file",
-            "defaultValue": "false",
-            "helpMarkDown": "Use a file or directory to create the configMap.",
-            "groupName": "configMaps"
-        },
-        {
-            "name": "configMapFile",
-            "type": "filePath",
-            "label": "ConfigMap File",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "Specify a file or directory that contains the configMaps",
-            "visibleRule": "useConfigMapFile = true",
-            "groupName": "configMaps"
-        },
-        {
             "name": "configMapArguments",
             "type": "multiLine",
             "properties": {
@@ -244,7 +226,6 @@
             },
             "label": "Arguments",
             "helpMarkDown": "Specify keys and literal values to insert in configMap.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
-            "visibleRule": "useConfigMapFile = false",
             "groupName": "configMaps"
         },
         {

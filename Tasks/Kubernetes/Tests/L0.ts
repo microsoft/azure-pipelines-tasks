@@ -26,7 +26,6 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.secretName];
         delete process.env[shared.TestEnvVars.forceUpdate];
         delete process.env[shared.TestEnvVars.configMapName];
-        delete process.env[shared.TestEnvVars.useConfigMapFile];
         delete process.env[shared.TestEnvVars.forceUpdateConfigMap];
         delete process.env[shared.TestEnvVars.configMapArguments];
         delete process.env[shared.TestEnvVars.outputFormat];
@@ -316,7 +315,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
  
-    it('Runs successfully for kubectl create configMap from file or directory with forceUpdate', (done:MochaDone) => {
+   /*  it('Runs successfully for kubectl create configMap from file or directory with forceUpdate', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -355,7 +354,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
-    });
+    }); */
 
     it('Runs successfully for kubectl create configMap using literal values with forceUpdate', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -425,7 +424,7 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.secretArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
         process.env[shared.TestEnvVars.secretName] = "my-secret";
         process.env[shared.TestEnvVars.configMapName] = "myConfigMap";
-        process.env[shared.TestEnvVars.useConfigMapFile] = "true";
+        process.env[shared.TestEnvVars.configMapArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
         process.env[shared.TestEnvVars.forceUpdateConfigMap] = "true";
         tr.run();
 
@@ -435,9 +434,9 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) != -1, "kubectl delete should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) != -1, "kubectl delete should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=${shared.formatPath("configMapDir/configMap.properties")}`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) < tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=${shared.formatPath("configMapDir/configMap.properties")}`), "kubectl create secrets should run before create configMap");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) < tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`), "kubectl create secrets should run before create configMap");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) < tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`), "kubectl create configMap should run before get");
         console.log(tr.stderr);
         done();
@@ -452,7 +451,7 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.secretArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
         process.env[shared.TestEnvVars.secretName] = "my-secret";
         process.env[shared.TestEnvVars.configMapName] = "someConfigMap";
-        process.env[shared.TestEnvVars.useConfigMapFile] = "true";
+        process.env[shared.TestEnvVars.configMapArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
         tr.run();
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -460,7 +459,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.failed, 'task should have failed');
         assert(tr.stdout.indexOf(`GetConfigMap someConfigMap`) != -1, "kubectl get should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap someConfigMap --from-file=${shared.formatPath("configMapDir/configMap.properties")}`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap someConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) == -1, "kubectl get should not run");
         console.log(tr.stderr);
         done();
@@ -472,7 +471,7 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
         process.env[shared.TestEnvVars.arguments] = "pods";
         process.env[shared.TestEnvVars.configMapName] = "existingConfigMap";
-        process.env[shared.TestEnvVars.useConfigMapFile] = "true";
+        process.env[shared.TestEnvVars.configMapArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -480,7 +479,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`GetConfigMap existingConfigMap`) != -1, "kubectl get should run");
         assert(tr.stdout.indexOf(`DeleteConfigMap existingConfigMap`) == -1, "kubectl delete should not run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap existingConfigMap --from-file=${shared.formatPath("configMapDir/configMap.properties")}`) == -1, "kubectl create should not run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap existingConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) == -1, "kubectl create should not run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();

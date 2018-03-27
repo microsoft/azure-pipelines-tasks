@@ -38,7 +38,7 @@ function deleteConfigMap(connection: ClusterConnection, configMapName: string): 
 }
 
 function getConfigMapArguments(): string {
-    if(tl.getBoolInput("useConfigMapFile") == true) {
+   /*  if(tl.getBoolInput("useConfigMapFile") == true) {
         var configMapFileOrDirectoryPath = tl.getInput("configMapFile", false);
         var configMapFromFromFileArgument: string = "";
         if(configMapFileOrDirectoryPath && tl.exist(configMapFileOrDirectoryPath))
@@ -47,13 +47,15 @@ function getConfigMapArguments(): string {
         }
 
         return configMapFromFromFileArgument;
-    } else {
-        return tl.getInput("configMapArguments", false);
-    }
+    } else { 
+       
+    }*/
+
+    return tl.getInput("configMapArguments", false);
 }
 
 function createConfigMap(connection: ClusterConnection, configMapName: string): any {
-    tl.debug(tl.loc('CreatingConfigMap', configMapName));
+    tl.debug(tl.loc('CreatingConfigMap', configMapName)); 
     var command = connection.createCommand();
     command.arg(kubernetesCommand.getNameSpace());
     command.arg("create")
