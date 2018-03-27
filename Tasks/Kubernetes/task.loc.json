@@ -29,6 +29,11 @@
       "isExpanded": false
     },
     {
+      "name": "configMaps",
+      "displayName": "ms-resource:loc.group.displayName.configMaps",
+      "isExpanded": false
+    },
+    {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false
@@ -202,6 +207,34 @@
       "groupName": "secrets"
     },
     {
+      "name": "configMapName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configMapName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.configMapName",
+      "groupName": "configMaps"
+    },
+    {
+      "name": "forceUpdateConfigMap",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.forceUpdateConfigMap",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.forceUpdateConfigMap",
+      "groupName": "configMaps"
+    },
+    {
+      "name": "configMapArguments",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2",
+        "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
+      },
+      "label": "ms-resource:loc.input.label.configMapArguments",
+      "helpMarkDown": "ms-resource:loc.input.help.configMapArguments",
+      "groupName": "configMaps"
+    },
+    {
       "name": "versionOrLocation",
       "type": "radio",
       "label": "ms-resource:loc.input.label.versionOrLocation",
@@ -297,6 +330,10 @@
     "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
     "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
     "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
+    "CreatingConfigMap": "ms-resource:loc.messages.CreatingConfigMap",
+    "DeleteConfigMap": "ms-resource:loc.messages.DeleteConfigMap",
+    "ConfigMapExists": "ms-resource:loc.messages.ConfigMapExists",
+    "GetConfigMap": "ms-resource:loc.messages.GetConfigMap",
     "DockerRegistryConnectionNotSpecified": "ms-resource:loc.messages.DockerRegistryConnectionNotSpecified",
     "FileNotFoundException": "ms-resource:loc.messages.FileNotFoundException",
     "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
