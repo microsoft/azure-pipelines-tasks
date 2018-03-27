@@ -73,6 +73,7 @@ $ExecutePsScript = {
                 . '$($initializationScriptPath.Replace("'","''"))'
             }
 
+            `$VerbosePreference = `"Continue`"
             . '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
 
             if(`"$ignoreLASTEXITCODE`" -eq `$false) {
