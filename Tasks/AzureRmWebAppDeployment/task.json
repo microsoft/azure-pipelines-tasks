@@ -16,7 +16,7 @@
     "version": {
         "Major": 3,
         "Minor": 3,
-        "Patch": 45
+        "Patch": 46
     },
     "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp;Supports File Transformations (XDT) <br/>&nbsp;&nbsp;Supports Variable Substitutions(XML, JSON) <br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -744,6 +744,7 @@
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "GoExeNameNotPresent": "Go exe name is not present",
-        "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
+        "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
+        "Updatemachinetoenablesecuretlsprotocol" : "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
     }
 }
