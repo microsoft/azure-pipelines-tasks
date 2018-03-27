@@ -15,6 +15,13 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 . $PSScriptRoot/InitializeFunctions.ps1
 . $PSScriptRoot/ImportFunctions.ps1
 
+try {
+    Import-Module $PSScriptRoot/../TlsHelper_
+    Add-Tls12InSession
+}
+catch {
+}
+
 # This is the only public function.
 function Initialize-Azure {
     [CmdletBinding()]
