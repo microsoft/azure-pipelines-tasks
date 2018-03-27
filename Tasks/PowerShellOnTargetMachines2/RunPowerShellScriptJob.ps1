@@ -70,10 +70,10 @@ $ExecutePsScript = {
             `$ErrorActionPreference = `"$_errorActionPreference`"
 
             if(![string]::IsNullOrEmpty(`"$initializationScriptPath`")) {
-                & '$($initializationScriptPath.Replace("'","''"))'
+                . '$($initializationScriptPath.Replace("'","''"))'
             }
 
-            & '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
+            . '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
 
             if(`"$ignoreLASTEXITCODE`" -eq `$false) {
                 if(!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {

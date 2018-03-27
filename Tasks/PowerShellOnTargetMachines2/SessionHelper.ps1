@@ -39,7 +39,7 @@ function Create-PSSessionToRemoteMachines {
         }
     
         foreach ($sessionError in $sessionErrors) {
-            Write-VstsTaskError -Message $sessionError.Exception.Message -Code "PS_TM_UnableToCreatePSSession"
+            Write-VstsTaskError -Message $sessionError.Exception.Message -ErrCode "PS_TM_UnableToCreatePSSession"
         }
     
         return $sessions
