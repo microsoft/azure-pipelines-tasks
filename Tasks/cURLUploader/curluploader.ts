@@ -38,7 +38,7 @@ async function run() {
             let serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(serviceEndpointID, false);
             username = serviceEndpoint.parameters['username'];
             password = serviceEndpoint.parameters['password'];
-            url = URL.format(URL.parse(tl.getEndpointUrl(serviceEndpointID, false)));
+            url = URL.format(URL.parse(tl.getEndpointUrl(serviceEndpointID, false))); // url has a / at the end
             if (!username || !password || !url) {
                 throw new Error(tl.loc('IncompleteEndpoint'));
             }
@@ -51,14 +51,10 @@ async function run() {
 
         let remotePath: string = tl.getInput('remotePath', false);
         if (remotePath) {
-            if (url.charAt(url.length - 1) != '/') {
-                url = url + '/';
-            }
-            while (remotePath.charAt(url.length - 2) == '/') {
-                url = url.substr(0, url.length - 1);
-            }
-            while (remotePath.charAt(0) == '/') {
-                remotePath = remotePath.substr(1);
+            if(authType === 'UserAndPass'){
+                // slash should only be added when authType is UserAndPass
+                // when authType is ServiceEndpoint there already is a slash
+                url = url + "/";
             }
             url = url + remotePath.replace(/\\/gi, "/").trim();
         }
