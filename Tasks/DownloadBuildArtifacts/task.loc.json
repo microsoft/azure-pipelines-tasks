@@ -6,7 +6,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Utility",
   "author": "Microsoft Corporation",
-  "preview": true,
   "version": {
     "Major": 0,
     "Minor": 131,
