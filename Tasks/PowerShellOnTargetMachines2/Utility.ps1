@@ -137,6 +137,8 @@ function ConvertTo-HashTable {
             $valueTokenPattern = "=[ ]*([^`" ]*(`"[^`"]*`")[^`" ]*|[^`" ,]+)[ ]*(,|$)"
             $allValueTokens_SemiParsed = Get-TokensFromSequence -tokenPattern $valueTokenPattern -tokenSequence $tokenSequence
             
+            Write-Verbose "Number of keys: $($allKeyTokens_SemiParsed.Count)"
+            Write-Verbose "Number of values: $($allValueTokens_SemiParsed.Count)"
             if (($allKeyTokens_SemiParsed.Count -ne $result.Count) -or ($allValueTokens_SemiParsed.Count -ne $result.Count)) {
                 throw (Get-VstsLocString -Key "PS_TM_InvalidSessionVariablesInputFormat")
             }
