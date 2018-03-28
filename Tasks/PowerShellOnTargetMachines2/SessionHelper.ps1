@@ -39,11 +39,10 @@ function ConnectTo-RemoteMachines {
     
         Write-Host $(Get-VstsLocString -Key "PS_TM_ConnectedMachines" -ArgumentList $($connectedMachineNames -join ','))
         if($remainingMachines.Count -gt 0) {
-            Write-Warning $(Get-VstsLocString -Key "PS_TM_NotConnectedMachines" -ArgumentList $($remainingMachines -join ','))
-        }
-    
-        foreach ($sessionError in $sessionErrors) {
-            Write-VstsTaskError -Message $sessionError.Exception.Message -ErrCode "PS_TM_UnableToCreatePSSession"
+            foreach ($sessionError in $sessionErrors) {
+                Write-VstsTaskError -Message $sessionError.Exception.Message -ErrCode "PS_TM_UnableToCreatePSSession"
+            }
+            Write-VstsSetResult -Result 'Failed' -Message $(Get-VstsLocString -Key "PS_TM_NotConnectedMachines" -ArgumentList $($remainingMachines -join ','))
         }
     
         return $sessions

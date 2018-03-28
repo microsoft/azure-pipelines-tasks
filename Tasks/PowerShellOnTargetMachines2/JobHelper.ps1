@@ -48,7 +48,7 @@ function Set-TaskResult {
         [Parameter(Mandatory = $true)]
         [hashtable[]] $jobResults
     )
-    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Paramter ""
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
     try {
         $failed = $false
         
