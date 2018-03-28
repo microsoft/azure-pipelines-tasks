@@ -18,7 +18,7 @@ function Add-Tls12InSession {
         }
     }
     catch {
-        Write-VstsTaskError 'Failed to add TLS 1.2 in session: $_.Exception.Message'
+        Write-VstsTaskError "Failed to add TLS 1.2 in session: $_.Exception.Message"
     }
 }
 
