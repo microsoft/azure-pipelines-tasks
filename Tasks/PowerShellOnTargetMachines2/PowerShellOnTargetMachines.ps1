@@ -20,6 +20,7 @@ try {
     $input_UserPassword = ConvertTo-SecureString -AsPlainText -String $(Get-VstsInput -Name "UserPassword" -Require -ErrorAction "Stop") -Force
 
     $input_Protocol = Get-VstsInput -Name "Protocol" -Require -ErrorAction "Stop"
+    $input_AuthenticationMechanism = Get-VstsInput -Name "AuthenticationMechanism" -Require -ErrorAction 'Stop'
     $input_NewPsSessionOptionArguments = Get-VstsInput -Name "NewPsSessionOptionArguments"
 
     $input_RunPowershellInParallel = Get-VstsInput -Name "RunPowershellInParallel" -AsBool
@@ -29,7 +30,7 @@ try {
 
     $PSSessionOption = Get-NewPSSessionOption -arguments $input_NewPsSessionOptionArguments
 
-    $sessions = Create-PSSessionToRemoteMachines -targetMachineNames $targetMachineNames -targetMachineCredential $credential -protocol $input_Protocol
+    $sessions = Create-PSSessionToRemoteMachines -targetMachineNames $targetMachineNames -targetMachineCredential $credential -protocol $input_Protocol -authenticationMechanism $input_AuthenticationMechanism
     $remoteScriptJobArguments = Get-RemoteScriptJobArguments
     if($input_RunPowershellInParallel -eq $true) {
         Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArguments $remoteScriptJobArguments

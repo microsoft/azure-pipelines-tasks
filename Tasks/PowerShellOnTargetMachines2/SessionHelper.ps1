@@ -5,6 +5,8 @@ function Create-PSSessionToRemoteMachines {
         [pscredential] $targetMachineCredential,
         [ValidateSet("http", "https")]
         [string] $protocol,
+        [ValidateSet("Default", "Credssp")]
+        [string] $authenticationMechanism,
         [ValidateRange(2,10)]
         [int] $maxRetryLimit = 3
     )
@@ -15,11 +17,13 @@ function Create-PSSessionToRemoteMachines {
         $sessions = @();
     
         $useSsl = ($protocol -eq "https")
+        $authOption = [System.Management.Automation.Runspaces.AuthenticationMechanism]::$authenticationMechanism
+
         $remainingMachines = $targetMachineNames | ForEach-Object { $_.ToLowerInvariant() }
     
         while ($retryCount -lt $maxRetryLimit) {
-            Write-Verbose "Attempting to establish connection: Attempt #$($retryCount + 1)"
-            $sessions += New-PSSession -ComputerName $remainingMachines -Credential $targetMachineCredential -UseSSL:$useSsl -ErrorAction "SilentlyContinue" -ErrorVariable sessionErrors
+            Write-Verbose "Trying to establish connection: Attempt #$($retryCount + 1)"
+            $sessions += New-PSSession -ComputerName $remainingMachines -Credential $targetMachineCredential -Authentication $authOption -UseSSL:$useSsl -ErrorAction "SilentlyContinue" -ErrorVariable sessionErrors
             foreach ($sessionError in $sessionErrors) {
                 Write-Verbose $("New-PSSession Error: " + $sessionError.Exception.Message)
             }

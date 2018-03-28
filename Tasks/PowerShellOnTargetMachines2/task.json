@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 42
+        "Patch": 44
     },
     "preview": true,
     "groups": [
@@ -146,6 +146,18 @@
             "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
             "groupName": "SessionOptions"
         },
+        {
+            "name": "AuthenticationMechanism",
+            "type": "pickList",
+            "label": "Authentication Mechanism",
+            "options": {
+                "Default": "Default",
+                "Credssp": "CredSSP"
+            },
+            "defaultValue": "Default",
+            "helpMarkDown": "Select the authentication mechanism to be used for creating ps session",
+            "groupName": "SessionOptions"
+        },        
         {
             "name": "NewPsSessionOptionArguments",
             "type": "multiLine",

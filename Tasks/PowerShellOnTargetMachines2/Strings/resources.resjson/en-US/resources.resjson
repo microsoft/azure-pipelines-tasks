@@ -27,6 +27,8 @@
   "loc.input.help.SessionVariables": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\"",
   "loc.input.label.Protocol": "Protocol",
   "loc.input.help.Protocol": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
+  "loc.input.label.AuthenticationMechanism": "Authentication Mechanism",
+  "loc.input.help.AuthenticationMechanism": "Select the authentication mechanism to be used for creating ps session",
   "loc.input.label.NewPsSessionOptionArguments": "New-PSSessionOption arguments",
   "loc.input.help.NewPsSessionOptionArguments": "Arguments to be used for creating a New-PSSessionOption object. To be used with New-PSSession",
   "loc.input.label.ErrorActionPreference": "ErrorActionPreference",

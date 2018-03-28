@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 42
+    "Patch": 44
   },
   "preview": true,
   "groups": [
@@ -144,6 +144,18 @@
       },
       "defaultValue": "Https",
       "helpMarkDown": "ms-resource:loc.input.help.Protocol",
+      "groupName": "SessionOptions"
+    },
+    {
+      "name": "AuthenticationMechanism",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AuthenticationMechanism",
+      "options": {
+        "Default": "Default",
+        "Credssp": "CredSSP"
+      },
+      "defaultValue": "Default",
+      "helpMarkDown": "ms-resource:loc.input.help.AuthenticationMechanism",
       "groupName": "SessionOptions"
     },
     {
