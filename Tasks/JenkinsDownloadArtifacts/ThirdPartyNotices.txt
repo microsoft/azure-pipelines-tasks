@@ -4,136 +4,136 @@ Do Not Translate or Localize
 
 Jenkins Download Artifact task incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.
 
-1.	align-text (https://github.com/jonschlinkert/align-text)
-2.	amdefine (https://github.com/jrburke/amdefine)
-		Includes:require-cs (https://github.com/requirejs/require-cs)
-3.  ansi-regex (https://github.com/sindresorhus/ansi-regex)
-4.	ansi-styles (https://github.com/chalk/ansi-styles)
-5.	artifact-engine (https://github.com/Microsoft/vsts-rm-extensions/tree/master/Extensions/ArtifactEngine)
-6.  asn1 (https://github.com/mcavage/node-asn1)
-7.	assert-plus (https://github.com/mcavage/node-assert-plus/)
-8.	async (https://github.com/caolan/async)
-9.  aws4 (https://github.com/mhart/aws4)
-10. balanced-match (https://github.com/juliangruber/balanced-match)
-11. bl (BufferList) (https://github.com/rvagg/bl)
-12.	boom (https://github.com/hapijs/boom)
-13.	brace-expansion (https://github.com/juliangruber/brace-expansion)
-14. browserify-mime (node-mime) (https://github.com/broofa/node-mime)
-15.	camelcase (https://github.com/sindresorhus/camelcase)
-16.	center-align (https://github.com/jonschlinkert/center-align)
-17. chalk (https://github.com/chalk/chalk)
-18.	cliui (https://github.com/yargs/cliui)
-19. combined-stream (https://github.com/felixge/node-combined-stream)
-20. commander (https://github.com/tj/commander.js)
-21.	concat-map (https://github.com/substack/node-concat-map)
-22. core-util-is (https://github.com/isaacs/core-util-is)
-23. cryptiles (https://github.com/hapijs/cryptiles)
-24. dashdash (https://github.com/trentm/node-dashdash)
-		Includes:ActiveState recipe
-25.	decamelize (https://github.com/sindresorhus/decamelize)
-26. delayed-stream (https://github.com/felixge/node-delayed-stream)
-27.	ecc-jsbn (https://github.com/quartzjer/ecc-jsbn)
-		Includes:jsbn; jsbn-ec-point-compression
-28. escape-string-regexp (https://github.com/sindresorhus/escape-string-regexp)
-29.	extend (https://github.com/justmoon/node-extend/)
-30. extsprintf (https://github.com/davepacheco/node-extsprintf)
-31. forever-agent (https://github.com/request/forever-agent)
-32.	form-data (ttps://github.com/form-data/form-data)
-33.	generate-function (https://github.com/mafintosh/generate-function)
-34.	generate-object-property (https://github.com/mafintosh/generate-object-property)
-35.	getpass (https://github.com/arekinath/node-getpass)
-36.	graceful-readlink (https://github.com/zhiyelee/graceful-readlink)
-37.	handlebars (https://github.com/wycats/handlebars.js)
-		Includes:lodash
-38. har-validator (https://github.com/ahmadnassri/har-validator)
-39.	has-ansi (https://github.com/chalk/has-ansi)
-40.	hash-base (https://github.com/crypto-browserify/hash-base)
-41.	hawk (https://github.com/hueniverse/hawk)
-		Includes:CryptoJS
-42.	hoek (https://github.com/hapijs/hoek)
-		Includes:Deep-eql
-43.	http-signature (https://github.com/joyent/node-http-signature)
-44.	inherits (https://github.com/isaacs/inherits)
-45. isarray (https://github.com/juliangruber/isarray/)
-46.	is-buffer (https://github.com/feross/is-buffer)
-47.	is-my-json-valid (https://github.com/mafintosh/is-my-json-valid)
-48.	is-property (https://github.com/mikolalysenko/is-property)
-49.	isstream (https://github.com/rvagg/isstream)
-50.	is-typedarray (https://github.com/hughsk/is-typedarray)
-51. Jenkins logo
-52. jodid25519 (https://github.com/meganz/jodid25519)
-		Includes:almond
-53.	jsbn (https://github.com/andyperlitch/jsbn)
-54.	json-edm-parser (https://github.com/yaxia/json-edm-parser)
-55.	jsonparse (https://github.com/creationix/jsonparse)
-56.	jsonpointer (https://github.com/janl/node-jsonpointer)
-57.	json-schema (https://github.com/kriszyp/json-schema)
-58.	json-stringify-safe (https://github.com/isaacs/json-stringify-safe)
-59.	jsprim (https://github.com/davepacheco/node-jsprim)
-60.	kind-of (https://github.com/jonschlinkert/kind-of)
-61.	lazy-cache (https://github.com/jonschlinkert/lazy-cache)
-62.	lodash (https://github.com/lodash/lodash)
-		Includes:Sizzle CSS Selector Engine
-		Includes:Webpack
-63.	longest (https://github.com/jonschlinkert/longest)
-64.	lru-cache (https://github.com/isaacs/node-lru-cache)
-65.	md5.js (https://github.com/crypto-browserify/md5.js)
-66.	mime-db (https://github.com/jshttp/mime-db)
-67.	mime-types (https://github.com/broofa/node-mime)
-68.	minimatch (https://github.com/isaacs/minimatch)
-69.	minimist (https://github.com/substack/minimist)
-70.	mockery (https://github.com/mfncooper/mockery)
-71.	optimist (https://github.com/substack/node-optimist)
-72. oauth-sign (https://github.com/request/oauth-sign)
-73.	pinkie (https://github.com/floatdrop/pinkie)
-74.	pinkie-promise (https://github.com/floatdrop/pinkie-promise)
-75.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
-76.	pseudomap (https://github.com/isaacs/pseudomap)
-77.	punycode (https://github.com/bestiejs/punycode.js)
-78.	q (https://github.com/kriskowal/q)
-79.	qs (https://github.com/ljharb/qs)
-		Includes:io.js
-80.	readable-stream (https://github.com/nodejs/readable-stream)
-81.	request (https://github.com/request/request)
-82.	repeat-string (https://github.com/jonschlinkert/repeat-string)
-83.	right-align (https://github.com/jonschlinkert/right-align)
-84. safe-buffer (https://github.com/feross/safe-buffer)
-85.	sax (https://github.com/isaacs/sax-js)
-86.	semver (https://github.com/npm/node-semver)
-87.	shelljs (https://github.com/arturadib/shelljs)
-		Includes:wrench-js
-88. sntp (https://github.com/hueniverse/sntp)
-89.	source-map (https://github.com/mozilla/source-map)
-		Includes:Base 64 VLQ implementation in Closure Compiler
-90.	sshpk (https://github.com/arekinath/node-sshpk)
-91.	string_decoder (https://github.com/rvagg/string_decoder)
-92.	stringstream (https://github.com/mhart/StringStream)
-93.	strip-ansi (https://github.com/chalk/strip-ansi)
-94.	supports-color (https://github.com/chalk/supports-color)
-95.	tough-cookie (https://github.com/SalesforceEng/tough-cookie)
-96.	tunnel (https://github.com/koichik/node-tunnel)
-97.	tunnel-agent (https://github.com/mikeal/tunnel-agent)
-98.	tweetnacl (https://github.com/dchest/tweetnacl-js)
-99. source-map (https://github.com/mozilla/source-map)
-100. tunnel (https://github.com/koichik/node-tunnel)
-101. uglify-js (https://www.npmjs.com/package/uglify-js)
-		Includes:Acorn
-		Includes:parse-js
-102. uglify-to-browserify (https://github.com/ForbesLindesay/uglify-to-browserify)
-103. underscore (https://github.com/jashkenas/underscore)
-		Includes:Normalize.css
-104. util-deprecate (https://github.com/TooTallNate/util-deprecate)
-105. uuid (https://github.com/defunctzombie/node-uuid)
-106. validator (https://github.com/chriso/validator.js)
-107. verror (https://github.com/joyent/node-verror)
-108. VSTS-task-lib (https://github.com/Microsoft/vsts-task-lib)
-109. window-size (https://github.com/jonschlinkert/window-size)
-110. wordwrap (https://github.com/substack/node-wordwrap)
-111. xml2js (https://github.com/Leonidas-from-XIV/node-xml2js)
-112. xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
-113. xtend (https://github.com/Raynos/xtend)
-114. yallist (https://github.com/isaacs/yallist)
-115.yargs (https://github.com/yargs/yargs)
+1.      align-text (https://github.com/jonschlinkert/align-text)
+2.      amdefine (https://github.com/jrburke/amdefine)
+            Includes:require-cs (https://github.com/requirejs/require-cs)
+3.      ansi-regex (https://github.com/sindresorhus/ansi-regex)
+4.      ansi-styles (https://github.com/chalk/ansi-styles)
+5.      artifact-engine (https://github.com/Microsoft/vsts-rm-extensions/tree/master/Extensions/ArtifactEngine)
+6.      asn1 (https://github.com/mcavage/node-asn1)
+7.      assert-plus (https://github.com/mcavage/node-assert-plus/)
+8.      async (https://github.com/caolan/async)
+9.      aws4 (https://github.com/mhart/aws4)
+10.     balanced-match (https://github.com/juliangruber/balanced-match)
+11.     bl (BufferList) (https://github.com/rvagg/bl)
+12.     boom (https://github.com/hapijs/boom)
+13.     brace-expansion (https://github.com/juliangruber/brace-expansion)
+14.     browserify-mime (node-mime) (https://github.com/broofa/node-mime)
+15.     camelcase (https://github.com/sindresorhus/camelcase)
+16.     center-align (https://github.com/jonschlinkert/center-align)
+17.     chalk (https://github.com/chalk/chalk)
+18.     cliui (https://github.com/yargs/cliui)
+19.     combined-stream (https://github.com/felixge/node-combined-stream)
+20.     commander (https://github.com/tj/commander.js)
+21.     concat-map (https://github.com/substack/node-concat-map)
+22.     core-util-is (https://github.com/isaacs/core-util-is)
+23.     cryptiles (https://github.com/hapijs/cryptiles)
+24.     dashdash (https://github.com/trentm/node-dashdash)
+            Includes:ActiveState recipe
+25.     decamelize (https://github.com/sindresorhus/decamelize)
+26.     delayed-stream (https://github.com/felixge/node-delayed-stream)
+27.     ecc-jsbn (https://github.com/quartzjer/ecc-jsbn)
+            Includes:jsbn; jsbn-ec-point-compression
+28.     escape-string-regexp (https://github.com/sindresorhus/escape-string-regexp)
+29.     extend (https://github.com/justmoon/node-extend/)
+30.     extsprintf (https://github.com/davepacheco/node-extsprintf)
+31.     forever-agent (https://github.com/request/forever-agent)
+32.     form-data (ttps://github.com/form-data/form-data)
+33.     generate-function (https://github.com/mafintosh/generate-function)
+34.     generate-object-property (https://github.com/mafintosh/generate-object-property)
+35.     getpass (https://github.com/arekinath/node-getpass)
+36.     graceful-readlink (https://github.com/zhiyelee/graceful-readlink)
+37.     handlebars (https://github.com/wycats/handlebars.js)
+            Includes:lodash
+38.     har-validator (https://github.com/ahmadnassri/har-validator)
+39.     has-ansi (https://github.com/chalk/has-ansi)
+40.     hash-base (https://github.com/crypto-browserify/hash-base)
+41.     hawk (https://github.com/hueniverse/hawk)
+            Includes:CryptoJS
+42.     hoek (https://github.com/hapijs/hoek)
+            Includes:Deep-eql
+43.     http-signature (https://github.com/joyent/node-http-signature)
+44.     inherits (https://github.com/isaacs/inherits)
+45.     isarray (https://github.com/juliangruber/isarray/)
+46.     is-buffer (https://github.com/feross/is-buffer)
+47.     is-my-json-valid (https://github.com/mafintosh/is-my-json-valid)
+48.     is-property (https://github.com/mikolalysenko/is-property)
+49.     isstream (https://github.com/rvagg/isstream)
+50.     is-typedarray (https://github.com/hughsk/is-typedarray)
+51.     Jenkins logo
+52.     jodid25519 (https://github.com/meganz/jodid25519)
+            Includes:almond
+53.     jsbn (https://github.com/andyperlitch/jsbn)
+54.     json-edm-parser (https://github.com/yaxia/json-edm-parser)
+55.     jsonparse (https://github.com/creationix/jsonparse)
+56.     jsonpointer (https://github.com/janl/node-jsonpointer)
+57.     json-schema (https://github.com/kriszyp/json-schema)
+58.     json-stringify-safe (https://github.com/isaacs/json-stringify-safe)
+59.     jsprim (https://github.com/davepacheco/node-jsprim)
+60.     kind-of (https://github.com/jonschlinkert/kind-of)
+61.     lazy-cache (https://github.com/jonschlinkert/lazy-cache)
+62.     lodash (https://github.com/lodash/lodash)
+            Includes:Sizzle CSS Selector Engine
+            Includes:Webpack
+63.     longest (https://github.com/jonschlinkert/longest)
+64.     lru-cache (https://github.com/isaacs/node-lru-cache)
+65.     md5.js (https://github.com/crypto-browserify/md5.js)
+66.     mime-db (https://github.com/jshttp/mime-db)
+67.     mime-types (https://github.com/broofa/node-mime)
+68.     minimatch (https://github.com/isaacs/minimatch)
+69.     minimist (https://github.com/substack/minimist)
+70.     mockery (https://github.com/mfncooper/mockery)
+71.     node-uuid (https://github.com/broofa/node-uuid)
+            Includes:Gnuplot
+72.     optimist (https://github.com/substack/node-optimist)
+73.     oauth-sign (https://github.com/request/oauth-sign)
+74.     pinkie (https://github.com/floatdrop/pinkie)
+75.     pinkie-promise (https://github.com/floatdrop/pinkie-promise)
+76.     process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
+77.     pseudomap (https://github.com/isaacs/pseudomap)
+78.     punycode (https://github.com/bestiejs/punycode.js)
+79.     q (https://github.com/kriskowal/q)
+80.     qs (https://github.com/ljharb/qs)
+            Includes:io.js
+81.     readable-stream (https://github.com/nodejs/readable-stream)
+82.     request (https://github.com/request/request)
+83.     repeat-string (https://github.com/jonschlinkert/repeat-string)
+84.     right-align (https://github.com/jonschlinkert/right-align)
+85.     safe-buffer (https://github.com/feross/safe-buffer)
+86.     sax (https://github.com/isaacs/sax-js)
+87.     semver (https://github.com/npm/node-semver)
+88.     shelljs (https://github.com/arturadib/shelljs)
+            Includes:wrench-js
+89.     sntp (https://github.com/hueniverse/sntp)
+90.     source-map (https://github.com/mozilla/source-map)
+            Includes:Base 64 VLQ implementation in Closure Compiler
+91.     sshpk (https://github.com/arekinath/node-sshpk)
+92.     string_decoder (https://github.com/rvagg/string_decoder)
+93.     stringstream (https://github.com/mhart/StringStream)
+94.     strip-ansi (https://github.com/chalk/strip-ansi)
+95.     supports-color (https://github.com/chalk/supports-color)
+96.     tough-cookie (https://github.com/SalesforceEng/tough-cookie)
+97.     tunnel (https://github.com/koichik/node-tunnel)
+98.     tunnel-agent (https://github.com/mikeal/tunnel-agent)
+99.     tweetnacl (https://github.com/dchest/tweetnacl-js)
+100.    uglify-js (https://www.npmjs.com/package/uglify-js)
+            Includes:Acorn
+            Includes:parse-js
+101.    uglify-to-browserify (https://github.com/ForbesLindesay/uglify-to-browserify)
+102.    underscore (https://github.com/jashkenas/underscore)
+            Includes:Normalize.css
+103.    util-deprecate (https://github.com/TooTallNate/util-deprecate)
+104.    uuid (https://github.com/kelektiv/node-uuid)
+105.    validator (https://github.com/chriso/validator.js)
+106.    verror (https://github.com/joyent/node-verror)
+107.    VSTS-task-lib (https://github.com/Microsoft/vsts-task-lib)
+108.    window-size (https://github.com/jonschlinkert/window-size)
+109.    wordwrap (https://github.com/substack/node-wordwrap)
+110.    xml2js (https://github.com/Leonidas-from-XIV/node-xml2js)
+111.    xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
+112.    xtend (https://github.com/Raynos/xtend)
+113.    yallist (https://github.com/isaacs/yallist)
+114.    yargs (https://github.com/yargs/yargs)
 
 
 %% align-text NOTICES, INFORMATION, AND LICENSE BEGIN HERE
@@ -2219,6 +2219,59 @@ END OF minimist NOTICES, INFORMATION, AND LICENSE
 
 =========================================
 END OF mockery NOTICES, INFORMATION, AND LICENSE
+
+%% node-uuid NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The MIT License (MIT)
+
+Copyright (c) 2010-2012 Robert Kieffer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+Includes
+#     G N U P L O T
+#     Version 4.4 patchlevel 3
+#     last modified March 2011
+#     System: Darwin 10.8.0
+#
+#     Copyright (C) 1986-1993, 1998, 2004, 2007-2010
+#     Thomas Williams, Colin Kelley and many others
+
+/*[
+ * Copyright 1986 - 1993, 1998, 2004   Thomas Williams, Colin Kelley
+ *
+ * Permission to use, copy, and distribute this software and its
+ * documentation for any purpose with or without fee is hereby granted,
+ * provided that the above copyright notice appear in all copies and
+ * that both that copyright notice and this permission notice appear
+ * in supporting documentation.
+ *
+ * Permission to modify the software is granted, but not the right to
+ * distribute the complete modified source code.  Modifications are to
+ * be distributed as patches to the released version.  Permission to
+ * distribute binaries produced by compiling modified sources is granted,
+ * provided you
+ *   1. distribute the corresponding source modifications from the
+ *    released version in the form of a patch file along with the binaries,
+ *   2. add special version identification to distinguish your version
+ *    in addition to the base release version number,
+ *   3. provide your name and address as the primary contact for the
+ *    support of your modified version, and
+ *   4. retain our contact information in regard to use of the base
+ *    software.
+ * Permission to distribute the released version of the source code along
+ * with corresponding source modifications in the form of a patch file is
+ * granted with same provisions 2 through 4 for binary distributions.
+ *
+ * This software is provided "as is" without express or implied warranty
+ * to the extent permitted by applicable law.
+]*/
+=========================================
+END OF node-uuid NOTICES, INFORMATION, AND LICENSE
 
 %% optimist NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
