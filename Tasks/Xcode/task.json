@@ -12,7 +12,7 @@
     "version": {
         "Major": 5,
         "Minor": 133,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "xcode"
@@ -231,29 +231,22 @@
             "visibleRule": "signingOption = auto"
         },
         {
-            "name": "destinationPlatformOption",
+            "name": "destinationPlatform",
             "type": "picklist",
             "label": "Destination platform",
             "defaultValue": "default",
             "required": false,
-            "helpMarkDown": "Select the destination device's platform to be used for UI testing when the generic build device isn't valid. Choose `Custom` to specify a platform not included in this list. When `Default` is selected, no simulators nor devices will be targeted.",
+            "helpMarkDown": "Select the destination device's platform to be used for UI testing when the generic build device isn't valid. When `Default` is selected, no simulators nor devices will be targeted.",
             "groupName": "devices",
             "options": {
                 "default": "Default",
                 "iOS": "iOS and watchOS",
                 "tvOS": "tvOS",
-                "macOS": "macOS",
-                "custom": "Custom"
+                "macOS": "macOS"
+            },
+            "properties": {
+                "EditableOptions": true
             }
-        },
-        {
-            "name": "destinationPlatform",
-            "type": "string",
-            "label": "Custom destination platform",
-            "required": false,
-            "helpMarkDown": "Enter a destination device's platform to be used for UI testing when the generic build device isn't valid.",
-            "groupName": "devices",
-            "visibleRule": "destinationPlatformOption == custom"
         },
         {
             "name": "destinationTypeOption",
@@ -263,7 +256,7 @@
             "required": false,
             "helpMarkDown": "Choose the destination type to be used for UI testing. Devices must be connected to the Mac performing the build via a cable or network connection. See <strong>Devices and Simulators</strong> in Xcode.",
             "groupName": "devices",
-            "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
+            "visibleRule": "destinationPlatform != default && destinationPlatform != macOS",
             "options": {
                 "simulators": "Simulator",
                 "devices": "Connected Device"
@@ -277,7 +270,7 @@
             "required": false,
             "groupName": "devices",
             "helpMarkDown": "Enter an Xcode simulator name to be used for UI testing. For example, enter `iPhone X` (iOS and watchOS) or `Apple TV 4K` (tvOS). A target OS version is optional and can be specified in the format 'OS=<i>versionNumber</i>', such as `iPhone X,OS=11.1`. A list of simulators installed on the <strong>Hosted macOS Preview</strong> agent can be [found here](https://docs.microsoft.com/en-us/mobile-center/build/software).",
-            "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == simulators"
+            "visibleRule": "destinationPlatform != default && destinationPlatform != macOS && destinationTypeOption == simulators"
         },
         {
             "name": "destinationDevices",
@@ -287,7 +280,7 @@
             "required": false,
             "groupName": "devices",
             "helpMarkDown": "Enter the name of the device to be used for UI testing, such as `Raisa's iPad`.",
-            "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
+            "visibleRule": "destinationPlatform != default && destinationPlatform != macOS && destinationTypeOption == devices"
         },
         {
             "name": "args",

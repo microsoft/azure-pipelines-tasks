@@ -12,7 +12,7 @@
   "version": {
     "Major": 5,
     "Minor": 133,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [
     "xcode"
@@ -231,29 +231,22 @@
       "visibleRule": "signingOption = auto"
     },
     {
-      "name": "destinationPlatformOption",
+      "name": "destinationPlatform",
       "type": "picklist",
-      "label": "ms-resource:loc.input.label.destinationPlatformOption",
+      "label": "ms-resource:loc.input.label.destinationPlatform",
       "defaultValue": "default",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatformOption",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatform",
       "groupName": "devices",
       "options": {
         "default": "Default",
         "iOS": "iOS and watchOS",
         "tvOS": "tvOS",
-        "macOS": "macOS",
-        "custom": "Custom"
+        "macOS": "macOS"
+      },
+      "properties": {
+        "EditableOptions": true
       }
-    },
-    {
-      "name": "destinationPlatform",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.destinationPlatform",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.destinationPlatform",
-      "groupName": "devices",
-      "visibleRule": "destinationPlatformOption == custom"
     },
     {
       "name": "destinationTypeOption",
@@ -263,7 +256,7 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.destinationTypeOption",
       "groupName": "devices",
-      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS",
+      "visibleRule": "destinationPlatform != default && destinationPlatform != macOS",
       "options": {
         "simulators": "Simulator",
         "devices": "Connected Device"
@@ -277,7 +270,7 @@
       "required": false,
       "groupName": "devices",
       "helpMarkDown": "ms-resource:loc.input.help.destinationSimulators",
-      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == simulators"
+      "visibleRule": "destinationPlatform != default && destinationPlatform != macOS && destinationTypeOption == simulators"
     },
     {
       "name": "destinationDevices",
@@ -287,7 +280,7 @@
       "required": false,
       "groupName": "devices",
       "helpMarkDown": "ms-resource:loc.input.help.destinationDevices",
-      "visibleRule": "destinationPlatformOption != default && destinationPlatformOption != macOS && destinationTypeOption == devices"
+      "visibleRule": "destinationPlatform != default && destinationPlatform != macOS && destinationTypeOption == devices"
     },
     {
       "name": "args",

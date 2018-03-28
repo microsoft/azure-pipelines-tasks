@@ -52,7 +52,7 @@ tr.setInput('exportOptionsPlist', '');
 tr.setInput('exportArgs', '');
 tr.setInput('signingOption', 'default');
 tr.setInput('cwd', '/user/build');
-tr.setInput('destinationPlatformOption', 'default');
+tr.setInput('destinationPlatform', 'default');
 tr.setInput('outputPattern', '');
 tr.setInput('useXcpretty', 'false');
 tr.setInput('publishJUnitResults', 'false');
