@@ -29,6 +29,7 @@ function ConnectTo-RemoteMachines {
             }
             $connectedMachineNames = $sessions | ForEach-Object { $_.ComputerName.ToLowerInvariant() }
             if($connectedMachineNames.Count -eq $targetMachineNames.Count) {
+                Write-Verbose "All target machines have been connected"
                 $remainingMachines = @();
                 break;
             }
