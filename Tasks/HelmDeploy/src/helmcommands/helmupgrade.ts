@@ -13,10 +13,10 @@ export function addArguments(helmCli: helmcli) : void {
     var waitForExecution = tl.getBoolInput('waitForExecution', false);
     var argumentsInput = tl.getInput("arguments", false);
     var valueFile = tl.getInput("valueFile", false);
-    var install = tl.getInput("install", false);
-    var recreate = tl.getInput("recreate", false);
-    var resetValues = tl.getInput("resetValues", false);
-    var force = tl.getInput("force", false);
+    var install = tl.getBoolInput("install", false);
+    var recreate = tl.getBoolInput("recreate", false);
+    var resetValues = tl.getBoolInput("resetValues", false);
+    var force = tl.getBoolInput("force", false);
     var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
     if(namespace) {
