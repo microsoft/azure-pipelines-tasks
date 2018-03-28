@@ -160,7 +160,7 @@ export class Kudu {
     public async getSiteExtensions(): Promise<Array<SiteExtension>> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
-        httpRequest.uri = this._client.getRequestUri(`/api/siteextensions`);
+        httpRequest.uri = this._client.getRequestUri(`/api/siteextensions`, ['checkLatest=false']);
         try {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`getSiteExtensions. Data: ${JSON.stringify(response)}`);
