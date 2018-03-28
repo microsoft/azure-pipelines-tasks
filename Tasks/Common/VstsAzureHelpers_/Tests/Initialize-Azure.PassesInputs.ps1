@@ -4,6 +4,7 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Unregister-Mock Import-Module
+Register-Mock Write-VstsTaskError
 Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 $variableSets = @(
     @{
