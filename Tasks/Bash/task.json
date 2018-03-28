@@ -16,13 +16,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 127,
+        "Minor": 133,
         "Patch": 0
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines and added support for Windows.",
-    "preview": true,
-    "minimumAgentVersion": "2.115.0",
+    "minimumAgentVersion": "2.120.0",
     "instanceNameFormat": "Bash Script",
+    "showEnvironmentBlock": true,
     "groups": [
         {
             "name": "advanced",
