@@ -760,20 +760,136 @@ var validateTask = function (task) {
     if (!task.id || !check.isUUID(task.id)) {
         fail('id is a required guid');
     };
-
+    
     if (!task.name || !check.isAlphanumeric(task.name)) {
         fail('name is a required alphanumeric string');
     }
-
+    
     if (!task.friendlyName || !check.isLength(task.friendlyName, 1, 40)) {
         fail('friendlyName is a required string <= 40 chars');
     }
-
+    
     if (!task.instanceNameFormat) {
         fail('instanceNameFormat is required');
     }
 };
 exports.validateTask = validateTask;
+
+// Outputs a YAML snippet for the task
+var createYamlSnippet = function (taskJson, outFilePath) {
+    var outFile = fs.openSync(outFilePath, 'w');
+    var taskYaml = getTaskYaml(taskJson);
+    fs.writeSync(outFile, taskYaml);
+    fs.closeSync(outFile);
+}
+exports.createYamlSnippet = createYamlSnippet;
+
+var getAliasOrNameForInputName = function(inputs, inputName) {
+    var returnInputName = inputName;
+    inputs.forEach(function(input) {
+        if (input.name == inputName) {
+            returnInputName = getInputAliasOrName(input);
+        }
+    });
+    return returnInputName;
+};
+
+var getInputAliasOrName = function(input) {
+    if (input.aliases && input.aliases.length > 0) {
+        return input.aliases[0];
+    }
+    else {
+        return input.name;
+    }
+};
+
+var cleanString = function(str) {
+    if (str) {
+        return str
+            .replaceAll("\r", '')
+            .replaceAll("\n", '')
+            .replaceAll("\"", '');
+    }
+    else {
+        return str;
+    }
+}
+
+String.prototype.replaceAll = function(searchFor, replacement) {
+    var target = this;
+    return target.replace(new RegExp(searchFor, 'g'), replacement);
+};
+
+var getTaskYaml = function(taskJson) {
+    var EOL = '\r\n';
+    var taskYaml = '';
+
+    taskYaml += '# ' + cleanString(taskJson.friendlyName) + EOL;
+    taskYaml += '# ' + cleanString(taskJson.description) + EOL;
+    taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + EOL;
+    taskYaml += '  inputs:' + EOL;
+
+    taskJson.inputs.forEach(function(input) {
+        // Is the input required?
+        var requiredOrNot = input.required ? '' : '# Optional';
+        if (input.required && input.visibleRule && input.visibleRule.length > 0) {
+            var spaceIndex = input.visibleRule.indexOf(' ');
+            var visibleRuleInputName = input.visibleRule.substring(0, spaceIndex);
+            requiredOrNot += '# Required when ' + input.visibleRule
+            .replaceAll(' = ', ' == ')
+            .replaceAll(visibleRuleInputName, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
+        }
+
+        // Does the input have a default value?
+        var isDefaultValueAvailable = input.defaultValue && input.defaultValue.length > 0;
+        var defaultValue = isDefaultValueAvailable ? input.defaultValue : null;
+
+        // Comment out the input?
+        if (!input.required ||
+            (input.required && isDefaultValueAvailable) ||
+            (input.visibleRule && input.visibleRule.length > 0)) {
+            taskYaml += '    #';
+        }
+        else {
+            taskYaml += '    ';
+        }
+
+        // Append input name
+        taskYaml += getInputAliasOrName(input) + ': ';
+
+        // Append default value
+        if (defaultValue) {
+            if (input.type == 'boolean') {
+                taskYaml += cleanString(defaultValue) + ' ';
+            }
+            else {
+                taskYaml += '\'' + cleanString(defaultValue) + '\' ';
+            }
+        }
+
+        // Append required or optional
+        taskYaml += requiredOrNot;
+
+        // Append options?
+        if (input.options) {
+            var isFirstOption = true;
+            Object.keys(input.options).forEach(function(key) {
+                if (isFirstOption) {
+                    taskYaml += (input.required ? '# ' : '. ') + 'Options: ' + cleanString(key);
+                    isFirstOption = false;
+                }
+                else {
+                    taskYaml += ', ' + cleanString(key);
+                }
+            });
+        }
+
+        // Append end of line
+        taskYaml += EOL;
+    });
+
+    return taskYaml;
+};
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
