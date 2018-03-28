@@ -3,6 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Unregister-Mock Import-Module
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 Register-Mock Import-FromModulePath { $true }
 & $module { $script:azureModule = @{ Version = [version]'0.8.10.0' } }

@@ -3,6 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Unregister-Mock Import-Module
 Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\..
 $variableSets = @(
     @{

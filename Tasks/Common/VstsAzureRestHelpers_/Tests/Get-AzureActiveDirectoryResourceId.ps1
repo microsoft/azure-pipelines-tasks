@@ -4,6 +4,7 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 Microsoft.PowerShell.Core\Import-Module Microsoft.PowerShell.Security
+Unregister-Mock Import-Module
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $endpoint = @{
     Url = "https://management.azure.com"
