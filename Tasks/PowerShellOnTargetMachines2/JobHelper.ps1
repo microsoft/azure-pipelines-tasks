@@ -13,7 +13,14 @@ function Run-RemoteScriptJobs {
     
         while($jobs | Where-Object { $_.State -eq "Running"}) {
             ForEach($job in $jobs) {
-                Receive-Job -Job $job | ForEach-Object { if($_.VstsTask -eq $true) { $jobResults += $_ } else { Write-Host $($_ | Out-String) } }
+                Receive-Job -Job $job |
+                    ForEach-Object {
+                         if($_.VstsTask -eq $true) { 
+                             $jobResults += $_ 
+                         } else { 
+                             Write-Host $($_ | Out-String) 
+                         }
+                    }
             }
             Start-Sleep -Seconds 30
         }
