@@ -6,11 +6,7 @@ function Add-Tls12InSession {
 
     try {
         if ([Net.ServicePointManager]::SecurityProtocol -notcontains 'Tls12') {
-            $securityProtocol=@()
-            $securityProtocol+=[Net.ServicePointManager]::SecurityProtocol
-            $securityProtocol+=[Net.SecurityProtocolType]3072
-            [Net.ServicePointManager]::SecurityProtocol=$securityProtocol
-
+            [Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType]3072
             Write-Verbose 'Added TLS 1.2 in session.'
         }
         else {
