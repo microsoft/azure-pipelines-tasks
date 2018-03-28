@@ -1,3 +1,5 @@
+Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
+
 function Add-Tls12InSession {
     [CmdletBinding()]
     param()
