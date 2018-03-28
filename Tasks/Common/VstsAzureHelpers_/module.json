@@ -9,7 +9,6 @@
         "AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Service principal authentication is not supported in version '{0}' of the Azure module.",
         "AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
         "AZ_AvailableModules": "The list of available {0} modules:",
-        "AZ_InvalidARMEndpoint": "Specified AzureRM endpoint is invalid.",
-        "AZ_UnsupportedTLSError": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
+        "AZ_InvalidARMEndpoint": "Specified AzureRM endpoint is invalid."
     }
 }
