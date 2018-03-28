@@ -19,7 +19,9 @@ $ExecutePsScript = {
             [string] $toolPath,
             [string] $toolArgs
         )
-        Invoke-Expression "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim())"
+        $command = "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim())"
+        Write-Host "##[command]$command"
+        Invoke-Expression $command
     }
 
     function Remove-TemporaryFile {
