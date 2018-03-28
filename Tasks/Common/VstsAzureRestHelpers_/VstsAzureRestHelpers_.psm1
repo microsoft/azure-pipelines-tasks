@@ -28,12 +28,8 @@ if ($global:DebugPreference -eq 'Continue') {
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
-try {
-    Import-Module $PSScriptRoot/../TlsHelper_
-    Add-Tls12InSession
-}
-catch {
-}
+Import-Module $PSScriptRoot/../TlsHelper_
+Add-Tls12InSession
 
 function Get-AzureUri
 {

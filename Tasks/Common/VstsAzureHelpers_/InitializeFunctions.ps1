@@ -31,35 +31,6 @@ function Format-Splat {
     "$parameters" # String join the array.
 }
 
-function Generate-TlsError {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory=$true)] $exception 
-    )
-
-    if ($exception -eq $null)
-    {
-        return
-    }
-
-    $isWebException = $true
-    $innerException = $exception
-    while ($innerException.GetType() -ne [System.Net.WebException])
-    {
-        $innerException = $innerException.InnerException
-        if ($innerException -eq $null)
-        {
-            $isWebException = $false
-            break
-        }
-    }
-
-    if (($isWebException -eq $true) -and ($innerException.InnerException -ne $null) -and ($innerException.InnerException.GetType() -eq [System.IO.IOException]))
-    {
-        Write-VstsTaskError -Message (Get-VstsLocString -Key AZ_UnsupportedTLSError)
-    }
-}
-
 function Initialize-AzureSubscription {
     [CmdletBinding()]
     param(
@@ -76,12 +47,7 @@ function Initialize-AzureSubscription {
         $environmentName = $Endpoint.Data.Environment
         if($environmentName -eq "AzureStack")
         {
-            try {
-                Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
-            } catch {
-                Generate-TlsError -exception $_.Exception
-            }
-            
+            Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"          
         }
     }
 
@@ -117,7 +83,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
-                Generate-TlsError -exception $_.Exception
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
         }
@@ -135,7 +101,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
-                Generate-TlsError -exception $_.Exception
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
         }
@@ -161,7 +127,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
-                Generate-TlsError -exception $_.Exception
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
             }
 
@@ -189,7 +155,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
-                Generate-TlsError -exception $_.Exception
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
             }
 
@@ -388,7 +354,13 @@ function Add-AzureStackAzureRmEnvironment {
         Write-Verbose "Adding AzureRm environment $name" -Verbose
     }
 
-    return Add-AzureRmEnvironment @azureEnvironmentParams
+    try {
+        return Add-AzureRmEnvironment @azureEnvironmentParams
+    }
+    catch {
+        Assert-TlsError -exception $_.Exception
+        throw $_.Exception
+    }
 }
 
 function Get-ProxyUri
