@@ -10,7 +10,7 @@
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.Machines": "Machines",
   "loc.input.help.Machines": "Provide a comma separated list of machine IP addresses or FQDNs along with ports. Port is defaulted based on the selected protocol. <br>Eg: dbserver.fabrikam.com,dbserver_int.fabrikam.com:5986,192.168.12.34:5986 <br>Or provide output variable of other tasks. Eg: $(variableName) <br>If you are using HTTPS, name/IP of machine should match the CN in the certificate.",
-  "loc.input.label.UserName": "Admin Login",
+  "loc.input.label.UserName": "Username",
   "loc.input.help.UserName": "Administrator login for the target machines. <br> Eg: Format: Domain\\Admin User, Admin User@Domain, .\\Admin User",
   "loc.input.label.UserPassword": "Password",
   "loc.input.help.UserPassword": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it.",
@@ -46,5 +46,8 @@
   "loc.messages.PS_TM_NotConnectedMachines": "PSSession could not be created for Machines:'{0}'",
   "loc.messages.PS_TM_ParseSessionVariablesValueNotFound": "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
   "loc.messages.PS_TM_ParseSessionVariablesKeyNotFound": "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
-  "loc.messages.PS_TM_InvalidSessionVariablesInputFormat": "Parsing operationg failed. Check format of input"
+  "loc.messages.PS_TM_InvalidSessionVariablesInputFormat": "Parsing operationg failed. Check format of input",
+  "loc.messages.PS_TM_ScriptJobFailed": "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
+  "loc.messages.PS_TM_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",
+  "loc.messages.PS_TM_UnknownStatus": "Unknown remote script job execution status: '{0}'"
 }

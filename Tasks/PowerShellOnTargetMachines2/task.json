@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 44
+        "Patch": 46
     },
     "preview": true,
     "groups": [
@@ -52,7 +52,7 @@
         {
             "name": "UserName",
             "type": "string",
-            "label": "Admin Login",
+            "label": "Username",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Administrator login for the target machines. <br> Eg: Format: Domain\\Admin User, Admin User@Domain, .\\Admin User"
@@ -230,6 +230,9 @@
         "PS_TM_NotConnectedMachines" : "PSSession could not be created for Machines:'{0}'",
         "PS_TM_ParseSessionVariablesValueNotFound" : "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
         "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
-        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input"
+        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input",
+        "PS_TM_ScriptJobFailed" : "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
+        "PS_TM_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",
+        "PS_TM_UnknownStatus": "Unknown remote script job execution status: '{0}'"
     }
 }

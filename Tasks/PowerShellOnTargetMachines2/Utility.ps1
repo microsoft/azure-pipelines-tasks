@@ -178,6 +178,7 @@ function Get-RemoteScriptJobArguments {
             $inline = $false
         } else {
             $input_InlineScript = Get-VstsInput -Name "InlineScript"
+            $input_initializationScriptPath = ""
             $inline = $true
         }
     

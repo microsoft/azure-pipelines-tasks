@@ -35,9 +35,9 @@ $ExecutePsScript = {
 
         $result = @{
             "VstsTask" = $true;
-            "Status" = "Failed";
+            "Status" = "InProgress";
             "Message" = "PS_TM_ExitCode";
-            "ExitCode" = 0;
+            "ExitCode" = -1;
             "ComputerName" = $env:COMPUTERNAME
         }
 
@@ -103,7 +103,6 @@ $ExecutePsScript = {
     } catch {
         $result.Status = "Failed";
         $result.Message = "$($_.Exception.Message)"
-        throw
     } finally {
         Remove-TemporaryFile -filePath $inlineScriptPath
         Remove-TemporaryFile -filePath $tempScriptPath

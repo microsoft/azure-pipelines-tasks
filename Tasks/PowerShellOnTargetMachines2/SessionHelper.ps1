@@ -1,4 +1,4 @@
-function Create-PSSessionToRemoteMachines {
+function ConnectTo-RemoteMachines {
     [CmdletBinding()]
     Param (
         [string[]] $targetMachineNames,
@@ -27,12 +27,12 @@ function Create-PSSessionToRemoteMachines {
             foreach ($sessionError in $sessionErrors) {
                 Write-Verbose $("New-PSSession Error: " + $sessionError.Exception.Message)
             }
-            $connectedMachineNames = $sessions | Select-Object ComputerName | ForEach-Object { $_.ComputerName.ToLowerInvariant() }
+            $connectedMachineNames = $sessions | ForEach-Object { $_.ComputerName.ToLowerInvariant() }
             if($connectedMachineNames.Count -eq $targetMachineNames.Count) {
                 $remainingMachines = @();
                 break;
             }
-            $remainingMachines = $remainingMachines | Where-Object { -not ($connectedMachineNames -contains $_) }
+            $remainingMachines = $remainingMachines | Where-Object { $connectedMachineNames -notcontains $_ }
             $retryCount++
             Start-Sleep -Seconds 30
         }
