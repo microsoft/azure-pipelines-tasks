@@ -164,7 +164,7 @@ function Initialize-AzureSubscription {
         $content =$response.Content | ConvertFrom-Json
         $access_token = $content.access_token
         try {
-            Write-Host "##[command]Add-AzureRmAccount  -AccessToken $access_token -AccountId $accountId "
+            Write-Host "##[command]Add-AzureRmAccount  -AccessToken ****** -AccountId $accountId "
             $null = Add-AzureRmAccount -AccessToken $access_token -AccountId $accountId
         } catch {
             # Provide an additional, custom, credentials-related error message.
