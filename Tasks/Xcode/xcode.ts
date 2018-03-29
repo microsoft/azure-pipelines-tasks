@@ -213,7 +213,22 @@ async function run() {
         }
 
         //--- Xcode Build ---
-        await xcb.exec();
+        let buildOnlyDeviceErrorFound: boolean;
+        xcb.on('errline', (line: string) => {
+            if (!buildOnlyDeviceErrorFound && line.includes('build only device cannot be used to run this target')) {
+                buildOnlyDeviceErrorFound = true;
+            }
+        });
+
+        try {
+            await xcb.exec();
+        } catch (err) {
+            if (buildOnlyDeviceErrorFound) {
+                // Tell the user they need to change Destination platform to fix this build error.
+                tl.warning(tl.loc('NoDestinationPlatformWarning'));
+            }
+            throw err;
+        }
 
         //--------------------------------------------------------
         // Package app to generate .ipa

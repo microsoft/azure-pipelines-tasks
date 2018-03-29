@@ -12,7 +12,7 @@
     "version": {
         "Major": 5,
         "Minor": 133,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
         "xcode"
@@ -362,6 +362,7 @@
         "NoSchemeFound": "No shared scheme found in the workspace. Use \"Manage Schemes\" in Xcode to share a scheme.",
         "SchemeSelected": "The workspace contains a single shared scheme. '%s' will be used.",
         "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
-        "OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action."
+        "OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action.",
+        "NoDestinationPlatformWarning": "UI tests must be run against a simulator or a connected device. In the Xcode task, set `Destination platform` to a value other than `Default`."
     }
 }
