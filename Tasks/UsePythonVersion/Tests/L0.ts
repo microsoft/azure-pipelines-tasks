@@ -51,6 +51,10 @@ describe('UsePythonVersion L0 Suite', function () {
                 expected: '3.7.0-rc'
             },
             {
+                versionSpec: '14.22.100a1000',
+                expected: '14.22.100-a1000'
+            },
+            {
                 versionSpec: '3.6.6b2 || >= 3.7.0rc',
                 expected: '3.6.6-b2 || >= 3.7.0-rc'
             },
