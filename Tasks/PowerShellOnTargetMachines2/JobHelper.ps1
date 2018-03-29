@@ -3,8 +3,7 @@ function Run-RemoteScriptJobs {
     Param (
         [System.Management.Automation.Runspaces.PSSession[]] $sessions,
         [scriptblock] $script,
-        [System.Array] $scriptArguments,
-        [switch] $ignoreLASTEXITCODE
+        [System.Array] $scriptArguments
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter "sessions","scriptArguments"
     try {
