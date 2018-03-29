@@ -83,6 +83,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
         }
@@ -100,6 +101,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
         }
@@ -125,6 +127,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
             }
 
@@ -152,6 +155,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
             }
 
@@ -350,7 +354,13 @@ function Add-AzureStackAzureRmEnvironment {
         Write-Verbose "Adding AzureRm environment $name" -Verbose
     }
 
-    return Add-AzureRmEnvironment @azureEnvironmentParams
+    try {
+        return Add-AzureRmEnvironment @azureEnvironmentParams
+    }
+    catch {
+        Assert-TlsError -exception $_.Exception
+        throw
+    }
 }
 
 function Get-ProxyUri
