@@ -60,7 +60,7 @@ describe('UsePythonVersion L0 Suite', function () {
             },
         ];
 
-        for (let tc of testCases) {
+        for (let tc of testCases) { // Node 5 can't handle destructuring assignment
             const actual = uut.pythonVersionToSemantic(tc.versionSpec);
             assert.strictEqual(actual, tc.expected);
         }
