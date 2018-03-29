@@ -29,19 +29,23 @@ function Assert-TlsError {
         return
     }
 
-    $isWebException = $true
+    $hasWebException = $false
+    $hasIOException = $false
     $innerException = $exception
-    while ($innerException.GetType() -ne [System.Net.WebException])
+    while ($innerException -ne $null)
     {
-        $innerException = $innerException.InnerException
-        if ($innerException -eq $null)
+        if ($innerException.GetType() -eq [System.Net.WebException])
         {
-            $isWebException = $false
-            break
+            $hasWebException = $true
         }
+        elseif ($innerException.GetType() -eq [System.IO.IOException])
+        {
+            $hasIOException = $true
+        }
+        $innerException = $innerException.InnerException
     }
 
-    if (($isWebException -eq $true) -and ($innerException.InnerException -ne $null) -and ($innerException.InnerException.GetType() -eq [System.IO.IOException]))
+    if (($hasWebException -eq $true) -and ($hasIOException -eq $true))
     {
         Write-VstsTaskError -Message (Get-VstsLocString -Key UnsupportedTLSError)
     }

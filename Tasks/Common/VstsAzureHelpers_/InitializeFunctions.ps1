@@ -41,13 +41,13 @@ function Initialize-AzureSubscription {
 
     #Set UserAgent for Azure Calls
     Set-UserAgent
-    
+
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
         if($environmentName -eq "AzureStack")
         {
-            Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"          
+            Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
 
