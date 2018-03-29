@@ -48,6 +48,17 @@
             "options": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "FlattenVariableName",
+            "type": "string",
+            "label": "Flatten to single variable",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "If present, the downloaded secrets will be stored in this single variable in JSON format.",
+            "options": {
+                "EditableOptions": "True"
+            }
         }
     ],
     "dataSourceBindings": [

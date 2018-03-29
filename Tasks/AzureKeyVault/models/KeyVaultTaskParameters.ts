@@ -9,6 +9,7 @@ export class KeyVaultTaskParameters {
     public subscriptionId: string;
     public keyVaultName: string;
     public secretsFilter: string[];
+    public flattenVariableName: string;
     public vaultCredentials: msRestAzure.ApplicationTokenCredentials;
     public keyVaultUrl: string;
     public servicePrincipalId: string;
@@ -18,6 +19,7 @@ export class KeyVaultTaskParameters {
         this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
         this.keyVaultName = tl.getInput("KeyVaultName", true);
         this.secretsFilter = tl.getDelimitedInput("SecretsFilter", ",", true);
+        this.flattenVariableName = tl.getInput("FlattenVariableName", true);
         var azureKeyVaultDnsSuffix = tl.getEndpointDataParameter(connectedService, "AzureKeyVaultDnsSuffix", true);
 
         this.servicePrincipalId = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', false);

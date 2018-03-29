@@ -45,6 +45,8 @@ export class KeyVault {
     private taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters;
     private keyVaultClient: armKeyVault.KeyVaultClient;
     private provisionKeyVaultSecretsScript: string;
+    
+    private flattenedSecrets: { [index: string]: string };
 
     constructor(taskParameters: keyVaultTaskParameters.KeyVaultTaskParameters) {
         this.taskParameters = taskParameters;
@@ -54,6 +56,8 @@ export class KeyVault {
             this.taskParameters.subscriptionId,
             this.taskParameters.keyVaultName,
             this.taskParameters.keyVaultUrl);
+
+        this.flattenedSecrets = {};
 
         var scriptContentFormat = `$ErrorActionPreference=\"Stop\";
 Login-AzureRmAccount -SubscriptionId %s;
@@ -65,7 +69,6 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
     }
 
     public downloadSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
-
         var downloadAllSecrets = false;
         if (this.taskParameters.secretsFilter && this.taskParameters.secretsFilter.length > 0)
         {
@@ -87,6 +90,8 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
     }
 
     private downloadAllSecrets(secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
+        this.flattenedSecrets = {};
+
         tl.debug(util.format("Downloading all secrets from subscriptionId: %s, vault: %s", this.taskParameters.subscriptionId, this.taskParameters.keyVaultName));
 
         return new Promise<void>((resolve, reject) => {
@@ -110,13 +115,19 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                 });
 
                 Promise.all(getSecretValuePromises).then(() =>{
-                    return resolve();
+                    if (this.taskParameters.flattenVariableName) {
+                        this.setVaultVariable(this.taskParameters.flattenVariableName, JSON.stringify(this.flattenedSecrets));
+                    } else {
+                        return resolve();
+                    }
                 });
             });
         });
     }
 
     private downloadSelectedSecrets(selectedSecrets: string[], secretsToErrorsMap: SecretsToErrorsMapping): Promise<void> {
+        this.flattenedSecrets = {};
+
         tl.debug(util.format("Downloading selected secrets from subscriptionId: %s, vault: %s", this.taskParameters.subscriptionId, this.taskParameters.keyVaultName));
 
         return new Promise<void>((resolve, reject) => {
@@ -126,7 +137,11 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
             });
 
             Promise.all(getSecretValuePromises).then(() =>{
-                return resolve();
+                if (this.taskParameters.flattenVariableName) {
+                    this.setVaultVariable(this.taskParameters.flattenVariableName, JSON.stringify(this.flattenedSecrets));
+                } else {
+                    return resolve();
+                }
             });
         });
     }
@@ -154,7 +169,11 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                     secretsToErrorsMap.addError(secretName, errorMessage);
                 }
                 else {
-                    this.setVaultVariable(secretName, secretValue);
+                    if (this.taskParameters.flattenVariableName) {
+                        this.flattenedSecrets[secretName] = secretValue;
+                    } else {
+                        this.setVaultVariable(secretName, secretValue);
+                    }
                 }
                 
                 return resolve();
