@@ -359,7 +359,7 @@ function Add-AzureStackAzureRmEnvironment {
     }
     catch {
         Assert-TlsError -exception $_.Exception
-        throw $_.Exception
+        throw
     }
 }
 
