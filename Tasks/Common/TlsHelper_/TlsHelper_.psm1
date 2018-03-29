@@ -7,7 +7,7 @@ function Add-Tls12InSession {
     try {
         if ([Net.ServicePointManager]::SecurityProtocol -notcontains 'Tls12') {
             [Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType]3072
-            Write-Verbose 'Added TLS 1.2 in session.'
+            Write-Host (Get-VstsLocString -Key TLS12AddedInSession)
         }
         else {
             Write-Verbose 'TLS 1.2 already present in session.'
@@ -43,7 +43,7 @@ function Assert-TlsError {
 
     if (($isWebException -eq $true) -and ($innerException.InnerException -ne $null) -and ($innerException.InnerException.GetType() -eq [System.IO.IOException]))
     {
-        Write-VstsTaskError -Message (Get-VstsLocString -Key AZ_UnsupportedTLSError)
+        Write-VstsTaskError -Message (Get-VstsLocString -Key UnsupportedTLSError)
     }
 }
 
