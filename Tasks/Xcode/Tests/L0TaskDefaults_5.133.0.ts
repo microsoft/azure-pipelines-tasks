@@ -8,7 +8,7 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME'] = '/users/test'; //replace with mock of setVariable when task-lib has the support
 
-// Xcode task defaults used for version 4.127.0.
+// Xcode task defaults used for version 5.133.0.
 tr.setInput('actions', 'build');
 tr.setInput('configuration', '$(Configuration)');
 tr.setInput('sdk', '$(SDK)');
@@ -28,8 +28,7 @@ tr.setInput('signingOption', 'nosign');
 tr.setInput('signingIdentity', '');
 tr.setInput('provisioningProfileUuid', '');
 tr.setInput('teamId', '');
-tr.setInput('destinationPlatformOption', 'default');
-tr.setInput('destinationPlatform', '');
+tr.setInput('destinationPlatform', 'default');
 tr.setInput('destinationTypeOption', 'simulators');
 tr.setInput('destinationSimulators', 'iPhone 7');
 tr.setInput('destinationDevices', '');

@@ -504,10 +504,10 @@ describe('Xcode L0 Suite', function () {
         done();
     });
 
-    it('Task defaults - v4.127.0', function (done: MochaDone) {
+    it('Task defaults - v5.133.0', function (done: MochaDone) {
         this.timeout(1000);
 
-        let tp = path.join(__dirname, 'L0TaskDefaults_4.127.0.js');
+        let tp = path.join(__dirname, 'L0TaskDefaults_5.133.0.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
         tr.run();

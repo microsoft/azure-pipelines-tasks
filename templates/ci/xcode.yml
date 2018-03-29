@@ -33,7 +33,7 @@ steps:
     sdk: '$(testSdk)'
     xcodeVersion: '$(xcodeVersion)'
     signingOption: 'default'
-    destinationPlatformOption: 'iOS'
+    destinationPlatform: 'iOS'
     publishJUnitResults: 'true'
   enabled: false
 
