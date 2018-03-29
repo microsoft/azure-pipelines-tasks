@@ -81,8 +81,12 @@ async function run() {
 
         let destinations: string[];
 
-        // To be yaml friendly, we'll let you skip destinationPlatformOption and supply destinationPlatform, custom or not.
-        let platform: string = tl.getInput('destinationPlatform', false) || tl.getInput('destinationPlatformOption', false);
+        let platform: string = tl.getInput('destinationPlatformOption', false);
+        if (platform === 'custom') {
+            // Read the custom platform from the text input.
+            platform = tl.getInput('destinationPlatform', false);
+        }
+
         if (platform === 'macOS') {
             destinations = ['platform=macOS'];
         }
@@ -387,7 +391,7 @@ async function run() {
 
                 //export path
                 let exportPath: string = tl.getInput('exportPath');
-                
+
                 for (var i = 0; i < archiveFolders.length; i++) {
                     let archive: string = archiveFolders.pop();
 
