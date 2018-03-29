@@ -166,7 +166,7 @@ export enum ComputeResourceType {
     VirtualMachineScaleSet
 }
 
-export enum scheme {
+export enum Scheme {
     ManagedServiceIdentity,
     SPN
 }

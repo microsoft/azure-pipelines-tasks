@@ -12,7 +12,7 @@ export class ApplicationTokenCredentials {
     public authorityUrl: string;
     public activeDirectoryResourceId: string;
     public isAzureStackEnvironment: boolean;
-    public scheme: string;
+    public scheme: number;
     public msiPort: string;
     private token_deferred: Q.Promise<string>;
 
@@ -55,13 +55,13 @@ export class ApplicationTokenCredentials {
         this.authorityUrl = authorityUrl;
         this.activeDirectoryResourceId = activeDirectoryResourceId;
         this.isAzureStackEnvironment = isAzureStackEnvironment;
-        this.scheme = scheme;
+        this.scheme = AzureModels.Scheme[scheme];
         this.msiPort = msiPort ? msiPort : '50342';
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
         if (!this.token_deferred || force) {
-            if(this.scheme && this.scheme === AzureModels.scheme.ManagedServiceIdentity.toString())
+            if(this.scheme === AzureModels.Scheme.ManagedServiceIdentity)
             {
                 this.token_deferred = this._getMSIAuthorizationToken();
             }
