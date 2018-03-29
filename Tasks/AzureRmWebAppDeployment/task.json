@@ -9,9 +9,9 @@
         "Build",
         "Release"
     ],
-    "preview": "true",
     "runsOn": [
-        "Agent"
+        "Agent",
+        "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
