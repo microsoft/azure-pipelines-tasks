@@ -60,9 +60,9 @@ describe('UsePythonVersion L0 Suite', function () {
             },
         ];
 
-        for (let { versionSpec, expected } of testCases) {
-            const actual = uut.pythonVersionToSemantic(versionSpec);
-            assert.strictEqual(actual, expected);
+        for (let tc of testCases) {
+            const actual = uut.pythonVersionToSemantic(tc.versionSpec);
+            assert.strictEqual(actual, tc.expected);
         }
     })
 
