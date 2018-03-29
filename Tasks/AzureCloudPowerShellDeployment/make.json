@@ -3,6 +3,10 @@
         {
             "module": "../Common/VstsAzureHelpers_",
             "type": "ps"
+        },
+        {
+            "module": "../Common/TlsHelper_",
+            "type": "ps"
         }
     ],
     "externals": {

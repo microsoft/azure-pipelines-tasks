@@ -11,6 +11,9 @@ if ($global:DebugPreference -eq 'Continue') {
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
+Import-Module $PSScriptRoot/../TlsHelper_
+Add-Tls12InSession
+
 # Dot source the private functions.
 . $PSScriptRoot/InitializeFunctions.ps1
 . $PSScriptRoot/ImportFunctions.ps1
