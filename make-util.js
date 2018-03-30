@@ -785,10 +785,7 @@ var createYamlSnippet = function (taskJson, outFilePath) {
 exports.createYamlSnippet = createYamlSnippet;
 
 function camelize(str) {
-    //return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(match, index) {
     return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-        //if (+match === 0) return " "; // or if (/\s+/.test(match)) for white spaces
-        //if (/\s+/.test(match)) return " ";
         return index == 0 ? match.toLowerCase() : match.toUpperCase();
     });
 }
