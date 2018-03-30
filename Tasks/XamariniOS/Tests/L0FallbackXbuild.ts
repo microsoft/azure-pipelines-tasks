@@ -23,22 +23,21 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "HOME": "/user/home"
     },
     "which": {
-        "msbuild": "/home/bin/msbuild",
-        "nuget": "/home/bin/nuget"
+        "xbuild": "/home/bin/xbuild"
     },
     "exec": {
-        "/home/bin/msbuild /version /nologo": {
+        "/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone /t:Clean": {
             "code": 0,
-            "stdout": "15.1.0.0"
+            "stdout": "msbuild"
         },
-        "/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone": {
+        "/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone": {
             "code": 0,
             "stdout": "msbuild"
         }
     },
     "checkPath" : {
         "/user/build": true,
-        "/home/bin/msbuild": true,
+        "/home/bin/xbuild": true,
         "src/project.sln": true
     },
     "findMatch" : {
