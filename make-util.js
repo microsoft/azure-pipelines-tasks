@@ -784,41 +784,52 @@ var createYamlSnippet = function (taskJson, outFilePath) {
 }
 exports.createYamlSnippet = createYamlSnippet;
 
+function camelize(str) {
+    //return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(match, index) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+        //if (+match === 0) return " "; // or if (/\s+/.test(match)) for white spaces
+        //if (/\s+/.test(match)) return " ";
+        return index == 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+}
+
 var getAliasOrNameForInputName = function(inputs, inputName) {
     var returnInputName = inputName;
     inputs.forEach(function(input) {
         if (input.name == inputName) {
-            returnInputName = getInputAliasOrName(input);
+            if (input.aliases && input.aliases.length > 0) {
+                returnInputName = input.aliases[0];
+            }
+            else {
+                returnInputName = input.name;
+            }
         }
     });
-    return returnInputName;
+    return camelize(returnInputName);
 };
 
 var getInputAliasOrName = function(input) {
+    var returnInputName;
     if (input.aliases && input.aliases.length > 0) {
-        return input.aliases[0];
+        returnInputName = input.aliases[0];
     }
     else {
-        return input.name;
+        returnInputName = input.name;
     }
+    return camelize(returnInputName);
 };
 
 var cleanString = function(str) {
     if (str) {
         return str
-            .replaceAll("\r", '')
-            .replaceAll("\n", '')
-            .replaceAll("\"", '');
+            .replace(/\r/g, '')
+            .replace(/\n/g, '')
+            .replace(/\"/g, '');
     }
     else {
         return str;
     }
 }
-
-String.prototype.replaceAll = function(searchFor, replacement) {
-    var target = this;
-    return target.replace(new RegExp(searchFor, 'g'), replacement);
-};
 
 var getTaskYaml = function(taskJson) {
     var EOL = '\r\n';
@@ -835,9 +846,10 @@ var getTaskYaml = function(taskJson) {
         if (input.required && input.visibleRule && input.visibleRule.length > 0) {
             var spaceIndex = input.visibleRule.indexOf(' ');
             var visibleRuleInputName = input.visibleRule.substring(0, spaceIndex);
-            requiredOrNot += '# Required when ' + input.visibleRule
-            .replaceAll(' = ', ' == ')
-            .replaceAll(visibleRuleInputName, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
+            var visibleRuleInputNameCamel = camelize(visibleRuleInputName);
+            requiredOrNot += '# Required when ' + camelize(input.visibleRule)
+            .replace(/ = /g, ' == ')
+            .replace(visibleRuleInputNameCamel, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
         }
 
         // Does the input have a default value?
@@ -875,11 +887,11 @@ var getTaskYaml = function(taskJson) {
             var isFirstOption = true;
             Object.keys(input.options).forEach(function(key) {
                 if (isFirstOption) {
-                    taskYaml += (input.required ? '# ' : '. ') + 'Options: ' + cleanString(key);
+                    taskYaml += (input.required ? '# ' : '. ') + 'Options: ' + camelize(cleanString(key));
                     isFirstOption = false;
                 }
                 else {
-                    taskYaml += ', ' + cleanString(key);
+                    taskYaml += ', ' + camelize(cleanString(key));
                 }
             });
         }
@@ -888,6 +900,7 @@ var getTaskYaml = function(taskJson) {
         taskYaml += EOL;
     });
 
+    //console.log(taskYaml);
     return taskYaml;
 };
 //------------------------------------------------------------------------------
