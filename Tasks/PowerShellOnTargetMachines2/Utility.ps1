@@ -11,13 +11,14 @@ function Parse-TargetMachineNames {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         # Any verification on the pattern of the target machine name should be done here.
-        $targetMachineNames = $machineNames.Split($separator) |
-            ForEach-Object { 
-                if (![string]::IsNullOrEmpty($_)) { 
-                    Write-Verbose "TargetMachineName: '$_'" ;
-                    $_ 
-                } 
-            };
+        $targetMachineNames = $machineNames.ToLowerInvariant().Split($separator) |
+            Select-Object -Unique |
+                ForEach-Object {
+                    if (![string]::IsNullOrEmpty($_)) {
+                        Write-Verbose "TargetMachineName: '$_'" ;
+                        $_.ToLowerInvariant()
+                    } 
+                }
             
         return ,$targetMachineNames;
     } finally {
