@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 17
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -95,6 +95,8 @@
         "GetSecretFailedBecauseOfInvalidCharacters": "Cannot find the secret with name: %s. Secret name must be a string 1-127 characters in length containing only 0-9, a-z, A-Z, and -",
         "UploadingAttachment": "Uploading %s as attachment",
         "CouldNotWriteToFile": "Could not save content to file. Failed with an error %s",
-        "CouldNotMaskSecret": "%s value has regular expressions hence could not mask completely"
+        "CouldNotMaskSecret": "%s value has regular expressions hence could not mask completely",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: '%s', status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for MSI. Please configure MSI for vm 'https://docs.microsoft.com/en-us/azure/active-directory/managed-service-identity/qs-configure-portal-windows-vm'. Status code: '%s', status message: %s"
     }
 }

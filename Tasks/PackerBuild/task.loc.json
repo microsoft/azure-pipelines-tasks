@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -299,6 +299,8 @@
     "ParsingCustomTemplateParameters": "ms-resource:loc.messages.ParsingCustomTemplateParameters",
     "FetchingSPNDetailsRemotely": "ms-resource:loc.messages.FetchingSPNDetailsRemotely",
     "FetchedSPNDetailsRemotely": "ms-resource:loc.messages.FetchedSPNDetailsRemotely",
-    "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely"
+    "FailedToFetchSPNDetailsRemotely": "ms-resource:loc.messages.FailedToFetchSPNDetailsRemotely",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }

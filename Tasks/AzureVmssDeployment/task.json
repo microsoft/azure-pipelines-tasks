@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -212,6 +212,8 @@
         "FailedToListItemInsideContainer": "Failed to list items inside container: %s. Error: %s.",
         "SuccessFullyFetchedItemList": "Successfully fetcted list of items",
         "UnableToFetchItem": "Unable to fetch item: %s. Error: %s.",
-        "UploadingItem": "Uploading %s."
+        "UploadingItem": "Uploading %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: '%s', status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for MSI. Please configure MSI for vm 'https://docs.microsoft.com/en-us/azure/active-directory/managed-service-identity/qs-configure-portal-windows-vm'. Status code: '%s', status message: %s"
     }
 }
