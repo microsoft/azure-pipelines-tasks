@@ -93,10 +93,12 @@ export class ApplicationTokenCredentials {
 
         webClient.sendRequest(webRequest).then(
             (response: webClient.WebResponse) => {
-                if (response.statusCode == 200) {
+                if (response.statusCode == 200) 
+                {
                     deferred.resolve(response.body.access_token);
                 }
-                else {
+                else 
+                {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
                 }
             },
@@ -125,10 +127,12 @@ export class ApplicationTokenCredentials {
 
         webClient.sendRequest(webRequest).then(
             (response: webClient.WebResponse) => {
-                if (response.statusCode == 200) {
+                if (response.statusCode == 200) 
+                {
                     deferred.resolve(response.body.access_token);
                 }
-                else {
+                else 
+                {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
                 }
             },
