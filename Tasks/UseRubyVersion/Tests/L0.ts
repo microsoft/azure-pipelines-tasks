@@ -12,6 +12,8 @@ function reload(): typeof useRubyVersion {
 }
 
 describe('UseRubyVersion L0 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 2000);
+    
     before(function () {
         mockery.enable({
             useCleanCache: true,
@@ -26,100 +28,90 @@ describe('UseRubyVersion L0 Suite', function () {
     afterEach(function () {
         mockery.deregisterAll();
         mockery.resetCache();
-    })
+    });
 
-    it('finds version in cache', async function () {
-        let buildVariables: any = {};
-        const mockBuildVariables = {
-            setVariable: (variable: string, value: string) => {
-                buildVariables[variable] = value;
-            },
-            getVariable: (variable: string) => buildVariables[variable]
+    it('finds version in cache in Linux', async function () {
+        const which: any = {
+            'ruby-switch': '/usr/bin/ruby-switch'
         };
-        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
-
-        const toolPath = path.join('/', 'Ruby', '2.5.0');
-        mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath
-        });
-
+        const toolSetCommand: string = 'sudo ruby-switch --set ruby2.5';
+        const willRun: any = {
+            'sudo ruby-switch --set ruby2.5': {
+                stdout: '',
+                code: 0
+            },
+            'ruby-switch --list': {
+                stdout: 'ruby2.5' + EOL + 'ruby2.2' + EOL + 'ruby2.4',
+                code: 0
+            }
+        };
+        let toolSet: boolean = false;
+        const mockTaskRun = {
+            execSync: (command: string, args: string[]) => {
+                if (args) {
+                    command = command + ' ' + args.join(' ');
+                }
+                if (command === toolSetCommand) {
+                    toolSet = true;
+                }
+                return willRun[command];
+            },
+            which: (command: string) => which[command]
+        };
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockTaskRun));
+        mockery.registerMock('vsts-task-tool-lib/tool', {});
         const uut = reload();
         const parameters = {
-            versionSpec: '2.5',
+            versionSpec: '= 2.5',
             outputVariable: 'Ruby',
-            addToPath: false,
-            installDevKit: false
+            addToPath: false
         };
-
-        assert.strictEqual(buildVariables['Ruby'], undefined);
-
-        await uut.useRubyVersion(parameters);
-        assert.strictEqual(buildVariables['Ruby'], toolPath);
+        await uut.useRubyVersion(parameters, uut.Platform.Linux);
+        assert.equal(true, toolSet);
     });
 
     it('rejects version not in cache', async function (done: MochaDone) {
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-        mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => null,
-            findLocalToolVersions: () => ['2.7.13']
-        });
+        const which: any = {
+            'ruby-switch': '/usr/bin/ruby-switch'
+        };
+        const willRun: any = {
+            'ruby-switch --list': {
+                'stdout': 'ruby2.5' + EOL + 'ruby2.2' + EOL + 'ruby2.4',
+                'code': 0
+            }
+        };
+        const mockTaskRun = {
+            execSync: (command: string, args: string[]) => {
+                if (args) {
+                    command = command + ' ' + args.join(' ');
+                }
+                return willRun[command];
+            },
+            which: (command: string) => which[command]
+        };
+
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockTaskRun));
+        mockery.registerMock('vsts-task-tool-lib/tool', {});
 
         const uut = reload();
         const parameters = {
-            versionSpec: '3.x',
+            versionSpec: '= 2.3',
             outputVariable: 'Ruby',
-            addToPath: false,
-            installDevKit: false
+            addToPath: false
         };
 
         try {
-            await uut.useRubyVersion(parameters);
+            await uut.useRubyVersion(parameters, uut.Platform.Linux);
             done(new Error('should not have succeeded'));
         } catch (e) {
             const expectedMessage = [
-                'loc_mock_VersionNotFound 3.x',
+                'loc_mock_VersionNotFound = 2.3',
                 'loc_mock_ListAvailableVersions',
-                '2.7.13'
+                'ruby2.5 ruby2.2 ruby2.4'
             ].join(EOL);
 
             assert.strictEqual(e.message, expectedMessage);
             done();
         }
-    });
-
-    it('install DevKit', async function () {
-        const runDevKit = path.join('/', 'Ruby', '2.4.4');
-        let ranDevKitInstall: boolean = false;
-        mockery.registerMock('vsts-task-lib/task', {
-            mockTask
-        });
-        mockery.registerMock('vsts-task-lib/task', {
-            execSync: (tool: any, args: any, options?: any) => {
-                if (tool && tool.indexOf('ridk') >= 0) {
-                    ranDevKitInstall = true;
-                }
-            },
-            loc: (s: string) => {
-                return s;
-            },
-            setVariable: (variable: string, value: string) => {}
-        });
-        const toolPath = path.join('/', 'Ruby', '2.4.4');
-        mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath,
-            findLocalToolVersions: () => ['2.4.4'],
-            prependPath: (path: string) => {}
-        });
-
-        const uut = reload();
-        const parameters = {
-            versionSpec: '2.4',
-            outputVariable: 'Ruby',
-            addToPath: true,
-            installDevKit: true
-        };
-
-        await uut.useRubyVersion(parameters);
-        assert.equal(true, ranDevKitInstall);
     });
 });

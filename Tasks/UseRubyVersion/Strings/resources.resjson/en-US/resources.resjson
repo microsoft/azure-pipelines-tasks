@@ -9,8 +9,6 @@
   "loc.input.help.outputVariable": "Set a name for the variable that will contain the directory of the decompressed Ruby distribution. Use this in subsequent tasks to access this installation of Ruby.",
   "loc.input.label.addToPath": "Add to PATH",
   "loc.input.help.addToPath": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.",
-  "loc.input.label.installDevKit": "Install DevKit",
-  "loc.input.help.installDevKit": "Installs DevKit (currently this task only supports Ruby versions >= 2.4).",
   "loc.messages.ListAvailableVersions": "Available versions:",
   "loc.messages.PlatformNotRecognized": "Platform not recognized",
   "loc.messages.VersionNotFound": "Version spec %s did not match any version in the tool cache."
