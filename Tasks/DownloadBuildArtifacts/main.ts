@@ -6,7 +6,7 @@ import * as tl from 'vsts-task-lib/task';
 import { IBuildApi } from './vso-node-api/BuildApi';
 import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
 import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
-import { BuildStatus, BuildResult, BuildQueryOrder, Build } from './vso-node-api/interfaces/BuildInterfaces';
+import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionReference } from './vso-node-api/interfaces/BuildInterfaces';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
@@ -69,6 +69,7 @@ async function main(): Promise<void> {
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
+        var tagFilters = [];
 
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
@@ -133,14 +134,22 @@ async function main(): Promise<void> {
             }
         }
 
+        // if the definition name includes a variable then definitionIdSpecified is a name vs a number
+        if (Number.isNaN(parseInt(definitionIdSpecified))) {
+            var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), 4).catch((reason) => {
+                reject(reason);
+                return;
+            });
+            definitionId = String(definitions[0].id);
+            console.log(tl.loc("DefinitionIDFound", definitionIdSpecified, definitionId));
+        }
         // verify that buildId belongs to the definition selected
         if (definitionId) {
             var build : Build;
             if (buildVersionToDownload != "specific"){ 
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;
-                
                 // get latest successful build filtered by branch
-                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchNameFilter), 4).catch((reason) => {
+                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, BuildResult.Succeeded, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), 4).catch((reason) => {
                     reject(reason);
                     return;
                 }); 
