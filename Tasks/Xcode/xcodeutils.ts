@@ -196,7 +196,6 @@ export function pipeOutputToFile(firstTool: ToolRunner, secondTool: ToolRunner, 
         index++;
     }
 
-    firstTool.pipeExecOutputToTool(secondTool);
     firstTool.pipeExecOutputToTool(secondTool, filePath);
     return filePath;
 }
