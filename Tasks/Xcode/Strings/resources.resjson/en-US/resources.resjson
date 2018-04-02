@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613730)",
   "loc.description": "Build, test, or archive an Xcode workspace on macOS. Optionally package an app.",
   "loc.instanceNameFormat": "Xcode $(actions)",
-  "loc.releaseNotes": "This version of the task is compatible with Xcode 8 and Xcode 9. Features that were there to keep compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
+  "loc.releaseNotes": "This version of the task is compatible with Xcode 8 and Xcode 9. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
   "loc.group.displayName.sign": "Signing & provisioning",
   "loc.group.displayName.package": "Package options",
   "loc.group.displayName.devices": "Devices & simulators",
