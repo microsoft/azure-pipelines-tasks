@@ -12,8 +12,10 @@
   "version": {
     "Major": 5,
     "Minor": 133,
-    "Patch": 2
+    "Patch": 3
   },
+  "preview": true,
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "xcode"
   ],
