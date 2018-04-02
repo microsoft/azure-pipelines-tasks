@@ -32,7 +32,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         this.taskParams = taskParams;
     }
 
-    public async PredeploymentStep() {
+    public async PreDeploymentStep() {
         this.azureEndpoint = await new AzureRMEndpoint(this.taskParams.connectedServiceName).getEndpoint();
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', this.taskParams.WebAppName));
         if(!this.taskParams.DeployToSlotOrASEFlag) {
@@ -60,7 +60,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         }
     }
 
-    protected async UpdateWebAppSettings() {
+    protected async PostDeploymentStep() {
         if(this.taskParams.AppSettings) {
             var customApplicationSettings = ParameterParser.parse(this.taskParams.AppSettings);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSettings);

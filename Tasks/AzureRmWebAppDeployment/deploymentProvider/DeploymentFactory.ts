@@ -24,7 +24,7 @@ export class DeploymentFactory{
                     return new WindowsWebAppDeploymentProvider(taskParams);
                 }
             default:
-                throw new Error("ArgumentException");
+                throw new Error("Invalid connection type");
         }
     }
 }

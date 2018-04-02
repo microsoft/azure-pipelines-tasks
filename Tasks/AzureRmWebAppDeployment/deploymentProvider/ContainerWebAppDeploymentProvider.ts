@@ -2,8 +2,6 @@ import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvid
 import tl = require('vsts-task-lib/task');
 import { ContainerBasedDeploymentUtility } from '../operations/ContainerBasedDeploymentUtility';
 
-var packageUtility = require('webdeployment-common/packageUtility.js');
-
 export class ContainerWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
 
     public async DeployWebAppStep() {

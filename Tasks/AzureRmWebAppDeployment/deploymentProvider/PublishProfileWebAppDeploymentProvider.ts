@@ -15,7 +15,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
         this.taskParams = taskParams;
     }
 
-    public async PredeploymentStep(){ }
+    public async PreDeploymentStep(){ }
 
     public async DeployWebAppStep() {
         var msDeployPublishingProfile = await PublishProfileUtility.GetTaskParametersFromPublishProfileFile(this.taskParams);

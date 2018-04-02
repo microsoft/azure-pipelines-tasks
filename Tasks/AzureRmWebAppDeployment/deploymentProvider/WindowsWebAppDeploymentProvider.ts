@@ -67,6 +67,6 @@ export class WindowsWebAppDeploymentProvider extends AzureRmWebAppDeploymentProv
             await this.kuduServiceUtility.deployWebPackage(webPackage, physicalPath, this.taskParams.VirtualApplication, this.taskParams.TakeAppOfflineFlag);
         }
 
-        await this.UpdateWebAppSettings();
+        await this.PostDeploymentStep();
     }
 }
