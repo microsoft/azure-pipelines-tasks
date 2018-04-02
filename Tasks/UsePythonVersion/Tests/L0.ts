@@ -28,6 +28,48 @@ describe('UsePythonVersion L0 Suite', function () {
         mockery.resetCache();
     })
 
+    it('converts Python prerelease versions to the semantic version format', function () {
+        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('vsts-task-tool-lib/tool', {});
+        const uut = reload();
+
+        const testCases = [
+            {
+                versionSpec: '3.x',
+                expected: '3.x'
+            },
+            {
+                versionSpec: '3.3.6',
+                expected: '3.3.6'
+            },
+            {
+                versionSpec: '3.7.0b2',
+                expected: '3.7.0-b2'
+            },
+            {
+                versionSpec: '3.7.0rc',
+                expected: '3.7.0-rc'
+            },
+            {
+                versionSpec: '14.22.100a1000',
+                expected: '14.22.100-a1000'
+            },
+            {
+                versionSpec: '3.6.6b2 || >= 3.7.0rc',
+                expected: '3.6.6-b2 || >= 3.7.0-rc'
+            },
+            {
+                versionSpec: '3.7rc1', // invalid
+                expected: '3.7rc1'
+            },
+        ];
+
+        for (let tc of testCases) { // Node 5 can't handle destructuring assignment
+            const actual = uut.pythonVersionToSemantic(tc.versionSpec);
+            assert.strictEqual(actual, tc.expected);
+        }
+    })
+
     it('finds version in cache', async function () {
         let buildVariables: any = {};
         const mockBuildVariables = {

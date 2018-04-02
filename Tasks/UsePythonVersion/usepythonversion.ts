@@ -31,8 +31,19 @@ interface TaskParameters {
     readonly addToPath: boolean
 }
 
+export function pythonVersionToSemantic(versionSpec: string) {
+    const prereleaseVersion = /(\d+\.\d+\.\d+)([a|b|rc]\d*)/g;
+    return versionSpec.replace(prereleaseVersion, '$1-$2');
+}
+
 export async function usePythonVersion(parameters: TaskParameters, platform: Platform): Promise<void> {
-    const installDir: string | null = tool.findLocalTool('Python', parameters.versionSpec);
+    // Python's prelease versions look like `3.7.0b2`.
+    // This is the one part of Python versioning that does not look like semantic versioning, which specifies `3.7.0-b2`.
+    // If the version spec contains prerelease versions, we need to convert them to the semantic version equivalent
+    const semanticVersionSpec = pythonVersionToSemantic(parameters.versionSpec);
+    task.debug(`Semantic version spec of ${parameters.versionSpec} is ${semanticVersionSpec}`);
+
+    const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec);
     if (!installDir) {
         // Fail and list available versions
         throw new Error([
