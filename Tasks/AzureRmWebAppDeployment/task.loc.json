@@ -27,7 +27,7 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp"
     },
     {
       "name": "AdditionalDeploymentOptions",
@@ -39,15 +39,27 @@
       "name": "PostDeploymentAction",
       "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != \"\""
+      "visibleRule": "ConnectionType = AzureRM || WebAppKind != \"\""
     },
     {
       "name": "ApplicationAndConfigurationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "ConnectionType = AzureRM"
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectionType",
+      "defaultValue": "AzureRM",
+      "options": {
+        "AzureRM": "Azure Resource Manager",
+        "PublishProfile": "Publish Profile"
+      },
+      "required": true
+    },
     {
       "name": "ConnectedServiceName",
       "aliases": [
@@ -57,7 +69,26 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectionType = AzureRM"
+    },
+    {
+      "name": "PublishProfilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.PublishProfilePath",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
+      "required": true,
+      "helpMarkDown": "",
+      "visibleRule": "ConnectionType = PublishProfile"
+    },
+    {
+      "name": "PublishProfilePassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PublishProfilePassword",
+      "defaultValue": "$(Password)",
+      "required": true,
+      "helpMarkDown": "",
+      "visibleRule": "ConnectionType = PublishProfile"
     },
     {
       "name": "WebAppKind",
@@ -76,7 +107,8 @@
         "apiApp": "API App",
         "mobileApp": "Mobile App"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppKind",
+      "visibleRule": "ConnectionType = AzureRM"
     },
     {
       "name": "WebAppName",
@@ -87,7 +119,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppName",
+      "visibleRule": "ConnectionType = AzureRM"
     },
     {
       "name": "DeployToSlotOrASEFlag",
@@ -99,7 +132,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotOrASEFlag",
-      "visibleRule": "WebAppKind != \"\""
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
     },
     {
       "name": "ResourceGroupName",
@@ -170,7 +203,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != webAppContainer && WebAppKind != \"\"",
+      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -179,8 +212,22 @@
       "label": "ms-resource:loc.input.label.RuntimeStack",
       "defaultValue": "",
       "required": true,
-      "properties": {
-        "EditableOptions": "True"
+      "options": {
+        "node|4.4": "Node.js 4.4",
+        "node|4.5": "Node.js 4.5",
+        "node|6.2": "Node.js 6.2",
+        "node|6.6": "Node.js 6.6",
+        "node|6.9": "Node.js 6.9",
+        "node|6.10": "Node.js 6.10",
+        "node|6.11": "Node.js 6.11",
+        "node|8.0": "Node.js 8.0",
+        "node|8.1": "Node.js 8.1",
+        "php|5.6": "PHP 5.6",
+        "php|7.0": "PHP 7.0",
+        "dotnetcore|1.0": ".Net Core 1.0",
+        "dotnetcore|1.1": ".Net Core 1.1",
+        "dotnetcore|2.0": ".Net Core 2.0",
+        "ruby|2.3": "Ruby 2.3"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
       "visibleRule": "WebAppKind = webAppLinux"
@@ -399,15 +446,6 @@
         "ResourceGroupName": "$(ResourceGroupName)"
       },
       "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-    },
-    {
-      "target": "RuntimeStack",
-      "endpointId": "$(ConnectedServiceName)",
-      "dataSourceName": "AzureRMWebAppRuntimeStacksByOsType",
-      "parameters": {
-        "osTypeSelected": "Linux"
-      },
-      "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
