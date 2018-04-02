@@ -6,14 +6,6 @@ export var nock = require('nock');
 
 export function getMockEndpoint(scheme?: string, msiPort?: string) {
     process.env["AZURE_HTTP_USER_AGENT"] = "TEST_AGENT";
-    if(this.scheme === Scheme.ManagedServiceIdentity)
-    {
-        this.token_deferred = this._getMSIAuthorizationToken();
-    }
-    else
-    {
-        this.token_deferred = this._getSPNAuthorizationToken();
-    }
 
     var endpoint: AzureEndpoint = {
         activeDirectoryAuthority: "https://login.windows.net/",
