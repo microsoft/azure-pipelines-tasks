@@ -28,11 +28,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
         "/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone /t:Clean": {
             "code": 0,
-            "stdout": "msbuild"
+            "stdout": "xbuild"
         },
         "/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone": {
             "code": 0,
-            "stdout": "msbuild"
+            "stdout": "xbuild"
         }
     },
     "checkPath" : {

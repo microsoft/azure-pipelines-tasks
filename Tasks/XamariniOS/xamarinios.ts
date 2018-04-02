@@ -25,9 +25,6 @@ function expandSolutionWildcardPatterns(solutionPattern: string): string {
 }
 
 async function run() {
-    let codesignKeychain: string;
-    let profileToDelete: string;
-
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -47,11 +44,7 @@ async function run() {
         const buildToolLocation: string = tl.getInput('buildToolLocation', false);
         let buildToolPath: string;
         if (buildToolLocation) {
-            // location is specified
             buildToolPath = buildToolLocation;
-            if (buildToolLocation && !buildToolLocation.toLowerCase().endsWith('msbuild')) {
-                buildToolPath = path.join(buildToolLocation, 'msbuild');
-            }
         } else {
             // no build tool path is supplied, check PATH
             // check for msbuild 15 or higher, if not fall back to xbuild
@@ -88,8 +81,8 @@ async function run() {
         const workingDir: string = cwd || tl.getVariable('System.DefaultWorkingDirectory');
         tl.cd(workingDir);
 
-        let provProfileUUID: string = tl.getInput('provProfileUuid');
-        let signIdentity: string = tl.getInput('iosSigningIdentity');
+        const provProfileUUID: string = tl.getInput('provProfileUuid');
+        const signIdentity: string = tl.getInput('iosSigningIdentity');
 
         // Prepare build command line
         const buildRunner: ToolRunner = tl.tool(buildToolPath);
@@ -100,7 +93,6 @@ async function run() {
         if (args) {
             buildRunner.line(args);
         }
-        buildRunner.argIf(codesignKeychain, '/p:CodesignKeychain=' + codesignKeychain);
         if (signIdentity && signIdentity.indexOf(',') > 0) {
             // Escape the input to workaround msbuild bug https://github.com/Microsoft/msbuild/issues/471
             tl.debug('Escaping , in arg /p:Codesignkey to workaround msbuild bug.');

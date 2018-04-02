@@ -63,7 +63,7 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('buildToolLocation', '/home/bin2/');
+        tr.setInput('buildToolLocation', '/home/bin2/msbuild');
         tr.setInput('runNugetRestore', 'true'); //boolean
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
@@ -191,7 +191,7 @@ describe('XamariniOS Suite', function() {
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            assert(tr.stderr.indexOf('not found build tool: /user/bin/msbuild') >= 0, 'wrong error message');            
+            assert(tr.stderr.indexOf('not found build tool: /user/bin/') >= 0, 'wrong error message');            
             done();
         })
         .fail((err) => {
@@ -212,7 +212,7 @@ describe('XamariniOS Suite', function() {
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
         tr.setInput('runNugetRestore', 'true'); //boolean
-        tr.setInput('buildToolLocation', '/home/bin2');
+        tr.setInput('buildToolLocation', '/home/bin2/msbuild');
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
         

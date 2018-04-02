@@ -15,7 +15,7 @@
         "Patch": 0
     },
     "preview": true,
-    "releaseNotes": "iOS signing setup has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
+    "releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
     "demands": [
         "Xamarin.iOS"
     ],
@@ -108,7 +108,7 @@
             "label": "Build tool path",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Optionally supply the path to MSBuild (the Visual Studio for Mac build tool). When empty, the default MSBuild path is used.",
+            "helpMarkDown": "Optionally supply the full path to MSBuild (the Visual Studio for Mac build tool). When empty, the default MSBuild path is used.",
             "groupName": "advanced"
         },
 
