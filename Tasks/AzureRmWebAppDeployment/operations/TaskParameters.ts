@@ -62,8 +62,6 @@ export class TaskParametersUtility {
     }
 
     private static _initializeDefaultParametersForPublishProfile(taskParameters: TaskParameters): void {
-        taskParameters.connectedServiceName = null;
-        taskParameters.WebAppName = null;
         taskParameters.PublishProfilePath = tl.getInput('PublishProfilePath', true);
         taskParameters.PublishProfilePassword = tl.getInput('PublishProfilePassword', true);
         taskParameters.isLinuxApp = false;

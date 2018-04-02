@@ -1,8 +1,8 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
-import { IWebAppDeploymentProvider } from './deployment/IWebAppDeploymentProvider';
-import { DeploymentFactory } from './deployment/DeploymentFactory';
+import { IWebAppDeploymentProvider } from './deploymentProvider/IWebAppDeploymentProvider';
+import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
 
 async function main() {
     let isDeploymentSuccess: boolean = true;
@@ -13,7 +13,7 @@ async function main() {
         var deploymentProvider = DeploymentFactory.GetDeploymentProvider(taskParams);
 
         tl.debug("Predeployment Step Started");
-        await deploymentProvider.PredeploymentStep();
+        await deploymentProvider.PreDeploymentStep();
 
         tl.debug("Deployment Step Started");
         await deploymentProvider.DeployWebAppStep();
@@ -24,7 +24,9 @@ async function main() {
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {
-        await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
+        if(deploymentProvider != null) {
+            await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
+        }
         tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "");
     }
 }

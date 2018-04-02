@@ -18,7 +18,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
         await this.appServiceUtility.updateStartupCommandAndRuntimeStack(this.taskParams.RuntimeStack, this.taskParams.StartupCommand);
 
-        await this.UpdateWebAppSettings();
+        await this.PostDeploymentStep();
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
