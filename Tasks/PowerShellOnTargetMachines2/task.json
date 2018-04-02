@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 54
+        "Patch": 55
     },
     "preview": true,
     "groups": [
@@ -163,7 +163,7 @@
             "type": "multiLine",
             "label": "New-PSSessionOption arguments",
             "required": false,
-            "defaultValue": "-SkipCACheck -SkipCNCheck",
+            "defaultValue": "-SkipCACheck",
             "helpMarkDown": "Arguments to be used for creating a New-PSSessionOption object. To be used with New-PSSession",
             "groupName": "SessionOptions"
         },
