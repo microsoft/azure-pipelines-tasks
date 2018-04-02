@@ -33,7 +33,7 @@
             "label": "Output variable",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "Set a name for the variable that will contain the directory of the decompressed Python distribution. Use this in subsequent tasks to access this installation of Python."
+            "helpMarkDown": "Name for the variable that will be created to contain the directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
         },
         {
             "name": "addToPath",
@@ -41,7 +41,7 @@
             "label": "Add to PATH",
             "required": true,
             "defaultValue": "true",
-            "helpMarkDown": "Prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+            "helpMarkDown": "Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
         }
     ],
     "execution": {
