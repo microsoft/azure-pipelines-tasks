@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# Copyright (c) 2017 Microsoft Corp. All Rights Reserved.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+$DIR/../lib/azcopy/azcopy "$@"

@@ -1,0 +1,205 @@
+{
+  "id": "8058bd24-ccd5-41ef-9a82-a8638ca4f856",
+  "name": "AzureFileCopyXplat1",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "2.119.1",
+  "groups": [
+    {
+      "name": "output",
+      "displayName": "ms-resource:loc.group.displayName.output",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceNameARM",
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "ToAzureBlob": "Copy files to Azure Blob",
+        "ToAzureVMs": "Azure files to Azure VMs",
+        "FromAzureBlob": "Copy files from Azure Blob"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Action"
+    },
+    {
+      "name": "SourcePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourcePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SourcePath",
+      "visibleRule": "Action = ToAzureBlob || Action = ToAzureVMs"
+    },
+    {
+      "name": "StorageAccount",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.StorageAccount",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.StorageAccount",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "ContainerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ContainerName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ContainerName",
+      "visibleRule": "Action = ToAzureBlob || Action = FromAzureBlob"
+    },
+    {
+      "name": "BlobPrefix",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.BlobPrefix",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.BlobPrefix",
+      "visibleRule": "Action = ToAzureBlob || Action = FromAzureBlob"
+    },
+    {
+      "name": "ResourceGroup",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroup",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroup",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "visibleRule": "Action = ToAzureVMs"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceFilteringMethod",
+      "visibleRule": "Action = ToAzureVMs"
+    },
+    {
+      "name": "MachineNamesOrTags",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineNamesOrTags",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNamesOrTags",
+      "visibleRule": "Action = ToAzureVMs"
+    },
+    {
+      "name": "TargetPathWin",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPathWin",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPathWin",
+      "visibleRule": "Action = ToAzureVMs"
+    },
+    {
+      "name": "TargetPathLinux",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPathLinux",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPathLinux",
+      "visibleRule": "Action = ToAzureVMs"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "CleanTargetBeforeCopy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy",
+      "visibleRule": "Action = ToAzureVMs"
+    },
+    {
+      "name": "DestinationPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.DestinationPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.DestinationPath",
+      "visibleRule": "Action = FromAzureBlob"
+    },
+    {
+      "name": "OutputStorageUri",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.OutputStorageUri",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.OutputStorageUri"
+    },
+    {
+      "name": "OutputStorageContainerSasToken",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.OutputStorageContainerSasToken",
+      "required": false,
+      "defaultValue": "",
+      "groupName": "output",
+      "helpMarkDown": "ms-resource:loc.input.help.OutputStorageContainerSasToken"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "StorageAccount",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRMandClassic"
+    },
+    {
+      "target": "ResourceGroup",
+      "endpointId": "$(ConnectedServiceNameARM)",
+      "dataSourceName": "AzureResourceGroups"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "main.js"
+    }
+  },
+  "messages": {
+    "AFCX_FetchingTaskInputParametersFailed": "ms-resource:loc.messages.AFCX_FetchingTaskInputParametersFailed"
+  }
+}

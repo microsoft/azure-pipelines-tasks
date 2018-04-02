@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+CHECKDOTNET=`which dotnet`
+if [ $? -ne 0 ] ; then
+    echo ".NET Core is not found in the system. Install it following the guide at https://www.microsoft.com/net/core"
+    exit
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+dotnet $DIR/bin/azcopy.dll "$@"
+

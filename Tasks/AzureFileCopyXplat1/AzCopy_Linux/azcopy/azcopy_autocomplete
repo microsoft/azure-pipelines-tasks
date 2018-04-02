@@ -1,0 +1,25 @@
+# azcopy completion                                       -*- shell-script -*-
+
+_azcopy()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    case $prev in
+    esac
+
+    if [[ "$cur" == [-+]* ]]; then
+        COMPREPLY=( $( compgen -W '--source --destination --source-key --dest-key
+            --source-sas --dest-sas --verbose --resume --config-file --quiet 
+            --parallel-level --source-type --dest-type
+            --recursive --include --check-md5 --dry-run --preserve-last-modified-time
+            --exclude-newer --exclude-older --sync-copy --set-content-type --blob-type
+            --delimiter --include-snapshot --help --version --follow-symlink' -- "$cur" ) )
+        return 0
+    fi
+
+    _filedir
+} &&
+complete -F _azcopy azcopy
+
+# ex: ts=4 sw=4 et filetype=sh

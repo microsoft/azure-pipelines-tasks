@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "sourceMap": true, 
+        "sourceRoot": "C:\\Users\\tedeshpa\\work\\VSTS_TASKS\\master\\vsts-tasks\\Tasks\\AzureFileCopyXplat1"
+    }
+}
