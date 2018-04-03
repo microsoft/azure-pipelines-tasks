@@ -71,7 +71,7 @@ describe('UsePythonVersion L0 Suite', function () {
     })
 
     it('finds version in cache', async function () {
-        let buildVariables: any = {};
+        let buildVariables: { [key: string]: string } = {};
         const mockBuildVariables = {
             setVariable: (variable: string, value: string) => {
                 buildVariables[variable] = value;
