@@ -7,23 +7,8 @@ import * as semver from 'semver';
 import * as task from 'vsts-task-lib/task';
 import * as tool from 'vsts-task-tool-lib/tool';
 
-export enum Platform {
-    Windows,
-    MacOS,
-    Linux
-}
-
-/**
- * Determine the operating system the build agent is running on.
- */
-export function getPlatform(): Platform {
-    switch (process.platform) {
-        case 'win32': return Platform.Windows;
-        case 'darwin': return Platform.MacOS;
-        case 'linux': return Platform.Linux;
-        default: throw Error(task.loc('PlatformNotRecognized'));
-    }
-}
+import { Platform } from './taskutil';
+import * as toolUtil  from './toolutil';
 
 interface TaskParameters {
     readonly versionSpec: string,
@@ -54,7 +39,7 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
 
     task.setVariable('pythonLocation', installDir);
     if (parameters.addToPath) {
-        tool.prependPath(installDir);
+        toolUtil.prependPathSafe(installDir);
 
         // Python has "scripts" directories where command-line tools that come with packages are installed.
         // There are different directories for `pip install` and `pip install --user`.
@@ -69,7 +54,7 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
         //      (--user) %APPDATA%\Python\PythonXY\Scripts
         if (platform === Platform.Windows) {
             const scriptsDir = path.join(installDir, 'Scripts');
-            tool.prependPath(scriptsDir);
+            toolUtil.prependPathSafe(scriptsDir);
 
             // Add --user directory
             // `installDir` from tool cache should look like $AGENT_TOOLSDIRECTORY/Python/<semantic version>/x64/
@@ -79,7 +64,7 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
             const minor = semver.minor(version);
 
             const userScriptsDir = path.join(process.env['APPDATA'], 'Python', `Python${major}${minor}`, 'Scripts');
-            tool.prependPath(userScriptsDir);
+            toolUtil.prependPathSafe(userScriptsDir);
         }
     }
 }

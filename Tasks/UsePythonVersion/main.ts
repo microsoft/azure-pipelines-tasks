@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as task from 'vsts-task-lib/task';
-import { getPlatform, usePythonVersion } from './usepythonversion';
+import { getPlatform } from './taskutil';
+import { usePythonVersion } from './usepythonversion';
 
 (async () => {
     try {

@@ -51,6 +51,7 @@
     "messages": {
         "ListAvailableVersions": "Available versions:",
         "PlatformNotRecognized": "Platform not recognized",
+        "PrependPath": "Prepending PATH environment variable with directory: %s",
         "VersionNotFound": "Version spec %s did not match any version in the tool cache."
     }
 }

@@ -4,6 +4,8 @@ import * as path from 'path';
 
 import * as mockery from 'mockery';
 import * as mockTask from 'vsts-task-lib/mock-task';
+
+import { Platform } from '../taskutil';
 import * as usePythonVersion from '../usepythonversion';
 
 /** Reload the unit under test to use mocks that have been registered. */
@@ -93,7 +95,7 @@ describe('UsePythonVersion L0 Suite', function () {
 
         assert.strictEqual(buildVariables['pythonLocation'], undefined);
 
-        await uut.usePythonVersion(parameters, uut.Platform.Linux);
+        await uut.usePythonVersion(parameters, Platform.Linux);
         assert.strictEqual(buildVariables['pythonLocation'], toolPath);
     });
 
@@ -111,7 +113,7 @@ describe('UsePythonVersion L0 Suite', function () {
         };
 
         try {
-            await uut.usePythonVersion(parameters, uut.Platform.Linux);
+            await uut.usePythonVersion(parameters, Platform.Linux);
             done(new Error('should not have succeeded'));
         } catch (e) {
             const expectedMessage = [
@@ -129,10 +131,13 @@ describe('UsePythonVersion L0 Suite', function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
         const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
-        let mockPath = '';
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
+        });
+
+        let mockPath = '';
+        mockery.registerMock('./toolutil', {
+            prependPathSafe: (s: string) => {
                 mockPath = s + ':' + mockPath;
             }
         });
@@ -144,7 +149,7 @@ describe('UsePythonVersion L0 Suite', function () {
             addToPath: true
         };
 
-        await uut.usePythonVersion(parameters, uut.Platform.Linux);
+        await uut.usePythonVersion(parameters, Platform.Linux);
         assert.strictEqual(`${toolPath}:`, mockPath);
     });
 
@@ -152,10 +157,13 @@ describe('UsePythonVersion L0 Suite', function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
         const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
-        let mockPath = '';
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
+            findLocalTool: () => toolPath
+        });
+
+        let mockPath = '';
+        mockery.registerMock('./toolutil', {
+            prependPathSafe: (s: string) => {
                 mockPath = s + ';' + mockPath;
             }
         });
@@ -166,7 +174,7 @@ describe('UsePythonVersion L0 Suite', function () {
             addToPath: true
         };
 
-        await uut.usePythonVersion(parameters, uut.Platform.Windows);
+        await uut.usePythonVersion(parameters, Platform.Windows);
 
         // On Windows, must add the two "Scripts" directories to PATH as well
         const expectedScripts = path.join(toolPath, 'Scripts');

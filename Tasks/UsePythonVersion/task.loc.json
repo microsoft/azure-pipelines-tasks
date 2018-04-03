@@ -51,6 +51,7 @@
   "messages": {
     "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
+    "PrependPath": "ms-resource:loc.messages.PrependPath",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"
   }
 }
