@@ -88,14 +88,13 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            outputVariable: 'Python',
             addToPath: false
         };
 
-        assert.strictEqual(buildVariables['Python'], undefined);
+        assert.strictEqual(buildVariables['pythonLocation'], undefined);
 
         await uut.usePythonVersion(parameters, uut.Platform.Linux);
-        assert.strictEqual(buildVariables['Python'], toolPath);
+        assert.strictEqual(buildVariables['pythonLocation'], toolPath);
     });
 
     it('rejects version not in cache', async function (done: MochaDone) {
@@ -108,7 +107,6 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.x',
-            outputVariable: 'Python',
             addToPath: false
         };
 
@@ -165,7 +163,6 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            outputVariable: 'Python',
             addToPath: true
         };
 

@@ -28,20 +28,18 @@
             "helpMarkDown": "Version range or exact version of a Python version to use."
         },
         {
-            "name": "outputVariable",
-            "type": "string",
-            "label": "Output variable",
-            "required": true,
-            "defaultValue": "",
-            "helpMarkDown": "Name for the variable that will be created to contain the directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
-        },
-        {
             "name": "addToPath",
             "type": "boolean",
             "label": "Add to PATH",
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "pythonLocation",
+            "description": "The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
         }
     ],
     "execution": {

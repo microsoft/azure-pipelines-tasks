@@ -27,7 +27,6 @@ export function getPlatform(): Platform {
 
 interface TaskParameters {
     readonly versionSpec: string,
-    readonly outputVariable: string,
     readonly addToPath: boolean
 }
 
@@ -53,7 +52,7 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
         ].join(os.EOL));
     }
 
-    task.setVariable(parameters.outputVariable, installDir);
+    task.setVariable('pythonLocation', installDir);
     if (parameters.addToPath) {
         tool.prependPath(installDir);
 
