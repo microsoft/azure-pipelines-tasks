@@ -168,6 +168,8 @@ describe('UsePythonVersion L0 Suite', function () {
             }
         });
 
+        process.env['APPDATA'] = '/mock-appdata';
+
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
