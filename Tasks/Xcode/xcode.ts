@@ -442,7 +442,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('XcodeSuccess'));
     }
     catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err.message);
+        tl.setResult(tl.TaskResult.Failed, err);
     }
 }
 

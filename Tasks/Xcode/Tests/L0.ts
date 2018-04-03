@@ -124,7 +124,7 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.invokedToolCount === 3, 'should have run xcodebuild for version, build, and archive.');
         assert(tr.failed, 'task should have failed');
-        assert(tr.stdout.indexOf('vso[task.issue type=error;]loc_mock_ExportOptionsPlistInvalidFilePath') >= 0,
+        assert(tr.stdout.indexOf('##vso[task.issue type=error;]Error: loc_mock_ExportOptionsPlistInvalidFilePath') >= 0,
             'Build should show error indicating invalid Plist file path.');
 
         done();
