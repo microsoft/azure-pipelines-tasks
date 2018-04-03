@@ -118,9 +118,9 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                     if (this.taskParameters.flattenVariableName) {
                         this.setVaultVariable(this.taskParameters.flattenVariableName, JSON.stringify(this.flattenedSecrets));
                         this.flattenedSecrets = {};
-                    } else {
-                        return resolve();
                     }
+
+                    return resolve();
                 });
             });
         });
@@ -141,9 +141,9 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                 if (this.taskParameters.flattenVariableName) {
                     this.setVaultVariable(this.taskParameters.flattenVariableName, JSON.stringify(this.flattenedSecrets));
                     this.flattenedSecrets = {};
-                } else {
-                    return resolve();
                 }
+
+                return resolve();
             });
         });
     }
