@@ -187,7 +187,7 @@ export function pathExistsAsFile(path: string) {
     }
 }
 
-export function pipeOutputToFile(firstTool: ToolRunner, secondTool: ToolRunner, logPrefix: string) : string {
+export function getUniqueLogFileName(logPrefix: string): string {
     //find a unique log file name
     let filePath: string = tl.resolve(tl.getVariable('Agent.TempDirectory'), logPrefix + '.log');
     let index = 1;
@@ -196,7 +196,6 @@ export function pipeOutputToFile(firstTool: ToolRunner, secondTool: ToolRunner, 
         index++;
     }
 
-    firstTool.pipeExecOutputToTool(secondTool, filePath);
     return filePath;
 }
 

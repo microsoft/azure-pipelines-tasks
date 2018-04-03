@@ -46,7 +46,7 @@ async function run() {
                 }
             }
             else {
-                throw tl.loc('WorkspaceDoesNotExist', ws);
+                throw new Error(tl.loc('WorkspaceDoesNotExist', ws));
             }
         }
 
@@ -215,7 +215,8 @@ async function run() {
             let xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
             xcPrettyTool.arg(['-r', 'junit', '--no-color']);
 
-            let logFile: string = utils.pipeOutputToFile(xcb, xcPrettyTool, 'xcodebuild');
+            const logFile: string = utils.getUniqueLogFileName('xcodebuild');
+            xcb.pipeExecOutputToTool(xcPrettyTool, logFile);
             utils.setTaskState('XCODEBUILD_LOG', logFile);
         }
 
@@ -243,10 +244,10 @@ async function run() {
         if (tl.getBoolInput('packageApp', true) && sdk !== 'iphonesimulator') {
             // use xcodebuild to create the app package
             if (!scheme) {
-                throw tl.loc("SchemeRequiredForArchive");
+                throw new Error(tl.loc("SchemeRequiredForArchive"));
             }
             if (!ws || !tl.filePathSupplied('xcWorkspacePath')) {
-                throw tl.loc("WorkspaceOrProjectRequiredForArchive");
+                throw new Error(tl.loc("WorkspaceOrProjectRequiredForArchive"));
             }
 
             // create archive
@@ -283,7 +284,8 @@ async function run() {
             if (useXcpretty) {
                 let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                 xcPrettyTool.arg('--no-color');
-                let logFile: string = utils.pipeOutputToFile(xcodeArchive, xcPrettyTool, 'xcodebuild_archive');
+                const logFile: string = utils.getUniqueLogFileName('xcodebuild_archive');
+                xcodeArchive.pipeExecOutputToTool(xcPrettyTool, logFile);
                 utils.setTaskState('XCODEBUILD_ARCHIVE_LOG', logFile);
             }
             await xcodeArchive.exec();
@@ -340,7 +342,7 @@ async function run() {
                 } else if (exportOptions === 'plist') {
                     exportOptionsPlist = tl.getInput('exportOptionsPlist');
                     if (!tl.filePathSupplied('exportOptionsPlist') || !utils.pathExistsAsFile(exportOptionsPlist)) {
-                        throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
+                        throw new Error(tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist));
                     }
                 }
 
@@ -403,7 +405,7 @@ async function run() {
                                 tl.debug('embeddedInfoPlist path = ' + embeddedInfoPlist + ', bundle identifier = ' + bundleId);
 
                                 if (!profileName || !bundleId) {
-                                    throw tl.loc('FailedToGenerateExportOptionsPlist');
+                                    throw new Error(tl.loc('FailedToGenerateExportOptionsPlist'));
                                 }
 
                                 tl.tool(plist).arg(['-c', 'Add provisioningProfiles:' + bundleId + ' string ' + profileName, exportOptionsPlist]).execSync();
@@ -429,7 +431,8 @@ async function run() {
                     if (useXcpretty) {
                         let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                         xcPrettyTool.arg('--no-color');
-                        let logFile: string = utils.pipeOutputToFile(xcodeExport, xcPrettyTool, 'xcodebuild_export');
+                        const logFile: string = utils.getUniqueLogFileName('xcodebuild_export');
+                        xcodeExport.pipeExecOutputToTool(xcPrettyTool, logFile);
                         utils.setTaskState('XCODEBUILD_EXPORT_LOG', logFile);
                     }
                     await xcodeExport.exec();
@@ -439,7 +442,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('XcodeSuccess'));
     }
     catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+        tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }
 
