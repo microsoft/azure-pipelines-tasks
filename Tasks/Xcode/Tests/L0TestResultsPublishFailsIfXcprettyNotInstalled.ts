@@ -1,4 +1,3 @@
-
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
@@ -31,7 +30,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "HOME": "/users/test"
     },
     "which": {
-        "xcpretty": "/users/xcpretty"
+        "xcpretty": ""
     },
     "findMatch": {
         "/home/build/**/build/reports/junit.xml": [

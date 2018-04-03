@@ -124,7 +124,7 @@ describe('Xcode L0 Suite', function () {
 
         assert(tr.invokedToolCount === 3, 'should have run xcodebuild for version, build, and archive.');
         assert(tr.failed, 'task should have failed');
-        assert(tr.stdout.indexOf('vso[task.issue type=error;]loc_mock_ExportOptionsPlistInvalidFilePath') >= 0,
+        assert(tr.stdout.indexOf('##vso[task.issue type=error;]Error: loc_mock_ExportOptionsPlistInvalidFilePath') >= 0,
             'Build should show error indicating invalid Plist file path.');
 
         done();
@@ -546,6 +546,21 @@ describe('Xcode L0 Suite', function () {
             'test result should have been published even when there are test errors');
         done();
     });
+
+    it('Test results publishing should fail if xcpretty is not installed', function (done: MochaDone) {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        let tp = path.join(__dirname, 'L0TestResultsPublishFailsIfXcprettyNotInstalled.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.stdout.indexOf('##vso[task.issue type=error;]loc_mock_XcprettyNotInstalled') > 0, 'error message should indicate that xcpretty has to be installed.')
+        assert(tr.failed, 'post xcode task should have failed');
+        done();
+    });
+
+    
 
     it('macOS auto export', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);

@@ -20,6 +20,7 @@
   },
   "getVariable": {
     "build.sourcesDirectory": "/user/build",
+    "Agent.TempDirectory": "/user/temp",
     "HOME": "/users/test"
   },
   "exec": {
