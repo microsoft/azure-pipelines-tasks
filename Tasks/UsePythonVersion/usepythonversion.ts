@@ -72,7 +72,15 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
             const scriptsDir = path.join(installDir, 'Scripts');
             tool.prependPath(scriptsDir);
 
-            // TODO add --user directory once build image is updated
+            // Add --user directory
+            // `installDir` from tool cache should look like $AGENT_TOOLSDIRECTORY/Python/<semantic version>/x64/
+            // So if `findLocalTool` succeeded above, we must have a conformant `installDir`
+            const version = path.basename(path.dirname(installDir));
+            const major = semver.major(version);
+            const minor = semver.minor(version);
+
+            const userScriptsDir = path.join(process.env['APPDATA'], 'Python', `Python${major}${minor}`, 'Scripts');
+            tool.prependPath(userScriptsDir);
         }
     }
 }
