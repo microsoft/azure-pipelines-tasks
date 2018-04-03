@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 133,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "demands": [],
@@ -28,20 +28,18 @@
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {
-      "name": "outputVariable",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.outputVariable",
-      "required": true,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
-    },
-    {
       "name": "addToPath",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.addToPath",
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addToPath"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "pythonLocation",
+      "description": "The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
     }
   ],
   "execution": {
@@ -53,6 +51,7 @@
   "messages": {
     "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
+    "PrependPath": "ms-resource:loc.messages.PrependPath",
     "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"
   }
 }

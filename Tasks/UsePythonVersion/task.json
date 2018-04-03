@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 133,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": true,
     "demands": [],
@@ -28,20 +28,18 @@
             "helpMarkDown": "Version range or exact version of a Python version to use."
         },
         {
-            "name": "outputVariable",
-            "type": "string",
-            "label": "Output variable",
-            "required": true,
-            "defaultValue": "",
-            "helpMarkDown": "Set a name for the variable that will contain the directory of the decompressed Python distribution. Use this in subsequent tasks to access this installation of Python."
-        },
-        {
             "name": "addToPath",
             "type": "boolean",
             "label": "Add to PATH",
             "required": true,
             "defaultValue": "true",
-            "helpMarkDown": "Prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+            "helpMarkDown": "Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "pythonLocation",
+            "description": "The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
         }
     ],
     "execution": {
@@ -53,6 +51,7 @@
     "messages": {
         "ListAvailableVersions": "Available versions:",
         "PlatformNotRecognized": "Platform not recognized",
+        "PrependPath": "Prepending PATH environment variable with directory: %s",
         "VersionNotFound": "Version spec %s did not match any version in the tool cache."
     }
 }

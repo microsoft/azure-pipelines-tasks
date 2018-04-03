@@ -4,6 +4,8 @@ import * as path from 'path';
 
 import * as mockery from 'mockery';
 import * as mockTask from 'vsts-task-lib/mock-task';
+
+import { Platform } from '../taskutil';
 import * as usePythonVersion from '../usepythonversion';
 
 /** Reload the unit under test to use mocks that have been registered. */
@@ -71,7 +73,7 @@ describe('UsePythonVersion L0 Suite', function () {
     })
 
     it('finds version in cache', async function () {
-        let buildVariables: any = {};
+        let buildVariables: { [key: string]: string } = {};
         const mockBuildVariables = {
             setVariable: (variable: string, value: string) => {
                 buildVariables[variable] = value;
@@ -88,14 +90,13 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            outputVariable: 'Python',
             addToPath: false
         };
 
-        assert.strictEqual(buildVariables['Python'], undefined);
+        assert.strictEqual(buildVariables['pythonLocation'], undefined);
 
-        await uut.usePythonVersion(parameters, uut.Platform.Linux);
-        assert.strictEqual(buildVariables['Python'], toolPath);
+        await uut.usePythonVersion(parameters, Platform.Linux);
+        assert.strictEqual(buildVariables['pythonLocation'], toolPath);
     });
 
     it('rejects version not in cache', async function (done: MochaDone) {
@@ -108,12 +109,11 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.x',
-            outputVariable: 'Python',
             addToPath: false
         };
 
         try {
-            await uut.usePythonVersion(parameters, uut.Platform.Linux);
+            await uut.usePythonVersion(parameters, Platform.Linux);
             done(new Error('should not have succeeded'));
         } catch (e) {
             const expectedMessage = [
@@ -130,11 +130,14 @@ describe('UsePythonVersion L0 Suite', function () {
     it('sets PATH correctly on Linux', async function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
-        const toolPath = path.join('/', 'Python', '3.6.4');
-        let mockPath = '';
+        const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
+        });
+
+        let mockPath = '';
+        mockery.registerMock('./toolutil', {
+            prependPathSafe: (s: string) => {
                 mockPath = s + ':' + mockPath;
             }
         });
@@ -146,31 +149,39 @@ describe('UsePythonVersion L0 Suite', function () {
             addToPath: true
         };
 
-        await uut.usePythonVersion(parameters, uut.Platform.Linux);
+        await uut.usePythonVersion(parameters, Platform.Linux);
         assert.strictEqual(`${toolPath}:`, mockPath);
     });
 
     it('sets PATH correctly on Windows', async function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
-        const toolPath = path.join('/', 'Python', '3.6.4');
-        let mockPath = '';
+        const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
+            findLocalTool: () => toolPath
+        });
+
+        let mockPath = '';
+        mockery.registerMock('./toolutil', {
+            prependPathSafe: (s: string) => {
                 mockPath = s + ';' + mockPath;
             }
         });
 
+        process.env['APPDATA'] = '/mock-appdata';
+
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            outputVariable: 'Python',
             addToPath: true
         };
 
-        await uut.usePythonVersion(parameters, uut.Platform.Windows);
-        // On Windows, must add the "Scripts" directory to PATH as well
-        assert.strictEqual(`${path.join(toolPath, 'Scripts')};${toolPath};`, mockPath);
+        await uut.usePythonVersion(parameters, Platform.Windows);
+
+        // On Windows, must add the two "Scripts" directories to PATH as well
+        const expectedScripts = path.join(toolPath, 'Scripts');
+        const expectedUserScripts = path.join(process.env['APPDATA'], 'Python', 'Python36', 'Scripts');
+        const expectedPath = `${expectedUserScripts};${expectedScripts};${toolPath};`;
+        assert.strictEqual(expectedPath, mockPath);
     });
 });
