@@ -126,21 +126,21 @@
       "required": true
     },
     {
-      "name": "ForceUpgrade",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.ForceUpgrade",
-      "defaultValue": "false",
-      "visibleRule": "AllowUpgrade == true",
-      "helpMarkDown": "ms-resource:loc.input.help.ForceUpgrade",
-      "required": false
-    },
-    {
       "name": "SimultaneousUpgrade",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.SimultaneousUpgrade",
       "defaultValue": "false",
       "visibleRule": "AllowUpgrade == true",
       "helpMarkDown": "ms-resource:loc.input.help.SimultaneousUpgrade",
+      "required": false
+    },
+    {
+      "name": "ForceUpgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ForceUpgrade",
+      "defaultValue": "false",
+      "visibleRule": "AllowUpgrade == true",
+      "helpMarkDown": "ms-resource:loc.input.help.ForceUpgrade",
       "required": false
     },
     {
