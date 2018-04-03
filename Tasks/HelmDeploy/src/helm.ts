@@ -38,30 +38,10 @@ async function getKubeConfigFile(): Promise<string> {
     });
 }
 
-//configure kubernetes
-function configureKubernetes(kubeconfigfilePath: string) :  kubernetescli {
-    var kubectlCli = new kubernetescli(kubeconfigfilePath);
-    if (!kubectlCli.IsInstalled()) {
-        throw new Error(tl.loc("KubernetesNotFound"));
-    }
-
-    return kubectlCli;
-}
-
-//configure helm
-function configureHelm() : helmcli {
-    var helmCli = new helmcli();
-    if (!helmCli.IsInstalled()) {
-       throw new Error(tl.loc("HelmNotFound"));
-    }
-
-    return helmCli;
-}
-
 async function run() {
     var kubeconfigfilePath = await getKubeConfigFile();
-    var kubectlCli: kubernetescli = configureKubernetes(kubeconfigfilePath);
-    var helmCli : helmcli = configureHelm();
+    var kubectlCli: kubernetescli = new kubernetescli(kubeconfigfilePath);
+    var helmCli : helmcli = new helmcli();
     kubectlCli.login();
     helmCli.login();
 

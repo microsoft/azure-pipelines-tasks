@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [],
   "preview": "true",
@@ -336,8 +336,6 @@
     }
   },
   "messages": {
-    "HelmNotFound": "ms-resource:loc.messages.HelmNotFound",
-    "KubernetesNotFound": "ms-resource:loc.messages.KubernetesNotFound",
     "CantDownloadAccessProfile": "ms-resource:loc.messages.CantDownloadAccessProfile",
     "KubeConfigFilePath": "ms-resource:loc.messages.KubeConfigFilePath",
     "KubernetesClusterInfo": "ms-resource:loc.messages.KubernetesClusterInfo",
