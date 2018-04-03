@@ -16,6 +16,8 @@ import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureSto
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 
+var DecompressZip = require('decompress-zip');
+var fsExtra = require('fs-extra');
 var taskJson = require('./task.json');
 
 const area: string = 'JenkinsDownloadArtifacts';
@@ -30,6 +32,17 @@ async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean,
     var downloaderOptions = configureDownloaderOptions();
     var downloader = new engine.ArtifactEngine();
     await downloader.processItems(webProvider, localFileProvider, downloaderOptions);
+}
+
+async function getZipFromUrl(artifactArchiveUrl: string, strictSSL: boolean, localPathRoot: string, handler: handlers.BasicCredentialHandler) {
+    console.log(tl.loc('ArtifactDownloadUrl', artifactArchiveUrl));
+
+    var downloaderOptions = configureDownloaderOptions();
+    var downloader = new engine.ArtifactEngine();
+    var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler, { ignoreSslError: false });
+    var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
+
+    await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
 }
 
 function configureDownloaderOptions(): engine.ArtifactEngineOptions {
@@ -78,6 +91,24 @@ function publishEvent(feature, properties: any): void {
     }
 }
 
+export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
+    await new Promise<void>(function (resolve, reject) {
+        tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
+
+        var unzipper = new DecompressZip(zipLocation);
+        unzipper.on('error', err => {
+            return reject(tl.loc("ExtractionFailed", err))
+        });
+        unzipper.on('extract', log => {
+            tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
+            return resolve();
+        });
+        unzipper.extract({
+            path: unzipLocation
+        });
+    });
+}
+
 async function doWork() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -100,10 +131,10 @@ async function doWork() {
             switch (artifactProvider.toLowerCase()) {
                 case "azurestorage":
                     let azureDownloader = new AzureStorageArtifactDownloader(tl.getInput('ConnectedServiceNameARM', true),
-                        tl.getInput('storageAccountName', true), 
-                        tl.getInput('containerName', true), 
+                        tl.getInput('storageAccountName', true),
+                        tl.getInput('containerName', true),
                         tl.getInput('commonVirtualPath', false));
-                        await azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
+                    await azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
                     break;
                 default:
                     throw Error(tl.loc('ArtifactProviderNotSupported', artifactProvider));
@@ -124,8 +155,29 @@ async function doWork() {
             };
 
             var handler = new handlers.BasicCredentialHandler(username, password);
-            
-            await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
+            if (!itemPattern || itemPattern === '**') {
+                const archiveUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/artifact/*zip*/`
+                var zipLocation = path.join(localPathRoot, "archive.zip");
+                await getZipFromUrl(archiveUrl, strictSSL, zipLocation, handler);
+
+                var unzipPromise = unzip(zipLocation, localPathRoot);
+                unzipPromise.catch((error) => {
+                    throw error;
+                });
+                
+                await unzipPromise;
+
+                if (tl.exist(zipLocation)) {
+                    tl.rmRF(zipLocation);
+                }
+
+                fsExtra.move(path.join(localPathRoot, "archive"), localPathRoot).catch((error) => {
+                    throw error;
+                });
+            }
+            else {
+                await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
+            }
         }
 
         console.log(tl.loc('ArtifactSuccessfullyDownloaded', localPathRoot));
