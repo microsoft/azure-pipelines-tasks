@@ -22,6 +22,7 @@ param (
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
+    $psCredentialObject = New-Object PSCredential($credential.UserName, (ConvertTo-SecureString $credential.Password -AsPlainText -Force))
 
     $isFileCopy = Test-Path -Path $sourcePath -PathType Leaf
     $doCleanUp = $cleanTargetBeforeCopy -eq "true"
@@ -158,25 +159,11 @@ param (
 
         return ""
     }
-    
-    function Get-NetExeCommand
-    {
-        $netExePath = Join-Path -path (get-item env:\windir).value -ChildPath system32\net.exe
-        if(Test-Path $netExePath)
-        {
-            Write-Verbose "Found the net exe path $netExePath. Net command will be $netExePath"
-            return $netExePath
-        }
-        
-        Write-Verbose "Unable to get the path for net.exe. Net command will be 'net'"
-        return 'net'
-    }
 
     function Create-DestinationDirectory(
         [string]$path
     )
     {
-        $psCredentialObject = New-Object PSCredential($credential.UserName, (ConvertTo-SecureString $credential.Password -AsPlainText -Force))
         $destPath = $path
         $foundParentPath = $false
         $isRoot = $false
@@ -233,54 +220,30 @@ param (
     {
         Create-DestinationDirectory -path $destinationNetworkPath
     }
-    
-    $netExeCommand = Get-NetExeCommand
 
     if($machineShare)
     {
-        $command = "$netExeCommand use `"$machineShare`""
-        if($userName)
-        {
-            $command += " /user:`'$userName`' `'$($password -replace "['`]", '$&$&')`'"
-        }
-        $command += " 2>&1"
-        
-        $dtl_mapOut = iex $command
-        if ($LASTEXITCODE -ne 0) 
-        {
-            $errorMessage = (Get-VstsLocString -Key "WFC_FailedToConnectToPathWithUser" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
-            ThrowError -errorMessage $errorMessage -fqdn $fqdn
-        }
+        New-PSDrive -Name "WFCPSDrive" -PSProvider FileSystem -Root $destinationNetworkPath -Credential $psCredentialObject -ErrorAction 'Stop'
     }
-
-    try
+    
+    if($doCleanUp)
     {
-        if($doCleanUp)
-        {
-           Clean-Target
-        }
-
-        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
-
-        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
-        Invoke-Expression $command        
-        
-        if ($LASTEXITCODE -ge 8)
-        {
-            $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
-            ThrowError -errorMessage $errorMessage -fqdn $fqdn            
-        }
-        else
-        {            
-            $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
-            Write-Output $message            
-        }        
+        Clean-Target
     }
-    finally
+
+    $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
+
+    $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
+    Invoke-Expression $command        
+    
+    if ($LASTEXITCODE -ge 8)
     {
-        if($machineShare)
-        {            
-            $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";  
-        }
+        $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
+        ThrowError -errorMessage $errorMessage -fqdn $fqdn            
     }
+    else
+    {            
+        $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
+        Write-Output $message            
+    }        
 }
