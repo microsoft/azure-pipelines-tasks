@@ -214,11 +214,8 @@ param (
 
     Write-Verbose "machine share= $machineShare"
     Write-Verbose "destination network path= $destinationNetworkPath"
-    
-    if([bool]([uri]$targetPath).IsUnc)
-    {
-        Create-DestinationDirectory -path $destinationNetworkPath
-    }
+
+    Create-DestinationDirectory -path $destinationNetworkPath
 
     if($machineShare)
     {
