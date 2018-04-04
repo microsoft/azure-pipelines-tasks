@@ -33,8 +33,6 @@ function run(): Promise<void> {
 var taskManifestPath = path.join(__dirname, "task.json");
 tl.debug("Setting resource path to " + taskManifestPath);
 tl.setResourcePath(taskManifestPath);
-tl.setResourcePath(path.join(__dirname,'node_modules','azure-arm-rest', 'module.json'));
-tl.setResourcePath(path.join(__dirname,'node_modules','azurestack-common', 'module.json'));
 
 run().then((result) =>
    tl.setResult(tl.TaskResult.Succeeded, "")

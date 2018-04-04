@@ -21,8 +21,6 @@ async function run() {
     try {
         task.debug('Task execution started');
         task.setResourcePath(path.join( __dirname, 'task.json'));
-        task.setResourcePath(path.join(__dirname,'node_modules','azure-arm-rest', 'module.json'));
-        task.setResourcePath(path.join(__dirname,'node_modules','utility-common', 'module.json'));
         // Get all task input parameters
         azureMysqlTaskParameter = new AzureMysqlTaskParameter();
         task.debug('parsed task inputs');
