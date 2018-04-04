@@ -6,27 +6,27 @@ import * as downloadutility from "./downloadutility";
 import * as util from "util";
 const uuidV4 = require('uuid/v4');
 const kubectlToolName = "kubectl"
+export const stableKubectlVersion = "1.8.9"
 
 
 var fs = require('fs');
 
 // get a stable version from the url https://storage.googleapis.com/kubernetes-release/release/stable.txt
 export async function getStableKubectlVersion() : Promise<string> {
-    var stableVersion = "v1.8.9";
     var version;
     var stableVersionUrl = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
     var downloadPath = path.join(getTempDirectory(), uuidV4() +".txt");
     return downloadutility.download(stableVersionUrl, downloadPath).then((resolve) => {
         version = fs.readFileSync(downloadPath, "utf8").toString().trim();
         if(!version){
-            version = stableVersion;
+            version = stableKubectlVersion;
         }
         return version;
     },
     (reject) => {
         tl.debug(reject);
-        tl.warning(tl.loc('DownloadStableVersionFailed', stableVersionUrl, stableVersion));
-        return stableVersion;
+        tl.warning(tl.loc('DownloadStableVersionFailed', stableVersionUrl, stableKubectlVersion));
+        return stableKubectlVersion;
     })
 }
 

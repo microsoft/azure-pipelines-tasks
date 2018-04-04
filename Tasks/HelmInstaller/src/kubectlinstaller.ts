@@ -10,7 +10,6 @@ import * as utils from './utils';
 
 
 export async function getKuberctlVersion(): Promise<string> {
-    var defaultStableVersion = "v1.8.9";
     var checkLatestKubeCtl = tl.getBoolInput('checkLatestKubeCtl', false); 
 
     if(checkLatestKubeCtl) {
@@ -22,7 +21,7 @@ export async function getKuberctlVersion(): Promise<string> {
         return utils.sanitizeVersionString(kubectlVersion);
     }
 
-    return defaultStableVersion;
+    return kubectlutility.stableKubectlVersion;
 }
 
 export async function downloadKubectl(version : string): Promise<string> {

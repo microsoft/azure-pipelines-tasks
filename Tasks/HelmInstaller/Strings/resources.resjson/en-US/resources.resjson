@@ -12,9 +12,9 @@
   "loc.input.help.kubectlVersion": "Specify the version of Kubectl to install",
   "loc.input.label.checkLatestKubeCtl": "Check for latest version of kubectl",
   "loc.input.help.checkLatestKubeCtl": "Check for latest version of kubectl.",
-  "loc.messages.DownloadStableVersionFailed": "Failed to read latest kubectl version from stable.txt.",
+  "loc.messages.DownloadStableVersionFailed": "Failed to read latest kubectl version from stable.txt. From url %s. Using default stable version %s.",
   "loc.messages.DownloadKubectlFailedFromLocation": "Failed to download kubectl from location %s. Error %s",
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.HelmNotFoundInFolder": "Helm executable not found in path %s",
-  "loc.messages.HelmDownloadFiled": "Failed to download helm from location %s. Error %s"
+  "loc.messages.HelmDownloadFailed": "Failed to download helm from location %s. Error %s"
 }

@@ -11,13 +11,7 @@ const uuidV4 = require('uuid/v4');
 const helmToolName = "helm"
 
 export async function getHelmVersion(): Promise<string> {
-    var defaultStableVersion = "v2.8.2";
-    let helmVersion = tl.getInput("helmVersion");
-    if(helmVersion) {
-        return utils.sanitizeVersionString(helmVersion);
-    }
-
-    return defaultStableVersion;
+    return utils.sanitizeVersionString(tl.getInput("helmVersion", true));
 }
 
 export async function downloadHelm(version : string): Promise<string> {
