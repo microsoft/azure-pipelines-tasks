@@ -3,7 +3,7 @@
     "name": "UsePythonVersion",
     "friendlyName": "Use Python Version",
     "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=871498)",
     "category": "Tool",
     "runsOn": [
         "Agent",
