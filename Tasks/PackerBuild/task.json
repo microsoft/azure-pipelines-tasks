@@ -300,7 +300,7 @@
         "FetchingSPNDetailsRemotely": "Fetching SPN details for app id %s from azure AD graph endpoint...",
         "FetchedSPNDetailsRemotely": "Fetched SPN details successfully. ObjectId: %s",
         "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from graph endpoint. Error: %s.",
-        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: '%s', status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for MSI. Please configure MSI for vm 'https://docs.microsoft.com/en-us/azure/active-directory/managed-service-identity/qs-configure-portal-windows-vm'. Status code: '%s', status message: %s"
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: '%s', status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '%s', status message: %s"
     }
 }
