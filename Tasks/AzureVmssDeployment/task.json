@@ -213,7 +213,7 @@
         "SuccessFullyFetchedItemList": "Successfully fetcted list of items",
         "UnableToFetchItem": "Unable to fetch item: %s. Error: %s.",
         "UploadingItem": "Uploading %s.",
-        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: '%s', status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for MSI. Please configure MSI for vm 'https://docs.microsoft.com/en-us/azure/active-directory/managed-service-identity/qs-configure-portal-windows-vm'. Status code: '%s', status message: %s"
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: '%s', status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '%s', status message: %s"
     }
 }

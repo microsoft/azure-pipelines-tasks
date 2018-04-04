@@ -72,5 +72,7 @@
   "loc.messages.FailedToListItemInsideContainer": "Failed to list items inside container: %s. Error: %s.",
   "loc.messages.SuccessFullyFetchedItemList": "Successfully fetcted list of items",
   "loc.messages.UnableToFetchItem": "Unable to fetch item: %s. Error: %s.",
-  "loc.messages.UploadingItem": "Uploading %s."
+  "loc.messages.UploadingItem": "Uploading %s.",
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: '%s', status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '%s', status message: %s"
 }
