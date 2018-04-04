@@ -6,6 +6,7 @@ import fs = require('fs');
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
 import kubectlutility = require("utility-common/kubectlutility");
+import * as utils from './utils';
 
 
 export async function getKuberctlVersion(): Promise<string> {
@@ -18,7 +19,7 @@ export async function getKuberctlVersion(): Promise<string> {
 
     let kubectlVersion = tl.getInput("kubectlVersion");
     if(kubectlVersion) {
-        return sanitizeVersionString(kubectlVersion);
+        return utils.sanitizeVersionString(kubectlVersion);
     }
 
     return defaultStableVersion;
@@ -26,14 +27,4 @@ export async function getKuberctlVersion(): Promise<string> {
 
 export async function downloadKubectl(version : string): Promise<string> {
      return await kubectlutility.downloadKubectl(version);
-}
-
-// handle user input scenerios
-function sanitizeVersionString(kubectlVersion: string) : string{
-    var version = toolLib.cleanVersion(kubectlVersion);
-    if(!version) {
-        throw new Error(tl.loc("NotAValidSemverVersion"));
-    }
-    
-    return "v"+version;
 }

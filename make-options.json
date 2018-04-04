@@ -47,6 +47,7 @@
         "Grunt",
         "Gulp",
         "HelmDeploy",
+        "HelmInstaller",
         "IISWebAppDeploymentOnMachineGroup",
         "IISWebAppManagementOnMachineGroup",
         "InstallAppleCertificate",

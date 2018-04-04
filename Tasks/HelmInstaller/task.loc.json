@@ -39,6 +39,7 @@
       "label": "ms-resource:loc.input.label.installKubeCtl",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.installKubeCtl",
+      "required": true,
       "groupName": "prerequisite"
     },
     {
@@ -67,11 +68,10 @@
     }
   },
   "messages": {
-    "KubectlPresent": "ms-resource:loc.messages.KubectlPresent",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
-    "SkippingDownloadKubectl": "ms-resource:loc.messages.SkippingDownloadKubectl",
-    "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
     "DownloadKubectlFailedFromLocation": "ms-resource:loc.messages.DownloadKubectlFailedFromLocation",
-    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion"
+    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
+    "HelmNotFoundInFolder": "ms-resource:loc.messages.HelmNotFoundInFolder",
+    "HelmDownloadFiled": "ms-resource:loc.messages.HelmDownloadFiled"
   }
 }

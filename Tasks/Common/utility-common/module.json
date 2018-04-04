@@ -1,9 +1,5 @@
 {
   "messages": {
-    "TokenUnavailable": "Could not retrieve token credentials for TFS/Team Services packaging.",
-    "DownloadStableVersionFailed" : "Failed to read latest kubectl version from stable.txt.",
-    "SkippingDownloadKubectl": "Skipped downloading kubectl as its already present at %s.",
-    "DownloadingKubeCtlFromUrl": "Downloading kubectl from %s at %s.",
-    "DownloadKubectlFailedFromLocation": "Download kubectl from %s failed."
+    "TokenUnavailable": "Could not retrieve token credentials for TFS/Team Services packaging."
   }
 }
