@@ -243,7 +243,7 @@ param (
         ForEach-Object {
             ,$_
             if($_ -is [System.Management.Automation.ErrorRecord]) {
-                Write-VstsTaskError -Message (Get-VstsLocString -Key "WFC_RobocopyError" -ArgumentList $command, $_.Exception.Message) -ErrCode "WFC_RobocopyError"
+                Write-VstsTaskError -Message (Get-VstsLocString -Key "WFC_RobocopyError" -ArgumentList $fqdn, $_.Exception.Message) -ErrCode "WFC_RobocopyError"
             }
         }
     
