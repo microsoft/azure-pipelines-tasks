@@ -45,5 +45,7 @@
   "loc.messages.SucceedMsg": "Successfully extracted all files.",
   "loc.messages.SetJavaHome": "JAVA_HOME is being set to: %s",
   "loc.messages.SetExtendedJavaHome": "%s is being set to: %s",
-  "loc.messages.UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension."
+  "loc.messages.UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension.",
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: '%s', status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '%s', status message: %s"
 }
