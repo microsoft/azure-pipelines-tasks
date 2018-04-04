@@ -38,6 +38,7 @@ async function startInstaller() {
             packageSource = overridenPackageSource;
             ci.publishEvent('PackageSourceOverridden', {packageSource: packageSource} );
         }
+        tl.debug(`Using the package source ${packageSource} to get the ${packageName} nuget package.`);
 
         ci.publishEvent('Options', { versionSelectorInput: versionSelectorInput, testPlatformVersion: testPlatformVersion } );
 
@@ -83,7 +84,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
             }
         } catch (error) {
             // Failed to list available versions, look for the latest stable version available in the cache
-            tl.warning(tl.loc('FailedToListAvailablePackagesFromNuget'));
+            tl.warning(`${tl.loc('FailedToListAvailablePackagesFromNuget')}\n${error}`);
             tl.debug('Looking for latest stable version available version in cache.');
             ci.publishEvent('RequestedVersionListFailed', { action: 'getLatestAvailableInCache', error: error } );
             testPlatformVersion = 'x';
@@ -143,20 +144,18 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
         args = 'list ' + packageName + ' -Source ' + packageSource;
     }
 
+    tl.debug(`Executing nuget.exe with args ${args} to list all available packages to identify latest version.`);
+
     const options = <tr.IExecOptions>{};
-    options.silent = true;
 
     const startTime = perf();
     const result = tl.execSync(nugetTool, args, options);
 
     ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, startTime: startTime, endTime: perf() } );
 
-    if (result.code !== 0) {
+    if (result.code !== 0 || !(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
         tl.debug(`Nuget.exe returned error code: ${result.code}`);
-        throw new Error('Listing packages failed. Nuget.exe returned ' + result.code);
-    } else if (!(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
-        tl.warning(result.stderr);
-        throw new Error('Listing packages failed.');
+        throw new Error(tl.loc('ListPackagesFailed', result.code, result.stderr, result.stdout));
     }
 
     const listOfPackages = result.stdout.split('\r\n');
