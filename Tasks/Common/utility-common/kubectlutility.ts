@@ -33,9 +33,7 @@ export async function getStableKubectlVersion() : Promise<string> {
 
 export async function downloadKubectl(version: string) : Promise<string> {
     var kubectlURL = getkubectlDownloadURL(version);
-
     var cachedToolpath = toolLib.findLocalTool(kubectlToolName, version);
-
     if(!cachedToolpath) {
         try {
                 var KubectlDownloadPath = await toolLib.downloadTool(getkubectlDownloadURL(version)); 

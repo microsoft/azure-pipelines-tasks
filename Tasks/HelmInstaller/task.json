@@ -72,7 +72,6 @@
         "DownloadKubectlFailedFromLocation": "Failed to download kubectl from location %s. Error %s",
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
         "HelmNotFoundInFolder": "Helm executable not found in path %s",
-        "HelmDownloadFiled": "Failed to download helm from location %s. Error %s",
-        "DownloadStableVersionFailed" : "Failed to read latest kubectl version from stable.txt."
+        "HelmDownloadFailed": "Failed to download helm from location %s. Error %s"
     }
 }

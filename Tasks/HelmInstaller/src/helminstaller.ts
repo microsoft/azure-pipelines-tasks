@@ -12,7 +12,6 @@ const helmToolName = "helm"
 
 export async function getHelmVersion(): Promise<string> {
     var defaultStableVersion = "v2.8.2";
-
     let helmVersion = tl.getInput("helmVersion");
     if(helmVersion) {
         return utils.sanitizeVersionString(helmVersion);
@@ -22,15 +21,12 @@ export async function getHelmVersion(): Promise<string> {
 }
 
 export async function downloadHelm(version : string): Promise<string> {
-     //
     var cachedToolpath = toolLib.findLocalTool(helmToolName, version);
-
     if(!cachedToolpath) {
-
         try {
             var helmDownloadPath = await toolLib.downloadTool(getHelmDownloadURL(version), helmToolName + "-" + version + "-" + uuidV4() +".zip");
         } catch(exception) {
-            throw new Error(tl.loc("HelmDownloadFiled", getHelmDownloadURL(version), exception));
+            throw new Error(tl.loc("HelmDownloadFailed", getHelmDownloadURL(version), exception));
         }
         
         var unzipedHelmPath = await toolLib.extractZip(helmDownloadPath);
@@ -38,7 +34,6 @@ export async function downloadHelm(version : string): Promise<string> {
     }
 
     var helmpath = findHelm(cachedToolpath);
-
     if(!helmpath) {
         throw new Error(tl.loc("HelmNotFoundInFolder", cachedToolpath))
     }
