@@ -40,11 +40,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Add-AzureRMAccount { 'some output' }
     Register-Mock Set-CurrentAzureRMSubscription
     Register-Mock Set-UserAgent
-    Register-Mock Invoke-WebRequest { @{Content = $content} } 
-    & $module {
-        $script:azureModule = $null
-        $script:azureRMProfileModule = @{ Version = [version]'1.2.3.4' }
-    }
+    Register-Mock Invoke-WebRequest { @{Content = $content} }
     
     # Act.
     $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
