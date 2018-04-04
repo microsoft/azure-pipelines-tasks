@@ -22,10 +22,7 @@ $endpoint = @{
 }
 
 $content = @"
-	{
-	"Content": 
            {"access_token" : "Dummy Token" }
-	}
 "@
 
 $variableSets = @(

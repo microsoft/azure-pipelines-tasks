@@ -9,5 +9,5 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
   "loc.messages.AZ_AvailableModules": "The list of available {0} modules:",
   "loc.messages.AZ_InvalidARMEndpoint": "Specified AzureRM endpoint is invalid.",
-  "loc.messages.AZ_ManagedServiceIdentityError": "There was an error with the Managed Service Principal. Please configure Mnaged Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'"
+  "loc.messages.AZ_ManagedServiceIdentityError": "There was an error with the Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'"
 }
