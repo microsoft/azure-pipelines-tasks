@@ -8,6 +8,7 @@ param (
     [string]$additionalArguments,
     [string]$scriptRoot
     )
+    $ErrorActionPreference = 'Stop'
 
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
