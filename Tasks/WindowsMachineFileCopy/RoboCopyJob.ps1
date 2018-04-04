@@ -223,7 +223,12 @@ param (
 
     if($machineShare)
     {
-        New-PSDrive -Name "WFCPSDrive" -PSProvider FileSystem -Root $destinationNetworkPath -Credential $psCredentialObject -ErrorAction 'Stop'
+        try {
+            New-PSDrive -Name "WFCPSDrive" -PSProvider FileSystem -Root $destinationNetworkPath -Credential $psCredentialObject -ErrorAction 'Stop'
+        } catch {
+            Write-VstsTaskError -Message (Get-VstsLocString -Key "WFC_FailedToCreatePSDrive" -ArgumentList $destinationNetworkPath, $($_.Exception.Message)) -ErrCode "WFC_FailedToCreatePSDrive"
+            throw
+        }
     }
     
     if($doCleanUp)
@@ -233,8 +238,15 @@ param (
 
     $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
 
-    $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
-    Invoke-Expression $command        
+    $ErrorActionPreference = 'Continue'
+    $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters 2>&1"                
+    Invoke-Expression $command |
+        ForEach-Object {
+            ,$_
+            if($_ -is [System.Management.Automation.ErrorRecord]) {
+                Write-VstsTaskError -Message (Get-VstsLocString -Key "WFC_RobocopyError" -ArgumentList $command, $_.Exception.Message) -ErrCode "WFC_RobocopyError"
+            }
+        }
     
     if ($LASTEXITCODE -ge 8)
     {

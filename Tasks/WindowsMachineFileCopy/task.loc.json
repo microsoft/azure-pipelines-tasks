@@ -109,6 +109,8 @@
     "WFC_CopyStartedFor0": "ms-resource:loc.messages.WFC_CopyStartedFor0",
     "WFC_NoMachineExistsUnderEnvironment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment",
     "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment",
-    "WFC_CopyingFailedForResource": "ms-resource:loc.messages.WFC_CopyingFailedForResource"
+    "WFC_CopyingFailedForResource": "ms-resource:loc.messages.WFC_CopyingFailedForResource",
+    "WFC_FailedToCreatePSDrive": "ms-resource:loc.messages.WFC_FailedToCreatePSDrive",
+    "WFC_RobocopyError": "ms-resource:loc.messages.WFC_RobocopyError"
   }
 }

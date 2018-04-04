@@ -109,6 +109,8 @@
         "WFC_CopyStartedFor0": "Copy started for - {0}",
         "WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
         "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
-        "WFC_CopyingFailedForResource": "Copying failed for resource : {0}"
+        "WFC_CopyingFailedForResource": "Copying failed for resource : {0}",
+        "WFC_FailedToCreatePSDrive": "Failed to Create PSDrive with Destination: '{0}', ErrorMessage: '{1}'",
+        "WFC_RobocopyError": "Robocopy Error. Command: '{0}'. ErrorMessage: '{1}'"
     }
 }
