@@ -30,10 +30,10 @@
         {
             "name": "outputVariable",
             "type": "string",
-            "label": "Output variable",
-            "required": true,
+            "label": "Ruby distribution path",
+            "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Set a name for the variable that will contain the directory of the decompressed Ruby distribution. Use this in subsequent tasks to access this installation of Ruby."
+            "helpMarkDown": "Set a name for the variable that will contain the directory of the Ruby distribution. Use this in subsequent tasks to access this installation of Ruby."
         },
         {
             "name": "addToPath",
@@ -42,6 +42,12 @@
             "required": false,
             "defaultValue": "true",
             "helpMarkDown": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "outputVariable",
+            "description": "The resolved folder of the Ruby distribution"
         }
     ],
     "execution": {

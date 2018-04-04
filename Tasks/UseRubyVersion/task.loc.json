@@ -31,7 +31,7 @@
       "name": "outputVariable",
       "type": "string",
       "label": "ms-resource:loc.input.label.outputVariable",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     },
@@ -42,6 +42,12 @@
       "required": false,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addToPath"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "outputVariable",
+      "description": "The resolved folder of the Ruby distribution"
     }
   ],
   "execution": {
