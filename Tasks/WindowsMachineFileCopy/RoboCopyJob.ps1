@@ -21,8 +21,11 @@ param (
     Write-Verbose "additionalArguments = $additionalArguments"
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
-    $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
-    $psCredentialObject = New-Object PSCredential($credential.UserName, (ConvertTo-SecureString $credential.Password -AsPlainText -Force))
+    $targetPath = $targetPath.Trim().TrimEnd('\', '/')  
+    Validate-Credential $credential
+    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
+    $password = $($credential.Password)  
+    $psCredentialObject = New-Object pscredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
 
     $isFileCopy = Test-Path -Path $sourcePath -PathType Leaf
     $doCleanUp = $cleanTargetBeforeCopy -eq "true"
@@ -212,10 +215,6 @@ param (
     Write-Verbose "machine share= $machineShare"
     Write-Verbose "destination network path= $destinationNetworkPath"
     
-    Validate-Credential $credential
-    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
-    $password = $($credential.Password) 
-
     if([bool]([uri]$targetPath).IsUnc)
     {
         Create-DestinationDirectory -path $destinationNetworkPath
@@ -230,7 +229,7 @@ param (
             throw
         }
     }
-    
+
     if($doCleanUp)
     {
         Clean-Target
