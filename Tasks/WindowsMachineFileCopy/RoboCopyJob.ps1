@@ -22,11 +22,6 @@ param (
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')  
-    Validate-Credential $credential
-    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
-    $password = $($credential.Password)  
-    $psCredentialObject = New-Object pscredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
-
     $isFileCopy = Test-Path -Path $sourcePath -PathType Leaf
     $doCleanUp = $cleanTargetBeforeCopy -eq "true"
 
@@ -208,7 +203,12 @@ param (
             }
         }
     }
-    
+
+    Validate-Credential $credential
+    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
+    $password = $($credential.Password)  
+    $psCredentialObject = New-Object pscredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
+   
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
 
