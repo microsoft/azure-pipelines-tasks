@@ -58,8 +58,6 @@
   "loc.input.help.arguments": "Command arguments.",
   "loc.input.label.tillernamespace": "Tiller namespace",
   "loc.input.help.tillernamespace": "Specify K8 namespace of tiller.",
-  "loc.messages.HelmNotFound": "Helm not installed on the machine.",
-  "loc.messages.KubernetesNotFound": "Kubernetes not installed on the machine.",
   "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
   "loc.messages.KubeConfigFilePath": "Kubeconfig file path: %s",
   "loc.messages.KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",
