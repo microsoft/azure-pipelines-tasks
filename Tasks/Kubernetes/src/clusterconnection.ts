@@ -49,7 +49,7 @@ export default class ClusterConnection {
 
     // close kubernetes connection
     public close(): void {
-        // all configuration ase in agent temp directory. Hence automatically deleted.
+        // all configuration are in agent temp directory. Hence automatically deleted.
     }
 
     //excute kubernetes command

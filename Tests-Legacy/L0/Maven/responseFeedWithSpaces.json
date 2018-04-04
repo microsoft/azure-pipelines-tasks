@@ -35,6 +35,7 @@
         "build.sourcesDirectory": "/user/build/s",
         "build.artifactStagingDirectory": "/user/build/a",
         "build.buildNumber": "1",
+        "Agent.TempDirectory": "/tmp",
         "System.TeamFoundationCollectionUri": "https://xplatalm.visualstudio.com/"
     },
     "find": {

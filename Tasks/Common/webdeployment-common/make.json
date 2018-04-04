@@ -4,5 +4,14 @@
             "source": "WebConfigTemplates",
             "options": "-R"
         }
-    ]
+    ],
+    "externals": {
+        "archivePackages": [
+            {
+                "archiveName": "MSDeploy.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/MSDeploy/3.6/M133/MSDeploy.zip",
+                "dest": "./"
+            }
+        ]
+    }
 }

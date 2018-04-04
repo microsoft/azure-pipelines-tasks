@@ -6,7 +6,10 @@ param(
     $PreviousPkgName,
 
     [switch]
-    $Service1Changed
+    $Service1Changed,
+
+    [string]
+    $PackageSubPath = ""
 )
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
@@ -14,14 +17,16 @@ param(
 $taskPath = "$PSScriptRoot\.."
 Microsoft.PowerShell.Core\Import-Module "$taskPath\Test-XmlEqual.psm1"
 
-$pkgPath = "$PSScriptRoot\pkg"
+$pkgPath = "$PSScriptRoot\${PackageSubPath}pkg"
+$oldDropLocation = "$PSScriptRoot\data\$PreviousPkgName"
+$oldPkgPath = "$oldDropLocation\pkg"
 
 try
 {
     # Arrange.
 
     # Setup working package folder
-    Copy-Item "$PSScriptRoot\data\CurrentPkg\" -Destination $pkgPath -Container -Recurse
+    Copy-Item -LiteralPath "$PSScriptRoot\data\CurrentPkg\" -Destination $pkgPath -Container -Recurse
 
     $newSuffix = ".NewSuffix"
     $oldSuffix = ".OldSuffix"
@@ -33,7 +38,7 @@ try
     Register-Mock Assert-VstsPath
     Register-Mock Assert-SingleItem
 
-    Register-Mock Get-VstsBuild { "$PSScriptRoot\data\$PreviousPkgName" }
+    Register-Mock Get-VstsBuild { $oldDropLocation }
 
     Register-Mock Get-VstsTaskVariable { $PSScriptRoot } -- -Name Build.SourcesDirectory -Require
 
@@ -55,12 +60,16 @@ try
     Update-ApplicationVersions
 
     # Assert
-    $appManifest = [xml](Get-Content "$pkgPath\ApplicationManifest.xml")
+    $appManifest = [xml](Get-Content -LiteralPath "$pkgPath\ApplicationManifest.xml")
     Assert-AreEqual "1.0.0$newSuffix" $appManifest.ApplicationManifest.ApplicationTypeVersion "App type version did not match."
     Assert-AreEqual $expectedService1Version $appManifest.ApplicationManifest.ServiceManifestImport[0].ServiceManifestRef.ServiceManifestVersion "Service 1 version did not match."
     Assert-AreEqual "1.0.0$oldSuffix" $appManifest.ApplicationManifest.ServiceManifestImport[1].ServiceManifestRef.ServiceManifestVersion "Service 2 version did not match."
+    Assert-WasCalled Update-ServiceVersions -ParametersEvaluator {
+        return $NewPackageRoot -eq $pkgPath -and `
+        ($PreviousPkgName -eq "PreviousPackageNoManifest") -or $OldPackageRoot -eq $oldPkgPath
+    }
 }
 finally
 {
-    Remove-Item -Recurse -Force $pkgPath
+    Remove-Item -Recurse -Force -LiteralPath $pkgPath
 }

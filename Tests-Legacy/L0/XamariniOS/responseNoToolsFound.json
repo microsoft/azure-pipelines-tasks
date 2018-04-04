@@ -3,7 +3,7 @@
         "HOME": "/user/home"
     },
     "checkPath": {
-        "/home/bin2/xbuild": true,
+        "/home/bin2/msbuild": true,
         "src/project.sln": true
     },
     "findMatch": {

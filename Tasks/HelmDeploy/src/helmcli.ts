@@ -9,7 +9,7 @@ import basecommand from "./basecommand"
 export default class helmcli extends basecommand {
 
     private command : string;
-    private argument : string;
+    private arguments : string[] = [];
     
     public getTool(): string {
         return "helm";
@@ -31,18 +31,21 @@ export default class helmcli extends basecommand {
         return this.command;
     }
 
-    public setArgument(argument: string): void {
-        this.argument = argument;
+    public addArgument(argument: string): void {
+        this.arguments.push(argument);
     }
 
-    public getArgument(): string {
-        return this.argument;
+    public getArguments(): string[] {
+        return this.arguments;
     }
 
     public execHelmCommand() : void {
         var command = this.createCommand();
         command.arg(this.command);
-        command.line(this.argument);
+        this.arguments.forEach((value) => {
+            command.line(value);
+        })
+        
         this.execCommandSync(command);
     }
 }

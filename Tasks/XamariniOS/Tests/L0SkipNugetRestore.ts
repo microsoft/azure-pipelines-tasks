@@ -14,15 +14,8 @@ tr.setInput('args', '');
 tr.setInput('packageApp', ''); //boolean
 tr.setInput('forSimulator', ''); //boolean
 tr.setInput('runNugetRestore', 'false'); //boolean
-tr.setInput('signMethod', 'file');
-tr.setInput('unlockDefaultKeychain', ''); //boolean
-tr.setInput('defaultKeychainPassword', '');
-tr.setInput('p12', ''); //path
-tr.setInput('p12pwd', '');
 tr.setInput('iosSigningIdentity', '');
 tr.setInput('provProfileUuid', '');
-tr.setInput('provProfile', ''); //path
-tr.setInput('removeProfile', ''); //boolean
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -30,18 +23,22 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "HOME": "/user/home"
     },
     "which": {
-        "xbuild": "/home/bin/xbuild",
+        "msbuild": "/home/bin/msbuild",
         "nuget": "/home/bin/nuget"
     },
     "exec": {
-        "/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone": {
+        "/home/bin/msbuild /version /nologo": {
             "code": 0,
-            "stdout": "xbuild"
+            "stdout": "15.1.0.0"
+        },
+        "/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone": {
+            "code": 0,
+            "stdout": "msbuild"
         }
     },
     "checkPath" : {
         "/user/build": true,
-        "/home/bin/xbuild": true,
+        "/home/bin/msbuild": true,
         "src/project.sln": true
     },
     "findMatch" : {

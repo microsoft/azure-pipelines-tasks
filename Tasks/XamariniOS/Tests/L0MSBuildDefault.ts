@@ -15,16 +15,8 @@ tr.setInput('clean', 'true');
 tr.setInput('packageApp', ''); //boolean
 tr.setInput('forSimulator', ''); //boolean
 tr.setInput('runNugetRestore', 'true'); //boolean
-tr.setInput('signMethod', 'file');
-tr.setInput('unlockDefaultKeychain', ''); //boolean
-tr.setInput('defaultKeychainPassword', '');
-tr.setInput('p12', ''); //path
-tr.setInput('p12pwd', '');
 tr.setInput('iosSigningIdentity', '');
 tr.setInput('provProfileUuid', '');
-tr.setInput('provProfile', ''); //path
-tr.setInput('removeProfile', ''); //boolean
-tr.setInput('buildTool', 'msbuild');
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

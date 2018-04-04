@@ -15,6 +15,7 @@ class PackOptions implements INuGetCommandOptions {
         public includeReferencedProjects: boolean,
         public version: string,
         public properties: string[],
+        public basePath: string,
         public createSymbolsPackage: boolean,
         public toolPackage: boolean,
         public verbosity: string,
@@ -36,6 +37,7 @@ export async function run(nuGetPath: string): Promise<void> {
     let patchVersion = tl.getInput("requestedPatchVersion");
     let timezone = tl.getInput("packTimezone");
     let propertiesInput = tl.getInput("buildProperties");
+    let basePath = tl.getInput("basePath");
     let verbosity = tl.getInput("verbosityPack");
     let createSymbolsPackage = tl.getBoolInput("includeSymbols");
     let toolPackage = tl.getBoolInput("toolPackage");
@@ -153,6 +155,7 @@ export async function run(nuGetPath: string): Promise<void> {
             includeRefProj,
             version,
             props,
+            basePath,
             createSymbolsPackage,
             toolPackage,
             verbosity,
@@ -183,6 +186,11 @@ function pack(file: string, options: PackOptions): IExecSyncResult {
     }
     else {
         nugetTool.arg(path.dirname(file));
+    }
+
+    if (options.basePath) {
+        nugetTool.arg("-BasePath");
+        nugetTool.arg(options.basePath);
     }
 
     if (options.properties && options.properties.length > 0) {

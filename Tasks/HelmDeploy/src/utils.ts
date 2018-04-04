@@ -28,6 +28,26 @@ export function deleteFile(filepath: string) : void {
     }
 }
 
+export function resolvePath(path : string): string {
+    if (path.indexOf('*') >= 0 || path.indexOf('?') >= 0) {
+        tl.debug(tl.loc('PatternFoundInPath', path));
+        var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
+        var allPaths = tl.find(rootFolder);
+        var matchingResultsFiles = tl.match(allPaths, path, rootFolder, { matchBase: true });
+
+        if (!matchingResultsFiles || matchingResultsFiles.length == 0) {
+            throw new Error(tl.loc('CantResolvePatternInPath', path));
+        }
+
+        return matchingResultsFiles[0];
+    }
+    else
+    {
+        tl.debug(tl.loc('PatternNotFoundInFilePath', path));
+        return path;
+    }
+}
+
 function ensureDirExists(dirPath : string) : void {
     if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath);

@@ -13,7 +13,7 @@ function Update-DockerImageSettings
         $appPackagePath = Find-VstsFiles -LegacyPattern $appPackagePathSearchPattern -IncludeDirectories
 
         # Collect the image digest values for the images
-        $imageDigestValues = (Get-Content -Path $imageDigestsPath).Replace("`r`n", "`n").Split("`n")
+        $imageDigestValues = (Get-Content -LiteralPath $imageDigestsPath).Replace("`r`n", "`n").Split("`n")
         $imageNameToDigestMapping = @{}
         foreach ($imageDigestValue in $imageDigestValues)
         {
@@ -29,11 +29,11 @@ function Update-DockerImageSettings
 
         # Update the service manifests to use the digest-qualified image names
         $appManifestPath = Join-Path $appPackagePath "ApplicationManifest.xml"
-        $appManifestXml = [xml](Get-Content $appManifestPath)
+        $appManifestXml = [xml](Get-Content -LiteralPath $appManifestPath)
         foreach ($serviceManifestImport in $appManifestXml.ApplicationManifest.ServiceManifestImport)
         {
             $serviceManifestPath = [System.IO.Path]::Combine($appPackagePath, $serviceManifestImport.ServiceManifestRef.ServiceManifestName, "ServiceManifest.xml")
-            $serviceManifestXml = [xml](Get-Content $serviceManifestPath)
+            $serviceManifestXml = [xml](Get-Content -LiteralPath $serviceManifestPath)
 
             $hasUpdates = $false
             $codePackages = @($serviceManifestXml.ServiceManifest.CodePackage)

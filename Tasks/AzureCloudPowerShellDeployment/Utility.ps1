@@ -206,3 +206,52 @@ function CmdletHasMember($memberName) {
         return false;
     }  
 }
+
+function Parse-CustomCertificates($customCertificates)
+{
+    $certificateFilePasswordMap = @{}
+    if($customCertificates)
+    {
+        $filePasswordPairs = $customCertificates.split()
+        foreach($filePasswordPair in $filePasswordPairs) 
+        {
+            if($filePasswordPair)
+            {
+                $filePasswordArray = $filePasswordPair.split(":")
+                if($filePasswordArray.Length -ne 2) 
+                {
+                    throw (Get-VstsLocString -Key "Customcertificatesaredefinedininvalidformat" -ArgumentList $pattern)
+                }
+                $certificateFilePasswordMap.Add($filePasswordArray[0],$filePasswordArray[1])
+            }
+        }
+    }
+    return $certificateFilePasswordMap
+}
+
+function Add-CustomCertificates($serviceName, $customCertificatesMap)
+{
+    if (!$customCertificatesMap)
+    {
+        Write-Verbose "No custom certificates configured"
+    }
+    else
+    {
+        foreach ($customCertificate in $customCertificatesMap.Keys)
+        {
+            Write-Host (Get-VstsLocString -Key "Addinganyconfiguredcustomcertificates")
+
+            Write-Verbose "Saving a custom certificate to a temp file..."
+            $tmpFile = New-TemporaryFile
+            [System.IO.File]::WriteAllBytes($tmpFile.FullName, [System.Convert]::FromBase64String($customCertificate))
+            Write-Verbose "Certificate saved"
+
+            Write-Verbose "Uploading certificate..."
+            Add-AzureCertificate -ServiceName $ServiceName -CertToDeploy $tmpFile.FullName -Password $customCertificatesMap.Item($customCertificate)
+            Write-Verbose "Certificate uploaded"
+
+            Remove-Item -Path $tmpFile.FullName -Force
+            Write-Verbose "Deleted the temp file $tmpFile.FullName"
+        }
+    }
+}

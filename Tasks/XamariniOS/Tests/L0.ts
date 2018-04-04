@@ -22,27 +22,9 @@ describe('XamariniOS L0 Suite', function () {
 
         tr.run();
 
-        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone ' +
+        assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone ' +
             '/p:Codesignkey=testSignIdentity /p:CodesignProvision=testUUID'),
-                'xbuild should have run with codesign for IDs');
-        assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-
-        done();
-    });
-
-    it('XamariniOS signing with files', function (done: MochaDone) {
-        this.timeout(2500);
-
-        const tp = path.join(__dirname, 'L0SignWithFiles.js');
-        const tr = new ttm.MockTestRunner(tp);
-
-        tr.run();
-
-        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone ' +
-                '/p:CodesignKeychain=/user/build/_xamariniostasktmp.keychain ' +
-                '/p:Codesignkey=iPhone Developer: XamariniOS Tester (HE432Y3E2Q) /p:CodesignProvision=testuuid'),
-        'xbuild should have run with codesigning with files');
+                'msbuild should have run with codesign for IDs');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -58,8 +40,8 @@ describe('XamariniOS L0 Suite', function () {
         tr.run();
 
         assert(!tr.ran('/home/bin/nuget restore src/project.sln'), 'nuget restore should not have run');
-        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
-        'xbuild should have run');
+        assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
+        'msbuild should have run');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -74,11 +56,11 @@ describe('XamariniOS L0 Suite', function () {
 
         tr.run();
 
-        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone /t:Clean'),
-        'xbuild /t:Clean should have run');
+        assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone /t:Clean'),
+        'msbuild /t:Clean should have run');
         assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'nuget restore should have run');
-        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
-        'xbuild should have run');
+        assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
+        'msbuild should have run');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
@@ -135,7 +117,7 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.warningIssues.length === 0, 'should not have issued any warnings');
         assert(tr.errorIssues.length === 0, 'should not have produced any errors');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'));
+        assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'));
 
         done();
     });
@@ -153,7 +135,7 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.warningIssues[0] === 'loc_mock_MultipleSolutionsFound src/1.sln');
         assert(tr.errorIssues.length === 0, 'should not have produced any errors');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.ran('/home/bin/xbuild src/1.sln /p:Configuration=Release /p:Platform=iPhone'));
+        assert(tr.ran('/home/bin/msbuild src/1.sln /p:Configuration=Release /p:Platform=iPhone'));
 
         done();
     });
@@ -171,6 +153,22 @@ describe('XamariniOS L0 Suite', function () {
         assert(tr.errorIssues.length > 0, 'should have produced an error');
         assert(tr.errorIssues[0] === 'loc_mock_XamariniOSFailed loc_mock_SolutionDoesNotExist **/*.sln');
         assert(!tr.succeeded, 'task should not have succeeded');
+
+        done();
+    });
+
+    it('XamariniOS fallback to xbuild when msbuild is not found', function (done: MochaDone) {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0FallbackXbuild.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'),
+        'xbuild should have run');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
 
         done();
     });

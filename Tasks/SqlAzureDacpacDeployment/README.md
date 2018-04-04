@@ -6,7 +6,7 @@ The task is used to deploy Azure SQL Database to an existing Azure SQL Server, e
 
 ### Contact Information
 
-Please contact the alias RM\_Customer\_Queries at microsoft dot com, if you are facing problems in making this task work. Also, if you would like to share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, then do send an email to the alias.
+Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
 
 ### Pre-requisites for the task
 
@@ -29,7 +29,7 @@ For Azure MSDN accounts, one can either use a [Service Principal](https://go.mic
 
 ##### Azure SQL Server
 
-There should be a Azure SQL Server that is already pre-created in the [Azure portal](https://ms.portal.azure.com/?r=1#create/Microsoft.SQLDatabase.0.5.7-preview). The task deploys Azure SQL Databases but does not create Azure SQL Server.
+There should be a Azure SQL Server that is already pre-created in the [Azure portal](https://ms.portal.azure.com/#create/Microsoft.SQLServer). The task deploys Azure SQL Databases but does not create Azure SQL Server.
 
 ##### Automation Agent
 
