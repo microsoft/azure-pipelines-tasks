@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 10
+    "Patch": 12
   },
   "preview": true,
   "satisfies": [
@@ -62,6 +62,7 @@
     "TestPlatformDownloadFailed": "ms-resource:loc.messages.TestPlatformDownloadFailed",
     "LookingForLatestStableVersion": "ms-resource:loc.messages.LookingForLatestStableVersion",
     "LookingForLatestPreReleaseVersion": "ms-resource:loc.messages.LookingForLatestPreReleaseVersion",
-    "AgentWorkDirectoryPathTooLong": "ms-resource:loc.messages.AgentWorkDirectoryPathTooLong"
+    "AgentWorkDirectoryPathTooLong": "ms-resource:loc.messages.AgentWorkDirectoryPathTooLong",
+    "ListPackagesFailed": "ms-resource:loc.messages.ListPackagesFailed"
   }
 }
