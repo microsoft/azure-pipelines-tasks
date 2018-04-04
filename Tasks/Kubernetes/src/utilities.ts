@@ -10,7 +10,7 @@ import * as util from "util";
 import downloadutility = require("utility-common/downloadutility");
 
 export function getTempDirectory(): string {
-    return os.tmpdir();
+    return tl.getVariable('agent.tempDirectory') || os.tmpdir();
 }
 
 export function getCurrentTime(): number {

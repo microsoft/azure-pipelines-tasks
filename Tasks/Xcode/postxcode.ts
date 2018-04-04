@@ -19,8 +19,12 @@ async function run() {
         
         if (publishResults) {
             if (!useXcpretty) {
-                tl.warning(tl.loc('UseXcprettyForTestPublishing'));
-            } else {
+                throw tl.loc('UseXcprettyForTestPublishing');
+            } else if (useXcpretty && !tl.which('xcpretty')) {
+                throw tl.loc("XcprettyNotInstalled");
+            }
+            else {
+                // xcpretty is enabled and installed
                 testResultsFiles = tl.resolve(workingDir, '**/build/reports/junit.xml');
 
                 if (testResultsFiles && 0 !== testResultsFiles.length) {
@@ -69,6 +73,10 @@ async function run() {
             }
         }
 
+        //upload detailed logs from xcodebuild if using xcpretty
+        utils.uploadLogFile(utils.getTaskState('XCODEBUILD_LOG'));
+        utils.uploadLogFile(utils.getTaskState('XCODEBUILD_ARCHIVE_LOG'));
+        utils.uploadLogFile(utils.getTaskState('XCODEBUILD_EXPORT_LOG'));
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }

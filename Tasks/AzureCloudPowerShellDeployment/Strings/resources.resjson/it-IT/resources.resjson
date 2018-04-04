@@ -24,6 +24,8 @@
   "loc.input.help.AppendDateTimeToLabel": "Aggiunge la data e l'ora correnti all'etichetta della distribuzione",
   "loc.input.label.AllowUpgrade": "Consenti aggiornamento",
   "loc.input.help.AllowUpgrade": "Quando questa opzione è selezionata, consente di eseguire un aggiornamento alla distribuzione di Microsoft Azure",
+  "loc.input.label.SimultaneousUpgrade": "Simultaneous upgrade",
+  "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Forza aggiornamento",
   "loc.input.help.ForceUpgrade": "Quando questa opzione è selezionata, forza l'aggiornamento. Questa operazione potrebbe causare la perdita di dati locali.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Chiavi dell'account di archiviazione di diagnostica",
@@ -32,6 +34,8 @@
   "loc.input.help.NewServiceAdditionalArguments": "Consente di passare al cmdlet `New-AzureService` argomenti aggiuntivi durante la creazione di un nuovo servizio, ad esempio `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "Gruppo di affinità",
   "loc.input.help.NewServiceAffinityGroup": "Durante la creazione del nuovo servizio invece della posizione del servizio verrà considerato questo gruppo di affinità.",
+  "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
+  "loc.input.help.NewServiceCustomCertificates": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
   "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Non è stato possibile ottenere la chiave di archiviazione primaria per l'account di archiviazione '{0}'. Non è possibile applicare le estensioni di diagnostica.",
   "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Non è stato possibile ottenere la chiave di archiviazione primaria per l'account di archiviazione '{0}' della configurazione pubblica. Non è possibile applicare le estensioni di diagnostica.",
   "loc.messages.Applyinganyconfigureddiagnosticsextensions": "Applicazione delle eventuali estensioni di diagnostica configurate.",
@@ -40,5 +44,7 @@
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Con il criterio di ricerca {0} sono stati trovati più file da distribuire. È possibile distribuirne uno solo.",
   "loc.messages.Storagekeysaredefinedininvalidformat": "Il formato usato per definire le chiavi di archiviazione non è valido.",
   "loc.messages.Unabletofind0usingprovidedsubscription": "{0} non è stato trovato con la sottoscrizione specificata",
-  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "La versione corrente di Azure PowerShell non supporta account di archiviazione esterni per la configurazione della diagnostica."
+  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "La versione corrente di Azure PowerShell non supporta account di archiviazione esterni per la configurazione della diagnostica.",
+  "loc.messages.Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
+  "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format."
 }

@@ -13,7 +13,7 @@ tr.setInput("saveTo", "jenkinsArtifacts");
 tr.setInput("filePath", "/");
 tr.setInput("jenkinsBuild", "BuildNumber");
 tr.setInput("jenkinsBuildNumber", "master/20");
-tr.setInput("itemPattern", "**");
+tr.setInput("itemPattern", "archive/**");
 tr.setInput("downloadCommitsAndWorkItems", "true");
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';

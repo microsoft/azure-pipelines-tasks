@@ -11,13 +11,14 @@
     ],
     "preview": "true",
     "runsOn": [
-        "Agent"
+        "Agent",
+        "DeploymentGroup"
     ],
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 6
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -170,22 +171,8 @@
             "label": "Runtime Stack",
             "defaultValue": "",
             "required": true,
-            "options": {
-                "node|4.4": "Node.js 4.4",
-                "node|4.5": "Node.js 4.5",
-                "node|6.2": "Node.js 6.2",
-                "node|6.6": "Node.js 6.6",
-                "node|6.9": "Node.js 6.9",
-                "node|6.10": "Node.js 6.10",
-                "node|6.11": "Node.js 6.11",
-                "node|8.0": "Node.js 8.0",
-                "node|8.1": "Node.js 8.1",
-                "php|5.6": "PHP 5.6",
-                "php|7.0": "PHP 7.0",
-                "dotnetcore|1.0": ".Net Core 1.0",
-                "dotnetcore|1.1": ".Net Core 1.1",
-                "dotnetcore|2.0": ".Net Core 2.0",
-                "ruby|2.3": "Ruby 2.3"
+            "properties": {
+                "EditableOptions": "True"
             },
             "helpMarkDown": "Select the framework and version.",
             "visibleRule": "WebAppKind = webAppLinux"
@@ -237,7 +224,7 @@
         {
             "name": "WebConfigParameters",
             "type": "multiLine",
-            "label": "Generate web.config paramters for Python and Node.js apps",
+            "label": "Generate web.config parameters for Python, Node.js and Go apps",
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
@@ -274,7 +261,7 @@
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
             "label": "Take App Offline",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
@@ -312,7 +299,7 @@
             "name": "ExcludeFilesFromAppDataFlag",
             "type": "boolean",
             "label": "Exclude files from the App_Data folder",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true",
@@ -332,7 +319,7 @@
             "name": "RenameFilesFlag",
             "type": "boolean",
             "label": "Rename locked files",
-            "defaultValue": "false",
+            "defaultValue": "true",
             "required": false,
             "visibleRule": "UseWebDeploy == true",
             "groupName": "AdditionalDeploymentOptions",
@@ -400,6 +387,16 @@
                 "ResourceGroupName": "$(ResourceGroupName)"
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+        },
+        {
+            "target": "RuntimeStack",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureRMWebAppRuntimeStacksByOsType",
+            "parameters": {
+                "osTypeSelected": "Linux"
+            },
+            "resultTemplate": "{\"Value\":\"{{{ runtimeVersion }}}\",\"DisplayValue\":\"{{{ displayVersion }}}\"}"
+
         }
     ],
     "instanceNameFormat": "Azure App Service Deploy: $(WebAppName)",
@@ -535,6 +532,7 @@
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "GoExeNameNotPresent": "Go exe name is not present",
-        "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
+        "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
+        "Updatemachinetoenablesecuretlsprotocol" : "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
     }
 }

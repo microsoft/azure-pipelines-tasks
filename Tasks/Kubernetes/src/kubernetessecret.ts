@@ -3,6 +3,7 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import * as tr from "vsts-task-lib/toolrunner";
+import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
 
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
@@ -33,7 +34,7 @@ function createSecret(connection: ClusterConnection, authenticationToken: Authen
 function deleteSecret(connection: ClusterConnection, secret: string): any {
     tl.debug(tl.loc('DeleteSecret', secret));
     var command = connection.createCommand();
-    command.arg(getNameSpace());
+    command.arg(kubernetesCommand.getNameSpace());
     command.arg("delete");
     command.arg("secret");
     command.arg(secret);
@@ -52,7 +53,7 @@ function createDockerRegistrySecret(connection: ClusterConnection, authenticatio
     {
         tl.debug(tl.loc('CreatingSecret', secret));
         var command = connection.createCommand();
-        command.arg(getNameSpace());
+        command.arg(kubernetesCommand.getNameSpace());
         command.arg("create")
         command.arg("secret");
         command.arg("docker-registry");
@@ -76,7 +77,7 @@ function createGenericSecret(connection: ClusterConnection, secret: string): any
 
     tl.debug(tl.loc('CreatingSecret', secret));
     var command = connection.createCommand();
-    command.arg(getNameSpace());
+    command.arg(kubernetesCommand.getNameSpace());
     command.arg("create")
     command.arg("secret");
     command.arg("generic");
@@ -88,15 +89,4 @@ function createGenericSecret(connection: ClusterConnection, secret: string): any
     }
 
     return connection.execCommand(command);
-}
-
-function getNameSpace(): string[] {
-    var args: string[] =[];   
-    var namespace = tl.getInput("namespace", false);	
-    if(namespace) {
-        args[0] = "-n";
-        args[1] = namespace;
-    }
-
-	return args;
 }

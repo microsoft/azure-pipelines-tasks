@@ -13,7 +13,7 @@ tr.setInput("saveTo", "jenkinsArtifacts");
 tr.setInput("filePath", "/");
 tr.setInput("jenkinsBuild", "BuildNumber");
 tr.setInput("jenkinsBuildNumber", "15");
-tr.setInput("itemPattern", "**");
+tr.setInput("itemPattern", "archive/**");
 tr.setInput("downloadCommitsAndWorkItems", "true");
 tr.setInput("startJenkinsBuildNumber", "15"); // same as jenkinsBuildNumber
 tr.setInput("artifactDetailsFileNameSuffix", "alias_v1.json");

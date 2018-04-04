@@ -83,6 +83,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
         }
@@ -90,11 +91,17 @@ function Initialize-AzureSubscription {
         # Add account (AzureRM).
         if ($script:azureRMProfileModule) {
             try {
-                Write-Host "##[command]Add-AzureRMAccount -Credential $psCredential"
-                $null = Add-AzureRMAccount -Credential $psCredential
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                    Write-Host "##[command] Add-AzureRMAccount -Credential $psCredential"
+                    $null = Add-AzureRMAccount -Credential $psCredential
+                } else {
+                    Write-Host "##[command] Connect-AzureRMAccount -Credential $psCredential"
+                    $null = Connect-AzureRMAccount -Credential $psCredential
+                }
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_CredentialsError), $_.Exception))
             }
         }
@@ -120,6 +127,7 @@ function Initialize-AzureSubscription {
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
             }
 
@@ -130,19 +138,24 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.
             try {
-                if(CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName")
-                {
-                    Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
-                    $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                    if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
+                        Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
+                        $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                    }
+                    else {
+                        Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                        $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                    }
                 }
-                else
-                {
-                    Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                    $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                else {
+                    Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                    $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
                 }
             } catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
+                Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
             }
 
@@ -207,8 +220,15 @@ function Set-CurrentAzureRMSubscription {
 
     $additional = @{ }
     if ($TenantId) { $additional['TenantId'] = $TenantId }
-    Write-Host "##[command]Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
-    $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
+
+    if (Get-Command -Name "Select-AzureRmSubscription" -ErrorAction "SilentlyContinue") {
+        Write-Host "##[command] Select-AzureRMSubscription -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Select-AzureRMSubscription -SubscriptionId $SubscriptionId @additional
+    }
+    else {
+        Write-Host "##[command] Set-AzureRmContext -SubscriptionId $SubscriptionId $(Format-Splat $additional)"
+        $null = Set-AzureRmContext -SubscriptionId $SubscriptionId @additional
+    }
 }
 
 function Set-UserAgent {
@@ -250,7 +270,7 @@ function CmdletHasMember {
     }
     catch
     {
-        return false;
+        return $false;
     }
 }
 
@@ -359,7 +379,13 @@ function Add-AzureStackAzureRmEnvironment {
         Write-Verbose "Adding AzureRm environment $name" -Verbose
     }
 
-    return Add-AzureRmEnvironment @azureEnvironmentParams
+    try {
+        return Add-AzureRmEnvironment @azureEnvironmentParams
+    }
+    catch {
+        Assert-TlsError -exception $_.Exception
+        throw
+    }
 }
 
 function Get-ProxyUri

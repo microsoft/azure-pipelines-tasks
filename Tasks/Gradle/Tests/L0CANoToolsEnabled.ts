@@ -32,6 +32,7 @@ process.env['BUILD_ARTIFACTSTAGINGDIRECTORY'] = `${tempDir}`;
 process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = `${taskReportValidDir}`; //'/user/build/s';
 
 tr.setInput('wrapperScript', 'gradlew');
+tr.setInput('cwd', '/home/repo/src');
 tr.setInput('options', '');
 tr.setInput('tasks', 'build');
 tr.setInput('javaHomeSelection', 'JDKVersion');

@@ -6,6 +6,7 @@ let taskPath = path.join(__dirname, '..', 'gradletask.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('wrapperScript', 'gradlew');
+tr.setInput('cwd', '/home/repo/src');
 tr.setInput('options', '');
 tr.setInput('tasks', 'build');
 tr.setInput('javaHomeSelection', 'JDKVersion');

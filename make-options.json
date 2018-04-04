@@ -90,6 +90,7 @@
         "SqlAzureDacpacDeployment",
         "SqlDacpacDeploymentOnMachineGroup",
         "SSH",
+        "UsePythonVersion",
         "VSBuild",
         "VsTest",
         "VsTestPlatformToolInstaller",
