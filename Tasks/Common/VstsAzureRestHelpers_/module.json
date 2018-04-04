@@ -7,6 +7,6 @@
         "AZ_UnableToFetchLoadbalancerDetails": "Unable to fetch load balancer details",
         "AZ_UnableToFetchPublicIPAddressesDetails": "Unable to fetch public IP Addresses details",
         "AZ_UnableToFetchNetworkInterfacesDetails": "Unable to fetch network interfaces details",
-        "AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for MSI. Please configure MSI for vm 'https://docs.microsoft.com/en-us/azure/active-directory/managed-service-identity/qs-configure-portal-windows-vm'.{0}"
+        "AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'.{0}"
     }
 }
