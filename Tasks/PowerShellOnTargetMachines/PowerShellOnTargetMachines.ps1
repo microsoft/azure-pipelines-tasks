@@ -166,7 +166,6 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
 
         if ($status -ne "Passed")
         {
-            Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
             Write-Verbose $deploymentResponse.Error.ToString()
             $errorMessage =  $deploymentResponse.Error.Message
             throw $errorMessage
@@ -220,13 +219,9 @@ else
             }
         }
     }
-}
 
 if($envOperationStatus -ne "Passed")
 {
-    foreach ($error in $dtlsdkErrors) {
-      Write-Telemetry "DTLSDK_Error" $error
-    }
     
     $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
     throw $errorMessage
