@@ -46,6 +46,7 @@ var assert = util.assert;
 var getExternals = util.getExternals;
 var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
+var createYamlSnippet = util.createYamlSnippet;
 var validateTask = util.validateTask;
 
 // global paths
@@ -140,6 +141,9 @@ target.build = function() {
         }
 
         mkdir('-p', outDir);
+
+        // create YAML snippet
+        createYamlSnippet(taskDef, path.join(outDir, taskName + '.yml'));
 
         // get externals
         var taskMakePath = path.join(taskPath, 'make.json');
