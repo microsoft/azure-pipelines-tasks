@@ -1,7 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
-import { IWebAppDeploymentProvider } from './deploymentProvider/IWebAppDeploymentProvider';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
 
 async function main() {

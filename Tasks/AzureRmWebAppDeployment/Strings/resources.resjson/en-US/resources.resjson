@@ -198,5 +198,10 @@
   "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+  "loc.messages.XmlParsingFailed": "Unable to parse publishProfileXML file, Error: %s",
+  "loc.messages.PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
+  "loc.messages.InvalidConnectionType": "Invalid connection type",
+  "loc.messages.InvalidImageSourceType": "Invalid Image source Type",
+  "loc.messages.InvalidPublishProfile": "Publish profile file is invalid."
 }

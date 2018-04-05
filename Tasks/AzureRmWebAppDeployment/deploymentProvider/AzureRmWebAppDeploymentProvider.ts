@@ -8,15 +8,9 @@ import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('vsts-task-lib/task');
-import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import { DeployWar } from '../operations/WarDeploymentUtilities';
 import * as ParameterParser from '../operations/parameterparser'
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 import * as Constant from '../operations/Constants';
-
-var packageUtility = require('webdeployment-common/packageUtility.js');
-var deployUtility = require('webdeployment-common/utility.js');
-var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 
 export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -24,7 +18,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
     protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
     protected kuduServiceUtility: KuduServiceUtility;
-    protected virtualApplicationPath: string;
+    protected virtualApplicationPath: string = "";
     protected azureEndpoint: AzureEndpoint;
     protected activeDeploymentID;
 

@@ -5,6 +5,7 @@ import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploy
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppDeploymentProvider } from './WindowsWebAppDeploymentProvider';
 import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentProvider';
+import tl = require('vsts-task-lib/task');
 
 export class DeploymentFactory{
     public static GetDeploymentProvider(taskParams: TaskParameters): IWebAppDeploymentProvider {
@@ -18,13 +19,13 @@ export class DeploymentFactory{
                     } else if(taskParams.isContainerWebApp) {
                         return new ContainerWebAppDeploymentProvider(taskParams);
                     } else {
-                        throw new Error('Invalid Image source Type');
+                        throw new Error(tl.loc('InvalidImageSourceType'));
                     }
                 } else {
                     return new WindowsWebAppDeploymentProvider(taskParams);
                 }
             default:
-                throw new Error("Invalid connection type");
+                throw new Error(tl.loc('InvalidConnectionType'));
         }
     }
 }
