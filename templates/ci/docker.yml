@@ -1,0 +1,63 @@
+# Docker
+# Build, tag, push, or run Docker images, or run a Docker command.
+# More Information on https://go.microsoft.com/fwlink/?linkid=848006
+# CodeLaunch YAML help: https://aka.ms/yaml
+
+queue:
+  name: Hosted VS2017                                       # Hosted Linux Preview, Default
+
+variables:
+#  system.debug: true
+
+  dockerRegistryConnectionEndpoint: ''                      # The unique name or the GUID Id of VSTS service connection endpoint
+                                                            # for Docker registry. Required if the step needs to authenticate
+                                                            # with a registry.
+                                                            
+  dockerHostEndpoint: ''                                    # The unique name or the GUID Id of VSTS service connection endpoint
+                                                            # for Docker host. Defaults to the agent's host.
+                                                            
+  imageName: '$(Build.Repository.Name):$(Build.BuildId)'    # Name of the Docker image to build and push
+  
+  qualifyImageName: true                                    # Qualify the image name with the Docker registry connection's hostname 
+                                                            
+  enforceDockerNamingConvention: true                       # The docker image name will be modified to follow Docker naming
+                                                            # convention. Converts upper case character to lower case and
+                                                            # removes spaces in image name.
+
+  defaultContext: true                                      # Set the build context to the directory that contains the Docker file.
+
+steps:
+- task: Docker@0
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryConnection: '$(dockerRegistryConnectionEndpoint)'
+    action: 'Build an image'                                # Tag images, Push images, Run an image, Run a Docker command
+    dockerFile: '**/Dockerfile' 
+#    buildArguments: |
+#      HTTP_PROXY=http://1.192.168.254
+#      BUILD_NUMBER=$(Build.BuildNumber)
+    defaultContext: $defaultContext)
+    imageName: '$(imageName)'
+    qualifyImageName: $(qualifyImageName)
+#    additionalImageTags: |
+#      Tag1
+#      Tag2
+    includeSourceTags: false
+    includeLatestTag: false
+    dockerHostEndpoint: '$(dockerHostEndpoint)'
+    enforceDockerNamingConvention: $(enforceDockerNamingConvention)
+
+- task: Docker@0
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryConnection: '$(dockerRegistryConnectionEndpoint)'
+    action: 'Push an image'                                 # Tag images, Push images, Run an image, Run a Docker command
+    imageName: '$(imageName)'
+    qualifyImageName: $(qualifyImageName)
+#    additionalImageTags: |
+#      Tag3
+#      Tag4
+    includeSourceTags: false
+    includeLatestTag: false
+    dockerHostEndpoint: '$(dockerHostEndpoint)'
+    enforceDockerNamingConvention: $(enforceDockerNamingConvention)
