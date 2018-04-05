@@ -1,7 +1,6 @@
 # Docker
 # Build, tag, push, or run Docker images, or run a Docker command.
-# More Information on https://go.microsoft.com/fwlink/?linkid=848006
-# CodeLaunch YAML help: https://aka.ms/yaml
+# https://aka.ms/yaml
 
 queue:
   name: Hosted VS2017                                       # Hosted Linux Preview, Default
@@ -36,7 +35,7 @@ steps:
 #    buildArguments: |
 #      HTTP_PROXY=http://1.192.168.254
 #      BUILD_NUMBER=$(Build.BuildNumber)
-    defaultContext: $defaultContext)
+    defaultContext: $(defaultContext)
     imageName: '$(imageName)'
     qualifyImageName: $(qualifyImageName)
 #    additionalImageTags: |
