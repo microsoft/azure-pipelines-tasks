@@ -7,6 +7,7 @@ let taskPath = path.join(__dirname, '..', 'predownloadsecurefile.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('secureFile', 'mySecureFileId');
+tr.setInput('targetFolder', 'C:/temp');
 
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['HOME'] = '/users/test';
