@@ -8,8 +8,6 @@ param (
     [string]$additionalArguments,
     [string]$scriptRoot
     )
-    $ErrorActionPreference = 'Stop'
-
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
 
@@ -176,7 +174,7 @@ param (
                 $foundParentPath = $true
                 Write-Verbose "Found parent path"
                 $relativePath = $path.Substring($destPath.Length)
-                New-Item -ItemType Directory WFCPSDrive:$relativePath -Force
+                New-Item -ItemType Directory WFCPSDrive:$relativePath -ErrorAction 'Stop' -Force
                 Write-Verbose "Created directory"
             }
             catch 
