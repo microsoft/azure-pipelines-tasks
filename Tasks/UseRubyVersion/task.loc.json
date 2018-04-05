@@ -17,6 +17,7 @@
   },
   "preview": true,
   "demands": [],
+  "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -26,14 +27,6 @@
       "required": true,
       "defaultValue": ">= 2.4",
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
-    },
-    {
-      "name": "outputVariable",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.outputVariable",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.outputVariable"
     },
     {
       "name": "addToPath",
@@ -46,8 +39,8 @@
   ],
   "outputVariables": [
     {
-      "name": "outputVariable",
-      "description": "The resolved folder of the Ruby distribution"
+      "name": "rubyLocation",
+      "description": "The resolved folder of the Ruby distribution."
     }
   ],
   "execution": {

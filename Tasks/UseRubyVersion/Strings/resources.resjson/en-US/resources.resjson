@@ -5,8 +5,6 @@
   "loc.instanceNameFormat": "Use Ruby $(versionSpec)",
   "loc.input.label.versionSpec": "Version spec",
   "loc.input.help.versionSpec": "Version range or exact version of a Ruby version to use.",
-  "loc.input.label.outputVariable": "Ruby distribution path",
-  "loc.input.help.outputVariable": "Set a name for the variable that will contain the directory of the Ruby distribution. Use this in subsequent tasks to access this installation of Ruby.",
   "loc.input.label.addToPath": "Add to PATH",
   "loc.input.help.addToPath": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.",
   "loc.messages.ListAvailableVersions": "Available versions:",

@@ -7,7 +7,6 @@ import { useRubyVersion, getPlatform } from './userubyversion';
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await useRubyVersion({
             versionSpec: task.getInput('versionSpec', true),
-            outputVariable: task.getInput('outputVariable', true),
             addToPath: task.getBoolInput('addToPath', true)
         }, getPlatform());
         task.setResult(task.TaskResult.Succeeded, '');

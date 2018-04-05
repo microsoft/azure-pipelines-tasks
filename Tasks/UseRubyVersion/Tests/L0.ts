@@ -31,7 +31,7 @@ describe('UseRubyVersion L0 Suite', function () {
     });
 
     it('finds version in cache in Linux', async function () {
-        const buildVariables: any = {};
+        const buildVariables: { [key: string]: string } = {};
         const mockTaskRun = {
             setVariable: (variable: string, value: string) => {
                 buildVariables[variable] = value;
@@ -45,19 +45,26 @@ describe('UseRubyVersion L0 Suite', function () {
             existsSync: () => {}
         });
 
+        let mockPath = '';
         const toolPath = path.join('/', 'Ruby', '2.5.4');
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath
+            findLocalTool: () => toolPath,
+            prependPath: (s: string) => {
+                mockPath = s + ':' + mockPath;
+            }
         });
         const uut = reload();
         const parameters = {
             versionSpec: '= 2.5',
-            outputVariable: 'Ruby',
             addToPath: false
         };
+
+        assert.strictEqual(buildVariables['rubyLocation'], undefined);
+
         await uut.useRubyVersion(parameters, uut.Platform.Linux);
-        assert.strictEqual(buildVariables['Ruby'], path.join(toolPath, 'bin'));
+        assert.strictEqual(buildVariables['rubyLocation'], path.join(toolPath, 'bin'));
     });
+
     it('rejects version not in cache', async function (done: MochaDone) {
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('vsts-task-tool-lib/tool', {
@@ -68,7 +75,6 @@ describe('UseRubyVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.x',
-            outputVariable: 'Ruby',
             addToPath: false
         };
 
@@ -88,7 +94,7 @@ describe('UseRubyVersion L0 Suite', function () {
     });
 
     it('sets PATH correctly on Linux', async function () {
-        const buildVariables: any = { 'PATH': '' };
+        const buildVariables: { [key: string]: string } = { 'PATH': '' };
         const mockTaskRun = {
             setVariable: (variable: string, value: string) => {
                 buildVariables[variable] = value;
@@ -102,24 +108,27 @@ describe('UseRubyVersion L0 Suite', function () {
             existsSync: () => {}
         });
 
+        let mockPath = '';
         const toolPath = path.join('/', 'Ruby', '2.4.4');
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath
+            findLocalTool: () => toolPath,
+            prependPath: (s: string) => {
+                mockPath = s + ':' + mockPath;
+            }
         });
 
         const uut = reload();
         const parameters = {
             versionSpec: '2.4',
-            outputVariable: 'Ruby',
             addToPath: true
         };
 
         await uut.useRubyVersion(parameters, uut.Platform.Linux);
-        assert.strictEqual(`${path.join(toolPath, 'bin')}${path.delimiter}`, buildVariables['PATH']);
+        assert.strictEqual(`${path.join(toolPath, 'bin')}:`, mockPath);
     });
 
     it('sets PATH correctly on Windows', async function () {
-        const buildVariables: any = { 'PATH': '' };
+        const buildVariables: { [key: string]: string } = { 'PATH': '' };
         const mockTaskRun = {
             setVariable: (variable: string, value: string) => {
                 buildVariables[variable] = value;
@@ -133,19 +142,22 @@ describe('UseRubyVersion L0 Suite', function () {
             existsSync: () => {}
         });
 
+        let mockPath = '';
         const toolPath = path.join('/', 'Ruby', '2.4.4');
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath
+            findLocalTool: () => toolPath,
+            prependPath: (s: string) => {
+                mockPath = s + ';' + mockPath;
+            }
         });
 
         const uut = reload();
         const parameters = {
             versionSpec: '2.4',
-            outputVariable: 'Ruby',
             addToPath: true
         };
 
         await uut.useRubyVersion(parameters, uut.Platform.Windows);
-        assert.strictEqual(`${toolPath}${path.delimiter}`, buildVariables['PATH']);
+        assert.strictEqual(`${toolPath};`, mockPath);
     });
 });

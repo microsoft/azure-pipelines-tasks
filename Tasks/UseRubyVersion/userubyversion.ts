@@ -24,7 +24,6 @@ export function getPlatform(): Platform {
 
 interface TaskParameters {
     readonly versionSpec: string;
-    readonly outputVariable: string;
     readonly addToPath: boolean;
 }
 
@@ -53,15 +52,8 @@ export async function useRubyVersion(parameters: TaskParameters, platform: Platf
         fs.symlinkSync(path.join(toolPath, 'ruby'), dest);
     }
 
-    task.setVariable(parameters.outputVariable, toolPath);
-
+    task.setVariable('rubyLocation', toolPath);
     if (parameters.addToPath) {
-        const originalPathKey: string = 'VSTS_USE_RUBY_VERSION_ORIGINAL_PATH';
-        let originalPath: string = task.getVariable(originalPathKey);
-        if (!originalPath) {
-            originalPath = task.getVariable('PATH');
-            task.setVariable(originalPathKey, originalPath);
-        }
-        task.setVariable('PATH', toolPath + path.delimiter + originalPath);
+        tool.prependPath(toolPath);
     }
 }
