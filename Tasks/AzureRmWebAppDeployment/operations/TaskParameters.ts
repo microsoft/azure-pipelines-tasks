@@ -44,8 +44,8 @@ export class TaskParametersUtility {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
         }
 
-        taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') ?
-            taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
+        taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') 
+            ? taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
 
         if(taskParameters.UseWebDeploy) {
             taskParameters.RemoveAdditionalFilesFlag = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
@@ -77,7 +77,7 @@ export class TaskParametersUtility {
         taskParameters.SetParametersFile = null;
         taskParameters.isBuiltinLinuxWebApp = false;
         taskParameters.ExcludeFilesFromAppDataFlag = false;
-        taskParameters.AdditionalArguments = "";
+        taskParameters.AdditionalArguments = "-retryAttempts:6 -retryInterval:10000";
         taskParameters.TakeAppOfflineFlag = false;
         taskParameters.RenameFilesFlag = false;
         taskParameters.AppSettings = null;

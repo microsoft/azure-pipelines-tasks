@@ -1,17 +1,7 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
-import { TaskParameters } from '../operations/TaskParameters';
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
-import { AzureEndpoint } from 'azure-arm-rest/azureModels';
-import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
-import { KuduServiceUtility } from '../operations/KuduServiceUtility';
-import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
-import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import { DeployWar } from '../operations/WarDeploymentUtilities';
-import * as ParameterParser from '../operations/parameterparser'
-import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 import * as Constant from '../operations/Constants';
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
@@ -19,13 +9,6 @@ var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 
 export class WindowsWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
-    protected taskParams:TaskParameters;
-    protected appService: AzureAppService;
-    protected kuduService: Kudu;
-    protected appServiceUtility: AzureAppServiceUtility;
-    protected kuduServiceUtility: KuduServiceUtility;
-    protected virtualApplicationPath: string;
-    protected azureEndpoint: AzureEndpoint;
  
     public async DeployWebAppStep() {
         var webPackage = packageUtility.PackageUtility.getPackagePath(this.taskParams.Package);

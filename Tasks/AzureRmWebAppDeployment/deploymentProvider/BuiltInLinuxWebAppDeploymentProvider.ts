@@ -1,8 +1,5 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
-import { ContainerBasedDeploymentUtility } from '../operations/ContainerBasedDeploymentUtility';
-import * as ParameterParser from '../operations/parameterparser'
-import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
 

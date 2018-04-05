@@ -196,5 +196,10 @@
   "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
   "loc.messages.GoExeNameNotPresent": "Go exe name is not present",
   "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+  "loc.messages.XmlParsingFailed": "Unable to parse publishProfileXML file, Error: %s",
+  "loc.messages.PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
+  "loc.messages.InvalidConnectionType": "Invalid connection type",
+  "loc.messages.InvalidImageSourceType": "Invalid Image source Type",
+  "loc.messages.InvalidPublishProfile": "Publish profile file is invalid."
 }

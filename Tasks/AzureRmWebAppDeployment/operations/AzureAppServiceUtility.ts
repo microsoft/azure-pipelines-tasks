@@ -63,13 +63,21 @@ export class AzureAppServiceUtility {
     }
 
     public async pingApplication(): Promise<void> {
-        try {
-            var applicationUrl: string = await this.getApplicationURL();
+        var applicationUrl: string = await this.getApplicationURL();
 
-            if(!applicationUrl) {
-                tl.debug('Application Url not found.');
-                return;
-            }
+        if(!applicationUrl) {
+            tl.debug('Application Url not found.');
+            return;
+        }
+        await AzureAppServiceUtility.pingApplication(applicationUrl);
+    }
+
+    public static async pingApplication(applicationUrl: string) {
+        if(!applicationUrl) {
+            tl.debug('Application Url empty.');
+            return;
+        }
+        try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;
