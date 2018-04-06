@@ -3,7 +3,7 @@
 # https://aka.ms/yaml
 
 queue:
-  name: Hosted VS2017                                       # or Hosted Linux, Default
+  name: Hosted Linux                                       # Hosted VS2017, Hosted Linux, or Default
 
 #variables:
 #  system.debug: true
