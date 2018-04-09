@@ -16,7 +16,7 @@ var taskList = [];
 var tasksFromFile = makeOptions.tasks;
 tasksFromFile.forEach(function(taskFromFile) {
     if (taskFromFile.build) {
-        taskList.push(task.name);
+        taskList.push(taskFromFile.name);
     }
 });
 
