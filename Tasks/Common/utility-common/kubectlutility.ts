@@ -6,7 +6,7 @@ import * as downloadutility from "./downloadutility";
 import * as util from "util";
 const uuidV4 = require('uuid/v4');
 const kubectlToolName = "kubectl"
-export const stableKubectlVersion = "1.8.9"
+export const stableKubectlVersion = "v1.8.9"
 
 
 var fs = require('fs');
