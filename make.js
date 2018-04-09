@@ -75,6 +75,7 @@ if (options.task) {
     // find using --task parameter
     if (options.task === "all") {
         // build all tasks in make-options.json regardless of "build" value
+        console.log('setting task list to all tasks in make-options.json')
         taskList = getTasksFromOptions(true);
     }
     else {
@@ -103,7 +104,7 @@ function getTasksFromOptions(loadAll) {
     var tasksFromFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
     tasksFromFile.forEach(function(taskFromFile) {
         if (loadAll || taskFromFile.build) {
-            taskList.push(taskFromFile.name);
+            tasks.push(taskFromFile.name);
         }
     });
 
