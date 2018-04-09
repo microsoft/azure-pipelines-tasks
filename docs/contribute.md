@@ -78,7 +78,7 @@ the `_build` directory.  You can then use the tfx client to upload this to your 
 
 The build will also generate a `tasks.loc.json` and an english strings file under `Strings` in your source tree. You should check these back in. Another localization process will create the other strings files.
 
-## Build All Tasks (this can take a while):
+## Build All Tasks In Repository (this can take a while):
 
 ``` bash
 # build and test
@@ -90,6 +90,14 @@ npm run build
 ```bash
 node make.js build --task ShellScript
 ```
+
+If you want to build all tasks that are in make-options.json, use:
+
+``` base
+node make.js build --task all
+```
+
+Note that the option above to build all tasks in repository does all tasks in the repository while this option builds all tasks specific in make-options.json (regardless of their "build" value).
 
 ## Run Tests
 

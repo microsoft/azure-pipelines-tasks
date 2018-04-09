@@ -73,17 +73,41 @@ addPath(binPath);
 var taskList;
 if (options.task) {
     // find using --task parameter
-    taskList = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true, matchBase: true })
-        .map(function (item) {
-            return path.basename(item);
-        });
+    if (options.task === "all") {
+        // build all tasks in make-options.json regardless of "build" value
+        taskList = getTasksFromOptions(true);
+    }
+    else {
+        taskList = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true, matchBase: true })
+            .map(function (item) {
+                return path.basename(item);
+            });
+    }
+    
     if (!taskList.length) {
         fail('Unable to find any tasks matching pattern ' + options.task);
     }
 }
 else {
     // load the default list
-    taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
+    taskList = getTasksFromOptions(false);
+}
+
+// Load tasks from make-options.json.
+// The structure of tasks is:
+//  { "name": "MSBuild", "build": false }
+// loadAll: if this is set to true, ignore the build flag and return all tasks in make-options
+function getTasksFromOptions(loadAll) {
+    var tasks = [];
+
+    var tasksFromFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
+    tasksFromFile.forEach(function(taskFromFile) {
+        if (loadAll || taskFromFile.build) {
+            taskList.push(taskFromFile.name);
+        }
+    });
+
+    return tasks;
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
