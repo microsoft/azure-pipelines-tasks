@@ -5,8 +5,12 @@ function Add-Tls12InSession {
     param()
 
     try {
-        if ([Net.ServicePointManager]::SecurityProtocol -notcontains 'Tls12') {
-            [Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType]3072
+        if ([Net.ServicePointManager]::SecurityProtocol.ToString().Split(',').Trim() -notcontains 'Tls12') {
+            $securityProtocol=@()
+            $securityProtocol+=[Net.ServicePointManager]::SecurityProtocol
+            $securityProtocol+=[Net.SecurityProtocolType]3072
+            [Net.ServicePointManager]::SecurityProtocol=$securityProtocol
+            
             Write-Host (Get-VstsLocString -Key TLS12AddedInSession)
         }
         else {
@@ -14,7 +18,7 @@ function Add-Tls12InSession {
         }
     }
     catch {
-        Write-VstsTaskError -Message (Get-VstsLocString -Key "UnableToAddTls12InSession" -ArgumentList $($_.Exception.Message))
+        Write-Host (Get-VstsLocString -Key "UnableToAddTls12InSession" -ArgumentList $($_.Exception.Message))
     }
 }
 
