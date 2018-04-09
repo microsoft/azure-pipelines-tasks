@@ -69,6 +69,10 @@ async function main(): Promise<void> {
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
+        var tagFilters = tl.getInput("tagFilters", false);
+        if (tagFilters != null){
+            tagFilters = tagFilters.split(",");
+        }
 
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
@@ -140,10 +144,10 @@ async function main(): Promise<void> {
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;
                 
                 // get latest successful build filtered by branch
-                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchNameFilter), 4).catch((reason) => {
+                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, BuildResult.Succeeded, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), 4).catch((reason) => {
                     reject(reason);
                     return;
-                }); 
+                });
 
                 if (!buildsForThisDefinition || buildsForThisDefinition.length == 0){ 
                     if (buildVersionToDownload == "latestFromBranch") reject(tl.loc("LatestBuildFromBranchNotFound", branchNameFilter));

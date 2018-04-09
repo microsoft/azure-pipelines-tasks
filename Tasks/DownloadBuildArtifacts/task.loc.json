@@ -103,6 +103,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.buildId"
     },
     {
+      "name": "Tags",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Tags",
+      "defaultValue": "",
+      "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Tags"
+    },
+    {
       "name": "downloadType",
       "type": "radio",
       "label": "ms-resource:loc.input.label.downloadType",
