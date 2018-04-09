@@ -151,6 +151,8 @@ Register-Mock Test-Path { $false } -- -LiteralPath $dataZippedPkg4
 Register-Mock Test-Path { $false } -- -LiteralPath $dataPkg4
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Create-DiffPackage.psm1"
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"
+Register-Mock Write-VstsTaskError
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
