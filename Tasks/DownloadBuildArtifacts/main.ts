@@ -77,6 +77,7 @@ async function main(): Promise<void> {
         var debugMode: string = tl.getVariable('System.Debug');
         var isVerbose: boolean = debugMode ? debugMode.toLowerCase() != 'false' : false;
         var parallelLimit: number = +tl.getInput("parallelizationLimit", false);
+        var retryLimit = parseInt(tl.getVariable("VSTS_HTTP_RETRY")) ? parseInt(tl.getVariable("VSTS_HTTP_RETRY")) : 4;
 
         var templatePath: string = path.join(__dirname, 'vsts.handlebars.txt');
         var buildApi: IBuildApi = webApi.getBuildApi();
@@ -136,11 +137,11 @@ async function main(): Promise<void> {
         // verify that buildId belongs to the definition selected
         if (definitionId) {
             var build : Build;
-            if (buildVersionToDownload != "specific"){ 
+            if (buildVersionToDownload != "specific") { 
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;
                 
                 // get latest successful build filtered by branch
-                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchNameFilter), 4).catch((reason) => {
+                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchNameFilter), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
                 }); 
@@ -157,7 +158,7 @@ async function main(): Promise<void> {
             } 
 
             if (!build){
-                build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), 4).catch((reason) => {
+                build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
                 });
@@ -178,7 +179,7 @@ async function main(): Promise<void> {
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName");
-            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), 4).catch((reason) => {
+            var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimit).catch((reason) => {
                 reject(reason);
                 return;
             });
@@ -192,7 +193,7 @@ async function main(): Promise<void> {
             itemPattern = '**';
         }
         else {
-            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), 4).catch((reason) => {
+            var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimit).catch((reason) => {
                 reject(reason);
             });
 

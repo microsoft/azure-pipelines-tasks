@@ -118,7 +118,7 @@
       "name": "artifactName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.artifactName",
-      "defaultValue": "drop",
+      "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True",
