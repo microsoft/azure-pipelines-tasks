@@ -77,8 +77,7 @@ phases:
 ################################################################################
   displayName: Publish
   dependsOn: buildAll_windows # TODO: also depend on buildAll_darwin buildAll_linux
-  # condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
   queue: Hosted VS2017
   steps:
 
