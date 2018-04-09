@@ -193,7 +193,7 @@ else
             }
         }
     }
-
+}
 if($envOperationStatus -ne "Passed")
 {
     
