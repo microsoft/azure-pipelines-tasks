@@ -30,10 +30,19 @@ export async function usePythonVersion(parameters: TaskParameters, platform: Pla
     const installDir: string | null = tool.findLocalTool('Python', semanticVersionSpec);
     if (!installDir) {
         // Fail and list available versions
+        const x86Versions = tool.findLocalToolVersions('Python', 'x86')
+            .map(s => `${s} (x86)`)
+            .join(os.EOL);
+
+        const x64Versions = tool.findLocalToolVersions('Python', 'x64')
+            .map(s => `${s} (x64)`)
+            .join(os.EOL);
+
         throw new Error([
             task.loc('VersionNotFound', parameters.versionSpec),
             task.loc('ListAvailableVersions'),
-            tool.findLocalToolVersions('Python')
+            x86Versions,
+            x64Versions
         ].join(os.EOL));
     }
 
