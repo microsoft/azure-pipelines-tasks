@@ -103,7 +103,7 @@ describe('UsePythonVersion L0 Suite', function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => null,
-            findLocalToolVersions: () => ['2.7.13']
+            findLocalToolVersions: () => ['2.6.0', '2.7.13']
         });
 
         const uut = reload();
@@ -119,7 +119,9 @@ describe('UsePythonVersion L0 Suite', function () {
             const expectedMessage = [
                 'loc_mock_VersionNotFound 3.x',
                 'loc_mock_ListAvailableVersions',
+                '2.6.0 (x86)',
                 '2.7.13 (x86)',
+                '2.6.0 (x64)',
                 '2.7.13 (x64)'
             ].join(EOL);
 
@@ -138,14 +140,14 @@ describe('UsePythonVersion L0 Suite', function () {
         };
         mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
 
-        const toolPathx86 = path.join('/', 'Python', '3.6.4', 'x86');
-        const toolPathx64 = path.join('/', 'Python', '3.6.4', 'x64');
+        const x86ToolPath = path.join('/', 'Python', '3.6.4', 'x86');
+        const x64ToolPath = path.join('/', 'Python', '3.6.4', 'x64');
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: (toolName: string, versionSpec: string, arch?: string) => {
                 if (arch === 'x86') {
-                    return toolPathx86;
+                    return x86ToolPath;
                 } else {
-                    return toolPathx64;
+                    return x64ToolPath;
                 }
             }
         });
@@ -160,7 +162,7 @@ describe('UsePythonVersion L0 Suite', function () {
         assert.strictEqual(buildVariables['pythonLocation'], undefined);
 
         await uut.usePythonVersion(parameters, Platform.Linux);
-        assert.strictEqual(buildVariables['pythonLocation'], toolPathx86);
+        assert.strictEqual(buildVariables['pythonLocation'], x86ToolPath);
     });
 
     it('sets PATH correctly on Linux', async function () {
