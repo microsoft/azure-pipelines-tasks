@@ -51,18 +51,20 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
     if (parameters.addToPath) {
         toolUtil.prependPathSafe(installDir);
 
-        // Python has "scripts" directories where command-line tools that come with packages are installed.
-        // There are different directories for `pip install` and `pip install --user`.
-        // On Linux and macOS, pip will create the scripts directories and add them to PATH as needed.
-        // On Windows, these directories do not get added to PATH, so we will add them ourselves.
-        // For reference, these directories are as follows:
-        //   macOS / Linux:
-        //      /usr/local/bin
-        //      (--user) ~/.local/bin
-        //   Windows:
-        //      <Python installation dir>\Scripts
-        //      (--user) %APPDATA%\Python\PythonXY\Scripts
+        // Make sure Python's "bin" directories are in PATH.
+        // Python has "scripts" or "bin" directories where command-line tools that come with packages are installed.
+        // This is where pip is, along with anything that pip installs.
+        // There is a seperate directory for `pip install --user`.
         if (platform === Platform.Windows) {
+            // On Windows, these directories do not get added to PATH, so we will add them ourselves.
+            // For reference, these directories are as follows:
+            //   macOS / Linux:
+            //      <sys.prefix>/bin (by default /usr/local/bin, but not on hosted agents -- see the `else`)
+            //      (--user) ~/.local/bin
+            //   Windows:
+            //      <Python installation dir>\Scripts
+            //      (--user) %APPDATA%\Python\PythonXY\Scripts
+            // See https://docs.python.org/3/library/sysconfig.html
             const scriptsDir = path.join(installDir, 'Scripts');
             toolUtil.prependPathSafe(scriptsDir);
 
@@ -75,6 +77,13 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
 
             const userScriptsDir = path.join(process.env['APPDATA'], 'Python', `Python${major}${minor}`, 'Scripts');
             toolUtil.prependPathSafe(userScriptsDir);
+        } else {
+            // On Linux and macOS, tools cache should be set up so that each Python version has its own "bin" directory.
+            // We do this so that the tool cache can just be dropped on an agent with minimal installation (no copying to /usr/local).
+            // This also keeps us open to side-by-siding the same minor version of Python (since Python uses /usr/local/lib/python3.6, etc.).
+            toolUtil.prependPathSafe(path.join(installDir, 'bin'));
+
+            // On Linux and macOS, pip will create the --user directory and add it to PATH as needed.
         }
     }
 }
