@@ -151,7 +151,8 @@ target.build = function() {
             validateTask(taskDef);
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
-            outDir = path.join(buildPath, taskDef.name);
+            //outDir = path.join(buildPath, taskDef.name);
+            outDir = path.join(buildPath, taskName);
 
             // create loc files
             createTaskLocJson(taskPath);
