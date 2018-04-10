@@ -34,6 +34,19 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addToPath"
+    },
+    {
+      "name": "architecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.architecture",
+      "defaultValue": "x64",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.architecture",
+      "groupName": "advanced",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
     }
   ],
   "outputVariables": [

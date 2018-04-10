@@ -90,7 +90,8 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            addToPath: false
+            addToPath: false,
+            architecture: 'x64'
         };
 
         assert.strictEqual(buildVariables['pythonLocation'], undefined);
@@ -109,7 +110,8 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.x',
-            addToPath: false
+            addToPath: false,
+            architecture: 'x64'
         };
 
         try {
@@ -183,7 +185,8 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            addToPath: true
+            addToPath: true,
+            architecture: 'x64'
         };
 
         await uut.usePythonVersion(parameters, Platform.Linux);
@@ -210,7 +213,8 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            addToPath: true
+            addToPath: true,
+            architecture: 'x64'
         };
 
         await uut.usePythonVersion(parameters, Platform.Windows);

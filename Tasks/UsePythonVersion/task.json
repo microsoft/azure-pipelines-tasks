@@ -34,6 +34,19 @@
             "required": true,
             "defaultValue": "true",
             "helpMarkDown": "Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+        },
+        {
+            "name": "architecture",
+            "type": "pickList",
+            "label": "Architecture",
+            "defaultValue": "x64",
+            "required": false,
+            "helpMarkDown": "The target architecture (x86, x64) of the Python interpeter.",
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
+            }
         }
     ],
     "outputVariables": [
