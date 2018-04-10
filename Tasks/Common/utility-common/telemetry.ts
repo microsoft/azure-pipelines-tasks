@@ -34,10 +34,8 @@ export function emitTelemetry(area: string, feature: string, taskSpecificTelemet
                 'BUILD_REASON': tl.getVariable('BUILD_REASON'),
                 'BUILD_REPOSITORY_CLEAN': tl.getVariable('BUILD_REPOSITORY_CLEAN'),
                 'BUILD_REPOSITORY_GIT_SUBMODULECHECKOUT': tl.getVariable('BUILD_REPOSITORY_GIT_SUBMODULECHECKOUT'),
-                'BUILD_REPOSITORY_ID': tl.getVariable('BUILD_REPOSITORY_ID'),
                 'BUILD_REPOSITORY_NAME': tl.getVariable('BUILD_REPOSITORY_NAME'),
                 'BUILD_REPOSITORY_PROVIDER': tl.getVariable('BUILD_REPOSITORY_PROVIDER'),
-                'BUILD_REPOSITORY_URI': tl.getVariable('BUILD_REPOSITORY_URI'),
                 'BUILD_SOURCEVERSION': tl.getVariable('BUILD_SOURCEVERSION'),
                 'agent.proxyurl': tl.getVariable("agent.proxyurl")
             };
