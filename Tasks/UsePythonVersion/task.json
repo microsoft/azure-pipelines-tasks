@@ -47,7 +47,7 @@
             "type": "pickList",
             "label": "Architecture",
             "defaultValue": "x64",
-            "required": false,
+            "required": true,
             "helpMarkDown": "The target architecture (x86, x64) of the Python interpeter.",
             "groupName": "advanced",
             "options": {
