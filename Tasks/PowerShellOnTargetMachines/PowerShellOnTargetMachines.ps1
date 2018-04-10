@@ -54,6 +54,7 @@ $ErrorActionPreference = 'Stop'
 $deploymentOperation = 'Deployment'
 
 $envOperationStatus = "Passed"
+$jobId = $env:SYSTEM_JOBID;
 
 # enabling detailed logging only when system.debug is true
 $enableDetailedLoggingString = $env:system_debug
@@ -65,6 +66,36 @@ if ($enableDetailedLoggingString -ne "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
+function Publish-AzureTelemetry
+ {
+   param([object] $deploymentResponse, 
+            [string] $jobId )
+    if($deploymentResponse){
+        $jsonString = -join("{")
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "IsAzureVm")){
+            $jsonString = -join( $jsonString,
+            "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" ,
+            ",")
+        }
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "VmUuidHash")){
+            $jsonString = -join( $jsonString,
+            "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"",
+            ",")
+        }
+        if([bool]($deploymentResponse.PSobject.Properties.name -match "TelemetryError")){
+            $jsonString = -join( $jsonString,
+            "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"",
+            ",")
+        }
+    
+        $jsonString = -join( $jsonString,
+            "`"JobId`" : `"$jobId`"" , "}")
+    }
+
+    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$jsonString"
+    Write-Host $telemetryString
+ }
+ 
 try
 {
     $connection = Get-VssConnection -TaskContext $distributedTaskContext
@@ -105,10 +136,10 @@ if($runPowershellInParallel -eq "false" -or  ( $resources.Count -eq 1 ) )
         $status = $deploymentResponse.Status
 
         Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+        Publish-AzureTelemetry -deploymentResponse $deploymentResponse -jobId $jobId
 
         if ($status -ne "Passed")
         {
-            Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
             Write-Verbose $deploymentResponse.Error.ToString()
             $errorMessage =  $deploymentResponse.Error.Message
             throw $errorMessage
@@ -145,6 +176,8 @@ else
 
                 Write-ResponseLogs -operationName $deploymentOperation -fqdn $displayName -deploymentResponse $output
                 Write-Output (Get-LocalizedString -Key "Deployment status for machine '{0}' : '{1}'" -ArgumentList $displayName, $status)
+                Publish-AzureTelemetry -deploymentResponse $output -jobId $jobId
+
                 if($status -ne "Passed")
                 {
                     $envOperationStatus = "Failed"
@@ -161,12 +194,8 @@ else
         }
     }
 }
-
 if($envOperationStatus -ne "Passed")
 {
-    foreach ($error in $dtlsdkErrors) {
-      Write-Telemetry "DTLSDK_Error" $error
-    }
     
     $errorMessage = (Get-LocalizedString -Key 'Deployment on one or more machines failed.')
     throw $errorMessage
