@@ -1,7 +1,7 @@
 "use strict";
 
 import tl = require('vsts-task-lib/task');
-import helmcli from "./helmcli";
+import helmcli from "./../helmcli";
 
 export function addArguments(helmCli: helmcli) : void {
     var namespace = tl.getInput("namespace", false);

@@ -10,6 +10,10 @@ export default class helmcli extends basecommand {
 
     private command : string;
     private arguments : string[] = [];
+
+    constructor() {
+        super(true)
+    }
     
     public getTool(): string {
         return "helm";

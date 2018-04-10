@@ -11,8 +11,8 @@ abstract class basecommand {
     abstract login(): void;
     abstract logout(): void;
 
-    constructor() {
-        this.toolPath = tl.which(this.getTool(), true);
+    constructor(required: boolean) {
+        this.toolPath = tl.which(this.getTool(), required);
     }
 
     public getToolPath(): string {
