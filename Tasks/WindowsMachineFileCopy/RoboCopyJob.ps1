@@ -8,8 +8,6 @@ param (
     [string]$additionalArguments,
     [string]$scriptRoot
     )
-    $ErrorActionPreference = 'Stop'
-
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
 
@@ -172,7 +170,7 @@ param (
         {
             try
             {
-                New-PSDrive -Name WFCPSDrive -PSProvider FileSystem -Root $destPath -Credential $psCredentialObject
+                New-PSDrive -Name WFCPSDrive -PSProvider FileSystem -Root $destPath -Credential $psCredentialObject -ErrorAction 'Stop'
                 $foundParentPath = $true
                 Write-Verbose "Found parent path"
                 $relativePath = $path.Substring($destPath.Length)
@@ -235,16 +233,9 @@ param (
 
     $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
 
-    $ErrorActionPreference = 'Continue'
-    $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters 2>&1"                
-    Invoke-Expression $command |
-        ForEach-Object {
-            ,$_
-            if($_ -is [System.Management.Automation.ErrorRecord]) {
-                Write-VstsTaskError -Message (Get-VstsLocString -Key "WFC_RobocopyError" -ArgumentList $fqdn, $_.Exception.Message) -ErrCode "WFC_RobocopyError"
-            }
-        }
-    
+    $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
+    Invoke-Expression $command   
+     
     if ($LASTEXITCODE -ge 8)
     {
         $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
