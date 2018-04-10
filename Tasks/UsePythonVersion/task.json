@@ -18,6 +18,13 @@
     "preview": true,
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "inputs": [
         {
             "name": "versionSpec",
