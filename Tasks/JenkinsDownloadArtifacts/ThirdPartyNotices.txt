@@ -14,126 +14,128 @@ Jenkins Download Artifact task incorporates third party material from the projec
 7.      assert-plus (https://github.com/mcavage/node-assert-plus/)
 8.      async (https://github.com/caolan/async)
 9.      aws4 (https://github.com/mhart/aws4)
-10.     balanced-match (https://github.com/juliangruber/balanced-match)
-11.     bl (BufferList) (https://github.com/rvagg/bl)
-12.     boom (https://github.com/hapijs/boom)
-13.     brace-expansion (https://github.com/juliangruber/brace-expansion)
-14.     browserify-mime (node-mime) (https://github.com/broofa/node-mime)
-15.     camelcase (https://github.com/sindresorhus/camelcase)
-16.     center-align (https://github.com/jonschlinkert/center-align)
-17.     chalk (https://github.com/chalk/chalk)
-18.     cliui (https://github.com/yargs/cliui)
-19.     combined-stream (https://github.com/felixge/node-combined-stream)
-20.     commander (https://github.com/tj/commander.js)
-21.     concat-map (https://github.com/substack/node-concat-map)
-22.     core-util-is (https://github.com/isaacs/core-util-is)
-23.     cryptiles (https://github.com/hapijs/cryptiles)
-24.     dashdash (https://github.com/trentm/node-dashdash)
+10.     aws-sign2 (https://github.com/request/aws-sign)
+11.     balanced-match (https://github.com/juliangruber/balanced-match)
+12.     bl (BufferList) (https://github.com/rvagg/bl)
+13.     boom (https://github.com/hapijs/boom)
+14.     brace-expansion (https://github.com/juliangruber/brace-expansion)
+15.     browserify-mime (node-mime) (https://github.com/broofa/node-mime)
+16.     camelcase (https://github.com/sindresorhus/camelcase)
+17.     caseless (https://github.com/request/caseless)
+18.     center-align (https://github.com/jonschlinkert/center-align)
+19.     chalk (https://github.com/chalk/chalk)
+20.     cliui (https://github.com/yargs/cliui)
+21.     combined-stream (https://github.com/felixge/node-combined-stream)
+22.     commander (https://github.com/tj/commander.js)
+23.     concat-map (https://github.com/substack/node-concat-map)
+24.     core-util-is (https://github.com/isaacs/core-util-is)
+25.     cryptiles (https://github.com/hapijs/cryptiles)
+26.     dashdash (https://github.com/trentm/node-dashdash)
             Includes:ActiveState recipe
-25.     decamelize (https://github.com/sindresorhus/decamelize)
-26.     delayed-stream (https://github.com/felixge/node-delayed-stream)
-27.     ecc-jsbn (https://github.com/quartzjer/ecc-jsbn)
+27.     decamelize (https://github.com/sindresorhus/decamelize)
+28.     delayed-stream (https://github.com/felixge/node-delayed-stream)
+29.     ecc-jsbn (https://github.com/quartzjer/ecc-jsbn)
             Includes:jsbn; jsbn-ec-point-compression
-28.     escape-string-regexp (https://github.com/sindresorhus/escape-string-regexp)
-29.     extend (https://github.com/justmoon/node-extend/)
-30.     extsprintf (https://github.com/davepacheco/node-extsprintf)
-31.     forever-agent (https://github.com/request/forever-agent)
-32.     form-data (ttps://github.com/form-data/form-data)
-33.     generate-function (https://github.com/mafintosh/generate-function)
-34.     generate-object-property (https://github.com/mafintosh/generate-object-property)
-35.     getpass (https://github.com/arekinath/node-getpass)
-36.     graceful-readlink (https://github.com/zhiyelee/graceful-readlink)
-37.     handlebars (https://github.com/wycats/handlebars.js)
+30.     escape-string-regexp (https://github.com/sindresorhus/escape-string-regexp)
+31.     extend (https://github.com/justmoon/node-extend/)
+32.     extsprintf (https://github.com/davepacheco/node-extsprintf)
+33.     forever-agent (https://github.com/request/forever-agent)
+34.     form-data (ttps://github.com/form-data/form-data)
+35.     generate-function (https://github.com/mafintosh/generate-function)
+36.     generate-object-property (https://github.com/mafintosh/generate-object-property)
+37.     getpass (https://github.com/arekinath/node-getpass)
+38.     graceful-readlink (https://github.com/zhiyelee/graceful-readlink)
+39.     handlebars (https://github.com/wycats/handlebars.js)
             Includes:lodash
-38.     har-validator (https://github.com/ahmadnassri/har-validator)
-39.     has-ansi (https://github.com/chalk/has-ansi)
-40.     hash-base (https://github.com/crypto-browserify/hash-base)
-41.     hawk (https://github.com/hueniverse/hawk)
+40.     har-validator (https://github.com/ahmadnassri/har-validator)
+41.     has-ansi (https://github.com/chalk/has-ansi)
+42.     hash-base (https://github.com/crypto-browserify/hash-base)
+43.     hawk (https://github.com/hueniverse/hawk)
             Includes:CryptoJS
-42.     hoek (https://github.com/hapijs/hoek)
+44.     hoek (https://github.com/hapijs/hoek)
             Includes:Deep-eql
-43.     http-signature (https://github.com/joyent/node-http-signature)
-44.     inherits (https://github.com/isaacs/inherits)
-45.     isarray (https://github.com/juliangruber/isarray/)
-46.     is-buffer (https://github.com/feross/is-buffer)
-47.     is-my-json-valid (https://github.com/mafintosh/is-my-json-valid)
-48.     is-property (https://github.com/mikolalysenko/is-property)
-49.     isstream (https://github.com/rvagg/isstream)
-50.     is-typedarray (https://github.com/hughsk/is-typedarray)
-51.     Jenkins logo
-52.     jodid25519 (https://github.com/meganz/jodid25519)
+45.     http-signature (https://github.com/joyent/node-http-signature)
+46.     inherits (https://github.com/isaacs/inherits)
+47.     isarray (https://github.com/juliangruber/isarray/)
+48.     is-buffer (https://github.com/feross/is-buffer)
+49.     is-my-json-valid (https://github.com/mafintosh/is-my-json-valid)
+50.     is-property (https://github.com/mikolalysenko/is-property)
+51.     isstream (https://github.com/rvagg/isstream)
+52.     is-typedarray (https://github.com/hughsk/is-typedarray)
+53.     Jenkins logo
+54.     jodid25519 (https://github.com/meganz/jodid25519)
             Includes:almond
-53.     jsbn (https://github.com/andyperlitch/jsbn)
-54.     json-edm-parser (https://github.com/yaxia/json-edm-parser)
-55.     jsonparse (https://github.com/creationix/jsonparse)
-56.     jsonpointer (https://github.com/janl/node-jsonpointer)
-57.     json-schema (https://github.com/kriszyp/json-schema)
-58.     json-stringify-safe (https://github.com/isaacs/json-stringify-safe)
-59.     jsprim (https://github.com/davepacheco/node-jsprim)
-60.     kind-of (https://github.com/jonschlinkert/kind-of)
-61.     lazy-cache (https://github.com/jonschlinkert/lazy-cache)
-62.     lodash (https://github.com/lodash/lodash)
+55.     jsbn (https://github.com/andyperlitch/jsbn)
+56.     json-edm-parser (https://github.com/yaxia/json-edm-parser)
+57.     jsonparse (https://github.com/creationix/jsonparse)
+58.     jsonpointer (https://github.com/janl/node-jsonpointer)
+59.     json-schema (https://github.com/kriszyp/json-schema)
+60.     json-stringify-safe (https://github.com/isaacs/json-stringify-safe)
+61.     jsprim (https://github.com/davepacheco/node-jsprim)
+62.     kind-of (https://github.com/jonschlinkert/kind-of)
+63.     lazy-cache (https://github.com/jonschlinkert/lazy-cache)
+64.     lodash (https://github.com/lodash/lodash)
             Includes:Sizzle CSS Selector Engine
             Includes:Webpack
-63.     longest (https://github.com/jonschlinkert/longest)
-64.     lru-cache (https://github.com/isaacs/node-lru-cache)
-65.     md5.js (https://github.com/crypto-browserify/md5.js)
-66.     mime-db (https://github.com/jshttp/mime-db)
-67.     mime-types (https://github.com/broofa/node-mime)
-68.     minimatch (https://github.com/isaacs/minimatch)
-69.     minimist (https://github.com/substack/minimist)
-70.     mockery (https://github.com/mfncooper/mockery)
-71.     node-uuid (https://github.com/broofa/node-uuid)
+65.     longest (https://github.com/jonschlinkert/longest)
+66.     lru-cache (https://github.com/isaacs/node-lru-cache)
+67.     md5.js (https://github.com/crypto-browserify/md5.js)
+68.     mime-db (https://github.com/jshttp/mime-db)
+69.     mime-types (https://github.com/broofa/node-mime)
+70.     minimatch (https://github.com/isaacs/minimatch)
+71.     minimist (https://github.com/substack/minimist)
+72.     mockery (https://github.com/mfncooper/mockery)
+73.     node-uuid (https://github.com/broofa/node-uuid)
             Includes:Gnuplot
-72.     optimist (https://github.com/substack/node-optimist)
-73.     oauth-sign (https://github.com/request/oauth-sign)
-74.     pinkie (https://github.com/floatdrop/pinkie)
-75.     pinkie-promise (https://github.com/floatdrop/pinkie-promise)
-76.     process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
-77.     pseudomap (https://github.com/isaacs/pseudomap)
-78.     punycode (https://github.com/bestiejs/punycode.js)
-79.     q (https://github.com/kriskowal/q)
-80.     qs (https://github.com/ljharb/qs)
+74.     optimist (https://github.com/substack/node-optimist)
+75.     oauth-sign (https://github.com/request/oauth-sign)
+76.     pinkie (https://github.com/floatdrop/pinkie)
+77.     pinkie-promise (https://github.com/floatdrop/pinkie-promise)
+78.     process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
+79.     pseudomap (https://github.com/isaacs/pseudomap)
+80.     punycode (https://github.com/bestiejs/punycode.js)
+81.     q (https://github.com/kriskowal/q)
+82.     qs (https://github.com/ljharb/qs)
             Includes:io.js
-81.     readable-stream (https://github.com/nodejs/readable-stream)
-82.     request (https://github.com/request/request)
-83.     repeat-string (https://github.com/jonschlinkert/repeat-string)
-84.     right-align (https://github.com/jonschlinkert/right-align)
-85.     safe-buffer (https://github.com/feross/safe-buffer)
-86.     sax (https://github.com/isaacs/sax-js)
-87.     semver (https://github.com/npm/node-semver)
-88.     shelljs (https://github.com/arturadib/shelljs)
+83.     readable-stream (https://github.com/nodejs/readable-stream)
+84.     request (https://github.com/request/request)
+85.     repeat-string (https://github.com/jonschlinkert/repeat-string)
+86.     right-align (https://github.com/jonschlinkert/right-align)
+87.     safe-buffer (https://github.com/feross/safe-buffer)
+88.     sax (https://github.com/isaacs/sax-js)
+89.     semver (https://github.com/npm/node-semver)
+90.     shelljs (https://github.com/arturadib/shelljs)
             Includes:wrench-js
-89.     sntp (https://github.com/hueniverse/sntp)
-90.     source-map (https://github.com/mozilla/source-map)
+91.     sntp (https://github.com/hueniverse/sntp)
+92.     source-map (https://github.com/mozilla/source-map)
             Includes:Base 64 VLQ implementation in Closure Compiler
-91.     sshpk (https://github.com/arekinath/node-sshpk)
-92.     string_decoder (https://github.com/rvagg/string_decoder)
-93.     stringstream (https://github.com/mhart/StringStream)
-94.     strip-ansi (https://github.com/chalk/strip-ansi)
-95.     supports-color (https://github.com/chalk/supports-color)
-96.     tough-cookie (https://github.com/SalesforceEng/tough-cookie)
-97.     tunnel (https://github.com/koichik/node-tunnel)
-98.     tunnel-agent (https://github.com/mikeal/tunnel-agent)
-99.     tweetnacl (https://github.com/dchest/tweetnacl-js)
-100.    uglify-js (https://www.npmjs.com/package/uglify-js)
+93.     sshpk (https://github.com/arekinath/node-sshpk)
+94.     string_decoder (https://github.com/rvagg/string_decoder)
+95.     stringstream (https://github.com/mhart/StringStream)
+96.     strip-ansi (https://github.com/chalk/strip-ansi)
+97.     supports-color (https://github.com/chalk/supports-color)
+98.     tough-cookie (https://github.com/SalesforceEng/tough-cookie)
+99.     tunnel (https://github.com/koichik/node-tunnel)
+100.    tunnel-agent (https://github.com/mikeal/tunnel-agent)
+101.    tweetnacl (https://github.com/dchest/tweetnacl-js)
+102.    uglify-js (https://www.npmjs.com/package/uglify-js)
             Includes:Acorn
             Includes:parse-js
-101.    uglify-to-browserify (https://github.com/ForbesLindesay/uglify-to-browserify)
-102.    underscore (https://github.com/jashkenas/underscore)
+103.    uglify-to-browserify (https://github.com/ForbesLindesay/uglify-to-browserify)
+104.    underscore (https://github.com/jashkenas/underscore)
             Includes:Normalize.css
-103.    util-deprecate (https://github.com/TooTallNate/util-deprecate)
-104.    uuid (https://github.com/kelektiv/node-uuid)
-105.    validator (https://github.com/chriso/validator.js)
-106.    verror (https://github.com/joyent/node-verror)
-107.    VSTS-task-lib (https://github.com/Microsoft/vsts-task-lib)
-108.    window-size (https://github.com/jonschlinkert/window-size)
-109.    wordwrap (https://github.com/substack/node-wordwrap)
-110.    xml2js (https://github.com/Leonidas-from-XIV/node-xml2js)
-111.    xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
-112.    xtend (https://github.com/Raynos/xtend)
-113.    yallist (https://github.com/isaacs/yallist)
-114.    yargs (https://github.com/yargs/yargs)
+105.    util-deprecate (https://github.com/TooTallNate/util-deprecate)
+106.    uuid (https://github.com/kelektiv/node-uuid)
+107.    validator (https://github.com/chriso/validator.js)
+108.    verror (https://github.com/joyent/node-verror)
+109.    VSTS-task-lib (https://github.com/Microsoft/vsts-task-lib)
+110.    window-size (https://github.com/jonschlinkert/window-size)
+111.    wordwrap (https://github.com/substack/node-wordwrap)
+112.    xml2js (https://github.com/Leonidas-from-XIV/node-xml2js)
+113.    xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
+114.    xtend (https://github.com/Raynos/xtend)
+115.    yallist (https://github.com/isaacs/yallist)
+116.    yargs (https://github.com/yargs/yargs)
 
 
 %% align-text NOTICES, INFORMATION, AND LICENSE BEGIN HERE
@@ -415,6 +417,66 @@ SOFTWARE.
 =========================================
 END OF aws4 NOTICES, INFORMATION, AND LICENSE
 
+%% aws-sign2 NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Apache License
+
+Version 2.0, January 2004
+
+http://www.apache.org/licenses/
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. Definitions.
+
+"License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document.
+
+"Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License.
+
+"Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
+
+"You" (or "Your") shall mean an individual or Legal Entity exercising permissions granted by this License.
+
+"Source" form shall mean the preferred form for making modifications, including but not limited to software source code, documentation source, and configuration files.
+
+"Object" form shall mean any form resulting from mechanical transformation or translation of a Source form, including but not limited to compiled object code, generated documentation, and conversions to other media types.
+
+"Work" shall mean the work of authorship, whether in Source or Object form, made available under the License, as indicated by a copyright notice that is included in or attached to the work (an example is provided in the Appendix below).
+
+"Derivative Works" shall mean any work, whether in Source or Object form, that is based on (or derived from) the Work and for which the editorial revisions, annotations, elaborations, or other modifications represent, as a whole, an original work of authorship. For the purposes of this License, Derivative Works shall not include works that remain separable from, or merely link (or bind by name) to the interfaces of, the Work and Derivative Works thereof.
+
+"Contribution" shall mean any work of authorship, including the original version of the Work and any modifications or additions to that Work or Derivative Works thereof, that is intentionally submitted to Licensor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner. For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication sent to the Licensor or its representatives, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, the Licensor for the purpose of discussing and improving the Work, but excluding communication that is conspicuously marked or otherwise designated in writing by the copyright owner as "Not a Contribution."
+
+"Contributor" shall mean Licensor and any individual or Legal Entity on behalf of whom a Contribution has been received by Licensor and subsequently incorporated within the Work.
+
+2. Grant of Copyright License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare Derivative Works of, publicly display, publicly perform, sublicense, and distribute the Work and such Derivative Works in Source or Object form.
+
+3. Grant of Patent License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this section) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work, where such license applies only to those patent claims licensable by such Contributor that are necessarily infringed by their Contribution(s) alone or by combination of their Contribution(s) with the Work to which such Contribution(s) was submitted. If You institute patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Work or a Contribution incorporated within the Work constitutes direct or contributory patent infringement, then any patent licenses granted to You under this License for that Work shall terminate as of the date such litigation is filed.
+
+4. Redistribution. You may reproduce and distribute copies of the Work or Derivative Works thereof in any medium, with or without modifications, and in Source or Object form, provided that You meet the following conditions:
+
+You must give any other recipients of the Work or Derivative Works a copy of this License; and
+
+You must cause any modified files to carry prominent notices stating that You changed the files; and
+
+You must retain, in the Source form of any Derivative Works that You distribute, all copyright, patent, trademark, and attribution notices from the Source form of the Work, excluding those notices that do not pertain to any part of the Derivative Works; and
+
+If the Work includes a "NOTICE" text file as part of its distribution, then any Derivative Works that You distribute must include a readable copy of the attribution notices contained within such NOTICE file, excluding those notices that do not pertain to any part of the Derivative Works, in at least one of the following places: within a NOTICE text file distributed as part of the Derivative Works; within the Source form or documentation, if provided along with the Derivative Works; or, within a display generated by the Derivative Works, if and wherever such third-party notices normally appear. The contents of the NOTICE file are for informational purposes only and do not modify the License. You may add Your own attribution notices within Derivative Works that You distribute, alongside or as an addendum to the NOTICE text from the Work, provided that such additional attribution notices cannot be construed as modifying the License. You may add Your own copyright statement to Your modifications and may provide additional or different license terms and conditions for use, reproduction, or distribution of Your modifications, or for any such Derivative Works as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the conditions stated in this License.
+
+5. Submission of Contributions. Unless You explicitly state otherwise, any Contribution intentionally submitted for inclusion in the Work by You to the Licensor shall be under the terms and conditions of this License, without any additional terms or conditions. Notwithstanding the above, nothing herein shall supersede or modify the terms of any separate license agreement you may have executed with Licensor regarding such Contributions.
+
+6. Trademarks. This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file.
+
+7. Disclaimer of Warranty. Unless required by applicable law or agreed to in writing, Licensor provides the Work (and each Contributor provides its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work and assume any risks associated with Your exercise of permissions under this License.
+
+8. Limitation of Liability. In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.
+
+9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability.
+
+END OF TERMS AND CONDITIONS
+=========================================
+END OF aws-sign2 NOTICES, INFORMATION, AND LICENSE
+
 %% balanced-match NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 (MIT)
@@ -568,6 +630,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 =========================================
 END OF camelcase NOTICES, INFORMATION, AND LICENSE
+
+%% caseless NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+1. Definitions.
+"License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document.
+"Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License.
+"Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
+"You" (or "Your") shall mean an individual or Legal Entity exercising permissions granted by this License.
+"Source" form shall mean the preferred form for making modifications, including but not limited to software source code, documentation source, and configuration files.
+"Object" form shall mean any form resulting from mechanical transformation or translation of a Source form, including but not limited to compiled object code, generated documentation, and conversions to other media types.
+"Work" shall mean the work of authorship, whether in Source or Object form, made available under the License, as indicated by a copyright notice that is included in or attached to the work (an example is provided in the Appendix below).
+"Derivative Works" shall mean any work, whether in Source or Object form, that is based on (or derived from) the Work and for which the editorial revisions, annotations, elaborations, or other modifications represent, as a whole, an original work of authorship. For the purposes of this License, Derivative Works shall not include works that remain separable from, or merely link (or bind by name) to the interfaces of, the Work and Derivative Works thereof.
+"Contribution" shall mean any work of authorship, including the original version of the Work and any modifications or additions to that Work or Derivative Works thereof, that is intentionally submitted to Licensor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner. For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication sent to the Licensor or its representatives, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, the Licensor for the purpose of discussing and improving the Work, but excluding communication that is conspicuously marked or otherwise designated in writing by the copyright owner as "Not a Contribution."
+"Contributor" shall mean Licensor and any individual or Legal Entity on behalf of whom a Contribution has been received by Licensor and subsequently incorporated within the Work.
+2. Grant of Copyright License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare Derivative Works of, publicly display, publicly perform, sublicense, and distribute the Work and such Derivative Works in Source or Object form.
+3. Grant of Patent License. Subject to the terms and conditions of this License, each Contributor hereby grants to You a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this section) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work, where such license applies only to those patent claims licensable by such Contributor that are necessarily infringed by their Contribution(s) alone or by combination of their Contribution(s) with the Work to which such Contribution(s) was submitted. If You institute patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Work or a Contribution incorporated within the Work constitutes direct or contributory patent infringement, then any patent licenses granted to You under this License for that Work shall terminate as of the date such litigation is filed.
+4. Redistribution. You may reproduce and distribute copies of the Work or Derivative Works thereof in any medium, with or without modifications, and in Source or Object form, provided that You meet the following conditions:
+You must give any other recipients of the Work or Derivative Works a copy of this License; and
+You must cause any modified files to carry prominent notices stating that You changed the files; and
+You must retain, in the Source form of any Derivative Works that You distribute, all copyright, patent, trademark, and attribution notices from the Source form of the Work, excluding those notices that do not pertain to any part of the Derivative Works; and
+If the Work includes a "NOTICE" text file as part of its distribution, then any Derivative Works that You distribute must include a readable copy of the attribution notices contained within such NOTICE file, excluding those notices that do not pertain to any part of the Derivative Works, in at least one of the following places: within a NOTICE text file distributed as part of the Derivative Works; within the Source form or documentation, if provided along with the Derivative Works; or, within a display generated by the Derivative Works, if and wherever such third-party notices normally appear. The contents of the NOTICE file are for informational purposes only and do not modify the License. You may add Your own attribution notices within Derivative Works that You distribute, alongside or as an addendum to the NOTICE text from the Work, provided that such additional attribution notices cannot be construed as modifying the License. You may add Your own copyright statement to Your modifications and may provide additional or different license terms and conditions for use, reproduction, or distribution of Your modifications, or for any such Derivative Works as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the conditions stated in this License.
+5. Submission of Contributions. Unless You explicitly state otherwise, any Contribution intentionally submitted for inclusion in the Work by You to the Licensor shall be under the terms and conditions of this License, without any additional terms or conditions. Notwithstanding the above, nothing herein shall supersede or modify the terms of any separate license agreement you may have executed with Licensor regarding such Contributions.
+6. Trademarks. This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file.
+7. Disclaimer of Warranty. Unless required by applicable law or agreed to in writing, Licensor provides the Work (and each Contributor provides its Contributions) on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work and assume any risks associated with Your exercise of permissions under this License.
+8. Limitation of Liability. In no event and under no legal theory, whether in tort (including negligence), contract, or otherwise, unless required by applicable law (such as deliberate and grossly negligent acts) or agreed to in writing, shall any Contributor be liable to You for damages, including any direct, indirect, special, incidental, or consequential damages of any character arising as a result of this License or out of the use or inability to use the Work (including but not limited to damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses), even if such Contributor has been advised of the possibility of such damages.
+9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability.
+END OF TERMS AND CONDITIONS
+=========================================
+END OF caseless NOTICES, INFORMATION, AND LICENSE
 
 %% center-align NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
