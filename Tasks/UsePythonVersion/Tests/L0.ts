@@ -82,7 +82,7 @@ describe('UsePythonVersion L0 Suite', function () {
         };
         mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
 
-        const toolPath = path.join('/', 'Python', '3.6.4');
+        const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => toolPath
         });
@@ -119,12 +119,48 @@ describe('UsePythonVersion L0 Suite', function () {
             const expectedMessage = [
                 'loc_mock_VersionNotFound 3.x',
                 'loc_mock_ListAvailableVersions',
-                '2.7.13'
+                '2.7.13 (x86)',
+                '2.7.13 (x64)'
             ].join(EOL);
 
             assert.strictEqual(e.message, expectedMessage);
             done();
         }
+    });
+
+    it('selects architecture passed as input', async function () {
+        let buildVariables: { [key: string]: string } = {};
+        const mockBuildVariables = {
+            setVariable: (variable: string, value: string) => {
+                buildVariables[variable] = value;
+            },
+            getVariable: (variable: string) => buildVariables[variable]
+        };
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
+
+        const toolPathx86 = path.join('/', 'Python', '3.6.4', 'x86');
+        const toolPathx64 = path.join('/', 'Python', '3.6.4', 'x64');
+        mockery.registerMock('vsts-task-tool-lib/tool', {
+            findLocalTool: (toolName: string, versionSpec: string, arch?: string) => {
+                if (arch === 'x86') {
+                    return toolPathx86;
+                } else {
+                    return toolPathx64;
+                }
+            }
+        });
+
+        const uut = reload();
+        const parameters = {
+            versionSpec: '3.6',
+            addToPath: false,
+            architecture: 'x86'
+        };
+
+        assert.strictEqual(buildVariables['pythonLocation'], undefined);
+
+        await uut.usePythonVersion(parameters, Platform.Linux);
+        assert.strictEqual(buildVariables['pythonLocation'], toolPathx86);
     });
 
     it('sets PATH correctly on Linux', async function () {
@@ -145,7 +181,6 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            outputVariable: 'Python',
             addToPath: true
         };
 
