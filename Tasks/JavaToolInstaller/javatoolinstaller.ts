@@ -43,12 +43,12 @@ async function getJava(versionSpec: string) {
     if (version) { //This version of Java JDK is already in the cache. Use it instead of downloading again.
         console.log(taskLib.loc('Info_ResolvedToolFromCache', version));
     } else if (fromAzure) { //Download JDK from an Azure blob storage location and extract.
-        console.log(taskLib.loc('RetrievingJdkFromAzure', version));
+        console.log(taskLib.loc('RetrievingJdkFromAzure'));
         compressedFileExtension = getFileEnding(taskLib.getInput('azureCommonVirtualFile', true));
     
         const azureDownloader = new AzureStorageArtifactDownloader(taskLib.getInput('azureResourceManagerEndpoint', true), 
-            taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), taskLib.getInput('azureCommonVirtualFile', false));
-        await azureDownloader.downloadArtifacts(extractLocation, '*' + compressedFileExtension);
+            taskLib.getInput('azureStorageAccountName', true), taskLib.getInput('azureContainerName', true), "");
+        await azureDownloader.downloadArtifacts(extractLocation, '*' + taskLib.getInput('azureCommonVirtualFile', false));
         await sleepFor(250); //Wait for the file to be released before extracting it.
 
         const extractSource = buildFilePath(extractLocation, compressedFileExtension);

@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 133,
-        "Patch": 0
+        "Minor": 134,
+        "Patch": 1
     },
     "preview": true,
     "satisfies": ["Java"],
@@ -86,8 +86,11 @@
         },
         {
             "name": "azureContainerName",
-            "type": "string",
+            "type": "pickList",
             "label": "Container name",
+            "properties": {
+                "EditableOptions": "True"
+            },
             "required": true,
             "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Name of the container in the storage account in which the JDK is located."
@@ -119,9 +122,18 @@
     ],
     "dataSourceBindings": [
         {
-            "endpointId":"$(ConnectedServiceNameARM)",
-            "target": "storageAccountName",
+            "endpointId":"$(azureResourceManagerEndpoint)",
+            "target": "azureStorageAccountName",
             "dataSourceName": "AzureStorageAccountRMandClassic"
+        },
+        {
+            "target": "azureContainerName",
+            "endpointId": "$(azureResourceManagerEndpoint)",
+            "dataSourceName": "AzureStorageContainer",
+            "resultTemplate": "{ \"Value\" : \"{{ Name }}\", \"DisplayValue\" : \"{{ Name }}\" }",
+            "parameters": {
+                "storageAccount": "$(azureStorageAccountName)"
+            }
         }
       ],
     "execution": {

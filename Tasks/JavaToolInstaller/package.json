@@ -1,6 +1,6 @@
 {
     "name": "java-tool-installer",
-    "version": "0.126.0",
+    "version": "0.134.0",
     "description": "Java Tool Installer",
     "main": "javaToolInstaller.js",
     "scripts": {
