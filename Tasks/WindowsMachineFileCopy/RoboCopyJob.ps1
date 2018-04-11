@@ -8,7 +8,6 @@ param (
     [string]$additionalArguments,
     [string]$scriptRoot
     )
-
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
 
@@ -21,8 +20,7 @@ param (
     Write-Verbose "additionalArguments = $additionalArguments"
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
-    $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
-
+    $targetPath = $targetPath.Trim().TrimEnd('\', '/')  
     $isFileCopy = Test-Path -Path $sourcePath -PathType Leaf
     $doCleanUp = $cleanTargetBeforeCopy -eq "true"
 
@@ -158,25 +156,11 @@ param (
 
         return ""
     }
-    
-    function Get-NetExeCommand
-    {
-        $netExePath = Join-Path -path (get-item env:\windir).value -ChildPath system32\net.exe
-        if(Test-Path $netExePath)
-        {
-            Write-Verbose "Found the net exe path $netExePath. Net command will be $netExePath"
-            return $netExePath
-        }
-        
-        Write-Verbose "Unable to get the path for net.exe. Net command will be 'net'"
-        return 'net'
-    }
 
     function Create-DestinationDirectory(
         [string]$path
     )
     {
-        $psCredentialObject = New-Object PSCredential($credential.UserName, (ConvertTo-SecureString $credential.Password -AsPlainText -Force))
         $destPath = $path
         $foundParentPath = $false
         $isRoot = $false
@@ -186,11 +170,11 @@ param (
         {
             try
             {
-                New-PSDrive -Name WFCPSDrive -PSProvider FileSystem -Root $destPath -Credential $psCredentialObject
+                New-PSDrive -Name WFCPSDrive -PSProvider FileSystem -Root $destPath -Credential $psCredentialObject -ErrorAction 'Stop'
                 $foundParentPath = $true
                 Write-Verbose "Found parent path"
                 $relativePath = $path.Substring($destPath.Length)
-                New-Item -ItemType Directory WFCPSDrive:$relativePath -Force
+                New-Item -ItemType Directory WFCPSDrive:$relativePath -ErrorAction 'Stop' -Force
                 Write-Verbose "Created directory"
             }
             catch 
@@ -218,69 +202,48 @@ param (
             }
         }
     }
-    
+
+    Validate-Credential $credential
+    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
+    $password = $($credential.Password)  
+    $psCredentialObject = New-Object pscredential -ArgumentList $userName, (ConvertTo-SecureString -String $password -AsPlainText -Force)
+   
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
 
     Write-Verbose "machine share= $machineShare"
     Write-Verbose "destination network path= $destinationNetworkPath"
-    
-    Validate-Credential $credential
-    $userName = Get-DownLevelLogonName -fqdn $fqdn -userName $($credential.UserName)
-    $password = $($credential.Password) 
 
-    if([bool]([uri]$targetPath).IsUnc)
-    {
-        Create-DestinationDirectory -path $destinationNetworkPath
-    }
-    
-    $netExeCommand = Get-NetExeCommand
+    Create-DestinationDirectory -path $destinationNetworkPath
 
     if($machineShare)
     {
-        $command = "$netExeCommand use `"$machineShare`""
-        if($userName)
-        {
-            $command += " /user:`'$userName`' `'$($password -replace "['`]", '$&$&')`'"
-        }
-        $command += " 2>&1"
-        
-        $dtl_mapOut = iex $command
-        if ($LASTEXITCODE -ne 0) 
-        {
-            $errorMessage = (Get-VstsLocString -Key "WFC_FailedToConnectToPathWithUser" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
-            ThrowError -errorMessage $errorMessage -fqdn $fqdn
+        try {
+            New-PSDrive -Name "WFCPSDrive" -PSProvider FileSystem -Root $destinationNetworkPath -Credential $psCredentialObject -ErrorAction 'Stop'
+        } catch {
+            Write-VstsTaskError -Message (Get-VstsLocString -Key "WFC_FailedToCreatePSDrive" -ArgumentList $destinationNetworkPath, $($_.Exception.Message)) -ErrCode "WFC_FailedToCreatePSDrive"
+            throw
         }
     }
 
-    try
+    if($doCleanUp)
     {
-        if($doCleanUp)
-        {
-           Clean-Target
-        }
-
-        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
-
-        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
-        Invoke-Expression $command        
-        
-        if ($LASTEXITCODE -ge 8)
-        {
-            $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
-            ThrowError -errorMessage $errorMessage -fqdn $fqdn            
-        }
-        else
-        {            
-            $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
-            Write-Output $message            
-        }        
+        Clean-Target
     }
-    finally
+
+    $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
+
+    $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
+    Invoke-Expression $command   
+     
+    if ($LASTEXITCODE -ge 8)
     {
-        if($machineShare)
-        {            
-            $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";  
-        }
+        $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
+        ThrowError -errorMessage $errorMessage -fqdn $fqdn            
     }
+    else
+    {            
+        $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
+        Write-Output $message            
+    }        
 }
