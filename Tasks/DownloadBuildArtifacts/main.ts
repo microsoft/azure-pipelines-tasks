@@ -69,9 +69,10 @@ async function main(): Promise<void> {
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
-        var tagFilters = tl.getInput("tagFilters", false);
-        if (tagFilters != null){
-            tagFilters = tagFilters.split(",");
+        var tagFiltersInput = tl.getInput("tagFilters", false);
+        var tagFilters = [];
+        if (!!tagFiltersInput) {
+            tagFilters = tagFiltersInput.split(",");
         }
 
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
