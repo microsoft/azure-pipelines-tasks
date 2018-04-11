@@ -364,8 +364,12 @@ target.testLegacy = function() {
             // copy the task layout
             var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
-            var taskCopySource = path.join(buildPath, taskJson.name);
-            var taskCopyDest = path.join(legacyTestTasksPath, taskJson.name);
+
+            // this needs to become the folder name instead of the task name
+            var taskCopySource = path.join(buildPath, taskName);
+            
+            // this needs to become the folder name instead of the task name
+            var taskCopyDest = path.join(legacyTestTasksPath, taskName);
             matchCopy('*', taskCopySource, taskCopyDest, { noRecurse: true, matchBase: true });
         }
 
