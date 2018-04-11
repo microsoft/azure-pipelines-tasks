@@ -1,5 +1,3 @@
-import fs = require('fs');
-import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
@@ -467,7 +465,7 @@ async function printFromPlist(itemToPrint: string, plistPath: string) {
  * @param keychainPath
  */
 export async function deleteKeychain(keychainPath: string) {
-    if (fs.existsSync(keychainPath)) {
+    if (tl.exist(keychainPath)) {
         let deleteKeychainCommand: ToolRunner = tl.tool(tl.which('security', true));
         deleteKeychainCommand.arg(['delete-keychain', keychainPath]);
         await deleteKeychainCommand.exec();
@@ -493,7 +491,7 @@ export async function unlockKeychain(keychainPath: string, keychainPwd: string) 
 export async function deleteProvisioningProfile(uuid: string) {
     let provProfilePath: string = getProvisioningProfilePath(uuid);
     tl.warning('Deleting provisioning profile: ' + provProfilePath);
-    if (fs.existsSync(provProfilePath)) {
+    if (tl.exist(provProfilePath)) {
         let deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
         deleteProfileCommand.arg(['-f', provProfilePath]);
         await deleteProfileCommand.exec();
