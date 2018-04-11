@@ -8,7 +8,8 @@ import { usePythonVersion } from './usepythonversion';
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await usePythonVersion({
             versionSpec: task.getInput('versionSpec', true),
-            addToPath: task.getBoolInput('addToPath', true)
+            addToPath: task.getBoolInput('addToPath', true),
+            architecture: task.getInput('architecture', true)
         },
         getPlatform());
         task.setResult(task.TaskResult.Succeeded, "");
