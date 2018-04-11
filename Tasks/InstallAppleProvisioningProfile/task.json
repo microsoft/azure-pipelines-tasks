@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 131,
+        "Minor": 133,
         "Patch": 0
     },
     "runsOn": [
@@ -67,7 +67,11 @@
     "outputVariables": [
         {
             "name": "provisioningProfileUuid",
-            "description": "The resolved UUID for the selected provisioning profile."
+            "description": "The UUID property for the selected provisioning profile."
+        },
+        {
+            "name": "provisioningProfileName",
+            "description": "The Name property for the selected provisioning profile."
         }
     ],
     "prejobexecution": {
