@@ -61,6 +61,7 @@
       "LookingForLatestStableVersion": "Looking for the latest stable version of the Microsoft.Testplatform.",
       "LookingForLatestPreReleaseVersion" : "Looking for the latest pre-release version of the Microsoft.Testplatform.",
       "AgentWorkDirectoryPathTooLong": "Please ensure that the agent work directory path is less than 50 characters to guarantee successful download of the test platform package.",
-      "ListPackagesFailed": "Listing packages failed. Nuget.exe returned %s.\nStandard Error:\n%sStandard Out:\n%s"
+      "ListPackagesFailed": "Listing packages failed. Nuget.exe returned %s.\nStandard Error:\n%sStandard Out:\n%s",
+      "NugetErrorCode": "Nuget.exe returned error code: %s"
     }
 }

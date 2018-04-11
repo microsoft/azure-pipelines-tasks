@@ -8,24 +8,28 @@ import * as ci from './cieventlogger';
 import { exec } from 'child_process';
 const perf = require('performance-now');
 
-const executionStartTime = perf();
-const osPlat: string = os.platform();
 const packageName = 'Microsoft.TestPlatform';
 let packageSource = 'https://api.nuget.org/v3/index.json';
 
 async function startInstaller() {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
-    ci.publishEvent('Start', { OS: osPlat, isSupportedOS: (osPlat === 'win32').toString(), startTime: executionStartTime } );
-
-    if (osPlat !== 'win32') {
-        // Fail the task if os is not windows
-        tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
-        return;
-    }
+    let executionStartTime;
 
     try {
+        const osPlat: string = os.platform();
+        executionStartTime = perf();
+
+        tl.setResourcePath(path.join(__dirname, 'task.json'));
+
         console.log(tl.loc('StartingInstaller'));
         console.log('==============================================================================');
+
+        ci.publishEvent('Start', { OS: osPlat, isSupportedOS: (osPlat === 'win32').toString(), startTime: executionStartTime } );
+
+        if (osPlat !== 'win32') {
+            // Fail the task if os is not windows
+            tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+            return;
+        }
 
         // Read task inputs
         const versionSelectorInput = tl.getInput('versionSelector', true);
@@ -49,9 +53,9 @@ async function startInstaller() {
     } catch (error) {
         ci.publishEvent('Completed', { isSetupSuccessful: 'false', error: error.message } );
         tl.setResult(tl.TaskResult.Failed, error.message);
+    } finally {
+        ci.publishEvent('Completed', { isSetupSuccessful: 'true', startTime: executionStartTime, endTime: perf() } );
     }
-
-    ci.publishEvent('Completed', { isSetupSuccessful: 'true', startTime: executionStartTime, endTime: perf() } );
 }
 
 async function getVsTestPlatformTool(testPlatformVersion: string, versionSelectorInput: string) {
@@ -154,14 +158,14 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
     ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, startTime: startTime, endTime: perf() } );
 
     if (result.code !== 0 || !(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
-        tl.debug(`Nuget.exe returned error code: ${result.code}`);
+        tl.warning(tl.loc('NugetErrorCode', result.code));
         throw new Error(tl.loc('ListPackagesFailed', result.code, result.stderr, result.stdout));
     }
 
     const listOfPackages = result.stdout.split('\r\n');
     let version: string;
 
-    // nuget returns latest vesions of all packages that match the given name, we need to filter out the exact package we need from this list
+    // Nuget returns latest vesions of all packages that match the given name, we need to filter out the exact package we need from this list
     listOfPackages.forEach(nugetPackage => {
         if (nugetPackage.split(' ')[0] === packageName) {
             version = nugetPackage.split(' ')[1];
@@ -194,7 +198,12 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
 
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     let startTime = perf();
-    await nugetTool.exec();
+    const resultCode = await nugetTool.exec();
+
+    if (resultCode !== 0) {
+        tl.warning(tl.loc('NugetErrorCode', resultCode));
+        throw new Error(`Download failed with error code: ${resultCode}.`);
+    }
 
     ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: startTime, endTime: perf() } );
 
