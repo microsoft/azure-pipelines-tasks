@@ -1,11 +1,11 @@
 {
     "tasks": [
-        { "name": "AndroidSigning",                     "build": false },
-        { "name": "ANT",                                "build": false },
-        { "name": "AppCenterDistribute",                "build": false },
-        { "name": "AppCenterTest",                      "build": false },
-        { "name": "ArchiveFiles",                       "build": false },
-        { "name": "AzureAppServiceManage",              "build": false },
+        { "name": "AndroidSigning",                     "build": true },
+        { "name": "ANT",                                "build": true },
+        { "name": "AppCenterDistribute",                "build": true },
+        { "name": "AppCenterTest",                      "build": true },
+        { "name": "ArchiveFiles",                       "build": true },
+        { "name": "AzureAppServiceManage",              "build": true },
         { "name": "AzureCLI",                           "build": false },
         { "name": "AzureCloudPowerShellDeployment",     "build": false },
         { "name": "AzureFileCopy",                      "build": false },
