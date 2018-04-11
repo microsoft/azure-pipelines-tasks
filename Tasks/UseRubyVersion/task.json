@@ -1,5 +1,5 @@
 {
-    "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+    "id": "630C472C-CDE7-4CD8-BA13-E00CA5FF180B",
     "name": "UseRubyVersion",
     "friendlyName": "Use Ruby Version",
     "description": "Retrieves the specified version of Ruby from the tool cache. Optionally add it to PATH.",
