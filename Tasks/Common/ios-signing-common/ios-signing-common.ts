@@ -207,7 +207,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
     if (provProfileDetails) {
         //write the provisioning profile to a plist
         tmpPlist = '_xcodetasktmp.plist';
-        fs.writeFileSync(tmpPlist, provProfileDetails);
+        tl.writeFile(tmpPlist, provProfileDetails);
     } else {
         throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
     }
@@ -284,7 +284,7 @@ export async function getProvisioningProfileName(provProfilePath: string) {
     if (provProfileDetails) {
         //write the provisioning profile to a plist
         tmpPlist = '_xcodetasktmp.plist';
-        fs.writeFileSync(tmpPlist, provProfileDetails);
+        tl.writeFile(tmpPlist, provProfileDetails);
     } else {
         throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
     }
@@ -328,7 +328,7 @@ export async function getiOSProvisioningProfileType(provProfilePath: string) {
         if (provProfileDetails) {
             //write the provisioning profile to a plist
             tmpPlist = '_xcodetasktmp.plist';
-            fs.writeFileSync(tmpPlist, provProfileDetails);
+            tl.writeFile(tmpPlist, provProfileDetails);
         } else {
             throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
         }
@@ -396,7 +396,7 @@ export async function getmacOSProvisioningProfileType(provProfilePath: string) {
         if (provProfileDetails) {
             //write the provisioning profile to a plist
             tmpPlist = '_xcodetasktmp.plist';
-            fs.writeFileSync(tmpPlist, provProfileDetails);
+            tl.writeFile(tmpPlist, provProfileDetails);
         } else {
             throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
         }
