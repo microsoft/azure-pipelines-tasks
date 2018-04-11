@@ -55,6 +55,7 @@ async function run()
 	}
 	catch(error)
 	{
+		console.log("##vso[task.logissue type=error;code=IWADDG_Task_InternalError;]" + error);
 		tl.setResult(tl.TaskResult.Failed,error);
 	}
 	

@@ -153,6 +153,7 @@ async function run() {
     }
 
     if (!taskResult) {
+        console.log("##vso[task.logissue type=error;code=AASM_Task_InternalError;]" + errorMessage);
         tl.setResult(tl.TaskResult.Failed, errorMessage);
     }
 }

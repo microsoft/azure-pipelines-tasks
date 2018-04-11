@@ -27,6 +27,7 @@ async function run() {
 		await addOrUpdateAlertRules(endpoint, resourceGroupName, resourceId, alertRules.rules, notifyServiceOwners, notifyEmails);
 	}
 	catch (error) {
+		console.log("##vso[task.logissue type=error;code=AMA_Task_InternalError;]" + error);
 		tl.setResult(tl.TaskResult.Failed, error);
 	}
 }

@@ -182,7 +182,7 @@ catch
 {
     Write-Verbose $_.Exception.ToString() -Verbose
 
-    Write-Telemetry "Task_InternalError" $_.Exception.Message
+    Write-Telemetry "AFC_Task_InternalError" $_.Exception.Message
     throw
 }
 finally

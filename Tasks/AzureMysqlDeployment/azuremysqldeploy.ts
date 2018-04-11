@@ -48,7 +48,8 @@ async function run() {
         }
     }
     catch(exception) {
-        task.debug('Getting exception: '+exception);
+        task.debug('Getting exception: ' + exception);
+        console.log("##vso[task.logissue type=error;code=AMSD_Task_InternalError;]" + exception);
         task.setResult(task.TaskResult.Failed, exception);
     }
     finally{

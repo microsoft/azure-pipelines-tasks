@@ -217,14 +217,18 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Host "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)"
     }
 
+    $errorMessage = [string]::Empty;
     if($_.Exception.Message) 
     {
-        Write-Error ($_.Exception.Message)
+        $errorMessage = $_.Exception.Message
     }
     else 
     {
-        Write-Error ($_.Exception)
+        $errorMessage = $_.Exception
     }
+
+    Write-VstsTaskError -Message $errorMessage -ErrCode "SADD_Task_InternalError"
+    Write-Error $errorMessage
     throw
 }
 Catch [Exception]
@@ -240,6 +244,7 @@ Catch [Exception]
         $errorMessage = $_.Exception.ToString() + " " + $errorMessage
     }
 
+    Write-VstsTaskError -Message $errorMessage -ErrCode "SADD_Task_InternalError"
     throw $errorMessage
 }
 Finally

@@ -125,6 +125,7 @@ try {
 }
 catch [Exception] 
 {    
+    Write-VstsTaskError -Message $_.Exception.Message -ErrCode "IWAMDG_Task_InternalError"
     Write-Error ($_.Exception.Message)
 }
 finally 
