@@ -1,6 +1,6 @@
 {
-  "id": "2C65196A-54FD-4A02-9BE8-D9D1837B7111",
-  "name": "VisualStudioTestPlatformInstaller",
+  "id": "2C65196A-53FD-4A02-9BB8-D9D1837B7211",
+  "name": "VisualStudioTestPlatformInstallerDiagnostic",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 12
+    "Patch": 13
   },
   "preview": true,
   "satisfies": [
