@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -299,6 +299,8 @@
         "ParsingCustomTemplateParameters": "Parsing custom template parameters json.",
         "FetchingSPNDetailsRemotely": "Fetching SPN details for app id %s from azure AD graph endpoint...",
         "FetchedSPNDetailsRemotely": "Fetched SPN details successfully. ObjectId: %s",
-        "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from graph endpoint. Error: %s."
+        "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from graph endpoint. Error: %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: '%s', status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '%s', status message: %s"
     }
 }

@@ -544,6 +544,8 @@
     "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
     "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
     "WarDeploymentRetry": "ms-resource:loc.messages.WarDeploymentRetry",
-    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol"
+    "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }

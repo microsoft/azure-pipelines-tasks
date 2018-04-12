@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 13
+    "Patch": 14
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -214,6 +214,8 @@
     "FailedToListItemInsideContainer": "ms-resource:loc.messages.FailedToListItemInsideContainer",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "UnableToFetchItem": "ms-resource:loc.messages.UnableToFetchItem",
-    "UploadingItem": "ms-resource:loc.messages.UploadingItem"
+    "UploadingItem": "ms-resource:loc.messages.UploadingItem",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }

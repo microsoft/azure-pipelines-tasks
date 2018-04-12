@@ -58,5 +58,7 @@
   "loc.messages.CallbackCannotBeNull": "callback cannot be null.",
   "loc.messages.UnableToCreateDatabaseException": "Unable to create database.",
   "loc.messages.WindowMysqlClientMissingError": "Mysql Client is missing in window agent box. Please install it by running mysql client installer 'https://aka.ms/window-mysqlcli-installer' script file in your agent box.",
-  "loc.messages.LinuxMysqlClientMissingError": "Mysql Client is missing in linux agent box. Please install it by running 'apt-get install mysql-client'."
+  "loc.messages.LinuxMysqlClientMissingError": "Mysql Client is missing in linux agent box. Please install it by running 'apt-get install mysql-client'.",
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: '%s', status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '%s', status message: %s"
 }

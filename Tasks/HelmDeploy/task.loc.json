@@ -346,6 +346,8 @@
     "RetryingRequest": "ms-resource:loc.messages.RetryingRequest",
     "PatternNotFoundInFilePath": "ms-resource:loc.messages.PatternNotFoundInFilePath",
     "CantResolvePatternInPath": "ms-resource:loc.messages.CantResolvePatternInPath",
-    "PatternFoundInPath": "ms-resource:loc.messages.PatternFoundInPath"
+    "PatternFoundInPath": "ms-resource:loc.messages.PatternFoundInPath",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }

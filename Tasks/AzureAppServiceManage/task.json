@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 26
+        "Patch": 27
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -399,6 +399,8 @@
         "WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
         "RestartingKuduService": "Restarting Kudu Service.",
         "RestartedKuduService": "Kudu Service restarted.",
-        "FailedToRestartKuduService": "Failed to restart kudu Service. %s."
+        "FailedToRestartKuduService": "Failed to restart kudu Service. %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: '%s', status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '%s', status message: %s"
     }
 }

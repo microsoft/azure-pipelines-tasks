@@ -342,6 +342,9 @@
         "RetryingRequest": "Retrying request after %s seconds.",
         "PatternNotFoundInFilePath": "Pattern not found in file path %s.",
         "CantResolvePatternInPath": "Can not resolve pattern in file path %s.",
-        "PatternFoundInPath": "Pattern found in file path %s."
+        "PatternFoundInPath": "Pattern found in file path %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: '%s', status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '%s', status message: %s"
+        
     }
 }
