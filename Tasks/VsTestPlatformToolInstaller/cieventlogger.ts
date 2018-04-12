@@ -16,11 +16,7 @@ export function publishEvent(subFeature: string, properties: { [key: string]: an
     try {
         tl.assertAgent('2.125.0');
         properties['subFeature'] = subFeature;
-        try {
-            tl.publishTelemetry(area, feature, Object.assign(getDefaultProps(), properties));
-        } catch (err) {
-            tl.debug(`Failed to publish telemetry with error: ${err}`);
-        }
+        tl.publishTelemetry(area, feature, Object.assign(getDefaultProps(), properties));
     } catch (err) {
         tl.debug(`Unable to publish telemetry due to lower agent version.`);
     }

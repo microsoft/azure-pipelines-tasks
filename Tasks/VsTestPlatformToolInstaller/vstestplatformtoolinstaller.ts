@@ -101,37 +101,44 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
     toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
     ci.publishEvent('CacheLookup', { CacheHit: (toolPath !== null && toolPath !== undefined && toolPath !== 'undefined').toString(), isFallback: 'false', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
 
-    if (!toolPath || toolPath === 'undefined') {
-        if (testPlatformVersion && testPlatformVersion !== 'x') {
-            tl.debug(`Could not find ${packageName}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
-            if (toolLib.isExplicitVersion(testPlatformVersion)) {
-                // Download the required version and cache it
-                try {
-                    toolPath = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion);
-                } catch (error) {
-                    // Download failed, look for the latest version available in the cache
-                    tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion));
-                    ci.publishEvent('DownloadFailed', { action: 'getLatestAvailableInCache', error: error } );
-                    testPlatformVersion = 'x';
-                    cacheLookupStartTime = perf();
-                    toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
-                    ci.publishEvent('CacheLookup', { CacheHit: (toolPath !== null && toolPath !== undefined && toolPath !== 'undefined').toString(), isFallback: 'true', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
-                    if (!toolPath || toolPath === 'undefined') {
-                        // No version found in cache, fail the task
-                        tl.warning(tl.loc('NoPackageFoundInCache'));
-                        throw new Error(tl.loc('FailedToAcquireTestPlatform'));
-                    }
-                }
-            } else {
-                ci.publishEvent('InvalidVersionSpecified', { version: testPlatformVersion } );
-                throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
-            }
-        } else {
+    if (toolPath && toolPath !== 'undefined') {
+        setVsTestToolLocation(toolPath);
+        return;
+    }
+
+    if (!testPlatformVersion || testPlatformVersion === 'x') {
+        tl.warning(tl.loc('NoPackageFoundInCache'));
+        throw new Error(tl.loc('FailedToAcquireTestPlatform'));
+    }
+
+    if (!toolLib.isExplicitVersion(testPlatformVersion)) {
+        ci.publishEvent('InvalidVersionSpecified', { version: testPlatformVersion } );
+        throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
+    }
+
+    // Download the required version and cache it
+    try {
+        tl.debug(`Could not find ${packageName}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
+        toolPath = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion);
+    } catch (error) {
+        // Download failed, look for the latest version available in the cache
+        tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion));
+        ci.publishEvent('DownloadFailed', { action: 'getLatestAvailableInCache', error: error } );
+        testPlatformVersion = 'x';
+        cacheLookupStartTime = perf();
+        toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
+        ci.publishEvent('CacheLookup', { CacheHit: (toolPath !== null && toolPath !== undefined && toolPath !== 'undefined').toString(), isFallback: 'true', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
+        if (!toolPath || toolPath === 'undefined') {
+            // No version found in cache, fail the task
             tl.warning(tl.loc('NoPackageFoundInCache'));
             throw new Error(tl.loc('FailedToAcquireTestPlatform'));
         }
     }
 
+    setVsTestToolLocation(toolPath);
+}
+
+function setVsTestToolLocation(toolPath: string) {
     // Set the task variable so that the VsTest task can consume this path
     tl.setVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
     console.log(tl.loc('InstallationSuccessful', toolPath));
@@ -199,6 +206,8 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     let startTime = perf();
     const resultCode = await nugetTool.exec();
+
+    tl.debug(`Nuget.exe returned with result code ${resultCode}`);
 
     if (resultCode !== 0) {
         tl.warning(tl.loc('NugetErrorCode', resultCode));
