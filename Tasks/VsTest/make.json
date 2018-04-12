@@ -2,7 +2,7 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://testselectorv2.blob.core.windows.net/testselector/5717050/TestSelector.zip",
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/5792911/TestSelector.zip",
                 "dest": "./"
             },
             {
