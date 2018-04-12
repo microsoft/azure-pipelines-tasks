@@ -112,7 +112,7 @@ function clearFileOfReferences(npmrc: string, file: string[], url: URL.Url) {
     let redoneFile = file;
     let warned = false;
     for (let i = 0; i < redoneFile.length; i++) {
-        if (file[i].indexOf(url.host) != -1 && file[i].indexOf('registry=') == -1) {
+        if (file[i].indexOf(url.host) != -1 && file[i].indexOf(url.path) != -1 && file[i].indexOf('registry=') == -1) {
             if (!warned) {
                 tl.warning(tl.loc('CheckedInCredentialsOverriden', url.host));
             }

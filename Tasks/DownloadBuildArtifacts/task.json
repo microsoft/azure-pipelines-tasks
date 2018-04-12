@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 133,
+    "Minor": 134,
     "Patch": 0
   },
   "groups": [
@@ -118,7 +118,7 @@
       "name": "artifactName",
       "type": "pickList",
       "label": "Artifact name",
-      "defaultValue": "drop",
+      "defaultValue": "",
       "required": true,
       "properties": {
         "EditableOptions": "True",

@@ -93,6 +93,7 @@
         { "name": "SqlDacpacDeploymentOnMachineGroup",  "build": true },
         { "name": "SSH",                                "build": true },
         { "name": "UsePythonVersion",                   "build": true },
+        { "name": "UseRubyVersion",                     "build": true },
         { "name": "VSBuild",                            "build": true },
         { "name": "VsTest",                             "build": true },
         { "name": "VsTestPlatformToolInstaller",        "build": true },
