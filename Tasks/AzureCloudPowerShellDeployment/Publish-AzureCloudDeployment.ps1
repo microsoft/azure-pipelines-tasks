@@ -170,9 +170,8 @@ try{
         }
     }
 } catch {
-    Write-Verbose $_.Exception.ToString() -Verbose
     Write-VstsTaskError -Message $_.Exception.Message -ErrCode "ACS_Task_InternalError"
-    throw $_.Exception
+    throw
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }
