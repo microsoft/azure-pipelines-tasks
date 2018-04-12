@@ -287,7 +287,6 @@
         "RestartAppServiceAccepted": "Restart request accepted by App Service : %s",
         "InvalidAction": "Invalid Action selected !",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment status. SCM endpoint is not enabled for this website.",
-        "CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
         "WebAppDoesntExist": "Web app '%s' doesn't exist.",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
         "StartingSwapSlot": "Requesting swap slot for Web App : %s",
@@ -312,7 +311,6 @@
         "UnableToFetchContinuousWebJobs": "Unable to fetch continuous web jobs",
         "UnableToStartContinuousWebJob": "Unable to start continuous web job",
         "UnableToStopContinuousWebJob":  "Unable to stop continuous web job",
-        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
         "AppNameCannotBeNull": "App name cannot be null or undefined and it must be of type string.",
         "SlotNameCannotBeNull": "Slot name cannot be null or undefined and it must be of type string.",
         "SourceSlotNameCannotBeNull": "Source slot name cannot be null or undefined and it must be of type string.",
@@ -398,6 +396,9 @@
         "WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
         "RestartingKuduService": "Restarting Kudu Service.",
         "RestartedKuduService": "Kudu Service restarted.",
-        "FailedToRestartKuduService": "Failed to restart kudu Service. %s."
+        "FailedToRestartKuduService": "Failed to restart kudu Service. %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
     }
 }
