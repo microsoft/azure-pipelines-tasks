@@ -82,7 +82,7 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-    private _getMSIAuthorizationToken(count: number ,timeToWait: number): Q.Promise<string> {
+    private _getMSIAuthorizationToken(retyCount: number ,timeToWait: number): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "GET";
@@ -102,12 +102,12 @@ export class ApplicationTokenCredentials {
                 }
                 else if (response.statusCode == 429 || response.statusCode == 500)
                 {
-                    if(count < retryLimit)
+                    if(retyCount < retryLimit)
                     {
                         let waitedTime = 2000 + timeToWait * 2;
-                        count +=1;
+                        retyCount +=1;
                         setTimeout(() => {
-                            deferred.resolve(this._getMSIAuthorizationToken(count, waitedTime));   
+                            deferred.resolve(this._getMSIAuthorizationToken(retyCount, waitedTime));   
                         }, waitedTime);
                     } 
                     else
