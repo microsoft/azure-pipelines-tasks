@@ -220,6 +220,9 @@
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
     "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",
     "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",
-    "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError"
+    "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }
