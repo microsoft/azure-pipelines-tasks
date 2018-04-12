@@ -75,6 +75,25 @@ function Invoke-ActionWithRetries {
     Trace-VstsLeavingInvocation $MyInvocation
 }
 
+function Get-TempDirectoryPath
+{
+    <#
+    .SYNOPSIS
+    Returns a temp directory path. Uses Agent.TempDirectory if available and shorter than env temp
+    #>
+
+    Param ()
+
+    $agentTemp = Get-VstsTaskVariable -Name 'agent.tempDirectory'
+    $envTemp = $env:Temp
+    if ($agentTemp -and ($agentTemp.Length -le $envTemp.Length))
+    {
+        return $agentTemp
+    }
+
+    return $envTemp
+}
+
 function Test-RetryableException {
     [CmdletBinding()]
     param(

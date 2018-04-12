@@ -11,7 +11,7 @@ export default class kubernetescli extends basecommand {
     private kubeconfigPath : string;
 
     constructor(kubeconfigPath: string) {
-        super();
+        super(true);
         this.kubeconfigPath = kubeconfigPath;
     }
     public getTool(): string {

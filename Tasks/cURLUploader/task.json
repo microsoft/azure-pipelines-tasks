@@ -8,7 +8,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 130,
+        "Minor": 131,
         "Patch": 0
     },
     "runsOn": [
@@ -85,7 +85,7 @@
             "name": "remotePath",
             "type": "string",
             "label": "Remote Directory",
-            "defaultValue": "/upload/$(Build.BuildId)/",
+            "defaultValue": "upload/$(Build.BuildId)/",
             "required": false,
             "helpMarkDown": "If supplied, this is the sub-folder on the remote server for the URL supplied in the credentials."
         },

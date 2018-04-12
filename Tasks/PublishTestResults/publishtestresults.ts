@@ -41,7 +41,21 @@ async function run() {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
 
-        let matchingTestResultsFiles: string[] = tl.findMatch(searchFolder, testResultsFiles);
+        let matchingTestResultsFiles: string [];
+        try {
+            matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles);
+        }
+        catch(error) {
+            tl.debug('Error in find matching files : ' + error);
+            tl.debug('Trying without following symlinks.');
+            // Will remove this once we have right api in vsts-task-lib.
+            const findOptions = <tl.FindOptions>{
+                followSpecifiedSymbolicLink: false,
+                followSymbolicLinks: false
+            };
+            matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
+        }
+
         const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
 
         tl.debug(`Detected ${testResultsFilesCount} test result files`)

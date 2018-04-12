@@ -8,6 +8,7 @@ const ConfigurationFilePath = shared.formatPath("dir/deployment.yaml");
 const newUserDirPath = shared.formatPath("newUserDir/");
 const KubconfigFile = shared.formatPath("newUserDir/config");
 const KubectlPath = shared.formatPath("newUserDir/kubectl.exe");
+const ConfigMapFilePath = shared.formatPath("configMapDir/configMap.properties");
 
 let taskPath = path.join(__dirname, '../src', 'kubernetes.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -22,6 +23,11 @@ tr.setInput('secretType', process.env[shared.TestEnvVars.secretType] || 'dockerR
 tr.setInput('secretArguments', process.env[shared.TestEnvVars.secretArguments] || '');
 tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('forceUpdate', process.env[shared.TestEnvVars.forceUpdate] || "true");
+tr.setInput('configMapName', process.env[shared.TestEnvVars.configMapName] || '');
+tr.setInput('forceUpdateConfigMap', process.env[shared.TestEnvVars.forceUpdateConfigMap] || "false");
+//tr.setInput('useConfigMapFile', process.env[shared.TestEnvVars.useConfigMapFile] || "false");
+//tr.setInput('configMapFile', ConfigMapFilePath);
+tr.setInput('configMapArguments', process.env[shared.TestEnvVars.configMapArguments] || '');
 tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocation] || 'version');
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.7.0");
 tr.setInput('checkLatest', process.env[shared.TestEnvVars.checkLatest] || "false");
@@ -53,7 +59,8 @@ let a = {
     },
      "checkPath": {
         [KubectlPath]: true,
-        [ConfigurationFilePath]: true
+        [ConfigurationFilePath]: true,
+        [ConfigMapFilePath]: true
     },
     "exist": {
         [KubconfigFile]: true
@@ -64,6 +71,7 @@ let a = {
 
 // Add extra answer definitions that need to be dynamically generated
 a.exist[ConfigurationFilePath] = true;
+a.exist[ConfigMapFilePath] = true;
 a.exist[KubectlPath] = true;
 
 if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
@@ -102,6 +110,28 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret docker-registry my-s
 };
 a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`] = {
     "code": 0
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} delete configmap myConfigMap`] = {
+    "code": 0
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} get configmap existingConfigMap`] = {
+    "code": 0  
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} get configmap someConfigMap`] = {
+    "code": 1  
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} get configmap myConfigMap`] = {
+    "code": 1  
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-file=${ConfigMapFilePath}`] = {
+    "code": 0
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
+    "code": 0
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap someConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
+    "code": 1,
+    "stdout" : "Error in configMap creation"
 };
 a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = {
     "code": 0,
@@ -199,7 +229,7 @@ tr.registerMock('./utilities', {
     },
     assertFileExists: function(path) {
         return true;
-    }   
+    } 
 });
 
 tr.run();

@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 2
+    "Patch": 5
   },
   "demands": [
     "Cmd"
@@ -441,6 +441,7 @@
     "SFSDK_AppTypeMismatch": "ms-resource:loc.messages.SFSDK_AppTypeMismatch",
     "SFSDK_UpgradeInProgressError": "ms-resource:loc.messages.SFSDK_UpgradeInProgressError",
     "SFSDK_StartAppUpgrade": "ms-resource:loc.messages.SFSDK_StartAppUpgrade",
+    "SFSDK_StartUpgradeFailed": "ms-resource:loc.messages.SFSDK_StartUpgradeFailed",
     "SFSDK_UnregisterAppTypeOnUpgradeFailure": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeOnUpgradeFailure",
     "SFSDK_WaitingForUpgrade": "ms-resource:loc.messages.SFSDK_WaitingForUpgrade",
     "SFSDK_UnregisterUnusedVersions": "ms-resource:loc.messages.SFSDK_UnregisterUnusedVersions",
@@ -450,6 +451,7 @@
     "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
     "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
     "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
-    "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning"
+    "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning",
+    "SFSDK_UnregisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailed"
   }
 }

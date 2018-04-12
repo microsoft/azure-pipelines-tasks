@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 5
+        "Minor": 3,
+        "Patch": 3
     },
     "demands": [
         "azureps"
@@ -122,6 +122,15 @@
             "required": true
         },
         {
+            "name": "SimultaneousUpgrade",
+            "type": "boolean",
+            "label": "Simultaneous upgrade",
+            "defaultValue": "false",
+            "visibleRule": "AllowUpgrade == true",
+            "helpMarkDown": "Updates all instances at once. Your cloud service will be unavailable during update.",
+            "required": false
+        },
+        {
             "name": "ForceUpgrade",
             "type": "boolean",
             "label": "Force upgrade",
@@ -142,6 +151,20 @@
                 "resizable": "true",
                 "rows": "6",
                 "maxLength": "500"
+            }
+        },
+        {
+            "name": "NewServiceCustomCertificates",
+            "type": "multiLine",
+            "label": "Custom certificates to import",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "resizable": "true",
+                "rows": "6",
+                "maxLength": "20000"
             }
         },
         {
@@ -203,6 +226,8 @@
         "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
         "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
         "Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription",
-        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell don't support external storage account for configuring diagnostics."
+        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell does not support external storage account for configuring diagnostics.",
+        "Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format.",
+        "Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates."
     }
 }

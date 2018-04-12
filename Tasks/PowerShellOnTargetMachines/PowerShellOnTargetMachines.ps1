@@ -126,7 +126,6 @@ try
             Publish-Azure-Telemetry -deploymentResponse $deploymentResponse -jobId $jobId
             if ($status -ne "Passed")
             {
-                Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
                 Write-Verbose $deploymentResponse.Error.ToString()
                 $errorMessage =  $deploymentResponse.Error.Message
                 throw $errorMessage
@@ -183,10 +182,6 @@ try
 
     if($envOperationStatus -ne "Passed")
     {
-        foreach ($error in $dtlsdkErrors) {
-        Write-Telemetry "DTLSDK_Error" $error
-        }
-        
         $errorMessage = (Get-VstsLocString -Key 'PS_TM_DeploymentOnOneOrMoreMachinesFailed')
         throw $errorMessage
     }

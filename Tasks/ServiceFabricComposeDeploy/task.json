@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [
         "Cmd"
@@ -39,7 +39,9 @@
     "inputs": [
         {
             "name": "serviceConnectionName",
-            "aliases": ["clusterConnection"],
+            "aliases": [
+                "clusterConnection"
+            ],
             "type": "connectedService:serviceFabric",
             "label": "Cluster Connection",
             "defaultValue": "",
@@ -79,7 +81,9 @@
         },
         {
             "name": "dockerRegistryEndpointName",
-            "aliases": ["dockerRegistryConnection"],
+            "aliases": [
+                "dockerRegistryConnection"
+            ],
             "type": "connectedService:dockerRegistry",
             "label": "Docker Registry Connection",
             "required": false,
@@ -89,7 +93,9 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
@@ -176,6 +182,7 @@
         "DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
         "CheckingComposeFile": "Checking compose file",
         "UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
-        "UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}."
+        "UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}.",
+        "InvalidApplicationNameWarning": "Latest Service Fabric has stopped supporting compose application name starting with 'fabric:/' and hence compose deployment might fail with ServiceDnsName error for application name '{0}'. You can provide a different application name and re-run if required."
     }
 }

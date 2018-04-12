@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 10
+        "Patch": 12
     },
     "preview": true,
     "satisfies": ["VsTest"],
@@ -55,11 +55,13 @@
       "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
       "RequiredVersionNotListed": "Required version of the Microsoft.Testplatform package was not listed in the nuget feed, looking for latest stable version cached.",
       "FailedToListAvailablePackagesFromNuget": "Failed to fetch list of available packages from nuget, looking for latest stable version cached.",
-      "FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please refer to the logs for additional information.",
+      "FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please set system.debug to true and refer to the debug logs for additional information.",
       "InstallationSuccessful": "VsTest will use the Test Platform package found in %s",
       "TestPlatformDownloadFailed": "Failed to download version %s of the test platform. Looking in the cache for the latest available stable version.",
       "LookingForLatestStableVersion": "Looking for the latest stable version of the Microsoft.Testplatform.",
       "LookingForLatestPreReleaseVersion" : "Looking for the latest pre-release version of the Microsoft.Testplatform.",
-      "AgentWorkDirectoryPathTooLong": "Please ensure that the agent work directory path is less than 50 characters to guarantee successful download of the test platform package."
+      "AgentWorkDirectoryPathTooLong": "Please ensure that the agent work directory path is less than 50 characters to guarantee successful download of the test platform package.",
+      "ListPackagesFailed": "Listing packages failed. Nuget.exe returned %s.\nStandard Error:\n%sStandard Out:\n%s",
+      "NugetErrorCode": "Nuget.exe returned error code: %s"
     }
 }

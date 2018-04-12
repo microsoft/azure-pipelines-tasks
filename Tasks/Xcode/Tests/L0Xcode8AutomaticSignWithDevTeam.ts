@@ -54,9 +54,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "getVariable": {
         "HOME": "/users/test"
     },
-    "exist": {
-        "/user/build/_XcodeTaskExport_testScheme": false
-    },
     "stats": {
         "/user/build": {
             "isFile": false
@@ -78,7 +75,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "Xcode 8.0"
         },
-        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=testDevTeamId": {
+        "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build CODE_SIGN_STYLE=Automatic DEVELOPMENT_TEAM=testDevTeamId": {
             "code": 0,
             "stdout": "xcodebuild output here"
         },
@@ -86,7 +83,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "xcodebuild archive output here"
         },
-        "/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive -exportPath /user/build/_XcodeTaskExport_testScheme -exportOptionsPlist _XcodeTaskExportOptions.plist": {
+        "/home/bin/xcodebuild -exportArchive -archivePath /user/build/testScheme.xcarchive -exportPath /user/build -exportOptionsPlist _XcodeTaskExportOptions.plist": {
             "code": 0,
             "stdout": "xcodebuild export output here"
         },

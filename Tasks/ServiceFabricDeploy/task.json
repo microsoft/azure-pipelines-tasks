@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 2
+        "Patch": 5
     },
     "demands": [
         "Cmd"
@@ -108,7 +108,7 @@
             "defaultValue": "",
             "required": false,
             "groupname": "advanced",
-            "helpMarkDown": "Timeout in seconds for registering application package."
+            "helpMarkDown": "Timeout in seconds for registering or un-registering application package."
         },
         {
             "name": "overwriteBehavior",
@@ -338,7 +338,9 @@
         },
         {
             "name": "dockerRegistryEndpoint",
-            "aliases": ["dockerRegistryConnection"],
+            "aliases": [
+                "dockerRegistryConnection"
+            ],
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Connection",
             "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",
@@ -348,7 +350,9 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",
@@ -437,7 +441,8 @@
         "SFSDK_AppTypeMismatch": "Application type of application '{0}' doesn't match the application type in the application manifest of the new application package. Please ensure that the application being upgraded has the same application type.",
         "SFSDK_UpgradeInProgressError": "An upgrade for the application '{0}' is already in progress.",
         "SFSDK_StartAppUpgrade": "Start upgrading application...",
-        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Unregistering application type '{0}' and version '{1}' failed",
+        "SFSDK_StartUpgradeFailed": "Failed to start application upgrade. Error {0}.",
+        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Could not start upgrade sucessfully. Unregistering application type '{0}' and version '{1}'.",
         "SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
         "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
         "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
@@ -446,6 +451,7 @@
         "SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message",
         "SFSDK_CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
         "SFSDK_CompressPackageWarning": "The CompressPackage parameter requires version '2.5' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
-        "SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster."
+        "SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster.",
+        "SFSDK_UnregisterAppTypeFailed": "Failed to unregister application type. Error: {0}."
     }
 }

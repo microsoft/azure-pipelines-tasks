@@ -24,6 +24,8 @@
   "loc.input.help.AppendDateTimeToLabel": "配置ラベルに現在の日付と時刻を追加します",
   "loc.input.label.AllowUpgrade": "アップグレードを許可",
   "loc.input.help.AllowUpgrade": "選択すると、Microsoft Azure 展開へのアップグレードが可能になります",
+  "loc.input.label.SimultaneousUpgrade": "Simultaneous upgrade",
+  "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "強制アップグレード",
   "loc.input.help.ForceUpgrade": "選択すると、アップグレードは強制アップグレードに設定されます。これにより、ローカル データが失われる可能性があります。",
   "loc.input.label.DiagnosticStorageAccountKeys": "診断ストレージ アカウント キー",
@@ -32,6 +34,8 @@
   "loc.input.help.NewServiceAdditionalArguments": "新規のサービスの作成中に追加引数を渡します。これらは `New-AzureService` コマンドレットに渡されます。例: `-Label 'MyTestService'`",
   "loc.input.label.NewServiceAffinityGroup": "アフィニティ グループ",
   "loc.input.help.NewServiceAffinityGroup": "新しいサービスの作成中、サービスの場所を使用する代わりに、このアフィニティ グループが考慮されます。",
+  "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
+  "loc.input.help.NewServiceCustomCertificates": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
   "loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "ストレージ アカウント '{0}' の主ストレージ キーを取得できません。診断拡張機能を適用できません。",
   "loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "公開構成ストレージ アカウント '{0}' の主ストレージ キーを取得できませんでした。診断拡張機能を適用できません。",
   "loc.messages.Applyinganyconfigureddiagnosticsextensions": "構成済み診断拡張機能を適用しています。",
@@ -40,5 +44,7 @@
   "loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "検索パターン {0} で、展開するファイルが複数見つかりました。1 つだけ指定してください。",
   "loc.messages.Storagekeysaredefinedininvalidformat": "ストレージ キーが無効な形式で定義されています。",
   "loc.messages.Unabletofind0usingprovidedsubscription": "指定したサブスクリプションを使用する {0} が見つかりません",
-  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Azure PowerShell の現在のバージョンでは、診断を構成するための外部ストレージ アカウントはサポートしていません。"
+  "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Azure PowerShell の現在のバージョンでは、診断を構成するための外部ストレージ アカウントはサポートしていません。",
+  "loc.messages.Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
+  "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format."
 }

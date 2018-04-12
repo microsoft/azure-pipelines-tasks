@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 131,
+    "Minor": 133,
     "Patch": 0
   },
   "demands": [],
@@ -50,9 +50,9 @@
       "name": "TargetPath",
       "type": "string",
       "label": "File share path",
-      "defaultValue": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
-      "required": false,
-      "helpMarkDown": "The file share to which the artifact files will be copied. Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The file share to which the artifact files will be copied. This can include variables. Example: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
       "visibleRule": "ArtifactType = FilePath"
     },
     {

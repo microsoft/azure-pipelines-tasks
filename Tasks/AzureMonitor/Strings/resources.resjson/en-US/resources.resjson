@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Query Azure Monitor Alerts",
-  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-monitor)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
   "loc.description": "Observe the configured Azure monitor rules for active alerts.",
   "loc.instanceNameFormat": "Query Azure Monitor alerts",
   "loc.input.label.connectedServiceNameARM": "Azure subscription",

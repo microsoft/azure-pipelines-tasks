@@ -38,7 +38,7 @@ async function run() {
             let serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(serviceEndpointID, false);
             username = serviceEndpoint.parameters['username'];
             password = serviceEndpoint.parameters['password'];
-            url = URL.format(URL.parse(tl.getEndpointUrl(serviceEndpointID, false)));
+            url = URL.format(URL.parse(tl.getEndpointUrl(serviceEndpointID, false))); // url has a / at the end
             if (!username || !password || !url) {
                 throw new Error(tl.loc('IncompleteEndpoint'));
             }
@@ -51,7 +51,12 @@ async function run() {
 
         let remotePath: string = tl.getInput('remotePath', false);
         if (remotePath) {
-            url = url + '/' + remotePath.replace(/\\/gi, "/").trim();
+            if(authType === 'UserAndPass'){
+                // slash should only be added when authType is UserAndPass
+                // when authType is ServiceEndpoint there already is a slash
+                url = url + "/";
+            }
+            url = url + remotePath.replace(/\\/gi, "/").trim();
         }
 
         // Find location of curl 

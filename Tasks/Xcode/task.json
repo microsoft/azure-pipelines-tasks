@@ -10,10 +10,12 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 4,
-        "Minor": 130,
-        "Patch": 0
+        "Major": 5,
+        "Minor": 133,
+        "Patch": 3
     },
+    "preview": true,
+    "releaseNotes": "This version of the task is compatible with Xcode 8 and Xcode 9. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
     "demands": [
         "xcode"
     ],
@@ -308,20 +310,12 @@
             "groupName": "advanced"
         },
         {
-            "name": "outputPattern",
-            "type": "string",
-            "label": "Output directory",
-            "required": false,
-            "helpMarkDown": "(Optional) Enter a path relative to the working directory where build output (binaries) will be placed. Examples: `output/$(SDK)/$(Configuration)` or `output/$(TestSDK)/$(TestConfiguration)`. Archive and export paths are configured separately.",
-            "groupName": "advanced"
-        },
-        {
             "name": "useXcpretty",
             "type": "boolean",
             "label": "Use xcpretty",
             "required": false,
-            "defaultValue": false,
-            "helpMarkDown": "Specify whether to use xcpretty to format xcodebuild output and generate JUnit test results. Enabling this requires xcpretty to be installed on the agent machine. It is preinstalled on VSTS hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
+            "defaultValue": true,
+            "helpMarkDown": "Specify whether to use xcpretty to format xcodebuild output. Enabling this requires xcpretty to be installed on the agent machine. If xcpretty is not installed, raw xcodebuild output is shown. xcpretty is preinstalled on VSTS hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
             "groupName": "advanced"
         },
         {
@@ -331,7 +325,7 @@
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "If xcpretty is enabled above, specify whether to publish JUnit test results to VSTS/TFS."
+            "helpMarkDown": "Specify whether to publish JUnit test results to VSTS/TFS. This requires xcpretty to be enabled to generate JUnit test results."
         }
     ],
     "execution": {
@@ -353,7 +347,7 @@
         "ProvProfileUUIDNotFound": "Failed to find the UUID for provisioning profile: %s",
         "MultipleWorkspacesFound": "Multiple Xcode workspace matches were found. The first match will be used: %s",
         "WorkspaceDoesNotExist": "The Xcode workspace was specified, but it does not exist or is not a directory: %s",
-        "UseXcprettyForTestPublishing": "When using xcodebuild, enable `Use xcpretty` to publish test results. For this build, no test results will be published.",
+        "UseXcprettyForTestPublishing": "Enable `Use xcpretty` to publish test results. For this build, no test results will be published.",
         "NoTestResultsFound": "No test result files matching `%s` were found. Publishing JUnit test results will be skipped.",
         "XcodeSuccess": "Xcode task execution completed with no errors.",
         "TempKeychainDeleteFailed": "Failed to delete the temporary keychain created during the build: `%s`",
@@ -370,6 +364,8 @@
         "NoSchemeFound": "No shared scheme found in the workspace. Use \"Manage Schemes\" in Xcode to share a scheme.",
         "SchemeSelected": "The workspace contains a single shared scheme. '%s' will be used.",
         "FailedToFindScheme": "Failed to find a scheme in the workspace. Use `Scheme` to specify a target scheme.",
-        "OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action."
+        "OutputDirectoryIgnored": "Output directory for build output (binaries) ignored. Specifying an output directory is incompatible with the '%s' action.",
+        "NoDestinationPlatformWarning": "UI tests must be run against a simulator or a connected device. In the Xcode task, set `Destination platform` to a value other than `Default`.",
+        "XcprettyNotInstalled": "xcpretty is not installed on the build server. xcodebuild raw output will be shown. Publishing test results will fail if xcpretty is not installed."
     }
 }

@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 131,
+        "Minor": 134,
         "Patch": 0
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
@@ -56,6 +56,15 @@
             "helpMarkDown": "Relative path from the repository root to the Gradle Wrapper script."
         },
         {
+            "name": "cwd",
+            "aliases": [ "workingDirectory" ],
+            "type": "filePath",
+            "label": "Working directory",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Working directory in which to run the Gradle build. If not specified, the repository root directory is used."
+        },
+        {
             "name": "options",
             "type": "string",
             "label": "Options",
@@ -68,16 +77,6 @@
             "label": "Tasks",
             "defaultValue": "build",
             "required": true
-        },
-        {
-            "name": "cwd",
-            "aliases": [ "workingDirectory" ],
-            "type": "filePath",
-            "label": "Working directory",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Working directory in which to run the Gradle build. If not specified, the repository root directory is used.",
-            "groupName": "advanced"
         },
         {
             "name": "publishJUnitResults",
@@ -182,6 +181,7 @@
             "visibleRule": "javaHomeSelection = JDKVersion",
             "options": {
                 "default": "default",
+                "1.10": "JDK 10",
                 "1.9": "JDK 9",
                 "1.8": "JDK 8",
                 "1.7": "JDK 7",

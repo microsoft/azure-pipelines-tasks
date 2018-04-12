@@ -39,6 +39,9 @@ describe('AzurePowerShell Suite', function () {
         it('redirects errors', (done) => {
             psr.run(path.join(__dirname, 'RedirectsErrors.ps1'), done);
         })
+        it('does not fail if failonstandarderror is set to false', (done) => {
+            psr.run(path.join(__dirname, 'DoesNotFailOnStandardError.ps1'), done);
+        })
         it('removes functions and variables', (done) => {
             psr.run(path.join(__dirname, 'RemovesFunctionsAndVariables.ps1'), done);
         })
@@ -50,6 +53,12 @@ describe('AzurePowerShell Suite', function () {
         })
         it('throws when invalid script path', (done) => {
             psr.run(path.join(__dirname, 'ThrowsWhenInvalidScriptPath.ps1'), done);
+        })
+        it('does not fail if native command writes to stderr and failonstderr is false', (done) => {
+            psr.run(path.join(__dirname, 'DoesNotThrowForNativeCommandError.ps1'), done);
+        })
+        it('fails for native command error if fail on standard error is true', (done) => {
+            psr.run(path.join(__dirname, 'FailsForNativeCommandError.ps1'), done);
         })
         it('Get-LatestModule returns the latest available module', (done) => {
             psr.run(path.join(__dirname, 'Utility.Get-LatestModule.ps1'), done);

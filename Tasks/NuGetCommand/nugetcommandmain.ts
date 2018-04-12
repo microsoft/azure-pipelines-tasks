@@ -89,7 +89,6 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
         }
         let nugetTelem = {
                 'command': tl.getInput('command'),
-                'arguments': tl.getInput('arguments'),
                 'NUGET_EXE_TOOL_PATH_ENV_VAR': tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR),
                 'NUGET_EXE_CUSTOM_LOCATION': tl.getVariable(NUGET_EXE_CUSTOM_LOCATION),
                 'searchPatternPack': tl.getPathInput('searchPatternPack'),
@@ -103,6 +102,7 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
                 'requestedPatchVersion': tl.getInput('requestedPatchVersion'),
                 'packTimezone': tl.getInput('packTimezone'),
                 'buildProperties': tl.getInput('buildProperties'),
+                'basePath': tl.getInput('basePath'),
                 'verbosityPack': tl.getInput('verbosityPack'),
                 'includeSymbols': tl.getBoolInput('includeSymbols'),
                 'NuGet.UseLegacyFindFiles': tl.getVariable('NuGet.UseLegacyFindFiles'),
@@ -114,6 +114,7 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
                 'allowpackageconflicts': tl.getInput('allowpackageconflicts'),
                 'includenugetorg': tl.getInput('includenugetorg'),
                 'nocache': tl.getInput('nocache'),
+                'disableparallelprocessing': tl.getInput('disableParallelProcessing'),
                 'nugetconfigpath': tl.getInput('nugetconfigpath'),
                 'nugetfeedtype': nugetfeedtype,
                 'searchpatternpush': tl.getInput('searchpatternpush'),

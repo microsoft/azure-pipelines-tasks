@@ -5,6 +5,7 @@ import * as tr from "vsts-task-lib/toolrunner";
 import trm = require('vsts-task-lib/toolrunner');
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
+import * as utils from "./utilities";
 import ClusterConnection from "./clusterconnection";
 
 export function run(connection: ClusterConnection, kubecommand: string, outputUpdate: (data: string) => any): any {
@@ -53,7 +54,7 @@ function getCommandArguments(): string {
     return tl.getInput("arguments", false);
 }
 
-function getNameSpace(): string[] {
+export function getNameSpace(): string[] {
 	var args: string[] =[];
 	var namespace = tl.getInput("namespace", false);	
 	if(namespace) {
