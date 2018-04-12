@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 26
+    "Patch": 27
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -172,6 +172,9 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.OutputVariable",
       "defaultValue": "",
+      "properties": {
+        "disabled": "True"
+      },
       "visibleRule": "Action = Install Extensions",
       "helpMarkDown": "ms-resource:loc.input.help.OutputVariable"
     },
@@ -202,6 +205,12 @@
       },
       "visibleRule": "Action == Enable Continuous Monitoring",
       "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsResourceName"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "ExtensionInstallPath",
+      "description": "Variable name for local installation path for selected extension.<br />Note: In case of multiple extensions selected for installation, the variable contains comma separated list of local installation paths in the order it appears in the Install Extension field."
     }
   ],
   "dataSourceBindings": [

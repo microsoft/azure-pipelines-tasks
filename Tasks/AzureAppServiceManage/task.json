@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 26
+        "Patch": 27
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -168,8 +168,11 @@
             "type": "string",
             "label": "Output variable",
             "defaultValue": "",
+            "properties": {
+                "disabled":"True"
+            },
             "visibleRule": "Action = Install Extensions",
-            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field.<br />Example: outputVariable1, outputVariable2"
+            "helpMarkDown": "Use the 'Output Variable' section below to provide the variable name for the local installation paths for the selected extensions."
         },
         {
             "name": "AppInsightsResourceGroupName",
@@ -198,6 +201,12 @@
             },
             "visibleRule": "Action == Enable Continuous Monitoring",
             "helpMarkDown": "Select Application Insights resource where continuous monitoring data will be recorded. <br/>If your application insights resource is not listed here and you want to create a new resource, click on [+New] button. Once the resource is created on Azure Portal, come back here and click on refresh button."
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "ExtensionInstallPath",
+            "description": "Variable name for local installation path for selected extension.<br />Note: In case of multiple extensions selected for installation, the variable contains comma separated list of local installation paths in the order it appears in the Install Extension field."
         }
     ],
     "dataSourceBindings": [
