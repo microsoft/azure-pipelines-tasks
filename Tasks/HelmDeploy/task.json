@@ -123,6 +123,9 @@
         "ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
         "ClusterNotFound": "%s cluster does not exists",
         "FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
-        "RetryingRequest": "Retrying request after %s seconds."
+        "RetryingRequest": "Retrying request after %s seconds.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
     }
 }

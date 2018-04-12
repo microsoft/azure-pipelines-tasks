@@ -214,6 +214,9 @@
     "FailedToListItemInsideContainer": "ms-resource:loc.messages.FailedToListItemInsideContainer",
     "SuccessFullyFetchedItemList": "ms-resource:loc.messages.SuccessFullyFetchedItemList",
     "UnableToFetchItem": "ms-resource:loc.messages.UnableToFetchItem",
-    "UploadingItem": "ms-resource:loc.messages.UploadingItem"
+    "UploadingItem": "ms-resource:loc.messages.UploadingItem",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }

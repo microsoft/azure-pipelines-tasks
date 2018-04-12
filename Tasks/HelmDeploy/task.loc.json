@@ -125,6 +125,9 @@
     "ClusterNotProvisioned": "ms-resource:loc.messages.ClusterNotProvisioned",
     "ClusterNotFound": "ms-resource:loc.messages.ClusterNotFound",
     "FailedToListClusters": "ms-resource:loc.messages.FailedToListClusters",
-    "RetryingRequest": "ms-resource:loc.messages.RetryingRequest"
+    "RetryingRequest": "ms-resource:loc.messages.RetryingRequest",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }
