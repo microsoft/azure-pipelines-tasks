@@ -220,7 +220,7 @@ export interface AzureEndpoint {
     portalEndpoint?: string;
     AzureKeyVaultDnsSuffix?: string;
     AzureKeyVaultServiceEndpointResourceId?: string;
-    msiPort?: string;
+    msiClientId?: string;
     scheme?: string;
     applicationTokenCredentials: ApplicationTokenCredentials;
 }
