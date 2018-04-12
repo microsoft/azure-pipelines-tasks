@@ -1,6 +1,6 @@
 {
     "name": "java-tool-installer",
-    "version": "0.126.0",
+    "version": "0.134.0",
     "description": "Java Tool Installer",
     "main": "javaToolInstaller.js",
     "scripts": {
@@ -24,7 +24,7 @@
     "dependencies": {
         "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
         "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-1.0.0.tgz",
-        "vsts-task-lib": "2.1.0",
-        "vsts-task-tool-lib": "^0.4.1"
+        "vsts-task-lib": "2.4.0",
+        "vsts-task-tool-lib": "0.8.1"
     }
 }

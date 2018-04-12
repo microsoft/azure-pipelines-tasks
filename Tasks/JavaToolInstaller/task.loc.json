@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 131,
+    "Minor": 134,
     "Patch": 0
   },
   "preview": true,
@@ -88,8 +88,11 @@
     },
     {
       "name": "azureContainerName",
-      "type": "string",
+      "type": "pickList",
       "label": "ms-resource:loc.input.label.azureContainerName",
+      "properties": {
+        "EditableOptions": "True"
+      },
       "required": true,
       "visibleRule": "jdkSourceOption == AzureStorage",
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerName"
@@ -121,9 +124,18 @@
   ],
   "dataSourceBindings": [
     {
-      "endpointId": "$(ConnectedServiceNameARM)",
-      "target": "storageAccountName",
+      "endpointId": "$(azureResourceManagerEndpoint)",
+      "target": "azureStorageAccountName",
       "dataSourceName": "AzureStorageAccountRMandClassic"
+    },
+    {
+      "target": "azureContainerName",
+      "endpointId": "$(azureResourceManagerEndpoint)",
+      "dataSourceName": "AzureStorageContainer",
+      "resultTemplate": "{ \"Value\" : \"{{ Name }}\", \"DisplayValue\" : \"{{ Name }}\" }",
+      "parameters": {
+        "storageAccount": "$(azureStorageAccountName)"
+      }
     }
   ],
   "execution": {
