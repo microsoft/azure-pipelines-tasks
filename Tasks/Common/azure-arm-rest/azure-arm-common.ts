@@ -100,7 +100,7 @@ export class ApplicationTokenCredentials {
                 {
                     deferred.resolve(response.body.access_token);
                 }
-                else if (response.statusCode == 209 || response.statusCode == 500)
+                else if (response.statusCode == 429 || response.statusCode == 500)
                 {
                     if(count < retryLimit)
                     {
