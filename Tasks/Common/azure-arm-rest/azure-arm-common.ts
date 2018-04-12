@@ -55,7 +55,7 @@ export class ApplicationTokenCredentials {
         this.authorityUrl = authorityUrl;
         this.activeDirectoryResourceId = activeDirectoryResourceId;
         this.isAzureStackEnvironment = isAzureStackEnvironment;
-        this.scheme = AzureModels.Scheme[scheme];
+        this.scheme = scheme ? AzureModels.Scheme[scheme] :  AzureModels.Scheme['SPN'] ;
         this.msiClientId = msiClientId ;
     }
 
