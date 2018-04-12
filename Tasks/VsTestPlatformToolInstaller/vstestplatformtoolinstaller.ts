@@ -101,16 +101,20 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
     toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
     ci.publishEvent('CacheLookup', { CacheHit: (toolPath !== null && toolPath !== undefined && toolPath !== 'undefined').toString(), isFallback: 'false', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
 
+    // If found in the cache then set the tool location and return
     if (toolPath && toolPath !== 'undefined') {
         setVsTestToolLocation(toolPath);
         return;
     }
 
+    // If the testPlatformVersion is 'x' meaning listing failed and we were looking for a stable version in the cache
+    // and the cache lookup failed, then fail the task
     if (!testPlatformVersion || testPlatformVersion === 'x') {
         tl.warning(tl.loc('NoPackageFoundInCache'));
         throw new Error(tl.loc('FailedToAcquireTestPlatform'));
     }
 
+    // If the version provided is not an explicit version (ie contains containing wildcards) then throw
     if (!toolLib.isExplicitVersion(testPlatformVersion)) {
         ci.publishEvent('InvalidVersionSpecified', { version: testPlatformVersion } );
         throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
@@ -135,6 +139,7 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
         }
     }
 
+    // Set the vstest platform tool location for the vstest task to consume
     setVsTestToolLocation(toolPath);
 }
 
