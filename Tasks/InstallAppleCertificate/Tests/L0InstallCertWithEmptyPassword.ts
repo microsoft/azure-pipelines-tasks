@@ -19,11 +19,6 @@ let secureFileHelperMock = require('securefiles-common/securefiles-common-mock')
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
 tr.registerMock('fs', {
-    existsSync: function (filePath) {
-        if (filePath === '/build/temp/ios_signing_temp.keychain') {
-            return false;
-        }
-    },
     writeFileSync: function (filePath, contents) {
     }
 });
