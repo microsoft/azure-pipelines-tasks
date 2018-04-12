@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 131,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "satisfies": [
@@ -154,6 +154,9 @@
     "SucceedMsg": "ms-resource:loc.messages.SucceedMsg",
     "SetJavaHome": "ms-resource:loc.messages.SetJavaHome",
     "SetExtendedJavaHome": "ms-resource:loc.messages.SetExtendedJavaHome",
-    "UnsupportedFileExtension": "ms-resource:loc.messages.UnsupportedFileExtension"
+    "UnsupportedFileExtension": "ms-resource:loc.messages.UnsupportedFileExtension",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }

@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 131,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": true,
     "satisfies": ["Java"],
@@ -152,6 +152,9 @@
         "SucceedMsg": "Successfully extracted all files.",
         "SetJavaHome": "JAVA_HOME is being set to: %s",
         "SetExtendedJavaHome": "%s is being set to: %s",
-        "UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension."
+        "UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
     }
 }

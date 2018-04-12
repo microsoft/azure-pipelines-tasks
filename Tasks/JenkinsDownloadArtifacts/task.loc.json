@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 133,
-    "Patch": 2
+    "Patch": 3
   },
   "groups": [
     {
@@ -315,7 +315,6 @@
     "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
     "armUrlCannotBeEmpty": "ms-resource:loc.messages.armUrlCannotBeEmpty",
     "authorityUrlCannotBeEmpty": "ms-resource:loc.messages.authorityUrlCannotBeEmpty",
-    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
     "VMNameCannotBeNull": "ms-resource:loc.messages.VMNameCannotBeNull",
     "InvalidValue": "ms-resource:loc.messages.InvalidValue",
@@ -361,6 +360,9 @@
     "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType",
     "InvalidJobName": "ms-resource:loc.messages.InvalidJobName",
     "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles",
-    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported"
+    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }
