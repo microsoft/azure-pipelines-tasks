@@ -35,7 +35,7 @@ export class AzureRMEndpoint {
                 url: tl.getEndpointUrl(this._connectedServiceName, true),
                 environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
                 scheme: tl.getEndpointAuthorizationScheme(this._connectedServiceName, true),
-                msiPort:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiport', true),
+                msiClientId:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiclientId', true),
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
@@ -48,7 +48,7 @@ export class AzureRMEndpoint {
             }
 
             this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
-                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiPort);
+                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId);
         }
 
         return this.endpoint;

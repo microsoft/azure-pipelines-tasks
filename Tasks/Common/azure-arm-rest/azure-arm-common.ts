@@ -13,10 +13,10 @@ export class ApplicationTokenCredentials {
     public activeDirectoryResourceId: string;
     public isAzureStackEnvironment: boolean;
     public scheme: number;
-    public msiPort: string;
+    public msiClientId: string;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiPort?: string) {
+    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string) {
 
         if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
@@ -56,14 +56,14 @@ export class ApplicationTokenCredentials {
         this.activeDirectoryResourceId = activeDirectoryResourceId;
         this.isAzureStackEnvironment = isAzureStackEnvironment;
         this.scheme = AzureModels.Scheme[scheme];
-        this.msiPort = msiPort ? msiPort : '50342';
+        this.msiClientId = msiClientId ;
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
         if (!this.token_deferred || force) {
             if(this.scheme === AzureModels.Scheme.ManagedServiceIdentity)
             {
-                this.token_deferred = this._getMSIAuthorizationToken();
+                this.token_deferred = this._getMSIAuthorizationToken(0, 0);
             }
             else
             {
@@ -82,11 +82,14 @@ export class ApplicationTokenCredentials {
         return this.clientId;
     }
 
-    private _getMSIAuthorizationToken(): Q.Promise<string> {
+    private _getMSIAuthorizationToken(count: number ,timeToWait: number): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "GET";
-        webRequest.uri = "http://localhost:"+ this.msiPort + "/oauth2/token?resource="+ this.baseUrl;
+        let apiVersion = "2018-02-01";
+        const retryLimit = 5;
+        let msiClientId =  this.msiClientId ? "&client_id=" + this.msiClientId : "";       
+        webRequest.uri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource="+ this.baseUrl + msiClientId;
         webRequest.headers = {
             "Metadata": true
         };
@@ -97,9 +100,25 @@ export class ApplicationTokenCredentials {
                 {
                     deferred.resolve(response.body.access_token);
                 }
+                else if (response.statusCode == 209 || response.statusCode == 500)
+                {
+                    if(count < retryLimit)
+                    {
+                        let waitedTime = 2000 + timeToWait * 2;
+                        count +=1;
+                        setTimeout(() => {
+                            deferred.resolve(this._getMSIAuthorizationToken(count, waitedTime));   
+                        }, waitedTime);
+                    } 
+                    else
+                    {
+                        deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
+                    }
+
+                }
                 else 
                 {
-                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIStatusCode', response.statusCode, response.statusMessage));
+                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode', response.statusCode, response.statusMessage));
                 }
             },
             (error) => {
