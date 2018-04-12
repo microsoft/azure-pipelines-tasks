@@ -4,7 +4,7 @@ import * as querystring from "querystring";
 import { ApplicationTokenCredentials } from '../azure-arm-common';
 export var nock = require('nock');
 
-export function getMockEndpoint(scheme?: string, msiPort?: string) {
+export function getMockEndpoint(scheme?: string, msiClientId?: string) {
     process.env["AZURE_HTTP_USER_AGENT"] = "TEST_AGENT";
 
     var endpoint: AzureEndpoint = {
@@ -19,7 +19,7 @@ export function getMockEndpoint(scheme?: string, msiPort?: string) {
         environmentAuthorityUrl: "https://login.windows.net/",
         activeDirectoryResourceID: "https://management.azure.com/",
         applicationTokenCredentials: new ApplicationTokenCredentials("MOCK_SPN_ID", "MOCK_TENANT_ID", "MOCK_SPN_KEY", "https://management.azure.com/",
-        "https://login.windows.net/", "https://management.azure.com/", false, scheme, msiPort)
+        "https://login.windows.net/", "https://management.azure.com/", false, scheme, msiClientId)
     }
     
     nock("https://login.windows.net", {
@@ -37,8 +37,9 @@ export function getMockEndpoint(scheme?: string, msiPort?: string) {
         access_token: "DUMMY_ACCESS_TOKEN"
     }).persist(); 
 
-    var msiPortVariable = msiPort ? msiPort : '50342';
-    var msiUrl = "http://localhost:"+ msiPortVariable;
+    let apiVersion = "2018-02-01";
+    let msiClientIdUrl =  msiClientId ? "&client_id=" + msiClientId : "";
+    var msiUrl = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=https://management.azure.com/" + msiClientIdUrl;
     nock(msiUrl, {
         reqheaders: {
             "Metadata": true
