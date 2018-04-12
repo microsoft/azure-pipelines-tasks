@@ -329,7 +329,7 @@ function Get-AzureRMAccessToken {
 
     if($endpoint.Auth.Scheme -eq $MsiConnection )
     {
-        Get-MsiAccessToken $endpoint
+        Get-MsiAccessToken $endpoint  0 0
     }
     else
     {
@@ -394,46 +394,64 @@ function Get-SpnAccessToken {
 # Get the Bearer Access Token from the Endpoint
 function Get-MsiAccessToken {
     [CmdletBinding()]
-    param([Parameter(Mandatory=$true)] $endpoint)
+    param([Parameter(Mandatory=$true)] $endpoint,
+        [Parameter(Mandatory=$true)] $count,
+        [Parameter(Mandatory=$true)] $timeToWait)
 
-    $msiPort = 50342;
-    if($endpoint.Data.MsiPort){
-        $msiPort = $endpoint.Data.MsiPort
+    $msiClientId = "";
+    if($endpoint.Data.msiClientId){
+        $msiClientId  =  "&client_id=" + $endpoint.Data.msiClientId;
     }
     $tenantId = $endpoint.Auth.Parameters.TenantId
 
     # Prepare contents for GET
     $method = "GET"
-    $authUri = "http://localhost:$msiPort/oauth2/token"
+    $apiVersion = "2018-02-01";
+    let msiClientId =  $endpoint.Data.msiClientId ? "&client_id=" + this.msiClientId : 
+    $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
     
     # Call Rest API to fetch AccessToken
     Write-Verbose "Fetching Access Token For MSI"
     
     try
     {
+        $retryLimit = 5;
+        $waitedTime = 2000 + $timeToWait * 2;
         $proxyUri = Get-ProxyUri $authUri
         $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
         $headers.Add("Metadata", $true)
         if ($proxyUri -eq $null)
         {
             Write-Verbose "No proxy settings"
-            $response = Invoke-WebRequest -Uri $authUri -Method $method -Body @{resource=$endpoint.Url} -Headers @{Metadata="true"} -UseBasicParsing
-            $accessToken = $response.Content | ConvertFrom-Json
-            return $accessToken
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseBasicParsing
         }
         else
         {
             Write-Verbose "Using Proxy settings"
-            $response = Invoke-WebRequest -Uri $authUri -Method $method -Body @{resource=$endpoint.Url} -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
-            $accessToken = $response.Content | ConvertFrom-Json
-            return $accessToken
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
         }
+
+        if($response.StatusCode == 209 -or $response.StatusCode == 500)
+        {
+            if(count -lt $retryLimit)
+            {
+                count += 1
+                Get-MsiAccessToken $endpoint count  $waitedTime
+            }
+            else
+            {
+                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $tenantId)
+            }
+        }
+        
+        $accessToken = $response.Content | ConvertFrom-Json
+        return $accessToken
     }
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
-        throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $tenantId)
+        throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $tenantId)
     }
 }
 
