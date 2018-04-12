@@ -253,8 +253,8 @@ async function main(): Promise<void> {
                     }
 
                     console.log(tl.loc("DownloadArtifacts", artifactLocation));
-                    var fileShareProvider = new providers.FilesystemProvider(artifactLocation);
-                    var fileSystemProvider = new providers.FilesystemProvider(downloadPath + '\\' + artifact.name);
+                    var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifact.name);
+                    var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
 
                     downloadPromises.push(downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions).catch((reason) => {
                         reject(reason);
