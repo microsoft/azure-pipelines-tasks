@@ -73,17 +73,10 @@ addPath(binPath);
 var taskList;
 if (options.task) {
     // find using --task parameter
-    if (options.task === "all") {
-        // build all tasks in make-options.json regardless of "build" value
-        console.log('setting task list to all tasks in make-options.json')
-        taskList = getTasksFromOptions(true);
-    }
-    else {
-        taskList = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true, matchBase: true })
+    taskList = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true, matchBase: true })
             .map(function (item) {
                 return path.basename(item);
             });
-    }
     
     if (!taskList.length) {
         fail('Unable to find any tasks matching pattern ' + options.task);
@@ -91,24 +84,7 @@ if (options.task) {
 }
 else {
     // load the default list
-    taskList = getTasksFromOptions(false);
-}
-
-// Load tasks from make-options.json.
-// The structure of tasks is:
-//  { "name": "MSBuild", "build": false }
-// loadAll: if this is set to true, ignore the build flag and return all tasks in make-options
-function getTasksFromOptions(loadAll) {
-    var tasks = [];
-
-    var tasksFromFile = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
-    tasksFromFile.forEach(function(taskFromFile) {
-        if (loadAll || taskFromFile.build) {
-            tasks.push(taskFromFile.name);
-        }
-    });
-
-    return tasks;
+    taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
@@ -151,7 +127,6 @@ target.build = function() {
             validateTask(taskDef);
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
-            //outDir = path.join(buildPath, taskDef.name);
             outDir = path.join(buildPath, taskName);
 
             // create loc files
@@ -364,11 +339,7 @@ target.testLegacy = function() {
             // copy the task layout
             var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
-
-            // this needs to become the folder name instead of the task name
             var taskCopySource = path.join(buildPath, taskName);
-            
-            // this needs to become the folder name instead of the task name
             var taskCopyDest = path.join(legacyTestTasksPath, taskName);
             matchCopy('*', taskCopySource, taskCopyDest, { noRecurse: true, matchBase: true });
         }
