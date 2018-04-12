@@ -183,12 +183,11 @@ export async function getCloudEntitlement(provisioningProfilePath: string, expor
 }
 
 /**
- * Find the UUID of the provisioning profile and install the profile
+ * Find the UUID and Name of the provisioning profile and install the profile
  * @param provProfilePath
- * @returns {string} UUID
+ * @returns { provProfileUUID, provProfileName }
  */
-export async function getProvisioningProfileUUID(provProfilePath: string) {
-
+export async function installProvisioningProfile(provProfilePath: string) : Promise<{ provProfileUUID: string, provProfileName: string }> {
     //find the provisioning profile UUID
     let provProfileDetails: string;
     let getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
@@ -225,6 +224,17 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
     })
     await plistTool.exec();
 
+    //use PlistBuddy to figure out the Name
+    let provProfileName: string;
+    plistTool = tl.tool(plist);
+    plistTool.arg(['-c', 'Print Name', tmpPlist]);
+    plistTool.on('stdout', function (data) {
+        if (data) {
+            provProfileName = data.toString();
+        }
+    })
+    await plistTool.exec();
+
     //delete the temporary plist file
     let deletePlistCommand: ToolRunner = tl.tool(tl.which('rm', true));
     deletePlistCommand.arg(['-f', tmpPlist]);
@@ -238,7 +248,11 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
         copyProvProfileCmd.arg(['-f', provProfilePath, pathToProvProfile]);
         await copyProvProfileCmd.exec();
 
-        return provProfileUUID;
+        if (!provProfileName) {
+            tl.warning(tl.loc('ProvProfileNameNotFound'));
+        }
+
+        return { provProfileUUID, provProfileName };
     } else {
         throw tl.loc('ProvProfileUUIDNotFound', provProfilePath);
     }

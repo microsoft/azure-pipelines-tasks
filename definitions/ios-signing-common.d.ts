@@ -19,11 +19,11 @@ declare module 'ios-signing-common/ios-signing-common' {
     export function findSigningIdentity(keychainPath: string) : string;
 
     /**
-     * Find the UUID of the provisioning profile and install the profile
+     * Find the UUID and Name of the provisioning profile and install the profile
      * @param provProfilePath
-     * @returns {string} UUID
+     * @returns { provProfileUUID, provProfileName }
      */
-    export function getProvisioningProfileUUID(provProfilePath: string) : string;
+    export function installProvisioningProfile(provProfilePath: string) : Promise<{ provProfileUUID: string, provProfileName: string }>;
 
     /**
      * Find the type of the provisioning profile - development, app-store or ad-hoc
@@ -57,10 +57,10 @@ declare module 'ios-signing-common/ios-signing-common' {
     export function getDefaultKeychainPath() : string;
 
     /**
-     * Get Cloud entitlement type Production or Development according to the export method - if entitlement doesn't exists in provisioning profile returns null 
+     * Get Cloud entitlement type Production or Development according to the export method - if entitlement doesn't exists in provisioning profile returns null
      * @param provisioningProfilePath
      * @param exportMethod
-     * @returns {string} 
+     * @returns {string}
      */
     export function getCloudEntitlement(provisioningProfilePath: string, exportMethod: string): Promise<string>
 }

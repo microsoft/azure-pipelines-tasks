@@ -17,17 +17,18 @@ export class SecureFileHelpers {
 
     /**
      * Download secure file contents to a temporary location for the build
-     * @param secureFileId 
+     * @param secureFileId
      */
     async downloadSecureFile(secureFileId: string) {
-        let tempDownloadPath: string = this.getSecureFileTempDownloadPath(secureFileId);
+        const tempDownloadPath: string = this.getSecureFileTempDownloadPath(secureFileId);
 
         tl.debug('Downloading secure file contents to: ' + tempDownloadPath);
-        let file: NodeJS.WritableStream = fs.createWriteStream(tempDownloadPath);
+        const file: NodeJS.WritableStream = fs.createWriteStream(tempDownloadPath);
 
-        let stream = (await this.serverConnection.getTaskAgentApi().downloadSecureFile(
+        const agentApi = await this.serverConnection.getTaskAgentApi();
+        const stream = (await agentApi.downloadSecureFile(
             tl.getVariable('SYSTEM.TEAMPROJECT'), secureFileId, tl.getSecureFileTicket(secureFileId), false)).pipe(file);
-        let defer = Q.defer();
+        const defer = Q.defer();
         stream.on('finish', () => {
             defer.resolve();
         });
@@ -38,7 +39,7 @@ export class SecureFileHelpers {
 
     /**
      * Delete secure file from the temporary location for the build
-     * @param secureFileId 
+     * @param secureFileId
      */
     deleteSecureFile(secureFileId: string) {
         let tempDownloadPath: string = this.getSecureFileTempDownloadPath(secureFileId);
@@ -50,7 +51,7 @@ export class SecureFileHelpers {
 
     /**
      * Returns the temporary download location for the secure file
-     * @param secureFileId 
+     * @param secureFileId
      */
     getSecureFileTempDownloadPath(secureFileId: string) {
         let fileName: string = tl.getSecureFileName(secureFileId);
