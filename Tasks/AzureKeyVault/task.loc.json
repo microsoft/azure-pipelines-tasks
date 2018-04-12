@@ -72,7 +72,6 @@
     "SecretCannotBeEmpty": "ms-resource:loc.messages.SecretCannotBeEmpty",
     "armUrlCannotBeEmpty": "ms-resource:loc.messages.armUrlCannotBeEmpty",
     "authorityUrlCannotBeEmpty": "ms-resource:loc.messages.authorityUrlCannotBeEmpty",
-    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
     "CredentialsCannotBeNull": "ms-resource:loc.messages.CredentialsCannotBeNull",
     "SubscriptionIdCannotBeNull": "ms-resource:loc.messages.SubscriptionIdCannotBeNull",
@@ -96,6 +95,9 @@
     "ConflictingVariableFound": "ms-resource:loc.messages.ConflictingVariableFound",
     "GetSecretFailedBecauseOfInvalidCharacters": "ms-resource:loc.messages.GetSecretFailedBecauseOfInvalidCharacters",
     "UploadingAttachment": "ms-resource:loc.messages.UploadingAttachment",
-    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile"
+    "CouldNotWriteToFile": "ms-resource:loc.messages.CouldNotWriteToFile",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }
