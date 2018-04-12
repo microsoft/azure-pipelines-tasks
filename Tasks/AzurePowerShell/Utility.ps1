@@ -30,7 +30,7 @@ function Update-PSModulePathForHostedAgent {
             $hostedAgentAzureModulePath  =  Get-LatestModule -patternToMatch "^azure_[0-9]+\.[0-9]+\.[0-9]+$"   -patternToExtract "[0-9]+\.[0-9]+\.[0-9]+$" -Classic:$true
         }
 
-        if($authScheme -eq 'ServicePrincipal' -or $authScheme -eq '' -or $authScheme -eq 'ManagedServiceIdentity')
+        if($authScheme -eq 'ServicePrincipal' -or $authScheme -eq 'ManagedServiceIdentity' -or $authScheme -eq '')
         {
             $env:PSModulePath = $hostedAgentAzureModulePath + ";" + $env:PSModulePath
             $env:PSModulePath = $env:PSModulePath.TrimStart(';')

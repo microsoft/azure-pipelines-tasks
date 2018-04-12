@@ -168,28 +168,84 @@ function Initialize-AzureSubscription {
         }
         $date = Get-Date -Format o
         $accountId = -join($accountId, "-", $date)
-        $port = 50342
-        if($Endpoint.Data.MsiPort){
-            $port = $Endpoint.Data.MsiPort
-        }
-        $msiUri =  "http://localhost:$port/oauth2/token"
-        $response = Invoke-WebRequest -Uri $msiUri -Method GET -Body @{resource= $Endpoint.Url} -Headers @{Metadata="true"} -UseBasicParsing
-        $content =$response.Content | ConvertFrom-Json
-        $access_token = $content.access_token
+        $access_token = Get-MsiAccessToken $Endpoint 0 0
         try {
             Write-Host "##[command]Add-AzureRmAccount  -AccessToken ****** -AccountId $accountId "
             $null = Add-AzureRmAccount -AccessToken $access_token -AccountId $accountId
         } catch {
             # Provide an additional, custom, credentials-related error message.
             Write-VstsTaskError -Message $_.Exception.Message
-            throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ManagedServiceIdentityError), $_.Exception))
+            throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
         }
         
         Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
     }else {
-        throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
+        throw (Get-VstsLocString-Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
+    } 
+}
+
+# Get the Bearer Access Token from the MSI Endpoint
+function Get-MsiAccessToken {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $endpoint,
+        [Parameter(Mandatory=$true)] $count,
+        [Parameter(Mandatory=$true)] $timeToWait)
+
+    $msiClientId = "";
+    if($endpoint.Data.msiClientId){
+        $msiClientId  =  "&client_id=" + $endpoint.Data.msiClientId;
+    }
+    $tenantId = $endpoint.Auth.Parameters.TenantId
+
+    # Prepare contents for GET
+    $method = "GET"
+    $apiVersion = "2018-02-01";
+    let msiClientId =  $endpoint.Data.msiClientId ? "&client_id=" + this.msiClientId : 
+    $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
+    
+    # Call Rest API to fetch AccessToken
+    Write-Verbose "Fetching Access Token For MSI"
+    
+    try
+    {
+        $retryLimit = 5;
+        $waitedTime = 2000 + $timeToWait * 2;
+        $proxyUri = Get-ProxyUri $authUri
+        if ($proxyUri -eq $null)
+        {
+            Write-Verbose "No proxy settings"
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseBasicParsing
+        }
+        else
+        {
+            Write-Verbose "Using Proxy settings"
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
+        }
+
+        if($response.StatusCode == 209 -or $response.StatusCode == 500)
+        {
+            if(count -lt $retryLimit)
+            {
+                count += 1
+                Get-MsiAccessToken $endpoint count  $waitedTime
+            }
+            else
+            {
+                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode $response.StatusDescription)
+            }
+        }
+        
+        $content = $response.Content | ConvertFrom-Json
+        return $content.access_token
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
+        throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure  -ArgumentList $response.StatusCode $response.StatusDescription)
     }
 }
+
 
 function Set-CurrentAzureSubscription {
     [CmdletBinding()]
