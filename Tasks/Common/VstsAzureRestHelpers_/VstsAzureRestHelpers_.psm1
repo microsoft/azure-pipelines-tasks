@@ -329,7 +329,7 @@ function Get-AzureRMAccessToken {
 
     if($endpoint.Auth.Scheme -eq $MsiConnection )
     {
-        Get-MsiAccessToken $endpoint  0 0
+        Get-MsiAccessToken $endpoint 0 0
     }
     else
     {
@@ -427,6 +427,8 @@ function Get-MsiAccessToken {
             $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
         }
 
+
+        # Action on the based of response 
         if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
         {
             if($retryCount -lt $retryLimit)
@@ -441,15 +443,22 @@ function Get-MsiAccessToken {
                 throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
             }
         }
+        elseif ($response.StatusCode -eq 200)
+        {
+            $accessToken = $response.Content | ConvertFrom-Json
+            return $accessToken
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
         
-        $accessToken = $response.Content | ConvertFrom-Json
-        return $accessToken
     }
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
-        throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        throw $_.Exception
     }
 }
 
