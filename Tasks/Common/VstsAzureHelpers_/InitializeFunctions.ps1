@@ -180,7 +180,7 @@ function Initialize-AzureSubscription {
         
         Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
     }else {
-        throw (Get-VstsLocString-Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
+        throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
     } 
 }
 
