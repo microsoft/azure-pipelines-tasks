@@ -30,6 +30,30 @@ class TokenCredentials {
     }
 }
 
+class AgentServiceUserCredentials {
+    private windowsUserName: string;
+    private windowsPassword: string;
+    private linuxUserName: string;
+
+    constructor(windowsUserName: string, windowsPassword: string, linuxUserName: string){
+        this.windowsUserName = windowsUserName || "";
+        this.windowsPassword = windowsPassword || "";
+        this.linuxUserName = linuxUserName || "";
+    }
+
+    public getWindowsUserName(): string{
+        return this.windowsUserName;
+    }
+
+    public getWindowsPassword(): string{
+        return this.windowsPassword;
+    }
+
+    public getLinuxUserName(): string{
+        return this.linuxUserName;
+    }
+}
+
 export class AzureRGTaskParameters {
 
     public action: string;
@@ -51,6 +75,7 @@ export class AzureRGTaskParameters {
     public deploymentGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
     public deploymentOutputs: string;
+    public agentServiceUserCredentials: AgentServiceUserCredentials;
 
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
@@ -132,6 +157,11 @@ export class AzureRGTaskParameters {
             if(deploymentGroupEndpointName){
                 this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
             }
+            var windowsUserName = tl.getInput("windowsUserName");
+            var windowsPassword = tl.getInput("windowsPassword");
+            var linuxUserName = tl.getInput("linuxUserName");
+            this.agentServiceUserCredentials = new AgentServiceUserCredentials(windowsUserName, windowsPassword, linuxUserName);
+            
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(connectedService);
