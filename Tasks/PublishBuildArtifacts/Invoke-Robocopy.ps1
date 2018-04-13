@@ -38,16 +38,19 @@ $writer = New-Object System.IO.StreamWriter($stdout, $utf8)
 # All subsequent output must be written using [System.Console]::WriteLine(). In
 # PowerShell 4, Write-Host and Out-Default do not consider the updated stream writer.
 
-if (!$File) {
+if ($File) {
+    $CopySubdirectories = '';
+} else {
+    $CopySubdirectories = '/E';
     $File = "*";
 }
 
 # Print the ##command. The /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" `"$File`"")
+    [System.Console]::WriteLine("##[command]robocopy.exe $CopySubdirectories /COPY:DA /NP /R:3 /MT:$ParallelCount `"$Source`" `"$Target`" `"$File`"")
 }
 else {
-    [System.Console]::WriteLine("##[command]robocopy.exe /E /COPY:DA /NP /R:3 `"$Source`" `"$Target`" `"$File`"")
+    [System.Console]::WriteLine("##[command]robocopy.exe $CopySubdirectories /COPY:DA /NP /R:3 `"$Source`" `"$Target`" `"$File`"")
 }
 
 # The $OutputEncoding variable instructs PowerShell how to interpret the output
@@ -74,7 +77,7 @@ $OutputEncoding = [System.Text.Encoding]::Default
 #
 # Note, the /MT parameter is only supported on 2008 R2 and higher.
 if ($ParallelCount -gt 1) {
-    & robocopy.exe /E /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
+    & robocopy.exe $CopySubdirectories /COPY:DA /NP /R:3 /MT:$ParallelCount $Source $Target $File 2>&1 |
         ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             [System.Console]::WriteLine($_.Exception.Message)
@@ -85,7 +88,7 @@ if ($ParallelCount -gt 1) {
     }
 }
 else {
-    & robocopy.exe /E /COPY:DA /NP /R:3 $Source $Target $File 2>&1 |
+    & robocopy.exe $CopySubdirectories /COPY:DA /NP /R:3 $Source $Target $File 2>&1 |
         ForEach-Object {
         if ($_ -is [System.Management.Automation.ErrorRecord]) {
             [System.Console]::WriteLine($_.Exception.Message)
