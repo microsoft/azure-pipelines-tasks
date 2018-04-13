@@ -143,10 +143,10 @@
             "visibleRule": "releaseNotesSelection = file"
         },
         {
-            "name": "destinationId",
+            "name": "distributionGroupId",
             "type": "string",
             "defaultValue": "",
-            "label": "Destination ID",
+            "label": "Distribution group ID",
             "helpMarkDown": "ID of the distribution group or store the app will deploy to. Leave it empty to use the default group.",
             "required": false
         }
