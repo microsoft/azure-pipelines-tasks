@@ -27,7 +27,7 @@ describe('ANT Suite', function() {
     it('run ANT with all inputs', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
