@@ -101,7 +101,7 @@ $ExecutePsScript = {
                     "##vso[task.complete result=Failed]"
                 }
             }
-        $result.Status = "Passed";            
+        $result.Status = "Passed";   
     } catch {
         $result.Status = "Failed";
         $result.Message = "$($_.Exception.Message)"

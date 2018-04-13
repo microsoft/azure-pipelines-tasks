@@ -32,7 +32,13 @@ try {
 
     $PSSessionOption = Get-NewPSSessionOption -arguments $input_NewPsSessionOptionArguments
 
-    $sessions = ConnectTo-RemoteMachines -targetMachineNames $targetMachineNames -targetMachineCredential $credential -protocol $input_Protocol -authenticationMechanism $input_AuthenticationMechanism
+    $sessionName = [Guid]::NewGuid().ToString();
+    $sessions = ConnectTo-RemoteMachines -targetMachineNames $targetMachineNames `
+                                         -targetMachineCredential $credential `
+                                         -protocol $input_Protocol `
+                                         -authenticationMechanism $input_AuthenticationMechanism `
+                                         -sessionName $sessionName
+
     $remoteScriptJobArguments = Get-RemoteScriptJobArguments
     if($input_RunPowershellInParallel -eq $true) {
         Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArguments $remoteScriptJobArguments

@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 55
+    "Patch": 56
   },
   "preview": true,
   "groups": [
@@ -107,6 +107,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
+      "visibleRule": "ScriptType = FilePath",
       "required": false,
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
