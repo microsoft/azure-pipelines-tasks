@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 131,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -143,11 +143,11 @@
             "visibleRule": "releaseNotesSelection = file"
         },
         {
-            "name": "distributionGroupId",
+            "name": "destinationId",
             "type": "string",
             "defaultValue": "",
-            "label": "Distribution group ID",
-            "helpMarkDown": "ID of the distribution group the app will deploy to. Leave it empty to use the default group.",
+            "label": "Destination ID",
+            "helpMarkDown": "ID of the distribution group or store the app will deploy to. Leave it empty to use the default group.",
             "required": false
         }
     ],
