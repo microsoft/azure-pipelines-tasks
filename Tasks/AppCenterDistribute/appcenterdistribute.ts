@@ -145,7 +145,7 @@ function commitRelease(apiServer: string, apiVersion: string, appSlug: string, u
     return defer.promise;
 }
 
-function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: string, destinationId: string, token: string, userAgent: string) {
+function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: string, distributionGroupId: string, token: string, userAgent: string) {
     tl.debug("-- Mark package available.");
     let defer = Q.defer<void>();
     let publishReleaseUrl: string = `${apiServer}/${releaseUrl}`;
@@ -162,7 +162,7 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
         "release_notes": releaseNotes,
         "destinations": [
             {
-                "id": destinationId
+                "id": distributionGroupId
             }
         ]
     };
@@ -399,8 +399,8 @@ async function run() {
             releaseNotes = tl.getInput('releaseNotesInput', true);
         }
 
-        let destinationId = tl.getInput('destinationId', false) || '00000000-0000-0000-0000-000000000000';
-        tl.debug(`Effective destinationId: ${destinationId}`);
+        let distributionGroupId = tl.getInput('distributionGroupId', false) || '00000000-0000-0000-0000-000000000000';
+        tl.debug(`Effective distributionGroupId: ${distributionGroupId}`);
 
         // Validate inputs
         if (!apiToken) {
@@ -432,7 +432,7 @@ async function run() {
         let packageUrl = await commitRelease(effectiveApiServer, effectiveApiVersion, appSlug, uploadInfo.upload_id, apiToken, userAgent);
 
         // Publish
-        await publishRelease(effectiveApiServer, packageUrl, releaseNotes, destinationId, apiToken, userAgent);
+        await publishRelease(effectiveApiServer, packageUrl, releaseNotes, distributionGroupId, apiToken, userAgent);
 
         if (symbolsFile) {
             // Begin preparing upload symbols

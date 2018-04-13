@@ -157,11 +157,11 @@
       "visibleRule": "releaseNotesSelection = file"
     },
     {
-      "name": "destinationId",
+      "name": "distributionGroupId",
       "type": "string",
       "defaultValue": "",
-      "label": "ms-resource:loc.input.label.destinationId",
-      "helpMarkDown": "ms-resource:loc.input.help.destinationId",
+      "label": "ms-resource:loc.input.label.distributionGroupId",
+      "helpMarkDown": "ms-resource:loc.input.help.distributionGroupId",
       "required": false
     }
   ],
