@@ -361,6 +361,8 @@
     "CannotFindJobType": "ms-resource:loc.messages.CannotFindJobType",
     "InvalidJobName": "ms-resource:loc.messages.InvalidJobName",
     "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles",
-    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported"
+    "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }
