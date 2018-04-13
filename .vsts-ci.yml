@@ -303,4 +303,3 @@ phases:
     displayName: Test with node 5
   - script: node make.js testLegacy --node 5 --task "$(task_pattern)"
     displayName: Legacy tests with node 5
-    
