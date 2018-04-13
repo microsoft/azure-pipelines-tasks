@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [],
   "preview": "true",
@@ -171,6 +171,9 @@
     {
       "name": "version",
       "label": "ms-resource:loc.input.label.version",
+      "aliases": [
+        "chartVersion"
+      ],
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.version",
       "defaultValue": "",
@@ -215,6 +218,9 @@
     },
     {
       "name": "canaryimage",
+      "aliases": [
+        "canaryImage"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.canaryimage",
       "defaultValue": "false",
@@ -224,6 +230,9 @@
     },
     {
       "name": "upgradetiller",
+      "aliases": [
+        "upgradeTiller"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.upgradetiller",
       "defaultValue": "true",
@@ -233,6 +242,9 @@
     },
     {
       "name": "updatedependency",
+      "aliases": [
+        "updateDependency"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.updatedependency",
       "defaultValue": "false",
@@ -307,6 +319,9 @@
     },
     {
       "name": "tillernamespace",
+      "aliases": [
+        "tillerNamespace"
+      ],
       "label": "ms-resource:loc.input.label.tillernamespace",
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
