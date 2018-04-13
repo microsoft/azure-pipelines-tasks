@@ -31,6 +31,12 @@ $content = @"
            {"access_token" : "Dummy Token" }
 "@
 
+$response = @{
+    Content = $content
+    StatusCode = 200
+    StatusDescription = 'OK'
+};
+
 foreach ($variableSet in $variableSets) {
 
     Write-Verbose ('-' * 80)
@@ -39,7 +45,7 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Add-AzureStackDependencyData
     Unregister-Mock Invoke-WebRequest
     Register-Mock Add-AzureStackDependencyData { return $endpoint }
-    Register-Mock Invoke-WebRequest { @{Content = $content} }
+    Register-Mock Invoke-WebRequest { $response }
 
     # Act.
     $result = & $module Get-AzureRMAccessToken -Endpoint $endpoint 

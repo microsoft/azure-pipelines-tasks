@@ -395,7 +395,7 @@ function Get-SpnAccessToken {
 function Get-MsiAccessToken {
     [CmdletBinding()]
     param([Parameter(Mandatory=$true)] $endpoint,
-        [Parameter(Mandatory=$true)] $count,
+        [Parameter(Mandatory=$true)] $retryCount,
         [Parameter(Mandatory=$true)] $timeToWait)
 
     $msiClientId = "";
@@ -407,7 +407,6 @@ function Get-MsiAccessToken {
     # Prepare contents for GET
     $method = "GET"
     $apiVersion = "2018-02-01";
-    let msiClientId =  $endpoint.Data.msiClientId ? "&client_id=" + this.msiClientId : 
     $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
     
     # Call Rest API to fetch AccessToken
@@ -418,8 +417,6 @@ function Get-MsiAccessToken {
         $retryLimit = 5;
         $waitedTime = 2000 + $timeToWait * 2;
         $proxyUri = Get-ProxyUri $authUri
-        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $headers.Add("Metadata", $true)
         if ($proxyUri -eq $null)
         {
             Write-Verbose "No proxy settings"
@@ -431,16 +428,16 @@ function Get-MsiAccessToken {
             $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
         }
 
-        if($response.StatusCode == 209 -or $response.StatusCode == 500)
+        if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
         {
-            if(count -lt $retryLimit)
+            if($retryCount -lt $retryLimit)
             {
-                count += 1
-                Get-MsiAccessToken $endpoint count  $waitedTime
+                $retryCount += 1
+                Get-MsiAccessToken $endpoint $retryCount  $waitedTime
             }
             else
             {
-                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $tenantId)
+                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
             }
         }
         
@@ -451,7 +448,7 @@ function Get-MsiAccessToken {
     {
         $exceptionMessage = $_.Exception.Message.ToString()
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
-        throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $tenantId)
+        throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
     }
 }
 
