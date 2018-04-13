@@ -427,14 +427,13 @@ function Get-MsiAccessToken {
             $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
         }
 
-
         # Action on the based of response 
         if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
         {
             if($retryCount -lt $retryLimit)
             {
                 $retryCount += 1
-                $waitedTime = 2000 + $timeToWait * 2;
+                $waitedTime = 2000 + $timeToWait * 2
                 Start-Sleep -m $waitedTime
                 Get-MsiAccessToken $endpoint $retryCount  $waitedTime
             }
@@ -458,7 +457,14 @@ function Get-MsiAccessToken {
     {
         $exceptionMessage = $_.Exception.Message.ToString()
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
-        throw $_.Exception
+        if($exceptionMessage -match "400")
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
+        else
+        {
+            throw $_.Exception
+        }
     }
 }
 
