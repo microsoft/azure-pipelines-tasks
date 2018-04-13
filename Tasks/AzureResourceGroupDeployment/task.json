@@ -241,43 +241,33 @@
             "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding Deployment Group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
         },
         {
-            "name": "enterUserCredentials",
+            "name": "runAgentServiceAsUser",
             "type": "boolean",
-            "label": "Enter user credentials for running agent service",
+            "label": "Run agent service as a user",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "defaultValue": false,
             "helpMarkDown": "Decide whether to run the agent service as a user different than the default. The default is \"NT AUTHORITY\\SYSTEM\" in Windows and \"root\" us Linux"
         },
         {
-            "name": "WindowsUserName",
+            "name": "userName",
             "type": "string",
-            "label": "Windows User Name",
+            "label": "User name",
             "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && enterUserCredentials = true",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
             "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "The username to run the agent service on the Windows VMs. Please enter values as \"domain\\username\" or \"username@domain.com\""
+            "required": true,
+            "helpMarkDown": "The username to run the agent service on the Windows VMs. Please enter values as \"domain\\username\" or \"username@domain.com\". For Linux machines, the domain name will be removed. It is assumed that user with the same name is present on all VMs in the resource group."
         },
         {
-            "name": "WindowsPassword",
+            "name": "password",
             "type": "string",
-            "label": "Windows Password",
+            "label": "Password",
             "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && enterUserCredentials = true",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The password for the user to run the agent service on the Windows VMs."
-        },
-        {
-            "name": "LinuxUserName",
-            "type": "string",
-            "label": "Linux User Name",
-            "groupName": "AdvancedDeploymentOptions",
-            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && enterUserCredentials = true",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "The username to run the agent service on the Windows VMs. Password is not required."
+            "helpMarkDown": "The password for the user to run the agent service on the Windows VMs. For linux VMs, password is not required and will be ignored."
         },
         {
             "name": "outputVariable",
