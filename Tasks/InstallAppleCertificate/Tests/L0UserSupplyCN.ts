@@ -20,11 +20,6 @@ let secureFileHelperMock = require('securefiles-common/securefiles-common-mock')
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
 tr.registerMock('fs', {
-    existsSync: function (filePath) {
-        if (filePath === '/usr/lib/login.keychain') {
-            return true;
-        }
-    },
     writeFileSync: function (filePath, contents) {
     }
 });

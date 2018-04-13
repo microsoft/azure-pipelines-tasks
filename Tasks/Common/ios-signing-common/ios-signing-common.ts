@@ -1,5 +1,3 @@
-import fs = require('fs');
-import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
@@ -183,12 +181,11 @@ export async function getCloudEntitlement(provisioningProfilePath: string, expor
 }
 
 /**
- * Find the UUID of the provisioning profile and install the profile
+ * Find the UUID and Name of the provisioning profile and install the profile
  * @param provProfilePath
- * @returns {string} UUID
+ * @returns { provProfileUUID, provProfileName }
  */
-export async function getProvisioningProfileUUID(provProfilePath: string) {
-
+export async function installProvisioningProfile(provProfilePath: string) : Promise<{ provProfileUUID: string, provProfileName: string }> {
     //find the provisioning profile UUID
     let provProfileDetails: string;
     let getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
@@ -208,7 +205,7 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
     if (provProfileDetails) {
         //write the provisioning profile to a plist
         tmpPlist = '_xcodetasktmp.plist';
-        fs.writeFileSync(tmpPlist, provProfileDetails);
+        tl.writeFile(tmpPlist, provProfileDetails);
     } else {
         throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
     }
@@ -221,6 +218,17 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
     plistTool.on('stdout', function (data) {
         if (data) {
             provProfileUUID = data.toString();
+        }
+    })
+    await plistTool.exec();
+
+    //use PlistBuddy to figure out the Name
+    let provProfileName: string;
+    plistTool = tl.tool(plist);
+    plistTool.arg(['-c', 'Print Name', tmpPlist]);
+    plistTool.on('stdout', function (data) {
+        if (data) {
+            provProfileName = data.toString();
         }
     })
     await plistTool.exec();
@@ -238,7 +246,11 @@ export async function getProvisioningProfileUUID(provProfilePath: string) {
         copyProvProfileCmd.arg(['-f', provProfilePath, pathToProvProfile]);
         await copyProvProfileCmd.exec();
 
-        return provProfileUUID;
+        if (!provProfileName) {
+            tl.warning(tl.loc('ProvProfileNameNotFound'));
+        }
+
+        return { provProfileUUID, provProfileName };
     } else {
         throw tl.loc('ProvProfileUUIDNotFound', provProfilePath);
     }
@@ -270,7 +282,7 @@ export async function getProvisioningProfileName(provProfilePath: string) {
     if (provProfileDetails) {
         //write the provisioning profile to a plist
         tmpPlist = '_xcodetasktmp.plist';
-        fs.writeFileSync(tmpPlist, provProfileDetails);
+        tl.writeFile(tmpPlist, provProfileDetails);
     } else {
         throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
     }
@@ -314,7 +326,7 @@ export async function getiOSProvisioningProfileType(provProfilePath: string) {
         if (provProfileDetails) {
             //write the provisioning profile to a plist
             tmpPlist = '_xcodetasktmp.plist';
-            fs.writeFileSync(tmpPlist, provProfileDetails);
+            tl.writeFile(tmpPlist, provProfileDetails);
         } else {
             throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
         }
@@ -382,7 +394,7 @@ export async function getmacOSProvisioningProfileType(provProfilePath: string) {
         if (provProfileDetails) {
             //write the provisioning profile to a plist
             tmpPlist = '_xcodetasktmp.plist';
-            fs.writeFileSync(tmpPlist, provProfileDetails);
+            tl.writeFile(tmpPlist, provProfileDetails);
         } else {
             throw tl.loc('ProvProfileDetailsNotFound', provProfilePath);
         }
@@ -453,7 +465,7 @@ async function printFromPlist(itemToPrint: string, plistPath: string) {
  * @param keychainPath
  */
 export async function deleteKeychain(keychainPath: string) {
-    if (fs.existsSync(keychainPath)) {
+    if (tl.exist(keychainPath)) {
         let deleteKeychainCommand: ToolRunner = tl.tool(tl.which('security', true));
         deleteKeychainCommand.arg(['delete-keychain', keychainPath]);
         await deleteKeychainCommand.exec();
@@ -479,7 +491,7 @@ export async function unlockKeychain(keychainPath: string, keychainPwd: string) 
 export async function deleteProvisioningProfile(uuid: string) {
     let provProfilePath: string = getProvisioningProfilePath(uuid);
     tl.warning('Deleting provisioning profile: ' + provProfilePath);
-    if (fs.existsSync(provProfilePath)) {
+    if (tl.exist(provProfilePath)) {
         let deleteProfileCommand: ToolRunner = tl.tool(tl.which('rm', true));
         deleteProfileCommand.arg(['-f', provProfilePath]);
         await deleteProfileCommand.exec();

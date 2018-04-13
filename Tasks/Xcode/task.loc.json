@@ -12,7 +12,7 @@
   "version": {
     "Major": 5,
     "Minor": 133,
-    "Patch": 3
+    "Patch": 4
   },
   "preview": true,
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -219,6 +219,15 @@
       "label": "ms-resource:loc.input.label.provisioningProfileUuid",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileUuid",
+      "groupName": "sign",
+      "visibleRule": "signingOption = manual"
+    },
+    {
+      "name": "provisioningProfileName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.provisioningProfileName",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileName",
       "groupName": "sign",
       "visibleRule": "signingOption = manual"
     },

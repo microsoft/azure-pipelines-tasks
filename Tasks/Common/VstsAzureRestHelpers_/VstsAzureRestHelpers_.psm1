@@ -372,6 +372,11 @@ function Get-SpnAccessToken {
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-SpnAccessToken)"
         throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
     }
@@ -423,6 +428,12 @@ function Get-AzStorageKeys
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzStorageKeys)"
         throw
     }
@@ -464,6 +475,12 @@ function Get-AzRMStorageKeys
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRMStorageKeys)"
         throw
     }
@@ -515,6 +532,12 @@ function Get-AzRmVmCustomScriptExtension
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmVmCustomScriptExtension)"
         throw
     }
@@ -557,6 +580,12 @@ function Remove-AzRmVmCustomScriptExtension
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Remove-AzRmVmCustomScriptExtension)"
         throw
     }
@@ -596,6 +625,12 @@ function Get-AzStorageAccount
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzStorageAccount)"
         throw
     }
@@ -652,6 +687,12 @@ function Get-AzRmStorageAccount
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmStorageAccount)"
         throw
     }
@@ -690,6 +731,12 @@ function Get-AzRmResourceGroup
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmResourceGroup)"
         throw
     }
@@ -926,32 +973,55 @@ function Remove-AzureSqlDatabaseServerFirewallRule
 
 function Parse-Exception($exception){
     if($exception) {
-        Write-Verbose "Exception message - $($exception.ToString())"
-        $response = $exception.Response
-        if($response) {
-            $responseStream =  $response.GetResponseStream()
-            $streamReader = New-Object System.IO.StreamReader($responseStream)
-            $streamReader.BaseStream.Position = 0
-            $streamReader.DiscardBufferedData()
-            $responseBody = $streamReader.ReadToEnd()
-            $streamReader.Close()
-            Write-Verbose "Exception message extracted from response $responseBody"
-            $exceptionMessage = "";
-            try
+        try{
+            Write-Verbose "Exception message - $($exception.ToString())"
+            $response = $exception.Response
+            if($response) 
             {
-                if($responseBody)
+                $responseStream =  $response.GetResponseStream()
+                $streamReader = New-Object System.IO.StreamReader($responseStream)
+                $streamReader.BaseStream.Position = 0
+                $streamReader.DiscardBufferedData()
+                $responseBody = $streamReader.ReadToEnd()
+                $streamReader.Close()
+                Write-Verbose "Exception message extracted from response $responseBody"
+                $exceptionMessage = "";
+                try
                 {
-                    $exceptionJson = $responseBody | ConvertFrom-Json
-                    $exceptionMessage = $exceptionJson.Message
+                    if($responseBody)
+                    {
+                        $exceptionJson = $responseBody | ConvertFrom-Json
+
+                        $exceptionError = $exceptionJson.error
+                        if($exceptionError)
+                        {
+                            $exceptionMessage = $exceptionError.Message
+                            $exceptionCode = $exceptionError.code
+                        }
+                        else 
+                        {
+                            $exceptionMessage = $exceptionJson.Message
+                            $exceptionCode = $exceptionJson.code
+                        }
+
+                        if ($exceptionCode)
+                        {
+                            Write-VstsTaskError -ErrCode $exceptionCode
+                        }
+                    }
                 }
+                catch{
+                    $exceptionMessage = $responseBody
+                }
+                if($response.statusCode -eq 404 -or (-not $exceptionMessage)){
+                    $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
+                }
+                return $exceptionMessage
             }
-            catch{
-                $exceptionMessage = $responseBody
-            }
-            if($response.statusCode -eq 404 -or (-not $exceptionMessage)){
-                $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
-            }
-            return $exceptionMessage
+        } 
+        catch
+        {
+            Write-verbose "Unable to parse exception: " + $_.Exception.ToString()
         }
     }
     return $null

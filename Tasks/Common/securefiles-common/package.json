@@ -18,6 +18,6 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "^2.0.3-preview",
-    "vso-node-api": "^6.1.2-preview"
+    "vso-node-api": "^6.5"
   }
 }
