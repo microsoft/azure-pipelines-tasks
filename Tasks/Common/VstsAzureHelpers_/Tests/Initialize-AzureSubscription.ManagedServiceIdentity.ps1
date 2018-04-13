@@ -27,6 +27,12 @@ $content = @"
            {"access_token" : "Dummy Token" }
 "@
 
+$response = @{
+    Content = $content
+    StatusCode = 200
+    StatusDescription = 'OK'
+};
+
 $variableSets = @(
     @{ StorageAccount = 'Some storage account' }
 )
@@ -39,7 +45,7 @@ foreach ($variableSet in $variableSets) {
     Register-Mock Add-AzureRMAccount { 'some output' }
     Register-Mock Set-CurrentAzureRMSubscription
     Register-Mock Set-UserAgent
-    Register-Mock Invoke-WebRequest { @{Content = $content} }
+    Register-Mock Invoke-WebRequest { $response }
     
     # Act.
     $result = & $module Initialize-AzureSubscription -Endpoint $endpoint -StorageAccount $variableSet.StorageAccount
