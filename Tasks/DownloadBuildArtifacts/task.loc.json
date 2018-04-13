@@ -71,7 +71,7 @@
       "name": "buildVersionToDownload",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.buildVersionToDownload",
-      "defaultValue": "latest",
+      "defaultValue": "specific",
       "visibleRule": "buildType == specific",
       "required": true,
       "options": {

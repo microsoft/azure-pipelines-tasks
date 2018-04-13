@@ -71,7 +71,7 @@
       "name": "buildVersionToDownload",
       "type": "pickList",
       "label": "Build version to download",
-      "defaultValue": "latest",
+      "defaultValue": "specific",
       "visibleRule": "buildType == specific",
       "required": true,
       "options": {
