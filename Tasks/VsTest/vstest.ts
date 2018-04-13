@@ -64,7 +64,7 @@ export function startTest() {
             agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
             codeCoverageEnabled: vstestConfig.codeCoverageEnabled,
             overrideTestrunParameters: utils.Helper.isNullOrUndefined(vstestConfig.overrideTestrunParameters) ? 'false' : 'true',
-            pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
+            pipeline: tl.getVariable('release.releaseUri') != null ? 'release' : 'build',
             runTestsInIsolation: vstestConfig.runTestsInIsolation,
             task: 'VsTestConsoleFlow',
             runInParallel: vstestConfig.runInParallel,
@@ -82,8 +82,8 @@ export function startTest() {
         invokeVSTest().then(function (taskResult) {
             uploadVstestDiagFile();
             if (vstestConfig.tiaConfig.tiaEnabled) {
-                uploadFile(path.join(os.tmpdir(), "TestImpactZip.zip"));
-                uploadFile(path.join(os.tmpdir(), "TestSelector.log"));
+                uploadFile(path.join(utils.Helper.GetTempFolder(), 'TestImpactZip.zip'));
+                uploadFile(path.join(utils.Helper.GetTempFolder(), 'TestSelector.log'));
             }
             if (taskResult == tl.TaskResult.Failed) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
@@ -388,7 +388,7 @@ function getVstestTestsListInternal(vsVersion: number, testCaseFilter: string, o
 }
 
 function getVstestTestsList(vsVersion: number): string {
-    const tempFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    const tempFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
     tl.debug('Discovered tests listed at: ' + tempFile);
     const argsArray: string[] = [];
 
@@ -398,6 +398,12 @@ function getVstestTestsList(vsVersion: number): string {
 function uploadVstestDiagFile(): void {
     if (vstestConfig && vstestConfig.vstestDiagFile && utils.Helper.pathExistsAsFile(vstestConfig.vstestDiagFile)) {
         uploadFile(vstestConfig.vstestDiagFile);
+        const files = tl.findMatch(utils.Helper.GetTempFolder(), ['*host.*.txt', '*datacollector.*.txt']);
+        if (files) {
+            files.forEach(file => {
+                uploadFile(file);
+            });
+        }
     }
 }
 
@@ -407,17 +413,8 @@ function uploadFile(file: string): void {
             const stats = fs.statSync(file);
             tl.debug('File exists. Size: ' + stats.size + ' Bytes');
             console.log('##vso[task.uploadfile]' + file);
-
-            const files = tl.findMatch(os.tmpdir(), ['*host.*.txt', '*datacollector.*.txt']);
-            if (files) {
-                files.forEach(file => {
-                    tl.debug('Uploading file: ' + file);
-                    console.log('##vso[task.uploadfile]' + file);
-                });
-            }
         }
-    }
-    catch (err) {
+    } catch (err) {
         utils.Helper.publishEventToCi(AreaCodes.GETVSTESTTESTSLIST, err.message, 1029, false);
         tl.debug(err);
     }
@@ -436,12 +433,12 @@ async function runVStest(settingsFile: string, vsVersion: number): Promise<tl.Ta
         return runVsTestAndUploadResultsNonTIAMode(settingsFile, vsVersion);
     }
 
-    let testCaseFilterFile = "";
-    let testCaseFilterOutput = "";
-    let listFile = "";
+    let testCaseFilterFile = '';
+    let testCaseFilterOutput = '';
+    let listFile = '';
     if (tiaConfig.userMapFile) {
-        testCaseFilterFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-        testCaseFilterOutput = path.join(os.tmpdir(), uuid.v1() + '.txt');
+        testCaseFilterFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+        testCaseFilterOutput = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
     }
 
     let testselector = new testselectorinvoker.TestSelectorInvoker();
@@ -525,7 +522,7 @@ async function runVsTestAndUploadResults(settingsFile: string, vsVersion: number
     vstestConfig.publishTestResultsInTiaMode = uploadTiaResults;
     let updateResponseSupplementryFileSuccess = isResponseFileRun && updateResponseFile(getVstestArguments(settingsFile, false), vstestConfig.responseSupplementryFile);
     if (!updateResponseSupplementryFileSuccess && vstestConfig.rerunFailedTests) {
-        tl.warning(tl.loc("rerunNotSupported"));
+        tl.warning(tl.loc('rerunNotSupported'));
         vstestConfig.rerunFailedTests = false;
     }
 
