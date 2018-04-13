@@ -91,14 +91,6 @@ npm run build
 node make.js build --task ShellScript
 ```
 
-If you want to build all tasks that are in make-options.json, use:
-
-``` base
-node make.js build --task all
-```
-
-Note that the option above to build all tasks in repository does all tasks in the repository while this option builds all tasks specific in make-options.json (regardless of their "build" value).
-
 ## Run Tests
 
 Tests for each task are located in Tests folder for each task.  To get additional debugging when you are running your tests, set the environment variable TASK_TEST_TRACE to 1.  This will cause additional logging to be printed to STDOUT.

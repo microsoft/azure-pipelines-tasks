@@ -1,15 +1,15 @@
 var admZip = require('adm-zip');
 var check = require('validator');
 var fs = require('fs');
+var makeOptions = require('./make-options.json');
 var minimatch = require('minimatch');
+var ncp = require('child_process');
 var os = require('os');
 var path = require('path');
 var process = require('process');
-var ncp = require('child_process');
 var semver = require('semver');
 var shell = require('shelljs');
 var syncRequest = require('sync-request');
-var makeOptions = require('./make-options.json');
 
 // global paths
 var downloadPath = path.join(__dirname, '_download');

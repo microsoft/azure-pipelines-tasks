@@ -74,9 +74,9 @@ var taskList;
 if (options.task) {
     // find using --task parameter
     taskList = matchFind(options.task, path.join(__dirname, 'Tasks'), { noRecurse: true, matchBase: true })
-            .map(function (item) {
-                return path.basename(item);
-            });
+        .map(function (item) {
+            return path.basename(item);
+        });
     
     if (!taskList.length) {
         fail('Unable to find any tasks matching pattern ' + options.task);
