@@ -184,11 +184,12 @@ function Initialize-AzureSubscription {
     } 
 }
 
-# Get the Bearer Access Token from the MSI Endpoint
+
+# Get the Bearer Access Token from the Endpoint
 function Get-MsiAccessToken {
     [CmdletBinding()]
     param([Parameter(Mandatory=$true)] $endpoint,
-        [Parameter(Mandatory=$true)] $count,
+        [Parameter(Mandatory=$true)] $retryCount,
         [Parameter(Mandatory=$true)] $timeToWait)
 
     $msiClientId = "";
@@ -200,7 +201,6 @@ function Get-MsiAccessToken {
     # Prepare contents for GET
     $method = "GET"
     $apiVersion = "2018-02-01";
-    let msiClientId =  $endpoint.Data.msiClientId ? "&client_id=" + this.msiClientId : 
     $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
     
     # Call Rest API to fetch AccessToken
@@ -209,7 +209,6 @@ function Get-MsiAccessToken {
     try
     {
         $retryLimit = 5;
-        $waitedTime = 2000 + $timeToWait * 2;
         $proxyUri = Get-ProxyUri $authUri
         if ($proxyUri -eq $null)
         {
@@ -222,27 +221,44 @@ function Get-MsiAccessToken {
             $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
         }
 
-        if($response.StatusCode == 209 -or $response.StatusCode == 500)
+        # Action on the based of response 
+        if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
         {
-            if(count -lt $retryLimit)
+            if($retryCount -lt $retryLimit)
             {
-                count += 1
-                Get-MsiAccessToken $endpoint count  $waitedTime
+                $retryCount += 1
+                $waitedTime = 2000 + $timeToWait * 2
+                Start-Sleep -m $waitedTime
+                Get-MsiAccessToken $endpoint $retryCount  $waitedTime
             }
             else
             {
-                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode $response.StatusDescription)
+                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
             }
         }
+        elseif ($response.StatusCode -eq 200)
+        {
+            $accessToken = $response.Content | ConvertFrom-Json
+            return $accessToken.access_token
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
         
-        $content = $response.Content | ConvertFrom-Json
-        return $content.access_token
     }
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
-        throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure  -ArgumentList $response.StatusCode $response.StatusDescription)
+        if($exceptionMessage -match "400")
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
+        else
+        {
+            throw $_.Exception
+        }
     }
 }
 
