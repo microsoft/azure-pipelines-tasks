@@ -164,8 +164,8 @@ try {
 
     if ($overrideApplicationParameters)
     {
-        $localAppManifestPath = Get-ApplicationManifesetPath $applicationPackagePath
-        $publishParameters['ApplicationParameter'] = Get-OverridenApplicationParameters $localAppManifestPath
+        $localAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $applicationPackagePath
+        $publishParameters['ApplicationParameter'] = Get-OverridenApplicationParameters -ApplicationManifestPath $localAppManifestPath
     }
 
     # Do an upgrade if configured to do so and the app actually exists

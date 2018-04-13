@@ -117,23 +117,22 @@ function Get-OverridenApplicationParameters
         $ApplicationManifestPath
     )
 
-    $OverrideParameters = @{}
-    $ApplicationManifestXml = [Xml] (Get-Content -LiteralPath $ApplicationManifestPath)
-    foreach ($param in $ApplicationManifestXml.ApplicationManifest.Parameters.Parameter)
+    $overrideParameters = @{}
+    $applicationManifestXml = [Xml] (Get-Content -LiteralPath $ApplicationManifestPath)
+    foreach ($param in $applicationManifestXml.ApplicationManifest.Parameters.Parameter)
     {
-        $paramName = $param.Name -replace "\.", '_'
-        $paramName = $paramName -replace " ", '_'
+        $paramName = $param.Name -replace "\.", '_' -replace " ", '_'
         $paramValue = (Get-Item env:$paramName -ErrorAction Ignore).Value
         if ($paramValue)
         {
-            $OverrideParameters.Add($paramName, $paramValue)
+            $overrideParameters.Add($paramName, $paramValue)
         }
     }
 
-    return $OverrideParameters
+    return $overrideParameters
 }
 
-function Get-ApplicationManifesetPath
+function Get-ApplicationManifestPath
 {
     Param (
         [String]

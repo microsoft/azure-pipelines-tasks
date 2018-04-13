@@ -7,7 +7,7 @@ Register-Mock Get-TempDirectoryPath { "C:\some-path" }
 
 $publishProfilePath = "$PSScriptRoot\data\NoAuthPublishProfile.xml"
 $applicationPackagePath = "$PSScriptRoot\data\DiffPkgAssets\AppPkg"
-$diffPackagePath = (Get-TempDirectoryPath) + "\DiffPackage"
+$diffPackagePath = Join-Path Get-TempDirectoryPath "DiffPackage"
 $serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
@@ -52,10 +52,14 @@ Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
 Register-Mock Get-VstsInput { "false" } -- -Name configureDockerSettings
 Register-Mock Get-VstsInput { "true" } -- -Name useDiffPackage
+Register-Mock Get-VstsInput { "false" } -- -Name overrideApplicationParameter
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
 Register-Mock Find-VstsFiles { $applicationPackagePath } -- -LegacyPattern $applicationPackagePath -IncludeDirectories
+
+Register-Mock Get-ApplicationManifestPath { $appManifestDiffPath } -- -ApplicationPackagePath $diffPackagePath
+Register-Mock Get-ApplicationManifestPath { $appManifestPath } -- -ApplicationPackagePath $applicationPackagePath
 
 Register-Mock Assert-VstsPath
 Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
