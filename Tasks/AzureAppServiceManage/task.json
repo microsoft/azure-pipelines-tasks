@@ -169,7 +169,7 @@
             "label": "Output variable",
             "defaultValue": "",
             "properties": {
-                "disabled":"True"
+                "Disabled":"True"
             },
             "visibleRule": "Action = Install Extensions",
             "helpMarkDown": "Use the 'Output Variable' section below to provide the variable name for the local installation paths for the selected extensions."

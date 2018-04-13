@@ -173,7 +173,7 @@
       "label": "ms-resource:loc.input.label.OutputVariable",
       "defaultValue": "",
       "properties": {
-        "disabled": "True"
+        "Disabled": "True"
       },
       "visibleRule": "Action = Install Extensions",
       "helpMarkDown": "ms-resource:loc.input.help.OutputVariable"
