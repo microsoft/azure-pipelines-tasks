@@ -82,8 +82,8 @@ export function startTest() {
         invokeVSTest().then(function (taskResult) {
             uploadVstestDiagFile();
             if (vstestConfig.tiaConfig.tiaEnabled) {
-                uploadFile(path.join(utils.Helper.GetTempFolder(), 'TestImpactZip.zip'));
-                uploadFile(path.join(utils.Helper.GetTempFolder(), 'TestSelector.log'));
+                uploadFile(path.join(os.tmpdir(), 'TestImpactZip.zip'));
+                uploadFile(path.join(os.tmpdir(), 'TestSelector.log'));
             }
             if (taskResult == tl.TaskResult.Failed) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
