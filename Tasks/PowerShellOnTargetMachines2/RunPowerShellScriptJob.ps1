@@ -7,7 +7,9 @@ $ExecutePsScript = {
         [string] $workingDirectory = "",
         [string] $_errorActionPreference = "Continue",
         [bool] $ignoreLASTEXITCODE,
-        [bool] $failOnStdErr
+        [bool] $failOnStdErr,
+        [string] $initializationScriptPath,
+        [string] $sessionVariables
     )
 
     $Global:ErrorActionPreference = "Continue";
@@ -17,7 +19,9 @@ $ExecutePsScript = {
             [string] $toolPath,
             [string] $toolArgs
         )
-        Invoke-Expression "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim())"
+        $command = "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim())"
+        Write-Host "##[command]$command"
+        Invoke-Expression $command
     }
 
     function Remove-TemporaryFile {
@@ -33,9 +37,9 @@ $ExecutePsScript = {
 
         $result = @{
             "VstsTask" = $true;
-            "Status" = "Failed";
+            "Status" = "InProgress";
             "Message" = "PS_TM_ExitCode";
-            "ExitCode" = 0;
+            "ExitCode" = -1;
             "ComputerName" = $env:COMPUTERNAME
         }
 
@@ -53,19 +57,32 @@ $ExecutePsScript = {
             throw [System.IO.FileNotFoundException]::New($scriptPath)
         }
 
+        if(![string]::IsNullOrEmpty($initializationScriptPath) -and !(Test-Path -LiteralPath $initializationScriptPath -PathType Leaf)) {
+            throw [System.IO.FileNotFoundException]::New($initializationScriptPath);
+        }
+
         $script = [scriptblock]::Create("
             if(![string]::IsNullOrEmpty(`"$workingDirectory`")) {
                 cd '$($workingDirectory.Replace("'","''"))'
             }
-
+            
+            # Set Error Action to Stop first, so that any errors while setting session variables can be caught.
+            `$ErrorActionPreference = 'Stop'
+            $sessionVariables
             `$ErrorActionPreference = `"$_errorActionPreference`"
-            & '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
+
+            if(![string]::IsNullOrEmpty(`"$initializationScriptPath`")) {
+                . '$($initializationScriptPath.Replace("'","''"))'
+            }
+
+            `$VerbosePreference = `"Continue`"
+            . '$($scriptPath.Replace("'","''"))' $($scriptArguments.Trim())
 
             if(`"$ignoreLASTEXITCODE`" -eq `$false) {
                 if(!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {
-                    Write-Output `"##vso[task.debug]LASTEXITCODE is not set`"
+                    Write-Output `"##vso[task.debug][`$env:ComputerName]LASTEXITCODE is not set`"
                 } else {
-                    Write-Output `"##vso[task.debug]LASTEXITCODE is `$LASTEXITCODE`"
+                    Write-Output `"##vso[task.debug][`$env:ComputerName]LASTEXITCODE is `$LASTEXITCODE`"
                     exit `$LASTEXITCODE
                 }
             }
@@ -84,11 +101,10 @@ $ExecutePsScript = {
                     "##vso[task.complete result=Failed]"
                 }
             }
-        $result.Status = "Passed";            
+        $result.Status = "Passed";   
     } catch {
         $result.Status = "Failed";
         $result.Message = "$($_.Exception.Message)"
-        throw
     } finally {
         Remove-TemporaryFile -filePath $inlineScriptPath
         Remove-TemporaryFile -filePath $tempScriptPath

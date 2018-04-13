@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 0,
-        "Patch": 23
+        "Minor": 1,
+        "Patch": 56
     },
     "preview": true,
     "groups": [
@@ -52,7 +52,7 @@
         {
             "name": "UserName",
             "type": "string",
-            "label": "Admin Login",
+            "label": "Username",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Administrator login for the target machines. <br> Eg: Format: Domain\\Admin User, Admin User@Domain, .\\Admin User"
@@ -69,7 +69,7 @@
             "name": "ScriptType",
             "type": "radio",
             "label": "Script Type",
-            "defaultValue": "FilePath",
+            "defaultValue": "Inline",
             "options": {
                 "FilePath": "File Path",
                 "Inline": "Inline"
@@ -107,6 +107,7 @@
             "type": "string",
             "label": "Script Arguments",
             "defaultValue": "",
+            "visibleRule": "ScriptType = FilePath",
             "required": false,
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -115,24 +116,55 @@
             "groupName": "ScriptOptions"
         },
         {
+            "name": "InitializationScript",
+            "type": "string",
+            "label": "Initialization script",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "ScriptType = FilePath",
+            "helpMarkDown": "Location of the data script for DSC on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\WebsiteConfiguration.ps1",
+            "groupName": "ScriptOptions"
+        },
+        {
+            "name": "SessionVariables",
+            "type": "multiLine",
+            "label": "Session Variables",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "ScriptType = FilePath",
+            "helpMarkDown": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\"",
+            "groupName": "ScriptOptions"
+        },
+        {
             "name": "Protocol",
             "type": "radio",
             "label": "Protocol",
-            "required": false,
-            "defaultValue": "Https",
             "options": {
                 "Http": "HTTP",
                 "Https": "HTTPS"
             },
+            "defaultValue": "Https",
             "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
             "groupName": "SessionOptions"
         },
+        {
+            "name": "AuthenticationMechanism",
+            "type": "pickList",
+            "label": "Authentication Mechanism",
+            "options": {
+                "Default": "Default",
+                "Credssp": "CredSSP"
+            },
+            "defaultValue": "Default",
+            "helpMarkDown": "Select the authentication mechanism to be used for creating ps session",
+            "groupName": "SessionOptions"
+        },        
         {
             "name": "NewPsSessionOptionArguments",
             "type": "multiLine",
             "label": "New-PSSessionOption arguments",
             "required": false,
-            "defaultValue": "",
+            "defaultValue": "-SkipCACheck",
             "helpMarkDown": "Arguments to be used for creating a New-PSSessionOption object. To be used with New-PSSession",
             "groupName": "SessionOptions"
         },
@@ -194,8 +226,14 @@
         }
     },
     "messages": {
-        "PS_TM_NonZeroExitCode": "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
-        "PS_TM_ConnectedMachines": "PSSession created for Machines:'{0}'",
-        "PS_TM_NotConnectedMachines": "PSSession could not be created for Machines:'{0}'"
+        "PS_TM_NonZeroExitCode" : "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
+        "PS_TM_ConnectedMachines" : "PSSession created for Machines:'{0}'",
+        "PS_TM_NotConnectedMachines" : "PSSession could not be created for Machines:'{0}'",
+        "PS_TM_ParseSessionVariablesValueNotFound" : "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
+        "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
+        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input",
+        "PS_TM_ScriptJobFailed" : "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
+        "PS_TM_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",
+        "PS_TM_UnknownStatus": "Unknown remote script job execution status: '{0}'"
     }
 }

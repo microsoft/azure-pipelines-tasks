@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 0,
-    "Patch": 23
+    "Minor": 1,
+    "Patch": 56
   },
   "preview": true,
   "groups": [
@@ -69,7 +69,7 @@
       "name": "ScriptType",
       "type": "radio",
       "label": "ms-resource:loc.input.label.ScriptType",
-      "defaultValue": "FilePath",
+      "defaultValue": "Inline",
       "options": {
         "FilePath": "File Path",
         "Inline": "Inline"
@@ -107,6 +107,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.ScriptArguments",
       "defaultValue": "",
+      "visibleRule": "ScriptType = FilePath",
       "required": false,
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -115,16 +116,47 @@
       "groupName": "ScriptOptions"
     },
     {
+      "name": "InitializationScript",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.InitializationScript",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ScriptType = FilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.InitializationScript",
+      "groupName": "ScriptOptions"
+    },
+    {
+      "name": "SessionVariables",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SessionVariables",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "ScriptType = FilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.SessionVariables",
+      "groupName": "ScriptOptions"
+    },
+    {
       "name": "Protocol",
       "type": "radio",
       "label": "ms-resource:loc.input.label.Protocol",
-      "required": false,
-      "defaultValue": "Https",
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
       },
+      "defaultValue": "Https",
       "helpMarkDown": "ms-resource:loc.input.help.Protocol",
+      "groupName": "SessionOptions"
+    },
+    {
+      "name": "AuthenticationMechanism",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AuthenticationMechanism",
+      "options": {
+        "Default": "Default",
+        "Credssp": "CredSSP"
+      },
+      "defaultValue": "Default",
+      "helpMarkDown": "ms-resource:loc.input.help.AuthenticationMechanism",
       "groupName": "SessionOptions"
     },
     {
@@ -132,7 +164,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.NewPsSessionOptionArguments",
       "required": false,
-      "defaultValue": "",
+      "defaultValue": "-SkipCACheck",
       "helpMarkDown": "ms-resource:loc.input.help.NewPsSessionOptionArguments",
       "groupName": "SessionOptions"
     },
@@ -196,6 +228,12 @@
   "messages": {
     "PS_TM_NonZeroExitCode": "ms-resource:loc.messages.PS_TM_NonZeroExitCode",
     "PS_TM_ConnectedMachines": "ms-resource:loc.messages.PS_TM_ConnectedMachines",
-    "PS_TM_NotConnectedMachines": "ms-resource:loc.messages.PS_TM_NotConnectedMachines"
+    "PS_TM_NotConnectedMachines": "ms-resource:loc.messages.PS_TM_NotConnectedMachines",
+    "PS_TM_ParseSessionVariablesValueNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesValueNotFound",
+    "PS_TM_ParseSessionVariablesKeyNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesKeyNotFound",
+    "PS_TM_InvalidSessionVariablesInputFormat": "ms-resource:loc.messages.PS_TM_InvalidSessionVariablesInputFormat",
+    "PS_TM_ScriptJobFailed": "ms-resource:loc.messages.PS_TM_ScriptJobFailed",
+    "PS_TM_ScriptExecutionSucceeded": "ms-resource:loc.messages.PS_TM_ScriptExecutionSucceeded",
+    "PS_TM_UnknownStatus": "ms-resource:loc.messages.PS_TM_UnknownStatus"
   }
 }
