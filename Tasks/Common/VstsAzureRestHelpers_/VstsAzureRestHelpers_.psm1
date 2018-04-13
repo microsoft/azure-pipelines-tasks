@@ -415,7 +415,6 @@ function Get-MsiAccessToken {
     try
     {
         $retryLimit = 5;
-        $waitedTime = 2000 + $timeToWait * 2;
         $proxyUri = Get-ProxyUri $authUri
         if ($proxyUri -eq $null)
         {
@@ -433,6 +432,8 @@ function Get-MsiAccessToken {
             if($retryCount -lt $retryLimit)
             {
                 $retryCount += 1
+                $waitedTime = 2000 + $timeToWait * 2;
+                Start-Sleep -m $waitedTime
                 Get-MsiAccessToken $endpoint $retryCount  $waitedTime
             }
             else
