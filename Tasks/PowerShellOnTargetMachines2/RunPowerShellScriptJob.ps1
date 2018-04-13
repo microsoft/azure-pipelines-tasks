@@ -19,7 +19,9 @@ $ExecutePsScript = {
             [string] $toolPath,
             [string] $toolArgs
         )
-        Invoke-Expression "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim())"
+        $command = "& '$($toolPath.Replace('"', '').Replace("'", "''"))' $($toolArgs.Trim())"
+        Write-Host "##[command]$command"
+        Invoke-Expression $command
     }
 
     function Remove-TemporaryFile {
@@ -35,9 +37,9 @@ $ExecutePsScript = {
 
         $result = @{
             "VstsTask" = $true;
-            "Status" = "Failed";
+            "Status" = "InProgress";
             "Message" = "PS_TM_ExitCode";
-            "ExitCode" = 0;
+            "ExitCode" = -1;
             "ComputerName" = $env:COMPUTERNAME
         }
 
@@ -78,9 +80,9 @@ $ExecutePsScript = {
 
             if(`"$ignoreLASTEXITCODE`" -eq `$false) {
                 if(!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {
-                    Write-Output `"##vso[task.debug]LASTEXITCODE is not set`"
+                    Write-Output `"##vso[task.debug][`$env:ComputerName]LASTEXITCODE is not set`"
                 } else {
-                    Write-Output `"##vso[task.debug]LASTEXITCODE is `$LASTEXITCODE`"
+                    Write-Output `"##vso[task.debug][`$env:ComputerName]LASTEXITCODE is `$LASTEXITCODE`"
                     exit `$LASTEXITCODE
                 }
             }
@@ -99,11 +101,10 @@ $ExecutePsScript = {
                     "##vso[task.complete result=Failed]"
                 }
             }
-        $result.Status = "Passed";            
+        $result.Status = "Passed";   
     } catch {
         $result.Status = "Failed";
         $result.Message = "$($_.Exception.Message)"
-        throw
     } finally {
         Remove-TemporaryFile -filePath $inlineScriptPath
         Remove-TemporaryFile -filePath $tempScriptPath

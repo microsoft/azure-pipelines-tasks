@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 0,
-        "Patch": 41
+        "Minor": 1,
+        "Patch": 56
     },
     "preview": true,
     "groups": [
@@ -52,7 +52,7 @@
         {
             "name": "UserName",
             "type": "string",
-            "label": "Admin Login",
+            "label": "Username",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Administrator login for the target machines. <br> Eg: Format: Domain\\Admin User, Admin User@Domain, .\\Admin User"
@@ -107,6 +107,7 @@
             "type": "string",
             "label": "Script Arguments",
             "defaultValue": "",
+            "visibleRule": "ScriptType = FilePath",
             "required": false,
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -147,11 +148,23 @@
             "groupName": "SessionOptions"
         },
         {
+            "name": "AuthenticationMechanism",
+            "type": "pickList",
+            "label": "Authentication Mechanism",
+            "options": {
+                "Default": "Default",
+                "Credssp": "CredSSP"
+            },
+            "defaultValue": "Default",
+            "helpMarkDown": "Select the authentication mechanism to be used for creating ps session",
+            "groupName": "SessionOptions"
+        },        
+        {
             "name": "NewPsSessionOptionArguments",
             "type": "multiLine",
             "label": "New-PSSessionOption arguments",
             "required": false,
-            "defaultValue": "-SkipCACheck -SkipCNCheck",
+            "defaultValue": "-SkipCACheck",
             "helpMarkDown": "Arguments to be used for creating a New-PSSessionOption object. To be used with New-PSSession",
             "groupName": "SessionOptions"
         },
@@ -218,6 +231,9 @@
         "PS_TM_NotConnectedMachines" : "PSSession could not be created for Machines:'{0}'",
         "PS_TM_ParseSessionVariablesValueNotFound" : "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
         "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
-        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input"
+        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input",
+        "PS_TM_ScriptJobFailed" : "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
+        "PS_TM_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",
+        "PS_TM_UnknownStatus": "Unknown remote script job execution status: '{0}'"
     }
 }

@@ -17,9 +17,12 @@ try {
     # Get all inputs for the task
     $input_Machines = Get-VstsInput -Name "Machines" -Require -ErrorAction "Stop"
     $input_UserName = Get-VstsInput -Name "UserName" -Require -ErrorAction "Stop"
-    $input_UserPassword = ConvertTo-SecureString -AsPlainText -String $(Get-VstsInput -Name "UserPassword" -Require -ErrorAction "Stop") -Force
+    $input_UserPassword = Get-VstsInput -Name "UserPassword" -Require -ErrorAction "Stop"
+    Write-VstsSetSecret -Value $input_UserPassword
+    $input_UserPassword = ConvertTo-SecureString -AsPlainText -String $input_UserPassword -Force
 
     $input_Protocol = Get-VstsInput -Name "Protocol" -Require -ErrorAction "Stop"
+    $input_AuthenticationMechanism = Get-VstsInput -Name "AuthenticationMechanism" -Require -ErrorAction 'Stop'
     $input_NewPsSessionOptionArguments = Get-VstsInput -Name "NewPsSessionOptionArguments"
 
     $input_RunPowershellInParallel = Get-VstsInput -Name "RunPowershellInParallel" -AsBool
@@ -29,7 +32,13 @@ try {
 
     $PSSessionOption = Get-NewPSSessionOption -arguments $input_NewPsSessionOptionArguments
 
-    $sessions = Create-PSSessionToRemoteMachines -targetMachineNames $targetMachineNames -targetMachineCredential $credential -protocol $input_Protocol
+    $sessionName = [Guid]::NewGuid().ToString();
+    $sessions = ConnectTo-RemoteMachines -targetMachineNames $targetMachineNames `
+                                         -targetMachineCredential $credential `
+                                         -protocol $input_Protocol `
+                                         -authenticationMechanism $input_AuthenticationMechanism `
+                                         -sessionName $sessionName
+
     $remoteScriptJobArguments = Get-RemoteScriptJobArguments
     if($input_RunPowershellInParallel -eq $true) {
         Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArguments $remoteScriptJobArguments
