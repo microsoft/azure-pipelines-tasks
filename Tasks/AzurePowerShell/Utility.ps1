@@ -90,7 +90,7 @@ function Get-LatestModule {
     return $resultFolder
 }
 
-function  Get-RollForwardVersion {
+function Get-RollForwardVersion {
     [CmdletBinding()]
     param([string]$azurePowerShellVersion)
     Trace-VstsEnteringInvocation $MyInvocation
