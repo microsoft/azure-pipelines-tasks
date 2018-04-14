@@ -14,7 +14,7 @@ function Run-RemoteScriptJobs {
             ForEach($job in $jobs) {
                 Receive-Job -Job $job |
                     ForEach-Object {
-                         if($_.VstsTask -eq $true) { 
+                         if($_.VstsTaskJobResult -eq $true) { 
                              $jobResults += $_ 
                          } else { 
                              Write-Host $($_ | Out-String) 
@@ -27,7 +27,7 @@ function Run-RemoteScriptJobs {
         ForEach($job in $jobs) {
             Receive-Job -Job $job |
              ForEach-Object {
-                  if($_.VstsTask -eq $true) {
+                  if($_.VstsTaskJobResult -eq $true) {
                        $jobResults += $_ 
                     } else {
                          Write-Host $($_ | Out-String) 

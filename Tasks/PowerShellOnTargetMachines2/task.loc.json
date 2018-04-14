@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 56
+    "Patch": 65
   },
   "preview": true,
   "groups": [
@@ -54,7 +54,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.UserName",
       "defaultValue": "",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.UserName"
     },
     {
@@ -62,7 +61,6 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.UserPassword",
       "defaultValue": "",
-      "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.UserPassword"
     },
     {
@@ -234,6 +232,7 @@
     "PS_TM_InvalidSessionVariablesInputFormat": "ms-resource:loc.messages.PS_TM_InvalidSessionVariablesInputFormat",
     "PS_TM_ScriptJobFailed": "ms-resource:loc.messages.PS_TM_ScriptJobFailed",
     "PS_TM_ScriptExecutionSucceeded": "ms-resource:loc.messages.PS_TM_ScriptExecutionSucceeded",
-    "PS_TM_UnknownStatus": "ms-resource:loc.messages.PS_TM_UnknownStatus"
+    "PS_TM_UnknownStatus": "ms-resource:loc.messages.PS_TM_UnknownStatus",
+    "PS_TM_TaskFailed": "ms-resource:loc.messages.PS_TM_TaskFailed"
   }
 }

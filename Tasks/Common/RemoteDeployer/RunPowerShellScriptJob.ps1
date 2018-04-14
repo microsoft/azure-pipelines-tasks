@@ -24,6 +24,19 @@ $ExecutePsScript = {
         Invoke-Expression $command
     }
 
+    function Create-TemporaryFile {
+        Param(
+            [string] $contents
+        )
+        $filePath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
+        [System.IO.File]::WriteAllText(
+            $filePath,
+            $contents,
+            [System.Text.Encoding]::UTF8
+        )
+        return $filePath
+    }
+    
     function Remove-TemporaryFile {
         Param(
             [string] $filePath
@@ -36,7 +49,7 @@ $ExecutePsScript = {
     try {
 
         $result = @{
-            "VstsTask" = $true;
+            "VstsTaskJobResult" = $true;
             "Status" = "InProgress";
             "Message" = "PS_TM_ExitCode";
             "ExitCode" = -1;
@@ -44,9 +57,8 @@ $ExecutePsScript = {
         }
 
         if( $inline -eq $true ) {
-            $inlineScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
+            $inlineScriptPath = Create-TemporaryFile -contents $inlineScript
             $scriptPath = $inlineScriptPath
-            ($inlineScript | Out-File $scriptPath)
         }
 
         if(!([string]::IsNullOrEmpty($workingDirectory)) -and !(Test-Path -Path $workingDirectory -PathType Container)) {
@@ -62,12 +74,8 @@ $ExecutePsScript = {
         }
 
         $script = [scriptblock]::Create("
-            if(![string]::IsNullOrEmpty(`"$workingDirectory`")) {
-                cd '$($workingDirectory.Replace("'","''"))'
-            }
-            
-            # Set Error Action to Stop first, so that any errors while setting session variables can be caught.
             `$ErrorActionPreference = 'Stop'
+            cd '$($workingDirectory.Replace("'","''"))'
             $sessionVariables
             `$ErrorActionPreference = `"$_errorActionPreference`"
 
@@ -88,9 +96,7 @@ $ExecutePsScript = {
             }
         ");
 
-        $tempScriptPath = [System.IO.Path]::Combine(([System.IO.Path]::GetTempPath()), ([guid]::NewGuid().ToString() + ".ps1"));
-        $script | Out-File $tempScriptPath
-
+        $tempScriptPath = Create-TemporaryFile -contents $script
         $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
         $powershellArguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($tempScriptPath.Replace("'", "''"))'`""
 
