@@ -11,7 +11,7 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 134,
         "Patch": 0
     },
@@ -143,7 +143,10 @@
             "visibleRule": "releaseNotesSelection = file"
         },
         {
-            "name": "distributionGroupId",
+            "name": "destinationId",
+            "aliases": [
+                "distributionGroupId"
+            ],
             "type": "string",
             "defaultValue": "",
             "label": "Destination ID",
