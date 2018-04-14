@@ -3,6 +3,10 @@
         {
             "module": "../Common/Deployment/TelemetryHelper",
             "type": "ps"
+        },
+        {
+            "module": "../Common/RemoteDeployer",
+            "type": "ps"
         }
     ],
     "externals": {

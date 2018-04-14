@@ -33,19 +33,16 @@ function Get-TargetMachineCredential {
         [ValidateNotNullOrEmpty()]
         [string] $userName,
         [Parameter(Mandatory = $true)]
-        [securestring] $securePassword,
-        [Parameter(Mandatory = $true)]
-        [ValidateCount(2,2)]
-        [string[]] $variableNames
+        [ValidateNotNullOrEmpty()]
+        [string] $password
     )
-    
-    Trace-VstsEnteringInvocation $MyInvocation
+
+    Trace-VstsEnteringInvocation $MyInvocation -Parameter "userName"
     try {
+        Write-VstsSetSecret -Value $password
+        $securePassword = ConvertTo-SecureString -AsPlainText -String $password -Force
         return (New-Object System.Management.Automation.PSCredential($userName, $securePassword))
     } finally {
-        ForEach ($variableName in $variableNames) {
-            Remove-Variable -Name $variableName -Force -Scope Script -ErrorAction SilentlyContinue
-        }
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -57,30 +54,9 @@ function Get-NewPSSessionOption {
     )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        $commandString = New-CommandString -commandName "New-PSSessionOption" -arguments $arguments
+        $commandString = "New-PSSessionOption $arguments"
+        Write-Verbose "New-PSSessionOption command: $commandString"
         return (Invoke-Expression -Command $commandString)
-    } finally {
-        Trace-VstsLeavingInvocation $MyInvocation
-    }
-}
-
-function New-CommandString {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [ValidateNotNullOrEmpty()]
-        [string] $commandName,
-        [string] $arguments = ""
-    )
-    Trace-VstsEnteringInvocation $MyInvocation
-    try {
-        if (Get-Command -Name $commandName -ErrorAction "SilentlyContinue") {
-            $commandString = "$commandName $arguments"
-            Write-Verbose "CommandString: $commandString"
-            return $commandString
-        } else {
-            throw (Get-VstsLocString -Key "PS_TM_CommandNotFound" -ArgumentList $commandName)
-        }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
@@ -173,7 +149,7 @@ function Get-RemoteScriptJobArguments {
             $sessionVariables = ConvertTo-HashTable -tokenSequence $input_sessionVariables
             $newVarCmds = @()
             foreach ($key in $sessionVariables.Keys) {
-                $newVarCmds += New-CommandString "Set-Item" "-LiteralPath variable:\$key -Value $($sessionVariables[$key])"
+                $newVarCmds += "Set-Item -LiteralPath variable:\$key -Value '$($sessionVariables[$key])'"
             }
             $joinedCommand = [System.String]::Join([Environment]::NewLine, $newVarCmds)
             $inline = $false
