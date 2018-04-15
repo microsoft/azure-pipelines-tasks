@@ -292,7 +292,6 @@
     "RestartAppServiceAccepted": "ms-resource:loc.messages.RestartAppServiceAccepted",
     "InvalidAction": "ms-resource:loc.messages.InvalidAction",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
-    "CouldnotfetchaccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchaccesstokenforAzureStatusCode",
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
     "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot",
@@ -317,7 +316,6 @@
     "UnableToFetchContinuousWebJobs": "ms-resource:loc.messages.UnableToFetchContinuousWebJobs",
     "UnableToStartContinuousWebJob": "ms-resource:loc.messages.UnableToStartContinuousWebJob",
     "UnableToStopContinuousWebJob": "ms-resource:loc.messages.UnableToStopContinuousWebJob",
-    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "AppNameCannotBeNull": "ms-resource:loc.messages.AppNameCannotBeNull",
     "SlotNameCannotBeNull": "ms-resource:loc.messages.SlotNameCannotBeNull",
     "SourceSlotNameCannotBeNull": "ms-resource:loc.messages.SourceSlotNameCannotBeNull",
@@ -403,6 +401,9 @@
     "WebJobAlreadyInStoppedState": "ms-resource:loc.messages.WebJobAlreadyInStoppedState",
     "RestartingKuduService": "ms-resource:loc.messages.RestartingKuduService",
     "RestartedKuduService": "ms-resource:loc.messages.RestartedKuduService",
-    "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService"
+    "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }
