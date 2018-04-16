@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 6
+        "Patch": 7
     },
     "demands": [],
     "preview": "true",
@@ -167,6 +167,7 @@
         {
             "name": "version",
             "label": "Version",
+            "aliases": ["chartVersion"],
             "type": "string",
             "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
             "defaultValue": "",
@@ -211,6 +212,7 @@
         },
         {
             "name": "canaryimage",
+            "aliases": ["canaryImage"],
             "type": "boolean",
             "label": "Use canary image version.",
             "defaultValue": "false",
@@ -220,6 +222,7 @@
         },
         {
             "name": "upgradetiller",
+            "aliases": ["upgradeTiller"],
             "type": "boolean",
             "label": "Upgrade Tiller",
             "defaultValue": "true",
@@ -229,6 +232,7 @@
         },
         {
             "name": "updatedependency",
+            "aliases": ["updateDependency"],
             "type": "boolean",
             "label": "Update Dependency",
             "defaultValue": "false",
@@ -303,6 +307,7 @@
         },
         {
             "name": "tillernamespace",
+            "aliases": ["tillerNamespace"],
             "label": "Tiller namespace",
             "helpMarkDown": "Specify K8 namespace of tiller.",
             "type": "string",
@@ -342,6 +347,9 @@
         "RetryingRequest": "Retrying request after %s seconds.",
         "PatternNotFoundInFilePath": "Pattern not found in file path %s.",
         "CantResolvePatternInPath": "Can not resolve pattern in file path %s.",
-        "PatternFoundInPath": "Pattern found in file path %s."
+        "PatternFoundInPath": "Pattern found in file path %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
     }
 }

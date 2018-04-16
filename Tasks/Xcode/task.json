@@ -12,7 +12,7 @@
     "version": {
         "Major": 5,
         "Minor": 133,
-        "Patch": 3
+        "Patch": 4
     },
     "preview": true,
     "releaseNotes": "This version of the task is compatible with Xcode 8 and Xcode 9. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
@@ -219,6 +219,15 @@
             "label": "Provisioning profile UUID",
             "required": false,
             "helpMarkDown": "(Optional) Enter the UUID of an installed provisioning profile to be used for this build. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).",
+            "groupName": "sign",
+            "visibleRule": "signingOption = manual"
+        },
+        {
+            "name": "provisioningProfileName",
+            "type": "string",
+            "label": "Provisioning profile name",
+            "required": false,
+            "helpMarkDown": "(Optional) Enter the name of an installed provisioning profile to be used for this build. If specified, this takes precedence over the provisioning profile UUID. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).",
             "groupName": "sign",
             "visibleRule": "signingOption = manual"
         },

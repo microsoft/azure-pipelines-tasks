@@ -315,7 +315,7 @@ export class DistributedTest {
                 throw new Error(tl.loc('noTestSourcesFound', this.dtaTestConfig.sourceFilter.toString()));
             }
 
-            const tempFile = path.join(os.tmpdir(), 'testSources_' + uuid.v1() + '.src');
+            const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuid.v1() + '.src');
             fs.writeFileSync(tempFile, filesMatching.join(os.EOL));
             tl.debug('Test Sources file :' + tempFile);
             return tempFile;
