@@ -114,6 +114,7 @@ export class dotNetExe {
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
 
         if (enablePublishTestResults && enablePublishTestResults === true) {
+            tl.rmRF(`${resultsDirectory}/*.trx`);
             this.arguments = this.arguments.concat(` --logger trx --results-directory ${resultsDirectory}`);
         }
         
