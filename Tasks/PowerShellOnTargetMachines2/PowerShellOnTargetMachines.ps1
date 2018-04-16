@@ -35,7 +35,7 @@ try {
 
     $targetMachineNames = Parse-TargetMachineNames -machineNames $input_Machines
 
-    $Global:PSSessionOption = Get-NewPSSessionOption -arguments $input_NewPsSessionOptionArguments
+    $sessionOption = Get-NewPSSessionOption -arguments $input_NewPsSessionOptionArguments
 
     $remoteScriptJobArguments = Get-RemoteScriptJobArguments
     $sessionName = [Guid]::NewGuid().ToString();
@@ -46,7 +46,8 @@ try {
                             -protocol $input_Protocol `
                             -authentication $input_AuthenticationMechanism `
                             -sessionName $sessionName `
-                            -remoteScriptJobArguments $remoteScriptJobArguments
+                            -remoteScriptJobArguments $remoteScriptJobArguments `
+                            -sessionOption $sessionOption
     } else {
         foreach($targetMachineName in $targetMachineNames) {
             Invoke-RemoteScript -targetMachineNames @($targetMachineName) `
@@ -54,7 +55,8 @@ try {
                                 -protocol $input_Protocol `
                                 -authentication $input_AuthenticationMechanism `
                                 -sessionName $sessionName `
-                                -remoteScriptJobArguments $remoteScriptJobArguments
+                                -remoteScriptJobArguments $remoteScriptJobArguments `
+                                -sessionOption $sessionOption
         }
     }
 } catch {
