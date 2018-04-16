@@ -272,7 +272,7 @@ describe('ANT Suite', function() {
             });
     })
 
-    it('ANT build with Publish Test Results.', (done) => {
+    it('Ant build with Publish Test Results.', (done) => {
         setResponseFile('antGood.json');
 
         var tr = new trm.TaskRunner('ANT');
@@ -294,7 +294,7 @@ describe('ANT Suite', function() {
             });
     })
 
-    it('ANT build with Publish Test Results with no matching test result files.', (done) => {
+    it('Ant build with Publish Test Results with no matching test result files.', (done) => {
         setResponseFile('antGood.json');
 
         var tr = new trm.TaskRunner('ANT');
@@ -320,7 +320,7 @@ describe('ANT Suite', function() {
             });
     })
 
-    it('ANT build with Publish Test Results for failed builds.', (done) => {
+    it('Ant build with Publish Test Results for failed builds.', (done) => {
         setResponseFile('antFails.json');
 
         var tr = new trm.TaskRunner('ANT');
