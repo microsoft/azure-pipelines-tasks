@@ -46,6 +46,20 @@ $ExecutePsScript = {
         }
     }
 
+    function Get-MachineGuidHash {
+        try {
+            $machineGuid = (Get-WmiObject -class Win32_ComputerSystemProduct -namespace "root\CIMv2" -ErrorAction "Stop").UUID
+            $sha512 = [System.Security.Cryptography.SHA512CryptoServiceProvider]::new()
+            $hash = $sha512.ComputeHash([System.Text.Encoding]::ASCII.GetBytes($machineGuid))
+            $machineGuidHash = [System.BitConverter]::ToString($hash).Replace("-", [string]::Empty)
+            Write-Verbose "Calculated Machine Guid Hash is: '$machineGuidHash'"
+        } catch {
+            Write-Verbose "Unable to calculate Machine Guid hash value. Error: $($_.Exception.Message)"
+            $machineGuidHash = ""            
+        }
+        return $machineGuidHash
+    }
+
     try {
 
         $result = @{
@@ -53,7 +67,9 @@ $ExecutePsScript = {
             "Status" = "InProgress";
             "Message" = "PS_TM_ExitCode";
             "ExitCode" = -1;
-            "ComputerName" = $env:COMPUTERNAME
+            "ComputerName" = $env:COMPUTERNAME;
+            "MachineGuidHash" = "";
+            "IsAzureVM" = $false;
         }
 
         if( $inline -eq $true ) {
@@ -115,6 +131,8 @@ $ExecutePsScript = {
         Remove-TemporaryFile -filePath $inlineScriptPath
         Remove-TemporaryFile -filePath $tempScriptPath
         $result.ExitCode = $LASTEXITCODE
+        $result.IsAzureVM = ((Get-Service -Name "WindowsAzureGuestAgent" -ErrorAction "SilentlyContinue") -ne $null)
+        $result.MachineGuidHash = Get-MachineGuidHash
     }
 
     return $result
