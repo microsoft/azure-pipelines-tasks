@@ -9,8 +9,6 @@ function Invoke-RemoteScript {
         [Parameter(Mandatory = $true)]
         [string[]] $targetMachineNames,
 
-        [Parameter(Mandatory = $true)]
-        [AllowNull()]
         [pscredential] $credential,
 
         [ValidateSet("http", "https")]
