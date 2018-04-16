@@ -5,14 +5,22 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import * as Constant from '../operations/Constants';
 import tl = require('vsts-task-lib/task');
+import fs = require('fs');
+import path = require('path');
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
 var deployUtility = require('webdeployment-common/utility.js');
-var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
+var msDeployUtility = require('webdeployment-common/msDeployUtility.js');
+
+const DEFAULT_RETRY_COUNT = 3;
 
 export class PublishProfileWebAppDeploymentProvider implements IWebAppDeploymentProvider{
     private taskParams: TaskParameters;
     private publishProfileUtility: PublishProfileUtility;
+    private origWebPackage: string;
+    private modWebPackage: string;
+    private bakWebPackage: string;
+    private origEnvPath: string;
 
     constructor(taskParams: TaskParameters) {
         this.taskParams = taskParams;
@@ -32,21 +40,105 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
     }
 
     public async DeployWebAppStep() {
-        var msDeployPublishingProfile = await this.publishProfileUtility.GetTaskParametersFromPublishProfileFile(this.taskParams);
-        var webPackage = packageUtility.PackageUtility.getPackagePath(this.taskParams.Package);
-        var isFolderBasedDeployment = deployUtility.isInputPkgIsFolder(webPackage);
-        webPackage = await FileTransformsUtility.applyTransformations(webPackage, this.taskParams);
-
-        tl.debug("Performing the deployment of webapp using publish profile.");
         if(!tl.osType().match(/^Win/)){
             throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
         }
 
-        await msDeploy.DeployUsingMSDeploy(webPackage, this.taskParams.WebAppName, msDeployPublishingProfile, 
-            this.taskParams.RemoveAdditionalFilesFlag, this.taskParams.ExcludeFilesFromAppDataFlag, this.taskParams.TakeAppOfflineFlag,
-            this.taskParams.VirtualApplication, this.taskParams.SetParametersFile, this.taskParams.AdditionalArguments,
-            isFolderBasedDeployment, this.taskParams.UseWebDeploy);
+        tl.debug("Performing the deployment of webapp using publish profile.");
+
+        var applyFileTransformFlag = this.taskParams.JSONFiles.length != 0 || this.taskParams.XmlTransformation || this.taskParams.XmlVariableSubstitution;
+        if(applyFileTransformFlag) {
+            await this.ApplyFileTransformation();
+        }
+
+        var msDeployPublishingProfile = await this.publishProfileUtility.GetTaskParametersFromPublishProfileFile(this.taskParams);
+        var deployCmdFilePath = this.GetDeployCmdFilePath();
+
+        await this.SetMsdeployEnvPath();
+        var cmdArgs:string = this.GetDeployScriptCmdArgs(deployCmdFilePath, msDeployPublishingProfile);
+
+        var retryCountParam = tl.getVariable("appservice.msdeployretrycount");
+        var retryCount = (retryCountParam && !(isNaN(Number(retryCountParam)))) ? Number(retryCountParam): DEFAULT_RETRY_COUNT; 
+        
+        try {
+            while(true) {
+                try {
+                    retryCount -= 1;
+                    await this.publishProfileUtility.RunCmd(cmdArgs);
+                    break;
+                }
+                catch (error) {
+                    if(retryCount == 0) {
+                        throw error;
+                    }
+                    console.log(error);
+                    console.log(tl.loc('RetryToDeploy'));
+                }
+            }
+            console.log(tl.loc('PackageDeploymentSuccess'));
+        }
+        catch (error) {
+            tl.error(tl.loc('PackageDeploymentFailed'));
+            tl.debug(JSON.stringify(error));
+            msDeployUtility.redirectMSDeployErrorToConsole();
+            throw Error(error.message);
+        }
+        finally {
+            this.ResetMsdeployEnvPath();
+            if(applyFileTransformFlag) {
+                this.ResetFileTransformation();
+            }
+        }
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean){ }
+
+    private async SetMsdeployEnvPath() {
+        var msDeployPath = await msDeployUtility.getMSDeployFullPath();
+        var msDeployDirectory = msDeployPath.slice(0, msDeployPath.lastIndexOf('\\') + 1);
+        this.origEnvPath = process.env.PATH;
+        process.env.PATH = msDeployDirectory + ";" + process.env.PATH ;
+    }
+
+    private async ResetMsdeployEnvPath() {
+        process.env.PATH = this.origEnvPath;
+    }
+
+    private GetDeployCmdFilePath(): string {
+        var webPackagePath = packageUtility.PackageUtility.getPackagePath(this.taskParams.Package);
+        var packageDir = path.dirname(webPackagePath);
+        return packageUtility.PackageUtility.getPackagePath(packageDir + "\\*.deploy.cmd");
+    }
+
+    private GetDeployScriptCmdArgs(deploycmdFileName:string, msDeployPublishingProfile:any): string {
+        var deployCmdArgs: string = " /C " + deploycmdFileName + " /Y /A:basic \"/U:" + msDeployPublishingProfile.userName + "\" \"\\\"/P:" + msDeployPublishingProfile.userPWD 
+            + "\\\"\" \"\\\"/M:" + "https://" + msDeployPublishingProfile.publishUrl + "/msdeploy.axd?site=" + this.taskParams.WebAppName + "\\\"\"";
+
+        if(this.taskParams.TakeAppOfflineFlag) {
+            deployCmdArgs += ' -enableRule:AppOffline';
+        }
+
+        if(this.taskParams.RemoveAdditionalFilesFlag) {
+            deployCmdArgs += " -enableRule:DoNotDeleteRule";
+        }
+
+        if(this.taskParams.AdditionalArguments) {
+            deployCmdArgs += " " + this.taskParams.AdditionalArguments;
+        }
+
+        return deployCmdArgs;
+    }
+
+    private async ApplyFileTransformation() {
+        this.origWebPackage = packageUtility.PackageUtility.getPackagePath(this.taskParams.Package);
+        this.modWebPackage = await FileTransformsUtility.applyTransformations(this.origWebPackage, this.taskParams);
+        this.bakWebPackage = this.origWebPackage + ".bak";
+        fs.renameSync(this.origWebPackage, this.bakWebPackage);
+        fs.renameSync(this.modWebPackage, this.origWebPackage);
+    }
+
+    private ResetFileTransformation() {
+        tl.rmRF(this.origWebPackage);
+        fs.renameSync(this.bakWebPackage, this.origWebPackage);
+    }
 }
