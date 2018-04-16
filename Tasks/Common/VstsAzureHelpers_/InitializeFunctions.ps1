@@ -250,6 +250,11 @@ function Get-MsiAccessToken {
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
         if($exceptionMessage -match "400")
         {
@@ -480,4 +485,60 @@ function Get-ProxyUri
     }
 
     return $proxyUri
+}
+
+function Parse-Exception($exception){
+    if($exception) {
+        try{
+            Write-Verbose "Exception message - $($exception.ToString())"
+            $response = $exception.Response
+            if($response) 
+            {
+                $responseStream =  $response.GetResponseStream()
+                $streamReader = New-Object System.IO.StreamReader($responseStream)
+                $streamReader.BaseStream.Position = 0
+                $streamReader.DiscardBufferedData()
+                $responseBody = $streamReader.ReadToEnd()
+                $streamReader.Close()
+                Write-Verbose "Exception message extracted from response $responseBody"
+                $exceptionMessage = "";
+                try
+                {
+                    if($responseBody)
+                    {
+                        $exceptionJson = $responseBody | ConvertFrom-Json
+
+                        $exceptionError = $exceptionJson.error
+                        if($exceptionError)
+                        {
+                            $exceptionMessage = $exceptionError.Message
+                            $exceptionCode = $exceptionError.code
+                        }
+                        else 
+                        {
+                            $exceptionMessage = $exceptionJson.Message
+                            $exceptionCode = $exceptionJson.code
+                        }
+
+                        if ($exceptionCode)
+                        {
+                            Write-VstsTaskError -ErrCode $exceptionCode
+                        }
+                    }
+                }
+                catch{
+                    $exceptionMessage = $responseBody
+                }
+                if($response.statusCode -eq 404 -or (-not $exceptionMessage)){
+                    $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
+                }
+                return $exceptionMessage
+            }
+        } 
+        catch
+        {
+            Write-verbose "Unable to parse exception: " + $_.Exception.ToString()
+        }
+    }
+    return $null
 }
