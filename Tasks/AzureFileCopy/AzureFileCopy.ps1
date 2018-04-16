@@ -115,7 +115,8 @@ try
 }
 catch
 {
-    Write-Telemetry "Task_InternalError" $_.Exception.Message
+    Write-Verbose $_.Exception.ToString()
+    Write-Telemetry "Task_InternalError" "TemporaryCopyingToBlobContainerFailed"
     throw
 }
 
@@ -182,7 +183,7 @@ catch
 {
     Write-Verbose $_.Exception.ToString() -Verbose
 
-    Write-Telemetry "Task_InternalError" $_.Exception.Message
+    Write-Telemetry "Task_InternalError" "CopyingToAzureVMFailed"
     throw
 }
 finally
