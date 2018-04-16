@@ -1116,7 +1116,7 @@ function Copy-FilesParallellyToAzureVMs
     if ($parallelOperationStatus -eq "Failed")
     {
         foreach ($error in $dtlsdkErrors) {
-            Write-Verbose $error
+            Write-Verbose "Error: " + $error
         }
 
         Write-Telemetry "DTLSDK_Error" "CopyFilesParallellyToAzureVMsFailed"
