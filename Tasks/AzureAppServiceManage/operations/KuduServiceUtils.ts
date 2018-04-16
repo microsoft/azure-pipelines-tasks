@@ -71,8 +71,8 @@ export class KuduServiceUtils {
             }
         }
         
-        tl.debug('Set output Variable ExtensionInstallPath to value: ' + extensionLocalPaths);
-        tl.setVariable("ExtensionInstallPath", extensionLocalPaths.slice(0, -1));
+        tl.debug('Set output Variable LocalPathsForInstalledExtensions to value: ' + extensionLocalPaths);
+        tl.setVariable("LocalPathsForInstalledExtensions", extensionLocalPaths.slice(0, -1));
         
         if(anyExtensionInstalled) {
             await this.restart();
