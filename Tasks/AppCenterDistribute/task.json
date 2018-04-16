@@ -15,6 +15,7 @@
         "Minor": 134,
         "Patch": 0
     },
+    "releaseNotes": "Take an advantage of the new Distribution API to add the support for distribution to stores.",
     "groups": [
         {
             "name": "symbols",
