@@ -1029,8 +1029,8 @@ function Copy-FilesSequentiallyToAzureVMs
                 $copyErrorMessage = $copyErrorMessage + $winrmHelpMsg
             }
 
-            Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
-            Write-Verbose "DeploymentSummary: $($copyResponse.DeploymentSummary)" -Verbose
+            Write-Verbose "CopyErrorMessage: $copyErrorMessage"
+            Write-Verbose "DeploymentSummary: $($copyResponse.DeploymentSummary)"
 
             Write-Telemetry "DTLSDK_Error" "CopyFilesSequentiallyToAzureVMsFailed"
             ThrowError -errorMessage $copyErrorMessage
@@ -1118,7 +1118,7 @@ function Copy-FilesParallellyToAzureVMs
         foreach ($error in $dtlsdkErrors) {
             Write-Verbose $error
         }
-        
+
         Write-Telemetry "DTLSDK_Error" "CopyFilesParallellyToAzureVMsFailed"
         $errorMessage = (Get-VstsLocString -Key "AFC_ParallelCopyFailed")      
         ThrowError -errorMessage $errorMessage

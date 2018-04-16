@@ -190,7 +190,7 @@ try
 }
 catch
 {
-    Write-Verbose $_.Exception.ToString() -Verbose
+    Write-Verbose $_.Exception.ToString()
     Write-Telemetry "Task_InternalError" "PowerShellOnTargetMachineTaskFailed"
     throw
 }
