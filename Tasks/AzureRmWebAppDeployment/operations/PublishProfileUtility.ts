@@ -2,9 +2,12 @@ import tl = require('vsts-task-lib/task');
 import { TaskParameters } from './TaskParameters';
 import fs = require('fs');
 import * as Constant from './Constants';
+import path = require('path');
+import Q = require('q');
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
 var parseString = require('xml2js').parseString;
+const ERROR_FILE_NAME = "error.txt";
 
 export class PublishProfileUtility {
 
@@ -43,8 +46,8 @@ export class PublishProfileUtility {
             throw new Error(error);
         }
         return new Promise ((response, reject) => {
-            this._publishProfileJs.hasOwnProperty(propertyKey)
-                ? response(this._publishProfileJs[propertyKey][0]) : reject(tl.loc('PropertyDoesntExistPublishProfile', propertyKey)); 
+            this._publishProfileJs.hasOwnProperty(propertyKey) ?
+                response(this._publishProfileJs[propertyKey][0]) : reject(tl.loc('PropertyDoesntExistPublishProfile', propertyKey)); 
             });
     }
 
@@ -74,5 +77,35 @@ export class PublishProfileUtility {
             });
         });
     }
-}
+    
+    public async RunCmd(cmdArgs) {
+        var deferred = Q.defer();
+        var cmdError = null;
+        var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'), ERROR_FILE_NAME);
+		var errObj = fs.createWriteStream(errorFile);
+        errObj.on('finish', () => {
+            if(cmdError) {
+                deferred.reject(cmdError);
+            }
+        });
 
+        try {
+           await tl.exec("cmd", cmdArgs, <any>{
+               errStream: errObj,
+			   outStream: process.stdout,
+			   failOnStdErr: true,
+               windowsVerbatimArguments: true
+             }).then(() => {
+               deferred.resolve();
+             }).catch((error) => {
+                throw(error);
+             });
+        } catch (error) {
+            cmdError = error;
+        } finally {
+            errObj.end();
+        }
+
+        return deferred.promise;
+    }
+}
