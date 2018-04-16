@@ -1116,7 +1116,7 @@ function Copy-FilesParallellyToAzureVMs
     if ($parallelOperationStatus -eq "Failed")
     {
         foreach ($error in $dtlsdkErrors) {
-            Write-Verbose "Error: " + $error
+            Write-Verbose "Error: $error"
         }
 
         Write-Telemetry "DTLSDK_Error" "CopyFilesParallellyToAzureVMsFailed"
@@ -1400,7 +1400,7 @@ function Add-AzureVMCustomScriptExtension
     }
     catch
     {
-         Write-Telemetry "Task_InternalError" "ExecutionOfVmCustomScriptFailed"    
+         Write-Telemetry "Task_InternalError" "ExecutionOfVmCustomScriptFailed:$exceptionType"    
          throw (Get-VstsLocString -Key "AFC_CopyPrereqsFailed" -ArgumentList $_.exception.message)
     }
 

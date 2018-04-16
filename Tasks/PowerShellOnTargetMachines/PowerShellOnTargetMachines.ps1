@@ -191,7 +191,8 @@ try
 catch
 {
     Write-Verbose $_.Exception.ToString()
-    Write-Telemetry "Task_InternalError" "PowerShellOnTargetMachineTaskFailed"
+    $exceptionType = $_.Exception.GetType()
+    Write-Telemetry "Task_InternalError" "PowerShellOnTargetMachineTaskFailed:$exceptionType"
     throw
 }
 finally
