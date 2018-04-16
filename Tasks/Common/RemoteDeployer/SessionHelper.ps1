@@ -41,13 +41,13 @@ function ConnectTo-RemoteMachine {
 
         if ($isConnectionComplete) {
             Write-Verbose "Connection established to computer:'$($machineDetails.ComputerName)' port:'$($machineDetails.WSManPort)'"
-            Write-Host $(Get-VstsLocString -Key "PS_TM_ConnectedMachines" -ArgumentList $targetMachineName)
+            Write-Host $(Get-VstsLocString -Key "RemoteDeployer_ConnectedMachines" -ArgumentList $targetMachineName)
             return $session    
         } else {
             foreach ($sessionError in $sessionErrors) {
                 Write-VstsTaskError -Message $sessionError.Exception.Message -ErrCode "PS_TM_UnableToCreatePSSession"
             }
-            Write-VstsSetResult -Result 'Failed' -Message $(Get-VstsLocString -Key "PS_TM_NotConnectedMachines" -ArgumentList $targetMachineName)
+            Write-VstsSetResult -Result 'Failed' -Message $(Get-VstsLocString -Key "RemoteDeployer_NotConnectedMachines" -ArgumentList $targetMachineName)
         }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

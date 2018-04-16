@@ -1,0 +1,8 @@
+{
+  "loc.messages.RemoteDeployer_ConnectedMachines": "PSSession created for Machines:'{0}'",
+  "loc.messages.RemoteDeployer_NotConnectedMachines": "PSSession could not be created for Machines:'{0}'",
+  "loc.messages.RemoteDeployer_ScriptJobFailed": "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
+  "loc.messages.RemoteDeployer_NonZeroExitCode": "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
+  "loc.messages.RemoteDeployer_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",
+  "loc.messages.RemoteDeployer_UnknownStatus": "Unknown remote script job execution status: '{0}'"
+}

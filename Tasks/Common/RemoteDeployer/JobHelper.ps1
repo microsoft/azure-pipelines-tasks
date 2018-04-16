@@ -54,18 +54,18 @@ function Set-TaskResult {
         ForEach($jobResult in $jobResults) {
             if ($jobResult.Status -eq "Failed") {
                 $failed = $true
-                Write-VstsSetResult -Result 'Failed' -Message (Get-VstsLocString -Key "PS_TM_ScriptJobFailed" -ArgumentList $jobResult.ComputerName, $jobResult.Message) -DoNotThrow
+                Write-VstsSetResult -Result 'Failed' -Message (Get-VstsLocString -Key "RemoteDeployer_ScriptJobFailed" -ArgumentList $jobResult.ComputerName, $jobResult.Message) -DoNotThrow
             } elseif ($jobResult.Status -eq "Passed") {
                 Write-Verbose "Remote script execution succeeded for machine: $($jobResult.ComputerName)"
                 if($jobResult.ExitCode -ne 0) {
                     $failed = $true
-                    Write-VstsSetResult -Result 'Failed' -Message (Get-VstsLocString -Key "PS_TM_NonZeroExitCode" -ArgumentList $jobResult.ComputerName, $jobResult.ExitCode) -DoNotThrow
+                    Write-VstsSetResult -Result 'Failed' -Message (Get-VstsLocString -Key "RemoteDeployer_NonZeroExitCode" -ArgumentList $jobResult.ComputerName, $jobResult.ExitCode) -DoNotThrow
                 } else {
-                    Write-Host $(Get-VstsLocString -Key "PS_TM_ScriptExecutionSucceeded" -ArgumentList $($jobResult.ComputerName))
+                    Write-Host $(Get-VstsLocString -Key "RemoteDeployer_ScriptExecutionSucceeded" -ArgumentList $($jobResult.ComputerName))
                 }
             } else {
                 $failed = $true
-                Write-VstsSetResult -Result 'Failed' -Message (Get-VstsLocString -Key "PS_TM_UnknownStatus" -ArgumentList $jobResult.Status) -DoNotThrow
+                Write-VstsSetResult -Result 'Failed' -Message (Get-VstsLocString -Key "RemoteDeployer_UnknownStatus" -ArgumentList $jobResult.Status) -DoNotThrow
             }
         }
 

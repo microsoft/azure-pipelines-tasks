@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 65
+        "Patch": 67
     },
     "preview": true,
     "groups": [
@@ -224,15 +224,9 @@
         }
     },
     "messages": {
-        "PS_TM_NonZeroExitCode" : "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
-        "PS_TM_ConnectedMachines" : "PSSession created for Machines:'{0}'",
-        "PS_TM_NotConnectedMachines" : "PSSession could not be created for Machines:'{0}'",
         "PS_TM_ParseSessionVariablesValueNotFound" : "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
         "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
         "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input",
-        "PS_TM_ScriptJobFailed" : "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
-        "PS_TM_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",
-        "PS_TM_UnknownStatus": "Unknown remote script job execution status: '{0}'",
         "PS_TM_TaskFailed": "Task failed with error: '{0}'"
     }
 }

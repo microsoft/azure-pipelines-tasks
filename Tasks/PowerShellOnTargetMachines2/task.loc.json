@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 65
+    "Patch": 67
   },
   "preview": true,
   "groups": [
@@ -224,15 +224,9 @@
     }
   },
   "messages": {
-    "PS_TM_NonZeroExitCode": "ms-resource:loc.messages.PS_TM_NonZeroExitCode",
-    "PS_TM_ConnectedMachines": "ms-resource:loc.messages.PS_TM_ConnectedMachines",
-    "PS_TM_NotConnectedMachines": "ms-resource:loc.messages.PS_TM_NotConnectedMachines",
     "PS_TM_ParseSessionVariablesValueNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesValueNotFound",
     "PS_TM_ParseSessionVariablesKeyNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesKeyNotFound",
     "PS_TM_InvalidSessionVariablesInputFormat": "ms-resource:loc.messages.PS_TM_InvalidSessionVariablesInputFormat",
-    "PS_TM_ScriptJobFailed": "ms-resource:loc.messages.PS_TM_ScriptJobFailed",
-    "PS_TM_ScriptExecutionSucceeded": "ms-resource:loc.messages.PS_TM_ScriptExecutionSucceeded",
-    "PS_TM_UnknownStatus": "ms-resource:loc.messages.PS_TM_UnknownStatus",
     "PS_TM_TaskFailed": "ms-resource:loc.messages.PS_TM_TaskFailed"
   }
 }
