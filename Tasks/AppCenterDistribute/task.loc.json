@@ -15,6 +15,7 @@
     "Minor": 134,
     "Patch": 0
   },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {
       "name": "symbols",
