@@ -4,7 +4,7 @@ var https   = require('https');
 var fs      = require('fs');
 import * as tl from "vsts-task-lib/task";
 
-export async function download(url: any, downloadPath: string, printData: boolean = false): Promise<void> {
+export async function download(url: any, downloadPath: string, printData: boolean): Promise<void> {
     var file = fs.createWriteStream(downloadPath);
     var body = ''
     return new Promise<void>((resolve, reject) => {

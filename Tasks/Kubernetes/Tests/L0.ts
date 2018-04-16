@@ -43,7 +43,6 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.specifyLocation] = shared.formatPath("newUserDir/kubectl.exe");
         process.env[shared.isKubectlPresentOnMachine] = "false";
         tr.run();
-        console.log(tr.stdout);
 
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
