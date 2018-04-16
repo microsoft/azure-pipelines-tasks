@@ -176,9 +176,11 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Error (Get-VstsLocString -Key "RunImportModuleSQLPSonyouragentPowershellprompt")
     }
 
+    Write-VstsTaskError -Message $_.Exception.Message -ErrCode "SDDDG_Task_InternalError"
     Write-Exception($_.Exception)
 }
 Catch [Exception]
 {
+    Write-VstsTaskError -Message $_.Exception.Message -ErrCode "SDDDG_Task_InternalError"
     Write-Exception($_.Exception)
 }

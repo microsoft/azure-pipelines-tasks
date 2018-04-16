@@ -36,6 +36,7 @@ tl.setResourcePath(taskManifestPath);
 
 run().then((result) =>
    tl.setResult(tl.TaskResult.Succeeded, "")
-).catch((error) => 
+).catch((error) => {
+    console.log("##vso[task.logissue type=error;code=ARG_Task_InternalError;]" + error);	
     tl.setResult(tl.TaskResult.Failed, error)
-);
+});

@@ -169,8 +169,9 @@ try{
             $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
         }
     }
-
-
+} catch {
+    Write-VstsTaskError -Message $_.Exception.Message -ErrCode "ACS_Task_InternalError"
+    throw
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }

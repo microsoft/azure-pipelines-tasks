@@ -123,6 +123,7 @@ async function main() {
     }
     catch(error) {
         isDeploymentSuccess = false;
+        console.log("##vso[task.logissue type=error;code=AASD_Task_InternalError;]" + error);	
         tl.setResult(tl.TaskResult.Failed, error);
     }
     finally {

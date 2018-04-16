@@ -43,6 +43,7 @@ async function run() {
 		tl._writeLine(tl.loc("ActionCompletedSuccefully", action, process.env.COMPUTERNAME, loadBalancerName));
 	}
 	catch(error) {
+	    console.log("##vso[task.logissue type=error;code=ANLBM_Task_InternalError;]" + error);		
 		tl.setResult(tl.TaskResult.Failed, error);
 	}
 }

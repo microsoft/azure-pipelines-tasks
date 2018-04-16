@@ -8,6 +8,8 @@ Register-Mock Get-VstsInput { "SqlTask" } -ParametersEvaluator { $Name -eq "Task
 Register-Mock Get-VstsInput { "MultipleSqlTaskFiles" } -ParametersEvaluator { $Name -eq "SqlFile" }
 Register-Mock Get-VstsInput { "Mock Value" } -ParametersEvaluator { $Name -ne "TaskNameSelector"  -and $Name -ne "SqlFile" }
 
+Register-Mock Write-VstsTaskError {}
+
 Register-Mock Find-VstsFiles {
     return @("Dacpac1.sql", "Dacpac2.sql", "DacpacN.sql") 
 } -ArgumentsEvaluator {$args.count -eq 2 -and $args[0] -like "LegacyPattern" -and $args[1] -like "MultipleSqlTaskFiles" }
