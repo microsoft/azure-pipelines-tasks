@@ -461,6 +461,11 @@ function Get-MsiAccessToken {
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
         if($exceptionMessage -match "400")
         {
