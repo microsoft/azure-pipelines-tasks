@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 67
+    "Patch": 68
   },
   "preview": true,
   "groups": [
@@ -162,7 +162,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.NewPsSessionOptionArguments",
       "required": false,
-      "defaultValue": "-SkipCACheck",
+      "defaultValue": "-SkipCACheck -OperationTimeout 0",
       "helpMarkDown": "ms-resource:loc.input.help.NewPsSessionOptionArguments",
       "groupName": "SessionOptions"
     },
