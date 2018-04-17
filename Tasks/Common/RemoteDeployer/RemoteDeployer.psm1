@@ -31,7 +31,7 @@ Import-VstsLocStrings "$PSScriptRoot\module.json"
 # name of the pssession that connects to target machines
 #
 #.PARAMETER remoteScriptJobArguments
-# hashtable with the following keys:
+# an array wherein each member is treated as follows (strictly this order should be followed):
 # 1. scriptPath
 # 2. scriptArguments
 # 3. inlineScript
