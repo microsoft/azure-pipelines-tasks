@@ -9,38 +9,68 @@ import * as os from 'os';
 import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
+import * as inputdatacontract from './inputdatacontract';
 const uuid = require('uuid');
 const regedit = require('regedit');
 
 export function getDistributedTestConfigurations() {
-    const dtaConfiguration = {} as models.DtaTestConfigurations;
-    initTestConfigurations(dtaConfiguration);
-    dtaConfiguration.useVsTestConsole = 'false';
+    const inputDataContract = {} as inputdatacontract.InputDataContract;
+    populateInputDataContract(inputDataContract);
+    inputDataContract.UseVsTestConsole = false;
 
-    if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
-        throw (tl.loc('vs2013NotSupportedInDta'));
-    }
-
-    if (dtaConfiguration.tiaConfig.tiaEnabled) {
-        dtaConfiguration.tiaConfig = getTiaConfiguration();
-    }
-    if (dtaConfiguration.runTestsInIsolation) {
-        tl.warning(tl.loc('runTestInIsolationNotSupported'));
-    }
-    if (dtaConfiguration.otherConsoleOptions) {
-        tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
-    }
-
-    dtaConfiguration.numberOfAgentsInPhase = 1;
+    inputDataContract.DistributionSettings.NumberOfTestAgents = 1;
     const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
     if (!isNaN(totalJobsInPhase)) {
-        dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
+        inputDataContract.DistributionSettings.NumberOfTestAgents = totalJobsInPhase;
     }
-    console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
+    console.log(tl.loc('dtaNumberOfAgents', inputDataContract.DistributionSettings.NumberOfTestAgents));
 
-    getDistributionBatchSize(dtaConfiguration);
+    const distributionType = tl.getInput('distributionBatchType');
 
-    let useVsTestConsole = tl.getVariable('UseVsTestConsole');
+    inputDataContract.DistributionSettings = <inputdatacontract.DistributionSettings>{};
+
+    if (distributionType && distributionType === 'basedOnTestCases') {
+        inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = true;
+        // flow if the batch type = based on agents/custom batching
+        const distributeByAgentsOption = tl.getInput('batchingBasedOnAgentsOption');
+        if (distributeByAgentsOption && distributeByAgentsOption === 'customBatchSize') {
+            const batchSize = parseInt(tl.getInput('customBatchSizeValue'));
+            if (!isNaN(batchSize) && batchSize > 0) {
+                inputDataContract.DistributionSettings.NumberOfTestCasesPerSlice = batchSize;
+                console.log(tl.loc('numberOfTestCasesPerSlice', inputDataContract.DistributionSettings.NumberOfTestCasesPerSlice));
+            } else {
+                throw new Error(tl.loc('invalidTestBatchSize', batchSize));
+            }
+        }
+        // by default we set the distribution = number of agents
+    } else if (distributionType && distributionType === 'basedOnExecutionTime') {
+        inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = true;
+        inputDataContract.DistributionSettings.IsTimeBasedSlicing = true;
+        // flow if the batch type = based on agents/custom batching
+        const batchBasedOnExecutionTimeOption = tl.getInput('batchingBasedOnExecutionTimeOption');
+        if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'customTimeBatchSize') {
+            const batchExecutionTimeInSec = parseInt(tl.getInput('customRunTimePerBatchValue'));
+            if (isNaN(batchExecutionTimeInSec) || batchExecutionTimeInSec <= 0) {
+                throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTimeInSec));
+            }
+
+            dtaTestConfiguration.runningTimePerBatchInMs = 60 * 1000;
+            if (batchExecutionTimeInSec >= 60) {
+                dtaTestConfiguration.runningTimePerBatchInMs = batchExecutionTimeInSec * 1000;
+                console.log(tl.loc('RunTimePerBatch', dtaTestConfiguration.runningTimePerBatchInMs));
+            } else {
+                tl.warning(tl.loc('minimumRunTimePerBatchWarning', 60));
+            }
+        } else if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'autoBatchSize') {
+            dtaTestConfiguration.runningTimePerBatchInMs = 0;
+        }
+    } else if (distributionType && distributionType === 'basedOnAssembly') {
+        inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = false;
+    }
+
+
+
+    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
     if (useVsTestConsole) {
         dtaConfiguration.useVsTestConsole = useVsTestConsole;
     }
@@ -57,8 +87,335 @@ export function getDistributedTestConfigurations() {
     }
     tl.debug('ProceedAfterAbortedTestCase is set to : ' + dtaConfiguration.proceedAfterAbortedTestCase);
 
-    dtaConfiguration.dtaEnvironment = initDtaEnvironment();
+    dtaConfiguration.dtaEnvironment = populateInputDataContract(inputDataContract);
     return dtaConfiguration;
+}
+
+function populateInputDataContract(inputDataContract: inputdatacontract.InputDataContract) {
+
+    inputDataContract.TestSelectionSettings = <inputdatacontract.TestSelectionSettings>{};
+    inputDataContract.TestSelectionSettings.TestSelectionType = tl.getInput('testSelector').toLowerCase();
+
+    switch (inputDataContract.TestSelectionSettings.TestSelectionType) {
+
+        case 'testplan':
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings = <inputdatacontract.TestPlanTestSuiteSettings>{};
+            console.log(tl.loc('testSelectorInput', tl.loc('testPlanSelector')));
+
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.Testplan = parseInt(tl.getInput('testPlan'));
+            console.log(tl.loc('testPlanInput', inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.Testplan));
+
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestPlanConfigId = parseInt(tl.getInput('testConfiguration'));
+            console.log(tl.loc('testplanConfigInput', inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestPlanConfigId));
+
+            const testSuiteStrings = tl.getDelimitedInput('testSuite', ',', true);
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestSuites = new Array<number>();
+            testSuiteStrings.forEach(element => {
+                const testSuiteId = parseInt(element);
+                console.log(tl.loc('testSuiteSelected', testSuiteId));
+                inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestSuites.push(testSuiteId);
+            });
+
+            // hydra: Set this as the default test source filter in case of test plan test suite scenario in hydra. ['**\\*', '!**\\obj\\*'] Also confirm if this is required
+            //tl.debug('Setting the test source filter for the Test plan : ' + testConfiguration.sourceFilter);
+            break;
+
+        case 'testassemblies':
+            console.log(tl.loc('testSelectorInput', tl.loc('testAssembliesSelector')));
+
+            inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection = <inputdatacontract.AssemblyBasedTestSelection>{};
+
+            // hydra: fix this, preferably maybe do the discovery here itself or get this input later after all other inputs are taken, fix description in the c# class
+            inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection.SourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+            console.log(tl.loc('testAssemblyFilterInput', inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection.SourceFilter));
+
+            inputDataContract.TestSelectionSettings.TestCaseFilter = tl.getInput('testFiltercriteria');
+            console.log(tl.loc('testFilterCriteriaInput', inputDataContract.TestSelectionSettings.TestCaseFilter));
+            break;
+
+        case 'testrun':
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings = <inputdatacontract.TestPlanTestSuiteSettings>{};
+
+            console.log(tl.loc('testSelectorInput', tl.loc('testRunSelector')));
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.OnDemandTestRunId = parseInt(tl.getInput('tcmTestRun'));
+
+            if (inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.OnDemandTestRunId <= 0) {
+                throw new Error(tl.loc('testRunIdInvalid', inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.OnDemandTestRunId));
+            }
+
+            console.log(tl.loc('testRunIdInput', inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.OnDemandTestRunId));
+
+            // hydra: Set this as the default test source filter in case of test plan test suite scenario in hydra. ['**\\*', '!**\\obj\\*'] Also confirm if this is required
+            // tl.debug('Setting the test source filter for the TestRun : ' + testConfiguration.sourceFilter);
+            break;
+    }
+
+    inputDataContract.TestSelectionSettings.SearchFolder = tl.getInput('searchFolder');
+    if (!utils.Helper.isNullOrWhitespace(inputDataContract.TestSelectionSettings.SearchFolder)) {
+        inputDataContract.TestSelectionSettings.SearchFolder = path.resolve(inputDataContract.TestSelectionSettings.SearchFolder);
+    }
+
+    if (inputDataContract.TestSelectionSettings.SearchFolder && !utils.Helper.pathExistsAsDirectory(inputDataContract.TestSelectionSettings.SearchFolder)) {
+        throw new Error(tl.loc('searchLocationNotDirectory', inputDataContract.TestSelectionSettings.SearchFolder));
+    }
+    console.log(tl.loc('searchFolderInput', inputDataContract.TestSelectionSettings.SearchFolder));
+
+    inputDataContract.ExecutionSettings.SettingsFile = tl.getPathInput('runSettingsFile');
+    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.SettingsFile)) {
+        inputDataContract.ExecutionSettings.SettingsFile = path.resolve(inputDataContract.ExecutionSettings.SettingsFile);
+    }
+    console.log(tl.loc('runSettingsFileInput', inputDataContract.ExecutionSettings.SettingsFile));
+
+    inputDataContract.ExecutionSettings.OverridenParameters = tl.getInput('overrideTestrunParameters');
+
+    inputDataContract.ExecutionSettings.AssemblyLevelParallelism = tl.getBoolInput('runInParallel');
+    console.log(tl.loc('runInParallelInput', inputDataContract.ExecutionSettings.AssemblyLevelParallelism));
+
+    // hydra: valid only for console flow
+    //inputDataContract.ExecutionSettings.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
+    //console.log(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
+
+    // hydra: do we want to shoot this warning?
+    // if (inputDataContract.runTestsInIsolation) {
+    //     tl.warning(tl.loc('runTestInIsolationNotSupported'));
+    // }
+
+    logWarningForWER(tl.getBoolInput('uiTests'));
+
+    // InputDataContract.TfsSpecificSettings
+    inputDataContract.TfsSpecificSettings = <inputdatacontract.TfsSpecificSettings>{};
+    inputDataContract.TfsSpecificSettings.BuildId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Build.Buildid')) ? null : Number(tl.getVariable('Build.Buildid'));
+    inputDataContract.TfsSpecificSettings.BuildUri = tl.getVariable('Build.BuildUri');
+    inputDataContract.TfsSpecificSettings.ReleaseId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.ReleaseId')) ? null : Number(tl.getVariable('Release.ReleaseId'));
+    inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
+
+
+    // TIA stuff
+
+    inputDataContract.ExecutionSettings.TiaSettings = <inputdatacontract.TiaSettings>{};
+
+    inputDataContract.ExecutionSettings.TiaSettings.Enabled = tl.getBoolInput('runOnlyImpactedTests');
+    inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
+    inputDataContract.ExecutionSettings.TiaSettings.FileLevel = tl.getVariable('tia.filelevel');
+    inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory = tl.getVariable('build.sourcesdirectory');
+    inputDataContract.ExecutionSettings.TiaSettings.FilterPaths = tl.getVariable('TIA_IncludePathFilters');
+
+    // hydra: inputDataContract.ExecutionSettings.TiaSettings.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    inputDataContract.TiaBaseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+
+    //hydra: inputDataContract.ExecutionSettings.TiaSettings.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+
+    inputDataContract.UseNewCollector = false;
+    const useNewCollector = tl.getVariable('tia.useNewCollector');
+    if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
+        inputDataContract.UseNewCollector = true;
+    }
+
+    const buildReason = tl.getVariable('Build.Reason');
+
+    // https://www.visualstudio.com/en-us/docs/build/define/variables
+    // PullRequest -> This is the case for TfsGit PR flow
+    // CheckInShelveset -> This is the case for TFVC Gated Checkin
+    if (buildReason && (buildReason === 'PullRequest' || buildReason === 'CheckInShelveset')) {
+        // hydra: Should this become a first class input or should we identify if it is a pr flow from the managed layer? First class input
+        inputDataContract.IsPrFlow = true;
+    } else {
+        inputDataContract.IsPrFlow = utils.Helper.stringToBool(tl.getVariable('tia.isPrFlow'));
+    }
+    inputDataContract.UseTestCaseFilterInResponseFile = tl.getVariable('tia.useTestCaseFilterInResponseFile');
+
+    //const releaseuri = tl.getVariable('release.releaseUri');
+    // tiaConfiguration.context = 'CI';
+    // if (releaseuri) {
+    //     tiaConfiguration.context = 'CD';
+    // }
+
+    // User map file
+    inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = tl.getVariable('tia.usermapfile');
+
+    // disable editing settings file to switch on data collector
+    // hydra: make this first class input
+    if (tl.getVariable('tia.disabletiadatacollector') && tl.getVariable('tia.disabletiadatacollector').toUpperCase() === 'TRUE') {
+        inputDataContract.DisableEnablingDataCollector = true;
+    } else {
+        inputDataContract.DisableEnablingDataCollector = false;
+    }
+
+    inputDataContract.ExecutionSettings.CustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
+    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
+        inputDataContract.ExecutionSettings.CustomTestAdapters = path.resolve(inputDataContract.ExecutionSettings.CustomTestAdapters);
+    }
+    if (inputDataContract.ExecutionSettings.CustomTestAdapters &&
+        !utils.Helper.pathExistsAsDirectory(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
+        throw new Error(tl.loc('pathToCustomAdaptersInvalid', inputDataContract.ExecutionSettings.CustomTestAdapters));
+    }
+    console.log(tl.loc('pathToCustomAdaptersInput', inputDataContract.ExecutionSettings.CustomTestAdapters));
+
+    // hydra: console flow only
+    //testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
+    //console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));\
+    
+    // hydra: enable this warning 
+    // if (dtaConfiguration.otherConsoleOptions) {
+    //     tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
+    // }
+
+    inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
+    console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
+
+    inputDataContract.TargetBinariesSettings.BuildConfig = tl.getInput('configuration');
+    inputDataContract.TargetBinariesSettings.BuildPlatform = tl.getInput('platform');
+    inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
+
+
+
+    // Rerun information
+    inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = tl.getBoolInput('rerunFailedTests');
+    console.log(tl.loc('rerunFailedTests', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests));
+
+    const rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
+
+    // hydra: unravel the nestings
+    if (rerunType === 'basedOnTestFailureCount') {
+        inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit = 5; //default value in case of error
+        const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
+        if (!isNaN(rerunFailedTestCasesMaxLimit) && rerunFailedTestCasesMaxLimit > 0 && rerunFailedTestCasesMaxLimit <= 100) {
+            inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit = rerunFailedTestCasesMaxLimit;
+            console.log(tl.loc('rerunFailedTestCasesMaxLimit', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit));
+        } else {
+            if (rerunFailedTestCasesMaxLimit === 0) {
+                tl.warning(tl.loc('disabledRerun', rerunFailedTestCasesMaxLimit));
+                inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = false;
+            } else {
+                tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
+            }
+        }
+    } else {
+        inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold = 30; //default value in case of error
+        const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
+        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
+            inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold = rerunFailedThreshold;
+            console.log(tl.loc('rerunFailedThreshold', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold));
+        } else {
+            if (rerunFailedThreshold === 0) {
+                tl.warning(tl.loc('disabledRerun', rerunFailedThreshold));
+                inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = false;
+            } else {
+                tl.warning(tl.loc('invalidRerunFailedThreshold'));
+            }
+        }
+    }
+
+    inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts = 3; //default values incase of error
+    const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
+    if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0 && rerunMaxAttempts <= 10) {
+        inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts = rerunMaxAttempts;
+        console.log(tl.loc('rerunMaxAttempts', inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts));
+    } else {
+        tl.warning(tl.loc('invalidRerunMaxAttempts'));
+    }
+
+    const vsTestLocationMethod = tl.getInput('vstestLocationMethod');
+    if (vsTestLocationMethod === utils.Constants.vsTestVersionString) {
+        const vsTestVersion = tl.getInput('vsTestVersion');
+        if (utils.Helper.isNullEmptyOrUndefined(vsTestVersion)) {
+            console.log('vsTestVersion is null or empty');
+            throw new Error('vsTestVersion is null or empty');
+        }
+        if (vsTestVersion.toLowerCase() === 'toolsinstaller') {
+            tl.debug('Trying VsTest installed by tools installer.');
+            ci.publishEvent({ subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) });
+
+            tl.debug('Path to VsTest from tools installer: ' + tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable));
+            const vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
+
+            // get path to vstest.console.exe
+            const matches = tl.findMatch(vsTestPackageLocation, '**\\vstest.console.exe');
+            if (matches && matches.length !== 0) {
+                inputDataContract.VsTestConsolePath = matches[0];
+            } else {
+                utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('toolsInstallerPathNotSet'), 1041, false);
+                throw new Error(tl.loc('toolsInstallerPathNotSet'));
+            }
+
+            // hydra: move this to managed
+            // // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
+            // var amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+            // if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
+            //     toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
+            // } else {
+            //     // Look in x64 also for Microsoft.IntelliTrace.ProfilerProxy.dll (x64)
+            //     amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+            //     if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
+            //         toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
+            //     } else {
+            //         utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
+            //         tl.warning(tl.loc('testImpactAndCCWontWork'));
+            //     }
+
+            //     utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
+            //     tl.warning(tl.loc('testImpactAndCCWontWork'));
+            // }
+
+            // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
+            // var x86ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll");
+            // if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
+            //     toolsInstallerConfiguration.x86ProfilerProxyDLLLocation = x86ProfilerProxy[0];
+            // } else {
+            //     utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
+            //     tl.warning(tl.loc('testImpactAndCCWontWork'));
+            // }
+
+            // if Tools installer is not there throw.
+            if (utils.Helper.isNullOrWhitespace(inputDataContract.VsTestConsolePath)) {
+                ci.publishEvent({ subFeature: 'ToolsInstallerInstallationError' });
+                utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, 'Tools installer task did not complete successfully.', 1040, true);
+                throw new Error(tl.loc('ToolsInstallerInstallationError'));
+            }
+
+            ci.publishEvent({ subFeature: 'ToolsInstallerInstallationSuccessful' });
+            // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
+            // testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
+            // testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
+
+            // testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
+
+        } else if ((vsTestVersion !== '15.0') && (vsTestVersion !== '14.0')
+            && (vsTestVersion.toLowerCase() !== 'latest')) {
+            throw new Error(tl.loc('vstestVersionInvalid', vsTestVersion));
+        }
+        if (vsTestLocationMethod === utils.Constants.vsTestVersionString && vsTestVersion === '12.0') {
+            throw (tl.loc('vs2013NotSupportedInDta'));
+        }
+        console.log(tl.loc('vsVersionSelected', vsTestVersion));
+    } else {
+        inputDataContract.VsTestConsolePath = tl.getInput('vsTestLocation');
+        console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', inputDataContract.VsTestConsolePath));
+    }
+
+
+    // hydra: Maybe move all warnings to a diff function
+    if (tl.getBoolInput('uiTests') && inputDataContract.ExecutionSettings.AssemblyLevelParallelism) {
+        tl.warning(tl.loc('uitestsparallel'));
+    }
+
+    inputDataContract.VstestTaskInstanceIdentifier = uuid.v1();
+
+    // hydra: do this in the managed layer
+    // try {
+    //     versionFinder.getVsTestRunnerDetails(testConfiguration);
+    // } catch (error) {
+    //     utils.Helper.publishEventToCi(AreaCodes.SPECIFIEDVSVERSIONNOTFOUND, error.message, 1039, true);
+    //     throw error;
+    // }
+
+    inputDataContract.ExecutionSettings.IgnoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
+
+    // Get proxy details
+    inputDataContract.ProxySettings.ProxyUrl = tl.getVariable('agent.proxyurl');
+    inputDataContract.ProxySettings.ProxyUsername = tl.getVariable('agent.proxyusername');
+    inputDataContract.ProxySettings.ProxyPassword = tl.getVariable('agent.proxypassword');
+    inputDataContract.ProxySettings.ProxyBypassHosts = tl.getVariable('agent.proxybypasslist');
 }
 
 export function getvsTestConfigurations() {

@@ -1,4 +1,5 @@
 import * as version from './vstestversion';
+import { InputDataContract } from './inputdatacontract';
 
 export interface TestConfigurations {
     testSelection: string;

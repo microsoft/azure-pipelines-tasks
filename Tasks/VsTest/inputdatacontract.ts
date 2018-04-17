@@ -5,6 +5,7 @@ export interface InputDataContract {
     EnvironmentUri : string;
     TeamProject : string;
     TestSelectionSettings : TestSelectionSettings;
+    VsTestConsolePath: string;
     TestReportingSettings : TestReportingSettings;
     TfsSpecificSettings : TfsSpecificSettings;
     TargetBinariesSettings : TargetBinariesSettings;
