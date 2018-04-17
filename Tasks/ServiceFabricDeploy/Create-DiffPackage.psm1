@@ -44,8 +44,8 @@ function Create-DiffPackage
         {
             Remove-Item -LiteralPath $diffPackagePath -Recurse -Force
         }
-        $diffPackagePath = New-Item -ItemType Directory -Path $diffPackagePath -Force
         $diffPkgAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $diffPackagePath
+        $diffPackagePath = New-Item -ItemType Directory -Path $diffPackagePath -Force
 
         # Get the service types from the cluster
         $serviceTypes = Get-ServiceFabricServiceType -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion

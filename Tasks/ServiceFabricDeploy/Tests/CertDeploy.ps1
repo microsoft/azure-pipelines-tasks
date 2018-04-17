@@ -62,7 +62,6 @@ $regKeyObj = @{
 Register-Mock Get-ItemProperty { $regKeyObj } -- -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKPSModulePath
 
 Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$PSScriptRoot\data\ApplicationParameters.xml"
-$env:Key1 = "overridenValue"
 Register-Mock Get-ApplicationManifestPath { $applicationManifestPath } -- -ApplicationPackagePath $applicationPackagePath
 Register-Mock Get-OverridenApplicationParameters { $applicationParameter } -- -ApplicationManifestPath $applicationManifestPath
 

@@ -7,7 +7,7 @@ Register-Mock Get-TempDirectoryPath { "C:\some-path" }
 
 $publishProfilePath = "$PSScriptRoot\data\NoAuthPublishProfile.xml"
 $applicationPackagePath = "$PSScriptRoot\data\DiffPkgAssets\AppPkg"
-$diffPackagePath = Join-Path Get-TempDirectoryPath "DiffPackage"
+$diffPackagePath = (Get-TempDirectoryPath) + "\DiffPackage"
 $serviceConnectionName = "random connection name"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
