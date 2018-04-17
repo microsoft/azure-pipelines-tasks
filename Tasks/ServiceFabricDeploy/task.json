@@ -80,7 +80,7 @@
             "label": "Override Application Parameters",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the application manifest file. \n Example: If your application has a parameter defined as below. \n <Parameter Name=\"SampleApp_PartitionCount\" Value=\"1\" /> \n and you want to change the partition count to 2, you can define a release definition or an environment variable \"SampleApp_PartitionCount\" and its value as \"2\". \n\n Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables."
+            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'Parameter Name' entries in the application manifest file. \n Example: If your application has a parameter defined as below. \n <Parameters> \n <Parameter Name=\"SampleApp_PartitionCount\" Value=\"1\" /> \n <Parameter Name=\"SampleApp_InstanceCount\" DefaultValue=\"-1\" /> \n </Parameters> \n and you want to change the partition count to 2, you can define a release definition or an environment variable \"SampleApp_PartitionCount\" and its value as \"2\". \n\n Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables."
         },
         {
             "name": "compressPackage",
