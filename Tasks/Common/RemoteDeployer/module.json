@@ -5,6 +5,7 @@
         "RemoteDeployer_ScriptJobFailed" : "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
         "RemoteDeployer_NonZeroExitCode" : "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
         "RemoteDeployer_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",
-        "RemoteDeployer_UnknownStatus": "Unknown remote script job execution status: '{0}'"
+        "RemoteDeployer_UnknownStatus": "Unknown remote script job execution status: '{0}'",
+        "RemoteDeployer_UnableToGetRemoteJobResults" : "Unable to get remote script job results"
     }
 }

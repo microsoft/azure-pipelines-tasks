@@ -34,8 +34,13 @@ function Run-RemoteScriptJobs {
                     } 
              }
         }
-        
-        Set-TaskResult -jobResults $jobResults
+
+        if($jobResults.Count -eq 0) {
+            Write-Host (Get-VstsLocString -Key "RemoteDeployer_UnableToGetRemoteJobResults")
+            Write-VstsSetResult -Result 'Failed' -Message "RemoteDeployer_UnableToGetRemoteJobResults" -DoNotThrow
+        } else {
+            Set-TaskResult -jobResults $jobResults
+        }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
