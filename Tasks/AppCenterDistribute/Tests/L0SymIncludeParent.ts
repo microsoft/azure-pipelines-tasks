@@ -49,8 +49,8 @@ nock('https://example.test')
 nock('https://example.test')
     .patch('/my_release_location', {
         status: 'available',
-        distribution_group_id:'00000000-0000-0000-0000-000000000000',
-        release_notes:'my release notes'
+        destinations: [{ id: "00000000-0000-0000-0000-000000000000" }],
+        release_notes: 'my release notes'
     })
     .reply(200);
 
