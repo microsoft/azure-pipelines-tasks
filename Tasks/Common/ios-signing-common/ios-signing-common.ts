@@ -4,6 +4,14 @@ import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 var userProvisioningProfilesPath = tl.resolve(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
 
+/**
+ * Creates a temporary keychain and installs the P12 cert in the temporary keychain
+ * @param keychainPath the path to the keychain file
+ * @param keychainPwd the password to use for unlocking the keychain
+ * @param p12CertPath the P12 cert to be installed in the keychain
+ * @param p12Pwd the password for the P12 cert
+ * @param useKeychainIfExists Pass false to delete and recreate a preexisting keychain
+ */
 export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean): Promise<void> {
     let setupKeychain: boolean = true;
 
@@ -262,7 +270,6 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
  * @returns {string} Name
  */
 export async function getProvisioningProfileName(provProfilePath: string) {
-
     //find the provisioning profile UUID
     let provProfileDetails: string;
     let getProvProfileDetailsCmd: ToolRunner = tl.tool(tl.which('security', true));
@@ -438,28 +445,6 @@ export async function getBundleIdFromPlist(plistPath: string) {
     return bundleId;
 }
 
-async function printFromPlist(itemToPrint: string, plistPath: string) {
-    let plist = tl.which('/usr/libexec/PlistBuddy', true);
-    let plistTool: ToolRunner = tl.tool(plist);
-    plistTool.arg(['-c', 'Print ' + itemToPrint, plistPath]);
-
-    let printedValue: string;
-    plistTool.on('stdout', function (data) {
-        if (data) {
-            printedValue = data.toString().trim();
-        }
-    });
-
-    try {
-        await plistTool.exec();
-    } catch (err) {
-        tl.debug('Exception when looking for ' + itemToPrint + ' in plist.');
-        printedValue = null;
-    }
-
-    return printedValue;
-}
-
 /**
  * Delete specified iOS keychain
  * @param keychainPath
@@ -498,10 +483,6 @@ export async function deleteProvisioningProfile(uuid: string): Promise<void> {
     }
 }
 
-function getProvisioningProfilePath(uuid: string): string {
-    return tl.resolve(userProvisioningProfilesPath, uuid.trim().concat('.mobileprovision'));
-}
-
 /**
  * Gets the path to the iOS default keychain
  */
@@ -527,6 +508,11 @@ export function getTempKeychainPath(): string {
     return getTempKeychainPath;
 }
 
+/**
+ * Get the SHA1 hash (thumbprint) for the certificate in a P12 file.
+ * @param p12Path Path to the P12 file
+ * @param p12Pwd Password for the P12 file
+ */
 export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<string> {
     //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –fingerprint
     let opensslPath: string = tl.which('openssl', true);
@@ -566,6 +552,11 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<s
     return sha1Hash;
 }
 
+/**
+ * Get the common name from the certificate in a P12 file, with 'CN=' removed.
+ * @param p12Path Path to the P12 file
+ * @param p12Pwd Password for the P12 file
+ */
 export async function getP12CommonName(p12Path: string, p12Pwd: string): Promise<string> {
     //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –subject
     let opensslPath: string = tl.which('openssl', true);
@@ -602,12 +593,22 @@ export async function getP12CommonName(p12Path: string, p12Pwd: string): Promise
     return commonName;
 }
 
+/**
+ * Delete certificate with specified SHA1 hash (thumbprint) from a keychain.
+ * @param keychainPath
+ * @param certSha1Hash
+ */
 export async function deleteCert(keychainPath: string, certSha1Hash: string): Promise<void> {
     let deleteCert: ToolRunner = tl.tool(tl.which('security', true));
     deleteCert.arg(['delete-certificate', '-Z', certSha1Hash, keychainPath]);
     await deleteCert.exec();
 }
 
+/**
+ * Get the friendly name from the private key in a P12 file.
+ * @param p12Path Path to the P12 file
+ * @param p12Pwd Password for the P12 file
+ */
 export async function getP12PrivateKeyName(p12Path: string, p12Pwd: string): Promise<string> {
     //openssl pkcs12 -in <p12Path> -nocerts -passin pass:"<p12Pwd>" -passout pass:"<p12Pwd>" | grep 'friendlyName'
     tl.debug('getting the P12 private key name');
@@ -648,6 +649,32 @@ export async function getP12PrivateKeyName(p12Path: string, p12Pwd: string): Pro
     }
 
     return privateKeyName;
+}
+
+async function printFromPlist(itemToPrint: string, plistPath: string) {
+    let plist = tl.which('/usr/libexec/PlistBuddy', true);
+    let plistTool: ToolRunner = tl.tool(plist);
+    plistTool.arg(['-c', 'Print ' + itemToPrint, plistPath]);
+
+    let printedValue: string;
+    plistTool.on('stdout', function (data) {
+        if (data) {
+            printedValue = data.toString().trim();
+        }
+    });
+
+    try {
+        await plistTool.exec();
+    } catch (err) {
+        tl.debug('Exception when looking for ' + itemToPrint + ' in plist.');
+        printedValue = null;
+    }
+
+    return printedValue;
+}
+
+function getProvisioningProfilePath(uuid: string): string {
+    return tl.resolve(userProvisioningProfilesPath, uuid.trim().concat('.mobileprovision'));
 }
 
 /**
