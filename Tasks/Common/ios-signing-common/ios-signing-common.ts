@@ -4,14 +4,7 @@ import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 var userProvisioningProfilesPath = tl.resolve(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
 
-/**
- * Creates a temporary keychain and installs the P12 cert in the specified keychain
- * @param keychainPath, the path to the keychain file
- * @param keychainPwd, the password to use for unlocking the keychain
- * @param p12CertPath, the P12 cert to be installed in the keychain
- * @param p12Pwd, the password for the P12 cert
- */
-export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean) {
+export async function installCertInTemporaryKeychain(keychainPath: string, keychainPwd: string, p12CertPath: string, p12Pwd: string, useKeychainIfExists: boolean): Promise<void> {
     let setupKeychain: boolean = true;
 
     if (useKeychainIfExists && tl.exist(keychainPath)) {
@@ -44,6 +37,14 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
     }
     importP12Command.arg(['import', p12CertPath, '-P', p12Pwd, '-A', '-t', 'cert', '-f', 'pkcs12', '-k', keychainPath]);
     await importP12Command.exec();
+
+    //If we imported into a pre-existing keychain (e.g. login.keychain), set the partition_id ACL for the private key we just imported
+    //so codesign won't prompt to use the key for signing. This isn't necessary for temporary keychains, at least on High Sierra.
+    //See https://stackoverflow.com/questions/39868578/security-codesign-in-sierra-keychain-ignores-access-control-settings-and-ui-p
+    if (!setupKeychain) {
+        const privateKeyName: string = await getP12PrivateKeyName(p12CertPath, p12Pwd);
+        await setKeyPartitionList(keychainPath, keychainPwd, privateKeyName);
+    }
 
     //list the keychains to get current keychains in search path
     let listAllOutput: string;
@@ -98,7 +99,6 @@ export async function installCertInTemporaryKeychain(keychainPath: string, keych
     if (!listVerifyOutput || listVerifyOutput.indexOf(keychainPath) < 0) {
         throw tl.loc('TempKeychainSetupFailed');
     }
-
 }
 
 /**
@@ -464,7 +464,7 @@ async function printFromPlist(itemToPrint: string, plistPath: string) {
  * Delete specified iOS keychain
  * @param keychainPath
  */
-export async function deleteKeychain(keychainPath: string) {
+export async function deleteKeychain(keychainPath: string): Promise<void> {
     if (tl.exist(keychainPath)) {
         let deleteKeychainCommand: ToolRunner = tl.tool(tl.which('security', true));
         deleteKeychainCommand.arg(['delete-keychain', keychainPath]);
@@ -477,7 +477,7 @@ export async function deleteKeychain(keychainPath: string) {
  * @param keychainPath
  * @param keychainPwd
  */
-export async function unlockKeychain(keychainPath: string, keychainPwd: string) {
+export async function unlockKeychain(keychainPath: string, keychainPwd: string): Promise<void> {
     //unlock the keychain
     let unlockCommand: ToolRunner = tl.tool(tl.which('security', true));
     unlockCommand.arg(['unlock-keychain', '-p', keychainPwd, keychainPath]);
@@ -488,7 +488,7 @@ export async function unlockKeychain(keychainPath: string, keychainPwd: string) 
  * Delete provisioning profile with specified UUID in the user's profiles directory
  * @param uuid
  */
-export async function deleteProvisioningProfile(uuid: string) {
+export async function deleteProvisioningProfile(uuid: string): Promise<void> {
     let provProfilePath: string = getProvisioningProfilePath(uuid);
     tl.warning('Deleting provisioning profile: ' + provProfilePath);
     if (tl.exist(provProfilePath)) {
@@ -521,13 +521,13 @@ export async function getDefaultKeychainPath() {
 /**
  * Gets the path to the temporary keychain path used during build or release
  */
-export function getTempKeychainPath() {
+export function getTempKeychainPath(): string {
     let keychainName: string = 'ios_signing_temp.keychain';
     let getTempKeychainPath: string = tl.resolve(tl.getVariable('Agent.TempDirectory'), keychainName);
     return getTempKeychainPath;
 }
 
-export async function getP12SHA1Hash(p12Path: string, p12Pwd: string) {
+export async function getP12SHA1Hash(p12Path: string, p12Pwd: string): Promise<string> {
     //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –fingerprint
     let opensslPath: string = tl.which('openssl', true);
     let openssl1: ToolRunner = tl.tool(opensslPath);
@@ -566,7 +566,7 @@ export async function getP12SHA1Hash(p12Path: string, p12Pwd: string) {
     return sha1Hash;
 }
 
-export async function getP12CommonName(p12Path: string, p12Pwd: string) {
+export async function getP12CommonName(p12Path: string, p12Pwd: string): Promise<string> {
     //openssl pkcs12 -in <p12Path> -nokeys -passin pass:"<p12Pwd>" | openssl x509 -noout –subject
     let opensslPath: string = tl.which('openssl', true);
     let openssl1: ToolRunner = tl.tool(opensslPath);
@@ -602,8 +602,96 @@ export async function getP12CommonName(p12Path: string, p12Pwd: string) {
     return commonName;
 }
 
-export async function deleteCert(keychainPath: string, certSha1Hash: string) {
+export async function deleteCert(keychainPath: string, certSha1Hash: string): Promise<void> {
     let deleteCert: ToolRunner = tl.tool(tl.which('security', true));
     deleteCert.arg(['delete-certificate', '-Z', certSha1Hash, keychainPath]);
     await deleteCert.exec();
+}
+
+export async function getP12PrivateKeyName(p12Path: string, p12Pwd: string): Promise<string> {
+    //openssl pkcs12 -in <p12Path> -nocerts -passin pass:"<p12Pwd>" -passout pass:"<p12Pwd>" | grep 'friendlyName'
+    tl.debug('getting the P12 private key name');
+    const opensslPath: string = tl.which('openssl', true);
+    const openssl: ToolRunner = tl.tool(opensslPath);
+    if (!p12Pwd) {
+        // if password is null or not defined, set it to empty
+        p12Pwd = '';
+    }
+    // since we can't suppress the private key bytes, encrypt them before we pass them to grep.
+    const privateKeyPassword = p12Pwd ? p12Pwd : generatePassword();
+    openssl.arg(['pkcs12', '-in', p12Path, '-nocerts', '-passin', 'pass:' + p12Pwd, '-passout', 'pass:' + privateKeyPassword]);
+
+    //we pipe through grep so we we don't log the private key to the console.
+    //even if it's encrypted, it's noise and could cause concern for some users.
+    const grepPath: string = tl.which('grep', true);
+    const grep: ToolRunner = tl.tool(grepPath);
+    grep.arg(['friendlyName']);
+    openssl.pipeExecOutputToTool(grep);
+
+    let privateKeyName: string;
+    openssl.on('stdout', function (data) {
+        if (data) {
+            // find the private key name
+            data = data.toString().trim();
+
+            const match = data.match(/friendlyName: (.*)/);
+            if (match && match[1]) {
+                privateKeyName = match[1].trim();
+            }
+        }
+    });
+
+    await openssl.exec();
+    tl.debug('P12 private key name = ' + privateKeyName);
+    if (!privateKeyName) {
+        throw new Error(tl.loc('P12PrivateKeyNameNotFound', p12Path));
+    }
+
+    return privateKeyName;
+}
+
+/**
+ * Set the partition_id ACL so codesign has permission to use the signing key.
+ */
+async function setKeyPartitionList(keychainPath: string, keychainPwd: string, privateKeyName: string) {
+    // security set-key-partition-list -S apple-tool:,apple: -s -l <privateKeyName> -k <keychainPwd> <keychainPath>
+    // n.b. This command could update multiple keys (e.g. an expired signing key and a newer signing key.)
+
+    if (privateKeyName) {
+        tl.debug(`Setting the partition_id ACL for ${privateKeyName}`);
+
+        // "If you'd like to run /usr/bin/codesign with the key, "apple:" must be an element of the partition list." - security(1) man page.
+        // When you sign into your developer account in Xcode on a new machine, you get a private key with partition list "apple:". However
+        // "security import a.p12 -k login.keychain" results in the private key with partition list "apple-tool:". I'm preserving import's
+        // "apple-tool:" and adding the "apple:" codesign needs.
+        const partitionList = 'apple-tool:,apple:';
+
+        let setKeyCommand: ToolRunner = tl.tool(tl.which('security', true));
+        setKeyCommand.arg(['set-key-partition-list', '-S', partitionList, '-s', '-l', privateKeyName, '-k', keychainPwd, keychainPath]);
+
+        // Watch for "unknown command". set-key-partition-list was added in Sierra (macOS v10.12)
+        let unknownCommandErrorFound: boolean;
+        let incorrectPasswordErrorFound: boolean;
+        setKeyCommand.on('errline', (line: string) => {
+            if (!unknownCommandErrorFound && line.includes('security: unknown command')) {
+                unknownCommandErrorFound = true;
+            }
+        });
+
+        try {
+            await setKeyCommand.exec();
+        } catch (err) {
+            if (unknownCommandErrorFound) {
+                // If we're on an older OS, we don't need to run set-key-partition-list.
+                console.log(tl.loc('SetKeyPartitionListCommandNotFound'));
+            } else {
+                tl.error(err);
+                throw new Error(tl.loc('SetKeyPartitionListCommandFailed'));
+            }
+        }
+    }
+}
+
+function generatePassword(): string {
+    return Math.random().toString(36);
 }

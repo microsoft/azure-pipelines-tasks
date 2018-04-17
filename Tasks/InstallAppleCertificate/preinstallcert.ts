@@ -21,7 +21,7 @@ async function run() {
 
         // get the P12 details - SHA1 hash and common name (CN)
         let p12Hash: string = await sign.getP12SHA1Hash(certPath, certPwd);
-        // give user an option to override the CN as a workaround if we can't parse the certificate
+        // give user an option to override the CN as a workaround if we can't parse the certificate's subject.
         let p12CN: string = tl.getInput('certSigningIdentity', false);
         if (!p12CN) {
             p12CN = await sign.getP12CommonName(certPath, certPwd);
@@ -41,10 +41,9 @@ async function run() {
         let keychainPath: string;
         if (keychain === 'temp') {
             keychainPath = sign.getTempKeychainPath();
-            if (!keychainPwd) {
-                // generate a keychain password for the temporary keychain since user did not provide one
-                keychainPwd = Math.random().toString(36);
-            }
+            // generate a keychain password for the temporary keychain
+            // overriding any value we may have read because keychainPassword is hidden in the designer for 'temp'.
+            keychainPwd = Math.random().toString(36);
         } else if (keychain === 'default') {
             keychainPath = await sign.getDefaultKeychainPath();
         } else if (keychain === 'custom') {
