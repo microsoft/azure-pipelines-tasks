@@ -34,6 +34,7 @@ try {
     $skipValidation =  [System.Boolean]::Parse((Get-VstsInput -Name skipPackageValidation))
     $unregisterUnusedVersions = [System.Boolean]::Parse((Get-VstsInput -Name unregisterUnusedVersions))
     $configureDockerSettings = [System.Boolean]::Parse((Get-VstsInput -Name configureDockerSettings))
+    $overrideApplicationParameters = [System.Boolean]::Parse((Get-VstsInput -Name overrideApplicationParameter))
 
     $clusterConnectionParameters = @{}
 
@@ -159,6 +160,12 @@ try {
     if ($skipValidation)
     {
         $publishParameters['SkipPackageValidation'] = $skipValidation
+    }
+
+    if ($overrideApplicationParameters)
+    {
+        $localAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $applicationPackagePath
+        $publishParameters['ApplicationParameter'] = Get-OverridenApplicationParameters -ApplicationManifestPath $localAppManifestPath
     }
 
     # Do an upgrade if configured to do so and the app actually exists
