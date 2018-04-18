@@ -162,11 +162,7 @@
             "type": "multiLine",
             "label": "New-PSSessionOption arguments",
             "required": false,
-<<<<<<< HEAD
-            "defaultValue": "-SkipCACheck -IdleTimeout 86400000 -OperationTimeout 0",
-=======
-            "defaultValue": "-SkipCACheck -OperationTimeout 0",
->>>>>>> af78e5140267a0065e9f9c0e2f23e0fd862cc6fb
+            "defaultValue": "-SkipCACheck -IdleTimeout 86400000 -OperationTimeout 0 -OutputBufferingMode Block",
             "helpMarkDown": "Arguments to be used for creating a New-PSSessionOption object. To be used with New-PSSession",
             "groupName": "SessionOptions"
         },
