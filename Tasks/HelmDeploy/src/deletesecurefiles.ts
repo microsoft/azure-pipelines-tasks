@@ -32,7 +32,7 @@ async function run() {
             fs.unlinkSync(keyFilePath);
         }
     } catch(err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+        tl.warning(err);
     }
 }
 
