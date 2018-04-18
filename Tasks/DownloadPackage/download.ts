@@ -14,8 +14,14 @@ const ApiVersion = "3.0-preview.1";
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function main(): Promise<void> {
-	let feedId = tl.getInput("feed");
-	let packageId = tl.getInput("definition");
+	let feedId = tl.getInput("feed");     
+        let regexGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        let packageId = tl.getInput("definition");
+        
+        if(!regexGuid.test(packageId)){
+            packageId = "Nuget_" + tl.getInput("definition");
+        }
+        
 	let version = tl.getInput("version");
 	let downloadPath = tl.getInput("downloadPath");
 	let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
