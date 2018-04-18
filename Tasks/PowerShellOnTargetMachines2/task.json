@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 73
+        "Patch": 74
     },
     "preview": true,
     "groups": [
@@ -214,9 +214,7 @@
             "defaultValue": "microsoft.powershell",
             "options": {
                 "microsoft.powershell": "microsoft.powershell",
-                "microsoft.powershell32": "microsoft.powershell32",
-                "microsoft.powershell.workflow": "microsoft.powershell.workflow",
-                "microsoft.windows.servermanagerworkflows": "microsoft.windows.servermanagerworkflows"
+                "microsoft.powershell32": "microsoft.powershell32"
             },
             "properties": {
                 "EditableOptions": "True"
