@@ -54,41 +54,50 @@ export function getDistributedTestConfigurations() {
                 throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTimeInSec));
             }
 
-            dtaTestConfiguration.runningTimePerBatchInMs = 60 * 1000;
+            inputDataContract.DistributionSettings.RunTimePerSlice = 60 * 1000;
             if (batchExecutionTimeInSec >= 60) {
-                dtaTestConfiguration.runningTimePerBatchInMs = batchExecutionTimeInSec * 1000;
-                console.log(tl.loc('RunTimePerBatch', dtaTestConfiguration.runningTimePerBatchInMs));
+                inputDataContract.DistributionSettings.RunTimePerSlice = batchExecutionTimeInSec * 1000;
+                console.log(tl.loc('RunTimePerBatch', inputDataContract.DistributionSettings.RunTimePerSlice));
             } else {
                 tl.warning(tl.loc('minimumRunTimePerBatchWarning', 60));
             }
         } else if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'autoBatchSize') {
-            dtaTestConfiguration.runningTimePerBatchInMs = 0;
+            inputDataContract.DistributionSettings.RunTimePerSlice = 0;
         }
     } else if (distributionType && distributionType === 'basedOnAssembly') {
         inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = false;
     }
 
-
-
+    // hydra: why is this still required?
     const useVsTestConsole = tl.getVariable('UseVsTestConsole');
     if (useVsTestConsole) {
-        dtaConfiguration.useVsTestConsole = useVsTestConsole;
+        inputDataContract.UseVsTestConsole = utils.Helper.stringToBool(useVsTestConsole);
     }
 
-    // VsTest Console cannot be used for Dev14
-    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0') {
-        console.log(tl.loc('noVstestConsole'));
-        dtaConfiguration.useVsTestConsole = 'false';
-    }
+    // hydra: this will have to be done after we get vstest version in the managed layer
+    // // VsTest Console cannot be used for Dev14
+    // if (inputDataContract.UseVsTestConsole === true && inputDataContract.vsTestVersion !== '15.0') {
+    //     console.log(tl.loc('noVstestConsole'));
+    //     dtaConfiguration.useVsTestConsole = 'false';
+    // }
 
-    dtaConfiguration.proceedAfterAbortedTestCase = false;
+    inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = false;
     if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {
-        dtaConfiguration.proceedAfterAbortedTestCase = true;
+        inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = true;
     }
-    tl.debug('ProceedAfterAbortedTestCase is set to : ' + dtaConfiguration.proceedAfterAbortedTestCase);
+    tl.debug('ProceedAfterAbortedTestCase is set to : ' + inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase);
 
-    dtaConfiguration.dtaEnvironment = populateInputDataContract(inputDataContract);
-    return dtaConfiguration;
+    inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
+    inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
+    inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
+
+    //hydra: change this input to be some unique run identifier
+    inputDataContract.EnvironmentUri = getEnvironmentUri();
+
+    //hydra: do we need
+    //dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
+
+    return inputDataContract;
 }
 
 function populateInputDataContract(inputDataContract: inputdatacontract.InputDataContract) {
