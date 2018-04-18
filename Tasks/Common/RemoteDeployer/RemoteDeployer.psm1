@@ -71,6 +71,8 @@ function Invoke-RemoteScript {
         [Parameter(Mandatory = $true)]
         [string] $sessionName,
 
+        [string] $sessionConfigurationName = "microsoft.powershell",
+
         [Parameter(Mandatory = $true)]
         [psobject] $remoteScriptJobArguments,
 
@@ -80,6 +82,7 @@ function Invoke-RemoteScript {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         $PSSessionOption = $sessionOption
+        $PSSessionConfigurationName = $sessionConfigurationName
         $sessions = @()
         foreach($targetMachineName in $targetMachineNames) {
             $sessions += ConnectTo-RemoteMachine -targetMachineName $targetMachineName `
