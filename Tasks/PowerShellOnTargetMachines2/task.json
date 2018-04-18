@@ -215,6 +215,24 @@
             "required": false,
             "helpMarkDown": "Setting it to true will run the PowerShell scripts in parallel on the target machines.",
             "groupName": "advanced"
+        },
+        {
+            "name": "SessionConfigurationName",
+            "type": "pickList",
+            "label": "Session Configuration",
+            "defaultValue": "microsoft.powershell",
+            "options": {
+                "microsoft.powershell": "microsoft.powershell",
+                "microsoft.powershell32": "microsoft.powershell32",
+                "microsoft.powershell.workflow": "microsoft.powershell.workflow",
+                "microsoft.windows.servermanagerworkflows": "microsoft.windows.servermanagerworkflows"
+            },
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "required": true,
+            "helpMarkDown": "Select one of the default session configurations to connect to or specify your own custom session configurations",
+            "groupName": "advanced"
         }
     ],
     "instanceNameFormat": "Run PowerShell on $(Machines)",
@@ -227,6 +245,7 @@
         "PS_TM_ParseSessionVariablesValueNotFound" : "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
         "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
         "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input",
-        "PS_TM_TaskFailed": "Task failed with error: '{0}'"
+        "PS_TM_TaskFailed": "Task failed with error: '{0}'",
+        "PS_TM_SessionConfigurationNameCannotBeNull": "Session configuration name cannot be null"
     }
 }

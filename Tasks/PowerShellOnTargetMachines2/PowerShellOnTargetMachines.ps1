@@ -32,6 +32,11 @@ try {
     $input_Protocol = Get-VstsInput -Name "Protocol" -Require -ErrorAction "Stop"
     $input_NewPsSessionOptionArguments = Get-VstsInput -Name "NewPsSessionOptionArguments"
     $input_RunPowershellInParallel = Get-VstsInput -Name "RunPowershellInParallel" -AsBool
+    $input_sessionConfigurationName = $(Get-VstsInput -Name "SessionConfigurationName").Trim()
+
+    if([string]::IsNullOrEmpty($input_sessionConfigurationName)) {
+        throw (Get-VstsLocString -Key "PS_TM_SessionConfigurationNameCannotBeNull")
+    }
 
     $targetMachineNames = Parse-TargetMachineNames -machineNames $input_Machines
 
@@ -46,6 +51,7 @@ try {
                             -protocol $input_Protocol `
                             -authentication $input_AuthenticationMechanism `
                             -sessionName $sessionName `
+                            -sessionConfigurationName $input_sessionConfigurationName `
                             -remoteScriptJobArguments $remoteScriptJobArguments `
                             -sessionOption $sessionOption
     } else {
@@ -55,6 +61,7 @@ try {
                                 -protocol $input_Protocol `
                                 -authentication $input_AuthenticationMechanism `
                                 -sessionName $sessionName `
+                                -sessionConfigurationName $input_sessionConfigurationName `
                                 -remoteScriptJobArguments $remoteScriptJobArguments `
                                 -sessionOption $sessionOption
         }
