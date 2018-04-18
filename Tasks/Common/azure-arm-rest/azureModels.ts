@@ -166,6 +166,11 @@ export enum ComputeResourceType {
     VirtualMachineScaleSet
 }
 
+export enum Scheme {
+    ManagedServiceIdentity,
+    SPN
+}
+
 export interface StorageAccountSku {
     name: string;
     tier?: string;
@@ -215,6 +220,8 @@ export interface AzureEndpoint {
     portalEndpoint?: string;
     AzureKeyVaultDnsSuffix?: string;
     AzureKeyVaultServiceEndpointResourceId?: string;
+    msiClientId?: string;
+    scheme?: string;
     applicationTokenCredentials: ApplicationTokenCredentials;
 }
 

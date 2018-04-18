@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 1,
-    "Patch": 10
+    "Minor": 2,
+    "Patch": 3
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -175,6 +175,7 @@
     "FileChanged": "ms-resource:loc.messages.FileChanged",
     "NoChanges": "ms-resource:loc.messages.NoChanges",
     "PdbWarning": "ms-resource:loc.messages.PdbWarning",
-    "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue"
+    "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue",
+    "CouldNotFindSubPath": "ms-resource:loc.messages.CouldNotFindSubPath"
   }
 }

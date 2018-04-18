@@ -559,14 +559,19 @@ function Get-MachinesFqdnsForPublicIP
         foreach($publicIp in $publicIPAddressResources)
         {
             if(-not [string]::IsNullOrEmpty($publicIp.IpConfiguration.Id))
-            {
+            {   
+                $publicIPKey = $publicIp.IpConfiguration.Id.ToLower()
+                Write-Verbose "Adding entry to FQDN map with key $publicIPKey" 
+
                 if(-not [string]::IsNullOrEmpty($publicIP.DnsSettings.Fqdn))
                 {
-                    $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.DnsSettings.Fqdn
+                    Write-Verbose "Inserting to FQDN map with value (FQDN) : $publicIPKey" 
+                    $fqdnMap[$publicIPKey] =  $publicIP.DnsSettings.Fqdn
                 }
                 elseif(-not [string]::IsNullOrEmpty($publicIP.IpAddress))
                 {
-                    $fqdnMap[$publicIp.IpConfiguration.Id.ToLower()] =  $publicIP.IpAddress
+                    Write-Verbose "Inserting to FQDN map with value (IP Address) : $publicIPKey" 
+                    $fqdnMap[$publicIPKey] =  $publicIP.IpAddress
                 }
             }
         }
@@ -588,7 +593,9 @@ function Get-MachinesFqdnsForPublicIP
                     $fqdnMap.Remove($ipc.Id.ToLower())
                     if($nic.VirtualMachine)
                     {
-                        $fqdnMap[$nic.VirtualMachine.Id.ToLower()] = $fqdn
+                        $vmId = $nic.VirtualMachine.Id.ToLower()
+                        Write-Verbose "Adding entry to FQDN map with key $vmId"
+                        $fqdnMap[$vmId] = $fqdn
                     }
                 }
             }

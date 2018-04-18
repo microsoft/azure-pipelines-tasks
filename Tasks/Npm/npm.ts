@@ -66,7 +66,6 @@ async function _logNpmStartupVariables() {
 
         let npmTelem = {
             'command': command,
-            'customCommand': tl.getInput(NpmTaskInput.CustomCommand),
             'verbose': tl.getInput(NpmTaskInput.Verbose),
             'customRegistry': tl.getInput(NpmTaskInput.CustomRegistry),
             'customFeed': tl.getInput(NpmTaskInput.CustomFeed),

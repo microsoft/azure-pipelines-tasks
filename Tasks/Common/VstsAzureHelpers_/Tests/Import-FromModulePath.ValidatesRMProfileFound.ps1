@@ -3,6 +3,8 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Unregister-Mock Import-Module
+Register-Mock Write-VstsTaskError
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $rmModule = @{ Name = 'AzureRM' ;
                Path = 'Path to AzureRM' ;
@@ -14,7 +16,8 @@ $rmModule = @{ Name = 'AzureRM' ;
                     @{
                         Name = "AzureRM.Compute"
                     }
-                )
+                );
+               RequiredModules = @()
 }
 Register-Mock Get-Module { $rmModule } -- -Name $rmModule.Name -ListAvailable
 Register-Mock Get-Module { $rmModule } -- -Name $rmModule.Name

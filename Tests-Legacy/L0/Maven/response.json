@@ -105,6 +105,7 @@
         "ENDPOINT_AUTH_SYSTEMVSSCONNECTION": "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}",
         "build.sourcesDirectory": "/user/build/s",
         "build.artifactStagingDirectory": "/user/build/a",
+        "Agent.TempDirectory": "/tmp",
         "build.buildNumber": "1",
         "System.TeamFoundationCollectionUri": "https://xplatalm.visualstudio.com/"
     },

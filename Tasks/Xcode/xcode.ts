@@ -28,18 +28,8 @@ async function run() {
         let tool: string = tl.which('xcodebuild', true);
         tl.debug('Tool selected: ' + tool);
 
-        //--------------------------------------------------------
-        // Paths
-        //--------------------------------------------------------
         let workingDir: string = tl.getPathInput('cwd');
         tl.cd(workingDir);
-
-        let outPath: string;
-        let outputPattern: string = tl.getInput('outputPattern', false);
-        if (outputPattern) {
-            outPath = tl.resolve(workingDir, outputPattern); //use posix implementation to resolve paths to prevent unit test failures on Windows
-            tl.mkdirP(outPath);
-        }
 
         //--------------------------------------------------------
         // Xcode args
@@ -56,7 +46,7 @@ async function run() {
                 }
             }
             else {
-                throw tl.loc('WorkspaceDoesNotExist', ws);
+                throw new Error(tl.loc('WorkspaceDoesNotExist', ws));
             }
         }
 
@@ -91,8 +81,12 @@ async function run() {
 
         let destinations: string[];
 
-        // To be yaml friendly, we'll let you skip destinationPlatformOption and supply destinationPlatform, custom or not.
-        let platform: string = tl.getInput('destinationPlatform', false) || tl.getInput('destinationPlatformOption', false);
+        let platform: string = tl.getInput('destinationPlatformOption', false);
+        if (platform === 'custom') {
+            // Read the custom platform from the text input.
+            platform = tl.getInput('destinationPlatform', false);
+        }
+
         if (platform === 'macOS') {
             destinations = ['platform=macOS'];
         }
@@ -161,19 +155,6 @@ async function run() {
             });
         }
         xcb.arg(actions);
-        if (outPath) {
-            if (actions.toString().indexOf('archive') < 0) {
-                // redirect build output if archive action is not passed
-                // xcodebuild archive produces an invalid archive if output is redirected
-                xcb.arg('DSTROOT=' + tl.resolve(outPath, 'build.dst'));
-                xcb.arg('OBJROOT=' + tl.resolve(outPath, 'build.obj'));
-                xcb.arg('SYMROOT=' + tl.resolve(outPath, 'build.sym'));
-                xcb.arg('SHARED_PRECOMPS_DIR=' + tl.resolve(outPath, 'build.pch'));
-            }
-            else {
-                tl.warning(tl.loc('OutputDirectoryIgnored', 'archive'));
-            }
-        }
         if (args) {
             xcb.line(args);
         }
@@ -189,6 +170,7 @@ async function run() {
         let xcode_otherCodeSignFlags: string;
         let xcode_codeSignIdentity: string;
         let xcode_provProfile: string;
+        let xcode_provProfileSpecifier: string;
         let xcode_devTeam: string;
 
         if (signingOption === 'nosign') {
@@ -197,15 +179,29 @@ async function run() {
         else if (signingOption === 'manual') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Manual';
 
-            let signIdentity: string = tl.getInput('signingIdentity');
+            const signIdentity: string = tl.getInput('signingIdentity');
             if (signIdentity) {
                 xcode_codeSignIdentity = 'CODE_SIGN_IDENTITY=' + signIdentity;
             }
 
             let provProfileUUID: string = tl.getInput('provisioningProfileUuid');
-            if (provProfileUUID) {
-                xcode_provProfile = 'PROVISIONING_PROFILE=' + provProfileUUID;
+            let provProfileName: string = tl.getInput('provisioningProfileName');
+
+            if (!provProfileUUID) {
+                provProfileUUID = "";
             }
+
+            if (!provProfileName) {
+                provProfileName = "";
+            }
+
+            // PROVISIONING_PROFILE_SPECIFIER takes predence over PROVISIONING_PROFILE,
+            // so it's important to pass it to Xcode even if it's empty. That way Xcode
+            // will ignore any specifier in the project file and honor the specifier
+            // or uuid we passed on the commandline. If the user wants to use the specifier
+            // in the project file, they should choose the "Project Defaults" signing style.
+            xcode_provProfile = `PROVISIONING_PROFILE=${provProfileUUID}`;
+            xcode_provProfileSpecifier = `PROVISIONING_PROFILE_SPECIFIER=${provProfileName}`;
         }
         else if (signingOption === 'auto') {
             xcode_codeSignStyle = 'CODE_SIGN_STYLE=Automatic';
@@ -220,19 +216,43 @@ async function run() {
         xcb.argIf(xcode_codeSignStyle, xcode_codeSignStyle);
         xcb.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
         xcb.argIf(xcode_provProfile, xcode_provProfile);
+        xcb.argIf(xcode_provProfileSpecifier, xcode_provProfileSpecifier);
         xcb.argIf(xcode_devTeam, xcode_devTeam);
 
-        //--- Enable Xcpretty formatting if using xcodebuild ---
+        //--- Enable Xcpretty formatting ---
+        if (useXcpretty && !tl.which('xcpretty')) {
+            // user wants to enable xcpretty but it is not installed, fallback to xcodebuild raw output
+            useXcpretty = false;
+            tl.warning(tl.loc("XcprettyNotInstalled"));
+        }
+
         if (useXcpretty) {
             let xcPrettyPath: string = tl.which('xcpretty', true);
             let xcPrettyTool: ToolRunner = tl.tool(xcPrettyPath);
             xcPrettyTool.arg(['-r', 'junit', '--no-color']);
 
-            xcb.pipeExecOutputToTool(xcPrettyTool);
+            const logFile: string = utils.getUniqueLogFileName('xcodebuild');
+            xcb.pipeExecOutputToTool(xcPrettyTool, logFile);
+            utils.setTaskState('XCODEBUILD_LOG', logFile);
         }
 
         //--- Xcode Build ---
-        await xcb.exec();
+        let buildOnlyDeviceErrorFound: boolean;
+        xcb.on('errline', (line: string) => {
+            if (!buildOnlyDeviceErrorFound && line.includes('build only device cannot be used to run this target')) {
+                buildOnlyDeviceErrorFound = true;
+            }
+        });
+
+        try {
+            await xcb.exec();
+        } catch (err) {
+            if (buildOnlyDeviceErrorFound) {
+                // Tell the user they need to change Destination platform to fix this build error.
+                tl.warning(tl.loc('NoDestinationPlatformWarning'));
+            }
+            throw err;
+        }
 
         //--------------------------------------------------------
         // Package app to generate .ipa
@@ -240,10 +260,10 @@ async function run() {
         if (tl.getBoolInput('packageApp', true) && sdk !== 'iphonesimulator') {
             // use xcodebuild to create the app package
             if (!scheme) {
-                throw tl.loc("SchemeRequiredForArchive");
+                throw new Error(tl.loc("SchemeRequiredForArchive"));
             }
             if (!ws || !tl.filePathSupplied('xcWorkspacePath')) {
-                throw tl.loc("WorkspaceOrProjectRequiredForArchive");
+                throw new Error(tl.loc("WorkspaceOrProjectRequiredForArchive"));
             }
 
             // create archive
@@ -272,6 +292,7 @@ async function run() {
             xcodeArchive.argIf(xcode_codeSignStyle, xcode_codeSignStyle);
             xcodeArchive.argIf(xcode_codeSignIdentity, xcode_codeSignIdentity);
             xcodeArchive.argIf(xcode_provProfile, xcode_provProfile);
+            xcodeArchive.argIf(xcode_provProfileSpecifier, xcode_provProfileSpecifier);
             xcodeArchive.argIf(xcode_devTeam, xcode_devTeam);
             if (args) {
                 xcodeArchive.line(args);
@@ -280,7 +301,9 @@ async function run() {
             if (useXcpretty) {
                 let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                 xcPrettyTool.arg('--no-color');
-                xcodeArchive.pipeExecOutputToTool(xcPrettyTool);
+                const logFile: string = utils.getUniqueLogFileName('xcodebuild_archive');
+                xcodeArchive.pipeExecOutputToTool(xcPrettyTool, logFile);
+                utils.setTaskState('XCODEBUILD_ARCHIVE_LOG', logFile);
             }
             await xcodeArchive.exec();
 
@@ -336,7 +359,7 @@ async function run() {
                 } else if (exportOptions === 'plist') {
                     exportOptionsPlist = tl.getInput('exportOptionsPlist');
                     if (!tl.filePathSupplied('exportOptionsPlist') || !utils.pathExistsAsFile(exportOptionsPlist)) {
-                        throw tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist);
+                        throw new Error(tl.loc('ExportOptionsPlistInvalidFilePath', exportOptionsPlist));
                     }
                 }
 
@@ -399,7 +422,7 @@ async function run() {
                                 tl.debug('embeddedInfoPlist path = ' + embeddedInfoPlist + ', bundle identifier = ' + bundleId);
 
                                 if (!profileName || !bundleId) {
-                                    throw tl.loc('FailedToGenerateExportOptionsPlist');
+                                    throw new Error(tl.loc('FailedToGenerateExportOptionsPlist'));
                                 }
 
                                 tl.tool(plist).arg(['-c', 'Add provisioningProfiles:' + bundleId + ' string ' + profileName, exportOptionsPlist]).execSync();
@@ -410,13 +433,6 @@ async function run() {
 
                 //export path
                 let exportPath: string = tl.getInput('exportPath');
-                if (!exportPath.endsWith('.ipa')) {
-                    exportPath = tl.resolve(exportPath, '_XcodeTaskExport_' + scheme);
-                }
-                // delete if it already exists, otherwise export will fail
-                if (tl.exist(exportPath)) {
-                    tl.rmRF(exportPath);
-                }
 
                 for (var i = 0; i < archiveFolders.length; i++) {
                     let archive: string = archiveFolders.pop();
@@ -432,7 +448,9 @@ async function run() {
                     if (useXcpretty) {
                         let xcPrettyTool: ToolRunner = tl.tool(tl.which('xcpretty', true));
                         xcPrettyTool.arg('--no-color');
-                        xcodeExport.pipeExecOutputToTool(xcPrettyTool);
+                        const logFile: string = utils.getUniqueLogFileName('xcodebuild_export');
+                        xcodeExport.pipeExecOutputToTool(xcPrettyTool, logFile);
+                        utils.setTaskState('XCODEBUILD_EXPORT_LOG', logFile);
                     }
                     await xcodeExport.exec();
                 }

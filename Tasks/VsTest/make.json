@@ -2,12 +2,20 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://testselector.blob.core.windows.net/testselector/4808807/TestSelector.zip",
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/5802917/TestSelector.zip",
                 "dest": "./"
             },
             {
-                "url": "https://testexecution.blob.core.windows.net/testexecution/5312315/TestExecution.zip",
+                "url": "https://testexecution.blob.core.windows.net/testexecution/5802917/TestAgent.zip",
                 "dest": "./Modules"
+            },
+            {
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/InputDataContractParityTool/InputDataContractParityTool.zip",
+                "dest": "./Tests"
+            },
+            {
+                "url": "https://testselectorv2.blob.core.windows.net/testselector/TestImpactCollector/TestImpactCollector.zip",
+                "dest": "./TestSelector"
             }
         ],
         "files": [

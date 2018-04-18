@@ -1,3 +1,4 @@
+
 {
   "loc.friendlyName": "Развертывание облачной службы Azure",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613748)",
@@ -24,6 +25,8 @@
   "loc.input.help.AppendDateTimeToLabel": "Добавляет текущую дату и время в метку развертывания",
   "loc.input.label.AllowUpgrade": "Разрешить обновление",
   "loc.input.help.AllowUpgrade": "При выборе этого варианта выполняется обновление до развертывания Microsoft Azure.",
+  "loc.input.label.SimultaneousUpgrade": "Simultaneous upgrade",
+  "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Принудительное обновление",
   "loc.input.help.ForceUpgrade": "При выборе этого варианта выполняется принудительное обновление, которое может привести к потере локальных данных.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Ключи учетной записи хранения диагностики",

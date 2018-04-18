@@ -5,12 +5,12 @@ function Test-FileEqual
     Param
     (
         [Parameter(Mandatory=$true)]
-        [ValidateScript({Test-Path $_})]
+        [ValidateScript({Test-Path -LiteralPath $_})]
         [string]
         $Path1,
 
         [Parameter(Mandatory=$true)]
-        [ValidateScript({Test-Path $_})]
+        [ValidateScript({Test-Path -LiteralPath $_})]
         [string]
         $Path2
     )
@@ -22,7 +22,7 @@ function Test-FileEqual
         # 10-15x faster than 'Get-Content' and 'Compare-Object'
         # 3x faster than 'ComputeHash' and 'Compare-Object'
         # 1.2x *slower* than 'Get-FileHash' and '-eq', but Get-FileHash isn't available until PowerShell 4.0
-        
+
         $sha256 = [System.Security.Cryptography.SHA256]::Create()
 
         try {

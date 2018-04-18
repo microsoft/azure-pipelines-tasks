@@ -40,7 +40,9 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         }
 
         var tp = new tl.TestPublisher("JUnit");
-        tp.publish(matchingTestResultsFiles, true, "", "", "", true);
+        const testRunTitle = tl.getInput('testRunTitle');
+
+        tp.publish(matchingTestResultsFiles, true, "", "", testRunTitle, true);
     }
 }
 

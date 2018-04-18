@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -218,6 +218,9 @@
         "CallbackCannotBeNull": "callback cannot be null.",
         "UnableToCreateDatabaseException": "Unable to create database.",
         "WindowMysqlClientMissingError": "Mysql Client is missing in window agent box. Please install it by running mysql client installer 'https://aka.ms/window-mysqlcli-installer' script file in your agent box.",
-        "LinuxMysqlClientMissingError": "Mysql Client is missing in linux agent box. Please install it by running 'apt-get install mysql-client'."
+        "LinuxMysqlClientMissingError": "Mysql Client is missing in linux agent box. Please install it by running 'apt-get install mysql-client'.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
     }
 }

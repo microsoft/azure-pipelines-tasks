@@ -110,7 +110,6 @@
   "loc.messages.SecretCannotBeEmpty": "secret must be a non empty string.",
   "loc.messages.armUrlCannotBeEmpty": "arm Url must be a non empty string.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority must be a non empty string.",
-  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
   "loc.messages.LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
   "loc.messages.NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
   "loc.messages.NetworkSecurityGroupNameCannotBeNull": "networkSecurityGroupName cannot be null or undefined and it must be of type string.",
@@ -169,5 +168,8 @@
   "loc.messages.UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
   "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}",
-  "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s"
+  "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s",
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
 }

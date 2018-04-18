@@ -13,11 +13,6 @@ process.env['VSTS_TASKVARIABLE_APPLE_CERTIFICATE_KEYCHAIN'] = '/build/temp/ios_s
 process.env['HOME'] = '/users/test';
 
 tr.registerMock('fs', {
-    existsSync: function (filePath) {
-        if (filePath === '/build/temp/ios_signing_temp.keychain') {
-            return true;
-        }
-    },
     readFileSync: fs.readFileSync,
     statSync: fs.statSync,
     writeFileSync: function (filePath, contents) {
@@ -28,6 +23,9 @@ tr.registerMock('fs', {
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
         "security": "/usr/bin/security"
+    },
+    "exist": {
+        "/build/temp/ios_signing_temp.keychain": true
     },
     "checkPath": {
         "/usr/bin/security": true

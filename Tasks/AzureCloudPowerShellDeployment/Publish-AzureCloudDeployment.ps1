@@ -12,6 +12,7 @@ try{
     $DeploymentLabel = Get-VstsInput -Name DeploymentLabel
     $AppendDateTimeToLabel = Get-VstsInput -Name AppendDateTimeToLabel -Require
     $AllowUpgrade = Get-VstsInput -Name AllowUpgrade -Require -AsBool
+    $SimultaneousUpgrade = Get-VstsInput -Name SimultaneousUpgrade -AsBool
     $ForceUpgrade = Get-VstsInput -Name ForceUpgrade -AsBool
     $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
@@ -44,7 +45,7 @@ try{
        $azureServiceError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
     }   
 
-   
+
     if (!$azureService)
     {    
         $azureService = "New-AzureService -ServiceName `"$ServiceName`""
@@ -95,7 +96,35 @@ try{
             Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
             $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
         }
-    } 
+    }
+    elseif ($AllowUpgrade -eq $true -and $SimultaneousUpgrade -eq $true -and $ForceUpgrade -eq $true)
+    {
+        #Use -Upgrade -Mode Simultaneous -Force
+        if ($label)
+        {
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration <extensions> -Force"
+            $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration $diagnosticExtensions -Force
+        }
+        else
+        {
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration <extensions> -Force"
+            $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration $diagnosticExtensions -Force
+        }
+    }
+    elseif ($AllowUpgrade -eq $true -and $SimultaneousUpgrade -eq $true)
+    {
+        #Use -Upgrade -Mode Simultaneous
+        if ($label)
+        {
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration <extensions>"
+            $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration $diagnosticExtensions
+        }
+        else
+        {
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration <extensions>"
+            $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration $diagnosticExtensions
+        }
+    }
     elseif ($AllowUpgrade -eq $true -and $ForceUpgrade -eq $true)
     {
         #Use -Upgrade

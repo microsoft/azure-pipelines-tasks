@@ -35,15 +35,6 @@ export class AzureAksService {
         });
     } 
 
-    // list all the manages cluster. They don't have continuation token now, so only one call.
-    public list(): Promise<Model.AKSCluster[]> {
-        return this.beginRequest(`//subscriptions/{subscriptionId}/providers/Microsoft.ContainerService/managedClusters`, {}).then((response) => {
-            return  response.body.value;
-        }, (reason) => {
-            throw Error(tl.loc('FailedToListClusters', this._client.getFormattedError(reason)));
-        });
-    }
-
     public getAccessProfile(resourceGroup : string , clusterName : string ): Promise<Model.AKSClusterAccessProfile> {
         return this.beginRequest(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.ContainerService/managedClusters/{ClusterName}/accessProfiles/clusterUser`,
         {
@@ -55,6 +46,4 @@ export class AzureAksService {
             throw Error(tl.loc('CantDownloadAccessProfile',clusterName,  this._client.getFormattedError(reason)));
         });
     }
-
-
 }

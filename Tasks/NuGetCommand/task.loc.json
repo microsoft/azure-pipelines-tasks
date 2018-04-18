@@ -9,7 +9,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 25
+    "Patch": 27
   },
   "runsOn": [
     "Agent",
@@ -153,6 +153,15 @@
       "label": "ms-resource:loc.input.label.noCache",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.noCache",
+      "required": "false",
+      "groupName": "restoreAdvanced"
+    },
+    {
+      "name": "disableParallelProcessing",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.disableParallelProcessing",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.disableParallelProcessing",
       "required": "false",
       "groupName": "restoreAdvanced"
     },
@@ -398,6 +407,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.buildProperties",
+      "groupName": "packAdvanced"
+    },
+    {
+      "name": "basePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.basePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.basePath",
       "groupName": "packAdvanced"
     },
     {

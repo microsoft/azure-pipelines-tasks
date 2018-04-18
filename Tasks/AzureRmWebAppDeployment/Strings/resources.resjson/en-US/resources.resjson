@@ -38,7 +38,7 @@
   "loc.input.help.ScriptType": "Customize the deployment by providing a script that will run on the Azure App service once the task has completed the deployment successfully . For example restore packages for Node, PHP, Python applications. [Learn more](https://go.microsoft.com/fwlink/?linkid=843471).",
   "loc.input.label.InlineScript": "Inline Script",
   "loc.input.label.ScriptPath": "Deployment script path",
-  "loc.input.label.WebConfigParameters": "Generate web.config paramters for Python and Node.js apps",
+  "loc.input.label.WebConfigParameters": "Generate web.config parameters for Python, Node.js and Go apps",
   "loc.input.help.WebConfigParameters": "A standard Web.config will be generated and deployed to Azure App Service if the application does not have one. The values in web.config can be edited and vary based on the application framework. For example for node.js application, web.config will have startup file and iis_node module values. This edit feature is only for the generated web.config. [Learn more](https://go.microsoft.com/fwlink/?linkid=843469).",
   "loc.input.label.AppSettings": "App settings",
   "loc.input.help.AppSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
@@ -71,7 +71,6 @@
   "loc.messages.ErrorNoSuchDeployingMethodExists": "Error : No such deploying method exists",
   "loc.messages.UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
   "loc.messages.UnabletoretrieveResourceID": "Unable to retrieve connection details for Azure Resource:'%s'. Status Code: %s",
-  "loc.messages.CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch access token for Azure. Status Code: %s (%s)",
   "loc.messages.Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
   "loc.messages.Failedtoupdatedeploymenthistory": "Failed to update deployment history. Error: %s",
   "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
@@ -190,5 +189,9 @@
   "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
   "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
   "loc.messages.GoExeNameNotPresent": "Go exe name is not present",
-  "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
+  "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
 }

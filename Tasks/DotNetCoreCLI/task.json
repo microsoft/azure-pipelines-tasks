@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 132,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -471,6 +471,7 @@
     },
     "messages": {
         "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
+        "CouldNotSetCodePaging": "Could not set the code paging of due to following error: %s",
         "Error_AutomaticallyVersionReleases": "Autoversion: Getting version number from build option is not supported in releases",
         "Error_CommandNotRecognized": "The command %s was not recognized.",
         "Error_NoSourceSpecifiedForPush": "No source was specified for push",

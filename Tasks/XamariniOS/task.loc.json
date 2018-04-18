@@ -10,10 +10,12 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 131,
+    "Major": 2,
+    "Minor": 133,
     "Patch": 0
   },
+  "preview": true,
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "Xamarin.iOS"
   ],
@@ -80,7 +82,7 @@
       "name": "runNugetRestore",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.runNugetRestore",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.runNugetRestore",
       "groupName": "advanced"
@@ -106,47 +108,17 @@
       "groupName": "advanced"
     },
     {
-      "name": "buildTool",
+      "name": "buildToolLocation",
       "aliases": [
-        "buildToolOption"
-      ],
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.buildTool",
-      "required": false,
-      "groupName": "advanced",
-      "defaultValue": "xbuild",
-      "options": {
-        "xbuild": "xbuild (Xamarin Studio)",
-        "msbuild": "MSBuild (Visual Studio for Mac)"
-      }
-    },
-    {
-      "name": "mdtoolLocation",
-      "aliases": [
-        "mdtoolFile"
+        "mdtoolFile",
+        "mdtoolLocation"
       ],
       "type": "string",
-      "label": "ms-resource:loc.input.label.mdtoolLocation",
+      "label": "ms-resource:loc.input.label.buildToolLocation",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.mdtoolLocation",
+      "helpMarkDown": "ms-resource:loc.input.help.buildToolLocation",
       "groupName": "advanced"
-    },
-    {
-      "name": "signMethod",
-      "aliases": [
-        "signingOption"
-      ],
-      "type": "radio",
-      "label": "ms-resource:loc.input.label.signMethod",
-      "required": false,
-      "groupName": "sign",
-      "defaultValue": "file",
-      "helpMarkDown": "ms-resource:loc.input.help.signMethod",
-      "options": {
-        "file": "File Contents",
-        "id": "Identifiers"
-      }
     },
     {
       "name": "iosSigningIdentity",
@@ -157,33 +129,7 @@
       "label": "ms-resource:loc.input.label.iosSigningIdentity",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.iosSigningIdentity",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
-    },
-    {
-      "name": "unlockDefaultKeychain",
-      "aliases": [
-        "signingUnlockDefaultKeychain"
-      ],
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.unlockDefaultKeychain",
-      "defaultValue": false,
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.unlockDefaultKeychain",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
-    },
-    {
-      "name": "defaultKeychainPassword",
-      "aliases": [
-        "signingDefaultKeychainPassword"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.defaultKeychainPassword",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.defaultKeychainPassword",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
+      "groupName": "sign"
     },
     {
       "name": "provProfileUuid",
@@ -194,57 +140,7 @@
       "label": "ms-resource:loc.input.label.provProfileUuid",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.provProfileUuid",
-      "groupName": "sign",
-      "visibleRule": "signMethod = id"
-    },
-    {
-      "name": "p12",
-      "aliases": [
-        "signingP12File"
-      ],
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.p12",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.p12",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "p12pwd",
-      "aliases": [
-        "signingP12Password"
-      ],
-      "type": "string",
-      "label": "ms-resource:loc.input.label.p12pwd",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.p12pwd",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "provProfile",
-      "aliases": [
-        "signingProvisioningProfileFile"
-      ],
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.provProfile",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.provProfile",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
-    },
-    {
-      "name": "removeProfile",
-      "aliases": [
-        "signingRemoveProfile"
-      ],
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.removeProfile",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.removeProfile",
-      "groupName": "sign",
-      "visibleRule": "signMethod = file"
+      "groupName": "sign"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -256,11 +152,7 @@
   },
   "messages": {
     "SignIdNotFound": "ms-resource:loc.messages.SignIdNotFound",
-    "TempKeychainSetupFailed": "ms-resource:loc.messages.TempKeychainSetupFailed",
-    "ProvProfileDetailsNotFound": "ms-resource:loc.messages.ProvProfileDetailsNotFound",
     "ProvProfileUUIDNotFound": "ms-resource:loc.messages.ProvProfileUUIDNotFound",
-    "TempKeychainDeleteFailed": "ms-resource:loc.messages.TempKeychainDeleteFailed",
-    "ProvProfileDeleteFailed": "ms-resource:loc.messages.ProvProfileDeleteFailed",
     "XamariniOSSucceeded": "ms-resource:loc.messages.XamariniOSSucceeded",
     "XamariniOSFailed": "ms-resource:loc.messages.XamariniOSFailed",
     "MSB_Build0": "ms-resource:loc.messages.MSB_Build0",

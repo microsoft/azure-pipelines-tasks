@@ -44,7 +44,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     let i = 0;
     let retryCount = options && options.retryCount ? options.retryCount : 5;
     let retryIntervalInSeconds = options && options.retryIntervalInSeconds ? options.retryIntervalInSeconds : 5;
-    let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : ["ETIMEDOUT"];
+    let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : ["ETIMEDOUT", "ECONNRESET"];
     let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes: [];
 
     while (true) {
@@ -65,6 +65,10 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
                 await sleepFor(retryIntervalInSeconds);
             }
             else {
+                if (error.code) {
+                    console.log("##vso[task.logissue type=error;code="+error.code+";]");
+                }
+
                 throw error;
             }
         }

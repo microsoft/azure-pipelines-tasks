@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 2,
-    "Patch": 0
+    "Minor": 3,
+    "Patch": 3
   },
   "demands": [
     "azureps"
@@ -126,6 +126,15 @@
       "required": true
     },
     {
+      "name": "SimultaneousUpgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.SimultaneousUpgrade",
+      "defaultValue": "false",
+      "visibleRule": "AllowUpgrade == true",
+      "helpMarkDown": "ms-resource:loc.input.help.SimultaneousUpgrade",
+      "required": false
+    },
+    {
       "name": "ForceUpgrade",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.ForceUpgrade",
@@ -221,6 +230,8 @@
     "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
     "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
     "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription",
-    "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics"
+    "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics",
+    "Customcertificatesaredefinedininvalidformat": "ms-resource:loc.messages.Customcertificatesaredefinedininvalidformat",
+    "Addinganyconfiguredcustomcertificates": "ms-resource:loc.messages.Addinganyconfiguredcustomcertificates"
   }
 }

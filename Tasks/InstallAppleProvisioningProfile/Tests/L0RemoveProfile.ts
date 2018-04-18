@@ -13,12 +13,6 @@ process.env['VSTS_TASKVARIABLE_APPLE_PROV_PROFILE_UUID'] = 'testuuid';
 process.env['HOME'] = '/users/test';
 
 tr.registerMock('fs', {
-    existsSync: function (pathToCheck) {
-        if (pathToCheck === '/users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision') {
-            return true;
-        }
-        return false;
-    },
     writeFileSync: function (filePath, contents) {
     },
     statSync: fs.statSync,

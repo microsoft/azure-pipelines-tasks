@@ -24,6 +24,8 @@
   "loc.input.help.AppendDateTimeToLabel": "将当前的日期和时间追加到部署标签",
   "loc.input.label.AllowUpgrade": "允许升级",
   "loc.input.help.AllowUpgrade": "选中后，可以升级到 Microsoft Azure 部署",
+  "loc.input.label.SimultaneousUpgrade": "Simultaneous upgrade",
+  "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "强制升级",
   "loc.input.help.ForceUpgrade": "选中后会将升级设置为强制升级，这可能导致本地数据丢失。",
   "loc.input.label.DiagnosticStorageAccountKeys": "诊断存储帐户密钥",

@@ -4,6 +4,7 @@ import * as ps from 'child_process';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
+import * as inputdatacontract from './inputdatacontract';
 import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
 import * as ta from './testagent';
@@ -42,7 +43,7 @@ export class DistributedTest {
 
     private async invokeDtaExecutionHost() {
         try {
-            var exitCode = await this.startDtaExecutionHost();
+            const exitCode = await this.startDtaExecutionHost();
             tl.debug('DtaExecutionHost finished');
 
             if (exitCode !== 0) {
@@ -60,86 +61,160 @@ export class DistributedTest {
     }
 
     private async startDtaExecutionHost(): Promise<number> {
-
-        let inputDataContract = {};
-
         this.testSourcesFile = this.createTestSourcesFile();
 
-        // Create empty sub nodes
-        inputDataContract['TestSelectionSettings'] = {};
-        inputDataContract['TestReportingSettings'] = {};
-        inputDataContract['TfsSpecificSettings'] = {};
-        inputDataContract['TargetBinariesSettings'] = {};
-        inputDataContract['ProxySettings'] = {};
-        inputDataContract['DistributionSettings'] = {};
-        inputDataContract['ExecutionSettings'] = {};
-        inputDataContract['Logging'] = {};
-        inputDataContract['TestSelectionSettings']['AssemblyBasedTestSelection'] = {};
-        inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings'] = {};
-        inputDataContract['TestSpecificSettings'] = {};
-        inputDataContract['ExecutionSettings']['RerunSettings'] = {};
-        inputDataContract['ExecutionSettings']['TiaSettings'] = {};
+        const inputDataContract = <inputdatacontract.InputDataContract>{};
 
-        // Settings override inputs
-        inputDataContract['ExecutionSettings']['TiaSettings']['Enabled'] = this.dtaTestConfig.tiaConfig.tiaEnabled;
-        inputDataContract['ExecutionSettings']['TiaSettings']['RebaseLimit'] = this.dtaTestConfig.tiaConfig.tiaRebaseLimit;
-        inputDataContract['ExecutionSettings']['TiaSettings']['SourcesDirectory'] = this.dtaTestConfig.tiaConfig.sourcesDir;
-        inputDataContract['ExecutionSettings']['TiaSettings']['FileLevel'] = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.tiaConfig.fileLevel) || this.dtaTestConfig.tiaConfig.fileLevel.toUpperCase() !== 'FALSE';
-        inputDataContract['ExecutionSettings']['TiaSettings']['FilterPaths'] = this.dtaTestConfig.tiaConfig.tiaFilterPaths;
+        // CoreInputs
+        inputDataContract.AgentName = this.dtaTestConfig.dtaEnvironment.agentName;
+        inputDataContract.CollectionUri = this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl;
+        inputDataContract.EnvironmentUri = this.dtaTestConfig.dtaEnvironment.environmentUri;
+        inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
 
-        // Temporary settings override inputs
-        inputDataContract['UseNewCollector'] = this.dtaTestConfig.tiaConfig.useNewCollector;
-        inputDataContract['IsPrFlow'] = this.dtaTestConfig.tiaConfig.isPrFlow;
-        inputDataContract['UseTestCaseFilterInResponseFile'] = this.dtaTestConfig.tiaConfig.useTestCaseFilterInResponseFile;
-        inputDataContract['UserMapFile'] = this.dtaTestConfig.tiaConfig.userMapFile;
-        inputDataContract['DisableEnablingDataCollector'] = this.dtaTestConfig.tiaConfig.disableEnablingDataCollector;
+        // InputDataContract.TestSelectionSettings
+        inputDataContract.TestSelectionSettings = <inputdatacontract.TestSelectionSettings>{};
+        inputDataContract.TestSelectionSettings.TestCaseFilter = this.dtaTestConfig.testcaseFilter;
+        inputDataContract.TestSelectionSettings.SearchFolder = this.dtaTestConfig.testDropLocation;
+        inputDataContract.TestSelectionSettings.TestSelectionType = this.dtaTestConfig.testSelection;
 
-        inputDataContract['ExecutionSettings']['VideoDataCollectorEnabled'] = this.dtaTestConfig.videoCoverageEnabled;
-        inputDataContract['TiaBaseLineBuildIdFile'] = this.dtaTestConfig.tiaConfig.baseLineBuildIdFile;
-        inputDataContract['VsVersion'] = this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber;
-        inputDataContract['VsVersionIsTestSettingsPropertiesSupported'] = this.dtaTestConfig.vsTestVersionDetails.isTestSettingsPropertiesSupported();
-        inputDataContract['ExecutionSettings']['IsToolsInstallerFlow'] = utils.Helper.isToolsInstallerFlow(this.dtaTestConfig);
-        inputDataContract['ExecutionSettings']['OverridenParameters'] = this.dtaTestConfig.overrideTestrunParameters;
-        inputDataContract['AgentName'] = this.dtaTestConfig.dtaEnvironment.agentName;
-        inputDataContract['EnvironmentUri'] = this.dtaTestConfig.dtaEnvironment.environmentUri;
-        inputDataContract['CollectionUri'] = this.dtaTestConfig.dtaEnvironment.tfsCollectionUrl;
-        inputDataContract['MiniMatchTestSourcesFile'] = this.testSourcesFile;
-        inputDataContract['SearchFolder'] = this.dtaTestConfig.testDropLocation;
-        inputDataContract['Logging']['EnableConsoleLogs'] = true;
-        inputDataContract['ExecutionSettings']['ProceedAfterAbortedTestCase'] = this.dtaTestConfig.proceedAfterAbortedTestCase;
-        inputDataContract['UseVsTestConsole'] = this.dtaTestConfig.useVsTestConsole === 'true';
-        inputDataContract['TestPlatformVersion'] = this.dtaTestConfig.vsTestVersion;
-        inputDataContract['TestSpecificSettings']['TestCaseAccessToken'] = tl.getVariable('Test.TestCaseAccessToken');
+        // InputDataContract.TestSelectionSettings.AssemblyBasedTestSelection
+        inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection = <inputdatacontract.AssemblyBasedTestSelection>{};
+        inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection.SourceFilter = this.dtaTestConfig.sourceFilter.join('|');
 
-        if (utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
-            inputDataContract['COR_PROFILER_PATH_32'] = this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation;
-            inputDataContract['COR_PROFILER_PATH_64'] = this.dtaTestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation;
-            inputDataContract['ForcePlatformV2'] = true;
+        // InputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings
+        inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings = <inputdatacontract.TestPlanTestSuiteSettings>{};
+        inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.Testplan = this.dtaTestConfig.testplan;
+        inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestPlanConfigId = this.dtaTestConfig.testPlanConfigId;
+        inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.OnDemandTestRunId = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.onDemandTestRunId) ? null : Number(this.dtaTestConfig.onDemandTestRunId);
+        if (!utils.Helper.isNullOrUndefined(this.dtaTestConfig.testSuites)) {
+            inputDataContract.TestSelectionSettings.TestPlanTestSuiteSettings.TestSuites = this.dtaTestConfig.testSuites;
         }
 
-        if (utils.Helper.isDebugEnabled()) {
-            inputDataContract['Logging']['DebugLogging'] = true;
+        // InputDataContract.TestReportingSettings
+        inputDataContract.TestReportingSettings = <inputdatacontract.TestReportingSettings>{};
+        inputDataContract.TestReportingSettings.TestRunTitle = this.dtaTestConfig.testRunTitle;
+
+        // InputDataContract.TfsSpecificSettings
+        inputDataContract.TfsSpecificSettings = <inputdatacontract.TfsSpecificSettings>{};
+        inputDataContract.TfsSpecificSettings.BuildId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Build.Buildid')) ? null : Number(tl.getVariable('Build.Buildid'));
+        inputDataContract.TfsSpecificSettings.BuildUri = tl.getVariable('Build.BuildUri');
+        inputDataContract.TfsSpecificSettings.ReleaseId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.ReleaseId')) ? null : Number(tl.getVariable('Release.ReleaseId'));
+        inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
+
+        // InputDataContract.TargetBinariesSettings
+        inputDataContract.TargetBinariesSettings = <inputdatacontract.TargetBinariesSettings>{};
+        inputDataContract.TargetBinariesSettings.BuildConfig = this.dtaTestConfig.buildConfig;
+        inputDataContract.TargetBinariesSettings.BuildPlatform = this.dtaTestConfig.buildPlatform;
+
+        // InputDataContract.ProxySettings
+        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyConfiguration.proxyUrl)) {
+            inputDataContract.ProxySettings = <inputdatacontract.ProxySettings>{};
+            inputDataContract.ProxySettings.ProxyUrl = this.dtaTestConfig.proxyConfiguration.proxyUrl;
+            inputDataContract.ProxySettings.ProxyUsername = this.dtaTestConfig.proxyConfiguration.proxyUserName;
+            inputDataContract.ProxySettings.ProxyPassword =  this.dtaTestConfig.proxyConfiguration.proxyPassword;
+            inputDataContract.ProxySettings.ProxyBypassHosts = this.dtaTestConfig.proxyConfiguration.proxyBypassHosts;
         }
 
+        // InputDataContract.DistributionSettings
+        inputDataContract.DistributionSettings = <inputdatacontract.DistributionSettings>{};
+        if (this.dtaTestConfig.batchingType === models.BatchingType.AssemblyBased) {
+            inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = false;
+        } else {
+            inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = true;
+        }
+        tl.debug('Type of batching' + this.dtaTestConfig.batchingType);
+        inputDataContract.DistributionSettings.NumberOfTestAgents = this.dtaTestConfig.numberOfAgentsInPhase;
+        const isTimeBasedBatching = (this.dtaTestConfig.batchingType === models.BatchingType.TestExecutionTimeBased);
+        tl.debug('isTimeBasedBatching : ' + isTimeBasedBatching);
+        inputDataContract.DistributionSettings.IsTimeBasedSlicing = isTimeBasedBatching;
+        if (isTimeBasedBatching && this.dtaTestConfig.runningTimePerBatchInMs) {
+            tl.debug('[RunStatistics] Run Time per batch' + this.dtaTestConfig.runningTimePerBatchInMs);
+            inputDataContract.DistributionSettings.RunTimePerSlice = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.runningTimePerBatchInMs) ? null : Number(this.dtaTestConfig.runningTimePerBatchInMs);
+        }
+        if (this.dtaTestConfig.numberOfTestCasesPerSlice) {
+            inputDataContract.DistributionSettings.NumberOfTestCasesPerSlice = this.dtaTestConfig.numberOfTestCasesPerSlice;
+        }
+
+        // InputDataContract.ExecutionSettings
+        inputDataContract.ExecutionSettings = <inputdatacontract.ExecutionSettings>{};
+        inputDataContract.ExecutionSettings.VideoDataCollectorEnabled = this.dtaTestConfig.videoCoverageEnabled;
+        inputDataContract.ExecutionSettings.IsToolsInstallerFlow = utils.Helper.isToolsInstallerFlow(this.dtaTestConfig);
+        inputDataContract.ExecutionSettings.OverridenParameters = this.dtaTestConfig.overrideTestrunParameters;
+        inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = this.dtaTestConfig.proceedAfterAbortedTestCase;
+        inputDataContract.ExecutionSettings.SettingsFile = this.dtaTestConfig.settingsFile;
+        inputDataContract.ExecutionSettings.IgnoreTestFailures = utils.Helper.stringToBool(this.dtaTestConfig.ignoreTestFailures);
+        inputDataContract.ExecutionSettings.CodeCoverageEnabled = this.dtaTestConfig.codeCoverageEnabled;
         if (this.dtaTestConfig.pathtoCustomTestAdapters) {
             const testAdapters = tl.findMatch(this.dtaTestConfig.pathtoCustomTestAdapters, '**\\*TestAdapter.dll');
             if (!testAdapters || (testAdapters && testAdapters.length === 0)) {
                 tl.warning(tl.loc('pathToCustomAdaptersContainsNoAdapters', this.dtaTestConfig.pathtoCustomTestAdapters));
             }
-            inputDataContract['ExecutionSettings']['CustomTestAdapters'] =  this.dtaTestConfig.pathtoCustomTestAdapters;
+            inputDataContract.ExecutionSettings.CustomTestAdapters =  this.dtaTestConfig.pathtoCustomTestAdapters;
         }
 
-        // Set proxy settings to environment if provided
-        if (!utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.proxyConfiguration.proxyUrl)) {
-            inputDataContract['ProxySettings']['ProxyUrl'] = this.dtaTestConfig.proxyConfiguration.proxyUrl;
-            inputDataContract['ProxySettings']['ProxyUsername'] = this.dtaTestConfig.proxyConfiguration.proxyUserName;
-            inputDataContract['ProxySettings']['ProxyPassword'] =  this.dtaTestConfig.proxyConfiguration.proxyPassword;
-            inputDataContract['ProxySettings']['ProxyBypassHosts'] = this.dtaTestConfig.proxyConfiguration.proxyBypassHosts;
+        // InputDataContract.ExecutionSettings.TiaSettings
+        inputDataContract.ExecutionSettings.TiaSettings = <inputdatacontract.TiaSettings>{};
+        inputDataContract.ExecutionSettings.TiaSettings.Enabled = this.dtaTestConfig.tiaConfig.tiaEnabled;
+        inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.tiaConfig.tiaRebaseLimit) ? null : Number(this.dtaTestConfig.tiaConfig.tiaRebaseLimit);
+        inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory = this.dtaTestConfig.tiaConfig.sourcesDir;
+        inputDataContract.ExecutionSettings.TiaSettings.FileLevel = utils.Helper.isNullEmptyOrUndefined(this.dtaTestConfig.tiaConfig.fileLevel) || this.dtaTestConfig.tiaConfig.fileLevel.toLowerCase() !== 'false';
+        inputDataContract.ExecutionSettings.TiaSettings.FilterPaths = this.dtaTestConfig.tiaConfig.tiaFilterPaths;
+        inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = this.dtaTestConfig.tiaConfig.userMapFile;
+
+        // InputDataContract.ExecutionSettings.RerunSettings
+        inputDataContract.ExecutionSettings.RerunSettings = <inputdatacontract.RerunSettings>{};
+        if (this.dtaTestConfig.rerunFailedTests) {
+            inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = true;
+            tl.debug('Type of rerun: ' + this.dtaTestConfig.rerunType);
+            if (this.dtaTestConfig.rerunType === 'basedOnTestFailureCount') {
+                inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit = this.dtaTestConfig.rerunFailedTestCasesMaxLimit;
+            } else {
+                inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold = this.dtaTestConfig.rerunFailedThreshold;
+            }
+            inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts = this.dtaTestConfig.rerunMaxAttempts;
         }
 
-        inputDataContract['TestSelectionSettings']['AssemblyBasedTestSelection']['SourceFilter'] = this.dtaTestConfig.sourceFilter.join('|');
+        // InputDataContract.TfsSpecificSettings
+        inputDataContract.TestSpecificSettings = <inputdatacontract.TestSpecificSettings>{};
+        inputDataContract.TestSpecificSettings.TestCaseAccessToken = tl.getVariable('Test.TestCaseAccessToken');
 
-        let settingsFile = this.dtaTestConfig.settingsFile;
+        // InputDataContract.Logging
+        inputDataContract.Logging = <inputdatacontract.Logging>{};
+        inputDataContract.Logging.EnableConsoleLogs = true;
+        if (utils.Helper.isDebugEnabled()) {
+            inputDataContract.Logging.DebugLogging = true;
+        }
+
+        // TemporaryInputs
+        inputDataContract.UseNewCollector = this.dtaTestConfig.tiaConfig.useNewCollector;
+        inputDataContract.IsPrFlow = utils.Helper.stringToBool(this.dtaTestConfig.tiaConfig.isPrFlow);
+        inputDataContract.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(this.dtaTestConfig.tiaConfig.useTestCaseFilterInResponseFile);
+        inputDataContract.DisableEnablingDataCollector = this.dtaTestConfig.tiaConfig.disableEnablingDataCollector;
+        inputDataContract.TiaBaseLineBuildIdFile = this.dtaTestConfig.tiaConfig.baseLineBuildIdFile;
+        inputDataContract.VsVersion = this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber;
+        inputDataContract.VsVersionIsTestSettingsPropertiesSupported = this.dtaTestConfig.vsTestVersionDetails.isTestSettingsPropertiesSupported();
+        inputDataContract.MiniMatchTestSourcesFile = this.testSourcesFile;
+        inputDataContract.UseVsTestConsole =  utils.Helper.stringToBool(this.dtaTestConfig.useVsTestConsole);
+        inputDataContract.TestPlatformVersion = this.dtaTestConfig.vsTestVersion;
+        if (utils.Helper.isToolsInstallerFlow(this.dtaTestConfig)) {
+            inputDataContract.COR_PROFILER_PATH_32 = this.dtaTestConfig.toolsInstallerConfig.x86ProfilerProxyDLLLocation;
+            inputDataContract.COR_PROFILER_PATH_64 = this.dtaTestConfig.toolsInstallerConfig.x64ProfilerProxyDLLLocation;
+            inputDataContract.ForcePlatformV2 = true;
+        }
+        // If we are setting the path version is not needed
+        const exelocation = path.dirname(this.dtaTestConfig.vsTestVersionDetails.vstestExeLocation);
+        tl.debug('Adding env var DTA.TestWindow.Path = ' + exelocation);
+        const testWindowRelativeDir = 'CommonExtensions\\Microsoft\\TestWindow';
+        if (exelocation && exelocation.indexOf(testWindowRelativeDir) !== -1) {
+            const ideLocation = exelocation.split(testWindowRelativeDir)[0];
+            tl.debug('Adding env var DTA.VisualStudio.Path = ' + ideLocation);
+            inputDataContract.VisualStudioPath = ideLocation;
+        } else {
+            inputDataContract.VisualStudioPath = exelocation;
+        }
+        inputDataContract.TestWindowPath = exelocation;
+
+        const settingsFile = this.dtaTestConfig.settingsFile;
         if (utils.Helper.pathExistsAsFile(settingsFile)) {
             tl.debug('Final runsettings file being used:');
             utils.Helper.readFileContents(settingsFile, 'utf-8').then(function (settings) {
@@ -148,71 +223,9 @@ export class DistributedTest {
             });
         }
 
-        inputDataContract['TestSelectionSettings']['TestCaseFilter'] = this.dtaTestConfig.testcaseFilter;
-        inputDataContract['ExecutionSettings']['SettingsFile'] = settingsFile;
-        inputDataContract['TestSelectionSettings']['SearchFolder'] = this.dtaTestConfig.testDropLocation;
-        inputDataContract['TargetBinariesSettings']['BuildConfig'] = this.dtaTestConfig.buildConfig;
-        inputDataContract['TargetBinariesSettings']['BuildPlatform'] = this.dtaTestConfig.buildPlatform;
-        inputDataContract['TestRunTitle'] = this.dtaTestConfig.testRunTitle;
-        inputDataContract['TestSelectionSettings']['TestSelectionType'] = this.dtaTestConfig.testSelection;
-        inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['OnDemandTestRunId'] = this.dtaTestConfig.onDemandTestRunId;
-        if (!utils.Helper.isNullOrUndefined(this.dtaTestConfig.testSuites)) {
-            inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['TestSuites'] = this.dtaTestConfig.testSuites;
-        }
-        inputDataContract['ExecutionSettings']['IgnoreTestFailures'] = this.dtaTestConfig.ignoreTestFailures;
-        inputDataContract['ExecutionSettings']['CodeCoverageEnabled'] = this.dtaTestConfig.codeCoverageEnabled;
-
-        inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['Testplan'] = this.dtaTestConfig.testplan;
-        inputDataContract['TestSelectionSettings']['TestPlanTestSuiteSettings']['TestPlanConfigId'] = this.dtaTestConfig.testPlanConfigId;
-
-        if (this.dtaTestConfig.batchingType === models.BatchingType.AssemblyBased) {
-            inputDataContract['DistributionSettings']['TestCaseLevelSlicingEnabled'] = false;
-        } else {
-            inputDataContract['DistributionSettings']['TestCaseLevelSlicingEnabled'] = true;
-        }
-
-        inputDataContract['DistributionSettings']['NumberOfTestAgents'] = this.dtaTestConfig.numberOfAgentsInPhase;
-        tl.debug("Type of batching" + this.dtaTestConfig.batchingType);
-        const isTimeBasedBatching = (this.dtaTestConfig.batchingType === models.BatchingType.TestExecutionTimeBased);
-        tl.debug("isTimeBasedBatching : " + isTimeBasedBatching);
-        inputDataContract['DistributionSettings']['IsTimeBasedSlicing'] = isTimeBasedBatching;
-        if (isTimeBasedBatching && this.dtaTestConfig.runningTimePerBatchInMs) {
-            tl.debug("[RunStatistics] Run Time per batch" + this.dtaTestConfig.runningTimePerBatchInMs);
-            inputDataContract['DistributionSettings']['RunTimePerSlice'] = this.dtaTestConfig.runningTimePerBatchInMs;
-        }
-        if (this.dtaTestConfig.numberOfTestCasesPerSlice) {
-            inputDataContract['DistributionSettings']['NumberOfTestCasesPerSlice'] = this.dtaTestConfig.numberOfTestCasesPerSlice;
-        }
-
-        if (this.dtaTestConfig.rerunFailedTests) {
-            inputDataContract['ExecutionSettings']['RerunSettings']['RerunFailedTests'] = true;
-            tl.debug("Type of rerun: " + this.dtaTestConfig.rerunType);
-            if (this.dtaTestConfig.rerunType === 'basedOnTestFailureCount') {
-                inputDataContract['ExecutionSettings']['RerunSettings']['RerunFailedTestCasesMaxLimit'] = this.dtaTestConfig.rerunFailedTestCasesMaxLimit;
-            } else {
-                inputDataContract['ExecutionSettings']['RerunSettings']['RerunFailedThreshold'] = this.dtaTestConfig.rerunFailedThreshold;
-            }
-            inputDataContract['ExecutionSettings']['RerunSettings']['RerunMaxAttempts'] = this.dtaTestConfig.rerunMaxAttempts;
-        }
-
-        // If we are setting the path version is not needed
-        const exelocation = path.dirname(this.dtaTestConfig.vsTestVersionDetails.vstestExeLocation);
-        tl.debug('Adding env var DTA.TestWindow.Path = ' + exelocation);
-
-        const testWindowRelativeDir = 'CommonExtensions\\Microsoft\\TestWindow';
-        if (exelocation && exelocation.indexOf(testWindowRelativeDir) !== -1) {
-            const ideLocation = exelocation.split(testWindowRelativeDir)[0];
-            tl.debug('Adding env var DTA.VisualStudio.Path = ' + ideLocation);
-            inputDataContract['VisualStudioPath'] = ideLocation;
-        } else {
-            inputDataContract['VisualStudioPath'] = exelocation;
-        }
-        inputDataContract['TestWindowPath'] = exelocation;
-        inputDataContract['TeamProject'] = tl.getVariable('System.TeamProject');
-
         // Pass the acess token as an environment variable for security purposes
         // let envVars: { [key: string]: string; } = <{ [key: string]: string; }>{};
-        let envVars: { [key: string]: string; } = process.env;
+        const envVars: { [key: string]: string; } = process.env; // This is a temporary solutio where we are passing parent process env vars, we should get away from this
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
 
         // Invoke DtaExecutionHost with the input json file
@@ -221,9 +234,9 @@ export class DistributedTest {
         writeFileSync(inputFilePath, JSON.stringify(inputDataContract));
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
-        var code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ env: envVars });
+        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ env: envVars });
 
-        var consolidatedCiData = {
+        const consolidatedCiData = {
             agentFailure: false,
             agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
             batchingType: models.BatchingType[this.dtaTestConfig.batchingType],
@@ -233,11 +246,11 @@ export class DistributedTest {
             environmentUri: this.dtaTestConfig.dtaEnvironment.environmentUri,
             numberOfAgentsInPhase: this.dtaTestConfig.numberOfAgentsInPhase,
             overrideTestrunParameters: utils.Helper.isNullOrUndefined(this.dtaTestConfig.overrideTestrunParameters) ? 'false' : 'true',
-            pipeline: tl.getVariable('release.releaseUri') != null ? "release" : "build",
+            pipeline: tl.getVariable('release.releaseUri') != null ? 'release' : 'build',
             runTestsInIsolation: this.dtaTestConfig.runTestsInIsolation,
             runInParallel: this.dtaTestConfig.runInParallel,
             settingsType: !utils.Helper.isNullOrUndefined(this.dtaTestConfig.settingsFile) ? this.dtaTestConfig.settingsFile.endsWith('.runsettings') ? 'runsettings' : this.dtaTestConfig.settingsFile.endsWith('.testsettings') ? 'testsettings' : 'none' : 'none',
-            task: "VsTestDistributedFlow",
+            task: 'VsTestDistributedFlow',
             testSelection: this.dtaTestConfig.testSelection,
             tiaEnabled: this.dtaTestConfig.tiaConfig.tiaEnabled,
             vsTestVersion: this.dtaTestConfig.vsTestVersionDetails.majorVersion + '.' + this.dtaTestConfig.vsTestVersionDetails.minorversion + '.' + this.dtaTestConfig.vsTestVersionDetails.patchNumber,
@@ -302,7 +315,7 @@ export class DistributedTest {
                 throw new Error(tl.loc('noTestSourcesFound', this.dtaTestConfig.sourceFilter.toString()));
             }
 
-            const tempFile = path.join(os.tmpdir(), 'testSources_' + uuid.v1() + '.src');
+            const tempFile = utils.Helper.GenerateTempFile('testSources_' + uuid.v1() + '.src');
             fs.writeFileSync(tempFile, filesMatching.join(os.EOL));
             tl.debug('Test Sources file :' + tempFile);
             return tempFile;

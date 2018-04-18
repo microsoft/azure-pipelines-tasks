@@ -30,6 +30,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "getVariable": {
         "HOME": "/users/test"
     },
+    "which": {
+        "xcpretty": "/users/xcpretty"
+    },
     "findMatch": {
         "/home/build/**/build/reports/junit.xml": [
             "/home/build/testbuild1/build/reports/junit.xml"

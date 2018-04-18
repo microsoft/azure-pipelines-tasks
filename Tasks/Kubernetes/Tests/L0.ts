@@ -25,6 +25,9 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.secretArguments];
         delete process.env[shared.TestEnvVars.secretName];
         delete process.env[shared.TestEnvVars.forceUpdate];
+        delete process.env[shared.TestEnvVars.configMapName];
+        delete process.env[shared.TestEnvVars.forceUpdateConfigMap];
+        delete process.env[shared.TestEnvVars.configMapArguments];
         delete process.env[shared.TestEnvVars.outputFormat];
         delete process.env[shared.TestEnvVars.kubectlOutput];
     });
@@ -311,6 +314,88 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);
         done();
     });
+ 
+   /*  it('Runs successfully for kubectl create configMap from file or directory with forceUpdate', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";
+        process.env[shared.TestEnvVars.configMapName] = "myConfigMap";
+        process.env[shared.TestEnvVars.useConfigMapFile] = "true";
+        process.env[shared.TestEnvVars.forceUpdateConfigMap] = "true";
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) == -1, "kubectl get should not run");
+        assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) != -1, "kubectl delete should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=${shared.formatPath("configMapDir/configMap.properties")}`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully for kubectl create configMap from file or directory without forceUpdate', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";
+        process.env[shared.TestEnvVars.configMapName] = "myConfigMap";
+        process.env[shared.TestEnvVars.useConfigMapFile] = "true";
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) == -1, "kubectl delete should not run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=${shared.formatPath("configMapDir/configMap.properties")}`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    }); */
+
+    it('Runs successfully for kubectl create configMap using literal values with forceUpdate', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";
+        process.env[shared.TestEnvVars.configMapName] = "myConfigMap";
+        process.env[shared.TestEnvVars.configMapArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
+        process.env[shared.TestEnvVars.forceUpdateConfigMap] = "true";
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) == -1, "kubectl get should not run");
+        assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) != -1, "kubectl delete should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully for kubectl kubectl create configMap using literal values without forceUpdate', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";
+        process.env[shared.TestEnvVars.configMapName] = "myConfigMap";
+        process.env[shared.TestEnvVars.configMapArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) == -1, "kubectl delete should not run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    });
 
     it('Runs successfully for kubectl get and print the output in a particular format', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -325,6 +410,77 @@ describe('Kubernetes Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get secrets my-secret -o yaml`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    }); 
+
+
+    it('Runs successfully for checking whether secrets, configmaps and kubectl commands are run in a consecutive manner', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";
+        process.env[shared.TestEnvVars.secretType] = "generic";
+        process.env[shared.TestEnvVars.secretArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
+        process.env[shared.TestEnvVars.secretName] = "my-secret";
+        process.env[shared.TestEnvVars.configMapName] = "myConfigMap";
+        process.env[shared.TestEnvVars.configMapArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
+        process.env[shared.TestEnvVars.forceUpdateConfigMap] = "true";
+        tr.run();
+
+        assert(tr.invokedToolCount == 3, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`DeleteSecret my-secret`) != -1, "kubectl delete should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) != -1, "kubectl delete should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) < tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`), "kubectl create secrets should run before create configMap");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) < tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`), "kubectl create configMap should run before get");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs fails if create config command fails even if create secret is successful', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";
+        process.env[shared.TestEnvVars.secretType] = "generic";
+        process.env[shared.TestEnvVars.secretArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
+        process.env[shared.TestEnvVars.secretName] = "my-secret";
+        process.env[shared.TestEnvVars.configMapName] = "someConfigMap";
+        process.env[shared.TestEnvVars.configMapArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
+        tr.run();
+
+        assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.indexOf(`GetConfigMap someConfigMap`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap someConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) == -1, "kubectl get should not run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully when forceUpdateConfigMap is false and configMap exists', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";
+        process.env[shared.TestEnvVars.configMapName] = "existingConfigMap";
+        process.env[shared.TestEnvVars.configMapArguments] = "--from-literal=key1=value1 --from-literal=key2=value2";
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`GetConfigMap existingConfigMap`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`DeleteConfigMap existingConfigMap`) == -1, "kubectl delete should not run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap existingConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) == -1, "kubectl create should not run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
