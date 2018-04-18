@@ -1418,3 +1418,74 @@ function Check-ContainerNameAndArgs
         Write-Warning (Get-vstsLocString -Key "AFC_RootContainerAndDirectory")
     }
 }
+
+function Copy-AzCopyTool
+{
+    param([string]$fqdn,
+          [string]$azCopyLocation,
+          [object]$networkCredentials,
+          [string]$winRMPort,
+          [string]$httpProtocolOption,
+          [string]$skipCACheckOption)
+
+    try {
+        if($skipCACheckOption)
+        {
+            $sessionOption = New-PSSessionOption -SkipCACheck
+        }
+        else
+        {
+            $sessionOption = New-PSSessionOption
+        }
+
+        $psCredentials = New-Object PSCredential($networkCredentials.UserName, (ConvertTo-SecureString $networkCredentials.Password -AsPlainText -Force))
+
+        if($httpProtocolOption -eq '-UseHttp')
+        {
+            $session = New-PSSession -ComputerName $fqdn -Port $winRMPort -Credential $psCredentials -SessionOption $sessionOption
+        }
+        else
+        {
+            $session = New-PSSession -ComputerName $fqdn -Port $winRMPort -Credential $psCredentials -SessionOption $sessionOption -UseSSL
+        }
+
+        Write-Verbose "Created new powershell session to copy AzCopy tools"
+
+        $azCopyToolFileNames = Get-ChildItem $azCopyLocation | select -ExpandProperty Name
+
+        $fileContents = @()
+        foreach ($file in $azCopyToolFileNames)
+        {
+            $fullPath = Join-Path -Path $azCopyLocation -ChildPath $file
+            $fileContents += [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($fullPath))
+        }
+
+        $scriptBlock = {
+            $destinationPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\AzCopy"
+            New-Item -ItemType Directory -Force -Path $destinationPath
+
+            for($i=0; $i -lt $using:azCopyToolFileNames.Length; $i++)
+            {
+                $path = Join-Path -Path $destinationPath -ChildPath ($using:azCopyToolFileNames)[$i]
+                $content = [Convert]::FromBase64String(($using:fileContents)[$i])
+                [System.IO.File]::WriteAllBytes($path, $content)
+                Write-Verbose "Copied file: ($using:azCopyToolFileNames)[$i]"
+            }
+        }
+
+        Invoke-Command -ScriptBlock $scriptBlock -Session $session -ErrorAction Stop
+        Remove-PSSession -Session $session
+
+        Write-Verbose "Finished copying AzCopy tools"
+    }
+    catch {
+        Write-Verbose "Failed to copy azcopy tools"
+        throw
+    }
+}
+
+# $sb={
+#     asdasd
+# }
+
+# pass $sb.ToString() as inlinescript argument

@@ -54,6 +54,7 @@ param (
     [String]$copyToAzureMachinesBlockString = [string]::Empty
     if([string]::IsNullOrWhiteSpace($additionalArguments))
     {
+        Copy-AzCopyTool $fqdn $azCopyLocation $credential $winRMPort $httpProtocolOption $skipCACheckOption
         $copyToAzureMachinesBlockString = "Copy-ToAzureMachines -MachineDnsName `$fqdn -StorageAccountName `$storageAccount -ContainerName `$containerName -SasToken `$sasToken -DestinationPath `$targetPath -Credential `$credential -AzCopyLocation `$azCopyLocation -BlobStorageURI `$blobStorageURI -WinRMPort $winRMPort $cleanTargetPathOption $skipCACheckOption $httpProtocolOption $enableDetailedLoggingOption"
     }
     else
