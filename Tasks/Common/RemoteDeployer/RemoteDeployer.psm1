@@ -82,14 +82,14 @@ function Invoke-RemoteScript {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         $PSSessionOption = $sessionOption
-        $PSSessionConfigurationName = $sessionConfigurationName
         $sessions = @()
         foreach($targetMachineName in $targetMachineNames) {
             $sessions += ConnectTo-RemoteMachine -targetMachineName $targetMachineName `
                                                  -credential $credential `
                                                  -protocol $protocol `
                                                  -authentication $authentication `
-                                                 -sessionName $sessionName        
+                                                 -sessionName $sessionName `
+                                                 -sessionConfigurationName $sessionConfigurationName
         }
         Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArguments $remoteScriptJobArguments
     } finally {

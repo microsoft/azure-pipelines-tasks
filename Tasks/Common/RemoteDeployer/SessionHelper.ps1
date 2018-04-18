@@ -6,6 +6,7 @@ function ConnectTo-RemoteMachine {
         [string] $protocol,
         [string] $authentication,
         [string] $sessionName,
+        [string] $sessionConfigurationName,
         [ValidateRange(2,10)]
         [int] $maxRetryLimit = 3
     )
@@ -20,6 +21,7 @@ function ConnectTo-RemoteMachine {
                                                        -authentication $authentication `
                                                        -sessionName $sessionName `
                                                        -useSsl:$useSsl `
+                                                       -sessionConfigurationName $sessionConfigurationName `
                                                        -NoCredential:($credential -eq $null)
 
         while ($retryCount -lt $maxRetryLimit) {
@@ -60,6 +62,7 @@ function Get-NewPSSessionCommand {
         [hashtable] $machineDetails,
         [string] $authentication,
         [string] $sessionName,
+        [string] $sessionConfigurationName,
         [switch] $useSsl,
         [switch] $NoCredential
     )
@@ -73,6 +76,7 @@ function Get-NewPSSessionCommand {
             $newPsSessionCommandArgs += " -UseSSL"
         }
         $newPsSessionCommandArgs += " -ErrorAction 'SilentlyContinue' -ErrorVariable sessionErrors"
+        $newPsSessionCommandArgs += " -ConfigurationName '$sessionConfigurationName'"
 
         $newPsSessionCommand = "New-PSSession $newPsSessionCommandArgs"
         Write-Verbose "New-PSSessionCommand: $newPsSessionCommand"
