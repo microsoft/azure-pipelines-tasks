@@ -1,6 +1,7 @@
 . "$PSScriptRoot/SessionHelper.ps1"
 . "$PSScriptRoot/RunPowerShellScriptJob.ps1"
 . "$PSScriptRoot/JobHelper.ps1"
+Import-VstsLocStrings "$PSScriptRoot\module.json"
 
 function Invoke-RemoteScript {
     [CmdletBinding()]
@@ -8,8 +9,6 @@ function Invoke-RemoteScript {
         [Parameter(Mandatory = $true)]
         [string[]] $targetMachineNames,
 
-        [Parameter(Mandatory = $true)]
-        [AllowNull()]
         [pscredential] $credential,
 
         [ValidateSet("http", "https")]
@@ -22,10 +21,14 @@ function Invoke-RemoteScript {
         [string] $sessionName,
 
         [Parameter(Mandatory = $true)]
-        [psobject] $remoteScriptJobArguments
+        [psobject] $remoteScriptJobArguments,
+
+        [Parameter(Mandatory = $true)]
+        [psobject] $sessionOption
     )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
+        $PSSessionOption = $sessionOption
         $sessions = @()
         foreach($targetMachineName in $targetMachineNames) {
             $sessions += ConnectTo-RemoteMachine -targetMachineName $targetMachineName `

@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 65
+    "Patch": 69
   },
   "preview": true,
   "groups": [
@@ -162,7 +162,11 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.NewPsSessionOptionArguments",
       "required": false,
+<<<<<<< HEAD
       "defaultValue": "-SkipCACheck -IdleTimeout 86400000 -OperationTimeout 0",
+=======
+      "defaultValue": "-SkipCACheck -OperationTimeout 0",
+>>>>>>> af78e5140267a0065e9f9c0e2f23e0fd862cc6fb
       "helpMarkDown": "ms-resource:loc.input.help.NewPsSessionOptionArguments",
       "groupName": "SessionOptions"
     },
@@ -224,15 +228,9 @@
     }
   },
   "messages": {
-    "PS_TM_NonZeroExitCode": "ms-resource:loc.messages.PS_TM_NonZeroExitCode",
-    "PS_TM_ConnectedMachines": "ms-resource:loc.messages.PS_TM_ConnectedMachines",
-    "PS_TM_NotConnectedMachines": "ms-resource:loc.messages.PS_TM_NotConnectedMachines",
     "PS_TM_ParseSessionVariablesValueNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesValueNotFound",
     "PS_TM_ParseSessionVariablesKeyNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesKeyNotFound",
     "PS_TM_InvalidSessionVariablesInputFormat": "ms-resource:loc.messages.PS_TM_InvalidSessionVariablesInputFormat",
-    "PS_TM_ScriptJobFailed": "ms-resource:loc.messages.PS_TM_ScriptJobFailed",
-    "PS_TM_ScriptExecutionSucceeded": "ms-resource:loc.messages.PS_TM_ScriptExecutionSucceeded",
-    "PS_TM_UnknownStatus": "ms-resource:loc.messages.PS_TM_UnknownStatus",
     "PS_TM_TaskFailed": "ms-resource:loc.messages.PS_TM_TaskFailed"
   }
 }
