@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 72
+        "Patch": 73
     },
     "preview": true,
     "groups": [
@@ -208,15 +208,6 @@
             "groupName": "advanced"
         },
         {
-            "name": "RunPowershellInParallel",
-            "type": "boolean",
-            "label": "Run PowerShell in Parallel",
-            "defaultValue": "true",
-            "required": false,
-            "helpMarkDown": "Setting it to true will run the PowerShell scripts in parallel on the target machines.",
-            "groupName": "advanced"
-        },
-        {
             "name": "SessionConfigurationName",
             "type": "pickList",
             "label": "Session Configuration",
@@ -232,6 +223,15 @@
             },
             "required": true,
             "helpMarkDown": "Select one of the default session configurations to connect to or specify your own custom session configurations",
+            "groupName": "advanced"
+        },
+        {
+            "name": "RunPowershellInParallel",
+            "type": "boolean",
+            "label": "Run PowerShell in Parallel",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Setting it to true will run the PowerShell scripts in parallel on the target machines.",
             "groupName": "advanced"
         }
     ],

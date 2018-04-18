@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 72
+    "Patch": 73
   },
   "preview": true,
   "groups": [
@@ -208,15 +208,6 @@
       "groupName": "advanced"
     },
     {
-      "name": "RunPowershellInParallel",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.RunPowershellInParallel",
-      "defaultValue": "true",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel",
-      "groupName": "advanced"
-    },
-    {
       "name": "SessionConfigurationName",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.SessionConfigurationName",
@@ -232,6 +223,15 @@
       },
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.SessionConfigurationName",
+      "groupName": "advanced"
+    },
+    {
+      "name": "RunPowershellInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.RunPowershellInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel",
       "groupName": "advanced"
     }
   ],
