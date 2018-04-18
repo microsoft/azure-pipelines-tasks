@@ -54,6 +54,7 @@ Import-VstsLocStrings "$PSScriptRoot\module.json"
 
 function Invoke-RemoteScript {
     [CmdletBinding()]
+    Param (
         [Parameter(Mandatory = $true)]
         [string[]] $targetMachineNames,
 
