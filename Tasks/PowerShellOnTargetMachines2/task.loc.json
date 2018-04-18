@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 69
+    "Patch": 71
   },
   "preview": true,
   "groups": [
@@ -215,6 +215,24 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.RunPowershellInParallel",
       "groupName": "advanced"
+    },
+    {
+      "name": "SessionConfigurationName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SessionConfigurationName",
+      "defaultValue": "microsoft.powershell",
+      "options": {
+        "microsoft.powershell": "microsoft.powershell",
+        "microsoft.powershell32": "microsoft.powershell32",
+        "microsoft.powershell.workflow": "microsoft.powershell.workflow",
+        "microsoft.windows.servermanagerworkflows": "microsoft.windows.servermanagerworkflows"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SessionConfigurationName",
+      "groupName": "advanced"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -227,6 +245,7 @@
     "PS_TM_ParseSessionVariablesValueNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesValueNotFound",
     "PS_TM_ParseSessionVariablesKeyNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesKeyNotFound",
     "PS_TM_InvalidSessionVariablesInputFormat": "ms-resource:loc.messages.PS_TM_InvalidSessionVariablesInputFormat",
-    "PS_TM_TaskFailed": "ms-resource:loc.messages.PS_TM_TaskFailed"
+    "PS_TM_TaskFailed": "ms-resource:loc.messages.PS_TM_TaskFailed",
+    "PS_TM_SessionConfigurationNameCannotBeNull": "ms-resource:loc.messages.PS_TM_SessionConfigurationNameCannotBeNull"
   }
 }
