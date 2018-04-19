@@ -16,13 +16,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 127,
+    "Minor": 135,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "preview": true,
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "showEnvironmentBlock": true,
   "groups": [
     {
       "name": "advanced",
@@ -67,7 +67,7 @@
       "label": "ms-resource:loc.input.label.script",
       "visibleRule": "targetType = inline",
       "required": true,
-      "defaultValue": "# Write your commands here",
+      "defaultValue": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script",
       "properties": {
         "resizable": "true",
         "rows": "10",
