@@ -1,0 +1,57 @@
+# Python package
+# Build and test a Python package on multiple Python versions. Upload to a Python package index.
+# https://aka.ms/yaml
+
+phases:
+- phase: 'Phase_1'
+  displayName: 'Build and Test'
+  queue:
+    name: 'Hosted Linux Preview'
+    matrix:
+      Python27:
+        PYTHON_VERSION: '2.7'
+      Python34:
+        PYTHON_VERSION: '3.4'
+      Python35:
+        PYTHON_VERSION: '3.5'
+      Python36:
+        PYTHON_VERSION: '3.6'
+      Python37-dev:
+        PYTHON_VERSION: '>= 3.7.0a'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(PYTHON_VERSION)'
+      architecture: 'x64'
+      addToPath: 'true'
+  - script: python -m pip install --upgrade pip && pip install -r requirements.txt
+    displayName: 'Install Dependencies'
+  # - script: 'pip install flake8 && flake8'
+  #   displayName: 'Flake8'
+  - script: pip install pytest && pytest tests --doctest-modules
+    displayName: 'pytest'
+
+- phase: 'Phase_2'
+  displayName: 'Publish'
+  dependsOn: 'Phase_1'
+  queue:
+    name: 'Hosted Linux Preview'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      architecture: 'x64'
+      addToPath: 'true'
+  - script: python -m pip install --upgrade pip && pip install wheel && python setup.py bdist_wheel
+    displayName: Build Wheel
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish artifacts'
+    inputs:
+      pathToPublish: 'dist'
+      artifactName: 'artifact'
+      artifactType: 'container'
+  # - task: PyPIPublisher@0
+  #   inputs:
+  #     serviceEndpoint: ''
+  #     wd: '$(Build.SourcesDirectory)'
+  #     wheel: 'false'
