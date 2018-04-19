@@ -64,23 +64,7 @@ export class TaskParametersUtility {
     private static _initializeDefaultParametersForPublishProfile(taskParameters: TaskParameters): void {
         taskParameters.PublishProfilePath = tl.getInput('PublishProfilePath', true);
         taskParameters.PublishProfilePassword = tl.getInput('PublishProfilePassword', true);
-        taskParameters.isLinuxApp = false;
-        taskParameters.isBuiltinLinuxWebApp = false;
-        taskParameters.isContainerWebApp = false;
-        taskParameters.WebAppKind = "webApp";
-        taskParameters.DeployToSlotOrASEFlag = false;
-        taskParameters.ResourceGroupName = null;
-        taskParameters.SlotName = null;
-        taskParameters.VirtualApplication = null;
-        taskParameters.UseWebDeploy = true;
-        taskParameters.RemoveAdditionalFilesFlag = false;
-        taskParameters.SetParametersFile = null;
-        taskParameters.isBuiltinLinuxWebApp = false;
-        taskParameters.ExcludeFilesFromAppDataFlag = false;
         taskParameters.AdditionalArguments = "-retryAttempts:6 -retryInterval:10000";
-        taskParameters.TakeAppOfflineFlag = false;
-        taskParameters.RenameFilesFlag = false;
-        taskParameters.AppSettings = null;
     }
 }
 

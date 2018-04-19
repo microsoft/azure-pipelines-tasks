@@ -52,7 +52,7 @@
         {
             "name": "ConnectionType",
             "type": "pickList",
-            "label": "Connection Type",
+            "label": "Connection type",
             "defaultValue": "AzureRM",
             "options": {
                 "AzureRM": "Azure Resource Manager",
@@ -74,7 +74,7 @@
         {
             "name": "PublishProfilePath",
             "type": "filePath",
-            "label": "Publish Profile Path",
+            "label": "Publish profile path",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
             "required": true,
             "helpMarkDown": "",
@@ -83,7 +83,7 @@
         {
             "name": "PublishProfilePassword",
             "type": "string",
-            "label": "Publish Profile Password",
+            "label": "Publish profile password",
             "required": true,
             "helpMarkDown": "It is recommended to store password in a secret variable and use that variable here e.g. $(Password).",
             "visibleRule": "ConnectionType = PublishProfile"

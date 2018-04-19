@@ -63,13 +63,17 @@ export class AzureAppServiceUtility {
     }
 
     public async pingApplication(): Promise<void> {
-        var applicationUrl: string = await this.getApplicationURL();
+        try {
+            var applicationUrl: string = await this.getApplicationURL();
 
-        if(!applicationUrl) {
-            tl.debug('Application Url not found.');
-            return;
+            if(!applicationUrl) {
+                tl.debug("Application Url not found.");
+                return;
+            }
+            await AzureAppServiceUtility.pingApplication(applicationUrl);
+        } catch(error) {
+            tl.debug("Unable to ping App Service. Error: ${error}");
         }
-        await AzureAppServiceUtility.pingApplication(applicationUrl);
     }
 
     public static async pingApplication(applicationUrl: string) {
