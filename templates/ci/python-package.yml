@@ -52,4 +52,6 @@ phases:
       artifactType: 'container'
   # - task: PyPIPublisher@0
   #   inputs:
+  #     serviceEndpoint: ''
   #     wd: '$(Build.SourcesDirectory)'
+  #     wheel: 'false'
