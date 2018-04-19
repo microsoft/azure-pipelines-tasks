@@ -177,6 +177,8 @@ async function main(): Promise<void> {
             }
         }
 
+        console.log(tl.loc("DownloadingArtifactsForBuild", buildId));
+
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName");
@@ -231,7 +233,7 @@ async function main(): Promise<void> {
                     var containerPath: string = containerParts[2];
 
                     var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
-                    console.log(tl.loc("DownloadArtifacts", itemsUrl));
+                    console.log(tl.loc("DownloadArtifacts", artifact.name, itemsUrl));
 
                     var variables = {};
                     var handler = new webHandlers.PersonalAccessTokenCredentialHandler(accessToken);
@@ -251,7 +253,7 @@ async function main(): Promise<void> {
                         artifactLocation = downloadUrl;
                     }
 
-                    console.log(tl.loc("DownloadArtifacts", artifactLocation));
+                    console.log(tl.loc("DownloadArtifacts", artifact.name, artifactLocation));
                     var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifact.name);
                     var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
 
