@@ -6,6 +6,7 @@ phases:
 - phase: 'Phase_1'
   displayName: 'Build and Test'
   queue:
+    name: 'Hosted Linux Preview'
     matrix:
       Python27:
         PYTHON_VERSION: '2.7'
@@ -33,6 +34,8 @@ phases:
 - phase: 'Phase_2'
   displayName: 'Publish'
   dependsOn: 'Phase_1'
+  queue:
+    name: 'Hosted Linux Preview'
   steps:
   - task: UsePythonVersion@0
     inputs:
