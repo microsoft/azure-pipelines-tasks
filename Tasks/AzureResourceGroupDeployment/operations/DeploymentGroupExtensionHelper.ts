@@ -213,6 +213,22 @@ export class DeploymentGroupExtensionHelper {
             };
             console.log("Public settings are:\n VSTSAccountName: %s\nTeamProject: %s\nDeploymentGroup: %s\nTags: %s\n", collectionUri, teamProject, this.taskParameters.deploymentGroupName, JSON.stringify(tags));
             var protectedSettings = { PATToken: this.taskParameters.tokenCredentials.getPatToken() };
+            var userName = this.taskParameters.agentServiceUserCredentials.getUserName();
+            var password = this.taskParameters.agentServiceUserCredentials.getPassword();
+            if (vmOsType === "Windows") {
+                publicSettings["WindowsLogonAccountName"] = userName
+                protectedSettings["WindowsLogonPassword"] = password
+            }
+            else if (vmOsType === "Linux") {
+                var linuxUserName = userName;
+                if(userName.includes("@")){
+                    linuxUserName = userName.split("@")[0];
+                }
+                else if(userName.includes("\\")){
+                    linuxUserName = userName.split("\\")[1];
+                }
+                publicSettings["ConfigureAgentAsUserName"] = linuxUserName; 
+            }
             var parameters = {
                 type: extensionType,
                 location: vmLocation,

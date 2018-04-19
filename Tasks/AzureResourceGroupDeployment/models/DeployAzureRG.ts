@@ -30,6 +30,24 @@ class TokenCredentials {
     }
 }
 
+class AgentServiceUserCredentials {
+    private userName: string;
+    private password: string;
+    
+    constructor(userName: string, password: string){
+        this.userName = userName || "";
+        this.password = password || "";
+    }
+
+    public getUserName(): string{
+        return this.userName;
+    }
+
+    public getPassword(): string{
+        return this.password;
+    }
+}
+
 export class AzureRGTaskParameters {
 
     public action: string;
@@ -51,6 +69,7 @@ export class AzureRGTaskParameters {
     public deploymentGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
     public deploymentOutputs: string;
+    public agentServiceUserCredentials: AgentServiceUserCredentials;
 
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
@@ -132,6 +151,10 @@ export class AzureRGTaskParameters {
             if(deploymentGroupEndpointName){
                 this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
             }
+            var userName = tl.getInput("userName");
+            var password = tl.getInput("password");
+            this.agentServiceUserCredentials = new AgentServiceUserCredentials(userName, password);
+            
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(connectedService);
