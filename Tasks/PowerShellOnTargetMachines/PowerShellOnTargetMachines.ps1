@@ -104,7 +104,8 @@ try
     }
     catch
     {
-        Write-Telemetry "Task_InternalError" $_.exception.Message
+        Write-Verbose $_.Exception.ToString()
+        Write-Telemetry "Task_InternalError" "FaileToFetchResourceProperties"
 
         throw
     }
@@ -189,8 +190,9 @@ try
 }
 catch
 {
-    Write-Verbose $_.Exception.ToString() -Verbose
-    Write-Telemetry "Task_InternalError" $_.Exception.Message
+    Write-Verbose $_.Exception.ToString()
+    $exceptionType = $_.Exception.GetType()
+    Write-Telemetry "Task_InternalError" "PowerShellOnTargetMachineTaskFailed:$exceptionType"
     throw
 }
 finally

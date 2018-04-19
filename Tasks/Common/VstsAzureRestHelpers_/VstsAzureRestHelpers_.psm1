@@ -8,6 +8,7 @@ $script:defaultEnvironmentAuthUri = "https://login.windows.net/"
 $certificateConnection = 'Certificate'
 $usernameConnection = 'UserNamePassword'
 $spnConnection = 'ServicePrincipal'
+$MsiConnection = 'ManagedServiceIdentity'
 
 # Well-Known ClientId
 $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
@@ -111,7 +112,7 @@ function IsAzureRmConnection
     param([Parameter(Mandatory=$true)] $connectionType)
 
     Write-Verbose "Connection type used is $connectionType"
-    if($connectionType -eq $spnConnection)
+    if(($connectionType -eq $spnConnection) -or ($connectionType -eq $MsiConnection))
     {
         return $true
     }
@@ -322,6 +323,19 @@ function Has-ObjectProperty {
     }
 }
 
+function Get-AzureRMAccessToken {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $endpoint) 
+
+    if($endpoint.Auth.Scheme -eq $MsiConnection )
+    {
+        Get-MsiAccessToken $endpoint 0 0
+    }
+    else
+    {
+        Get-SpnAccessToken $endpoint
+    }   
+}
 
 # Get the Bearer Access Token from the Endpoint
 function Get-SpnAccessToken {
@@ -381,6 +395,84 @@ function Get-SpnAccessToken {
         throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
     }
 }
+
+# Get the Bearer Access Token from the Endpoint
+function Get-MsiAccessToken {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $endpoint,
+        [Parameter(Mandatory=$true)] $retryCount,
+        [Parameter(Mandatory=$true)] $timeToWait)
+
+    $msiClientId = "";
+    if($endpoint.Data.msiClientId){
+        $msiClientId  =  "&client_id=" + $endpoint.Data.msiClientId;
+    }
+    $tenantId = $endpoint.Auth.Parameters.TenantId
+
+    # Prepare contents for GET
+    $method = "GET"
+    $apiVersion = "2018-02-01";
+    $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
+    
+    # Call Rest API to fetch AccessToken
+    Write-Verbose "Fetching Access Token For MSI"
+    
+    try
+    {
+        $retryLimit = 5;
+        $proxyUri = Get-ProxyUri $authUri
+        if ($proxyUri -eq $null)
+        {
+            Write-Verbose "No proxy settings"
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseBasicParsing
+        }
+        else
+        {
+            Write-Verbose "Using Proxy settings"
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
+        }
+
+        # Action on the based of response 
+        if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
+        {
+            if($retryCount -lt $retryLimit)
+            {
+                $retryCount += 1
+                $waitedTime = 2000 + $timeToWait * 2
+                Start-Sleep -m $waitedTime
+                Get-MsiAccessToken $endpoint $retryCount  $waitedTime
+            }
+            else
+            {
+                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+            }
+        }
+        elseif ($response.StatusCode -eq 200)
+        {
+            $accessToken = $response.Content | ConvertFrom-Json
+            return $accessToken
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
+        
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
+        if($exceptionMessage -match "400")
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
+        else
+        {
+            throw $_.Exception
+        }
+    }
+}
+
 
 # Get the certificate from the Endpoint.
 function Get-Certificate {
@@ -448,7 +540,7 @@ function Get-AzRMStorageKeys
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
 
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
@@ -496,7 +588,7 @@ function Get-AzRmVmCustomScriptExtension
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -553,7 +645,7 @@ function Remove-AzRmVmCustomScriptExtension
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -645,7 +737,7 @@ function Get-AzRmStorageAccount
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -706,7 +798,7 @@ function Get-AzRmResourceGroup
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
         $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
         $method="GET"
@@ -822,7 +914,7 @@ function Add-AzureRmSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
@@ -874,7 +966,7 @@ function Remove-AzureRmSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
 
     # Fetch Azure SQL server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
@@ -1033,7 +1125,7 @@ function Get-AzureNetworkInterfaceDetails
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
           [Object] [Parameter(Mandatory = $true)] $endpoint)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Network Interface Details"
@@ -1072,7 +1164,7 @@ function Get-AzurePublicIpAddressDetails
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
           [Object] [Parameter(Mandatory = $true)] $endpoint)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Public IP Addresses Details"
@@ -1111,7 +1203,7 @@ function Get-AzureLoadBalancersDetails
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
           [Object] [Parameter(Mandatory = $true)] $endpoint)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Load Balancers details"
@@ -1151,7 +1243,7 @@ function Get-AzureLoadBalancerDetails
           [String] [Parameter(Mandatory = $true)] $name,
           [Object] [Parameter(Mandatory = $true)] $endpoint)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
     
     Write-Verbose "[Azure Rest Call] Get Load balancer details with name : $name"

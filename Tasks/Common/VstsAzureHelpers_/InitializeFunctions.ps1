@@ -161,10 +161,107 @@ function Initialize-AzureSubscription {
 
             Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
         }
-    } else {
+    } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
+        $accountId = $env:BUILD_BUILDID 
+        if($env:RELEASE_RELEASEID){
+            $accountId = $env:RELEASE_RELEASEID 
+        }
+        $date = Get-Date -Format o
+        $accountId = -join($accountId, "-", $date)
+        $access_token = Get-MsiAccessToken $Endpoint 0 0
+        try {
+            Write-Host "##[command]Add-AzureRmAccount  -AccessToken ****** -AccountId $accountId "
+            $null = Add-AzureRmAccount -AccessToken $access_token -AccountId $accountId
+        } catch {
+            # Provide an additional, custom, credentials-related error message.
+            Write-VstsTaskError -Message $_.Exception.Message
+            throw (New-Object System.Exception((Get-VstsLocString -Key AZ_MsiFailure), $_.Exception))
+        }
+        
+        Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+    }else {
         throw (Get-VstsLocString -Key AZ_UnsupportedAuthScheme0 -ArgumentList $Endpoint.Auth.Scheme)
+    } 
+}
+
+
+# Get the Bearer Access Token from the Endpoint
+function Get-MsiAccessToken {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $endpoint,
+        [Parameter(Mandatory=$true)] $retryCount,
+        [Parameter(Mandatory=$true)] $timeToWait)
+
+    $msiClientId = "";
+    if($endpoint.Data.msiClientId){
+        $msiClientId  =  "&client_id=" + $endpoint.Data.msiClientId;
+    }
+    $tenantId = $endpoint.Auth.Parameters.TenantId
+
+    # Prepare contents for GET
+    $method = "GET"
+    $apiVersion = "2018-02-01";
+    $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
+    
+    # Call Rest API to fetch AccessToken
+    Write-Verbose "Fetching Access Token For MSI"
+    
+    try
+    {
+        $retryLimit = 5;
+        $proxyUri = Get-ProxyUri $authUri
+        if ($proxyUri -eq $null)
+        {
+            Write-Verbose "No proxy settings"
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseBasicParsing
+        }
+        else
+        {
+            Write-Verbose "Using Proxy settings"
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
+        }
+
+        # Action on the based of response 
+        if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
+        {
+            if($retryCount -lt $retryLimit)
+            {
+                $retryCount += 1
+                $waitedTime = 2000 + $timeToWait * 2
+                Start-Sleep -m $waitedTime
+                Get-MsiAccessToken $endpoint $retryCount  $waitedTime
+            }
+            else
+            {
+                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+            }
+        }
+        elseif ($response.StatusCode -eq 200)
+        {
+            $accessToken = $response.Content | ConvertFrom-Json
+            return $accessToken.access_token
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
+        
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
+        if($exceptionMessage -match "400")
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
+        else
+        {
+            throw $_.Exception
+        }
     }
 }
+
 
 function Set-CurrentAzureSubscription {
     [CmdletBinding()]

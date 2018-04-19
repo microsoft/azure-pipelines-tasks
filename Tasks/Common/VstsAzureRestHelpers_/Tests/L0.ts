@@ -33,5 +33,8 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('Verify if Get-AzureActiveDirectoryResourceId returns correct URL.', (done) => {
             psr.run(path.join(__dirname, 'Get-AzureActiveDirectoryResourceId.ps1'), done);
         })
+        it('Get-AzureRMAccessToken should return access token', (done) => {
+            psr.run(path.join(__dirname, 'Get-AzureRMAccessToken.ps1'), done);
+        })
     }
 });

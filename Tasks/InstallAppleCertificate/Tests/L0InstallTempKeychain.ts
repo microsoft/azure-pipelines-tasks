@@ -9,7 +9,6 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('certSecureFile', 'mySecureFileId');
 tr.setInput('certPwd', 'mycertPwd');
 tr.setInput('keychain', 'temp');
-tr.setInput('keychainPassword', 'mykeychainPwd');
 
 process.env['AGENT_VERSION'] = '2.116.0';
 process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
@@ -23,15 +22,22 @@ tr.registerMock('fs', {
     }
 });
 
+// Mock Math.random() to always return the same value for our tests.
+Math.random = function (): number {
+    return 1337;
+}
+
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
         "openssl": "/usr/bin/openssl",
-        "security": "/usr/bin/security"
+        "security": "/usr/bin/security",
+        "grep": "/usr/bin/grep"
     },
     "checkPath": {
         "/usr/bin/openssl": true,
-        "/usr/bin/security": true
+        "/usr/bin/security": true,
+        "/usr/bin/grep": true
     },
     "exist": {
         "/build/temp/mySecureFileId.filename": true,
@@ -46,7 +52,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C"
         },
-        "/usr/bin/security create-keychain -p mykeychainPwd /build/temp/ios_signing_temp.keychain": {
+        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nocerts -passin pass:mycertPwd -passout pass:mycertPwd | /usr/bin/grep friendlyName": {
+            "code": 0,
+            "stdout": "MAC verified OK\n    friendlyName: iOS Developer: Madhuri Gummalla (Madhuri Gummalla)"
+        },
+        "/usr/bin/security create-keychain -p 115 /build/temp/ios_signing_temp.keychain": {
             "code": 0,
             "stdout": "keychain created"
         },
@@ -54,13 +64,17 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "keychain settings"
         },
-        "/usr/bin/security unlock-keychain -p mykeychainPwd /build/temp/ios_signing_temp.keychain": {
+        "/usr/bin/security unlock-keychain -p 115 /build/temp/ios_signing_temp.keychain": {
             "code": 0,
             "stdout": "keychain unlocked"
         },
         "/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /build/temp/ios_signing_temp.keychain": {
             "code": 0,
             "stdout": "cert installed"
+        },
+        "/usr/bin/security set-key-partition-list -S apple-tool:,apple: -s -l iOS Developer: Madhuri Gummalla (Madhuri Gummalla) -k 115 /build/temp/ios_signing_temp.keychain": {
+            "code": 0,
+            "stdout": "dumped keychain key"
         },
         "/usr/bin/security list-keychain -d user": {
             "code": 0,

@@ -9,6 +9,9 @@
         "AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Service principal authentication is not supported in version '{0}' of the Azure module.",
         "AZ_UnsupportedAuthScheme0": "Unsupported authentication scheme '{0}' for Azure endpoint.",
         "AZ_AvailableModules": "The list of available {0} modules:",
-        "AZ_InvalidARMEndpoint": "Specified AzureRM endpoint is invalid."
+        "AZ_InvalidARMEndpoint": "Specified AzureRM endpoint is invalid.",
+        "AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: '{0}', status message: {1}",
+        "AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Service Principal. Status code: '{0}', status message: {1}" ,
+        "AZ_MsiFailure": "Could not fetch access token for Managed Service Principal. {0}"  
     }
 }
