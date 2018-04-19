@@ -9,6 +9,15 @@ var packageUtility = require('webdeployment-common/packageUtility.js');
 var parseString = require('xml2js').parseString;
 const ERROR_FILE_NAME = "error.txt";
 
+export interface PublishingProfile{
+    PublishUrl:string;
+    UserName: string;
+    UserPWD: string;
+    WebAppName: string;
+    TakeAppOfflineFlag: boolean;
+    RemoveAdditionalFilesFlag: boolean;
+}
+
 export class PublishProfileUtility {
 
     private _publishProfileJs: any = null;
@@ -18,7 +27,7 @@ export class PublishProfileUtility {
         this._publishProfilePath = publishProfilePath;
     }
 
-    public async GetTaskParametersFromPublishProfileFile(taskParams: TaskParameters): Promise<any> {
+    public async GetTaskParametersFromPublishProfileFile(taskParams: TaskParameters): Promise<PublishingProfile> {
         try {
             if(this._publishProfileJs === null) {
                 this._publishProfileJs = await this.GetPublishProfileJsonFromFile();
@@ -26,14 +35,16 @@ export class PublishProfileUtility {
         } catch(error) {
             throw new Error(error);
         }
-        var msDeployPublishingProfile: any = {};
-        taskParams.WebAppName = this._publishProfileJs.DeployIisAppPath[0];
-        taskParams.ExcludeFilesFromAppDataFlag = this._publishProfileJs.hasOwnProperty(Constant.PublishProfileXml.ExcludeApp_Data) ? this._publishProfileJs.ExcludeApp_Data[0] : false;
-        taskParams.TakeAppOfflineFlag = this._publishProfileJs.hasOwnProperty(Constant.PublishProfileXml.EnableMSDeployAppOffline) ? this._publishProfileJs.EnableMSDeployAppOffline[0] : false;
-        taskParams.RemoveAdditionalFilesFlag = this._publishProfileJs.hasOwnProperty(Constant.PublishProfileXml.SkipExtraFilesOnServer) ? this._publishProfileJs.SkipExtraFilesOnServer[0] : false
-        msDeployPublishingProfile.publishUrl = this._publishProfileJs.MSDeployServiceURL[0];
-        msDeployPublishingProfile.userName = this._publishProfileJs.UserName[0];
-        msDeployPublishingProfile.userPWD = taskParams.PublishProfilePassword;
+        var msDeployPublishingProfile: PublishingProfile = {
+            WebAppName: this._publishProfileJs.DeployIisAppPath[0],
+            TakeAppOfflineFlag: this._publishProfileJs.hasOwnProperty(Constant.PublishProfileXml.EnableMSDeployAppOffline) ?
+                this._publishProfileJs.EnableMSDeployAppOffline[0] : false,
+            RemoveAdditionalFilesFlag: this._publishProfileJs.hasOwnProperty(Constant.PublishProfileXml.SkipExtraFilesOnServer) ?
+                this._publishProfileJs.SkipExtraFilesOnServer[0] : false,
+            PublishUrl: this._publishProfileJs.MSDeployServiceURL[0],
+            UserName: this._publishProfileJs.UserName[0],
+            UserPWD: taskParams.PublishProfilePassword
+        }
         return msDeployPublishingProfile;
     }
 
@@ -82,10 +93,12 @@ export class PublishProfileUtility {
         var deferred = Q.defer();
         var cmdError = null;
         var errorFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'), ERROR_FILE_NAME);
-		var errObj = fs.createWriteStream(errorFile);
+        var errObj = fs.createWriteStream(errorFile);
         errObj.on('finish', () => {
             if(cmdError) {
                 deferred.reject(cmdError);
+            } else {
+                deferred.resolve();
             }
         });
 
@@ -95,10 +108,6 @@ export class PublishProfileUtility {
 			   outStream: process.stdout,
 			   failOnStdErr: true,
                windowsVerbatimArguments: true
-             }).then(() => {
-               deferred.resolve();
-             }).catch((error) => {
-                throw(error);
              });
         } catch (error) {
             cmdError = error;

@@ -1,6 +1,6 @@
 import { IWebAppDeploymentProvider } from "./IWebAppDeploymentProvider";
 import { TaskParameters } from "../operations/TaskParameters";
-import { PublishProfileUtility } from '../operations/PublishProfileUtility';
+import { PublishProfileUtility, PublishingProfile } from '../operations/PublishProfileUtility';
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import * as Constant from '../operations/Constants';
@@ -26,8 +26,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
         this.taskParams = taskParams;
     }
 
-    public async PreDeploymentStep()
-    {
+    public async PreDeploymentStep() {
         this.publishProfileUtility = new PublishProfileUtility(this.taskParams.PublishProfilePath);
         try {
             var siteUrl = await this.publishProfileUtility.GetPropertyValuefromPublishProfile(Constant.PublishProfileXml.SiteUrlToLaunchAfterPublish);
@@ -51,7 +50,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
             await this.ApplyFileTransformation();
         }
 
-        var msDeployPublishingProfile = await this.publishProfileUtility.GetTaskParametersFromPublishProfileFile(this.taskParams);
+        var msDeployPublishingProfile: PublishingProfile = await this.publishProfileUtility.GetTaskParametersFromPublishProfileFile(this.taskParams);
         var deployCmdFilePath = this.GetDeployCmdFilePath();
 
         await this.SetMsdeployEnvPath();
@@ -111,14 +110,14 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
     }
 
     private GetDeployScriptCmdArgs(deploycmdFileName:string, msDeployPublishingProfile:any): string {
-        var deployCmdArgs: string = " /C " + deploycmdFileName + " /Y /A:basic \"/U:" + msDeployPublishingProfile.userName + "\" \"\\\"/P:" + msDeployPublishingProfile.userPWD 
-            + "\\\"\" \"\\\"/M:" + "https://" + msDeployPublishingProfile.publishUrl + "/msdeploy.axd?site=" + this.taskParams.WebAppName + "\\\"\"";
+        var deployCmdArgs: string = " /C " + deploycmdFileName + " /Y /A:basic \"/U:" + msDeployPublishingProfile.UserName + "\" \"\\\"/P:" + msDeployPublishingProfile.UserPWD 
+            + "\\\"\" \"\\\"/M:" + "https://" + msDeployPublishingProfile.PublishUrl + "/msdeploy.axd?site=" + msDeployPublishingProfile.WebAppName + "\\\"\"";
 
-        if(this.taskParams.TakeAppOfflineFlag) {
+        if(msDeployPublishingProfile.TakeAppOfflineFlag) {
             deployCmdArgs += ' -enableRule:AppOffline';
         }
 
-        if(this.taskParams.RemoveAdditionalFilesFlag) {
+        if(msDeployPublishingProfile.RemoveAdditionalFilesFlag) {
             deployCmdArgs += " -enableRule:DoNotDeleteRule";
         }
 
