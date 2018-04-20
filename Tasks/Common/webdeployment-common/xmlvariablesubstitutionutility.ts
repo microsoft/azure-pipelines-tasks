@@ -267,16 +267,16 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
     return isSubstitutionApplied;
 }
 
-function replaceEscapeXMLCharacters(xmlDOM) {
-    if(!xmlDOM || typeof xmlDOM == 'string') {
+function replaceEscapeXMLCharacters(xmlDOMNode) {
+    if(!xmlDOMNode || typeof xmlDOMNode == 'string') {
         return;
     }
 
-    for(var xmlAttributes in xmlDOM.attrs) {
-        xmlDOM.attrs[xmlAttributes] = xmlDOM.attrs[xmlAttributes].replace(/'/g, "APOS_CHARACTER_TOKEN");
+    for(var xmlAttribute in xmlDOMNode.attrs) {
+        xmlDOMNode.attrs[xmlAttribute] = xmlDOMNode.attrs[xmlAttribute].replace(/'/g, "APOS_CHARACTER_TOKEN");
     }
 
-    for(var xmlChild of xmlDOM.children) {
+    for(var xmlChild of xmlDOMNode.children) {
         replaceEscapeXMLCharacters(xmlChild);
     }
 }
