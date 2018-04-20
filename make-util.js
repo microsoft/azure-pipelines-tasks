@@ -1,20 +1,18 @@
-
 var admZip = require('adm-zip');
 var check = require('validator');
 var fs = require('fs');
+var makeOptions = require('./make-options.json');
 var minimatch = require('minimatch');
+var ncp = require('child_process');
 var os = require('os');
 var path = require('path');
 var process = require('process');
-var ncp = require('child_process');
 var semver = require('semver');
 var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 // global paths
 var downloadPath = path.join(__dirname, '_download');
-
-var makeOptions = require('./make-options.json');
 
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];

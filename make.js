@@ -77,6 +77,7 @@ if (options.task) {
         .map(function (item) {
             return path.basename(item);
         });
+    
     if (!taskList.length) {
         fail('Unable to find any tasks matching pattern ' + options.task);
     }
@@ -126,7 +127,7 @@ target.build = function() {
             validateTask(taskDef);
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
-            outDir = path.join(buildPath, taskDef.name);
+            outDir = path.join(buildPath, taskName);
 
             // create loc files
             createTaskLocJson(taskPath);
@@ -338,8 +339,8 @@ target.testLegacy = function() {
             // copy the task layout
             var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
-            var taskCopySource = path.join(buildPath, taskJson.name);
-            var taskCopyDest = path.join(legacyTestTasksPath, taskJson.name);
+            var taskCopySource = path.join(buildPath, taskName);
+            var taskCopyDest = path.join(legacyTestTasksPath, taskName);
             matchCopy('*', taskCopySource, taskCopyDest, { noRecurse: true, matchBase: true });
         }
 
