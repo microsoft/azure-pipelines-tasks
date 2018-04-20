@@ -40,7 +40,10 @@
     Timeout in seconds for copying application package to image store.
 
     .PARAMETER RegisterPackageTimeoutSec
-    Timeout in seconds for registering/un-registering application package.
+    Timeout in seconds for registering application package.
+
+    .PARAMETER UnregisterPackageTimeoutSec
+    Timeout in seconds for un-registering application package.
 
     .PARAMETER CompressPackage
     Indicates whether the application package should be compressed before copying to the image store.
@@ -95,6 +98,10 @@
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
         [int]$RegisterPackageTimeoutSec,
+
+        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName = "ApplicationName")]
+        [int]$UnregisterPackageTimeoutSec= 120,
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
@@ -223,7 +230,7 @@
                     # It will unregister the existing application's type and version even if its different from the application being created,
                     if ((Get-ServiceFabricApplication | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
-                        Unregister-ServiceFabricApplicationType -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -Force -TimeoutSec $RegisterPackageTimeoutSec
+                        Unregister-ServiceFabricApplicationType -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -Force -TimeoutSec $UnregisterPackageTimeoutSec
                     }
                 }
             }
@@ -244,7 +251,7 @@
             if (!$typeIsInUse)
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $RegisterPackageTimeoutSec
+                $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 $ApplicationTypeAlreadyRegistered = $false
                 if (!$?)
                 {
