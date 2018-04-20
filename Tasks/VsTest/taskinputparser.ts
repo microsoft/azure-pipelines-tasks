@@ -13,9 +13,8 @@ import * as inputdatacontract from './inputdatacontract';
 const uuid = require('uuid');
 const regedit = require('regedit');
 
-export function getDistributedTestConfigurations() {
-    const inputDataContract = {} as inputdatacontract.InputDataContract;
-    populateInputDataContract(inputDataContract);
+export function getDistributedTestConfigurations() : inputdatacontract.InputDataContract {
+    const inputDataContract = populateInputDataContract();
     inputDataContract.UseVsTestConsole = false;
 
     inputDataContract.DistributionSettings.NumberOfTestAgents = 1;
@@ -81,6 +80,8 @@ export function getDistributedTestConfigurations() {
     //     dtaConfiguration.useVsTestConsole = 'false';
     // }
 
+    inputDataContract.ExecutionSettings = <inputdatacontract.ExecutionSettings>{};
+
     inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = false;
     if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {
         inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = true;
@@ -100,7 +101,8 @@ export function getDistributedTestConfigurations() {
     return inputDataContract;
 }
 
-function populateInputDataContract(inputDataContract: inputdatacontract.InputDataContract) {
+function populateInputDataContract() : inputdatacontract.InputDataContract {
+    const inputDataContract = {} as inputdatacontract.InputDataContract;
 
     inputDataContract.TestSelectionSettings = <inputdatacontract.TestSelectionSettings>{};
     inputDataContract.TestSelectionSettings.TestSelectionType = tl.getInput('testSelector').toLowerCase();
@@ -134,8 +136,6 @@ function populateInputDataContract(inputDataContract: inputdatacontract.InputDat
 
             inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection = <inputdatacontract.AssemblyBasedTestSelection>{};
 
-            // hydra: fix this, preferably maybe do the discovery here itself or get this input later after all other inputs are taken, fix description in the c# class
-            inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection.SourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
             console.log(tl.loc('testAssemblyFilterInput', inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection.SourceFilter));
 
             inputDataContract.TestSelectionSettings.TestCaseFilter = tl.getInput('testFiltercriteria');
@@ -205,7 +205,9 @@ function populateInputDataContract(inputDataContract: inputdatacontract.InputDat
 
     inputDataContract.ExecutionSettings.TiaSettings.Enabled = tl.getBoolInput('runOnlyImpactedTests');
     inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
-    inputDataContract.ExecutionSettings.TiaSettings.FileLevel = tl.getVariable('tia.filelevel');
+
+    inputDataContract.ExecutionSettings.TiaSettings.FileLevel = getTIALevel(tl.getVariable('tia.filelevel'));
+
     inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory = tl.getVariable('build.sourcesdirectory');
     inputDataContract.ExecutionSettings.TiaSettings.FilterPaths = tl.getVariable('TIA_IncludePathFilters');
 
@@ -263,8 +265,8 @@ function populateInputDataContract(inputDataContract: inputdatacontract.InputDat
     // hydra: console flow only
     //testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
     //console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));\
-    
-    // hydra: enable this warning 
+
+    // hydra: enable this warning
     // if (dtaConfiguration.otherConsoleOptions) {
     //     tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
     // }
@@ -272,12 +274,22 @@ function populateInputDataContract(inputDataContract: inputdatacontract.InputDat
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
 
+    inputDataContract.TargetBinariesSettings = <inputdatacontract.TargetBinariesSettings>{};
     inputDataContract.TargetBinariesSettings.BuildConfig = tl.getInput('configuration');
     inputDataContract.TargetBinariesSettings.BuildPlatform = tl.getInput('platform');
+
+    inputDataContract.TestReportingSettings = <inputdatacontract.TestReportingSettings>{};
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
 
+    inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
 
 
+    // InputDataContract.TestSpecificSettings
+    inputDataContract.TestSpecificSettings = <inputdatacontract.TestSpecificSettings>{};
+    inputDataContract.TestSpecificSettings.TestCaseAccessToken = tl.getVariable('Test.TestCaseAccessToken');
+
+
+    inputDataContract.ExecutionSettings.RerunSettings = <inputdatacontract.RerunSettings>{};
     // Rerun information
     inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = tl.getBoolInput('rerunFailedTests');
     console.log(tl.loc('rerunFailedTests', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests));
@@ -342,6 +354,9 @@ function populateInputDataContract(inputDataContract: inputdatacontract.InputDat
             const matches = tl.findMatch(vsTestPackageLocation, '**\\vstest.console.exe');
             if (matches && matches.length !== 0) {
                 inputDataContract.VsTestConsolePath = matches[0];
+
+                // hydra: do this in dta exe host based on version of vstest.console.exe
+                inputDataContract.ForcePlatformV2 = true;
             } else {
                 utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('toolsInstallerPathNotSet'), 1041, false);
                 throw new Error(tl.loc('toolsInstallerPathNotSet'));
@@ -408,6 +423,15 @@ function populateInputDataContract(inputDataContract: inputdatacontract.InputDat
         tl.warning(tl.loc('uitestsparallel'));
     }
 
+
+    // InputDataContract.Logging
+    inputDataContract.Logging = <inputdatacontract.Logging>{};
+    inputDataContract.Logging.EnableConsoleLogs = true;
+    if (utils.Helper.isDebugEnabled()) {
+        inputDataContract.Logging.DebugLogging = true;
+    }
+
+
     inputDataContract.VstestTaskInstanceIdentifier = uuid.v1();
 
     // hydra: do this in the managed layer
@@ -421,10 +445,13 @@ function populateInputDataContract(inputDataContract: inputdatacontract.InputDat
     inputDataContract.ExecutionSettings.IgnoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
 
     // Get proxy details
+    inputDataContract.ProxySettings = <inputdatacontract.ProxySettings>{};
     inputDataContract.ProxySettings.ProxyUrl = tl.getVariable('agent.proxyurl');
     inputDataContract.ProxySettings.ProxyUsername = tl.getVariable('agent.proxyusername');
     inputDataContract.ProxySettings.ProxyPassword = tl.getVariable('agent.proxypassword');
     inputDataContract.ProxySettings.ProxyBypassHosts = tl.getVariable('agent.proxybypasslist');
+
+    return inputDataContract;
 }
 
 export function getvsTestConfigurations() {
@@ -761,7 +788,7 @@ function getTiaConfiguration(): models.TiaConfiguration {
     }
     tiaConfiguration.useTestCaseFilterInResponseFile = tl.getVariable('tia.useTestCaseFilterInResponseFile');
 
-    const releaseuri = tl.getVariable('release.releaseUri')
+    const releaseuri = tl.getVariable('release.releaseUri');
     tiaConfiguration.context = 'CI';
     if (releaseuri) {
         tiaConfiguration.context = 'CD';
@@ -865,4 +892,13 @@ function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurat
         dtaTestConfiguration.batchingType = models.BatchingType.AssemblyBased;
     }
     return 0;
+}
+
+
+// hydra: rename function and maybe refactor and add logic inline
+function getTIALevel(tiaConfig: models.TiaConfiguration) {
+    if (tiaConfig.fileLevel && tiaConfig.fileLevel.toUpperCase() === 'FALSE') {
+        return false;
+    }
+    return true;
 }

@@ -34,10 +34,10 @@ if (osPlat !== 'win32') {
 
             console.log(tl.loc('distributedTestWorkflow'));
             console.log('======================================================');
-            const dtaTestConfig = taskInputParser.getDistributedTestConfigurations();
+            const inputDataContract = taskInputParser.getDistributedTestConfigurations();
             console.log('======================================================');
 
-            const test = new distributedTest.DistributedTest(dtaTestConfig);
+            const test = new distributedTest.DistributedTest(inputDataContract);
             test.runDistributedTest();
         } else {
             ci.publishEvent({ runmode: 'vstest' });
