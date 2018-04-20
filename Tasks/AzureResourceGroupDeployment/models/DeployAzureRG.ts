@@ -151,7 +151,11 @@ export class AzureRGTaskParameters {
             if(deploymentGroupEndpointName){
                 this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
             }
+            var runAgentServiceAsUser = tl.getBoolInput("runAgentServiceAsUser");
             var userName = tl.getInput("userName");
+            if(runAgentServiceAsUser && !userName){
+                throw tl.loc("UserNameCannotBeNull");
+            }
             var password = tl.getInput("password");
             this.agentServiceUserCredentials = new AgentServiceUserCredentials(userName, password);
             

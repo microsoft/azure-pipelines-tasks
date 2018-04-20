@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 131,
-    "Patch": 2
+    "Minor": 132,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -241,6 +241,35 @@
       "helpMarkDown": "ms-resource:loc.input.help.copyAzureVMTags"
     },
     {
+      "name": "runAgentServiceAsUser",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runAgentServiceAsUser",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runAgentServiceAsUser"
+    },
+    {
+      "name": "userName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userName",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.userName"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.password"
+    },
+    {
       "name": "outputVariable",
       "type": "string",
       "label": "ms-resource:loc.input.label.outputVariable",
@@ -420,6 +449,7 @@
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
     "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
     "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData",
-    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody"
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "UserNameCannotBeNull": "ms-resource:loc.messages.UserNameCannotBeNull"
   }
 }
