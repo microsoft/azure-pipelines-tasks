@@ -26,7 +26,7 @@ $input = @{
     'testSuite' = ''
     'testConfiguration' = ''
 }
-& $PSScriptRoot\..\..\..\Tasks\RunVisualStudioTestsusingTestAgent\RunDistributedTests.ps1 @input
+& $PSScriptRoot\..\..\..\Tasks\RunDistributedTests\RunDistributedTests.ps1 @input
 
 
 Assert-WasCalled Get-VssConnection -Times 1
