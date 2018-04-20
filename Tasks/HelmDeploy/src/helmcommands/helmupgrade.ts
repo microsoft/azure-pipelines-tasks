@@ -3,6 +3,7 @@
 import tl = require('vsts-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
+import {addHelmTlsSettings} from "./../tlssetting";
 
 export function addArguments(helmCli: helmcli) : void {
     var chartType = tl.getInput("chartType", true);
@@ -17,6 +18,7 @@ export function addArguments(helmCli: helmcli) : void {
     var recreate = tl.getBoolInput("recreate", false);
     var resetValues = tl.getBoolInput("resetValues", false);
     var force = tl.getBoolInput("force", false);
+    var enableTls = tl.getBoolInput("enableTls", false);
     var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
     if(namespace) {
@@ -50,6 +52,10 @@ export function addArguments(helmCli: helmcli) : void {
 
     if(waitForExecution) {
         helmCli.addArgument("--wait");
+    }
+
+    if(enableTls) {
+        addHelmTlsSettings(helmCli);
     }
 
     if(argumentsInput) {

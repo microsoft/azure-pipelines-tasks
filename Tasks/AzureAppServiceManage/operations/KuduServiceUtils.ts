@@ -46,6 +46,7 @@ export class KuduServiceUtils {
         var siteExtensions = await this._appServiceKuduService.getSiteExtensions();
         var anyExtensionInstalled: boolean = false;
         var siteExtensionMap = {};
+        var extensionLocalPaths: string = "";
         for(var siteExtension of siteExtensions) {
             siteExtensionMap[siteExtension.id] = siteExtension;
         }
@@ -60,14 +61,18 @@ export class KuduServiceUtils {
                 siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
                 anyExtensionInstalled = true;
             }
-
+            
+            var extensionLocalPath: string = this._getExtensionLocalPath(siteExtensionDetails);
+            extensionLocalPaths += extensionLocalPath + ",";
             if(outputVariableIterator < outputVariables.length) {
-                var extensionLocalPath: string = this._getExtensionLocalPath(siteExtensionDetails);
                 tl.debug('Set output Variable ' + outputVariables[outputVariableIterator] + ' to value: ' + extensionLocalPath);
                 tl.setVariable(outputVariables[outputVariableIterator], extensionLocalPath);
                 outputVariableIterator += 1;
             }
         }
+        
+        tl.debug('Set output Variable LocalPathsForInstalledExtensions to value: ' + extensionLocalPaths);
+        tl.setVariable("LocalPathsForInstalledExtensions", extensionLocalPaths.slice(0, -1));
         
         if(anyExtensionInstalled) {
             await this.restart();

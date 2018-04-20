@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 26
+    "Patch": 27
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -172,6 +172,9 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.OutputVariable",
       "defaultValue": "",
+      "properties": {
+        "Disabled": "True"
+      },
       "visibleRule": "Action = Install Extensions",
       "helpMarkDown": "ms-resource:loc.input.help.OutputVariable"
     },
@@ -202,6 +205,12 @@
       },
       "visibleRule": "Action == Enable Continuous Monitoring",
       "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsResourceName"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "LocalPathsForInstalledExtensions",
+      "description": "The local installation paths for the selected extensions for installation. <br/>Note: In case multiple extensions are selected for installation, the output is a comma separated list of local paths for each of the selected extension in the order they appear in the Install Extensions field."
     }
   ],
   "dataSourceBindings": [
@@ -292,7 +301,6 @@
     "RestartAppServiceAccepted": "ms-resource:loc.messages.RestartAppServiceAccepted",
     "InvalidAction": "ms-resource:loc.messages.InvalidAction",
     "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "ms-resource:loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite",
-    "CouldnotfetchaccesstokenforAzureStatusCode": "ms-resource:loc.messages.CouldnotfetchaccesstokenforAzureStatusCode",
     "WebAppDoesntExist": "ms-resource:loc.messages.WebAppDoesntExist",
     "UnabletoretrieveWebAppID": "ms-resource:loc.messages.UnabletoretrieveWebAppID",
     "StartingSwapSlot": "ms-resource:loc.messages.StartingSwapSlot",
@@ -317,7 +325,6 @@
     "UnableToFetchContinuousWebJobs": "ms-resource:loc.messages.UnableToFetchContinuousWebJobs",
     "UnableToStartContinuousWebJob": "ms-resource:loc.messages.UnableToStartContinuousWebJob",
     "UnableToStopContinuousWebJob": "ms-resource:loc.messages.UnableToStopContinuousWebJob",
-    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "AppNameCannotBeNull": "ms-resource:loc.messages.AppNameCannotBeNull",
     "SlotNameCannotBeNull": "ms-resource:loc.messages.SlotNameCannotBeNull",
     "SourceSlotNameCannotBeNull": "ms-resource:loc.messages.SourceSlotNameCannotBeNull",
@@ -403,6 +410,9 @@
     "WebJobAlreadyInStoppedState": "ms-resource:loc.messages.WebJobAlreadyInStoppedState",
     "RestartingKuduService": "ms-resource:loc.messages.RestartingKuduService",
     "RestartedKuduService": "ms-resource:loc.messages.RestartedKuduService",
-    "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService"
+    "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
   }
 }

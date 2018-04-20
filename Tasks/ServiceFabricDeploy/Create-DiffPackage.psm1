@@ -16,8 +16,7 @@ function Create-DiffPackage
         Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
         Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
 
-        $appManifestName = "ApplicationManifest.xml"
-        $localAppManifestPath = Join-Path $ApplicationPackagePath $appManifestName
+        $localAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $ApplicationPackagePath
         $localAppManifestXml = [XML](Get-Content -LiteralPath $localAppManifestPath)
         $applicationTypeName = $localAppManifestXml.ApplicationManifest.ApplicationTypeName
         $localAppTypeVersion = $localAppManifestXml.ApplicationManifest.ApplicationTypeVersion
@@ -45,8 +44,8 @@ function Create-DiffPackage
         {
             Remove-Item -LiteralPath $diffPackagePath -Recurse -Force
         }
+        $diffPkgAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $diffPackagePath
         $diffPackagePath = New-Item -ItemType Directory -Path $diffPackagePath -Force
-        $diffPkgAppManifestPath = Join-Path $diffPackagePath $appManifestName
 
         # Get the service types from the cluster
         $serviceTypes = Get-ServiceFabricServiceType -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion

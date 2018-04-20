@@ -65,6 +65,10 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
                 await sleepFor(retryIntervalInSeconds);
             }
             else {
+                if (error.code) {
+                    console.log("##vso[task.logissue type=error;code="+error.code+";]");
+                }
+
                 throw error;
             }
         }
