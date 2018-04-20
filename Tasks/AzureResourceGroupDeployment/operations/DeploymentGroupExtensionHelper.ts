@@ -220,14 +220,7 @@ export class DeploymentGroupExtensionHelper {
                 protectedSettings["WindowsLogonPassword"] = password
             }
             else if (vmOsType === "Linux") {
-                var linuxUserName = userName;
-                if(userName.includes("@")){
-                    linuxUserName = userName.split("@")[0];
-                }
-                else if(userName.includes("\\")){
-                    linuxUserName = userName.split("\\")[1];
-                }
-                publicSettings["ConfigureAgentAsUserName"] = linuxUserName; 
+                publicSettings["ConfigureAgentAsUserName"] = userName; 
             }
             var parameters = {
                 type: extensionType,
