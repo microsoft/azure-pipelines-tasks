@@ -16,13 +16,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "groups": [
     {
       "name": "signingDetails",
       "displayName": "ms-resource:loc.group.displayName.signingDetails",
-      "isExpanded": true
+      "isExpanded": false
     }
   ],
   "inputs": [
@@ -75,7 +75,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.signatureKey",
       "required": false,
-      "defaultValue": "",
+      "defaultValue": "signature",
       "helpMarkDown": "ms-resource:loc.input.help.signatureKey",
       "visibleRule": "signPayload = true",
       "groupName": "signingDetails"
