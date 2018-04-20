@@ -1,0 +1,47 @@
+{
+    "id": "03DD16C3-43E0-4667-BA84-40515D27A410",
+    "name": "CondaEnvironment",
+    "friendlyName": "Conda Environment",
+    "description": "Activate a Conda environment.",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 134,
+        "Patch": 0
+    },
+    "preview": true,
+    "demands": [],
+    "instanceNameFormat": "Activate Conda Environment",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "versionSpec",
+            "type": "string",
+            "label": "Version spec",
+            "required": true,
+            "defaultValue": ">= 3.3",
+            "helpMarkDown": "Version range or exact version of a Python version to use."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "PlatformNotRecognized": "Platform not recognized"
+    }
+}

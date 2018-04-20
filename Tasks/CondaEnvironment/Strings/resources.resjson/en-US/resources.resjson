@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Conda Environment",
+  "loc.helpMarkDown": "",
+  "loc.description": "Activate a Conda environment.",
+  "loc.instanceNameFormat": "Activate Conda Environment",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.input.label.versionSpec": "Version spec",
+  "loc.input.help.versionSpec": "Version range or exact version of a Python version to use.",
+  "loc.messages.PlatformNotRecognized": "Platform not recognized"
+}
