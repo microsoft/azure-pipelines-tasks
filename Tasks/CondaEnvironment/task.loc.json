@@ -27,12 +27,38 @@
   ],
   "inputs": [
     {
-      "name": "versionSpec",
+      "name": "environmentName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.versionSpec",
+      "label": "ms-resource:loc.input.label.environmentName",
       "required": true,
-      "defaultValue": ">= 3.3",
-      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.environmentName"
+    },
+    {
+      "name": "packageSpecs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageSpecs",
+      "required": false,
+      "defaultValue": "python=3",
+      "helpMarkDown": "ms-resource:loc.input.help.packageSpecs"
+    },
+    {
+      "name": "otherOptions",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.otherOptions",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.otherOptions",
+      "groupName": "advanced"
+    },
+    {
+      "name": "installConda",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.installConda",
+      "required": true,
+      "defaultValue": true,
+      "helpMarkDown": "ms-resource:loc.input.help.installConda",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -42,6 +68,8 @@
     }
   },
   "messages": {
+    "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
+    "FailedCreate": "ms-resource:loc.messages.FailedCreate",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   }
 }

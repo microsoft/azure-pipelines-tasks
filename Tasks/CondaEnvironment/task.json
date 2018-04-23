@@ -2,7 +2,7 @@
     "id": "03DD16C3-43E0-4667-BA84-40515D27A410",
     "name": "CondaEnvironment",
     "friendlyName": "Conda Environment",
-    "description": "Activate a Conda environment.",
+    "description": "Create and activate a Conda environment.",
     "helpMarkDown": "",
     "category": "Tool",
     "runsOn": [
@@ -17,7 +17,7 @@
     },
     "preview": true,
     "demands": [],
-    "instanceNameFormat": "Activate Conda Environment",
+    "instanceNameFormat": "Conda Environment $(environmentName)",
     "groups": [
         {
             "name": "advanced",
@@ -27,12 +27,38 @@
     ],
     "inputs": [
         {
-            "name": "versionSpec",
+            "name": "environmentName",
             "type": "string",
-            "label": "Version spec",
+            "label": "Environment name",
             "required": true,
-            "defaultValue": ">= 3.3",
-            "helpMarkDown": "Version range or exact version of a Python version to use."
+            "defaultValue": "",
+            "helpMarkDown": "Name of the Conda environment to create and activate."
+        },
+        {
+            "name": "packageSpecs",
+            "type": "string",
+            "label": "Package specs",
+            "required": false,
+            "defaultValue": "python=3",
+            "helpMarkDown": "Space-delimited list of packages to install."
+        },
+        {
+            "name": "otherOptions",
+            "type": "string",
+            "label": "Other options",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Space-delimited list of other options to pass to the `conda` command.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "installConda",
+            "type": "boolean",
+            "label": "Install Conda if missing",
+            "required": true,
+            "defaultValue": true,
+            "helpMarkDown": "Download and install the latest version of Miniconda if the `conda` executable is not found at the path from the `CONDA` environment variable.",
+            "groupName": "advanced"
         }
     ],
     "execution": {
@@ -42,6 +68,8 @@
         }
     },
     "messages": {
+        "CondaNotFound": "The `conda` executable was not found at the path specified by the `CONDA` environment variable: %s",
+        "FailedCreate": "Failed to create Conda environment %s (`conda create` returned code %d)",
         "PlatformNotRecognized": "Platform not recognized"
     }
 }
