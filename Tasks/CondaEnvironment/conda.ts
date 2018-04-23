@@ -12,10 +12,12 @@ interface TaskParameters {
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     let condaPath = internal.findConda(platform);
-    if (!condaPath && parameters.installConda) {
-        condaPath = await internal.downloadConda(platform);
-    } else {
-        throw new Error(task.loc('CondaNotFound', task.getVariable('CONDA')));
+    if (!condaPath) {
+        if (parameters.installConda) {
+            condaPath = await internal.downloadConda(platform);
+        } else {
+            throw new Error(task.loc('CondaNotFound', task.getVariable('CONDA')));
+        }
     }
 
     await internal.createEnvironment(condaPath, parameters.environmentName, parameters.packageSpecs, parameters.otherOptions);
