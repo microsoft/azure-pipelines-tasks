@@ -53,7 +53,6 @@ export async function createEnvironment(condaPath: string, environmentName: stri
     // }
 }
 
-export async function activateEnvironment(environmentPath: string): Promise<number> {
+export function activateEnvironment(environmentsDir: string, environmentName: string): void {
     // TODO
-    return Promise.reject("not implemented");
 }

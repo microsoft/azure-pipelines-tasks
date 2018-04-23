@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import * as mockery from 'mockery';
 import * as sinon from 'sinon';
+
 import * as mockTask from 'vsts-task-lib/mock-task';
 
 import { Platform } from '../taskutil';
@@ -79,7 +80,7 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
         assert(installMiniconda.calledOnceWithExactly(absPath('downloadMiniconda'), Platform.Linux));
         assert(createEnvironment.calledOnceWithExactly(absPath('installMiniconda'), 'env', undefined, undefined));
-        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs', 'env')));
+        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs'), 'env'));
     })
 
     it('downloads Conda if `conda` is not found, creates and activates environment', async function () {
@@ -111,7 +112,7 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
         assert(installMiniconda.calledOnceWithExactly(absPath('downloadMiniconda'), Platform.Linux));
         assert(createEnvironment.calledOnceWithExactly(absPath('installMiniconda'), 'env', undefined, undefined));
-        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs', 'env')));
+        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs'), 'env'));
     })
 
     it('does not download Conda if found, creates and activates environment', async function () {
@@ -142,7 +143,7 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(hasConda.calledOnceWithExactly(absPath('path-to-conda'), Platform.Linux));
         assert(downloadMiniconda.notCalled);
         assert(createEnvironment.calledOnceWithExactly(absPath('path-to-conda'), 'env', undefined, undefined));
-        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('path-to-conda'), 'envs', 'env')));
+        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('path-to-conda'), 'envs'), 'env'));
     })
 
     it('does not download Conda if not found and user opts not to', async function (done: MochaDone) {
@@ -235,7 +236,7 @@ describe('CondaEnvironment L0 Suite', function () {
         }
     })
 
-    it('downloads and installs Conda', async function () {
+    it('downloads Conda', async function () {
         const downloadTool = sinon.stub().returns('downloadTool');
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('vsts-task-tool-lib/tool', {
@@ -260,5 +261,38 @@ describe('CondaEnvironment L0 Suite', function () {
             const actual = await uut.downloadMiniconda(Platform.Windows);
             assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe'));
         }
+    })
+
+    it('installs Conda', async function () {
+        assert.fail(null, null, 'TODO mock tool runner');
+
+        { // Linux
+        }
+        { // macOS
+        }
+        { // Windows
+        }
+    })
+
+    it('creates Conda environment', async function () {
+        assert.fail(null, null, 'TODO mock tool runner');
+    })
+
+    it('activates Conda environment', async function () {
+        const prependPath = sinon.spy();
+        const setVariable = sinon.spy();
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+            prependPath: prependPath,
+            setVariable: setVariable
+        }));
+
+        const uut = reload('../conda_internal');
+
+        uut.activateEnvironment(absPath('envs'), 'env');
+        assert(prependPath.calledOnceWithExactly(path.join(absPath('envs'), 'envs')));
+        assert(setVariable.callCount === 3);
+        assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
+        assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join(absPath('envs'), 'envs')));
+        assert(setVariable.calledWithExactly('CONDA_PROMPT_MODIFIER', '(env)'));
     })
 });
