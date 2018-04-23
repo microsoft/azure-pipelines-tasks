@@ -2,10 +2,11 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import webClient = require('azure-arm-rest/webClient');
+const pythonExtensionPrefix: string = "azureappservice-";
 
 export class KuduServiceUtils {
     private _appServiceKuduService: Kudu;
-
+    
     constructor(kuduService: Kudu) {
         this._appServiceKuduService = kuduService;
     }
@@ -53,8 +54,8 @@ export class KuduServiceUtils {
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
-            if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap["azureappservice-" + extensionID])) {
-                siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap["azureappservice-" + extensionID];
+            if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
+                siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
             }
             else {
@@ -128,7 +129,7 @@ export class KuduServiceUtils {
     }
 
     private _getExtensionLocalPath(extensionInfo: JSON): string {
-        var extensionId: string = extensionInfo['id'].replace("azureappservice-", "");
+        var extensionId: string = extensionInfo['id'].replace(pythonExtensionPrefix, "");
         var homeDir = "D:\\home\\";
     
         if(extensionId.startsWith('python2')) {
