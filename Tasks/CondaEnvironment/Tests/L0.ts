@@ -79,7 +79,7 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
         assert(installMiniconda.calledOnceWithExactly(absPath('downloadMiniconda'), Platform.Linux));
         assert(createEnvironment.calledOnceWithExactly(absPath('installMiniconda'), 'env', undefined, undefined));
-        assert(activateEnvironment.calledOnceWithExactly('env'));
+        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs', 'env')));
     })
 
     it('downloads Conda if `conda` is not found, creates and activates environment', async function () {
@@ -111,7 +111,7 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
         assert(installMiniconda.calledOnceWithExactly(absPath('downloadMiniconda'), Platform.Linux));
         assert(createEnvironment.calledOnceWithExactly(absPath('installMiniconda'), 'env', undefined, undefined));
-        assert(activateEnvironment.calledOnceWithExactly('env'));
+        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs', 'env')));
     })
 
     it('does not download Conda if found, creates and activates environment', async function () {
@@ -141,8 +141,8 @@ describe('CondaEnvironment L0 Suite', function () {
         await uut.condaEnvironment(parameters, Platform.Linux);
         assert(hasConda.calledOnceWithExactly(absPath('path-to-conda'), Platform.Linux));
         assert(downloadMiniconda.notCalled);
-        assert(createEnvironment.calledOnceWithExactly('hasConda', 'env', undefined, undefined));
-        assert(activateEnvironment.calledOnceWithExactly('env'));
+        assert(createEnvironment.calledOnceWithExactly(absPath('path-to-conda'), 'env', undefined, undefined));
+        assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('path-to-conda'), 'envs', 'env')));
     })
 
     it('does not download Conda if not found and user opts not to', async function (done: MochaDone) {
