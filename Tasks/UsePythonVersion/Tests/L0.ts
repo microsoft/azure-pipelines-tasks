@@ -3,6 +3,7 @@ import { EOL } from 'os';
 import * as path from 'path';
 
 import * as mockery from 'mockery';
+import * as sinon from 'sinon';
 import * as mockTask from 'vsts-task-lib/mock-task';
 
 import { Platform } from '../taskutil';
@@ -73,18 +74,10 @@ describe('UsePythonVersion L0 Suite', function () {
     })
 
     it('finds version in cache', async function () {
-        let buildVariables: { [key: string]: string } = {};
-        const mockBuildVariables = {
-            setVariable: (variable: string, value: string) => {
-                buildVariables[variable] = value;
-            },
-            getVariable: (variable: string) => buildVariables[variable]
-        };
-        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
-
-        const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
+        const setVariable = sinon.spy();
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, { setVariable: setVariable }));
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath
+            findLocalTool: sinon.stub().returns('findLocalTool')
         });
 
         const uut = reload();
@@ -94,10 +87,8 @@ describe('UsePythonVersion L0 Suite', function () {
             architecture: 'x64'
         };
 
-        assert.strictEqual(buildVariables['pythonLocation'], undefined);
-
         await uut.usePythonVersion(parameters, Platform.Linux);
-        assert.strictEqual(buildVariables['pythonLocation'], toolPath);
+        assert(setVariable.calledOnceWithExactly('pythonLocation', 'findLocalTool'));
     });
 
     it('rejects version not in cache', async function (done: MochaDone) {
@@ -133,23 +124,14 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('selects architecture passed as input', async function () {
-        let buildVariables: { [key: string]: string } = {};
-        const mockBuildVariables = {
-            setVariable: (variable: string, value: string) => {
-                buildVariables[variable] = value;
-            },
-            getVariable: (variable: string) => buildVariables[variable]
-        };
-        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
-
-        const x86ToolPath = path.join('/', 'Python', '3.6.4', 'x86');
-        const x64ToolPath = path.join('/', 'Python', '3.6.4', 'x64');
+        const setVariable = sinon.spy();
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, { setVariable: setVariable }));
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: (toolName: string, versionSpec: string, arch?: string) => {
                 if (arch === 'x86') {
-                    return x86ToolPath;
+                    return 'x86ToolPath';
                 } else {
-                    return x64ToolPath;
+                    return 'x64ToolPath';
                 }
             }
         });
@@ -161,25 +143,22 @@ describe('UsePythonVersion L0 Suite', function () {
             architecture: 'x86'
         };
 
-        assert.strictEqual(buildVariables['pythonLocation'], undefined);
-
         await uut.usePythonVersion(parameters, Platform.Linux);
-        assert.strictEqual(buildVariables['pythonLocation'], x86ToolPath);
+        assert(setVariable.calledOnce);
+        assert(setVariable.calledWith('pythonLocation', 'x86ToolPath'));
     });
 
     it('sets PATH correctly on Linux', async function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
-        const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
+        const findLocalTool = sinon.stub().returns('findLocalTool');
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath,
+            findLocalTool: findLocalTool
         });
 
-        let mockPath = '';
+        const prependPathSafe = sinon.spy();
         mockery.registerMock('./toolutil', {
-            prependPathSafe: (s: string) => {
-                mockPath = s + ':' + mockPath;
-            }
+            prependPathSafe: prependPathSafe
         });
 
         const uut = reload();
@@ -190,25 +169,28 @@ describe('UsePythonVersion L0 Suite', function () {
         };
 
         await uut.usePythonVersion(parameters, Platform.Linux);
-        assert.strictEqual(`${path.join(toolPath, 'bin')}:${toolPath}:`, mockPath);
+        assert(findLocalTool.calledOnceWithExactly('Python', '3.6', 'x64'));
+        assert(prependPathSafe.calledTwice);
+        assert(prependPathSafe.calledWithExactly('findLocalTool'));
+        assert(prependPathSafe.calledWithExactly(path.join('findLocalTool', 'bin')));
     });
 
     it('sets PATH correctly on Windows', async function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
+        // Windows PATH logic will parse this path, so it has to be realistic
         const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
+        const findLocalTool = sinon.stub().returns(toolPath);
         mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath
+            findLocalTool: findLocalTool
         });
 
-        let mockPath = '';
+        const prependPathSafe = sinon.spy();
         mockery.registerMock('./toolutil', {
-            prependPathSafe: (s: string) => {
-                mockPath = s + ';' + mockPath;
-            }
+            prependPathSafe: prependPathSafe
         });
 
-        process.env['APPDATA'] = '/mock-appdata';
+        process.env['APPDATA'] = '/mock-appdata'; // needed for running this test on Linux and macOS
 
         const uut = reload();
         const parameters = {
@@ -218,11 +200,14 @@ describe('UsePythonVersion L0 Suite', function () {
         };
 
         await uut.usePythonVersion(parameters, Platform.Windows);
+        assert(findLocalTool.calledOnceWithExactly('Python', '3.6', 'x64'));
+        assert(prependPathSafe.calledThrice);
+        assert(prependPathSafe.calledWithExactly(toolPath));
 
         // On Windows, must add the two "Scripts" directories to PATH as well
         const expectedScripts = path.join(toolPath, 'Scripts');
+        assert(prependPathSafe.calledWithExactly(expectedScripts));
         const expectedUserScripts = path.join(process.env['APPDATA'], 'Python', 'Python36', 'Scripts');
-        const expectedPath = `${expectedUserScripts};${expectedScripts};${toolPath};`;
-        assert.strictEqual(expectedPath, mockPath);
+        assert(prependPathSafe.calledWithExactly(expectedUserScripts));
     });
 });
