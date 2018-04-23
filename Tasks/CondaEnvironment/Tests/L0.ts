@@ -13,10 +13,9 @@ import * as condaInternal from '../conda_internal';
 function reload(module: typeof condaEnvironment): typeof condaEnvironment;
 function reload(module: typeof condaInternal): typeof condaInternal;
 function reload(module: any): any {
-    if (typeof module === typeof condaEnvironment) {
-        return require('../conda');
-    } else if (typeof module === typeof condaInternal) {
-        return require('../conda_internal');
+    switch (typeof module) {
+        case typeof condaEnvironment: return require('../conda');
+        case typeof condaInternal: return require('../conda_internal');
     }
 }
 
