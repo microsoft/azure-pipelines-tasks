@@ -50,11 +50,13 @@ describe('CondaEnvironment L0 Suite', function () {
 
         const findConda = sinon.stub().returns('findConda');
         const downloadMiniconda = sinon.spy();
+        const installMiniconda = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             findConda: findConda,
             downloadMiniconda: downloadMiniconda,
+            installMiniconda: installMiniconda,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
         });
@@ -77,11 +79,13 @@ describe('CondaEnvironment L0 Suite', function () {
 
         const findConda = sinon.stub().returns(null);
         const downloadMiniconda = sinon.stub().returns('downloadMiniconda');
+        const installMiniconda = sinon.stub().returns('installMiniconda');
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             findConda: findConda,
             downloadMiniconda: downloadMiniconda,
+            installMiniconda: installMiniconda,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
         });
@@ -95,7 +99,8 @@ describe('CondaEnvironment L0 Suite', function () {
         await uut.condaEnvironment(parameters, Platform.Linux);
         assert(findConda.calledOnceWithExactly(Platform.Linux));
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
-        assert(createEnvironment.calledOnceWithExactly('downloadMiniconda', 'env', undefined, undefined));
+        assert(installMiniconda.calledOnceWithExactly('downloadMiniconda', Platform.Linux));
+        assert(createEnvironment.calledOnceWithExactly('installMiniconda', 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly('env'));
     })
 
@@ -106,11 +111,13 @@ describe('CondaEnvironment L0 Suite', function () {
 
         const findConda = sinon.stub().returns(null);
         const downloadMiniconda = sinon.spy();
+        const installMiniconda = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             findConda: findConda,
             downloadMiniconda: downloadMiniconda,
+            installMiniconda: installMiniconda,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
         });
@@ -128,6 +135,7 @@ describe('CondaEnvironment L0 Suite', function () {
             assert.strictEqual(e.message, 'loc_mock_CondaNotFound path/to/conda');
             assert(findConda.calledOnceWithExactly(Platform.Windows));
             assert(downloadMiniconda.notCalled);
+            assert(installMiniconda.notCalled);
             assert(createEnvironment.notCalled);
             assert(activateEnvironment.notCalled);
             done();
