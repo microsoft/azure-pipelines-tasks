@@ -49,12 +49,12 @@ describe('CondaEnvironment L0 Suite', function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
         const findConda = sinon.stub().returns('findConda');
-        const downloadConda = sinon.spy();
+        const downloadMiniconda = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             findConda: findConda,
-            downloadConda: downloadConda,
+            downloadMiniconda: downloadMiniconda,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
         });
@@ -67,7 +67,7 @@ describe('CondaEnvironment L0 Suite', function () {
 
         await uut.condaEnvironment(parameters, Platform.Linux);
         assert(findConda.calledOnceWithExactly(Platform.Linux));
-        assert(downloadConda.notCalled);
+        assert(downloadMiniconda.notCalled);
         assert(createEnvironment.calledOnceWithExactly('findConda', 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly('env'));
     })
@@ -76,12 +76,12 @@ describe('CondaEnvironment L0 Suite', function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
         const findConda = sinon.stub().returns(null);
-        const downloadConda = sinon.stub().returns('downloadConda');
+        const downloadMiniconda = sinon.stub().returns('downloadMiniconda');
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             findConda: findConda,
-            downloadConda: downloadConda,
+            downloadMiniconda: downloadMiniconda,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
         });
@@ -94,8 +94,8 @@ describe('CondaEnvironment L0 Suite', function () {
 
         await uut.condaEnvironment(parameters, Platform.Linux);
         assert(findConda.calledOnceWithExactly(Platform.Linux));
-        assert(downloadConda.calledOnceWithExactly(Platform.Linux));
-        assert(createEnvironment.calledOnceWithExactly('downloadConda', 'env', undefined, undefined));
+        assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
+        assert(createEnvironment.calledOnceWithExactly('downloadMiniconda', 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly('env'));
     })
 
@@ -105,12 +105,12 @@ describe('CondaEnvironment L0 Suite', function () {
         }));
 
         const findConda = sinon.stub().returns(null);
-        const downloadConda = sinon.spy();
+        const downloadMiniconda = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             findConda: findConda,
-            downloadConda: downloadConda,
+            downloadMiniconda: downloadMiniconda,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
         });
@@ -127,7 +127,7 @@ describe('CondaEnvironment L0 Suite', function () {
         } catch (e) {
             assert.strictEqual(e.message, 'loc_mock_CondaNotFound path/to/conda');
             assert(findConda.calledOnceWithExactly(Platform.Windows));
-            assert(downloadConda.notCalled);
+            assert(downloadMiniconda.notCalled);
             assert(createEnvironment.notCalled);
             assert(activateEnvironment.notCalled);
             done();
@@ -205,20 +205,20 @@ describe('CondaEnvironment L0 Suite', function () {
 
         { // Linux
             const uut = reload('../conda_internal');
-            const actual = await uut.downloadConda(Platform.Linux);
+            const actual = await uut.downloadMiniconda(Platform.Linux);
 
             assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh'));
         }
         { // macOS
             const uut = reload('../conda_internal');
 
-            const actual = await uut.downloadConda(Platform.MacOS);
+            const actual = await uut.downloadMiniconda(Platform.MacOS);
             assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh'));
         }
         { // Windows
             const uut = reload('../conda_internal');
 
-            const actual = await uut.downloadConda(Platform.Windows);
+            const actual = await uut.downloadMiniconda(Platform.Windows);
             assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe'));
         }
     })
