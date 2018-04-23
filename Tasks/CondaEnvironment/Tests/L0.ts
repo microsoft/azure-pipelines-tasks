@@ -45,35 +45,6 @@ describe('CondaEnvironment L0 Suite', function () {
 
     // Test conda.ts
 
-    it('does not download Conda if found, creates and activates environment', async function () {
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-
-        const findConda = sinon.stub().returns('findConda');
-        const downloadMiniconda = sinon.spy();
-        const installMiniconda = sinon.spy();
-        const createEnvironment = sinon.spy();
-        const activateEnvironment = sinon.spy();
-        mockery.registerMock('./conda_internal', {
-            findConda: findConda,
-            downloadMiniconda: downloadMiniconda,
-            installMiniconda: installMiniconda,
-            createEnvironment: createEnvironment,
-            activateEnvironment: activateEnvironment
-        });
-
-        const uut = reload('../conda');
-        const parameters = {
-            environmentName: 'env',
-            installConda: true
-        };
-
-        await uut.condaEnvironment(parameters, Platform.Linux);
-        assert(findConda.calledOnceWithExactly(Platform.Linux));
-        assert(downloadMiniconda.notCalled);
-        assert(createEnvironment.calledOnceWithExactly('findConda', 'env', undefined, undefined));
-        assert(activateEnvironment.calledOnceWithExactly('env'));
-    })
-
     it('downloads Conda if not found, creates and activates environment', async function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
@@ -101,6 +72,35 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
         assert(installMiniconda.calledOnceWithExactly('downloadMiniconda', Platform.Linux));
         assert(createEnvironment.calledOnceWithExactly('installMiniconda', 'env', undefined, undefined));
+        assert(activateEnvironment.calledOnceWithExactly('env'));
+    })
+
+    it('does not download Conda if found, creates and activates environment', async function () {
+        mockery.registerMock('vsts-task-lib/task', mockTask);
+
+        const findConda = sinon.stub().returns('findConda');
+        const downloadMiniconda = sinon.spy();
+        const installMiniconda = sinon.spy();
+        const createEnvironment = sinon.spy();
+        const activateEnvironment = sinon.spy();
+        mockery.registerMock('./conda_internal', {
+            findConda: findConda,
+            downloadMiniconda: downloadMiniconda,
+            installMiniconda: installMiniconda,
+            createEnvironment: createEnvironment,
+            activateEnvironment: activateEnvironment
+        });
+
+        const uut = reload('../conda');
+        const parameters = {
+            environmentName: 'env',
+            installConda: true
+        };
+
+        await uut.condaEnvironment(parameters, Platform.Linux);
+        assert(findConda.calledOnceWithExactly(Platform.Linux));
+        assert(downloadMiniconda.notCalled);
+        assert(createEnvironment.calledOnceWithExactly('findConda', 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly('env'));
     })
 
