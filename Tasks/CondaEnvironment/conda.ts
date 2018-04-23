@@ -17,13 +17,11 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
     const condaRoot = await (async () => {
         if (condaPathFromEnvironment && internal.hasConda(condaPathFromEnvironment, platform)) {
             return condaPathFromEnvironment;
+        } else if (parameters.installConda) {
+            const download = await internal.downloadMiniconda(platform);
+            return await internal.installMiniconda(download, platform);
         } else {
-            if (parameters.installConda) {
-                const download = await internal.downloadMiniconda(platform);
-                return await internal.installMiniconda(download, platform);
-            } else {
-                throw new Error(task.loc('CondaNotFound', condaPathFromEnvironment));
-            }
+            throw new Error(task.loc('CondaNotFound', condaPathFromEnvironment));
         }
     })();
 
