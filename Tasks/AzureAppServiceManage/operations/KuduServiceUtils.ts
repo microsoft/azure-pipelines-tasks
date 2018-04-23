@@ -6,7 +6,6 @@ const pythonExtensionPrefix: string = "azureappservice-";
 
 export class KuduServiceUtils {
     private _appServiceKuduService: Kudu;
-    
     constructor(kuduService: Kudu) {
         this._appServiceKuduService = kuduService;
     }
