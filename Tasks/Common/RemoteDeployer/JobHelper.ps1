@@ -3,10 +3,11 @@ function Run-RemoteScriptJobs {
     Param (
         [System.Management.Automation.Runspaces.PSSession[]] $sessions,
         [scriptblock] $script,
-        [System.Array] $scriptArguments
+        [hashtable] $scriptArgumentsByName
     )
-    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter "sessions","scriptArguments"
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
     try {
+        $scriptArguments = Get-ScriptArguments -scriptArgumentsByName $scriptArgumentsByName
         $jobs = Invoke-Command -Session $sessions -AsJob -ScriptBlock $script -ArgumentList $scriptArguments
         $jobResults = @();
     
@@ -77,6 +78,30 @@ function Set-TaskResult {
         if(!$failed) {
             Write-VstsSetResult -Result 'Succeeded'
         }        
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Get-ScriptArguments {
+    Param (
+        [hashtable] $scriptArgumentsByName
+    )
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
+    try {
+        $scriptArguments = @(
+            $scriptArgumentsByName.scriptPath,
+            $scriptArgumentsByName.scriptArguments,
+            $scriptArgumentsByName.inlineScript,
+            $scriptArgumentsByName.inline,
+            $scriptArgumentsByName.workingDirectory,
+            $scriptArgumentsByName.errorActionPreference,
+            $scriptArgumentsByName.ignoreLASTEXITCODE,
+            $scriptArgumentsByName.failOnStdErr,
+            $scriptArgumentsByName.initializationScriptPath,
+            $scriptArgumentsByName.sessionVariables
+        );
+        return $scriptArguments
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
