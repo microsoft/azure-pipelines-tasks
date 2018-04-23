@@ -7,10 +7,17 @@ import * as mockTask from 'vsts-task-lib/mock-task';
 
 import { Platform } from '../taskutil';
 import * as condaEnvironment from '../conda';
+import * as condaInternal from '../conda_internal';
 
 /** Reload the unit under test to use mocks that have been registered. */
-function reload(): typeof condaEnvironment {
-    return require('../conda');
+function reload(module: typeof condaEnvironment): typeof condaEnvironment;
+function reload(module: typeof condaInternal): typeof condaInternal;
+function reload(module: any): any {
+    if (typeof module === typeof condaEnvironment) {
+        return require('../conda');
+    } else if (typeof module === typeof condaInternal) {
+        return require('../conda_internal');
+    }
 }
 
 describe('CondaEnvironment L0 Suite', function () {
@@ -34,7 +41,7 @@ describe('CondaEnvironment L0 Suite', function () {
     it('test', async function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('vsts-task-tool-lib/tool', {});
-        const uut = reload();
+        const uut = reload(condaEnvironment);
     })
 
     it('does not download Conda if found, creates and activates environment', async function () {
@@ -51,7 +58,7 @@ describe('CondaEnvironment L0 Suite', function () {
             activateEnvironment: activateEnvironment
         });
 
-        const uut = reload();
+        const uut = reload(condaEnvironment);
         const parameters = {
             environmentName: 'env',
             installConda: true
@@ -78,7 +85,7 @@ describe('CondaEnvironment L0 Suite', function () {
             activateEnvironment: activateEnvironment
         });
 
-        const uut = reload();
+        const uut = reload(condaEnvironment);
         const parameters = {
             environmentName: 'env',
             installConda: true
@@ -107,7 +114,7 @@ describe('CondaEnvironment L0 Suite', function () {
             activateEnvironment: activateEnvironment
         });
 
-        const uut = reload();
+        const uut = reload(condaEnvironment);
         const parameters = {
             environmentName: 'env',
             installConda: false
