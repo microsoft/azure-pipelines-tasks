@@ -30,15 +30,15 @@ Import-VstsLocStrings "$PSScriptRoot\module.json"
 #.PARAMETER sessionName
 # name of the pssession that connects to target machines
 #
-#.PARAMETER remoteScriptJobArguments
-# an array wherein each member is treated as follows (strictly this order should be followed):
+#.PARAMETER remoteScriptJobArgumentsByName
+# a hashtable with the following fields:
 # 1. scriptPath
 # 2. scriptArguments
 # 3. inlineScript
-# 4. [bool] $inline
+# 4. [bool] inline
 # 5. workingDirectory
-# 6. _errorActionPreference
-# 7. [bool] _ignoreLASTEXITCODE
+# 6. errorActionPreference
+# 7. [bool] ignoreLASTEXITCODE
 # 8. [bool] failOnStdErr
 # 9. initializationScriptPath
 # 10. sessionVariables
@@ -74,12 +74,12 @@ function Invoke-RemoteScript {
         [string] $sessionConfigurationName = "microsoft.powershell",
 
         [Parameter(Mandatory = $true)]
-        [psobject] $remoteScriptJobArguments,
+        [hashtable] $remoteScriptJobArgumentsByName,
 
         [Parameter(Mandatory = $true)]
         [psobject] $sessionOption
     )
-    Trace-VstsEnteringInvocation $MyInvocation
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter 'targetMachineNames'
     try {
         $PSSessionOption = $sessionOption
         $sessions = @()
@@ -91,7 +91,7 @@ function Invoke-RemoteScript {
                                                  -sessionName $sessionName `
                                                  -sessionConfigurationName $sessionConfigurationName
         }
-        Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArguments $remoteScriptJobArguments
+        Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArgumentsByName $remoteScriptJobArgumentsByName
     } finally {
         if($sessions.Count -gt 0) {
             Remove-PSSession -Session $sessions
