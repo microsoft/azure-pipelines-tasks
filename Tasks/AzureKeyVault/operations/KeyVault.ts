@@ -79,6 +79,9 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
         console.log(tl.loc("SubscriptionIdLabel", this.taskParameters.subscriptionId));
         console.log(tl.loc("KeyVaultNameLabel", this.taskParameters.keyVaultName));
 
+        // since key vault task explicitly handles multi line masking setting SYSTEM_UNSAFEALLOWMULTILINESECRET to true
+        tl.setVariable("SYSTEM_UNSAFEALLOWMULTILINESECRET", "true");
+
         if (downloadAllSecrets) {
             return this.downloadAllSecrets(secretsToErrorsMap);
         } else {
