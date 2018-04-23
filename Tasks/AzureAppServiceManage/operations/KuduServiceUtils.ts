@@ -52,8 +52,8 @@ export class KuduServiceUtils {
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
-            if(siteExtensionMap[extensionID]) {
-                siteExtensionDetails = siteExtensionMap[extensionID];
+            if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap["azureappservice-" + extensionID])) {
+                siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap["azureappservice-" + extensionID];
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
             }
             else {
@@ -123,7 +123,7 @@ export class KuduServiceUtils {
     }
 
     private _getExtensionLocalPath(extensionInfo: JSON): string {
-        var extensionId: string = extensionInfo['id'];
+        var extensionId: string = extensionInfo['id'].replace("azureappservice-", "");
         var homeDir = "D:\\home\\";
     
         if(extensionId.startsWith('python2')) {
