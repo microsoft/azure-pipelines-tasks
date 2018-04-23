@@ -45,16 +45,18 @@ describe('CondaEnvironment L0 Suite', function () {
 
     // Test conda.ts
 
-    it('downloads Conda if not found, creates and activates environment', async function () {
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+    it('downloads Conda if `CONDA` is not set, creates and activates environment', async function () {
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+            getVariable: sinon.stub().withArgs('CONDA').returns(undefined)
+        }));
 
-        const findConda = sinon.stub().returns(null);
+        const hasConda = sinon.stub().returns(false);
         const downloadMiniconda = sinon.stub().returns('downloadMiniconda');
         const installMiniconda = sinon.stub().returns('installMiniconda');
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
-            findConda: findConda,
+            hasConda: hasConda,
             downloadMiniconda: downloadMiniconda,
             installMiniconda: installMiniconda,
             createEnvironment: createEnvironment,
@@ -68,7 +70,39 @@ describe('CondaEnvironment L0 Suite', function () {
         };
 
         await uut.condaEnvironment(parameters, Platform.Linux);
-        assert(findConda.calledOnceWithExactly(Platform.Linux));
+        assert(hasConda.notCalled);
+        assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
+        assert(installMiniconda.calledOnceWithExactly('downloadMiniconda', Platform.Linux));
+        assert(createEnvironment.calledOnceWithExactly('installMiniconda', 'env', undefined, undefined));
+        assert(activateEnvironment.calledOnceWithExactly('env'));
+    })
+
+    it('downloads Conda if `conda` is not found, creates and activates environment', async function () {
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+            getVariable: sinon.stub().withArgs('CONDA').returns('/path/to/conda')
+        }));
+
+        const hasConda = sinon.stub().returns(false);
+        const downloadMiniconda = sinon.stub().returns('downloadMiniconda');
+        const installMiniconda = sinon.stub().returns('installMiniconda');
+        const createEnvironment = sinon.spy();
+        const activateEnvironment = sinon.spy();
+        mockery.registerMock('./conda_internal', {
+            hasConda: hasConda,
+            downloadMiniconda: downloadMiniconda,
+            installMiniconda: installMiniconda,
+            createEnvironment: createEnvironment,
+            activateEnvironment: activateEnvironment
+        });
+
+        const uut = reload('../conda');
+        const parameters = {
+            environmentName: 'env',
+            installConda: true
+        };
+
+        await uut.condaEnvironment(parameters, Platform.Linux);
+        assert(hasConda.calledOnceWithExactly('/path/to/conda', Platform.Linux));
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
         assert(installMiniconda.calledOnceWithExactly('downloadMiniconda', Platform.Linux));
         assert(createEnvironment.calledOnceWithExactly('installMiniconda', 'env', undefined, undefined));
@@ -76,15 +110,17 @@ describe('CondaEnvironment L0 Suite', function () {
     })
 
     it('does not download Conda if found, creates and activates environment', async function () {
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+            getVariable: sinon.stub().withArgs('CONDA').returns('/path/to/conda')
+        }));
 
-        const findConda = sinon.stub().returns('findConda');
+        const hasConda = sinon.stub().returns(true);
         const downloadMiniconda = sinon.spy();
         const installMiniconda = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
-            findConda: findConda,
+            hasConda: hasConda,
             downloadMiniconda: downloadMiniconda,
             installMiniconda: installMiniconda,
             createEnvironment: createEnvironment,
@@ -98,24 +134,24 @@ describe('CondaEnvironment L0 Suite', function () {
         };
 
         await uut.condaEnvironment(parameters, Platform.Linux);
-        assert(findConda.calledOnceWithExactly(Platform.Linux));
+        assert(hasConda.calledOnceWithExactly('/path/to/conda', Platform.Linux));
         assert(downloadMiniconda.notCalled);
-        assert(createEnvironment.calledOnceWithExactly('findConda', 'env', undefined, undefined));
+        assert(createEnvironment.calledOnceWithExactly('hasConda', 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly('env'));
     })
 
     it('does not download Conda if not found and user opts not to', async function (done: MochaDone) {
         mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-            getVariable: sinon.stub().withArgs('CONDA').returns('path/to/conda')
+            getVariable: sinon.stub().withArgs('CONDA').returns('/path/to/conda')
         }));
 
-        const findConda = sinon.stub().returns(null);
+        const hasConda = sinon.stub().returns(false);
         const downloadMiniconda = sinon.spy();
         const installMiniconda = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
-            findConda: findConda,
+            hasConda: hasConda,
             downloadMiniconda: downloadMiniconda,
             installMiniconda: installMiniconda,
             createEnvironment: createEnvironment,
@@ -133,7 +169,7 @@ describe('CondaEnvironment L0 Suite', function () {
             done(new Error('should not have succeeded'));
         } catch (e) {
             assert.strictEqual(e.message, 'loc_mock_CondaNotFound path/to/conda');
-            assert(findConda.calledOnceWithExactly(Platform.Windows));
+            assert(hasConda.calledOnceWithExactly('/path/to/conda', Platform.Windows));
             assert(downloadMiniconda.notCalled);
             assert(installMiniconda.notCalled);
             assert(createEnvironment.notCalled);
@@ -144,7 +180,7 @@ describe('CondaEnvironment L0 Suite', function () {
 
     // Test conda_internal.ts
 
-    it('finds Conda', async function () {
+    it('finds the Conda executable', async function () {
         const existSync = sinon.stub().returns(true);
         const statSync = sinon.stub().returns({
             isFile: () => true
@@ -161,46 +197,33 @@ describe('CondaEnvironment L0 Suite', function () {
             getVariable: getVariable
         }));
 
-        { // `CONDA` environment variable is not set
-            getVariable.withArgs('CONDA').returns(undefined);
-            const uut = reload('../conda_internal');
-
-            const actual = uut.findConda(Platform.Windows);
-            assert.strictEqual(actual, null);
-        }
-        { // `CONDA` environment variable is set
-            getVariable.withArgs('CONDA').returns('conda');
-            const uut = reload('../conda_internal');
-
-            const actual = uut.findConda(Platform.Windows);
-            assert.strictEqual(actual, 'conda');
-        }
         { // `conda` executable does not exist (Linux / macOS)
-            existSync.withArgs('conda').returns(false);
+            existSync.withArgs('/path/to/conda/bin/conda').returns(false);
             const uut = reload('../conda_internal');
 
-            assert.strictEqual(uut.findConda(Platform.Linux), null);
-            assert.strictEqual(uut.findConda(Platform.MacOS), null);
+            assert(!uut.hasConda('/path/to/conda', Platform.Linux));
+            assert(!uut.hasConda('/path/to/conda', Platform.MacOS));
         }
         { // `conda.exe` executable does not exist (Windows)
             existSync.reset();
-            existSync.withArgs('conda.exe').returns(false);
+            existSync.withArgs('/path/to/conda/Scripts/conda.exe').returns(false);
             const uut = reload('../conda_internal');
 
-            assert.strictEqual(uut.findConda(Platform.Windows), null);
+            assert(!uut.hasConda('/path/to/conda/Scripts/conda.exe', Platform.Windows));
         }
         { // `conda` exists but is not a file
             existSync.reset();
-            existSync.returns(true);
+            existSync.withArgs('/path/to/conda/bin/conda').returns(true);
+            existSync.withArgs('/path/to/conda/Scripts/conda.exe').returns(true);
             statSync.returns({
                 isFile: () => false
             });
 
             const uut = reload('../conda_internal');
 
-            assert.strictEqual(uut.findConda(Platform.Linux), null);
-            assert.strictEqual(uut.findConda(Platform.MacOS), null);
-            assert.strictEqual(uut.findConda(Platform.Windows), null);
+            assert(!uut.hasConda('/path/to/conda', Platform.Linux));
+            assert(!uut.hasConda('/path/to/conda', Platform.MacOS));
+            assert(!uut.hasConda('/path/to/conda', Platform.Windows));
         }
     })
 

@@ -4,14 +4,14 @@ import { ToolRunner } from 'vsts-task-lib/toolrunner';
 import { Platform } from './taskutil';
 
 /**
- * Find a Conda installation on the system by looking for a `conda` executable
- * under the path given in the `CONDA` environment variable.
+ * Whether `searchDir` has a `conda` executable for `platform`.
+ * @param searchDir Absolute path to a directory to look for a `conda` executable in.
  * @param platform Platform whose executable type we want to use (i.e. `conda` vs `conda.exe`)
- * @returns Absolute path to the `conda` executable or `null` if it was not found
+ * @returns Whether `searchDir` has a `conda` executable for `platform`.
  */
-export function findConda(platform: Platform): string | null {
+export function hasConda(searchDir: string, platform: Platform): boolean {
     // TODO
-    return null;
+    return false;
 }
 
 /**

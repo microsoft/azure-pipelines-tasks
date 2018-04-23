@@ -13,17 +13,21 @@ interface TaskParameters {
 }
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    let condaPath = internal.findConda(platform);
-    if (!condaPath) {
-        if (parameters.installConda) {
-            const download = await internal.downloadMiniconda(platform);
-            condaPath = await internal.installMiniconda(download, platform);
+    const condaPathFromEnvironment = task.getVariable('CONDA');
+    const condaRoot = await (async () => {
+        if (condaPathFromEnvironment && internal.hasConda(condaPathFromEnvironment, platform)) {
+            return condaPathFromEnvironment;
         } else {
-            throw new Error(task.loc('CondaNotFound', task.getVariable('CONDA')));
+            if (parameters.installConda) {
+                const download = await internal.downloadMiniconda(platform);
+                return await internal.installMiniconda(download, platform);
+            } else {
+                throw new Error(task.loc('CondaNotFound', condaPathFromEnvironment));
+            }
         }
-    }
+    })();
 
-    await internal.createEnvironment(condaPath, parameters.environmentName, parameters.packageSpecs, parameters.otherOptions);
-    const environmentDir = path.resolve(path.dirname(condaPath), '..', 'envs');
+    await internal.createEnvironment(condaRoot, parameters.environmentName, parameters.packageSpecs, parameters.otherOptions);
+    const environmentDir = path.join(condaRoot, 'envs');
     await internal.activateEnvironment(path.join(environmentDir, parameters.environmentName));
 }
