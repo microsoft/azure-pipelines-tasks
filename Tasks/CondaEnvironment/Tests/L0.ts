@@ -198,6 +198,13 @@ describe('CondaEnvironment L0 Suite', function () {
 
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
+        { // executable exists and is a file
+            const uut = reload('../conda_internal');
+
+            assert(uut.hasConda(absPath('path-to-conda'), Platform.Linux));
+            assert(uut.hasConda(absPath('path-to-conda'), Platform.MacOS));
+            assert(uut.hasConda(absPath('path-to-conda'), Platform.Windows));
+        }
         { // `conda` executable does not exist (Linux / macOS)
             existSync.withArgs(path.join(absPath('path-to-conda'), 'bin', 'conda')).returns(false);
             const uut = reload('../conda_internal');
