@@ -139,6 +139,19 @@ function ConvertTo-HashTable {
 function Get-RemoteScriptJobArguments {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
+        $scriptArgumentsByName = @{
+            scriptPath = "";
+            scriptArguments = "";
+            inlineScript = "";
+            inline = $false;
+            workingDirectory = "";
+            errorActionPreference = "continue";
+            ignoreLASTEXITCODE = $false;
+            failOnStdErr = $false;
+            initializationScriptPath = "";
+            sessionVariables = "";
+        }
+
         $input_ScriptType = Get-VstsInput -Name "ScriptType" -Require -ErrorAction "Stop"
     
         if ($input_ScriptType -eq "FilePath") {
@@ -151,7 +164,7 @@ function Get-RemoteScriptJobArguments {
             foreach ($key in $sessionVariables.Keys) {
                 $newVarCmds += "Set-Item -LiteralPath variable:\$key -Value '$($sessionVariables[$key])'"
             }
-            $joinedCommand = [System.String]::Join([Environment]::NewLine, $newVarCmds)
+            $allNewVarCommands = [System.String]::Join([Environment]::NewLine, $newVarCmds)
             $inline = $false
         } else {
             $input_InlineScript = Get-VstsInput -Name "InlineScript"
@@ -162,21 +175,20 @@ function Get-RemoteScriptJobArguments {
         $input_ErrorActionPreference = Get-VstsInput -Name "ErrorActionPreference" -Require -ErrorAction "Stop"
         $input_failOnStderr = Get-VstsInput -Name "failOnStderr" -AsBool
         $input_ignoreLASTEXITCODE = Get-VstsInput -Name "ignoreLASTEXITCODE" -AsBool
-    
         $input_WorkingDirectory = Get-VstsInput -Name "WorkingDirectory"
     
-        return @(
-            $input_ScriptPath,
-            $input_ScriptArguments,
-            $input_InlineScript,
-            $inline,
-            $input_WorkingDirectory,
-            $input_ErrorActionPreference,
-            $input_ignoreLASTEXITCODE,
-            $input_failOnStderr,
-            $input_initializationScriptPath,
-            $joinedCommand
-        )
+        $scriptArgumentsByName.scriptPath = $input_ScriptPath
+        $scriptArgumentsByName.scriptArguments = $input_ScriptArguments
+        $scriptArgumentsByName.inlineScript = $input_InlineScript
+        $scriptArgumentsByName.inline = $inline
+        $scriptArgumentsByName.workingDirectory = $input_WorkingDirectory
+        $scriptArgumentsByName.errorActionPreference = $input_ErrorActionPreference
+        $scriptArgumentsByName.ignoreLASTEXITCODE = $input_ignoreLASTEXITCODE
+        $scriptArgumentsByName.failOnStdErr = $input_failOnStderr
+        $scriptArgumentsByName.initializationScriptPath = $input_initializationScriptPath
+        $scriptArgumentsByName.sessionVariables = $allNewVarCommands
+
+        return $scriptArgumentsByName
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
