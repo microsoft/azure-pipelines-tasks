@@ -54,6 +54,8 @@ export class KuduServiceUtils {
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
+        
+             // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
             if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
                 siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
