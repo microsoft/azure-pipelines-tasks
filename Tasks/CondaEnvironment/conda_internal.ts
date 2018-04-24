@@ -91,8 +91,6 @@ export async function installMiniconda(installerPath: string, platform: Platform
  * @param otherOptions Optional list of other options to pass to the `conda create` command.
  */
 export async function createEnvironment(environmentsDir: string, environmentName: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
-    // TODO validate `environmentName`
-    // TODO validate `otherOptions`
     const prefix = path.join(environmentsDir, environmentName);
     const conda = new ToolRunner('conda');
     conda.line(`create --quiet --yes --prefix ${prefix} --mkdir`);
