@@ -106,7 +106,7 @@ it('installs Miniconda', async function (done: MochaDone) {
                 'bash installer.sh -b -f -p path-to-tools/Miniconda': {
                     code: 0
                 },
-                // work around for running tests cross-platform
+                // workaround for running tests cross-platform
                 'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
                     code: 0
                 }
@@ -122,7 +122,7 @@ it('installs Miniconda', async function (done: MochaDone) {
                 'bash installer.sh -b -f -p path-to-tools/Miniconda': {
                     code: 0
                 },
-                // work around for running tests cross-platform
+                // workaround for running tests cross-platform
                 'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
                     code: 0
                 }
@@ -138,7 +138,7 @@ it('installs Miniconda', async function (done: MochaDone) {
                 'start /wait installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools\\Miniconda': {
                     code: 0
                 },
-                // work around for running tests cross-platform
+                // workaround for running tests cross-platform
                 'start /wait installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools/Miniconda': {
                     code: 0
                 }
@@ -154,7 +154,7 @@ it('installs Miniconda', async function (done: MochaDone) {
                 'bash installer.sh -b -f -p path-to-tools/Miniconda': {
                     code: 1
                 },
-                // work around for running tests cross-platform
+                // workaround for running tests cross-platform
                 'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
                     code: 1
                 }
@@ -183,7 +183,7 @@ it('creates Conda environment', async function (done: MochaDone) {
                 'conda create --quiet --yes --prefix envsDir/env --mkdir': {
                     code: 0
                 },
-                // work around for running tests cross-platform
+                // workaround for running tests cross-platform
                 'conda create --quiet --yes --prefix envsDir\\env --mkdir': {
                     code: 0
                 }
@@ -198,7 +198,7 @@ it('creates Conda environment', async function (done: MochaDone) {
                 'conda create --quiet --yes --prefix envsDir/env --mkdir': {
                     code: 1
                 },
-                // work around for running tests cross-platform
+                // workaround for running tests cross-platform
                 'conda create --quiet --yes --prefix envsDir\\env --mkdir': {
                     code: 1
                 }
