@@ -361,21 +361,40 @@ describe('CondaEnvironment L0 Suite', function () {
         }
     })
 
-    it('creates Conda environment', async function () {
+    it('creates Conda environment', async function (done: MochaDone) {
         mockery.registerMock('vsts-task-lib/task', mockTask);
-        mockToolRunner.setAnswers({
-            exec: {
-                'conda create --quiet --yes --prefix envsDir --mkdir --name env': {
-                    code: 0
-                }
-            }
-        });
-
         mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
         mockery.registerMock('vsts-task-tool-lib/tool', {});
         const uut = reload('../conda_internal');
 
-        await uut.createEnvironment('envsDir', 'env');
+        { // success
+            mockToolRunner.setAnswers({
+                exec: {
+                    'conda create --quiet --yes --prefix envsDir --mkdir --name env': {
+                        code: 0
+                    }
+                }
+            });
+
+            await uut.createEnvironment('envsDir', 'env');
+        }
+        { // failure
+            mockToolRunner.setAnswers({
+                exec: {
+                    'conda create --quiet --yes --prefix envsDir --mkdir --name env': {
+                        code: 1
+                    }
+                }
+            });
+
+            try {
+                await uut.createEnvironment('envsDir', 'env');
+                done(new Error('should not have succeeded'));
+            } catch (e) {
+                assert.strictEqual(e.message, `loc_mock_CreateFailed env Error: conda failed with return code: 1`);
+                done();
+            }
+        }
     })
 
     it('activates Conda environment', async function () {

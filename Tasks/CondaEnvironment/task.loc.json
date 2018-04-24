@@ -68,8 +68,8 @@
     }
   },
   "messages": {
+    "CreateFailed": "ms-resource:loc.messages.CreateFailed",
     "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
-    "FailedCreate": "ms-resource:loc.messages.FailedCreate",
     "InstallationFailed": "ms-resource:loc.messages.InstallationFailed",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   }
