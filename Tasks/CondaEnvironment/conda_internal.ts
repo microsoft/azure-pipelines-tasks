@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
 import * as task from 'vsts-task-lib/task';
@@ -13,8 +14,11 @@ import { Platform } from './taskutil';
  * @returns Whether `searchDir` has a `conda` executable for `platform`.
  */
 export function hasConda(searchDir: string, platform: Platform): boolean {
-    // TODO
-    return false;
+    const conda = platform === Platform.Windows ?
+        path.join(searchDir, 'Scripts', 'conda.exe') :
+        path.join(searchDir, 'bin', 'conda');
+
+    return fs.existsSync(conda) && fs.statSync(conda).isFile();
 }
 
 /**
@@ -35,7 +39,7 @@ export function prependCondaToPath(condaRoot: string, platform: Platform): void 
 }
 
 /**
- * Download the appropriate Miniconda installer.
+ * Download the appropriate Miniconda installer for `platform`.
  * @param platform Platform for which we want to download Miniconda.
  * @returns Absolute path to the download.
  */
@@ -52,7 +56,7 @@ export function downloadMiniconda(platform: Platform): Promise<string> {
 }
 
 /**
- * Download the appropriate Miniconda installer.
+ * Run the Miniconda installer.
  * @param installerPath Absolute path to the Miniconda installer.
  * @param platform Platform for which we want to install Miniconda.
  * @returns Absolute path to the install location.

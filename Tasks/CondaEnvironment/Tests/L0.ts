@@ -206,13 +206,13 @@ describe('CondaEnvironment L0 Suite', function () {
     // Test conda_internal.ts
 
     it('finds the Conda executable', async function () {
-        const existSync = sinon.stub().returns(true);
+        const existsSync = sinon.stub().returns(true);
         const statSync = sinon.stub().returns({
             isFile: () => true
         });
 
         mockery.registerMock('fs', {
-            existSync: existSync,
+            existsSync: existsSync,
             statSync: statSync
         });
 
@@ -227,23 +227,23 @@ describe('CondaEnvironment L0 Suite', function () {
             assert(uut.hasConda(absPath('path-to-conda'), Platform.Windows));
         }
         { // `conda` executable does not exist (Linux / macOS)
-            existSync.withArgs(path.join(absPath('path-to-conda'), 'bin', 'conda')).returns(false);
+            existsSync.withArgs(path.join(absPath('path-to-conda'), 'bin', 'conda')).returns(false);
             const uut = reload('../conda_internal');
 
             assert(!uut.hasConda(absPath('path-to-conda'), Platform.Linux));
             assert(!uut.hasConda(absPath('path-to-conda'), Platform.MacOS));
         }
         { // `conda.exe` executable does not exist (Windows)
-            existSync.reset();
-            existSync.withArgs(path.join(absPath('path-to-conda'), 'Scripts', 'conda.exe')).returns(false);
+            existsSync.reset();
+            existsSync.withArgs(path.join(absPath('path-to-conda'), 'Scripts', 'conda.exe')).returns(false);
             const uut = reload('../conda_internal');
 
             assert(!uut.hasConda(absPath('path-to-conda'), Platform.Windows));
         }
         { // `conda` exists but is not a file
-            existSync.reset();
-            existSync.withArgs(path.join(absPath('path-to-conda'), 'bin', 'conda')).returns(true);
-            existSync.withArgs(path.join(absPath('path-to-conda'), 'Scripts', 'conda.exe')).returns(true);
+            existsSync.reset();
+            existsSync.withArgs(path.join(absPath('path-to-conda'), 'bin', 'conda')).returns(true);
+            existsSync.withArgs(path.join(absPath('path-to-conda'), 'Scripts', 'conda.exe')).returns(true);
             statSync.returns({
                 isFile: () => false
             });
