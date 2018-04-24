@@ -25,6 +25,9 @@ async function run() {
         azureMysqlTaskParameter = new AzureMysqlTaskParameter();
         task.debug('parsed task inputs');
         const endpoint: AzureEndpoint = await new AzureRMEndpoint(azureMysqlTaskParameter.getConnectedServiceName()).getEndpoint();
+
+        var endpointTelemetry = '{"endpointId":"' + azureMysqlTaskParameter.getConnectedServiceName() + '"}';
+        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureMysqlDeployment]" + endpointTelemetry);
         if(!endpoint) {
             throw new Error(task.loc("AzureEndpointCannotBeNull"));
         }
