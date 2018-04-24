@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
 import * as task from 'vsts-task-lib/task';
@@ -31,7 +32,14 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
 
     internal.prependCondaToPath(condaRoot, platform);
 
+    // Activate the environment, creating it if it does not exist
     const environmentsDir = path.join(condaRoot, 'envs');
-    await internal.createEnvironment(environmentsDir, parameters.environmentName, parameters.packageSpecs, parameters.otherOptions);
+    const environmentPath = path.join(environmentsDir, parameters.environmentName);
+    if (fs.existsSync(environmentPath)) {
+        console.log(task.loc('FoundEnvironment', environmentPath));
+    } else {
+        await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.otherOptions);
+    }
+
     internal.activateEnvironment(environmentsDir, parameters.environmentName);
 }

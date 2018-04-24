@@ -190,7 +190,7 @@ it('creates Conda environment', async function (done: MochaDone) {
             }
         });
 
-        await uut.createEnvironment('envsDir', 'env');
+        await uut.createEnvironment(path.join('envsDir', 'env'));
     }
     { // failure
         mockToolRunner.setAnswers({
@@ -206,7 +206,7 @@ it('creates Conda environment', async function (done: MochaDone) {
         });
 
         try {
-            await uut.createEnvironment('envsDir', 'env');
+            await uut.createEnvironment(path.join('envsDir', 'env'));
             done(new Error('should not have succeeded'));
         } catch (e) {
             assert.strictEqual(e.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);

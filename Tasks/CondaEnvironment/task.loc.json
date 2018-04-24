@@ -70,6 +70,7 @@
   "messages": {
     "CreateFailed": "ms-resource:loc.messages.CreateFailed",
     "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
+    "FoundEnvironment": "ms-resource:loc.messages.FoundEnvironment",
     "InstallationFailed": "ms-resource:loc.messages.InstallationFailed",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   }

@@ -16,6 +16,10 @@ function reload(module: '../conda'): typeof condaEnvironment {
 }
 
 it('downloads Conda if `CONDA` is not set, creates and activates environment', async function () {
+    mockery.registerMock('fs', {
+        existsSync: () => false
+    });
+
     const setVariable = sinon.spy();
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable: sinon.stub().withArgs('CONDA').returns(undefined),
@@ -48,12 +52,16 @@ it('downloads Conda if `CONDA` is not set, creates and activates environment', a
     assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
     assert(installMiniconda.calledOnceWithExactly('path-downloadMiniconda', Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-installMiniconda', Platform.Linux));
-    assert(createEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs'), 'env', undefined, undefined));
+    assert(createEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs', 'env'), undefined, undefined));
     assert(activateEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs'), 'env'));
     assert(setVariable.calledOnceWithExactly('CONDA', 'path-installMiniconda'));
 });
 
 it('downloads Conda if `conda` is not found, creates and activates environment', async function () {
+    mockery.registerMock('fs', {
+        existsSync: () => false
+    });
+
     const setVariable = sinon.spy();
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable: sinon.stub().withArgs('CONDA').returns('path-to-conda'),
@@ -86,12 +94,16 @@ it('downloads Conda if `conda` is not found, creates and activates environment',
     assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
     assert(installMiniconda.calledOnceWithExactly('path-downloadMiniconda', Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-installMiniconda', Platform.Linux));
-    assert(createEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs'), 'env', undefined, undefined));
+    assert(createEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs', 'env'), undefined, undefined));
     assert(activateEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs'), 'env'));
     assert(setVariable.calledOnceWithExactly('CONDA', 'path-installMiniconda'));
 })
 
 it('does not download Conda if found, creates and activates environment', async function () {
+    mockery.registerMock('fs', {
+        existsSync: () => false
+    });
+
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable: sinon.stub().withArgs('CONDA').returns('path-to-conda')
     }));
@@ -121,11 +133,15 @@ it('does not download Conda if found, creates and activates environment', async 
     assert(hasConda.calledOnceWithExactly('path-to-conda', Platform.Linux));
     assert(downloadMiniconda.notCalled);
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
-    assert(createEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', undefined, undefined));
+    assert(createEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs', 'env'), undefined, undefined));
     assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env'));
 });
 
 it('does not download Conda if not found and user opts not to', async function (done: MochaDone) {
+    mockery.registerMock('fs', {
+        existsSync: () => false
+    });
+
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable: sinon.stub().withArgs('CONDA').returns('path-to-conda')
     }));

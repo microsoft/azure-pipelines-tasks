@@ -85,15 +85,13 @@ export async function installMiniconda(installerPath: string, platform: Platform
 /**
  * Create a Conda environment by running `conda create`.
  * Precondition: `conda` executable is in PATH
- * @param environmentsDir Prefix where the environment directory will be created.
- * @param environmentName Name of the environemnt to create.
+ * @param environmentPath Absolute path of the directory in which to create the environment. Will be created if it does not exist.
  * @param packageSpecs Optional list of Conda packages and versions to preinstall in the environment.
  * @param otherOptions Optional list of other options to pass to the `conda create` command.
  */
-export async function createEnvironment(environmentsDir: string, environmentName: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
-    const prefix = path.join(environmentsDir, environmentName);
+export async function createEnvironment(environmentPath: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
     const conda = new ToolRunner('conda');
-    conda.line(`create --quiet --yes --prefix ${prefix} --mkdir`);
+    conda.line(`create --quiet --yes --prefix ${environmentPath} --mkdir`);
     if (packageSpecs) {
         conda.line(packageSpecs);
     }
@@ -102,7 +100,7 @@ export async function createEnvironment(environmentsDir: string, environmentName
         await conda.exec();
     } catch (e) {
         // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
-        throw new Error(task.loc('CreateFailed', prefix, e));
+        throw new Error(task.loc('CreateFailed', environmentPath, e));
     }
 }
 
