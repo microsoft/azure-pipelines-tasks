@@ -14,5 +14,6 @@
   "loc.input.help.installConda": "Download and install the latest version of Miniconda if the `conda` executable is not found at the path from the `CONDA` environment variable.",
   "loc.messages.CondaNotFound": "The `conda` executable was not found at the path specified by the `CONDA` environment variable: %s",
   "loc.messages.FailedCreate": "Failed to create Conda environment %s (`conda create` returned code %d)",
+  "loc.messages.InstallationFailed": "Miniconda installer failed: %s",
   "loc.messages.PlatformNotRecognized": "Platform not recognized"
 }

@@ -62,8 +62,24 @@ export function downloadMiniconda(platform: Platform): Promise<string> {
  * @returns Absolute path to the install location.
  */
 export async function installMiniconda(installerPath: string, platform: Platform): Promise<string> {
-    // TODO
-    return Promise.reject("not implemented");
+    const toolsDirectory = task.getVariable('AGENT_TOOLSDIRECTORY');
+    const destination = path.join(toolsDirectory, 'Miniconda');
+    const installer = (() => {
+        if (platform === Platform.Windows) {
+            return new ToolRunner('start').line(`/wait ${installerPath} /S /AddToPath=0 /RegisterPython=0 /D=${destination}`);
+        } else {
+            return new ToolRunner('bash').line(`${installerPath} -b -f -p ${destination}`);
+        }
+    })();
+
+    try {
+        await installer.exec();
+    } catch (e) {
+        // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
+        throw new Error(task.loc('InstallationFailed', e));
+    }
+
+    return destination;
 }
 
 /**

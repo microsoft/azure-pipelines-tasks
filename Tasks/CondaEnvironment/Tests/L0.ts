@@ -281,68 +281,83 @@ describe('CondaEnvironment L0 Suite', function () {
         }
     })
 
-    it('installs Miniconda', async function () {
+    it('installs Miniconda', async function (done: MochaDone) {
         mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
             getVariable: sinon.stub().withArgs('AGENT_TOOLSDIRECTORY').returns(absPath('_tools'))
         }));
 
+        mockery.registerMock('vsts-task-tool-lib/tool', {});
+        mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
+        const uut = reload('../conda_internal');
+
         { // Linux
             mockToolRunner.setAnswers({
                 exec: {
-                    'bash installer.sh -b -f -p /_tools/Miniconda': {
+                    'bash /installer.sh -b -f -p /_tools/Miniconda': {
                         code: 0
                     },
                     // work around for running tests cross-platform
-                    'bash installer.sh -b -f -p \\_tools\\Miniconda': {
+                    'bash \\installer.sh -b -f -p \\_tools\\Miniconda': {
                         code: 0
-                    },
+                    }
                 }
             });
 
-            mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
-            mockery.registerMock('vsts-task-tool-lib/tool', {});
-            const uut = reload('../conda_internal');
-
-            const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.Windows);
-            assert.strictEqual(actual, path.join('_tools', 'Miniconda'));
+            const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.Linux);
+            assert.strictEqual(actual, path.join(absPath('_tools'), 'Miniconda'));
         }
         { // macOS
             mockToolRunner.setAnswers({
                 exec: {
-                    'bash installer.sh -b -f -p /_tools/Miniconda': {
+                    'bash /installer.sh -b -f -p /_tools/Miniconda': {
                         code: 0
                     },
                     // work around for running tests cross-platform
-                    'bash installer.sh -b -f -p \\_tools\\Miniconda': {
+                    'bash \\installer.sh -b -f -p \\_tools\\Miniconda': {
                         code: 0
-                    },
+                    }
                 }
             });
 
-            mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
-            const uut = reload('../conda_internal');
-
-            const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.Windows);
-            assert.strictEqual(actual, path.join('_tools', 'Miniconda'));
+            const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.MacOS);
+            assert.strictEqual(actual, path.join(absPath('_tools'), 'Miniconda'));
         }
         { // Windows
             mockToolRunner.setAnswers({
                 exec: {
-                    'start /wait "" installer.exe /S /AddToPath=0 /RegisterPython=0 /D=\\_tools\\Miniconda': {
+                    'start /wait \\installer.exe /S /AddToPath=0 /RegisterPython=0 /D=\\_tools\\Miniconda': {
                         code: 0
                     },
                     // work around for running tests cross-platform
-                    'start /wait "" installer.exe /S /AddToPath=0 /RegisterPython=0 /D=/_tools/Miniconda': {
+                    'start /wait /installer.exe /S /AddToPath=0 /RegisterPython=0 /D=/_tools/Miniconda': {
                         code: 0
-                    },
+                    }
                 }
             });
 
-            mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
-            const uut = reload('../conda_internal');
-
             const actual = await uut.installMiniconda(absPath('installer.exe'), Platform.Windows);
-            assert.strictEqual(actual, path.join('_tools', 'Miniconda'));
+            assert.strictEqual(actual, path.join(absPath('_tools'), 'Miniconda'));
+        }
+        { // Failed installation
+            mockToolRunner.setAnswers({
+                exec: {
+                    'bash /installer.sh -b -f -p /_tools/Miniconda': {
+                        code: 1
+                    },
+                    // work around for running tests cross-platform
+                    'bash \\installer.sh -b -f -p \\_tools\\Miniconda': {
+                        code: 1
+                    }
+                }
+            });
+
+            try {
+                const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.MacOS);
+                done(new Error('should not have succeeded'));
+            } catch (e) {
+                assert.strictEqual(e.message, `loc_mock_InstallationFailed Error: bash failed with return code: 1`);
+                done();
+            }
         }
     })
 

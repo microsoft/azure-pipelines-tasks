@@ -70,6 +70,7 @@
     "messages": {
         "CondaNotFound": "The `conda` executable was not found at the path specified by the `CONDA` environment variable: %s",
         "FailedCreate": "Failed to create Conda environment %s (`conda create` returned code %d)",
+        "InstallationFailed": "Miniconda installer failed: %s",
         "PlatformNotRecognized": "Platform not recognized"
     }
 }
