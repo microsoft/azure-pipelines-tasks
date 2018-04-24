@@ -67,8 +67,11 @@ it('finds the Conda executable', async function () {
 });
 
 it('downloads Miniconda', async function () {
-    const downloadTool = sinon.stub().returns('downloadTool');
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+        getVariable: sinon.stub().withArgs('AGENT_TEMPDIRECTORY').returns('path-temp')
+    }));
+
+    const downloadTool = sinon.stub().returns('path-downloadTool');
     mockery.registerMock('vsts-task-tool-lib/tool', {
         downloadTool: downloadTool
     });
@@ -77,23 +80,23 @@ it('downloads Miniconda', async function () {
 
     { // Linux
         const actual = await uut.downloadMiniconda(Platform.Linux);
-        assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh'));
+        assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh', path.join('path-temp', 'Miniconda2-latest-Linux-x86_64.sh')));
     }
     { // macOS
         downloadTool.resetHistory();
         const actual = await uut.downloadMiniconda(Platform.MacOS);
-        assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh'));
+        assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh', path.join('path-temp', 'Miniconda3-latest-MacOSX-x86_64.sh')));
     }
     { // Windows
         downloadTool.resetHistory();
         const actual = await uut.downloadMiniconda(Platform.Windows);
-        assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe'));
+        assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe', path.join('path-temp', 'Miniconda3-latest-Windows-x86_64.exe')));
     }
 });
 
 it('installs Miniconda', async function (done: MochaDone) {
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        getVariable: sinon.stub().withArgs('AGENTpath-to-toolsDIRECTORY').returns('path-to-tools')
+        getVariable: sinon.stub().withArgs('AGENT_TOOLSDIRECTORY').returns('path-to-tools')
     }));
 
     mockery.registerMock('vsts-task-tool-lib/tool', {});
@@ -135,11 +138,11 @@ it('installs Miniconda', async function (done: MochaDone) {
     { // Windows
         mockToolRunner.setAnswers({
             exec: {
-                'start /wait installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools\\Miniconda': {
+                'installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools\\Miniconda': {
                     code: 0
                 },
                 // workaround for running tests cross-platform
-                'start /wait installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools/Miniconda': {
+                'installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools/Miniconda': {
                     code: 0
                 }
             }

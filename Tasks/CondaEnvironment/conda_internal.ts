@@ -52,7 +52,11 @@ export function downloadMiniconda(platform: Platform): Promise<string> {
         }
     })();
 
-    return tool.downloadTool(url);
+    // By default `downloadTool` will name the downloaded file with a GUID
+    // But on Windows, the file must end with `.exe` to make it executable
+    const tempDirectory = task.getVariable('AGENT_TEMPDIRECTORY');
+    const filename = url.split('/').pop()!;
+    return tool.downloadTool(url, path.join(tempDirectory, filename));
 }
 
 /**
@@ -66,7 +70,7 @@ export async function installMiniconda(installerPath: string, platform: Platform
     const destination = path.join(toolsDirectory, 'Miniconda');
     const installer = (() => {
         if (platform === Platform.Windows) {
-            return new ToolRunner('start').line(`/wait ${installerPath} /S /AddToPath=0 /RegisterPython=0 /D=${destination}`);
+            return new ToolRunner(installerPath).line(`/S /AddToPath=0 /RegisterPython=0 /D=${destination}`);
         } else {
             return new ToolRunner('bash').line(`${installerPath} -b -f -p ${destination}`);
         }
