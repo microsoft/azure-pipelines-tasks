@@ -370,7 +370,11 @@ describe('CondaEnvironment L0 Suite', function () {
         { // success
             mockToolRunner.setAnswers({
                 exec: {
-                    'conda create --quiet --yes --prefix envsDir --mkdir --name env': {
+                    'conda create --quiet --yes --prefix envsDir/env --mkdir': {
+                        code: 0
+                    },
+                    // work around for running tests cross-platform
+                    'conda create --quiet --yes --prefix envsDir\\env --mkdir': {
                         code: 0
                     }
                 }
@@ -381,7 +385,11 @@ describe('CondaEnvironment L0 Suite', function () {
         { // failure
             mockToolRunner.setAnswers({
                 exec: {
-                    'conda create --quiet --yes --prefix envsDir --mkdir --name env': {
+                    'conda create --quiet --yes --prefix envsDir/env --mkdir': {
+                        code: 1
+                    },
+                    // work around for running tests cross-platform
+                    'conda create --quiet --yes --prefix envsDir\\env --mkdir': {
                         code: 1
                     }
                 }
@@ -391,7 +399,7 @@ describe('CondaEnvironment L0 Suite', function () {
                 await uut.createEnvironment('envsDir', 'env');
                 done(new Error('should not have succeeded'));
             } catch (e) {
-                assert.strictEqual(e.message, `loc_mock_CreateFailed env Error: conda failed with return code: 1`);
+                assert.strictEqual(e.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
                 done();
             }
         }

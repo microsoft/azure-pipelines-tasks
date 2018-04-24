@@ -93,8 +93,9 @@ export async function installMiniconda(installerPath: string, platform: Platform
 export async function createEnvironment(environmentsDir: string, environmentName: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
     // TODO validate `environmentName`
     // TODO validate `otherOptions`
+    const prefix = path.join(environmentsDir, environmentName);
     const conda = new ToolRunner('conda');
-    conda.line(`create --quiet --yes --prefix ${environmentsDir} --mkdir --name ${environmentName}`);
+    conda.line(`create --quiet --yes --prefix ${prefix} --mkdir`);
     if (packageSpecs) {
         conda.line(packageSpecs);
     }
@@ -103,7 +104,7 @@ export async function createEnvironment(environmentsDir: string, environmentName
         await conda.exec();
     } catch (e) {
         // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
-        throw new Error(task.loc('CreateFailed', environmentName, e));
+        throw new Error(task.loc('CreateFailed', prefix, e));
     }
 }
 
