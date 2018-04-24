@@ -50,6 +50,9 @@ $containerName = $containerName.Trim().ToLower()
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
+# Import RemoteDeployer
+Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
+
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Initialize-Azure
@@ -106,14 +109,13 @@ try
     }
 
     # creating temporary container for uploading files if no input is provided for container name
-    if([string]::IsNullOrEmpty($containerName))
+    if([string]::IsNullOrEmpty($containerName) -or ($destination -ne "AzureBlob"))
     {
         $containerName = [guid]::NewGuid().ToString()
         Create-AzureContainer -containerName $containerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
     }
 	
-    # Geting Azure Blob Storage Endpoint
-
+    # Getting Azure Blob Storage Endpoint
     $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
 
 }
@@ -176,12 +178,39 @@ try
     # generate container sas token with full permissions
     $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
 
+    #Get Invoke-RemoteScript parameters
+    $invokeRemoteScriptParams = Get-InvokeRemoteScriptParameters `
+                                -azureVMResourcesProperties $azureVMResourcesProperties `
+                                -networkCredentials $azureVMsCredentials `
+                                -httpProtocolOption $useHttpsProtocolOption `
+                                -skipCACheckOption $skipCACheckOption
+
+    # Copy AzCopy tools to VMs
+    Copy-AzCopyTool -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `
+                    -azCopyToolSourceLocation $azCopyLocation `
+                    -credential $invokeRemoteScriptParams.credential `
+                    -protocol $invokeRemoteScriptParams.protocol `
+                    -sessionOption $invokeRemoteScriptParams.sessionOption
+
     #copies files on azureVMs 
-    Copy-FilesToAzureVMsFromStorageContainer `
-        -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
-        -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
-        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
-        -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -copyFilesInParallel $copyFilesInParallel -connectionType $connectionType
+    Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `
+                                             -credential $invokeRemoteScriptParams.credential `
+                                             -protocol $invokeRemoteScriptParams.protocol `
+                                             -sessionOption $invokeRemoteScriptParams.sessionOption `
+                                             -blobStorageEndpoint $blobStorageEndpoint `
+                                             -containerName $containerName `
+                                             -containerSasToken $containerSasToken `
+                                             -targetPath $targetPath `
+                                             -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
+                                             -copyFilesInParallel $copyFilesInParallel `
+                                             -additionalArguments $additionalArguments
+
+
+    # Copy-FilesToAzureVMsFromStorageContainer `
+    #     -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
+    #     -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
+    #     -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
+    #     -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -copyFilesInParallel $copyFilesInParallel -connectionType $connectionType
 }
 catch
 {
