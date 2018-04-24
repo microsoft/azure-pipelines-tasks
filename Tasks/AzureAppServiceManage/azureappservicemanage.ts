@@ -34,7 +34,7 @@ async function run() {
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
-
+        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureAppServiceManage]" + '{"endpointId":"' + connectedServiceName + '"}');
         if(action != "Swap Slots" && !slotName) {
             resourceGroupName = await AzureResourceFilterUtils.getResourceGroupName(azureEndpoint, 'Microsoft.Web/Sites', webAppName);
         }

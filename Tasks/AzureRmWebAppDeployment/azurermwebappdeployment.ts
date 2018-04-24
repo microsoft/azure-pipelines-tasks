@@ -30,6 +30,7 @@ async function main() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
         var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(taskParams.connectedServiceName).getEndpoint();
+        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + '{"endpointId":"' + taskParams.connectedServiceName + '"}');
         var virtualApplicationPath: string;
         console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParams.WebAppName));
         if(!taskParams.DeployToSlotOrASEFlag) {
