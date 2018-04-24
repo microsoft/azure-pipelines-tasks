@@ -63,11 +63,12 @@ export async function installMiniconda(installerPath: string, platform: Platform
 }
 
 /**
+ * Create a Conda environment by running `conda create`.
  * Precondition: `conda` executable is in PATH
- * @param environmentsDir 
- * @param environmentName 
- * @param packageSpecs 
- * @param otherOptions 
+ * @param environmentsDir Prefix where the environment directory will be created.
+ * @param environmentName Name of the environemnt to create.
+ * @param packageSpecs Optional list of Conda packages and versions to preinstall in the environment.
+ * @param otherOptions Optional list of other options to pass to the `conda create` command.
  */
 export async function createEnvironment(environmentsDir: string, environmentName: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
     // TODO validate `environmentName`
