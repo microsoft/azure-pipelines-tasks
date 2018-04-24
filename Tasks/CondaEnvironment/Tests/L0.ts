@@ -244,28 +244,26 @@ describe('CondaEnvironment L0 Suite', function () {
         }
     })
 
-    it('downloads Conda', async function () {
+    it('downloads Miniconda', async function () {
         const downloadTool = sinon.stub().returns('downloadTool');
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('vsts-task-tool-lib/tool', {
             downloadTool: downloadTool
         });
 
-        { // Linux
-            const uut = reload('../conda_internal');
-            const actual = await uut.downloadMiniconda(Platform.Linux);
+        const uut = reload('../conda_internal');
 
+        { // Linux
+            const actual = await uut.downloadMiniconda(Platform.Linux);
             assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh'));
         }
         { // macOS
-            const uut = reload('../conda_internal');
-
+            downloadTool.resetHistory();
             const actual = await uut.downloadMiniconda(Platform.MacOS);
             assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh'));
         }
         { // Windows
-            const uut = reload('../conda_internal');
-
+            downloadTool.resetHistory();
             const actual = await uut.downloadMiniconda(Platform.Windows);
             assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe'));
         }

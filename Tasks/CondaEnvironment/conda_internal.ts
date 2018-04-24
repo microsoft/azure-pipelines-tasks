@@ -1,4 +1,5 @@
 import * as task from 'vsts-task-lib/task';
+import * as tool from 'vsts-task-tool-lib/tool';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import { Platform } from './taskutil';
@@ -19,9 +20,16 @@ export function hasConda(searchDir: string, platform: Platform): boolean {
  * @param platform Platform for which we want to download Miniconda.
  * @returns Absolute path to the download.
  */
-export async function downloadMiniconda(platform: Platform): Promise<string> {
-    // TODO
-    return Promise.reject("not implemented");
+export function downloadMiniconda(platform: Platform): Promise<string> {
+    const url = (() => {
+        switch (platform) {
+            case Platform.Linux: return 'https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh';
+            case Platform.MacOS: return 'https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh';
+            case Platform.Windows: return 'https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe';
+        }
+    })();
+
+    return tool.downloadTool(url);
 }
 
 /**
