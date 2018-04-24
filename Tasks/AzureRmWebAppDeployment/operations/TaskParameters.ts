@@ -40,7 +40,7 @@ export class TaskParametersUtility {
         taskParameters.ResourceGroupName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('ResourceGroupName', false) : null;
         taskParameters.SlotName = taskParameters.DeployToSlotOrASEFlag ? tl.getInput('SlotName', false) : null;
 
-        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureAppServiceManage]" + '{"endpointId":"' + taskParameters.connectedServiceName + '"}');
+        console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + '{"endpointId":"' + taskParameters.connectedServiceName + '"}');
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
