@@ -18,9 +18,10 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
         if (condaPathFromEnvironment && internal.hasConda(condaPathFromEnvironment, platform)) {
             return condaPathFromEnvironment;
         } else if (parameters.installConda) {
-            const download = await internal.downloadMiniconda(platform);
-            return await internal.installMiniconda(download, platform);
-            // TODO set CONDA
+            const downloadPath = await internal.downloadMiniconda(platform);
+            const installPath = await internal.installMiniconda(downloadPath, platform);
+            task.setVariable('CONDA', installPath);
+            return installPath;
         } else {
             throw new Error(task.loc('CondaNotFound', condaPathFromEnvironment));
         }

@@ -54,8 +54,10 @@ describe('CondaEnvironment L0 Suite', function () {
     // Test conda.ts
 
     it('downloads Conda if `CONDA` is not set, creates and activates environment', async function () {
+        const setVariable = sinon.spy();
         mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-            getVariable: sinon.stub().withArgs('CONDA').returns(undefined)
+            getVariable: sinon.stub().withArgs('CONDA').returns(undefined),
+            setVariable: setVariable
         }));
 
         const hasConda = sinon.stub().returns(false);
@@ -83,11 +85,14 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(installMiniconda.calledOnceWithExactly(absPath('downloadMiniconda'), Platform.Linux));
         assert(createEnvironment.calledOnceWithExactly(absPath('installMiniconda'), 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs'), 'env'));
+        assert(setVariable.calledOnceWithExactly('CONDA', absPath('installMiniconda')));
     })
 
     it('downloads Conda if `conda` is not found, creates and activates environment', async function () {
+        const setVariable = sinon.spy();
         mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-            getVariable: sinon.stub().withArgs('CONDA').returns(absPath('path-to-conda'))
+            getVariable: sinon.stub().withArgs('CONDA').returns(absPath('path-to-conda')),
+            setVariable: setVariable
         }));
 
         const hasConda = sinon.stub().returns(false);
@@ -115,6 +120,7 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(installMiniconda.calledOnceWithExactly(absPath('downloadMiniconda'), Platform.Linux));
         assert(createEnvironment.calledOnceWithExactly(absPath('installMiniconda'), 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs'), 'env'));
+        assert(setVariable.calledOnceWithExactly('CONDA', absPath('installMiniconda')));
     })
 
     it('does not download Conda if found, creates and activates environment', async function () {
