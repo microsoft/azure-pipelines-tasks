@@ -109,6 +109,12 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
         // Set highest logging level
         sevenZip.arg('-bb3');
     }
+
+    const sevenZipCompression = tl.getInput('sevenZipCompression', false);    
+    if(sevenZipCompression) {
+        sevenZip.arg('-mx=' + sevenZipCompression);
+    }
+
     sevenZip.arg(archive);
 
     const fileList: string = createFileList(files);
