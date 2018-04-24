@@ -398,21 +398,23 @@ describe('CondaEnvironment L0 Suite', function () {
     })
 
     it('activates Conda environment', async function () {
-        const prependPath = sinon.spy();
         const setVariable = sinon.spy();
         mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-            prependPath: prependPath,
             setVariable: setVariable
         }));
 
-        mockery.registerMock('vsts-task-tool-lib/tool', {});
+        const prependPath = sinon.spy();
+        mockery.registerMock('vsts-task-tool-lib/tool', {
+            prependPath: prependPath
+        });
+
         const uut = reload('../conda_internal');
 
         uut.activateEnvironment(absPath('envs'), 'env');
-        assert(prependPath.calledOnceWithExactly(path.join(absPath('envs'), 'envs')));
+        assert(prependPath.calledOnceWithExactly(path.join(absPath('envs'), 'env')));
         assert(setVariable.callCount === 3);
         assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
-        assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join(absPath('envs'), 'envs')));
+        assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join(absPath('envs'), 'env')));
         assert(setVariable.calledWithExactly('CONDA_PROMPT_MODIFIER', '(env)'));
     })
 });

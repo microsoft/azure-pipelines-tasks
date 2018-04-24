@@ -107,6 +107,14 @@ export async function createEnvironment(environmentsDir: string, environmentName
     }
 }
 
+/**
+ * Manually activate the environment by setting the variables touched by `conda activate` and prepending the environment to PATH.
+ * This allows the environment to remain activated in subsequent build steps.
+ */
 export function activateEnvironment(environmentsDir: string, environmentName: string): void {
-    // TODO
+    const environmentPath = path.join(environmentsDir, environmentName);
+    tool.prependPath(environmentPath);
+    task.setVariable('CONDA_DEFAULT_ENV', environmentName)
+    task.setVariable('CONDA_PREFIX', environmentPath)
+    task.setVariable('CONDA_PROMPT_MODIFIER', `(${environmentName})`)
 }
