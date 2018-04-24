@@ -112,7 +112,9 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
         tl.debug(error);
         return;
     }
-    var replacableTokenValues = {};
+    var replacableTokenValues = {
+        "APOS_CHARACTER_TOKEN": "'"
+    };
     var isSubstitutionApplied: boolean = false;
     for(var tag of tags) {
         var nodes = ltxDomUtiltiyInstance.getElementsByTagName(tag); 
@@ -146,6 +148,7 @@ export function substituteXmlVariables(configFile, tags, variableMap, parameterF
     }
 
     if(isSubstitutionApplied) {
+        replaceEscapeXMLCharacters(xmlDocument);
         var domContent = ( fileEncodeType[1]? '\uFEFF' : '' ) + ltxDomUtiltiyInstance.getContentWithHeader(xmlDocument);
         for(var replacableTokenValue in replacableTokenValues) {
             tl.debug('Substituting original value in place of temp_name: ' + replacableTokenValue);
@@ -262,4 +265,18 @@ function updateXmlConnectionStringsNodeAttribute(xmlDomNode, variableMap, replac
     }
 
     return isSubstitutionApplied;
+}
+
+function replaceEscapeXMLCharacters(xmlDOMNode) {
+    if(!xmlDOMNode || typeof xmlDOMNode == 'string') {
+        return;
+    }
+
+    for(var xmlAttribute in xmlDOMNode.attrs) {
+        xmlDOMNode.attrs[xmlAttribute] = xmlDOMNode.attrs[xmlAttribute].replace(/'/g, "APOS_CHARACTER_TOKEN");
+    }
+
+    for(var xmlChild of xmlDOMNode.children) {
+        replaceEscapeXMLCharacters(xmlChild);
+    }
 }

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 0,
-    "Patch": 7
+    "Minor": 1,
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -27,27 +27,40 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
     },
     {
       "name": "PostDeploymentAction",
       "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != \"\""
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
     },
     {
       "name": "ApplicationAndConfigurationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "ConnectionType = AzureRM"
     }
   ],
   "inputs": [
+    {
+      "name": "ConnectionType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ConnectionType",
+      "defaultValue": "AzureRM",
+      "options": {
+        "AzureRM": "Azure Resource Manager",
+        "PublishProfile": "Publish Profile"
+      },
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectionType"
+    },
     {
       "name": "ConnectedServiceName",
       "aliases": [
@@ -57,7 +70,25 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "visibleRule": "ConnectionType = AzureRM"
+    },
+    {
+      "name": "PublishProfilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.PublishProfilePath",
+      "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
+      "required": true,
+      "helpMarkDown": "",
+      "visibleRule": "ConnectionType = PublishProfile"
+    },
+    {
+      "name": "PublishProfilePassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PublishProfilePassword",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.PublishProfilePassword",
+      "visibleRule": "ConnectionType = PublishProfile"
     },
     {
       "name": "WebAppKind",
@@ -76,7 +107,8 @@
         "apiApp": "API App",
         "mobileApp": "Mobile App"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppKind"
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppKind",
+      "visibleRule": "ConnectionType = AzureRM"
     },
     {
       "name": "WebAppName",
@@ -87,7 +119,8 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "ms-resource:loc.input.help.WebAppName"
+      "helpMarkDown": "ms-resource:loc.input.help.WebAppName",
+      "visibleRule": "ConnectionType = AzureRM"
     },
     {
       "name": "DeployToSlotOrASEFlag",
@@ -99,7 +132,7 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.DeployToSlotOrASEFlag",
-      "visibleRule": "WebAppKind != \"\""
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
     },
     {
       "name": "ResourceGroupName",
@@ -170,7 +203,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "WebAppKind != webAppContainer && WebAppKind != \"\"",
+      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -546,6 +579,11 @@
     "Updatemachinetoenablesecuretlsprotocol": "ms-resource:loc.messages.Updatemachinetoenablesecuretlsprotocol",
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "XmlParsingFailed": "ms-resource:loc.messages.XmlParsingFailed",
+    "PropertyDoesntExistPublishProfile": "ms-resource:loc.messages.PropertyDoesntExistPublishProfile",
+    "InvalidConnectionType": "ms-resource:loc.messages.InvalidConnectionType",
+    "InvalidImageSourceType": "ms-resource:loc.messages.InvalidImageSourceType",
+    "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile"
   }
 }

@@ -6,6 +6,8 @@
   "loc.group.displayName.prerequisite": "Prerequisite",
   "loc.input.label.helmVersion": "Helm Version Spec",
   "loc.input.help.helmVersion": "Specify the version of Helm to install",
+  "loc.input.label.checkLatestHelmVersion": "Check for latest version of Helm",
+  "loc.input.help.checkLatestHelmVersion": "Check for latest version of Helm.",
   "loc.input.label.installKubeCtl": "Install Kubectl",
   "loc.input.help.installKubeCtl": "Install Kubectl.",
   "loc.input.label.kubectlVersion": "Kubectl Version Spec",
@@ -16,5 +18,6 @@
   "loc.messages.DownloadKubectlFailedFromLocation": "Failed to download kubectl from location %s. Error %s",
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.HelmNotFoundInFolder": "Helm executable not found in path %s",
-  "loc.messages.HelmDownloadFailed": "Failed to download helm from location %s. Error %s"
+  "loc.messages.HelmDownloadFailed": "Failed to download helm from location %s. Error %s",
+  "loc.messages.HelmLatestNotKnown": "Can not get lateast helm info from %s. Error %s. Using default helm version %s."
 }

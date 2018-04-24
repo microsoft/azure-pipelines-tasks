@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 5
+    "Patch": 8
   },
   "demands": [
     "Cmd"
@@ -73,6 +73,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
+    },
+    {
+      "name": "overrideApplicationParameter",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overrideApplicationParameter",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.overrideApplicationParameter"
     },
     {
       "name": "compressPackage",

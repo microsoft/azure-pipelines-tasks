@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import webClient = require('azure-arm-rest/webClient');
+const pythonExtensionPrefix: string = "azureappservice-";
 
 export class KuduServiceUtils {
     private _appServiceKuduService: Kudu;
@@ -46,28 +47,35 @@ export class KuduServiceUtils {
         var siteExtensions = await this._appServiceKuduService.getSiteExtensions();
         var anyExtensionInstalled: boolean = false;
         var siteExtensionMap = {};
+        var extensionLocalPaths: string = "";
         for(var siteExtension of siteExtensions) {
             siteExtensionMap[siteExtension.id] = siteExtension;
         }
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
-            if(siteExtensionMap[extensionID]) {
-                siteExtensionDetails = siteExtensionMap[extensionID];
+        
+             // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
+            if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
+                siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
             }
             else {
                 siteExtensionDetails = await this._appServiceKuduService.installSiteExtension(extensionID);
                 anyExtensionInstalled = true;
             }
-
+            
+            var extensionLocalPath: string = this._getExtensionLocalPath(siteExtensionDetails);
+            extensionLocalPaths += extensionLocalPath + ",";
             if(outputVariableIterator < outputVariables.length) {
-                var extensionLocalPath: string = this._getExtensionLocalPath(siteExtensionDetails);
                 tl.debug('Set output Variable ' + outputVariables[outputVariableIterator] + ' to value: ' + extensionLocalPath);
                 tl.setVariable(outputVariables[outputVariableIterator], extensionLocalPath);
                 outputVariableIterator += 1;
             }
         }
+        
+        tl.debug('Set output Variable LocalPathsForInstalledExtensions to value: ' + extensionLocalPaths);
+        tl.setVariable("LocalPathsForInstalledExtensions", extensionLocalPaths.slice(0, -1));
         
         if(anyExtensionInstalled) {
             await this.restart();
@@ -123,7 +131,7 @@ export class KuduServiceUtils {
     }
 
     private _getExtensionLocalPath(extensionInfo: JSON): string {
-        var extensionId: string = extensionInfo['id'];
+        var extensionId: string = extensionInfo['id'].replace(pythonExtensionPrefix, "");
         var homeDir = "D:\\home\\";
     
         if(extensionId.startsWith('python2')) {

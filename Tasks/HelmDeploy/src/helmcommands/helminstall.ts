@@ -3,6 +3,7 @@
 import tl = require('vsts-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
+import {addHelmTlsSettings} from "./../tlssetting";
 
 /*supported chart install
 By chart reference: helm install stable/mariadb
@@ -27,6 +28,7 @@ export function addArguments(helmCli: helmcli) : void {
     var argumentsInput = tl.getInput("arguments", false);
     var valueFile = tl.getInput("valueFile", false);
     var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
+    var enableTls = tl.getBoolInput("enableTls", false);
 
     if(namespace) {
         helmCli.addArgument("--namespace ".concat(namespace));
@@ -55,6 +57,10 @@ export function addArguments(helmCli: helmcli) : void {
 
     if(argumentsInput) {
         helmCli.addArgument(argumentsInput);
+    }
+
+    if(enableTls) {
+        addHelmTlsSettings(helmCli);
     }
 
     if(chartType === "Name") {

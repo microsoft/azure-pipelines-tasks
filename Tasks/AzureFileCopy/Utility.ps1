@@ -1029,9 +1029,10 @@ function Copy-FilesSequentiallyToAzureVMs
                 $copyErrorMessage = $copyErrorMessage + $winrmHelpMsg
             }
 
-            Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
+            Write-Verbose "CopyErrorMessage: $copyErrorMessage"
+            Write-Verbose "DeploymentSummary: $($copyResponse.DeploymentSummary)"
 
-            Write-Telemetry "DTLSDK_Error" $copyResponse.DeploymentSummary
+            Write-Telemetry "DTLSDK_Error" "CopyFilesSequentiallyToAzureVMsFailed"
             ThrowError -errorMessage $copyErrorMessage
         }
     }
@@ -1115,8 +1116,10 @@ function Copy-FilesParallellyToAzureVMs
     if ($parallelOperationStatus -eq "Failed")
     {
         foreach ($error in $dtlsdkErrors) {
-            Write-Telemetry "DTLSDK_Error" $error
+            Write-Verbose "Error: $error"
         }
+
+        Write-Telemetry "DTLSDK_Error" "CopyFilesParallellyToAzureVMsFailed"
         $errorMessage = (Get-VstsLocString -Key "AFC_ParallelCopyFailed")      
         ThrowError -errorMessage $errorMessage
     }
@@ -1397,7 +1400,7 @@ function Add-AzureVMCustomScriptExtension
     }
     catch
     {
-         Write-Telemetry "Task_InternalError" "ExecutionOfVmCustomScriptFailed"    
+         Write-Telemetry "Task_InternalError" "ExecutionOfVmCustomScriptFailed:$exceptionType"    
          throw (Get-VstsLocString -Key "AFC_CopyPrereqsFailed" -ArgumentList $_.exception.message)
     }
 
