@@ -27,7 +27,9 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
         }
     })();
 
-    await internal.createEnvironment(condaRoot, parameters.environmentName, parameters.packageSpecs, parameters.otherOptions);
+    internal.prependCondaToPath(condaRoot, platform);
+
     const environmentsDir = path.join(condaRoot, 'envs');
+    await internal.createEnvironment(environmentsDir, parameters.environmentName, parameters.packageSpecs, parameters.otherOptions);
     internal.activateEnvironment(environmentsDir, parameters.environmentName);
 }

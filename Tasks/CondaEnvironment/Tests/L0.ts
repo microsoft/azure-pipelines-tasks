@@ -63,12 +63,14 @@ describe('CondaEnvironment L0 Suite', function () {
         const hasConda = sinon.stub().returns(false);
         const downloadMiniconda = sinon.stub().returns(absPath('downloadMiniconda'));
         const installMiniconda = sinon.stub().returns(absPath('installMiniconda'));
+        const prependCondaToPath = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             hasConda: hasConda,
             downloadMiniconda: downloadMiniconda,
             installMiniconda: installMiniconda,
+            prependCondaToPath: prependCondaToPath,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
         });
@@ -83,7 +85,8 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(hasConda.notCalled);
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
         assert(installMiniconda.calledOnceWithExactly(absPath('downloadMiniconda'), Platform.Linux));
-        assert(createEnvironment.calledOnceWithExactly(absPath('installMiniconda'), 'env', undefined, undefined));
+        assert(prependCondaToPath.calledOnceWithExactly(absPath('installMiniconda'), Platform.Linux));
+        assert(createEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs'), 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs'), 'env'));
         assert(setVariable.calledOnceWithExactly('CONDA', absPath('installMiniconda')));
     })
@@ -98,11 +101,13 @@ describe('CondaEnvironment L0 Suite', function () {
         const hasConda = sinon.stub().returns(false);
         const downloadMiniconda = sinon.stub().returns(absPath('downloadMiniconda'));
         const installMiniconda = sinon.stub().returns(absPath('installMiniconda'));
+        const prependCondaToPath = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             hasConda: hasConda,
             downloadMiniconda: downloadMiniconda,
+            prependCondaToPath: prependCondaToPath,
             installMiniconda: installMiniconda,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
@@ -118,7 +123,8 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(hasConda.calledOnceWithExactly(absPath('path-to-conda'), Platform.Linux));
         assert(downloadMiniconda.calledOnceWithExactly(Platform.Linux));
         assert(installMiniconda.calledOnceWithExactly(absPath('downloadMiniconda'), Platform.Linux));
-        assert(createEnvironment.calledOnceWithExactly(absPath('installMiniconda'), 'env', undefined, undefined));
+        assert(prependCondaToPath.calledOnceWithExactly(absPath('installMiniconda'), Platform.Linux));
+        assert(createEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs'), 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('installMiniconda'), 'envs'), 'env'));
         assert(setVariable.calledOnceWithExactly('CONDA', absPath('installMiniconda')));
     })
@@ -131,11 +137,13 @@ describe('CondaEnvironment L0 Suite', function () {
         const hasConda = sinon.stub().returns(true);
         const downloadMiniconda = sinon.spy();
         const installMiniconda = sinon.spy();
+        const prependCondaToPath = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
             hasConda: hasConda,
             downloadMiniconda: downloadMiniconda,
+            prependCondaToPath: prependCondaToPath,
             installMiniconda: installMiniconda,
             createEnvironment: createEnvironment,
             activateEnvironment: activateEnvironment
@@ -150,7 +158,8 @@ describe('CondaEnvironment L0 Suite', function () {
         await uut.condaEnvironment(parameters, Platform.Linux);
         assert(hasConda.calledOnceWithExactly(absPath('path-to-conda'), Platform.Linux));
         assert(downloadMiniconda.notCalled);
-        assert(createEnvironment.calledOnceWithExactly(absPath('path-to-conda'), 'env', undefined, undefined));
+        assert(prependCondaToPath.calledOnceWithExactly(absPath('path-to-conda'), Platform.Linux));
+        assert(createEnvironment.calledOnceWithExactly(path.join(absPath('path-to-conda'), 'envs'), 'env', undefined, undefined));
         assert(activateEnvironment.calledOnceWithExactly(path.join(absPath('path-to-conda'), 'envs'), 'env'));
     })
 
@@ -162,6 +171,7 @@ describe('CondaEnvironment L0 Suite', function () {
         const hasConda = sinon.stub().returns(false);
         const downloadMiniconda = sinon.spy();
         const installMiniconda = sinon.spy();
+        const prependCondaToPath = sinon.spy();
         const createEnvironment = sinon.spy();
         const activateEnvironment = sinon.spy();
         mockery.registerMock('./conda_internal', {
@@ -185,6 +195,7 @@ describe('CondaEnvironment L0 Suite', function () {
             assert.strictEqual(e.message, `loc_mock_CondaNotFound ${absPath('path-to-conda')}`);
             assert(hasConda.calledOnceWithExactly(absPath('path-to-conda'), Platform.Windows));
             assert(downloadMiniconda.notCalled);
+            assert(prependCondaToPath.notCalled);
             assert(installMiniconda.notCalled);
             assert(createEnvironment.notCalled);
             assert(activateEnvironment.notCalled);
@@ -334,7 +345,19 @@ describe('CondaEnvironment L0 Suite', function () {
     })
 
     it('creates Conda environment', async function () {
-        assert.fail(null, null, 'TODO mock tool runner');
+        mockToolRunner.setAnswers({
+            exec: {
+                'conda create --quiet --yes --prefix envsDir --mkdir --name env': {
+                    code: 0
+                }
+            }
+        });
+
+        mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
+        mockery.registerMock('vsts-task-lib/task', mockTask);
+        const uut = reload('../conda_internal');
+
+        await uut.createEnvironment('envsDir', 'env');
     })
 
     it('activates Conda environment', async function () {

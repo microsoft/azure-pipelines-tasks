@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import * as task from 'vsts-task-lib/task';
 import * as tool from 'vsts-task-tool-lib/tool';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
@@ -13,6 +15,23 @@ import { Platform } from './taskutil';
 export function hasConda(searchDir: string, platform: Platform): boolean {
     // TODO
     return false;
+}
+
+/**
+ * Add Conda's `python` and `conda` executables to PATH.
+ * Precondition: Conda is installed at `condaRoot`
+ * @param condaRoot Root directory or "prefix" of the Conda installation
+ * @param platform Platform for which Conda is installed
+ */
+export function prependCondaToPath(condaRoot: string, platform: Platform): void {
+    if (platform === Platform.Windows) {
+        // Windows: `python` lives in `condaRoot` and `conda` lives in `condaRoot\Scripts`
+        tool.prependPath(condaRoot);
+        tool.prependPath(path.join(condaRoot, 'Scripts'));
+    } else {
+        // Linux and macOS: `python` and `conda` both live in the `bin` directory
+        tool.prependPath(path.join(condaRoot, 'bin'));
+    }
 }
 
 /**
@@ -43,7 +62,14 @@ export async function installMiniconda(installerPath: string, platform: Platform
     return Promise.reject("not implemented");
 }
 
-export async function createEnvironment(condaPath: string, environmentName: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
+/**
+ * Precondition: `conda` executable is in PATH
+ * @param environmentsDir 
+ * @param environmentName 
+ * @param packageSpecs 
+ * @param otherOptions 
+ */
+export async function createEnvironment(environmentsDir: string, environmentName: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
     // TODO validate `environmentName`
     // TODO validate `otherOptions`
     // TODO
