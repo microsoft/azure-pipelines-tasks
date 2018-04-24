@@ -217,6 +217,7 @@ describe('CondaEnvironment L0 Suite', function () {
         });
 
         mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('vsts-task-tool-lib/tool', {});
 
         { // executable exists and is a file
             const uut = reload('../conda_internal');
@@ -299,6 +300,7 @@ describe('CondaEnvironment L0 Suite', function () {
             });
 
             mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
+            mockery.registerMock('vsts-task-tool-lib/tool', {});
             const uut = reload('../conda_internal');
 
             const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.Windows);
@@ -345,6 +347,7 @@ describe('CondaEnvironment L0 Suite', function () {
     })
 
     it('creates Conda environment', async function () {
+        mockery.registerMock('vsts-task-lib/task', mockTask);
         mockToolRunner.setAnswers({
             exec: {
                 'conda create --quiet --yes --prefix envsDir --mkdir --name env': {
@@ -354,7 +357,7 @@ describe('CondaEnvironment L0 Suite', function () {
         });
 
         mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
-        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('vsts-task-tool-lib/tool', {});
         const uut = reload('../conda_internal');
 
         await uut.createEnvironment('envsDir', 'env');
@@ -368,6 +371,7 @@ describe('CondaEnvironment L0 Suite', function () {
             setVariable: setVariable
         }));
 
+        mockery.registerMock('vsts-task-tool-lib/tool', {});
         const uut = reload('../conda_internal');
 
         uut.activateEnvironment(absPath('envs'), 'env');
