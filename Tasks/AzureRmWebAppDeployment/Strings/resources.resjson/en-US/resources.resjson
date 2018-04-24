@@ -8,8 +8,13 @@
   "loc.group.displayName.AdditionalDeploymentOptions": "Additional Deployment Options",
   "loc.group.displayName.PostDeploymentAction": "Post Deployment Action",
   "loc.group.displayName.ApplicationAndConfigurationSettings": "Application and Configuration Settings",
+  "loc.input.label.ConnectionType": "Connection type",
+  "loc.input.help.ConnectionType": "Select the connection type to use to deploy the WebApp.",
   "loc.input.label.ConnectedServiceName": "Azure subscription",
   "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription for the deployment.",
+  "loc.input.label.PublishProfilePath": "Publish profile path",
+  "loc.input.label.PublishProfilePassword": "Publish profile password",
+  "loc.input.help.PublishProfilePassword": "It is recommended to store password in a secret variable and use that variable here e.g. $(Password).",
   "loc.input.label.WebAppKind": "App Service type",
   "loc.input.help.WebAppKind": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App and Mobile App.",
   "loc.input.label.WebAppName": "App Service name",
@@ -191,5 +196,10 @@
   "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
   "loc.messages.GoExeNameNotPresent": "Go exe name is not present",
   "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+  "loc.messages.XmlParsingFailed": "Unable to parse publishProfileXML file, Error: %s",
+  "loc.messages.PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
+  "loc.messages.InvalidConnectionType": "Invalid connection type",
+  "loc.messages.InvalidImageSourceType": "Invalid Image source Type",
+  "loc.messages.InvalidPublishProfile": "Publish profile file is invalid."
 }
