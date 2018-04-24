@@ -15,12 +15,6 @@ function reload(module: '../conda_internal'): typeof condaInternal {
     return require('../conda_internal');
 }
 
-/** Convenience function for making an absolute path. */
-// TODO just mock `path.join` everywhere?
-function absPath(x: string): string {
-    return path.join('/', x);
-}
-
 it('finds the Conda executable', async function () {
     const existsSync = sinon.stub().returns(true);
     const statSync = sinon.stub().returns({
@@ -38,37 +32,37 @@ it('finds the Conda executable', async function () {
     { // executable exists and is a file
         const uut = reload('../conda_internal');
 
-        assert(uut.hasConda(absPath('path-to-conda'), Platform.Linux));
-        assert(uut.hasConda(absPath('path-to-conda'), Platform.MacOS));
-        assert(uut.hasConda(absPath('path-to-conda'), Platform.Windows));
+        assert(uut.hasConda('path-to-conda', Platform.Linux));
+        assert(uut.hasConda('path-to-conda', Platform.MacOS));
+        assert(uut.hasConda('path-to-conda', Platform.Windows));
     }
     { // `conda` executable does not exist (Linux / macOS)
-        existsSync.withArgs(path.join(absPath('path-to-conda'), 'bin', 'conda')).returns(false);
+        existsSync.withArgs(path.join('path-to-conda', 'bin', 'conda')).returns(false);
         const uut = reload('../conda_internal');
 
-        assert(!uut.hasConda(absPath('path-to-conda'), Platform.Linux));
-        assert(!uut.hasConda(absPath('path-to-conda'), Platform.MacOS));
+        assert(!uut.hasConda('path-to-conda', Platform.Linux));
+        assert(!uut.hasConda('path-to-conda', Platform.MacOS));
     }
     { // `conda.exe` executable does not exist (Windows)
         existsSync.reset();
-        existsSync.withArgs(path.join(absPath('path-to-conda'), 'Scripts', 'conda.exe')).returns(false);
+        existsSync.withArgs(path.join('path-to-conda', 'Scripts', 'conda.exe')).returns(false);
         const uut = reload('../conda_internal');
 
-        assert(!uut.hasConda(absPath('path-to-conda'), Platform.Windows));
+        assert(!uut.hasConda('path-to-conda', Platform.Windows));
     }
     { // `conda` exists but is not a file
         existsSync.reset();
-        existsSync.withArgs(path.join(absPath('path-to-conda'), 'bin', 'conda')).returns(true);
-        existsSync.withArgs(path.join(absPath('path-to-conda'), 'Scripts', 'conda.exe')).returns(true);
+        existsSync.withArgs(path.join('path-to-conda', 'bin', 'conda')).returns(true);
+        existsSync.withArgs(path.join('path-to-conda', 'Scripts', 'conda.exe')).returns(true);
         statSync.returns({
             isFile: () => false
         });
 
         const uut = reload('../conda_internal');
 
-        assert(!uut.hasConda(absPath('path-to-conda'), Platform.Linux));
-        assert(!uut.hasConda(absPath('path-to-conda'), Platform.MacOS));
-        assert(!uut.hasConda(absPath('path-to-conda'), Platform.Windows));
+        assert(!uut.hasConda('path-to-conda', Platform.Linux));
+        assert(!uut.hasConda('path-to-conda', Platform.MacOS));
+        assert(!uut.hasConda('path-to-conda', Platform.Windows));
     }
 });
 
@@ -99,7 +93,7 @@ it('downloads Miniconda', async function () {
 
 it('installs Miniconda', async function (done: MochaDone) {
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        getVariable: sinon.stub().withArgs('AGENT_TOOLSDIRECTORY').returns(absPath('_tools'))
+        getVariable: sinon.stub().withArgs('AGENTpath-to-toolsDIRECTORY').returns('path-to-tools')
     }));
 
     mockery.registerMock('vsts-task-tool-lib/tool', {});
@@ -109,66 +103,66 @@ it('installs Miniconda', async function (done: MochaDone) {
     { // Linux
         mockToolRunner.setAnswers({
             exec: {
-                'bash /installer.sh -b -f -p /_tools/Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools/Miniconda': {
                     code: 0
                 },
                 // work around for running tests cross-platform
-                'bash \\installer.sh -b -f -p \\_tools\\Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
                     code: 0
                 }
             }
         });
 
-        const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.Linux);
-        assert.strictEqual(actual, path.join(absPath('_tools'), 'Miniconda'));
+        const actual = await uut.installMiniconda('installer.sh', Platform.Linux);
+        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda'));
     }
     { // macOS
         mockToolRunner.setAnswers({
             exec: {
-                'bash /installer.sh -b -f -p /_tools/Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools/Miniconda': {
                     code: 0
                 },
                 // work around for running tests cross-platform
-                'bash \\installer.sh -b -f -p \\_tools\\Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
                     code: 0
                 }
             }
         });
 
-        const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.MacOS);
-        assert.strictEqual(actual, path.join(absPath('_tools'), 'Miniconda'));
+        const actual = await uut.installMiniconda('installer.sh', Platform.MacOS);
+        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda'));
     }
     { // Windows
         mockToolRunner.setAnswers({
             exec: {
-                'start /wait \\installer.exe /S /AddToPath=0 /RegisterPython=0 /D=\\_tools\\Miniconda': {
+                'start /wait installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools\\Miniconda': {
                     code: 0
                 },
                 // work around for running tests cross-platform
-                'start /wait /installer.exe /S /AddToPath=0 /RegisterPython=0 /D=/_tools/Miniconda': {
+                'start /wait installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools/Miniconda': {
                     code: 0
                 }
             }
         });
 
-        const actual = await uut.installMiniconda(absPath('installer.exe'), Platform.Windows);
-        assert.strictEqual(actual, path.join(absPath('_tools'), 'Miniconda'));
+        const actual = await uut.installMiniconda('installer.exe', Platform.Windows);
+        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda'));
     }
     { // Failed installation
         mockToolRunner.setAnswers({
             exec: {
-                'bash /installer.sh -b -f -p /_tools/Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools/Miniconda': {
                     code: 1
                 },
                 // work around for running tests cross-platform
-                'bash \\installer.sh -b -f -p \\_tools\\Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
                     code: 1
                 }
             }
         });
 
         try {
-            const actual = await uut.installMiniconda(absPath('installer.sh'), Platform.MacOS);
+            const actual = await uut.installMiniconda('installer.sh', Platform.MacOS);
             done(new Error('should not have succeeded'));
         } catch (e) {
             assert.strictEqual(e.message, `loc_mock_InstallationFailed Error: bash failed with return code: 1`);
@@ -234,10 +228,10 @@ it('activates Conda environment', async function () {
 
     const uut = reload('../conda_internal');
 
-    uut.activateEnvironment(absPath('envs'), 'env');
-    assert(prependPath.calledOnceWithExactly(path.join(absPath('envs'), 'env')));
+    uut.activateEnvironment('envs', 'env');
+    assert(prependPath.calledOnceWithExactly(path.join('envs', 'env')));
     assert(setVariable.callCount === 3);
     assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
-    assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join(absPath('envs'), 'env')));
+    assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
     assert(setVariable.calledWithExactly('CONDA_PROMPT_MODIFIER', '(env)'));
 });
