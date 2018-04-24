@@ -113,6 +113,11 @@ export async function createEnvironment(environmentsDir: string, environmentName
 export function activateEnvironment(environmentsDir: string, environmentName: string): void {
     const environmentPath = path.join(environmentsDir, environmentName);
     tool.prependPath(environmentPath);
+
+    // If Conda ever changes the names of the environment variables it uses to find its environment, this task will break.
+    // For now we will assume these names are stable.
+    // If we ever get broken, we should write code to run the activation script, diff the environment before and after,
+    // and surface up the new environment variables as build variables.
     task.setVariable('CONDA_DEFAULT_ENV', environmentName)
     task.setVariable('CONDA_PREFIX', environmentPath)
     task.setVariable('CONDA_PROMPT_MODIFIER', `(${environmentName})`)
