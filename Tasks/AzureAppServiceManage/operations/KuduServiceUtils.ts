@@ -55,17 +55,13 @@ export class KuduServiceUtils {
         }
         for(var siteExtension of allSiteExtensions) {
             allSiteExtensionMap[siteExtension.id] = siteExtension;
+            allSiteExtensionMap[siteExtension.title] = siteExtension;
         }
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
-            if(!allSiteExtensionMap[extensionID]){
-                for(var siteExtension of allSiteExtensions){
-                    if(siteExtension.title == extensionID){
-                        extensionID = siteExtension.id;
-                        break;
-                    }
-                }
+            if(allSiteExtensionMap[extensionID] && allSiteExtensionMap[extensionID].title == extensionID){
+                extensionID = allSiteExtensionMap[extensionID].id;
             }
             // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
             if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
@@ -86,7 +82,7 @@ export class KuduServiceUtils {
             }
         }
         
-        tl.debug('Set output Variable LocalPathsForInstalledExtensions to value: ' + extensionLocalPaths);
+        tl.debug('Set output Variable LocalPathsForInstalledExtensions to value: ' + extensionLocalPaths.slice(0, -1));
         tl.setVariable("LocalPathsForInstalledExtensions", extensionLocalPaths.slice(0, -1));
         
         if(anyExtensionInstalled) {
