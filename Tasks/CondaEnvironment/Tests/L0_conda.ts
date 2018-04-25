@@ -53,7 +53,7 @@ it('downloads Conda if `CONDA` is not set, creates and activates environment', a
     assert(installMiniconda.calledOnceWithExactly('path-downloadMiniconda', Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-installMiniconda', Platform.Linux));
     assert(createEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs', 'env'), undefined, undefined));
-    assert(activateEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs'), 'env'));
+    assert(activateEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs'), 'env', Platform.Linux));
     assert(setVariable.calledOnceWithExactly('CONDA', 'path-installMiniconda'));
 });
 
@@ -95,7 +95,7 @@ it('downloads Conda if `conda` is not found, creates and activates environment',
     assert(installMiniconda.calledOnceWithExactly('path-downloadMiniconda', Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-installMiniconda', Platform.Linux));
     assert(createEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs', 'env'), undefined, undefined));
-    assert(activateEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs'), 'env'));
+    assert(activateEnvironment.calledOnceWithExactly(path.join('path-installMiniconda', 'envs'), 'env', Platform.Linux));
     assert(setVariable.calledOnceWithExactly('CONDA', 'path-installMiniconda'));
 })
 
@@ -134,7 +134,7 @@ it('does not download Conda if found, creates and activates environment', async 
     assert(downloadMiniconda.notCalled);
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
     assert(createEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs', 'env'), undefined, undefined));
-    assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env'));
+    assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', Platform.Linux));
 });
 
 it('does not download Conda if not found and user opts not to', async function (done: MochaDone) {

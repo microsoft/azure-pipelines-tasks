@@ -41,5 +41,5 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
         await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.otherOptions);
     }
 
-    internal.activateEnvironment(environmentsDir, parameters.environmentName);
+    internal.activateEnvironment(environmentsDir, parameters.environmentName, platform);
 }

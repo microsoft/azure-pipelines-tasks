@@ -231,9 +231,28 @@ it('activates Conda environment', async function () {
 
     const uut = reload('../conda_internal');
 
-    uut.activateEnvironment('envs', 'env');
-    assert(prependPath.calledOnceWithExactly(path.join('envs', 'env')));
-    assert(setVariable.calledTwice);
-    assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
-    assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
+    { // Linux
+        uut.activateEnvironment('envs', 'env', Platform.Linux);
+        assert(prependPath.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
+        assert(setVariable.calledTwice);
+        assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
+        assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
+    }
+    { // macOS
+        setVariable.resetHistory();
+        uut.activateEnvironment('envs', 'env', Platform.MacOS);
+        assert(prependPath.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
+        assert(setVariable.calledTwice);
+        assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
+        assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
+    }
+    { // Windows
+        setVariable.resetHistory();
+        uut.activateEnvironment('envs', 'env', Platform.Windows);
+        assert(prependPath.calledWithExactly(path.join('envs', 'env')));
+        assert(prependPath.calledWithExactly(path.join('envs', 'env', 'Scripts')));
+        assert(setVariable.calledTwice);
+        assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
+        assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
+    }
 });
