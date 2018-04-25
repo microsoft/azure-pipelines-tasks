@@ -117,7 +117,7 @@ export class TestSelectorInvoker {
         let definitionRunId: string;
         let definitionId: string;
         let prFlow: string;
-        let rebaseLimit: number;
+        let rebaseLimit: string;
         let sourcesDirectory: string;
         let context: string;
 
@@ -147,8 +147,9 @@ export class TestSelectorInvoker {
             prFlow = 'false';
         }
 
+        //hydra: check if this conversion works fine (number to string)
         if (inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit) {
-            rebaseLimit = inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit;
+            rebaseLimit = inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit.toString();
         }
 
         if (inputDataContract.ExecutionSettings.TiaSettings.FilterPaths) {
@@ -366,6 +367,13 @@ export class TestSelectorInvoker {
 
         tl.debug('Completed updating test results');
         return output.code;
+    }
+
+    private getTIALevel(tiaConfig: models.TiaConfiguration) {
+        if (tiaConfig.fileLevel && tiaConfig.fileLevel.toUpperCase() === 'FALSE') {
+            return 'method';
+        }
+        return 'file';
     }
 
     private getTestSelectorLocation(): string {

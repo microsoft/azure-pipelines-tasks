@@ -2,10 +2,11 @@ export interface InputDataContract {
     AgentName : string;
     AccessToken : string;
     CollectionUri : string;
-    EnvironmentUri : string;
+    RunIdentifier : string;
     TeamProject : string;
     TestSelectionSettings : TestSelectionSettings;
-    VsTestConsolePath: string;
+    VsTestConsolePath : string;
+    UsingXCopyTestPlatformPackage : boolean;
     TestReportingSettings : TestReportingSettings;
     TfsSpecificSettings : TfsSpecificSettings;
     TargetBinariesSettings : TargetBinariesSettings;
@@ -44,14 +45,10 @@ export interface TestReportingSettings {
 
 export interface TestSelectionSettings {
     TestSelectionType : string;
-    AssemblyBasedTestSelection : AssemblyBasedTestSelection;
     TestPlanTestSuiteSettings : TestPlanTestSuiteSettings;
     SearchFolder : string;
     TestCaseFilter : string;
-}
-
-export interface AssemblyBasedTestSelection {
-    SourceFilter : string;
+    TestSourcesFile : string;
 }
 
 export interface TestPlanTestSuiteSettings {
@@ -87,6 +84,7 @@ export interface ProxySettings {
 
 export interface RerunSettings {
     RerunFailedTests : boolean;
+    RerunType : string;
     RerunFailedTestCasesMaxLimit : number;
     RerunFailedThreshold : number;
     RerunMaxAttempts : number;
@@ -110,8 +108,6 @@ export interface ExecutionSettings {
     SettingsFile : string;
     OverridenParameters : string;
     RerunSettings : RerunSettings;
-    IsToolsInstallerFlow : boolean;
-    VstestConsolePath : string;
     TiaSettings : TiaSettings;
     VideoDataCollectorEnabled : boolean;
 }

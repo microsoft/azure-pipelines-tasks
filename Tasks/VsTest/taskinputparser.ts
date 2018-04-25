@@ -17,6 +17,7 @@ export function getDistributedTestConfigurations() : inputdatacontract.InputData
     const inputDataContract = populateInputDataContract();
     inputDataContract.UseVsTestConsole = false;
 
+    inputDataContract.DistributionSettings = <inputdatacontract.DistributionSettings>{};
     inputDataContract.DistributionSettings.NumberOfTestAgents = 1;
     const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
     if (!isNaN(totalJobsInPhase)) {
@@ -25,8 +26,6 @@ export function getDistributedTestConfigurations() : inputdatacontract.InputData
     console.log(tl.loc('dtaNumberOfAgents', inputDataContract.DistributionSettings.NumberOfTestAgents));
 
     const distributionType = tl.getInput('distributionBatchType');
-
-    inputDataContract.DistributionSettings = <inputdatacontract.DistributionSettings>{};
 
     if (distributionType && distributionType === 'basedOnTestCases') {
         inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = true;
@@ -52,16 +51,8 @@ export function getDistributedTestConfigurations() : inputdatacontract.InputData
             if (isNaN(batchExecutionTimeInSec) || batchExecutionTimeInSec <= 0) {
                 throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTimeInSec));
             }
-
-            inputDataContract.DistributionSettings.RunTimePerSlice = 60 * 1000;
-            if (batchExecutionTimeInSec >= 60) {
-                inputDataContract.DistributionSettings.RunTimePerSlice = batchExecutionTimeInSec * 1000;
-                console.log(tl.loc('RunTimePerBatch', inputDataContract.DistributionSettings.RunTimePerSlice));
-            } else {
-                tl.warning(tl.loc('minimumRunTimePerBatchWarning', 60));
-            }
-        } else if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'autoBatchSize') {
-            inputDataContract.DistributionSettings.RunTimePerSlice = 0;
+            inputDataContract.DistributionSettings.RunTimePerSlice = batchExecutionTimeInSec;
+            console.log(tl.loc('RunTimePerBatch', inputDataContract.DistributionSettings.RunTimePerSlice));
         }
     } else if (distributionType && distributionType === 'basedOnAssembly') {
         inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = false;
@@ -80,8 +71,6 @@ export function getDistributedTestConfigurations() : inputdatacontract.InputData
     //     dtaConfiguration.useVsTestConsole = 'false';
     // }
 
-    inputDataContract.ExecutionSettings = <inputdatacontract.ExecutionSettings>{};
-
     inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = false;
     if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {
         inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = true;
@@ -93,7 +82,7 @@ export function getDistributedTestConfigurations() : inputdatacontract.InputData
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
 
     //hydra: change this input to be some unique run identifier
-    inputDataContract.EnvironmentUri = getEnvironmentUri();
+    inputDataContract.RunIdentifier = getRunIdentifier();
 
     //hydra: do we need
     //dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
@@ -134,10 +123,6 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
         case 'testassemblies':
             console.log(tl.loc('testSelectorInput', tl.loc('testAssembliesSelector')));
 
-            inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection = <inputdatacontract.AssemblyBasedTestSelection>{};
-
-            console.log(tl.loc('testAssemblyFilterInput', inputDataContract.TestSelectionSettings.AssemblyBasedTestSelection.SourceFilter));
-
             inputDataContract.TestSelectionSettings.TestCaseFilter = tl.getInput('testFiltercriteria');
             console.log(tl.loc('testFilterCriteriaInput', inputDataContract.TestSelectionSettings.TestCaseFilter));
             break;
@@ -169,9 +154,14 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
     }
     console.log(tl.loc('searchFolderInput', inputDataContract.TestSelectionSettings.SearchFolder));
 
+    inputDataContract.ExecutionSettings = <inputdatacontract.ExecutionSettings>{};
+
     inputDataContract.ExecutionSettings.SettingsFile = tl.getPathInput('runSettingsFile');
     if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.SettingsFile)) {
         inputDataContract.ExecutionSettings.SettingsFile = path.resolve(inputDataContract.ExecutionSettings.SettingsFile);
+    }
+    if (inputDataContract.ExecutionSettings.SettingsFile === tl.getVariable('System.DefaultWorkingDirectory')) {
+        delete inputDataContract.ExecutionSettings.SettingsFile;
     }
     console.log(tl.loc('runSettingsFileInput', inputDataContract.ExecutionSettings.SettingsFile));
 
@@ -204,7 +194,7 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
     inputDataContract.ExecutionSettings.TiaSettings = <inputdatacontract.TiaSettings>{};
 
     inputDataContract.ExecutionSettings.TiaSettings.Enabled = tl.getBoolInput('runOnlyImpactedTests');
-    inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = tl.getInput('runAllTestsAfterXBuilds');
+    inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = +tl.getInput('runAllTestsAfterXBuilds');
 
     inputDataContract.ExecutionSettings.TiaSettings.FileLevel = getTIALevel(tl.getVariable('tia.filelevel'));
 
@@ -233,13 +223,7 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
     } else {
         inputDataContract.IsPrFlow = utils.Helper.stringToBool(tl.getVariable('tia.isPrFlow'));
     }
-    inputDataContract.UseTestCaseFilterInResponseFile = tl.getVariable('tia.useTestCaseFilterInResponseFile');
-
-    //const releaseuri = tl.getVariable('release.releaseUri');
-    // tiaConfiguration.context = 'CI';
-    // if (releaseuri) {
-    //     tiaConfiguration.context = 'CD';
-    // }
+    inputDataContract.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(tl.getVariable('tia.useTestCaseFilterInResponseFile'));
 
     // User map file
     inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = tl.getVariable('tia.usermapfile');
@@ -296,40 +280,29 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
 
     const rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
 
+    inputDataContract.ExecutionSettings.RerunSettings.RerunType = rerunType;
+
     // hydra: unravel the nestings
     if (rerunType === 'basedOnTestFailureCount') {
-        inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit = 5; //default value in case of error
         const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
-        if (!isNaN(rerunFailedTestCasesMaxLimit) && rerunFailedTestCasesMaxLimit > 0 && rerunFailedTestCasesMaxLimit <= 100) {
+        if (!isNaN(rerunFailedTestCasesMaxLimit)) {
             inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit = rerunFailedTestCasesMaxLimit;
             console.log(tl.loc('rerunFailedTestCasesMaxLimit', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit));
         } else {
-            if (rerunFailedTestCasesMaxLimit === 0) {
-                tl.warning(tl.loc('disabledRerun', rerunFailedTestCasesMaxLimit));
-                inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = false;
-            } else {
-                tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
-            }
+            tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
         }
     } else {
-        inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold = 30; //default value in case of error
         const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
-        if (!isNaN(rerunFailedThreshold) && rerunFailedThreshold > 0 && rerunFailedThreshold <= 100) {
+        if (!isNaN(rerunFailedThreshold)) {
             inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold = rerunFailedThreshold;
             console.log(tl.loc('rerunFailedThreshold', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold));
         } else {
-            if (rerunFailedThreshold === 0) {
-                tl.warning(tl.loc('disabledRerun', rerunFailedThreshold));
-                inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = false;
-            } else {
-                tl.warning(tl.loc('invalidRerunFailedThreshold'));
-            }
+            tl.warning(tl.loc('invalidRerunFailedThreshold'));
         }
     }
 
-    inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts = 3; //default values incase of error
     const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
-    if (!isNaN(rerunMaxAttempts) && rerunMaxAttempts > 0 && rerunMaxAttempts <= 10) {
+    if (!isNaN(rerunMaxAttempts)) {
         inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts = rerunMaxAttempts;
         console.log(tl.loc('rerunMaxAttempts', inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts));
     } else {
@@ -342,18 +315,17 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
         if (utils.Helper.isNullEmptyOrUndefined(vsTestVersion)) {
             console.log('vsTestVersion is null or empty');
             throw new Error('vsTestVersion is null or empty');
-        }
-        if (vsTestVersion.toLowerCase() === 'toolsinstaller') {
+        } else if (vsTestVersion.toLowerCase() === 'toolsinstaller') {
             tl.debug('Trying VsTest installed by tools installer.');
             ci.publishEvent({ subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) });
 
-            tl.debug('Path to VsTest from tools installer: ' + tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable));
             const vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
+            tl.debug('Path to VsTest from tools installer: ' + vsTestPackageLocation);
 
             // get path to vstest.console.exe
             const matches = tl.findMatch(vsTestPackageLocation, '**\\vstest.console.exe');
             if (matches && matches.length !== 0) {
-                inputDataContract.VsTestConsolePath = matches[0];
+                inputDataContract.VsTestConsolePath = path.dirname(matches[0]);
 
                 // hydra: do this in dta exe host based on version of vstest.console.exe
                 inputDataContract.ForcePlatformV2 = true;
@@ -361,34 +333,6 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
                 utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('toolsInstallerPathNotSet'), 1041, false);
                 throw new Error(tl.loc('toolsInstallerPathNotSet'));
             }
-
-            // hydra: move this to managed
-            // // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
-            // var amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
-            // if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-            //     toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
-            // } else {
-            //     // Look in x64 also for Microsoft.IntelliTrace.ProfilerProxy.dll (x64)
-            //     amd64ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll");
-            //     if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-            //         toolsInstallerConfiguration.x64ProfilerProxyDLLLocation = amd64ProfilerProxy[0];
-            //     } else {
-            //         utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
-            //         tl.warning(tl.loc('testImpactAndCCWontWork'));
-            //     }
-
-            //     utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
-            //     tl.warning(tl.loc('testImpactAndCCWontWork'));
-            // }
-
-            // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
-            // var x86ProfilerProxy = tl.findMatch(toolsInstallerConfiguration.vsTestPackageLocation, "**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll");
-            // if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
-            //     toolsInstallerConfiguration.x86ProfilerProxyDLLLocation = x86ProfilerProxy[0];
-            // } else {
-            //     utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
-            //     tl.warning(tl.loc('testImpactAndCCWontWork'));
-            // }
 
             // if Tools installer is not there throw.
             if (utils.Helper.isNullOrWhitespace(inputDataContract.VsTestConsolePath)) {
@@ -398,31 +342,28 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
             }
 
             ci.publishEvent({ subFeature: 'ToolsInstallerInstallationSuccessful' });
-            // if tools installer is there set path to vstest.console.exe and call getVsTestRunnerDetails
-            // testConfiguration.vsTestLocationMethod = utils.Constants.vsTestLocationString;
-            // testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
-
-            // testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
 
         } else if ((vsTestVersion !== '15.0') && (vsTestVersion !== '14.0')
             && (vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', vsTestVersion));
-        }
-        if (vsTestLocationMethod === utils.Constants.vsTestVersionString && vsTestVersion === '12.0') {
+        } else if (vsTestLocationMethod === utils.Constants.vsTestVersionString && vsTestVersion === '12.0') {
             throw (tl.loc('vs2013NotSupportedInDta'));
+        } else {
+            console.log(tl.loc('vsVersionSelected', vsTestVersion));
+
+            getTestPlatformPath(inputDataContract);
+            // hydra: find vs installation location here
         }
-        console.log(tl.loc('vsVersionSelected', vsTestVersion));
     } else {
+        // hydra: should it be full path or directory above?
         inputDataContract.VsTestConsolePath = tl.getInput('vsTestLocation');
         console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', inputDataContract.VsTestConsolePath));
     }
-
 
     // hydra: Maybe move all warnings to a diff function
     if (tl.getBoolInput('uiTests') && inputDataContract.ExecutionSettings.AssemblyLevelParallelism) {
         tl.warning(tl.loc('uitestsparallel'));
     }
-
 
     // InputDataContract.Logging
     inputDataContract.Logging = <inputdatacontract.Logging>{};
@@ -430,7 +371,6 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
     if (utils.Helper.isDebugEnabled()) {
         inputDataContract.Logging.DebugLogging = true;
     }
-
 
     inputDataContract.VstestTaskInstanceIdentifier = uuid.v1();
 
@@ -442,7 +382,7 @@ function populateInputDataContract() : inputdatacontract.InputDataContract {
     //     throw error;
     // }
 
-    inputDataContract.ExecutionSettings.IgnoreTestFailures = tl.getVariable('vstest.ignoretestfailures');
+    inputDataContract.ExecutionSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
 
     // Get proxy details
     inputDataContract.ProxySettings = <inputdatacontract.ProxySettings>{};
@@ -894,11 +834,81 @@ function getDistributionBatchSize(dtaTestConfiguration: models.DtaTestConfigurat
     return 0;
 }
 
+function getRunIdentifier(): string {
+    let runIdentifier: string = '';
+    const taskInstanceId = getDtaInstanceId();
+    const dontDistribute = tl.getBoolInput('dontDistribute');
+    const releaseId = tl.getVariable('Release.ReleaseId');
+    const jobId = tl.getVariable('System.JobPositionInPhase');
+    const parallelExecution = tl.getVariable('System.ParallelExecutionType');
+    const phaseId = utils.Helper.isNullEmptyOrUndefined(releaseId) ?
+        tl.getVariable('System.PhaseId') : tl.getVariable('Release.DeployPhaseId');
+    if ((!utils.Helper.isNullEmptyOrUndefined(parallelExecution) && parallelExecution.toLowerCase() === 'multiconfiguration')
+        || dontDistribute) {
+        runIdentifier = `${phaseId}/${jobId}/${taskInstanceId}`;
+    } else {
+        runIdentifier = `${phaseId}/${taskInstanceId}`;
+    }
+
+    return runIdentifier;
+}
 
 // hydra: rename function and maybe refactor and add logic inline
-function getTIALevel(tiaConfig: models.TiaConfiguration) {
-    if (tiaConfig.fileLevel && tiaConfig.fileLevel.toUpperCase() === 'FALSE') {
+function getTIALevel(fileLevel: string) {
+    if (fileLevel && fileLevel.toUpperCase() === 'FALSE') {
         return false;
     }
     return true;
+}
+
+function getTestPlatformPath(inputDataContract : inputdatacontract.InputDataContract) {
+    let vsTestVersion = tl.getInput('vsTestVersion');
+    if (vsTestVersion.toLowerCase() === 'latest') {
+        // latest
+        tl.debug('Searching for latest Visual Studio');
+        const vstestconsole15Path = getVSTestConsole15Path();
+        if (vstestconsole15Path) {
+            vsTestVersion = '15.0';
+            return vstestconsole15Path;
+        }
+
+        // fallback
+        tl.debug('Unable to find an instance of Visual Studio 2017..');
+        tl.debug('Searching for Visual Studio 2015..');
+        vsTestVersion = '14.0';
+        return getVSTestLocation(14);
+    }
+
+    const vsVersion: number = parseFloat(vsTestVersion);
+
+    if (vsVersion === 15.0) {
+        const vstestconsole15Path = getVSTestConsole15Path();
+        if (vstestconsole15Path) {
+            return vstestconsole15Path;
+        }
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+
+    tl.debug('Searching for Visual Studio ' + vsVersion.toString());
+    return getVSTestLocation(vsVersion);
+}
+
+function getVSTestConsole15Path(): string {
+    const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
+    vswhereTool.line('-version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath');
+    let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
+    vsPath = utils.Helper.trimString(vsPath);
+    tl.debug('Visual Studio 15.0 or higher installed path: ' + vsPath);
+    if (!utils.Helper.isNullOrWhitespace(vsPath)) {
+        return path.join(vsPath, 'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'TestWindow');
+    }
+    return null;
+}
+
+function getVSTestLocation(vsVersion: number): string {
+    const vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
+    if (!vsCommon) {
+        throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));
+    }
+    return path.join(vsCommon, '..\\IDE\\CommonExtensions\\Microsoft\\TestWindow');
 }
