@@ -57,6 +57,7 @@ $ExecutePsScript = {
         }
 
         if( $inline -eq $true ) {
+            $inlineScript = [scriptblock]::Create($inlineScript)
             $inlineScriptPath = Create-TemporaryFile -contents $inlineScript
             $scriptPath = $inlineScriptPath
         }
