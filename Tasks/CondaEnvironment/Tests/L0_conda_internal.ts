@@ -240,6 +240,7 @@ it('activates Conda environment', async function () {
     }
     { // macOS
         setVariable.resetHistory();
+        prependPath.resetHistory();
         uut.activateEnvironment('envs', 'env', Platform.MacOS);
         assert(prependPath.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
         assert(setVariable.calledTwice);
@@ -248,6 +249,7 @@ it('activates Conda environment', async function () {
     }
     { // Windows
         setVariable.resetHistory();
+        prependPath.resetHistory();
         uut.activateEnvironment('envs', 'env', Platform.Windows);
         assert(prependPath.calledWithExactly(path.join('envs', 'env')));
         assert(prependPath.calledWithExactly(path.join('envs', 'env', 'Scripts')));

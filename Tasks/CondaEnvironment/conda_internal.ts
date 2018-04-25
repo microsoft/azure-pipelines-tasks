@@ -114,7 +114,7 @@ export async function createEnvironment(environmentPath: string, packageSpecs?: 
  */
 export function activateEnvironment(environmentsDir: string, environmentName: string, platform: Platform): void {
     const environmentPath = path.join(environmentsDir, environmentName);
-    // prependCondaToPath(environmentPath, platform);
+    prependCondaToPath(environmentPath, platform);
 
     // If Conda ever changes the names of the environment variables it uses to find its environment, this task will break.
     // For now we will assume these names are stable.
