@@ -83,6 +83,22 @@ export async function installMiniconda(installerPath: string, platform: Platform
         throw new Error(task.loc('InstallationFailed', e));
     }
 
+    // Somehow, even by downloading the "latest" version, there will be a newer version available and it will prompt you to update
+    try {
+        const conda = (() => {
+            if (platform === Platform.Windows) {
+                return new ToolRunner(path.join(destination, 'Scripts', 'conda.exe'))
+            } else {
+                return new ToolRunner(path.join(destination, 'bin', 'conda'))
+            }
+        })();
+
+        conda.line('update --name base conda');
+        await conda.exec();
+    } catch (e) {
+        // Best effort
+    }
+
     return destination;
 }
 
