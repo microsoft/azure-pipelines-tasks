@@ -45,8 +45,9 @@ try {
     $remoteScriptJobArguments = Get-RemoteScriptJobArguments
     $sessionName = [Guid]::NewGuid().ToString();
 
+    $jobResults = @()
     if($input_RunPowershellInParallel -eq $true) {
-        Invoke-RemoteScript -targetMachineNames $targetMachineNames `
+        $jobResults = Invoke-RemoteScript -targetMachineNames $targetMachineNames `
                             -credential $credential `
                             -protocol $input_Protocol `
                             -authentication $input_AuthenticationMechanism `
@@ -56,7 +57,7 @@ try {
                             -sessionOption $sessionOption
     } else {
         foreach($targetMachineName in $targetMachineNames) {
-            Invoke-RemoteScript -targetMachineNames @($targetMachineName) `
+            $jobResults += Invoke-RemoteScript -targetMachineNames @($targetMachineName) `
                                 -credential $credential `
                                 -protocol $input_Protocol `
                                 -authentication $input_AuthenticationMechanism `
