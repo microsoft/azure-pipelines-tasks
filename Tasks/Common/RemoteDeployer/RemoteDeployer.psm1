@@ -75,7 +75,9 @@ function Invoke-RemoteScript {
         [hashtable] $remoteScriptJobArgumentsByName,
 
         [Parameter(Mandatory = $true)]
-        [psobject] $sessionOption
+        [psobject] $sessionOption,
+
+        [scriptblock] $errorHandler
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter 'targetMachineNames'
     try {
@@ -101,7 +103,8 @@ function Invoke-RemoteScript {
                              -script $ExecutePsScript `
                              -sessionName $sessionName `
                              -scriptArgumentsByName $remoteScriptJobArgumentsByName `
-                             -targetMachines $targetMachines
+                             -targetMachines $targetMachines `
+                             -errorHandler $errorHandler
         return $jobResults
     } finally {
         if($sessions.Count -gt 0) {
