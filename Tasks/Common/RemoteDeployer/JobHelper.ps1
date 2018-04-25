@@ -147,7 +147,7 @@ function Get-JobResults {
                         
                     if($jobState -eq "completed") {
                         $remoteExecutionStatusByLocation[$computerName] = "Finished"
-                    } else {
+                    } elseif($jobState -ne "running") {
                         Write-Verbose "Job (Id = $jobId) is in undesirable state (State = $jobState). Attempting reconnection"
                         if($connectionAttemptsByLocation[$computerName] -ge 15) {
                             Write-Verbose "Maximum connection retry limit reached for computerName: $computerName"
