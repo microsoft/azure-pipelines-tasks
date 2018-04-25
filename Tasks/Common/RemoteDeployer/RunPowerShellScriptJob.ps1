@@ -62,11 +62,11 @@ $ExecutePsScript = {
         }
 
         if(!([string]::IsNullOrEmpty($workingDirectory)) -and !(Test-Path -Path $workingDirectory -PathType Container)) {
-            throw [System.IO.DirectoryNotFoundException]::New($workingDirectory)
+            throw "DirectoryNotFound: $workingDirectory"
         }
 
         if([string]::IsNullOrEmpty($scriptPath) -or !(Test-Path -Path $scriptPath -PathType Leaf)) {
-            throw [System.IO.FileNotFoundException]::New($scriptPath)
+            throw "FileNotFound: $scriptPath"
         }
 
         if(![string]::IsNullOrEmpty($initializationScriptPath) -and !(Test-Path -LiteralPath $initializationScriptPath -PathType Leaf)) {

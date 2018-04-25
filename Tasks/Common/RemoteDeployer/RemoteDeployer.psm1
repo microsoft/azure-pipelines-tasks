@@ -81,19 +81,78 @@ function Invoke-RemoteScript {
     try {
         $PSSessionOption = $sessionOption
         $sessions = @()
-        foreach($targetMachineName in $targetMachineNames) {
-            $sessions += ConnectTo-RemoteMachine -targetMachineName $targetMachineName `
-                                                 -credential $credential `
-                                                 -protocol $protocol `
-                                                 -authentication $authentication `
+        $useSsl = ($protocol -eq 'https')
+        $targetMachines = Get-TargetMachines -targetMachineNames $targetMachineNames `
+                                             -credential $credential `
+                                             -authentication $authentication `
+                                             -sessionConfigurationName $sessionConfigurationName `
+                                             -useSsl:$useSsl                                             
+
+        foreach($targetMachine in $targetMachines) {
+            $sessions += ConnectTo-RemoteMachine -computerName $targetMachine.ComputerName `
+                                                 -port $targetMachine.WSManPort `
+                                                 -credential $targetMachine.Credential `
+                                                 -authentication $targetMachine.Authentication `
                                                  -sessionName $sessionName `
-                                                 -sessionConfigurationName $sessionConfigurationName
+                                                 -sessionConfigurationName $targetMachine.sessionConfigurationName `
+                                                 -useSsl:($targetMachine.UseSsl)
         }
-        Run-RemoteScriptJobs -sessions $sessions -script $ExecutePsScript -scriptArgumentsByName $remoteScriptJobArgumentsByName
+        $jobResults = Run-RemoteScriptJobs -sessions $sessions `
+                             -script $ExecutePsScript `
+                             -sessionName $sessionName `
+                             -scriptArgumentsByName $remoteScriptJobArgumentsByName `
+                             -targetMachines $targetMachines
+        return $jobResults
     } finally {
         if($sessions.Count -gt 0) {
             Remove-PSSession -Session $sessions
         }
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Get-TargetMachines {
+    [CmdletBinding()]
+    Param (
+        [string[]] $targetMachineNames,
+        [pscredential] $credential,
+        [string] $authentication,
+        [string] $sessionConfigurationName,
+        [switch] $useSsl
+    )
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
+    try {
+        $targetMachines = @();
+        foreach($targetMachineName in $targetMachineNames) {
+            $targetMachine = @{
+                ComputerName = "";
+                WSManPort = "";
+                Credential = $credential;
+                Authentication = $authentication;
+                SessionConfigurationName = $sessionConfigurationName;
+                UseSsl = $useSsl
+            }
+        
+            $computerName, $port = $targetMachineName.Split(':');
+            if([string]::IsNullOrEmpty($port)) {
+                if($useSsl) {
+                    $port = "5986"
+                } else {
+                    $port = "5985"
+                }
+            }
+            $targetMachine.ComputerName = $computerName
+            $targetMachine.WSManPort = $port
+
+            Write-Verbose "ComputerName = $($targetMachine.ComputerName)"
+            Write-Verbose "WSManPort = $($targetMachine.WSManPort)"
+            Write-Verbose "Authentication = $($targetMachine.Authentication)"
+            Write-Verbose "SessionConfigurationName = $($targetMachine.SessionConfigurationName)"
+            Write-Verbose "UseSSL = $($targetMachine.UseSsl)"
+            $targetMachines += $targetMachine
+        }
+        return $targetMachines
+    } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }

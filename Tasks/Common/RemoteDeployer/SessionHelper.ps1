@@ -1,12 +1,13 @@
 function ConnectTo-RemoteMachine {
     [CmdletBinding()]
     Param (
-        [string] $targetMachineName,
+        [string] $computerName,
+        [string] $port,
         [pscredential] $credential,
-        [string] $protocol,
         [string] $authentication,
         [string] $sessionName,
         [string] $sessionConfigurationName,
+        [switch] $useSsl,
         [ValidateRange(2,10)]
         [int] $maxRetryLimit = 3
     )
@@ -15,9 +16,8 @@ function ConnectTo-RemoteMachine {
     try {
         $retryCount = 0;
         $isConnectionComplete = $false
-        $useSsl = ($protocol -eq "https")
-        $machineDetails = Get-MachineDetails -MachineName $targetMachineName -useSsl:$useSsl
-        $newPsSessionCommand = Get-NewPSSessionCommand -machineDetails $machineDetails `
+        $newPsSessionCommand = Get-NewPSSessionCommand -computerName $computerName `
+                                                       -port $port `
                                                        -authentication $authentication `
                                                        -sessionName $sessionName `
                                                        -useSsl:$useSsl `
@@ -42,14 +42,14 @@ function ConnectTo-RemoteMachine {
         }
 
         if ($isConnectionComplete) {
-            Write-Verbose "Connection established to computer:'$($machineDetails.ComputerName)' port:'$($machineDetails.WSManPort)'"
-            Write-Host $(Get-VstsLocString -Key "RemoteDeployer_ConnectedMachines" -ArgumentList $targetMachineName)
+            Write-Verbose "Connection established to computer:'$computerName' port:'$port'"
+            Write-Host $(Get-VstsLocString -Key "RemoteDeployer_ConnectedMachines" -ArgumentList $computerName)
             return $session    
         } else {
             foreach ($sessionError in $sessionErrors) {
                 Write-VstsTaskError -Message $sessionError.Exception.Message -ErrCode "PS_TM_UnableToCreatePSSession"
             }
-            Write-VstsSetResult -Result 'Failed' -Message $(Get-VstsLocString -Key "RemoteDeployer_NotConnectedMachines" -ArgumentList $targetMachineName)
+            Write-VstsSetResult -Result 'Failed' -Message $(Get-VstsLocString -Key "RemoteDeployer_NotConnectedMachines" -ArgumentList $computerName)
         }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
@@ -59,7 +59,8 @@ function ConnectTo-RemoteMachine {
 function Get-NewPSSessionCommand {
     [CmdletBinding()]
     Param (
-        [hashtable] $machineDetails,
+        [string] $computerName,
+        [string] $port,
         [string] $authentication,
         [string] $sessionName,
         [string] $sessionConfigurationName,
@@ -68,7 +69,7 @@ function Get-NewPSSessionCommand {
     )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        $newPsSessionCommandArgs = "-ComputerName '$($machineDetails.ComputerName)' -Port $($machineDetails.WSManPort) -Authentication $authentication -Name '$sessionName'"
+        $newPsSessionCommandArgs = "-ComputerName '$computerName' -Port $port -Authentication $authentication -Name '$sessionName'"
         if(!$NoCredential) {
             $newPsSessionCommandArgs += " -Credential `$credential"    
         }
@@ -86,35 +87,53 @@ function Get-NewPSSessionCommand {
     }
 }
 
-function Get-MachineDetails {
+function Retry-Connection {
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory = $true)]
-        [string] $machineName,
-        [switch] $useSsl
+        [psobject[]] $targetMachines,
+        [string] $computerName,
+        [string] $sessionName
     )
-    Trace-VstsEnteringInvocation $MyInvocation
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
     try {
-        $machineDetails = @{
-            "ComputerName" = "";
-            "WSManPort" = "";
-        }
-    
-        $computerName, $port = $machineName.Split(':');
-        if([string]::IsNullOrEmpty($port)) {
-            if($useSsl) {
-                $port = "5986"
+        $targetMachine = $targetMachines | Where-Object { $_.ComputerName.ToLowerInvariant() -eq $computerName.ToLowerInvariant() }
+        if($targetMachine -eq $null) {
+            $allComputerNames = $($targetMachines | ForEach-Object { $_.ComputerName }) -join ','
+            Write-Verbose "Unable to find target machine: '$computerName' in the list of target machines: '$allComputerNames'"
+        } else {
+            if($targetMachine.Credential -eq $null) {
+                $remoteSession = Get-PSSession  -ComputerName $($targetMachine.ComputerName) `
+                                                -Name $sessionName `
+                                                -ConfigurationName ($targetMachine.SessionConfigurationName) `
+                                                -Port ($targetMachine.WSManPort) `
+                                                -Authentication ($targetMachine.Authentication) `
+                                                -UseSSL:$($targetMachine.UseSsl)
             } else {
-                $port = "5985"
+                $remoteSession = Get-PSSession  -ComputerName ($targetMachine.ComputerName) `
+                                                -Name $sessionName `
+                                                -ConfigurationName ($targetMachine.SessionConfigurationName) `
+                                                -Credential ($targetMachine.Credential) `
+                                                -Port ($targetMachine.WSManPort) `
+                                                -Authentication ($targetMachine.Authentication) `
+                                                -UseSSL:$($targetMachine.UseSsl)
+            }
+    
+            if(!$remoteSession) {
+                Write-Verbose "Unable to get remote pssession with name: '$sessionName' on remote computer: '$($targetMachine.ComputerName)'"
+            } else {
+                if(($remoteSession.State.ToString().ToLowerInvariant() -eq "disconnected") -and ($remoteSession.Availability.ToString().ToLowerInvariant() -eq "none")) {
+                    Write-Verbose "Session: '$sessionName' is available for reconnection on remote computer: '$($targetMachine.ComputerName)'"
+                    $job = Receive-PSSession -Session $remoteSession -OutTarget Job -ErrorAction 'Stop'
+                    return ($job.ChildJobs[0].Id)
+                } else {
+                    Write-Verbose "Remote PSSession unavailable for connection. PSSessionState: '$($remoteSession.State)'. PSSessionAvailability: '$($remoteSession.Availability)'"
+                }
             }
         }
-    
-        $machineDetails.ComputerName = $computerName
-        $machineDetails.WSManPort = $port
-        Write-Verbose "ComputerName = $($machineDetails.ComputerName)"
-        Write-Verbose "WSManPort = $($machineDetails.WSManPort)"
-        return $machineDetails
+    } catch {
+        Write-Verbose "Error during reconnection attempt: $($_.Exception.ToString())"
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
+    return $null
 }
