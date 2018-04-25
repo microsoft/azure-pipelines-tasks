@@ -122,5 +122,4 @@ export function activateEnvironment(environmentsDir: string, environmentName: st
     // and surface up the new environment variables as build variables.
     task.setVariable('CONDA_DEFAULT_ENV', environmentName)
     task.setVariable('CONDA_PREFIX', environmentPath)
-    task.setVariable('CONDA_PROMPT_MODIFIER', `(${environmentName})`)
 }

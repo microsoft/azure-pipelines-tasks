@@ -233,8 +233,7 @@ it('activates Conda environment', async function () {
 
     uut.activateEnvironment('envs', 'env');
     assert(prependPath.calledOnceWithExactly(path.join('envs', 'env')));
-    assert(setVariable.callCount === 3);
+    assert(setVariable.calledTwice);
     assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
     assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
-    assert(setVariable.calledWithExactly('CONDA_PROMPT_MODIFIER', '(env)'));
 });
