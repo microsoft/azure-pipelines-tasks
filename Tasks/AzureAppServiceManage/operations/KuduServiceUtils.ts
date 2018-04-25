@@ -44,15 +44,28 @@ export class KuduServiceUtils {
         outputVariables = outputVariables ? outputVariables : [];
         var outputVariableIterator: number = 0;
         var siteExtensions = await this._appServiceKuduService.getSiteExtensions();
+        var allSiteExtensions = await this._appServiceKuduService.getAllSiteExtensions();
         var anyExtensionInstalled: boolean = false;
         var siteExtensionMap = {};
+        var allSiteExtensionMap = {};
         var extensionLocalPaths: string = "";
         for(var siteExtension of siteExtensions) {
             siteExtensionMap[siteExtension.id] = siteExtension;
         }
+        for(var siteExtension of allSiteExtensions) {
+            allSiteExtensionMap[siteExtension.id] = siteExtension;
+        }
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
+            if(!allSiteExtensionMap[extensionID]){
+                for(var siteExtension of allSiteExtensions){
+                    if(siteExtension.title == extensionID){
+                        extensionID = siteExtension.id;
+                        break;
+                    }
+                }
+            }
             if(siteExtensionMap[extensionID]) {
                 siteExtensionDetails = siteExtensionMap[extensionID];
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
