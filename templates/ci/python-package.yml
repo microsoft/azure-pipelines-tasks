@@ -46,7 +46,7 @@ phases:
     displayName: 'Publish artifacts'
     inputs:
       pathToPublish: 'dist'
-      artifactName: 'artifact'
+      artifactName: 'dist'
       artifactType: 'container'
   # - task: PyPIPublisher@0
   #   inputs:
