@@ -60,7 +60,7 @@ export class KuduServiceUtils {
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
-            if(allSiteExtensionMap[extensionID] && allSiteExtensionMap[extensionID].title == extensionID){
+            if(allSiteExtensionMap[extensionID] && allSiteExtensionMap[extensionID].title == extensionID) {
                 extensionID = allSiteExtensionMap[extensionID].id;
             }
             // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
