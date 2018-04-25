@@ -40,8 +40,8 @@ phases:
       versionSpec: '3.6'
       architecture: 'x64'
       addToPath: 'true'
-  - script: python -m pip install --upgrade pip && pip install wheel && python setup.py bdist_wheel
-    displayName: Build Wheel
+  - script: python setup.py sdist
+    displayName: Build sdist
   - task: PublishBuildArtifacts@1
     displayName: 'Publish artifacts'
     inputs:
