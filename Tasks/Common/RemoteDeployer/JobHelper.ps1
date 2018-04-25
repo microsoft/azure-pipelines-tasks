@@ -18,7 +18,8 @@ function Run-RemoteScriptJobs {
         [scriptblock] $script,
         [string] $sessionName,
         [hashtable] $scriptArgumentsByName,
-        [hashtable[]] $targetMachines
+        [hashtable[]] $targetMachines,
+        [scriptblock] $errorHandler = $null
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
     try {
@@ -26,7 +27,7 @@ function Run-RemoteScriptJobs {
         $scriptArguments = Get-ScriptArguments -scriptArgumentsByName $scriptArgumentsByName
         $jobName = [Guid]::NewGuid().ToString()
         $jobsInfo = (Invoke-Command -Session $sessions -AsJob -ScriptBlock $script -ArgumentList $scriptArguments -JobName $jobName -ErrorAction 'Stop').ChildJobs | Select-Object Id, Location
-        $jobResults = Get-JobResults -jobsInfo $jobsInfo -targetMachines $targetMachines -sessionName $sessionName
+        $jobResults = Get-JobResults -jobsInfo $jobsInfo -targetMachines $targetMachines -sessionName $sessionName -errorHandler $errorHandler
         Set-TaskResult -jobResults $jobResults -machinesCount $totalTargetMachinesCount
         return $jobResults
     } finally {
@@ -109,7 +110,8 @@ function Get-JobResults {
     Param (
         [psobject[]] $jobsInfo,
         [hashtable[]] $targetMachines,
-        [string] $sessionName
+        [string] $sessionName,
+        [scriptblock] $errorHandler
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
     try {
@@ -136,6 +138,10 @@ function Get-JobResults {
                                 $jobResults += $_ 
                             } else { 
                                 Write-Host $($_ | Out-String) 
+                                if(($errorHandler -ne $null) -and ($_ -is [System.Management.Automation.ErrorRecord])) {
+                                    $errorRecord = $_
+                                    $null = & { try { & $errorHandler $errorRecord $($job.Location) } catch { Write-Host "ErrorHandlerException: $($_.Exception.ToString())" } }
+                                }
                             }
                         }
                         
