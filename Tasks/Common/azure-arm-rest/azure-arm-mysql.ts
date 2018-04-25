@@ -100,7 +100,7 @@ export class FirewallRules {
                 deferred.reject(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
             }
             else if(statusCode === 202){
-                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 3).then((response) => {
+                this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, 3, 0).then((response) => {
                     deferred.resolve(new azureServiceClient.ApiResult(null, response));
                 },(error) => {
                     deferred.reject(error);
@@ -233,13 +233,14 @@ export class FirewallRules {
      * @param firewallRuleName      firewall rule name to be deleted 
      * @param retryOption           no of time to retry
      */
-    private _recursiveGetCall(resourceGroupName: string, serverName: string, firewallRuleName: string, retryOption: number) : Q.Promise<azureServiceClient.ApiResult>{
+    private _recursiveGetCall(resourceGroupName: string, serverName: string, firewallRuleName: string, retryOption: number, timeToWait: number) : Q.Promise<azureServiceClient.ApiResult>{
         var deferred = Q.defer<azureServiceClient.ApiResult>();
+        let waitedTime = 2000 + timeToWait * 2;
         setTimeout(() => {
             this.get(resourceGroupName, serverName, firewallRuleName, (error, result, request, response) => {
                 if(error){
                     if(retryOption > 0){
-                        deferred.resolve(this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, retryOption - 1));
+                        deferred.resolve(this._recursiveGetCall(resourceGroupName, serverName, firewallRuleName, retryOption - 1, waitedTime));
                     }else{
                         deferred.reject(new Error(tl.loc("NotAbleToCreateFirewallRule", error)));
                     }
@@ -248,7 +249,7 @@ export class FirewallRules {
                     deferred.resolve(new azureServiceClient.ApiResult(null, result));
                 }
             });
-        }, 500); 
+        }, waitedTime); 
 
         return deferred.promise;
     }

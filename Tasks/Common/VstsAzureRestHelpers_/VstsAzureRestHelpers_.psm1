@@ -8,6 +8,7 @@ $script:defaultEnvironmentAuthUri = "https://login.windows.net/"
 $certificateConnection = 'Certificate'
 $usernameConnection = 'UserNamePassword'
 $spnConnection = 'ServicePrincipal'
+$MsiConnection = 'ManagedServiceIdentity'
 
 # Well-Known ClientId
 $azurePsClientId = "1950a258-227b-4e31-a9cf-717495945fc2"
@@ -111,7 +112,7 @@ function IsAzureRmConnection
     param([Parameter(Mandatory=$true)] $connectionType)
 
     Write-Verbose "Connection type used is $connectionType"
-    if($connectionType -eq $spnConnection)
+    if(($connectionType -eq $spnConnection) -or ($connectionType -eq $MsiConnection))
     {
         return $true
     }
@@ -322,6 +323,19 @@ function Has-ObjectProperty {
     }
 }
 
+function Get-AzureRMAccessToken {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $endpoint) 
+
+    if($endpoint.Auth.Scheme -eq $MsiConnection )
+    {
+        Get-MsiAccessToken $endpoint 0 0
+    }
+    else
+    {
+        Get-SpnAccessToken $endpoint
+    }   
+}
 
 # Get the Bearer Access Token from the Endpoint
 function Get-SpnAccessToken {
@@ -372,10 +386,93 @@ function Get-SpnAccessToken {
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-SpnAccessToken)"
         throw (Get-VstsLocString -Key AZ_SpnAccessTokenFetchFailure -ArgumentList $tenantId)
     }
 }
+
+# Get the Bearer Access Token from the Endpoint
+function Get-MsiAccessToken {
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true)] $endpoint,
+        [Parameter(Mandatory=$true)] $retryCount,
+        [Parameter(Mandatory=$true)] $timeToWait)
+
+    $msiClientId = "";
+    if($endpoint.Data.msiClientId){
+        $msiClientId  =  "&client_id=" + $endpoint.Data.msiClientId;
+    }
+    $tenantId = $endpoint.Auth.Parameters.TenantId
+
+    # Prepare contents for GET
+    $method = "GET"
+    $apiVersion = "2018-02-01";
+    $authUri = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + $apiVersion + "&resource=" + $endpoint.Url + $msiClientId;
+    
+    # Call Rest API to fetch AccessToken
+    Write-Verbose "Fetching Access Token For MSI"
+    
+    try
+    {
+        $retryLimit = 5;
+        $proxyUri = Get-ProxyUri $authUri
+        if ($proxyUri -eq $null)
+        {
+            Write-Verbose "No proxy settings"
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseBasicParsing
+        }
+        else
+        {
+            Write-Verbose "Using Proxy settings"
+            $response = Invoke-WebRequest -Uri $authUri -Method $method -Headers @{Metadata="true"} -UseDefaultCredentials -Proxy $proxyUri -ProxyUseDefaultCredentials -UseBasicParsing
+        }
+
+        # Action on the based of response 
+        if(($response.StatusCode -eq 429) -or ($response.StatusCode -eq 500))
+        {
+            if($retryCount -lt $retryLimit)
+            {
+                $retryCount += 1
+                $waitedTime = 2000 + $timeToWait * 2
+                Start-Sleep -m $waitedTime
+                Get-MsiAccessToken $endpoint $retryCount  $waitedTime
+            }
+            else
+            {
+                throw (Get-VstsLocString -Key AZ_MsiAccessTokenFetchFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+            }
+        }
+        elseif ($response.StatusCode -eq 200)
+        {
+            $accessToken = $response.Content | ConvertFrom-Json
+            return $accessToken
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
+        
+    }
+    catch
+    {
+        $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "ExceptionMessage: $exceptionMessage (in function: Get-MsiAccessToken)"
+        if($exceptionMessage -match "400")
+        {
+            throw (Get-VstsLocString -Key AZ_MsiAccessNotConfiguredProperlyFailure -ArgumentList $response.StatusCode, $response.StatusDescription)
+        }
+        else
+        {
+            throw $_.Exception
+        }
+    }
+}
+
 
 # Get the certificate from the Endpoint.
 function Get-Certificate {
@@ -423,6 +520,12 @@ function Get-AzStorageKeys
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzStorageKeys)"
         throw
     }
@@ -437,7 +540,7 @@ function Get-AzRMStorageKeys
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
 
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
@@ -464,6 +567,12 @@ function Get-AzRMStorageKeys
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRMStorageKeys)"
         throw
     }
@@ -479,7 +588,7 @@ function Get-AzRmVmCustomScriptExtension
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -515,6 +624,12 @@ function Get-AzRmVmCustomScriptExtension
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmVmCustomScriptExtension)"
         throw
     }
@@ -530,7 +645,7 @@ function Remove-AzRmVmCustomScriptExtension
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -557,6 +672,12 @@ function Remove-AzRmVmCustomScriptExtension
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Remove-AzRmVmCustomScriptExtension)"
         throw
     }
@@ -596,6 +717,12 @@ function Get-AzStorageAccount
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzStorageAccount)"
         throw
     }
@@ -610,7 +737,7 @@ function Get-AzRmStorageAccount
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
         $resourceGroupDetails = Get-AzRmResourceGroup $resourceGroupName $endpoint
         $resourceGroupId = $resourceGroupDetails.id
 
@@ -652,6 +779,12 @@ function Get-AzRmStorageAccount
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmStorageAccount)"
         throw
     }
@@ -665,7 +798,7 @@ function Get-AzRmResourceGroup
 
     try
     {
-        $accessToken = Get-SpnAccessToken $endpoint
+        $accessToken = Get-AzureRMAccessToken $endpoint
         $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
         $method="GET"
@@ -690,6 +823,12 @@ function Get-AzRmResourceGroup
     catch
     {
         $exceptionMessage = $_.Exception.Message.ToString()
+        Write-Verbose "Exception : $exceptionMessage" 
+        $parsedException = Parse-Exception($_.Exception)
+        if($parsedException)
+        {
+            $exceptionMessage = $parsedException
+        }
         Write-Error "ExceptionMessage: $exceptionMessage (in function: Get-AzRmResourceGroup)"
         throw
     }
@@ -775,7 +914,7 @@ function Add-AzureRmSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     # get azure sql server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
 
@@ -827,7 +966,7 @@ function Remove-AzureRmSqlServerFirewall
           [String] [Parameter(Mandatory = $true)] $serverName,
           [String] [Parameter(Mandatory = $true)] $firewallRuleName)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
 
     # Fetch Azure SQL server resource Id
     $azureResourceId = Get-AzureSqlDatabaseServerResourceId -endpoint $endpoint -serverName $serverName -accessToken $accessToken
@@ -926,32 +1065,55 @@ function Remove-AzureSqlDatabaseServerFirewallRule
 
 function Parse-Exception($exception){
     if($exception) {
-        Write-Verbose "Exception message - $($exception.ToString())"
-        $response = $exception.Response
-        if($response) {
-            $responseStream =  $response.GetResponseStream()
-            $streamReader = New-Object System.IO.StreamReader($responseStream)
-            $streamReader.BaseStream.Position = 0
-            $streamReader.DiscardBufferedData()
-            $responseBody = $streamReader.ReadToEnd()
-            $streamReader.Close()
-            Write-Verbose "Exception message extracted from response $responseBody"
-            $exceptionMessage = "";
-            try
+        try{
+            Write-Verbose "Exception message - $($exception.ToString())"
+            $response = $exception.Response
+            if($response) 
             {
-                if($responseBody)
+                $responseStream =  $response.GetResponseStream()
+                $streamReader = New-Object System.IO.StreamReader($responseStream)
+                $streamReader.BaseStream.Position = 0
+                $streamReader.DiscardBufferedData()
+                $responseBody = $streamReader.ReadToEnd()
+                $streamReader.Close()
+                Write-Verbose "Exception message extracted from response $responseBody"
+                $exceptionMessage = "";
+                try
                 {
-                    $exceptionJson = $responseBody | ConvertFrom-Json
-                    $exceptionMessage = $exceptionJson.Message
+                    if($responseBody)
+                    {
+                        $exceptionJson = $responseBody | ConvertFrom-Json
+
+                        $exceptionError = $exceptionJson.error
+                        if($exceptionError)
+                        {
+                            $exceptionMessage = $exceptionError.Message
+                            $exceptionCode = $exceptionError.code
+                        }
+                        else 
+                        {
+                            $exceptionMessage = $exceptionJson.Message
+                            $exceptionCode = $exceptionJson.code
+                        }
+
+                        if ($exceptionCode)
+                        {
+                            Write-VstsTaskError -ErrCode $exceptionCode
+                        }
+                    }
                 }
+                catch{
+                    $exceptionMessage = $responseBody
+                }
+                if($response.statusCode -eq 404 -or (-not $exceptionMessage)){
+                    $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
+                }
+                return $exceptionMessage
             }
-            catch{
-                $exceptionMessage = $responseBody
-            }
-            if($response.statusCode -eq 404 -or (-not $exceptionMessage)){
-                $exceptionMessage += " Please verify request URL : $($response.ResponseUri)" 
-            }
-            return $exceptionMessage
+        } 
+        catch
+        {
+            Write-verbose "Unable to parse exception: " + $_.Exception.ToString()
         }
     }
     return $null
@@ -963,7 +1125,7 @@ function Get-AzureNetworkInterfaceDetails
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
           [Object] [Parameter(Mandatory = $true)] $endpoint)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Network Interface Details"
@@ -1002,7 +1164,7 @@ function Get-AzurePublicIpAddressDetails
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
           [Object] [Parameter(Mandatory = $true)] $endpoint)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Public IP Addresses Details"
@@ -1041,7 +1203,7 @@ function Get-AzureLoadBalancersDetails
     param([String] [Parameter(Mandatory = $true)] $resourceGroupName,
           [Object] [Parameter(Mandatory = $true)] $endpoint)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
 
     Write-Verbose "[Azure Rest Call] Get Load Balancers details"
@@ -1081,7 +1243,7 @@ function Get-AzureLoadBalancerDetails
           [String] [Parameter(Mandatory = $true)] $name,
           [Object] [Parameter(Mandatory = $true)] $endpoint)
 
-    $accessToken = Get-SpnAccessToken $endpoint
+    $accessToken = Get-AzureRMAccessToken $endpoint
     $subscriptionId = $endpoint.Data.SubscriptionId.ToLower()
     
     Write-Verbose "[Azure Rest Call] Get Load balancer details with name : $name"

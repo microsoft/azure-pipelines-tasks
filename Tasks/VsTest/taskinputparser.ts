@@ -67,10 +67,10 @@ export function getvsTestConfigurations() {
     vsTestConfiguration.isResponseFileRun = false;
     vsTestConfiguration.publishTestResultsInTiaMode = false;
     vsTestConfiguration.publishRunAttachments = tl.getInput('publishRunAttachments');
-    vsTestConfiguration.vstestDiagFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    vsTestConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    vsTestConfiguration.vstestArgsFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    vsTestConfiguration.responseSupplementryFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    vsTestConfiguration.vstestDiagFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+    vsTestConfiguration.responseFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+    vsTestConfiguration.vstestArgsFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+    vsTestConfiguration.responseSupplementryFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
     vsTestConfiguration.responseFileSupported = vsTestConfiguration.vsTestVersionDetails.isResponseFileSupported() || utils.Helper.isToolsInstallerFlow(vsTestConfiguration);
     return vsTestConfiguration;
 }
@@ -371,9 +371,10 @@ function getTiaConfiguration(): models.TiaConfiguration {
     tiaConfiguration.fileLevel = tl.getVariable('tia.filelevel');
     tiaConfiguration.sourcesDir = tl.getVariable('build.sourcesdirectory');
     tiaConfiguration.tiaFilterPaths = tl.getVariable('TIA_IncludePathFilters');
-    tiaConfiguration.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    tiaConfiguration.baseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    tiaConfiguration.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    tiaConfiguration.runIdFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+    tiaConfiguration.baseLineBuildIdFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+    tiaConfiguration.responseFile = utils.Helper.GenerateTempFile(uuid.v1() + '.txt');
+
     tiaConfiguration.useNewCollector = false;
 
     const useNewCollector = tl.getVariable('tia.useNewCollector');

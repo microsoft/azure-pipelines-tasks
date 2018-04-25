@@ -4,12 +4,14 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 
 $publishProfilePath = "$PSScriptRoot\data\CertPublishProfile.xml"
-$applicationPackagePath = "random package path"
+$applicationPackagePath = "$PSScriptRoot\data"
+$applicationManifestPath = "$applicationPackagePath\ApplicationManifest.xml"
 $serviceConnectionName = "random connection name"
 $serverCertThumbprint = "random thumbprint"
 $serviceFabricSdkModulePath = "$PSScriptRoot\data\ServiceFabricSDK.ps1"
 $appName = "AppName"
 $overwriteBehavior = "SameAppTypeAndVersion"
+$applicationParameter = @{ "Key1" = "overridenValue" }
 
 # Setup input arguments
 Register-Mock Get-VstsInput { $publishProfilePath } -- -Name publishProfilePath
@@ -22,6 +24,7 @@ Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
 Register-Mock Get-VstsInput { "false" } -- -Name configureDockerSettings
 Register-Mock Get-VstsInput { "false" } -- -Name useDiffPackage
+Register-Mock Get-VstsInput { "true" } -- -Name overrideApplicationParameter
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -59,10 +62,12 @@ $regKeyObj = @{
 Register-Mock Get-ItemProperty { $regKeyObj } -- -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKPSModulePath
 
 Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$PSScriptRoot\data\ApplicationParameters.xml"
+Register-Mock Get-ApplicationManifestPath { $applicationManifestPath } -- -ApplicationPackagePath $applicationPackagePath
+Register-Mock Get-OverridenApplicationParameters { $applicationParameter } -- -ApplicationManifestPath $applicationManifestPath
 
 # Indicate that the application does not exist on cluster
 Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
-$publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml",  "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
+$publishArgs = @("-Action:", "RegisterAndCreate", "-ApplicationPackagePath:", $applicationPackagePath, "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationParameter:", $applicationParameter, "-ErrorAction:", "Stop", "-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"

@@ -46,6 +46,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "testuuid"
         },
+        "/usr/libexec/PlistBuddy -c Print Name _xcodetasktmp.plist": {
+            "code": 0,
+            "stdout": "testprovname"
+        },
         "/bin/cp -f /build/temp/mySecureFileId.filename /users/test/Library/MobileDevice/Provisioning Profiles/testuuid.mobileprovision": {
             "code": 0,
             "stdout": "provisioning profile copied"

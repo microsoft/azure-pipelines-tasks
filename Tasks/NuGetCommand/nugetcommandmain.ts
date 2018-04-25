@@ -89,7 +89,6 @@ function _logNugetStartupVariables(nuGetPath: string, nugetVersion: string) {
         }
         let nugetTelem = {
                 'command': tl.getInput('command'),
-                'arguments': tl.getInput('arguments'),
                 'NUGET_EXE_TOOL_PATH_ENV_VAR': tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR),
                 'NUGET_EXE_CUSTOM_LOCATION': tl.getVariable(NUGET_EXE_CUSTOM_LOCATION),
                 'searchPatternPack': tl.getPathInput('searchPatternPack'),

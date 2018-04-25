@@ -207,7 +207,7 @@ describe('Xcode Suite', function() {
             tr.run()
                 .then(() => {
                     assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
-                    assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
+                    assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid PROVISIONING_PROFILE_SPECIFIER='),
                         'xcodebuild for building the ios project/workspace should have been run with signing options.');
                     assert(tr.resultWasSet, 'task should have set a result');
                     assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -247,8 +247,8 @@ describe('Xcode Suite', function() {
             tr.run()
                 .then(() => {
                     assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
-                    assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q)'),
-                        'xcodebuild for building the ios project/workspace should have been run with signing options with P12 only, no provisioning profile.');
+                    assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE= PROVISIONING_PROFILE_SPECIFIER='),
+                        'xcodebuild for building the ios project/workspace should have been run with signing options with P12 signing identity, and empty provisioning profile/specifier values that override any values in the pbxproj file.');
                     assert(tr.resultWasSet, 'task should have set a result');
                     assert(tr.stderr.length == 0, 'should not have written to stderr');
                     assert(tr.succeeded, 'task should have succeeded');
@@ -282,7 +282,7 @@ describe('Xcode Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
-                assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE=testuuid'),
+                assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE=testuuid PROVISIONING_PROFILE_SPECIFIER='),
                     'xcodebuild for building the ios project/workspace should have been run with signing options with provisioning profile only.');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -317,7 +317,7 @@ describe('Xcode Suite', function() {
         tr.run()
             .then(() => {
                 assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
-                assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=testSignIdentity PROVISIONING_PROFILE=testUUID'),
+                assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=testSignIdentity PROVISIONING_PROFILE=testUUID PROVISIONING_PROFILE_SPECIFIER='),
                     'xcodebuild for building the ios project/workspace should have been run with signing options.');
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length == 0, 'should not have written to stderr');

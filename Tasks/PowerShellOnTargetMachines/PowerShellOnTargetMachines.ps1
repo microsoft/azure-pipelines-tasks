@@ -104,7 +104,8 @@ try
     }
     catch
     {
-        Write-Telemetry "Task_InternalError" $_.exception.Message
+        Write-Verbose $_.Exception.ToString()
+        Write-Telemetry "Task_InternalError" "FaileToFetchResourceProperties"
 
         throw
     }
@@ -126,7 +127,6 @@ try
             Publish-Azure-Telemetry -deploymentResponse $deploymentResponse -jobId $jobId
             if ($status -ne "Passed")
             {
-                Write-Telemetry "DTLSDK_Error" $deploymentResponse.DeploymentSummary
                 Write-Verbose $deploymentResponse.Error.ToString()
                 $errorMessage =  $deploymentResponse.Error.Message
                 throw $errorMessage
@@ -183,10 +183,6 @@ try
 
     if($envOperationStatus -ne "Passed")
     {
-        foreach ($error in $dtlsdkErrors) {
-        Write-Telemetry "DTLSDK_Error" $error
-        }
-        
         $errorMessage = (Get-VstsLocString -Key 'PS_TM_DeploymentOnOneOrMoreMachinesFailed')
         throw $errorMessage
     }
@@ -194,8 +190,9 @@ try
 }
 catch
 {
-    Write-Verbose $_.Exception.ToString() -Verbose
-    Write-Telemetry "Task_InternalError" $_.Exception.Message
+    Write-Verbose $_.Exception.ToString()
+    $exceptionType = $_.Exception.GetType()
+    Write-Telemetry "Task_InternalError" "PowerShellOnTargetMachineTaskFailed:$exceptionType"
     throw
 }
 finally

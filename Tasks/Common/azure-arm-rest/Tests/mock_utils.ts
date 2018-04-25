@@ -1,11 +1,12 @@
-import { AzureEndpoint, WebTest } from '../azureModels';
+import { AzureEndpoint, WebTest, Scheme } from '../azureModels';
 import { ApplicationInsightsWebTests } from '../azure-arm-appinsights-webtests';
 import * as querystring from "querystring";
 import { ApplicationTokenCredentials } from '../azure-arm-common';
 export var nock = require('nock');
 
-export function getMockEndpoint() {
+export function getMockEndpoint(scheme?: string, msiClientId?: string) {
     process.env["AZURE_HTTP_USER_AGENT"] = "TEST_AGENT";
+
     var endpoint: AzureEndpoint = {
         activeDirectoryAuthority: "https://login.windows.net/",
         environment: "AzureCloud",
@@ -18,7 +19,7 @@ export function getMockEndpoint() {
         environmentAuthorityUrl: "https://login.windows.net/",
         activeDirectoryResourceID: "https://management.azure.com/",
         applicationTokenCredentials: new ApplicationTokenCredentials("MOCK_SPN_ID", "MOCK_TENANT_ID", "MOCK_SPN_KEY", "https://management.azure.com/",
-        "https://login.windows.net/", "https://management.azure.com/", false)
+        "https://login.windows.net/", "https://management.azure.com/", false, scheme, msiClientId)
     }
     
     nock("https://login.windows.net", {
@@ -35,6 +36,19 @@ export function getMockEndpoint() {
     .reply(200, { 
         access_token: "DUMMY_ACCESS_TOKEN"
     }).persist(); 
+
+    let apiVersion = "2018-02-01";
+    let msiClientIdUrl =  msiClientId ? "&client_id=" + msiClientId : "";
+    var msiUrl = "http://169.254.169.254/metadata/identity/oauth2/token?api-version=" + apiVersion + "&resource=https://management.azure.com/" + msiClientIdUrl;
+    nock(msiUrl, {
+        reqheaders: {
+            "Metadata": true
+          }
+    })
+    .get("/oauth2/token?resource=https://management.azure.com/")
+    .reply(200, { 
+        access_token: "DUMMY_ACCESS_TOKEN"
+    }).persist();
 
     return endpoint;
 }

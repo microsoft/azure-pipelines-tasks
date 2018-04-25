@@ -12,12 +12,19 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 133,
-    "Patch": 1
+    "Minor": 134,
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
   "inputs": [
     {
       "name": "versionSpec",
@@ -34,6 +41,19 @@
       "required": true,
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.addToPath"
+    },
+    {
+      "name": "architecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.architecture",
+      "defaultValue": "x64",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.architecture",
+      "groupName": "advanced",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
     }
   ],
   "outputVariables": [

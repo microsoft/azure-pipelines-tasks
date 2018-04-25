@@ -92,6 +92,7 @@
         "SqlDacpacDeploymentOnMachineGroup",
         "SSH",
         "UsePythonVersion",
+        "UseRubyVersion",
         "VSBuild",
         "VsTest",
         "VsTestPlatformToolInstaller",

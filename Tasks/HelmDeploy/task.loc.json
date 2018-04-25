@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 8
   },
   "demands": [],
   "preview": "true",
@@ -27,6 +27,11 @@
       "name": "commands",
       "displayName": "ms-resource:loc.group.displayName.commands",
       "isExpanded": true
+    },
+    {
+      "name": "tls",
+      "displayName": "ms-resource:loc.group.displayName.tls",
+      "isExpanded": false
     },
     {
       "name": "advanced",
@@ -171,6 +176,9 @@
     {
       "name": "version",
       "label": "ms-resource:loc.input.label.version",
+      "aliases": [
+        "chartVersion"
+      ],
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.version",
       "defaultValue": "",
@@ -215,6 +223,9 @@
     },
     {
       "name": "canaryimage",
+      "aliases": [
+        "canaryImage"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.canaryimage",
       "defaultValue": "false",
@@ -224,6 +235,9 @@
     },
     {
       "name": "upgradetiller",
+      "aliases": [
+        "upgradeTiller"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.upgradetiller",
       "defaultValue": "true",
@@ -233,6 +247,9 @@
     },
     {
       "name": "updatedependency",
+      "aliases": [
+        "updateDependency"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.updatedependency",
       "defaultValue": "false",
@@ -306,7 +323,48 @@
       "groupName": "commands"
     },
     {
+      "name": "enableTls",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.enableTls",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.enableTls",
+      "groupName": "tls"
+    },
+    {
+      "name": "caCert",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.caCert",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.caCert",
+      "visibleRule": "enableTls == true",
+      "groupName": "tls"
+    },
+    {
+      "name": "certificate",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.certificate",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.certificate",
+      "visibleRule": "enableTls == true",
+      "groupName": "tls"
+    },
+    {
+      "name": "privatekey",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.privatekey",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.privatekey",
+      "visibleRule": "enableTls == true",
+      "groupName": "tls"
+    },
+    {
       "name": "tillernamespace",
+      "aliases": [
+        "tillerNamespace"
+      ],
       "label": "ms-resource:loc.input.label.tillernamespace",
       "helpMarkDown": "ms-resource:loc.input.help.tillernamespace",
       "type": "string",
@@ -330,9 +388,19 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node": {
+      "target": "src//downloadsecurefiles.js"
+    }
+  },
   "execution": {
     "Node": {
       "target": "src//helm.js"
+    }
+  },
+  "postjobexecution": {
+    "Node": {
+      "target": "src//deletesecurefiles.js"
     }
   },
   "messages": {
@@ -346,6 +414,12 @@
     "RetryingRequest": "ms-resource:loc.messages.RetryingRequest",
     "PatternNotFoundInFilePath": "ms-resource:loc.messages.PatternNotFoundInFilePath",
     "CantResolvePatternInPath": "ms-resource:loc.messages.CantResolvePatternInPath",
-    "PatternFoundInPath": "ms-resource:loc.messages.PatternFoundInPath"
+    "PatternFoundInPath": "ms-resource:loc.messages.PatternFoundInPath",
+    "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
+    "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "SkipDeleteSecureFiles": "ms-resource:loc.messages.SkipDeleteSecureFiles",
+    "SkipDownloadSecureFiles": "ms-resource:loc.messages.SkipDownloadSecureFiles",
+    "FileNotFound": "ms-resource:loc.messages.FileNotFound"
   }
 }

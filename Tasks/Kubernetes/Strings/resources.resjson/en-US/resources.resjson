@@ -13,7 +13,7 @@
   "loc.input.label.namespace": "Namespace",
   "loc.input.help.namespace": "Name of the namespace to run the command in.",
   "loc.input.label.command": "Command",
-  "loc.input.help.command": "Select a kubectl command.",
+  "loc.input.help.command": "Select or type a kubectl command.",
   "loc.input.label.useConfigurationFile": "Use Configuration files",
   "loc.input.help.useConfigurationFile": "Use Kubernetes configuration file or folder with the command.",
   "loc.input.label.configuration": "Configuration File",
