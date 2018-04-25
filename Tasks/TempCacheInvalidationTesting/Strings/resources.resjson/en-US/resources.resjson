@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "TempCacheInvalidationTesting",
+  "loc.helpMarkDown": "TempCacheInvalidationTesting",
+  "loc.description": "TempCacheInvalidationTesting",
+  "loc.instanceNameFormat": "Command Line Script",
+  "loc.releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines.",
+  "loc.group.displayName.advanced": "Advanced",
+  "loc.messages.GeneratingScript": "Generating script.",
+  "loc.messages.JS_ExitCode": "Bash exited with code '%s'.",
+  "loc.messages.JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
+  "loc.messages.PS_ExitCode": "Cmd.exe exited with code '{0}'.",
+  "loc.messages.PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from cmd.exe.",
+  "loc.messages.ScriptContents": "Script contents:"
+}

@@ -1,0 +1,47 @@
+{
+    "id": "206C6FF6-1C64-4E4E-B32B-0AC64E313055",
+    "name": "TempCacheInvalidationTesting",
+    "friendlyName": "TempCacheInvalidationTesting",
+    "description": "TempCacheInvalidationTesting",
+    "helpMarkDown": "TempCacheInvalidationTesting",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 134,
+        "Patch": 4
+    },
+    "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines.",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+    ],
+    "instanceNameFormat": "Command Line Script",
+    "execution": {
+        "Node": {
+            "target": "cmdline.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "GeneratingScript": "Generating script.",
+        "JS_ExitCode": "Bash exited with code '%s'.",
+        "JS_Stderr": "Bash wrote one or more lines to the standard error stream.",
+        "PS_ExitCode": "Cmd.exe exited with code '{0}'.",
+        "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from cmd.exe.",
+        "ScriptContents": "Script contents:"
+    }
+}
