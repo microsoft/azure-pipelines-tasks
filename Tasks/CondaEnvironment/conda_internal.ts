@@ -46,7 +46,7 @@ export function prependCondaToPath(condaRoot: string, platform: Platform): void 
 export function downloadMiniconda(platform: Platform): Promise<string> {
     const url = (() => {
         switch (platform) {
-            case Platform.Linux: return 'https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh';
+            case Platform.Linux: return 'https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh';
             case Platform.MacOS: return 'https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh';
             case Platform.Windows: return 'https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe';
         }
@@ -87,13 +87,13 @@ export async function installMiniconda(installerPath: string, platform: Platform
     try {
         const conda = (() => {
             if (platform === Platform.Windows) {
-                return new ToolRunner(path.join(destination, 'Scripts', 'conda.exe'))
+                return new ToolRunner(path.join(destination, 'Scripts', 'conda.exe'));
             } else {
-                return new ToolRunner(path.join(destination, 'bin', 'conda'))
+                return new ToolRunner(path.join(destination, 'bin', 'conda'));
             }
         })();
 
-        conda.line('update --name base conda');
+        conda.line('update --name base conda --yes');
         await conda.exec();
     } catch (e) {
         // Best effort
@@ -111,7 +111,7 @@ export async function installMiniconda(installerPath: string, platform: Platform
  */
 export async function createEnvironment(environmentPath: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
     const conda = new ToolRunner('conda');
-    conda.line(`create --quiet --yes --prefix ${environmentPath} --mkdir`);
+    conda.line(`create --quiet --prefix ${environmentPath} --mkdir --yes`);
     if (packageSpecs) {
         conda.line(packageSpecs);
     }

@@ -80,7 +80,7 @@ it('downloads Miniconda', async function () {
 
     { // Linux
         const actual = await uut.downloadMiniconda(Platform.Linux);
-        assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh', path.join('path-temp', 'Miniconda2-latest-Linux-x86_64.sh')));
+        assert(downloadTool.calledOnceWithExactly('https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh', path.join('path-temp', 'Miniconda3-latest-Linux-x86_64.sh')));
     }
     { // macOS
         downloadTool.resetHistory();
@@ -183,11 +183,11 @@ it('creates Conda environment', async function (done: MochaDone) {
     { // success
         mockToolRunner.setAnswers({
             exec: {
-                'conda create --quiet --yes --prefix envsDir/env --mkdir': {
+                'conda create --quiet --prefix envsDir/env --mkdir --yes': {
                     code: 0
                 },
                 // workaround for running tests cross-platform
-                'conda create --quiet --yes --prefix envsDir\\env --mkdir': {
+                'conda create --quiet --prefix envsDir\\env --mkdir --yes': {
                     code: 0
                 }
             }
@@ -198,11 +198,11 @@ it('creates Conda environment', async function (done: MochaDone) {
     { // failure
         mockToolRunner.setAnswers({
             exec: {
-                'conda create --quiet --yes --prefix envsDir/env --mkdir': {
+                'conda create --quiet --prefix envsDir/env --mkdir --yes': {
                     code: 1
                 },
                 // workaround for running tests cross-platform
-                'conda create --quiet --yes --prefix envsDir\\env --mkdir': {
+                'conda create --quiet --prefix envsDir\\env --mkdir --yes': {
                     code: 1
                 }
             }
