@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [],
     "satisfies": ["Helm"],
@@ -36,7 +36,15 @@
             "defaultValue": "2.8.2"
         },
         {
+            "name": "checkLatestHelmVersion",
+            "type": "boolean",
+            "label": "Check for latest version of Helm",
+            "defaultValue": "true",
+            "helpMarkDown": "Check for latest version of Helm."
+        },
+        {
             "name": "installKubeCtl",
+            "aliases": ["installKubectl"],
             "type": "boolean",
             "label": "Install Kubectl",
             "defaultValue": "true",
@@ -55,6 +63,7 @@
         },
         {
             "name": "checkLatestKubeCtl",
+            "aliases": ["checkLatestKubectl"],
             "type": "boolean",
             "label": "Check for latest version of kubectl",
             "defaultValue": "true",
@@ -74,6 +83,7 @@
         "DownloadKubectlFailedFromLocation": "Failed to download kubectl from location %s. Error %s",
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
         "HelmNotFoundInFolder": "Helm executable not found in path %s",
-        "HelmDownloadFailed": "Failed to download helm from location %s. Error %s"
+        "HelmDownloadFailed": "Failed to download helm from location %s. Error %s",
+        "HelmLatestNotKnown": "Can not get lateast helm info from %s. Error %s. Using default helm version %s."
     }
 }

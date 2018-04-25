@@ -110,6 +110,40 @@ function Read-PublishProfile
     return $publishProfile
 }
 
+function Get-OverridenApplicationParameters
+{
+    Param (
+        [String]
+        $ApplicationManifestPath
+    )
+
+    $overrideParameters = @{}
+    $applicationManifestXml = [Xml] (Get-Content -LiteralPath $ApplicationManifestPath)
+    foreach ($param in $applicationManifestXml.ApplicationManifest.Parameters.Parameter)
+    {
+        $paramName = $param.Name -replace "\.", '_' -replace " ", '_'
+        $paramValue = (Get-Item env:$paramName -ErrorAction Ignore).Value
+        if ($paramValue)
+        {
+            $overrideParameters.Add($paramName, $paramValue)
+        }
+    }
+
+    return $overrideParameters
+}
+
+function Get-ApplicationManifestPath
+{
+    Param (
+        [String]
+        $ApplicationPackagePath
+    )
+
+    $appManifestName = "ApplicationManifest.xml"
+    $localAppManifestPath = Join-Path $ApplicationPackagePath $appManifestName
+    return $localAppManifestPath
+}
+
 function Get-VstsUpgradeParameters
 {
     Param ()

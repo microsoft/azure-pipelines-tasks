@@ -16,13 +16,13 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "groups": [
       {
           "name": "signingDetails",
-          "displayName": "Certificate Details",
-          "isExpanded": true
+          "displayName": "Signing Properties",
+          "isExpanded": false
       }
   ],
   "inputs": [
@@ -64,7 +64,7 @@
     "label": "Certificate Variable",
     "required": true,
     "defaultValue": "",
-    "helpMarkDown": "Certificate pulled in from Key Vault store. Please create a variable group that is linked to an Azure Key Vault, which contains a variable, whose value is the certificate. You can do this by going to Library -> Variable group -> + Variable group -> Select 'Link secrets from an Azure key vault as variables' -> Select your Azure subscription -> Select the key vault name -> Ensure that the variable with the certificate is selected. You can also define regular/secret variable which will contain certificate content as string.",
+    "helpMarkDown": "Specify the secret variable that contains the certificate content.",
     "visibleRule": "signPayload = true",
     "groupName": "signingDetails"
   },
@@ -73,7 +73,7 @@
     "type": "string",
     "label": "Signature Property Key",
     "required": false,
-    "defaultValue": "",
+    "defaultValue": "signature",
     "helpMarkDown": "Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties",
     "visibleRule": "signPayload = true",
     "groupName": "signingDetails"

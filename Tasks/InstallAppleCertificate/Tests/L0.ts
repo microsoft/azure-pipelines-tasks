@@ -21,7 +21,7 @@ describe('InstallAppleCertificate Suite', function () {
 
         assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /build/temp/ios_signing_temp.keychain'),
             'certificate should have been installed in the keychain');
-        assert(tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /build/temp/ios_signing_temp.keychain'),
+        assert(tr.ran('/usr/bin/security create-keychain -p 115 /build/temp/ios_signing_temp.keychain'),
             'temp keychain should have been created.');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
@@ -39,7 +39,7 @@ describe('InstallAppleCertificate Suite', function () {
 
         assert(tr.ran('/usr/bin/security import /build/temp/mySecureFileId.filename -P  -A -t cert -f pkcs12 -k /build/temp/ios_signing_temp.keychain'),
             'certificate should have been installed in the keychain');
-        assert(tr.ran('/usr/bin/security create-keychain -p mykeychainPwd /build/temp/ios_signing_temp.keychain'),
+        assert(tr.ran('/usr/bin/security create-keychain -p 115 /build/temp/ios_signing_temp.keychain'),
             'temp keychain should have been created.');
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');

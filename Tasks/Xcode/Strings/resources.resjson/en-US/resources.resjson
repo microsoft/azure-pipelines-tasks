@@ -44,6 +44,8 @@
   "loc.input.help.signingIdentity": "(Optional) Enter a signing identity override with which to sign the build. This may require unlocking the default keychain on the agent machine. If no value is entered, the Xcode project's setting will be used.",
   "loc.input.label.provisioningProfileUuid": "Provisioning profile UUID",
   "loc.input.help.provisioningProfileUuid": "(Optional) Enter the UUID of an installed provisioning profile to be used for this build. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).",
+  "loc.input.label.provisioningProfileName": "Provisioning profile name",
+  "loc.input.help.provisioningProfileName": "(Optional) Enter the name of an installed provisioning profile to be used for this build. If specified, this takes precedence over the provisioning profile UUID. Use separate build tasks with different schemes or targets to specify separate provisioning profiles by target in a single workspace (iOS, tvOS, watchOS).",
   "loc.input.label.teamId": "Team ID",
   "loc.input.help.teamId": "(Optional, unless you are a member of multiple development teams.) Specify the 10-character development team ID.",
   "loc.input.label.destinationPlatformOption": "Destination platform",

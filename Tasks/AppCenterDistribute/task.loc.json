@@ -11,10 +11,11 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 0,
-    "Minor": 131,
+    "Major": 1,
+    "Minor": 134,
     "Patch": 0
   },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {
       "name": "symbols",
@@ -157,11 +158,14 @@
       "visibleRule": "releaseNotesSelection = file"
     },
     {
-      "name": "distributionGroupId",
+      "name": "destinationId",
+      "aliases": [
+        "distributionGroupId"
+      ],
       "type": "string",
       "defaultValue": "",
-      "label": "ms-resource:loc.input.label.distributionGroupId",
-      "helpMarkDown": "ms-resource:loc.input.help.distributionGroupId",
+      "label": "ms-resource:loc.input.label.destinationId",
+      "helpMarkDown": "ms-resource:loc.input.help.destinationId",
       "required": false
     }
   ],

@@ -20,11 +20,6 @@ let secureFileHelperMock = require('securefiles-common/securefiles-common-mock')
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
 tr.registerMock('fs', {
-    existsSync: function (filePath) {
-        if (filePath === '/usr/lib/login.keychain') {
-            return true;
-        }
-    },
     writeFileSync: function (filePath, contents) {
     }
 });
@@ -33,11 +28,13 @@ tr.registerMock('fs', {
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
         "openssl": "/usr/bin/openssl",
-        "security": "/usr/bin/security"
+        "security": "/usr/bin/security",
+        "grep": "/usr/bin/grep"
     },
     "checkPath": {
         "/usr/bin/openssl": true,
-        "/usr/bin/security": true
+        "/usr/bin/security": true,
+        "/usr/bin/grep": true
     },
     "exist": {
         "/build/temp/mySecureFileId.filename": true,
@@ -52,6 +49,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 0,
             "stdout": "MAC verified OK\nSHA1 Fingerprint=BB:26:83:C6:AA:88:35:DE:36:94:F2:CF:37:0A:D4:60:BB:AE:87:0C"
         },
+        "/usr/bin/openssl pkcs12 -in /build/temp/mySecureFileId.filename -nocerts -passin pass:mycertPwd -passout pass:mycertPwd | /usr/bin/grep friendlyName": {
+            "code": 0,
+            "stdout": "MAC verified OK\n    friendlyName: iOS Developer: Madhuri Gummalla (Madhuri Gummalla)"
+        },
         "/usr/bin/security default-keychain": {
             "code": 0,
             "stdout": "/usr/lib/login.keychain"
@@ -63,6 +64,10 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/usr/bin/security import /build/temp/mySecureFileId.filename -P mycertPwd -A -t cert -f pkcs12 -k /usr/lib/login.keychain": {
             "code": 0,
             "stdout": "cert installed"
+        },
+        "/usr/bin/security set-key-partition-list -S apple-tool:,apple: -s -l iOS Developer: Madhuri Gummalla (Madhuri Gummalla) -k mykeychainPwd /usr/lib/login.keychain": {
+            "code": 0,
+            "stdout": "private key dump"
         },
         "/usr/bin/security list-keychain -d user": {
             "code": 0,

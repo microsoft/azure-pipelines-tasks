@@ -10,6 +10,7 @@ var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 
 export async function DeployWar(webPackage, taskParams: TaskParameters, msDeployPublishingProfile, kuduService: Kudu, appServiceUtility: AzureAppServiceUtility): Promise<void> {
     // get list of files before deploying to the web app.
+    await appServiceUtility.pingApplication();
     var listOfFilesBeforeDeployment: any = await kuduService.listDir('/site/wwwroot/webapps/');
     tl.debug("Listing file structure of webapps folder before deployment starts => " + JSON.stringify(listOfFilesBeforeDeployment));
 
@@ -64,6 +65,6 @@ export async function HasWarExpandedSuccessfully(kuduService: Kudu, directoryWit
 
     // Verify if the content of that war file has successfully expanded. This is can be concluded if
     // directory with same name as war file exists after deployment and if it existed before deployment, then the directory should contain content of new war file
-    // which can be concluded if the modified time of the directory has changed.
-    return filesAfterDeployment.some(item => { return item.name == warFileName && item.mime == "inode/directory" && (!directoryWithSameNameBeforeDeployment || item.mtime != directoryWithSameNameBeforeDeployment.mtime) });
+    // which can be concluded if the modified time of the directory has changed. We have however observerd some minor milliseconds change in the modified time even when deployment is not successfull, only for the first time. Hence we are introducing a check that the time change should be more than 0.5 second or 500 milliseconds.
+    return filesAfterDeployment.some(item => { return item.name == warFileName && item.mime == "inode/directory" && (!directoryWithSameNameBeforeDeployment || (item.mtime != directoryWithSameNameBeforeDeployment.mtime && (new Date(item.mtime).getTime() - new Date(directoryWithSameNameBeforeDeployment.mtime).getTime() > 500))) });
 }

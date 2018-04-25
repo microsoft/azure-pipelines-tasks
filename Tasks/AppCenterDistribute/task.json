@@ -11,10 +11,11 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
-        "Minor": 131,
+        "Major": 1,
+        "Minor": 134,
         "Patch": 0
     },
+    "releaseNotes": "Add support for distribution to stores.",
     "groups": [
         {
             "name": "symbols",
@@ -143,11 +144,14 @@
             "visibleRule": "releaseNotesSelection = file"
         },
         {
-            "name": "distributionGroupId",
+            "name": "destinationId",
+            "aliases": [
+                "distributionGroupId"
+            ],
             "type": "string",
             "defaultValue": "",
-            "label": "Distribution group ID",
-            "helpMarkDown": "ID of the distribution group the app will deploy to. Leave it empty to use the default group.",
+            "label": "Destination ID",
+            "helpMarkDown": "ID of the distribution group or store the app will deploy to. Leave it empty to use the default group.",
             "required": false
         }
     ],

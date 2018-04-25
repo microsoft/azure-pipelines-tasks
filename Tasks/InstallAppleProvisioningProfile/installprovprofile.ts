@@ -16,15 +16,16 @@ async function run() {
             let provProfilePath: string = tl.getInput('provProfileSourceRepository', true);
 
             if (tl.filePathSupplied('provProfileSourceRepository') && tl.exist(provProfilePath) && tl.stats(provProfilePath).isFile()) {
-                let UUID: string = await sign.getProvisioningProfileUUID(provProfilePath);
-                tl.setTaskVariable('APPLE_PROV_PROFILE_UUID', UUID);
+                const info = await sign.installProvisioningProfile(provProfilePath);
+                tl.setTaskVariable('APPLE_PROV_PROFILE_UUID', info.provProfileUUID);
 
                 // set the provisioning profile output variable.
-                tl.setVariable('provisioningProfileUuid', UUID);
+                tl.setVariable('provisioningProfileUuid', info.provProfileUUID);
+                tl.setVariable('provisioningProfileName', info.provProfileName);
 
                 // Set the legacy variable that doesn't use the task's refName, unlike our output variables.
                 // If there are multiple InstallAppleCertificate tasks, the last one wins.
-                tl.setVariable('APPLE_PROV_PROFILE_UUID', UUID);                
+                tl.setVariable('APPLE_PROV_PROFILE_UUID', info.provProfileUUID);
             } else {
                 throw tl.loc('InputProvisioningProfileNotFound', provProfilePath);
             }

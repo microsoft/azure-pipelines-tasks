@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import webClient = require('azure-arm-rest/webClient');
+const pythonExtensionPrefix: string = "azureappservice-";
 
 export class KuduServiceUtils {
     private _appServiceKuduService: Kudu;
@@ -66,8 +67,9 @@ export class KuduServiceUtils {
                     }
                 }
             }
-            if(siteExtensionMap[extensionID]) {
-                siteExtensionDetails = siteExtensionMap[extensionID];
+            // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
+            if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
+                siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
             }
             else {
@@ -141,7 +143,7 @@ export class KuduServiceUtils {
     }
 
     private _getExtensionLocalPath(extensionInfo: JSON): string {
-        var extensionId: string = extensionInfo['id'];
+        var extensionId: string = extensionInfo['id'].replace(pythonExtensionPrefix, "");
         var homeDir = "D:\\home\\";
     
         if(extensionId.startsWith('python2')) {

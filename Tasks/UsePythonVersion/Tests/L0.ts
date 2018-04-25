@@ -190,7 +190,7 @@ describe('UsePythonVersion L0 Suite', function () {
         };
 
         await uut.usePythonVersion(parameters, Platform.Linux);
-        assert.strictEqual(`${toolPath}:`, mockPath);
+        assert.strictEqual(`${path.join(toolPath, 'bin')}:${toolPath}:`, mockPath);
     });
 
     it('sets PATH correctly on Windows', async function () {

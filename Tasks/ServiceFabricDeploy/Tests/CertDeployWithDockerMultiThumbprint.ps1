@@ -30,6 +30,7 @@ Register-Mock Get-VstsInput { "true" } -- -Name configureDockerSettings
 Register-Mock Get-VstsInput { "AzureResourceManagerEndpoint" } -- -Name registryCredentials -Require
 Register-Mock Get-VstsInput { $azureSubscriptionEndpoint } -- -Name azureSubscriptionEndpoint -Require
 Register-Mock Get-VstsInput { "false" } -- -Name useDiffPackage
+Register-Mock Get-VstsInput { "false" } -- -Name overrideApplicationParameter
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -94,6 +95,8 @@ $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\Applicati
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Update-DockerSettings.psm1"
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"
+Register-Mock Write-VstsTaskError
 
 Copy-Item -LiteralPath "$PSScriptRoot\data\DockerSupportAssets\AppPkg\" -Destination $applicationPackagePath -Container -Recurse
 

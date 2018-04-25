@@ -39,7 +39,10 @@ function Publish-UpgradedServiceFabricApplication
     Timeout in seconds for copying application package to image store.
 
     .PARAMETER RegisterPackageTimeoutSec
-    Timeout in seconds for registering/un-registering application package.
+    Timeout in seconds for registering application package.
+
+    .PARAMETER UnregisterPackageTimeoutSec
+    Timeout in seconds for un-registering application package.
 
     .PARAMETER CompressPackage
     Indicates whether the application package should be compressed before copying to the image store.
@@ -99,6 +102,10 @@ function Publish-UpgradedServiceFabricApplication
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
         [int]$RegisterPackageTimeoutSec,
+
+        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName = "ApplicationName")]
+        [int]$UnregisterPackageTimeoutSec= 120,
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
@@ -231,7 +238,7 @@ function Publish-UpgradedServiceFabricApplication
             if (!$typeIsInUse)
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $RegisterPackageTimeoutSec
+                $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 $ApplicationTypeAlreadyRegistered = $false
             }
             else
@@ -342,7 +349,7 @@ function Publish-UpgradedServiceFabricApplication
                 if (!$ApplicationTypeAlreadyRegistered)
                 {
                     Write-Host (Get-VstsLocString -Key SFSDK_UnregisterAppTypeOnUpgradeFailure -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                    Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force -TimeoutSec $RegisterPackageTimeoutSec
+                    Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 }
             }
             catch
@@ -376,7 +383,7 @@ function Publish-UpgradedServiceFabricApplication
             {
                 try
                 {
-                    $registeredAppTypes | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $RegisterPackageTimeoutSec
+                    $registeredAppTypes | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 }
                 catch [System.Fabric.FabricException]
                 {
