@@ -14,6 +14,7 @@ interface TaskParameters {
 }
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
+    // Find Conda on the system, or install it if it is missing and the user requested it
     const condaPathFromEnvironment = task.getVariable('CONDA');
     const condaRoot = await (async () => {
         if (condaPathFromEnvironment && internal.hasConda(condaPathFromEnvironment, platform)) {
