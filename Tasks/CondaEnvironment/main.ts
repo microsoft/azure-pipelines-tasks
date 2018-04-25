@@ -10,7 +10,7 @@ import { condaEnvironment } from './conda';
             environmentName: task.getInput('environmentName', true),
             packageSpecs: task.getInput('packageSpecs', false),
             otherOptions: task.getInput('otherOptions', false),
-            installConda: task.getBoolInput('installConda', true)
+            installConda: task.getBoolInput('installConda', false)
         },
         getPlatform());
         task.setResult(task.TaskResult.Succeeded, "");

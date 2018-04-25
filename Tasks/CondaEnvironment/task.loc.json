@@ -55,7 +55,7 @@
       "name": "installConda",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.installConda",
-      "required": true,
+      "required": false,
       "defaultValue": true,
       "helpMarkDown": "ms-resource:loc.input.help.installConda",
       "groupName": "advanced"

@@ -55,7 +55,7 @@
             "name": "installConda",
             "type": "boolean",
             "label": "Install Conda if missing",
-            "required": true,
+            "required": false,
             "defaultValue": true,
             "helpMarkDown": "Download and install the latest version of Miniconda if the `conda` executable is not found at the path from the `CONDA` environment variable.",
             "groupName": "advanced"

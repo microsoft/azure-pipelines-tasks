@@ -10,12 +10,10 @@ interface TaskParameters {
     environmentName: string,
     packageSpecs?: string
     otherOptions?: string,
-    installConda: boolean
+    installConda?: boolean
 }
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    // TODO validate `environmentName`?
-    // TODO validate `otherOptions`?
     const condaPathFromEnvironment = task.getVariable('CONDA');
     const condaRoot = await (async () => {
         if (condaPathFromEnvironment && internal.hasConda(condaPathFromEnvironment, platform)) {
