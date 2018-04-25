@@ -106,59 +106,59 @@ it('installs Miniconda', async function (done: MochaDone) {
     { // Linux
         mockToolRunner.setAnswers({
             exec: {
-                'bash installer.sh -b -f -p path-to-tools/Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools/Miniconda/latest': {
                     code: 0
                 },
                 // workaround for running tests cross-platform
-                'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools\\Miniconda\\latest': {
                     code: 0
                 }
             }
         });
 
         const actual = await uut.installMiniconda('installer.sh', Platform.Linux);
-        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda'));
+        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda', 'latest'));
     }
     { // macOS
         mockToolRunner.setAnswers({
             exec: {
-                'bash installer.sh -b -f -p path-to-tools/Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools/Miniconda/latest': {
                     code: 0
                 },
                 // workaround for running tests cross-platform
-                'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools\\Miniconda\\latest': {
                     code: 0
                 }
             }
         });
 
         const actual = await uut.installMiniconda('installer.sh', Platform.MacOS);
-        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda'));
+        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda', 'latest'));
     }
     { // Windows
         mockToolRunner.setAnswers({
             exec: {
-                'installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools\\Miniconda': {
+                'installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools\\Miniconda\\latest': {
                     code: 0
                 },
                 // workaround for running tests cross-platform
-                'installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools/Miniconda': {
+                'installer.exe /S /AddToPath=0 /RegisterPython=0 /D=path-to-tools/Miniconda/latest': {
                     code: 0
                 }
             }
         });
 
         const actual = await uut.installMiniconda('installer.exe', Platform.Windows);
-        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda'));
+        assert.strictEqual(actual, path.join('path-to-tools', 'Miniconda', 'latest'));
     }
     { // Failed installation
         mockToolRunner.setAnswers({
             exec: {
-                'bash installer.sh -b -f -p path-to-tools/Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools/Miniconda/latest': {
                     code: 1
                 },
                 // workaround for running tests cross-platform
-                'bash installer.sh -b -f -p path-to-tools\\Miniconda': {
+                'bash installer.sh -b -f -p path-to-tools\\Miniconda\\latest': {
                     code: 1
                 }
             }
