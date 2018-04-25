@@ -67,7 +67,7 @@ export function downloadMiniconda(platform: Platform): Promise<string> {
  */
 export async function installMiniconda(installerPath: string, platform: Platform): Promise<string> {
     const toolsDirectory = task.getVariable('AGENT_TOOLSDIRECTORY');
-    const destination = path.join(toolsDirectory, 'Miniconda');
+    const destination = path.join(toolsDirectory, 'Miniconda', 'latest');
     const installer = (() => {
         if (platform === Platform.Windows) {
             return new ToolRunner(installerPath).line(`/S /AddToPath=0 /RegisterPython=0 /D=${destination}`);
