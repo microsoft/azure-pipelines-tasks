@@ -158,6 +158,6 @@ describe('UseRubyVersion L0 Suite', function () {
         };
 
         await uut.useRubyVersion(parameters, uut.Platform.Windows);
-        assert.strictEqual(`${toolPath};`, mockPath);
+        assert.strictEqual(`${path.join(toolPath, 'bin')};`, mockPath);
     });
 });
