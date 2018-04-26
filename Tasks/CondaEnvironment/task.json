@@ -51,12 +51,12 @@
             "helpMarkDown": "Update Conda to the latest version. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable."
         },
         {
-            "name": "otherOptions",
+            "name": "createOptions",
             "type": "string",
-            "label": "Other options",
+            "label": "Environment creation options",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Space-delimited list of other options to pass to the `conda` command.",
+            "helpMarkDown": "Space-delimited list of other options to pass to the `conda create` command.",
             "groupName": "advanced"
         },
         {

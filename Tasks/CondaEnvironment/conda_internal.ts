@@ -91,6 +91,10 @@ export async function createEnvironment(environmentPath: string, packageSpecs?: 
         conda.line(packageSpecs);
     }
 
+    if (otherOptions) {
+        conda.line(otherOptions);
+    }
+
     try {
         await conda.exec();
     } catch (e) {
