@@ -39,10 +39,8 @@ export async function useRubyVersion(parameters: TaskParameters, platform: Platf
         ].join(os.EOL));
     }
 
-    let toolPath: string = installDir;
+    const toolPath: string = path.join(installDir, 'bin');
     if (platform !== Platform.Windows) {
-        toolPath = path.join(installDir, 'bin');
-
         // replace the default
         const dest: string = '/usr/bin/ruby';
         if (fs.existsSync(dest)) {
