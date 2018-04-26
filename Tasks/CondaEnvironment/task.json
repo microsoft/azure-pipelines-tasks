@@ -45,10 +45,10 @@
         {
             "name": "getLatestConda",
             "type": "boolean",
-            "label": "Get latest Conda",
+            "label": "Update to latest Conda",
             "required": false,
-            "defaultValue": false,
-            "helpMarkDown": "Update Conda to the latest version, or download and install the latest version of Miniconda if the `conda` executable is not found on the system."
+            "defaultValue": true,
+            "helpMarkDown": "Update your Conda to the latest version, or download and install the latest version of Miniconda if the `conda` executable is not found on the system."
         },
         {
             "name": "otherOptions",
@@ -68,7 +68,7 @@
     },
     "messages": {
         "CreateFailed": "Failed to create Conda environment %s: %s",
-        "CondaNotFound": "The `conda` executable was not found on the system. Set the task's \"Get latest Conda\" parameter to download Miniconda, or ask your administrator to install Miniconda or Anaconda.",
+        "CondaNotFound": "The `conda` executable was not found on the system. Set the task's \"Update to latest Conda\" parameter to download Miniconda, or ask your administrator to install Miniconda or Anaconda.",
         "FoundEnvironment": "Found existing environment %s. Reactivating ...",
         "InstallationFailed": "Miniconda installer failed: %s",
         "PlatformNotRecognized": "Platform not recognized"
