@@ -10,8 +10,6 @@ phases:
     matrix:
       Python27:
         PYTHON_VERSION: '2.7'
-      Python34:
-        PYTHON_VERSION: '3.4'
       Python35:
         PYTHON_VERSION: '3.5'
       Python36:
@@ -42,13 +40,13 @@ phases:
       versionSpec: '3.6'
       architecture: 'x64'
       addToPath: 'true'
-  - script: python -m pip install --upgrade pip && pip install wheel && python setup.py bdist_wheel
-    displayName: Build Wheel
+  - script: python setup.py sdist
+    displayName: Build sdist
   - task: PublishBuildArtifacts@1
     displayName: 'Publish artifacts'
     inputs:
       pathToPublish: 'dist'
-      artifactName: 'artifact'
+      artifactName: 'dist'
       artifactType: 'container'
   # - task: PyPIPublisher@0
   #   inputs:
