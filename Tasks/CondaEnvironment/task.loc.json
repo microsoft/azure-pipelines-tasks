@@ -58,6 +58,15 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.otherOptions",
       "groupName": "advanced"
+    },
+    {
+      "name": "cleanEnvironment",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.cleanEnvironment",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cleanEnvironment",
+      "groupName": "advanced"
     }
   ],
   "execution": {
@@ -67,9 +76,10 @@
     }
   },
   "messages": {
+    "CleanEnvironment": "ms-resource:loc.messages.CleanEnvironment",
     "CreateFailed": "ms-resource:loc.messages.CreateFailed",
     "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
-    "FoundEnvironment": "ms-resource:loc.messages.FoundEnvironment",
+    "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
     "InstallationFailed": "ms-resource:loc.messages.InstallationFailed",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   }

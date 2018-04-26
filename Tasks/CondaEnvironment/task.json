@@ -45,10 +45,10 @@
         {
             "name": "getLatestConda",
             "type": "boolean",
-            "label": "Update to latest Conda",
+            "label": "Update to the latest Conda",
             "required": false,
             "defaultValue": true,
-            "helpMarkDown": "Update your Conda to the latest version, or download and install the latest version of Miniconda if the `conda` executable is not found on the system."
+            "helpMarkDown": "Update Conda to the latest version. If the `conda` executable is not found on the system, download and install the latest version of Miniconda. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable."
         },
         {
             "name": "otherOptions",
@@ -57,6 +57,15 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Space-delimited list of other options to pass to the `conda` command.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "cleanEnvironment",
+            "type": "boolean",
+            "label": "Clean the environment",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment.",
             "groupName": "advanced"
         }
     ],
@@ -67,9 +76,10 @@
         }
     },
     "messages": {
+        "CleanEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is set. Deleting ...",
         "CreateFailed": "Failed to create Conda environment %s: %s",
         "CondaNotFound": "The `conda` executable was not found on the system. Set the task's \"Update to latest Conda\" parameter to download Miniconda, or ask your administrator to install Miniconda or Anaconda.",
-        "FoundEnvironment": "Found existing environment %s. Reactivating ...",
+        "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
         "InstallationFailed": "Miniconda installer failed: %s",
         "PlatformNotRecognized": "Platform not recognized"
     }

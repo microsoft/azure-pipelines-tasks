@@ -10,7 +10,8 @@ interface TaskParameters {
     environmentName: string,
     packageSpecs?: string,
     getLatestConda?: boolean,
-    otherOptions?: string
+    otherOptions?: string,
+    cleanEnvironment?: boolean
 }
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
@@ -19,7 +20,7 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
         const preinstalledConda = internal.findConda(platform);
         if (preinstalledConda) {
             if (parameters.getLatestConda) {
-                internal.updateConda(preinstalledConda, platform);
+                await internal.updateConda(preinstalledConda, platform);
             }
             return preinstalledConda;
         } else if (parameters.getLatestConda) {
@@ -35,9 +36,14 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
     // Activate the environment, creating it if it does not exist
     const environmentsDir = path.join(condaRoot, 'envs');
     const environmentPath = path.join(environmentsDir, parameters.environmentName);
-    if (fs.existsSync(environmentPath)) {
-        console.log(task.loc('FoundEnvironment', environmentPath));
-    } else {
+
+    if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {
+        console.log(task.loc('ReactivateExistingEnvironment', environmentPath));
+    } else { // create the environment
+        if (fs.existsSync(environmentPath)) {
+            console.log(task.loc('CleanEnvironment', environmentPath));
+            task.rmRF(environmentPath);
+        }
         await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.otherOptions);
     }
 
