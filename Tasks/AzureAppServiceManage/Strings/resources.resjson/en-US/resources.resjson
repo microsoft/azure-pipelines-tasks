@@ -141,7 +141,7 @@
   "loc.messages.FailedToStartContinuousWebJob": "Failed to start continuous WebJob '%s'. Error: %s",
   "loc.messages.FailedToStopContinuousWebJob": "Failed to stop continuous WebJob '%s'. Error: %s",
   "loc.messages.FailedToGetSiteExtensions": "Failed to get site extensions. Error: %s",
-  "loc.messages.FailedToGetAllSiteExtensions": "Failed to get all site extensions. Error: %s",
+  "loc.messages.FailedToGetAllSiteExtensions": "Failed to get extension feed. Error: %s",
   "loc.messages.ExtensionAlreadyInstalled": "Extension '%s' already installed.",
   "loc.messages.InstallingSiteExtension": "Installing site Extension '%s'",
   "loc.messages.FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
