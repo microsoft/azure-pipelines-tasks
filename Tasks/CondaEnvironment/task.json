@@ -43,21 +43,20 @@
             "helpMarkDown": "Space-delimited list of packages to install."
         },
         {
+            "name": "getLatestConda",
+            "type": "boolean",
+            "label": "Get latest Conda",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "Update Conda to the latest version, or download and install the latest version of Miniconda if the `conda` executable is not found on the system."
+        },
+        {
             "name": "otherOptions",
             "type": "string",
             "label": "Other options",
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Space-delimited list of other options to pass to the `conda` command.",
-            "groupName": "advanced"
-        },
-        {
-            "name": "installConda",
-            "type": "boolean",
-            "label": "Install Conda if missing",
-            "required": false,
-            "defaultValue": true,
-            "helpMarkDown": "Download and install the latest version of Miniconda if the `conda` executable is not found at the path from the `CONDA` environment variable.",
             "groupName": "advanced"
         }
     ],
@@ -69,7 +68,7 @@
     },
     "messages": {
         "CreateFailed": "Failed to create Conda environment %s: %s",
-        "CondaNotFound": "The `conda` executable was not found at the path specified by the `CONDA` environment variable: %s",
+        "CondaNotFound": "The `conda` executable was not found on the system. Set the task's \"Get latest Conda\" parameter to download Miniconda, or ask your administrator to install Miniconda or Anaconda.",
         "FoundEnvironment": "Found existing environment %s. Reactivating ...",
         "InstallationFailed": "Miniconda installer failed: %s",
         "PlatformNotRecognized": "Platform not recognized"

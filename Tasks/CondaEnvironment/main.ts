@@ -9,8 +9,8 @@ import { condaEnvironment } from './conda';
         await condaEnvironment({
             environmentName: task.getInput('environmentName', true),
             packageSpecs: task.getInput('packageSpecs', false),
-            otherOptions: task.getInput('otherOptions', false),
-            installConda: task.getBoolInput('installConda', false)
+            getLatestConda: task.getBoolInput('getLatestConda', false),
+            otherOptions: task.getInput('otherOptions', false)
         },
         getPlatform());
         task.setResult(task.TaskResult.Succeeded, "");

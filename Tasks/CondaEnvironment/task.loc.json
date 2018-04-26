@@ -43,21 +43,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.packageSpecs"
     },
     {
+      "name": "getLatestConda",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.getLatestConda",
+      "required": false,
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.getLatestConda"
+    },
+    {
       "name": "otherOptions",
       "type": "string",
       "label": "ms-resource:loc.input.label.otherOptions",
       "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.otherOptions",
-      "groupName": "advanced"
-    },
-    {
-      "name": "installConda",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.installConda",
-      "required": false,
-      "defaultValue": true,
-      "helpMarkDown": "ms-resource:loc.input.help.installConda",
       "groupName": "advanced"
     }
   ],

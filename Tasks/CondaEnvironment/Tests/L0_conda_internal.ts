@@ -15,54 +15,67 @@ function reload(module: '../conda_internal'): typeof condaInternal {
     return require('../conda_internal');
 }
 
-it('finds the Conda executable', async function () {
-    const existsSync = sinon.stub().returns(true);
-    const statSync = sinon.stub().returns({
-        isFile: () => true
-    });
+it('finds the Conda executable with the CONDA variable', async function () {
+    const existsSync = sinon.stub();
+    const statSync = sinon.stub();
 
     mockery.registerMock('fs', {
         existsSync: existsSync,
         statSync: statSync
     });
 
-    mockery.registerMock('vsts-task-lib/task', mockTask);
+    mockTask.setAnswers({
+        which: {
+        }
+    });
+
+    const getVariable = sinon.stub();
+    getVariable.withArgs('CONDA').returns('path-to-conda');
+    getVariable.withArgs('AGENT_TOOLSDIRECTORY').returns('path-to-tools');
+
+    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+        getVariable: getVariable
+    }));
+
     mockery.registerMock('vsts-task-tool-lib/tool', {});
 
     { // executable exists and is a file
+        existsSync.returns(true);
+        statSync.returns({
+            isFile: () => true
+        });
+
         const uut = reload('../conda_internal');
 
-        assert(uut.hasConda('path-to-conda', Platform.Linux));
-        assert(uut.hasConda('path-to-conda', Platform.MacOS));
-        assert(uut.hasConda('path-to-conda', Platform.Windows));
+        assert.strictEqual(uut.findConda(Platform.Linux), 'path-to-conda');
+        assert.strictEqual(uut.findConda(Platform.MacOS), 'path-to-conda');
+        assert.strictEqual(uut.findConda(Platform.Windows), 'path-to-conda');
     }
     { // `conda` executable does not exist (Linux / macOS)
-        existsSync.withArgs(path.join('path-to-conda', 'bin', 'conda')).returns(false);
+        existsSync.returns(false);
         const uut = reload('../conda_internal');
 
-        assert(!uut.hasConda('path-to-conda', Platform.Linux));
-        assert(!uut.hasConda('path-to-conda', Platform.MacOS));
+        assert.strictEqual(uut.findConda(Platform.Linux), null);
+        assert.strictEqual(uut.findConda(Platform.MacOS), null);
     }
     { // `conda.exe` executable does not exist (Windows)
         existsSync.reset();
         existsSync.withArgs(path.join('path-to-conda', 'Scripts', 'conda.exe')).returns(false);
         const uut = reload('../conda_internal');
 
-        assert(!uut.hasConda('path-to-conda', Platform.Windows));
+        assert.strictEqual(uut.findConda(Platform.Windows), null);
     }
     { // `conda` exists but is not a file
-        existsSync.reset();
-        existsSync.withArgs(path.join('path-to-conda', 'bin', 'conda')).returns(true);
-        existsSync.withArgs(path.join('path-to-conda', 'Scripts', 'conda.exe')).returns(true);
+        existsSync.returns(true);
         statSync.returns({
             isFile: () => false
         });
 
         const uut = reload('../conda_internal');
 
-        assert(!uut.hasConda('path-to-conda', Platform.Linux));
-        assert(!uut.hasConda('path-to-conda', Platform.MacOS));
-        assert(!uut.hasConda('path-to-conda', Platform.Windows));
+        assert.strictEqual(uut.findConda(Platform.Linux), null);
+        assert.strictEqual(uut.findConda(Platform.MacOS), null);
+        assert.strictEqual(uut.findConda(Platform.Windows), null);
     }
 });
 
