@@ -77,7 +77,9 @@ function Invoke-RemoteScript {
         [Parameter(Mandatory = $true)]
         [psobject] $sessionOption,
 
-        [scriptblock] $errorHandler
+        [scriptblock] $outputHandler = $defaultOutputHandler,
+
+        [scriptblock] $errorHandler = $defaultErrorHandler
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter 'targetMachineNames'
     try {
@@ -104,6 +106,7 @@ function Invoke-RemoteScript {
                              -sessionName $sessionName `
                              -scriptArgumentsByName $remoteScriptJobArgumentsByName `
                              -targetMachines $targetMachines `
+                             -outputHandler $outputHandler `
                              -errorHandler $errorHandler
         return $jobResults
     } finally {
@@ -158,6 +161,16 @@ function Get-TargetMachines {
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
     }
+}
+
+$defaultErrorHandler = {
+    Param($object, $computerName)
+    Write-Host ($object | Out-String)
+}
+
+$defaultOutputHandler = {
+    Param($object, $computerName)
+    Write-Host ($object | Out-String)
 }
 
 Export-ModuleMember -Function Invoke-RemoteScript
