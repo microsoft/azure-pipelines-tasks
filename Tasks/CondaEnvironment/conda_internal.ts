@@ -24,7 +24,7 @@ function hasConda(searchDir: string, platform: Platform): boolean {
 
 // Where the agent will install Miniconda if it is missing and requested by the user
 const installLocation = new Lazy<string>(() => {
-    const toolsDirectory = task.getVariable('AGENT_TOOLSDIRECTORY');
+    const toolsDirectory = task.getVariable('Agent.ToolsDirectory');
     return path.join(toolsDirectory, 'Miniconda', 'latest');
 });
 
@@ -105,7 +105,7 @@ export function downloadMiniconda(platform: Platform): Promise<string> {
 
     // By default `downloadTool` will name the downloaded file with a GUID
     // But on Windows, the file must end with `.exe` to make it executable
-    const tempDirectory = task.getVariable('AGENT_TEMPDIRECTORY');
+    const tempDirectory = task.getVariable('Agent.TempDirectory');
     const filename = url.split('/').pop()!;
     return tool.downloadTool(url, path.join(tempDirectory, filename));
 }

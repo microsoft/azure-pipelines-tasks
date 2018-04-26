@@ -31,7 +31,7 @@ it('finds the Conda executable with the CONDA variable', async function () {
 
     const getVariable = sinon.stub();
     getVariable.withArgs('CONDA').returns('path-to-conda');
-    getVariable.withArgs('AGENT_TOOLSDIRECTORY').returns('path-to-tools');
+    getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable: getVariable
@@ -75,7 +75,7 @@ it('finds the Conda executable with the CONDA variable', async function () {
 
 it('downloads Miniconda', async function () {
     const getVariable = sinon.stub();
-    getVariable.withArgs('AGENT_TEMPDIRECTORY').returns('path-temp');
+    getVariable.withArgs('Agent.TempDirectory').returns('path-temp');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable: getVariable
@@ -106,7 +106,7 @@ it('downloads Miniconda', async function () {
 
 it('installs Miniconda', async function (done: MochaDone) {
     const getVariable = sinon.stub();
-    getVariable.withArgs('AGENT_TOOLSDIRECTORY').returns('path-to-tools');
+    getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         getVariable: getVariable
