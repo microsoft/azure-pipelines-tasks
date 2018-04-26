@@ -51,18 +51,12 @@ it('finds the Conda executable with the CONDA variable', async function () {
         assert.strictEqual(uut.findConda(Platform.MacOS), 'path-to-conda');
         assert.strictEqual(uut.findConda(Platform.Windows), 'path-to-conda');
     }
-    { // `conda` executable does not exist (Linux / macOS)
+    { // `conda` executable does not exist
         existsSync.returns(false);
         const uut = reload('../conda_internal');
 
         assert.strictEqual(uut.findConda(Platform.Linux), null);
         assert.strictEqual(uut.findConda(Platform.MacOS), null);
-    }
-    { // `conda.exe` executable does not exist (Windows)
-        existsSync.reset();
-        existsSync.withArgs(path.join('path-to-conda', 'Scripts', 'conda.exe')).returns(false);
-        const uut = reload('../conda_internal');
-
         assert.strictEqual(uut.findConda(Platform.Windows), null);
     }
     { // `conda` exists but is not a file
@@ -80,8 +74,11 @@ it('finds the Conda executable with the CONDA variable', async function () {
 });
 
 it('downloads Miniconda', async function () {
+    const getVariable = sinon.stub();
+    getVariable.withArgs('AGENT_TEMPDIRECTORY').returns('path-temp');
+
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        getVariable: sinon.stub().withArgs('AGENT_TEMPDIRECTORY').returns('path-temp')
+        getVariable: getVariable
     }));
 
     const downloadTool = sinon.stub().returns('path-downloadTool');
@@ -108,8 +105,11 @@ it('downloads Miniconda', async function () {
 });
 
 it('installs Miniconda', async function (done: MochaDone) {
+    const getVariable = sinon.stub();
+    getVariable.withArgs('AGENT_TOOLSDIRECTORY').returns('path-to-tools');
+
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        getVariable: sinon.stub().withArgs('AGENT_TOOLSDIRECTORY').returns('path-to-tools')
+        getVariable: getVariable
     }));
 
     mockery.registerMock('vsts-task-tool-lib/tool', {});
