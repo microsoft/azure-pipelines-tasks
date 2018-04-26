@@ -35,7 +35,6 @@ export interface InputDataContract {
     UseNewCollector : boolean;
     IsPrFlow : boolean;
     UseTestCaseFilterInResponseFile : boolean;
-    DisableEnablingDataCollector : boolean;
 }
 
 export interface TestReportingSettings {
@@ -114,6 +113,7 @@ export interface ExecutionSettings {
 
 export interface TiaSettings {
     Enabled : boolean;
+    DisableDataCollection : boolean;
     RebaseLimit : number;
     SourcesDirectory : string;
     FileLevel : boolean;

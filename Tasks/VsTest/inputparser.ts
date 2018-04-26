@@ -13,11 +13,72 @@ const uuid = require('uuid');
 const regedit = require('regedit');
 
 export function getDistributedTestConfigurations() : idc.InputDataContract {
-    const inputDataContract = {} as idc.InputDataContract;
+    let inputDataContract = {} as idc.InputDataContract;
 
+    inputDataContract = getTestSelectionInputs(inputDataContract);
+    inputDataContract = getTfsSpecificSettings(inputDataContract);
+    inputDataContract = getTargetBinariesSettings(inputDataContract);
+    inputDataContract = getTestReportingSettings(inputDataContract);
+    inputDataContract = getTestPlatformSettings(inputDataContract);
+    inputDataContract = getLoggingSettings(inputDataContract);
+    inputDataContract = getProxySettings(inputDataContract);
+    inputDataContract = getDistributionSettings(inputDataContract);
+    inputDataContract = getExecutionSettings(inputDataContract);
+
+    taskinputparser.logWarningForWER(tl.getBoolInput('uiTests'));
+
+    inputDataContract.UseNewCollector = false;
+    const useNewCollector = tl.getVariable('tia.useNewCollector');
+    if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
+        inputDataContract.UseNewCollector = true;
+    }
+
+    const buildReason = tl.getVariable('Build.Reason');
+
+    // https://www.visualstudio.com/en-us/docs/build/define/variables
+    // PullRequest -> This is the case for TfsGit PR flow
+    // CheckInShelveset -> This is the case for TFVC Gated Checkin
+    if (buildReason && (buildReason === 'PullRequest' || buildReason === 'CheckInShelveset')) {
+        // hydra: Should this become a first class input or should we identify if it is a pr flow from the managed layer? First class input
+        inputDataContract.IsPrFlow = true;
+    } else {
+        inputDataContract.IsPrFlow = utils.Helper.stringToBool(tl.getVariable('tia.isPrFlow'));
+    }
+    inputDataContract.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(tl.getVariable('tia.useTestCaseFilterInResponseFile'));
+
+    inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
+    inputDataContract.VstestTaskInstanceIdentifier = uuid.v1();
+
+    inputDataContract.UseVsTestConsole = false;
+    // hydra: why is this still required?
+    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
+    if (useVsTestConsole) {
+        inputDataContract.UseVsTestConsole = utils.Helper.stringToBool(useVsTestConsole);
+    }
+
+    // hydra: this will have to be done after we get vstest version in the managed layer. Also we support using vstest console.exe in distributed flow today?
+    // // VsTest Console cannot be used for Dev14
+    // if (inputDataContract.UseVsTestConsole === true && inputDataContract.vsTestVersion !== '15.0') {
+    //     console.log(tl.loc('noVstestConsole'));
+    //     dtaConfiguration.useVsTestConsole = 'false';
+    // }
+
+    inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
+    inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
+    inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
+
+    //hydra: change this input to be some unique run identifier
+    inputDataContract.RunIdentifier = getRunIdentifier();
+
+    //hydra: do we need
+    //dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
+
+    return inputDataContract;
+}
+
+function getTestSelectionInputs(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.TestSelectionSettings = <idc.TestSelectionSettings>{};
     inputDataContract.TestSelectionSettings.TestSelectionType = tl.getInput('testSelector').toLowerCase();
-
     switch (inputDataContract.TestSelectionSettings.TestSelectionType) {
 
         case 'testplan':
@@ -71,162 +132,46 @@ export function getDistributedTestConfigurations() : idc.InputDataContract {
     }
     console.log(tl.loc('searchFolderInput', inputDataContract.TestSelectionSettings.SearchFolder));
 
-    inputDataContract.ExecutionSettings = <idc.ExecutionSettings>{};
+    return inputDataContract;
+}
 
-    inputDataContract.ExecutionSettings.SettingsFile = tl.getPathInput('runSettingsFile');
-    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.SettingsFile)) {
-        inputDataContract.ExecutionSettings.SettingsFile = path.resolve(inputDataContract.ExecutionSettings.SettingsFile);
-    }
-    if (inputDataContract.ExecutionSettings.SettingsFile === tl.getVariable('System.DefaultWorkingDirectory')) {
-        delete inputDataContract.ExecutionSettings.SettingsFile;
-    }
-    console.log(tl.loc('runSettingsFileInput', inputDataContract.ExecutionSettings.SettingsFile));
+function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
+        inputDataContract.TfsSpecificSettings = <idc.TfsSpecificSettings>{};
+        inputDataContract.TfsSpecificSettings.BuildId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Build.Buildid')) ? null : Number(tl.getVariable('Build.Buildid'));
+        inputDataContract.TfsSpecificSettings.BuildUri = tl.getVariable('Build.BuildUri');
+        inputDataContract.TfsSpecificSettings.ReleaseId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.ReleaseId')) ? null : Number(tl.getVariable('Release.ReleaseId'));
+        inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
+        return inputDataContract;
+}
 
-    inputDataContract.ExecutionSettings.OverridenParameters = tl.getInput('overrideTestrunParameters');
-
-    inputDataContract.ExecutionSettings.AssemblyLevelParallelism = tl.getBoolInput('runInParallel');
-    console.log(tl.loc('runInParallelInput', inputDataContract.ExecutionSettings.AssemblyLevelParallelism));
-
-    // hydra: valid only for console flow
-    //inputDataContract.ExecutionSettings.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
-    //console.log(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
-
-    // hydra: do we want to shoot this warning?
-    // if (inputDataContract.runTestsInIsolation) {
-    //     tl.warning(tl.loc('runTestInIsolationNotSupported'));
-    // }
-
-    taskinputparser.logWarningForWER(tl.getBoolInput('uiTests'));
-
-    // InputDataContract.TfsSpecificSettings
-    inputDataContract.TfsSpecificSettings = <idc.TfsSpecificSettings>{};
-    inputDataContract.TfsSpecificSettings.BuildId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Build.Buildid')) ? null : Number(tl.getVariable('Build.Buildid'));
-    inputDataContract.TfsSpecificSettings.BuildUri = tl.getVariable('Build.BuildUri');
-    inputDataContract.TfsSpecificSettings.ReleaseId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.ReleaseId')) ? null : Number(tl.getVariable('Release.ReleaseId'));
-    inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
-
-    // TIA stuff
-    inputDataContract.ExecutionSettings.TiaSettings = <idc.TiaSettings>{};
-    inputDataContract.ExecutionSettings.TiaSettings.Enabled = tl.getBoolInput('runOnlyImpactedTests');
-    inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = +tl.getInput('runAllTestsAfterXBuilds');
-    inputDataContract.ExecutionSettings.TiaSettings.FileLevel = getTIALevel(tl.getVariable('tia.filelevel'));
-    inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory = tl.getVariable('build.sourcesdirectory');
-    inputDataContract.ExecutionSettings.TiaSettings.FilterPaths = tl.getVariable('TIA_IncludePathFilters');
-    // hydra: inputDataContract.ExecutionSettings.TiaSettings.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    inputDataContract.TiaBaseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    //hydra: inputDataContract.ExecutionSettings.TiaSettings.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-
-    inputDataContract.UseNewCollector = false;
-    const useNewCollector = tl.getVariable('tia.useNewCollector');
-    if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
-        inputDataContract.UseNewCollector = true;
-    }
-
-    const buildReason = tl.getVariable('Build.Reason');
-
-    // https://www.visualstudio.com/en-us/docs/build/define/variables
-    // PullRequest -> This is the case for TfsGit PR flow
-    // CheckInShelveset -> This is the case for TFVC Gated Checkin
-    if (buildReason && (buildReason === 'PullRequest' || buildReason === 'CheckInShelveset')) {
-        // hydra: Should this become a first class input or should we identify if it is a pr flow from the managed layer? First class input
-        inputDataContract.IsPrFlow = true;
-    } else {
-        inputDataContract.IsPrFlow = utils.Helper.stringToBool(tl.getVariable('tia.isPrFlow'));
-    }
-    inputDataContract.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(tl.getVariable('tia.useTestCaseFilterInResponseFile'));
-
-    // User map file
-    inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = tl.getVariable('tia.usermapfile');
-
-    // disable editing settings file to switch on data collector
-    // hydra: make this first class input
-    if (tl.getVariable('tia.disabletiadatacollector') && tl.getVariable('tia.disabletiadatacollector').toUpperCase() === 'TRUE') {
-        inputDataContract.DisableEnablingDataCollector = true;
-    } else {
-        inputDataContract.DisableEnablingDataCollector = false;
-    }
-
-    inputDataContract.ExecutionSettings.CustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
-    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
-        inputDataContract.ExecutionSettings.CustomTestAdapters = path.resolve(inputDataContract.ExecutionSettings.CustomTestAdapters);
-    }
-    if (inputDataContract.ExecutionSettings.CustomTestAdapters &&
-        !utils.Helper.pathExistsAsDirectory(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
-        throw new Error(tl.loc('pathToCustomAdaptersInvalid', inputDataContract.ExecutionSettings.CustomTestAdapters));
-    }
-    console.log(tl.loc('pathToCustomAdaptersInput', inputDataContract.ExecutionSettings.CustomTestAdapters));
-
-    // hydra: console flow only
-    //testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
-    //console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));\
-
-    // hydra: enable this warning
-    // if (dtaConfiguration.otherConsoleOptions) {
-    //     tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
-    // }
-
-    inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
-    console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
-
+function getTargetBinariesSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.TargetBinariesSettings = <idc.TargetBinariesSettings>{};
     inputDataContract.TargetBinariesSettings.BuildConfig = tl.getInput('configuration');
     inputDataContract.TargetBinariesSettings.BuildPlatform = tl.getInput('platform');
+    return inputDataContract;
+}
 
+function getTestReportingSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.TestReportingSettings = <idc.TestReportingSettings>{};
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
 
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
+
         let definitionName = tl.getVariable('BUILD_DEFINITIONNAME');
         let buildOrReleaseName = tl.getVariable('BUILD_BUILDNUMBER');
+
         if (inputDataContract.TfsSpecificSettings.ReleaseUri) {
             definitionName = tl.getVariable('RELEASE_DEFINITIONNAME');
             buildOrReleaseName = tl.getVariable('RELEASE_RELEASENAME');
         }
+
         inputDataContract.TestReportingSettings.TestRunTitle = `TestRun_${definitionName}_${buildOrReleaseName}`;
     }
 
-    inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
+    return inputDataContract;
+}
 
-    // InputDataContract.TestSpecificSettings
-    inputDataContract.TestSpecificSettings = <idc.TestSpecificSettings>{};
-    inputDataContract.TestSpecificSettings.TestCaseAccessToken = tl.getVariable('Test.TestCaseAccessToken');
-
-    inputDataContract.ExecutionSettings.RerunSettings = <idc.RerunSettings>{};
-    // Rerun information
-    inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = tl.getBoolInput('rerunFailedTests');
-    console.log(tl.loc('rerunFailedTests', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests));
-
-    const rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
-
-    inputDataContract.ExecutionSettings.RerunSettings.RerunType = rerunType;
-
-    // hydra: unravel the nestings
-    if (rerunType === 'basedOnTestFailureCount') {
-        const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
-        if (!isNaN(rerunFailedTestCasesMaxLimit)) {
-            inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit = rerunFailedTestCasesMaxLimit;
-            console.log(tl.loc('rerunFailedTestCasesMaxLimit', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit));
-        } else {
-            tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
-        }
-    } else {
-        const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
-        if (!isNaN(rerunFailedThreshold)) {
-            inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold = rerunFailedThreshold;
-            console.log(tl.loc('rerunFailedThreshold', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold));
-        } else {
-            tl.warning(tl.loc('invalidRerunFailedThreshold'));
-        }
-    }
-
-    const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
-    if (!isNaN(rerunMaxAttempts)) {
-        inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts = rerunMaxAttempts;
-        console.log(tl.loc('rerunMaxAttempts', inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts));
-    } else {
-        tl.warning(tl.loc('invalidRerunMaxAttempts'));
-    }
-
+function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     const vsTestLocationMethod = tl.getInput('vstestLocationMethod');
     if (vsTestLocationMethod === utils.Constants.vsTestVersionString) {
         const vsTestVersion = tl.getInput('vsTestVersion');
@@ -268,9 +213,7 @@ export function getDistributedTestConfigurations() : idc.InputDataContract {
             throw (tl.loc('vs2013NotSupportedInDta'));
         } else {
             console.log(tl.loc('vsVersionSelected', vsTestVersion));
-
-            getTestPlatformPath(inputDataContract);
-            // hydra: find vs installation location here
+            inputDataContract.VsTestConsolePath = getTestPlatformPath(inputDataContract);
         }
     } else {
         // hydra: should it be full path or directory above?
@@ -278,29 +221,30 @@ export function getDistributedTestConfigurations() : idc.InputDataContract {
         console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', inputDataContract.VsTestConsolePath));
     }
 
-    // hydra: Maybe move all warnings to a diff function
-    if (tl.getBoolInput('uiTests') && inputDataContract.ExecutionSettings.AssemblyLevelParallelism) {
-        tl.warning(tl.loc('uitestsparallel'));
-    }
+    return inputDataContract;
+}
 
+function getLoggingSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     // InputDataContract.Logging
     inputDataContract.Logging = <idc.Logging>{};
     inputDataContract.Logging.EnableConsoleLogs = true;
     if (utils.Helper.isDebugEnabled()) {
         inputDataContract.Logging.DebugLogging = true;
     }
+    return inputDataContract;
+}
 
-    inputDataContract.VstestTaskInstanceIdentifier = uuid.v1();
-    inputDataContract.ExecutionSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
-
+function getProxySettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     // Get proxy details
     inputDataContract.ProxySettings = <idc.ProxySettings>{};
     inputDataContract.ProxySettings.ProxyUrl = tl.getVariable('agent.proxyurl');
     inputDataContract.ProxySettings.ProxyUsername = tl.getVariable('agent.proxyusername');
     inputDataContract.ProxySettings.ProxyPassword = tl.getVariable('agent.proxypassword');
     inputDataContract.ProxySettings.ProxyBypassHosts = tl.getVariable('agent.proxybypasslist');
-    inputDataContract.UseVsTestConsole = false;
+    return inputDataContract;
+}
 
+function getDistributionSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.DistributionSettings = <idc.DistributionSettings>{};
     inputDataContract.DistributionSettings.NumberOfTestAgents = 1;
     const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
@@ -341,19 +285,46 @@ export function getDistributedTestConfigurations() : idc.InputDataContract {
     } else if (distributionType && distributionType === 'basedOnAssembly') {
         inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = false;
     }
+    return inputDataContract;
+}
 
-    // hydra: why is this still required?
-    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
-    if (useVsTestConsole) {
-        inputDataContract.UseVsTestConsole = utils.Helper.stringToBool(useVsTestConsole);
+function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
+    inputDataContract.ExecutionSettings = <idc.ExecutionSettings>{};
+
+    inputDataContract.ExecutionSettings.SettingsFile = tl.getPathInput('runSettingsFile');
+    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.SettingsFile)) {
+        inputDataContract.ExecutionSettings.SettingsFile = path.resolve(inputDataContract.ExecutionSettings.SettingsFile);
     }
+    if (inputDataContract.ExecutionSettings.SettingsFile === tl.getVariable('System.DefaultWorkingDirectory')) {
+        delete inputDataContract.ExecutionSettings.SettingsFile;
+    }
+    console.log(tl.loc('runSettingsFileInput', inputDataContract.ExecutionSettings.SettingsFile));
 
-    // hydra: this will have to be done after we get vstest version in the managed layer. Also we support using vstest console.exe in distributed flow today?
-    // // VsTest Console cannot be used for Dev14
-    // if (inputDataContract.UseVsTestConsole === true && inputDataContract.vsTestVersion !== '15.0') {
-    //     console.log(tl.loc('noVstestConsole'));
-    //     dtaConfiguration.useVsTestConsole = 'false';
+    inputDataContract.ExecutionSettings.OverridenParameters = tl.getInput('overrideTestrunParameters');
+
+    inputDataContract.ExecutionSettings.AssemblyLevelParallelism = tl.getBoolInput('runInParallel');
+    console.log(tl.loc('runInParallelInput', inputDataContract.ExecutionSettings.AssemblyLevelParallelism));
+
+    // hydra: valid only for console flow
+    //inputDataContract.ExecutionSettings.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
+    //console.log(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
+
+    // hydra: do we want to shoot this warning?
+    // if (inputDataContract.runTestsInIsolation) {
+    //     tl.warning(tl.loc('runTestInIsolationNotSupported'));
     // }
+
+    inputDataContract.ExecutionSettings.CustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
+    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
+        inputDataContract.ExecutionSettings.CustomTestAdapters = path.resolve(inputDataContract.ExecutionSettings.CustomTestAdapters);
+    }
+    if (inputDataContract.ExecutionSettings.CustomTestAdapters &&
+        !utils.Helper.pathExistsAsDirectory(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
+        throw new Error(tl.loc('pathToCustomAdaptersInvalid', inputDataContract.ExecutionSettings.CustomTestAdapters));
+    }
+    console.log(tl.loc('pathToCustomAdaptersInput', inputDataContract.ExecutionSettings.CustomTestAdapters));
+
+    inputDataContract.ExecutionSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
 
     inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase = false;
     if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {
@@ -361,16 +332,91 @@ export function getDistributedTestConfigurations() : idc.InputDataContract {
     }
     tl.debug('ProceedAfterAbortedTestCase is set to : ' + inputDataContract.ExecutionSettings.ProceedAfterAbortedTestCase);
 
-    inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
-    inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
-    inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
+    // hydra: Maybe move all warnings to a diff function
+    if (tl.getBoolInput('uiTests') && inputDataContract.ExecutionSettings.AssemblyLevelParallelism) {
+        tl.warning(tl.loc('uitestsparallel'));
+    }
 
-    //hydra: change this input to be some unique run identifier
-    inputDataContract.RunIdentifier = getRunIdentifier();
+    // hydra: console flow only
+    //testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
+    //console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));\
 
-    //hydra: do we need
-    //dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
+    // hydra: enable this warning
+    // if (dtaConfiguration.otherConsoleOptions) {
+    //     tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
+    // }
 
+    inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
+    console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
+
+    inputDataContract = getTiaSettings(inputDataContract);
+    inputDataContract = getRerunSettings(inputDataContract);
+
+    return inputDataContract;
+}
+
+function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
+    // TIA stuff
+    inputDataContract.ExecutionSettings.TiaSettings = <idc.TiaSettings>{};
+    inputDataContract.ExecutionSettings.TiaSettings.Enabled = tl.getBoolInput('runOnlyImpactedTests');
+    inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = +tl.getInput('runAllTestsAfterXBuilds');
+    inputDataContract.ExecutionSettings.TiaSettings.FileLevel = getTIALevel(tl.getVariable('tia.filelevel'));
+    inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory = tl.getVariable('build.sourcesdirectory');
+    inputDataContract.ExecutionSettings.TiaSettings.FilterPaths = tl.getVariable('TIA_IncludePathFilters');
+    // hydra: inputDataContract.ExecutionSettings.TiaSettings.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    inputDataContract.TiaBaseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+    //hydra: inputDataContract.ExecutionSettings.TiaSettings.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
+
+    // User map file
+    inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = tl.getVariable('tia.usermapfile');
+
+    // disable editing settings file to switch on data collector
+    // hydra: make this first class input
+    if (tl.getVariable('tia.disabletiadatacollector') && tl.getVariable('tia.disabletiadatacollector').toUpperCase() === 'TRUE') {
+        inputDataContract.ExecutionSettings.TiaSettings.DisableDataCollection = true;
+    } else {
+        inputDataContract.ExecutionSettings.TiaSettings.DisableDataCollection = false;
+    }
+    return inputDataContract;
+}
+
+function getRerunSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
+    // Rerun settings
+    inputDataContract.ExecutionSettings.RerunSettings = <idc.RerunSettings>{};
+
+    inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = tl.getBoolInput('rerunFailedTests');
+    console.log(tl.loc('rerunFailedTests', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests));
+
+    const rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
+
+    inputDataContract.ExecutionSettings.RerunSettings.RerunType = rerunType;
+
+    // hydra: unravel the nestings
+    if (rerunType === 'basedOnTestFailureCount') {
+        const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
+        if (!isNaN(rerunFailedTestCasesMaxLimit)) {
+            inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit = rerunFailedTestCasesMaxLimit;
+            console.log(tl.loc('rerunFailedTestCasesMaxLimit', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTestCasesMaxLimit));
+        } else {
+            tl.warning(tl.loc('invalidRerunFailedTestCasesMaxLimit'));
+        }
+    } else {
+        const rerunFailedThreshold = parseInt(tl.getInput('rerunFailedThreshold'));
+        if (!isNaN(rerunFailedThreshold)) {
+            inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold = rerunFailedThreshold;
+            console.log(tl.loc('rerunFailedThreshold', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedThreshold));
+        } else {
+            tl.warning(tl.loc('invalidRerunFailedThreshold'));
+        }
+    }
+
+    const rerunMaxAttempts = parseInt(tl.getInput('rerunMaxAttempts'));
+    if (!isNaN(rerunMaxAttempts)) {
+        inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts = rerunMaxAttempts;
+        console.log(tl.loc('rerunMaxAttempts', inputDataContract.ExecutionSettings.RerunSettings.RerunMaxAttempts));
+    } else {
+        tl.warning(tl.loc('invalidRerunMaxAttempts'));
+    }
     return inputDataContract;
 }
 
