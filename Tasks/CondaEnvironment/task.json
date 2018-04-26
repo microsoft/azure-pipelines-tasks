@@ -4,7 +4,7 @@
     "friendlyName": "Conda Environment",
     "description": "Create and activate a Conda environment.",
     "helpMarkDown": "",
-    "category": "Tool",
+    "category": "Package",
     "runsOn": [
         "Agent",
         "DeploymentGroup"
