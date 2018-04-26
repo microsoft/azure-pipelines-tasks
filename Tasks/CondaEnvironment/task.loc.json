@@ -43,12 +43,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.packageSpecs"
     },
     {
-      "name": "getLatestConda",
+      "name": "updateConda",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.getLatestConda",
+      "label": "ms-resource:loc.input.label.updateConda",
       "required": false,
       "defaultValue": true,
-      "helpMarkDown": "ms-resource:loc.input.help.getLatestConda"
+      "helpMarkDown": "ms-resource:loc.input.help.updateConda"
     },
     {
       "name": "otherOptions",
@@ -80,7 +80,6 @@
     "CreateFailed": "ms-resource:loc.messages.CreateFailed",
     "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
     "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
-    "InstallationFailed": "ms-resource:loc.messages.InstallationFailed",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   }
 }

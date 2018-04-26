@@ -9,27 +9,25 @@ import { Platform } from './taskutil';
 interface TaskParameters {
     environmentName: string,
     packageSpecs?: string,
-    getLatestConda?: boolean,
+    updateConda?: boolean,
     otherOptions?: string,
     cleanEnvironment?: boolean
 }
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    // Find Conda on the system, or install it if it is missing and the user requested it
+    // Find Conda on the system
     const condaRoot = await (async () => {
         const preinstalledConda = internal.findConda(platform);
         if (preinstalledConda) {
-            if (parameters.getLatestConda) {
-                await internal.updateConda(preinstalledConda, platform);
-            }
             return preinstalledConda;
-        } else if (parameters.getLatestConda) {
-            const downloadPath = await internal.downloadMiniconda(platform);
-            return await internal.installMiniconda(downloadPath, platform);
         } else {
             throw new Error(task.loc('CondaNotFound'));
         }
     })();
+
+    if (parameters.updateConda) {
+        await internal.updateConda(condaRoot, platform);
+    }
 
     internal.prependCondaToPath(condaRoot, platform);
 

@@ -43,12 +43,12 @@
             "helpMarkDown": "Space-delimited list of packages to install."
         },
         {
-            "name": "getLatestConda",
+            "name": "updateConda",
             "type": "boolean",
             "label": "Update to the latest Conda",
             "required": false,
             "defaultValue": true,
-            "helpMarkDown": "Update Conda to the latest version. If the `conda` executable is not found on the system, download and install the latest version of Miniconda. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable."
+            "helpMarkDown": "Update Conda to the latest version. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable."
         },
         {
             "name": "otherOptions",
@@ -78,9 +78,8 @@
     "messages": {
         "CleanEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is set. Deleting ...",
         "CreateFailed": "Failed to create Conda environment %s: %s",
-        "CondaNotFound": "The `conda` executable was not found on the system. Set the task's \"Update to latest Conda\" parameter to download Miniconda, or ask your administrator to install Miniconda or Anaconda.",
+        "CondaNotFound": "The `conda` executable was not found on the system. Ask your administrator to install Miniconda or Anaconda. Then add the `conda` executable to `PATH` or set the `CONDA` environment variable to the root of the installation.",
         "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
-        "InstallationFailed": "Miniconda installer failed: %s",
         "PlatformNotRecognized": "Platform not recognized"
     }
 }

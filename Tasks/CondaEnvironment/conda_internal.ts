@@ -5,7 +5,6 @@ import * as task from 'vsts-task-lib/task';
 import * as tool from 'vsts-task-tool-lib/tool';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
-import { Lazy } from './lazy';
 import { Platform } from './taskutil';
 
 /**
@@ -21,12 +20,6 @@ function hasConda(searchDir: string, platform: Platform): boolean {
 
     return fs.existsSync(conda) && fs.statSync(conda).isFile();
 }
-
-// Where the agent will install Miniconda if it is missing and requested by the user
-const installLocation = new Lazy<string>(() => {
-    const toolsDirectory = task.getVariable('Agent.ToolsDirectory');
-    return path.join(toolsDirectory, 'Miniconda', 'latest');
-});
 
 /**
  * Search the system for an existing Conda installation.
@@ -45,11 +38,6 @@ export function findConda(platform: Platform): string | null {
     const condaFromEnvironment: string | undefined = task.getVariable('CONDA');
     if (condaFromEnvironment && hasConda(condaFromEnvironment, platform)) {
         return condaFromEnvironment;
-    }
-
-    const condaFromAgent = installLocation.value;
-    if (fs.existsSync(condaFromAgent) && hasConda(condaFromAgent, platform)) {
-        return condaFromAgent;
     }
 
     return null;
@@ -87,57 +75,6 @@ export async function updateConda(condaRoot: string, platform: Platform): Promis
     } catch (e) {
         // Best effort
     }
-}
-
-/**
- * Download the appropriate Miniconda installer for `platform`.
- * @param platform Platform for which we want to download Miniconda.
- * @returns Absolute path to the download.
- */
-export function downloadMiniconda(platform: Platform): Promise<string> {
-    const url = (() => {
-        switch (platform) {
-            case Platform.Linux: return 'https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh';
-            case Platform.MacOS: return 'https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh';
-            case Platform.Windows: return 'https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe';
-        }
-    })();
-
-    // By default `downloadTool` will name the downloaded file with a GUID
-    // But on Windows, the file must end with `.exe` to make it executable
-    const tempDirectory = task.getVariable('Agent.TempDirectory');
-    const filename = url.split('/').pop()!;
-    return tool.downloadTool(url, path.join(tempDirectory, filename));
-}
-
-/**
- * Run the Miniconda installer.
- * @param installerPath Absolute path to the Miniconda installer.
- * @param platform Platform for which we want to install Miniconda.
- * @returns Absolute path to the install location.
- */
-export async function installMiniconda(installerPath: string, platform: Platform): Promise<string> {
-    const destination = installLocation.value;
-    const installer = (() => {
-        if (platform === Platform.Windows) {
-            return new ToolRunner(installerPath).line(`/S /AddToPath=0 /RegisterPython=0 /D=${destination}`);
-        } else {
-            return new ToolRunner('bash').line(`${installerPath} -b -f -p ${destination}`);
-        }
-    })();
-
-    try {
-        await installer.exec();
-    } catch (e) {
-        // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
-        throw new Error(task.loc('InstallationFailed', e));
-    }
-
-    // Somehow, even by downloading the "latest" version, there will be a newer version available and it will prompt you to update
-    await updateConda(destination, platform);
-
-    task.setVariable('CONDA', destination);
-    return destination;
 }
 
 /**
