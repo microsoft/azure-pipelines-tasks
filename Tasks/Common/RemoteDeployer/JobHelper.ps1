@@ -19,7 +19,8 @@ function Run-RemoteScriptJobs {
         [string] $sessionName,
         [hashtable] $scriptArgumentsByName,
         [hashtable[]] $targetMachines,
-        [scriptblock] $errorHandler = $null
+        [scriptblock] $outputHandler,
+        [scriptblock] $errorHandler
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
     try {
@@ -27,7 +28,7 @@ function Run-RemoteScriptJobs {
         $scriptArguments = Get-ScriptArguments -scriptArgumentsByName $scriptArgumentsByName
         $jobName = [Guid]::NewGuid().ToString()
         $jobsInfo = (Invoke-Command -Session $sessions -AsJob -ScriptBlock $script -ArgumentList $scriptArguments -JobName $jobName -ErrorAction 'Stop').ChildJobs | Select-Object Id, Location
-        $jobResults = Get-JobResults -jobsInfo $jobsInfo -targetMachines $targetMachines -sessionName $sessionName -errorHandler $errorHandler
+        $jobResults = Get-JobResults -jobsInfo $jobsInfo -targetMachines $targetMachines -sessionName $sessionName -outputHandler $outputHandler -errorHandler $errorHandler
         Set-TaskResult -jobResults $jobResults -machinesCount $totalTargetMachinesCount
         return $jobResults
     } finally {
@@ -111,6 +112,7 @@ function Get-JobResults {
         [psobject[]] $jobsInfo,
         [hashtable[]] $targetMachines,
         [string] $sessionName,
+        [scriptblock] $outputHandler,
         [scriptblock] $errorHandler
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
@@ -136,11 +138,13 @@ function Get-JobResults {
                         ForEach-Object {
                             if($_.VstsTaskJobResult -eq $true) { 
                                 $jobResults += $_ 
-                            } else { 
-                                Write-Host $($_ | Out-String) 
-                                if(($errorHandler -ne $null) -and ($_ -is [System.Management.Automation.ErrorRecord])) {
+                            } else {
+                                if($_ -is [System.Management.Automation.ErrorRecord]) {
                                     $errorRecord = $_
                                     $null = & { try { & $errorHandler $errorRecord $($job.Location) } catch { Write-Host "ErrorHandlerException: $($_.Exception.ToString())" } }
+                                } else {
+                                    $outputObject = $_
+                                    $null = & { try { & $outputHandler $outputObject $($job.Location) } catch { Write-Host "OutputHandlerException: $($_.Exception.ToString())" } }
                                 }
                             }
                         }
