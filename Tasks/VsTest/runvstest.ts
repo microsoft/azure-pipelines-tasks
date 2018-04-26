@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
 import * as utils from './helpers';
+import * as inputParser from './inputparser';
 import * as os from 'os';
 const osPlat: string = os.platform();
 
@@ -34,7 +35,7 @@ if (osPlat !== 'win32') {
 
             console.log(tl.loc('distributedTestWorkflow'));
             console.log('======================================================');
-            const inputDataContract = taskInputParser.getDistributedTestConfigurations();
+            const inputDataContract = inputParser.getDistributedTestConfigurations();
             console.log('======================================================');
 
             const test = new distributedTest.DistributedTest(inputDataContract);
