@@ -32,7 +32,7 @@ export function findConda(platform: Platform): string | null {
     const condaFromPath: string | undefined = task.which('conda');
     if (condaFromPath) {
         // On all platforms, the `conda` executable lives in a directory off the root of the installation
-        return path.join('..', condaFromPath);
+        return path.dirname(path.dirname(condaFromPath));
     }
 
     const condaFromEnvironment: string | undefined = task.getVariable('CONDA');

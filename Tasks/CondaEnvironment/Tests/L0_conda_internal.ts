@@ -15,7 +15,7 @@ function reload(module: '../conda_internal'): typeof condaInternal {
     return require('../conda_internal');
 }
 
-it('finds the Conda executable with the CONDA variable', async function () {
+it('finds the Conda installation with the CONDA variable', async function () {
     const existsSync = sinon.stub();
     const statSync = sinon.stub();
 
@@ -71,6 +71,40 @@ it('finds the Conda executable with the CONDA variable', async function () {
         assert.strictEqual(uut.findConda(Platform.MacOS), null);
         assert.strictEqual(uut.findConda(Platform.Windows), null);
     }
+});
+
+it('finds the Conda installation with PATH', async function () {
+    const existsSync = sinon.stub().returns(true);
+    const statSync = sinon.stub().returns({
+        isFile: () => true
+    });
+
+    mockery.registerMock('fs', {
+        existsSync: existsSync,
+        statSync: statSync
+    });
+
+    mockTask.setAnswers({
+        which: {
+            'conda': 'path-to-conda/bin/conda'
+        }
+    });
+
+    const getVariable = sinon.stub();
+    getVariable.withArgs('CONDA').returns(undefined);
+    getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
+
+    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
+        getVariable: getVariable
+    }));
+
+    mockery.registerMock('vsts-task-tool-lib/tool', {});
+
+    const uut = reload('../conda_internal');
+
+    assert.strictEqual(uut.findConda(Platform.Linux), 'path-to-conda');
+    assert.strictEqual(uut.findConda(Platform.MacOS), 'path-to-conda');
+    assert.strictEqual(uut.findConda(Platform.Windows), 'path-to-conda');
 });
 
 it('creates Conda environment', async function (done: MochaDone) {
