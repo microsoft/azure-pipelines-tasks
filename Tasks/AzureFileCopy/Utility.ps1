@@ -995,7 +995,7 @@ function Copy-FilesParallellyToAzureVMs
         [object]$sessionOption
     )
 
-    Write-Output "Starting parallel file copy"
+    Write-Verbose "Starting parallel file copy"
 
     $parallelCopyJobResults = Invoke-RemoteScript -targetMachineNames $targetMachineNames `
                                                   -credential $credential `
@@ -1038,7 +1038,7 @@ function Copy-FilesSequentiallyToAzureVMs
         [object]$sessionOption
     )
 
-    Write-Output "Starting sequential file copy"
+    Write-Verbose "Starting sequential file copy"
 
     $targetMachineNames | ForEach-Object {
         Write-Output (Get-VstsLocString -Key "AFC_CopyStarted" -ArgumentList $_)
