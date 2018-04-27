@@ -102,12 +102,12 @@ function Invoke-RemoteScript {
                                                  -useSsl:($targetMachine.UseSsl)
         }
         $jobResults = Run-RemoteScriptJobs -sessions $sessions `
-                             -script $ExecutePsScript `
-                             -sessionName $sessionName `
-                             -scriptArgumentsByName $remoteScriptJobArgumentsByName `
-                             -targetMachines $targetMachines `
-                             -outputHandler $outputHandler `
-                             -errorHandler $errorHandler
+                                           -script $ExecutePsScript `
+                                           -sessionName $sessionName `
+                                           -scriptArgumentsByName $remoteScriptJobArgumentsByName `
+                                           -targetMachines $targetMachines `
+                                           -outputHandler $outputHandler `
+                                           -errorHandler $errorHandler
         return $jobResults
     } finally {
         if($sessions.Count -gt 0) {
@@ -128,6 +128,7 @@ function Get-TargetMachines {
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
     try {
+        Write-Verbose "Target Machines: $($targetMachineNames -join ',')"
         $targetMachines = @();
         foreach($targetMachineName in $targetMachineNames) {
             $targetMachine = @{
@@ -157,6 +158,7 @@ function Get-TargetMachines {
             Write-Verbose "UseSSL = $($targetMachine.UseSsl)"
             $targetMachines += $targetMachine
         }
+        Write-Verbose "Total target machines are: $($targetMachines.Count)"
         return $targetMachines
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
