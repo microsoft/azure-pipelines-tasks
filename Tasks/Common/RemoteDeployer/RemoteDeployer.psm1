@@ -95,7 +95,7 @@ function Invoke-RemoteScript {
                                              -useSsl:$useSsl                                             
 
         foreach($targetMachine in $targetMachines) {
-            $sessions += Get-WinRmSessionToTargetMachine -computerName $targetMachine.ComputerName `
+            $sessions += Get-WinRmConnectionToTargetMachine -computerName $targetMachine.ComputerName `
                                                          -port $targetMachine.WSManPort `
                                                          -credential $targetMachine.Credential `
                                                          -authentication $targetMachine.Authentication `

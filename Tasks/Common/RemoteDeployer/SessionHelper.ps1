@@ -1,4 +1,4 @@
-function Get-WinRmSessionToTargetMachine {
+function Get-WinRmConnectionToTargetMachine {
     [CmdletBinding()]
     Param (
         [string] $computerName,
