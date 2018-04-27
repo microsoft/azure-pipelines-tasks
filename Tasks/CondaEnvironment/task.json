@@ -40,7 +40,7 @@
             "label": "Package specs",
             "required": false,
             "defaultValue": "python=3",
-            "helpMarkDown": "Space-delimited list of packages to install."
+            "helpMarkDown": "Space-delimited list of packages to install when creating the environment."
         },
         {
             "name": "updateConda",
