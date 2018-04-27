@@ -84,6 +84,44 @@ if (options.task) {
 else {
     // load the default list
     taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
+    
+    // For now filter further to just what's changed here.
+    // We could also use a --changed flag and preserve the force building of all.
+    // Not sure if there will be a use case for that after this change goes in
+    // But it would make things more explicit
+    if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET) {
+        var changed = [];
+        taskList.forEach(function (taskName) {
+            // compare current and packaging version
+            // add to new list if current > packaging
+            // print all verbose, print warning if < packaging
+            var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+            var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+            if (typeof taskJson.version.Patch != 'number') {
+                fail(`Error processing '${taskName}'. version.Patch should be a number.`);
+            }
+            var sourceTaskVersion = taskJson.version.major + "." + taskJson.version.minor + "." + taskJson.version.patch;
+
+            var packagingTaskVersion = ''; // TODO: Load this from packaging.
+
+            // need to add semver to do comparisons safely
+            //https://docs.microsoft.com/en-us/rest/api/vsts/packaging/versions/list
+            //GET https://{accountName}.feeds.visualstudio.com/_apis/packaging/Feeds/{feedId}/Packages/{packageId}/versions?api-version=5.0-preview.1
+
+
+            // Something like this but with a GUID
+            // https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages/Mseng.MS.TF.Build.Tasks/versions?api-version=5.0-preview.1
+
+
+            // Can get all feeds doing this
+            // https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages/
+
+            // TODO: We need to keep the GUIDs for each task in the task.json or we can discover them... probably best to discover them after we have a task naming convention
+            // e.g - Mseng.MS.TF.Build.Tasks.CMake, get the task name from task.json not from the task folder, e.g. - taskJson.name
+            
+        });
+        taskList = changed;
+    }
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
