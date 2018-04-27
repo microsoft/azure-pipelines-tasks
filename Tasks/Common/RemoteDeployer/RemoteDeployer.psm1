@@ -104,12 +104,12 @@ function Invoke-RemoteScript {
                                                  -useSsl:($targetMachine.UseSsl)
         }
         $jobResults = Run-RemoteScriptJobs -sessions $sessions `
-                             -script $ExecutePsScript `
-                             -sessionName $sessionName `
-                             -scriptArgumentsByName $remoteScriptJobArgumentsByName `
-                             -targetMachines $targetMachines `
-                             -outputHandler $outputHandler `
-                             -errorHandler $errorHandler
+                                           -script $ExecutePsScript `
+                                           -sessionName $sessionName `
+                                           -scriptArgumentsByName $remoteScriptJobArgumentsByName `
+                                           -targetMachines $targetMachines `
+                                           -outputHandler $outputHandler `
+                                           -errorHandler $errorHandler
         return $jobResults
     } finally {
         if($sessions.Count -gt 0) {
