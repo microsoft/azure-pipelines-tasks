@@ -197,6 +197,7 @@ try
                                              -additionalArguments $additionalArguments `
                                              -azCopyToolLocation $azCopyLocation
 
+    Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
 }
 catch
 {

@@ -1021,11 +1021,10 @@ function Copy-FilesParallellyToAzureVMs
     # Throw if any of the remote jobs failed
     if($isFileCopyFailed)
     {
-        $errorMessage = "Failed to copy source files on one or more VMs. Refer logs for more details." # TODO: localize this
-        ThrowError -errorMessage $errorMessage
+        ThrowError -errorMessage (Get-VstsLocString -Key "AFC_ParallelCopyFailed")
     }
 
-    Write-Output "Successfully finished parallel file copy" # TODO: localize this"
+    Write-Verbose "Successfully finished parallel file copy"
 }
 
 function Copy-FilesSequentiallyToAzureVMs
@@ -1054,17 +1053,16 @@ function Copy-FilesSequentiallyToAzureVMs
 
         if($copyJobResult.ExitCode -eq 0)
         {
-            Write-Verbose "Copy source files status for $($_.ComputerName): Successful"
+            Write-Verbose "Copy source files status for $_ : Successful"
         }
         else
         {
-            Write-Verbose "Copy source files status for $($_.ComputerName): Failed"
-            $errorMessage = "Failed to copy source files on VM: $($_.ComputerName). Refer logs for more details." # TODO: localize this"
-            ThrowError -errorMessage $errorMessage
+            Write-Verbose "Copy source files status for $_ : Failed"
+            ThrowError -errorMessage (Get-VstsLocString -Key "AFC_CopyFailed" -ArgumentList $_)
         }
     }
 
-    Write-Output "Successfully finished sequential file copy" # TODO: localize this"
+    Write-Verbose "Successfully finished sequential file copy"
 }
 
 function Copy-FilesToAzureVMsFromStorageContainer
@@ -1087,7 +1085,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     # Generate storage container URL
     $containerURL = [string]::Format("{0}/{1}", $blobStorageEndpoint.Trim("/"), $containerName)
 
-    $azCopyToolFileNames = Get-ChildItem $azCopyToolLocation | Where-Object {($_ -like "*.exe") -or ($_ -like "*.dll")} | Select-Object -ExpandProperty Name
+    $azCopyToolFileNames = Get-ChildItem $azCopyToolLocation | Select-Object -ExpandProperty Name
 
     $azCopyToolFileContents = @()
     

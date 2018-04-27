@@ -11,9 +11,9 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 114
+        "Patch": 0
     },
     "demands": [
         "azureps"
@@ -323,8 +323,8 @@
         "AFC_CopyStarted": "Copy started for machine: '{0}'",
         "AFC_CopyCompleted": "Copy status for machine '{0}' : '{1}'",
         "AFC_WinRMHelpMessage": "To fix WinRM connection related issues, select the 'Enable Copy Prerequisites' option in the task. If set already, and the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). Applicable only for ARM VMs.",
-        "AFC_CopyFailed": "Copy failed on machine '{0}' with following message : '{1}'",
-        "AFC_ParallelCopyFailed": "Copy to one or more machines failed.",
+        "AFC_CopyFailed": "Copy failed on machine '{0}'. Refer logs for more details.",
+        "AFC_ParallelCopyFailed": "Copy to one or more machines failed. Refer logs for more details.",
         "AFC_CopySuccessful": "Copied files from source path: '{0}' to target azure VMs in resource group: '{1}' successfully",
         "AFC_SetCustomScriptExtensionFailed": "Setting the custom script extension '{0}' for virtual machine '{1}' failed with error : {2}",
         "AFC_AddNetworkSecurityRuleFailed": "Failed to add the network security rule: {0}",
