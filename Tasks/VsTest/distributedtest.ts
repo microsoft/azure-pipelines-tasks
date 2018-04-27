@@ -229,7 +229,7 @@ export class DistributedTest {
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.dtaTestConfig.dtaEnvironment.patToken);
 
         // Invoke DtaExecutionHost with the input json file
-        const inputFilePath = path.join(tl.getVariable('temp'), 'input.json');
+        const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v1() + '.json');
         DistributedTest.removeEmptyNodes(inputDataContract);
         writeFileSync(inputFilePath, JSON.stringify(inputDataContract));
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
