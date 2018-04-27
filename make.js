@@ -89,6 +89,7 @@ else {
     // We could also use a --changed flag and preserve the force building of all.
     // Not sure if there will be a use case for that after this change goes in
     // But it would make things more explicit
+    // TODO: Maybe put the logic to get task lists into make util.
     if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET) {
         var changed = [];
         taskList.forEach(function (taskName) {
@@ -100,7 +101,7 @@ else {
             }
             var sourceTaskVersion = taskJson.version.major + "." + taskJson.version.minor + "." + taskJson.version.patch;
 
-            if (!taskVersionExistsInPackaging(taskJson.name, sourceTaskVersion)) {
+            if (!util.taskVersionExistsInPackaging(taskJson.name, sourceTaskVersion)) {
                 // This version of the task doesn't exist, we should build it
                 console.log(`Task '${taskJson.name}' version '${sourceTaskVersion}' does not exist in packaging, adding to list of tasks to be built.`);
                 changed.push(taskName);
@@ -111,52 +112,6 @@ else {
         });
         taskList = changed;
     }
-}
-
-function taskVersionExistsInPackaging() {
-    var packagingTaskVersion = ''; // TODO: Load this from packaging.
-
-            // need to add semver to do comparisons safely
-            //https://docs.microsoft.com/en-us/rest/api/vsts/packaging/versions/list
-            //GET https://{accountName}.feeds.visualstudio.com/_apis/packaging/Feeds/{feedId}/Packages/{packageId}/versions?api-version=5.0-preview.1
-
-
-            // Something like this but with a GUID
-            // https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages/Mseng.MS.TF.Build.Tasks/versions?api-version=5.0-preview.1
-            // Id for Mseng.MS.TF.Build.Tasks is 180592ac-ce16-471d-97c1-b9ba418477b5
-
-            // TODO: Create package for each nuget package
-            // TODO: Document process for creating a new task? Should we have CI handle creating a new package for the task if one doesn't exist?
-            // TODO: We got 1000 packages back, does the query limit the number? This could cause issues.
-
-            // Find all packages that contain "Mseng.MS.TF.Build.Tasks"
-            var taskPackagesQueryUrl = 'https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages?packageNameQuery=Mseng.MS.TF.Build.Tasks';
-
-
-
-            // Instead of this check if it exists
-            // Do they have a bulk api?
-            // TODO: look for a specific task name and version, can we do this?
-            // If they don't we will have to get the entire list and see if the version we want is there ourselves
-
-            // go through each item in value, there should only be one
-            // check the versions... check version property
-
-
-            // TODO: TOP: Maybe we can use this and add a filter for Tasks
-            // GET https://{accountName}.feeds.visualstudio.com/_apis/packaging/Feeds/{feedId}/packages?protocolType={protocolType}&packageNameQuery={packageNameQuery}&normalizedPackageName={normalizedPackageName}&includeUrls={includeUrls}&includeAllVersions={includeAllVersions}&isListed={isListed}&getTopPackageVersions={getTopPackageVersions}&isRelease={isRelease}&includeDescription={includeDescription}&$top={$top}&$skip={$skip}&includeDeleted={includeDeleted}&isCached={isCached}&directUpstreamId={directUpstreamId}&api-version=5.0-preview.1
-
-
-
-
-
-            // Can get all feeds doing this
-            // https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages/
-
-            // TODO: We need to keep the GUIDs for each task in the task.json or we can discover them... probably best to discover them after we have a task naming convention
-            // e.g - Mseng.MS.TF.Build.Tasks.CMake, get the task name from task.json not from the task folder, e.g. - taskJson.name
-
-    return true;
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
