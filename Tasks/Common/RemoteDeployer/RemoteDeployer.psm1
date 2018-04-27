@@ -130,6 +130,7 @@ function Get-TargetMachines {
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
     try {
+        Write-Verbose "Target Machines: $($targetMachineNames -join ',')"
         $targetMachines = @();
         foreach($targetMachineName in $targetMachineNames) {
             $targetMachine = @{
@@ -159,6 +160,7 @@ function Get-TargetMachines {
             Write-Verbose "UseSSL = $($targetMachine.UseSsl)"
             $targetMachines += $targetMachine
         }
+        Write-Verbose "Total target machines are: $($targetMachines.Count)"
         return $targetMachines
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

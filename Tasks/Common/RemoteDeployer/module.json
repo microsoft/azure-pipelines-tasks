@@ -1,7 +1,7 @@
 {
     "messages": {
         "RemoteDeployer_ConnectedMachines" : "PSSession created for Machines:'{0}'",
-        "RemoteDeployer_NotConnectedMachines" : "PSSession could not be created for Machines:'{0}'",
+        "RemoteDeployer_NotConnectedMachines" : "PSSession could not be created for Machine:'{0}:{1}'",
         "RemoteDeployer_ScriptJobFailed" : "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
         "RemoteDeployer_NonZeroExitCode" : "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
         "RemoteDeployer_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",

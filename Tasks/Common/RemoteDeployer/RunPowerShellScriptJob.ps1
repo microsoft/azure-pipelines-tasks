@@ -34,6 +34,7 @@ $ExecutePsScript = {
             $contents,
             [System.Text.Encoding]::UTF8
         )
+        Write-Verbose "Temporary script file created at path:'$filePath'"
         return $filePath
     }
     
@@ -49,7 +50,7 @@ $ExecutePsScript = {
     try {
 
         $result = @{
-            "VstsTaskJobResult" = $true;
+            "VstsRemoteDeployerJobResult" = $true;
             "Status" = "InProgress";
             "Message" = "PS_TM_ExitCode";
             "ExitCode" = -1;

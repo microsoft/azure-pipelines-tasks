@@ -49,7 +49,8 @@ function ConnectTo-RemoteMachine {
             foreach ($sessionError in $sessionErrors) {
                 Write-VstsTaskError -Message $sessionError.Exception.Message -ErrCode "PS_TM_UnableToCreatePSSession"
             }
-            Write-VstsSetResult -Result 'Failed' -Message $(Get-VstsLocString -Key "RemoteDeployer_NotConnectedMachines" -ArgumentList $computerName)
+            Write-Error (Get-VstsLocString -Key "RemoteDeployer_NotConnectedMachines" -ArgumentList $computerName, $port)
+            Write-VstsSetResult -Result 'Failed' -Message "RemoteDeployer_NotConnectedMachines"
         }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation

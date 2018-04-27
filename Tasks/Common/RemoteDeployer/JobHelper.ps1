@@ -25,9 +25,10 @@ function Run-RemoteScriptJobs {
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
     try {
         $totalTargetMachinesCount = $targetMachines.Count
+        Write-Verbose "Total no. of target machines: $totalTargetMachinesCount"
         $scriptArguments = Get-ScriptArguments -scriptArgumentsByName $scriptArgumentsByName
         $jobName = [Guid]::NewGuid().ToString()
-        $jobsInfo = (Invoke-Command -Session $sessions -AsJob -ScriptBlock $script -ArgumentList $scriptArguments -JobName $jobName -ErrorAction 'Stop').ChildJobs | Select-Object Id, Location
+        $jobsInfo = (Invoke-Command -Session $sessions -AsJob -ScriptBlock $script -ArgumentList $scriptArguments -JobName $jobName -ErrorAction 'Stop').ChildJobs | Select-Object Id, Location, @{ Name = 'JobRetrievelCount'; Expression = { 0 } }
         $jobResults = Get-JobResults -jobsInfo $jobsInfo -targetMachines $targetMachines -sessionName $sessionName -outputHandler $outputHandler -errorHandler $errorHandler
         Set-TaskResult -jobResults $jobResults -machinesCount $totalTargetMachinesCount
         return $jobResults
@@ -131,13 +132,31 @@ function Get-JobResults {
                 $jobId = $jobInfo.Id
                 $computerName = $jobInfo.Location
                 if($remoteExecutionStatusByLocation[$computerName] -eq "Unknown") {
-                    $job = Get-Job -Id $jobId
+                    try {
+                        $job = Get-Job -Id $jobId -ErrorAction 'Stop'
+                    } catch {
+                        Write-Verbose "Unable to get job with id: '$jobId'. Error: '$($_.Exception.Message)'"
+                        Write-Verbose $_.Exception.ToString()
+                        $jobInfo.JobRetrievelCount++
+                        if($jobInfo.JobRetrievelCount -ge 3) {
+                            Write-Verbose "Maximum job retrievel count reached for jobid: '$jobId'. Dropping job."
+                            $remoteExecutionStatusByLocation[$computerName] = "Finished"
+                        }
+                        continue;
+                    }
+                    $jobInfo.JobRetrievelCount = 0
                     $jobState = $job.State.ToString().ToLowerInvariant()
                     Write-Verbose "JobId: '$jobid', JobState: '$jobState', ComputerName: '$computerName'"
                     Receive-Job -Job $job |
                         ForEach-Object {
-                            if($_.VstsTaskJobResult -eq $true) { 
-                                $jobResults += $_ 
+                            if($_.VstsRemoteDeployerJobResult -eq $true) { 
+                                if($_ -is [hashtable]) {
+                                    $_.Remove("VstsRemoteDeployerJobResult")
+                                    $jobResults += $_ 
+                                } else {
+                                    Write-Verbose "jobResult is not a hashtable"
+                                    Write-Verbose $_.ToString();
+                                }
                             } else {
                                 if($_ -is [System.Management.Automation.ErrorRecord]) {
                                     $errorRecord = $_
@@ -162,6 +181,7 @@ function Get-JobResults {
                                 Write-Verbose "Connection re-established to computer: $computerName, JobId (New): $newJobId, JobId(Old): $($jobInfo.Id)"
                                 Stop-Job -Id $jobInfo.Id
                                 $jobInfo.Id = $newJobId
+                                $jobInfo.JobRetrievelCount = 0
                                 $connectionAttemptsByLocation[$computerName] = 0;
                             } else {
                                 Write-Verbose "Unable to re-establish connection to computer: $computerName. Retry attempt #$($connectionAttemptsByLocation[$computerName])"
@@ -180,7 +200,9 @@ function Get-JobResults {
                 }
             }
 
-            Start-Sleep -Seconds 30
+            if($isRemoteExecutionFinished -eq $false) {
+                Start-Sleep -Seconds 30
+            }
         }
         return $jobResults
     } finally {
