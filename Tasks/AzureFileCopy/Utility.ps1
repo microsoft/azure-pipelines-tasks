@@ -984,193 +984,10 @@ function Get-AzureVMsCredentials
     return $azureVmsCredentials
 }
 
-# function Copy-FilesSequentiallyToAzureVMs2
-# {
-#     param([string][Parameter(Mandatory=$true)]$storageAccountName,
-#           [string][Parameter(Mandatory=$true)]$containerName,
-#           [string][Parameter(Mandatory=$true)]$containerSasToken,
-# 		  [string]$blobStorageEndpoint,
-#           [string][Parameter(Mandatory=$true)]$targetPath,
-#           [string][Parameter(Mandatory=$true)]$azCopyLocation,
-#           [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
-#           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
-#           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
-#           [string]$communicationProtocol,
-#           [string]$skipCACheckOption,
-#           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
-#           [string]$additionalArguments,
-#           [string][Parameter(Mandatory=$true)]$connectionType)
-
-#     foreach ($resource in $azureVMResourcesProperties.Keys)
-#     {
-#         $resourceProperties = $azureVMResourcesProperties[$resource]
-#         $resourceFQDN = $resourceProperties.fqdn
-#         $resourceName = $resourceProperties.Name
-#         $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
-
-#         Write-Output (Get-VstsLocString -Key "AFC_CopyStarted" -ArgumentList $resourceName)
-
-#         $deploymentUtilitiesLocation = Get-DeploymentModulePath
-#         $copyResponse = Invoke-Command -ScriptBlock $AzureFileCopyJob -ArgumentList `
-#                             $deploymentutilitieslocation, $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVMsCredentials, `
-#                             $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
-
-#         $status = $copyResponse.Status
-
-#         Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $copyResponse
-#         Write-Output (Get-VstsLocString -Key "AFC_CopyCompleted" -ArgumentList $resourceName, $status)
-#         Publish-Azure-Telemetry -deploymentResponse $copyResponse -jobId $jobId
-#         if ($status -ne "Passed")
-#         {
-#             $winrmHelpMsg = Get-VstsLocString -Key "AFC_WinRMHelpMessage"
-#             $copyErrorMessage =  $copyResponse.Error.Message
-#             if($connectionType -eq 'ServicePrincipal')
-#             {
-#                 $copyErrorMessage = $copyErrorMessage + $winrmHelpMsg
-#             }
-
-#             Write-Verbose "CopyErrorMessage: $copyErrorMessage" -Verbose
-
-#             Write-Telemetry "DTLSDK_Error" $copyResponse.DeploymentSummary
-#             ThrowError -errorMessage $copyErrorMessage
-#         }
-#     }
-# }
-
-# function Copy-FilesParallellyToAzureVMs2
-# {
-#     param([string][Parameter(Mandatory=$true)]$storageAccountName,
-#           [string][Parameter(Mandatory=$true)]$containerName,
-#           [string][Parameter(Mandatory=$true)]$containerSasToken,
-# 		  [string]$blobStorageEndpoint,
-#           [string][Parameter(Mandatory=$true)]$targetPath,
-#           [string][Parameter(Mandatory=$true)]$azCopyLocation,
-#           [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
-#           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
-#           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
-#           [string]$communicationProtocol,
-#           [string]$skipCACheckOption,
-#           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
-#           [string]$additionalArguments,
-#           [string][Parameter(Mandatory=$true)]$connectionType)
-
-#     [hashtable]$Jobs = @{}
-#     $dtlsdkErrors = @()
-#     $deploymentUtilitiesLocation = Get-DeploymentModulePath
-#     foreach ($resource in $azureVMResourcesProperties.Keys)
-#     {
-#         $resourceProperties = $azureVMResourcesProperties[$resource]
-#         $resourceFQDN = $resourceProperties.fqdn
-#         $resourceName = $resourceProperties.Name
-#         $resourceWinRMHttpsPort = $resourceProperties.winRMHttpsPort
-
-#         Write-Output (Get-VstsLocString -Key "AFC_CopyStarted" -ArgumentList $resourceName)
-
-#         $job = Start-Job -ScriptBlock $AzureFileCopyJob -ArgumentList `
-#                    $deploymentutilitieslocation, $resourceFQDN, $storageAccountName, $containerName, $containerSasToken, $blobStorageEndpoint, $azCopyLocation, $targetPath, $azureVmsCredentials, `
-#                    $cleanTargetBeforeCopy, $resourceWinRMHttpsPort, $communicationProtocol, $skipCACheckOption, $enableDetailedLoggingString, $additionalArguments
-
-#         $Jobs.Add($job.Id, $resourceProperties)
-#     }
-
-#     While ($Jobs.Count -gt 0)
-#     {
-#         Start-Sleep 10
-#         foreach ($job in Get-Job)
-#         {
-#             if ($Jobs.ContainsKey($job.Id) -and $job.State -ne "Running")
-#             {
-#                 $output = Receive-Job -Id $job.Id
-#                 Remove-Job $Job
-
-#                 $status = $output.Status
-#                 $resourceName = $Jobs.Item($job.Id).Name
-
-#                 Write-ResponseLogs -operationName 'AzureFileCopy' -fqdn $resourceName -deploymentResponse $output
-#                 Write-Output (Get-VstsLocString -Key "AFC_CopyCompleted" -ArgumentList $resourceName, $status)
-#                 Publish-Azure-Telemetry -deploymentResponse $output -jobId $jobId
-#                 if ($status -ne "Passed")
-#                 {
-#                     $parallelOperationStatus = "Failed"
-#                     $errorMessage = ""
-#                     if($output.Error -ne $null)
-#                     {
-#                         $winrmHelpMsg = Get-VstsLocString -Key "AFC_WinRMHelpMessage"
-#                         $errorMessage = $output.Error.Message
-#                         if($connectionType -eq 'ServicePrincipal')
-#                         {
-#                             $errorMessage = $errorMessage + $winrmHelpMsg
-#                         }
-#                     }
-#                     $dtlsdkErrors += $output.DeploymentSummary
-
-#                     Write-Output (Get-VstsLocString -Key "AFC_CopyFailed" -ArgumentList $resourceName, $errorMessage)
-#                 }
-#                 $Jobs.Remove($job.Id)
-#             }
-#         }
-#     }
-
-#     # While copying parallelly, if copy failed on one or more azure VMs then throw
-#     if ($parallelOperationStatus -eq "Failed")
-#     {
-#         foreach ($error in $dtlsdkErrors) {
-#             Write-Telemetry "DTLSDK_Error" $error
-#         }
-#         $errorMessage = (Get-VstsLocString -Key "AFC_ParallelCopyFailed")      
-#         ThrowError -errorMessage $errorMessage
-#     }
-# }
-
-# function Copy-FilesToAzureVMsFromStorageContainer2
-# {
-#     param([string][Parameter(Mandatory=$true)]$storageAccountName,
-#           [string][Parameter(Mandatory=$true)]$containerName,
-#           [string][Parameter(Mandatory=$true)]$containerSasToken,
-# 		  [string]$blobStorageEndpoint,
-#           [string][Parameter(Mandatory=$true)]$targetPath,
-#           [string][Parameter(Mandatory=$true)]$azCopyLocation,
-#           [string][Parameter(Mandatory=$true)]$resourceGroupName,
-#           [object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
-#           [object][Parameter(Mandatory=$true)]$azureVMsCredentials,
-#           [string][Parameter(Mandatory=$true)]$cleanTargetBeforeCopy,
-#           [string]$communicationProtocol,
-#           [string]$skipCACheckOption,
-#           [string][Parameter(Mandatory=$true)]$enableDetailedLoggingString,
-#           [string]$additionalArguments,
-#           [string][Parameter(Mandatory=$true)]$copyFilesInParallel,
-#           [string][Parameter(Mandatory=$true)]$connectionType)
-
-#     # copies files sequentially
-#     if ($copyFilesInParallel -eq "false" -or ( $azureVMResourcesProperties.Count -eq 1 ))
-#     {
-
-#         Copy-FilesSequentiallyToAzureVMs2 `
-#                 -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken `
-#                 -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
-#                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
-#                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
-#                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
-#     }
-#     # copies files parallelly
-#     else
-#     {
-#         Copy-FilesParallellyToAzureVMs2 `
-#                 -storageAccountName $storageAccountName -containerName $containerName -containerSasToken $containerSasToken `
-#                 -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
-#                 -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
-#                 -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $communicationProtocol -skipCACheckOption $skipCACheckOption `
-#                 -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -connectionType $connectionType
-#     }
-
-#     # if no error thrown, copy successfully succeeded
-#     Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $resourceGroupName)
-# }
-
 function Copy-FilesParallellyToAzureVMs
 {
     param(
-        [string[]][Parameter(Mandatory=$true)]$targetMachineNames,
+        [string[]]$targetMachineNames,
         [pscredential]$credential,
         [string]$protocol,
         [string]$sessionName,
@@ -1178,22 +995,43 @@ function Copy-FilesParallellyToAzureVMs
         [object]$sessionOption
     )
 
-    Write-Verbose "Calling Invoke-RemoteScript for parallel file copy"
+    Write-Output "Starting parallel file copy"
 
-    Invoke-RemoteScript -targetMachineNames $targetMachineNames `
-                        -credential $credential `
-                        -protocol $protocol `
-                        -sessionName $sessionName `
-                        -remoteScriptJobArguments $remoteScriptJobArguments `
-                        -sessionOption $sessionOption
+    $parallelCopyJobResults = Invoke-RemoteScript -targetMachineNames $targetMachineNames `
+                                                  -credential $credential `
+                                                  -protocol $protocol `
+                                                  -sessionName $sessionName `
+                                                  -remoteScriptJobArguments $remoteScriptJobArguments `
+                                                  -sessionOption $sessionOption
 
-    Write-Verbose "Finished Invoke-RemoteScript for parallel file copy"
+    # Write job status for every VM
+    $isFileCopyFailed = $false
+    $parallelCopyJobResults | ForEach-Object {
+        if($_.ExitCode -eq 0)
+        {
+            Write-Verbose "Copy source files status for $($_.ComputerName): Successful"
+        }
+        else
+        {
+            $isFileCopyFailed = $true
+            Write-Verbose "Copy source files status for $($_.ComputerName): Failed"
+        }
+    }
+
+    # Throw if any of the remote jobs failed
+    if($isFileCopyFailed)
+    {
+        $errorMessage = "Failed to copy source files on one or more VMs. Refer logs for more details." # TODO: localize this
+        ThrowError -errorMessage $errorMessage
+    }
+
+    Write-Output "Successfully finished parallel file copy" # TODO: localize this"
 }
 
 function Copy-FilesSequentiallyToAzureVMs
 {
     param(
-        [string[]][Parameter(Mandatory=$true)]$targetMachineNames,
+        [string[]]$targetMachineNames,
         [pscredential]$credential,
         [string]$protocol,
         [string]$sessionName,
@@ -1201,29 +1039,38 @@ function Copy-FilesSequentiallyToAzureVMs
         [object]$sessionOption
     )
 
-    Write-Verbose "Calling Invoke-RemoteScript for sequential file copy"
+    Write-Output "Starting sequential file copy"
 
     $targetMachineNames | ForEach-Object {
         Write-Output (Get-VstsLocString -Key "AFC_CopyStarted" -ArgumentList $_)
         $targetMachineName = @($_)
 
-        Invoke-RemoteScript -targetMachineNames $targetMachineName `
-                            -credential $credential `
-                            -protocol $protocol `
-                            -sessionName $sessionName `
-                            -remoteScriptJobArguments $remoteScriptJobArguments `
-                            -sessionOption $sessionOption
+        $copyJobResult = Invoke-RemoteScript -targetMachineNames $targetMachineName `
+                                             -credential $credential `
+                                             -protocol $protocol `
+                                             -sessionName $sessionName `
+                                             -remoteScriptJobArguments $remoteScriptJobArguments `
+                                             -sessionOption $sessionOption
 
-        Write-Verbose "Finished Invoke-RemoteScript for machine: $_"
+        if($copyJobResult.ExitCode -eq 0)
+        {
+            Write-Verbose "Copy source files status for $($_.ComputerName): Successful"
+        }
+        else
+        {
+            Write-Verbose "Copy source files status for $($_.ComputerName): Failed"
+            $errorMessage = "Failed to copy source files on VM: $($_.ComputerName). Refer logs for more details." # TODO: localize this"
+            ThrowError -errorMessage $errorMessage
+        }
     }
 
-    Write-Verbose "Finished Invoke-RemoteScript for sequential file copy"
+    Write-Output "Successfully finished sequential file copy" # TODO: localize this"
 }
 
 function Copy-FilesToAzureVMsFromStorageContainer
 {
     param(
-        [string[]][Parameter(Mandatory=$true)]$targetMachineNames,
+        [string[]]$targetMachineNames,
         [pscredential]$credential,
         [string]$protocol,
         [object]$sessionOption,
@@ -1233,11 +1080,22 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [string]$targetPath,
         [bool]$cleanTargetBeforeCopy,
         [bool]$copyFilesInParallel,
-        [string]$additionalArguments
+        [string]$additionalArguments,
+        [string]$azCopyToolLocation
     )
 
     # Generate storage container URL
     $containerURL = [string]::Format("{0}/{1}", $blobStorageEndpoint.Trim("/"), $containerName)
+
+    $azCopyToolFileNames = Get-ChildItem $azCopyToolLocation | Where-Object {($_ -like "*.exe") -or ($_ -like "*.dll")} | Select-Object -ExpandProperty Name
+
+    $azCopyToolFileContents = @()
+    
+    foreach ($file in $azCopyToolFileNames)
+    {
+        $fullPath = Join-Path -Path $azCopyToolLocation -ChildPath $file
+        $azCopyToolFileContents += [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($fullPath))
+    }
 
     # script block to be executed on remote
     $scriptBlock = {
@@ -1246,26 +1104,50 @@ function Copy-FilesToAzureVMsFromStorageContainer
             [string]$targetPath,
             [string]$containerSasToken,
             [string]$additionalArguments,
+            [string]$azCopyToolFileNamesString,
+            [string]$azCopyToolFileContentsString,
             [switch]$CleanTargetBeforeCopy
         )
 
-        if($cleanTargetBeforeCopy)
+        try
         {
-            Get-ChildItem -Path $targetPath -Recurse -Force | Remove-Item -Force -Recurse
+            $azCopyToolFileNames = $azCopyToolFileNamesString.Split(";")
+            $azCopyToolFileContents = $azCopyToolFileContentsString.Split(";")
+
+            $destinationPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\AzCopy"
+            New-Item -ItemType Directory -Force -Path $destinationPath
+
+            for($i=0; $i -lt $azCopyToolFileNames.Length; $i++)
+            {
+                $path = Join-Path -Path $destinationPath -ChildPath $azCopyToolFileNames[$i]
+                $content = [Convert]::FromBase64String($azCopyToolFileContents[$i])
+                [System.IO.File]::WriteAllBytes($path, $content)
+            }
+
+            if($cleanTargetBeforeCopy)
+            {
+                Get-ChildItem -Path $targetPath -Recurse -Force | Remove-Item -Force -Recurse
+            }
+
+            $azCopyExeLocation = Join-Path -Path $env:windir -ChildPath "DtlDownloads\AzCopy\AzCopy.exe"
+            $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
+
+            $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" /Z:`"$azCopyLocation`" /S /Y $additionalArguments"
+            Invoke-Expression $azCopyCommand
         }
-
-        $azCopyExeLocation = Join-Path -Path $env:windir -ChildPath "DtlDownloads\AzCopy\AzCopy.exe"
-        $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
-
-        & $azCopyExeLocation /Source:$containerURL /Dest:$targetPath /SourceSAS:`"$containerSasToken`" /Z:$azCopyLocation /S /Y $additionalArguments
-
-        # Delete AzCopy tool folder
-        Get-ChildItem -Path $azCopyLocation -Recurse -Force | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-        Remove-Item $azCopyLocation -Force -ErrorAction SilentlyContinue
+        finally
+        {
+            # Delete AzCopy tool folder
+            Get-ChildItem -Path $azCopyLocation -Recurse -Force | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+            Remove-Item $azCopyLocation -Force -ErrorAction SilentlyContinue
+        }
     }
 
+    $azCopyToolFileNamesString = $azCopyToolFileNames -join ";"
+    $azCopyToolFileContentsString = $azCopyToolFileContents -join ";"
+
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments'"
+    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString'"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -1273,17 +1155,14 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     # other invoke-remotescript arguments
     $sessionName = "AFCCopyToVMs"
-    
-    $remoteScriptJobArguments = @(
-        $null,
-        $scriptBlockArgs
-        $scriptBlock.ToString(),
-        $true,
-        "",
-        "Stop",
-        $false,
-        $true
-    )
+
+    $remoteScriptJobArguments = @{
+        inline = $true;
+        inlineScript = $scriptBlock.ToString();
+        scriptArguments = $scriptBlockArgs;
+        errorActionPreference = "Stop";
+        failOnStdErr = $true;
+    }
 
     if($copyFilesInParallel)
     {
@@ -1558,7 +1437,6 @@ function Get-InvokeRemoteScriptParameters
 {
     param([object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
           [object]$networkCredentials,
-          [string]$httpProtocolOption,
           [string]$skipCACheckOption)
 
     if($skipCACheckOption)
@@ -1579,85 +1457,11 @@ function Get-InvokeRemoteScriptParameters
     }
 
     $protocol = 'https'
-    if($httpProtocolOption -eq '-UseHttp')
-    {
-        $protocol = 'http'
-    }
 
     return @{
         targetMachineNames = $targetMachines;
         credential = $psCredentials;
         protocol = $protocol;
         sessionOption = $sessionOption
-    }
-}
-
-function Copy-AzCopyTool
-{
-    param([string[]][Parameter(Mandatory=$true)]$targetMachineNames,
-          [string]$azCopyToolSourceLocation,
-          [pscredential]$credential,
-          [string]$protocol,
-          [object]$sessionOption)
-
-    try {
-        $azCopyToolFileNames = Get-ChildItem $azCopyToolSourceLocation | Select-Object -ExpandProperty Name
-
-        $azCopyToolFileContents = @()
-        foreach ($file in $azCopyToolFileNames)
-        {
-            $fullPath = Join-Path -Path $azCopyToolSourceLocation -ChildPath $file
-            $azCopyToolFileContents += [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($fullPath))
-        }
-
-        $scriptBlock = {
-            param(
-                [string]$azCopyToolFileNamesString,
-                [string]$azCopyToolFileContentsString
-            )
-
-            $azCopyToolFileNames = $azCopyToolFileNamesString.Split(";")
-            $azCopyToolFileContents = $azCopyToolFileContentsString.Split(";")
-
-            $destinationPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\AzCopy"
-            New-Item -ItemType Directory -Force -Path $destinationPath
-
-            for($i=0; $i -lt $azCopyToolFileNames.Length; $i++)
-            {
-                $path = Join-Path -Path $destinationPath -ChildPath $azCopyToolFileNames[$i]
-                $content = [Convert]::FromBase64String($azCopyToolFileContents[$i])
-                [System.IO.File]::WriteAllBytes($path, $content)
-                Write-Verbose "Copied file: $azCopyToolFileNames[$i]"
-            }
-        }
-
-        $sessionName = "AFCAzCopyTools"
-        $azCopyToolFileNamesString = $azCopyToolFileNames -join ";"
-        $azCopyToolFileContentsString = $azCopyToolFileContents -join ";"
-
-        $remoteScriptJobArguments = @(
-            $null,
-            " -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString'",
-            $scriptBlock.ToString(),
-            $true,
-            "",
-            "Stop",
-            $false,
-            $true
-        )
-
-        Write-Verbose "Initiating Invoke-RemoteScript to copy AzCopy tool files"
-        Invoke-RemoteScript -targetMachineNames $targetMachineNames `
-                            -credential $credential `
-                            -protocol $protocol `
-                            -sessionName $sessionName `
-                            -remoteScriptJobArguments $remoteScriptJobArguments `
-                            -sessionOption $sessionOption
-
-        Write-Verbose "Finished copying AzCopy tools"
-    }
-    catch {
-        Write-Verbose "Failed to copy AzCopy tools"
-        throw
     }
 }

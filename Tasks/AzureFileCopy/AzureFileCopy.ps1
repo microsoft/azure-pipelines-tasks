@@ -65,7 +65,6 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
 # Load all dependent files for execution
-. "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
 
 # Enabling detailed logging only when system.debug is true
@@ -175,24 +174,16 @@ try
     $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
     $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 
-    # generate container sas token with full permissions
-    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
-
-    #Get Invoke-RemoteScript parameters
+    # Get Invoke-RemoteScript parameters
     $invokeRemoteScriptParams = Get-InvokeRemoteScriptParameters `
                                 -azureVMResourcesProperties $azureVMResourcesProperties `
                                 -networkCredentials $azureVMsCredentials `
-                                -httpProtocolOption $useHttpsProtocolOption `
                                 -skipCACheckOption $skipCACheckOption
 
-    # Copy AzCopy tools to VMs
-    Copy-AzCopyTool -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `
-                    -azCopyToolSourceLocation $azCopyLocation `
-                    -credential $invokeRemoteScriptParams.credential `
-                    -protocol $invokeRemoteScriptParams.protocol `
-                    -sessionOption $invokeRemoteScriptParams.sessionOption
+    # generate container sas token with full permissions
+    $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
 
-    #copies files on azureVMs 
+    # Copies files on azureVMs 
     Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScriptParams.targetMachineNames `
                                              -credential $invokeRemoteScriptParams.credential `
                                              -protocol $invokeRemoteScriptParams.protocol `
@@ -203,14 +194,9 @@ try
                                              -targetPath $targetPath `
                                              -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
                                              -copyFilesInParallel $copyFilesInParallel `
-                                             -additionalArguments $additionalArguments
+                                             -additionalArguments $additionalArguments `
+                                             -azCopyToolLocation $azCopyLocation
 
-
-    # Copy-FilesToAzureVMsFromStorageContainer `
-    #     -storageAccountName $storageAccount -containerName $containerName -containerSasToken $containerSasToken -blobStorageEndpoint $blobStorageEndpoint -targetPath $targetPath -azCopyLocation $azCopyLocation `
-    #     -resourceGroupName $environmentName -azureVMResourcesProperties $azureVMResourcesProperties -azureVMsCredentials $azureVMsCredentials `
-    #     -cleanTargetBeforeCopy $cleanTargetBeforeCopy -communicationProtocol $useHttpsProtocolOption -skipCACheckOption $skipCACheckOption `
-    #     -enableDetailedLoggingString $enableDetailedLoggingString -additionalArguments $additionalArguments -copyFilesInParallel $copyFilesInParallel -connectionType $connectionType
 }
 catch
 {
