@@ -26,8 +26,12 @@ phases:
     displayName: 'Install Dependencies'
   # - script: 'pip install flake8 && flake8'
   #   displayName: 'Flake8'
-  - script: pip install pytest && pytest tests --doctest-modules
+  - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
     displayName: 'pytest'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/test-results.xml'
+      testRunTitle: 'Python $(python.version)'
 
 - phase: 'Phase_2'
   displayName: 'Publish'
