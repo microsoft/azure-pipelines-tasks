@@ -92,9 +92,7 @@ else {
     if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET) {
         var changed = [];
         taskList.forEach(function (taskName) {
-            // compare current and packaging version
-            // add to new list if current > packaging
-            // print all verbose, print warning if < packaging
+            // check packaging for the version of the task, if it doesn't exist we should build it
             var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
             var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
             if (typeof taskJson.version.Patch != 'number') {
@@ -102,7 +100,21 @@ else {
             }
             var sourceTaskVersion = taskJson.version.major + "." + taskJson.version.minor + "." + taskJson.version.patch;
 
-            var packagingTaskVersion = ''; // TODO: Load this from packaging.
+            if (!taskVersionExistsInPackaging(taskJson.name, sourceTaskVersion)) {
+                // This version of the task doesn't exist, we should build it
+                console.log(`Task '${taskJson.name}' version '${sourceTaskVersion}' does not exist in packaging, adding to list of tasks to be built.`);
+                changed.push(taskName);
+            } 
+            else {
+                console.log(`Task '${taskJson.name}' version '${sourceTaskVersion}' exists in packaging so it will not be built.`);
+            }
+        });
+        taskList = changed;
+    }
+}
+
+function taskVersionExistsInPackaging() {
+    var packagingTaskVersion = ''; // TODO: Load this from packaging.
 
             // need to add semver to do comparisons safely
             //https://docs.microsoft.com/en-us/rest/api/vsts/packaging/versions/list
@@ -111,6 +123,31 @@ else {
 
             // Something like this but with a GUID
             // https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages/Mseng.MS.TF.Build.Tasks/versions?api-version=5.0-preview.1
+            // Id for Mseng.MS.TF.Build.Tasks is 180592ac-ce16-471d-97c1-b9ba418477b5
+
+            // TODO: Create package for each nuget package
+            // TODO: Document process for creating a new task? Should we have CI handle creating a new package for the task if one doesn't exist?
+            // TODO: We got 1000 packages back, does the query limit the number? This could cause issues.
+
+            // Find all packages that contain "Mseng.MS.TF.Build.Tasks"
+            var taskPackagesQueryUrl = 'https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages?packageNameQuery=Mseng.MS.TF.Build.Tasks';
+
+
+
+            // Instead of this check if it exists
+            // Do they have a bulk api?
+            // TODO: look for a specific task name and version, can we do this?
+            // If they don't we will have to get the entire list and see if the version we want is there ourselves
+
+            // go through each item in value, there should only be one
+            // check the versions... check version property
+
+
+            // TODO: TOP: Maybe we can use this and add a filter for Tasks
+            // GET https://{accountName}.feeds.visualstudio.com/_apis/packaging/Feeds/{feedId}/packages?protocolType={protocolType}&packageNameQuery={packageNameQuery}&normalizedPackageName={normalizedPackageName}&includeUrls={includeUrls}&includeAllVersions={includeAllVersions}&isListed={isListed}&getTopPackageVersions={getTopPackageVersions}&isRelease={isRelease}&includeDescription={includeDescription}&$top={$top}&$skip={$skip}&includeDeleted={includeDeleted}&isCached={isCached}&directUpstreamId={directUpstreamId}&api-version=5.0-preview.1
+
+
+
 
 
             // Can get all feeds doing this
@@ -118,10 +155,8 @@ else {
 
             // TODO: We need to keep the GUIDs for each task in the task.json or we can discover them... probably best to discover them after we have a task naming convention
             // e.g - Mseng.MS.TF.Build.Tasks.CMake, get the task name from task.json not from the task folder, e.g. - taskJson.name
-            
-        });
-        taskList = changed;
-    }
+
+    return true;
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
