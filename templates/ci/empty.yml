@@ -2,11 +2,8 @@
 # Start with a pipeline that has no steps.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
-
-#variables:
-#  system.debug: 'true'
-
+queue: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
 steps:
+
 #- script: |
 #    echo Write your commands here

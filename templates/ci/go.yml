@@ -2,20 +2,20 @@
 # Build your Go project.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
 steps:
 
 - task: GoTool@0
 
 - task: Go@0
   inputs:
-    command: get
+    command: 'get'
     arguments: '-d'
 
 - task: Go@0
   inputs:
-    command: build
-    arguments: '-o "$(System.TeamProject)"'
+    command: 'build'
+    arguments: '-o "$(Build.Repository.Name)"'
 
 - task: ArchiveFiles@2
   inputs:
@@ -25,5 +25,5 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     pathToPublish: '$(build.artifactStagingDirectory)'
+    publishLocation: 'container'
     artifactName: 'artifact'
-    artifactType: 'container'

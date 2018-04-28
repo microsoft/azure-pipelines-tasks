@@ -2,37 +2,21 @@
 # Build your Java projects and run tests with Gradle using a Gradle wrapper script.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
-
-#variables:
-#  system.debug: 'true'
-
+queue: 'Hosted VS2017' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
 steps:
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '1.8'
-    jdkArchitectureOption: 'x64' # x64, x86
-    jdkSourceOption: 'localDirectory' # azureStorage, localDirectory
-    jdkFile: # Enter JDK archive file path
-    jdkDestinationDirectory: # Enter JDK archive extraction directory
-    cleanDestinationDirectory: true
-  enabled: false
 
 - task: Gradle@2
-  displayName: 'Build with Gradle'
   inputs:
     gradleWrapperFile: 'gradlew'
     tasks: 'build'
 
 - task: CopyFiles@2
-  displayName: 'Copy artifacts'
   inputs:
     contents: '**/*.jar'
     targetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
   inputs:
     pathToPublish: '$(build.artifactStagingDirectory)'
+    publishLocation: 'container'
     artifactName: 'artifact'
-    artifactType: 'container'

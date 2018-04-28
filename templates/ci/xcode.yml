@@ -3,69 +3,43 @@
 # https://aka.ms/yaml
 
 queue: 'Hosted macOS Preview'
-
-variables:
-  buildConfiguration: 'Release'
-  buildSdk: 'iphoneos'
-  scheme: ''
-  testConfiguration: 'Debug'
-  testSdk: 'iphonesimulator'
-  xcodeVersion: 'default'
-  # system.debug: 'true'
-
 steps:
-- task: InstallAppleCertificate@1
-  displayName: 'Install certificate
-  inputs:
-    certPwd: ''
-  enabled: false
 
-- task: InstallAppleProvisioningProfile@1
-  displayName: 'Install provisioning profile'
-  enabled: false
+#- task: InstallAppleCertificate@1
+#  inputs:
+#    certSecureFile: ''
+#    certPwd: '$(P12password)'
 
-- task: Xcode@4
-  displayName: 'Xcode test'
-  inputs:
-    actions: 'test'
-    configuration: '$(testConfiguration)'
-    scheme: '$(scheme)'
-    sdk: '$(testSdk)'
-    xcodeVersion: '$(xcodeVersion)'
-    signingOption: 'default'
-    destinationPlatformOption: 'iOS'
-    publishJUnitResults: 'true'
-  enabled: false
+#- task: InstallAppleProvisioningProfile@1
+#  inputs:
+#    provProfileSecureFile: ''
+
+#- task: Xcode@4
+#  inputs:
+#    actions: 'test'
+#    configuration: 'Debug'
+#    scheme: ''
+#    sdk: 'iphonesimulator'
+#    publishJUnitResults: 'true'
 
 - task: Xcode@4
-  displayName: 'Xcode build'
   inputs:
-    configuration: '$(buildConfiguration)'
-    scheme: '$(scheme)'
-    sdk: '$(buildSdk)'
-    xcodeVersion: '$(xcodeVersion)'
-    signingOption: 'nosign'
+    configuration: 'Release'
+    scheme: ''
+    sdk: 'iphoneos'
 
 - task: CopyFiles@2
-  displayName: 'Copy artifacts'
   inputs:
     contents: '**/*.ipa'
     targetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
   inputs:
     pathtoPublish: '$(build.artifactStagingDirectory)'
+    publishLocation: 'container'
     artifactName: 'artifact'
-    artifactType: 'container'
 
-## Release to the Apple App Store
-## This task requires the Apple App Store extension:
-## https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store
-#- task: ms-vsclient.app-store.app-store-release.AppStoreRelease@1
-#  inputs:
-#    serviceEndpoint: 'Enter your Apple App Store service endpoint name here'
-#    #appIdentifier: com.myapp.etc
-#    #releaseNotes: 'Optionally enter the path to release notes here'
-#    distributedToExternalTesters: false
-#    externalTestersGroups: 'Optionally enter your external tester groups here'
+# Next steps:
+# Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
+# Distribute apps to testers and users with the App Center Distribute task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterDistribute
+# Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store
