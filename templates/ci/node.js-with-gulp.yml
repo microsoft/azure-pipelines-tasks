@@ -2,31 +2,25 @@
 # Build a Node.js application using the gulp task runner.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
-
-#variables:
-#  system.debug: 'true'
-
+queue: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
 steps:
+
 - task: Npm@1
-  displayName: 'npm install'
+  inputs:
+    command: 'install'
 
 - task: Gulp@0
-  displayName: 'Run gulp'
   inputs:
     gulpFile: 'gulpfile.js'
     targets: ''
-    publishJUnitResults: 'true'
 
 - task: ArchiveFiles@2
-  displayName: 'Archive artifacts'
   inputs:
     rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-    includeRootFolder: 'false'
+    includeRootFolder: false
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
   inputs:
     pathToPublish: '$(build.artifactStagingDirectory)'
+    publishLocation: 'container'
     artifactName: 'artifact'
-    artifactType: 'container'

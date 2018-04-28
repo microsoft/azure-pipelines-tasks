@@ -1,12 +1,16 @@
 # Python package
-# Build and test a Python package on multiple Python versions. Upload to a Python package index.
+# Build and test a Python package on multiple Python versions. Then, upload it to a Python package index.
 # https://aka.ms/yaml
 
 phases:
-- phase: 'Phase_1'
-  displayName: 'Build and Test'
+
+# =============
+# Phase 1: Test
+# =============
+- phase: 'Test'
   queue:
-    name: 'Hosted Linux Preview'
+    name: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
+    parallel: 1
     matrix:
       Python27:
         PYTHON_VERSION: '2.7'
@@ -17,39 +21,45 @@ phases:
       Python37-dev:
         PYTHON_VERSION: '>= 3.7.0a'
   steps:
+
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '$(PYTHON_VERSION)'
       architecture: 'x64'
-      addToPath: 'true'
+
   - script: python -m pip install --upgrade pip && pip install -r requirements.txt
-    displayName: 'Install Dependencies'
-  # - script: 'pip install flake8 && flake8'
-  #   displayName: 'Flake8'
+    displayName: 'Install dependencies'
+
+#  - script: 'pip install flake8 && flake8'
+#    displayName: 'Flake8'
+
   - script: pip install pytest && pytest tests --doctest-modules
     displayName: 'pytest'
 
-- phase: 'Phase_2'
-  displayName: 'Publish'
-  dependsOn: 'Phase_1'
-  queue:
-    name: 'Hosted Linux Preview'
+# ================
+# Phase 2: Publish
+# ================
+- phase: 'Publish'
+  dependsOn: 'Test'
+  queue: 'Hosted Linux Preview'
   steps:
+
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.6'
       architecture: 'x64'
-      addToPath: 'true'
+
   - script: python setup.py sdist
-    displayName: Build sdist
+    displayName: 'Build sdist'
+
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish artifacts'
     inputs:
       pathToPublish: 'dist'
+      publishLocation: 'container'
       artifactName: 'dist'
-      artifactType: 'container'
-  # - task: PyPIPublisher@0
-  #   inputs:
-  #     serviceEndpoint: ''
-  #     wd: '$(Build.SourcesDirectory)'
-  #     wheel: 'false'
+
+#  - task: PyPIPublisher@0
+#    inputs:
+#      serviceEndpoint: ''
+#      wd: '$(Build.SourcesDirectory)'
+#      wheel: 'false'

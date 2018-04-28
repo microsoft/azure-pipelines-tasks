@@ -2,24 +2,18 @@
 # Build your C project with GNU GCC.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux'
-
-#variables:
-  outputFile: 'main'
-  # system.debug: 'true'
-
+queue: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
 steps:
-- script: 'gcc *.c -o $(outputFile)'
+
+- script: 'make'
 
 - task: CopyFiles@2
-  displayName: 'Copy artifacts'
   inputs:
-    contents: '$(outputFile)'
+    contents: '**/*.out'
     targetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
   inputs:
     pathToPublish: '$(build.artifactStagingDirectory)'
+    publishLocation: 'container'
     artifactName: 'artifact'
-    artifactType: 'container'

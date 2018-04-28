@@ -3,49 +3,40 @@
 # https://aka.ms/yaml
 
 queue: 'Hosted VS2017'
-
 variables:
   buildConfiguration: 'Release'
   buildPlatform: 'Any CPU'
   solution: '**/*.sln'
-  # system.debug: 'true'
-
 steps:
+
 - task: NuGetToolInstaller@0
-  displayName: 'Install NuGet'
 
 - task: NuGetCommand@2
-  displayName: 'Restore NuGet packages'
   inputs:
     restoreSolution: '$(solution)'
 
 - task: VSBuild@1
-  displayName: 'Build solution'
   inputs:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 - task: VSTest@2
-  displayName: 'Run tests'
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 - task: PublishSymbols@1
-  displayName: 'Publish symbols'
   inputs:
     searchPattern: '**/bin/$(buildConfiguration)/*.pdb'
 
 - task: CopyFiles@2
-  displayName: 'Copy artifacts'
   inputs:
     contents: '**/bin/$(buildConfiguration)/**'
     targetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
   inputs:
     pathToPublish: '$(build.artifactStagingDirectory)'
+    publishLocation: 'container'
     artifactName: 'artifact'
-    artifactType: 'container'
