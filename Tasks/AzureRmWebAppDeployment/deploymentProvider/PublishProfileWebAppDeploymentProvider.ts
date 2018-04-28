@@ -10,7 +10,7 @@ import path = require('path');
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
 var deployUtility = require('webdeployment-common/utility.js');
-var msDeployUtility = require('webdeployment-common/msDeployUtility.js');
+var msDeployUtility = require('webdeployment-common/msdeployutility.js');
 
 const DEFAULT_RETRY_COUNT = 3;
 
