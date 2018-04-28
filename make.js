@@ -46,6 +46,7 @@ var assert = util.assert;
 var getExternals = util.getExternals;
 var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
+var createYamlSnippet = util.createYamlSnippet;
 var validateTask = util.validateTask;
 
 // global paths
@@ -97,6 +98,37 @@ target.clean = function () {
     mkdir('-p', buildPath);
     rm('-Rf', path.join(__dirname, '_test'));
 };
+
+//
+// Generate documentation (currently only YAML snippets)
+// ex: node make.js gendocs
+// ex: node make.js gendocs --task ShellScript
+//
+target.gendocs = function() {
+
+    var docsDir = path.join(__dirname, '_gendocs');
+    rm('-Rf', docsDir);
+    mkdir('-p', docsDir);
+    console.log();
+    console.log('> generating docs');
+
+    taskList.forEach(function(taskName) {
+        var taskPath = path.join(__dirname, 'Tasks', taskName);
+        ensureExists(taskPath);
+
+        // load the task.json
+        var taskJsonPath = path.join(taskPath, 'task.json');
+        if (test('-f', taskJsonPath)) {
+            var taskDef = require(taskJsonPath);
+            validateTask(taskDef);
+
+            // create YAML snippet
+            createYamlSnippet(taskDef, path.join(docsDir, taskName + '.yml'));
+        }
+    });
+
+    banner('Generating docs successful', true);
+}
 
 //
 // ex: node make.js build
