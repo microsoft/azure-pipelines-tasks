@@ -36,6 +36,7 @@ _download/
 _package/
 _test/
 _working/
+_gendocs/
 
 # Roslyn cache directories
 *.ide/
