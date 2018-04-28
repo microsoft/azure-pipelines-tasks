@@ -2,13 +2,13 @@
 # Build your Android projects, run tests, and sign and align Android App Package files.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017' # Common: Hosted macOS Preview, Hosted VS2017
+queue: 'Hosted VS2017'
 steps:
 
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
-    tasks: 'assembleRelease' # Common tasks: assembleDebug, assembleRelease
+    tasks: 'assembleRelease'
 
 - task: CopyFiles@2
   inputs:

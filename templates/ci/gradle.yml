@@ -2,7 +2,7 @@
 # Build your Java projects and run tests with Gradle using a Gradle wrapper script.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
+queue: 'Hosted VS2017'
 steps:
 
 - task: Gradle@2

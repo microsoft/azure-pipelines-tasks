@@ -2,7 +2,7 @@
 # Start with a pipeline that has no steps.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
+queue: 'Hosted Linux Preview'
 steps:
 
 #- script: |

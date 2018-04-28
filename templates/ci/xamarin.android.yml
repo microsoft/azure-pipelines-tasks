@@ -2,7 +2,7 @@
 # Build a Xamarin.Android app and Xamarin.UITest assembly.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017' # Common: Hosted macOS Preview, Hosted VS2017
+queue: 'Hosted VS2017'
 variables:
   apkFiles: '$(outputDirectory)'
   buildConfiguration: 'Release'

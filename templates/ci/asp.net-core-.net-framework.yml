@@ -2,7 +2,7 @@
 # Build and test ASP.NET Core web applications targeting the full .NET Framework.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
+queue: 'Hosted VS2017'
 variables:
   buildConfiguration: 'Release'
   buildPlatform: 'Any CPU'

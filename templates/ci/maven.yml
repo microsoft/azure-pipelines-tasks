@@ -2,7 +2,7 @@
 # Build your Java projects and run tests with Apache Maven.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
+queue: 'Hosted Linux Preview'
 steps:
 
 - task: Maven@2

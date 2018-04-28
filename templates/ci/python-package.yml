@@ -9,7 +9,7 @@ phases:
 # =============
 - phase: 'Test'
   queue:
-    name: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
+    name: 'Hosted Linux Preview'
     parallel: 1
     matrix:
       Python27:
@@ -29,9 +29,6 @@ phases:
 
   - script: python -m pip install --upgrade pip && pip install -r requirements.txt
     displayName: 'Install dependencies'
-
-#  - script: 'pip install flake8 && flake8'
-#    displayName: 'Flake8'
 
   - script: pip install pytest && pytest tests --doctest-modules
     displayName: 'pytest'

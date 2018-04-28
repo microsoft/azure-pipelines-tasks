@@ -2,7 +2,7 @@
 # Build a Node.js application using the gulp task runner.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview' # Common: Hosted Linux Preview, Hosted macOS Preview, Hosted VS2017
+queue: 'Hosted Linux Preview'
 steps:
 
 - task: Npm@1
