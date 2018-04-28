@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 133,
+    "Minor": 135,
     "Patch": 0
   },
   "demands": [],
@@ -21,7 +21,7 @@
       "name": "PathtoPublish",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.PathtoPublish",
-      "defaultValue": "",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.PathtoPublish"
     },
@@ -29,7 +29,7 @@
       "name": "ArtifactName",
       "type": "string",
       "label": "ms-resource:loc.input.label.ArtifactName",
-      "defaultValue": "",
+      "defaultValue": "artifact",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ArtifactName"
     },
@@ -40,7 +40,7 @@
       ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.ArtifactType",
-      "defaultValue": "",
+      "defaultValue": "Container",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ArtifactType",
       "options": {
