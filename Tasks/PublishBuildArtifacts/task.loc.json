@@ -29,7 +29,7 @@
       "name": "ArtifactName",
       "type": "string",
       "label": "ms-resource:loc.input.label.ArtifactName",
-      "defaultValue": "artifact",
+      "defaultValue": "drop",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ArtifactName"
     },

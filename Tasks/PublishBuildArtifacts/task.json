@@ -29,9 +29,9 @@
       "name": "ArtifactName",
       "type": "string",
       "label": "Artifact name",
-      "defaultValue": "artifact",
+      "defaultValue": "drop",
       "required": true,
-      "helpMarkDown": "The name of the artifact to create in the publish location"
+      "helpMarkDown": "The name of the artifact to create in the publish location."
     },
     {
       "name": "ArtifactType",
