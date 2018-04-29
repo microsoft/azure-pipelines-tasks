@@ -93,13 +93,13 @@ function Invoke-RemoteScript {
                                              -useSsl:$useSsl                                             
 
         foreach($targetMachine in $targetMachines) {
-            $sessions += ConnectTo-RemoteMachine -computerName $targetMachine.ComputerName `
-                                                 -port $targetMachine.WSManPort `
-                                                 -credential $targetMachine.Credential `
-                                                 -authentication $targetMachine.Authentication `
-                                                 -sessionName $sessionName `
-                                                 -sessionConfigurationName $targetMachine.sessionConfigurationName `
-                                                 -useSsl:($targetMachine.UseSsl)
+            $sessions += Get-WinRmConnectionToTargetMachine -computerName $targetMachine.ComputerName `
+                                                            -port $targetMachine.WSManPort `
+                                                            -credential $targetMachine.Credential `
+                                                            -authentication $targetMachine.Authentication `
+                                                            -sessionName $sessionName `
+                                                            -sessionConfigurationName $targetMachine.sessionConfigurationName `
+                                                            -useSsl:($targetMachine.UseSsl)
         }
         $jobResults = Run-RemoteScriptJobs -sessions $sessions `
                                            -script $ExecutePsScript `

@@ -1,4 +1,4 @@
-function ConnectTo-RemoteMachine {
+function Get-WinRmConnectionToTargetMachine {
     [CmdletBinding()]
     Param (
         [string] $computerName,
