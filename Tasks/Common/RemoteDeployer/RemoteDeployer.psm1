@@ -1,7 +1,7 @@
 . "$PSScriptRoot/SessionHelper.ps1"
 . "$PSScriptRoot/RunPowerShellScriptJob.ps1"
 . "$PSScriptRoot/JobHelper.ps1"
-. "$PSScriptRoot/Utility.ps1"
+. "$PSScriptRoot/RemoteDeployer.Utility.ps1"
 Import-VstsLocStrings "$PSScriptRoot\module.json"
 
 ##############################
