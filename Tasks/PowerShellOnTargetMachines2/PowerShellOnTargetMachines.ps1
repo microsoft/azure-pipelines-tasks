@@ -69,7 +69,6 @@ try {
     }
 } catch {
     Write-Verbose "Exception caught from task: $($_.Exception.ToString())"
-    Write-VstsSetResult -Result 'Failed' -Message (Get-VstsLocString -Key "PS_TM_TaskFailed" -ArgumentList $_.Exception.Message) -DoNotThrow
     throw
 } finally {
     Trace-VstsLeavingInvocation $MyInvocation

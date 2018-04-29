@@ -47,10 +47,9 @@ function Get-WinRmConnectionToTargetMachine {
             return $session    
         } else {
             foreach ($sessionError in $sessionErrors) {
-                Write-VstsTaskError -Message $sessionError.Exception.Message -ErrCode "PS_TM_UnableToCreatePSSession"
+                Write-Error (Get-VstsLocString -Key "PS_TM_UnableToCreatePSSession" -ArgumentList ($sessionError.Exception.Message))
             }
-            Write-Error (Get-VstsLocString -Key "RemoteDeployer_NotConnectedMachines" -ArgumentList $computerName, $port)
-            Write-VstsSetResult -Result 'Failed' -Message "RemoteDeployer_NotConnectedMachines"
+            throw (Get-VstsLocString -Key "RemoteDeployer_NotConnectedMachines" -ArgumentList $computerName, $port)
         }
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
