@@ -658,6 +658,12 @@ exports.getExternals = getExternals;
 //------------------------------------------------------------------------------
 // task.json functions
 //------------------------------------------------------------------------------
+var fileToJson = function (file) {
+    var jsonFromFile = JSON.parse(fs.readFileSync(file).toString());
+    return jsonFromFile;
+}
+exports.fileToJson = fileToJson;
+
 var createResjson = function (task, taskPath) {
     var resources = {};
     if (task.hasOwnProperty('friendlyName')) {
@@ -786,6 +792,8 @@ var createYamlSnippet = function (taskJson, outFilePath) {
 }
 exports.createYamlSnippet = createYamlSnippet;
 
+// Returns a copy of the specified string with its first letter as a lowercase letter.
+// Example: 'NachoLibre' -> 'nachoLibre'
 function camelize(str) {
     return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
         return index == 0 ? match.toLowerCase() : match.toUpperCase();
@@ -831,13 +839,12 @@ var cleanString = function(str) {
 }
 
 var getTaskYaml = function(taskJson) {
-    var EOL = '\r\n';
     var taskYaml = '';
 
-    taskYaml += '# ' + cleanString(taskJson.friendlyName) + EOL;
-    taskYaml += '# ' + cleanString(taskJson.description) + EOL;
-    taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + EOL;
-    taskYaml += '  inputs:' + EOL;
+    taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
+    taskYaml += '# ' + cleanString(taskJson.description) + os.EOL;
+    taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + os.EOL;
+    taskYaml += '  inputs:' + os.EOL;
 
     taskJson.inputs.forEach(function(input) {
         // Is the input required?
@@ -896,10 +903,9 @@ var getTaskYaml = function(taskJson) {
         }
 
         // Append end of line
-        taskYaml += EOL;
+        taskYaml += os.EOL;
     });
 
-    //console.log(taskYaml);
     return taskYaml;
 };
 //------------------------------------------------------------------------------
