@@ -40,7 +40,7 @@ export class Resources {
         httpRequest.method = 'GET';
 
         httpRequest.uri = this._client.getRequestUri('//subscriptions/{subscriptionId}/resources', {},
-        [`$filter=resourceType EQ \'${resourceType}\' AND name EQ \'${resourceName}\'`], '2016-07-01');
+        [`$filter=resourceType EQ \'${encodeURIComponent(resourceType)}\' AND name EQ \'${encodeURIComponent(resourceName)}\'`], '2016-07-01');
 
         var result = [];
         try {
