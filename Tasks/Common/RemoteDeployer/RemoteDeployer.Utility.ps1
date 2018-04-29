@@ -29,8 +29,8 @@ function Get-TargetMachines {
                     $port = "5985"
                 }
             }
-            $targetMachine.ComputerName = $computerName
-            $targetMachine.WSManPort = $port
+            $targetMachine.ComputerName = $computerName.Trim()
+            $targetMachine.WSManPort = $port.Trim()
 
             Write-Verbose "ComputerName = $($targetMachine.ComputerName)"
             Write-Verbose "WSManPort = $($targetMachine.WSManPort)"
