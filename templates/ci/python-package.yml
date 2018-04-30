@@ -28,7 +28,7 @@ phases:
       architecture: 'x64'
 
   - script: python -m pip install --upgrade pip && pip install -r requirements.txt
-    displayName: 'Install Dependencies'
+    displayName: 'Install dependencies'
 
   # - script: 'pip install flake8 && flake8'
   #   displayName: 'Flake8'
