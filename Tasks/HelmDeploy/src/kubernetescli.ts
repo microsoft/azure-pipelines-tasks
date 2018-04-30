@@ -19,10 +19,14 @@ export default class kubernetescli extends basecommand {
     }
 
     public login(): void {
-        process.env["KUBECONFIG"] = this.kubeconfigPath;
+        if(this.kubeconfigPath) {
+            process.env["KUBECONFIG"] = this.kubeconfigPath;
+        }
     }
 
     public logout(): void  {
-        delete process.env["KUBECONFIG"];
+        if(this.kubeconfigPath) {
+            delete process.env["KUBECONFIG"];
+        }
     }
 }

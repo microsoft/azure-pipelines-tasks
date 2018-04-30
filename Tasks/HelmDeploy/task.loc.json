@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [],
   "preview": "true",
@@ -63,7 +63,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "groupName": "cluster"
     },
     {
@@ -73,7 +73,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "groupName": "cluster",
       "properties": {
         "EditableOptions": "True"
@@ -86,7 +86,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "groupName": "cluster",
       "properties": {
         "EditableOptions": "True"
@@ -101,7 +101,7 @@
       "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
       "visibleRule": "connectionType = Kubernetes Service Connection",
-      "required": true,
+      "required": false,
       "groupName": "cluster"
     },
     {
@@ -420,6 +420,8 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "SkipDeleteSecureFiles": "ms-resource:loc.messages.SkipDeleteSecureFiles",
     "SkipDownloadSecureFiles": "ms-resource:loc.messages.SkipDownloadSecureFiles",
-    "FileNotFound": "ms-resource:loc.messages.FileNotFound"
+    "FileNotFound": "ms-resource:loc.messages.FileNotFound",
+    "AzureClusterInfoNotProvided": "ms-resource:loc.messages.AzureClusterInfoNotProvided",
+    "KubernetesEndpointNotSpecified": "ms-resource:loc.messages.KubernetesEndpointNotSpecified"
   }
 }

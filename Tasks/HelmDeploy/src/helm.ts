@@ -31,6 +31,9 @@ function getClusterType(): any {
 // get kubeconfig file path
 async function getKubeConfigFile(): Promise<string> {
     return getClusterType().getKubeConfig().then((config) => {
+        if(!config) {
+            return undefined;
+        }
         var configFilePath = getKubeConfigFilePath();
         tl.debug(tl.loc("KubeConfigFilePath", configFilePath));
         fs.writeFileSync(configFilePath, config);
