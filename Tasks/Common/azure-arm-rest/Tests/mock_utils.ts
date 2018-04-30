@@ -647,3 +647,21 @@ export function mockKuduServiceTests() {
     nock('http://FAIL_MOCK_SCM_WEBSITE.scm.azurewebsites.net').
     get('/api/deployments/latest?deployer=VSTS_ZIP_DEPLOY').reply(200, {id: "ZIP_DEPLOY_FAILED_ID", status: 3, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"});
 }
+
+export function mockAzureARMResourcesTests() {
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8"
+        }
+    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resources?$filter=resourceType%20EQ%20%27Microsoft.Web%2Fsites%27%20AND%20name%20EQ%20%27g%C3%B6m-mig-fr%C3%A5n-omv%C3%A4rlden%27&api-version=2016-07-01")
+    .reply(200, {
+        value: [{ 
+            id: "subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.web/sites/göm-mig-från-omvär", 
+            name: "MOCK_APP_INSIGHTS_NAME",
+            type: "microsoft.insights/components",
+            tags: {},
+            properties: {}
+        }]
+     }).persist();
+}
