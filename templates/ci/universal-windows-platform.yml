@@ -26,5 +26,3 @@ steps:
 - task: PublishBuildArtifacts@1
   inputs:
     pathToPublish: '$(appxPackageDir)'
-    publishLocation: 'container'
-    artifactName: 'artifact'

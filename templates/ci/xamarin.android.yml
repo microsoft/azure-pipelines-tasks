@@ -4,7 +4,6 @@
 
 queue: 'Hosted VS2017'
 variables:
-  apkFiles: '$(outputDirectory)'
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
 steps:
@@ -23,9 +22,7 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(apkFiles)'
-    publishLocation: 'container'
-    artifactName: 'artifact'
+    pathtoPublish: '$(outputDirectory)'
 
 # Next steps:
 # Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
