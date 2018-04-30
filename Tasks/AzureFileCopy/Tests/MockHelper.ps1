@@ -187,6 +187,8 @@ $validSecurityGroupPropsLatest = @{"Name"="VMWithSGHighPS";"SecurityRules"=$secu
 $validSecurityGroupLatest = New-Object PSObject -Property $validSecurityGroupPropsLatest
 $securityGroupsLatest.Add($validSecurityGroupLatest)
 
+$securedMockPassword = New-Object -TypeName System.Security.SecureString
+
 $vmIdWhichHasSecurityGroupPrevious = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a9fb0f70/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSG"
 $vmIdWhichHasSecurityGroupRecommended = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a9fb0f70/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSGRecPS"
 $vmIdWhichHasSecurityGroupLatest = "/subscriptions/c94bda7a-0577-4374-9c53-0e46a9fb0f70/resourceGroups/AzureFIleCopyPTRGWithSGDoNotDelete/providers/Microsoft.Compute/virtualMachines/VMWithSGHighPS"

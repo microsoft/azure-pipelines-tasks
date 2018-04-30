@@ -43,3 +43,10 @@ $jobPassedResponse = @{"Status" = $passedStatus; "DeploymentLog" = $successLog; 
 $jobPassedLatestResponse = @{"Status" = $passedStatus; "DeploymentLog" = $successLog; "ServiceLog" = $null; "Error" = $null}
 
 $connectedServiceName = "DummyConnectedServiceName"
+
+$invokeRemoteScriptFailedResponse = @{ExitCode = 1}
+$invokeRemoteScriptPassedResponse = @{ExitCode = 0}
+$invokeRemoteScriptOnePassOneFailResponse = @($invokeRemoteScriptFailedResponse, $invokeRemoteScriptPassedResponse)
+$invokeRemoteScriptAllPassedResponse = @($invokeRemoteScriptPassedResponse, $invokeRemoteScriptPassedResponse)
+
+$validBlobStorageEndpoint = "https://validInputStorageAccount.blob.core.windows.net"
