@@ -8,7 +8,7 @@ import fs = require('fs');
 var AppServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service.js");
 var KuduServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
 var ApplicationInsightsTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
-
+var ResourcesTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-resource-tests.js");
 
 describe('AzureRmWebAppDeployment Suite', function() {
     
@@ -37,7 +37,8 @@ describe('AzureRmWebAppDeployment Suite', function() {
     ApplicationInsightsTests.ApplicationInsightsTests();
     AppServiceTests.AzureAppServiceMockTests();
     KuduServiceTests.KuduServiceTests();
-
+    ResourcesTests.ResourcesTests();
+    
     if (tl.osType().match(/^Win/)) {
         it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {
             this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);

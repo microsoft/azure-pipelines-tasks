@@ -3,46 +3,26 @@
 # https://aka.ms/yaml
 
 queue: 'Hosted macOS Preview'
-
-variables:
-  buildConfiguration: 'Release'
-  solution: '**/*.sln'
-  # system.debug: 'true'
-
 steps:
-- task: XamarinComponentRestore@0
-  displayName: 'Xamarin component restore'
-  inputs:
-    solutionFile: '$(solution)'
-  enabled: false
 
 - task: XamariniOS@1
-  displayName: 'Build Xamarin.iOS solution'
   inputs:
-    solutionFile: $(solution)
-    configuration: $(buildConfiguration)
+    solutionFile: '**/*.sln'
+    configuration: 'Release'
     buildForSimulator: true
 
 - task: CopyFiles@2
-  displayName: 'Copy artifacts'
   inputs:
     contents: '**/*.ipa'
     targetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
   inputs:
     pathToPublish: '$(build.artifactStagingDirectory)'
+    publishLocation: 'container'
     artifactName: 'artifact'
-    artifactType: 'container'
 
-## Release to the Apple App Store
-## This task requires the Apple App Store extension:
-## https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store
-#- task: ms-vsclient.app-store.app-store-release.AppStoreRelease@1
-#  inputs:
-#    serviceEndpoint: 'Enter your Apple App Store service endpoint name here'
-#    #appIdentifier: com.myapp.etc
-#    #releaseNotes: 'Optionally enter the path to release notes here'
-#    distributedToExternalTesters: false
-#    externalTestersGroups: 'Optionally enter your external tester groups here'
+# Next steps:
+# Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
+# Distribute apps to testers and users with the App Center Distribute task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterDistribute
+# Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store
