@@ -20,7 +20,3 @@ steps:
     includeRootFolder: false
 
 - task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: '$(build.artifactStagingDirectory)'
-    publishLocation: 'container'
-    artifactName: 'artifact'

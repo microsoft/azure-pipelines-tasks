@@ -28,9 +28,4 @@ steps:
 #  inputs:
 #    command: 'publish'
 #    arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(build.artifactStagingDirectory)'
-    publishLocation: 'container'
-    artifactName: 'artifact'
+#- task: PublishBuildArtifacts@1

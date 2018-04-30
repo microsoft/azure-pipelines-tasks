@@ -16,10 +16,6 @@ steps:
     targetFolder: '$(build.artifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: '$(build.artifactStagingDirectory)'
-    publishLocation: 'container'
-    artifactName: 'artifact'
 
 # Next steps:
 # Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
