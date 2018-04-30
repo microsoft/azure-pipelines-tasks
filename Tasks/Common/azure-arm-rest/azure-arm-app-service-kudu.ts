@@ -21,14 +21,8 @@ export class KuduServiceManagementClient {
         request.headers = request.headers || {};
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
-        var options: webClient.WebRequestOptions = {
-            retryIntervalInSeconds: reqOptions && reqOptions.retryIntervalInSeconds ? reqOptions.retryIntervalInSeconds :  10,
-            retryCount: reqOptions && reqOptions.retryCount ? reqOptions.retryCount : 6,
-            retriableErrorCodes: reqOptions && reqOptions.retriableErrorCodes ? reqOptions.retriableErrorCodes : ["ETIMEDOUT"],
-            retriableStatusCodes: reqOptions && reqOptions.retriableStatusCodes ? reqOptions.retriableStatusCodes :  [409, 500, 502, 503, 504]
-        };
         
-        var httpResponse = webClient.sendRequest(request, options);
+        var httpResponse = webClient.sendRequest(request, reqOptions);
         return httpResponse;
     }
 
