@@ -38,4 +38,15 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(testRunner.createdErrorIssue(errorMessage));
         assert(testRunner.failed, 'task should have failed');
     });
+
+    it('selects architecture passed as input', function () {
+        const testFile = path.join(__dirname, 'L0SelectsArchitecture.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained(`##vso[task.setvariable variable=pythonLocation;issecret=false;]${'x86ToolPath'}`));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
 });
