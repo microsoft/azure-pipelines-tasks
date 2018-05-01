@@ -462,6 +462,7 @@ target.testLegacy = function() {
     run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
 }
 
+// TODO: When is this used vs. the code in stage-aggregate.js?
 target.package = function() {
     // clean
     rm('-Rf', packagePath);
@@ -515,6 +516,7 @@ target.package = function() {
 }
 
 // used by CI that does official publish
+// TODO: Look at how this is used in CI and how it relates to other CI scripts.
 target.publish = function() {
     var server = options.server;
     assert(server, 'server');
@@ -565,6 +567,7 @@ target.publish = function() {
 }
 
 // used to bump the patch version in task.json files
+// TODO: When/why is this used?
 target.bump = function() {
     taskList.forEach(function (taskName) {
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');

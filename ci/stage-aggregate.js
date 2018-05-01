@@ -96,3 +96,17 @@ util.run(`nuget pack "${util.aggregateNuspecPath}" -BasePath "${util.aggregatePa
 
 // create push.cmd
 fs.writeFileSync(util.publishPushCmdPath, `nuget.exe push Mseng.MS.TF.Build.Tasks.${process.env.AGGREGATE_VERSION}.nupkg -source "${process.env.AGGREGATE_TASKS_FEED_URL}" -apikey Skyrise`);
+
+// If this flag is set we want to stage the per task nuget files.
+// After this is fully working we can refactor again and clean up all the aggregate code.
+// Trying to make this code change in such a way that we only need to delete aggregate 
+//      files later and not redo any of the nuget package per task code.
+if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET) {
+    console.log('> Zipping nuget package per task');
+
+    // mkdir _package/per-task-layout
+    fs.mkdirSync(util.perTaskLayoutPath);
+
+
+
+}
