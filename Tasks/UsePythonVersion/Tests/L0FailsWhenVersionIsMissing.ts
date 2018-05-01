@@ -12,7 +12,7 @@ taskRunner.setInput('architecture', 'x64');
 // Mock vsts-task-tool-lib
 taskRunner.registerMock('vsts-task-tool-lib/tool', {
     findLocalTool: () => null,
-    findLocalToolVersions: () => []
+    findLocalToolVersions: () => ['2.6.0', '2.7.13']
 });
 
 taskRunner.run();

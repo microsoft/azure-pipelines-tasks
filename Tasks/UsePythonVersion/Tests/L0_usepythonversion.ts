@@ -90,38 +90,6 @@ it('finds version in cache', async function () {
     assert(setVariable.calledOnceWithExactly('pythonLocation', 'findLocalTool'));
 });
 
-it('rejects version not in cache', async function (done: MochaDone) {
-    mockery.registerMock('vsts-task-lib/task', mockTask);
-    mockery.registerMock('vsts-task-tool-lib/tool', {
-        findLocalTool: () => null,
-        findLocalToolVersions: () => ['2.6.0', '2.7.13']
-    });
-
-    const uut = reload();
-    const parameters = {
-        versionSpec: '3.x',
-        addToPath: false,
-        architecture: 'x64'
-    };
-
-    try {
-        await uut.usePythonVersion(parameters, Platform.Linux);
-        done(new Error('should not have succeeded'));
-    } catch (e) {
-        const expectedMessage = [
-            'loc_mock_VersionNotFound 3.x',
-            'loc_mock_ListAvailableVersions',
-            '2.6.0 (x86)',
-            '2.7.13 (x86)',
-            '2.6.0 (x64)',
-            '2.7.13 (x64)'
-        ].join(EOL);
-
-        assert.strictEqual(e.message, expectedMessage);
-        done();
-    }
-});
-
 it('selects architecture passed as input', async function () {
     const setVariable = sinon.spy();
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, { setVariable: setVariable }));
