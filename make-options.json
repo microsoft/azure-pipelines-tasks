@@ -1,11 +1,7 @@
 {
     "tasks": [
-        "Bash",
-        "BatchScript",
-        "Chef",
-        "ChefKnife",
-        "CMake",
-        "CmdLine"
+        "BashV3",
+        "CmdLineV2"
     ],
     "taskResources": [
         "*.ps1",
