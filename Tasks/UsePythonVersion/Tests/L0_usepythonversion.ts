@@ -93,14 +93,12 @@ it('finds version in cache', async function () {
 it('selects architecture passed as input', async function () {
     const setVariable = sinon.spy();
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, { setVariable: setVariable }));
+
+    const findLocalTool = sinon.stub();
+    findLocalTool.withArgs(sinon.match.any, sinon.match.any, 'x86').returns('x86ToolPath');
+    findLocalTool.withArgs(sinon.match.any, sinon.match.any, 'x64').returns('x64ToolPath');
     mockery.registerMock('vsts-task-tool-lib/tool', {
-        findLocalTool: (toolName: string, versionSpec: string, arch?: string) => {
-            if (arch === 'x86') {
-                return 'x86ToolPath';
-            } else {
-                return 'x64ToolPath';
-            }
-        }
+        findLocalTool: findLocalTool
     });
 
     const uut = reload();
@@ -111,8 +109,7 @@ it('selects architecture passed as input', async function () {
     };
 
     await uut.usePythonVersion(parameters, Platform.Linux);
-    assert(setVariable.calledOnce);
-    assert(setVariable.calledWith('pythonLocation', 'x86ToolPath'));
+    assert(setVariable.calledOnceWithExactly('pythonLocation', 'x86ToolPath'));
 });
 
 it('sets PATH correctly on Linux', async function () {
