@@ -1,7 +1,10 @@
 {
     "tasks": [
+        "AzureCLIV1",
+        "AzurePowerShellV3",
         "BashV3",
-        "CmdLineV2"
+        "CmdLineV2",
+        "SshV0"
     ],
     "taskResources": [
         "*.ps1",
