@@ -78,7 +78,7 @@
         "PublishSymbols",
         "PublishTestResults",
         "PublishToAzureServiceBus",
-        "PyPIPublisher",
+        "PublishToPyPI",
         "QueryWorkItems",
         "QuickPerfTest",
         "RunDistributedTests",
