@@ -90,7 +90,7 @@
         "ServiceFabricUpdateManifestsV2",
         "SqlAzureDacpacDeployment",
         "SqlDacpacDeploymentOnMachineGroup",
-        "SSH",
+        "SshV0",
         "UsePythonVersion",
         "UseRubyVersion",
         "VSBuild",
