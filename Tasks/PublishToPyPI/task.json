@@ -21,7 +21,7 @@
   "inputs": [
     {
       "name": "serviceEndpoint",
-      "aliases": [ "pyPIConnection" ],
+      "aliases": [ "pypiConnection" ],
       "type": "connectedService:generic",
       "label": "PyPI connection",
       "required": true,
@@ -37,7 +37,7 @@
     },
     {
         "name": "wheel",
-        "aliases": [ "alsoPublishAWheel" ],
+        "aliases": [ "alsoPublishWheel" ],
         "type": "boolean",
         "label": "Also publish a wheel",
         "defaultValue": "false",

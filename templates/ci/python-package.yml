@@ -60,11 +60,10 @@ phases:
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: 'dist'
-      publishLocation: 'container'
       artifactName: 'dist'
 
 #  - task: PublishToPyPI@0
 #    inputs:
 #      pyPIConnection: ''
 #      packageDirectory: '$(Build.SourcesDirectory)'
-#      alsoPublishAWheel: 'false'
+#      alsoPublishWheel: 'false'

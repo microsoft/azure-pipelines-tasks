@@ -22,7 +22,7 @@
     {
       "name": "serviceEndpoint",
       "aliases": [
-        "pyPIConnection"
+        "pypiConnection"
       ],
       "type": "connectedService:generic",
       "label": "ms-resource:loc.input.label.serviceEndpoint",
@@ -42,7 +42,7 @@
     {
       "name": "wheel",
       "aliases": [
-        "alsoPublishAWheel"
+        "alsoPublishWheel"
       ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.wheel",
