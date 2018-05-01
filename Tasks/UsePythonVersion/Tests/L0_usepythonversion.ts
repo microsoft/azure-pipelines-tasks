@@ -72,24 +72,6 @@ it('converts Python prerelease versions to the semantic version format', functio
     }
 })
 
-it('finds version in cache', async function () {
-    const setVariable = sinon.spy();
-    mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, { setVariable: setVariable }));
-    mockery.registerMock('vsts-task-tool-lib/tool', {
-        findLocalTool: sinon.stub().returns('findLocalTool')
-    });
-
-    const uut = reload();
-    const parameters = {
-        versionSpec: '3.6',
-        addToPath: false,
-        architecture: 'x64'
-    };
-
-    await uut.usePythonVersion(parameters, Platform.Linux);
-    assert(setVariable.calledOnceWithExactly('pythonLocation', 'findLocalTool'));
-});
-
 it('selects architecture passed as input', async function () {
     const setVariable = sinon.spy();
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, { setVariable: setVariable }));

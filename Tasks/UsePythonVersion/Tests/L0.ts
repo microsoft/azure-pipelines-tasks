@@ -15,6 +15,7 @@ describe('UsePythonVersion L0 Suite', function () {
 
         testRunner.run();
 
+        assert(testRunner.stdOutContained(`##vso[task.setvariable variable=pythonLocation;issecret=false;]${path.join('/', 'Python', '3.6.4', 'x64')}`))
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
