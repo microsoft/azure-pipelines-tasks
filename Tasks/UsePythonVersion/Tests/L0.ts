@@ -1,28 +1,10 @@
 import * as assert from 'assert';
+import { EOL } from 'os';
 import * as path from 'path';
 
-// import * as mockery from 'mockery';
 import { MockTestRunner } from 'vsts-task-lib/mock-test';
 
-import { Platform } from '../taskutil';
-
 describe('UsePythonVersion L0 Suite', function () {
-    // before(function () {
-    //     mockery.enable({
-    //         useCleanCache: true,
-    //         warnOnUnregistered: false
-    //     });
-    // });
-    
-    // after(function () {
-    //     mockery.disable();
-    // });
-
-    // afterEach(function () {
-    //     mockery.deregisterAll();
-    //     mockery.resetCache();
-    // });
-
     describe('usepythonversion.ts', function () {
         require('./L0_usepythonversion');
     });
@@ -38,6 +20,17 @@ describe('UsePythonVersion L0 Suite', function () {
     });
 
     it('fails when version is not found', function () {
+        const testFile = path.join(__dirname, 'L0FailsWhenVersionIsMissing.js');
+        const testRunner = new MockTestRunner(testFile);
 
+        testRunner.run();
+
+        const errorMessage = [
+            'loc_mock_VersionNotFound 3.x',
+            'loc_mock_ListAvailableVersions'
+        ].join(EOL);
+
+        assert(testRunner.createdErrorIssue(errorMessage));
+        assert(testRunner.failed, 'task should have failed');
     });
 });
