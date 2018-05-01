@@ -96,3 +96,51 @@ util.run(`nuget pack "${util.aggregateNuspecPath}" -BasePath "${util.aggregatePa
 
 // create push.cmd
 fs.writeFileSync(util.publishPushCmdPath, `nuget.exe push Mseng.MS.TF.Build.Tasks.${process.env.AGGREGATE_VERSION}.nupkg -source "${process.env.AGGREGATE_TASKS_FEED_URL}" -apikey Skyrise`);
+
+// If this flag is set we want to stage the per task nuget files.
+// After this is fully working we can refactor again and clean up all the aggregate code.
+// Trying to make this code change in such a way that we only need to delete aggregate 
+//      files later and not redo any of the nuget package per task code.
+if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET) {
+    console.log('> Zipping nuget package per task');
+
+    // mkdir _package/per-task-layout
+    fs.mkdirSync(util.perTaskLayoutPath);
+
+
+
+    // TODO: Below this line needs to be refactored for the per task nuget setup.
+
+    // TODO: I think we need to make changes here but start with this and see where it goes.
+    util.linkAggregateLayoutContent(util.milestoneLayoutPath, util.perTaskLayoutPath, /*release:*/'', /*commit:*/refs.head.commit, taskDestMap);
+
+
+    // Iterate all the folders inside util.perTaskLayoutPath and create a nuspec file, pack, and create push.cmd
+    
+
+
+    // // create the nuspec file
+    // console.log();
+    // console.log('> Generating .nuspec file');
+    // var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
+    // contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
+    // contents += '   <metadata>' + os.EOL;
+    // contents += '      <id>' + util.aggregatePackageName + '</id>' + os.EOL;
+    // contents += '      <version>' + process.env.AGGREGATE_VERSION + '</version>' + os.EOL;
+    // contents += '      <authors>bigbldt</authors>' + os.EOL;
+    // contents += '      <owners>bigbldt,Microsoft</owners>' + os.EOL;
+    // contents += '      <requireLicenseAcceptance>false</requireLicenseAcceptance>' + os.EOL;
+    // contents += '      <description>For VSS internal use only</description>' + os.EOL;
+    // contents += '      <tags>VSSInternal</tags>' + os.EOL;
+    // contents += '   </metadata>' + os.EOL;
+    // contents += '</package>' + os.EOL;
+    // fs.writeFileSync(util.aggregateNuspecPath, contents);
+
+    // // pack
+    // fs.mkdirSync(util.publishLayoutPath);
+    // process.chdir(util.publishLayoutPath);
+    // util.run(`nuget pack "${util.aggregateNuspecPath}" -BasePath "${util.aggregatePackSourcePath}" -NoDefaultExcludes`, /*inheritStreams:*/true);
+
+    // // create push.cmd
+    // fs.writeFileSync(util.publishPushCmdPath, `nuget.exe push Mseng.MS.TF.Build.Tasks.${process.env.AGGREGATE_VERSION}.nupkg -source "${process.env.AGGREGATE_TASKS_FEED_URL}" -apikey Skyrise`);
+}
