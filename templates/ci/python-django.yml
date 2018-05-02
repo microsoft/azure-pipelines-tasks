@@ -1,0 +1,43 @@
+# Python Django
+# Test a Django app on multiple versions of Python.
+# https://aka.ms/yaml
+
+phases:
+
+# =================
+# Test a Django app
+# =================
+- phase: 'Django'
+  variables:
+    # relative path to your manage.py
+    projectPath: mysite/
+
+  queue:
+    name: 'Hosted Linux Preview'
+    parallel: 1
+    matrix:
+      # Uncomment 2.7 if you're using a version of Django that still
+      # supports Python 2 (Django 1.11 and lower).
+      # Python27:
+      #   PYTHON_VERSION: '2.7'
+      Python35:
+        PYTHON_VERSION: '3.5'
+      Python36:
+        PYTHON_VERSION: '3.6'
+      Python37-dev:
+        PYTHON_VERSION: '>= 3.7.0a'
+  steps:
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(PYTHON_VERSION)'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip setuptools wheel
+    displayName: 'Install dependencies'
+
+  - script: python -m pip install -r requirements.txt
+    displayName: 'Install requirements'
+
+  - script: pushd $(projectPath) && python manage.py test --no-input
+    displayName: 'Run tests'
