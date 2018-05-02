@@ -8,6 +8,7 @@ steps:
 - task: Gradle@2
   inputs:
     gradleWrapperFile: 'gradlew'
+    testResultsFiles: '**/TEST-*.xml'
     tasks: 'build'
 
 - task: CopyFiles@2
