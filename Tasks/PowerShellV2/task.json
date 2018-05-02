@@ -21,7 +21,7 @@
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for macOS and Linux.",
     "minimumAgentVersion": "2.115.0",
-    "showEnvironmentBlock": true,
+    "showEnvironmentVariables": true,
     "groups": [
         {
             "name": "advanced",

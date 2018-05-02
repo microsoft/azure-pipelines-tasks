@@ -20,7 +20,7 @@
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "showEnvironmentBlock": true,
+  "showEnvironmentVariables": true,
   "groups": [
     {
       "name": "advanced",

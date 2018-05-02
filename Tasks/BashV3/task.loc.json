@@ -22,7 +22,7 @@
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "showEnvironmentBlock": true,
+  "showEnvironmentVariables": true,
   "groups": [
     {
       "name": "advanced",
