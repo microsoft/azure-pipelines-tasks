@@ -1,0 +1,54 @@
+{
+  "id": "2d8a1d60-8ccd-11e7-a792-11ac56e9f553",
+  "name": "PublishToPyPI",
+  "friendlyName": "Publish to PyPI",
+  "description": "Create and upload a Python package to a Python Package Index using twine.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "[More Information](https://aka.ms/pypipublisher)",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 135,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.0.0",
+  "instanceNameFormat": "Package and publish to PyPI",
+  "inputs": [
+    {
+      "name": "serviceEndpoint",
+      "aliases": [ "pypiConnection" ],
+      "type": "connectedService:generic",
+      "label": "PyPI connection",
+      "required": true,
+      "helpMarkDown": "Select a generic service endpoint containing PyPI connection details. \n\nTo create a new generic service endpoint, go to Settings -> Service endpoints -> New Service Endpoint -> Generic. \n\nConnection Name – Use a friendly connection name of your choice. \nServer URL – The PyPI package server URL (for example: https://upload.pypi.org/legacy/). \nUser Name – The PyPI registered username. \nPassword – The password for your PyPI account."
+    },    
+    {
+      "name": "wd",
+      "aliases": [ "packageDirectory" ],
+      "type": "filePath",
+      "label": "Python package directory",
+      "required": true,
+      "helpMarkDown": "The directory of the Python package to be created and published, where setup.py is present."
+    },
+    {
+        "name": "wheel",
+        "aliases": [ "alsoPublishWheel" ],
+        "type": "boolean",
+        "label": "Also publish a wheel",
+        "defaultValue": "false",
+        "required": false,
+        "helpMarkDown": "Select whether to create and publish a universal wheel package (platform independent) in addition to an sdist package. [More information](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "publisher.js",
+      "argumentFormat": ""
+    }
+  }
+}

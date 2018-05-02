@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as ttm from 'vsts-task-lib/mock-test';
 import * as path from 'path';
 
-describe('PyPI Publisher', function () {
+describe('Publish to PyPI', function () {
 
     it('Test to verify pip command arguements', (done: MochaDone) => {
         let tp = path.join(__dirname, 'L0PipCommands.js');

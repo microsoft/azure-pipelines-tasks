@@ -1,4 +1,4 @@
-# PyPI Publisher
+# Publish to PyPI
 
 ### Overview
 
@@ -7,7 +7,7 @@ This task can be used for publishing python packages to PyPI directly.
 When publishing a new package, user under generic endpoint will be assigned as owner of the package. 
 For updating existing packages, user should have owner/maintainer role for the package. 
 
-### Parameters for PyPI publisher task:
+### Parameters for the Publish to PyPI task:
 
 - **Python package path :** This is a Required field. Provide path of python package directory which is to be published. Setup file with the name setup.py should be present in this directory. 
 

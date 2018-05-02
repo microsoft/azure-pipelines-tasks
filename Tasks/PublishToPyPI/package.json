@@ -1,5 +1,5 @@
 {
-  "name": "pypipublisher",
+  "name": "publishtopypi",
   "version": "1.0.0",
   "description": "publish python package to the python package index",
   "main": "publisher.js",
