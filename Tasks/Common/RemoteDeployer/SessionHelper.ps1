@@ -8,8 +8,10 @@ function Get-WinRmConnectionToTargetMachine {
         [string] $sessionName,
         [string] $sessionConfigurationName,
         [switch] $useSsl,
-        [ValidateRange(2,10)]
-        [int] $maxRetryLimit = 3
+        [ValidateRange(1,10)]
+        [int] $maxRetryLimit = 3,
+        [ValidateRange(5, 60)]
+        [int] $timeoutPeriod = 30
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -38,7 +40,7 @@ function Get-WinRmConnectionToTargetMachine {
             }
 
             $retryCount++
-            Start-Sleep -Seconds 30
+            Start-Sleep -Seconds $timeoutPeriod
         }
 
         if ($isConnectionComplete) {
@@ -118,7 +120,7 @@ function Retry-Connection {
                                                 -UseSSL:$($targetMachine.UseSsl)
             }
     
-            if(!$remoteSession) {
+            if($remoteSession -eq $null) {
                 Write-Verbose "Unable to get remote pssession with name: '$sessionName' on remote computer: '$($targetMachine.ComputerName)'"
             } else {
                 if(($remoteSession.State.ToString().ToLowerInvariant() -eq "disconnected") -and ($remoteSession.Availability.ToString().ToLowerInvariant() -eq "none")) {
