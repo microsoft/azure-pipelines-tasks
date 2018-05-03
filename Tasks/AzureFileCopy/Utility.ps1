@@ -1094,12 +1094,14 @@ function Copy-FilesToAzureVMsFromStorageContainer
             $azCopyToolFileNames = $azCopyToolFileNamesString.Split(";")
             $azCopyToolFileContents = $azCopyToolFileContentsString.Split(";")
 
-            $destinationPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\AzCopy"
-            New-Item -ItemType Directory -Force -Path $destinationPath
+            $randomFolderName = "AFC_" + [guid]::NewGuid()
+            $randomFolderPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\$randomFolderName"
+            $azCopyDestinationPath = Join-Path -Path $randomFolderPath -ChildPath "AzCopy"
+            New-Item -ItemType Directory -Force -Path $azCopyDestinationPath
 
             for($i=0; $i -lt $azCopyToolFileNames.Length; $i++)
             {
-                $path = Join-Path -Path $destinationPath -ChildPath $azCopyToolFileNames[$i]
+                $path = Join-Path -Path $azCopyDestinationPath -ChildPath $azCopyToolFileNames[$i]
                 $content = [Convert]::FromBase64String($azCopyToolFileContents[$i])
                 [System.IO.File]::WriteAllBytes($path, $content)
             }
@@ -1109,17 +1111,17 @@ function Copy-FilesToAzureVMsFromStorageContainer
                 Get-ChildItem -Path $targetPath -Recurse -Force | Remove-Item -Force -Recurse
             }
 
-            $azCopyExeLocation = Join-Path -Path $env:windir -ChildPath "DtlDownloads\AzCopy\AzCopy.exe"
-            $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
+            $azCopyExeLocation = Join-Path -Path $azCopyDestinationPath -ChildPath "AzCopy.exe"
 
-            $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" /Z:`"$azCopyLocation`" /S /Y $additionalArguments"
+            $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" /Z:`"$azCopyDestinationPath`" /S /Y $additionalArguments"
             Invoke-Expression $azCopyCommand
         }
         finally
         {
             # Delete AzCopy tool folder
-            Get-ChildItem -Path $azCopyLocation -Recurse -Force | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-            Remove-Item $azCopyLocation -Force -ErrorAction SilentlyContinue
+            Get-ChildItem -Path $azCopyDestinationPath -Recurse -Force | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+            Remove-Item $azCopyDestinationPath -Force -ErrorAction SilentlyContinue
+            Remove-Item $randomFolderPath -Force -ErrorAction SilentlyContinue
         }
     }
 
