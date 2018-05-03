@@ -32,7 +32,7 @@ try {
     $input_Protocol = Get-VstsInput -Name "Protocol" -Require -ErrorAction "Stop"
     $input_NewPsSessionOptionArguments = Get-VstsInput -Name "NewPsSessionOptionArguments"
     $input_RunPowershellInParallel = Get-VstsInput -Name "RunPowershellInParallel" -AsBool
-    $input_sessionConfigurationName = $(Get-VstsInput -Name "SessionConfigurationName").Trim()
+    $input_sessionConfigurationName = 'microsoft.powershell'
 
     if([string]::IsNullOrEmpty($input_sessionConfigurationName)) {
         throw (Get-VstsLocString -Key "PS_TM_SessionConfigurationNameCannotBeNull")

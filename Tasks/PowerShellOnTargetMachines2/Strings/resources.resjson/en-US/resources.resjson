@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "PowerShell on Target Machines",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
-  "loc.description": "Execute PowerShell scripts on remote machine(s)",
+  "loc.description": "Execute PowerShell scripts on remote machine(s) using Invoke-Command cmdlet",
   "loc.instanceNameFormat": "Run PowerShell on $(Machines)",
   "loc.releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp; Use invoke-command to perform remote script execution",
   "loc.group.displayName.ScriptOptions": "Script options",
@@ -39,8 +39,6 @@
   "loc.input.help.ignoreLASTEXITCODE": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
   "loc.input.label.WorkingDirectory": "Working Directory",
   "loc.input.help.WorkingDirectory": "Working directory where the script is run.",
-  "loc.input.label.SessionConfigurationName": "Session Configuration",
-  "loc.input.help.SessionConfigurationName": "Select one of the default session configurations to connect to or specify your own custom session configurations",
   "loc.input.label.RunPowershellInParallel": "Run PowerShell in Parallel",
   "loc.input.help.RunPowershellInParallel": "Setting it to true will run the PowerShell scripts in parallel on the target machines.",
   "loc.messages.PS_TM_ParseSessionVariablesValueNotFound": "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",

@@ -2,7 +2,7 @@
     "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
     "name": "PowerShellOnTargetMachines",
     "friendlyName": "PowerShell on Target Machines",
-    "description": "Execute PowerShell scripts on remote machine(s)",
+    "description": "Execute PowerShell scripts on remote machine(s) using Invoke-Command cmdlet",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=627414)",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 85
+        "Patch": 87
     },
     "preview": true,
     "groups": [
@@ -205,22 +205,6 @@
             "required": false,
             "defaultValue": "",
             "helpMarkDown": "Working directory where the script is run.",
-            "groupName": "advanced"
-        },
-        {
-            "name": "SessionConfigurationName",
-            "type": "pickList",
-            "label": "Session Configuration",
-            "defaultValue": "microsoft.powershell",
-            "options": {
-                "microsoft.powershell": "microsoft.powershell",
-                "microsoft.powershell32": "microsoft.powershell32"
-            },
-            "properties": {
-                "EditableOptions": "True"
-            },
-            "required": true,
-            "helpMarkDown": "Select one of the default session configurations to connect to or specify your own custom session configurations",
             "groupName": "advanced"
         },
         {
