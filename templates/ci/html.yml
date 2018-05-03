@@ -1,21 +1,9 @@
-# Go
-# Build your Go application.
+# HTML
+# Package your static HTML application.
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux Preview'
 steps:
-
-- task: GoTool@0
-
-- task: Go@0
-  inputs:
-    command: 'get'
-    arguments: '-d'
-
-- task: Go@0
-  inputs:
-    command: 'build'
-    arguments: '-o "$(build.repository.name)"'
 
 - task: ArchiveFiles@2
   inputs:

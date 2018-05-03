@@ -1,21 +1,17 @@
-# Go
-# Build your Go application.
+# Ruby
+# Package your Ruby application.
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux Preview'
 steps:
 
-- task: GoTool@0
-
-- task: Go@0
+- task: UseRubyVersion@0
   inputs:
-    command: 'get'
-    arguments: '-d'
+    versionSpec: '>= 2.5' 
 
-- task: Go@0
-  inputs:
-    command: 'build'
-    arguments: '-o "$(build.repository.name)"'
+#- script: |
+#    gem install bundler
+#    gem install rails && rails -v
 
 - task: ArchiveFiles@2
   inputs:
