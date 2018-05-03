@@ -16,12 +16,12 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 135,
+        "Minor": 129,
         "Patch": 0
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for macOS and Linux.",
+    "preview": true,
     "minimumAgentVersion": "2.115.0",
-    "showEnvironmentVariables": true,
     "groups": [
         {
             "name": "advanced",
@@ -66,7 +66,7 @@
             "label": "Script",
             "visibleRule": "targetType = inline",
             "required": true,
-            "defaultValue": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"\n\n# Use the environment variables input below to pass secret variables to this script.",
+            "defaultValue": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"",
             "properties": {
                 "resizable": "true",
                 "rows": "10",

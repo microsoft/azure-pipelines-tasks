@@ -16,11 +16,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 135,
+    "Minor": 127,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "showEnvironmentVariables": true,
+  "preview": true,
   "groups": [
     {
       "name": "advanced",
@@ -34,7 +34,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
       "required": true,
-      "defaultValue": "echo Write your commands here\n\necho Use the environment variables input below to pass secret variables to this script",
+      "defaultValue": "echo Write your commands here",
       "properties": {
         "resizable": "true",
         "rows": "10",

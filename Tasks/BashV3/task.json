@@ -16,13 +16,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 135,
+        "Minor": 127,
         "Patch": 0
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines and added support for Windows.",
+    "preview": true,
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "Bash Script",
-    "showEnvironmentVariables": true,
     "groups": [
         {
             "name": "advanced",
@@ -67,7 +67,7 @@
             "label": "Script",
             "visibleRule": "targetType = inline",
             "required": true,
-            "defaultValue": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script",
+            "defaultValue": "# Write your commands here",
             "properties": {
                 "resizable": "true",
                 "rows": "10",

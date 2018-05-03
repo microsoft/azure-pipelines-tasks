@@ -1,19 +1,17 @@
 # Python package
-# Build and test a Python package on multiple Python versions. Then, upload it to a Python package index.
+# Build and test a Python package on multiple Python versions. Upload to a Python package index.
 # https://aka.ms/yaml
 
 phases:
-
-# =============
-# Phase 1: Test
-# =============
-- phase: 'Test'
+- phase: 'Phase_1'
+  displayName: 'Build and Test'
   queue:
     name: 'Hosted Linux Preview'
-    parallel: 1
     matrix:
       Python27:
         PYTHON_VERSION: '2.7'
+      Python34:
+        PYTHON_VERSION: '3.4'
       Python35:
         PYTHON_VERSION: '3.5'
       Python36:
@@ -21,50 +19,39 @@ phases:
       Python37-dev:
         PYTHON_VERSION: '>= 3.7.0a'
   steps:
-
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '$(PYTHON_VERSION)'
       architecture: 'x64'
-
+      addToPath: 'true'
   - script: python -m pip install --upgrade pip && pip install -r requirements.txt
-    displayName: 'Install dependencies'
-
+    displayName: 'Install Dependencies'
   # - script: 'pip install flake8 && flake8'
   #   displayName: 'Flake8'
-
-  - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
+  - script: pip install pytest && pytest tests --doctest-modules
     displayName: 'pytest'
 
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '**/test-results.xml'
-      testRunTitle: 'Python $(python.version)'
-
-# ================
-# Phase 2: Publish
-# ================
-- phase: 'Publish'
-  dependsOn: 'Test'
-  queue: 'Hosted Linux Preview'
+- phase: 'Phase_2'
+  displayName: 'Publish'
+  dependsOn: 'Phase_1'
+  queue:
+    name: 'Hosted Linux Preview'
   steps:
-
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.6'
       architecture: 'x64'
-
-  - script: python setup.py sdist
-    displayName: 'Build sdist'
-
+      addToPath: 'true'
+  - script: python -m pip install --upgrade pip && pip install wheel && python setup.py bdist_wheel
+    displayName: Build Wheel
   - task: PublishBuildArtifacts@1
+    displayName: 'Publish artifacts'
     inputs:
       pathToPublish: 'dist'
-      publishLocation: 'container'
-      artifactName: 'dist'
-
-#  - task: PyPIPublisher@0
-#    inputs:
-#      serviceEndpoint: ''
-#      wd: '$(Build.SourcesDirectory)'
-#      wheel: 'false'
+      artifactName: 'artifact'
+      artifactType: 'container'
+  # - task: PyPIPublisher@0
+  #   inputs:
+  #     serviceEndpoint: ''
+  #     wd: '$(Build.SourcesDirectory)'
+  #     wheel: 'false'

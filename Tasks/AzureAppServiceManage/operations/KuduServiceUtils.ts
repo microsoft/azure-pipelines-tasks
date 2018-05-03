@@ -45,25 +45,17 @@ export class KuduServiceUtils {
         outputVariables = outputVariables ? outputVariables : [];
         var outputVariableIterator: number = 0;
         var siteExtensions = await this._appServiceKuduService.getSiteExtensions();
-        var allSiteExtensions = await this._appServiceKuduService.getAllSiteExtensions();
         var anyExtensionInstalled: boolean = false;
         var siteExtensionMap = {};
-        var allSiteExtensionMap = {};
         var extensionLocalPaths: string = "";
         for(var siteExtension of siteExtensions) {
             siteExtensionMap[siteExtension.id] = siteExtension;
         }
-        for(var siteExtension of allSiteExtensions) {
-            allSiteExtensionMap[siteExtension.id] = siteExtension;
-            allSiteExtensionMap[siteExtension.title] = siteExtension;
-        }
 
         for(var extensionID of extensionList) {
             var siteExtensionDetails = null;
-            if(allSiteExtensionMap[extensionID] && allSiteExtensionMap[extensionID].title == extensionID) {
-                extensionID = allSiteExtensionMap[extensionID].id;
-            }
-            // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
+        
+             // Python extensions are moved to Nuget and the extensions IDs are changed. The belo check ensures that old extensions are mapped to new extension ID.
             if(siteExtensionMap[extensionID] || (extensionID.startsWith('python') && siteExtensionMap[pythonExtensionPrefix + extensionID])) {
                 siteExtensionDetails = siteExtensionMap[extensionID] || siteExtensionMap[pythonExtensionPrefix + extensionID];
                 console.log(tl.loc('ExtensionAlreadyInstalled', extensionID));
@@ -82,7 +74,7 @@ export class KuduServiceUtils {
             }
         }
         
-        tl.debug('Set output Variable LocalPathsForInstalledExtensions to value: ' + extensionLocalPaths.slice(0, -1));
+        tl.debug('Set output Variable LocalPathsForInstalledExtensions to value: ' + extensionLocalPaths);
         tl.setVariable("LocalPathsForInstalledExtensions", extensionLocalPaths.slice(0, -1));
         
         if(anyExtensionInstalled) {

@@ -58,7 +58,7 @@ steps:
   inputs:
     pathToPublish: _package/publish-layout
     artifactName: TaskPackage
-    publishLocation: container
+    artifactType: container
 
 # Publish milestone package
 - task: NuGetCommand@2

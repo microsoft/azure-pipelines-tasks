@@ -35,7 +35,7 @@ steps:
   inputs:
     pathToPublish: _package/hotfix-layout
     artifactName: hotfix
-    publishLocation: container
+    artifactType: container
 
 # Test
 - script: node make.js test
