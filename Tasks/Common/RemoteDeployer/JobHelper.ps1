@@ -29,7 +29,14 @@ function Run-RemoteScriptJobs {
         Write-Verbose "Total no. of target machines: $totalTargetMachinesCount"
         $scriptArguments = Get-ScriptArguments -scriptArgumentsByName $scriptArgumentsByName
         $jobName = [Guid]::NewGuid().ToString()
-        $jobsInfo = (Invoke-Command -Session $sessions -AsJob -ScriptBlock $script -ArgumentList $scriptArguments -JobName $jobName -ErrorAction 'Stop').ChildJobs | Select-Object Id, Location, @{ Name = 'JobRetrievelCount'; Expression = { 0 } }
+        $parentJob = Invoke-Command -Session $sessions `
+                                    -ScriptBlock $script `
+                                    -ArgumentList $scriptArguments `
+                                    -JobName $jobName `
+                                    -AsJob `
+                                    -ErrorAction 'Stop'
+        $jobsInfo = $parentJob.ChildJobs | Select-Object Id, Location, @{ Name = 'JobRetrievelCount'; Expression = { 0 } }
+
         $jobResults = Get-JobResults -jobsInfo $jobsInfo `
                                      -targetMachines $targetMachines `
                                      -sessionName $sessionName `
