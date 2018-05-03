@@ -2,6 +2,8 @@
 # Test a Django app on multiple versions of Python.
 # https://aka.ms/yaml
 
+## NOTE! You need to set the projectRoot in both phases (until VSTS supports YAML anchors).
+
 phases:
 
 # =================
@@ -9,8 +11,7 @@ phases:
 # =================
 - phase: 'DjangoApp'
   variables:
-    # relative path to your manage.py
-    projectPath: mysite/
+    projectRoot: mysite/  # relative path to the directory containing manage.py
 
   queue:
     name: 'Hosted Linux Preview'
@@ -38,10 +39,35 @@ phases:
   - script: python -m pip install unittest-xml-reporting
     displayName: 'Install unittest-xml-reporting'
 
-  - script: pushd $(projectPath) && python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
+  - script: pushd $(projectRoot) && python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
     displayName: 'Run tests'
   
   - task: PublishTestResults@2
     inputs:
       testResultsFiles: "**/TEST-*.xml"
-      searchFolder: $(System.DefaultWorkingDirectory)/$(projectPath)
+      searchFolder: $(system.defaultWorkingDirectory)/$(projectRoot)
+      testRunTitle: 'Python $(PYTHON_VERSION)'
+
+
+# ===============================================
+# Phase 2: Copy sources to prepare for publishing
+# ===============================================
+- phase: 'PublishProjectArtifact'
+  dependsOn: 'DjangoApp'
+  variables:
+    projectRoot: mysite/  # relative path to the directory containing manage.py
+  queue: 'Hosted Linux Preview'
+
+  steps:
+
+  - task: CopyFiles@2
+    displayName: 'Stage project directory'
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)/$(projectRoot)'
+      targetFolder: '$(build.artifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(build.artifactStagingDirectory)
+      artifactName: 'django-project'
+      publishLocation: 'container'
