@@ -162,7 +162,7 @@
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.NewPsSessionOptionArguments",
       "required": false,
-      "defaultValue": "-SkipCACheck -IdleTimeout 86400000 -OperationTimeout 0 -OutputBufferingMode Block",
+      "defaultValue": "-SkipCACheck -IdleTimeout 7200000 -OperationTimeout 0 -OutputBufferingMode Block",
       "helpMarkDown": "ms-resource:loc.input.help.NewPsSessionOptionArguments",
       "groupName": "SessionOptions"
     },
