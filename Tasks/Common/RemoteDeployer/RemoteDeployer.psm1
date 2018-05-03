@@ -46,6 +46,12 @@ Import-VstsLocStrings "$PSScriptRoot\module.json"
 # the session option object to be used for creating sessions.
 # eg. for skipping ca check, create a new session option object ( New-PSSession -SkipCACheck ) and pass as an argument.
 #
+#.PARAMETER outputHandler
+# a scriptblock that is called with: output stream data coming from remote machine and the computer.
+#
+# #.PARAMETER errorHandler
+# a scriptblock that is called with: error stream data coming from remote machine and the computer.
+#
 #.EXAMPLE
 #An example
 #
