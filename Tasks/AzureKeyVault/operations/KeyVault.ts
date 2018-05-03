@@ -169,13 +169,8 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
                 if (error) {
                     let errorMessage = this.getError(error);
                     secretsToErrorsMap.addError(secretName, errorMessage);
-                }
-                else {
-                    if (this.taskParameters.flattenVariableName) {
-                        this.flattenedSecrets[secretName] = secretValue;
-                    } else {
-                        this.setVaultVariable(secretName, secretValue);
-                    }
+                } else {
+                    this.processDownloadedSecret(secretName, secretValue);                    
                 }
                 
                 return resolve();
@@ -196,36 +191,56 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -Permission
         return null;
     }
 
+    private processMultilineSecret(secretName: string, secretValue: string): string {        
+        let doNotMaskMultilineSecrets = tl.getVariable("SYSTEM_DONOTMASKMULTILINESECRETS");
+        if (doNotMaskMultilineSecrets && doNotMaskMultilineSecrets.toUpperCase() === "TRUE") {
+            return secretValue;
+        }
+
+        // multi-line case
+        if (secretValue.indexOf('\n') >= 0) {
+            let strVal = this.tryFlattenJson(secretValue);
+            if (strVal) {
+                console.log(util.format("Value of secret %s has been converted to single line.", secretName));
+                return strVal;
+            } else {
+                let lines = secretValue.split('\n');
+                lines.forEach((line: string, index: number) => {
+                    this.trySetSecret(secretName, line);
+                });
+            }
+        }
+
+        return secretValue;
+    }
+
+    private processDownloadedSecret(secretName: string, secretValue: string): void {
+        if (!secretValue) {
+            return;
+        }
+
+        const isMultiline = secretValue.indexOf('\n') >= 0;
+        if (isMultiline) {
+            secretValue = this.processMultilineSecret(secretName, secretValue);
+        }
+        
+        if (this.taskParameters.flattenVariableName) {
+            // we need to mask each individual secret unless it was already processed as multiline
+            if (!isMultiline) {
+                this.trySetSecret(secretName, secretValue);
+            }
+            this.flattenedSecrets[secretName] = secretValue;
+        } else {
+            this.setVaultVariable(secretName, secretValue);
+        }
+    }
+
     private setVaultVariable(secretName: string, secretValue: string): void {
         if (!secretValue) {
             return;
         }
 
-        let doNotMaskMultilineSecrets = tl.getVariable("SYSTEM_DONOTMASKMULTILINESECRETS");
-        if (doNotMaskMultilineSecrets && doNotMaskMultilineSecrets.toUpperCase() === "TRUE") {
-            tl.setVariable(secretName, secretValue, true);
-            return;
-        }
-
-        if (secretValue.indexOf('\n') < 0) {
-            // single-line case
-            tl.setVariable(secretName, secretValue, true);
-        }
-        else {
-            // multi-line case
-            let strVal = this.tryFlattenJson(secretValue);
-            if (strVal) {
-                console.log(util.format("Value of secret %s has been converted to single line.", secretName));
-                tl.setVariable(secretName, strVal, true);
-            }
-            else {
-                let lines = secretValue.split('\n');
-                lines.forEach((line: string, index: number) => {
-                    this.trySetSecret(secretName, line);
-                });
-                tl.setVariable(secretName, secretValue, true);
-            }
-        }
+        tl.setVariable(secretName, secretValue, true);
     }
 
     private trySetSecret(secretName: string, secretValue: string): void {
