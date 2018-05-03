@@ -48,7 +48,7 @@ steps:
     inputs:
       pathToPublish: _package/tasks.zip
       artifactName: slice-$(system.jobPositionInPhase)
-      artifactType: container
+      publishLocation: container
 
 # Test
 - script: node make.js test

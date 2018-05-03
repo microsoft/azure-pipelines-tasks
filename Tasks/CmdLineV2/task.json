@@ -16,11 +16,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 127,
+        "Minor": 135,
         "Patch": 0
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines.",
-    "preview": true,
+    "showEnvironmentVariables": true,
     "groups": [
         {
             "name": "advanced",
@@ -34,7 +34,7 @@
             "type": "multiLine",
             "label": "Script",
             "required": true,
-            "defaultValue": "echo Write your commands here",
+            "defaultValue": "echo Write your commands here\n\necho Use the environment variables input below to pass secret variables to this script",
             "properties": {
                 "resizable": "true",
                 "rows": "10",

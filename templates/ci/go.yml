@@ -9,13 +9,13 @@ steps:
 
 - task: Go@0
   inputs:
-    command: get
+    command: 'get'
     arguments: '-d'
 
 - task: Go@0
   inputs:
-    command: build
-    arguments: '-o "$(System.TeamProject)"'
+    command: 'build'
+    arguments: '-o "$(Build.Repository.Name)"'
 
 - task: ArchiveFiles@2
   inputs:
@@ -23,7 +23,3 @@ steps:
     includeRootFolder: false
 
 - task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: '$(build.artifactStagingDirectory)'
-    artifactName: 'artifact'
-    artifactType: 'container'
