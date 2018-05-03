@@ -5,6 +5,14 @@
 queue: 'Hosted Linux Preview'
 steps:
 
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '>= 2.5' 
+
+#- script: |
+#    gem install bundler
+#    gem install rails && rails -v
+
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(system.defaultWorkingDirectory)'

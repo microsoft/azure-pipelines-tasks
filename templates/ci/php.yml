@@ -5,6 +5,8 @@
 queue: 'Hosted Linux Preview'
 steps:
 
+#- script: composer install
+
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(system.defaultWorkingDirectory)'
