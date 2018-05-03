@@ -574,8 +574,18 @@ export function mockKuduServiceTests() {
         {id: "MOCK_EXT_1", title: "MOCK_EXT", local_path: "D:\\home\\Mock_Path"}
     ]);
 
+    nock('http://MOCK_SCM_WEBSITE').
+    get('/api/extensionfeed').reply(200, [
+        {id: "MOCK_EXT", title: "MOCK_EXT", local_path: "D:\\home\\Mock_Path"},
+        {id: "MOCK_EXT_1", title: "MOCK_EXT", local_path: "D:\\home\\Mock_Path"},
+        {id: "MOCK_EXT_2", title: "MOCK_EXT", local_path: "D:\\home\\Mock_Path"}
+    ]);
+
     nock('http://FAIL_MOCK_SCM_WEBSITE').
     get('/api/siteextensions?checkLatest=false').reply(501, 'Internal error occured');
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    get('/api/extensionfeed').reply(501, 'Internal error occured');
 
     nock('http://MOCK_SCM_WEBSITE').
     get('/api/processes/0').reply(200, { id: 1 });
