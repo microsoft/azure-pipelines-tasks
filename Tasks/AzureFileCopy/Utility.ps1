@@ -264,25 +264,32 @@ function Upload-FilesToAzureContainer
           [string]$additionalArguments,
           [string][Parameter(Mandatory=$true)]$destinationType)
 
-    $sourcePath = $sourcePath.Trim('"')
-    $storageAccountName = $storageAccountName.Trim()
     try
     {
         Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        
+        $sourcePath = $sourcePath.Trim('"')
+        $storageAccountName = $storageAccountName.Trim()
+        $blobPrefix = $blobPrefix.Trim()
+        $containerURL = [string]::Format("{0}/{1}", $blobStorageEndpoint.Trim("/"), $containerName)
+        $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        if(-not [string]::IsNullOrWhiteSpace($blobStorageEndpoint))
+        if ([string]::IsNullOrEmpty($blobPrefix))
         {
-            $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
-        }
-
-        if([string]::IsNullOrWhiteSpace($additionalArguments))
-        {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey  $storageKey -AzCopyLocation $azCopyLocation -BlobStorageURI $blobStorageURI
+            $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /DestKey:`"$storageKey`" /XO /Y /SetContentType /Z:`"$azCopyLocation`" $uploadAdditionalArguments" # TODO: also add /V
         }
         else
         {
-            $uploadResponse = Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
+            $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /Pattern:$blobPrefix /DestKey:`"$storageKey`" /XO /Y /SetContentType /Z:`"$azCopyLocation`" $uploadAdditionalArguments" # TODO: also add /V
         }
+
+        if ($containerName -ne "`$root")
+        {
+            $uploadToBlobCommand += " /S"
+        }
+
+        Invoke-Expression $uploadToBlobCommand
+        Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
     }
     catch
     {
@@ -298,31 +305,6 @@ function Upload-FilesToAzureContainer
         $errorMessage = (Get-VstsLocString -Key "AFC_UploadContainerStorageAccount" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $exceptionMessage)
         Write-Telemetry "Task_InternalError" "BlobUploadFailed"
         ThrowError -errorMessage $errorMessage
-    }
-    finally
-    {
-        if ($uploadResponse.Status -eq "Failed")
-        {
-            # deletes container only if we have created temporary container
-            if ($destination -ne "AzureBlob")
-            {
-                Remove-AzureContainer -containerName $containerName -storageContext $storageContext
-            }
-
-            $uploadErrorMessage = $uploadResponse.Error
-            Write-Verbose "UploadErrorMessage: $uploadErrorMessage"
-
-            $uploadResponseLog = $uploadResponse.Log
-            Write-Verbose "UploadResponseLog: $uploadResponseLog"
-
-            $errorMessage = (Get-VstsLocString -Key "AFC_UploadContainerStorageAccount" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $uploadErrorMessage)
-             Write-Telemetry "Task_InternalError" "BlobUploadFailed"
-            ThrowError -errorMessage $errorMessage
-        }
-        elseif ($uploadResponse.Status -eq "Succeeded")
-        {
-            Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
-        }
     }
 }
 

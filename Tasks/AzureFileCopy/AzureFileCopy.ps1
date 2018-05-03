@@ -62,17 +62,9 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Import all the dlls and modules which have cmdlets we need
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
 # Load all dependent files for execution
 . "$PSScriptRoot\Utility.ps1"
-
-# Enabling detailed logging only when system.debug is true
-$enableDetailedLoggingString = $env:system_debug
-if ($enableDetailedLoggingString -ne "true")
-{
-    $enableDetailedLoggingString = "false"
-}
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
