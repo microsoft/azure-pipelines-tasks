@@ -19,6 +19,7 @@ function Run-RemoteScriptJobs {
         [string] $sessionName,
         [hashtable] $scriptArgumentsByName,
         [hashtable[]] $targetMachines,
+        [psobject] $sessionOption,
         [scriptblock] $outputHandler,
         [scriptblock] $errorHandler
     )
@@ -29,7 +30,12 @@ function Run-RemoteScriptJobs {
         $scriptArguments = Get-ScriptArguments -scriptArgumentsByName $scriptArgumentsByName
         $jobName = [Guid]::NewGuid().ToString()
         $jobsInfo = (Invoke-Command -Session $sessions -AsJob -ScriptBlock $script -ArgumentList $scriptArguments -JobName $jobName -ErrorAction 'Stop').ChildJobs | Select-Object Id, Location, @{ Name = 'JobRetrievelCount'; Expression = { 0 } }
-        $jobResults = Get-JobResults -jobsInfo $jobsInfo -targetMachines $targetMachines -sessionName $sessionName -outputHandler $outputHandler -errorHandler $errorHandler
+        $jobResults = Get-JobResults -jobsInfo $jobsInfo `
+                                     -targetMachines $targetMachines `
+                                     -sessionName $sessionName `
+                                     -sessionOption $sessionOption `
+                                     -outputHandler $outputHandler `
+                                     -errorHandler $errorHandler
         Set-TaskResult -jobResults $jobResults -machinesCount $totalTargetMachinesCount
         return $jobResults
     } finally {
@@ -117,6 +123,7 @@ function Get-JobResults {
         [psobject[]] $jobsInfo,
         [hashtable[]] $targetMachines,
         [string] $sessionName,
+        [psobject] $sessionOption,
         [scriptblock] $outputHandler,
         [scriptblock] $errorHandler
     )
@@ -180,7 +187,7 @@ function Get-JobResults {
                             Write-Verbose "Maximum connection retry limit reached for computerName: $computerName"
                             $remoteExecutionStatusByLocation[$computerName] = "Finished"
                         } else {
-                            $newJobId = Retry-Connection -targetMachines $targetMachines -computerName $computerName -sessionName $sessionName
+                            $newJobId = Retry-Connection -targetMachines $targetMachines -computerName $computerName -sessionName $sessionName -sessionOption $sessionOption
                             if($newJobId -ne $null) {
                                 Write-Verbose "Connection re-established to computer: $computerName, JobId (New): $newJobId, JobId(Old): $($jobInfo.Id)"
                                 Stop-Job -Id $jobInfo.Id

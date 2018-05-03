@@ -94,7 +94,8 @@ function Retry-Connection {
     Param (
         [psobject[]] $targetMachines,
         [string] $computerName,
-        [string] $sessionName
+        [string] $sessionName,
+        [psobject] $sessionOption
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
     try {
@@ -103,23 +104,7 @@ function Retry-Connection {
             $allComputerNames = $($targetMachines | ForEach-Object { $_.ComputerName }) -join ','
             Write-Verbose "Unable to find target machine: '$computerName' in the list of target machines: '$allComputerNames'"
         } else {
-            if($targetMachine.Credential -eq $null) {
-                $remoteSession = Get-PSSession  -ComputerName $($targetMachine.ComputerName) `
-                                                -Name $sessionName `
-                                                -ConfigurationName ($targetMachine.SessionConfigurationName) `
-                                                -Port ($targetMachine.WSManPort) `
-                                                -Authentication ($targetMachine.Authentication) `
-                                                -UseSSL:$($targetMachine.UseSsl)
-            } else {
-                $remoteSession = Get-PSSession  -ComputerName ($targetMachine.ComputerName) `
-                                                -Name $sessionName `
-                                                -ConfigurationName ($targetMachine.SessionConfigurationName) `
-                                                -Credential ($targetMachine.Credential) `
-                                                -Port ($targetMachine.WSManPort) `
-                                                -Authentication ($targetMachine.Authentication) `
-                                                -UseSSL:$($targetMachine.UseSsl)
-            }
-    
+            $remoteSession = Get-RemoteConnection -targetMachine $targetMachine -sessionName $sessionName -sessionOption $sessionOption
             if($remoteSession -eq $null) {
                 Write-Verbose "Unable to get remote pssession with name: '$sessionName' on remote computer: '$($targetMachine.ComputerName)'"
             } else {
@@ -138,4 +123,66 @@ function Retry-Connection {
         Trace-VstsLeavingInvocation $MyInvocation
     }
     return $null
+}
+
+function Disconnect-WinRmConnectionToTargetMachines {
+    [CmdletBinding()]
+    Param (
+        [psobject[]] $targetMachines,
+        [string] $sessionName,
+        [psobject] $sessionOption
+    )
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
+    try {
+        foreach($targetMachine in $targetMachines) {
+            $remoteSession = Get-RemoteConnection -targetMachine $targetMachine -sessionName $sessionName -sessionOption $sessionOption
+            if($remoteSession -ne $null) {
+                try {
+                    Write-Verbose "Trying to disconnect pssession with name: $sessionName, computerName: $($targetMachine.ComputerName)"
+                    Disconnect-PSSession -Session $remoteSession -IdleTimeoutSec 60 -ErrorAction 'Stop'
+                    Write-Verbose "Successfully disconnected session: $sessionName on computer: $($targetMachine.ComputerName)"
+                } catch {
+                    Write-Verbose "Unable to disconnect pssession with name: $sessionName, computerName: $($targetMachine.ComputerName). Error: $($_.Exception.Message)"
+                }
+            }
+        }
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Get-RemoteConnection {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [psobject] $targetMachine,
+        [Parameter(Mandatory = $true)]
+        [string] $sessionName,
+        [Parameter(Mandatory = $true)]
+        [psobject] $sessionOption
+    )
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
+    try {
+        if($targetMachine.Credential -eq $null) {
+            $remoteSession = Get-PSSession  -ComputerName $($targetMachine.ComputerName) `
+                                            -Name $sessionName `
+                                            -ConfigurationName ($targetMachine.SessionConfigurationName) `
+                                            -Port ($targetMachine.WSManPort) `
+                                            -Authentication ($targetMachine.Authentication) `
+                                            -SessionOption $sessionOption `
+                                            -UseSSL:$($targetMachine.UseSsl)
+        } else {
+            $remoteSession = Get-PSSession  -ComputerName ($targetMachine.ComputerName) `
+                                            -Name $sessionName `
+                                            -ConfigurationName ($targetMachine.SessionConfigurationName) `
+                                            -Credential ($targetMachine.Credential) `
+                                            -Port ($targetMachine.WSManPort) `
+                                            -Authentication ($targetMachine.Authentication) `
+                                            -SessionOption $sessionOption `
+                                            -UseSSL:$($targetMachine.UseSsl)
+        }
+        return $remoteSession
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
 }

@@ -83,8 +83,8 @@ function Invoke-RemoteScript {
         [scriptblock] $errorHandler = $defaultErrorHandler
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter 'targetMachineNames'
+    $Global:PSSessionOption = $sessionOption
     try {
-        $PSSessionOption = $sessionOption
         $sessions = @()
         $useSsl = ($protocol -eq 'https')
         $targetMachines = Get-TargetMachines -targetMachineNames $targetMachineNames `
@@ -107,13 +107,12 @@ function Invoke-RemoteScript {
                                            -sessionName $sessionName `
                                            -scriptArgumentsByName $remoteScriptJobArgumentsByName `
                                            -targetMachines $targetMachines `
+                                           -sessionOption $sessionOption `
                                            -outputHandler $outputHandler `
                                            -errorHandler $errorHandler
         return $jobResults
     } finally {
-        if($sessions.Count -gt 0) {
-            Remove-PSSession -Session $sessions
-        }
+        Disconnect-WinRmConnectionToTargetMachines -targetMachines $targetMachines -sessionName $sessionName -sessionOption $sessionOption
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
