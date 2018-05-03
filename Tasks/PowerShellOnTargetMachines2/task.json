@@ -217,7 +217,7 @@
             "groupName": "advanced"
         }
     ],
-    "instanceNameFormat": "Run PowerShell on $(Machines)",
+    "instanceNameFormat": "Run PowerShell on Target Machines",
     "execution": {
         "PowerShell3": {
             "target": "PowerShellOnTargetMachines.ps1"
