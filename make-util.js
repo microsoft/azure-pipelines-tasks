@@ -658,6 +658,12 @@ exports.getExternals = getExternals;
 //------------------------------------------------------------------------------
 // task.json functions
 //------------------------------------------------------------------------------
+var fileToJson = function (file) {
+    var jsonFromFile = JSON.parse(fs.readFileSync(file).toString());
+    return jsonFromFile;
+}
+exports.fileToJson = fileToJson;
+
 var createResjson = function (task, taskPath) {
     var resources = {};
     if (task.hasOwnProperty('friendlyName')) {
@@ -772,6 +778,136 @@ var validateTask = function (task) {
     }
 };
 exports.validateTask = validateTask;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// Generate docs functions
+//------------------------------------------------------------------------------
+// Outputs a YAML snippet for the task
+var createYamlSnippet = function (taskJson, outFilePath) {
+    var outFile = fs.openSync(outFilePath, 'w');
+    var taskYaml = getTaskYaml(taskJson);
+    fs.writeSync(outFile, taskYaml);
+    fs.closeSync(outFile);
+}
+exports.createYamlSnippet = createYamlSnippet;
+
+// Returns a copy of the specified string with its first letter as a lowercase letter.
+// Example: 'NachoLibre' -> 'nachoLibre'
+function camelize(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+        return index == 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+}
+
+var getAliasOrNameForInputName = function(inputs, inputName) {
+    var returnInputName = inputName;
+    inputs.forEach(function(input) {
+        if (input.name == inputName) {
+            if (input.aliases && input.aliases.length > 0) {
+                returnInputName = input.aliases[0];
+            }
+            else {
+                returnInputName = input.name;
+            }
+        }
+    });
+    return camelize(returnInputName);
+};
+
+var getInputAliasOrName = function(input) {
+    var returnInputName;
+    if (input.aliases && input.aliases.length > 0) {
+        returnInputName = input.aliases[0];
+    }
+    else {
+        returnInputName = input.name;
+    }
+    return camelize(returnInputName);
+};
+
+var cleanString = function(str) {
+    if (str) {
+        return str
+            .replace(/\r/g, '')
+            .replace(/\n/g, '')
+            .replace(/\"/g, '');
+    }
+    else {
+        return str;
+    }
+}
+
+var getTaskYaml = function(taskJson) {
+    var taskYaml = '';
+
+    taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
+    taskYaml += '# ' + cleanString(taskJson.description) + os.EOL;
+    taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + os.EOL;
+    taskYaml += '  inputs:' + os.EOL;
+
+    taskJson.inputs.forEach(function(input) {
+        // Is the input required?
+        var requiredOrNot = input.required ? '' : '# Optional';
+        if (input.required && input.visibleRule && input.visibleRule.length > 0) {
+            var spaceIndex = input.visibleRule.indexOf(' ');
+            var visibleRuleInputName = input.visibleRule.substring(0, spaceIndex);
+            var visibleRuleInputNameCamel = camelize(visibleRuleInputName);
+            requiredOrNot += '# Required when ' + camelize(input.visibleRule)
+            .replace(/ = /g, ' == ')
+            .replace(visibleRuleInputNameCamel, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
+        }
+
+        // Does the input have a default value?
+        var isDefaultValueAvailable = input.defaultValue && input.defaultValue.length > 0;
+        var defaultValue = isDefaultValueAvailable ? input.defaultValue : null;
+
+        // Comment out the input?
+        if (!input.required ||
+            (input.required && isDefaultValueAvailable) ||
+            (input.visibleRule && input.visibleRule.length > 0)) {
+            taskYaml += '    #';
+        }
+        else {
+            taskYaml += '    ';
+        }
+
+        // Append input name
+        taskYaml += getInputAliasOrName(input) + ': ';
+
+        // Append default value
+        if (defaultValue) {
+            if (input.type == 'boolean') {
+                taskYaml += cleanString(defaultValue) + ' ';
+            }
+            else {
+                taskYaml += '\'' + cleanString(defaultValue) + '\' ';
+            }
+        }
+
+        // Append required or optional
+        taskYaml += requiredOrNot;
+
+        // Append options?
+        if (input.options) {
+            var isFirstOption = true;
+            Object.keys(input.options).forEach(function(key) {
+                if (isFirstOption) {
+                    taskYaml += (input.required ? '# ' : '. ') + 'Options: ' + camelize(cleanString(key));
+                    isFirstOption = false;
+                }
+                else {
+                    taskYaml += ', ' + camelize(cleanString(key));
+                }
+            });
+        }
+
+        // Append end of line
+        taskYaml += os.EOL;
+    });
+
+    return taskYaml;
+};
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------

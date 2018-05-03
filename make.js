@@ -47,6 +47,8 @@ var getExternals = util.getExternals;
 var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
+var fileToJson = util.fileToJson;
+var createYamlSnippet = util.createYamlSnippet;
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
@@ -83,7 +85,7 @@ if (options.task) {
 }
 else {
     // load the default list
-    taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
+    taskList = fileToJson(path.join(__dirname, 'make-options.json')).tasks;
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
@@ -97,6 +99,38 @@ target.clean = function () {
     mkdir('-p', buildPath);
     rm('-Rf', path.join(__dirname, '_test'));
 };
+
+//
+// Generate documentation (currently only YAML snippets)
+// ex: node make.js gendocs
+// ex: node make.js gendocs --task ShellScript
+//
+target.gendocs = function() {
+
+    var docsDir = path.join(__dirname, '_gendocs');
+    rm('-Rf', docsDir);
+    mkdir('-p', docsDir);
+    console.log();
+    console.log('> generating docs');
+
+    taskList.forEach(function(taskName) {
+        var taskPath = path.join(__dirname, 'Tasks', taskName);
+        ensureExists(taskPath);
+
+        // load the task.json
+        var taskJsonPath = path.join(taskPath, 'task.json');
+        if (test('-f', taskJsonPath)) {
+            var taskDef = fileToJson(taskJsonPath);
+            validateTask(taskDef);
+
+            // create YAML snippet
+            var outputFilename = taskName + '.' + taskDef.version.Major + '.yml';
+            createYamlSnippet(taskDef, path.join(docsDir, outputFilename));
+        }
+    });
+
+    banner('Generating docs successful', true);
+}
 
 //
 // ex: node make.js build
@@ -122,7 +156,7 @@ target.build = function() {
         var shouldBuildNode = test('-f', path.join(taskPath, 'tsconfig.json'));
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
-            var taskDef = require(taskJsonPath);
+            var taskDef = fileToJson(taskJsonPath);
             validateTask(taskDef);
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
@@ -143,7 +177,7 @@ target.build = function() {
 
         // get externals
         var taskMakePath = path.join(taskPath, 'make.json');
-        var taskMake = test('-f', taskMakePath) ? require(taskMakePath) : {};
+        var taskMake = test('-f', taskMakePath) ? fileToJson(taskMakePath) : {};
         if (taskMake.hasOwnProperty('externals')) {
             console.log('');
             console.log('> getting task externals');
@@ -170,7 +204,7 @@ target.build = function() {
                     // create loc files
                     var modJsonPath = path.join(modPath, 'module.json');
                     if (test('-f', modJsonPath)) {
-                        createResjson(require(modJsonPath), modPath);
+                        createResjson(fileToJson(modJsonPath), modPath);
                     }
 
                     // npm install and compile
@@ -182,7 +216,7 @@ target.build = function() {
                     console.log();
                     console.log('> copying module resources');
                     var modMakePath = path.join(modPath, 'make.json');
-                    var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
+                    var modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
                     copyTaskResources(modMake, modPath, modOutDir);
 
                     // get externals
@@ -248,7 +282,7 @@ target.build = function() {
             if (!test('-f', lockFilePath)) {
                 lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
             }
-            var packageLock = JSON.parse(fs.readFileSync(lockFilePath).toString());
+            var packageLock = fileToJson(lockFilePath);
             Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
                 commonPacks.forEach(function (commonPack) {
                     if (dependencyName == commonPack.packageName) {
@@ -343,7 +377,7 @@ target.testLegacy = function() {
 
         // copy each common-module L0 source files if exist
         var taskMakePath = path.join(__dirname, 'Tasks', taskName, 'make.json');
-        var taskMake = test('-f', taskMakePath) ? JSON.parse(fs.readFileSync(taskMakePath).toString()) : {};
+        var taskMake = test('-f', taskMakePath) ? fileToJson(taskMakePath) : {};
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
             common.forEach(function(mod) {
