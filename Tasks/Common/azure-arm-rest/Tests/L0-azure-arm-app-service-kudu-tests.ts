@@ -22,8 +22,6 @@ export function KuduServiceTests() {
             installSiteExtension(tr);
             console.log("\tvalidating getSiteExtensions");
             getSiteExtensions(tr);
-            console.log("\tvalidating getAllSiteExtensions");
-            getAllSiteExtensions(tr);
             console.log("\tvalidating getProcess");
             getProcess(tr);
             console.log("\tvalidating killProcess");
@@ -106,14 +104,6 @@ function getSiteExtensions(tr) {
 
     assert(tr.stdOutContained('FailedToGetSiteExtensions null (CODE: 501)'),
         'Should have printed: FailedToGetSiteExtensions null (CODE: 501)');
-}
-
-function getAllSiteExtensions(tr) {
-    assert(tr.stdOutContained('MOCK KUDU SITE EXTENSIONS COUNT: 3'),
-    'Should have printed: MOCK KUDU SITE EXTENSIONS COUNT: 3');
-
-    assert(tr.stdOutContained('FailedToGetAllSiteExtensions null (CODE: 501)'),
-        'Should have printed: FailedToGetAllSiteExtensions null (CODE: 501)');
 }
 
 function getProcess(tr) {

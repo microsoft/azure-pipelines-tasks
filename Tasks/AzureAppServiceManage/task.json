@@ -145,6 +145,20 @@
                 "EditableOptions": "True",
                 "MultiSelectFlatList": "True"
             },
+            "options": {
+                "Microsoft.ApplicationInsights.AzureWebSites": "Application Insights",
+                "ComposerExtension": "Composer",
+                "python2712x64": "Python 2.7.12 x64",
+                "python2712x86": "Python 2.7.12 x86",
+                "python2713x64": "Python 2.7.13 x64",
+                "python2713x86": "Python 2.7.13 x86",
+                "python353x64": "Python 3.5.3 x64",
+                "python353x86": "Python 3.5.3 x86",
+                "python360x86": "Python 3.6.0 x86",
+                "python360x64": "Python 3.6.0 x64",
+                "python361x86": "Python 3.6.1 x86",
+                "python361x64": "Python 3.6.1 x64"
+            },
             "required": "True",
             "visibleRule": "Action = Install Extensions",
             "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
@@ -251,12 +265,6 @@
                 "ResourceGroupName": "$(ResourceGroupName)"
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
-        },
-        {
-            "target": "ExtensionsList",
-            "endpointId": "$(ConnectedServiceName)",
-            "dataSourceName": "AzureSiteExtensions",
-            "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{ #stringReplace '\".' '' title}}}\"}"
         }
     ],
     "execution": {
@@ -377,7 +385,6 @@
         "FailedToStartContinuousWebJob": "Failed to start continuous WebJob '%s'. Error: %s",
         "FailedToStopContinuousWebJob": "Failed to stop continuous WebJob '%s'. Error: %s",
         "FailedToGetSiteExtensions": "Failed to get site extensions. Error: %s",
-        "FailedToGetAllSiteExtensions": "Failed to get extension feed. Error: %s",
         "ExtensionAlreadyInstalled": "Extension '%s' already installed.",
         "InstallingSiteExtension": "Installing site Extension '%s'",
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",

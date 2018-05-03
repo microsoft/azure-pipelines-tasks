@@ -175,24 +175,6 @@ export class Kudu {
         }
     }
 
-    public async getAllSiteExtensions(): Promise<Array<SiteExtension>> {
-        var httpRequest = new webClient.WebRequest();
-        httpRequest.method = 'GET';
-        httpRequest.uri = this._client.getRequestUri(`/api/extensionfeed`);
-        try {
-            var response = await this._client.beginRequest(httpRequest);
-            tl.debug(`getAllSiteExtensions. Data: ${JSON.stringify(response)}`);
-            if(response.statusCode == 200) {
-                return response.body as Array<SiteExtension>;
-            }
-
-            throw response;
-        }
-        catch(error) {
-            throw Error(tl.loc('FailedToGetAllSiteExtensions', this._getFormattedError(error)))
-        }
-    }
-
     public async getProcess(processID: number): Promise<any> {
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
