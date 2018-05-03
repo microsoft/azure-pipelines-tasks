@@ -1,5 +1,5 @@
 # Python package
-# Build and test a Python package on multiple Python versions. Then, upload it to a Python package index.
+# Create and test a Python package on multiple Python versions. Then, upload it to a Python package index.
 # https://aka.ms/yaml
 
 phases:
