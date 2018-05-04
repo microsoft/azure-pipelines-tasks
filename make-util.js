@@ -849,7 +849,21 @@ var cleanString = function(str) {
 var getTaskMarkdownDoc = function(taskJson) {
     var taskMarkdown = '';
 
-    taskMarkdown += '# ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
+    taskMarkdown += '---' + os.EOL;
+    taskMarkdown += 'title: ' + cleanString(taskJson.friendlyName) + os.EOL;
+    taskMarkdown += 'description: ' + cleanString(taskJson.description) + os.EOL;
+    taskMarkdown += 'ms.topic: reference' + os.EOL;
+    taskMarkdown += 'ms.prod: devops' + os.EOL;
+    taskMarkdown += 'ms.technology: devops-cicd' + os.EOL;
+    taskMarkdown += 'ms.assetid: REPLACE_ME_WITH_A_GUID' + os.EOL;
+    taskMarkdown += 'ms.manager: REPLACE_ME' + os.EOL;
+    taskMarkdown += 'ms.author: REPLACE_ME' + os.EOL;
+    taskMarkdown += 'author: REPLACE_ME' + os.EOL;
+    taskMarkdown += 'ms.date: 08/10/2016' + os.EOL;
+    taskMarkdown += 'monikerRange: \'VSTS\'' + os.EOL;
+    taskMarkdown += '---' + os.EOL + os.EOL;
+
+    taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
     taskMarkdown += '![](_img/REPLACE_ME.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
 
     taskMarkdown += '## Arguments' + os.EOL + os.EOL;
@@ -857,7 +871,7 @@ var getTaskMarkdownDoc = function(taskJson) {
     taskJson.inputs.forEach(function(input) {
         var requiredOrNot = input.required ? 'Required' : 'Optional';
         var label = cleanString(input.label);
-        var description = cleanString(input.helpMarkDown);
+        var description = input.helpMarkDown; // Do not clean white space from descriptions
         taskMarkdown += '<tr><td>' + label + '</td><td>(' + requiredOrNot + ') ' + description + '</td></tr>' + os.EOL;
     });
     taskMarkdown += '[!INCLUDE [temp](../_shared/control-options-arguments.md)]' + os.EOL;
