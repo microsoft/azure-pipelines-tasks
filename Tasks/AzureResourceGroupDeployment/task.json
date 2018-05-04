@@ -199,7 +199,7 @@
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Agent registration with Deployment group requires access to your Visual Studio project.​ <br><br>Click \"+New\" to create an endpoint using personal access token (PAT) with scope restricted to \"Deployment Group\" and a default expiration time of 90 days. <br><br>​Click \"Manage\" to update endpoint details.​",
+            "helpMarkDown": "Specify the endpoint to connect to VSTS/TFS account for agent registration.<br><br>You can create an endpoint using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup an endpoint. <br><br>​Click \"Manage\" to update endpoint details.​",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -247,7 +247,7 @@
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "defaultValue": false,
-            "helpMarkDown": "Decide whether to run the agent service as a user other than the default. The default use is \"NT AUTHORITY\\SYSTEM\" in Windows and \"root\" in Linux."
+            "helpMarkDown": "Decide whether to run the agent service as a user other than the default. The default user is \"NT AUTHORITY\\SYSTEM\" in Windows and \"root\" in Linux."
         },
         {
             "name": "userName",
@@ -257,7 +257,7 @@
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The username to run the agent service on the Windows VMs. For domain users, please enter values as \"domain\\username\" or \"username@domain.com\". For local users, please enter just the user name. It is assumed that a user with the same name is present on all VMs in the resource group."
+            "helpMarkDown": "The username to run the agent service on the virtual machines. For domain users, please enter values as \"domain\\username\" or \"username@domain.com\". For local users, please enter just the user name. It is assumed that the same domain user\\a local user with the same name, respectively, is present on all the virtual machines in the resource group."
         },
         {
             "name": "password",
