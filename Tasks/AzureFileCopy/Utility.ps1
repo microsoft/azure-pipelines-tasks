@@ -4,30 +4,6 @@ $ErrorActionPreference = 'Stop'
 $azureStackEnvironment = "AzureStack"
 $jobId = $env:SYSTEM_JOBID;
 
-function Get-DeploymentModulePath
-{
-    Write-Output "$PSScriptRoot\DeploymentUtilities"
-}
-
-function Publish-Azure-Telemetry
- {
-   param([object] $deploymentResponse, [string] $jobId)
-    if($deploymentResponse){
-       $jsonString = -join("{" , 
-       "`"IsAzureVm`" : `"$($deploymentResponse.IsAzureVm)`"" , 
-       "," , 
-       "`"VmUuidHash`" : `"$($deploymentResponse.VmUuidHash)`"" , 
-       "," , 
-       "`"TelemetryError`" : `"$($deploymentResponse.TelemetryError)`"" ,
-       "," ,
-       "`"JobId`" : `"$jobId`"" ,
-       "}")
-    }
-
-    $telemetryString ="##vso[telemetry.publish area=TaskHub;feature=AzureFileCopy]$jsonString"
-    Write-Host $telemetryString
- }
-
 function Get-AzureCmdletsVersion
 {
     $module = Get-Module AzureRM -ListAvailable
@@ -271,17 +247,10 @@ function Upload-FilesToAzureContainer
         $sourcePath = $sourcePath.Trim('"')
         $storageAccountName = $storageAccountName.Trim()
         $blobPrefix = $blobPrefix.Trim()
-        $containerURL = [string]::Format("{0}/{1}", $blobStorageEndpoint.Trim("/"), $containerName)
+        $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        if ([string]::IsNullOrEmpty($blobPrefix))
-        {
-            $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /DestKey:`"$storageKey`" /XO /Y /SetContentType /Z:`"$azCopyLocation`" $uploadAdditionalArguments" # TODO: also add /V
-        }
-        else
-        {
-            $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /Pattern:$blobPrefix /DestKey:`"$storageKey`" /XO /Y /SetContentType /Z:`"$azCopyLocation`" $uploadAdditionalArguments" # TODO: also add /V
-        }
+        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /DestKey:`"$storageKey`" /XO /Y /SetContentType /Z:`"$azCopyLocation`" $additionalArguments"
 
         if ($containerName -ne "`$root")
         {

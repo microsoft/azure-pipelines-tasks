@@ -35,6 +35,11 @@ if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
     $environmentName = $environmentNameRM
 }
 
+if ($destination -ne "AzureBlob")
+{
+    $blobPrefix = ""
+}
+
 # Constants
 $defaultSasTokenTimeOutInHours = 4
 $useHttpsProtocolOption = ''
