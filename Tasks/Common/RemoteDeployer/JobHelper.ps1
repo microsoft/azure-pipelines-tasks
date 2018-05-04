@@ -21,7 +21,8 @@ function Run-RemoteScriptJobs {
         [hashtable[]] $targetMachines,
         [psobject] $sessionOption,
         [scriptblock] $outputHandler,
-        [scriptblock] $errorHandler
+        [scriptblock] $errorHandler,
+        [switch] $uploadLogFiles
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
     try {
@@ -36,15 +37,23 @@ function Run-RemoteScriptJobs {
                                     -AsJob `
                                     -ErrorAction 'Stop'
         $jobsInfo = $parentJob.ChildJobs | Select-Object Id, Location, @{ Name = 'JobRetrievelCount'; Expression = { 0 } }
-
+        if($uploadLogFiles -eq $true) {
+            $tempLogsFolder = Get-TemporaryLogsFolder
+        }
         $jobResults = Get-JobResults -jobsInfo $jobsInfo `
                                      -targetMachines $targetMachines `
                                      -sessionName $sessionName `
                                      -sessionOption $sessionOption `
                                      -outputHandler $outputHandler `
-                                     -errorHandler $errorHandler
+                                     -errorHandler $errorHandler `
+                                     -logsFolder $tempLogsFolder
+        
         if(($jobResults -ne $null) -and ($jobResults.Count -gt 0)) {
             Publish-Telemetry -jobResults $jobResults
+        }
+        
+        if(![string]::IsNullOrEmpty($tempLogsFolder)) {
+            Upload-TargetMachineLogs -logsFolder $tempLogsFolder
         }
         Set-TaskResult -jobResults $jobResults -machinesCount $totalTargetMachinesCount
         return $jobResults
@@ -135,7 +144,8 @@ function Get-JobResults {
         [string] $sessionName,
         [psobject] $sessionOption,
         [scriptblock] $outputHandler,
-        [scriptblock] $errorHandler
+        [scriptblock] $errorHandler,
+        [string] $logsFolder
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
     try {
@@ -185,6 +195,14 @@ function Get-JobResults {
                                 } else {
                                     $outputObject = $_
                                     $null = & { try { & $outputHandler $outputObject $($job.Location) } catch { Write-Host "OutputHandlerException: $($_.Exception.ToString())" } }
+                                }
+                                if(![string]::IsNullOrEmpty($logsFolder)) {
+                                    $fileName = "$logsFolder\$computerName.log"
+                                    try {
+                                        Add-Content -LiteralPath $fileName -Value $($_ | Out-String) -Encoding UTF8 -ErrorAction 'Stop'
+                                    } catch {
+                                        Write-Verbose "Unable to add content to file: $fileName. Error: $($_.Exception.Message)"
+                                    }
                                 }
                             }
                         }

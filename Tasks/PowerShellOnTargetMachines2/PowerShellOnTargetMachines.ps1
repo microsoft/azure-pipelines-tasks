@@ -48,13 +48,14 @@ try {
     $jobResults = @()
     if($input_RunPowershellInParallel -eq $true) {
         $jobResults = Invoke-RemoteScript -targetMachineNames $targetMachineNames `
-                            -credential $credential `
-                            -protocol $input_Protocol `
-                            -authentication $input_AuthenticationMechanism `
-                            -sessionName $sessionName `
-                            -sessionConfigurationName $input_sessionConfigurationName `
-                            -remoteScriptJobArguments $remoteScriptJobArguments `
-                            -sessionOption $sessionOption
+                                          -credential $credential `
+                                          -protocol $input_Protocol `
+                                          -authentication $input_AuthenticationMechanism `
+                                          -sessionName $sessionName `
+                                          -sessionConfigurationName $input_sessionConfigurationName `
+                                          -remoteScriptJobArguments $remoteScriptJobArguments `
+                                          -sessionOption $sessionOption `
+                                          -uploadLogFiles
     } else {
         foreach($targetMachineName in $targetMachineNames) {
             $jobResults += Invoke-RemoteScript -targetMachineNames @($targetMachineName) `
@@ -64,7 +65,8 @@ try {
                                 -sessionName $sessionName `
                                 -sessionConfigurationName $input_sessionConfigurationName `
                                 -remoteScriptJobArguments $remoteScriptJobArguments `
-                                -sessionOption $sessionOption
+                                -sessionOption $sessionOption `
+                                -uploadLogFiles
         }
     }
 } catch {

@@ -69,6 +69,39 @@ function Publish-Telemetry {
     }
 }
 
+function Get-TemporaryLogsFolder {
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $agentTempDirectory = Get-VstsTaskVariable -Name 'Agent.TempDirectory'
+        $tempFolderName = "PS_TM_v3"
+        $tempLogsFolder = [System.IO.Path]::Combine($agentTempDirectory, $tempFolderName)
+        if((Test-Path -LiteralPath $tempLogsFolder -PathType 'Container') -eq $true) {
+            Remove-Item -LiteralPath $tempLogsFolder -Force
+        }
+        $tempLogsFolder = (New-Item -Path $agentTempDirectory -Name $tempFolderName -ItemType 'Container').FullName
+        return $tempLogsFolder
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Upload-TargetMachineLogs {
+    Param( [string] $logsFolder )
+    
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation
+    if((Test-Path -LiteralPath $logsFolder -PathType 'Container') -eq $true) {
+        try {
+            $logFiles = Get-ChildItem -LiteralPath $logsFolder -Filter "*.log"
+            foreach($logFile in $logFiles) {
+                Write-Host "##vso[task.uploadfile]$($logFile.FullName)"
+            }
+        } catch {
+            Write-Error (Get-VstsLocString -Key "RemoteDeployer_UnableToUploadTargetMachineLogs" -ArgumentList $logsFolder, $_.Exception.Message)
+        }
+    }
+    Trace-VstsLeavingInvocation $MyInvocation
+}
+
 $defaultErrorHandler = {
     Param($object, $computerName)
     Write-Host ($object | Out-String)

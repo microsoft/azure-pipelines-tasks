@@ -86,7 +86,9 @@ function Invoke-RemoteScript {
 
         [scriptblock] $outputHandler = $defaultOutputHandler,
 
-        [scriptblock] $errorHandler = $defaultErrorHandler
+        [scriptblock] $errorHandler = $defaultErrorHandler,
+
+        [switch] $uploadLogFiles
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter 'targetMachineNames'
     $Global:PSSessionOption = $sessionOption
@@ -115,7 +117,8 @@ function Invoke-RemoteScript {
                                            -targetMachines $targetMachines `
                                            -sessionOption $sessionOption `
                                            -outputHandler $outputHandler `
-                                           -errorHandler $errorHandler
+                                           -errorHandler $errorHandler `
+                                           -uploadLogFiles:$uploadLogFiles
         return $jobResults
     } finally {
         Disconnect-WinRmConnectionToTargetMachines -targetMachines $targetMachines -sessionName $sessionName -sessionOption $sessionOption
