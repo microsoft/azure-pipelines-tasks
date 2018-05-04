@@ -50,13 +50,13 @@ function Publish-Telemetry {
     Param([hashtable[]] $jobResults)
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
     try {
-        $jobId = Get-VstsTaskVariable -Name 'System.JobId'
+        $buildOrReleaseJobId = Get-VstsTaskVariable -Name 'System.JobId'
         foreach($jobResult in $jobResults) {
             $telemetryData = @{
                 "IsAzureVm" = $jobResult.IsAzureVM;
                 "VmUuidHash" = $jobResult.MachineGuidHash;
                 "TelemetryError" = $jobResult.TelemetryError;
-                "JobId" = $jobId
+                "JobId" = $buildOrReleaseJobId;
             }
             $telemetryDataJson = ConvertTo-Json $telemetryData
             $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
