@@ -48,7 +48,8 @@ var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
 var fileToJson = util.fileToJson;
-var createYamlSnippet = util.createYamlSnippet;
+var createYamlSnippetFile = util.createYamlSnippetFile;
+var createMarkdownDocFile = util.createMarkdownDocFile;
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
@@ -123,9 +124,13 @@ target.gendocs = function() {
             var taskDef = fileToJson(taskJsonPath);
             validateTask(taskDef);
 
-            // create YAML snippet
-            var outputFilename = taskName + '.' + taskDef.version.Major + '.yml';
-            createYamlSnippet(taskDef, path.join(docsDir, outputFilename));
+            // create YAML snippet file
+            var yamlOutputFilename = taskName + '.' + taskDef.version.Major + '.yml';
+            createYamlSnippetFile(taskDef, path.join(docsDir, yamlOutputFilename));
+
+            // create Markdown documentation file
+            var mdDocOutputFilename = taskName + '.' + taskDef.version.Major + '.md';
+            createMarkdownDocFile(taskDef, path.join(docsDir, mdDocOutputFilename));
         }
     });
 

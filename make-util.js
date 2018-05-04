@@ -783,14 +783,22 @@ exports.validateTask = validateTask;
 //------------------------------------------------------------------------------
 // Generate docs functions
 //------------------------------------------------------------------------------
-// Outputs a YAML snippet for the task
-var createYamlSnippet = function (taskJson, outFilePath) {
+// Outputs a YAML snippet file for the specified task.
+var createYamlSnippetFile = function (taskJson, outFilePath) {
     var outFile = fs.openSync(outFilePath, 'w');
     var taskYaml = getTaskYaml(taskJson);
     fs.writeSync(outFile, taskYaml);
     fs.closeSync(outFile);
 }
-exports.createYamlSnippet = createYamlSnippet;
+exports.createYamlSnippetFile = createYamlSnippetFile;
+
+var createMarkdownDocFile = function(taskJson, outFilePath) {
+    var outFile = fs.openSync(outFilePath, 'w');
+    var taskMarkdownDoc = getTaskMarkdownDoc(taskJson);
+    fs.writeSync(outFile, taskMarkdownDoc);
+    fs.closeSync(outFile);
+}
+exports.createMarkdownDocFile = createMarkdownDocFile;
 
 // Returns a copy of the specified string with its first letter as a lowercase letter.
 // Example: 'NachoLibre' -> 'nachoLibre'
@@ -836,6 +844,37 @@ var cleanString = function(str) {
     else {
         return str;
     }
+}
+
+var getTaskMarkdownDoc = function(taskJson) {
+    var taskMarkdown = '';
+
+    taskMarkdown += '# ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
+    taskMarkdown += '![](_img/REPLACE_ME.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
+
+    taskMarkdown += '## Arguments' + os.EOL + os.EOL;
+    taskMarkdown += '<table><thead><tr><th>Argument</th><th>Description</th></tr></thead>' + os.EOL;
+    taskJson.inputs.forEach(function(input) {
+        var requiredOrNot = input.required ? 'Required' : 'Optional';
+        var label = cleanString(input.label);
+        var description = cleanString(input.helpMarkDown);
+        taskMarkdown += '<tr><td>' + label + '</td><td>(' + requiredOrNot + ') ' + description + '</td></tr>' + os.EOL;
+    });
+    taskMarkdown += '[!INCLUDE [temp](../_shared/control-options-arguments.md)]' + os.EOL;
+    taskMarkdown += '</table>' + os.EOL + os.EOL;
+
+    taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
+    taskMarkdown += '```YAML' + os.EOL;
+    taskMarkdown += getTaskYaml(taskJson);
+    taskMarkdown += '```' + os.EOL + os.EOL;
+    taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
+
+    taskMarkdown += '## Q&A' + os.EOL + os.EOL;
+    taskMarkdown += '<!-- BEGINSECTION class="md-qanda" -->' + os.EOL + os.EOL;
+    taskMarkdown += '<!-- ENDSECTION -->' + os.EOL;
+
+    return taskMarkdown;
 }
 
 var getTaskYaml = function(taskJson) {
