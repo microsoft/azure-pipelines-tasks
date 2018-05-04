@@ -29,7 +29,7 @@ try {
         $credential = $null
     }
 
-    $input_Protocol = Get-VstsInput -Name "Protocol" -Require -ErrorAction "Stop"
+    $input_Protocol = Get-VstsInput -Name "CommunicationProtocol" -Require -ErrorAction "Stop"
     $input_NewPsSessionOptionArguments = Get-VstsInput -Name "NewPsSessionOptionArguments"
     $input_RunPowershellInParallel = Get-VstsInput -Name "RunPowershellInParallel" -AsBool
     $input_sessionConfigurationName = 'microsoft.powershell'

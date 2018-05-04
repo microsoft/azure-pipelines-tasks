@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 88
+    "Patch": 91
   },
   "preview": true,
   "groups": [
@@ -134,15 +134,15 @@
       "groupName": "ScriptOptions"
     },
     {
-      "name": "Protocol",
+      "name": "CommunicationProtocol",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.Protocol",
+      "label": "ms-resource:loc.input.label.CommunicationProtocol",
+      "defaultValue": "Https",
       "options": {
         "Http": "HTTP",
         "Https": "HTTPS"
       },
-      "defaultValue": "Https",
-      "helpMarkDown": "ms-resource:loc.input.help.Protocol",
+      "helpMarkDown": "ms-resource:loc.input.help.CommunicationProtocol",
       "groupName": "SessionOptions"
     },
     {
