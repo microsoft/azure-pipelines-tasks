@@ -18,7 +18,6 @@ phases:
       architecture: 'x64'
 
   - script: |
-      python --version
       python - << 'END_DETECT'
       import itertools, os
 
