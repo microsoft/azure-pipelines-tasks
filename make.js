@@ -126,11 +126,11 @@ target.gendocs = function() {
 
             // create YAML snippet file
             var yamlOutputFilename = taskName + '.' + taskDef.version.Major + '.yml';
-            createYamlSnippetFile(taskDef, path.join(docsDir, yamlOutputFilename));
+            createYamlSnippetFile(taskDef, docsDir, yamlOutputFilename);
 
             // create Markdown documentation file
             var mdDocOutputFilename = taskName + '.' + taskDef.version.Major + '.md';
-            createMarkdownDocFile(taskDef, path.join(docsDir, mdDocOutputFilename));
+            createMarkdownDocFile(taskDef, taskJsonPath, docsDir, mdDocOutputFilename);
         }
     });
 

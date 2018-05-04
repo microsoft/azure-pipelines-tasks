@@ -784,12 +784,26 @@ exports.validateTask = validateTask;
 // Generate docs functions
 //------------------------------------------------------------------------------
 // Outputs a YAML snippet file for the specified task.
-var createYamlSnippetFile = function (taskJson, outFilePath) {
+var createYamlSnippetFile = function (taskJson, docsDir, yamlOutputFilename) {
+    var outFilePath = path.join(docsDir, yamlOutputFilename);
     fs.writeFileSync(outFilePath, getTaskYaml(taskJson));
 }
 exports.createYamlSnippetFile = createYamlSnippetFile;
 
-var createMarkdownDocFile = function(taskJson, outFilePath) {
+var createMarkdownDocFile = function(taskJson, taskJsonPath, docsDir, mdDocOutputFilename) {
+    var outFilePath = path.join(docsDir, taskJson.category.toLowerCase(), mdDocOutputFilename);
+    if (!test('-e', path.dirname(outFilePath))) {
+        fs.mkdirSync(path.dirname(outFilePath));
+        fs.mkdirSync(path.join(path.dirname(outFilePath), '_img'));
+    }
+    //console.log("outFilePath: " + outFilePath);
+    var iconPath = path.join(path.dirname(taskJsonPath), 'icon.png');
+    //console.log("iconPath: " + iconPath);
+    if (test('-f', iconPath)) {
+        var docIconPath = path.join(path.dirname(outFilePath), '_img', cleanString(taskJson.name).toLowerCase() + '.png');
+        //console.log("docIconPath: " + docIconPath);
+        fs.copyFileSync(iconPath, docIconPath);
+    }
     fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson));
 }
 exports.createMarkdownDocFile = createMarkdownDocFile;
@@ -859,7 +873,7 @@ var getTaskMarkdownDoc = function(taskJson) {
     taskMarkdown += '---' + os.EOL + os.EOL;
 
     taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
-    taskMarkdown += '![](_img/REPLACE_ME.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
+    taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
 
     taskMarkdown += '## Arguments' + os.EOL + os.EOL;
     taskMarkdown += '<table><thead><tr><th>Argument</th><th>Description</th></tr></thead>' + os.EOL;
