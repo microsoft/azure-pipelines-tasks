@@ -785,18 +785,12 @@ exports.validateTask = validateTask;
 //------------------------------------------------------------------------------
 // Outputs a YAML snippet file for the specified task.
 var createYamlSnippetFile = function (taskJson, outFilePath) {
-    var outFile = fs.openSync(outFilePath, 'w');
-    var taskYaml = getTaskYaml(taskJson);
-    fs.writeSync(outFile, taskYaml);
-    fs.closeSync(outFile);
+    fs.writeFileSync(outFilePath, getTaskYaml(taskJson));
 }
 exports.createYamlSnippetFile = createYamlSnippetFile;
 
 var createMarkdownDocFile = function(taskJson, outFilePath) {
-    var outFile = fs.openSync(outFilePath, 'w');
-    var taskMarkdownDoc = getTaskMarkdownDoc(taskJson);
-    fs.writeSync(outFile, taskMarkdownDoc);
-    fs.closeSync(outFile);
+    fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson));
 }
 exports.createMarkdownDocFile = createMarkdownDocFile;
 
@@ -855,11 +849,12 @@ var getTaskMarkdownDoc = function(taskJson) {
     taskMarkdown += 'ms.topic: reference' + os.EOL;
     taskMarkdown += 'ms.prod: devops' + os.EOL;
     taskMarkdown += 'ms.technology: devops-cicd' + os.EOL;
-    taskMarkdown += 'ms.assetid: REPLACE_ME_WITH_A_GUID' + os.EOL;
-    taskMarkdown += 'ms.manager: REPLACE_ME' + os.EOL;
-    taskMarkdown += 'ms.author: REPLACE_ME' + os.EOL;
-    taskMarkdown += 'author: REPLACE_ME' + os.EOL;
-    taskMarkdown += 'ms.date: 08/10/2016' + os.EOL;
+    taskMarkdown += 'ms.assetid: ' + taskJson.id + os.EOL;
+    taskMarkdown += 'ms.manager: ' + os.userInfo().username + os.EOL;
+    taskMarkdown += 'ms.author: ' + os.userInfo().username + os.EOL;
+    taskMarkdown += 'ms.date: ' +
+                    new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()) +
+                    os.EOL;
     taskMarkdown += 'monikerRange: \'VSTS\'' + os.EOL;
     taskMarkdown += '---' + os.EOL + os.EOL;
 
@@ -874,6 +869,7 @@ var getTaskMarkdownDoc = function(taskJson) {
         var description = input.helpMarkDown; // Do not clean white space from descriptions
         taskMarkdown += '<tr><td>' + label + '</td><td>(' + requiredOrNot + ') ' + description + '</td></tr>' + os.EOL;
     });
+    
     taskMarkdown += '[!INCLUDE [temp](../_shared/control-options-arguments.md)]' + os.EOL;
     taskMarkdown += '</table>' + os.EOL + os.EOL;
 
