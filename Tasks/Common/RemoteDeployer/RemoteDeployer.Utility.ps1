@@ -46,6 +46,29 @@ function Get-TargetMachines {
     }
 }
 
+function Publish-Telemetry {
+    Param([hashtable[]] $jobResults)
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
+    try {
+        $jobId = Get-VstsTaskVariable -Name 'System.JobId'
+        foreach($jobResult in $jobResults) {
+            $telemetryData = @{
+                "IsAzureVm" = $jobResult.IsAzureVM;
+                "VmUuidHash" = $jobResult.MachineGuidHash;
+                "TelemetryError" = $jobResult.TelemetryError;
+                "JobId" = $jobId
+            }
+            $telemetryDataJson = ConvertTo-Json $telemetryData
+            $telemetry = "##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$telemetryDataJson"
+            Write-Host $telemetry
+        }
+    } catch {
+        Write-Verbose "Unable to publish telemetry data. Error: $($_.Exception.Message)"
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
 $defaultErrorHandler = {
     Param($object, $computerName)
     Write-Host ($object | Out-String)

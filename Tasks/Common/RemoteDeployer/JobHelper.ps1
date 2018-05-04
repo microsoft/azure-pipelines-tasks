@@ -43,6 +43,9 @@ function Run-RemoteScriptJobs {
                                      -sessionOption $sessionOption `
                                      -outputHandler $outputHandler `
                                      -errorHandler $errorHandler
+        if(($jobResults -ne $null) -and ($jobResults.Count -gt 0)) {
+            Publish-Telemetry -jobResults $jobResults
+        }
         Set-TaskResult -jobResults $jobResults -machinesCount $totalTargetMachinesCount
         return $jobResults
     } finally {
