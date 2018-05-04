@@ -39,7 +39,7 @@ function Get-TargetMachines {
             Write-Verbose "UseSSL = $($targetMachine.UseSsl)"
             $targetMachines += $targetMachine
         }
-        Write-Verbose "Total target machines are: $($targetMachines.Count)"
+        Write-Verbose "Total target machines are: $($targetMachines.Length)"
         return $targetMachines
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
@@ -101,6 +101,52 @@ function Upload-TargetMachineLogs {
         }
     }
     Trace-VstsLeavingInvocation $MyInvocation
+}
+
+function Set-TaskResult {
+    [CmdletBinding()]
+    param (
+        [hashtable[]] $jobResults,
+        [int] $machinesCount
+    )
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
+    try {
+        $errCodes = @()
+        $failed = $false
+        if(($jobResults -eq $null) -or ($jobResults.Length -ne $machinesCount)) {
+            $failed = $true
+            Write-Error (Get-VstsLocString -Key "RemoteDeployer_UnableToGetRemoteJobResults")
+            $errCodes += "RemoteDeployer_UnableToGetRemoteJobResults"
+        }
+        ForEach($jobResult in $jobResults) {
+            if ($jobResult.Status -eq "Failed") {
+                $failed = $true
+                Write-Error (Get-VstsLocString -Key "RemoteDeployer_ScriptJobFailed" -ArgumentList $jobResult.ComputerName, $jobResult.Message)
+                $errCodes += "RemoteDeployer_ScriptJobFailed"
+            } elseif ($jobResult.Status -eq "Passed") {
+                Write-Verbose "Remote script execution completed for machine: $($jobResult.ComputerName)"
+                if($jobResult.ExitCode -ne 0) {
+                    $failed = $true
+                    Write-Error (Get-VstsLocString -Key "RemoteDeployer_NonZeroExitCode" -ArgumentList $jobResult.ComputerName, $jobResult.ExitCode)
+                    $errCodes += "RemoteDeployer_NonZeroExitCode"
+                } else {
+                    Write-Host $(Get-VstsLocString -Key "RemoteDeployer_ScriptExecutionSucceeded" -ArgumentList $($jobResult.ComputerName))
+                }
+            } else {
+                $failed = $true
+                Write-Error (Get-VstsLocString -Key "RemoteDeployer_UnknownStatus" -ArgumentList $jobResult.Status)
+                $errCodes += "RemoteDeployer_UnknownStatus"
+            }
+        }
+        if(!$failed) {
+            Write-VstsSetResult -Result 'Succeeded'
+        } else {
+            $errMessage = $errCodes -join ','
+            throw (Get-VstsLocString -Key "RemoteDeployer_JobResultEvaluationFailure" -ArgumentList $errMessage)
+        }
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
 }
 
 $defaultErrorHandler = {

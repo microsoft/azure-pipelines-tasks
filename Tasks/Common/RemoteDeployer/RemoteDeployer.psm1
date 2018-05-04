@@ -91,7 +91,7 @@ function Invoke-RemoteScript {
         [switch] $uploadLogFiles
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter 'targetMachineNames'
-    $Global:PSSessionOption = $sessionOption
+    $PSSessionOption = $sessionOption
     try {
         $sessions = @()
         $useSsl = ($protocol -eq 'https')
@@ -110,6 +110,11 @@ function Invoke-RemoteScript {
                                                             -sessionConfigurationName $targetMachine.sessionConfigurationName `
                                                             -useSsl:($targetMachine.UseSsl)
         }
+
+        if($uploadLogFiles -eq $true) {
+            $tempLogsFolder = Get-TemporaryLogsFolder
+        }
+
         $jobResults = Run-RemoteScriptJobs -sessions $sessions `
                                            -script $ExecutePsScript `
                                            -sessionName $sessionName `
@@ -118,7 +123,17 @@ function Invoke-RemoteScript {
                                            -sessionOption $sessionOption `
                                            -outputHandler $outputHandler `
                                            -errorHandler $errorHandler `
-                                           -uploadLogFiles:$uploadLogFiles
+                                           -logsFolder $tempLogsFolder
+
+        if(($jobResults -ne $null) -and ($jobResults.Length -gt 0)) {
+            Publish-Telemetry -jobResults $jobResults
+        }
+        
+        if(![string]::IsNullOrEmpty($tempLogsFolder)) {
+            Upload-TargetMachineLogs -logsFolder $tempLogsFolder
+        }
+
+        Set-TaskResult -jobResults $jobResults -machinesCount $targetMachines.Length
         return $jobResults
     } finally {
         Disconnect-WinRmConnectionToTargetMachines -targetMachines $targetMachines -sessionName $sessionName -sessionOption $sessionOption
