@@ -58,15 +58,15 @@ try {
                                           -uploadLogFiles
     } else {
         foreach($targetMachineName in $targetMachineNames) {
-            $jobResults += Invoke-RemoteScript -targetMachineNames @($targetMachineName) `
-                                -credential $credential `
-                                -protocol $input_Protocol `
-                                -authentication $input_AuthenticationMechanism `
-                                -sessionName $sessionName `
-                                -sessionConfigurationName $input_sessionConfigurationName `
-                                -remoteScriptJobArguments $remoteScriptJobArguments `
-                                -sessionOption $sessionOption `
-                                -uploadLogFiles
+            $jobResults += Invoke-RemoteScript  -targetMachineNames @($targetMachineName) `
+                                                -credential $credential `
+                                                -protocol $input_Protocol `
+                                                -authentication $input_AuthenticationMechanism `
+                                                -sessionName $sessionName `
+                                                -sessionConfigurationName $input_sessionConfigurationName `
+                                                -remoteScriptJobArguments $remoteScriptJobArguments `
+                                                -sessionOption $sessionOption `
+                                                -uploadLogFiles
         }
     }
 } catch {
