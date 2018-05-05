@@ -60,6 +60,7 @@ function Publish-Telemetry {
             }
             $telemetryDataJson = ConvertTo-Json $telemetryData
             $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
+            Write-Verbose "Telemetry Data is: $telemetryDataJson"
             $telemetry = "##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$telemetryDataJson"
             Write-Host $telemetry
         }
