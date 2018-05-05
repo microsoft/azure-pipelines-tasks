@@ -21,6 +21,7 @@ function Get-TargetMachines {
                 UseSsl = $useSsl
             }
         
+            # if port if provided with machine name, use it, else default it based on protocol
             $computerName, $port = $targetMachineName.Split(':');
             if([string]::IsNullOrEmpty($port)) {
                 if($useSsl) {
@@ -55,6 +56,7 @@ function Publish-Telemetry {
             $telemetryData = @{
                 "IsAzureVm" = $jobResult.IsAzureVM;
                 "VmUuidHash" = $jobResult.MachineGuidHash;
+                # field name 'TelemetryError' is misleading here. TelemetryError is only the type of the Telemetry exception.
                 "TelemetryError" = $jobResult.TelemetryError;
                 "JobId" = $buildOrReleaseJobId;
             }

@@ -130,6 +130,8 @@ function Get-JobResults {
                                     Write-Verbose $_.ToString();
                                 }
                             } else {
+                                # Ensure that output and error handlers do not write anything to stream and
+                                # task does not fail due to an exception from them
                                 if($_ -is [System.Management.Automation.ErrorRecord]) {
                                     $errorRecord = $_
                                     $null = & { try { & $errorHandler $errorRecord $($job.Location) } catch { Write-Host "ErrorHandlerException: $($_.Exception.ToString())" } }
@@ -137,6 +139,7 @@ function Get-JobResults {
                                     $outputObject = $_
                                     $null = & { try { & $outputHandler $outputObject $($job.Location) } catch { Write-Host "OutputHandlerException: $($_.Exception.ToString())" } }
                                 }
+                                # write logs for each targetmachine
                                 if(![string]::IsNullOrEmpty($logsFolder)) {
                                     $fileName = "$logsFolder\$computerName.log"
                                     try {

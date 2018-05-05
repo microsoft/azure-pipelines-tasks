@@ -10,8 +10,8 @@ function Parse-TargetMachineNames {
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        # Any verification on the pattern of the target machine name should be done here.
         $targetMachineNames = $machineNames.ToLowerInvariant().Split($separator) |
+        # multiple connections to the same machine are filtered here
             Select-Object -Unique |
                 ForEach-Object {
                     if (![string]::IsNullOrEmpty($_)) {
@@ -160,6 +160,7 @@ function Get-RemoteScriptJobArguments {
             $input_initializationScriptPath = Get-VstsInput -Name "InitializationScript"
             $input_sessionVariables = Get-VstsInput -Name "SessionVariables"
             $sessionVariables = ConvertTo-HashTable -tokenSequence $input_sessionVariables
+            # sessionVariables is a newline separated list of set-item commands which are executed right before the target script.
             $newVarCmds = @()
             foreach ($key in $sessionVariables.Keys) {
                 $newVarCmds += "Set-Item -LiteralPath variable:\$key -Value '$($sessionVariables[$key])'"

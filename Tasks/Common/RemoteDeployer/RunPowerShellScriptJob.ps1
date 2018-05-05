@@ -49,6 +49,7 @@ $ExecutePsScript = {
 
     function Get-MachineGuidHash {
         $machineGuidHash = ""
+        # How to uniquely identify an azure vm: https://azure.microsoft.com/en-in/blog/accessing-and-using-azure-vm-unique-id/
         $machineGuid = (Get-WmiObject -class Win32_ComputerSystemProduct -namespace "root\CIMv2" -ErrorAction "Stop").UUID
         $sha512 = New-Object -TypeName System.Security.Cryptography.SHA512CryptoServiceProvider
         $hash = $sha512.ComputeHash([System.Text.Encoding]::ASCII.GetBytes($machineGuid))

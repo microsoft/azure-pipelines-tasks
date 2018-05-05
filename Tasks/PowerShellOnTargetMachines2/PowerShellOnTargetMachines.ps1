@@ -1,9 +1,5 @@
 Trace-VstsEnteringInvocation $MyInvocation
 $global:ErrorActionPreference = 'Continue'
-
-# Undocumented VstsTaskSdk variable so Verbose/Debug isn't converted to ##vso[task.debug].
-# Otherwise any content the ad-hoc script writes to the verbose pipeline gets dropped by
-# the agent when System.Debug is not set.
 $global:__vstsNoOverrideVerbose = $true
 
 try {
@@ -17,8 +13,10 @@ try {
     $input_AuthenticationMechanism = Get-VstsInput -Name "AuthenticationMechanism" -Require -ErrorAction 'Stop'
 
     if ($input_AuthenticationMechanism.ToLowerInvariant() -eq "default") {
+        # It is not mandatory that a credential be provided in case of default auth
         $input_UserName = Get-VstsInput -Name "UserName"
     } elseif ($input_AuthenticationMechanism.ToLowerInvariant() -eq "credssp") {
+        # But for credssp, credentials are mandatory ( -ErrorAction 'Stop' )
         $input_UserName = Get-VstsInput -Name "UserName" -Require -ErrorAction 'Stop'
     }
 
@@ -32,6 +30,7 @@ try {
     $input_Protocol = Get-VstsInput -Name "CommunicationProtocol" -Require -ErrorAction "Stop"
     $input_NewPsSessionOptionArguments = Get-VstsInput -Name "NewPsSessionOptionArguments"
     $input_RunPowershellInParallel = Get-VstsInput -Name "RunPowershellInParallel" -AsBool
+    # connecting to a specific powershell configuration can be supported here eg. 'microsoft.powershell32' for a 32 bit session etc.
     $input_sessionConfigurationName = 'microsoft.powershell'
 
     if([string]::IsNullOrEmpty($input_sessionConfigurationName)) {
@@ -43,6 +42,7 @@ try {
     $sessionOption = Get-NewPSSessionOption -arguments $input_NewPsSessionOptionArguments
 
     $remoteScriptJobArguments = Get-RemoteScriptJobArguments
+    # sessionname should be unique in order to support reconnection effectively
     $sessionName = [Guid]::NewGuid().ToString();
 
     $jobResults = @()
