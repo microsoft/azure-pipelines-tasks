@@ -50,7 +50,7 @@ $ExecutePsScript = {
     function Get-MachineGuidHash {
         $machineGuidHash = ""
         $machineGuid = (Get-WmiObject -class Win32_ComputerSystemProduct -namespace "root\CIMv2" -ErrorAction "Stop").UUID
-        $sha512 = [System.Security.Cryptography.SHA512CryptoServiceProvider]::new()
+        $sha512 = New-Object -TypeName System.Security.Cryptography.SHA512CryptoServiceProvider
         $hash = $sha512.ComputeHash([System.Text.Encoding]::ASCII.GetBytes($machineGuid))
         $machineGuidHash = [System.BitConverter]::ToString($hash).Replace("-", [string]::Empty)
         Write-Verbose "Calculated Machine Guid Hash is: '$machineGuidHash'"
