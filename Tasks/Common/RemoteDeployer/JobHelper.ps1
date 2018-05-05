@@ -60,6 +60,8 @@ function Get-ScriptArguments {
                 $scriptArgumentsByName[$key] = $defaultScriptArgumentsValues[$key]
             }
         }
+        # scriptArguments should be an array with each element being assigned in the
+        # exact order of params that is accepted by RunPowerShellScriptJob
         $scriptArguments = @(
             $scriptArgumentsByName.scriptPath,
             $scriptArgumentsByName.scriptArguments,
