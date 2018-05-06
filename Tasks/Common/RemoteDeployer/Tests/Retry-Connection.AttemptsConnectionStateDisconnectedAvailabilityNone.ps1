@@ -23,8 +23,8 @@ $tms = @(
         Credential = $null
     }
 )
-Register-Mock Get-PSSession { @{ state = 'disconnected'; availability = 'none'} };
+Register-Mock Get-RemoteConnection { @{ state = 'disconnected'; availability = 'none'} };
 Register-Mock Receive-PSSession { @{ ChildJobs = @( @{ Id = 7 } ) } }
 $rv = & $module Retry-Connection $tms 'computer1' 'session1'
 Assert-WasCalled Receive-PSSession -Times 1
-Assert-AreEqual $rv 7
+Assert-AreEqual $rv 7   
