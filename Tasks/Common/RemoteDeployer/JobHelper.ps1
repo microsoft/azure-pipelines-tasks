@@ -93,7 +93,6 @@ function Get-JobResults {
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
     try {
         $jobResults = @()
-        $isRemoteExecutionFinished = $false
         $remoteExecutionStatusByLocation = @{}
         $connectionAttemptsByLocation = @{}
         foreach($jobInfo in $jobsInfo) {
@@ -101,7 +100,7 @@ function Get-JobResults {
             $connectionAttemptsByLocation[$jobInfo.Location] = 0
         }
 
-        while(!$isRemoteExecutionFinished) {
+        while($true) {
             foreach($jobInfo in $jobsInfo) {
                 $jobId = $jobInfo.Id
                 $computerName = $jobInfo.Location
@@ -176,18 +175,10 @@ function Get-JobResults {
                     }
                 }
             }
-
-            $isRemoteExecutionFinished = $true
-            foreach($value in $remoteExecutionStatusByLocation.Values) {
-                if($value -eq "Unknown") {
-                    $isRemoteExecutionFinished = $false
-                    break;
-                }
+            if($($remoteExecutionStatusByLocation.Values | ? { $_ -eq "Unknown" }).Count -eq 0) {
+                break;
             }
-
-            if($isRemoteExecutionFinished -eq $false) {
-                Start-Sleep -Seconds 30
-            }
+            Start-Sleep -Seconds 30
         }
         return $jobResults
     } finally {
