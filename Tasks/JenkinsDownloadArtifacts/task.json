@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 134,
+        "Minor": 135,
         "Patch": 0
     },
     "groups": [
@@ -293,7 +293,7 @@
         "UploadingAttachment": "Uploading %s as attachment",
         "SuccessfullyUploadedCommitsAttachment": "Successfully uploaded commits attachment",
         "GetCommitMessages": "Getting commit messages from commits",
-        "GetCommitMessagesFailed": "Getting commits message failed with an error %s",
+        "GetCommitMessagesFailed": "Getting commits message failed with an error %s. \nCommits: %s",
         "CouldNotWriteToFile": "Could not save content to file. Failed with an error %s",
         "DownloadingWorkItemsFromSingleBuild": "Downloading workitems associated with the build %s",
         "WritingWorkItemsTo": "Writing workitems to %s",
