@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Conda Environment",
-  "loc.helpMarkDown": "",
+  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=873466)",
   "loc.description": "Create and activate a Conda environment.",
   "loc.instanceNameFormat": "Conda Environment $(environmentName)",
   "loc.group.displayName.advanced": "Advanced",
