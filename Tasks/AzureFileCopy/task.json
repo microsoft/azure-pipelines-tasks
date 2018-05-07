@@ -15,9 +15,11 @@
         "Minor": 0,
         "Patch": 0
     },
+    "preview": true,
     "demands": [
         "azureps"
     ],
+    "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp; Using newer version of AzCopy.",
     "minimumAgentVersion": "1.103.0",
     "groups": [
         {
@@ -200,12 +202,21 @@
             "visibleRule": "Destination = AzureVMs"
         },
         {
-            "name": "AdditionalArguments",
+            "name": "AdditionalArgumentsForBlobCopy",
             "type": "multiLine",
-            "label": "Additional Arguments",
+            "label": "Optional Arguments (for uploading files to blob)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Additional AzCopy.exe arguments that will be applied when uploading to blob or uploading to VM like, /NC:10."
+            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when uploading to blob like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /SetContentType, /Z,<br> /S (only if container name is not $root),<br> /BlobType:page (only if specified storage account is a premium account)"
+        },
+        {
+            "name": "AdditionalArgumentsForVMCopy",
+            "type": "multiLine",
+            "label": "Optional Arguments (for downloading files to VM)",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when downloading to VM like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /S, /Z",
+            "visibleRule": "Destination = AzureVMs"
         },
         {
             "name": "enableCopyPrerequisites",

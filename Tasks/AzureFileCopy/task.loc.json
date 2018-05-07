@@ -15,9 +15,11 @@
     "Minor": 0,
     "Patch": 0
   },
+  "preview": true,
   "demands": [
     "azureps"
   ],
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "1.103.0",
   "groups": [
     {
@@ -214,12 +216,21 @@
       "visibleRule": "Destination = AzureVMs"
     },
     {
-      "name": "AdditionalArguments",
+      "name": "AdditionalArgumentsForBlobCopy",
       "type": "multiLine",
-      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "label": "ms-resource:loc.input.label.AdditionalArgumentsForBlobCopy",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsForBlobCopy"
+    },
+    {
+      "name": "AdditionalArgumentsForVMCopy",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArgumentsForVMCopy",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsForVMCopy",
+      "visibleRule": "Destination = AzureVMs"
     },
     {
       "name": "enableCopyPrerequisites",

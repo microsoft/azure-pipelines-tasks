@@ -243,19 +243,12 @@ function Upload-FilesToAzureContainer
     try
     {
         Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
-        
-        $sourcePath = $sourcePath.Trim('"')
-        $storageAccountName = $storageAccountName.Trim()
+
         $blobPrefix = $blobPrefix.Trim()
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /DestKey:`"$storageKey`" /XO /Y /SetContentType /Z:`"$azCopyLocation`" $additionalArguments"
-
-        if ($containerName -ne "`$root")
-        {
-            $uploadToBlobCommand += " /S"
-        }
+        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /DestKey:`"$storageKey`" $additionalArguments"
 
         Invoke-Expression $uploadToBlobCommand
         Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
@@ -1082,7 +1075,12 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
             $azCopyExeLocation = Join-Path -Path $azCopyDestinationPath -ChildPath "AzCopy.exe"
 
-            $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" /Z:`"$azCopyDestinationPath`" /S /Y $additionalArguments"
+            if($additionalArguments -eq "")
+            {
+                $additionalArguments = "/Z:`"$azCopyDestinationPath`" /S /Y"
+            }
+
+            $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
             Invoke-Expression $azCopyCommand
         }
         finally
@@ -1375,7 +1373,8 @@ function Add-AzureVMCustomScriptExtension
 function Check-ContainerNameAndArgs
 {
     param([string]$containerName,
-          [string]$additionalArguments)
+          [string]$additionalArguments,
+          [bool]$useDefaultArgumentsForBlob)
     
     $additionalArguments = ' ' + $additionalArguments + ' '
     if($containerName -eq '$root' -and $additionalArguments -like '* /S *')

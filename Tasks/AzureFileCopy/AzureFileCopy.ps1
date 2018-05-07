@@ -20,7 +20,8 @@ $machineNames = Get-VstsInput -Name MachineNames
 $vmsAdminUserName = Get-VstsInput -Name VmsAdminUsername
 $vmsAdminPassword = Get-VstsInput -Name VmsAdminPassword
 $targetPath = Get-VstsInput -Name TargetPath
-$additionalArguments = Get-VstsInput -Name AdditionalArguments
+$additionalArgumentsForBlobCopy = Get-VstsInput -Name AdditionalArgumentsForBlobCopy
+$additionalArgumentsForVMCopy = Get-VstsInput -Name AdditionalArgumentsForVMCopy
 $cleanTargetBeforeCopy = Get-VstsInput -Name CleanTargetBeforeCopy -AsBool
 $copyFilesInParallel = Get-VstsInput -Name CopyFilesInParallel -AsBool
 $skipCACheck = Get-VstsInput -Name SkipCACheck -AsBool
@@ -55,6 +56,17 @@ $containerName = $containerName.Trim().ToLower()
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
 $azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
+# Set additional arguments for blob copy
+$useDefaultArgumentsForBlob = $false
+$additionalArgumentsForBlobCopy = $additionalArgumentsForBlobCopy.Trim()
+$additionalArgumentsForVMCopy = $additionalArgumentsForVMCopy.Trim()
+
+if ($additionalArgumentsForBlobCopy -eq "")
+{
+    $additionalArgumentsForBlobCopy = "/XO /Y /SetContentType /Z:`"$azCopyLocation`""
+    $useDefaultArgumentsForBlob = $true
+}
+
 # Import RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
@@ -64,9 +76,6 @@ Initialize-Azure
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
-
-# Import all the dlls and modules which have cmdlets we need
-Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
 
 # Load all dependent files for execution
 . "$PSScriptRoot\Utility.ps1"
@@ -122,21 +131,24 @@ catch
     throw
 }
 
-if($isPremiumStorage -and $additionalArguments -notLike "*/BlobType:page*")
+# Add more arguments if required
+if($isPremiumStorage -and $useDefaultArgumentsForBlob)
 {
     Write-Verbose "Setting BlobType to page for Premium Storage account."
-    $uploadAdditionalArguments = $additionalArguments + " /BlobType:page"
-}
-else
-{
-    $uploadAdditionalArguments = $additionalArguments
+    $additionalArgumentsForBlobCopy += " /BlobType:page"
 }
 
-Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArguments
+if(($containerName -ne '$root') -and $useDefaultArgumentsForBlob)
+{
+    Write-Verbose "Adding argument for recursive copy"
+    $additionalArgumentsForBlobCopy += " /S"
+}
+
+Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
 
 # Uploading files to container
 Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -blobStorageEndpoint $blobStorageEndpoint -storageKey $storageKey `
-                             -azCopyLocation $azCopyLocation -additionalArguments $uploadAdditionalArguments -destinationType $destination
+                             -azCopyLocation $azCopyLocation -additionalArguments $additionalArgumentsForBlobCopy -destinationType $destination
 
 # Complete the task if destination is azure blob
 if ($destination -eq "AzureBlob")
@@ -191,7 +203,7 @@ try
                                              -targetPath $targetPath `
                                              -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
                                              -copyFilesInParallel $copyFilesInParallel `
-                                             -additionalArguments $additionalArguments `
+                                             -additionalArguments $additionalArgumentsForVMCopy `
                                              -azCopyToolLocation $azCopyLocation
 
     Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
