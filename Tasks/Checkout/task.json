@@ -1,0 +1,40 @@
+{
+	"id" : "c61807ba-5e20-4b70-bd8c-3683c9f74003",
+	"name" : "checkout",
+	"friendlyName" : "Get Source",
+	"description" : "Get Source",
+	"helpMarkDown" : "",
+	"category" : "Utility",
+	"visibility" : ["Build", "Release"],
+	"runsOn" : ["Agent", "DeploymentGroup"],
+	"author" : "Microsoft Corporation",
+	"version" : {
+		"Major" : 1,
+		"Minor" : 0,
+		"Patch" : 1
+	},
+	"inputs" : [{
+			"name" : "repository",
+			"type" : "string",
+			"label" : "Repository",
+			"required" : true,
+			"defaultValue" : "self",
+		}, {
+			"name" : "clean",
+			"type" : "boolean",
+			"label" : "Clean",
+			"defaultValue" : "true",
+			"required" : false,
+		}
+	],
+	"execution" : {
+		"AgentPlugin" : {
+			"target" : "Agent.Plugins.Repository.CheckoutTask, Agent.Plugins"
+		}
+	},
+	"postjobexecution" : {
+		"AgentPlugin" : {
+			"target" : "Agent.Plugins.Repository.CleanupTask, Agent.Plugins"
+		}
+	}
+}
