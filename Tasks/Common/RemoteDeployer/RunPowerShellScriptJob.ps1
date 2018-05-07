@@ -82,11 +82,11 @@ $ExecutePsScript = {
         }
 
         if([string]::IsNullOrEmpty($scriptPath) -or !(Test-Path -Path $scriptPath -PathType Leaf)) {
-            throw "FileNotFound: $scriptPath"
+            throw "FileNotFound (TargetScript): $scriptPath"
         }
 
         if(![string]::IsNullOrEmpty($initializationScriptPath) -and !(Test-Path -LiteralPath $initializationScriptPath -PathType Leaf)) {
-            throw [System.IO.FileNotFoundException]::New($initializationScriptPath);
+            throw "FileNotFound (InitializationScript): $initializationScriptPath"
         }
 
         $script = [scriptblock]::Create("

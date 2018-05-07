@@ -99,7 +99,7 @@ function ConvertTo-HashTable {
                         throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList $($token.Value), $currentKey)
                     }
                     $currentKey = $token.Value.Trim('$')
-                    Write-Verbose "Adding Key:'$currentKey' Value:''"
+                    Write-Verbose "Adding Key:'$currentKey'"
                     $result.Add($currentKey, [string]::Empty)
                 } elseif (!$token.Value.StartsWith('$') -and ![string]::IsNullOrEmpty($currentKey)) {
                     Write-Verbose "Setting Key:'$currentKey' Value:'$($token.Value)'"
