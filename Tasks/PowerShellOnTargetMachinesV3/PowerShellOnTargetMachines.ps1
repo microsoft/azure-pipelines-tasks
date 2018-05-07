@@ -42,8 +42,6 @@ try {
     $sessionOption = Get-NewPSSessionOption -arguments $input_NewPsSessionOptionArguments
 
     $remoteScriptJobArguments = Get-RemoteScriptJobArguments
-    # sessionname should be unique in order to support reconnection effectively
-    $sessionName = [Guid]::NewGuid().ToString();
 
     $jobResults = @()
     if($input_RunPowershellInParallel -eq $true) {
@@ -51,7 +49,6 @@ try {
                                           -credential $credential `
                                           -protocol $input_Protocol `
                                           -authentication $input_AuthenticationMechanism `
-                                          -sessionName $sessionName `
                                           -sessionConfigurationName $input_sessionConfigurationName `
                                           -remoteScriptJobArguments $remoteScriptJobArguments `
                                           -sessionOption $sessionOption `
@@ -62,7 +59,6 @@ try {
                                                 -credential $credential `
                                                 -protocol $input_Protocol `
                                                 -authentication $input_AuthenticationMechanism `
-                                                -sessionName $sessionName `
                                                 -sessionConfigurationName $input_sessionConfigurationName `
                                                 -remoteScriptJobArguments $remoteScriptJobArguments `
                                                 -sessionOption $sessionOption `
