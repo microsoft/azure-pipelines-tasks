@@ -142,11 +142,13 @@ function Get-JobResults {
                                 }
                                 # write logs for each targetmachine
                                 if(![string]::IsNullOrEmpty($logsFolder)) {
-                                    $fileName = "$logsFolder\$computerName.log"
-                                    try {
-                                        Add-Content -LiteralPath $fileName -Value $($_ | Out-String) -Encoding UTF8 -ErrorAction 'Stop'
-                                    } catch {
-                                        Write-Verbose "Unable to add content to file: $fileName. Error: $($_.Exception.Message)"
+                                    if(!(($_ -is [string]) -and $_.StartsWith('##vso'))) {
+                                        $fileName = "$logsFolder\$computerName.log"
+                                        try {
+                                            Add-Content -LiteralPath $fileName -Value $($_ | Out-String) -Encoding UTF8 -ErrorAction 'Stop'
+                                        } catch {
+                                            Write-Verbose "Unable to add content to file: $fileName. Error: $($_.Exception.Message)"
+                                        }
                                     }
                                 }
                             }
