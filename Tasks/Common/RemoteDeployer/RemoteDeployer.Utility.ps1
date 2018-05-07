@@ -154,10 +154,12 @@ function Set-TaskResult {
 
 $defaultErrorHandler = {
     Param($object, $computerName)
+    Write-Host "******************************************************** $computerName ********************************************************"
     Write-Host ($object | Out-String)
 }
 
 $defaultOutputHandler = {
     Param($object, $computerName)
+    Write-Host "******************************************************** $computerName ********************************************************"
     Write-Host ($object | Out-String)
 }
