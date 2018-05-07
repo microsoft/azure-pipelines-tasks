@@ -10,11 +10,11 @@ $exceptionMessage = "Exception thrown"
 
 Register-Mock Write-Telemetry { }
 
-# Test 1 "Should throw if destination blob is invalid"
-Register-Mock Copy-FilesToAzureBlob { throw $exceptionMessage } -ParametersEvaluator {$StorageAccountName -eq $invalidInputStorageAccount}
+# Test 1 "Should throw if Invoke-Expression fails"
+Register-Mock Invoke-Expression { throw $exceptionMessage }
 Assert-Throws {
     Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -storageAccountName $invalidInputStorageAccount -containerName $validInputContainerName `
-                                 -blobPrefix $validInputBlobPrefix -storageKey $validStorageKey -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType
+                                 -blobPrefix $validInputBlobPrefix -blobStorageEndpoint $validBlobStorageEndpoint -storageKey $validStorageKey -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType
 } -MessagePattern "*AFC_UploadContainerStorageAccount*invalidInputStorageAccount*"
 
 # Test 2 "Should throw and delete container if destination azureVM"
@@ -29,9 +29,10 @@ Assert-WasCalled Remove-AzureContainer -Times 1
 
 
 # Test 3 "Success in Upload blob destination"
-Register-Mock Copy-FilesToAzureBlob { return $succeededCopyResponse } -ParametersEvaluator {$StorageAccountName -eq $validInputStorageAccount}
+Unregister-Mock Invoke-Expression
+Register-Mock Invoke-Expression { return $succeededCopyResponse }
 
 Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -storageAccountName $validInputStorageAccount -containerName $validInputContainerName `
                              -blobPrefix $validInputBlobPrefix -storageKey $validStorageKey -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType
 
-Assert-WasCalled Copy-FilesToAzureBlob -Times 1 -ParametersEvaluator {$StorageAccountName -eq $validInputStorageAccount}
+Assert-WasCalled Invoke-Expression -Times 1
