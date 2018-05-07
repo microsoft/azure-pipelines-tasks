@@ -1,0 +1,105 @@
+# Python Django
+# Test a Django project on multiple versions of Python.
+# https://aka.ms/yaml
+
+phases:
+
+# ==================================
+# Phase 1: Locate the Django project
+# ==================================
+- phase: 'LocateProject'
+  queue:
+    name: 'Hosted Linux Preview'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      architecture: 'x64'
+
+  - script: |
+      python - << 'END_DETECT'
+      import itertools, os
+
+      project_location = list(itertools.chain(
+          ['.' for f in os.scandir() if f.name == 'manage.py'],
+          [d.name for d in os.scandir() if d.is_dir() for f in os.scandir(d) if f.name == 'manage.py' ],
+          [None]))[0]
+
+      if not project_location:
+          raise SystemExit("Could not find a Django project")
+
+      print("Found Django project in {0}".format(project_location))
+      print("##vso[task.setvariable variable=projectDir;isOutput=true]{0}".format(project_location))
+      END_DETECT
+    name: setvar
+    displayName: 'Export project folder name'
+
+# ================================
+# Phase 2: Test the Django project
+# ================================
+- phase: 'Test'
+  dependsOn: 'LocateProject'
+  variables:
+    projectRoot: $[ dependencies.LocateProject.outputs['setvar.projectDir'] ]
+
+  queue:
+    name: 'Hosted Linux Preview'
+    parallel: 1
+    matrix:
+      Python35:
+        PYTHON_VERSION: '3.5'
+      Python36:
+        PYTHON_VERSION: '3.6'
+      Python37-dev:
+        PYTHON_VERSION: '>= 3.7.0a'
+  steps:
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(PYTHON_VERSION)'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip setuptools wheel
+    displayName: 'Install dependencies'
+
+  - script: python -m pip install -r requirements.txt
+    displayName: 'Install requirements'
+
+  - script: python -m pip install unittest-xml-reporting
+    displayName: 'Install unittest-xml-reporting'
+
+  - script: pushd '$(projectRoot)' && python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
+    displayName: 'Run tests'
+  
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: "**/TEST-*.xml"
+      searchFolder: $(system.defaultWorkingDirectory)/$(projectRoot)
+      testRunTitle: 'Python $(PYTHON_VERSION)'
+
+
+# ===============================================
+# Phase 3: Copy sources to prepare for publishing
+# ===============================================
+- phase: 'PublishProjectArtifact'
+  dependsOn:
+    - 'LocateProject'
+    - 'Test'
+  variables:
+    projectRoot: $[ dependencies.LocateProject.outputs['setvar.projectDir'] ]
+  queue: 'Hosted Linux Preview'
+
+  steps:
+
+  - task: CopyFiles@2
+    displayName: 'Stage project directory'
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)/$(projectRoot)'
+      targetFolder: '$(build.artifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(build.artifactStagingDirectory)
+      artifactName: 'django-project'
+      publishLocation: 'container'

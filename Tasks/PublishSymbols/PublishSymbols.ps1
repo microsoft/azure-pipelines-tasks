@@ -31,7 +31,7 @@ try {
         Write-Host "Get-SymStorePath: $symstorePath"
     }
 
-    [string]$SymbolServerType = Get-VstsInput -Name 'SymbolServerType' -Require
+    [string]$SymbolServerType = Get-VstsInput -Name 'SymbolServerType' -Default 'None'
     [bool]$DetailedLog = Get-VstsInput -Name 'DetailedLog' -AsBool
     
     if ($SymbolServerType -eq "FileShare") {
