@@ -73,6 +73,7 @@
         "DownloadPackage",
         "powerShell",
         "PowerShellOnTargetMachines",
+        "PowerShellOnTargetMachinesV3",
         "PublishBuildArtifacts",
         "PublishCodeCoverageResults",
         "PublishSymbols",
