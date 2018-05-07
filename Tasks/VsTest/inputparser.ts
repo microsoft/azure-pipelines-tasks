@@ -189,9 +189,6 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
             const matches = tl.findMatch(vsTestPackageLocation, '**\\vstest.console.exe');
             if (matches && matches.length !== 0) {
                 inputDataContract.VsTestConsolePath = path.dirname(matches[0]);
-
-                // hydra: do this in dta exe host based on version of vstest.console.exe
-                inputDataContract.ForcePlatformV2 = true;
             } else {
                 utils.Helper.publishEventToCi(AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('toolsInstallerPathNotSet'), 1041, false);
                 throw new Error(tl.loc('toolsInstallerPathNotSet'));
@@ -357,6 +354,10 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
 
 function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     // TIA stuff
+    if (tl.getBoolInput('runOnlyImpactedTests') === false) {
+        return inputDataContract;
+    }
+
     inputDataContract.ExecutionSettings.TiaSettings = <idc.TiaSettings>{};
     inputDataContract.ExecutionSettings.TiaSettings.Enabled = tl.getBoolInput('runOnlyImpactedTests');
     inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit = +tl.getInput('runAllTestsAfterXBuilds');
@@ -382,16 +383,16 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
 
 function getRerunSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     // Rerun settings
-    inputDataContract.ExecutionSettings.RerunSettings = <idc.RerunSettings>{};
+    if (tl.getBoolInput('rerunFailedTests') === false) {
+        return inputDataContract;
+    }
 
+    inputDataContract.ExecutionSettings.RerunSettings = <idc.RerunSettings>{};
     inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests = tl.getBoolInput('rerunFailedTests');
     console.log(tl.loc('rerunFailedTests', inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests));
-
     const rerunType = tl.getInput('rerunType') || 'basedOnTestFailurePercentage';
-
     inputDataContract.ExecutionSettings.RerunSettings.RerunType = rerunType;
 
-    // hydra: unravel the nestings
     if (rerunType === 'basedOnTestFailureCount') {
         const rerunFailedTestCasesMaxLimit = parseInt(tl.getInput('rerunFailedTestCasesMaxLimit'));
         if (!isNaN(rerunFailedTestCasesMaxLimit)) {

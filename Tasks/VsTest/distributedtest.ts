@@ -66,6 +66,10 @@ export class DistributedTest {
 
         // let envVars: { [key: string]: string; } = <{ [key: string]: string; }>{};
         const envVars: { [key: string]: string; } = process.env; // This is a temporary solution where we are passing parent process env vars, we should get away from this
+
+        // Overriding temp with agent temp
+        utils.Helper.addToProcessEnvVars(envVars, 'temp', utils.Helper.GetTempFolder());
+
         this.inputDataContract.TestSelectionSettings.TestSourcesFile = this.createTestSourcesFile();
         // Temporary solution till this logic can move to the test platform itself
         if (this.inputDataContract.UsingXCopyTestPlatformPackage) {
@@ -106,7 +110,11 @@ export class DistributedTest {
         this.inputDataContract.AccessToken = null;
 
         // Invoke DtaExecutionHost with the input json file
-        const inputFilePath = path.join(tl.getVariable('temp'), 'input.json');
+        const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v1() + '.json');
+        if (utils.Helper.isDebugEnabled()) {
+            //hydra: move to utils helper
+            this.uploadFile(inputFilePath);
+        }
         DistributedTest.removeEmptyNodes(this.inputDataContract);
         writeFileSync(inputFilePath, JSON.stringify(this.inputDataContract));
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
@@ -144,7 +152,7 @@ export class DistributedTest {
         return code;
     }
 
-    // Utility function used to remove empty or spurios nodes from the input json file
+    // Utility function used to remove empty or spurious nodes from the input json file
     public static removeEmptyNodes(obj: any) {
         if (obj === null || obj === undefined ) {
             return;
@@ -158,6 +166,7 @@ export class DistributedTest {
                 DistributedTest.removeEmptyNodes(obj[keys[index]]);
             }
             if (obj[keys[index]] == undefined || obj[keys[index]] == null || (typeof obj[keys[index]] == "object" && Object.keys(obj[keys[index]]).length == 0)) {
+                tl.debug(`Removing node ${keys[index]} as its value is ${obj[keys[index]]}.`);
                 delete obj[keys[index]];
             }
         }
@@ -207,4 +216,18 @@ export class DistributedTest {
 
     private inputDataContract: inputdatacontract.InputDataContract;
     private dtaPid: number;
+
+    // hydra: move to utils helper
+    private uploadFile(file: string): void {
+        try {
+            if (utils.Helper.pathExistsAsFile(file)) {
+                const stats = fs.statSync(file);
+                tl.debug('File exists. Size: ' + stats.size + ' Bytes');
+                console.log('##vso[task.uploadfile]' + file);
+            }
+        } catch (err) {
+            tl.debug(err);
+        }
+    }
 }
+
