@@ -136,7 +136,7 @@ $ExecutePsScript = {
             $result.MachineGuidHash = Get-MachineGuidHash
         } catch {
             Write-Verbose "Unable to get Telemetry data. Error: $($_.Exception.Message)"
-            $result.TelemetryError = $_.Exception.GetType()
+            $result.TelemetryError = $_.Exception.GetType().ToString()
         }
     }
 

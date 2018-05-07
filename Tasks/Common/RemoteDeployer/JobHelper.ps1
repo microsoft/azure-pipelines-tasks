@@ -27,7 +27,7 @@ function Run-RemoteScriptJobs {
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
     try {
         $scriptArguments = Get-ScriptArguments -scriptArgumentsByName $scriptArgumentsByName
-        $jobName = [Guid]::NewGuid().ToString()
+        $jobName = Get-VstsTaskVariable -Name 'System.JobId'
         $parentJob = Invoke-Command -Session $sessions `
                                     -ScriptBlock $script `
                                     -ArgumentList $scriptArguments `
