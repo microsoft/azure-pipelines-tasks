@@ -82,7 +82,7 @@ describe('UsePythonVersion L0 Suite', function () {
         };
         mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
 
-        const toolPath = path.join('/', 'Python', '3.6.4');
+        const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => toolPath
         });
@@ -90,7 +90,8 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            addToPath: false
+            addToPath: false,
+            architecture: 'x64'
         };
 
         assert.strictEqual(buildVariables['pythonLocation'], undefined);
@@ -103,13 +104,14 @@ describe('UsePythonVersion L0 Suite', function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('vsts-task-tool-lib/tool', {
             findLocalTool: () => null,
-            findLocalToolVersions: () => ['2.7.13']
+            findLocalToolVersions: () => ['2.6.0', '2.7.13']
         });
 
         const uut = reload();
         const parameters = {
             versionSpec: '3.x',
-            addToPath: false
+            addToPath: false,
+            architecture: 'x64'
         };
 
         try {
@@ -119,12 +121,50 @@ describe('UsePythonVersion L0 Suite', function () {
             const expectedMessage = [
                 'loc_mock_VersionNotFound 3.x',
                 'loc_mock_ListAvailableVersions',
-                '2.7.13'
+                '2.6.0 (x86)',
+                '2.7.13 (x86)',
+                '2.6.0 (x64)',
+                '2.7.13 (x64)'
             ].join(EOL);
 
             assert.strictEqual(e.message, expectedMessage);
             done();
         }
+    });
+
+    it('selects architecture passed as input', async function () {
+        let buildVariables: { [key: string]: string } = {};
+        const mockBuildVariables = {
+            setVariable: (variable: string, value: string) => {
+                buildVariables[variable] = value;
+            },
+            getVariable: (variable: string) => buildVariables[variable]
+        };
+        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockBuildVariables));
+
+        const x86ToolPath = path.join('/', 'Python', '3.6.4', 'x86');
+        const x64ToolPath = path.join('/', 'Python', '3.6.4', 'x64');
+        mockery.registerMock('vsts-task-tool-lib/tool', {
+            findLocalTool: (toolName: string, versionSpec: string, arch?: string) => {
+                if (arch === 'x86') {
+                    return x86ToolPath;
+                } else {
+                    return x64ToolPath;
+                }
+            }
+        });
+
+        const uut = reload();
+        const parameters = {
+            versionSpec: '3.6',
+            addToPath: false,
+            architecture: 'x86'
+        };
+
+        assert.strictEqual(buildVariables['pythonLocation'], undefined);
+
+        await uut.usePythonVersion(parameters, Platform.Linux);
+        assert.strictEqual(buildVariables['pythonLocation'], x86ToolPath);
     });
 
     it('sets PATH correctly on Linux', async function () {
@@ -145,12 +185,12 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            outputVariable: 'Python',
-            addToPath: true
+            addToPath: true,
+            architecture: 'x64'
         };
 
         await uut.usePythonVersion(parameters, Platform.Linux);
-        assert.strictEqual(`${toolPath}:`, mockPath);
+        assert.strictEqual(`${path.join(toolPath, 'bin')}:${toolPath}:`, mockPath);
     });
 
     it('sets PATH correctly on Windows', async function () {
@@ -173,7 +213,8 @@ describe('UsePythonVersion L0 Suite', function () {
         const uut = reload();
         const parameters = {
             versionSpec: '3.6',
-            addToPath: true
+            addToPath: true,
+            architecture: 'x64'
         };
 
         await uut.usePythonVersion(parameters, Platform.Windows);
