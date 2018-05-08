@@ -87,7 +87,7 @@
             "defaultValue": "**/TEST-*.xml",
             "required": true,
             "groupName": "junitTestResults",
-            "helpMarkDown": "Specify the path and pattern of test results files to publish. For example, `**/TEST-*.xml` for all XML files whose name starts with `TEST-`. If no root path is specified, files are matched beneath the default working directory, the value of which is available in the variable: $(System.DefaultWorkingDirectory).  For example, a value of '**/TEST-*.xml' will actually result in matching files from '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'. [More information](https://go.microsoft.com/fwlink/?linkid=856077).",
+            "helpMarkDown": "Specify the path and pattern of test results files to publish. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/TEST-*.xml` for all XML files whose name starts with `TEST-`. If no root path is specified, files are matched beneath the default working directory, the value of which is available in the variable: $(System.DefaultWorkingDirectory).  For example, a value of '**/TEST-*.xml' will actually result in matching files from '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'.",
             "visibleRule": "publishJUnitResults = true"
         },
         {

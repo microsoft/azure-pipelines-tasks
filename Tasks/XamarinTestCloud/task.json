@@ -33,7 +33,7 @@
             "label": "App file",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders. [More information](https://go.microsoft.com/fwlink/?linkid=856077)"
+            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).  For example, `**/*.apk` for all APK files in all subfolders."
         },
         {
             "name": "dsym",
@@ -141,7 +141,7 @@
             "groupName": "advanced",
             "defaultValue": "**/packages/**/tools/test-cloud.exe",
             "required": true,
-            "helpMarkDown": "The path to test-cloud.exe.  Wildcards can be used, in which case the first occurrence of test-cloud.exe is used. [More information](https://go.microsoft.com/fwlink/?linkid=856077)."
+            "helpMarkDown": "The path to test-cloud.exe.  Wildcards can be used, in which case the first occurrence of test-cloud.exe is used ([more information](https://go.microsoft.com/fwlink/?linkid=856077))."
         },
         {
             "name": "optionalArgs",
