@@ -897,26 +897,6 @@ function Get-AzureVMResourcesProperties
     }
 }
 
-function Get-SkipCACheckOption
-{
-    param([string]$skipCACheck)
-
-    $doSkipCACheckOption = '-SkipCACheck'
-    $doNotSkipCACheckOption = ''
-
-    if(-not [string]::IsNullOrEmpty($skipCACheck))
-    {
-        if ($skipCACheck -eq "false")
-        {
-            Write-Verbose "Not skipping CA Check"
-            return $doNotSkipCACheckOption
-        }
-
-        Write-Verbose "Skipping CA Check"
-        return $doSkipCACheckOption
-    }
-}
-
 function Get-AzureVMsCredentials
 {
     param([string][Parameter(Mandatory=$true)]$vmsAdminUserName,
@@ -934,19 +914,27 @@ function Copy-FilesParallellyToAzureVMs
         [string[]]$targetMachineNames,
         [pscredential]$credential,
         [string]$protocol,
-        [string]$sessionName,
         [object]$remoteScriptJobArguments,
         [object]$sessionOption
     )
 
     Write-Verbose "Starting parallel file copy"
 
-    $parallelCopyJobResults = Invoke-RemoteScript -targetMachineNames $targetMachineNames `
-                                                  -credential $credential `
-                                                  -protocol $protocol `
-                                                  -sessionName $sessionName `
-                                                  -remoteScriptJobArguments $remoteScriptJobArguments `
-                                                  -sessionOption $sessionOption
+    try
+    {
+        $parallelCopyJobResults = Invoke-RemoteScript -targetMachineNames $targetMachineNames `
+                                                      -credential $credential `
+                                                      -protocol $protocol `
+                                                      -remoteScriptJobArguments $remoteScriptJobArguments `
+                                                      -sessionOption $sessionOption
+
+        Write-Verbose "Parallel file copy: Invoke-RemoteScript completed"
+    }
+    catch
+    {
+        Write-Verbose "Parallel file copy: Invoke-RemoteScript threw exception"
+        throw
+    }
 
     # Write job status for every VM
     $isFileCopyFailed = $false
@@ -977,7 +965,6 @@ function Copy-FilesSequentiallyToAzureVMs
         [string[]]$targetMachineNames,
         [pscredential]$credential,
         [string]$protocol,
-        [string]$sessionName,
         [object]$remoteScriptJobArguments,
         [object]$sessionOption
     )
@@ -988,12 +975,21 @@ function Copy-FilesSequentiallyToAzureVMs
         Write-Output (Get-VstsLocString -Key "AFC_CopyStarted" -ArgumentList $_)
         $targetMachineName = @($_)
 
-        $copyJobResult = Invoke-RemoteScript -targetMachineNames $targetMachineName `
-                                             -credential $credential `
-                                             -protocol $protocol `
-                                             -sessionName $sessionName `
-                                             -remoteScriptJobArguments $remoteScriptJobArguments `
-                                             -sessionOption $sessionOption
+        try
+        {
+            $copyJobResult = Invoke-RemoteScript -targetMachineNames $targetMachineName `
+                                                 -credential $credential `
+                                                 -protocol $protocol `
+                                                 -remoteScriptJobArguments $remoteScriptJobArguments `
+                                                 -sessionOption $sessionOption
+
+             Write-Verbose "Sequential file copy: Invoke-RemoteScript completed"
+        }
+        catch
+        {
+            Write-Verbose "Sequential file copy: Invoke-RemoteScript threw exception"
+            throw
+        }
 
         if($copyJobResult.ExitCode -eq 0)
         {
@@ -1023,73 +1019,21 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [bool]$cleanTargetBeforeCopy,
         [bool]$copyFilesInParallel,
         [string]$additionalArguments,
-        [string]$azCopyToolLocation
+        [string]$azCopyToolLocation,
+        [scriptblock]$fileCopyJobScript
     )
 
     # Generate storage container URL
     $containerURL = [string]::Format("{0}/{1}", $blobStorageEndpoint.Trim("/"), $containerName)
 
     $azCopyToolFileNames = Get-ChildItem $azCopyToolLocation | Select-Object -ExpandProperty Name
+    $azCopyToolFilePaths = Get-ChildItem $azCopyToolLocation | Select-Object -ExpandProperty FullName
 
     $azCopyToolFileContents = @()
     
-    foreach ($file in $azCopyToolFileNames)
+    foreach ($file in $azCopyToolFilePaths)
     {
-        $fullPath = Join-Path -Path $azCopyToolLocation -ChildPath $file
-        $azCopyToolFileContents += [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($fullPath))
-    }
-
-    # script block to be executed on remote
-    $scriptBlock = {
-        param(
-            [string]$containerURL,
-            [string]$targetPath,
-            [string]$containerSasToken,
-            [string]$additionalArguments,
-            [string]$azCopyToolFileNamesString,
-            [string]$azCopyToolFileContentsString,
-            [switch]$CleanTargetBeforeCopy
-        )
-
-        try
-        {
-            $azCopyToolFileNames = $azCopyToolFileNamesString.Split(";")
-            $azCopyToolFileContents = $azCopyToolFileContentsString.Split(";")
-
-            $randomFolderName = "AFC_" + [guid]::NewGuid()
-            $randomFolderPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\$randomFolderName"
-            $azCopyDestinationPath = Join-Path -Path $randomFolderPath -ChildPath "AzCopy"
-            New-Item -ItemType Directory -Force -Path $azCopyDestinationPath
-
-            for($i=0; $i -lt $azCopyToolFileNames.Length; $i++)
-            {
-                $path = Join-Path -Path $azCopyDestinationPath -ChildPath $azCopyToolFileNames[$i]
-                $content = [Convert]::FromBase64String($azCopyToolFileContents[$i])
-                [System.IO.File]::WriteAllBytes($path, $content)
-            }
-
-            if($cleanTargetBeforeCopy)
-            {
-                Get-ChildItem -Path $targetPath -Recurse -Force | Remove-Item -Force -Recurse
-            }
-
-            $azCopyExeLocation = Join-Path -Path $azCopyDestinationPath -ChildPath "AzCopy.exe"
-
-            if($additionalArguments -eq "")
-            {
-                $additionalArguments = "/Z:`"$azCopyDestinationPath`" /S /Y"
-            }
-
-            $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
-            Invoke-Expression $azCopyCommand
-        }
-        finally
-        {
-            # Delete AzCopy tool folder
-            Get-ChildItem -Path $azCopyDestinationPath -Recurse -Force | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-            Remove-Item $azCopyDestinationPath -Force -ErrorAction SilentlyContinue
-            Remove-Item $randomFolderPath -Force -ErrorAction SilentlyContinue
-        }
+        $azCopyToolFileContents += [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($file))
     }
 
     $azCopyToolFileNamesString = $azCopyToolFileNames -join ";"
@@ -1102,12 +1046,9 @@ function Copy-FilesToAzureVMsFromStorageContainer
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
     }
 
-    # other invoke-remotescript arguments
-    $sessionName = "AFCCopyToVMs"
-
     $remoteScriptJobArguments = @{
         inline = $true;
-        inlineScript = $scriptBlock.ToString();
+        inlineScript = $fileCopyJobScript.ToString();
         scriptArguments = $scriptBlockArgs;
         errorActionPreference = "Stop";
         failOnStdErr = $true;
@@ -1118,7 +1059,6 @@ function Copy-FilesToAzureVMsFromStorageContainer
         Copy-FilesParallellyToAzureVMs -targetMachineNames $targetMachineNames `
                                        -credential $credential `
                                        -protocol $protocol `
-                                       -sessionName $sessionName `
                                        -remoteScriptJobArguments $remoteScriptJobArguments `
                                        -sessionOption $sessionOption
     }
@@ -1127,7 +1067,6 @@ function Copy-FilesToAzureVMsFromStorageContainer
         Copy-FilesSequentiallyToAzureVMs -targetMachineNames $targetMachineNames `
                                          -credential $credential `
                                          -protocol $protocol `
-                                         -sessionName $sessionName `
                                          -remoteScriptJobArguments $remoteScriptJobArguments `
                                          -sessionOption $sessionOption
     }
@@ -1373,8 +1312,7 @@ function Add-AzureVMCustomScriptExtension
 function Check-ContainerNameAndArgs
 {
     param([string]$containerName,
-          [string]$additionalArguments,
-          [bool]$useDefaultArgumentsForBlob)
+          [string]$additionalArguments)
     
     $additionalArguments = ' ' + $additionalArguments + ' '
     if($containerName -eq '$root' -and $additionalArguments -like '* /S *')
@@ -1387,23 +1325,16 @@ function Get-InvokeRemoteScriptParameters
 {
     param([object][Parameter(Mandatory=$true)]$azureVMResourcesProperties,
           [object]$networkCredentials,
-          [string]$skipCACheckOption)
+          [bool]$skipCACheck)
 
-    if($skipCACheckOption)
-    {
-        $sessionOption = New-PSSessionOption -SkipCACheck
-    }
-    else
-    {
-        $sessionOption = New-PSSessionOption
-    }
+    New-PSSessionOption -SkipCACheck:$skipCACheck
 
     $psCredentials = New-Object PSCredential($networkCredentials.UserName, (ConvertTo-SecureString $networkCredentials.Password -AsPlainText -Force))
 
     $targetMachines = @()
-    $azureVMResourcesProperties.Keys | ForEach-Object {
-        $vmDetails = $azureVMResourcesProperties.Item($_)
-        $targetMachines += [string]::Format("{0}:{1}", $vmDetails.fqdn, $vmDetails.winRMHttpsPort)
+    foreach($vm in $azureVMResourcesProperties.Values)
+    {
+        $targetMachines += [string]::Format("{0}:{1}", $vm.fqdn, $vm.winRMHttpsPort)
     }
 
     $protocol = 'https'

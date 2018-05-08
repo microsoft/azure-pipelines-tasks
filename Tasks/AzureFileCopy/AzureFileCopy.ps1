@@ -52,20 +52,12 @@ $sourcePath = $sourcePath.Trim('"')
 $storageAccount = $storageAccount.Trim()
 $containerName = $containerName.Trim().ToLower()
 
-# azcopy location on automation agent
-$azCopyExeLocation = 'AzCopy\AzCopy.exe'
-$azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
-
-# Set additional arguments for blob copy
-$useDefaultArgumentsForBlob = $false
 $additionalArgumentsForBlobCopy = $additionalArgumentsForBlobCopy.Trim()
 $additionalArgumentsForVMCopy = $additionalArgumentsForVMCopy.Trim()
 
-if ($additionalArgumentsForBlobCopy -eq "")
-{
-    $additionalArgumentsForBlobCopy = "/XO /Y /SetContentType /Z:`"$azCopyLocation`""
-    $useDefaultArgumentsForBlob = $true
-}
+# azcopy location on automation agent
+$azCopyExeLocation = 'AzCopy\AzCopy.exe'
+$azCopyLocation = [System.IO.Path]::GetDirectoryName($azCopyExeLocation)
 
 # Import RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
@@ -78,6 +70,7 @@ Initialize-Azure
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Load all dependent files for execution
+. "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
 
 # Telemetry
@@ -131,17 +124,31 @@ catch
     throw
 }
 
-# Add more arguments if required
-if($isPremiumStorage -and $useDefaultArgumentsForBlob)
+# Set optional arguments for azcopy blob upload
+if ($additionalArgumentsForBlobCopy -eq "")
 {
-    Write-Verbose "Setting BlobType to page for Premium Storage account."
-    $additionalArgumentsForBlobCopy += " /BlobType:page"
-}
+    # Adding default optional arguments:
+    # /XO: Excludes an older source resource
+    # /Y: Suppresses all AzCopy confirmation prompts
+    # /SetContentType: Sets each blob's MIME type according to its file extension
+    # /Z: Journal file location
+    $additionalArgumentsForBlobCopy = "/XO /Y /SetContentType /Z:`"$azCopyLocation`""
 
-if(($containerName -ne '$root') -and $useDefaultArgumentsForBlob)
-{
-    Write-Verbose "Adding argument for recursive copy"
-    $additionalArgumentsForBlobCopy += " /S"
+    # Add more arguments if required
+
+    # Premium storage accounts only support page blobs
+    if($isPremiumStorage)
+    {
+        Write-Verbose "Setting BlobType to page for Premium Storage account."
+        $additionalArgumentsForBlobCopy += " /BlobType:page"
+    }
+
+    # $root container does not support sub folders. So excluding recursive copy option for $root container.
+    if($containerName -ne '$root')
+    {
+        Write-Verbose "Adding argument for recursive copy"
+        $additionalArgumentsForBlobCopy += " /S"
+    }
 }
 
 Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
@@ -180,14 +187,12 @@ try
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
     -resourceFilteringMethod $resourceFilteringMethod -machineNames $machineNames -enableCopyPrerequisites $enableCopyPrerequisites -connectedServiceName $connectedServiceName
 
-    $skipCACheckOption = Get-SkipCACheckOption -skipCACheck $skipCACheck
     $azureVMsCredentials = Get-AzureVMsCredentials -vmsAdminUserName $vmsAdminUserName -vmsAdminPassword $vmsAdminPassword
 
     # Get Invoke-RemoteScript parameters
-    $invokeRemoteScriptParams = Get-InvokeRemoteScriptParameters `
-                                -azureVMResourcesProperties $azureVMResourcesProperties `
-                                -networkCredentials $azureVMsCredentials `
-                                -skipCACheckOption $skipCACheckOption
+    $invokeRemoteScriptParams = Get-InvokeRemoteScriptParameters -azureVMResourcesProperties $azureVMResourcesProperties `
+                                                                 -networkCredentials $azureVMsCredentials `
+                                                                 -skipCACheck $skipCACheck
 
     # generate container sas token with full permissions
     $containerSasToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInHours $defaultSasTokenTimeOutInHours
@@ -204,7 +209,8 @@ try
                                              -cleanTargetBeforeCopy $cleanTargetBeforeCopy `
                                              -copyFilesInParallel $copyFilesInParallel `
                                              -additionalArguments $additionalArgumentsForVMCopy `
-                                             -azCopyToolLocation $azCopyLocation
+                                             -azCopyToolLocation $azCopyLocation `
+                                             -fileCopyJobScript $AzureFileCopyRemoteJob 
 
     Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
 }

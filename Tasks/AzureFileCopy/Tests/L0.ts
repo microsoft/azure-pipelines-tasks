@@ -84,9 +84,6 @@ describe('AzureFileCopy Suite', function () {
         it('Validate AzureFileCopy.Utility Get-AzureVMResourcesProperties', (done) => {
             psr.run(path.join(__dirname, 'L0GetAzureVMResourcesProperties.ps1'), done);
         });
-        it('Validate AzureFileCopy.Utility Get-SkipCACheckOption', (done) => {
-            psr.run(path.join(__dirname, 'L0GetSkipCACheckOption.ps1'), done);
-        });
         it('Validate AzureFileCopy.Utility Get-AzureVMsCredentials', (done) => {
             psr.run(path.join(__dirname, 'L0GetAzureVMsCredentials.ps1'), done);
         });
