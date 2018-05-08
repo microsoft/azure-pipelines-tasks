@@ -73,9 +73,6 @@ function Invoke-RemoteScript {
         [ValidateSet("Default", "Credssp")]
         [string] $authentication = "Default",
 
-        [Parameter(Mandatory = $true)]
-        [string] $sessionName,
-
         [string] $sessionConfigurationName = "microsoft.powershell",
 
         [Parameter(Mandatory = $true)]
@@ -93,6 +90,7 @@ function Invoke-RemoteScript {
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter 'targetMachineNames'
     $PSSessionOption = $sessionOption
     try {
+        $sessionName = [Guid]::NewGuid().ToString();
         $sessions = @()
         $useSsl = ($protocol -eq 'https')
         $targetMachines = Get-TargetMachines -targetMachineNames $targetMachineNames `
