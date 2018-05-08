@@ -2,6 +2,8 @@
 
 import tl = require('vsts-task-lib/task');
 import * as tr from "vsts-task-lib/toolrunner";
+import path = require('path');
+import * as fs from "fs";
 import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
 
@@ -38,20 +40,26 @@ function deleteConfigMap(connection: ClusterConnection, configMapName: string): 
 }
 
 function getConfigMapArguments(): string {
-   /*  if(tl.getBoolInput("useConfigMapFile") == true) {
+    if(tl.getBoolInput("useConfigMapFile") == true) {
         var configMapFileOrDirectoryPath = tl.getInput("configMapFile", false);
         var configMapFromFromFileArgument: string = "";
         if(configMapFileOrDirectoryPath && tl.exist(configMapFileOrDirectoryPath))
         {
-            configMapFromFromFileArgument = "--from-file=" + configMapFileOrDirectoryPath;
+            if (fs.statSync(configMapFileOrDirectoryPath).isFile())
+            {
+                var fileName = path.basename(configMapFileOrDirectoryPath);
+                configMapFromFromFileArgument = "--from-file=" + fileName + "=" + configMapFileOrDirectoryPath;
+            }
+            else if (fs.statSync(configMapFileOrDirectoryPath).isDirectory())
+            {
+                configMapFromFromFileArgument = "--from-file=" + configMapFileOrDirectoryPath;
+            }
         }
 
         return configMapFromFromFileArgument;
     } else { 
-       
-    }*/
-
-    return tl.getInput("configMapArguments", false);
+        return tl.getInput("configMapArguments", false);
+    } 
 }
 
 function createConfigMap(connection: ClusterConnection, configMapName: string): any {
