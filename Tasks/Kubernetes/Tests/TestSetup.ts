@@ -2,13 +2,15 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import * as shared from './TestShared';
+var Stats = require('fs').Stats
 
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const ConfigurationFilePath = shared.formatPath("dir/deployment.yaml");
 const newUserDirPath = shared.formatPath("newUserDir/");
 const KubconfigFile = shared.formatPath("newUserDir/config");
 const KubectlPath = shared.formatPath("newUserDir/kubectl.exe");
-const ConfigMapFilePath = shared.formatPath("configMapDir/configMap.properties");
+const ConfigMapFilePath = shared.formatPath("configMapDir/configmap.properties");
+const ConfigMapDirectoryPath = shared.formatPath("kubernetes/configMapDir");
 
 let taskPath = path.join(__dirname, '../src', 'kubernetes.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -25,8 +27,8 @@ tr.setInput('secretName', process.env[shared.TestEnvVars.secretName] || '');
 tr.setInput('forceUpdate', process.env[shared.TestEnvVars.forceUpdate] || "true");
 tr.setInput('configMapName', process.env[shared.TestEnvVars.configMapName] || '');
 tr.setInput('forceUpdateConfigMap', process.env[shared.TestEnvVars.forceUpdateConfigMap] || "false");
-//tr.setInput('useConfigMapFile', process.env[shared.TestEnvVars.useConfigMapFile] || "false");
-//tr.setInput('configMapFile', ConfigMapFilePath);
+tr.setInput('useConfigMapFile', process.env[shared.TestEnvVars.useConfigMapFile] || "false");
+tr.setInput('configMapFile', process.env[shared.TestEnvVars.configMapFile] || ConfigMapFilePath);
 tr.setInput('configMapArguments', process.env[shared.TestEnvVars.configMapArguments] || '');
 tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocation] || 'version');
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.7.0");
@@ -60,7 +62,8 @@ let a = {
      "checkPath": {
         [KubectlPath]: true,
         [ConfigurationFilePath]: true,
-        [ConfigMapFilePath]: true
+        [ConfigMapFilePath]: true,
+        [ConfigMapDirectoryPath]: true
     },
     "exist": {
         [KubconfigFile]: true
@@ -73,6 +76,7 @@ let a = {
 a.exist[ConfigurationFilePath] = true;
 a.exist[ConfigMapFilePath] = true;
 a.exist[KubectlPath] = true;
+a.exist[ConfigMapDirectoryPath] = true;
 
 if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
 {
@@ -123,7 +127,10 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} get configmap someConfigMap`] = {
 a.exec[`kubectl --kubeconfig ${KubconfigFile} get configmap myConfigMap`] = {
     "code": 1  
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-file=${ConfigMapFilePath}`] = {
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-file=configmap.properties=${ConfigMapFilePath}`] = {
+    "code": 0
+};
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-file=${ConfigMapDirectoryPath}`] = {
     "code": 0
 };
 a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
@@ -178,6 +185,31 @@ fsClone.chmod = function(path, mode) {
             fs.chmod(path, mode);        
       }
 };
+
+fsClone.statSync = (s: string) => {
+    let stat = new Stats;
+
+    stat.isFile = () => {
+        if (s.endsWith('.properties')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    stat.isDirectory = () => {
+        if (s.endsWith('.properties')) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    stat.size = 100;
+
+    return stat;
+}
+
 
 tr.registerMock('fs', fsClone);
 
