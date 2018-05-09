@@ -56,7 +56,6 @@ phases:
 #  - task: PublishBuildArtifacts@1
 #    inputs:
 #      pathToPublish: 'dist'
-#      publishLocation: 'container'
 #      artifactName: 'dist'
 
 #  - task: PyPIPublisher@0

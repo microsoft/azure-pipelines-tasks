@@ -87,7 +87,3 @@ phases:
 #      sourceFolder: '$(Build.SourcesDirectory)/$(projectRoot)'
 #      targetFolder: '$(build.artifactStagingDirectory)'
 #  - task: PublishBuildArtifacts@1
-#    inputs:
-#      pathToPublish: $(build.artifactStagingDirectory)
-#      artifactName: 'django-project'
-#      publishLocation: 'container'
