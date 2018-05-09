@@ -14,6 +14,8 @@ export let TestEnvVars = {
     forceUpdate: "__forceUpdate__",
     configMapName: "__configMapName__",
     forceUpdateConfigMap: "__forceUpdateConfigMap__",
+    useConfigMapFile: "__useConfigMapFile__",
+    configMapFile: "__configMapFile__",
     configMapArguments: "__configMapArguments__",
     versionOrLocation: "__versionOrLocation__",
     versionSpec: "__versionSpec__",
