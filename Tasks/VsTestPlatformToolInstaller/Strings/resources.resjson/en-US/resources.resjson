@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Visual Studio Test Platform Installer",
+  "loc.friendlyName": "Debug:VisualStudio TestPlatformInstaller",
   "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">Test platform package on NuGet</a>",
   "loc.description": "Acquires the test platform from nuget.org or the tools cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.",
-  "loc.instanceNameFormat": "VsTest Platform Installer",
+  "loc.instanceNameFormat": "VsTest Platform Installer Diagnostic Version",
   "loc.input.label.versionSelector": "Version",
   "loc.input.help.versionSelector": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform.",
   "loc.input.label.testPlatformVersion": "Test Platform Version",
