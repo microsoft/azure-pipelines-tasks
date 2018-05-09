@@ -1327,7 +1327,7 @@ function Get-InvokeRemoteScriptParameters
           [object]$networkCredentials,
           [bool]$skipCACheck)
 
-    New-PSSessionOption -SkipCACheck:$skipCACheck
+    $sessionOption = New-PSSessionOption -SkipCACheck:$skipCACheck
 
     $psCredentials = New-Object PSCredential($networkCredentials.UserName, (ConvertTo-SecureString $networkCredentials.Password -AsPlainText -Force))
 
