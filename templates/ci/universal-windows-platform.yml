@@ -23,6 +23,6 @@ steps:
     platform: 'x86'
     configuration: '$(buildConfiguration)'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: '$(appxPackageDir)'
+#- task: PublishBuildArtifacts@1
+#  inputs:
+#    pathToPublish: '$(appxPackageDir)'

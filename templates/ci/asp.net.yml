@@ -27,8 +27,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: PublishSymbols@1
-  inputs:
-    searchPattern: '**/bin/$(buildConfiguration)/*.pdb'
-
-- task: PublishBuildArtifacts@1
+#- task: PublishSymbols@1
+#  inputs:
+#    searchPattern: '**/bin/$(buildConfiguration)/*.pdb'
+#- task: PublishBuildArtifacts@1

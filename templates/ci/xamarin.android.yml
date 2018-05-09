@@ -20,9 +20,9 @@ steps:
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(outputDirectory)'
+#- task: PublishBuildArtifacts@1
+#  inputs:
+#    pathtoPublish: '$(outputDirectory)'
 
 # Next steps:
 # Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
