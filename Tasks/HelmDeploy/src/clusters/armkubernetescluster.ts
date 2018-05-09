@@ -18,8 +18,13 @@ async function getKubeConfigFromAKS(azureSubscriptionEndpoint: string, resourceG
 }
 
 export async function getKubeConfig(): Promise<string> {
-    var clusterName : string = tl.getInput("kubernetesCluster", true);
-    var azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint", true);
-    var resourceGroup : string = tl.getInput("azureResourceGroup", true);
+    var clusterName : string = tl.getInput("kubernetesCluster", false);
+    var azureSubscriptionEndpoint : string = tl.getInput("azureSubscriptionEndpoint", false);
+    var resourceGroup : string = tl.getInput("azureResourceGroup", false);
+    if(!clusterName || !azureSubscriptionEndpoint || !resourceGroup) {
+        tl.debug("AzureClusterInfoNotProvided");
+        return undefined;
+    }
+
     return getKubeConfigFromAKS(azureSubscriptionEndpoint, resourceGroup, clusterName);
 }

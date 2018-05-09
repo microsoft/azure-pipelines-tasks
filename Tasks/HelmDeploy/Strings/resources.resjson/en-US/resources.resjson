@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Package and deploy Helm charts",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
-  "loc.description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+  "loc.description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running Helm commands. Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application.",
   "loc.instanceNameFormat": "helm $(command)",
   "loc.group.displayName.cluster": "Kubernetes Cluster",
   "loc.group.displayName.commands": "Commands",
@@ -83,5 +83,7 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
   "loc.messages.SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
   "loc.messages.SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
-  "loc.messages.FileNotFound": "File not found at %s"
+  "loc.messages.FileNotFound": "File not found at %s",
+  "loc.messages.AzureClusterInfoNotProvided": "Azure kubernetes cluster information missing. Skipping fetching of kubeconfig file.",
+  "loc.messages.KubernetesEndpointNotSpecified": "Kubernetes endpoint not specified. Skipping fetching of kubeconfig file."
 }

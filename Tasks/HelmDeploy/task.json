@@ -2,7 +2,7 @@
     "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
     "name": "HelmDeploy",
     "friendlyName": "Package and deploy Helm charts",
-    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running Helm commands. Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 9
     },
     "demands": [],
     "preview": "true",
@@ -61,7 +61,7 @@
             "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
             "visibleRule": "connectionType = Azure Resource Manager",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "groupName": "cluster"
         },
         {
@@ -71,7 +71,7 @@
             "helpMarkDown": "Select an Azure Resource Group.",
             "visibleRule": "connectionType = Azure Resource Manager",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "groupName": "cluster",
             "properties": {
                 "EditableOptions": "True"
@@ -84,7 +84,7 @@
             "helpMarkDown": "Select an Azure Managed Cluster.",
             "visibleRule": "connectionType = Azure Resource Manager",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "groupName": "cluster",
             "properties": {
                 "EditableOptions": "True"
@@ -97,7 +97,7 @@
             "label": "Kubernetes Service Connection",
             "helpMarkDown": "Select a Kubernetes service connection.",
             "visibleRule": "connectionType = Kubernetes Service Connection",
-            "required": true,
+            "required": false,
             "groupName": "cluster"
         },
         {
@@ -406,6 +406,8 @@
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
         "SkipDeleteSecureFiles":"TLS not enabled in the Task. Skipping delete of certificates.",
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
-        "FileNotFound": "File not found at %s"
+        "FileNotFound": "File not found at %s",
+        "AzureClusterInfoNotProvided": "Azure kubernetes cluster information missing. Skipping fetching of kubeconfig file.",
+        "KubernetesEndpointNotSpecified": "Kubernetes endpoint not specified. Skipping fetching of kubeconfig file."
     }
 }
