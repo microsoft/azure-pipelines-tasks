@@ -26,13 +26,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: PublishSymbols@1
-  inputs:
-    searchPattern: '**/bin/$(buildConfiguration)/*.pdb'
-
-- task: CopyFiles@2
-  inputs:
-    contents: '**/bin/$(buildConfiguration)/**'
-    targetFolder: '$(build.artifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
+#- task: PublishSymbols@1
+#  inputs:
+#    searchPattern: '**/bin/$(buildConfiguration)/*.pdb'
+#- task: CopyFiles@2
+#  inputs:
+#    contents: '**/bin/$(buildConfiguration)/**'
+#    targetFolder: '$(build.artifactStagingDirectory)'
+#- task: PublishBuildArtifacts@1

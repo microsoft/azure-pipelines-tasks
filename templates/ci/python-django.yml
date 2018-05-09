@@ -4,14 +4,11 @@
 
 phases:
 
-# ==================================
 # Phase 1: Locate the Django project
-# ==================================
 - phase: 'LocateProject'
-  queue:
-    name: 'Hosted Linux Preview'
-
+  queue: 'Hosted Linux Preview'
   steps:
+
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.6'
@@ -35,14 +32,11 @@ phases:
     name: setvar
     displayName: 'Export project folder name'
 
-# ================================
 # Phase 2: Test the Django project
-# ================================
 - phase: 'Test'
   dependsOn: 'LocateProject'
   variables:
     projectRoot: $[ dependencies.LocateProject.outputs['setvar.projectDir'] ]
-
   queue:
     name: 'Hosted Linux Preview'
     parallel: 1
@@ -78,28 +72,18 @@ phases:
       searchFolder: $(system.defaultWorkingDirectory)/$(projectRoot)
       testRunTitle: 'Python $(PYTHON_VERSION)'
 
-
-# ===============================================
 # Phase 3: Copy sources to prepare for publishing
-# ===============================================
-- phase: 'PublishProjectArtifact'
-  dependsOn:
-    - 'LocateProject'
-    - 'Test'
-  variables:
-    projectRoot: $[ dependencies.LocateProject.outputs['setvar.projectDir'] ]
-  queue: 'Hosted Linux Preview'
-
-  steps:
-
-  - task: CopyFiles@2
-    displayName: 'Stage project directory'
-    inputs:
-      sourceFolder: '$(Build.SourcesDirectory)/$(projectRoot)'
-      targetFolder: '$(build.artifactStagingDirectory)'
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: $(build.artifactStagingDirectory)
-      artifactName: 'django-project'
-      publishLocation: 'container'
+#- phase: 'PublishProjectArtifact'
+#  dependsOn:
+#    - 'LocateProject'
+#    - 'Test'
+#  variables:
+#    projectRoot: $[ dependencies.LocateProject.outputs['setvar.projectDir'] ]
+#  queue: 'Hosted Linux Preview'
+#  steps:
+#  - task: CopyFiles@2
+#    displayName: 'Stage project directory'
+#    inputs:
+#      sourceFolder: '$(Build.SourcesDirectory)/$(projectRoot)'
+#      targetFolder: '$(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1

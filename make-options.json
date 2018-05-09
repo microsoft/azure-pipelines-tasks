@@ -72,7 +72,7 @@
         "PackerBuild",
         "DownloadPackage",
         "PowerShellV2",
-        "PowerShellOnTargetMachines",
+        "PowerShellOnTargetMachinesV2",
         "PowerShellOnTargetMachinesV3",
         "PublishBuildArtifacts",
         "PublishCodeCoverageResults",
