@@ -238,7 +238,11 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$storageKey,
           [string][Parameter(Mandatory=$true)]$azCopyLocation,
           [string]$additionalArguments,
-          [string][Parameter(Mandatory=$true)]$destinationType)
+          [string][Parameter(Mandatory=$true)]$destinationType,
+          [bool]$enableDetailedLogging,
+          [bool]$useDefaultArguments,
+          [string]$azCopyLogFilePath
+    )
 
     try
     {
@@ -267,6 +271,30 @@ function Upload-FilesToAzureContainer
         $errorMessage = (Get-VstsLocString -Key "AFC_UploadContainerStorageAccount" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $exceptionMessage)
         Write-Telemetry "Task_InternalError" "BlobUploadFailed"
         ThrowError -errorMessage $errorMessage
+    }
+    finally
+    {
+        Handle-AzCopyLogs -isLogsPresent $useDefaultArguments -printLogs $enableDetailedLogging -logsFilePath $azCopyLogFilePath -ErrorAction SilentlyContinue
+    }
+}
+
+function Handle-AzCopyLogs
+{
+    [CmdletBinding()]
+    param(
+        [bool]$isLogsPresent,
+        [bool]$printLogs,
+        [string]$logsFilePath
+    )
+
+    if($isLogsPresent)
+    {
+        if($printLogs)
+        {
+            Get-Content -Path $logsFilePath | Write-Verbose
+        }
+
+        Remove-Item $logsFilePath -ErrorAction SilentlyContinue
     }
 }
 
@@ -915,7 +943,8 @@ function Copy-FilesParallellyToAzureVMs
         [pscredential]$credential,
         [string]$protocol,
         [object]$remoteScriptJobArguments,
-        [object]$sessionOption
+        [object]$sessionOption,
+        [bool]$enableDetailedLogging
     )
 
     Write-Verbose "Starting parallel file copy"
@@ -926,7 +955,8 @@ function Copy-FilesParallellyToAzureVMs
                                                       -credential $credential `
                                                       -protocol $protocol `
                                                       -remoteScriptJobArguments $remoteScriptJobArguments `
-                                                      -sessionOption $sessionOption
+                                                      -sessionOption $sessionOption `
+                                                      -uploadLogFiles:$enableDetailedLogging
 
         Write-Verbose "Parallel file copy: Invoke-RemoteScript completed"
     }
@@ -966,7 +996,8 @@ function Copy-FilesSequentiallyToAzureVMs
         [pscredential]$credential,
         [string]$protocol,
         [object]$remoteScriptJobArguments,
-        [object]$sessionOption
+        [object]$sessionOption,
+        [bool]$enableDetailedLogging
     )
 
     Write-Verbose "Starting sequential file copy"
@@ -981,7 +1012,8 @@ function Copy-FilesSequentiallyToAzureVMs
                                                  -credential $credential `
                                                  -protocol $protocol `
                                                  -remoteScriptJobArguments $remoteScriptJobArguments `
-                                                 -sessionOption $sessionOption
+                                                 -sessionOption $sessionOption `
+                                                 -uploadLogFiles:$enableDetailedLogging
 
              Write-Verbose "Sequential file copy: Invoke-RemoteScript completed"
         }
@@ -1020,7 +1052,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [bool]$copyFilesInParallel,
         [string]$additionalArguments,
         [string]$azCopyToolLocation,
-        [scriptblock]$fileCopyJobScript
+        [scriptblock]$fileCopyJobScript,
+        [bool]$enableDetailedLogging
     )
 
     # Generate storage container URL
@@ -1045,6 +1078,10 @@ function Copy-FilesToAzureVMsFromStorageContainer
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
     }
+    if($enableDetailedLogging)
+    {
+        $scriptBlockArgs += " -EnableDetailedLogging"
+    }
 
     $remoteScriptJobArguments = @{
         inline = $true;
@@ -1060,7 +1097,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
                                        -credential $credential `
                                        -protocol $protocol `
                                        -remoteScriptJobArguments $remoteScriptJobArguments `
-                                       -sessionOption $sessionOption
+                                       -sessionOption $sessionOption `
+                                       -enableDetailedLogging $enableDetailedLogging
     }
     else
     {
@@ -1068,7 +1106,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
                                          -credential $credential `
                                          -protocol $protocol `
                                          -remoteScriptJobArguments $remoteScriptJobArguments `
-                                         -sessionOption $sessionOption
+                                         -sessionOption $sessionOption `
+                                         -enableDetailedLogging $enableDetailedLogging
     }
 }
 

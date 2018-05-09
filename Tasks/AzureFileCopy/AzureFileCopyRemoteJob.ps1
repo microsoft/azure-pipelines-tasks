@@ -6,8 +6,36 @@ $AzureFileCopyRemoteJob = {
         [string]$additionalArguments,
         [string]$azCopyToolFileNamesString,
         [string]$azCopyToolFileContentsString,
-        [switch]$CleanTargetBeforeCopy
+        [switch]$CleanTargetBeforeCopy,
+        [switch]$EnableDetailedLogging
     )
+
+    function Get-AzCopyVerboseLogs
+    {
+        [CmdletBinding()]
+        param(
+            [string]$logFilePath,
+            [bool]$printLogs
+        )
+
+        if($printLogs -and $EnableDetailedLogging)
+        {
+            Get-Content -Path $logFilePath | Write-Verbose
+        }
+    }
+
+    function Remove-AzCopyFolder
+    {
+        [CmdletBinding()]
+        param([string]$azCopyLocation)
+
+        $tempParentFolder = (Get-Item $azCopyLocation).Parent.FullName
+
+        Get-ChildItem -Path $azCopyLocation -Recurse -Force | Remove-Item -Force -Recurse
+        Remove-Item $azCopyLocation -Force
+
+        Remove-Item $tempParentFolder -Force
+    }
 
     try
     {
@@ -26,20 +54,26 @@ $AzureFileCopyRemoteJob = {
             [System.IO.File]::WriteAllBytes($path, $content)
         }
 
-        if($cleanTargetBeforeCopy)
+        if($CleanTargetBeforeCopy)
         {
             Get-ChildItem -Path $targetPath -Recurse -Force | Remove-Item -Force -Recurse
         }
 
         $azCopyExeLocation = Join-Path -Path $azCopyDestinationPath -ChildPath "AzCopy.exe"
 
+        $logFileName = "AzCopyVerbose_" + [guid]::NewGuid() + ".log"
+        $logFilePath = Join-Path -Path $azCopyDestinationPath -ChildPath $logFileName
+        $useDefaultArguments = $false
+
         if($additionalArguments -eq "")
         {
             # Adding default optional arguments:
             # /Z: Journal file Location
+            # /V: AzCopy verbose logs file location
             # /S: Recursive copy
             # /Y: Suppresses all AzCopy confirmation prompts
-            $additionalArguments = "/Z:`"$azCopyDestinationPath`" /S /Y"
+            $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
+            $useDefaultArguments = $true
         }
 
         $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
@@ -47,9 +81,10 @@ $AzureFileCopyRemoteJob = {
     }
     finally
     {
+        # Print AzCopy.exe verbose logs
+        Get-AzCopyVerboseLogs -logFilePath $logFilePath -printLogs $useDefaultArguments -ErrorAction SilentlyContinue
+
         # Delete AzCopy tool folder
-        Get-ChildItem -Path $azCopyDestinationPath -Recurse -Force | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
-        Remove-Item $azCopyDestinationPath -Force -ErrorAction SilentlyContinue
-        Remove-Item $randomFolderPath -Force -ErrorAction SilentlyContinue
+        Remove-AzCopyFolder -azCopyLocation $azCopyDestinationPath -ErrorAction SilentlyContinue
     }
 }

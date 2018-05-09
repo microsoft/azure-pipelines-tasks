@@ -4,6 +4,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\..\Utility.ps1
+. $PSScriptRoot\..\AzureFileCopyRemoteJob.ps1
 . $PSScriptRoot\MockHelper.ps1
 
 $rgWithClassicVMs = "taskplatformtesttwovm"
@@ -29,7 +30,9 @@ Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScript
                                          -cleanTargetBeforeCopy $false `
                                          -copyFilesInParallel $true `
                                          -additionalArguments "" `
-                                         -azCopyToolLocation "AzCopy"
+                                         -azCopyToolLocation "AzCopy" `
+                                         -fileCopyJobScript $AzureFileCopyRemoteJob `
+                                         -enableDetailedLogging $false
 
 
 Assert-WasCalled Copy-FilesParallellyToAzureVMs -Times 1
@@ -47,7 +50,9 @@ Copy-FilesToAzureVMsFromStorageContainer -targetMachineNames $invokeRemoteScript
                                          -cleanTargetBeforeCopy $false `
                                          -copyFilesInParallel $false `
                                          -additionalArguments "" `
-                                         -azCopyToolLocation "AzCopy"
+                                         -azCopyToolLocation "AzCopy" `
+                                         -fileCopyJobScript $AzureFileCopyRemoteJob `
+                                         -enableDetailedLogging $false
 
 
 Unregister-Mock Copy-FilesParallellyToAzureVMs

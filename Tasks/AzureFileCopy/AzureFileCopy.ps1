@@ -54,6 +54,7 @@ $containerName = $containerName.Trim().ToLower()
 
 $additionalArgumentsForBlobCopy = $additionalArgumentsForBlobCopy.Trim()
 $additionalArgumentsForVMCopy = $additionalArgumentsForVMCopy.Trim()
+$useDefaultArgumentsForBlobCopy = $false
 
 # azcopy location on automation agent
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
@@ -72,6 +73,13 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
+
+# Enabling detailed logging only when system.debug is true
+$enableDetailedLogging = $false
+if ($env:system_debug -eq "true")
+{
+    $enableDetailedLogging = $true
+}
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
@@ -132,7 +140,13 @@ if ($additionalArgumentsForBlobCopy -eq "")
     # /Y: Suppresses all AzCopy confirmation prompts
     # /SetContentType: Sets each blob's MIME type according to its file extension
     # /Z: Journal file location
-    $additionalArgumentsForBlobCopy = "/XO /Y /SetContentType /Z:`"$azCopyLocation`""
+    # /V: AzCopy verbose logs file location
+
+    $useDefaultArgumentsForBlobCopy = $true
+    $logFileName = "AzCopyVerbose_" + [guid]::NewGuid() + ".log"
+    $logFilePath = Join-Path -Path $azCopyLocation -ChildPath $logFileName
+
+    $additionalArgumentsForBlobCopy = "/XO /Y /SetContentType /Z:`"$azCopyLocation`" /V:`"$logFilePath`""
 
     # Add more arguments if required
 
@@ -154,8 +168,18 @@ if ($additionalArgumentsForBlobCopy -eq "")
 Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
 
 # Uploading files to container
-Upload-FilesToAzureContainer -sourcePath $sourcePath -storageAccountName $storageAccount -containerName $containerName -blobPrefix $blobPrefix -blobStorageEndpoint $blobStorageEndpoint -storageKey $storageKey `
-                             -azCopyLocation $azCopyLocation -additionalArguments $additionalArgumentsForBlobCopy -destinationType $destination
+Upload-FilesToAzureContainer -sourcePath $sourcePath `
+                             -storageAccountName $storageAccount `
+                             -containerName $containerName `
+                             -blobPrefix $blobPrefix `
+                             -blobStorageEndpoint $blobStorageEndpoint `
+                             -storageKey $storageKey `
+                             -azCopyLocation $azCopyLocation `
+                             -additionalArguments $additionalArgumentsForBlobCopy `
+                             -destinationType $destination `
+                             -enableDetailedLogging $enableDetailedLogging `
+                             -useDefaultArguments $useDefaultArgumentsForBlobCopy `
+                             -azCopyLogFilePath $logFilePath
 
 # Complete the task if destination is azure blob
 if ($destination -eq "AzureBlob")
@@ -210,7 +234,8 @@ try
                                              -copyFilesInParallel $copyFilesInParallel `
                                              -additionalArguments $additionalArgumentsForVMCopy `
                                              -azCopyToolLocation $azCopyLocation `
-                                             -fileCopyJobScript $AzureFileCopyRemoteJob 
+                                             -fileCopyJobScript $AzureFileCopyRemoteJob `
+                                             -enableDetailedLogging $enableDetailedLogging
 
     Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
 }
