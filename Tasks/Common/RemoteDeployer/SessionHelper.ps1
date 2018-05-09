@@ -139,7 +139,7 @@ function Disconnect-WinRmConnectionToTargetMachines {
             if($remoteSession -ne $null) {
                 try {
                     Write-Verbose "Trying to disconnect pssession with name: $sessionName, computerName: $($targetMachine.ComputerName)"
-                    Disconnect-PSSession -Session $remoteSession -IdleTimeoutSec 60 -ErrorAction 'Stop'
+                    $null = Disconnect-PSSession -Session $remoteSession -IdleTimeoutSec 60 -ErrorAction 'Stop'
                     Write-Verbose "Successfully disconnected session: $sessionName on computer: $($targetMachine.ComputerName)"
                 } catch {
                     Write-Verbose "Unable to disconnect pssession with name: $sessionName, computerName: $($targetMachine.ComputerName). Error: $($_.Exception.Message)"
