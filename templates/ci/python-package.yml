@@ -4,9 +4,7 @@
 
 phases:
 
-# =============
 # Phase 1: Test
-# =============
 - phase: 'Test'
   queue:
     name: 'Hosted Linux Preview'
@@ -41,9 +39,7 @@ phases:
       testResultsFiles: '**/test-results.xml'
       testRunTitle: 'Python $(python.version)'
 
-# ================
 # Phase 2: Publish
-# ================
 - phase: 'Publish'
   dependsOn: 'Test'
   queue: 'Hosted Linux Preview'
@@ -57,11 +53,10 @@ phases:
   - script: python setup.py sdist
     displayName: 'Build sdist'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: 'dist'
-      publishLocation: 'container'
-      artifactName: 'dist'
+#  - task: PublishBuildArtifacts@1
+#    inputs:
+#      pathToPublish: 'dist'
+#      artifactName: 'dist'
 
 #  - task: PyPIPublisher@0
 #    inputs:

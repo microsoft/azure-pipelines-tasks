@@ -10,12 +10,11 @@ steps:
     gradleWrapperFile: 'gradlew'
     tasks: 'assembleRelease'
 
-- task: CopyFiles@2
-  inputs:
-    contents: '**/*.apk'
-    targetFolder: '$(build.artifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
+#- task: CopyFiles@2
+#  inputs:
+#    contents: '**/*.apk'
+#    targetFolder: '$(build.artifactStagingDirectory)'
+#- task: PublishBuildArtifacts@1
 
 # Next steps:
 # Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
