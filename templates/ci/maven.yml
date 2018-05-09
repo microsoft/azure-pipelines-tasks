@@ -12,6 +12,6 @@ steps:
 
 #- task: CopyFiles@2
 #  inputs:
-#    contents: '**/*.{jar,war,ear}'
+#    contents: '**/target/*.{jar,war,ear}'
 #    targetFolder: '$(build.artifactStagingDirectory)'
 #- task: PublishBuildArtifacts@1
