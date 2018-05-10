@@ -215,4 +215,16 @@ export class Helper {
     public static stringToBool(inputString : string) : boolean {
         return !this.isNullEmptyOrUndefined(inputString) && inputString.toLowerCase() === 'true';
     }
+
+    public static uploadFile(file: string): void {
+        try {
+            if (Helper.pathExistsAsFile(file)) {
+                const stats = fs.statSync(file);
+                tl.debug('File exists. Size: ' + stats.size + ' Bytes');
+                console.log('##vso[task.uploadfile]' + file);
+            }
+        } catch (err) {
+            tl.debug(`Failed to upload file ${file} with error ${err}`);
+        }
+    }
 }
