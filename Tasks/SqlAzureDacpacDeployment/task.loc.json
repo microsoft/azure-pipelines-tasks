@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 30
+    "Patch": 31
   },
   "demands": [
     "sqlpackage"
@@ -114,6 +114,23 @@
       "groupName": "target",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "DeploymentAction",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.DeploymentAction",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "Publish",
+      "options": {
+        "Publish": "Publish",
+        "Extract": "Extract",
+        "Export": "Export",
+        "Import": "Import",
+        "DriftReport": "DriftReport",
+        "Script": "Script",
+        "DeployReport": "DeployReport"
+      }
     },
     {
       "name": "TaskNameSelector",
