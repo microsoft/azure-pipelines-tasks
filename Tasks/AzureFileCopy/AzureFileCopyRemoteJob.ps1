@@ -33,7 +33,7 @@ $AzureFileCopyRemoteJob = {
 
         if($isLogsPresent)
         {
-            Get-Content -Path $logFilePath | Write-DetailLogs
+            Write-DetailLogs (Get-Content -Path $logFilePath | Out-String)
         }
     }
 
@@ -46,7 +46,6 @@ $AzureFileCopyRemoteJob = {
 
         Get-ChildItem -Path $azCopyLocation -Recurse -Force | Remove-Item -Force -Recurse
         Remove-Item $azCopyLocation -Force
-
         Remove-Item $tempParentFolder -Force
     }
 

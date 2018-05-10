@@ -289,8 +289,8 @@ function Handle-AzCopyLogs
 
     if($isLogsPresent)
     {
-        Get-Content -Path $logsFilePath | Write-Verbose
-        Remove-Item $logsFilePath -ErrorAction SilentlyContinue
+        Get-Content -Path $logsFilePath | Out-String | Write-Verbose
+        Remove-Item $logsFilePath
     }
 }
 
