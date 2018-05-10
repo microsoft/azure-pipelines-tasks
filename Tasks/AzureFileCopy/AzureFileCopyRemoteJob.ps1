@@ -10,17 +10,30 @@ $AzureFileCopyRemoteJob = {
         [switch]$EnableDetailedLogging
     )
 
+    function Write-DetailLogs
+    {
+        [CmdletBinding()]
+        param(
+            [string]$message
+        )
+
+        if($EnableDetailedLogging)
+        {
+            Write-Verbose $message
+        }
+    }
+
     function Get-AzCopyVerboseLogs
     {
         [CmdletBinding()]
         param(
-            [string]$logFilePath,
-            [bool]$printLogs
+            [bool]$isLogsPresent,
+            [string]$logFilePath
         )
 
-        if($printLogs -and $EnableDetailedLogging)
+        if($isLogsPresent)
         {
-            Get-Content -Path $logFilePath | Write-Verbose
+            Get-Content -Path $logFilePath | Write-DetailLogs
         }
     }
 
@@ -54,27 +67,33 @@ $AzureFileCopyRemoteJob = {
             [System.IO.File]::WriteAllBytes($path, $content)
         }
 
+        Write-DetailLogs "Copied AzCopy tool files"
+
         if($CleanTargetBeforeCopy)
         {
             Get-ChildItem -Path $targetPath -Recurse -Force | Remove-Item -Force -Recurse
+            Write-DetailLogs "Destination location cleaned"
         }
 
         $azCopyExeLocation = Join-Path -Path $azCopyDestinationPath -ChildPath "AzCopy.exe"
 
         $logFileName = "AzCopyVerbose_" + [guid]::NewGuid() + ".log"
         $logFilePath = Join-Path -Path $azCopyDestinationPath -ChildPath $logFileName
-        $useDefaultArguments = $false
+        $useDefaultArguments = ($additionalArguments -eq "")
 
-        if($additionalArguments -eq "")
+        if($useDefaultArguments)
         {
             # Adding default optional arguments:
             # /Z: Journal file Location
             # /V: AzCopy verbose logs file location
             # /S: Recursive copy
             # /Y: Suppresses all AzCopy confirmation prompts
+
+            Write-DetailLogs "Using default AzCopy arguments for dowloading to VM"
             $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
-            $useDefaultArguments = $true
         }
+
+        Write-DetailLogs "Executing command: & `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
 
         $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
         Invoke-Expression $azCopyCommand
@@ -82,7 +101,7 @@ $AzureFileCopyRemoteJob = {
     finally
     {
         # Print AzCopy.exe verbose logs
-        Get-AzCopyVerboseLogs -logFilePath $logFilePath -printLogs $useDefaultArguments -ErrorAction SilentlyContinue
+        Get-AzCopyVerboseLogs -isLogsPresent $useDefaultArguments -logFilePath $logFilePath -ErrorAction SilentlyContinue
 
         # Delete AzCopy tool folder
         Remove-AzCopyFolder -azCopyLocation $azCopyDestinationPath -ErrorAction SilentlyContinue

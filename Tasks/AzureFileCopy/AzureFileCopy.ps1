@@ -54,7 +54,7 @@ $containerName = $containerName.Trim().ToLower()
 
 $additionalArgumentsForBlobCopy = $additionalArgumentsForBlobCopy.Trim()
 $additionalArgumentsForVMCopy = $additionalArgumentsForVMCopy.Trim()
-$useDefaultArgumentsForBlobCopy = $false
+$useDefaultArgumentsForBlobCopy = ($additionalArgumentsForBlobCopy -eq "")
 
 # azcopy location on automation agent
 $azCopyExeLocation = 'AzCopy\AzCopy.exe'
@@ -75,11 +75,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 . "$PSScriptRoot\Utility.ps1"
 
 # Enabling detailed logging only when system.debug is true
-$enableDetailedLogging = $false
-if ($env:system_debug -eq "true")
-{
-    $enableDetailedLogging = $true
-}
+$enableDetailedLogging = ($env:system_debug -eq "true")
 
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
@@ -133,7 +129,7 @@ catch
 }
 
 # Set optional arguments for azcopy blob upload
-if ($additionalArgumentsForBlobCopy -eq "")
+if ($useDefaultArgumentsForBlobCopy)
 {
     # Adding default optional arguments:
     # /XO: Excludes an older source resource
@@ -142,7 +138,8 @@ if ($additionalArgumentsForBlobCopy -eq "")
     # /Z: Journal file location
     # /V: AzCopy verbose logs file location
 
-    $useDefaultArgumentsForBlobCopy = $true
+    Write-Verbose "Using default AzCopy arguments for uploading to blob storage"
+
     $logFileName = "AzCopyVerbose_" + [guid]::NewGuid() + ".log"
     $logFilePath = Join-Path -Path $azCopyLocation -ChildPath $logFileName
 
@@ -177,7 +174,6 @@ Upload-FilesToAzureContainer -sourcePath $sourcePath `
                              -azCopyLocation $azCopyLocation `
                              -additionalArguments $additionalArgumentsForBlobCopy `
                              -destinationType $destination `
-                             -enableDetailedLogging $enableDetailedLogging `
                              -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                              -azCopyLogFilePath $logFilePath
 
