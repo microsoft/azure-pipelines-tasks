@@ -5,6 +5,7 @@
   "loc.instanceNameFormat": "helm $(command)",
   "loc.group.displayName.cluster": "Kubernetes Cluster",
   "loc.group.displayName.commands": "Commands",
+  "loc.group.displayName.tls": "TLS",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.connectionType": "Connection Type",
   "loc.input.help.connectionType": "Select a Connection Type.",
@@ -56,6 +57,14 @@
   "loc.input.help.waitForExecution": "Block till command execution completes.",
   "loc.input.label.arguments": "Arguments",
   "loc.input.help.arguments": "Command arguments.",
+  "loc.input.label.enableTls": "Enable TLS",
+  "loc.input.help.enableTls": "Enables using SSL between Helm and Tiller.",
+  "loc.input.label.caCert": "CA certificate",
+  "loc.input.help.caCert": "CA cert used to issue certificate for tiller and helm client.",
+  "loc.input.label.certificate": "Certificate",
+  "loc.input.help.certificate": "Specify Tiller certificate or Helm client certificate",
+  "loc.input.label.privatekey": "Key",
+  "loc.input.help.privatekey": "Specify Tiller Key or Helm client key",
   "loc.input.label.tillernamespace": "Tiller namespace",
   "loc.input.help.tillernamespace": "Specify K8 namespace of tiller.",
   "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
@@ -71,5 +80,8 @@
   "loc.messages.PatternFoundInPath": "Pattern found in file path %s.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+  "loc.messages.SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
+  "loc.messages.SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
+  "loc.messages.FileNotFound": "File not found at %s"
 }

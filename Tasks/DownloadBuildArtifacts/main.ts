@@ -248,14 +248,15 @@ async function main(): Promise<void> {
                 else if (artifact.resource.type.toLowerCase() === "filepath") {
                     let downloader = new engine.ArtifactEngine();
                     let downloadUrl = artifact.resource.data;
-                    let artifactLocation = downloadUrl + '/' + artifact.name;
+                    let artifactName = artifact.name.replace('/', '\\');
+                    let artifactLocation = path.join(downloadUrl, artifactName);
                     if (!fs.existsSync(artifactLocation)) {
                         console.log(tl.loc("ArtifactNameDirectoryNotFound", artifactLocation, downloadUrl));
                         artifactLocation = downloadUrl;
                     }
 
                     console.log(tl.loc("DownloadArtifacts", artifact.name, artifactLocation));
-                    var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifact.name);
+                    var fileShareProvider = new providers.FilesystemProvider(artifactLocation, artifactName);
                     var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
 
                     downloadPromises.push(downloader.processItems(fileShareProvider, fileSystemProvider, downloaderOptions).catch((reason) => {

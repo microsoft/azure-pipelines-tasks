@@ -247,6 +247,10 @@ export class JenkinsRestClient {
                                 }
 
                                 var result = template(jsonResult);
+
+                                // back slash is an illegal character in json.
+                                // when we downloaded the api output has \\, but the previous parse method will strip of a single \. Adding it back.
+                                result = result.replace(/\\/g,"\\\\");
                                 defer.resolve(result);
                             }
                             catch(err) {
