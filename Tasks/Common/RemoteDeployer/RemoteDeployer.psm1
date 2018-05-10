@@ -132,6 +132,10 @@ function Invoke-RemoteScript {
         }
 
         Set-TaskResult -jobResults $jobResults -machinesCount $targetMachines.Length
+        Write-Verbose "Job results are: "
+        foreach($jr in $jobResults) {
+            Write-Verbose ($jr | Out-String)
+        }
         return $jobResults
     } finally {
         Disconnect-WinRmConnectionToTargetMachines -targetMachines $targetMachines -sessionName $sessionName -sessionOption $sessionOption
