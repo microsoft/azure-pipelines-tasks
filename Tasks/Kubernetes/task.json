@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 17
+        "Patch": 21
     },
     "demands": [],
     "preview": "false",
@@ -49,7 +49,7 @@
             "name": "kubernetesServiceEndpoint",
             "aliases": ["kubernetesServiceConnection"],
             "type": "connectedService:kubernetes",
-            "label": "Kubernetes Service Connection",
+            "label": "Kubernetes service connection",
             "helpMarkDown": "Select a Kubernetes service connection."
         },
         {
@@ -58,7 +58,7 @@
             "label": "Namespace",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Name of the namespace to run the command in."
+            "helpMarkDown": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {
             "name": "command",
@@ -78,7 +78,7 @@
                 "set": "set",
                 "top": "top"
             },
-            "helpMarkDown": "Select a kubectl command.",
+            "helpMarkDown": "Select or specify a kubectl command to run.",
             "groupName": "commands",
             "properties": {
                 "EditableOptions": "True"
@@ -89,13 +89,13 @@
             "type": "boolean",
             "label": "Use Configuration files",
             "defaultValue": "false",
-            "helpMarkDown": "Use Kubernetes configuration file or folder with the command.",
+            "helpMarkDown": "Use Kubernetes configuration file with the kubectl command. Filename, directory, or URL to Kubernetes configuration files can also be provided.",
             "groupName": "commands"
         },
         {
             "name": "configuration",
             "type": "filePath",
-            "label": "Configuration File",
+            "label": "Configuration file",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Filename, directory, or URL to kubernetes configuration files that will be used with the commands.",
@@ -111,7 +111,7 @@
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
             },
             "label": "Arguments",
-            "helpMarkDown": "Command arguments.",
+            "helpMarkDown": "Arguments to the specified kubectl command.",
             "groupName": "commands"
         },
         {
@@ -124,7 +124,7 @@
                 "dockerRegistry": "dockerRegistry",
                 "generic": "generic"
             },
-            "helpMarkDown": "Select a type of secret",
+            "helpMarkDown": "Create/update a generic or dockerimagepullsecret.",
             "groupName": "secrets"
         },
         {
@@ -151,7 +151,7 @@
                 "Azure Container Registry": "Azure Container Registry",
                 "Container Registry": "Container Registry"
             },
-            "helpMarkDown": "Select a Container registry type.",
+            "helpMarkDown": "Select a Container registry type. The task can use Azure Subscription details to work with an Azure Container registry. Other standard Container registries are also supported.",
             "visibleRule": "secretType = dockerRegistry",
             "groupName": "secrets"
         },
@@ -159,7 +159,7 @@
             "name": "dockerRegistryEndpoint",
             "aliases": ["dockerRegistryConnection"],
             "type": "connectedService:dockerregistry",
-            "label": "Docker Registry Connection",
+            "label": "Docker Registry connection",
             "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "secretType = dockerRegistry && containerRegistryType = Container Registry",
             "groupName": "secrets"
@@ -169,7 +169,7 @@
             "aliases": ["azureSubscription"],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
-            "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+            "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry. Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
             "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
             "defaultValue": "",
             "groupName": "secrets"
@@ -178,7 +178,7 @@
             "name": "azureContainerRegistry",
             "label": "Azure Container Registry",
             "type": "pickList",
-            "helpMarkDown": "Select an Azure Container Registry. Required for commands that need to authenticate with a registry.",
+            "helpMarkDown": "Select an Azure Container Registry which will be used for pulling container images and deploying applications to the Kubernetes cluster. Required for commands that need to authenticate with a registry.",
             "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
             "defaultValue": "",
             "groupName": "secrets"
@@ -203,9 +203,9 @@
         {
             "name": "configMapName",
             "type": "string",
-            "label": "ConfigMap Name",
+            "label": "ConfigMap name",
             "defaultValue": "",
-            "helpMarkDown": "Name of ConfigMap.",
+            "helpMarkDown": "ConfigMaps allow you to decouple configuration artifacts from image content to keep containerized applications portable.",
             "groupName": "configMaps"
         },
         {
@@ -217,6 +217,24 @@
             "groupName": "configMaps"
         },
         {
+            "name": "useConfigMapFile",
+            "type": "boolean",
+            "label": "Use file",
+            "defaultValue": "false",
+            "helpMarkDown": "Create a ConfigMap from an individual file, or from multiple files by specifying a directory.",
+            "groupName": "configMaps"
+        },
+        {	
+            "name": "configMapFile",	
+            "type": "filePath",
+            "label": "ConfigMap file",	
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify a file or directory that contains the configMaps",
+            "visibleRule": "useConfigMapFile = true",
+            "groupName": "configMaps"	
+        },
+        {
             "name": "configMapArguments",
             "type": "multiLine",
             "properties": {
@@ -226,6 +244,7 @@
             },
             "label": "Arguments",
             "helpMarkDown": "Specify keys and literal values to insert in configMap.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
+            "visibleRule": "useConfigMapFile = false",
             "groupName": "configMaps"
         },
         {
@@ -236,14 +255,14 @@
             "required": false,
             "options": {
                 "version": "Version",
-                "location": "Specify Location"
+                "location": "Specify location"
             },
             "groupName": "advanced"
         },
         {
             "name": "versionSpec",
             "type": "string",
-            "label": "Version Spec",
+            "label": "Version spec",
             "defaultValue": "1.7.0",
             "helpMarkDown": "Version Spec of version to get.  Examples: 1.7.0, 1.x.0, 4.x.0, 6.10.0, >=6.10.0",
             "groupName": "advanced",
@@ -252,7 +271,7 @@
         {
             "name": "checkLatest",
             "type": "boolean",
-            "label": "Check for Latest Version",
+            "label": "Check for latest version",
             "defaultValue": "false",
             "helpMarkDown": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
             "required": false,

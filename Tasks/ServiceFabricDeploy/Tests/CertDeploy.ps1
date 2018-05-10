@@ -70,6 +70,9 @@ Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appNam
 $publishArgs = @("-Action:", "RegisterAndCreate", "-ApplicationPackagePath:", $applicationPackagePath, "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationParameter:", $applicationParameter, "-ErrorAction:", "Stop", "-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"
+Register-Mock Write-VstsTaskError
+
 try
 {
     # Act

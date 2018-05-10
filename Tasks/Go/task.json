@@ -2,7 +2,7 @@
     "id": "34B37FDD-BBF7-4EF1-B37C-9652CA7BB355",
     "name": "Go",
     "friendlyName": "Go",
-    "description": "Get, build, test a go application, or run a custom go command.",
+    "description": "Get, build, or test a Go application, or run a custom Go command.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867582)",
     "author": "Microsoft Corporation",
     "preview": true,
@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 1,
+        "Minor": 2,
         "Patch": 0
     },
     "runsOn": [
@@ -48,7 +48,7 @@
         {
             "name": "customCommand",
             "label": "Custom command",
-            "helpMarkDown": "Custom Go command for execution. For example: to execute go version, enter version.",
+            "helpMarkDown": "A custom Go command to execute. For example, to execute 'go version', enter 'version'.",
             "required": true,
             "type": "string",
             "visibleRule": "command == custom"
@@ -59,13 +59,13 @@
             "label": "Arguments",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Arguments to the selected command. For example, build time arguments for go build command."
+            "helpMarkDown": "Optional arguments to the selected command. For example, build-time arguments for the 'go build' command."
         },
         {
             "name": "workingDirectory",
             "type": "filePath",
-            "label": "Working Directory",
-            "helpMarkDown": "Current working directory where the script is run. Empty is the root of the repo (build) or artifacts (release), which is $(System.DefaultWorkingDirectory)",
+            "label": "Working directory",
+            "helpMarkDown": "The working directory where the command will run. When empty, the root of the repository (for builds) or artifacts (for releases) is used, which is the value of '$(System.DefaultWorkingDirectory)'.",
             "required": "false",
             "groupName": "advanced"
         }
@@ -78,6 +78,6 @@
         }
     },
     "messages": {
-        "TaskFailedWithError" : "Go task failed with error: %s"
+        "TaskFailedWithError" : "The Go task failed with an error: %s"
     }
 }

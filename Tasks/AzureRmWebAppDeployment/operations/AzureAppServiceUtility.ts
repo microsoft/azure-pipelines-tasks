@@ -67,9 +67,21 @@ export class AzureAppServiceUtility {
             var applicationUrl: string = await this.getApplicationURL();
 
             if(!applicationUrl) {
-                tl.debug('Application Url not found.');
+                tl.debug("Application Url not found.");
                 return;
             }
+            await AzureAppServiceUtility.pingApplication(applicationUrl);
+        } catch(error) {
+            tl.debug("Unable to ping App Service. Error: ${error}");
+        }
+    }
+
+    public static async pingApplication(applicationUrl: string) {
+        if(!applicationUrl) {
+            tl.debug('Application Url empty.');
+            return;
+        }
+        try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;

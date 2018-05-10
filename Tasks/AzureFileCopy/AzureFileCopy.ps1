@@ -84,6 +84,10 @@ try
     Write-Verbose -Verbose "Loading $azureUtility"
     . "$PSScriptRoot/$azureUtility"
 
+    # Telemetry for endpoint id
+    $telemetryJsonContent = "{`"endpointId`":`"$connectedServiceName`"}"
+    Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=AzureFileCopy]$telemetryJsonContent"
+
     # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
     $connectionType = Get-TypeOfConnection -connectedServiceName $connectedServiceName
 

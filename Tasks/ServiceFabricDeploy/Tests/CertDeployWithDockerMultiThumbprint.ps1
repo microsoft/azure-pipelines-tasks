@@ -95,6 +95,8 @@ $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\Applicati
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Update-DockerSettings.psm1"
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"
+Register-Mock Write-VstsTaskError
 
 Copy-Item -LiteralPath "$PSScriptRoot\data\DockerSupportAssets\AppPkg\" -Destination $applicationPackagePath -Container -Recurse
 

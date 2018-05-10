@@ -63,7 +63,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         try {
             var result = template(JSON.parse(commits));
         } catch(error) {
-            console.log(tl.loc("GetCommitMessagesFailed", error));
+            console.log(tl.loc("GetCommitMessagesFailed", error, commits));
             throw error;
         }
 

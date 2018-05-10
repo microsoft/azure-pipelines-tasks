@@ -1,0 +1,14 @@
+# PHP
+# Package your PHP application.
+# https://aka.ms/yaml
+
+queue: 'Hosted Linux Preview'
+steps:
+
+#- script: composer install
+
+#- task: ArchiveFiles@2
+#  inputs:
+#    rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#    includeRootFolder: false
+#- task: PublishBuildArtifacts@1
