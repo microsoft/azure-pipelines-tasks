@@ -15,7 +15,7 @@
         "AzureMysqlDeployment",
         "AzureMonitor",		
         "AzureNLBManagement",
-        "AzurePowerShell",
+        "AzurePowerShellV3",
         "AzureResourceGroupDeployment",
         "AzureRmWebAppDeployment",
         "AzureVmssDeployment",
