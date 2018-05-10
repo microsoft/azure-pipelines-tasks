@@ -3,30 +3,35 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 
+## xlr8 : Get all inputs 
 $connectedServiceNameSelector = Get-VstsInput -Name "ConnectedServiceNameSelector" -Require
-$TaskNameSelector = Get-VstsInput -Name "TaskNameSelector" -Require
-$DacpacFile = Get-VstsInput -Name "DacpacFile"
-$SqlFile = Get-VstsInput -Name "SqlFile"
-$SqlInline = Get-VstsInput -Name "SqlInline"
-$ServerName = Get-VstsInput -Name  "ServerName" -Require
-$DatabaseName = Get-VstsInput -Name "DatabaseName" -Require
+$taskNameSelector = Get-VstsInput -Name "TaskNameSelector" -Require
+$dacpacFile = Get-VstsInput -Name "DacpacFile"
+$sqlFile = Get-VstsInput -Name "SqlFile"
+$sqlInline = Get-VstsInput -Name "SqlInline"
+$serverName = Get-VstsInput -Name  "ServerName" -Require
+$databaseName = Get-VstsInput -Name "DatabaseName" -Require
 $connectedServiceName = Get-VstsInput -Name "ConnectedServiceName"
 $connectedServiceNameARM = Get-VstsInput -Name "ConnectedServiceNameARM"
-$SqlUsername = Get-VstsInput -Name "SqlUsername"
-$SqlPassword = Get-VstsInput -Name "SqlPassword"
-$PublishProfile = Get-VstsInput -Name "PublishProfile"
-$AdditionalArguments = Get-VstsInput -Name "AdditionalArguments"
-$SqlAdditionalArguments = Get-VstsInput -Name "SqlAdditionalArguments"
-$InlineAdditionalArguments = Get-VstsInput -Name "InlineAdditionalArguments"
-$IpDetectionMethod = Get-VstsInput -Name "IpDetectionMethod" -Require
-$StartIpAddress = Get-VstsInput -Name "StartIpAddress"
-$EndIpAddress = Get-VstsInput -Name "EndIpAddress"
-$DeleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
+$sqlUsername = Get-VstsInput -Name "SqlUsername"
+$sqlPassword = Get-VstsInput -Name "SqlPassword"
+
+$deploymentAction = Get-VstsInput -Name "DeploymentAction"  # new input 
+
+$publishProfile = Get-VstsInput -Name "PublishProfile"
+$additionalArguments = Get-VstsInput -Name "AdditionalArguments"
+$sqlAdditionalArguments = Get-VstsInput -Name "SqlAdditionalArguments"
+$inlineAdditionalArguments = Get-VstsInput -Name "InlineAdditionalArguments"
+$ipDetectionMethod = Get-VstsInput -Name "IpDetectionMethod" -Require
+$startIpAddress = Get-VstsInput -Name "StartIpAddress"
+$endIpAddress = Get-VstsInput -Name "EndIpAddress"
+$deleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
 $defaultTimeout = 120
 
 $ErrorActionPreference = 'Stop'
 
 # Initialize Rest API Helpers.
+# xlr8 : This should be mainly for adding/removing firewalls
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 # Import the loc strings.
@@ -35,28 +40,6 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 # Load all dependent files for execution
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\FindSqlPackagePath.ps1"
-
-# Function to import SqlPS module & avoid directory switch
-function Import-Sqlps {
-    push-location
-    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | out-null
-    pop-location
-}
-
-function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
-{
-    if ($files -is [system.array])
-    {
-        throw (Get-VstsLocString -Key "SAD_FoundMoreFiles" -ArgumentList $pattern)
-    }
-    else
-    {
-        if (!$files)
-        {
-            throw (Get-VstsLocString -Key "SAD_NoFilesMatch" -ArgumentList $pattern)
-        }
-    }
-}
 
 Try
 {
@@ -109,80 +92,30 @@ Try
         $SqlAdditionalArguments = $InlineAdditionalArguments
     }
 
+    # xlr8 : Get the endpoint used in the task
     if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM")
     {
         $connectedServiceName = $connectedServiceNameARM
     }
 
-    $ServerName = $ServerName.ToLower()
-    # Checks for the very basic consistency of the Server Name
-    Check-ServerName $ServerName
-
-    $serverFriendlyName = $ServerName.split(".")[0]
-    Write-Verbose "Server friendly name is $serverFriendlyName"
-
     # Getting endpoint used for the task
     $endpoint = Get-Endpoint -connectedServiceName $connectedServiceName
 
-    # Import SQLPS Module
+    # Checks for the very basic consistency of the Server Name
+    $ServerName = $ServerName.ToLower()
+    Check-ServerName $ServerName
+
     Import-SqlPs
-
-    # Test and get IPRange for autoDetect IpDetectionMethod
-    $ipAddressRange = @{}
-    if($IpDetectionMethod -eq "AutoDetect")
-    {
-        $ipAddressRange = Get-AgentIPRange -serverName $ServerName -sqlUsername $SqlUsername -sqlPassword $SqlPassword
-    }
-    else 
-    {
-        $ipAddressRange.StartIPAddress = $StartIpAddress
-        $ipAddressRange.EndIPAddress = $EndIpAddress
-    }
-
-    Write-Verbose ($ipAddressRange | Format-List | Out-String)
-
-    # creating firewall rule for agent on sql server, if it is not able to connect or iprange is selected
-    if($ipAddressRange.Count -ne 0)
-    {
-        $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $ipAddressRange.StartIPAddress -endIP $ipAddressRange.EndIPAddress -serverName $serverFriendlyName -endpoint $endpoint
-        Write-Verbose ($firewallSettings | Format-List | Out-String)
-
-        $firewallRuleName = $firewallSettings.RuleName
-        $isFirewallConfigured = $firewallSettings.IsConfigured
-    }
-
+    
+    $firewallRuleName, $isFirewallConfigured = Add-SqlServerFirewallRule -IpDetectionMethod $IpDetectionMethod -ServerName $serverName  
+    
     if ($TaskNameSelector -eq "DacpacTask")
     {
-        # Increase Timeout to 120 seconds in case its not provided by User
-        if (-not ($AdditionalArguments.ToLower().Contains("/targettimeout:") -or $AdditionalArguments.ToLower().Contains("/tt:")))
-        {
-            # Add Timeout of 120 Seconds
-            $AdditionalArguments = $AdditionalArguments + " /TargetTimeout:$defaultTimeout"
-        }
-
-        # getting script arguments to execute sqlpackage.exe
-        $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $FilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
-                                                     -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments
-
-        $scriptArgumentToBeLogged = Get-SqlPackageCommandArguments -dacpacFile $FilePath -targetMethod "server" -serverName $ServerName -databaseName $DatabaseName `
-                                                     -sqlUsername $SqlUsername -sqlPassword $SqlPassword -publishProfile $PublishProfilePath -additionalArguments $AdditionalArguments -isOutputSecure
-   
-        Write-Verbose "sqlPackageArguments = $scriptArgumentToBeLogged"
-
-        $SqlPackagePath = Get-SqlPackageOnTargetMachine
-
-        Write-Verbose "Executing SQLPackage.exe"
-
-        $SqlPackageCommand = "`"$SqlPackagePath`" $scriptArgument"
-        $commandToBeLogged = "`"$SqlPackagePath`" $scriptArgumentToBeLogged"
-
-        Write-Verbose "Executing : $commandToBeLogged"
-
-        Execute-Command -FileName $SqlPackagePath -Arguments $scriptArgument
+        Publish-DacpacFile -AdditionalArguments $AdditionalArguments
     }
     else
     {
-         if($sqlUserName)
+        if($sqlUserName)
         {
             $SqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
         }
@@ -263,6 +196,72 @@ Finally
     {
         Write-Verbose "No Firewall Rule was added"
     }
+}
+
+
+## =========== should the below functions be in the same file ?
+
+# Function to import SqlPS module & avoid directory switch
+function Import-Sqlps {
+    Push-Location
+    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | out-null
+    Pop-Location
+}
+
+function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
+{
+    if ($files -is [system.array])
+    {
+        throw (Get-VstsLocString -Key "SAD_FoundMoreFiles" -ArgumentList $pattern)
+    }
+    else
+    {
+        if (!$files)
+        {
+            throw (Get-VstsLocString -Key "SAD_NoFilesMatch" -ArgumentList $pattern)
+        }
+    }
+}
+
+function Add-SqlServerFirewallRule {
+    param (
+        [String][Parameter(Mandatory=$true)] $IpDetectionMethod,
+        [String] $ServerName,
+        [String] $ServerFriendlyName, # is this necessary ?
+        [String] $SqlUsername,
+        [String] $SqlPassword, 
+        [String] $StartIpAddress,
+        [string] $EndIpAddress
+    )
+    # Test and get IPRange for autoDetect IpDetectionMethod
+
+    $ipAddressRange = @{}
+    if($IpDetectionMethod -eq "AutoDetect")
+    {
+        $ipAddressRange = Get-AgentIPRange -serverName $ServerName -sqlUsername $SqlUsername -sqlPassword $SqlPassword
+    }
+    else 
+    {
+        $ipAddressRange.StartIPAddress = $StartIpAddress
+        $ipAddressRange.EndIPAddress = $EndIpAddress
+    }
+
+    Write-Verbose ($ipAddressRange | Format-List | Out-String)
+
+    # creating firewall rule for agent on sql server, if it is not able to connect or iprange is selected
+    if($ipAddressRange.Count -ne 0)
+    {
+        $serverFriendlyName = $ServerName.split(".")[0]
+        Write-Verbose "Server friendly name is $serverFriendlyName"
+
+        $firewallSettings = Create-AzureSqlDatabaseServerFirewallRule -startIP $ipAddressRange.StartIPAddress -endIP $ipAddressRange.EndIPAddress -serverName $serverFriendlyName -endpoint $endpoint
+        Write-Verbose ($firewallSettings | Format-List | Out-String)
+
+        $firewallRuleName = $firewallSettings.RuleName
+        $isFirewallConfigured = $firewallSettings.IsConfigured
+    }
+
+    return $firewallRuleName, $isFirewallConfigured
 }
 
 Write-Verbose "Leaving script DeploySqlAzure.ps1"

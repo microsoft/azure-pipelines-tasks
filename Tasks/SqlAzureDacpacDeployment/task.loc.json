@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 30
+    "Minor": 2,
+    "Patch": 4
   },
   "demands": [
     "sqlpackage"
@@ -114,6 +114,23 @@
       "groupName": "target",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "DeploymentAction",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.DeploymentAction",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "Publish",
+      "options": {
+        "Publish": "Publish",
+        "Extract": "Extract",
+        "Export": "Export",
+        "Import": "Import",
+        "DriftReport": "Drift Report",
+        "Script": "Script",
+        "DeployReport": "Deploy Report"
+      }
     },
     {
       "name": "TaskNameSelector",
@@ -249,7 +266,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell3": {
-      "target": "DeploySqlAzure.ps1"
+      "target": "DeploySqlAzure2.ps1"
     }
   },
   "messages": {
