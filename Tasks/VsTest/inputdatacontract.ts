@@ -15,26 +15,9 @@ export interface InputDataContract {
     DistributionSettings : DistributionSettings;
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
-    UseVsTestConsole : boolean;
-    TestPlatformVersion : string;
-    COR_PROFILER_PATH_32 : string;
-    COR_PROFILER_PATH_64 : string;
-    ForcePlatformV2 : boolean;
-    VisualStudioPath : string;
-    TestWindowPath : string;
-    TiaRunIdFile : string;
-    ResponseFile : string;
-    ResponseSupplementryFilePath : string;
     TiaBaseLineBuildIdFile : string;
-    VsVersion : string;
-    VsVersionIsTestSettingsPropertiesSupported : boolean;
-    RerunIterationCount : number;
-    AgentVersion : string;
-    VstestTaskInstanceIdentifier : string;
-    MiniMatchTestSourcesFile : string;
     UseNewCollector : boolean;
     IsPrFlow : boolean;
-    UseTestCaseFilterInResponseFile : boolean;
 }
 
 export interface TestReportingSettings {
@@ -90,9 +73,8 @@ export interface RerunSettings {
 }
 
 export interface DistributionSettings {
-    TestCaseLevelSlicingEnabled : boolean;
+    DistributeTestsBasedOn : string;
     NumberOfTestAgents : number;
-    IsTimeBasedSlicing : boolean;
     RunTimePerSlice : number;
     NumberOfTestCasesPerSlice : number;
 }

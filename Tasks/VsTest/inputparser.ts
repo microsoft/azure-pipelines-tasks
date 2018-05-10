@@ -5,7 +5,7 @@ import * as utils from './helpers';
 import * as constants from './constants';
 import * as os from 'os';
 import * as ci from './cieventlogger';
-import { AreaCodes, ResultMessages } from './constants';
+import { AreaCodes, ResultMessages, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
 import * as taskinputparser from './taskinputparser';
 import * as versionfinder from './versionfinder';
@@ -44,34 +44,12 @@ export function getDistributedTestConfigurations() : idc.InputDataContract {
     } else {
         inputDataContract.IsPrFlow = utils.Helper.stringToBool(tl.getVariable('tia.isPrFlow'));
     }
-    inputDataContract.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(tl.getVariable('tia.useTestCaseFilterInResponseFile'));
 
     inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
-    inputDataContract.VstestTaskInstanceIdentifier = uuid.v1();
-
-    inputDataContract.UseVsTestConsole = false;
-    // hydra: why is this still required?
-    const useVsTestConsole = tl.getVariable('UseVsTestConsole');
-    if (useVsTestConsole) {
-        inputDataContract.UseVsTestConsole = utils.Helper.stringToBool(useVsTestConsole);
-    }
-
-    // hydra: this will have to be done after we get vstest version in the managed layer. Also we support using vstest console.exe in distributed flow today?
-    // // VsTest Console cannot be used for Dev14
-    // if (inputDataContract.UseVsTestConsole === true && inputDataContract.vsTestVersion !== '15.0') {
-    //     console.log(tl.loc('noVstestConsole'));
-    //     dtaConfiguration.useVsTestConsole = 'false';
-    // }
-
     inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
     inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
-
-    //hydra: change this input to be some unique run identifier
     inputDataContract.RunIdentifier = getRunIdentifier();
-
-    //hydra: do we need
-    //dtaEnvironment.dtaHostLogFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), 'DTAExecutionHost.exe.log');
 
     return inputDataContract;
 }
@@ -176,11 +154,13 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
     if (vsTestLocationMethod === utils.Constants.vsTestVersionString) {
         const vsTestVersion = tl.getInput('vsTestVersion');
         if (utils.Helper.isNullEmptyOrUndefined(vsTestVersion)) {
-            console.log('vsTestVersion is null or empty');
-            throw new Error('vsTestVersion is null or empty');
+            console.log(tl.loc('VsTestVersionEmpty'));
+            throw new Error(tl.loc('VsTestVersionEmpty'));
         } else if (vsTestVersion.toLowerCase() === 'toolsinstaller') {
             tl.debug('Trying VsTest installed by tools installer.');
             ci.publishEvent({ subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) });
+
+            inputDataContract.UsingXCopyTestPlatformPackage = true;
 
             const vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
             tl.debug('Path to VsTest from tools installer: ' + vsTestPackageLocation);
@@ -216,6 +196,9 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
         // hydra: should it be full path or directory above?
         inputDataContract.VsTestConsolePath = tl.getInput('vsTestLocation');
         console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', inputDataContract.VsTestConsolePath));
+        if (inputDataContract.VsTestConsolePath.endsWith('vstest.console.exe')) {
+            inputDataContract.VsTestConsolePath = path.dirname(inputDataContract.VsTestConsolePath);
+        }
     }
 
     return inputDataContract;
@@ -253,7 +236,7 @@ function getDistributionSettings(inputDataContract : idc.InputDataContract) : id
     const distributionType = tl.getInput('distributionBatchType');
 
     if (distributionType && distributionType === 'basedOnTestCases') {
-        inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = true;
+        inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.NUMBEROFTESTMETHODSBASED;
         // flow if the batch type = based on agents/custom batching
         const distributeByAgentsOption = tl.getInput('batchingBasedOnAgentsOption');
         if (distributeByAgentsOption && distributeByAgentsOption === 'customBatchSize') {
@@ -267,8 +250,7 @@ function getDistributionSettings(inputDataContract : idc.InputDataContract) : id
         }
         // by default we set the distribution = number of agents
     } else if (distributionType && distributionType === 'basedOnExecutionTime') {
-        inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = true;
-        inputDataContract.DistributionSettings.IsTimeBasedSlicing = true;
+        inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.EXECUTIONTIMEBASED;
         // flow if the batch type = based on agents/custom batching
         const batchBasedOnExecutionTimeOption = tl.getInput('batchingBasedOnExecutionTimeOption');
         if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'customTimeBatchSize') {
@@ -280,7 +262,7 @@ function getDistributionSettings(inputDataContract : idc.InputDataContract) : id
             console.log(tl.loc('RunTimePerBatch', inputDataContract.DistributionSettings.RunTimePerSlice));
         }
     } else if (distributionType && distributionType === 'basedOnAssembly') {
-        inputDataContract.DistributionSettings.TestCaseLevelSlicingEnabled = false;
+        inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.ASSEMBLYBASED;
     }
     return inputDataContract;
 }
@@ -302,14 +284,10 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
     inputDataContract.ExecutionSettings.AssemblyLevelParallelism = tl.getBoolInput('runInParallel');
     console.log(tl.loc('runInParallelInput', inputDataContract.ExecutionSettings.AssemblyLevelParallelism));
 
-    // hydra: valid only for console flow
-    //inputDataContract.ExecutionSettings.runTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
-    //console.log(tl.loc('runInIsolationInput', testConfiguration.runTestsInIsolation));
-
     // hydra: do we want to shoot this warning?
-    // if (inputDataContract.runTestsInIsolation) {
-    //     tl.warning(tl.loc('runTestInIsolationNotSupported'));
-    // }
+    if (tl.getBoolInput('runTestsInIsolation')) {
+        tl.warning(tl.loc('runTestInIsolationNotSupported'));
+    }
 
     inputDataContract.ExecutionSettings.CustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
     if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
@@ -334,14 +312,9 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
         tl.warning(tl.loc('uitestsparallel'));
     }
 
-    // hydra: console flow only
-    //testConfiguration.otherConsoleOptions = tl.getInput('otherConsoleOptions');
-    //console.log(tl.loc('otherConsoleOptionsInput', testConfiguration.otherConsoleOptions));\
-
-    // hydra: enable this warning
-    // if (dtaConfiguration.otherConsoleOptions) {
-    //     tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
-    // }
+    if (tl.getInput('otherConsoleOptions')) {
+        tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
+    }
 
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
@@ -364,15 +337,12 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
     inputDataContract.ExecutionSettings.TiaSettings.FileLevel = getTIALevel(tl.getVariable('tia.filelevel'));
     inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory = tl.getVariable('build.sourcesdirectory');
     inputDataContract.ExecutionSettings.TiaSettings.FilterPaths = tl.getVariable('TIA_IncludePathFilters');
-    // hydra: inputDataContract.ExecutionSettings.TiaSettings.runIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
     inputDataContract.TiaBaseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
-    //hydra: inputDataContract.ExecutionSettings.TiaSettings.responseFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
 
     // User map file
     inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = tl.getVariable('tia.usermapfile');
 
     // disable editing settings file to switch on data collector
-    // hydra: make this first class input
     if (tl.getVariable('tia.disabletiadatacollector') && tl.getVariable('tia.disabletiadatacollector').toUpperCase() === 'TRUE') {
         inputDataContract.ExecutionSettings.TiaSettings.DisableDataCollection = true;
     } else {

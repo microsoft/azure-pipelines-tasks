@@ -4,7 +4,7 @@ import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
 import * as inputdatacontract from './inputdatacontract';
 import { Helper } from './helpers';
-
+const uuid = require('uuid');
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
@@ -186,7 +186,7 @@ export class TestSelectorInvoker {
                 'proxypassword': inputDataContract.ProxySettings.ProxyPassword,
                 'proxybypasslist': inputDataContract.ProxySettings.ProxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
-                'VsTest_TaskInstanceIdentifier': inputDataContract.VstestTaskInstanceIdentifier,
+                'VsTest_TaskInstanceIdentifier': uuid.v1(),
                 'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
                 'VSTS_HTTP_TIMEOUT': tl.getVariable('VSTS_HTTP_TIMEOUT'),
                 'DebugLogging': this.isDebugEnabled()

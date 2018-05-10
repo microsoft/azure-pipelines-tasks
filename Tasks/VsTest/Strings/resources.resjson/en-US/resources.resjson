@@ -168,5 +168,6 @@
   "loc.messages.OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "On demand runs are not supported with Multi-Configuration option. Please use 'None' or 'Multi-agent' parallelism option.",
   "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s",
-  "loc.messages.UpgradeAgentMessage": "Please upgrade your vsts-agent version. https://github.com/Microsoft/vsts-agent/releases"
+  "loc.messages.UpgradeAgentMessage": "Please upgrade your vsts-agent version. https://github.com/Microsoft/vsts-agent/releases",
+  "loc.messages.VsTestVersionEmpty": "VsTestVersion is null or empty"
 }

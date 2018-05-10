@@ -14,7 +14,7 @@ import * as os from 'os';
 import * as ci from './cieventlogger';
 import { TestSelectorInvoker } from './testselectorinvoker';
 import { writeFileSync } from 'fs';
-
+import { TaskResult } from 'vso-node-api/interfaces/TaskAgentInterfaces';
 const uuid = require('uuid');
 
 const testSelector = new TestSelectorInvoker();
@@ -31,7 +31,9 @@ export class DistributedTest {
     }
 
     private publishCodeChangesIfRequired(): void {
-        if (this.inputDataContract.ExecutionSettings.TiaSettings.Enabled) {
+        if (this.inputDataContract.ExecutionSettings
+            && this.inputDataContract.ExecutionSettings.TiaSettings
+            && this.inputDataContract.ExecutionSettings.TiaSettings.Enabled) {
 
             // hydra: fix this
             const code = testSelector.publishCodeChangesInDistributedMode(this.inputDataContract);
@@ -65,44 +67,16 @@ export class DistributedTest {
     private async startDtaExecutionHost(): Promise<number> {
 
         // let envVars: { [key: string]: string; } = <{ [key: string]: string; }>{};
-        const envVars: { [key: string]: string; } = process.env; // This is a temporary solution where we are passing parent process env vars, we should get away from this
+        let envVars: { [key: string]: string; } = process.env; // This is a temporary solution where we are passing parent process env vars, we should get away from this
 
         // Overriding temp with agent temp
         utils.Helper.addToProcessEnvVars(envVars, 'temp', utils.Helper.GetTempFolder());
 
         this.inputDataContract.TestSelectionSettings.TestSourcesFile = this.createTestSourcesFile();
+
         // Temporary solution till this logic can move to the test platform itself
         if (this.inputDataContract.UsingXCopyTestPlatformPackage) {
-            const vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
-
-            // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
-            let amd64ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-            if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-
-                envVars['COR_PROFILER_PATH_64'] = amd64ProfilerProxy[0];
-            } else {
-                // Look in x64 also for Microsoft.IntelliTrace.ProfilerProxy.dll (x64)
-                amd64ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-                if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-
-                    envVars['COR_PROFILER_PATH_64'] = amd64ProfilerProxy[0];
-                } else {
-                    utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
-                    tl.warning(tl.loc('testImpactAndCCWontWork'));
-                }
-
-                utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
-                tl.warning(tl.loc('testImpactAndCCWontWork'));
-            }
-
-            // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
-            const x86ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-            if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
-                    envVars['COR_PROFILER_PATH_32'] = x86ProfilerProxy[0];
-            } else {
-                utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
-                tl.warning(tl.loc('testImpactAndCCWontWork'));
-            }
+            envVars = this.setProfilerVariables(envVars);
         }
 
         // Pass the acess token as an environment variable for security purposes
@@ -111,34 +85,25 @@ export class DistributedTest {
 
         // Invoke DtaExecutionHost with the input json file
         const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v1() + '.json');
-        if (utils.Helper.isDebugEnabled()) {
-            //hydra: move to utils helper
-            this.uploadFile(inputFilePath);
-        }
         DistributedTest.removeEmptyNodes(this.inputDataContract);
-        writeFileSync(inputFilePath, JSON.stringify(this.inputDataContract));
+
+        try {
+            writeFileSync(inputFilePath, JSON.stringify(this.inputDataContract));
+        } catch (e) {
+            tl.setResult(tl.TaskResult.Failed, `Failed to write to the input json file ${inputFilePath} with error ${e}`);
+        }
+
+        if (utils.Helper.isDebugEnabled()) {
+            utils.Helper.uploadFile(inputFilePath);
+        }
+
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
         const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ env: envVars });
 
+        //hydra: add consolidated ci for inputs in C# layer for now
         const consolidatedCiData = {
-            agentFailure: false,
-            agentPhaseSettings: tl.getVariable('System.ParallelExecutionType'),
-            //batchingType: models.BatchingType[this.dtaTestConfig.batchingType],
-            batchSize: this.inputDataContract.DistributionSettings.NumberOfTestCasesPerSlice,
-            codeCoverageEnabled: this.inputDataContract.ExecutionSettings.CodeCoverageEnabled,
-            dontDistribute: tl.getBoolInput('dontDistribute'),
-            environmentUri: this.inputDataContract.RunIdentifier,
-            numberOfAgentsInPhase: this.inputDataContract.DistributionSettings.NumberOfTestAgents,
-            overrideTestrunParameters: utils.Helper.isNullOrUndefined(this.inputDataContract.ExecutionSettings.OverridenParameters) ? 'false' : 'true',
-            pipeline: tl.getVariable('release.releaseUri') != null ? 'release' : 'build',
-            runInParallel: this.inputDataContract.ExecutionSettings.AssemblyLevelParallelism,
-            settingsType: !utils.Helper.isNullOrUndefined(this.inputDataContract.ExecutionSettings.SettingsFile) ? this.inputDataContract.ExecutionSettings.SettingsFile.endsWith('.runsettings') ? 'runsettings' : this.inputDataContract.ExecutionSettings.SettingsFile.endsWith('.testsettings') ? 'testsettings' : 'none' : 'none',
-            task: 'VsTestDistributedFlow',
-            testSelection: this.inputDataContract.TestSelectionSettings.TestSelectionType,
-            tiaEnabled: this.inputDataContract.ExecutionSettings.TiaSettings.Enabled,
-            rerunEnabled: this.inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests,
-            rerunType: utils.Helper.isNullEmptyOrUndefined(tl.getInput('rerunType')) ? '' : tl.getInput('rerunType')
+            agentFailure: false
         };
 
         if (code !== 0) {
@@ -146,9 +111,7 @@ export class DistributedTest {
         } else {
             tl.debug('Modules/DTAExecutionHost.exe exited');
         }
-
         ci.publishEvent(consolidatedCiData);
-        this.cleanUpDtaExeHost();
         return code;
     }
 
@@ -170,17 +133,6 @@ export class DistributedTest {
                 delete obj[keys[index]];
             }
         }
-    }
-
-    private cleanUpDtaExeHost() {
-        try {
-            if (this.inputDataContract.TestSelectionSettings.TestSourcesFile) {
-                tl.rmRF(this.inputDataContract.TestSelectionSettings.TestSourcesFile);
-            }
-        } catch (error) {
-            //Ignore.
-        }
-        this.dtaPid = -1;
     }
 
     private createTestSourcesFile(): string {
@@ -214,20 +166,41 @@ export class DistributedTest {
         }
     }
 
+    private setProfilerVariables(envVars: { [key: string]: string; }) : { [key: string]: string; } {
+        const vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
+
+        // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
+        let amd64ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
+        if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
+
+            envVars['COR_PROFILER_PATH_64'] = amd64ProfilerProxy[0];
+        } else {
+            // Look in x64 also for Microsoft.IntelliTrace.ProfilerProxy.dll (x64)
+            amd64ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
+            if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
+
+                envVars['COR_PROFILER_PATH_64'] = amd64ProfilerProxy[0];
+            } else {
+                utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
+                tl.warning(tl.loc('testImpactAndCCWontWork'));
+            }
+
+            utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
+            tl.warning(tl.loc('testImpactAndCCWontWork'));
+        }
+
+        // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
+        const x86ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll');
+        if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
+                envVars['COR_PROFILER_PATH_32'] = x86ProfilerProxy[0];
+        } else {
+            utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
+            tl.warning(tl.loc('testImpactAndCCWontWork'));
+        }
+
+        return envVars;
+    }
+
     private inputDataContract: inputdatacontract.InputDataContract;
     private dtaPid: number;
-
-    // hydra: move to utils helper
-    private uploadFile(file: string): void {
-        try {
-            if (utils.Helper.pathExistsAsFile(file)) {
-                const stats = fs.statSync(file);
-                tl.debug('File exists. Size: ' + stats.size + ' Bytes');
-                console.log('##vso[task.uploadfile]' + file);
-            }
-        } catch (err) {
-            tl.debug(err);
-        }
-    }
 }
-

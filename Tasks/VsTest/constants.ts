@@ -26,3 +26,9 @@ export module ResultMessages {
 export module VsTestToolsInstaller {
     export const PathToVsTestToolVariable = 'VsTestToolsInstallerInstalledToolLocation';
 }
+
+export module DistributionTypes {
+    export const EXECUTIONTIMEBASED = 'TestExecutionTimes';
+    export const ASSEMBLYBASED = 'TestAssemblies';
+    export const NUMBEROFTESTMETHODSBASED = 'numberoftestmethods';
+}
