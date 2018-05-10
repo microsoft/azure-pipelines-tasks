@@ -8,6 +8,7 @@ $taskNameSelector = Get-VstsInput -Name "TaskNameSelector" -Require
 $dacpacFile = Get-VstsInput -Name "DacpacFile"
 $sqlFile = Get-VstsInput -Name "SqlFile"
 $sqlInline = Get-VstsInput -Name "SqlInline"
+$bacpacFile = Get-VstsInput -Name "BacpacFile"
 $serverName = Get-VstsInput -Name  "ServerName" -Require
 $databaseName = Get-VstsInput -Name "DatabaseName" -Require
 $connectedServiceName = Get-VstsInput -Name "ConnectedServiceName"
@@ -61,22 +62,22 @@ try {
                 -publishProfile $publishProfile -sqlFile $sqlFile -sqlInline $sqlInline -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -sqlcmdInlineAdditionalArguments $sqlcmdInlineAdditionalArguments
         }
         "Extract" {
-
+            Extract-Dacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "Export" {
-
+            Export-Bacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "Import" {
-
+            Import-Bacpac -bacpacFile $bacpacFile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "DriftReport" {
-
+            Drift-Report -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "Script" {
-
+            Script-Action -dacpacFile $dacpacFile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "DeployReport" {
-
+            Deploy-Report -dacpacFile $dacpacFile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         default {
             throw "Invalid deployment action: $deploymentAction"

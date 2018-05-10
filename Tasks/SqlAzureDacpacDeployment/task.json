@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 18
     },
     "demands": [
         "sqlpackage"
@@ -138,7 +138,8 @@
                 "DacpacTask": "SQL DACPAC File",
                 "SqlTask": "SQL Script File",
                 "InlineSqlTask": "Inline SQL Script"
-            }
+            },
+            "visibleRule": "DeploymentAction = Publish"
         },
         {
             "name": "DacpacFile",
@@ -148,7 +149,17 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "TaskNameSelector = DacpacTask"
+            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+        },
+        {
+            "name": "BacpacFile",
+            "type": "filePath",
+            "label": "BACPAC File",
+            "required": true,
+            "groupName": "taskDetails",
+            "defaultValue": "",
+            "helpMarkDown": "Location of the BACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
+            "visibleRule": "DeploymentAction = Import"
         },
         {
             "name": "SqlFile",
@@ -182,7 +193,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Publish profile provides fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share. Predefined system variables like, $(agent.buildDirectory) or $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "TaskNameSelector = DacpacTask"
+            "visibleRule": "DeploymentAction = Publish && TaskNameSelector = DacpacTask"
         },
         {
             "name": "AdditionalArguments",
@@ -192,7 +203,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Database, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
-            "visibleRule": "TaskNameSelector = DacpacTask"
+            "visibleRule": ""
         },
         {
             "name": "SqlAdditionalArguments",
@@ -202,7 +213,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors.",
-            "visibleRule": "TaskNameSelector = SqlTask"
+            "visibleRule": "DeploymentAction = Publish && TaskNameSelector = SqlTask"
         },
         {
             "name": "InlineAdditionalArguments",
@@ -212,7 +223,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors",
-            "visibleRule": "TaskNameSelector = InlineSqlTask"
+            "visibleRule": "DeploymentAction = Publish && TaskNameSelector = InlineSqlTask"
         },
         {
             "name": "IpDetectionMethod",

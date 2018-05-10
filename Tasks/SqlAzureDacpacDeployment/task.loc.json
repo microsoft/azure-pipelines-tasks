@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 4
+    "Patch": 18
   },
   "demands": [
     "sqlpackage"
@@ -144,7 +144,8 @@
         "DacpacTask": "SQL DACPAC File",
         "SqlTask": "SQL Script File",
         "InlineSqlTask": "Inline SQL Script"
-      }
+      },
+      "visibleRule": "DeploymentAction = Publish"
     },
     {
       "name": "DacpacFile",
@@ -154,7 +155,17 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.DacpacFile",
-      "visibleRule": "TaskNameSelector = DacpacTask"
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+    },
+    {
+      "name": "BacpacFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.BacpacFile",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.BacpacFile",
+      "visibleRule": "DeploymentAction = Import"
     },
     {
       "name": "SqlFile",
@@ -188,7 +199,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.PublishProfile",
-      "visibleRule": "TaskNameSelector = DacpacTask"
+      "visibleRule": "DeploymentAction = Publish && TaskNameSelector = DacpacTask"
     },
     {
       "name": "AdditionalArguments",
@@ -198,7 +209,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
-      "visibleRule": "TaskNameSelector = DacpacTask"
+      "visibleRule": ""
     },
     {
       "name": "SqlAdditionalArguments",
@@ -208,7 +219,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments",
-      "visibleRule": "TaskNameSelector = SqlTask"
+      "visibleRule": "DeploymentAction = Publish && TaskNameSelector = SqlTask"
     },
     {
       "name": "InlineAdditionalArguments",
@@ -218,7 +229,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.InlineAdditionalArguments",
-      "visibleRule": "TaskNameSelector = InlineSqlTask"
+      "visibleRule": "DeploymentAction = Publish && TaskNameSelector = InlineSqlTask"
     },
     {
       "name": "IpDetectionMethod",
