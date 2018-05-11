@@ -75,7 +75,7 @@
         "PowerShellOnTargetMachinesV2",
         "PowerShellOnTargetMachinesV3",
         "PublishBuildArtifacts",
-        "PublishCodeCoverageResults",
+        "PublishCodeCoverageResultsV1",
         "PublishSymbols",
         "PublishTestResults",
         "PublishToAzureServiceBusV1",
