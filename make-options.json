@@ -20,7 +20,7 @@
         "AzureRmWebAppDeployment",
         "AzureVmssDeployment",
         "BashV3",
-        "BatchScript",
+        "BatchScriptV1",
         "Chef",
         "ChefKnife",
         "CMake",
