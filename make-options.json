@@ -41,7 +41,7 @@
         "DownloadPackageV0",
         "DownloadSecureFileV1",
         "ExtractFilesV1",
-        "FtpUpload",
+        "FtpUploadV1",
         "Go",
         "GoTool",
         "Gradle",
