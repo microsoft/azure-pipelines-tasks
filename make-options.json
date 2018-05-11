@@ -80,7 +80,7 @@
         "PublishTestResults",
         "PublishToAzureServiceBusV1",
         "PyPiPublisherV0",
-        "QueryWorkItems",
+        "QueryWorkItemsV0",
         "QuickPerfTest",
         "RunDistributedTests",
         "RunJMeterLoadTest",
