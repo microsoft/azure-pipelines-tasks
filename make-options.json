@@ -65,7 +65,7 @@
         "Npm",
         "NpmAuthenticate",
         "NuGetV0",
-        "NugetPackager",
+        "NuGetPackagerV0",
         "NuGetPublisher",
         "NuGetCommandV2",
         "NuGetToolInstaller",
