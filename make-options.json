@@ -99,7 +99,7 @@
         "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV2",
         "XamarinAndroid",
-        "XamarinComponentRestore",
+        "XamarinComponentRestoreV0",
         "XamariniOS",
         "XamarinTestCloud",
         "Xcode",
