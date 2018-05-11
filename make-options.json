@@ -61,7 +61,7 @@
         "ManualIntervention",
         "Maven",
         "MSBuild",
-        "NodeTool",
+        "NodeToolV0",
         "Npm",
         "NpmAuthenticate",
         "NuGet",
