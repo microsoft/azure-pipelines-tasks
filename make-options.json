@@ -13,7 +13,7 @@
         "AzureKeyVault",
         "AzureMonitorAlerts",
         "AzureMysqlDeployment",
-        "AzureMonitor",		
+        "AzureMonitorV0",		
         "AzureNLBManagement",
         "AzurePowerShellV3",
         "AzureResourceGroupDeploymentV2",
