@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 133,
-        "Patch": 4
+        "Minor": 135,
+        "Patch": 0
     },
     "preview": true,
     "releaseNotes": "This version of the task is compatible with Xcode 8 and Xcode 9. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
@@ -73,7 +73,7 @@
             "label": "Workspace or project path",
             "defaultValue": "**/*.xcodeproj/project.xcworkspace",
             "required": false,
-            "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`."
+            "helpMarkDown": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077))."
         },
         {
             "name": "scheme",
