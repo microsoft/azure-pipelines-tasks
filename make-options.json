@@ -40,7 +40,7 @@
         "DownloadBuildArtifacts",
         "DownloadPackageV0",
         "DownloadSecureFileV1",
-        "ExtractFiles",
+        "ExtractFilesV1",
         "FtpUpload",
         "Go",
         "GoTool",
