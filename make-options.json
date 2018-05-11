@@ -84,7 +84,7 @@
         "QuickPerfTestV1",
         "RunDistributedTestsV1",
         "RunJMeterLoadTestV1",
-        "RunLoadTest",
+        "RunLoadTestV1",
         "ServiceFabricComposeDeploy",
         "ServiceFabricDeploy",
         "ServiceFabricPowerShell",
