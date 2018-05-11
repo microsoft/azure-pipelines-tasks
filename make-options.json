@@ -92,7 +92,7 @@
         "SqlAzureDacpacDeployment",
         "SqlDacpacDeploymentOnMachineGroup",
         "SshV0",
-        "UsePythonVersion",
+        "UsePythonVersionV0",
         "UseRubyVersion",
         "VSBuild",
         "VsTest",
