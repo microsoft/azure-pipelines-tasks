@@ -28,7 +28,7 @@
         "CocoaPodsV0",
         "CopyFilesV2",
         "CopyFilesOverSSHV0",
-        "cURLUploader",
+        "CUrlUploaderV2",
         "DecryptFileV1",
         "DelayV1",
         "DeleteFilesV1",
