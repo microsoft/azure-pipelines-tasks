@@ -51,7 +51,7 @@
         "HelmInstallerV0",
         "IISWebAppDeploymentOnMachineGroup",
         "IISWebAppManagementOnMachineGroupV0",
-        "InstallAppleCertificate",
+        "InstallAppleCertificateV2",
         "InstallAppleProvisioningProfile",
         "InstallSSHKey",
         "InvokeRestApiV1",
