@@ -27,7 +27,7 @@
         "CmdLineV2",
         "CocoaPodsV0",
         "CopyFilesV2",
-        "CopyFilesOverSSH",
+        "CopyFilesOverSSHV0",
         "cURLUploader",
         "DecryptFile",
         "Delay",
