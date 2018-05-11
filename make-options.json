@@ -63,7 +63,7 @@
         "Maven",
         "MSBuildV1",
         "NodeToolV0",
-        "Npm",
+        "NpmV1",
         "NpmAuthenticate",
         "NuGetV0",
         "NuGetCommandV2",
