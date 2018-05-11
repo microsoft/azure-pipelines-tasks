@@ -50,7 +50,7 @@
         "HelmDeployV0",
         "HelmInstallerV0",
         "IISWebAppDeploymentOnMachineGroup",
-        "IISWebAppManagementOnMachineGroup",
+        "IISWebAppManagementOnMachineGroupV0",
         "InstallAppleCertificate",
         "InstallAppleProvisioningProfile",
         "InstallSSHKey",
