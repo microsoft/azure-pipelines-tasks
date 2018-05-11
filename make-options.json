@@ -53,7 +53,7 @@
         "IISWebAppManagementOnMachineGroupV0",
         "InstallAppleCertificateV2",
         "InstallAppleProvisioningProfileV1",
-        "InstallSSHKey",
+        "InstallSSHKeyV0",
         "InvokeRestApiV1",
         "JavaToolInstaller",
         "JenkinsDownloadArtifacts",
