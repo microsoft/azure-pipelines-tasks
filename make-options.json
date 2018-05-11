@@ -96,7 +96,7 @@
         "UseRubyVersionV0",
         "VSBuildV1",
         "VsTest",
-        "VsTestPlatformToolInstaller",
+        "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV2",
         "XamarinAndroid",
         "XamarinComponentRestore",
