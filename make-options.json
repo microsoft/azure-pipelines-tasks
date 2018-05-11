@@ -26,7 +26,7 @@
         "CMake",
         "CmdLineV2",
         "CocoaPods",
-        "CopyFiles",
+        "CopyFilesV2",
         "CopyFilesOverSSH",
         "cURLUploader",
         "DecryptFile",
