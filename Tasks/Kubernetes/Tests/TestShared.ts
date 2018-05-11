@@ -3,6 +3,7 @@ import tl = require('vsts-task-lib');
 export let TestEnvVars = {
     operatingSystem: "__operating_system__",
     containerType: "__container_type__",
+    connectionType: "__connectionType__",
     command: "__command__",
     useConfigurationFile: "__useConfigurationFile__",
     configuration: "__configuration__",
@@ -20,9 +21,7 @@ export let TestEnvVars = {
     versionOrLocation: "__versionOrLocation__",
     versionSpec: "__versionSpec__",
     checkLatest: "__checkLatest__",
-    specifyLocation: "__specifyLocation__",
-    outputFormat: "__outputFormat__",
-    kubectlOutput: "__kubectlOutput__"
+    specifyLocation: "__specifyLocation__"
 };
 
 export let OperatingSystems = {
@@ -48,6 +47,11 @@ export let isKubectlPresentOnMachine = "true";
 export let ContainerTypes = {
     AzureContainerRegistry: "Azure Container Registry",
     ContainerRegistry: "Container Registry"
+}
+
+export let ConnectionType = {
+    AzureResourceManager: "Azure Resource Manager",
+    KubernetesServiceConnection: "Kubernetes Service Connection"
 }
 
 /**

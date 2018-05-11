@@ -2,7 +2,10 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import * as shared from './TestShared';
-var Stats = require('fs').Stats
+const querystring = require("querystring");
+
+var nock = require("nock");
+var Stats = require('fs').Stats;
 
 const DefaultWorkingDirectory: string = shared.formatPath("a/w");
 const ConfigurationFilePath = shared.formatPath("dir/deployment.yaml");
@@ -16,6 +19,7 @@ let taskPath = path.join(__dirname, '../src', 'kubernetes.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('containerregistrytype', process.env[shared.TestEnvVars.containerType] || shared.ContainerTypes.ContainerRegistry);
+tr.setInput('connectionType', process.env[shared.TestEnvVars.connectionType] || shared.ConnectionType.AzureResourceManager);
 tr.setInput('command', process.env[shared.TestEnvVars.command] || shared.Commands.apply);
 tr.setInput('useConfigurationFile', process.env[shared.TestEnvVars.useConfigurationFile] || "false");
 tr.setInput('configuration', ConfigurationFilePath);
@@ -34,26 +38,63 @@ tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocatio
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.7.0");
 tr.setInput('checkLatest', process.env[shared.TestEnvVars.checkLatest] || "false");
 tr.setInput('specifyLocation', process.env[shared.TestEnvVars.specifyLocation] || "");
-tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || 'json');
-tr.setInput('kubectlOutput', process.env[shared.TestEnvVars.kubectlOutput] || '');
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('kubernetesServiceEndpoint', 'kubernetesEndpoint');
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
-tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
+tr.setInput('azureSubscriptionEndpoint2', 'AzureRMSpn');
+tr.setInput('azureContainerRegistry', 'ajgtestacr1.azurecr.io');
+tr.setInput('azureResourceGroup', 'myResourceGroup');
+tr.setInput('kubernetesCluster', 'myCluster1');
 console.log("Inputs have been set");
 
+process.env['AGENT_VERSION'] = '2.115.0';
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_kubernetesEndpoint"] = "{\"parameters\":{\"kubeconfig\":\"kubeconfig\", \"username\":\"test\", \"password\":\"regpassword\",},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_kubernetesEndpoint_KUBECONFIG"] =  "{\"apiVersion\":\"v1\", \"clusters\": [{\"cluster\": {\"insecure-skip-tls-verify\":\"true\", \"server\":\"https://5.6.7.8\", \"name\" : \"scratch\"}}], \"contexts\": [{\"context\" : {\"cluster\": \"scratch\", \"namespace\" : \"default\", \"user\": \"experimenter\", \"name\" : \"exp-scratch\"}], \"current-context\" : \"exp-scratch\", \"kind\": \"Config\", \"users\" : [{\"user\": {\"password\": \"regpassword\", \"username\" : \"test\"}]}";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
-process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
-process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
-process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "MOCK_SPN_ID";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "MOCK_SPN_KEY";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "MOCK_TENANT_ID";
+process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SCHEME"] = "ServicePrincipal";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
+process.env["ENDPOINT_DATA_AzureRMSpn_ENVIRONMENT"] = "AzureCloud";
+process.env['ENDPOINT_DATA_AzureRMSpn_ENVIRONMENTAUTHORITYURL'] = "https://login.windows.net/";
+process.env['ENDPOINT_URL_AzureRMSpn'] = 'https://management.azure.com/';
+process.env['ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID'] = 'https://management.azure.com/';
+process.env['AZURE_HTTP_USER_AGENT'] = 'TEST_AGENT';
+process.env['PATH'] = KubectlPath;
+
+//mock responses for Azure Resource Manager connection type
+nock("https://login.windows.net", {
+		reqheaders: {
+            "content-type": "application/x-www-form-urlencoded; charset=utf-8"
+      	}
+    })
+	.post('/MOCK_TENANT_ID/oauth2/token/', querystring.stringify({
+		resource: "https://management.azure.com/",
+		client_id: "MOCK_SPN_ID",
+		grant_type: "client_credentials",
+		client_secret: "MOCK_SPN_KEY"
+	}))
+	.reply(200, {
+        access_token: "DUMMY_ACCESS_TOKEN"
+    }).persist();
+    
+nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8"
+        }
+    }).get("/subscriptions/sId/resourceGroups/myResourceGroup/providers/Microsoft.ContainerService/managedClusters/myCluster1/accessProfiles/clusterUser?api-version=2017-08-31")
+        .reply(200, {
+            properties: {
+                kubeConfig: '{\"apiVersion\":\"v1\", \"clusters\": [{\"cluster\": {\"insecure-skip-tls-verify\":\"true\", \"server\":\"https://5.6.7.8\", \"name\" : \"scratch\"}}], \"contexts\": [{\"context\" : {\"cluster\": \"scratch\", \"namespace\" : \"default\", \"user\": \"experimenter\", \"name\" : \"exp-scratch\"}], \"current-context\" : \"exp-scratch\", \"kind\": \"Config\", \"users\" : [{\"user\": {\"password\": \"regpassword\", \"username\" : \"test\"}]}'
+            }
+        }).persist();
 
 // provide answers for task mock
 let a = {
@@ -106,7 +147,7 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} get -n kube-system pods`] = {
 a.exec[`kubectl --kubeconfig ${KubconfigFile} delete secret my-secret`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=spId --docker-password=spKey --docker-email=ServicePrincipal@AzureRM`] = {
+a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=MOCK_SPN_ID --docker-password=MOCK_SPN_KEY --docker-email=ServicePrincipal@AzureRM`] = {
     "code": 0
 };
 a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret docker-registry my-secret --docker-server=https://index.docker.io/v1/ --docker-username=test --docker-password=regpassword --docker-email=test@microsoft.com`] = {
@@ -140,11 +181,6 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap someConfigMap --f
     "code": 1,
     "stdout" : "Error in configMap creation"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = {
-    "code": 0,
-    "stdout": "successfully got secret my-secret and printed it in the specified format"
-};
-
 tr.setAnswers(<any>a);
 
 // Create mock for fs module

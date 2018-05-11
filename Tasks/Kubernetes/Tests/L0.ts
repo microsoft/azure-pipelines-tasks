@@ -14,6 +14,7 @@ describe('Kubernetes Suite', function() {
         process.env[shared.isKubectlPresentOnMachine] = "true";
         delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.containerType];
+        delete process.env[shared.TestEnvVars.connectionType];
         delete process.env[shared.TestEnvVars.versionOrLocation];
         delete process.env[shared.TestEnvVars.specifyLocation];
         delete process.env[shared.TestEnvVars.versionSpec];
@@ -30,10 +31,24 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.useConfigMapFile];
         delete process.env[shared.TestEnvVars.configMapFile];
         delete process.env[shared.TestEnvVars.configMapArguments];
-        delete process.env[shared.TestEnvVars.outputFormat];
-        delete process.env[shared.TestEnvVars.kubectlOutput];
     });
     after(function () {
+    });
+
+    it('Run successfully when the connectionType is Kubernetes Service Connection', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";    
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionType.KubernetesServiceConnection;        
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
     });
 
     it('Run successfully when the user provides a specific location for kubectl', (done:MochaDone) => {
@@ -54,7 +69,7 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);
         done();
     });
-
+ 
     it('Run successfully when the user provides the version for kubectl with checkLatest as false and version that dosent have a v prefix', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -196,7 +211,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get -n kube-system pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
-    });
+    }); 
 
     it('Runs successfully for kubectl docker-registry secrets using Container Registry with forceUpdate', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -250,7 +265,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) != -1, "kubectl delete should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=spId --docker-password=spKey --docker-email=ServicePrincipal@AzureRM`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=MOCK_SPN_ID --docker-password=MOCK_SPN_KEY --docker-email=ServicePrincipal@AzureRM`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
@@ -270,7 +285,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) == -1, "kubectl delete should not run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=spId --docker-password=spKey --docker-email=ServicePrincipal@AzureRM`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=MOCK_SPN_ID --docker-password=MOCK_SPN_KEY --docker-email=ServicePrincipal@AzureRM`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
@@ -399,24 +414,6 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);
         done();
     });
-
-    it('Runs successfully for kubectl get and print the output in a particular format', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.get;
-        process.env[shared.TestEnvVars.arguments] = "secrets my-secret";
-        process.env[shared.TestEnvVars.outputFormat] = 'yaml';
-        process.env[shared.TestEnvVars.kubectlOutput] = "secretsOutputVariable";
-        tr.run();
-        
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get secrets my-secret -o yaml`) != -1, "kubectl get should run");
-        console.log(tr.stderr);
-        done();
-    }); 
-
 
     it('Runs successfully for checking whether secrets, configmaps and kubectl commands are run in a consecutive manner', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');

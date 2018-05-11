@@ -5,6 +5,7 @@ import * as path from "path";
 import * as url from "url";
 import * as tl from "vsts-task-lib/task";
 import * as tr from "vsts-task-lib/toolrunner";
+import * as toolLib from 'vsts-task-tool-lib/tool';
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as utils from "./utilities";
 import * as os from "os";
@@ -19,11 +20,31 @@ export default class ClusterConnection {
         this.userDir = utils.getNewUserDirPath();
     }
 
+    private getClusterType(): any {
+        var connectionType = tl.getInput("connectionType", true);
+        if(connectionType === "Azure Resource Manager") {
+            return require("./clusters/armkubernetescluster")  
+        }
+        
+        return require("./clusters/generickubernetescluster")
+    }
+    
+    // get kubeconfig file path
+    private async getKubeConfig(): Promise<string> {
+        return this.getClusterType().getKubeConfig().then((config) => {
+            return config;
+        });
+    }
+
     private async initialize(): Promise<void> {
         if(!this.kubectlPath || !fs.existsSync(this.kubectlPath))
         {
             return this.getKubectl().then((kubectlpath)=> {
-                this.kubectlPath = kubectlpath;
+                this.kubectlPath = kubectlpath; 
+                // prepend the tools path. instructs the agent to prepend for future tasks
+                if(!process.env['PATH'].startsWith(path.dirname(this.kubectlPath))) {
+                    toolLib.prependPath(path.dirname(this.kubectlPath));
+                }             
             });
         }
     }
@@ -39,11 +60,11 @@ export default class ClusterConnection {
     }
 
     // open kubernetes connection
-    public async open(kubernetesEndpoint?: string){
+    public async open(){
+        var kubeconfig = await this.getKubeConfig();
          return this.initialize().then(() => {
-            if (kubernetesEndpoint) {
-                this.downloadKubeconfigFileFromEndpoint(kubernetesEndpoint);
-            }
+            this.kubeconfigFile = path.join(this.userDir, "config");
+            fs.writeFileSync(this.kubeconfigFile, kubeconfig);
          });
     }
 
@@ -88,12 +109,10 @@ export default class ClusterConnection {
         }
         else if(versionOrLocation === "version") {
             tl.debug(tl.loc("DownloadingClient"));
-            var kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
             let versionSpec = tl.getInput("versionSpec");
             let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
-            return utils.getKubectlVersion(versionSpec, checkLatest).then((version) => {
-                return utils.downloadKubectl(version, kubectlPath);
-            })
+            var version = await utils.getKubectlVersion(versionSpec, checkLatest);
+            return await utils.downloadKubectl(version);                 
         }
     }
 }

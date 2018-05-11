@@ -22,7 +22,7 @@ var registryType = tl.getInput("containerRegistryType", true);
 var authenticationProvider : AuthenticationTokenProvider;
 
 if(registryType ==  "Azure Container Registry"){
-    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint"), tl.getInput("azureContainerRegistry"));
+    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint2"), tl.getInput("azureContainerRegistry"));
 } 
 else {
     authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
@@ -34,7 +34,7 @@ var registryAuthenticationToken = authenticationProvider.getAuthenticationToken(
 var connection = new ClusterConnection();
 try
 {
-    connection.open(tl.getInput("kubernetesServiceEndpoint")).then(  
+    connection.open().then(  
         () => { return run(connection, registryAuthenticationToken) }
     ).then(
        () =>  {
@@ -71,11 +71,5 @@ async function run(clusterConnection: ClusterConnection, registryAuthenticationT
 function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
     var command = tl.getInput("command", true);
     var result = "";
-    var ouputVariableName =  tl.getInput("kubectlOutput", false);  
-    return kubectl.run(clusterConnection, command, (data) => result += data)
-    .fin(function cleanup() {
-        if(ouputVariableName) {
-            tl.setVariable(ouputVariableName, result);
-        }
-    });
+    return kubectl.run(clusterConnection, command, (data) => result += data);
 }
