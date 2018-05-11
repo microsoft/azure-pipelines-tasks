@@ -39,7 +39,7 @@
         "DotNetCoreInstallerV0",
         "DownloadBuildArtifacts",
         "DownloadPackageV0",
-        "DownloadSecureFile",
+        "DownloadSecureFileV1",
         "ExtractFiles",
         "FtpUpload",
         "Go",
