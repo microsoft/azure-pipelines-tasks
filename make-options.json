@@ -52,7 +52,7 @@
         "IISWebAppDeploymentOnMachineGroup",
         "IISWebAppManagementOnMachineGroupV0",
         "InstallAppleCertificateV2",
-        "InstallAppleProvisioningProfile",
+        "InstallAppleProvisioningProfileV1",
         "InstallSSHKey",
         "InvokeRestApiV1",
         "JavaToolInstaller",
