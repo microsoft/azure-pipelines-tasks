@@ -64,7 +64,7 @@
         "MSBuildV1",
         "NodeToolV0",
         "NpmV1",
-        "NpmAuthenticate",
+        "NpmAuthenticateV0",
         "NuGetV0",
         "NuGetCommandV2",
         "NuGetPackagerV0",
