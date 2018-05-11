@@ -103,7 +103,7 @@
         "XamariniOSV2",
         "XamarinTestCloud",
         "Xcode",
-        "XcodePackageiOS"
+        "XcodePackageiOSV0"
     ],
     "taskResources": [
         "*.ps1",
