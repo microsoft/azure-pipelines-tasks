@@ -61,7 +61,7 @@
         "Kubernetes",
         "ManualIntervention",
         "Maven",
-        "MSBuild",
+        "MSBuildV1",
         "NodeToolV0",
         "Npm",
         "NpmAuthenticate",
