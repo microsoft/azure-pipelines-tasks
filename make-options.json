@@ -83,7 +83,7 @@
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
         "RunDistributedTestsV1",
-        "RunJMeterLoadTest",
+        "RunJMeterLoadTestV1",
         "RunLoadTest",
         "ServiceFabricComposeDeploy",
         "ServiceFabricDeploy",
