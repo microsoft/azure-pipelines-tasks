@@ -172,4 +172,18 @@ describe('XamariniOS L0 Suite', function () {
 
         done();
     });
+
+    it('XamariniOS task fails on Windows', function (done: MochaDone) {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0RunOnWindows.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues[0] === 'loc_mock_XamariniOSFailed loc_mock_BuildRequiresMac');
+
+        done();
+    })
 })

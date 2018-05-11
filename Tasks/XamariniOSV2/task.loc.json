@@ -11,7 +11,11 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
+<<<<<<< HEAD
     "Minor": 136,
+=======
+    "Minor": 135,
+>>>>>>> Fail task early if run on windows or linux
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -160,6 +164,7 @@
     "MSB_RestoreNuGetPackagesDeprecated": "ms-resource:loc.messages.MSB_RestoreNuGetPackagesDeprecated",
     "MSB_BuildToolNotFound": "ms-resource:loc.messages.MSB_BuildToolNotFound",
     "MultipleSolutionsFound": "ms-resource:loc.messages.MultipleSolutionsFound",
-    "SolutionDoesNotExist": "ms-resource:loc.messages.SolutionDoesNotExist"
+    "SolutionDoesNotExist": "ms-resource:loc.messages.SolutionDoesNotExist",
+    "BuildRequiresMac": "ms-resource:loc.messages.BuildRequiresMac"
   }
 }

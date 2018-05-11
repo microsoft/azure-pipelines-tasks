@@ -11,7 +11,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
+<<<<<<< HEAD
         "Minor": 136,
+=======
+        "Minor": 135,
+>>>>>>> Fail task early if run on windows or linux
         "Patch": 0
     },
     "releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
@@ -148,6 +152,7 @@
         "MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
         "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
         "MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-        "SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+        "SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s",
+        "BuildRequiresMac": "Xamarin iOS builds require a macOS agent. Running on a Windows or Linux agent is not supported by Apple."
     }
 }

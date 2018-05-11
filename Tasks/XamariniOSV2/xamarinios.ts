@@ -1,6 +1,7 @@
 ﻿import path = require('path');
 import tl = require('vsts-task-lib/task');
 import msbuildhelpers = require('msbuildhelpers/msbuildhelpers');
+import os = require('os');
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
@@ -28,6 +29,11 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        // Check platform is macOS since demands are not evaluated on Hosted pools
+        if (!/^darwin/.test(os.platform())) {
+            throw tl.loc('BuildRequiresMac');
+        }
+        
         // Get build inputs
         const solutionInput: string = tl.getPathInput('solution', true, false);
         const configuration: string = tl.getInput('configuration', true);
