@@ -94,7 +94,7 @@
         "SshV0",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
-        "VSBuild",
+        "VSBuildV1",
         "VsTest",
         "VsTestPlatformToolInstaller",
         "WindowsMachineFileCopyV2",
