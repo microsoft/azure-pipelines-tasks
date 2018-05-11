@@ -67,7 +67,7 @@
         "NuGetV0",
         "NugetPackager",
         "NuGetPublisher",
-        "NuGetCommand",
+        "NuGetCommandV2",
         "NuGetToolInstaller",
         "PackerBuild",
         "DownloadPackage",
