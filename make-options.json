@@ -36,7 +36,7 @@
         "Docker",
         "DockerCompose",
         "DotNetCoreCLIV2",
-        "DotNetCoreInstaller",
+        "DotNetCoreInstallerV0",
         "DownloadBuildArtifacts",
         "DownloadSecureFile",
         "ExtractFiles",
