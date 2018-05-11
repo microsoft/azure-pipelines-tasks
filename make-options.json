@@ -64,7 +64,7 @@
         "NodeToolV0",
         "Npm",
         "NpmAuthenticate",
-        "NuGet",
+        "NuGetV0",
         "NugetPackager",
         "NuGetPublisher",
         "NuGetCommand",
