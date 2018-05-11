@@ -29,14 +29,17 @@ steps:
   displayName: Download slices
   env:
     SYSTEM_ACCESSTOKEN: $(system.accessToken)
+  #condition: ne(variables['DISTRIBUTEDTASK_USE_PERTASK_NUGET'], 'true')
 
 # Stage milestone
 - script: node .\ci\stage-milestone.js
   displayName: Stage milestone
+  #condition: ne(variables['DISTRIBUTEDTASK_USE_PERTASK_NUGET'], 'true')
 
 # Create packages.config for restoring previous milestones
 - script: node .\ci\create-restore-config.js
   displayName: Create packages.config for restoring previous milestones
+  #condition: ne(variables['DISTRIBUTEDTASK_USE_PERTASK_NUGET'], 'true')
 
 # Restore previous milestones
 - task: NuGetCommand@2
@@ -48,10 +51,12 @@ steps:
     feedRestore: $(task_milestone_feed_name)
     includeNuGetOrg: false
     packagesDirectory: $(system.defaultWorkingDirectory)\_package\restore
+  condition: ne(variables['DISTRIBUTEDTASK_USE_PERTASK_NUGET'], 'true')
 
 # Stage aggregate
 - script: node .\ci\stage-aggregate.js
   displayName: Stage aggregate
+  condition: ne(variables['DISTRIBUTEDTASK_USE_PERTASK_NUGET'], 'true')
 
 # Publish aggregate artifact
 - task: PublishBuildArtifacts@1
@@ -59,6 +64,21 @@ steps:
     pathToPublish: _package/publish-layout
     artifactName: TaskPackage
     artifactType: container
+  condition: ne(variables['DISTRIBUTEDTASK_USE_PERTASK_NUGET'], 'true')
+
+# Stage per task nuget package
+- script: node .\ci\per-task-nuget-package.js
+  displayName: Stage per task nuget package
+  condition: eq(variables['DISTRIBUTEDTASK_USE_PERTASK_NUGET'], 'true')
+
+# Publish per task artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish per task artifact
+  inputs:
+    pathToPublish: _package\per-task-publish
+    artifactName: PerTaskPackages
+    artifactType: container
+  condition: eq(variables['DISTRIBUTEDTASK_USE_PERTASK_NUGET'], 'true')
 
 # Publish milestone package
 - task: NuGetCommand@2

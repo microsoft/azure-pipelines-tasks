@@ -393,6 +393,49 @@ var downloadFile = function (url) {
 }
 exports.downloadFile = downloadFile;
 
+// Check if a specified version of a task exists in packaging feed.
+var taskVersionExistsInPackaging = function (taskName, taskVersion) {
+    // need to add semver to do comparisons safely
+    //https://docs.microsoft.com/en-us/rest/api/vsts/packaging/versions/list
+    //GET https://{accountName}.feeds.visualstudio.com/_apis/packaging/Feeds/{feedId}/Packages/{packageId}/versions?api-version=5.0-preview.1
+
+
+    // Something like this but with a GUID
+    // https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages/Mseng.MS.TF.Build.Tasks/versions?api-version=5.0-preview.1
+    // Id for Mseng.MS.TF.Build.Tasks is 180592ac-ce16-471d-97c1-b9ba418477b5
+
+    // TODO: Create package for each nuget package
+    // TODO: Document process for creating a new task? Should we have CI handle creating a new package for the task if one doesn't exist?
+    // TODO: We got 1000 packages back, does the query limit the number? This could cause issues.
+
+    // Find all packages that contain "Mseng.MS.TF.Build.Tasks"
+    // TODO: Use taskName in this url... append "." + taskName to the end
+    // NOTE: This queries by name so that we don't have to store the GUID for each task package. Makes things more flexible.
+    // NOTE: If we get no results do we want to create a new one here? Or is this a manual step for new task owners?
+    var taskPackagesQueryUrl = 'https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages?packageNameQuery=Mseng.MS.TF.Build.Tasks';
+
+    var packagingData = syncRequest('GET', taskPackagesQueryUrl).getBody();
+    packagingData.value.forEach(function (package) {
+        // there should only ever be one package
+        package.versions.forEach(function (versionDetails) {
+            if (versionDetails.version === taskVersion) {
+                return true;
+            }
+        });
+    });
+
+    // yes : 1.20180427.35389-m134-df8ea257
+    // no: randomstring
+
+    // Instead of this check if it exists
+    // Do they have a bulk api?
+    // TODO: look for a specific task name and version, can we do this?
+    // If they don't we will have to get the entire list and see if the version we want is there ourselves
+
+    return false;
+}
+exports.taskVersionExistsInPackaging = taskVersionExistsInPackaging;
+
 var downloadArchive = function (url, omitExtensionCheck) {
     // validate parameters
     if (!url) {

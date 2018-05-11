@@ -84,44 +84,35 @@ if (options.task) {
 else {
     // load the default list
     taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
-    
-    // For now filter further to just what's changed here.
-    // We could also use a --changed flag and preserve the force building of all.
-    // Not sure if there will be a use case for that after this change goes in
-    // But it would make things more explicit
-    if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET) {
-        var changed = [];
-        taskList.forEach(function (taskName) {
-            // compare current and packaging version
-            // add to new list if current > packaging
-            // print all verbose, print warning if < packaging
-            var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
-            var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
-            if (typeof taskJson.version.Patch != 'number') {
-                fail(`Error processing '${taskName}'. version.Patch should be a number.`);
-            }
-            var sourceTaskVersion = taskJson.version.major + "." + taskJson.version.minor + "." + taskJson.version.patch;
+}
 
-            var packagingTaskVersion = ''; // TODO: Load this from packaging.
+// For now filter further to just what's changed here.
+// We could also use a --changed flag and preserve the force building of all.
+// Not sure if there will be a use case for that after this change goes in
+// But it would make things more explicit
+// TODO: Maybe put the logic to get task lists into make util.
+// TODO: Maybe put this in separate js file like set-task-slice.js(build-changed-js) and run it conditionally on feature flag for now.
+if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET) {
+    // var changed = [];
+    // taskList.forEach(function (taskName) {
+    //     // check packaging for the version of the task, if it doesn't exist we should build it
+    //     var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
+    //     var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+    //     if (typeof taskJson.version.Patch != 'number') {
+    //         fail(`Error processing '${taskName}'. version.Patch should be a number.`);
+    //     }
+    //     var sourceTaskVersion = taskJson.version.major + "." + taskJson.version.minor + "." + taskJson.version.patch;
 
-            // need to add semver to do comparisons safely
-            //https://docs.microsoft.com/en-us/rest/api/vsts/packaging/versions/list
-            //GET https://{accountName}.feeds.visualstudio.com/_apis/packaging/Feeds/{feedId}/Packages/{packageId}/versions?api-version=5.0-preview.1
-
-
-            // Something like this but with a GUID
-            // https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages/Mseng.MS.TF.Build.Tasks/versions?api-version=5.0-preview.1
-
-
-            // Can get all feeds doing this
-            // https://mseng.feeds.visualstudio.com/_apis/packaging/Feeds/VsoMicrosoftExternals/Packages/
-
-            // TODO: We need to keep the GUIDs for each task in the task.json or we can discover them... probably best to discover them after we have a task naming convention
-            // e.g - Mseng.MS.TF.Build.Tasks.CMake, get the task name from task.json not from the task folder, e.g. - taskJson.name
-            
-        });
-        taskList = changed;
-    }
+    //     if (!util.taskVersionExistsInPackaging(taskJson.name, sourceTaskVersion)) {
+    //         // This version of the task doesn't exist, we should build it
+    //         console.log(`Task '${taskJson.name}' version '${sourceTaskVersion}' does not exist in packaging, adding to list of tasks to be built.`);
+    //         changed.push(taskName);
+    //     } 
+    //     else {
+    //         console.log(`Task '${taskJson.name}' version '${sourceTaskVersion}' exists in packaging so it will not be built.`);
+    //     }
+    // });
+    // taskList = changed;
 }
 
 // set the runner options. should either be empty or a comma delimited list of test runners.
@@ -472,6 +463,7 @@ target.testLegacy = function() {
     run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
 }
 
+// TODO: When is this used vs. the code in stage-aggregate.js?
 target.package = function() {
     // clean
     rm('-Rf', packagePath);
@@ -525,6 +517,7 @@ target.package = function() {
 }
 
 // used by CI that does official publish
+// TODO: Look at how this is used in CI and how it relates to other CI scripts.
 target.publish = function() {
     var server = options.server;
     assert(server, 'server');
@@ -575,6 +568,7 @@ target.publish = function() {
 }
 
 // used to bump the patch version in task.json files
+// TODO: When/why is this used?
 target.bump = function() {
     taskList.forEach(function (taskName) {
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');

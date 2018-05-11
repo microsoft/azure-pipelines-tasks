@@ -28,6 +28,7 @@ steps:
 # Slice the tasks (sets TASK_PATTERN)
 - script: node ./ci/set-task-slice.js
   displayName: Set task slice
+  # condition: ne(variables.DISTRIBUTEDTASK_USE_PERTASK_NUGET, 'true')
 
 # Build
 - script: node make.js build --task "$(task_pattern)"

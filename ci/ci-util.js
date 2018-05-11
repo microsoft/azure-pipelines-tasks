@@ -8,41 +8,66 @@ var semver = require('semver');
 //------------------------------------------------------------------------------
 
 var buildTasksPath = path.join(__dirname, '..', '_build', 'Tasks');
-var packagePath = path.join(__dirname, '..', '_package');
-var tasksLayoutPath = path.join(packagePath, 'tasks-layout');
-var tasksZipPath = path.join(packagePath, 'tasks.zip');
-var hotfixLayoutPath = path.join(packagePath, 'hotfix-layout');
-var milestoneLayoutPath = path.join(packagePath, 'milestone-layout');
-var milestonePackSourcePath = path.join(packagePath, 'milestone-pack-source');
-var milestonePackSourceContentsPath = path.join(packagePath, 'milestone-pack-source', 'contents');
-var milestoneNuspecPath = path.join(packagePath, 'vsts-tasks-milestone.nuspec');
-var restorePath = path.join(packagePath, 'restore');
-var aggregateLayoutPath = path.join(packagePath, 'aggregate-layout');
-var aggregatePackSourcePath = path.join(packagePath, 'aggregate-pack-source');
-var aggregatePackSourceContentsPath = path.join(packagePath, 'aggregate-pack-source', 'contents');
-var aggregatePackSourceContentsZipPath = path.join(packagePath, 'aggregate-pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
-var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
-var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
-var publishLayoutPath = path.join(packagePath, 'publish-layout');
-var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
 exports.buildTasksPath = buildTasksPath;
+
+var packagePath = path.join(__dirname, '..', '_package');
 exports.packagePath = packagePath;
+
+var tasksLayoutPath = path.join(packagePath, 'tasks-layout');
 exports.tasksLayoutPath = tasksLayoutPath;
+
+var tasksZipPath = path.join(packagePath, 'tasks.zip');
 exports.tasksZipPath = tasksZipPath;
+
+var hotfixLayoutPath = path.join(packagePath, 'hotfix-layout');
 exports.hotfixLayoutPath = hotfixLayoutPath;
+
+var milestoneLayoutPath = path.join(packagePath, 'milestone-layout');
 exports.milestoneLayoutPath = milestoneLayoutPath;
+
+var milestonePackSourcePath = path.join(packagePath, 'milestone-pack-source');
 exports.milestonePackSourcePath = milestonePackSourcePath;
+
+var milestonePackSourceContentsPath = path.join(packagePath, 'milestone-pack-source', 'contents');
 exports.milestonePackSourceContentsPath = milestonePackSourceContentsPath;
+
+var milestoneNuspecPath = path.join(packagePath, 'vsts-tasks-milestone.nuspec');
 exports.milestoneNuspecPath = milestoneNuspecPath;
+
+var restorePath = path.join(packagePath, 'restore');
 exports.restorePath = restorePath;
+
+var aggregateLayoutPath = path.join(packagePath, 'aggregate-layout');
 exports.aggregateLayoutPath = aggregateLayoutPath;
+
+var aggregatePackSourcePath = path.join(packagePath, 'aggregate-pack-source');
 exports.aggregatePackSourcePath = aggregatePackSourcePath;
+
+var aggregatePackSourceContentsPath = path.join(packagePath, 'aggregate-pack-source', 'contents');
 exports.aggregatePackSourceContentsPath = aggregatePackSourceContentsPath;
+
+var aggregatePackSourceContentsZipPath = path.join(packagePath, 'aggregate-pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
 exports.aggregatePackSourceContentsZipPath = aggregatePackSourceContentsZipPath;
+
+var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 exports.aggregatePackageName = aggregatePackageName;
+
+var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 exports.aggregateNuspecPath = aggregateNuspecPath;
+
+var publishLayoutPath = path.join(packagePath, 'publish-layout');
 exports.publishLayoutPath = publishLayoutPath;
+
+var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
 exports.publishPushCmdPath = publishPushCmdPath;
+
+// Nuget package per task paths
+
+var perTaskLayoutPath = path.join(packagePath, 'per-task-layout');
+exports.perTaskLayoutPath = perTaskLayoutPath;
+
+var perTaskPublishPath = path.join(packagePath, 'per-task-publish');
+exports.perTaskPublishPath = perTaskPublishPath;
 
 //------------------------------------------------------------------------------
 // generic functions
