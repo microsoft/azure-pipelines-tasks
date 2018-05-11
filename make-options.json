@@ -30,7 +30,7 @@
         "CopyFilesOverSSHV0",
         "cURLUploader",
         "DecryptFileV1",
-        "Delay",
+        "DelayV1",
         "DeleteFiles",
         "DeployVisualStudioTestAgent",
         "Docker",
