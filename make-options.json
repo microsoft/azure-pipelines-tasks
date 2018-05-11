@@ -14,7 +14,7 @@
         "AzureMonitorAlertsV0",
         "AzureMysqlDeployment",
         "AzureMonitorV0",		
-        "AzureNLBManagement",
+        "AzureNLBManagementV1",
         "AzurePowerShellV3",
         "AzureResourceGroupDeploymentV2",
         "AzureRmWebAppDeployment",
