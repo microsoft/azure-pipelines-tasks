@@ -31,7 +31,7 @@
         "cURLUploader",
         "DecryptFileV1",
         "DelayV1",
-        "DeleteFiles",
+        "DeleteFilesV1",
         "DeployVisualStudioTestAgent",
         "Docker",
         "DockerCompose",
