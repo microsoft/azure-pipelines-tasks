@@ -32,7 +32,7 @@
         "DecryptFileV1",
         "DelayV1",
         "DeleteFilesV1",
-        "DeployVisualStudioTestAgent",
+        "DeployVisualStudioTestAgentV2",
         "Docker",
         "DockerCompose",
         "DotNetCoreCLIV2",
