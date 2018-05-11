@@ -90,7 +90,7 @@
         "ServiceFabricPowerShell",
         "ServiceFabricUpdateManifestsV2",
         "SqlAzureDacpacDeployment",
-        "SqlDacpacDeploymentOnMachineGroup",
+        "SqlDacpacDeploymentOnMachineGroupV0",
         "SshV0",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
