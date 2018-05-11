@@ -18,7 +18,7 @@
         "AzurePowerShellV3",
         "AzureResourceGroupDeploymentV2",
         "AzureRmWebAppDeployment",
-        "AzureVmssDeployment",
+        "AzureVmssDeploymentV0",
         "BashV3",
         "BatchScriptV1",
         "Chef",
