@@ -25,7 +25,7 @@
         "ChefKnifeV1",
         "CMakeV1",
         "CmdLineV2",
-        "CocoaPods",
+        "CocoaPodsV0",
         "CopyFilesV2",
         "CopyFilesOverSSH",
         "cURLUploader",
