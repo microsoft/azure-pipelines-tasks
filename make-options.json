@@ -21,7 +21,7 @@
         "AzureVmssDeploymentV0",
         "BashV3",
         "BatchScriptV1",
-        "Chef",
+        "ChefV1",
         "ChefKnife",
         "CMakeV1",
         "CmdLineV2",
