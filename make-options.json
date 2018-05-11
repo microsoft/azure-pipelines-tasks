@@ -82,7 +82,7 @@
         "PyPiPublisherV0",
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
-        "RunDistributedTests",
+        "RunDistributedTestsV1",
         "RunJMeterLoadTest",
         "RunLoadTest",
         "ServiceFabricComposeDeploy",
