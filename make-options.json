@@ -29,7 +29,7 @@
         "CopyFilesV2",
         "CopyFilesOverSSHV0",
         "cURLUploader",
-        "DecryptFile",
+        "DecryptFileV1",
         "Delay",
         "DeleteFiles",
         "DeployVisualStudioTestAgent",
