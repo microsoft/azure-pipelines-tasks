@@ -70,7 +70,7 @@
         "NuGetPackagerV0",
         "NuGetPublisherV0",
         "NuGetToolInstallerV0",
-        "PackerBuild",
+        "PackerBuildV0",
         "PowerShellV2",
         "PowerShellOnTargetMachinesV2",
         "PowerShellOnTargetMachinesV3",
