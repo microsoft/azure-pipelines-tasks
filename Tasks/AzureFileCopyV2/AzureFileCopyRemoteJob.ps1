@@ -57,6 +57,8 @@ $AzureFileCopyRemoteJob = {
         $randomFolderName = "AFC_" + [guid]::NewGuid()
         $randomFolderPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\$randomFolderName"
         $azCopyDestinationPath = Join-Path -Path $randomFolderPath -ChildPath "AzCopy"
+
+        Write-DetailLogs "Copying AzCopy tool files to location: $azCopyDestinationPath"
         New-Item -ItemType Directory -Force -Path $azCopyDestinationPath
 
         for($i=0; $i -lt $azCopyToolFileNames.Length; $i++)
@@ -96,6 +98,11 @@ $AzureFileCopyRemoteJob = {
 
         $azCopyCommand = "& `"$azCopyExeLocation`" /Source:$containerURL /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
         Invoke-Expression $azCopyCommand
+    }
+    catch
+    {
+        Write-Verbose "AzureFileCopyRemoteJob threw exception"
+        throw
     }
     finally
     {
