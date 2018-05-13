@@ -110,7 +110,8 @@ function Add-Certificate
     return $certificate
 }
 
-function Connect-ServiceFabricClusterFromServiceEndpoint {
+function Connect-ServiceFabricClusterFromServiceEndpoint
+{
     [CmdletBinding()]
     param(
         [Hashtable]
@@ -120,7 +121,12 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
+
+    Import-Module $PSScriptRoot/../TlsHelper_
+    Add-Tls12InSession
+
+    try
+    {
 
         $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
         if (!(Test-Path $regKey))
@@ -166,7 +172,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
                 $clusterConnectionParameters["WindowsCredential"] = $true
 
                 $clusterSpn = $ConnectedServiceEndpoint.Auth.Parameters.ClusterSpn
-                if($clusterSpn)
+                if ($clusterSpn)
                 {
                     $clusterConnectionParameters["ClusterSpn"] = $clusterSpn
                 }
@@ -174,11 +180,14 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
         }
 
         # Connect to cluster
-        try {
+        try
+        {
             [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
         }
-        catch {
-            if ($connectionEndpointUrl.Port -ne "19000") {
+        catch
+        {
+            if ($connectionEndpointUrl.Port -ne "19000")
+            {
                 Write-Warning (Get-VstsLocString -Key DefaultPortWarning $connectionEndpointUrl.Port)
             }
 
@@ -190,7 +199,14 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
         # Reset the scope of the ClusterConnection variable that gets set by the call to Connect-ServiceFabricCluster so that it is available outside the scope of this module
         Set-Variable -Name ClusterConnection -Value $Private:ClusterConnection -Scope Global
 
-    } finally {
+    }
+    catch
+    {
+        Assert-TlsError -exception $_.Exception
+        throw
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
