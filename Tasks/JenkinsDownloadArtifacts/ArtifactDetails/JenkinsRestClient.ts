@@ -397,6 +397,42 @@ export class JenkinsRestClient {
         return defer.promise;
     }
 
+    public HasAssociatedArtifacts(artifactQueryUrl: string): Q.Promise<boolean> {
+        let defer = Q.defer<boolean>();
+        this.GetClient().get(artifactQueryUrl).then((response: HttpClientResponse) => {
+            response.readBody().then((body: string) => {
+                if (!!body && response.message.statusCode === 200) {
+                    let jsonResult;
+                    try {
+                        jsonResult = JSON.parse(body);
+
+                        if (!!jsonResult.artifacts && jsonResult.artifacts.length > 0) {
+                            defer.resolve(true);
+                        }
+                        else {
+                            defer.resolve(false);
+                        }
+                    } catch (error) {
+                        defer.reject(error);
+                    }
+                }
+                else {
+                    if (response.message.statusCode) {
+                        console.log(tl.loc('ServerCallErrorCode', response.message.statusCode));
+                    }
+
+                    if (body) {
+                        tl.debug(body);
+                    }
+
+                    defer.reject(new Error(tl.loc('ServerCallFailed')));
+                }
+            })
+        });
+
+        return defer.promise;
+    }
+
     private IsValidBuildId(buildId: number, multiBranchName: string, isMultiBranch: boolean): boolean {
         if (isNaN(buildId)) {
             return false;

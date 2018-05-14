@@ -31,6 +31,10 @@ helper.RegisterHttpClientMock(tr, (url: string) => {
     if (url.indexOf('allBuilds[number]') !== -1) {
         return helper.GetSuccessExpectedResult('{"allBuilds":[{"number":22},{"number":21},{"number":20},{"number":18},{"number":15},{"number":14},{"number":13}]}');
     }
+
+    if (url === "http://url//job/testmultibranchproject//job/master/20/api/json?tree=artifacts[*]") {
+        return helper.GetSuccessExpectedResult('{ "_class": "hudson.model.FreeStyleBuild", "artifacts": [ "abc" ] }');
+    }
 });
 
 tr.run();
