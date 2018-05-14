@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 133,
-        "Patch": 1
+        "Minor": 135,
+        "Patch": 0
     },
     "groups": [
         {
@@ -293,7 +293,7 @@
         "UploadingAttachment": "Uploading %s as attachment",
         "SuccessfullyUploadedCommitsAttachment": "Successfully uploaded commits attachment",
         "GetCommitMessages": "Getting commit messages from commits",
-        "GetCommitMessagesFailed": "Getting commits message failed with an error %s",
+        "GetCommitMessagesFailed": "Getting commits message failed with an error %s. \nCommits: %s",
         "CouldNotWriteToFile": "Could not save content to file. Failed with an error %s",
         "DownloadingWorkItemsFromSingleBuild": "Downloading workitems associated with the build %s",
         "WritingWorkItemsTo": "Writing workitems to %s",
@@ -361,6 +361,8 @@
         "CannotFindJobType": "Could not detect job type",
         "InvalidJobName": "Invalid job name %s",
         "ContinuationTokenExistsFetchingRemainingFiles": "Continuation token exists, trying to fetch the list of remaining files.",
-        "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path"
+        "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
     }
 }

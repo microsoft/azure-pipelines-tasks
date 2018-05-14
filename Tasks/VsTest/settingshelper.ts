@@ -55,7 +55,7 @@ const runSettingsTemplate = `<?xml version=\"1.0\" encoding=\"utf-8\"?> <RunSett
 export async function updateSettingsFileAsRequired(settingsFile: string, isParallelRun: boolean, tiaConfig: models.TiaConfiguration, vsVersion: version.VSTestVersion, videoCollector: boolean, overrideParametersString: string, isDistributedRun: boolean, codeCoverageToolsInstallerFlow: boolean): Promise<string> {
     const defer = Q.defer<string>();
     let result: any;
-    
+
     if (!isParallelRun && !videoCollector && !tiaConfig.tiaEnabled && !overrideParametersString && !codeCoverageToolsInstallerFlow) {
         defer.resolve(settingsFile);
         return defer.promise;
@@ -82,7 +82,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
     if (settingsExt === testSettingsExtension && result.TestSettings &&
         result.TestSettings.Properties && result.TestSettings.Properties[0] &&
         result.TestSettings.Properties[0].Property && vsVersion && !vsVersion.isTestSettingsPropertiesSupported()) {
-        tl.warning(tl.loc('testSettingPropertiesNotSupported'))
+        tl.warning(tl.loc('testSettingPropertiesNotSupported'));
     }
 
     if (overrideParametersString) {
@@ -142,7 +142,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             if (tiaConfig.useNewCollector) {
                 testImpactCollectorNode[0].DataCollector[0].$.codebase = getTraceCollectorUri(vsVersion.majorVersion);
             }
-            
+
             testImpactCollectorNode[0].DataCollector[0].Configuration[0].ImpactLevel = getTIALevel(tiaConfig);
             testImpactCollectorNode[0].DataCollector[0].Configuration[0].LogFilePath = 'true';
 
@@ -154,13 +154,13 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
         });
 
         if (settingsExt === testSettingsExtension) {
-            tl.debug('Enabling Test Impact collector by editing given testsettings.')
+            tl.debug('Enabling Test Impact collector by editing given testsettings.');
             result = updateTestSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
         } else if (settingsExt === runSettingsExtension) {
-            tl.debug('Enabling Test Impact collector by editing given runsettings.')
+            tl.debug('Enabling Test Impact collector by editing given runsettings.');
             result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
         } else {
-            tl.debug('Enabling test impact data collection by creating new runsettings.')
+            tl.debug('Enabling test impact data collection by creating new runsettings.');
             settingsExt = runSettingsExtension;
             result = await CreateSettings(runSettingsTemplate);
             result = updateRunSettingsWithDataCollector(result, testImpactFriendlyName, testImpactCollectorNode);
@@ -204,7 +204,7 @@ export async function updateSettingsFileAsRequired(settingsFile: string, isParal
             tl.debug('Enabling code coverage by creating new run settings.');
             settingsExt = runSettingsExtension;
             result = await CreateSettings(runSettingsTemplate);
-            result = updateRunSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile)
+            result = updateRunSettingsWithCodeCoverageDetails(result, codeCoverageNode, settingsFile);
             tl.debug('Successfully added code coverage settings details to runsettings file.');
         }
     } 
@@ -232,8 +232,8 @@ function updateRunSettingsWithCodeCoverageDetails(result: any, codeCoverageNode:
         tl.debug('Updating runsettings file from DataCollectors node');
         result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: codeCoverageNode };
     } else {
-        var dataCollectorArray; 
-        dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector; 
+        var dataCollectorArray;
+        dataCollectorArray = result.RunSettings.DataCollectionRunSettings[0].DataCollectors[0].DataCollector;
         if (!dataCollectorArray) {
             tl.debug('Updating runsettings file from DataCollectors node');
             result.RunSettings.DataCollectionRunSettings[0] = { DataCollectors: codeCoverageNode };

@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 26
+        "Patch": 31
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -145,20 +145,6 @@
                 "EditableOptions": "True",
                 "MultiSelectFlatList": "True"
             },
-            "options": {
-                "Microsoft.ApplicationInsights.AzureWebSites": "Application Insights",
-                "ComposerExtension": "Composer",
-                "python2712x64": "Python 2.7.12 x64",
-                "python2712x86": "Python 2.7.12 x86",
-                "python2713x64": "Python 2.7.13 x64",
-                "python2713x86": "Python 2.7.13 x86",
-                "python353x64": "Python 3.5.3 x64",
-                "python353x86": "Python 3.5.3 x86",
-                "python360x86": "Python 3.6.0 x86",
-                "python360x64": "Python 3.6.0 x64",
-                "python361x86": "Python 3.6.1 x86",
-                "python361x64": "Python 3.6.1 x64"
-            },
             "required": "True",
             "visibleRule": "Action = Install Extensions",
             "helpMarkDown": "Site Extensions run on Microsoft Azure App Service. You can install set of tools as site extension and better manage your Azure App Service. The  App Service will be restarted to make sure latest changes take effect."
@@ -168,8 +154,11 @@
             "type": "string",
             "label": "Output variable",
             "defaultValue": "",
+            "properties": {
+                "Disabled":"True"
+            },
             "visibleRule": "Action = Install Extensions",
-            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br />Note: In case of multiple extensions selected for installation, provide comma separated list of variables that saves the local path for each of the selected extension in the order it appears in the Install Extension field.<br />Example: outputVariable1, outputVariable2"
+            "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br/>This field is now deprecated and would be removed. Use LocalPathsForInstalledExtensions variable from Output Variables section in subsequent tasks."
         },
         {
             "name": "AppInsightsResourceGroupName",
@@ -198,6 +187,12 @@
             },
             "visibleRule": "Action == Enable Continuous Monitoring",
             "helpMarkDown": "Select Application Insights resource where continuous monitoring data will be recorded. <br/>If your application insights resource is not listed here and you want to create a new resource, click on [+New] button. Once the resource is created on Azure Portal, come back here and click on refresh button."
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "LocalPathsForInstalledExtensions",
+            "description": "The local installation paths for the selected extensions for installation. <br/>Note: In case multiple extensions are selected for installation, the output is a comma separated list of local paths for each of the selected extension in the order they appear in the Install Extensions field."
         }
     ],
     "dataSourceBindings": [
@@ -256,6 +251,12 @@
                 "ResourceGroupName": "$(ResourceGroupName)"
             },
             "resultTemplate": "{\"Value\":\"{{{ #extractResource slots}}}\",\"DisplayValue\":\"{{{ #extractResource slots}}}\"}"
+        },
+        {
+            "target": "ExtensionsList",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureSiteExtensions",
+            "resultTemplate": "{\"Value\":\"{{{id}}}\",\"DisplayValue\":\"{{{ #stringReplace '\".' '' title}}}\"}"
         }
     ],
     "execution": {
@@ -288,7 +289,6 @@
         "RestartAppServiceAccepted": "Restart request accepted by App Service : %s",
         "InvalidAction": "Invalid Action selected !",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment status. SCM endpoint is not enabled for this website.",
-        "CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch acccess token for Azure App Service. StatusCode %s (%s)",
         "WebAppDoesntExist": "Web app '%s' doesn't exist.",
         "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
         "StartingSwapSlot": "Requesting swap slot for Web App : %s",
@@ -313,7 +313,6 @@
         "UnableToFetchContinuousWebJobs": "Unable to fetch continuous web jobs",
         "UnableToStartContinuousWebJob": "Unable to start continuous web job",
         "UnableToStopContinuousWebJob":  "Unable to stop continuous web job",
-        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
         "AppNameCannotBeNull": "App name cannot be null or undefined and it must be of type string.",
         "SlotNameCannotBeNull": "Slot name cannot be null or undefined and it must be of type string.",
         "SourceSlotNameCannotBeNull": "Source slot name cannot be null or undefined and it must be of type string.",
@@ -378,6 +377,7 @@
         "FailedToStartContinuousWebJob": "Failed to start continuous WebJob '%s'. Error: %s",
         "FailedToStopContinuousWebJob": "Failed to stop continuous WebJob '%s'. Error: %s",
         "FailedToGetSiteExtensions": "Failed to get site extensions. Error: %s",
+        "FailedToGetAllSiteExtensions": "Failed to get extension feed. Error: %s",
         "ExtensionAlreadyInstalled": "Extension '%s' already installed.",
         "InstallingSiteExtension": "Installing site Extension '%s'",
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
@@ -399,6 +399,9 @@
         "WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
         "RestartingKuduService": "Restarting Kudu Service.",
         "RestartedKuduService": "Kudu Service restarted.",
-        "FailedToRestartKuduService": "Failed to restart kudu Service. %s."
+        "FailedToRestartKuduService": "Failed to restart kudu Service. %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
     }
 }

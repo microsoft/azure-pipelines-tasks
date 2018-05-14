@@ -2,9 +2,11 @@ export interface InputDataContract {
     AgentName : string;
     AccessToken : string;
     CollectionUri : string;
-    EnvironmentUri : string;
+    RunIdentifier : string;
     TeamProject : string;
     TestSelectionSettings : TestSelectionSettings;
+    VsTestConsolePath : string;
+    UsingXCopyTestPlatformPackage : boolean;
     TestReportingSettings : TestReportingSettings;
     TfsSpecificSettings : TfsSpecificSettings;
     TargetBinariesSettings : TargetBinariesSettings;
@@ -13,27 +15,9 @@ export interface InputDataContract {
     DistributionSettings : DistributionSettings;
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
-    UseVsTestConsole : boolean;
-    TestPlatformVersion : string;
-    COR_PROFILER_PATH_32 : string;
-    COR_PROFILER_PATH_64 : string;
-    ForcePlatformV2 : boolean;
-    VisualStudioPath : string;
-    TestWindowPath : string;
-    TiaRunIdFile : string;
-    ResponseFile : string;
-    ResponseSupplementryFilePath : string;
     TiaBaseLineBuildIdFile : string;
-    VsVersion : string;
-    VsVersionIsTestSettingsPropertiesSupported : boolean;
-    RerunIterationCount : number;
-    AgentVersion : string;
-    VstestTaskInstanceIdentifier : string;
-    MiniMatchTestSourcesFile : string;
     UseNewCollector : boolean;
     IsPrFlow : boolean;
-    UseTestCaseFilterInResponseFile : boolean;
-    DisableEnablingDataCollector : boolean;
 }
 
 export interface TestReportingSettings {
@@ -43,14 +27,10 @@ export interface TestReportingSettings {
 
 export interface TestSelectionSettings {
     TestSelectionType : string;
-    AssemblyBasedTestSelection : AssemblyBasedTestSelection;
     TestPlanTestSuiteSettings : TestPlanTestSuiteSettings;
     SearchFolder : string;
     TestCaseFilter : string;
-}
-
-export interface AssemblyBasedTestSelection {
-    SourceFilter : string;
+    TestSourcesFile : string;
 }
 
 export interface TestPlanTestSuiteSettings {
@@ -86,15 +66,15 @@ export interface ProxySettings {
 
 export interface RerunSettings {
     RerunFailedTests : boolean;
+    RerunType : string;
     RerunFailedTestCasesMaxLimit : number;
     RerunFailedThreshold : number;
     RerunMaxAttempts : number;
 }
 
 export interface DistributionSettings {
-    TestCaseLevelSlicingEnabled : boolean;
+    DistributeTestsBasedOn : string;
     NumberOfTestAgents : number;
-    IsTimeBasedSlicing : boolean;
     RunTimePerSlice : number;
     NumberOfTestCasesPerSlice : number;
 }
@@ -109,14 +89,13 @@ export interface ExecutionSettings {
     SettingsFile : string;
     OverridenParameters : string;
     RerunSettings : RerunSettings;
-    IsToolsInstallerFlow : boolean;
-    VstestConsolePath : string;
     TiaSettings : TiaSettings;
     VideoDataCollectorEnabled : boolean;
 }
 
 export interface TiaSettings {
     Enabled : boolean;
+    DisableDataCollection : boolean;
     RebaseLimit : number;
     SourcesDirectory : string;
     FileLevel : boolean;

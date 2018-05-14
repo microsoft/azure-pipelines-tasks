@@ -27,6 +27,8 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.forceUpdate];
         delete process.env[shared.TestEnvVars.configMapName];
         delete process.env[shared.TestEnvVars.forceUpdateConfigMap];
+        delete process.env[shared.TestEnvVars.useConfigMapFile];
+        delete process.env[shared.TestEnvVars.configMapFile];
         delete process.env[shared.TestEnvVars.configMapArguments];
         delete process.env[shared.TestEnvVars.outputFormat];
         delete process.env[shared.TestEnvVars.kubectlOutput];
@@ -315,7 +317,7 @@ describe('Kubernetes Suite', function() {
         done();
     });
  
-   /*  it('Runs successfully for kubectl create configMap from file or directory with forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl create configMap from file with forceUpdate', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
@@ -330,19 +332,20 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) == -1, "kubectl get should not run");
         assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) != -1, "kubectl delete should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=${shared.formatPath("configMapDir/configMap.properties")}`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=configmap.properties=${shared.formatPath("configMapDir/configmap.properties")}`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
 
-    it('Runs successfully for kubectl create configMap from file or directory without forceUpdate', (done:MochaDone) => {
+    it('Runs successfully for kubectl create configMap from directory without forceUpdate', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
         process.env[shared.TestEnvVars.arguments] = "pods";
         process.env[shared.TestEnvVars.configMapName] = "myConfigMap";
         process.env[shared.TestEnvVars.useConfigMapFile] = "true";
+        process.env[shared.TestEnvVars.configMapFile] =  shared.formatPath("kubernetes/configMapDir");
         tr.run();
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -350,11 +353,11 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) != -1, "kubectl get should run");
         assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) == -1, "kubectl delete should not run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=${shared.formatPath("configMapDir/configMap.properties")}`) != -1, "kubectl create should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=${shared.formatPath("kubernetes/configMapDir")}`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
-    }); */
+    }); 
 
     it('Runs successfully for kubectl create configMap using literal values with forceUpdate', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
@@ -483,5 +486,5 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
-    });
+    }); 
 });

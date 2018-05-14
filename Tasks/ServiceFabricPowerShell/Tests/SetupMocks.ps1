@@ -20,7 +20,7 @@ Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SD
 $vstsEndpoint = @{
     "url" = $connectionEndpointFullUrl
     "Auth" = @{
-        "Scheme" = "UserNamePassword" 
+        "Scheme" = "UserNamePassword"
         "Parameters" = @{
             "ServerCertThumbprint" = $serverCertThumbprint
             "Username" = $userName
@@ -66,3 +66,6 @@ $regKeyObj = @{
     "FabricSDKPSModulePath" = $serviceFabricSdkModulePath
 }
 Register-Mock Get-ItemProperty { $regKeyObj } -- -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKPSModulePath
+
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"
+Register-Mock Write-VstsTaskError

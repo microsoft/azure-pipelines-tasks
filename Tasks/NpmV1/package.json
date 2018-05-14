@@ -1,0 +1,27 @@
+{
+  "name": "vsts-npm-task",
+  "version": "1.0.15",
+  "description": "VSTS NPM Task",
+  "main": "npmtask.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "ini": "^1.3.4",
+    "mockery": "^1.7.0",
+    "npm-common": "file:../../_build/Tasks/Common/npm-common-1.0.1.tgz",
+    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+    "vso-node-api": "^6.2.2-preview",
+    "vsts-task-lib": "2.0.6"
+  }
+}

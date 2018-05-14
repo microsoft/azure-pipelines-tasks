@@ -114,6 +114,10 @@ Try
         $connectedServiceName = $connectedServiceNameARM
     }
 
+    # Telemetry for endpoint id 
+    $telemetryJsonContent = "{`"endpointId`":`"$connectedServiceName`"}"
+    Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=SqlAzureDacpacDeployment]$telemetryJsonContent"
+
     $ServerName = $ServerName.ToLower()
     # Checks for the very basic consistency of the Server Name
     Check-ServerName $ServerName

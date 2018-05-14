@@ -19,6 +19,7 @@ import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsR
 var DecompressZip = require('decompress-zip');
 var fsExtra = require('fs-extra');
 var taskJson = require('./task.json');
+var uuidv4 = require('uuid/v4');
 
 const area: string = 'JenkinsDownloadArtifacts';
 
@@ -59,12 +60,14 @@ function getDefaultProps() {
     var hostType = (tl.getVariable('SYSTEM.HOSTTYPE') || "").toLowerCase();
     return {
         hostType: hostType,
-        definitionName: hostType === 'release' ? tl.getVariable('RELEASE.DEFINITIONNAME') : tl.getVariable('BUILD.DEFINITIONNAME'),
+        definitionName: '[NonEmail:' + (hostType === 'release' ? tl.getVariable('RELEASE.DEFINITIONNAME') : tl.getVariable('BUILD.DEFINITIONNAME')) + ']',
         processId: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEID') : tl.getVariable('BUILD.BUILDID'),
         processUrl: hostType === 'release' ? tl.getVariable('RELEASE.RELEASEWEBURL') : (tl.getVariable('SYSTEM.TEAMFOUNDATIONSERVERURI') + tl.getVariable('SYSTEM.TEAMPROJECT') + '/_build?buildId=' + tl.getVariable('BUILD.BUILDID')),
         taskDisplayName: tl.getVariable('TASK.DISPLAYNAME'),
         jobid: tl.getVariable('SYSTEM.JOBID'),
         agentVersion: tl.getVariable('AGENT.VERSION'),
+        agentOS: tl.getVariable('AGENT.OS'),
+        agentName: tl.getVariable('AGENT.NAME'),
         version: taskJson.version
     };
 }
@@ -171,9 +174,23 @@ async function doWork() {
                     tl.rmRF(zipLocation);
                 }
 
-                fsExtra.move(path.join(localPathRoot, "archive"), localPathRoot).catch((error) => {
-                    throw error;
-                });
+                var archivePath = path.join(localPathRoot, "archive");
+                var tempPath = path.join(localPathRoot, uuidv4());
+                fsExtra.move(archivePath, tempPath)
+                    .then(() => {
+                        fsExtra.copy(tempPath, localPathRoot)
+                            .then(() => {
+                                fsExtra.remove(tempPath).catch((error) => {
+                                    throw error;
+                                });
+                            })
+                            .catch((error) => {
+                                throw error;
+                            });
+                    })
+                    .catch((error) => {
+                        throw error;
+                    });
             }
             else {
                 await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);

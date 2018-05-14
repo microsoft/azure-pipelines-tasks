@@ -1,0 +1,23 @@
+{
+  "name": "vsts-npm-authenticate-task",
+  "version": "0.0.2",
+  "description": "VSTS npm Authenticate Task",
+  "main": "npmauth.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "npm-common": "file:../../_build/Tasks/Common/npm-common-1.0.1.tgz",
+    "vsts-task-lib": "2.0.6"
+  }
+}

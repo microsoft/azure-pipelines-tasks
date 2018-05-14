@@ -2,8 +2,9 @@ import models = require('./models');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
 import path = require('path');
-import { Helper } from './helpers'
-
+import * as inputdatacontract from './inputdatacontract';
+import { Helper } from './helpers';
+const uuid = require('uuid');
 let perf = require('performance-now');
 
 export class TestSelectorInvoker {
@@ -83,6 +84,109 @@ export class TestSelectorInvoker {
                 'proxybypasslist': proxyConfig.proxyBypassHosts,
                 'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
                 'VsTest_TaskInstanceIdentifier': taskInstanceIdentifier,
+                'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
+                'VSTS_HTTP_TIMEOUT': tl.getVariable('VSTS_HTTP_TIMEOUT'),
+                'DebugLogging': this.isDebugEnabled()
+            },
+            silent: null,
+            outStream: null,
+            errStream: null,
+            windowsVerbatimArguments: null
+        });
+
+        endTime = perf();
+        elapsedTime = endTime - startTime;
+        console.log('##vso[task.logissue type=warning;SubTaskName=PublishCodeChanges;SubTaskDuration=' + elapsedTime + ']');
+        tl.debug(tl.loc('PublishCodeChangesPerfTime', elapsedTime));
+
+        if (output.code !== 0) {
+            tl.warning(output.stderr);
+        }
+
+        tl.debug('completed publish code changes');
+        return output.code;
+    }
+
+    public publishCodeChangesInDistributedMode(inputDataContract: inputdatacontract.InputDataContract): number {
+        tl.debug('Entered publish code changes');
+
+        const startTime = perf();
+        let endTime: number;
+        let elapsedTime: number;
+        let pathFilters: string;
+        let definitionRunId: string;
+        let definitionId: string;
+        let prFlow: string;
+        let rebaseLimit: string;
+        let sourcesDirectory: string;
+        let context: string;
+
+        let newprovider = 'true';
+        if (!inputDataContract.ExecutionSettings.TiaSettings.FileLevel) {
+            newprovider = 'false';
+        }
+
+        const selectortool = tl.tool(this.getTestSelectorLocation());
+        selectortool.arg('PublishCodeChanges');
+
+        if (tl.getVariable('release.releaseUri')) {
+            // Release context. Passing Release Id.
+            context = 'CD';
+            definitionRunId = tl.getVariable('Release.ReleaseId');
+            definitionId = tl.getVariable('release.DefinitionId');
+        } else {
+            // Build context. Passing build id.
+            context = 'CI';
+            definitionRunId = tl.getVariable('Build.BuildId');
+            definitionId = tl.getVariable('System.DefinitionId');
+        }
+
+        if (inputDataContract.IsPrFlow) {
+            prFlow = 'true';
+        } else {
+            prFlow = 'false';
+        }
+
+        //hydra: check if this conversion works fine (number to string)
+        if (inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit) {
+            rebaseLimit = inputDataContract.ExecutionSettings.TiaSettings.RebaseLimit.toString();
+        }
+
+        if (inputDataContract.ExecutionSettings.TiaSettings.FilterPaths) {
+            pathFilters = inputDataContract.ExecutionSettings.TiaSettings.FilterPaths.trim();
+        } else {
+            pathFilters = '';
+        }
+
+        if (inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory) {
+            sourcesDirectory = inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory.trim();
+        } else {
+            sourcesDirectory = '';
+        }
+
+        const output = selectortool.execSync({
+            cwd: null,
+            env: {
+                'collectionurl': tl.getVariable('System.TeamFoundationCollectionUri'),
+                'projectid': tl.getVariable('System.TeamProject'),
+                'definitionrunid': definitionRunId,
+                'definitionid': definitionId,
+                'token': tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
+                'sourcesdir': sourcesDirectory,
+                'newprovider': newprovider,
+                'prflow': prFlow,
+                'rebaselimit': rebaseLimit,
+                'baselinefile': inputDataContract.TiaBaseLineBuildIdFile,
+                'context': context,
+                'filter': pathFilters,
+                'userMapFile': inputDataContract.ExecutionSettings.TiaSettings.UserMapFile ? inputDataContract.ExecutionSettings.TiaSettings.UserMapFile : '',
+                'testCaseFilterResponseFile': '',
+                'proxyurl': inputDataContract.ProxySettings.ProxyUrl,
+                'proxyusername': inputDataContract.ProxySettings.ProxyUsername,
+                'proxypassword': inputDataContract.ProxySettings.ProxyPassword,
+                'proxybypasslist': inputDataContract.ProxySettings.ProxyBypassHosts,
+                'AGENT_VERSION': tl.getVariable('AGENT.VERSION'),
+                'VsTest_TaskInstanceIdentifier': uuid.v1(),
                 'VSTS_HTTP_RETRY': tl.getVariable('VSTS_HTTP_RETRY'),
                 'VSTS_HTTP_TIMEOUT': tl.getVariable('VSTS_HTTP_TIMEOUT'),
                 'DebugLogging': this.isDebugEnabled()

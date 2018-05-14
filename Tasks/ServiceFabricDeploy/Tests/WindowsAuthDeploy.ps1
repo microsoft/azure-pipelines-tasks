@@ -24,6 +24,7 @@ Register-Mock Get-VstsInput { "false" } -- -Name skipPackageValidation
 Register-Mock Get-VstsInput { "false" } -- -Name unregisterUnusedVersions
 Register-Mock Get-VstsInput { "false" } -- -Name configureDockerSettings
 Register-Mock Get-VstsInput { "false" } -- -Name useDiffPackage
+Register-Mock Get-VstsInput { "false" } -- -Name overrideApplicationParameter
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -61,6 +62,9 @@ Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$
 Register-Mock Get-ServiceFabricApplication { $null } -- -ApplicationName $appName
 $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\ApplicationParameters.xml", "-OverwriteBehavior:", $overwriteBehavior, "-ApplicationPackagePath:", $applicationPackagePath, "-ErrorAction:", "Stop", "-Action:", "RegisterAndCreate")
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
+
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"
+Register-Mock Write-VstsTaskError
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1

@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 0,
-        "Patch": 6
+        "Minor": 1,
+        "Patch": 5
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -27,27 +27,40 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+            "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp"
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
         },
         {
             "name": "PostDeploymentAction",
             "displayName": "Post Deployment Action",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != \"\""
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
         },
         {
             "name": "ApplicationAndConfigurationSettings",
             "displayName": "Application and Configuration Settings",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "ConnectionType = AzureRM"
         }
     ],
     "inputs": [
+        {
+            "name": "ConnectionType",
+            "type": "pickList",
+            "label": "Connection type",
+            "defaultValue": "AzureRM",
+            "options": {
+                "AzureRM": "Azure Resource Manager",
+                "PublishProfile": "Publish Profile"
+            },
+            "required": true,
+            "helpMarkDown": "Select the connection type to use to deploy the WebApp."
+        },
         {
             "name": "ConnectedServiceName",
             "aliases": ["azureSubscription"],
@@ -55,7 +68,25 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "visibleRule": "ConnectionType = AzureRM"
+        },
+        {
+            "name": "PublishProfilePath",
+            "type": "filePath",
+            "label": "Publish profile path",
+            "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.pubxml",
+            "required": true,
+            "helpMarkDown": "",
+            "visibleRule": "ConnectionType = PublishProfile"
+        },
+        {
+            "name": "PublishProfilePassword",
+            "type": "string",
+            "label": "Publish profile password",
+            "required": true,
+            "helpMarkDown": "It is recommended to store password in a secret variable and use that variable here e.g. $(Password).",
+            "visibleRule": "ConnectionType = PublishProfile"
         },
         {
             "name": "WebAppKind",
@@ -72,7 +103,8 @@
                 "apiApp": "API App",
                 "mobileApp": "Mobile App"
             },
-            "helpMarkDown": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App and Mobile App."
+            "helpMarkDown": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App and Mobile App.",
+            "visibleRule": "ConnectionType = AzureRM"
         },
         {
             "name": "WebAppName",
@@ -83,7 +115,8 @@
             "properties": {
                 "EditableOptions": "True"
             },
-            "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed."
+            "helpMarkDown": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.",
+            "visibleRule": "ConnectionType = AzureRM"
         },
         {
             "name": "DeployToSlotOrASEFlag",
@@ -93,7 +126,7 @@
             "defaultValue": "false",
             "required": false,
             "helpMarkDown": "Select the option to deploy to an existing deployment slot or Azure App Service Environment.<br />For both the targets, the task needs Resource group name.<br />In case the deployment target is a slot, by default the deployment is done to the production slot. Any other existing slot name can also be provided.<br />In case the deployment target is an Azure App Service environment, leave the slot name as ‘production’ and just specify the Resource group name.",
-            "visibleRule": "WebAppKind != \"\""
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
         },
         {
             "name": "ResourceGroupName",
@@ -162,7 +195,7 @@
             "label": "Package or folder",
             "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
             "required": true,
-            "visibleRule": "WebAppKind != webAppContainer && WebAppKind != \"\"",
+            "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux",
             "helpMarkDown": "File path to the package or a folder containing app service contents generated by MSBuild or a compressed zip or war file.<br />Variables ( [Build](https://www.visualstudio.com/docs/build/define/variables) | [Release](https://www.visualstudio.com/docs/release/author-release-definition/understanding-tasks#predefvariables)), wild cards are supported. <br/> For example, $(System.DefaultWorkingDirectory)/\\*\\*/\\*.zip or $(System.DefaultWorkingDirectory)/\\*\\*/\\*.war."
         },
         {
@@ -413,7 +446,6 @@
         "ErrorNoSuchDeployingMethodExists": "Error : No such deploying method exists",
         "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
         "UnabletoretrieveResourceID": "Unable to retrieve connection details for Azure Resource:'%s'. Status Code: %s",
-        "CouldnotfetchaccesstokenforAzureStatusCode": "Could not fetch access token for Azure. Status Code: %s (%s)",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history. Error: %s",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
@@ -533,6 +565,14 @@
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "GoExeNameNotPresent": "Go exe name is not present",
         "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
-        "Updatemachinetoenablesecuretlsprotocol" : "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
+        "Updatemachinetoenablesecuretlsprotocol" : "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "XmlParsingFailed":"Unable to parse publishProfileXML file, Error: %s",
+        "PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
+        "InvalidConnectionType": "Invalid connection type",
+        "InvalidImageSourceType": "Invalid Image source Type",
+        "InvalidPublishProfile": "Publish profile file is invalid."
     }
 }

@@ -44,8 +44,8 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
     let i = 0;
     let retryCount = options && options.retryCount ? options.retryCount : 5;
     let retryIntervalInSeconds = options && options.retryIntervalInSeconds ? options.retryIntervalInSeconds : 5;
-    let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : ["ETIMEDOUT", "ECONNRESET"];
-    let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes: [];
+    let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
+    let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes: [408, 409, 500, 502, 503, 504];
 
     while (true) {
         try {
@@ -65,6 +65,10 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
                 await sleepFor(retryIntervalInSeconds);
             }
             else {
+                if (error.code) {
+                    console.log("##vso[task.logissue type=error;code="+error.code+";]");
+                }
+
                 throw error;
             }
         }

@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Publish To Azure Service Bus",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870237)",
+  "loc.description": "Sends a message to azure service bus using a service connection (no agent required).",
+  "loc.instanceNameFormat": "Publish to Azure Service Bus",
+  "loc.group.displayName.signingDetails": "Signing Properties",
+  "loc.input.label.connectedServiceName": "Azure service bus connection",
+  "loc.input.help.connectedServiceName": "Select a Azure Service Bus connection.",
+  "loc.input.label.messageBody": "Message body",
+  "loc.input.help.messageBody": "Enter the json messageBody.",
+  "loc.input.label.signPayload": "Sign the Message",
+  "loc.input.help.signPayload": "If this is set to true, message will be signed provided a private certificate.",
+  "loc.input.label.certificateString": "Certificate Variable",
+  "loc.input.help.certificateString": "Specify the secret variable that contains the certificate content.",
+  "loc.input.label.signatureKey": "Signature Property Key",
+  "loc.input.help.signatureKey": "Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties",
+  "loc.input.label.waitForCompletion": "Wait for task completion",
+  "loc.input.help.waitForCompletion": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+}

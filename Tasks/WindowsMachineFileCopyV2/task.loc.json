@@ -1,0 +1,116 @@
+{
+  "id": "731004D4-1D66-4F70-8C05-638018B22210",
+  "name": "WindowsMachineFileCopy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "minimumAgentVersion": "1.104.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "SourcePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourcePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
+    },
+    {
+      "name": "MachineNames",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.MachineNames",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
+    },
+    {
+      "name": "AdminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminUserName"
+    },
+    {
+      "name": "AdminPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminPassword"
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPath"
+    },
+    {
+      "name": "CleanTargetBeforeCopy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy"
+    },
+    {
+      "name": "CopyFilesInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CopyFilesInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "WindowsMachineFileCopy.ps1"
+    }
+  },
+  "messages": {
+    "WFC_ParameterCannotBeNullorEmpty": "ms-resource:loc.messages.WFC_ParameterCannotBeNullorEmpty",
+    "WFC_FailedToConnectToPathWithUser": "ms-resource:loc.messages.WFC_FailedToConnectToPathWithUser",
+    "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails": "ms-resource:loc.messages.WFC_CopyingFailedConsultRobocopyLogsForMoreDetails",
+    "WFC_CopyingRecurivelyFrom0to1MachineSucceed": "ms-resource:loc.messages.WFC_CopyingRecurivelyFrom0to1MachineSucceed",
+    "WFC_SourcePathDoesNotExist": "ms-resource:loc.messages.WFC_SourcePathDoesNotExist",
+    "WFC_RemoteDestinationPathCannotContainEnvironmentVariables": "ms-resource:loc.messages.WFC_RemoteDestinationPathCannotContainEnvironmentVariables",
+    "WFC_CopyStartedFor0": "ms-resource:loc.messages.WFC_CopyStartedFor0",
+    "WFC_NoMachineExistsUnderEnvironment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment",
+    "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "ms-resource:loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment",
+    "WFC_CopyingFailedForResource": "ms-resource:loc.messages.WFC_CopyingFailedForResource",
+    "WFC_FailedToCreatePSDrive": "ms-resource:loc.messages.WFC_FailedToCreatePSDrive",
+    "WFC_RobocopyError": "ms-resource:loc.messages.WFC_RobocopyError"
+  }
+}

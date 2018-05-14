@@ -172,12 +172,12 @@ describe('Xcode L0 Suite', function () {
         //build
         assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
             '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme build ' +
-            'CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
+            'CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid PROVISIONING_PROFILE_SPECIFIER='),
             'xcodebuild for building the ios project/workspace should have been run.');
         //archive
         assert(tr.ran('/home/bin/xcodebuild -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme testScheme ' +
             'archive -sdk $(SDK) -configuration $(Configuration) -archivePath /user/build/testScheme ' +
-            'CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid'),
+            'CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid PROVISIONING_PROFILE_SPECIFIER='),
             'xcodebuild archive should have been run to create the .xcarchive.');
         //export
         assert(tr.ran('/home/bin/xcodebuild -exportArchive ' +
@@ -560,7 +560,7 @@ describe('Xcode L0 Suite', function () {
         done();
     });
 
-    
+
 
     it('macOS auto export', function (done: MochaDone) {
         this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);

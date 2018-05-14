@@ -106,7 +106,7 @@ export class Helper {
 
     public static saveToFile(fileContents: string, extension: string): Q.Promise<string> {
         const defer = Q.defer<string>();
-        const tempFile = path.join(os.tmpdir(), uuid.v1() + extension);
+        const tempFile = Helper.GenerateTempFile(uuid.v1() + extension);
         fs.writeFile(tempFile, fileContents, function (err) {
             if (err) {
                 defer.reject(err);
@@ -115,6 +115,21 @@ export class Helper {
             defer.resolve(tempFile);
         });
         return defer.promise;
+    }
+
+    public static GenerateTempFile(fileName: string): string {
+        return path.join(Helper.GetTempFolder(), fileName);
+    }
+
+    public static GetTempFolder(): string {
+        try {
+            tl.assertAgent('2.115.0');
+            const tmpDir =  tl.getVariable('Agent.TempDirectory');
+            return tmpDir;
+        } catch (err) {
+            tl.warning(tl.loc('UpgradeAgentMessage'));
+            return os.tmpdir();
+        }
     }
 
     public static readFileContents(filePath: string, encoding: string): Q.Promise<string> {
@@ -199,5 +214,17 @@ export class Helper {
 
     public static stringToBool(inputString : string) : boolean {
         return !this.isNullEmptyOrUndefined(inputString) && inputString.toLowerCase() === 'true';
+    }
+
+    public static uploadFile(file: string): void {
+        try {
+            if (Helper.pathExistsAsFile(file)) {
+                const stats = fs.statSync(file);
+                tl.debug('File exists. Size: ' + stats.size + ' Bytes');
+                console.log('##vso[task.uploadfile]' + file);
+            }
+        } catch (err) {
+            tl.debug(`Failed to upload file ${file} with error ${err}`);
+        }
     }
 }

@@ -84,6 +84,10 @@ try
     Write-Verbose -Verbose "Loading $azureUtility"
     . "$PSScriptRoot/$azureUtility"
 
+    # Telemetry for endpoint id
+    $telemetryJsonContent = "{`"endpointId`":`"$connectedServiceName`"}"
+    Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=AzureFileCopy]$telemetryJsonContent"
+
     # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
     $connectionType = Get-TypeOfConnection -connectedServiceName $connectedServiceName
 
@@ -115,7 +119,8 @@ try
 }
 catch
 {
-    Write-Telemetry "Task_InternalError" $_.Exception.Message
+    Write-Verbose $_.Exception.ToString()
+    Write-Telemetry "Task_InternalError" "TemporaryCopyingToBlobContainerFailed"
     throw
 }
 
@@ -180,9 +185,9 @@ try
 }
 catch
 {
-    Write-Verbose $_.Exception.ToString() -Verbose
+    Write-Verbose $_.Exception.ToString()
 
-    Write-Telemetry "Task_InternalError" $_.Exception.Message
+    Write-Telemetry "Task_InternalError" "CopyingToAzureVMFailed"
     throw
 }
 finally
