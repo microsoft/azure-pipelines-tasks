@@ -60,6 +60,6 @@ phases:
 
 #  - task: PyPIPublisher@0
 #    inputs:
-#      serviceEndpoint: ''
-#      wd: '$(Build.SourcesDirectory)'
-#      wheel: 'false'
+#      pypiConnection: ''
+#      packageDirectory: '$(build.sourcesDirectory)'
+#      alsoPublishWheel: false

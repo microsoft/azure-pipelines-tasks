@@ -80,7 +80,7 @@
         "PublishSymbols",
         "PublishTestResults",
         "PublishToAzureServiceBusV1",
-        "PyPiPublisherV0",
+        "PyPIPublisherV0",
         "QueryWorkItemsV0",
         "QuickPerfTestV1",
         "RunDistributedTestsV1",
