@@ -222,16 +222,25 @@
     }
   },
   "messages": {
+    "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
+    "Addinganyconfiguredcustomcertificates": "ms-resource:loc.messages.Addinganyconfiguredcustomcertificates",
+    "AllInstancesReadyRole0status": "ms-resource:loc.messages.AllInstancesReadyRole0status",
+    "Applyinganyconfigureddiagnosticsextensions": "ms-resource:loc.messages.Applyinganyconfigureddiagnosticsextensions",
     "Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions",
     "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "ms-resource:loc.messages.Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions",
-    "Applyinganyconfigureddiagnosticsextensions": "ms-resource:loc.messages.Applyinganyconfigureddiagnosticsextensions",
-    "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "ms-resource:loc.messages._0couldnotbeparsedintopartsforregisteringdiagnosticsextensions",
-    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
-    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
-    "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
-    "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription",
     "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics",
     "Customcertificatesaredefinedininvalidformat": "ms-resource:loc.messages.Customcertificatesaredefinedininvalidformat",
-    "Addinganyconfiguredcustomcertificates": "ms-resource:loc.messages.Addinganyconfiguredcustomcertificates"
+    "EachInstancesNameAndStatus0": "ms-resource:loc.messages.EachInstancesNameAndStatus0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone",
+    "Instance0Name": "ms-resource:loc.messages.Instance0Name",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "RetryForService0Availablity": "ms-resource:loc.messages.RetryForService0Availablity",
+    "Role0OrRoleInstanceNotfound": "ms-resource:loc.messages.Role0OrRoleInstanceNotfound",
+    "ServiceNotFound0": "ms-resource:loc.messages.ServiceNotFound0",
+    "Storagekeysaredefinedininvalidformat": "ms-resource:loc.messages.Storagekeysaredefinedininvalidformat",
+    "Unabletofind0usingprovidedsubscription": "ms-resource:loc.messages.Unabletofind0usingprovidedsubscription",
+    "Unabletofindservicestatus0": "ms-resource:loc.messages.Unabletofindservicestatus0",
+    "WaitingForInstance0Beforefindstatus": "ms-resource:loc.messages.WaitingForInstance0Beforefindstatus",
+    "WaitingForService0Available": "ms-resource:loc.messages.WaitingForService0Available"
   }
 }

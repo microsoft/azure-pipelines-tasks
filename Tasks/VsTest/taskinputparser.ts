@@ -9,57 +9,9 @@ import * as os from 'os';
 import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
+import * as inputdatacontract from './inputdatacontract';
 const uuid = require('uuid');
 const regedit = require('regedit');
-
-export function getDistributedTestConfigurations() {
-    const dtaConfiguration = {} as models.DtaTestConfigurations;
-    initTestConfigurations(dtaConfiguration);
-    dtaConfiguration.useVsTestConsole = 'false';
-
-    if (dtaConfiguration.vsTestLocationMethod === utils.Constants.vsTestVersionString && dtaConfiguration.vsTestVersion === '12.0') {
-        throw (tl.loc('vs2013NotSupportedInDta'));
-    }
-
-    if (dtaConfiguration.tiaConfig.tiaEnabled) {
-        dtaConfiguration.tiaConfig = getTiaConfiguration();
-    }
-    if (dtaConfiguration.runTestsInIsolation) {
-        tl.warning(tl.loc('runTestInIsolationNotSupported'));
-    }
-    if (dtaConfiguration.otherConsoleOptions) {
-        tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
-    }
-
-    dtaConfiguration.numberOfAgentsInPhase = 1;
-    const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
-    if (!isNaN(totalJobsInPhase)) {
-        dtaConfiguration.numberOfAgentsInPhase = totalJobsInPhase;
-    }
-    console.log(tl.loc('dtaNumberOfAgents', dtaConfiguration.numberOfAgentsInPhase));
-
-    getDistributionBatchSize(dtaConfiguration);
-
-    let useVsTestConsole = tl.getVariable('UseVsTestConsole');
-    if (useVsTestConsole) {
-        dtaConfiguration.useVsTestConsole = useVsTestConsole;
-    }
-
-    // VsTest Console cannot be used for Dev14
-    if (dtaConfiguration.useVsTestConsole.toUpperCase() === 'TRUE' && dtaConfiguration.vsTestVersion !== '15.0') {
-        console.log(tl.loc('noVstestConsole'));
-        dtaConfiguration.useVsTestConsole = 'false';
-    }
-
-    dtaConfiguration.proceedAfterAbortedTestCase = false;
-    if (tl.getVariable('ProceedAfterAbortedTestCase') && tl.getVariable('ProceedAfterAbortedTestCase').toUpperCase() === 'TRUE') {
-        dtaConfiguration.proceedAfterAbortedTestCase = true;
-    }
-    tl.debug('ProceedAfterAbortedTestCase is set to : ' + dtaConfiguration.proceedAfterAbortedTestCase);
-
-    dtaConfiguration.dtaEnvironment = initDtaEnvironment();
-    return dtaConfiguration;
-}
 
 export function getvsTestConfigurations() {
     const vsTestConfiguration = {} as models.VsTestConfigurations;
@@ -109,7 +61,7 @@ function getEnvironmentUri(): string {
     return environmentUri;
 }
 
-function getDtaInstanceId(): number {
+export function getDtaInstanceId(): number {
     const taskInstanceIdString = tl.getVariable('DTA_INSTANCE_ID');
     let taskInstanceId: number = 1;
     if (taskInstanceIdString) {
@@ -192,7 +144,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             throw new Error('vsTestVersion is null or empty');
         }
         if (testConfiguration.vsTestVersion.toLowerCase() === 'toolsinstaller') {
-            tl.debug("Trying VsTest installed by tools installer.");
+            tl.debug('Trying VsTest installed by tools installer.');
             ci.publishEvent({ subFeature: 'ToolsInstallerSelected', isToolsInstallerPackageLocationSet: !utils.Helper.isNullEmptyOrUndefined(tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable)) });
 
             testConfiguration.toolsInstallerConfig = getToolsInstallerConfiguration();
@@ -210,8 +162,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
             testConfiguration.vsTestLocation = testConfiguration.toolsInstallerConfig.vsTestConsolePathFromPackageLocation;
 
             testConfiguration.toolsInstallerConfig.isToolsInstallerInUse = true;
-        }
-        else if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
+        } else if ((testConfiguration.vsTestVersion !== '15.0') && (testConfiguration.vsTestVersion !== '14.0')
             && (testConfiguration.vsTestVersion.toLowerCase() !== 'latest')) {
             throw new Error(tl.loc('vstestVersionInvalid', testConfiguration.vsTestVersion));
         }
@@ -293,7 +244,7 @@ function getProxyConfiguration(): models.ProxyConfiguration {
     return proxyConfiguration;
 }
 
-async function logWarningForWER(runUITests: boolean) {
+export async function logWarningForWER(runUITests: boolean) {
     if (!runUITests) {
         return;
     }
@@ -309,7 +260,7 @@ async function logWarningForWER(runUITests: boolean) {
     }
 }
 
-function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
+export function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
     const defer = Q.defer<boolean>();
     const regValue = 'DontShowUI';
     regedit.list(regPath).on('data', (entry) => {
@@ -382,20 +333,19 @@ function getTiaConfiguration(): models.TiaConfiguration {
         tiaConfiguration.useNewCollector = true;
     }
 
-    var buildReason = tl.getVariable('Build.Reason');
+    const buildReason = tl.getVariable('Build.Reason');
 
     // https://www.visualstudio.com/en-us/docs/build/define/variables
     // PullRequest -> This is the case for TfsGit PR flow
     // CheckInShelveset -> This is the case for TFVC Gated Checkin
-    if (buildReason && (buildReason === "PullRequest" || buildReason === "CheckInShelveset")) {
-        tiaConfiguration.isPrFlow = "true";
-    }
-    else {
+    if (buildReason && (buildReason === 'PullRequest' || buildReason === 'CheckInShelveset')) {
+        tiaConfiguration.isPrFlow = 'true';
+    } else {
         tiaConfiguration.isPrFlow = tl.getVariable('tia.isPrFlow');
     }
     tiaConfiguration.useTestCaseFilterInResponseFile = tl.getVariable('tia.useTestCaseFilterInResponseFile');
 
-    const releaseuri = tl.getVariable('release.releaseUri')
+    const releaseuri = tl.getVariable('release.releaseUri');
     tiaConfiguration.context = 'CI';
     if (releaseuri) {
         tiaConfiguration.context = 'CD';

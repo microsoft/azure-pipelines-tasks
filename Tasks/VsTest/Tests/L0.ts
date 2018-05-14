@@ -45,7 +45,7 @@ describe('VsTest Suite', function() {
             interfacesDictionary[interfaceName] = interfacePropertiesDictionary;
         });
 
-        checkParity(inputDataContractParityToolOutput, interfacesDictionary, interfacesDictionary['InputDataContract']);
+        checkParity(inputDataContractParityToolOutput, interfacesDictionary, interfacesDictionary.InputDataContract);
 
         function checkParity(dataContractObject: any, interfacesDictionary: any, subInterface: any) {
 

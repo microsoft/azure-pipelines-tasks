@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 134,
+        "Minor": 135,
         "Patch": 0
     },
     "demands": [
@@ -39,7 +39,7 @@
             "label": "Project",
             "defaultValue": "**/*.csproj",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used.  For example, `**/*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target if `Create App Package` is selected."
+            "helpMarkDown": "Relative path from repo root of Xamarin.Android project(s) to build.  Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).  For example, `**/*.csproj` for all csproj files in all subfolders.  The project must have a PackageForAndroid target if `Create App Package` is selected."
         },
         {
             "name": "target",
