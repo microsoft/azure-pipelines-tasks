@@ -8,26 +8,142 @@ function Extract-Dacpac {
     )
 
     $targetDacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\$databaseName.dacpac"
-
-    # Increase Timeout to 120 seconds in case its not provided by User
-    if (-not ($sqlpackageAdditionalArguments.ToLower().Contains("/targettimeout:") -or $sqlpackageAdditionalArguments.ToLower().Contains("/tt:")))
-    {
-        # Add Timeout of 120 Seconds
-        $sqlpackageAdditionalArguments = $sqlpackageAdditionalArguments + " /TargetTimeout:$defaultTimeout"
-    }
-
-    # append additionalArguments to scriptArguments
-    # getting script arguments to execute sqlpackage.exe
-    $sqlpackageArguments =  "/Action:Extract /TargetFile:`"$targetDacpacFilePath`" /SourceServerName:`"$serverName`" /SourceDatabaseName:`"$databaseName`" /SourceUser:`"$sqlUsername`" /SourcePassword:`"$sqlPassword`""
-    $sqlpackageArgumentsToBeLogged = "/Action:Extract /TargetFile:`"$targetDacpacFilePath`" /SourceServerName:`"$serverName`" /SourceDatabaseName:`"$databaseName`" /SourceUser:`"$sqlUsername`" /SourcePassword:********"
-
-    $sqlPackagePath = Get-SqlPackageOnTargetMachine
-    Write-Verbose "Executing : `"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
-
-    Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
+    
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    
+    Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated dacpac file: $targetDacpacFilePath. Uploading the dacpac file to the logs."
     Write-Host "##vso[task.uploadfile]$targetDacpacFilePath"
+}
+
+function Export-Bacpac {
+    param (
+        [string] $serverName,
+        [string] $databaseName,
+        [string] $sqlUsername,
+        [string] $sqlPassword,
+        [string] $sqlpackageAdditionalArguments
+    )
+
+    $targetBacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\$databaseName.bacpac"
+
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+
+    Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
+
+    Write-Host "Generated bacpac file: $targetBacpacFilePath. Uploading the bacpac file to the logs."
+    Write-Host "##vso[task.uploadfile]$targetBacpacFilePath"
+}
+
+function Import-Bacpac {
+    param (
+        [string] $bacpacFile,   
+        [string] $serverName,
+        [string] $databaseName,
+        [string] $sqlUsername,
+        [string] $sqlPassword,
+        [string] $sqlpackageAdditionalArguments
+    )
+
+    $bacpacFilePath = Find-SqlFiles -filePathPattern $bacpacFile -verboseMessage "Bacpac file:" -throwIfMultipleFilesOrNoFilePresent
+
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+
+    Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
+}
+
+function Deploy-Report {
+    param (
+        [string] $dacpacFile,   
+        [string] $serverName,
+        [string] $databaseName,
+        [string] $sqlUsername,
+        [string] $sqlPassword,
+        [string] $sqlpackageAdditionalArguments
+    )
+
+    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
+    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_DeployReport.xml"
+    
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure 
+
+    Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
+
+    Write-Host "Generated deploy report: $outputXmlPath. Uploading the deploy report file to the logs."
+    Write-Host "##vso[task.uploadfile]$outputXmlPath"
+}
+
+function Drift-Report {
+    param (
+        [string] $serverName,
+        [string] $databaseName,
+        [string] $sqlUsername,
+        [string] $sqlPassword,
+        [string] $sqlpackageAdditionalArguments
+    )
+
+    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_DriftReport.xml"
+    
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+
+    Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
+
+    Write-Host "Generated drift report: $outputXmlPath. Uploading the drift report file to the logs."
+    Write-Host "##vso[task.uploadfile]$outputXmlPath"
+}
+
+function Script-Action {
+    param (
+        [string] $dacpacFile,   
+        [string] $serverName,
+        [string] $databaseName,
+        [string] $sqlUsername,
+        [string] $sqlPassword,
+        [string] $sqlpackageAdditionalArguments
+    )
+
+    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
+    $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_Script.sql"
+    
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Script" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Script" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+
+    Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
+
+    Write-Host "Generated script: $outputSqlPath. Uploading the script file to the logs."
+    Write-Host "##vso[task.uploadfile]$outputSqlPath"
+}
+
+function Publish-Dacpac {
+    param (
+        [string] $serverName,
+        [string] $databaseName,
+        [string] $sqlUsername,
+        [string] $sqlPassword,
+        [string] $dacpacFile,
+        [string] $publishProfile,
+        [string] $sqlpackageAdditionalArguments
+    )
+    
+    #Ensure that a single package (.dacpac) file is found
+    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac package file:" -throwIfMultipleFilesOrNoFilePresent
+
+    # Publish profile path validations - Ensure that only one publish profile file is found
+    $publishProfilePath = "" 
+    if ([string]::IsNullOrWhitespace($publishProfile) -eq $false -and $publishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $publishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")) {
+        $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage "Publish profile path:" -throwIfMultipleFilesOrNoFilePresent
+    }
+
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+
+    Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 }
 
 function Execute-PublishAction {
@@ -60,215 +176,6 @@ function Execute-PublishAction {
             throw "Invalid option selected for publish action: $taskNameSelector"
         }
     }
-}
-
-function Export-Bacpac {
-    param (
-        [string] $serverName,
-        [string] $databaseName,
-        [string] $sqlUsername,
-        [string] $sqlPassword,
-        [string] $sqlpackageAdditionalArguments
-    )
-
-    $targetBacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\$databaseName.bacpac"
-
-    # Increase Timeout to 120 seconds in case its not provided by User
-    if (-not ($sqlpackageAdditionalArguments.ToLower().Contains("/targettimeout:") -or $sqlpackageAdditionalArguments.ToLower().Contains("/tt:")))
-    {
-        # Add Timeout of 120 Seconds
-        $sqlpackageAdditionalArguments = $sqlpackageAdditionalArguments + " /TargetTimeout:$defaultTimeout"
-    }
-
-    # append additionalArguments to scriptArguments
-    # getting script arguments to execute sqlpackage.exe
-    $sqlpackageArguments =  "/Action:Export /TargetFile:`"$targetBacpacFilePath`" /SourceServerName:`"$serverName`" /SourceDatabaseName:`"$databaseName`" /SourceUser:`"$sqlUsername`" /SourcePassword:`"$sqlPassword`""
-    $sqlpackageArgumentsToBeLogged = "/Action:Export /TargetFile:`"$targetBacpacFilePath`" /SourceServerName:`"$serverName`" /SourceDatabaseName:`"$databaseName`" /SourceUser:`"$sqlUsername`" /SourcePassword:********"
-
-    $sqlPackagePath = Get-SqlPackageOnTargetMachine
-    Write-Verbose "Executing : `"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
-
-    Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
-
-    Write-Host "Generated bacpac file: $targetBacpacFilePath. Uploading the bacpac file to the logs."
-    Write-Host "##vso[task.uploadfile]$targetBacpacFilePath"
-}
-
-function Import-Bacpac {
-    param (
-        [string] $bacpacFile,   
-        [string] $serverName,
-        [string] $databaseName,
-        [string] $sqlUsername,
-        [string] $sqlPassword,
-        [string] $sqlpackageAdditionalArguments
-    )
-
-    $bacpacFilePath = Find-SqlFiles -filePathPattern $bacpacFile -verboseMessage "Bacpac file:" -throwIfMultipleFilesOrNoFilePresent
-
-    # Increase Timeout to 120 seconds in case its not provided by User
-    if (-not ($sqlpackageAdditionalArguments.ToLower().Contains("/targettimeout:") -or $sqlpackageAdditionalArguments.ToLower().Contains("/tt:")))
-    {
-        # Add Timeout of 120 Seconds
-        $sqlpackageAdditionalArguments = $sqlpackageAdditionalArguments + " /TargetTimeout:$defaultTimeout"
-    }
-
-    # append additionalArguments to scriptArguments
-    # getting script arguments to execute sqlpackage.exe
-    $sqlpackageArguments =  "/Action:Import /SourceFile:`"$bacpacFilePath`" /TargetServerName:`"$serverName`" /TargetDatabaseName:`"$databaseName`" /TargetUser:`"$sqlUsername`" /TargetPassword:`"$sqlPassword`""
-    $sqlpackageArgumentsToBeLogged = "/Action:Import /SourceFile:`"$bacpacFilePath`" /TargetServerName:`"$serverName`" /TargetDatabaseName:`"$databaseName`" /TargetUser:`"$sqlUsername`" /TargetPassword:********"
-
-    $sqlPackagePath = Get-SqlPackageOnTargetMachine
-    Write-Verbose "Executing : `"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
-
-    Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
-}
-
-function Deploy-Report {
-    param (
-        [string] $dacpacFile,   
-        [string] $serverName,
-        [string] $databaseName,
-        [string] $sqlUsername,
-        [string] $sqlPassword,
-        [string] $sqlpackageAdditionalArguments
-    )
-
-    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
-    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_DeployReport.xml"
-    
-    # Increase Timeout to 120 seconds in case its not provided by User
-    if (-not ($sqlpackageAdditionalArguments.ToLower().Contains("/targettimeout:") -or $sqlpackageAdditionalArguments.ToLower().Contains("/tt:")))
-    {
-        # Add Timeout of 120 Seconds
-        $sqlpackageAdditionalArguments = $sqlpackageAdditionalArguments + " /TargetTimeout:$defaultTimeout"
-    }
-
-    # append additionalArguments to scriptArguments
-    # getting script arguments to execute sqlpackage.exe
-    $sqlpackageArguments =  "/Action:DeployReport /SourceFile:`"$dacpacFilePath`" /TargetServerName:`"$serverName`" /TargetDatabaseName:`"$databaseName`" /TargetUser:`"$sqlUsername`" /TargetPassword:`"$sqlPassword`" /OutputPath:`"$outputXmlPath`" /p:AllowIncompatiblePlatform=true"
-    $sqlpackageArgumentsToBeLogged = "/Action:DeployReport /SourceFile:`"$dacpacFilePath`" /TargetServerName:`"$serverName`" /TargetDatabaseName:`"$databaseName`" /TargetUser:`"$sqlUsername`" /TargetPassword:******** /OutputPath:`"$outputXmlPath`""
-
-    $sqlPackagePath = Get-SqlPackageOnTargetMachine
-    Write-Verbose "Executing : `"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
-
-    Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
-
-    Write-Host "Generated deploy report: $outputXmlPath. Uploading the deploy report file to the logs."
-    Write-Host "##vso[task.uploadfile]$outputXmlPath"
-}
-
-function Drift-Report {
-    param (
-        [string] $serverName,
-        [string] $databaseName,
-        [string] $sqlUsername,
-        [string] $sqlPassword,
-        [string] $sqlpackageAdditionalArguments
-    )
-
-    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_DriftReport.xml"
-    
-    # Increase Timeout to 120 seconds in case its not provided by User
-    if (-not ($sqlpackageAdditionalArguments.ToLower().Contains("/targettimeout:") -or $sqlpackageAdditionalArguments.ToLower().Contains("/tt:")))
-    {
-        # Add Timeout of 120 Seconds
-        $sqlpackageAdditionalArguments = $sqlpackageAdditionalArguments + " /TargetTimeout:$defaultTimeout"
-    }
-
-    # append additionalArguments to scriptArguments
-    # getting script arguments to execute sqlpackage.exe
-    $sqlpackageArguments =  "/Action:DriftReport /TargetServerName:`"$serverName`" /TargetDatabaseName:`"$databaseName`" /TargetUser:`"$sqlUsername`" /TargetPassword:`"$sqlPassword`" /OutputPath:`"$outputXmlPath`""
-    $sqlpackageArgumentsToBeLogged = "/Action:DriftReport /TargetServerName:`"$serverName`" /TargetDatabaseName:`"$databaseName`" /TargetUser:`"$sqlUsername`" /TargetPassword:******** /OutputPath:`"$outputXmlPath`""
-
-    $sqlPackagePath = Get-SqlPackageOnTargetMachine
-    Write-Verbose "Executing : `"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
-
-    Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
-
-    Write-Host "Generated drift report: $outputXmlPath. Uploading the drift report file to the logs."
-    Write-Host "##vso[task.uploadfile]$outputXmlPath"
-}
-
-function Script-Action {
-    param (
-        [string] $dacpacFile,   
-        [string] $serverName,
-        [string] $databaseName,
-        [string] $sqlUsername,
-        [string] $sqlPassword,
-        [string] $sqlpackageAdditionalArguments
-    )
-
-    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
-    $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_Script.sql"
-    
-    # Increase Timeout to 120 seconds in case its not provided by User
-    if (-not ($sqlpackageAdditionalArguments.ToLower().Contains("/targettimeout:") -or $sqlpackageAdditionalArguments.ToLower().Contains("/tt:")))
-    {
-        # Add Timeout of 120 Seconds
-        $sqlpackageAdditionalArguments = $sqlpackageAdditionalArguments + " /TargetTimeout:$defaultTimeout"
-    }
-
-    # append additionalArguments to scriptArguments
-    # getting script arguments to execute sqlpackage.exe
-    $sqlpackageArguments =  "/Action:Script /SourceFile:`"$dacpacFilePath`" /TargetServerName:`"$serverName`" /TargetDatabaseName:`"$databaseName`" /TargetUser:`"$sqlUsername`" /TargetPassword:`"$sqlPassword`" /OutputPath:`"$outputSqlPath`" /p:AllowIncompatiblePlatform=true"
-    $sqlpackageArgumentsToBeLogged = "/Action:Script /SourceFile:`"$dacpacFilePath`" /TargetServerName:`"$serverName`" /TargetDatabaseName:`"$databaseName`" /TargetUser:`"$sqlUsername`" /TargetPassword:******** /OutputPath:`"$outputSqlPath`""
-
-    $sqlPackagePath = Get-SqlPackageOnTargetMachine
-    Write-Verbose "Executing : `"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
-
-    Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
-
-    Write-Host "Generated script: $outputSqlPath. Uploading the script file to the logs."
-    Write-Host "##vso[task.uploadfile]$outputSqlPath"
-}
-
-function Publish-Dacpac {
-    param (
-        [string] $serverName,
-        [string] $databaseName,
-        [string] $sqlUsername,
-        [string] $sqlPassword,
-        [string] $dacpacFile,
-        [string] $publishProfile,
-        [string] $sqlpackageAdditionalArguments
-    )
-    
-    #Ensure that a single package (.dacpac) file is found
-    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac package file:" -throwIfMultipleFilesOrNoFilePresent
-
-    # Publish profile path validations - Ensure that only one publish profile file is found
-    $publishProfilePath = "" 
-    if ([string]::IsNullOrWhitespace($publishProfile) -eq $false -and $publishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $publishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")) {
-        $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage "Publish profile path:" -throwIfMultipleFilesOrNoFilePresent
-    }
-
-    # Increase Timeout to 120 seconds in case its not provided by User
-    if (-not ($sqlpackageAdditionalArguments.ToLower().Contains("/targettimeout:") -or $sqlpackageAdditionalArguments.ToLower().Contains("/tt:")))
-    {
-        # Add Timeout of 120 Seconds
-        $sqlpackageAdditionalArguments = $sqlpackageAdditionalArguments + " /TargetTimeout:$defaultTimeout"
-    }
-
-    # getting script arguments to execute sqlpackage.exe
-    $scriptArgument = Get-SqlPackageCommandArguments -dacpacFile $dacpacFilePath -targetMethod "server" -serverName $serverName -databaseName $databaseName `
-                                                    -sqlUsername $sqlUsername -sqlPassword $sqlPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
-
-    $scriptArgumentToBeLogged = Get-SqlPackageCommandArguments -dacpacFile $dacpacFilePath -targetMethod "server" -serverName $serverName -databaseName $databaseName `
-                                                    -sqlUsername $sqlUsername -sqlPassword $sqlPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
-
-    Write-Verbose "sqlPackageArguments = $scriptArgumentToBeLogged"
-
-    $sqlPackagePath = Get-SqlPackageOnTargetMachine
-
-    Write-Verbose "Executing SQLPackage.exe"
-
-    $commandToBeLogged = "`"$SqlPackagePath`" $scriptArgumentToBeLogged"
-
-    Write-Verbose "Executing : $commandToBeLogged"
-
-    Execute-Command -FileName $SqlPackagePath -Arguments $scriptArgument
 }
 
 function Run-SqlFiles {
@@ -414,3 +321,14 @@ function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
     }
 }
 
+function Execute-SqlPackage {
+    param (
+        [string] $sqlpackageArguments, 
+        [string] $sqlpackageArgumentsToBeLogged
+    )
+
+    $sqlPackagePath = Get-SqlPackageOnTargetMachine
+    Write-Verbose "Executing : `"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
+
+    Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
+}
