@@ -39,8 +39,7 @@ phases:
       testResultsFiles: "**/TEST-*.xml"
       testRunTitle: 'Python $(PYTHON_VERSION)'
 
-# Phase 3: Copy sources to prepare for publishing
-# - phase: 'PublishProjectArtifact'
+# - phase: 'Publish'
 #   dependsOn:
 #     - 'Test'
 #   queue: 'Hosted Linux Preview'
