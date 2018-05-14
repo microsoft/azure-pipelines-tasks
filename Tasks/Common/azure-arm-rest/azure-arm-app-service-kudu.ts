@@ -523,7 +523,7 @@ export class Kudu {
                 }
                 else {
                     tl.debug(`Deployment status: ${result.status} '${result.status_text}'. retry after 10 seconds`);
-                    await webClient.sleepFor(10);
+                    await webClient.sleepFor(5);
                     continue;
                 }
             }

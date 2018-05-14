@@ -106,8 +106,8 @@ export class KuduServiceUtility {
         try {
             if(appOffline) {
                 await this._appOfflineKuduService(physicalPath, true);
-                tl.debug('Wait for 10 seconds for app_offline to take effect');
-                await webClient.sleepFor(10);
+                tl.debug('Wait for 5 seconds for app_offline to take effect');
+                await webClient.sleepFor(5);
             }
 
             if(tl.stats(packagePath).isDirectory()) {
@@ -145,8 +145,8 @@ export class KuduServiceUtility {
 
             if(appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, true);
-                tl.debug('Wait for 10 seconds for app_offline to take effect');
-                await webClient.sleepFor(10);
+                tl.debug('Wait for 5 seconds for app_offline to take effect');
+                await webClient.sleepFor(5);
             }
 
             let queryParameters: Array<string> = [
@@ -358,8 +358,8 @@ export class KuduServiceUtility {
             attempts += 1;
             var fileContent: string = await this._appServiceKuduService.getFileContent(physicalPath, fileName);
             if(fileContent == null) {
-                tl.debug('File: ' + fileName + ' not found. retry after 10 seconds. Attempt: ' + attempts);
-                await webClient.sleepFor(10);
+                tl.debug('File: ' + fileName + ' not found. retry after 5 seconds. Attempt: ' + attempts);
+                await webClient.sleepFor(5);
             }
             else {
                 tl.debug('Found file:  ' + fileName);

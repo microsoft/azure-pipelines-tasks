@@ -234,15 +234,7 @@ export function getWebDeployErrorCode(errorMessage): string {
     }
 
     return "";
-
 }
-
-/*
-webAppPackage: string, webAppName: string, publishingProfile,
-                             removeAdditionalFilesFlag: boolean, excludeFilesFromAppDataFlag: boolean, takeAppOfflineFlag: boolean,
-                             virtualApplication: string, setParametersFile: string, additionalArguments: string, isParamFilePresentInPacakge: boolean,
-                             isFolderBasedDeployment: boolean, useWebDeploy: boolean
-*/
 
 export interface WebDeployArguments {
     package: Package;
