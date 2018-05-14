@@ -1,10 +1,10 @@
 {
   "loc.friendlyName": "PyPI Publisher",
-  "loc.helpMarkDown": "[More Information](https://aka.ms/pypipublisher)",
-  "loc.description": "Create and upload a Python package to a Python Package Index using twine.",
+  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/vsts/build-release/tasks/package/pypi-publisher)",
+  "loc.description": "Create and upload an sdist or wheel to a PyPI-compatible index using Twine.",
   "loc.instanceNameFormat": "Package and publish to PyPI",
   "loc.input.label.serviceEndpoint": "PyPI connection",
-  "loc.input.help.serviceEndpoint": "Select a generic service endpoint containing PyPI connection details. \n\nTo create a new generic service endpoint, go to Settings -> Service endpoints -> New Service Endpoint -> Generic. \n\nConnection Name – Use a friendly connection name of your choice. \nServer URL – The PyPI package server URL (for example: https://upload.pypi.org/legacy/). \nUser Name – The PyPI registered username. \nPassword – The password for your PyPI account.",
+  "loc.input.help.serviceEndpoint": "A generic service endpoint for connecting to the package index.",
   "loc.input.label.wd": "Python package directory",
   "loc.input.help.wd": "The directory of the Python package to be created and published, where setup.py is present.",
   "loc.input.label.wheel": "Also publish a wheel",
