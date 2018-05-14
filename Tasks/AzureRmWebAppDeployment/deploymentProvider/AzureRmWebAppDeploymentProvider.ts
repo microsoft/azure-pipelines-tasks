@@ -38,7 +38,6 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.taskParams.SlotName, this.taskParams.WebAppKind);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
 
-        await this.appServiceUtility.pingApplication();
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
         tl.setVariable('AppServiceApplicationUrl', await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
