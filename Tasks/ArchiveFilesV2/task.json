@@ -71,12 +71,12 @@
             "groupName": "archive",
             "visibleRule": "archiveType = 7z",
             "options": {
-                "9": "Ultra",
-                "7": "Maximum",
-                "5": "Normal",
-                "3": "Fast",
-                "1": "Fastest",
-                "0": "None"
+                "ultra": "Ultra",
+                "maximum": "Maximum",
+                "normal": "Normal",
+                "fast": "Fast",
+                "fastest": "Fastest",
+                "none": "None"
             }
         },
         {

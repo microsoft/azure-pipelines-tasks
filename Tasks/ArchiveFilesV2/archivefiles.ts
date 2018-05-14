@@ -110,9 +110,9 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
         sevenZip.arg('-bb3');
     }
 
-    const sevenZipCompression = tl.getInput('sevenZipCompression', false);    
-    if(sevenZipCompression) {
-        sevenZip.arg('-mx=' + sevenZipCompression);
+    const sevenZipCompression = tl.getInput('sevenZipCompression', false);
+    if (sevenZipCompression) {
+        sevenZip.arg('-mx=' + mapSevenZipCompressionLevel(sevenZipCompression));
     }
 
     sevenZip.arg(archive);
@@ -121,6 +121,26 @@ function sevenZipArchive(archive: string, compression: string, files: string[]) 
     sevenZip.arg('@' + fileList);
 
     return handleExecResult(sevenZip.execSync(getOptions()), archive);
+}
+
+// map from YAML-friendly value to 7-Zip numeric value
+function mapSevenZipCompressionLevel(sevenZipCompression: string) {    
+    switch (sevenZipCompression.toLowerCase()) {
+        case "ultra":
+            return "9";
+        case "maximum":
+            return "7";
+        case "normal":
+            return "5";
+        case "fast":
+            return "3";
+        case "fastest":
+            return "1";
+        case "none":
+            return "0";
+        default:
+            return "5";
+    }
 }
 
 // linux & mac only
