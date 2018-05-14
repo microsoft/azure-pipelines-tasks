@@ -404,15 +404,13 @@ function Find-SqlFiles {
 
 function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
 {
-    if ($files -is [system.array])
-    {
+    if ($files -is [system.array]) {
         throw (Get-VstsLocString -Key "SAD_FoundMoreFiles" -ArgumentList $pattern)
     }
-    else
-    {
-        if (!$files)
-        {
+    else {
+        if (!$files) {
             throw (Get-VstsLocString -Key "SAD_NoFilesMatch" -ArgumentList $pattern)
         }
     }
 }
+

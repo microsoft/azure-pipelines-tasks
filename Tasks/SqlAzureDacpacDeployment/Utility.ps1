@@ -146,16 +146,18 @@ function Delete-AzureSqlDatabaseServerFirewallRule
 
 function Get-SqlPackageCommandArguments
 {
-    param([String] $dacpacFile,
-          [String] $targetMethod,
-          [String] $serverName,
-          [String] $databaseName,
-          [String] $sqlUsername,
-          [String] $sqlPassword,
-          [String] $connectionString,
-          [String] $publishProfile,
-          [String] $additionalArguments,
-          [switch] $isOutputSecure)
+    param(
+        [String] $dacpacFile,
+        [String] $targetMethod,
+        [String] $serverName,
+        [String] $databaseName,
+        [String] $sqlUsername,
+        [String] $sqlPassword,
+        [String] $connectionString,
+        [String] $publishProfile,
+        [String] $additionalArguments,
+        [switch] $isOutputSecure
+    )
 
     $ErrorActionPreference = 'Stop'
     $dacpacFileExtension = ".dacpac"
