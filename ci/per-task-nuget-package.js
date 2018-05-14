@@ -15,11 +15,11 @@
 //          /task.json
 //          /task.loc.json
 //          /task.zip
-//          /Mseng.MS.TF.Build.Tasks.CmdLineV2__v2.nuspec *created in this script
+//          /Mseng.MS.TF.DistributedTask.Tasks.CmdLineV2__v2.nuspec *created in this script
 // 
 //  /per-task-publish (util.perTaskPublishPath)
 //      /CmdLineV2__v2 //  Keep "__v2" until everyone has version in their task name.
-//          Mseng.MS.TF.Build.Tasks.CmdLine.2.132.0.nupkg * created in this script
+//          Mseng.MS.TF.DistributedTask.Tasks.CmdLine.2.132.0.nupkg * created in this script
 //          push.cmd * created in this script
 //      push-all.cmd (courtesy script that runs all push.cmds, we will run this once a sprint and force a build all) TODO: Create this.
 // 
@@ -81,7 +81,7 @@ if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET || localRun) {
             // extract values that we need from task.json
             var taskVersion = taskJsonContents.version.Major + '.' + taskJsonContents.version.Minor + '.' + taskJsonContents.version.Patch;
             var taskName = taskJsonContents.name;
-            var fullTaskName = 'Mseng.MS.TF.Build.Tasks.' + taskName;
+            var fullTaskName = 'Mseng.MS.TF.DistributedTask.Tasks.' + taskName;
 
             var taskNuspecPath = createNuspecFile(taskLayoutPath, fullTaskName, taskVersion);
             var taskPublishFolder = createNuGetPackage(publishPath, taskFolderName, taskNuspecPath, taskLayoutPath);
@@ -100,7 +100,7 @@ if (process.env.DISTRIBUTEDTASK_USE_PERTASK_NUGET || localRun) {
  * @param {*} taskLayoutPath Layout path for the specific task we are creating nuspec for. e.g. - _package\per-task-layout\AzurePowerShellV3__v3
  * @param {*} fullTaskName Full name of the task. e.g - AzureCLIV2
  * @param {*} taskVersion taskVersion Version of the task. e.g - 1.132.0
- * @returns Path of the nuspec file that was created. // e.g. - _package\per-task-layout\AzureCLIV1__v1\Mseng.MS.TF.Build.Tasks.AzureCLIV1.nuspec
+ * @returns Path of the nuspec file that was created. // e.g. - _package\per-task-layout\AzureCLIV1__v1\Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1.nuspec
  */
 function createNuspecFile(taskLayoutPath, fullTaskName, taskVersion) {
     console.log('> Creating nuspec file');
@@ -129,7 +129,7 @@ function createNuspecFile(taskLayoutPath, fullTaskName, taskVersion) {
  * Create .nupkg for a specific task.
  * @param {*} publishPath X. e.g - _package\per-task-publish
  * @param {*} taskFolderName X. e.g - AzurePowerShellV3__v3
- * @param {*} taskNuspecPath X. e.g - _package\per-task-layout\AzureCLIV1__v1\Mseng.MS.TF.Build.Tasks.AzureCLIV1.nuspec
+ * @param {*} taskNuspecPath X. e.g - _package\per-task-layout\AzureCLIV1__v1\Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1.nuspec
  * @param {*} taskLayoutPath X. e.g - _package\per-task-layout\AzurePowerShellV3__v3
  * @returns Publish folder for the task. e.g - _package\per-task-publish\AzurePowerShellV3__v3
  */
