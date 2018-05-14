@@ -46,6 +46,6 @@ phases:
 #   steps:
 #   - task: CopyFiles@2
 #     inputs:
-#       sourceFolder: '$(Build.SourcesDirectory)'
+#       sourceFolder: '$(build.sourcesDirectory)'
 #       targetFolder: '$(build.artifactStagingDirectory)'
 #   - task: PublishBuildArtifacts@1
