@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks",
   "devDependencies": {
-    "adm-zip": "0.4.7",
+    "adm-zip": "0.4.11",
     "gulp": "3.9.0",
     "gulp-util": "3.0.4",
     "markdown-toc": "^1.2.0",
