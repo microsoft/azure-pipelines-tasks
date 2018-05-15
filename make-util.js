@@ -1302,7 +1302,13 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
         });
 
     // Create root push.cmd
-    var contents = 'for /D %%s in (.\\*) do %%s\\push.cmd';
+    console.log();
+    console.log('> Creating root push.cmd')
+    var contents = 'for /D %%s in (.\*) do (';
+    contents +=     'pushd %%s';
+    contents +=     'push.cmd';
+    contents +=     'popd';
+    contents += ')';
     var rootPushCmdPath = path.join(artifactsPath, 'push.cmd');
     fs.writeFileSync(rootPushCmdPath, contents);
 }
@@ -1372,6 +1378,9 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     // TODO: I think we just need to rename this, the name is not accurate. It's the tasks feed url that we happen to push the aggregate to. It's not a specific link for the aggregate.
     var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL; // Need the task feed per task. This is based on task name from task.json too? Can we append based on name?
     var apiKey = 'Skyrise';
+
+    var taskFeedUrl = "http://localhost:44396/nuget";
+    var apiKey = '123456';
     
     fs.writeFileSync(taskPushCmdPath, `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`);
 }
