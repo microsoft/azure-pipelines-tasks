@@ -1259,6 +1259,9 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     console.log('> Zipping task folders')
     // TODO: We need to create a content.zip or preferably full task name.zip from each folder in non-aggregated-layout
 
+    var x = new admZip();
+    admZip.
+
     fs.readdirSync(layoutPath)
         .forEach(function (taskFolderName) {
             if (taskFolderName === 'layout-version.txt') { // TODO: Clean this up. Make sure we have layout-version in each task nuget package? I think we need it? Is it applicable in nuget package per task setup?
@@ -1269,8 +1272,17 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             var taskZipPath = path.join(tasksZipsPath, taskFolderName);
             mkdir('-p', taskZipPath);
 
-            // Zip the folder from non aggregated layout and name it based on task.json contents
-            
+            // Zip the folder from non aggregated layout and name it based on task.json contents. TODO: Refactor this to method?
+            var zipFileName = 'Mseng.MS.TF.DistributedTask.Tasks.Foo.zip';
+            var zipSourcePath = path.join(layoutPath, taskFolderName);
+            var zipTargetPath = path.join(taskZipPath, zipFileName);
+
+            var taskZip = new admZip();
+            taskZip.addLocalFolder(zipSourcePath);
+            taskZip.writeZip(zipTargetPath);
+
+            // Now we have a zip per task
+
         });
 
 
