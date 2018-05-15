@@ -1298,7 +1298,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             
             //var taskPublishFolder = createNuGetPackage(artifactsPath, taskFolderName, taskNuspecPath, taskLayoutPath);
             var taskPublishFolder = createNuGetPackage(artifactsPath, taskFolderName, taskNuspecPath, taskZipPath);
-            createPushCmd(taskZipPath, fullTaskName, taskVersion);
+            createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
         });
 
     // TODO: Create root push.cmd in artifactsPath
