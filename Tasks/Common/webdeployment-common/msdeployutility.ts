@@ -219,7 +219,7 @@ export function getWebDeployErrorCode(errorMessage): string {
         if(errorMessage.indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
             return "ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER";
         }
-        else if(errorMessage.indexOf("An error was encountered when processing operation 'Delete Directory' on 'D:\\home\\site\\wwwroot\\app_data\\jobs'") !== -1) {
+        else if(errorMessage.indexOf("An error was encountered when processing operation 'Delete Directory' on 'D:\\home\\site\\wwwroot\\app_data\\jobs") !== -1) {
             return "WebJobsInProgressIssue";
         }
         else if(errorMessage.indexOf("FILE_IN_USE") !== -1) {
