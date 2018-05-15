@@ -902,6 +902,7 @@ var getTaskYaml = function(taskJson) {
     var taskYaml = '';
 
     taskYaml += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskYaml += '## YAML snippet' + os.EOL + os.EOL;
     taskYaml += '```YAML' + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.description) + os.EOL;
