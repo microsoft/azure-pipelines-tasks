@@ -11,18 +11,18 @@ phases:
     parallel: 1
     matrix:
       Python27:
-        PYTHON_VERSION: '2.7'
+        python.version: '2.7'
       Python35:
-        PYTHON_VERSION: '3.5'
+        python.version: '3.5'
       Python36:
-        PYTHON_VERSION: '3.6'
+        python.version: '3.6'
       Python37-dev:
-        PYTHON_VERSION: '>= 3.7.0a'
+        python.version: '>= 3.7.0a'
   steps:
 
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '$(PYTHON_VERSION)'
+      versionSpec: '$(python.version)'
       architecture: 'x64'
 
   - script: python -m pip install --upgrade pip && pip install -r requirements.txt
