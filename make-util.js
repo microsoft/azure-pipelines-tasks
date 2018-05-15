@@ -1190,19 +1190,7 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
 }
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-
-const listFilesInDirectory = dir =>
-        fs.readdirSync(dir).reduce((files, file) => {
-            const name = path.join(dir, file);
-            const isDirectory = fs.statSync(name).isDirectory();
-            return isDirectory ? [...files, ...listFilesInDirectory(name)] : [...files, name];
-        }, []);
-
+// TODO: Update all these comments considering changes for running locally.
 // Overview:
 // 
 // This script starts with having a folder per task with the content for each task inside(comes from combining the slices).
@@ -1336,7 +1324,6 @@ var createNuspecFile = function (taskLayoutPath, fullTaskName, taskVersion) {
 
     return taskNuspecPath;
 }
-//exports.createNuspecFile = createNuspecFile;
 
 /**
  * Create .nupkg for a specific task.
@@ -1356,7 +1343,6 @@ var createNuGetPackage = function (publishPath, taskFolderName, taskNuspecPath, 
 
     return taskPublishFolder;
 }
-//exports.createNuGetPackage = createNuGetPackage;
 
 /**
  * Create push.cmd for the task.
@@ -1376,61 +1362,3 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     
     fs.writeFileSync(taskPushCmdPath, `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`);
 }
-//exports.createPushCmd = createPushCmd;
-
-//------------------------------------------------------------------------------
-
-
-// Old code, get rid of this when local layout is working
-////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-
-// console.log('> Creating nuget package per task');
-
-// var layoutPath = util.perTaskLayoutPath;
-// var publishPath = util.perTaskPublishPath;
-
-// console.log(`> Creating folders for layout '${layoutPath}' and publish '${publishPath}'`);
-// fs.mkdirSync(layoutPath);
-// fs.mkdirSync(publishPath);
-
-// // TODO: I think we need to make changes here but start with this and see where it goes.
-// // console.log('> Linking aggregate layout content to per-task-layout path, may need to change this');
-// // //var commitHash = refs.head.commit;
-// console.log(`> Linking content.`);
-// var commitHash = 'aaaaaa';
-// var taskDestMap = {}; // I don't think this is actually used for anything?
-
-// // TODO: Can we use linkNonAggregateLayoutContent here? Do both to different destinations and compare the difference in folder structures.
-// util.linkAggregateLayoutContent(util.milestoneLayoutPath, layoutPath, '', commitHash, taskDestMap);
-
-// console.log();
-// console.log(`> Iterating all folders in '${layoutPath}'`);
-// fs.readdirSync(layoutPath)
-//     .forEach(function (taskFolderName) {
-//         if (taskFolderName.indexOf('aaaaaa') > -1) {
-//             // For some reason there is also D:\a\1\s\_package\per-task-layout\AzurePowerShellV3__v3_aaaaaa
-//             return;
-//         }
-
-//         var taskLayoutPath = path.join(layoutPath, taskFolderName);
-
-//         // load the task.json
-//         var taskJsonPath = path.join(taskLayoutPath, 'task.json');
-//         var taskJsonContents = JSON.parse(fs.readFileSync(taskJsonPath));
-
-//         // extract values that we need from task.json
-//         var taskVersion = taskJsonContents.version.Major + '.' + taskJsonContents.version.Minor + '.' + taskJsonContents.version.Patch;
-//         var taskName = taskJsonContents.name;
-//         var fullTaskName = 'Mseng.MS.TF.DistributedTask.Tasks.' + taskName;
-
-//         var taskNuspecPath = createNuspecFile(taskLayoutPath, fullTaskName, taskVersion);
-//         var taskPublishFolder = createNuGetPackage(publishPath, taskFolderName, taskNuspecPath, taskLayoutPath);
-//         createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
-//     });
-
-
-// console.log('> Finished, printing package folder contents.');
-// listFilesInDirectory(util.packagePath).forEach(function (f) { 
-//     console.log(f);
-// });
