@@ -40,7 +40,7 @@ async function getZipFromUrl(artifactArchiveUrl: string, strictSSL: boolean, loc
 
     var downloaderOptions = configureDownloaderOptions();
     var downloader = new engine.ArtifactEngine();
-    var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler, { ignoreSslError: false });
+    var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler, { ignoreSslError: !strictSSL });
     var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
 
     await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
