@@ -1272,11 +1272,22 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             var taskZipPath = path.join(tasksZipsPath, taskFolderName);
             mkdir('-p', taskZipPath);
 
+            // Create a task folder inside the folder so that when we do a nuget pack the contents are inside a folder.
+            // This makes things easier/cleaner downstream when we do servicing and prevents needing to zip the contents
+            //  a second time.
+            var folderInsideFolderPath = path.join(tasksZipsPath, taskFolderName);
+            mkdir('-p', folderInsideFolderPath);
+
+            var copydir = require('copy-dir');
+            copydir.sync(taskLayoutPath, folderInsideFolderPath);
+            //fs.copyFileSync(taskLayoutPath, taskZipPath);
+
+
             // Zip the folder from non aggregated layout and name it based on task.json contents. TODO: Refactor this to method?
             // TODO IMPORTANT: We want to zip it as an entire folder so that when we unzip it's a full folder? Makes the servicing processing simpler.
-            var taskZip = new admZip();
-            taskZip.addLocalFolder(taskLayoutPath);
-            taskZip.writeZip(path.join(taskZipPath, `${fullTaskName}.zip`));
+            // var taskZip = new admZip();
+            // taskZip.addLocalFolder(taskLayoutPath);
+            // taskZip.writeZip(path.join(taskZipPath, `${fullTaskName}.zip`));
 
             // Now we can create the nuspec file, nupkg, and push.cmd
             // var taskNuspecPath = createNuspecFile(taskLayoutPath, fullTaskName, taskVersion);
@@ -1287,7 +1298,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             
             //var taskPublishFolder = createNuGetPackage(artifactsPath, taskFolderName, taskNuspecPath, taskLayoutPath);
             var taskPublishFolder = createNuGetPackage(artifactsPath, taskFolderName, taskNuspecPath, taskZipPath);
-            // createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
+            createPushCmd(taskZipPath, fullTaskName, taskVersion);
         });
 
     // TODO: Create root push.cmd in artifactsPath
