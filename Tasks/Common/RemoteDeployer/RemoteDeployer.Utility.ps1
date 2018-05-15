@@ -77,7 +77,7 @@ function Get-TemporaryLogsFolder {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
         $agentTempDirectory = Get-VstsTaskVariable -Name 'Agent.TempDirectory'
-        $tempFolderName = "PS_TM_v3"
+        $tempFolderName = [Guid]::NewGuid().ToString()
         $tempLogsFolder = [System.IO.Path]::Combine($agentTempDirectory, $tempFolderName)
         if((Test-Path -LiteralPath $tempLogsFolder -PathType 'Container') -eq $true) {
             Remove-Item -LiteralPath $tempLogsFolder -Force

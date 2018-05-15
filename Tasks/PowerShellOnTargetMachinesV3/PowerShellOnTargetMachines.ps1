@@ -61,7 +61,8 @@ try {
                                                 -authentication $input_AuthenticationMechanism `
                                                 -sessionConfigurationName $input_sessionConfigurationName `
                                                 -remoteScriptJobArguments $remoteScriptJobArguments `
-                                                -sessionOption $sessionOption
+                                                -sessionOption $sessionOption `
+                                                -uploadLogFiles
         }
     }
 } catch {
