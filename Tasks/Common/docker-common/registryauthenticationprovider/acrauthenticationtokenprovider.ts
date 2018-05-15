@@ -9,6 +9,9 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
     // URL to registry like jitekuma-microsoft.azurecr.io
     private registryURL: string;
 
+    // ACR fragment like /subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/jitekuma-RG/providers/Microsoft.ContainerRegistry/registries/jitekuma
+    private acrFragmentUrl: string;
+
     // name of the azure subscription endpoint like RMDev
     private endpointName: string;
 
@@ -16,7 +19,18 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         super();
 
         if(endpointName && registerNameValue) {
+          try
+          {
+            var obj = JSON.parse(registerNameValue);  
+            this.registryURL = obj.loginServer;
+            this.acrFragmentUrl = obj.id;
+          }  
+          catch(e)
+          {
+            tl.debug("normal registry");
             this.registryURL = registerNameValue;
+          }
+
             this.endpointName = endpointName;
         }
     }

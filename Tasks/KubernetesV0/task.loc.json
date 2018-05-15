@@ -11,9 +11,9 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 0
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 21
   },
   "demands": [],
   "preview": "false",
@@ -46,62 +46,13 @@
   ],
   "inputs": [
     {
-      "name": "connectionType",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.connectionType",
-      "defaultValue": "Azure Resource Manager",
-      "required": true,
-      "options": {
-        "Azure Resource Manager": "Azure Resource Manager",
-        "Kubernetes Service Connection": "Kubernetes Service Connection"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.connectionType"
-    },
-    {
       "name": "kubernetesServiceEndpoint",
       "aliases": [
         "kubernetesServiceConnection"
       ],
       "type": "connectedService:kubernetes",
       "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
-      "visibleRule": "connectionType = Kubernetes Service Connection",
       "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint"
-    },
-    {
-      "name": "azureSubscriptionEndpoint",
-      "aliases": [
-        "azureSubscription"
-      ],
-      "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
-      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
-      "visibleRule": "connectionType = Azure Resource Manager",
-      "defaultValue": "",
-      "required": true
-    },
-    {
-      "name": "azureResourceGroup",
-      "label": "ms-resource:loc.input.label.azureResourceGroup",
-      "type": "pickList",
-      "helpMarkDown": "ms-resource:loc.input.help.azureResourceGroup",
-      "visibleRule": "connectionType = Azure Resource Manager",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "kubernetesCluster",
-      "label": "ms-resource:loc.input.label.kubernetesCluster",
-      "type": "pickList",
-      "helpMarkDown": "ms-resource:loc.input.help.kubernetesCluster",
-      "visibleRule": "connectionType = Azure Resource Manager",
-      "defaultValue": "",
-      "required": true,
-      "properties": {
-        "EditableOptions": "True"
-      }
     },
     {
       "name": "namespace",
@@ -218,13 +169,13 @@
       "groupName": "secrets"
     },
     {
-      "name": "azureSubscriptionEndpoint2",
+      "name": "azureSubscriptionEndpoint",
       "aliases": [
-        "azureSubscription2"
+        "azureSubscription"
       ],
       "type": "connectedService:AzureRM",
-      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint2",
-      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint2",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
       "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
       "defaultValue": "",
       "groupName": "secrets"
@@ -353,28 +304,39 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "outputFormat",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.outputFormat",
+      "defaultValue": "json",
+      "required": false,
+      "options": {
+        "json": "json",
+        "yaml": "yaml"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
+      "groupName": "output",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "kubectlOutput",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.kubectlOutput",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.kubectlOutput",
+      "groupName": "output"
     }
   ],
   "dataSourceBindings": [
     {
       "target": "azureContainerRegistry",
-      "endpointId": "$(azureSubscriptionEndpoint2)",
+      "endpointId": "$(azureSubscriptionEndpoint)",
       "dataSourceName": "AzureRMContainerRegistries",
-      "resultTemplate": "{{{properties.loginServer}}}"
-    },
-    {
-      "target": "kubernetesCluster",
-      "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{{{name}}}"
-    },
-    {
-      "target": "azureResourceGroup",
-      "endpointId": "$(azureSubscriptionEndpoint)",
-      "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+      "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -385,7 +347,6 @@
   },
   "messages": {
     "DownloadingClient": "ms-resource:loc.messages.DownloadingClient",
-    "KubernetesClusterResourceGroup": "ms-resource:loc.messages.KubernetesClusterResourceGroup",
     "CreatingSecret": "ms-resource:loc.messages.CreatingSecret",
     "DeleteSecret": "ms-resource:loc.messages.DeleteSecret",
     "CreatingConfigMap": "ms-resource:loc.messages.CreatingConfigMap",
@@ -398,7 +359,6 @@
     "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
     "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
-    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
-    "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion"
+    "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion"
   }
 }
