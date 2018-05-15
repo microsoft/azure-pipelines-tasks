@@ -338,7 +338,7 @@ function Execute-SqlPackage {
     )
 
     $sqlPackagePath = Get-SqlPackageOnTargetMachine
-    Write-Verbose "Executing : `"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
+    Write-Host "`"$sqlpackagePath`" $sqlpackageArgumentsToBeLogged"
 
     Execute-Command -FileName $sqlPackagePath -Arguments $sqlpackageArguments
 }

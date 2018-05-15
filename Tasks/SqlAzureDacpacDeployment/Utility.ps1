@@ -383,7 +383,7 @@ function Execute-Command
     $ErrorActionPreference = 'Stop'
     if($LASTEXITCODE -ne 0)
     {
-         throw  (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed")
+         throw  (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed" -ArgumentList $LASTEXITCODE)
     }
 }
 

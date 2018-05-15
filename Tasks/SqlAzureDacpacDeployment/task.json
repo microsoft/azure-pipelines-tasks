@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 30
+        "Patch": 32
     },
     "demands": [
         "sqlpackage"
@@ -291,7 +291,7 @@
         "SAD_NoPassword": "No password specified for the SQL User: '{0}'",
         "SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided",
         "SAD_InvalidServerNameFormat": "Server name '{0}' is not in the right format. Use FQDN format like '{1}'",
-        "SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed.",
+        "SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed. SqlPackage.exe exited with code {0}.",
         "SAD_TroubleshootingLink": "Checkout how to troubleshoot failures https://aka.ms/sqlazuredeployreadme#troubleshooting."
     }
 }
