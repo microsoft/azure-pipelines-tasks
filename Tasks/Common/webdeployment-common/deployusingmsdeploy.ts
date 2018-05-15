@@ -91,7 +91,7 @@ export async function executeWebDeploy(WebDeployArguments: WebDeployArguments, p
     }
     catch(exception) {
         var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'error.txt';
-        var errorFileContent = tl.exist(msDeployErrorFilePath) ? fs.readFileSync(msDeployErrorFilePath, 'utf-8'): "";
+        var errorFileContent = tl.exist(msDeployErrorFilePath) ? fs.readFileSync(msDeployErrorFilePath, 'utf-8') : "";
         return {
             isSuccess: false,
             error: errorFileContent,

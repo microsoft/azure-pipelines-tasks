@@ -75,7 +75,9 @@ export class WebDeployUtility {
                 if(!isRecommendation && taskParameters.RenameFilesFlag) {
                     await azureAppServiceUtility.enableRenameLockedFiles();
                 }
-                tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
+                else {
+                    tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
+                }
                 break;
             }
             case 'transport connection': {
