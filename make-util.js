@@ -1301,8 +1301,10 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
         });
 
-    // TODO: Create root push.cmd in artifactsPath
-
+    // Create root push.cmd
+    var contents = 'for /D %%s in (.\\*) do %%s\\push.cmd';
+    var rootPushCmdPath = path.join(artifactsPath, 'push.cmd');
+    fs.writeFileSync(rootPushCmdPath, contents);
 }
 exports.createNugetPackagePerTask = createNugetPackagePerTask;
 
