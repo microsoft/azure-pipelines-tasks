@@ -32,11 +32,13 @@ export class Package {
     public async isMSBuildPackage(): Promise<boolean> {
         if(this._isMSBuildPackage == undefined) {
             this._isMSBuildPackage = false;
-            var pacakgeComponent = await zipUtility.getArchivedEntries(this._path);
-            if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
-                ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1)
-                 || (pacakgeComponent["entries"].indexOf("SystemInfo.xml") > -1))) {
-                this._isMSBuildPackage = true;
+            if(!this.isFolder()) {
+                var pacakgeComponent = await zipUtility.getArchivedEntries(this._path);
+                if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
+                    ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1)
+                    || (pacakgeComponent["entries"].indexOf("SystemInfo.xml") > -1))) {
+                    this._isMSBuildPackage = true;
+                }
             }
             
             tl.debug("Is the package an msdeploy package : " + this._isMSBuildPackage);
