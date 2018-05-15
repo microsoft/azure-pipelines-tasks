@@ -56,13 +56,21 @@ try {
 
     $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress
     
+    # Create the directory for output files
+    $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
+    if (Test-Path $generatedOutputFilesRoot) {
+        Remove-Item -Path $generatedOutputFilesRoot -Recurce -Force
+    }
+
+    New-Item -Path $generatedOutputFilesRoot -ItemType Directory | Out-Null
+
     switch ($deploymentAction) {
         "Publish" {
             Execute-PublishAction -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -taskNameSelector $taskNameSelector -dacpacFile $dacpacFile `
                 -publishProfile $publishProfile -sqlFile $sqlFile -sqlInline $sqlInline -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -sqlcmdInlineAdditionalArguments $sqlcmdInlineAdditionalArguments
         }
         "Extract" {
-            Extract-Dacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
+            Extract-Dacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments    
         }
         "Export" {
             Export-Bacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments

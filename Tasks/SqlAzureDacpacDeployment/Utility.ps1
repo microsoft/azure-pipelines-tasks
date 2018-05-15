@@ -163,7 +163,7 @@ function Get-SqlPackageCommandArguments2
         [String] $publishProfile,
         [String] $outputPath,
         [String] $additionalArguments,
-        [switch] $isOutputSecure
+        [Switch] $isOutputSecure
     )
 
     $ErrorActionPreference = 'Stop'
@@ -186,25 +186,25 @@ function Get-SqlPackageCommandArguments2
         OutputPath = "/OutputPath:";
     }
 
-    $sqlPackageArguments = @("${SqlPackageOptions.Action}$sqlpackageAction")
+    $sqlPackageArguments = @("$($sqlPackageOptions.Action)$sqlpackageAction")
     
     if ($sourceFile) {
-        $sqlPackageArguments = @("${sqlPackageOptions.SourceFile}`"$sourceFile`"")
+        $sqlPackageArguments += @("$($sqlPackageOptions.SourceFile)`"$sourceFile`"")
     }
 
     if ($targetFile) {
-        $sqlPackageArguments = @("${sqlPackageOptions.TargetFile}`"$targetFile`"")
+        $sqlPackageArguments += @("$($sqlPackageOptions.TargetFile)`"$targetFile`"")
     }
 
     if ($targetMethod -eq "server") {
         if ($sourceServerName -and $sourceDatabaseName) {
-            $sqlPackageArguments += @("${sqlPackageOptions.SourceServerName}`"$sourceServerName`"", 
-                                      "${sqlPackageOptions.SourceDatabaseName}`"$sourceDatabaseName`"")
+            $sqlPackageArguments += @("$($sqlPackageOptions.SourceServerName)`"$sourceServerName`"", 
+                                      "$($sqlPackageOptions.SourceDatabaseName)`"$sourceDatabaseName`"")
         }
 
         if ($targetServerName -and $targetDatabaseName) {
-            $sqlPackageArguments += @("${sqlPackageOptions.TargetServerName}`"$targetServerName`"", 
-                                      "${sqlPackageOptions.TargetDatabaseName}`"$targetDatabaseName`"")
+            $sqlPackageArguments += @("$($sqlPackageOptions.TargetServerName)`"$targetServerName`"", 
+                                      "$($sqlPackageOptions.TargetDatabaseName)`"$targetDatabaseName`"")
         }
 
         $sqlUsername = ""
@@ -233,38 +233,38 @@ function Get-SqlPackageCommandArguments2
             }
 
             if ($sourceUser -and $sourcePassword) {
-                $sqlPackageArguments += @("${sqlPackageOptions.SourceUser}`"$sqlUsername`"",
-                                          "${sqlPackageOptions.SourcePassword}`"$sqlPassword`"")
+                $sqlPackageArguments += @("$($sqlPackageOptions.SourceUser)`"$sqlUsername`"",
+                                          "$($sqlPackageOptions.SourcePassword)`"$sqlPassword`"")
             }
 
             if ($targetUser -and $targetPassword) {
-                $sqlPackageArguments += @("${sqlPackageOptions.TargetUser}`"$sqlUsername`"",
-                                          "${sqlPackageOptions.TargetPassword}`"$sqlPassword`"")
+                $sqlPackageArguments += @("$($sqlPackageOptions.TargetUser)`"$sqlUsername`"",
+                                          "$($sqlPackageOptions.TargetPassword)`"$sqlPassword`"")
             }
         }
     }
-    elseif($targetMethod -eq "connectionString")
-    { 
+    elseif ($targetMethod -eq "connectionString") { 
         # check this for extract and export
-        $sqlPackageArguments += @("${sqlPackageOptions.TargetConnectionString}`"$connectionString`"")
+        $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$connectionString`"")
     }
     
 
     if ($publishProfile) {
         # validate publish profile
-        if([System.IO.Path]::GetExtension($publishProfile) -ne ".xml") {
+        if ([System.IO.Path]::GetExtension($publishProfile) -ne ".xml") {
             Write-Error (Get-VstsLocString -Key "SAD_InvalidPublishProfile" -ArgumentList $publishProfile)
         }
 
-        $sqlPackageArguments += @("${sqlPackageOptions.Profile}`"$publishProfile`"")
+        $sqlPackageArguments += @("$($sqlPackageOptions.Profile)`"$publishProfile`"")
     }
 
     if ($outputPath) {
-        $sqlPackageArguments += @("${sqlPackageOptions.OutputPath}`"$outputPath`"")
+        $sqlPackageArguments += @("$($sqlPackageOptions.OutputPath)`"$outputPath`"")
     }
 
+    # not supported in Extract Export
     $defaultTimeout = 120
-    if (-not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
+    if (-not ($sqlpackageAction -eq "Extract" -or $sqlpackageAction -eq "Export") -and -not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
         # Add Timeout of 120 Seconds
         $additionalArguments = $additionalArguments + " /TargetTimeout:$defaultTimeout"
     }
@@ -348,10 +348,10 @@ function Get-SqlPackageCommandArguments
     if($publishProfile)
     {
         # validate publish profile
-        if([System.IO.Path]::GetExtension($publishProfile) -ne ".xml")
-        {
+        if([System.IO.Path]::GetExtension($publishProfile) -ne ".xml") {
             Write-Error (Get-VstsLocString -Key "SAD_InvalidPublishProfile" -ArgumentList $publishProfile)
         }
+
         $sqlPackageArguments += @($SqlPackageOptions.Profile + "`"$publishProfile`"")
     }
 

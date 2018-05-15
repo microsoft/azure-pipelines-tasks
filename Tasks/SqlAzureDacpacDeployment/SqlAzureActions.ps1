@@ -7,7 +7,7 @@ function Extract-Dacpac {
         [string] $sqlpackageAdditionalArguments
     )
 
-    $targetDacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\$databaseName.dacpac"
+    $targetDacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\$databaseName.dacpac"
     
     $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
     $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
@@ -15,6 +15,8 @@ function Extract-Dacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated dacpac file: $targetDacpacFilePath. Uploading the dacpac file to the logs."
+    Write-Host "Setting output variable 'OutputFile' equal to '$targetDacpacFilePath'"
+    Write-Host "##vso[task.setVariable variable=OutputFile]$targetDacpacFilePath"
     Write-Host "##vso[task.uploadfile]$targetDacpacFilePath"
 }
 
@@ -27,7 +29,7 @@ function Export-Bacpac {
         [string] $sqlpackageAdditionalArguments
     )
 
-    $targetBacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\$databaseName.bacpac"
+    $targetBacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\$databaseName.bacpac"
 
     $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
     $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
@@ -35,6 +37,8 @@ function Export-Bacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated bacpac file: $targetBacpacFilePath. Uploading the bacpac file to the logs."
+    Write-Host "Setting output variable 'OutputFile' equal to '$targetBacpacFilePath'"
+    Write-Host "##vso[task.setVariable variable=OutputFile]$targetBacpacFilePath"
     Write-Host "##vso[task.uploadfile]$targetBacpacFilePath"
 }
 
@@ -67,7 +71,7 @@ function Deploy-Report {
     )
 
     $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
-    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_DeployReport.xml"
+    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
     
     $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
     $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure 
@@ -75,6 +79,8 @@ function Deploy-Report {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated deploy report: $outputXmlPath. Uploading the deploy report file to the logs."
+    Write-Host "Setting output variable 'OutputFile' equal to '$outputXmlPath'"
+    Write-Host "##vso[task.setVariable variable=OutputFile]$outputXmlPath"
     Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
 
@@ -87,7 +93,7 @@ function Drift-Report {
         [string] $sqlpackageAdditionalArguments
     )
 
-    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_DriftReport.xml"
+    $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DriftReport.xml"
     
     $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
     $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DriftReport" -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
@@ -95,6 +101,8 @@ function Drift-Report {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated drift report: $outputXmlPath. Uploading the drift report file to the logs."
+    Write-Host "Setting output variable 'OutputFile' equal to '$outputXmlPath'"
+    Write-Host "##vso[task.setVariable variable=OutputFile]$outputXmlPath"
     Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
 
@@ -109,7 +117,7 @@ function Script-Action {
     )
 
     $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
-    $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\${databaseName}_Script.sql"
+    $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
     
     $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Script" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments
     $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Script" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
@@ -117,6 +125,8 @@ function Script-Action {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated script: $outputSqlPath. Uploading the script file to the logs."
+    Write-Host "Setting output variable 'OutputFile' equal to '$outputSqlPath'"
+    Write-Host "##vso[task.setVariable variable=OutputFile]$outputSqlPath"
     Write-Host "##vso[task.uploadfile]$outputSqlPath"
 }
 
@@ -140,8 +150,8 @@ function Publish-Dacpac {
         $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage "Publish profile path:" -throwIfMultipleFilesOrNoFilePresent
     }
 
-    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 }

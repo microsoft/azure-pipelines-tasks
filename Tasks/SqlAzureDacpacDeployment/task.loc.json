@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 18
+    "Patch": 30
   },
   "demands": [
     "sqlpackage"
@@ -272,6 +272,12 @@
       "groupName": "firewall",
       "defaultValue": "true",
       "helpMarkDown": "ms-resource:loc.input.help.DeleteFirewallRule"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "OutputFile",
+      "description": "Application URL of the selected App Service."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

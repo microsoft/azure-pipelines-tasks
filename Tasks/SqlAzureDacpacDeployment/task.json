@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 18
+        "Patch": 30
     },
     "demands": [
         "sqlpackage"
@@ -266,6 +266,12 @@
             "groupName": "firewall",
             "defaultValue": "true",
             "helpMarkDown": "If selected, then after the task ends, the IP Addresses specified here are deleted from the 'Allowed IP Addresses' list of the Azure SQL Server's Firewall."
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "OutputFile",
+            "description": "Application URL of the selected App Service."
         }
     ],
     "instanceNameFormat": "Execute Azure SQL : $(TaskNameSelector)",
