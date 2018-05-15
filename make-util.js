@@ -1224,7 +1224,7 @@ const listFilesInDirectory = dir =>
 // Stage 5: Create nuget packages and push.cmd and push-all.cmd
 
 
-// 
+// TODO: Redo this for new path structure that works both locally and on server
 // _package
 //  /per-task-layout (util.perTaskLayoutPath)
 //      /CmdLineV2__v2 // Keep "__v2" until everyone has version in their task name.
@@ -1255,12 +1255,15 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     var tasksZipsPath = path.join(packagePath, 'task-zips');
     mkdir('-p', tasksZipsPath);
 
+    // _package\artifacts
+    // This is the final state of the task content and what is published.
+    console.log();
+    console.log('> Creating artifacts folder');
+    var artifactsPath = path.join(packagePath, "artifacts");
+    mkdir('-p', artifactsPath);
+
     console.log();
     console.log('> Zipping task folders')
-    // TODO: We need to create a content.zip or preferably full task name.zip from each folder in non-aggregated-layout
-
-    var x = new admZip();
-    admZip.
 
     fs.readdirSync(layoutPath)
         .forEach(function (taskFolderName) {
@@ -1268,76 +1271,39 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
                 return;
             }
 
+            var taskLayoutPath = path.join(layoutPath, taskFolderName);
+            var taskJsonPath = path.join(taskLayoutPath, 'task.json');
+            var taskJsonContents = JSON.parse(fs.readFileSync(taskJsonPath));
+
+            // extract values that we need from task.json
+            var taskVersion = taskJsonContents.version.Major + '.' + taskJsonContents.version.Minor + '.' + taskJsonContents.version.Patch;
+            var taskName = taskJsonContents.name;
+            var fullTaskName = 'Mseng.MS.TF.DistributedTask.Tasks.' + taskName;
+
             // Create a matching folder inside taskZipsPath
             var taskZipPath = path.join(tasksZipsPath, taskFolderName);
             mkdir('-p', taskZipPath);
 
             // Zip the folder from non aggregated layout and name it based on task.json contents. TODO: Refactor this to method?
-            var zipFileName = 'Mseng.MS.TF.DistributedTask.Tasks.Foo.zip';
-            var zipSourcePath = path.join(layoutPath, taskFolderName);
-            var zipTargetPath = path.join(taskZipPath, zipFileName);
-
+            // TODO IMPORTANT: We want to zip it as an entire folder so that when we unzip it's a full folder? Makes the servicing processing simpler.
             var taskZip = new admZip();
-            taskZip.addLocalFolder(zipSourcePath);
-            taskZip.writeZip(zipTargetPath);
+            taskZip.addLocalFolder(taskLayoutPath);
+            taskZip.writeZip(path.join(taskZipPath, `${fullTaskName}.zip`));
 
-            // Now we have a zip per task
+            // Now we can create the nuspec file, nupkg, and push.cmd
+            // var taskNuspecPath = createNuspecFile(taskLayoutPath, fullTaskName, taskVersion);
+            var taskNuspecPath = createNuspecFile(taskZipPath, fullTaskName, taskVersion);
 
+            // var taskArtifactFolder = path.join(artifactsPath, taskFolderName);
+            // mkdir('-p', taskArtifactFolder);
+            
+            //var taskPublishFolder = createNuGetPackage(artifactsPath, taskFolderName, taskNuspecPath, taskLayoutPath);
+            var taskPublishFolder = createNuGetPackage(artifactsPath, taskFolderName, taskNuspecPath, taskZipPath);
+            // createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
         });
 
+    // TODO: Create root push.cmd in artifactsPath
 
-    ////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////
-
-    // console.log('> Creating nuget package per task');
-
-    // var layoutPath = util.perTaskLayoutPath;
-    // var publishPath = util.perTaskPublishPath;
-
-    // console.log(`> Creating folders for layout '${layoutPath}' and publish '${publishPath}'`);
-    // fs.mkdirSync(layoutPath);
-    // fs.mkdirSync(publishPath);
-
-    // // TODO: I think we need to make changes here but start with this and see where it goes.
-    // // console.log('> Linking aggregate layout content to per-task-layout path, may need to change this');
-    // // //var commitHash = refs.head.commit;
-    // console.log(`> Linking content.`);
-    // var commitHash = 'aaaaaa';
-    // var taskDestMap = {}; // I don't think this is actually used for anything?
-
-    // // TODO: Can we use linkNonAggregateLayoutContent here? Do both to different destinations and compare the difference in folder structures.
-    // util.linkAggregateLayoutContent(util.milestoneLayoutPath, layoutPath, '', commitHash, taskDestMap);
-
-    // console.log();
-    // console.log(`> Iterating all folders in '${layoutPath}'`);
-    // fs.readdirSync(layoutPath)
-    //     .forEach(function (taskFolderName) {
-    //         if (taskFolderName.indexOf('aaaaaa') > -1) {
-    //             // For some reason there is also D:\a\1\s\_package\per-task-layout\AzurePowerShellV3__v3_aaaaaa
-    //             return;
-    //         }
-
-    //         var taskLayoutPath = path.join(layoutPath, taskFolderName);
-
-    //         // load the task.json
-    //         var taskJsonPath = path.join(taskLayoutPath, 'task.json');
-    //         var taskJsonContents = JSON.parse(fs.readFileSync(taskJsonPath));
-
-    //         // extract values that we need from task.json
-    //         var taskVersion = taskJsonContents.version.Major + '.' + taskJsonContents.version.Minor + '.' + taskJsonContents.version.Patch;
-    //         var taskName = taskJsonContents.name;
-    //         var fullTaskName = 'Mseng.MS.TF.DistributedTask.Tasks.' + taskName;
-
-    //         var taskNuspecPath = createNuspecFile(taskLayoutPath, fullTaskName, taskVersion);
-    //         var taskPublishFolder = createNuGetPackage(publishPath, taskFolderName, taskNuspecPath, taskLayoutPath);
-    //         createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
-    //     });
-
-
-    // console.log('> Finished, printing package folder contents.');
-    // listFilesInDirectory(util.packagePath).forEach(function (f) { 
-    //     console.log(f);
-    // });
 }
 exports.createNugetPackagePerTask = createNugetPackagePerTask;
 
@@ -1386,7 +1352,7 @@ var createNuGetPackage = function (publishPath, taskFolderName, taskNuspecPath, 
     var taskPublishFolder = path.join(publishPath, taskFolderName);
     fs.mkdirSync(taskPublishFolder);
     process.chdir(taskPublishFolder);
-    util.run(`nuget pack "${taskNuspecPath}" -BasePath "${taskLayoutPath}" -NoDefaultExcludes`, /*inheritStreams:*/ true);
+    run(`nuget pack "${taskNuspecPath}" -BasePath "${taskLayoutPath}" -NoDefaultExcludes`, /*inheritStreams:*/ true);
 
     return taskPublishFolder;
 }
@@ -1413,3 +1379,58 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
 //exports.createPushCmd = createPushCmd;
 
 //------------------------------------------------------------------------------
+
+
+// Old code, get rid of this when local layout is working
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+// console.log('> Creating nuget package per task');
+
+// var layoutPath = util.perTaskLayoutPath;
+// var publishPath = util.perTaskPublishPath;
+
+// console.log(`> Creating folders for layout '${layoutPath}' and publish '${publishPath}'`);
+// fs.mkdirSync(layoutPath);
+// fs.mkdirSync(publishPath);
+
+// // TODO: I think we need to make changes here but start with this and see where it goes.
+// // console.log('> Linking aggregate layout content to per-task-layout path, may need to change this');
+// // //var commitHash = refs.head.commit;
+// console.log(`> Linking content.`);
+// var commitHash = 'aaaaaa';
+// var taskDestMap = {}; // I don't think this is actually used for anything?
+
+// // TODO: Can we use linkNonAggregateLayoutContent here? Do both to different destinations and compare the difference in folder structures.
+// util.linkAggregateLayoutContent(util.milestoneLayoutPath, layoutPath, '', commitHash, taskDestMap);
+
+// console.log();
+// console.log(`> Iterating all folders in '${layoutPath}'`);
+// fs.readdirSync(layoutPath)
+//     .forEach(function (taskFolderName) {
+//         if (taskFolderName.indexOf('aaaaaa') > -1) {
+//             // For some reason there is also D:\a\1\s\_package\per-task-layout\AzurePowerShellV3__v3_aaaaaa
+//             return;
+//         }
+
+//         var taskLayoutPath = path.join(layoutPath, taskFolderName);
+
+//         // load the task.json
+//         var taskJsonPath = path.join(taskLayoutPath, 'task.json');
+//         var taskJsonContents = JSON.parse(fs.readFileSync(taskJsonPath));
+
+//         // extract values that we need from task.json
+//         var taskVersion = taskJsonContents.version.Major + '.' + taskJsonContents.version.Minor + '.' + taskJsonContents.version.Patch;
+//         var taskName = taskJsonContents.name;
+//         var fullTaskName = 'Mseng.MS.TF.DistributedTask.Tasks.' + taskName;
+
+//         var taskNuspecPath = createNuspecFile(taskLayoutPath, fullTaskName, taskVersion);
+//         var taskPublishFolder = createNuGetPackage(publishPath, taskFolderName, taskNuspecPath, taskLayoutPath);
+//         createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
+//     });
+
+
+// console.log('> Finished, printing package folder contents.');
+// listFilesInDirectory(util.packagePath).forEach(function (f) { 
+//     console.log(f);
+// });
