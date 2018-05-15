@@ -463,57 +463,18 @@ target.testLegacy = function() {
     run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
 }
 
-// TODO: When is this used vs. the code in stage-aggregate.js?
-target.package = function() {
-    // clean
+// 
+// node make.js layout
+// This will take the built tasks and create the files we need to publish them.
+// 
+target.layout = function() {
+    banner('Starting layout process...')
+
+    console.log('> Cleaning packge path');
     rm('-Rf', packagePath);
 
-    // create the non-aggregated layout
-    util.createNonAggregatedZip(buildPath, packagePath);
-
-    // if task specified, create hotfix layout and short-circuit
-    if (options.task) {
-        util.createHotfixLayout(packagePath, options.task);
-        return;
-    }
-
-    // create the aggregated tasks layout
-    util.createAggregatedZip(packagePath);
-
-    // nuspec
-    var version = options.version;
-    if (!version) {
-        console.warn('Skipping nupkg creation. Supply version with --version.');
-        return;
-    }
-
-    if (!semver.valid(version)) {
-        fail('invalid semver version: ' + version);
-    }
-
-    var pkgName = 'Mseng.MS.TF.Build.Tasks';
-    console.log();
-    console.log('> Generating .nuspec file');
-    var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
-    contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
-    contents += '   <metadata>' + os.EOL;
-    contents += '      <id>' + pkgName + '</id>' + os.EOL;
-    contents += '      <version>' + version + '</version>' + os.EOL;
-    contents += '      <authors>bigbldt</authors>' + os.EOL;
-    contents += '      <owners>bigbldt,Microsoft</owners>' + os.EOL;
-    contents += '      <requireLicenseAcceptance>false</requireLicenseAcceptance>' + os.EOL;
-    contents += '      <description>For VSS internal use only</description>' + os.EOL;
-    contents += '      <tags>VSSInternal</tags>' + os.EOL;
-    contents += '   </metadata>' + os.EOL;
-    contents += '</package>' + os.EOL;
-    var nuspecPath = path.join(packagePath, 'pack-source', pkgName + '.nuspec');
-    fs.writeFileSync(nuspecPath, contents);
-
-    // package
-    ensureTool('nuget.exe');
-    var nupkgPath = path.join(packagePath, 'pack-target', `${pkgName}.${version}.nupkg`);
-    mkdir('-p', path.dirname(nupkgPath));
-    run(`nuget.exe pack ${nuspecPath} -OutputDirectory ${path.dirname(nupkgPath)}`);
+    var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
+    util.createNugetPackagePerTask(packagePath, layoutPath);
 }
 
 // used by CI that does official publish
