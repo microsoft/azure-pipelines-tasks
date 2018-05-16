@@ -111,7 +111,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
     return getVSTestLocation(vsVersion);
 }
 
-function getVSTestConsole15Path(): string {
+export function getVSTestConsole15Path(): string {
     const vswhereTool = tl.tool(path.join(__dirname, 'vswhere.exe'));
     vswhereTool.line('-version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath');
     let vsPath = vswhereTool.execSync({ silent: true } as tr.IExecSyncOptions).stdout;
@@ -123,7 +123,7 @@ function getVSTestConsole15Path(): string {
     return null;
 }
 
-function getVSTestLocation(vsVersion: number): string {
+export function getVSTestLocation(vsVersion: number): string {
     const vsCommon: string = tl.getVariable('VS' + vsVersion + '0COMNTools');
     if (!vsCommon) {
         throw (new Error(tl.loc('VstestNotFound', utils.Helper.getVSVersion(vsVersion))));

@@ -1,0 +1,60 @@
+{
+  "id": "2d8a1d60-8ccd-11e7-a792-11ac56e9f553",
+  "name": "PyPIPublisher",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Package",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 135,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.0.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "serviceEndpoint",
+      "aliases": [
+        "pypiConnection"
+      ],
+      "type": "connectedService:generic",
+      "label": "ms-resource:loc.input.label.serviceEndpoint",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoint"
+    },
+    {
+      "name": "wd",
+      "aliases": [
+        "packageDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.wd",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.wd"
+    },
+    {
+      "name": "wheel",
+      "aliases": [
+        "alsoPublishWheel"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.wheel",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.wheel"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "publisher.js",
+      "argumentFormat": ""
+    }
+  }
+}

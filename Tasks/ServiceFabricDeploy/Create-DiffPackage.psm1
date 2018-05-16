@@ -13,6 +13,8 @@ function Create-DiffPackage
     {
         Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackage)
 
+         # Load utility functions
+        . "$PSScriptRoot\utilities.ps1"
         Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
         Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
 

@@ -155,6 +155,7 @@ try {
     if ($registerPackageTimeoutSec)
     {
         $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
+        $publishParameters['UnregisterPackageTimeoutSec'] = $registerPackageTimeoutSec
     }
 
     if ($skipValidation)

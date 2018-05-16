@@ -368,7 +368,7 @@ export class KuduServiceUtility {
         }
 
         if(attempts == noOfRetry) {
-            throw new Error(tl.loc('ScriptStatusTimeout'));
+            throw new Error(tl.loc('PollingForFileTimeOut'));
         }
     }
 

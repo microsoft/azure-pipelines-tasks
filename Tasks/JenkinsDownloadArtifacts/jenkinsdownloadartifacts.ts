@@ -40,7 +40,7 @@ async function getZipFromUrl(artifactArchiveUrl: string, strictSSL: boolean, loc
 
     var downloaderOptions = configureDownloaderOptions();
     var downloader = new engine.ArtifactEngine();
-    var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler, { ignoreSslError: false });
+    var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler, { ignoreSslError: !strictSSL });
     var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
 
     await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
@@ -158,42 +158,49 @@ async function doWork() {
             };
 
             var handler = new handlers.BasicCredentialHandler(username, password);
-            if (!itemPattern || itemPattern === '**') {
-                const archiveUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/artifact/*zip*/`
-                var zipLocation = path.join(localPathRoot, "archive.zip");
-                await getZipFromUrl(archiveUrl, strictSSL, zipLocation, handler);
+            var hasArtifacts = await jenkinsClient.HasAssociatedArtifacts(artifactQueryUrl);
 
-                var unzipPromise = unzip(zipLocation, localPathRoot);
-                unzipPromise.catch((error) => {
-                    throw error;
-                });
-                
-                await unzipPromise;
+            if (hasArtifacts) {
+                if (!itemPattern || itemPattern === '**') {
+                    const archiveUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/artifact/*zip*/`
+                    var zipLocation = path.join(localPathRoot, "archive.zip");
+                    await getZipFromUrl(archiveUrl, strictSSL, zipLocation, handler);
 
-                if (tl.exist(zipLocation)) {
-                    tl.rmRF(zipLocation);
-                }
-
-                var archivePath = path.join(localPathRoot, "archive");
-                var tempPath = path.join(localPathRoot, uuidv4());
-                fsExtra.move(archivePath, tempPath)
-                    .then(() => {
-                        fsExtra.copy(tempPath, localPathRoot)
-                            .then(() => {
-                                fsExtra.remove(tempPath).catch((error) => {
-                                    throw error;
-                                });
-                            })
-                            .catch((error) => {
-                                throw error;
-                            });
-                    })
-                    .catch((error) => {
+                    var unzipPromise = unzip(zipLocation, localPathRoot);
+                    unzipPromise.catch((error) => {
                         throw error;
                     });
+
+                    await unzipPromise;
+
+                    if (tl.exist(zipLocation)) {
+                        tl.rmRF(zipLocation);
+                    }
+
+                    var archivePath = path.join(localPathRoot, "archive");
+                    var tempPath = path.join(localPathRoot, uuidv4());
+                    fsExtra.move(archivePath, tempPath)
+                        .then(() => {
+                            fsExtra.copy(tempPath, localPathRoot)
+                                .then(() => {
+                                    fsExtra.remove(tempPath).catch((error) => {
+                                        throw error;
+                                    });
+                                })
+                                .catch((error) => {
+                                    throw error;
+                                });
+                        })
+                        .catch((error) => {
+                            throw error;
+                        });
+                }
+                else {
+                    await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
+                }
             }
             else {
-                await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
+               console.log(tl.loc('NoAssociatedArtifacts'));
             }
         }
 

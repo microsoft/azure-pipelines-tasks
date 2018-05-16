@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 134,
+        "Minor": 135,
         "Patch": 0
     },
     "demands": [
@@ -83,7 +83,7 @@
             "defaultValue": "**/TEST-*.xml",
             "required": true,
             "groupName": "junitTestResults",
-            "helpMarkDown": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
+            "helpMarkDown": "Test results files path. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
             "visibleRule": "publishJUnitResults = true"
         },
         {

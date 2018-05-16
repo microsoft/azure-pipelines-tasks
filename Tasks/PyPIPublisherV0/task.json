@@ -1,0 +1,54 @@
+{
+  "id": "2d8a1d60-8ccd-11e7-a792-11ac56e9f553",
+  "name": "PyPIPublisher",
+  "friendlyName": "PyPI Publisher",
+  "description": "Create and upload an sdist or wheel to a PyPI-compatible index using Twine.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "[More Information](https://docs.microsoft.com/vsts/build-release/tasks/package/pypi-publisher)",
+  "category": "Package",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 135,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "2.0.0",
+  "instanceNameFormat": "Package and publish to PyPI",
+  "inputs": [
+    {
+      "name": "serviceEndpoint",
+      "aliases": [ "pypiConnection" ],
+      "type": "connectedService:generic",
+      "label": "PyPI connection",
+      "required": true,
+      "helpMarkDown": "A generic service endpoint for connecting to the package index."
+    },    
+    {
+      "name": "wd",
+      "aliases": [ "packageDirectory" ],
+      "type": "filePath",
+      "label": "Python package directory",
+      "required": true,
+      "helpMarkDown": "The directory of the Python package to be created and published, where setup.py is present."
+    },
+    {
+        "name": "wheel",
+        "aliases": [ "alsoPublishWheel" ],
+        "type": "boolean",
+        "label": "Also publish a wheel",
+        "defaultValue": "false",
+        "required": false,
+        "helpMarkDown": "Select whether to create and publish a universal wheel package (platform independent) in addition to an sdist package. [More information](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "publisher.js",
+      "argumentFormat": ""
+    }
+  }
+}

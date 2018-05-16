@@ -129,6 +129,26 @@ export class KuduTests {
         }
     }
 
+    public static async getAllSiteExtensions() {
+        try {
+            var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            console.log(`MOCK KUDU SITE EXTENSIONS COUNT: ${(await kudu.getAllSiteExtensions()).length}`);
+        }
+        catch(error) {
+            tl.error(error);
+            tl.setResult(tl.TaskResult.Failed, 'KuduTests.getAllSiteExtensions() should have passed but failed');
+        }
+
+        try {
+            var kudu = new Kudu('http://FAIL_MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
+            await kudu.getAllSiteExtensions();
+            tl.setResult(tl.TaskResult.Failed, 'KuduTests.getAllSiteExtensions() should have failed but passed');
+        }
+        catch(error) {
+            tl.error(error);
+        }
+    }
+
     public static async getProcess() {
         try {
             var kudu = new Kudu('http://MOCK_SCM_WEBSITE', 'MOCK_SCM_USERNAME', 'MOCK_SCM_PASSWORD');
@@ -365,6 +385,7 @@ async function RUNTESTS() {
     await KuduTests.stopContinuousWebJob();
     await KuduTests.installSiteExtension();
     await KuduTests.getSiteExtensions();
+    await KuduTests.getAllSiteExtensions();
     await KuduTests.getProcess();
     await KuduTests.killProcess();
     await KuduTests.getAppSettings();
