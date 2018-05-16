@@ -17,7 +17,6 @@ export interface InputDataContract {
     Logging : Logging;
     TiaBaseLineBuildIdFile : string;
     UseNewCollector : boolean;
-    IsPrFlow : boolean;
 }
 
 export interface TestReportingSettings {
@@ -41,6 +40,7 @@ export interface TestPlanTestSuiteSettings {
 }
 
 export interface TfsSpecificSettings {
+    DefinitionId : number;
     BuildId : number;
     BuildUri : string;
     ReleaseId : number;
@@ -100,7 +100,8 @@ export interface TiaSettings {
     SourcesDirectory : string;
     FileLevel : boolean;
     FilterPaths : string;
-    UserMapFile : string;
+    UserMapFile : string;    
+    IsPrFlow : boolean;
 }
 
 export interface Logging {
