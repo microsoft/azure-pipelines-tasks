@@ -15,7 +15,7 @@ function Extract-Dacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated dacpac file: $targetDacpacFilePath. Uploading the dacpac file to the logs."
-    Write-Host "Setting output variable 'OutputFile' to '$targetDacpacFilePath'"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $targetDacpacFilePath)
     Write-Host "##vso[task.setVariable variable=OutputFile]$targetDacpacFilePath"
     Write-Host "##vso[task.uploadfile]$targetDacpacFilePath"
 }
@@ -37,7 +37,7 @@ function Export-Bacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated bacpac file: $targetBacpacFilePath. Uploading the bacpac file to the logs."
-    Write-Host "Setting output variable 'OutputFile' to '$targetBacpacFilePath'"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $targetBacpacFilePath)
     Write-Host "##vso[task.setVariable variable=OutputFile] $targetBacpacFilePath"
     Write-Host "##vso[task.uploadfile] $targetBacpacFilePath"
 }
@@ -62,7 +62,8 @@ function Import-Bacpac {
 
 function Deploy-Report {
     param (
-        [string] $dacpacFile,   
+        [string] $dacpacFile,  
+        [string] $publishProfile,
         [string] $serverName,
         [string] $databaseName,
         [string] $sqlUsername,
@@ -73,13 +74,13 @@ function Deploy-Report {
     $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
     $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
     
-    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure 
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfile -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfile -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure 
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated deploy report: $outputXmlPath. Uploading the deploy report file to the logs."
-    Write-Host "Setting output variable 'OutputFile' to '$outputXmlPath'"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $outputXmlPath)
     Write-Host "##vso[task.setVariable variable=OutputFile]$outputXmlPath"
     Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
@@ -101,14 +102,15 @@ function Drift-Report {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated drift report: $outputXmlPath. Uploading the drift report file to the logs."
-    Write-Host "Setting output variable 'OutputFile' to '$outputXmlPath'"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $outputXmlPath)
     Write-Host "##vso[task.setVariable variable=OutputFile]$outputXmlPath"
     Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
 
 function Script-Action {
     param (
-        [string] $dacpacFile,   
+        [string] $dacpacFile,
+        [string] $publishProfile,
         [string] $serverName,
         [string] $databaseName,
         [string] $sqlUsername,
@@ -119,13 +121,13 @@ function Script-Action {
     $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
     $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
     
-    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Script" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Script" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
+    $sqlpackageArguments = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfile -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments2 -targetMethod "server" -sqlpackageAction "Script" -sourceFile $dacpacFilePath -publishProfile $publishProfile -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputSqlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated script: $outputSqlPath. Uploading the script file to the logs."
-    Write-Host "Setting output variable 'OutputFile' to '$outputSqlPath'"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $outputSqlPath)
     Write-Host "##vso[task.setVariable variable=OutputFile]$outputSqlPath"
     Write-Host "##vso[task.uploadfile]$outputSqlPath"
 }
@@ -221,9 +223,17 @@ function Run-InlineSql {
     $sqlInlineFilePath = [System.IO.Path]::GetTempFileName()
     $sqlInline | Out-File $sqlInlineFilePath
 
-    Write-Host "Temporary inline sql file: $sqlInlineFilePath"
+    Write-Host (Get-VstsLocString -Key "SAD_TemporaryInlineSqlFile" -ArgumentList $sqlInlineFilePath)
 
-    Run-SqlCmd -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlInlineFilePath -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
+    try {
+        Run-SqlCmd -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlInlineFilePath -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
+    }
+    finally {
+        if (Test-Path -Path $sqlInlineFilePath) {
+            Write-Verbose "Removing File $sqlInlineFilePath"
+            Remove-Item $sqlInlineFilePath -ErrorAction 'SilentlyContinue'
+        }
+    }
 }
 
 function Run-SqlCmd {

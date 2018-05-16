@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 32
+        "Patch": 0
     },
     "demands": [
         "sqlpackage"
@@ -121,10 +121,12 @@
                 "Extract": "Extract",
                 "Export": "Export",
                 "Import": "Import",
-                "DriftReport": "Drift Report",
                 "Script": "Script",
+                "DriftReport": "Drift Report",
                 "DeployReport": "Deploy Report"
-            }
+            },
+            "helpMarkDown": "Publish, Extract, Export, Import, Script, DriftReport, DeployReport actions. More info link."
+
         },
         {
             "name": "TaskNameSelector",
@@ -193,7 +195,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Publish profile provides fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share. Predefined system variables like, $(agent.buildDirectory) or $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "DeploymentAction = Publish && TaskNameSelector = DacpacTask"
+            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
         },
         {
             "name": "AdditionalArguments",
@@ -203,7 +205,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Database, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
-            "visibleRule": ""
+            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
         },
         {
             "name": "SqlAdditionalArguments",
@@ -271,13 +273,13 @@
     "outputVariables": [
         {
             "name": "OutputFile",
-            "description": "Application URL of the selected App Service."
+            "description": "Generated output file path for Extract, Export, Script, DriftReport and DeployReport actions."
         }
     ],
-    "instanceNameFormat": "Execute Azure SQL : $(TaskNameSelector)",
+    "instanceNameFormat": "Azure SQL $(DeploymentAction)",
     "execution": {
         "PowerShell3": {
-            "target": "DeploySqlAzure2.ps1"
+            "target": "DeploySqlAzure.ps1"
         }
     },
     "messages": {
@@ -292,6 +294,9 @@
         "SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided",
         "SAD_InvalidServerNameFormat": "Server name '{0}' is not in the right format. Use FQDN format like '{1}'",
         "SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed. SqlPackage.exe exited with code {0}.",
-        "SAD_TroubleshootingLink": "Checkout how to troubleshoot failures https://aka.ms/sqlazuredeployreadme#troubleshooting."
+        "SAD_TroubleshootingLink": "Checkout how to troubleshoot failures https://aka.ms/sqlazuredeployreadme#troubleshooting-",
+        "SAD_InvalidDeploymentAction": "Invalid deployment action: {0}",
+        "SAD_SetOutputVariable": "Setting output variable '{0}' to '{1}'",
+        "SAD_TemporaryInlineSqlFile": "Temporary inline sql file: {0}"
     }
 }

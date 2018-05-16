@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 32
+    "Patch": 0
   },
   "demands": [
     "sqlpackage"
@@ -127,10 +127,11 @@
         "Extract": "Extract",
         "Export": "Export",
         "Import": "Import",
-        "DriftReport": "Drift Report",
         "Script": "Script",
+        "DriftReport": "Drift Report",
         "DeployReport": "Deploy Report"
-      }
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentAction"
     },
     {
       "name": "TaskNameSelector",
@@ -199,7 +200,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.PublishProfile",
-      "visibleRule": "DeploymentAction = Publish && TaskNameSelector = DacpacTask"
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
     },
     {
       "name": "AdditionalArguments",
@@ -209,7 +210,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
-      "visibleRule": ""
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
     },
     {
       "name": "SqlAdditionalArguments",
@@ -277,13 +278,13 @@
   "outputVariables": [
     {
       "name": "OutputFile",
-      "description": "Application URL of the selected App Service."
+      "description": "Generated output file path for Extract, Export, Script, DriftReport and DeployReport actions."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell3": {
-      "target": "DeploySqlAzure2.ps1"
+      "target": "DeploySqlAzure.ps1"
     }
   },
   "messages": {
@@ -298,6 +299,9 @@
     "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile",
     "SAD_InvalidServerNameFormat": "ms-resource:loc.messages.SAD_InvalidServerNameFormat",
     "SAD_AzureSQLDacpacTaskFailed": "ms-resource:loc.messages.SAD_AzureSQLDacpacTaskFailed",
-    "SAD_TroubleshootingLink": "ms-resource:loc.messages.SAD_TroubleshootingLink"
+    "SAD_TroubleshootingLink": "ms-resource:loc.messages.SAD_TroubleshootingLink",
+    "SAD_InvalidDeploymentAction": "ms-resource:loc.messages.SAD_InvalidDeploymentAction",
+    "SAD_SetOutputVariable": "ms-resource:loc.messages.SAD_SetOutputVariable",
+    "SAD_TemporaryInlineSqlFile": "ms-resource:loc.messages.SAD_TemporaryInlineSqlFile"
   }
 }
