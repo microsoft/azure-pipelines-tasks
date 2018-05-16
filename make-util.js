@@ -803,7 +803,7 @@ var createMarkdownDocFile = function(taskJson, taskJsonPath, docsDir, mdDocOutpu
         fs.copyFileSync(iconPath, docIconPath);
     }
 
-    fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson));
+    fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson, mdDocOutputFilename));
 }
 exports.createMarkdownDocFile = createMarkdownDocFile;
 
@@ -853,7 +853,7 @@ var cleanString = function(str) {
     }
 }
 
-var getTaskMarkdownDoc = function(taskJson) {
+var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     var taskMarkdown = '';
 
     taskMarkdown += '---' + os.EOL;
@@ -874,10 +874,7 @@ var getTaskMarkdownDoc = function(taskJson) {
     taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
     taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
 
-    taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
-    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
-    taskMarkdown += getTaskYaml(taskJson) + os.EOL + os.EOL;
-    taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
+    taskMarkdown += '[!INCLUDE [temp](../_shared/yaml/' + mdDocOutputFilename + ')]' + os.EOL + os.EOL;
 
     taskMarkdown += '## Arguments' + os.EOL + os.EOL;
     taskMarkdown += '<table><thead><tr><th>Argument</th><th>Description</th></tr></thead>' + os.EOL;
@@ -971,7 +968,10 @@ var getTaskYaml = function(taskJson) {
 
     // Append endings
     taskYaml += '```' + os.EOL + os.EOL;
-    taskYaml += '::: moniker-end';
+    taskYaml += '::: moniker-end' + os.EOL + os.EOL;
+    taskYaml += '::: moniker range="< vsts"' + os.EOL + os.EOL;
+    taskYaml += '::: moniker-end' + os.EOL;
+
     return taskYaml;
 };
 //------------------------------------------------------------------------------
