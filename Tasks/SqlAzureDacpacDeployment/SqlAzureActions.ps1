@@ -15,7 +15,7 @@ function Extract-Dacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated dacpac file: $targetDacpacFilePath. Uploading the dacpac file to the logs."
-    Write-Host "Setting output variable 'OutputFile' equal to '$targetDacpacFilePath'"
+    Write-Host "Setting output variable 'OutputFile' to '$targetDacpacFilePath'"
     Write-Host "##vso[task.setVariable variable=OutputFile]$targetDacpacFilePath"
     Write-Host "##vso[task.uploadfile]$targetDacpacFilePath"
 }
@@ -37,9 +37,9 @@ function Export-Bacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated bacpac file: $targetBacpacFilePath. Uploading the bacpac file to the logs."
-    Write-Host "Setting output variable 'OutputFile' equal to '$targetBacpacFilePath'"
-    Write-Host "##vso[task.setVariable variable=OutputFile]$targetBacpacFilePath"
-    Write-Host "##vso[task.uploadfile]$targetBacpacFilePath"
+    Write-Host "Setting output variable 'OutputFile' to '$targetBacpacFilePath'"
+    Write-Host "##vso[task.setVariable variable=OutputFile] $targetBacpacFilePath"
+    Write-Host "##vso[task.uploadfile] $targetBacpacFilePath"
 }
 
 function Import-Bacpac {
@@ -79,7 +79,7 @@ function Deploy-Report {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated deploy report: $outputXmlPath. Uploading the deploy report file to the logs."
-    Write-Host "Setting output variable 'OutputFile' equal to '$outputXmlPath'"
+    Write-Host "Setting output variable 'OutputFile' to '$outputXmlPath'"
     Write-Host "##vso[task.setVariable variable=OutputFile]$outputXmlPath"
     Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
@@ -101,7 +101,7 @@ function Drift-Report {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated drift report: $outputXmlPath. Uploading the drift report file to the logs."
-    Write-Host "Setting output variable 'OutputFile' equal to '$outputXmlPath'"
+    Write-Host "Setting output variable 'OutputFile' to '$outputXmlPath'"
     Write-Host "##vso[task.setVariable variable=OutputFile]$outputXmlPath"
     Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
@@ -125,7 +125,7 @@ function Script-Action {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated script: $outputSqlPath. Uploading the script file to the logs."
-    Write-Host "Setting output variable 'OutputFile' equal to '$outputSqlPath'"
+    Write-Host "Setting output variable 'OutputFile' to '$outputSqlPath'"
     Write-Host "##vso[task.setVariable variable=OutputFile]$outputSqlPath"
     Write-Host "##vso[task.uploadfile]$outputSqlPath"
 }
