@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 1,
-    "Patch": 6
+    "Patch": 7
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -39,7 +39,7 @@
       "name": "PostDeploymentAction",
       "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
+      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || UseWebDeploy = false || DeploymentType != zipDeploy || UseRunFromZip = false"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -299,15 +299,6 @@
       }
     },
     {
-      "name": "TakeAppOfflineFlag",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
-      "defaultValue": "true",
-      "required": false,
-      "groupName": "AdditionalDeploymentOptions",
-      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
-    },
-    {
       "name": "UseWebDeploy",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.UseWebDeploy",
@@ -317,13 +308,47 @@
       "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
     },
     {
+      "name": "DeploymentType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DeploymentType",
+      "defaultValue": "webDeploy",
+      "required": true,
+      "groupName": "AdditionalDeploymentOptions",
+      "options": {
+        "webDeploy": "Web Deploy",
+        "zipDeploy": "Zip Deploy"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentType",
+      "visibleRule": "UseWebDeploy == true"
+    },
+    {
+      "name": "UseRunFromZip",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.UseRunFromZip",
+      "required": false,
+      "defaultValue": "true",
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "DeploymentType == zipDeploy",
+      "helpMarkDown": "ms-resource:loc.input.help.UseRunFromZip"
+    },
+    {
+      "name": "TakeAppOfflineFlag",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TakeAppOfflineFlag",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "AdditionalDeploymentOptions",
+      "visibleRule": "UseWebDeploy = false || DeploymentType != zipDeploy || UseRunFromZip = false",
+      "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
+    },
+    {
       "name": "SetParametersFile",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.SetParametersFile",
       "defaultValue": "",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy == true",
+      "visibleRule": "DeploymentType == webDeploy",
       "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
     },
     {
@@ -333,7 +358,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy == true",
+      "visibleRule": "DeploymentType == webDeploy",
       "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
     },
     {
@@ -343,7 +368,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy == true",
+      "visibleRule": "DeploymentType == webDeploy",
       "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
     },
     {
@@ -353,7 +378,7 @@
       "required": false,
       "defaultValue": "-retryAttempts:6 -retryInterval:10000",
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy == true",
+      "visibleRule": "DeploymentType == webDeploy",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
@@ -362,7 +387,7 @@
       "label": "ms-resource:loc.input.label.RenameFilesFlag",
       "defaultValue": "true",
       "required": false,
-      "visibleRule": "UseWebDeploy == true",
+      "visibleRule": "DeploymentType == webDeploy",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
     },
@@ -488,6 +513,8 @@
     "CannotPerformXdtTransformationOnNonWindowsPlatform": "ms-resource:loc.messages.CannotPerformXdtTransformationOnNonWindowsPlatform",
     "XdtTransformationErrorWhileTransforming": "ms-resource:loc.messages.XdtTransformationErrorWhileTransforming",
     "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
+    "Publishusingzipdeploynotsupportedformsbuildpackage": "ms-resource:loc.messages.Publishusingzipdeploynotsupportedformsbuildpackage",
+    "Publishusingzipdeploynotsupportedforvirtualapplication": "ms-resource:loc.messages.Publishusingzipdeploynotsupportedforvirtualapplication",
     "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
     "UnknownFileEncodeError": "ms-resource:loc.messages.UnknownFileEncodeError",

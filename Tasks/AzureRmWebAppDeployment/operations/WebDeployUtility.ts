@@ -35,7 +35,7 @@ export class WebDeployUtility {
 
     public static constructWebDeployArguments(taskParameters: TaskParameters, publishProfile: any): WebDeployArguments {
         let webDeployArguments: any = {};
-        webDeployArguments.package = new Package(taskParameters.Package);
+        webDeployArguments.package = taskParameters.Package;
         webDeployArguments.additionalArguments = taskParameters.AdditionalArguments;
         webDeployArguments.appName = taskParameters.WebAppName;
         webDeployArguments.excludeFilesFromAppDataFlag = taskParameters.ExcludeFilesFromAppDataFlag;

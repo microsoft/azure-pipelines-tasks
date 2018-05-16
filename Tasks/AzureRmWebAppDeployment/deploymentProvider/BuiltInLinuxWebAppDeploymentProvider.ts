@@ -7,10 +7,9 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
     private zipDeploymentID: string;
 
     public async DeployWebAppStep() {
-        var webPackage = packageUtility.PackageUtility.getPackagePath(this.taskParams.Package);
         tl.debug('Performing Linux built-in package deployment');
 
-        this.zipDeploymentID = await this.kuduServiceUtility.zipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
+        this.zipDeploymentID = await this.kuduServiceUtility.zipDeploy(this.taskParams.Package.getPath(), false, this.taskParams.TakeAppOfflineFlag, 
             { slotName: this.appService.getSlot() });
 
         await this.appServiceUtility.updateStartupCommandAndRuntimeStack(this.taskParams.RuntimeStack, this.taskParams.StartupCommand);

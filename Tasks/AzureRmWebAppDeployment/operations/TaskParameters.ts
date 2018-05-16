@@ -1,5 +1,6 @@
 import tl = require('vsts-task-lib/task');
 import * as Constant from '../operations/Constants'
+import { Package } from 'webdeployment-common/packageUtility';
 
 export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
@@ -8,7 +9,7 @@ export class TaskParametersUtility {
             WebAppKind: tl.getInput('WebAppKind', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
             VirtualApplication: tl.getInput('VirtualApplication', false),
-            Package: tl.getPathInput('Package', true),
+            Package: new Package(tl.getPathInput('Package', true)),
             GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
             WebConfigParameters: tl.getInput('WebConfigParameters', false),
             XmlTransformation: tl.getBoolInput('XmlTransformation', false),
@@ -55,6 +56,8 @@ export class TaskParametersUtility {
             taskParameters.SetParametersFile = tl.getPathInput('SetParametersFile', false);
             taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
             taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
+            taskParameters.DeploymentType = tl.getInput('DeploymentType', false);
+            taskParameters.UseRunFromZip = tl.getBoolInput('UseRunFromZip', false);
         }
         else {
             // Retry Attempt is passed by default
@@ -82,13 +85,15 @@ export interface TaskParameters {
     ResourceGroupName?: string;
     SlotName?: string;
     VirtualApplication?: string;
-    Package: string;
+    Package: Package;
     GenerateWebConfig?: boolean;
     WebConfigParameters?: string;
     XmlTransformation?: boolean;
     JSONFiles?: string[];
     XmlVariableSubstitution?: boolean;
     UseWebDeploy?: boolean;
+    DeploymentType?: string;
+    UseRunFromZip?: boolean;
     RemoveAdditionalFilesFlag?: boolean;
     SetParametersFile?: string;
     ExcludeFilesFromAppDataFlag?: boolean;

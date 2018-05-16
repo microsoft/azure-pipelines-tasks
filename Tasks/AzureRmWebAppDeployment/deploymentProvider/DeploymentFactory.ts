@@ -3,12 +3,14 @@ import * as Constant from '../operations/Constants'
 import { PublishProfileWebAppDeploymentProvider } from './PublishProfileWebAppDeploymentProvider';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
-import { WindowsWebAppDeploymentProvider } from './WindowsWebAppDeploymentProvider';
+import { WindowsWebAppWebDeployProvider } from './WindowsWebAppWebDeployProvider';
+import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
 import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
+import { Package } from 'webdeployment-common/packageUtility';
 
 export class DeploymentFactory{
-    public static GetDeploymentProvider(taskParams: TaskParameters): IWebAppDeploymentProvider {
+    public static async GetDeploymentProvider(taskParams: TaskParameters): Promise<IWebAppDeploymentProvider> {
         switch(taskParams.ConnectionType) {
             case Constant.ConnectionType.PublishProfile:
                 return new PublishProfileWebAppDeploymentProvider(taskParams);
@@ -22,7 +24,21 @@ export class DeploymentFactory{
                         throw new Error(tl.loc('InvalidImageSourceType'));
                     }
                 } else {
-                    return new WindowsWebAppDeploymentProvider(taskParams);
+                    if (taskParams.UseWebDeploy && taskParams.DeploymentType === 'webDeploy') {
+                        return new WindowsWebAppWebDeployProvider(taskParams);
+                    }
+                    else if (taskParams.UseWebDeploy && taskParams.DeploymentType === 'zipDeploy') {
+                        return new WindowsWebAppZipDeployProvider(taskParams);
+                    }
+                    else {             
+                        var _isMSBuildPackage = await taskParams.Package.isMSBuildPackage();           
+                        if (_isMSBuildPackage || taskParams.VirtualApplication) {
+                            return new WindowsWebAppWebDeployProvider(taskParams);
+                        }
+                        else {
+                            return new WindowsWebAppZipDeployProvider(taskParams);
+                        }
+                    }
                 }
             default:
                 throw new Error(tl.loc('InvalidConnectionType'));
