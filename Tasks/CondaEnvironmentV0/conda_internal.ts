@@ -85,7 +85,7 @@ export async function updateConda(condaRoot: string, platform: Platform): Promis
  * @param otherOptions Optional list of other options to pass to the `conda create` command.
  */
 export async function createEnvironment(environmentPath: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
-    const conda = new ToolRunner('conda');
+    const conda = task.tool('conda');
     conda.line(`create --quiet --prefix ${environmentPath} --mkdir --yes`);
     if (packageSpecs) {
         conda.line(packageSpecs);

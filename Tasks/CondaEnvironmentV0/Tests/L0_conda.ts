@@ -15,6 +15,22 @@ function reload(module: '../conda'): typeof condaEnvironment {
     return require('../conda');
 }
 
+before(function () {
+    mockery.enable({
+        useCleanCache: true,
+        warnOnUnregistered: false
+    });
+});
+
+after(function () {
+    mockery.disable();
+});
+
+afterEach(function () {
+    mockery.deregisterAll();
+    mockery.resetCache();
+});
+
 it('creates and activates environment', async function () {
     mockery.registerMock('fs', {
         existsSync: () => false

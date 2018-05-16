@@ -15,6 +15,22 @@ function reload(module: '../conda_internal'): typeof condaInternal {
     return require('../conda_internal');
 }
 
+before(function () {
+    mockery.enable({
+        useCleanCache: true,
+        warnOnUnregistered: false
+    });
+});
+
+after(function () {
+    mockery.disable();
+});
+
+afterEach(function () {
+    mockery.deregisterAll();
+    mockery.resetCache();
+});
+
 it('finds the Conda installation with the CONDA variable', async function () {
     const existsSync = sinon.stub();
     const statSync = sinon.stub();
