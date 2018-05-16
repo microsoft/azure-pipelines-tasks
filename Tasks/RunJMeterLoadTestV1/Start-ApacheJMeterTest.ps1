@@ -159,7 +159,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
 	$summaryFile =  ("{0}\ApacheJMeterTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
 
-	$summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl , $run.name)
+	$summary = ('<a href="{1}" target="_blank">Test Run: {0}</a> using {2}.' -f  $run.runNumber, $webResultsUrl , $run.name)
 	
 	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
 	UploadSummaryMdReport $summaryFile
