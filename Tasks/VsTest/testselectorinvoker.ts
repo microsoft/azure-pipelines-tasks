@@ -141,7 +141,7 @@ export class TestSelectorInvoker {
             definitionId = tl.getVariable('System.DefinitionId');
         }
 
-        if (inputDataContract.IsPrFlow) {
+        if (inputDataContract.ExecutionSettings.TiaSettings.IsPrFlow) {
             prFlow = 'true';
         } else {
             prFlow = 'false';

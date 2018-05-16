@@ -124,8 +124,8 @@ target.gendocs = function() {
             var taskDef = fileToJson(taskJsonPath);
             validateTask(taskDef);
 
-            // create YAML snippet file
-            var yamlOutputFilename = taskName + '.' + taskDef.version.Major + '.yml';
+            // create YAML snippet Markdown
+            var yamlOutputFilename = taskName + '.' + taskDef.version.Major + '.md';
             createYamlSnippetFile(taskDef, docsDir, yamlOutputFilename);
 
             // create Markdown documentation file
