@@ -27,6 +27,7 @@
         "CMakeV1",
         "CmdLineV2",
         "CocoaPodsV0",
+        "CondaEnvironmentV0",
         "CopyFilesV2",
         "CopyFilesOverSSHV0",
         "CUrlUploaderV2",
