@@ -27,13 +27,13 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
         
         tl.debug("Performing the deployment of webapp.");
-        if(!tl.osType().match(/^Win/)){
+        if(!tl.osType().match(/^Win/)) {
             throw Error(tl.loc("PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent"));
         }
 
         var msDeployPublishingProfile = await this.appServiceUtility.getWebDeployPublishingProfile();
 
-        if (webPackage.toString().toLowerCase().endsWith('.war')) {
+        if(webPackage.toString().toLowerCase().endsWith('.war')) {
             await DeployWar(webPackage, this.taskParams, msDeployPublishingProfile, this.kuduService, this.appServiceUtility);
         }
         else {

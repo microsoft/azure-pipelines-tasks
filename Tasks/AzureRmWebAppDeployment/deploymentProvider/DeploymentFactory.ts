@@ -24,15 +24,15 @@ export class DeploymentFactory{
                         throw new Error(tl.loc('InvalidImageSourceType'));
                     }
                 } else {
-                    if (taskParams.UseWebDeploy && taskParams.DeploymentType === 'webDeploy') {
+                    if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'webDeploy') {
                         return new WindowsWebAppWebDeployProvider(taskParams);
                     }
-                    else if (taskParams.UseWebDeploy && taskParams.DeploymentType === 'zipDeploy') {
+                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'zipDeploy') {
                         return new WindowsWebAppZipDeployProvider(taskParams);
                     }
                     else {             
                         var _isMSBuildPackage = await taskParams.Package.isMSBuildPackage();           
-                        if (_isMSBuildPackage || taskParams.VirtualApplication) {
+                        if(_isMSBuildPackage || taskParams.VirtualApplication) {
                             return new WindowsWebAppWebDeployProvider(taskParams);
                         }
                         else {

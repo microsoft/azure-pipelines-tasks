@@ -159,7 +159,9 @@ export class KuduServiceUtility {
             try {
                 var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
                 tl.debug(`logs from ZIP deploy: ${kuduDeploymentDetails.log_url}`);
-                await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
+                if(!runFromZip) {
+                    await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
+                }
             }
             catch(error) {
                 tl.debug(`Unable to fetch logs for kudu ZIP Deploy: ${JSON.stringify(error)}`)

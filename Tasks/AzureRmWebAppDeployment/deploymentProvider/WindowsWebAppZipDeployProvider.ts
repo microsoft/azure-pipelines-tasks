@@ -16,27 +16,28 @@ const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
     
     private zipDeploymentID: string;
+    private runFromZip: boolean;
  
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
 
-        if (this.taskParams.DeploymentType === "zipDeploy") {
+        if(this.taskParams.DeploymentType === "zipDeploy") {
 
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage(); 
-            if(_isMSBuildPackage){
+            if(_isMSBuildPackage) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedformsbuildpackage"));
             }
-            else if(this.taskParams.VirtualApplication){
+            else if(this.taskParams.VirtualApplication) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedforvirtualapplication"));
             }
 
-            this.deployUsingZipDeploy(webPackage, this.taskParams.UseRunFromZip);
+            await this.deployUsingZipDeploy(webPackage, this.taskParams.UseRunFromZip);
         }
-        else if (this.taskParams.ScriptType) {
-            this.deployUsingZipDeploy(webPackage, false);
+        else if(this.taskParams.ScriptType) {
+            await this.deployUsingZipDeploy(webPackage, false);
         }
         else {
-            this.deployUsingZipDeploy(webPackage, true);
+            await this.deployUsingZipDeploy(webPackage, true);
         }
 
         await this.PostDeploymentStep();
@@ -45,7 +46,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
     private async deployUsingZipDeploy(webPackage, runFromZip: boolean) {
         tl.debug("Initiated deployment via kudu service for webapp package : ");
 
-        if(runFromZip){
+        if(runFromZip) {
             var customApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
         }
@@ -53,11 +54,11 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         this.zipDeploymentID = await this.kuduServiceUtility.zipDeploy(webPackage, runFromZip, this.taskParams.TakeAppOfflineFlag, 
             { slotName: this.appService.getSlot() });
 
-        await this.appServiceUtility.updateStartupCommandAndRuntimeStack(this.taskParams.RuntimeStack, this.taskParams.StartupCommand);
+        this.runFromZip = runFromZip; 
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.kuduServiceUtility) {
+        if(!this.runFromZip && this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
             if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
