@@ -15,7 +15,7 @@
   "loc.input.label.publishJUnitResults": "Publish to TFS/Team Services",
   "loc.input.help.publishJUnitResults": "Select this option to publish JUnit test results produced by the Ant build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services.",
   "loc.input.label.testResultsFiles": "Test results files",
-  "loc.input.help.testResultsFiles": "Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
+  "loc.input.help.testResultsFiles": "Test results files path. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/TEST-*.xml` for all XML files whose name starts with TEST-.",
   "loc.input.label.testRunTitle": "Test run title",
   "loc.input.help.testRunTitle": "Provide a name for the test run.",
   "loc.input.label.codeCoverageTool": "Code coverage tool",

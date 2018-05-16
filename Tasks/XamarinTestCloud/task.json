@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 133,
+        "Minor": 135,
         "Patch": 0
     },
     "demands": [],
@@ -33,7 +33,7 @@
             "label": "App file",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used.  For example, `**/*.apk` for all APK files in all subfolders."
+            "helpMarkDown": "Relative path from repo root of the app(s) to test.  Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).  For example, `**/*.apk` for all APK files in all subfolders."
         },
         {
             "name": "dsym",
@@ -42,7 +42,7 @@
             "label": "dSYM file (iOS only)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Example: *.dSYM"
+            "helpMarkDown": "To make crash logs easier to read, you can upload a dSYM file that is associated with your app. This field only applies to iOS apps. Provide path relative to the .ipa file. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example: *.dSYM"
         },
         {
             "name": "teamApiKey",
@@ -140,7 +140,8 @@
             "label": "test-cloud.exe location",
             "groupName": "advanced",
             "defaultValue": "**/packages/**/tools/test-cloud.exe",
-            "required": true
+            "required": true,
+            "helpMarkDown": "The path to test-cloud.exe.  Wildcards can be used, in which case the first occurrence of test-cloud.exe is used ([more information](https://go.microsoft.com/fwlink/?linkid=856077))."
         },
         {
             "name": "optionalArgs",

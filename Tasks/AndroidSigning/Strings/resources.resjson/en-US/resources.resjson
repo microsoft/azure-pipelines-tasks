@@ -6,7 +6,7 @@
   "loc.group.displayName.jarsignerOptions": "Signing Options",
   "loc.group.displayName.zipalignOptions": "Zipalign Options",
   "loc.input.label.files": "APK files",
-  "loc.input.help.files": "Relative path from the repo root to the APK(s) you want to sign. You can use wildcards to specify multiple files. For example, `**/bin/*.apk` for all .APK files in the 'bin' subfolder.",
+  "loc.input.help.files": "Relative path from the repo root to the APK(s) you want to sign. You can use wildcards to specify multiple files ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/bin/*.apk` for all .APK files in the 'bin' subfolder",
   "loc.input.label.jarsign": "Sign the APK",
   "loc.input.help.jarsign": "Select this option to sign the APK with a provided keystore file. Unsigned APKs can only run in an emulator. APKs must be signed to run on a device.",
   "loc.input.label.keystoreFile": "Keystore file",

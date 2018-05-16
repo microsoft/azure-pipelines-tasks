@@ -796,14 +796,13 @@ var createMarkdownDocFile = function(taskJson, taskJsonPath, docsDir, mdDocOutpu
         fs.mkdirSync(path.dirname(outFilePath));
         fs.mkdirSync(path.join(path.dirname(outFilePath), '_img'));
     }
-    //console.log("outFilePath: " + outFilePath);
+
     var iconPath = path.join(path.dirname(taskJsonPath), 'icon.png');
-    //console.log("iconPath: " + iconPath);
     if (test('-f', iconPath)) {
         var docIconPath = path.join(path.dirname(outFilePath), '_img', cleanString(taskJson.name).toLowerCase() + '.png');
-        //console.log("docIconPath: " + docIconPath);
         fs.copyFileSync(iconPath, docIconPath);
     }
+
     fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson));
 }
 exports.createMarkdownDocFile = createMarkdownDocFile;
@@ -875,6 +874,11 @@ var getTaskMarkdownDoc = function(taskJson) {
     taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
     taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
 
+    taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
+    taskMarkdown += getTaskYaml(taskJson) + os.EOL + os.EOL;
+    taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
+
     taskMarkdown += '## Arguments' + os.EOL + os.EOL;
     taskMarkdown += '<table><thead><tr><th>Argument</th><th>Description</th></tr></thead>' + os.EOL;
     taskJson.inputs.forEach(function(input) {
@@ -883,16 +887,9 @@ var getTaskMarkdownDoc = function(taskJson) {
         var description = input.helpMarkDown; // Do not clean white space from descriptions
         taskMarkdown += '<tr><td>' + label + '</td><td>(' + requiredOrNot + ') ' + description + '</td></tr>' + os.EOL;
     });
-    
+
     taskMarkdown += '[!INCLUDE [temp](../_shared/control-options-arguments.md)]' + os.EOL;
     taskMarkdown += '</table>' + os.EOL + os.EOL;
-
-    taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
-    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
-    taskMarkdown += '```YAML' + os.EOL;
-    taskMarkdown += getTaskYaml(taskJson);
-    taskMarkdown += '```' + os.EOL + os.EOL;
-    taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
 
     taskMarkdown += '## Q&A' + os.EOL + os.EOL;
     taskMarkdown += '<!-- BEGINSECTION class="md-qanda" -->' + os.EOL + os.EOL;
@@ -904,6 +901,9 @@ var getTaskMarkdownDoc = function(taskJson) {
 var getTaskYaml = function(taskJson) {
     var taskYaml = '';
 
+    taskYaml += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskYaml += '## YAML snippet' + os.EOL + os.EOL;
+    taskYaml += '```YAML' + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.description) + os.EOL;
     taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + os.EOL;
@@ -965,10 +965,13 @@ var getTaskYaml = function(taskJson) {
             });
         }
 
-        // Append end of line
+        // Append end-of-line for the input
         taskYaml += os.EOL;
     });
 
+    // Append endings
+    taskYaml += '```' + os.EOL + os.EOL;
+    taskYaml += '::: moniker-end';
     return taskYaml;
 };
 //------------------------------------------------------------------------------

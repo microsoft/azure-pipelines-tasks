@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 133,
+    "Minor": 135,
     "Patch": 0
   },
   "demands": [],
@@ -154,7 +154,8 @@
       "label": "ms-resource:loc.input.label.testCloudLocation",
       "groupName": "advanced",
       "defaultValue": "**/packages/**/tools/test-cloud.exe",
-      "required": true
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.testCloudLocation"
     },
     {
       "name": "optionalArgs",

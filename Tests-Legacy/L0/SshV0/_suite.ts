@@ -9,7 +9,7 @@ function setResponseFile(name: string) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
-describe('SSH Suite', function() {
+describe('SshV0 Suite', function() {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
@@ -23,7 +23,7 @@ describe('SSH Suite', function() {
     it('Fails for missing endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
 
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
 
         tr.run()
             .then(() => {
@@ -40,7 +40,7 @@ describe('SSH Suite', function() {
     })
     //it('Fails for invalid private key', (done) => {
     //    setResponseFile('responseEndpoint.json');
-    //    var tr = new trm.TaskRunner('SSH', true, true);
+    //    var tr = new trm.TaskRunner('SshV0', true, true);
     //    tr.setInput('sshEndpoint', 'IDInvalidKey');
     //    tr.setInput('runOptions', 'commands');
     //    tr.setInput('commands', 'ls -l');
@@ -61,7 +61,7 @@ describe('SSH Suite', function() {
     //})
     it('Fails when user name is not provided in the endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
         tr.setInput('sshEndpoint', 'IDUserNameNotSet');
         tr.setInput('commands', 'ls -l');
 
@@ -80,7 +80,7 @@ describe('SSH Suite', function() {
     })
     it('Empty password/passphrase is valid in the endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
         tr.setInput('sshEndpoint', 'IDPasswordNotSet');
 
         tr.run()
@@ -95,7 +95,7 @@ describe('SSH Suite', function() {
     })
     it('Fails when host is not provided in the endpoint', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
         tr.setInput('sshEndpoint', 'IDHostNotSet');
 
         tr.run()
@@ -113,7 +113,7 @@ describe('SSH Suite', function() {
     })
     it('When port is not provided in the endpoint, 22 is used as default port number', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
         tr.setInput('sshEndpoint', 'IDPortNotSet');
 
         tr.run()
@@ -128,7 +128,7 @@ describe('SSH Suite', function() {
     })
     it('Fails when connection cannot be made with given details', (done) => {
         setResponseFile('responseEndpoint.json');
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
         tr.setInput('runOptions', 'commands');
         tr.setInput('commands', 'ls -l');
@@ -149,7 +149,7 @@ describe('SSH Suite', function() {
     it('Fails for missing run options', (done) => {
         setResponseFile('responseEndpoint.json');
 
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
 
         tr.run()
@@ -166,7 +166,7 @@ describe('SSH Suite', function() {
     it('Fails for missing commands', (done) => {
         setResponseFile('responseEndpoint.json');
 
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
         tr.setInput('runOptions', 'commands');
 
@@ -184,7 +184,7 @@ describe('SSH Suite', function() {
     it('Fails for missing script path', (done) => {
         setResponseFile('responseEndpoint.json');
 
-        var tr = new trm.TaskRunner('SSH', true, true);
+        var tr = new trm.TaskRunner('SshV0', true, true);
         tr.setInput('sshEndpoint', 'IDValidKey');
         tr.setInput('runOptions', 'script');
 

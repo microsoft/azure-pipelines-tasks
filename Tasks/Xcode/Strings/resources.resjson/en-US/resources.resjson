@@ -15,7 +15,7 @@
   "loc.input.label.sdk": "SDK",
   "loc.input.help.sdk": "Specify an SDK to use when building the Xcode project or workspace. From the macOS Terminal application, run `xcodebuild -showsdks` to display the valid list of SDKs. The default value of this field is the variable `$(SDK)`. When using a variable, make sure to specify a value (for example, `iphonesimulator`) on the **Variables** tab.",
   "loc.input.label.xcWorkspacePath": "Workspace or project path",
-  "loc.input.help.xcWorkspacePath": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`.",
+  "loc.input.help.xcWorkspacePath": "(Optional) Enter a relative path from the root of the repository to the Xcode workspace or project. For example, `MyApp/MyApp.xcworkspace` or `MyApp/MyApp.xcodeproj`. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).",
   "loc.input.label.scheme": "Scheme",
   "loc.input.help.scheme": "(Optional) Enter a scheme name defined in Xcode. It must be a shared scheme, with its <strong>Shared</strong> checkbox enabled under <strong>Managed Schemes</strong> in Xcode. If you specify a <strong>Workspace or project path</strong> above without specifying a scheme, and the workspace has a single shared scheme, it will be automatically used.",
   "loc.input.label.xcodeVersion": "Xcode version",
