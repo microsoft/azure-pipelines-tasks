@@ -1,9 +1,10 @@
 # Empty
-# Start with a pipeline that has no steps.
+# Start with an empty pipeline and add your own build steps.
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux Preview'
 steps:
 
 #- script: |
-#    echo Write your commands here
+#    echo Write multiple lines of script here,
+#    echo or add other steps for your build configuration.
