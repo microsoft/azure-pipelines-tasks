@@ -58,24 +58,24 @@ function start(tr) {
     assert(tr.stdOutContained('StartingAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: StartingAppService MOCK_APP_SERVICE_NAME');
     assert(tr.stdOutContained('StartedAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: StartedAppService MOCK_APP_SERVICE_NAME');
     assert(tr.stdOutContained('StartingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME'), 'Should have printed: StartingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME');
-    assert(tr.stdOutContained('Error: FailedToStartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'),
-        'Should have printed Error: FailedToStartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToStartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'),
+        'Should have printed Error: FailedToStartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function stop(tr) {
     assert(tr.stdOutContained('StoppingAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: StoppingAppService MOCK_APP_SERVICE_NAME');
     assert(tr.stdOutContained('StoppedAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: StoppedAppService MOCK_APP_SERVICE_NAME');
     assert(tr.stdOutContained('StoppingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME'), 'Should have printed: StoppingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME');
-    assert(tr.stdOutContained('Error: FailedToStopAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'),
-        'Should have printed Error: FailedToStopAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToStopAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'),
+        'Should have printed Error: FailedToStopAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function restart(tr) {
     assert(tr.stdOutContained('RestartingAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: RestartingAppService MOCK_APP_SERVICE_NAME');
     assert(tr.stdOutContained('RestartedAppService MOCK_APP_SERVICE_NAME'), 'Should have printed: RestartedAppService MOCK_APP_SERVICE_NAME');
     assert(tr.stdOutContained('RestartingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME'), 'Should have printed: RestartingAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME');
-    assert(tr.stdOutContained('Error: FailedToRestartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'),
-        'Should have printed Error: FailedToRestartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToRestartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'),
+        'Should have printed Error: FailedToRestartAppService MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function swap(tr) {
@@ -89,8 +89,8 @@ function swap(tr) {
 function get(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME'),
         'Should have printed: MOCK_APP_SERVICE_NAME ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME');
-    assert(tr.stdOutContained('Error: FailedToGetAppServiceDetails MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'),
-        'Should have printed: Error: FailedToGetAppServiceDetails MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToGetAppServiceDetails MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'),
+        'Should have printed: Error: FailedToGetAppServiceDetails MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function monitorAppState(tr) {
@@ -100,61 +100,61 @@ function monitorAppState(tr) {
 
 function getPublishingProfileWithSecrets(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME.scm.azurewebsites.net:443'), 'Should have printed: MOCK_APP_SERVICE_NAME.scm.azurewebsites.net:443');
-    assert(tr.stdOutContained('Error: FailedToGetAppServicePublishingProfile MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-    'Should have printed: Error: FailedToGetAppServicePublishingProfile MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToGetAppServicePublishingProfile MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+    'Should have printed: Error: FailedToGetAppServicePublishingProfile MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function getPublishingCredentials(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME PUBLISHINGCREDENTIALS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/publishingcredentials/$MOCK_APP_SERVICE_NAME'),
         'Should have printed: MOCK_APP_SERVICE_NAME PUBLISHINGCREDENTIALS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/publishingcredentials/$MOCK_APP_SERVICE_NAME');
-    assert(tr.stdOutContained('Error: FailedToGetAppServicePublishingCredentials MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-        'Should have printed: Error: FailedToGetAppServicePublishingCredentials MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToGetAppServicePublishingCredentials MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed: Error: FailedToGetAppServicePublishingCredentials MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function getApplicationSettings(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME APPSETTINGS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/appsettings'),
         'Should have printed: MOCK_APP_SERVICE_NAME APPSETTINGS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/appsettings');
-    assert(tr.stdOutContained('Error: FailedToGetAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-        'Should have printed: Error: FailedToGetAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToGetAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed: Error: FailedToGetAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function updateApplicationSettings(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME APPSETTINGS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/appsettings'),
         'Should have printed: MOCK_APP_SERVICE_NAME APPSETTINGS ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/appsettings');
-    assert(tr.stdOutContained('Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-        'Should have printed: Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed: Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function getConfiguration(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_WEB ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/web'),
         'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_WEB ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/web');
-    assert(tr.stdOutContained('Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-        'Should have printed: Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed: Error: FailedToUpdateAppServiceApplicationSettings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function updateConfiguration(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_WEB ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/web'),
         'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_WEB ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/web');
-    assert(tr.stdOutContained('Error: FailedToUpdateAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-        'Should have printed: Error: FailedToUpdateAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained('Error: FailedToUpdateAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed: Error: FailedToUpdateAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function patchConfiguration(tr) {
     assert(tr.stdOutContained('PATCH CONFIGURATION PASSED'), 'Should have printed: PATCH CONFIGURATION PASSED');
-    assert(tr.stdOutContained(' FailedToPatchAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-        'Should have printed: FailedToPatchAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained(' FailedToPatchAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed: FailedToPatchAppServiceConfiguration MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function getMetadata(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_METADATA GET ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata'),
         'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_METADATA GET ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata');
-    assert(tr.stdOutContained(' FailedToGetAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-        'Should have printed:  FailedToGetAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained(' FailedToGetAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed:  FailedToGetAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
 
 function updateMetadata(tr) {
     assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_METADATA UPDATE ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata'),
         'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_METADATA UPDATE ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata');
-    assert(tr.stdOutContained(' FailedToUpdateAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)'), 
-        'Should have printed: FailedToUpdateAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal_server_error (CODE: 500)');
+    assert(tr.stdOutContained(' FailedToUpdateAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed: FailedToUpdateAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }

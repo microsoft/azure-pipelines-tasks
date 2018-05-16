@@ -27,6 +27,10 @@ helper.RegisterHttpClientMock(tr, (url: string) => {
     if (url === "http://url/job/testmultibranchproject//api/json") {
         return helper.GetSuccessExpectedResult('{ "_class": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject" }');
     };
+
+    if (url === "http://url//job/testmultibranchproject//job/master/20/api/json?tree=artifacts[*]"){
+        return helper.GetSuccessExpectedResult('{ "_class": "hudson.model.FreeStyleBuild", "artifacts": [ "abc" ] }');
+    }
 });
 
 tr.run();

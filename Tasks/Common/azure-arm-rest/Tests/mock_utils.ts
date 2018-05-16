@@ -160,7 +160,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/start?api-version=2016-08-01")
-    .reply(500,'internal_server_error').persist();
+    .reply(501,'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -176,7 +176,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/stop?api-version=2016-08-01")
-    .reply(500,'internal_server_error').persist();
+    .reply(501,'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -192,7 +192,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/restart?api-version=2016-08-01")
-    .reply(500,'internal_server_error').persist();
+    .reply(501,'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -239,7 +239,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -296,7 +296,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/publishxml?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -323,7 +323,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/publishingcredentials/list?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -349,7 +349,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/appsettings/list?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 
     var appSettings = {
         id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/appsettings",
@@ -387,7 +387,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/appsettings?api-version=2016-08-01", JSON.stringify(appSettings))
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -412,7 +412,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/web?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 
     var appSettings1 = {
         id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/web",
@@ -448,7 +448,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/web?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -473,7 +473,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).patch("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/web?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 
     nock('https://management.azure.com', {
         reqheaders: {
@@ -498,7 +498,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/metadata/list?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
     
     nock('https://management.azure.com', {
         reqheaders: {
@@ -523,7 +523,7 @@ export function mockAzureAppServiceTests() {
             "content-type": "application/json; charset=utf-8"
         }
     }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/slots/MOCK_SLOT_NAME/config/metadata?api-version=2016-08-01")
-    .reply(500, 'internal_server_error').persist();
+    .reply(501, 'internal error occurred').persist();
 }
 
 export function mockKuduServiceTests() {
@@ -574,8 +574,18 @@ export function mockKuduServiceTests() {
         {id: "MOCK_EXT_1", title: "MOCK_EXT", local_path: "D:\\home\\Mock_Path"}
     ]);
 
+    nock('http://MOCK_SCM_WEBSITE').
+    get('/api/extensionfeed').reply(200, [
+        {id: "MOCK_EXT", title: "MOCK_EXT", local_path: "D:\\home\\Mock_Path"},
+        {id: "MOCK_EXT_1", title: "MOCK_EXT", local_path: "D:\\home\\Mock_Path"},
+        {id: "MOCK_EXT_2", title: "MOCK_EXT", local_path: "D:\\home\\Mock_Path"}
+    ]);
+
     nock('http://FAIL_MOCK_SCM_WEBSITE').
     get('/api/siteextensions?checkLatest=false').reply(501, 'Internal error occured');
+
+    nock('http://FAIL_MOCK_SCM_WEBSITE').
+    get('/api/extensionfeed').reply(501, 'Internal error occured');
 
     nock('http://MOCK_SCM_WEBSITE').
     get('/api/processes/0').reply(200, { id: 1 });
@@ -646,4 +656,22 @@ export function mockKuduServiceTests() {
 
     nock('http://FAIL_MOCK_SCM_WEBSITE.scm.azurewebsites.net').
     get('/api/deployments/latest?deployer=VSTS_ZIP_DEPLOY').reply(200, {id: "ZIP_DEPLOY_FAILED_ID", status: 3, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"});
+}
+
+export function mockAzureARMResourcesTests() {
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8"
+        }
+    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resources?$filter=resourceType%20EQ%20%27Microsoft.Web%2Fsites%27%20AND%20name%20EQ%20%27g%C3%B6m-mig-fr%C3%A5n-omv%C3%A4rlden%27&api-version=2016-07-01")
+    .reply(200, {
+        value: [{ 
+            id: "subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/microsoft.web/sites/göm-mig-från-omvär", 
+            name: "MOCK_APP_INSIGHTS_NAME",
+            type: "microsoft.insights/components",
+            tags: {},
+            properties: {}
+        }]
+     }).persist();
 }

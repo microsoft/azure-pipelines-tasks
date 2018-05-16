@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 131,
+        "Minor": 135,
         "Patch": 0
     },
     "demands": [
@@ -39,7 +39,7 @@
             "label": "APK files",
             "defaultValue": "**/*.apk",
             "required": true,
-            "helpMarkDown": "Relative path from the repo root to the APK(s) you want to sign. You can use wildcards to specify multiple files. For example, `**/bin/*.apk` for all .APK files in the 'bin' subfolder."
+            "helpMarkDown": "Relative path from the repo root to the APK(s) you want to sign. You can use wildcards to specify multiple files ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/bin/*.apk` for all .APK files in the 'bin' subfolder"
         },
         {
             "name": "jarsign",

@@ -6,6 +6,8 @@ var AppServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm
 var KuduServiceTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
 var ApplicationInsightsTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-tests.js");
 var AppInsightsWebTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-appinsights-webtests-tests.js");
+var ResourcesTests = require("../node_modules/azure-arm-rest/Tests/L0-azure-arm-resource-tests.js");
+
 describe('Azure App Service Manage Suite', function() {
 
     this.timeout(60000);
@@ -30,4 +32,5 @@ describe('Azure App Service Manage Suite', function() {
     AppServiceTests.AzureAppServiceMockTests();
     KuduServiceTests.KuduServiceTests();
     AppInsightsWebTests.ApplicationInsightsTests();
+    ResourcesTests.ResourcesTests();
 });

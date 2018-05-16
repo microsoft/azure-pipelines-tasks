@@ -27,6 +27,10 @@ helper.RegisterHttpClientMock(tr, (url: string) => {
     if (url === "http://url/job/myfreestyleproject//api/json") {
         return helper.GetSuccessExpectedResult('{}');
     }
+
+    if (url === "http://url//job/myfreestyleproject//20/api/json?tree=artifacts[*]") {
+        return helper.GetSuccessExpectedResult('{ "_class": "hudson.model.FreeStyleBuild", "artifacts": [ "abc" ] }');
+    }
 });
 
 tr.run();

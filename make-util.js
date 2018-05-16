@@ -658,6 +658,12 @@ exports.getExternals = getExternals;
 //------------------------------------------------------------------------------
 // task.json functions
 //------------------------------------------------------------------------------
+var fileToJson = function (file) {
+    var jsonFromFile = JSON.parse(fs.readFileSync(file).toString());
+    return jsonFromFile;
+}
+exports.fileToJson = fileToJson;
+
 var createResjson = function (task, taskPath) {
     var resources = {};
     if (task.hasOwnProperty('friendlyName')) {
@@ -772,6 +778,202 @@ var validateTask = function (task) {
     }
 };
 exports.validateTask = validateTask;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// Generate docs functions
+//------------------------------------------------------------------------------
+// Outputs a YAML snippet file for the specified task.
+var createYamlSnippetFile = function (taskJson, docsDir, yamlOutputFilename) {
+    var outFilePath = path.join(docsDir, yamlOutputFilename);
+    fs.writeFileSync(outFilePath, getTaskYaml(taskJson));
+}
+exports.createYamlSnippetFile = createYamlSnippetFile;
+
+var createMarkdownDocFile = function(taskJson, taskJsonPath, docsDir, mdDocOutputFilename) {
+    var outFilePath = path.join(docsDir, taskJson.category.toLowerCase(), mdDocOutputFilename);
+    if (!test('-e', path.dirname(outFilePath))) {
+        fs.mkdirSync(path.dirname(outFilePath));
+        fs.mkdirSync(path.join(path.dirname(outFilePath), '_img'));
+    }
+
+    var iconPath = path.join(path.dirname(taskJsonPath), 'icon.png');
+    if (test('-f', iconPath)) {
+        var docIconPath = path.join(path.dirname(outFilePath), '_img', cleanString(taskJson.name).toLowerCase() + '.png');
+        fs.copyFileSync(iconPath, docIconPath);
+    }
+
+    fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson));
+}
+exports.createMarkdownDocFile = createMarkdownDocFile;
+
+// Returns a copy of the specified string with its first letter as a lowercase letter.
+// Example: 'NachoLibre' -> 'nachoLibre'
+function camelize(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+        return index == 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+}
+
+var getAliasOrNameForInputName = function(inputs, inputName) {
+    var returnInputName = inputName;
+    inputs.forEach(function(input) {
+        if (input.name == inputName) {
+            if (input.aliases && input.aliases.length > 0) {
+                returnInputName = input.aliases[0];
+            }
+            else {
+                returnInputName = input.name;
+            }
+        }
+    });
+    return camelize(returnInputName);
+};
+
+var getInputAliasOrName = function(input) {
+    var returnInputName;
+    if (input.aliases && input.aliases.length > 0) {
+        returnInputName = input.aliases[0];
+    }
+    else {
+        returnInputName = input.name;
+    }
+    return camelize(returnInputName);
+};
+
+var cleanString = function(str) {
+    if (str) {
+        return str
+            .replace(/\r/g, '')
+            .replace(/\n/g, '')
+            .replace(/\"/g, '');
+    }
+    else {
+        return str;
+    }
+}
+
+var getTaskMarkdownDoc = function(taskJson) {
+    var taskMarkdown = '';
+
+    taskMarkdown += '---' + os.EOL;
+    taskMarkdown += 'title: ' + cleanString(taskJson.friendlyName) + os.EOL;
+    taskMarkdown += 'description: ' + cleanString(taskJson.description) + os.EOL;
+    taskMarkdown += 'ms.topic: reference' + os.EOL;
+    taskMarkdown += 'ms.prod: devops' + os.EOL;
+    taskMarkdown += 'ms.technology: devops-cicd' + os.EOL;
+    taskMarkdown += 'ms.assetid: ' + taskJson.id + os.EOL;
+    taskMarkdown += 'ms.manager: ' + os.userInfo().username + os.EOL;
+    taskMarkdown += 'ms.author: ' + os.userInfo().username + os.EOL;
+    taskMarkdown += 'ms.date: ' +
+                    new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()) +
+                    os.EOL;
+    taskMarkdown += 'monikerRange: \'VSTS\'' + os.EOL;
+    taskMarkdown += '---' + os.EOL + os.EOL;
+
+    taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
+    taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
+
+    taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
+    taskMarkdown += getTaskYaml(taskJson) + os.EOL + os.EOL;
+    taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
+
+    taskMarkdown += '## Arguments' + os.EOL + os.EOL;
+    taskMarkdown += '<table><thead><tr><th>Argument</th><th>Description</th></tr></thead>' + os.EOL;
+    taskJson.inputs.forEach(function(input) {
+        var requiredOrNot = input.required ? 'Required' : 'Optional';
+        var label = cleanString(input.label);
+        var description = input.helpMarkDown; // Do not clean white space from descriptions
+        taskMarkdown += '<tr><td>' + label + '</td><td>(' + requiredOrNot + ') ' + description + '</td></tr>' + os.EOL;
+    });
+
+    taskMarkdown += '[!INCLUDE [temp](../_shared/control-options-arguments.md)]' + os.EOL;
+    taskMarkdown += '</table>' + os.EOL + os.EOL;
+
+    taskMarkdown += '## Q&A' + os.EOL + os.EOL;
+    taskMarkdown += '<!-- BEGINSECTION class="md-qanda" -->' + os.EOL + os.EOL;
+    taskMarkdown += '<!-- ENDSECTION -->' + os.EOL;
+
+    return taskMarkdown;
+}
+
+var getTaskYaml = function(taskJson) {
+    var taskYaml = '';
+
+    taskYaml += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskYaml += '## YAML snippet' + os.EOL + os.EOL;
+    taskYaml += '```YAML' + os.EOL;
+    taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
+    taskYaml += '# ' + cleanString(taskJson.description) + os.EOL;
+    taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + os.EOL;
+    taskYaml += '  inputs:' + os.EOL;
+
+    taskJson.inputs.forEach(function(input) {
+        // Is the input required?
+        var requiredOrNot = input.required ? '' : '# Optional';
+        if (input.required && input.visibleRule && input.visibleRule.length > 0) {
+            var spaceIndex = input.visibleRule.indexOf(' ');
+            var visibleRuleInputName = input.visibleRule.substring(0, spaceIndex);
+            var visibleRuleInputNameCamel = camelize(visibleRuleInputName);
+            requiredOrNot += '# Required when ' + camelize(input.visibleRule)
+            .replace(/ = /g, ' == ')
+            .replace(visibleRuleInputNameCamel, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
+        }
+
+        // Does the input have a default value?
+        var isDefaultValueAvailable = input.defaultValue && input.defaultValue.length > 0;
+        var defaultValue = isDefaultValueAvailable ? input.defaultValue : null;
+
+        // Comment out the input?
+        if (!input.required ||
+            (input.required && isDefaultValueAvailable) ||
+            (input.visibleRule && input.visibleRule.length > 0)) {
+            taskYaml += '    #';
+        }
+        else {
+            taskYaml += '    ';
+        }
+
+        // Append input name
+        taskYaml += getInputAliasOrName(input) + ': ';
+
+        // Append default value
+        if (defaultValue) {
+            if (input.type == 'boolean') {
+                taskYaml += cleanString(defaultValue) + ' ';
+            }
+            else {
+                taskYaml += '\'' + cleanString(defaultValue) + '\' ';
+            }
+        }
+
+        // Append required or optional
+        taskYaml += requiredOrNot;
+
+        // Append options?
+        if (input.options) {
+            var isFirstOption = true;
+            Object.keys(input.options).forEach(function(key) {
+                if (isFirstOption) {
+                    taskYaml += (input.required ? '# ' : '. ') + 'Options: ' + camelize(cleanString(key));
+                    isFirstOption = false;
+                }
+                else {
+                    taskYaml += ', ' + camelize(cleanString(key));
+                }
+            });
+        }
+
+        // Append end-of-line for the input
+        taskYaml += os.EOL;
+    });
+
+    // Append endings
+    taskYaml += '```' + os.EOL + os.EOL;
+    taskYaml += '::: moniker-end';
+    return taskYaml;
+};
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------

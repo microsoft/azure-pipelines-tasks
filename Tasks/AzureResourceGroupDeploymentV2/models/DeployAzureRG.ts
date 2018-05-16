@@ -112,6 +112,8 @@ export class AzureRGTaskParameters {
     {
         try {
             var connectedService = tl.getInput("ConnectedServiceName", true);
+            var endpointTelemetry = '{"endpointId":"' + connectedService + '"}';
+            console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceGroupDeployment]" + endpointTelemetry);
             this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
             this.resourceGroupName = tl.getInput("resourceGroupName", true);
             this.action = tl.getInput("action");
