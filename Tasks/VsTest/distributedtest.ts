@@ -26,23 +26,7 @@ export class DistributedTest {
     }
 
     public runDistributedTest() {
-        this.publishCodeChangesIfRequired();
         this.invokeDtaExecutionHost();
-    }
-
-    private publishCodeChangesIfRequired(): void {
-        if (this.inputDataContract.ExecutionSettings
-            && this.inputDataContract.ExecutionSettings.TiaSettings
-            && this.inputDataContract.ExecutionSettings.TiaSettings.Enabled) {
-
-            // hydra: fix this
-            const code = testSelector.publishCodeChangesInDistributedMode(this.inputDataContract);
-            //todo: enable custom engine
-
-            if (code !== 0) {
-                tl.warning(tl.loc('ErrorWhilePublishingCodeChanges'));
-            }
-        }
     }
 
     private async invokeDtaExecutionHost() {

@@ -33,18 +33,6 @@ export function getDistributedTestConfigurations() : idc.InputDataContract {
         inputDataContract.UseNewCollector = true;
     }
 
-    const buildReason = tl.getVariable('Build.Reason');
-
-    // https://www.visualstudio.com/en-us/docs/build/define/variables
-    // PullRequest -> This is the case for TfsGit PR flow
-    // CheckInShelveset -> This is the case for TFVC Gated Checkin
-    if (buildReason && (buildReason === 'PullRequest' || buildReason === 'CheckInShelveset')) {
-        // hydra: Should this become a first class input or should we identify if it is a pr flow from the managed layer? First class input
-        inputDataContract.IsPrFlow = true;
-    } else {
-        inputDataContract.IsPrFlow = utils.Helper.stringToBool(tl.getVariable('tia.isPrFlow'));
-    }
-
     inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
     inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
     inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
@@ -115,6 +103,7 @@ function getTestSelectionInputs(inputDataContract : idc.InputDataContract) : idc
 
 function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
         inputDataContract.TfsSpecificSettings = <idc.TfsSpecificSettings>{};
+        inputDataContract.TfsSpecificSettings.DefinitionId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.DefinitionId')) ? Number(tl.getVariable('System.DefinitionId')) : Number(tl.getVariable('Release.ReleaseId'));
         inputDataContract.TfsSpecificSettings.BuildId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Build.Buildid')) ? null : Number(tl.getVariable('Build.Buildid'));
         inputDataContract.TfsSpecificSettings.BuildUri = tl.getVariable('Build.BuildUri');
         inputDataContract.TfsSpecificSettings.ReleaseId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.ReleaseId')) ? null : Number(tl.getVariable('Release.ReleaseId'));
@@ -348,6 +337,19 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
     } else {
         inputDataContract.ExecutionSettings.TiaSettings.DisableDataCollection = false;
     }
+
+    const buildReason = tl.getVariable('Build.Reason');
+    
+    // https://www.visualstudio.com/en-us/docs/build/define/variables
+    // PullRequest -> This is the case for TfsGit PR flow
+    // CheckInShelveset -> This is the case for TFVC Gated Checkin
+    if (buildReason && (buildReason === 'PullRequest' || buildReason === 'CheckInShelveset')) {
+        // hydra: Should this become a first class input or should we identify if it is a pr flow from the managed layer? First class input
+        inputDataContract.ExecutionSettings.TiaSettings.IsPrFlow = true;
+    } else {
+        inputDataContract.ExecutionSettings.TiaSettings.IsPrFlow = utils.Helper.stringToBool(tl.getVariable('tia.isPrFlow'));
+    }
+
     return inputDataContract;
 }
 
