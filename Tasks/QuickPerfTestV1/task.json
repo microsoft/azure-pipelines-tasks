@@ -133,7 +133,7 @@
             "type": "int",
             "label": "No. of agents to use",
             "required": false,
-            "defaultValue": "1",
+            "defaultValue": 1,
             "visibleRule": "machineType == 2",
             "helpMarkDown": "Number of self provisioned agents to use for this test."
         },
