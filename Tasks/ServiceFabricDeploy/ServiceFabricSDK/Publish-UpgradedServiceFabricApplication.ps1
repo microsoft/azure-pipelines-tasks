@@ -24,7 +24,7 @@ function Publish-UpgradedServiceFabricApplication
 
     .PARAMETER ApplicationParameter
     Hashtable of the Service Fabric application parameters to be used for the application. If value for this parameter is provided, it will be merged with application parameters
-    specified in ApplicationParameter file. In case a parameter is found ina pplication parameter file and on commandline, commandline parameter will override the one specified in application parameter file.
+    specified in ApplicationParameter file. In case a parameter is found in application parameter file and on commandline, commandline parameter will override the one specified in application parameter file.
 
     .PARAMETER UpgradeParameters
     Hashtable of the upgrade parameters to be used for this upgrade. If Upgrade parameters are not specified then script will perform an UnmonitoredAuto upgrade.
@@ -367,12 +367,12 @@ function Publish-UpgradedServiceFabricApplication
         }
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-        $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
+        $upgradeStatusFetcher = { $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName; Write-Host "Upgrade State:" $upgradeStatus.UpgradeState; Write-Host "`n Domain Wise Upgrade Status: " $upgradeStatus.UpgradeDomainsStatus ; if ($upgradeStatus.UnhealthyEvaluations -ne $null) { Write-Host "Upgrade errors: " $upgradeStatus.UnhealthyEvaluations; } $upgradeStatus }
         $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
         $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
             -ActionSuccessValidator $upgradeStatusValidator `
             -MaxTries 2147483647 `
-            -RetryIntervalInSeconds 3 `
+            -RetryIntervalInSeconds 60 `
             -RetryableExceptions @("System.Fabric.FabricTransientException") `
             -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 
