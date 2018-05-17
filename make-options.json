@@ -11,7 +11,7 @@
         "AzureFileCopyV1",
         "AzureFileCopyV2",
         "AzureFunctionV1",
-        "AzureKeyVault",
+        "AzureKeyVaultV1",
         "AzureMonitorAlertsV0",
         "AzureMonitorV0",
         "AzureMysqlDeploymentV1",
