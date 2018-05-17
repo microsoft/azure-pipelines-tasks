@@ -11,7 +11,7 @@ import { pythonScript } from './pythonscript';
             arguments: task.getInput('arguments'),
             script: task.getInput('script'),
             pythonInterpreter: task.getPathInput('pythonInterpreter'),
-            workingDirectory: task.getPathInput('workingDirectorys'),
+            workingDirectory: task.getPathInput('workingDirectory'),
             failOnStderr: task.getBoolInput('failOnStderr')
         });
         task.setResult(task.TaskResult.Succeeded, "");
