@@ -50,13 +50,6 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
     const pythonPath = parameters.pythonInterpreter || task.which('python');
     const python = task.tool(pythonPath);
 
-    let stderrFailure = false;
-    if (parameters.failOnStderr) { // Listen for stderr
-        python.on('stderr', () => {
-            stderrFailure = true;
-        });
-    }
-
     // Run the script
     // TODO cast to `any` to work around what I suspect are bugs with `IExecOptions`'s type annotations:
     // - optional fields need to be typed as optional
