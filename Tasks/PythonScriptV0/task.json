@@ -2,8 +2,8 @@
     "id": "6392F95F-7E76-4A18-B3C7-7F078D2F7700",
     "name": "PythonScript",
     "friendlyName": "Python Script",
-    "description": "",
-    "helpMarkDown": "[More information]()",
+    "description": "Run a Python script.",
+    "helpMarkDown": "",
     "category": "Utility",
     "visibility": [
         "Build",
