@@ -261,7 +261,7 @@ function Upload-FilesToAzureContainer
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        Write-Verbose "Executing command: & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"*****`" $additionalArguments"
+        Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"*****`" $additionalArguments"
 
         $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"$storageKey`" $additionalArguments"
 
@@ -293,7 +293,7 @@ function Upload-FilesToAzureContainer
     }
     finally
     {
-        Handle-AzCopyLogs -isLogsPresent $useDefaultArguments -logsFilePath "$azCopyLogFilePath" -ErrorAction SilentlyContinue
+        Handle-AzCopyLogs -isLogsPresent $useDefaultArguments -logsFilePath $azCopyLogFilePath -ErrorAction SilentlyContinue
     }
 }
 
