@@ -50,7 +50,7 @@
         "GulpV0",
         "HelmDeployV0",
         "HelmInstallerV0",
-        "IISWebAppDeploymentOnMachineGroup",
+        "IISWebAppDeploymentOnMachineGroupV0",
         "IISWebAppManagementOnMachineGroupV0",
         "InstallAppleCertificateV2",
         "InstallAppleProvisioningProfileV1",
