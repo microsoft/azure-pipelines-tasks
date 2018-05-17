@@ -235,7 +235,7 @@ export interface AzureAppServiceConfigurationDetails {
     type: string;
     kind?: string;
     location: string;
-    tags: string;
+    tags: {[key: string]: string};
     properties?: {[key: string]: any};
 }
 
