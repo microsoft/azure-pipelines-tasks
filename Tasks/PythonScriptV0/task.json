@@ -34,7 +34,7 @@
             "name": "targetType",
             "type": "radio",
             "label": "Type",
-            "required": false,
+            "required": true,
             "defaultValue": "filePath",
             "helpMarkDown": "Target script type: File path or Inline",
             "options": {

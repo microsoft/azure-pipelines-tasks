@@ -7,29 +7,30 @@ import * as toolRunner from 'vsts-task-lib/toolrunner';
 
 import * as uuidV4 from 'uuid/v4';
 
-// TODO optional parameters
 interface TaskParameters {
     targetType: string,
-    filePath: string,
-    script: string,
-    arguments: string,
-    pythonInterpreter: string,
-    workingDirectory: string,
-    failOnStderr: boolean
+    filePath?: string,
+    script?: string,
+    arguments?: string,
+    pythonInterpreter?: string,
+    workingDirectory?: string,
+    failOnStderr?: boolean
 }
 
 export async function pythonScript(parameters: Readonly<TaskParameters>): Promise<void> {
     // Get the script to run
     const scriptPath = await (async () => {
         if (parameters.targetType.toLowerCase() === 'filepath') { // Run script file
-            if (!fs.statSync(parameters.filePath).isFile()) {
-                throw new Error(task.loc('NotAFile', parameters.filePath));
+            const filePath = parameters.filePath!; // Required if `targetType` is 'filepath'
+            if (!fs.statSync(filePath).isFile()) {
+                throw new Error(task.loc('NotAFile', filePath));
             }
-            return parameters.filePath;
+            return filePath;
         } else { // Run inline script
             // Print one-line scripts
-            if (!(parameters.script.includes('\n') || parameters.script.toLowerCase().includes('##vso['))) {
-                console.log(parameters.script);
+            const script = parameters.script!; // Required if `targetType` is 'script'
+            if (!(script.includes('\n') || script.toLowerCase().includes('##vso['))) {
+                console.log(script);
             }
 
             // Write the script to disk
@@ -39,7 +40,7 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
             const filePath = path.join(tempDirectory, `${uuidV4()}.py`);
             await fs.writeFileSync(
                 filePath,
-                parameters.script,
+                script,
                 { encoding: 'utf8' });
 
             return filePath;

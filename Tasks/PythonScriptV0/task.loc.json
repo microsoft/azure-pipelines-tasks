@@ -34,7 +34,7 @@
       "name": "targetType",
       "type": "radio",
       "label": "ms-resource:loc.input.label.targetType",
-      "required": false,
+      "required": true,
       "defaultValue": "filePath",
       "helpMarkDown": "ms-resource:loc.input.help.targetType",
       "options": {
