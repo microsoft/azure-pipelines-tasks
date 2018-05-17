@@ -52,15 +52,6 @@
             "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
         },
         {
-            "name": "arguments",
-            "type": "string",
-            "label": "Arguments",
-            "visibleRule": "targetType = filePath",
-            "required": false,
-            "defaultValue": "",
-            "helpMarkDown": "Arguments passed to the script execution, available through `sys.argv`."
-        },
-        {
             "name": "script",
             "type": "multiLine",
             "label": "Script",
@@ -73,6 +64,14 @@
                 "maxLength": "5000"
             },
             "helpMarkDown": "The Python script to run"
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Arguments passed to the script execution, available through `sys.argv`."
         },
         {
             "name": "pythonInterpreter",

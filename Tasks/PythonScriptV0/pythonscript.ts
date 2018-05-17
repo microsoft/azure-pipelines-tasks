@@ -7,11 +7,12 @@ import * as toolRunner from 'vsts-task-lib/toolrunner';
 
 import * as uuidV4 from 'uuid/v4';
 
+// TODO optional parameters
 interface TaskParameters {
     targetType: string,
     filePath: string,
-    arguments: string,
     script: string,
+    arguments: string,
     pythonInterpreter: string,
     workingDirectory: string,
     failOnStderr: boolean
@@ -49,8 +50,13 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
     const pythonPath = parameters.pythonInterpreter || task.which('python');
     const python = task.tool(pythonPath).arg(scriptPath);
 
+    // Calling `line` with a falsy argument returns `undefined`, so can't chain this call
+    if (parameters.arguments) {
+        python.line(parameters.arguments);
+    }
+
     // Run the script
-    // TODO use `any` to work around what I suspect are bugs with `IExecOptions`'s type annotations:
+    // Use `any` to work around what I suspect are bugs with `IExecOptions`'s type annotations:
     // - optional fields need to be typed as optional
     // - `errStream` and `outStream` should be `NodeJs.WritableStream`, not `NodeJS.Writable`
     await python.exec(<any>{

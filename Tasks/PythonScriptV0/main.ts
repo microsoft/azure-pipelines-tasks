@@ -8,8 +8,8 @@ import { pythonScript } from './pythonscript';
         await pythonScript({
             targetType: task.getInput('targetType'),
             filePath: task.getPathInput('filePath'), // TODO required?
-            arguments: task.getInput('arguments'),
             script: task.getInput('script'),
+            arguments: task.getInput('arguments'),
             pythonInterpreter: task.getInput('pythonInterpreter'), // string instead of path: a path will default to the agent's sources directory
             workingDirectory: task.getPathInput('workingDirectory'),
             failOnStderr: task.getBoolInput('failOnStderr')

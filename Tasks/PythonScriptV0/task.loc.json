@@ -52,15 +52,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.filePath"
     },
     {
-      "name": "arguments",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.arguments",
-      "visibleRule": "targetType = filePath",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.arguments"
-    },
-    {
       "name": "script",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
@@ -73,6 +64,14 @@
         "maxLength": "5000"
       },
       "helpMarkDown": "ms-resource:loc.input.help.script"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
       "name": "pythonInterpreter",
