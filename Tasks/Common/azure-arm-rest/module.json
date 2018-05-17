@@ -133,6 +133,8 @@
         "FailedToListPath": "Failed to list path '%s'. Error: %s",
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-        "ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+        "ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s",
+        "FailedToGetAppServiceConnectionStrings": "Failed to get '%s' App Service connection strings. Error: %s.",
+        "FailedToUpdateAppServiceConnectionStrings": "Failed to update '%s' App Service connection strings. Error: %s."
     }
 }
