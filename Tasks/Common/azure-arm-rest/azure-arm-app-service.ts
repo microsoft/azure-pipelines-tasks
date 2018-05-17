@@ -38,7 +38,7 @@ export class AzureAppService {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'POST';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/start`, {
                 '{ResourceGroupName}': this._resourceGroup,
                 '{name}': this._name
@@ -61,7 +61,7 @@ export class AzureAppService {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'POST';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/stop`, {
                 '{ResourceGroupName}': this._resourceGroup,
                 '{name}': this._name
@@ -84,7 +84,7 @@ export class AzureAppService {
         try {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'POST';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/restart`, {
                 '{ResourceGroupName}': this._resourceGroup,
                 '{name}': this._name
@@ -112,7 +112,7 @@ export class AzureAppService {
                 preserveVnet: preserveVNet
             });
 
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             webRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/slotsswap`, {
             '{ResourceGroupName}': this._resourceGroup,
             '{name}': this._name,
@@ -156,7 +156,7 @@ export class AzureAppService {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/publishingcredentials/list`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -188,7 +188,7 @@ export class AzureAppService {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
             httpRequest.body = JSON.stringify(applicationSettings);
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/appsettings`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -221,7 +221,7 @@ export class AzureAppService {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'GET';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/web`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -245,7 +245,7 @@ export class AzureAppService {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
             httpRequest.body = JSON.stringify(applicationSettings);
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/web`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -269,7 +269,7 @@ export class AzureAppService {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PATCH';
             httpRequest.body = JSON.stringify(properties);
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/web`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -293,7 +293,7 @@ export class AzureAppService {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/metadata/list`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -317,7 +317,7 @@ export class AzureAppService {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
             httpRequest.body = JSON.stringify(applicationSettings);
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/metadata`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -344,7 +344,63 @@ export class AzureAppService {
 
         await this.updateMetadata(applicationSettings);
     }
-    
+
+    public async getConnectionStrings(): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'POST';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/connectionstrings/list`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToGetAppServiceConnectionStrings', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    public async updateConnectionStrings(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
+        try {
+            var httpRequest = new webClient.WebRequest();
+            httpRequest.method = 'PUT';
+            httpRequest.body = JSON.stringify(applicationSettings);
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
+            httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/connectionstrings`,
+            {
+                '{resourceGroupName}': this._resourceGroup,
+                '{name}': this._name,
+            }, null, '2016-08-01');
+            
+            var response = await this._client.beginRequest(httpRequest);
+            if(response.statusCode != 200) {
+                throw ToError(response);
+            }
+
+            return response.body;
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToUpdateAppServiceConnectionStrings', this._getFormattedName(), this._client.getFormattedError(error)));
+        }
+    }
+
+    public async patchConnectionStrings(properties): Promise<void> {
+        var applicationSettings = await this.getConnectionStrings();
+        for(var key in properties) {
+            applicationSettings.properties[key] = properties[key];
+        }
+
+        await this.updateConnectionStrings(applicationSettings);
+    }
+
     public getSlot(): string {
         return this._slot ? this._slot : "production";
     }
@@ -353,7 +409,7 @@ export class AzureAppService {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/publishxml`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -377,7 +433,7 @@ export class AzureAppService {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}/config/appsettings/list`,
             {
                 '{resourceGroupName}': this._resourceGroup,
@@ -400,7 +456,7 @@ export class AzureAppService {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'GET';
-            var slotUrl: string = !!this._slot ? `/slots/${this._slot}` : '';
+            var slotUrl: string = !!this._slot ? `/slots/${encodeURIComponent(this._slot)}` : '';
             httpRequest.uri = this._client.getRequestUri(`//subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{name}/${slotUrl}`,
             {
                 '{resourceGroupName}': this._resourceGroup,
