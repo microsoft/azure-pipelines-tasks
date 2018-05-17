@@ -51,7 +51,7 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
     const python = task.tool(pythonPath);
 
     // Run the script
-    // TODO cast to `any` to work around what I suspect are bugs with `IExecOptions`'s type annotations:
+    // TODO use `any` to work around what I suspect are bugs with `IExecOptions`'s type annotations:
     // - optional fields need to be typed as optional
     // - `errStream` and `outStream` should be `NodeJs.WritableStream`, not `NodeJS.Writable`
     await python.exec(<any>{
