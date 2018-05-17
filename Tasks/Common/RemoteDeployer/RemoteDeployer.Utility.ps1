@@ -80,9 +80,10 @@ function Get-TemporaryLogsFolder {
         $tempFolderName = [Guid]::NewGuid().ToString()
         $tempLogsFolder = [System.IO.Path]::Combine($agentTempDirectory, $tempFolderName)
         if((Test-Path -LiteralPath $tempLogsFolder -PathType 'Container') -eq $true) {
-            Remove-Item -LiteralPath $tempLogsFolder -Force
+            Remove-Item -LiteralPath $tempLogsFolder -Recurse -Force
         }
         $tempLogsFolder = (New-Item -Path $agentTempDirectory -Name $tempFolderName -ItemType 'Container').FullName
+        Write-Verbose "Created temporary logs folder: $tempLogsFolder"
         return $tempLogsFolder
     } finally {
         Trace-VstsLeavingInvocation $MyInvocation
