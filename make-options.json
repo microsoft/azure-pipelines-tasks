@@ -59,7 +59,7 @@
         "JavaToolInstallerV0",
         "JenkinsDownloadArtifacts",
         "JenkinsQueueJobV2",
-        "Kubernetes",
+        "KubernetesV0",
         "ManualInterventionV8",
         "Maven",
         "MSBuildV1",
