@@ -26,7 +26,7 @@ describe('VsTest Suite', function() {
         const inputDataContractParityToolOutput = JSON.parse(inputDataContractParityTool.execSync().stdout);
 
         // Read the typescript representation of the data contract interface
-        const inputDataContractInterfaceFileContents = fs.readFileSync('../Tasks/VsTest2/inputdatacontract.ts', 'utf8').toString();
+        const inputDataContractInterfaceFileContents = fs.readFileSync('../Tasks/VsTestV2/inputdatacontract.ts', 'utf8').toString();
         const listOfInterfaces = inputDataContractInterfaceFileContents.replace(/export interface (.*) \{([\s][^{}]*)+\}(\s)*/g, '$1 ').trim().split(' ');
 
         const interfacesDictionary : { [key: string] : any } = <{ [key: string] : any} >{};
