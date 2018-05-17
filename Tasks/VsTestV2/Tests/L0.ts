@@ -22,7 +22,7 @@ describe('VsTest Suite', function() {
 
         // Read the output of the parity tool and get the json representation of the C# data contract class
         const inputDataContractParityTool = tl.tool(path.join(__dirname, './InputDataContractParityTool.exe'));
-        inputDataContractParityTool.arg('../_build/Tasks/VsTest/Modules/MS.VS.TestService.Common.dll');
+        inputDataContractParityTool.arg('../_build/Tasks/VsTestV2/Modules/MS.VS.TestService.Common.dll');
         const inputDataContractParityToolOutput = JSON.parse(inputDataContractParityTool.execSync().stdout);
 
         // Read the typescript representation of the data contract interface
