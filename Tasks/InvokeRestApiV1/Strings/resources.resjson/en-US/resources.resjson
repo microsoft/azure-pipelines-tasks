@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Invoke REST API",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "loc.description": "Invoke REST API as a part of your process.",
+  "loc.instanceNameFormat": "Invoke REST API: $(method)",
+  "loc.group.displayName.completionOptions": "Advanced",
+  "loc.input.label.connectedServiceName": "Generic endpoint",
+  "loc.input.help.connectedServiceName": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request.",
+  "loc.input.label.method": "Method",
+  "loc.input.help.method": "Select the http method with which the API should be invoked with.",
+  "loc.input.label.headers": "Headers",
+  "loc.input.help.headers": "Define header in JSON format. The header shall be attached with request to be sent.",
+  "loc.input.label.body": "Body",
+  "loc.input.label.urlSuffix": "Url suffix and parameters",
+  "loc.input.help.urlSuffix": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
+  "loc.input.label.waitForCompletion": "Completion event",
+  "loc.input.help.waitForCompletion": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
+  "loc.input.label.successCriteria": "Success criteria",
+  "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​"
+}

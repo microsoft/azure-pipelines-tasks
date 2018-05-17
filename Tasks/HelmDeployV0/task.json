@@ -1,0 +1,411 @@
+{
+    "id": "AFA7D54D-537B-4DC8-B60A-E0EEEA2C9A87",
+    "name": "HelmDeploy",
+    "friendlyName": "Package and deploy Helm charts",
+    "description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running helm commands.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=851275)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 8
+    },
+    "demands": [],
+    "preview": "true",
+    "groups": [
+        {
+            "name": "cluster",
+            "displayName": "Kubernetes Cluster",
+            "isExpanded": true
+        },
+        {
+            "name": "commands",
+            "displayName": "Commands",
+            "isExpanded": true
+        },
+        {
+            "name": "tls",
+            "displayName": "TLS",
+            "isExpanded": false
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "connectionType",
+            "type": "pickList",
+            "label": "Connection Type",
+            "defaultValue": "Azure Resource Manager",
+            "required": true,
+            "options": {
+                "Azure Resource Manager": "Azure Resource Manager",
+                "Kubernetes Service Connection": "Kubernetes Service Connection"
+            },
+            "helpMarkDown": "Select a Connection Type.",
+            "groupName": "cluster"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": ["azureSubscription"],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "azureResourceGroup",
+            "label": "Resource group",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Resource Group.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "kubernetesCluster",
+            "label": "Kubernetes cluster",
+            "type": "pickList",
+            "helpMarkDown": "Select an Azure Managed Cluster.",
+            "visibleRule": "connectionType = Azure Resource Manager",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "cluster",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "kubernetesServiceEndpoint",
+            "aliases": ["kubernetesServiceConnection"],
+            "type": "connectedService:kubernetes",
+            "label": "Kubernetes Service Connection",
+            "helpMarkDown": "Select a Kubernetes service connection.",
+            "visibleRule": "connectionType = Kubernetes Service Connection",
+            "required": true,
+            "groupName": "cluster"
+        },
+        {
+            "name": "namespace",
+            "label": "Namespace",
+            "type": "string",
+            "helpMarkDown": "Specify K8 namespace to use. Use Tiller namespace in advance section to specify tiller namespace.",
+            "defaultValue": "",
+            "groupName": "cluster"
+        },
+        {
+            "name": "command",
+            "type": "pickList",
+            "label": "Command",
+            "defaultValue": "ls",
+            "required": true,
+            "options": {
+                "create": "create",
+                "delete": "delete",
+                "expose": "expose",
+                "get": "get",
+                "init": "init",
+                "install": "install",
+                "ls": "ls",
+                "package": "package",
+                "rollback": "rollback",
+                "upgrade": "upgrade"
+            },
+            "helpMarkDown": "Select a helm command.",
+            "groupName": "commands",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "chartType",
+            "type": "pickList",
+            "label": "Chart Type",
+            "required": true,
+            "options": {
+                "Name" : "Name",
+                "FilePath": "File Path"
+            },
+            "helpMarkDown": "Select how you want to enter chart info. You can either provide name of the chart or folder/file path to the chart.",
+            "groupName": "commands",
+            "visibleRule": "command == install || command == upgrade",
+            "defaultValue": "Name",
+            "properties": {
+                "EditableOptions": "False"
+            }
+        },
+        {
+            "name": "chartName",
+            "label": "Chart Name",
+            "type": "string",
+            "helpMarkDown": "Name of the chart to install or upgrade.",
+            "defaultValue": "",
+            "visibleRule": "chartType == Name",
+            "required":  "true",
+            "groupName": "commands"
+        },
+        {
+            "name": "chartPath",
+            "label": "Chart Path",
+            "type": "filePath",
+            "helpMarkDown": "Path to the chart to install or upgrade.",
+            "defaultValue": "",
+            "visibleRule": "chartType == FilePath || command == package",
+            "required":  "true",
+            "groupName": "commands"
+        },
+        {
+            "name": "version",
+            "label": "Version",
+            "aliases": ["chartVersion"],
+            "type": "string",
+            "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
+            "defaultValue": "",
+            "visibleRule": "command == package",
+            "groupName": "commands"
+        },
+        {
+            "name": "releaseName",
+            "label": "Release Name",
+            "type": "string",
+            "helpMarkDown": "Release name. If unspecified, it will autogenerate one for you.",
+            "defaultValue": "",
+            "visibleRule": "command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "overrideValues",
+            "label": "Set Values",
+            "type": "string",
+            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).",
+            "defaultValue": "",
+            "visibleRule": "command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "valueFile",
+            "label": "Value File",
+            "type": "filePath",
+            "defaultValue": "",
+            "helpMarkDown": "Specify values in a YAML file or a URL.",
+            "visibleRule": "command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "destination",
+            "label":"Destination",
+            "type": "string",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)",
+            "helpMarkDown": "Specify values in a YAML file or a URL.",
+            "visibleRule": "command == package",
+            "groupName": "commands"   
+        },
+        {
+            "name": "canaryimage",
+            "aliases": ["canaryImage"],
+            "type": "boolean",
+            "label": "Use canary image version.",
+            "defaultValue": "false",
+            "helpMarkDown": "Use the canary Tiller image. Will install the latest pre-release version of Tiller.",
+            "visibleRule": "command == init",
+            "groupName": "commands"
+        },
+        {
+            "name": "upgradetiller",
+            "aliases": ["upgradeTiller"],
+            "type": "boolean",
+            "label": "Upgrade Tiller",
+            "defaultValue": "true",
+            "helpMarkDown": "Upgrade if Tiller is already installed.",
+            "visibleRule": "command == init",
+            "groupName": "commands"
+        },
+        {
+            "name": "updatedependency",
+            "aliases": ["updateDependency"],
+            "type": "boolean",
+            "label": "Update Dependency",
+            "defaultValue": "false",
+            "helpMarkDown": "Run helm dependency update before installing the chart. Update dependencies from 'requirements.yaml' to dir 'charts/' before packaging",
+            "visibleRule": "command == install || command == package",
+            "groupName": "commands"
+        },
+        {
+            "name": "save",
+            "type": "boolean",
+            "label": "Save",
+            "defaultValue": "true",
+            "helpMarkDown": "Save packaged chart to local chart repository (default true)​",
+            "visibleRule": "command == package",
+            "groupName": "commands"
+        },
+        {
+            "name": "install",
+            "type": "boolean",
+            "label": "Install if release not present.",
+            "defaultValue": "true",
+            "helpMarkDown": "If a release by this name doesn't already exist, run an install​.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "recreate",
+            "type": "boolean",
+            "label": "Recreate Pods.",
+            "defaultValue": "false",
+            "helpMarkDown": "Performs pods restart for the resource if applicable.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "resetValues",
+            "type": "boolean",
+            "label": "Reset Values.",
+            "defaultValue": "false",
+            "helpMarkDown": "Reset the values to the ones built into the chart.",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "force",
+            "type": "boolean",
+            "label": "Force",
+            "defaultValue": "false",
+            "helpMarkDown": "Force resource update through delete/recreate if needed​",
+            "visibleRule": "command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "waitForExecution",
+            "type": "boolean",
+            "label": "Wait",
+            "defaultValue": "true",
+            "helpMarkDown": "Block till command execution completes.",
+            "visibleRule": "command == init || command == install || command == upgrade",
+            "groupName": "commands"
+        },
+        {
+            "name": "arguments",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2"
+            },
+            "label": "Arguments",
+            "helpMarkDown": "Command arguments.",
+            "groupName": "commands"
+        },
+        {
+            "name": "enableTls",
+            "type": "boolean",
+            "label": "Enable TLS",
+            "defaultValue": "false",
+            "helpMarkDown": "Enables using SSL between Helm and Tiller.",
+            "groupName": "tls"
+        },
+        {
+            "name": "caCert",
+            "type": "secureFile",
+            "label": "CA certificate",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "CA cert used to issue certificate for tiller and helm client.",
+            "visibleRule": "enableTls == true",
+            "groupName": "tls"
+        },
+        {
+            "name": "certificate",
+            "type": "secureFile",
+            "label": "Certificate",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify Tiller certificate or Helm client certificate",
+            "visibleRule": "enableTls == true",
+            "groupName": "tls"
+        },
+        {
+            "name": "privatekey",
+            "type": "secureFile",
+            "label": "Key",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Specify Tiller Key or Helm client key",
+            "visibleRule": "enableTls == true",
+            "groupName": "tls"
+        },
+        {
+            "name": "tillernamespace",
+            "aliases": ["tillerNamespace"],
+            "label": "Tiller namespace",
+            "helpMarkDown": "Specify K8 namespace of tiller.",
+            "type": "string",
+            "groupName": "advanced"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "kubernetesCluster",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl":"{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{name}}}"
+        },
+        {
+            "target": "azureResourceGroup",
+            "endpointId": "$(azureSubscriptionEndpoint)",
+            "endpointUrl":"{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "resultSelector": "jsonpath:$.value[*]",
+            "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
+        }
+    ],
+    "instanceNameFormat": "helm $(command)",
+    "prejobexecution": {
+        "Node": {
+            "target": "src//downloadsecurefiles.js"
+        }
+    },
+    "execution": {
+        "Node": {
+            "target": "src//helm.js"
+        }
+    },
+    "postjobexecution": {
+        "Node": {
+            "target": "src//deletesecurefiles.js"
+        }
+    },
+    "messages": {
+        "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
+        "KubeConfigFilePath": "Kubeconfig file path: %s",
+        "KubernetesClusterInfo": "Kubernetes cluster Id : %s, kubernetes server version %s, kuberenettes provision state %s",
+        "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
+        "ClusterNotProvisioned": "Observed that the cluster %s is in %s state.",
+        "ClusterNotFound": "%s cluster does not exists",
+        "FailedToListClusters": "Failed to list managed clusters in the subscription. %s",
+        "RetryingRequest": "Retrying request after %s seconds.",
+        "PatternNotFoundInFilePath": "Pattern not found in file path %s.",
+        "CantResolvePatternInPath": "Can not resolve pattern in file path %s.",
+        "PatternFoundInPath": "Pattern found in file path %s.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "SkipDeleteSecureFiles":"TLS not enabled in the Task. Skipping delete of certificates.",
+        "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
+        "FileNotFound": "File not found at %s"
+    }
+}

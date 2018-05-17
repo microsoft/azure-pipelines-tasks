@@ -1,0 +1,76 @@
+{
+  "id": "F1E4B0E6-017E-4819-8A48-EF19AE96E289",
+  "name": "queryWorkItems",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Server",
+    "ServerGate"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 9
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "queryId",
+      "type": "querycontrol",
+      "label": "ms-resource:loc.input.label.queryId",
+      "defaultValue": "",
+      "required": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.queryId"
+    },
+    {
+      "name": "maxThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.maxThreshold",
+      "defaultValue": "0",
+      "required": "true",
+      "properties": {
+        "isVariableOrNonNegativeNumber": "true"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.maxThreshold"
+    },
+    {
+      "name": "minThreshold",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.minThreshold",
+      "defaultValue": "0",
+      "required": "true",
+      "properties": {
+        "isVariableOrNonNegativeNumber": "true"
+      },
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.minThreshold"
+    }
+  ],
+  "execution": {
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId": "",
+        "EndpointUrl": "$(system.teamFoundationCollectionUri)$(system.teamProjectId)/_apis/wit/wiql/$(queryId)?api-version=3.1",
+        "Method": "GET",
+        "Body": "",
+        "Headers": "{\n\"Content-Type\":\"application/json\"\n, \"Authorization\":\"Bearer $(system.accesstoken)\"\n}",
+        "WaitForCompletion": "false",
+        "Expression": "and(le(count(root['workItems']), $(maxThreshold)), ge(count(root['workItems']), $(minThreshold)))"
+      }
+    }
+  }
+}

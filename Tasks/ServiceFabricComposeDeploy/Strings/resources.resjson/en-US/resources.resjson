@@ -48,5 +48,6 @@
   "loc.messages.CheckingComposeFile": "Checking compose file",
   "loc.messages.UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
   "loc.messages.UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}.",
+  "loc.messages.InvalidApplicationNameWarning": "Latest Service Fabric has stopped supporting compose application name starting with 'fabric:/' and hence compose deployment might fail with ServiceDnsName error for application name '{0}'. You can provide a different application name and re-run if required.",
   "loc.messages.UpgradeInProgress": "An upgrade for the application '{0}' is already in progress."
 }

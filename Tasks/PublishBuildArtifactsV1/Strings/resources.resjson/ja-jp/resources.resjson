@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "ビルド成果物の発行",
+  "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=708390)",
+  "loc.description": "ビルド成果物を Visual Studio Team Services/TFS またはファイル共有に発行します",
+  "loc.instanceNameFormat": "成果物の公開: $(ArtifactName)",
+  "loc.input.label.PathtoPublish": "発行するためのパス",
+  "loc.input.help.PathtoPublish": "発行するフォルダーまたはファイルのパス。完全修飾パスまたはリポジトリのルートからの相対パスを指定できます。ワイルドカードはサポートされていません。[変数](https://go.microsoft.com/fwlink/?LinkID=550988) がサポートされています。例: $(Build.ArtifactStagingDirectory)",
+  "loc.input.label.ArtifactName": "成果物名",
+  "loc.input.help.ArtifactName": "発行場所に作成する成果物の名前",
+  "loc.input.label.ArtifactType": "成果物の発行場所",
+  "loc.input.help.ArtifactType": "Visual Studio Team Services/TFS に成果物を保存するか、ビルド エージェントからアクセスできる必要があるファイル共有にコピーするかを選択します。",
+  "loc.input.label.TargetPath": "ファイル共有パス",
+  "loc.input.help.TargetPath": "成果物ファイルのコピー先のファイル共有です。Linux または macOS のエージェントからファイル共有への成果物の発行はサポートされていません。",
+  "loc.input.label.Parallel": "並列コピー",
+  "loc.input.help.Parallel": "スループット向上を期待して複数のスレッドを使って並列でファイルをコピーするかどうかを選択します。この設定が無効の場合は、1 つのスレッドが使用されます。",
+  "loc.input.label.ParallelCount": "並列数",
+  "loc.input.help.ParallelCount": "コピーを実行するための並列処理の程度、つまり使用するスレッド数を入力します。この値は 1 以上 128 以下でなければなりません。",
+  "loc.messages.ErrorFileShareLinux": "Linux または macOS のエージェントからファイル共有への成果物の発行はサポートされていません。成果物の種類を [Visual Studio Team Services/TFS] に変更するか、Windows エージェントをご使用ください。",
+  "loc.messages.ErrorHostTypeNotSupported": "このタスクは、成果物を Visual Studio Team Services または TFS に発行するため、ビルドで実行する必要があります。",
+  "loc.messages.PublishBuildArtifactsFailed": "ビルド成果物の発行が失敗し、次のエラーが発生しました: %s",
+  "loc.messages.UnexpectedParallelCount": "並列数 '%s' はサポートされていません。1 以上 128 以下の数を入力してください。"
+}

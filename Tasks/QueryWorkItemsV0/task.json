@@ -1,0 +1,77 @@
+{
+  "id": "F1E4B0E6-017E-4819-8A48-EF19AE96E289",
+  "name": "queryWorkItems",
+  "friendlyName": "Query Work Items",
+  "description": "Executes a work item query and checks for the number of items returned.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870238)",
+  "category": "Utility",
+  "visibility": [
+     "Build",
+     "Release"
+  ],
+  "runsOn": [
+    "Server",
+    "ServerGate"
+  ],
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 9
+  },
+  "instanceNameFormat": "Query Work Items",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "queryId",
+      "type": "querycontrol",
+      "label": "Query",
+      "defaultValue": "",
+      "required": "true",
+      "helpMarkDown": "Select a saved work item query to execute."
+    },
+    {
+      "name": "maxThreshold",
+      "type": "string",
+      "label": "Upper threshold",
+      "defaultValue": "0",
+      "required": "true",
+      "properties": {
+          "isVariableOrNonNegativeNumber": "true"
+      },
+      "helpMarkDown": "The maximum number of matching workitems from the query."
+    },
+    {
+      "name": "minThreshold",
+      "type": "string",
+      "label": "Lower threshold",
+      "defaultValue": "0",
+      "required": "true",
+      "properties": {
+        "isVariableOrNonNegativeNumber": "true"
+      },
+      "groupName": "advanced",
+      "helpMarkDown": "The minimum number of matching workitems from the query."
+    }
+  ],
+
+  "execution": {
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId":"",
+        "EndpointUrl": "$(system.teamFoundationCollectionUri)$(system.teamProjectId)/_apis/wit/wiql/$(queryId)?api-version=3.1",
+        "Method": "GET",
+        "Body": "",
+        "Headers":"{\n\"Content-Type\":\"application/json\"\n, \"Authorization\":\"Bearer $(system.accesstoken)\"\n}",
+        "WaitForCompletion":"false",
+        "Expression":"and(le(count(root['workItems']), $(maxThreshold)), ge(count(root['workItems']), $(minThreshold)))"
+      }
+    }
+  }
+}

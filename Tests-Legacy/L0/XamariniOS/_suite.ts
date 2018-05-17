@@ -32,22 +32,16 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('mdtoolLocation', '');
+        tr.setInput('buildToolLocation', '');
         tr.setInput('runNugetRestore', 'true'); //boolean
-        tr.setInput('unlockDefaultKeychain', ''); //boolean
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('p12', ''); //path
-        tr.setInput('p12pwd', '');
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
-        tr.setInput('provProfile', ''); //path
-        tr.setInput('removeProfile', ''); //boolean
         
         tr.run()
         .then(() => {
             assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'it should have run nuget restore');
-            assert(tr.ran('/home/bin/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'), 'it should have run xbuild');
-            assert(tr.invokedToolCount == 2, 'should have only run 2 commands');
+            assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'), 'it should have run msbuild');
+            assert(tr.invokedToolCount == 3, 'should have only run 3 commands');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
@@ -58,7 +52,7 @@ describe('XamariniOS Suite', function() {
         });
     })
     
-    it('run XamariniOS with mdtoolLocation set', (done) => {
+    it('run XamariniOS with buildToolLocation set', (done) => {
         setResponseFile('response.json');
         
         var tr = new trm.TaskRunner('XamariniOS', true, true);
@@ -69,22 +63,15 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('buildTool', 'xbuild');
-        tr.setInput('mdtoolLocation', '/home/bin2/');
+        tr.setInput('buildToolLocation', '/home/bin2/msbuild');
         tr.setInput('runNugetRestore', 'true'); //boolean
-        tr.setInput('unlockDefaultKeychain', ''); //boolean
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('p12', ''); //path
-        tr.setInput('p12pwd', '');
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
-        tr.setInput('provProfile', ''); //path
-        tr.setInput('removeProfile', ''); //boolean
         
         tr.run()
         .then(() => {
             assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'it should have run nuget restore');
-            assert(tr.ran('/home/bin2/xbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'), 'it should have run xbuild');
+            assert(tr.ran('/home/bin2/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'), 'it should have run msbuild');
             assert(tr.invokedToolCount == 2, 'should have only run 2 commands');
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length == 0, 'should not have written to stderr');
@@ -107,15 +94,9 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('mdtoolLocation', '');
-        tr.setInput('unlockDefaultKeychain', ''); //boolean
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('p12', ''); //path
-        tr.setInput('p12pwd', '');
+        tr.setInput('buildToolLocation', '');
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
-        tr.setInput('provProfile', ''); //path
-        tr.setInput('removeProfile', ''); //boolean
         
         tr.run()
         .then(() => {
@@ -142,15 +123,9 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('mdtoolLocation', '');
-        tr.setInput('unlockDefaultKeychain', ''); //boolean
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('p12', ''); //path
-        tr.setInput('p12pwd', '');
+        tr.setInput('buildToolLocation', '');
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
-        tr.setInput('provProfile', ''); //path
-        tr.setInput('removeProfile', ''); //boolean
         
         tr.run()
         .then(() => {
@@ -166,7 +141,7 @@ describe('XamariniOS Suite', function() {
         });
     })
          
-    it('fails when xbuildLocation not provided and xbuild is not found', (done) => {
+    it('fails when msbuildLocation not provided and msbuild is not found', (done) => {
         setResponseFile('responseNoToolsFound.json');
         
         var tr = new trm.TaskRunner('XamariniOS', true, true);
@@ -177,15 +152,9 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('mdtoolLocation', '');
-        tr.setInput('unlockDefaultKeychain', ''); //boolean
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('p12', ''); //path
-        tr.setInput('p12pwd', '');
+        tr.setInput('buildToolLocation', '');
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
-        tr.setInput('provProfile', ''); //path
-        tr.setInput('removeProfile', ''); //boolean
         
         tr.run()
         .then(() => {
@@ -193,7 +162,7 @@ describe('XamariniOS Suite', function() {
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            assert(tr.stderr.indexOf('not found xbuild: null') >= 0, 'wrong error message');            
+            assert(tr.stderr.indexOf('Xamarin.iOS task failed with error MSBuild or xbuild (Mono) were not found on the macOS or Linux agent') >= 0, 'wrong error message');            
             done();
         })
         .fail((err) => {
@@ -201,7 +170,7 @@ describe('XamariniOS Suite', function() {
         });
     })
     
-    it('fails when xbuildLocation is provided but is incorrect', (done) => {
+    it('fails when msbuildLocation is provided but is incorrect', (done) => {
         setResponseFile('response.json');
         
         var tr = new trm.TaskRunner('XamariniOS', true, true);
@@ -212,16 +181,9 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('buildTool', 'xbuild');
-        tr.setInput('mdtoolLocation', '/user/bin/');
-        tr.setInput('unlockDefaultKeychain', ''); //boolean
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('p12', ''); //path
-        tr.setInput('p12pwd', '');
+        tr.setInput('buildToolLocation', '/user/bin/');
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
-        tr.setInput('provProfile', ''); //path
-        tr.setInput('removeProfile', ''); //boolean
         
         tr.run()
         .then(() => {
@@ -229,7 +191,7 @@ describe('XamariniOS Suite', function() {
             assert(tr.resultWasSet, 'task should have set a result');
             assert(tr.stderr.length > 0, 'should have written to stderr');
             assert(tr.failed, 'task should have failed');
-            assert(tr.stderr.indexOf('not found build tool: /user/bin/xbuild') >= 0, 'wrong error message');            
+            assert(tr.stderr.indexOf('not found build tool: /user/bin/') >= 0, 'wrong error message');            
             done();
         })
         .fail((err) => {
@@ -249,17 +211,10 @@ describe('XamariniOS Suite', function() {
         tr.setInput('args', '');
         tr.setInput('packageApp', ''); //boolean
         tr.setInput('forSimulator', ''); //boolean
-        tr.setInput('buildTool', 'xbuild');
-        tr.setInput('mdtoolLocation', '/home/bin2');
         tr.setInput('runNugetRestore', 'true'); //boolean
-        tr.setInput('unlockDefaultKeychain', ''); //boolean
-        tr.setInput('defaultKeychainPassword', '');
-        tr.setInput('p12', ''); //path
-        tr.setInput('p12pwd', '');
+        tr.setInput('buildToolLocation', '/home/bin2/msbuild');
         tr.setInput('iosSigningIdentity', '');
         tr.setInput('provProfileUuid', '');
-        tr.setInput('provProfile', ''); //path
-        tr.setInput('removeProfile', ''); //boolean
         
         tr.run()
         .then(() => {

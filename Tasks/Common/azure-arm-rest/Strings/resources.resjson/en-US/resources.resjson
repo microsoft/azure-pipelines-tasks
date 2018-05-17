@@ -4,7 +4,9 @@
   "loc.messages.SecretCannotBeEmpty": "secret must be a non empty string.",
   "loc.messages.armUrlCannotBeEmpty": "arm Url must be a non empty string.",
   "loc.messages.authorityUrlCannotBeEmpty": "authority must be a non empty string.",
-  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for azure. Status code: %s, status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
   "loc.messages.CallbackCannotBeNull": "callback cannot be null.",
   "loc.messages.VMNameCannotBeNull": "vmName cannot be null or undefined and it must be of type string.",
   "loc.messages.InvalidValue": "%s is not a valid value. The valid values are: %s",
@@ -98,6 +100,7 @@
   "loc.messages.FailedToStartContinuousWebJob": "Failed to start continuous WebJob '%s'. Error: %s",
   "loc.messages.FailedToStopContinuousWebJob": "Failed to stop continuous WebJob '%s'. Error: %s",
   "loc.messages.FailedToGetSiteExtensions": "Failed to get site extensions. Error: %s",
+  "loc.messages.FailedToGetAllSiteExtensions": "Failed to get extension feed. Error: %s",
   "loc.messages.ExtensionAlreadyInstalled": "Extension '%s' already installed.",
   "loc.messages.InstallingSiteExtension": "Installing site Extension '%s'",
   "loc.messages.FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
@@ -127,5 +130,7 @@
   "loc.messages.FailedToUploadFile": "Failed to upload file '%s/%s from Kudu. Error: %s",
   "loc.messages.FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
   "loc.messages.FailedToListPath": "Failed to list path '%s'. Error: %s",
-  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s"
+  "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
 }

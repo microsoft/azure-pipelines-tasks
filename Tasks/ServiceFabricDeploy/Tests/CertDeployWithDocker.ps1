@@ -27,6 +27,7 @@ Register-Mock Get-VstsInput { "true" } -- -Name configureDockerSettings
 Register-Mock Get-VstsInput { "AzureResourceManagerEndpoint" } -- -Name registryCredentials -Require
 Register-Mock Get-VstsInput { $azureSubscriptionEndpoint } -- -Name azureSubscriptionEndpoint -Require
 Register-Mock Get-VstsInput { "false" } -- -Name useDiffPackage
+Register-Mock Get-VstsInput { "false" } -- -Name overrideApplicationParameter
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $publishProfilePath } -- -LegacyPattern $publishProfilePath
@@ -89,8 +90,10 @@ $publishArgs = @("-ApplicationParameterFilePath:", "$PSScriptRoot\data\Applicati
 Register-Mock Publish-NewServiceFabricApplication -Arguments $publishArgs
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\Update-DockerSettings.psm1"
+Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"
+Register-Mock Write-VstsTaskError
 
-Copy-Item "$PSScriptRoot\data\DockerSupportAssets\AppPkg\" -Destination $applicationPackagePath -Container -Recurse
+Copy-Item -LiteralPath "$PSScriptRoot\data\DockerSupportAssets\AppPkg\" -Destination $applicationPackagePath -Container -Recurse
 
 try
 {
@@ -102,7 +105,7 @@ try
     # Assert
     Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs
 
-    $appManifestXml = [xml](Get-Content "$applicationPackagePath\ApplicationManifest.xml")
+    $appManifestXml = [xml](Get-Content -LiteralPath "$applicationPackagePath\ApplicationManifest.xml")
     Assert-AreEqual 2 $appManifestXml.ApplicationManifest.ServiceManifestImport.Length
     foreach ($serviceManifestImport in $appManifestXml.ApplicationManifest.ServiceManifestImport)
     {
@@ -131,5 +134,5 @@ finally
         $store.Dispose()
     }
 
-    Remove-Item -Recurse -Force $applicationPackagePath
+    Remove-Item -Recurse -Force -LiteralPath $applicationPackagePath
 }

@@ -186,6 +186,7 @@
     "CheckingComposeFile": "ms-resource:loc.messages.CheckingComposeFile",
     "UnsupportedAPIVersion": "ms-resource:loc.messages.UnsupportedAPIVersion",
     "UsingAPIVersion": "ms-resource:loc.messages.UsingAPIVersion",
+    "InvalidApplicationNameWarning": "ms-resource:loc.messages.InvalidApplicationNameWarning",
     "UpgradeInProgress": "ms-resource:loc.messages.UpgradeInProgress"
   }
 }

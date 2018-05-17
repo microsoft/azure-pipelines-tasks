@@ -15,7 +15,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 131,
+    "Minor": 135,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -58,6 +58,17 @@
       "helpMarkDown": "ms-resource:loc.input.help.wrapperScript"
     },
     {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
+    },
+    {
       "name": "options",
       "type": "string",
       "label": "ms-resource:loc.input.label.options",
@@ -72,18 +83,6 @@
       "required": true
     },
     {
-      "name": "cwd",
-      "aliases": [
-        "workingDirectory"
-      ],
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.cwd",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.cwd",
-      "groupName": "advanced"
-    },
-    {
       "name": "publishJUnitResults",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.publishJUnitResults",
@@ -96,7 +95,7 @@
       "name": "testResultsFiles",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testResultsFiles",
-      "defaultValue": "**/build/test-results/TEST-*.xml",
+      "defaultValue": "**/TEST-*.xml",
       "required": true,
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
@@ -198,6 +197,7 @@
       "visibleRule": "javaHomeSelection = JDKVersion",
       "options": {
         "default": "default",
+        "1.10": "JDK 10",
         "1.9": "JDK 9",
         "1.8": "JDK 8",
         "1.7": "JDK 7",

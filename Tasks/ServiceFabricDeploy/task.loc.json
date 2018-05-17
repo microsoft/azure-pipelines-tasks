@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 1
+    "Patch": 9
   },
   "demands": [
     "Cmd"
@@ -73,6 +73,14 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.applicationParameterPath"
+    },
+    {
+      "name": "overrideApplicationParameter",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overrideApplicationParameter",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.overrideApplicationParameter"
     },
     {
       "name": "compressPackage",
@@ -403,8 +411,10 @@
     "DIFFPKG_CreatingDiffPackage": "ms-resource:loc.messages.DIFFPKG_CreatingDiffPackage",
     "DIFFPKG_CreatingDiffPackageForService": "ms-resource:loc.messages.DIFFPKG_CreatingDiffPackageForService",
     "DIFFPKG_NoServicesRunning": "ms-resource:loc.messages.DIFFPKG_NoServicesRunning",
+    "DIFFPKG_PackageDoesNotExist": "ms-resource:loc.messages.DIFFPKG_PackageDoesNotExist",
     "DIFFPKG_ServiceDoesNotExist": "ms-resource:loc.messages.DIFFPKG_ServiceDoesNotExist",
     "DIFFPKG_ServiceIsNotChanged": "ms-resource:loc.messages.DIFFPKG_ServiceIsNotChanged",
+    "DIFFPKG_TestAppPkgFailed": "ms-resource:loc.messages.DIFFPKG_TestAppPkgFailed",
     "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
     "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
     "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
@@ -439,6 +449,7 @@
     "SFSDK_AppTypeMismatch": "ms-resource:loc.messages.SFSDK_AppTypeMismatch",
     "SFSDK_UpgradeInProgressError": "ms-resource:loc.messages.SFSDK_UpgradeInProgressError",
     "SFSDK_StartAppUpgrade": "ms-resource:loc.messages.SFSDK_StartAppUpgrade",
+    "SFSDK_StartUpgradeFailed": "ms-resource:loc.messages.SFSDK_StartUpgradeFailed",
     "SFSDK_UnregisterAppTypeOnUpgradeFailure": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeOnUpgradeFailure",
     "SFSDK_WaitingForUpgrade": "ms-resource:loc.messages.SFSDK_WaitingForUpgrade",
     "SFSDK_UnregisterUnusedVersions": "ms-resource:loc.messages.SFSDK_UnregisterUnusedVersions",
@@ -448,6 +459,7 @@
     "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
     "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
     "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
-    "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning"
+    "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning",
+    "SFSDK_UnregisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailed"
   }
 }

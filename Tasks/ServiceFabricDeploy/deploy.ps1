@@ -34,6 +34,7 @@ try {
     $skipValidation =  [System.Boolean]::Parse((Get-VstsInput -Name skipPackageValidation))
     $unregisterUnusedVersions = [System.Boolean]::Parse((Get-VstsInput -Name unregisterUnusedVersions))
     $configureDockerSettings = [System.Boolean]::Parse((Get-VstsInput -Name configureDockerSettings))
+    $overrideApplicationParameters = [System.Boolean]::Parse((Get-VstsInput -Name overrideApplicationParameter))
 
     $clusterConnectionParameters = @{}
 
@@ -102,8 +103,22 @@ try {
     $useDiffPackage = [System.Boolean]::Parse((Get-VstsInput -Name useDiffPackage))
     if ($useDiffPackage)
     {
-        Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
-        $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
+        $isPackageValid = $true
+
+        if (!$skipValidation)
+        {
+            $isPackageValid = Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath
+        }
+
+        if ($isPackageValid)
+        {
+            Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
+            $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
+        }
+        else
+        {
+            Write-Warning (Get-VstsLocString -Key DIFFPKG_TestAppPkgFailed)
+        }
     }
     $publishParameters = @{
         'ApplicationPackagePath' = if (!$diffPackagePath) {$applicationPackagePath} else {[string]$diffPackagePath}
@@ -140,11 +155,18 @@ try {
     if ($registerPackageTimeoutSec)
     {
         $publishParameters['RegisterPackageTimeoutSec'] = $registerPackageTimeoutSec
+        $publishParameters['UnregisterPackageTimeoutSec'] = $registerPackageTimeoutSec
     }
 
     if ($skipValidation)
     {
         $publishParameters['SkipPackageValidation'] = $skipValidation
+    }
+
+    if ($overrideApplicationParameters)
+    {
+        $localAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $applicationPackagePath
+        $publishParameters['ApplicationParameter'] = Get-OverridenApplicationParameters -ApplicationManifestPath $localAppManifestPath
     }
 
     # Do an upgrade if configured to do so and the app actually exists

@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Im Azure Service Bus veröffentlichen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://docs.microsoft.com/de-de/vsts/build-release/tasks/utility/publish-to-azure-service-bus)",
+  "loc.description": "Sendet eine Nachricht an den Azure Service Bus über eine Dienstverbindung (kein Agent erforderlich).",
+  "loc.instanceNameFormat": "Im Azure Service Bus veröffentlichen",
+  "loc.group.displayName.signingDetails": "Zertifikatdetails",
+  "loc.input.label.connectedServiceName": "Azure Service Bus-Verbindung",
+  "loc.input.help.connectedServiceName": "Wählen Sie eine Azure Service Bus-Verbindung aus.",
+  "loc.input.label.messageBody": "Nachrichtentext",
+  "loc.input.help.messageBody": "Geben Sie den JSON-messageBody ein.",
+  "loc.input.label.signPayload": "Nachricht signieren",
+  "loc.input.help.signPayload": "Sofern auf TRUE festgelegt, wird die Nachricht mit einem privaten Zertifikat signiert (falls angegeben).",
+  "loc.input.label.certificateString": "Zertifikatvariable",
+  "loc.input.help.certificateString": "Das Zertifikat, das aus dem Key Vault-Speicher abgerufen wird. Erstellen Sie eine Variablengruppe, die mit einer Azure Key Vault-Instanz verknüpft ist, die eine im Zertifikat enthaltene Variable verwendet. Wechseln Sie hierzu zu \"Bibliothek\" > \"Variablengruppe\" > \"+ Variablengruppe\", wählen Sie die Option \"Geheimnisse von einem Azure Key Vault als Variablen verknüpfen\" aus, und wählen Sie Ihr Azure-Abonnement und den Key Vault-Namen aus. Stellen Sie sicher, dass die Variable mit dem Zertifikat ausgewählt ist. Sie können auch eine reguläre Variable/Geheimnisvariable auswählen, die den Zertifikatinhalt als Zeichenfolge enthält.",
+  "loc.input.label.signatureKey": "Signatureigenschaftenschlüssel",
+  "loc.input.help.signatureKey": "Der Schlüssel für die Signatur in den Nachrichteneigenschaften. Ist dieser Wert leer, wird in den Nachrichteneigenschaften standardmäßig \"signature\" verwendet.",
+  "loc.input.label.waitForCompletion": "Auf Abschluss der Aufgabe warten",
+  "loc.input.help.waitForCompletion": "Bei \"true\" wartet die Aufgabe für die Dauer des angegebenen Aufgabenzeitlimits auf das TaskCompleted-Ereignis."
+}

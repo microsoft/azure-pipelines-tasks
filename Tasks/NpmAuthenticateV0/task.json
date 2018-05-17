@@ -1,0 +1,68 @@
+{
+    "id": "ad884ca2-732e-4b85-b2d3-ed71bcbd2788",
+    "name": "npmAuthenticate",
+    "friendlyName": "npm Authenticate (for task runners)",
+    "description": "Don't use this task if you're also using the npm task. Provides npm credentials to an .npmrc file in your repository for the scope of the build. This enables npm task runners like Gulp and Grunt to authenticate with private registries.",
+    "helpMarkDown": "",
+    "category": "Package",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 2
+    },
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "minimumAgentVersion": "2.115.0",
+    "instanceNameFormat": "npm Authenticate $(workingFile)",
+    "inputs": [
+        {
+            "name": "workingFile",
+            "label": ".npmrc file to authenticate",
+            "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
+            "type": "filePath"
+        },
+        {
+            "name": "customEndpoint",
+            "label": "Credentials for registries outside this account/collection",
+            "helpMarkDown": "Credentials to use for external registries located in the project's .npmrc. For registries in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "type": "connectedService:externalnpmregistry",
+            "properties": {
+                "MultiSelectFlatList": "true"
+            }
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "npmauth.js"
+        }
+    },
+    "messages": {
+        "FoundBuildCredentials": "Found build credentials",
+        "NoBuildCredentials": "Could not find build credentials",
+        "ServiceEndpointNotDefined": "Couldn't find Service Endpoint, make sure the selected endpoint still exists.",
+        "NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",
+        "ServiceEndpointUrlNotDefined": "Couldn't find Url for Service Endpoint, make sure Service Endpoint is correctly configured.",
+        "SavingFile": "Saving file %s",
+        "RestoringFile": "Restoring file %s",
+        "AddingAuthRegistry": "Adding auth for registry: %s",
+        "FoundLocalRegistries": "Found %d registries in this account/collection",
+        "AddingLocalCredentials": "Adding credentials for a local registry",
+        "AddingEndpointCredentials": "Adding credentials for the %s endpoint",
+        "AuthenticatingThisNpmrc": "Adding authentication to the .npmrc file at %s",
+        "IgnoringRegistry": "No service endpoints that matched %s were found",
+        "ForcePackagingUrl": "Packaging collection url forced to: %s",
+        "CheckedInCredentialsOverriden": "Found and overrode credentials for the %s registry in the selected .npmrc file. Remove credentials from the file and store them in an npm Service Endpoint instead (recommended), or remove the npm Authenticate step from your build to use credentials checked into an .npmrc.",
+        "NoIndexJsonFile": "No index.json file was found and no files were restored",
+        "RevertedChangesToNpmrc" : "Reverted changes made to %s.",
+        "NpmrcDoesNotExist" : "The .npmrc file you selected at %s does not currently exist."
+    },
+    "postjobexecution": {
+        "Node": {
+            "target": "npmauthcleanup.js",
+            "argumentFormat": ""
+        }
+    }
+}

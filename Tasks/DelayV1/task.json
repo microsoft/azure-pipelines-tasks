@@ -1,0 +1,38 @@
+{
+    "id": "28782B92-5E8E-4458-9751-A71CD1492BAE",
+    "name": "Delay",
+    "friendlyName": "Delay",
+    "description": "Delay further execution of the workflow by a fixed time.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870239)",
+    "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+    "author": "Microsoft Corporation",
+    "runsOn": [
+        "Server"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 1,
+        "Patch": 3
+    },
+    "inputs": [
+        {
+            "name": "delayForMinutes",
+            "type": "string",
+            "label": "Delay Time (minutes)",
+            "defaultValue": "0",
+            "required": true,
+            "properties": {
+                "isVariableOrNonNegativeNumber": "true"
+            },
+            "helpMarkDown": "Delay the execution of the workflow by specified time in minutes."
+        }
+    ],
+    "instanceNameFormat": "Delay by $(delayForMinutes) minutes",
+    "execution": {
+        "Delay": {}
+    }
+}

@@ -30,9 +30,7 @@ export class Resources {
     private _client: ServiceClient;
     
     constructor(endpoint: AzureEndpoint) {
-        var credentials = new msRestAzure.ApplicationTokenCredentials(endpoint.servicePrincipalClientID, endpoint.tenantID, endpoint.servicePrincipalKey, 
-            endpoint.url, endpoint.environmentAuthorityUrl, endpoint.activeDirectoryResourceID, endpoint.environment.toLowerCase() == 'azurestack');
-        this._client = new ServiceClient(credentials, endpoint.subscriptionID, 30);
+        this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
     }
 
     public async getResources(resourceType: string, resourceName: string) {
@@ -40,7 +38,7 @@ export class Resources {
         httpRequest.method = 'GET';
 
         httpRequest.uri = this._client.getRequestUri('//subscriptions/{subscriptionId}/resources', {},
-        [`$filter=resourceType EQ \'${resourceType}\' AND name EQ \'${resourceName}\'`], '2016-07-01');
+        [`$filter=resourceType EQ \'${encodeURIComponent(resourceType)}\' AND name EQ \'${encodeURIComponent(resourceName)}\'`], '2016-07-01');
 
         var result = [];
         try {

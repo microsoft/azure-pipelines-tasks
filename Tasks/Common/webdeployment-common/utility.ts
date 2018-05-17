@@ -47,7 +47,7 @@ export function fileExists(path): boolean {
  */
 export function copySetParamFileIfItExists(setParametersFile: string) : string {
 
-    if(setParametersFile === null || (!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
+    if(!setParametersFile || (!tl.filePathSupplied('SetParametersFile')) || setParametersFile == tl.getVariable('System.DefaultWorkingDirectory')) {
         setParametersFile = null;
     }
     else if (!fileExists(setParametersFile)) {
@@ -148,7 +148,7 @@ export async function isMSDeployPackage(webAppPackage: string ) {
     var isParamFilePresent = false;
     var pacakgeComponent = await zipUtility.getArchivedEntries(webAppPackage);
     if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
-    ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1))) {
+    ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("SystemInfo.xml") > -1))) {
         isParamFilePresent = true;
     }
     tl.debug("Is the package an msdeploy package : " + isParamFilePresent);

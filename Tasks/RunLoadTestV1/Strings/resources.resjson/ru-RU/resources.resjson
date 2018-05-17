@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Облачный нагрузочный тест",
+  "loc.helpMarkDown": "Эта задача запускает облачный нагрузочный тест с помощью Visual Studio Team Services. [Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "Выполнение нагрузочного теста в облаке с помощью Visual Studio Team Services",
+  "loc.instanceNameFormat": "Облачный нагрузочный тест $(LoadTest)",
+  "loc.input.label.connectedServiceName": "Подключение к Visual Studio Team Services",
+  "loc.input.help.connectedServiceName": "Выберите ранее зарегистрированное подключение службы для взаимодействия со службой облачного нагрузочного тестирования. Чтобы зарегистрировать новое подключение, нажмите \"Управление\".",
+  "loc.input.label.TestDrop": "Папка файлов нагрузочного теста",
+  "loc.input.help.TestDrop": "Путь к выходному каталогу, в котором находятся нагрузочный тест и вспомогательные файлы, включая подключаемые модули и файлы данных. <ul><li><b>Пример для сборки:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>Пример для выпуска:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />, где SourceCI — псевдоним источника, а drop — имя артефакта</li></ul>",
+  "loc.input.label.LoadTest": "Файл нагрузочного теста",
+  "loc.input.help.LoadTest": "Имя файла нагрузочного теста, который нужно использовать в указанной выше папке файлов нагрузочного теста.",
+  "loc.input.label.activeRunSettings": "Active Run Settings",
+  "loc.input.help.activeRunSettings": "Use the active run settings as specified in the file (values can be overriden) or change the active run setting for the load test file.",
+  "loc.input.label.runSettingName": "Specify the name of the Run Settings",
+  "loc.input.help.runSettingName": "The name of the run setting that will be made active",
+  "loc.input.label.testContextParameters": "Override load test context parameters",
+  "loc.input.help.testContextParameters": "Override test context parameters defined in the load test. For example: `-parameter1 value1 -parameter2 \"value with spaces\"",
+  "loc.input.label.TestSettings": "Файл параметров тестирования",
+  "loc.input.help.TestSettings": "Имя используемого файла testsettings из указанной выше папки нагрузочного теста или из полного пути. <ul><li><b>Пример для сборки:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration)\\load.testsettings </li><li><b>Пример для выпуска:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release\\load.testsettings <br />, где SourceCI — псевдоним источника, а drop — имя артефакта</li></ul>",
+  "loc.input.label.ThresholdLimit": "Количество допустимых превышений порогового значения",
+  "loc.input.help.ThresholdLimit": "Число нарушений пороговых значений, при превышении которого нагрузочный тест считается непройденным.",
+  "loc.input.label.MachineType": "Выполнить нагрузочный тест с помощью"
+}

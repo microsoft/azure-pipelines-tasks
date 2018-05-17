@@ -3,44 +3,31 @@
 # https://aka.ms/yaml
 
 queue: 'Hosted VS2017'
-
 variables:
   buildConfiguration: 'Release'
-  restoreBuildProjects: '**/*.csproj'
-  testProjects: '**/*Tests/*.csproj'
-  # system.debug: 'true'
-
 steps:
+
+- task: DotNetCoreInstaller@0
+
 - task: DotNetCoreCLI@1
-  displayName: 'Restore'
   inputs:
     command: 'restore'
-    projects: '$(restoreBuildProjects)'
+    projects: '**/*.csproj'
 
 - task: DotNetCoreCLI@1
-  displayName: 'Build'
   inputs:
-    projects: '$(restoreBuildProjects)'
+    command: 'build'
+    projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@1
-  displayName: 'Test'
   inputs:
     command: 'test'
-    projects: '$(testProjects)'
+    projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-- task: DotNetCoreCLI@1
-  displayName: 'Publish'
-  inputs:
-    command: 'publish'
-    publishWebProjects: 'true'
-    arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
-    zipAfterPublish: 'true'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts'
-  inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)'
-    ArtifactName: 'artifact'
-    ArtifactType: 'container'
+#- task: DotNetCoreCLI@1
+#  inputs:
+#    command: 'publish'
+#    arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
+#- task: PublishBuildArtifacts@1

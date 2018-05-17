@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Invocar API de REST",
+  "loc.helpMarkDown": "[Más información](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.description": "Invoque la API de REST como parte del proceso.",
+  "loc.instanceNameFormat": "Invocar la API de REST: $(method)",
+  "loc.group.displayName.completionOptions": "Avanzado",
+  "loc.input.label.connectedServiceName": "Punto de conexión genérico",
+  "loc.input.help.connectedServiceName": "Elija un punto de conexión genérico que debe usarse para seleccionar la dirección URL y construir un encabezado de autorización para la solicitud HTTP.",
+  "loc.input.label.method": "Método",
+  "loc.input.help.method": "Seleccione el método HTTP con el que debe invocarse la API.",
+  "loc.input.label.headers": "Encabezados",
+  "loc.input.help.headers": "Defina el encabezado con formato JSON. El encabezado se adjuntará a la solicitud que se enviará.",
+  "loc.input.label.body": "Cuerpo",
+  "loc.input.label.urlSuffix": "Parámetros y sufijo de dirección URL",
+  "loc.input.help.urlSuffix": "La cadena especificada se anexa a la dirección URL. Ejemplo: Si la dirección URL del punto de conexión es https:...TestProj/_apis/Release/releases y el sufijo de URL es /2/environments/1, la dirección URL del punto de conexión se convierte en https:.../TestProj/_apis/Release/releases/2/environments/1. Si el sufijo de URL es ?definitionId=1&releaseCount=1, entonces la dirección URL del punto de conexión será https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
+  "loc.input.label.waitForCompletion": "Evento de finalización",
+  "loc.input.help.waitForCompletion": "Valor predeterminado \"ApiResponse\". Valores disponibles: \"ApiResponse\", llamada \"Callback\" en la que la API de REST devuelve una llamada para actualizar el registro de la escala de tiempo.",
+  "loc.input.label.successCriteria": "Criterios de éxito",
+  "loc.input.help.successCriteria": "Criterios que definen cuándo debe pasarse la tarea. Si no hay ningún criterio, significa que el contenido de la respuesta no influye en el resultado. Ejemplo: Para la respuesta {\"estado\" : \"correcto\"}, la expresión puede ser eq(root[\"estado\"], \"correcto\"). [Más información](https://go.microsoft.com/fwlink/?linkid=842996)​"
+}

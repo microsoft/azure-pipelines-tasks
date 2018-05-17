@@ -2,5 +2,8 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Схема аутентификации \"{0}\" не поддерживается для конечной точки Azure.",
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "Не удается получить токен для клиента с идентификатором {0}.",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "Не удается получить токен для указанного пользователя.",
-  "loc.messages.AZ_NoValidResourceIdFound": "В подписке {2} не найдено ни одного ресурса для названия сервера (serverName) {0} и типа сервера (serverType) {1}. Укажите правильные название и тип сервера и повторите попытку."
+  "loc.messages.AZ_NoValidResourceIdFound": "В подписке {2} не найдено ни одного ресурса для названия сервера (serverName) {0} и типа сервера (serverType) {1}. Укажите правильные название и тип сервера и повторите попытку.",
+  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Не удалось получить сведения о балансировщике нагрузки",
+  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Не удалось получить сведения об общедоступных IP-адресах",
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Не удалось получить сведения о сетевых интерфейсах"
 }

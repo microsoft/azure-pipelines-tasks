@@ -56,22 +56,24 @@ function Get-SinglePathOfType
 function Get-ServiceFabricComposeApplicationStatusHelper
 {
     Param (
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]
         $ApiVersion,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [HashTable]
         $GetStatusParameters
     )
 
-    switch ($ApiVersion) {
-        "255.255" {
+    switch ($ApiVersion)
+    {
+        "255.255"
+        {
             $status = Get-ServiceFabricComposeApplicationStatusPaged @GetStatusParameters
             if ($status)
             {
                 return @{
-                    "Status" = $status.ComposeApplicationStatus
+                    "Status"        = $status.ComposeApplicationStatus
                     "StatusDetails" = $status.StatusDetails
                 }
             }
@@ -80,12 +82,13 @@ function Get-ServiceFabricComposeApplicationStatusHelper
                 return $null
             }
         }
-        "2.7" {
+        "2.7"
+        {
             $status = Get-ServiceFabricComposeApplicationStatus @GetStatusParameters
             if ($status)
             {
                 return @{
-                    "Status" = $status.ComposeApplicationStatus
+                    "Status"        = $status.ComposeApplicationStatus
                     "StatusDetails" = $status.StatusDetails
                 }
             }
@@ -94,12 +97,13 @@ function Get-ServiceFabricComposeApplicationStatusHelper
                 return $null
             }
         }
-        Default {
+        Default
+        {
             $status = Get-ServiceFabricComposeDeploymentStatus @GetStatusParameters
             if ($status)
             {
                 return @{
-                    "Status" = $status.ComposeDeploymentStatus
+                    "Status"        = $status.ComposeDeploymentStatus
                     "StatusDetails" = $status.StatusDetails
                 }
             }
@@ -114,23 +118,27 @@ function Get-ServiceFabricComposeApplicationStatusHelper
 function Remove-ServiceFabricComposeApplicationHelper
 {
     Param (
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]
         $ApiVersion,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [HashTable]
         $RemoveParameters
     )
 
-    switch ($ApiVersion) {
-        "255.255" {
+    switch ($ApiVersion)
+    {
+        "255.255"
+        {
             return Remove-ServiceFabricComposeApplication @RemoveParameters
         }
-        "2.7" {
+        "2.7"
+        {
             return Remove-ServiceFabricComposeApplication @RemoveParameters
         }
-        Default {
+        Default
+        {
             return Remove-ServiceFabricComposeDeployment @RemoveParameters
         }
     }
@@ -139,23 +147,27 @@ function Remove-ServiceFabricComposeApplicationHelper
 function New-ServiceFabricComposeApplicationHelper
 {
     Param (
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]
         $ApiVersion,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [HashTable]
         $DeployParameters
     )
 
-    switch ($ApiVersion) {
-        "255.255" {
+    switch ($ApiVersion)
+    {
+        "255.255"
+        {
             return New-ServiceFabricComposeApplication @DeployParameters
         }
-        "2.7" {
+        "2.7"
+        {
             return New-ServiceFabricComposeApplication @DeployParameters
         }
-        Default {
+        Default
+        {
             return New-ServiceFabricComposeDeployment @DeployParameters
         }
     }
@@ -164,11 +176,11 @@ function New-ServiceFabricComposeApplicationHelper
 function Start-ServiceFabricComposeDeploymentUpgradeHelper
 {
     Param (
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]
         $ApiVersion,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [HashTable]
         $UpgradeParameters
     )
@@ -179,11 +191,11 @@ function Start-ServiceFabricComposeDeploymentUpgradeHelper
 function Get-ServiceFabricComposeDeploymentUpgradeHelper
 {
     Param (
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]
         $ApiVersion,
 
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [HashTable]
         $GetUpgradeParameters
     )
@@ -211,7 +223,7 @@ function Get-ServiceFabricComposeDeploymentUpgradeHelper
     }
 
     return @{
-        "UpgradeState" = $appUpgrade.UpgradeState
+        "UpgradeState"         = $appUpgrade.UpgradeState
         "UpgradeStatusDetails" = $composeDeploymentUpgrade.UpgradeStatusDetails
     }
 }
@@ -219,7 +231,7 @@ function Get-ServiceFabricComposeDeploymentUpgradeHelper
 function IsUpgradeRunning
 {
     Param (
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]
         $UpgradeState
     )
@@ -228,4 +240,38 @@ function IsUpgradeRunning
             $UpgradeState -ne 'Invalid' -and `
             $UpgradeState -ne 'RollingForwardCompleted' -and `
             $UpgradeState -ne 'RollingBackCompleted')
+}
+
+function Test-ApplicationName
+{
+    Param (
+        [Parameter(Mandatory = $True)]
+        [string]
+        $ApiVersion,
+
+        [Parameter(Mandatory = $True)]
+        [string]
+        $ApplicationName
+    )
+
+    switch ($ApiVersion)
+    {
+        "255.255"
+        {
+            return
+        }
+        "2.7"
+        {
+            return
+        }
+        Default
+        { 
+            if ($ApplicationName.StartsWith("fabric:/", [StringComparison]::OrdinalIgnoreCase))
+            {
+                Write-Warning (Get-VstsLocString -Key InvalidApplicationNameWarning -ArgumentList $ApplicationName)
+            }
+
+            return
+        }
+    }
 }

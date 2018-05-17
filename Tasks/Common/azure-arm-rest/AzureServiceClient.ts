@@ -36,6 +36,8 @@ export function ToError(response: webClient.WebResponse): AzureError {
         error.code = response.body.error.code;
         error.message = response.body.error.message;
         error.details = response.body.error.details;
+
+        console.log("##vso[task.logissue type=error;code="+error.code+";]");
     }
 
     return error;
@@ -165,6 +167,31 @@ export class ServiceClient {
         return response;
     }
 
+    public async beginRequestExpBackoff(request: webClient.WebRequest, maxAttempt: number): Promise<webClient.WebResponse> {
+        var sleepDuration = 1;
+        for(var i = 1; true; i++) {
+            var response : webClient.WebResponse = await this.beginRequest(request);
+            //not a server error;
+            if(response.statusCode <500) {
+                return response;
+            }
+
+            // response of last attempt
+            if(i == maxAttempt) {
+                return response;
+            }
+
+            // Retry after given interval.
+            sleepDuration = sleepDuration + i;
+            if (response.headers["retry-after"]) {
+                sleepDuration = parseInt(response.headers["retry-after"]);
+            }
+
+            tl.debug(tl.loc("RetryingRequest", sleepDuration));
+            await this.sleepFor(sleepDuration);
+        }
+    }
+
     public async accumulateResultFromPagedResult(nextLinkUrl: string): Promise<ApiResult> {
         var result = [];
         while (nextLinkUrl) {
@@ -201,6 +228,14 @@ export class ServiceClient {
             if (resourceGroupName.match(/^[-\w\._\(\)]+$/) === null) {
                 throw new Error(tl.loc("ResourceGroupDoesntMatchPattern"));
             }
+        }
+    }
+
+    public isNameValid(name: string): boolean {
+        if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
+            return false;
+        }else{
+            return true;
         }
     }
 

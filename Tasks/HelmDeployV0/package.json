@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
+    "del": "2.2.0",
+    "js-base64": "2.4.3",
+    "securefiles-common": "file:../../_build/Tasks/Common/securefiles-common-1.0.0.tgz",
+    "vsts-task-tool-lib": "0.4.0"
+  }
+}

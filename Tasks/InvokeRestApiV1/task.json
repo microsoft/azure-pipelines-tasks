@@ -1,0 +1,129 @@
+{
+  "id": "9C3E8943-130D-4C78-AC63-8AF81DF62DFB",
+  "name": "InvokeRESTAPI",
+  "friendlyName": "Invoke REST API",
+  "description": "Invoke REST API as a part of your process.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Server",
+    "ServerGate"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 1
+  }, 
+  "instanceNameFormat": "Invoke REST API: $(method)",
+  "groups": [{
+			"name": "completionOptions",
+			"displayName": "Advanced",
+			"isExpanded": false
+		}
+	],
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "aliases": ["serviceConnection"],
+      "type": "connectedService:Generic",
+      "label": "Generic endpoint",
+      "defaultValue": "",
+      "required": "true",
+      "helpMarkDown": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request."
+    },
+    {
+      "name": "method",
+      "type": "pickList",
+      "label": "Method",
+      "required": "true",
+      "defaultValue": "POST",
+      "options": {
+        "OPTIONS":"OPTIONS",
+        "GET": "GET",
+        "HEAD": "HEAD",
+        "POST": "POST",
+        "PUT": "PUT",
+        "DELETE": "DELETE",
+        "TRACE":"TRACE",
+        "PATCH": "PATCH"
+      },
+      "helpMarkDown": "Select the http method with which the API should be invoked with."
+    },
+    {
+      "name":"headers",
+      "type":"multiLine",
+      "label":"Headers",
+      "required":"false",
+      "defaultValue": "{\n\"Content-Type\":\"application/json\", \n\"PlanUrl\": \"$(system.CollectionUri)\", \n\"ProjectId\": \"$(system.TeamProjectId)\", \n\"HubName\": \"$(system.HostType)\", \n\"PlanId\": \"$(system.PlanId)\", \n\"JobId\": \"$(system.JobId)\", \n\"TimelineId\": \"$(system.TimelineId)\", \n\"TaskInstanceId\": \"$(system.TaskInstanceId)\", \n\"AuthToken\": \"$(system.AccessToken)\"\n}",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "2000"
+      },
+      "helpMarkDown": "Define header in JSON format. The header shall be attached with request to be sent."
+    },
+    {
+      "name": "body",
+      "type": "multiLine",
+      "label": "Body",
+      "required": "false",
+      "defaultValue": "",
+      "properties": {
+                "resizable": "true",
+                "rows": "3",
+                "maxLength": "2000"
+            },
+      "visibleRule": "method != GET && method != HEAD"
+    },
+    {
+      "name": "urlSuffix",
+      "type": "string",
+      "label": "Url suffix and parameters",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1."
+    },
+    {
+      "name": "waitForCompletion",
+      "type": "pickList",
+      "label": "Completion event",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the REST API calls back to update the timeline record​.",
+      "groupName": "completionOptions",
+      "options": {
+        "true": "Callback",
+        "false": "ApiResponse"
+      }
+    },
+    {
+      "name": "successCriteria",
+      "type": "string",
+      "label": "Success criteria",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+      "groupName": "completionOptions",
+      "visibleRule": "waitForCompletion = false"
+    }
+  ],
+
+  "execution": {
+    "HttpRequest": {
+      "Execute": {
+        "EndpointId":"$(connectedServiceName)",
+        "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
+        "Method": "$(method)",
+        "Body": "$(body)",
+        "Headers":"$(headers)",
+        "WaitForCompletion":"$(waitForCompletion)",
+        "Expression": "$(successCriteria)"
+      }
+    }
+  }
+}

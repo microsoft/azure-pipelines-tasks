@@ -2,22 +2,24 @@ function Create-DiffPackage
 {
     [CmdletBinding()]
     param(
-        [parameter(Mandatory=$true)][String] $ApplicationName,
-        [parameter(Mandatory=$true)][String] $ApplicationPackagePath,
-        [parameter(Mandatory=$true)] $ConnectedServiceEndpoint,
-        [parameter(Mandatory=$true)][Hashtable] $ClusterConnectionParameters
+        [parameter(Mandatory = $true)][String] $ApplicationName,
+        [parameter(Mandatory = $true)][String] $ApplicationPackagePath,
+        [parameter(Mandatory = $true)] $ConnectedServiceEndpoint,
+        [parameter(Mandatory = $true)][Hashtable] $ClusterConnectionParameters
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
+    try
+    {
         Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackage)
 
+         # Load utility functions
+        . "$PSScriptRoot\utilities.ps1"
         Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
         Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
 
-        $appManifestName = "ApplicationManifest.xml"
-        $localAppManifestPath = Join-Path $ApplicationPackagePath $appManifestName
-        $localAppManifestXml = [XML](Get-Content $localAppManifestPath)
+        $localAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $ApplicationPackagePath
+        $localAppManifestXml = [XML](Get-Content -LiteralPath $localAppManifestPath)
         $applicationTypeName = $localAppManifestXml.ApplicationManifest.ApplicationTypeName
         $localAppTypeVersion = $localAppManifestXml.ApplicationManifest.ApplicationTypeVersion
 
@@ -39,13 +41,13 @@ function Create-DiffPackage
             Return
         }
 
-        $diffPackagePath = Join-Path $env:Temp "DiffPackage"
-        if (Test-Path -PathType Container -Path $diffPackagePath)
+        $diffPackagePath = Join-Path (Get-TempDirectoryPath) "DiffPackage"
+        if (Test-Path -PathType Container -LiteralPath $diffPackagePath)
         {
-            Remove-Item -Path $diffPackagePath -Recurse -Force
+            Remove-Item -LiteralPath $diffPackagePath -Recurse -Force
         }
+        $diffPkgAppManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $diffPackagePath
         $diffPackagePath = New-Item -ItemType Directory -Path $diffPackagePath -Force
-        $diffPkgAppManifestPath = Join-Path $diffPackagePath $appManifestName
 
         # Get the service types from the cluster
         $serviceTypes = Get-ServiceFabricServiceType -ApplicationTypeName $applicationTypeName -ApplicationTypeVersion $clusterAppTypeVersion
@@ -60,7 +62,7 @@ function Create-DiffPackage
         }
 
         Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localAppManifestPath, $diffPkgAppManifestPath))
-        Copy-Item $localAppManifestPath $diffPkgAppManifestPath -Force
+        Copy-Item -LiteralPath $localAppManifestPath $diffPkgAppManifestPath -Force
 
         # Get the service manifests from the cluster
         $clusterServiceManifestByName = @{}
@@ -78,19 +80,19 @@ function Create-DiffPackage
             $localServiceManifestVersion = $serviceManifestImport.ServiceManifestRef.ServiceManifestVersion
             $localServicePkgPath = Join-Path $ApplicationPackagePath $localServiceManifestName
             $localServiceManifestPath = [System.IO.Path]::Combine($localServicePkgPath, $serviceManifestName)
-            $localServiceManifest = ([XML](Get-Content $localServiceManifestPath)).ServiceManifest
+            $localServiceManifest = ([XML](Get-Content -LiteralPath $localServiceManifestPath)).ServiceManifest
             $diffServicePkgPath = [System.IO.Path]::Combine($diffPackagePath, $localServiceManifestName)
             $clusterServiceManifest = $clusterServiceManifestByName[$localServiceManifestName].ServiceManifest
 
-            # If there's no matching manifest from the cluster it means this is a newly added service that doesn't exist yet on the cluster. 
+            # If there's no matching manifest from the cluster it means this is a newly added service that doesn't exist yet on the cluster.
             if (!$clusterServiceManifest)
             {
                 # Copy this service and all the children
                 Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceDoesNotExist -ArgumentList @($localServiceManifestName, $ApplicationName, $ConnectedServiceEndpoint.Url))
-                Copy-Item $localServicePkgPath $diffServicePkgPath -Recurse
+                Copy-Item -LiteralPath $localServicePkgPath $diffServicePkgPath -Recurse
                 continue
             }
-        
+
             # If the Version of the Service is not changed, don't include the service in the diff package
             if ($clusterServiceManifest.Version -eq $localServiceManifestVersion)
             {
@@ -104,12 +106,14 @@ function Create-DiffPackage
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.DataPackage -localPackages $localServiceManifest.DataPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
 
             Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localServiceManifestPath, (Join-Path $diffServicePkgPath $serviceManifestName)))
-            Copy-Item $localServiceManifestPath (Join-Path $diffServicePkgPath $serviceManifestName) -Force
+            Copy-Item -LiteralPath $localServiceManifestPath (Join-Path $diffServicePkgPath $serviceManifestName) -Force
         }
 
         Return $diffPackagePath
 
-    } finally {
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
@@ -143,15 +147,21 @@ function Copy-DiffPackage
         $localPkgPath = Join-Path $localParentPkgPath $localPackage.Name
         $diffPkgPath = Join-Path $diffParentPkgPath $localPackage.Name
 
-        if (Test-Path -Path ($localPkgPath + ".zip"))
+        if (Test-Path -LiteralPath ($localPkgPath + ".zip"))
         {
             $localPkgPath += ".zip"
             $diffPkgPath += ".zip"
         }
+        # The Code package for containerized service does not exist, but we want to continue the deployment
+        elseif (!(Test-Path -LiteralPath $localPkgPath))
+        {
+            Write-Host (Get-VstsLocString -Key DIFFPKG_PackageDoesNotExist -ArgumentList @($localPkgPath))
+            continue
+        }
 
         Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localPkgPath, $diffPkgPath))
         # Copy the package on this level to diff package which is considered to be Leaf
-        Copy-Item $localPkgPath $diffPkgPath -Recurse
+        Copy-Item -LiteralPath $localPkgPath $diffPkgPath -Recurse
     }
     return
 }

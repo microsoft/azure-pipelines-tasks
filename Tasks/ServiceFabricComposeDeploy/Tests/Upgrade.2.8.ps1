@@ -30,13 +30,13 @@ Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SD
 
 # Setup mock VSTS service endpoint
 $vstsEndpoint = @{
-    "url" = $connectionEndpointFullUrl
+    "url"  = $connectionEndpointFullUrl
     "Auth" = @{
-        "Scheme" = "UserNamePassword"
+        "Scheme"     = "UserNamePassword"
         "Parameters" = @{
             "ServerCertThumbprint" = $serverCertThumbprint
-            "Username" = $userName
-            "Password" = $password
+            "Username"             = $userName
+            "Password"             = $password
         }
     }
 }
@@ -52,32 +52,32 @@ Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsof
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
 $deploymentStatus = @{
-    "ApplicationName" = $applicationName
-    "DeploymentName" = $deploymentName
+    "ApplicationName"         = $applicationName
+    "DeploymentName"          = $deploymentName
     "ComposeDeploymentStatus" = "Ready"
-    "StatusDetails" = ""
+    "StatusDetails"           = ""
 }
 
 $deploymentUpgraded = @{
-    "ApplicationName" = $applicationName
-    "DeploymentName" = $deploymentName
-    "UpgradeState" = "RollingForwardCompleted"
+    "ApplicationName"      = $applicationName
+    "DeploymentName"       = $deploymentName
+    "UpgradeState"         = "RollingForwardCompleted"
     "UpgradeStatusDetails" = ""
 }
 $applicationUpgraded = @{
     "ApplicationName" = $applicationName
-    "UpgradeState" = "RollingForwardCompleted"
+    "UpgradeState"    = "RollingForwardCompleted"
 }
 
 $deploymentUpgrading = @{
-    "ApplicationName" = $applicationName
-    "DeploymentName"  = $deploymentName
-    "UpgradeState" = "RollingForwardInProgress"
+    "ApplicationName"      = $applicationName
+    "DeploymentName"       = $deploymentName
+    "UpgradeState"         = "RollingForwardInProgress"
     "UpgradeStatusDetails" = ""
 }
 $applicationUpgrading = @{
     "ApplicationName" = $applicationName
-    "UpgradeState" = "RollingForwardInProgress"
+    "UpgradeState"    = "RollingForwardInProgress"
 }
 
 # Need to store the bool in an object so the lambdas will share the reference

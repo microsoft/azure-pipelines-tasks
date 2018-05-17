@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Восстановление компонентов Xamarin",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?LinkId=786653)",
+  "loc.description": "Восстановление компонентов Xamarin для указанного решения",
+  "loc.instanceNameFormat": "Восстановление компонентов Xamarin $(solution)",
+  "loc.input.label.solution": "Path to solution",
+  "loc.input.help.solution": "Путь к файлу решения Visual Studio",
+  "loc.input.label.email": "Электронная почта",
+  "loc.input.help.email": "Адрес электронной почты учетной записи Xamarin.",
+  "loc.input.label.password": "Пароль",
+  "loc.input.help.password": "Пароль учетной записи Xamarin. Чтобы зашифровать это значение, используйте новую переменную сборки с включенной блокировкой на вкладке \"Переменные\".",
+  "loc.messages.XamarinComponentRestoreReturnCode": "Выход xamarin-component.exe с кодом возврата: %d",
+  "loc.messages.XamarinComponentRestoreFailed": "Сбой xamarin-component.exe с ошибкой: %s"
+}

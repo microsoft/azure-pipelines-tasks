@@ -1,0 +1,65 @@
+# Python package
+# Create and test a Python package on multiple Python versions. Then, upload it to a Python package index.
+# https://aka.ms/yaml
+
+phases:
+
+# Phase 1: Test
+- phase: 'Test'
+  queue:
+    name: 'Hosted Linux Preview'
+    parallel: 1
+    matrix:
+      Python27:
+        python.version: '2.7'
+      Python35:
+        python.version: '3.5'
+      Python36:
+        python.version: '3.6'
+      Python37-dev:
+        python.version: '>= 3.7.0a'
+  steps:
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip && pip install -r requirements.txt
+    displayName: 'Install dependencies'
+
+  # - script: 'pip install flake8 && flake8'
+  #   displayName: 'Flake8'
+
+  - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
+    displayName: 'pytest'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/test-results.xml'
+      testRunTitle: 'Python $(python.version)'
+
+# Phase 2: Publish
+- phase: 'Publish'
+  dependsOn: 'Test'
+  queue: 'Hosted Linux Preview'
+  steps:
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      architecture: 'x64'
+
+  - script: python setup.py sdist
+    displayName: 'Build sdist'
+
+#  - task: PublishBuildArtifacts@1
+#    inputs:
+#      pathToPublish: 'dist'
+#      artifactName: 'dist'
+
+#  - task: PyPIPublisher@0
+#    inputs:
+#      pypiConnection: ''
+#      packageDirectory: '$(build.sourcesDirectory)'
+#      alsoPublishWheel: false
