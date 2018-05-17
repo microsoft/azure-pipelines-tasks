@@ -21,13 +21,14 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
         if(endpointName && registerNameValue) {
           try
           {
+            tl.debug("Reading the acr registry in old versions");
             var obj = JSON.parse(registerNameValue);  
             this.registryURL = obj.loginServer;
             this.acrFragmentUrl = obj.id;
           }  
           catch(e)
           {
-            tl.debug("normal registry");
+            tl.debug("Reading the acr registry in kubernetesV1");
             this.registryURL = registerNameValue;
           }
 

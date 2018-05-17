@@ -110,6 +110,10 @@ let a = {
         [KubconfigFile]: true
     },
     "exec": {
+        "kubectl get pods --dry-run":{
+            "code": 0,
+            "stdout": "successfully ran get pods command"
+        }
     }
 };
 
@@ -118,6 +122,7 @@ a.exist[ConfigurationFilePath] = true;
 a.exist[ConfigMapFilePath] = true;
 a.exist[KubectlPath] = true;
 a.exist[ConfigMapDirectoryPath] = true;
+a.exist[newUserDirPath] = true;
 
 if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
 {

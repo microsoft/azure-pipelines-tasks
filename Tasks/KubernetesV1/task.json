@@ -54,7 +54,8 @@
             "required": true,
             "options": {
                 "Azure Resource Manager": "Azure Resource Manager",
-                "Kubernetes Service Connection": "Kubernetes Service Connection"
+                "Kubernetes Service Connection": "Kubernetes Service Connection",
+                "Not Applicable": "Not Applicable"
             },
             "helpMarkDown": "Select a connection type."
         },
@@ -64,7 +65,8 @@
             "type": "connectedService:kubernetes",
             "label": "Kubernetes service connection",
             "visibleRule": "connectionType = Kubernetes Service Connection",
-            "helpMarkDown": "Select a Kubernetes service connection."
+            "helpMarkDown": "Select a Kubernetes service connection.",
+            "required": true
         },
         {
             "name": "azureSubscriptionEndpoint",
@@ -351,7 +353,7 @@
             "target": "azureContainerRegistry",
             "endpointId": "$(azureSubscriptionEndpoint2)",
             "dataSourceName": "AzureRMContainerRegistries",
-            "resultTemplate": "{{{properties.loginServer}}}"      
+            "resultTemplate": "{\"Value\":\"{{{properties.loginServer}}}\",\"DisplayValue\":\"{{{name}}}\"}"
         },
         {
             "target": "kubernetesCluster",
@@ -369,12 +371,19 @@
         }
     ],
     "instanceNameFormat": "kubectl $(command)",
+    "outputVariables": [
+	    {
+            "name" : "KubectlOutput",
+            "description": "Stores the output of the kubectl command"
+        } 
+    ],
     "execution": {
         "Node": {
             "target": "src//kubernetes.js"
         }
     },
     "messages": {
+        "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
         "DownloadingClient": "Downloading kubernetes client.",
         "KubernetesClusterResourceGroup" : "Kubernetes cluster %s, resource group %s.",
         "CreatingSecret": "Executing create %s secret.",

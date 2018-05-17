@@ -21,7 +21,8 @@ export let TestEnvVars = {
     versionOrLocation: "__versionOrLocation__",
     versionSpec: "__versionSpec__",
     checkLatest: "__checkLatest__",
-    specifyLocation: "__specifyLocation__"
+    specifyLocation: "__specifyLocation__",
+    KubectlOutput: "__KubectlOutput__"
 };
 
 export let OperatingSystems = {
@@ -51,7 +52,8 @@ export let ContainerTypes = {
 
 export let ConnectionType = {
     AzureResourceManager: "Azure Resource Manager",
-    KubernetesServiceConnection: "Kubernetes Service Connection"
+    KubernetesServiceConnection: "Kubernetes Service Connection",
+    NotApplicable: "Not Applicable"
 }
 
 /**

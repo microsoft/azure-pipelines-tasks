@@ -51,6 +51,22 @@ describe('Kubernetes Suite', function() {
         done();
     });
 
+    it('Run successfully when the connectionType is Not applicable', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods --dry-run";    
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionType.NotApplicable;        
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`[command]kubectl get pods --dry-run`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    });
+ 
     it('Run successfully when the user provides a specific location for kubectl', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -483,5 +499,5 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
-    }); 
+    });
 });

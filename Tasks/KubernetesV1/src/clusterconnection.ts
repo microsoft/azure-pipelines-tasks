@@ -20,20 +20,30 @@ export default class ClusterConnection {
         this.userDir = utils.getNewUserDirPath();
     }
 
-    private getClusterType(): any {
-        var connectionType = tl.getInput("connectionType", true);
+    private getClusterType(connectionType: string): any {
         if(connectionType === "Azure Resource Manager") {
-            return require("./clusters/armkubernetescluster")  
+            return require("./clusters/armkubernetescluster");
         }
-        
-        return require("./clusters/generickubernetescluster")
+        else if (connectionType === 'Kubernetes Service Connection'){
+            return require("./clusters/generickubernetescluster");
+        }
+        else
+        {
+            return null;
+        }
     }
     
     // get kubeconfig file path
     private async getKubeConfig(): Promise<string> {
-        return this.getClusterType().getKubeConfig().then((config) => {
-            return config;
-        });
+        var connectionType = tl.getInput("connectionType", true);
+        if(connectionType != 'Not Applicable')
+        {
+            return this.getClusterType(connectionType).getKubeConfig().then((config) => {
+                return config;
+            });
+        }
+
+        return null;     
     }
 
     private async initialize(): Promise<void> {
@@ -42,7 +52,7 @@ export default class ClusterConnection {
             return this.getKubectl().then((kubectlpath)=> {
                 this.kubectlPath = kubectlpath; 
                 // prepend the tools path. instructs the agent to prepend for future tasks
-                if(!process.env['PATH'].startsWith(path.dirname(this.kubectlPath))) {
+                if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
                     toolLib.prependPath(path.dirname(this.kubectlPath));
                 }             
             });
@@ -63,14 +73,20 @@ export default class ClusterConnection {
     public async open(){
         var kubeconfig = await this.getKubeConfig();
          return this.initialize().then(() => {
-            this.kubeconfigFile = path.join(this.userDir, "config");
-            fs.writeFileSync(this.kubeconfigFile, kubeconfig);
+            if (kubeconfig != null)
+            {
+                this.kubeconfigFile = path.join(this.userDir, "config");
+                fs.writeFileSync(this.kubeconfigFile, kubeconfig);
+            }
          });
     }
 
     // close kubernetes connection
     public close(): void {
-        // all configuration are in agent temp directory. Hence automatically deleted.
+        if (this.kubeconfigFile != null && fs.exists(this.kubeconfigFile))
+        {          
+           fs.rmdirSync(this.kubeconfigFile);
+        }
     }
 
     //excute kubernetes command
@@ -83,21 +99,6 @@ export default class ClusterConnection {
             errlines.forEach(line => tl.error(line));
             throw error;
         });
-    }
-
-    // download kubernetes cluster config file from endpoint
-    private downloadKubeconfigFileFromEndpoint(kubernetesEndpoint: string) : void {
-        this.kubeconfigFile = path.join(this.userDir, "config");
-        var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
-        fs.writeFileSync(this.kubeconfigFile, kubeconfig);
-    }
-
-    private getExecutableExtention(): string {
-        if(os.type().match(/^Win/)){
-            return ".exe";
-        }
-
-        return "";
     }
 
     private async getKubectl() : Promise<string> {

@@ -42,7 +42,7 @@ try
            connection.close();
        }
     ).catch((error) => {
-       tl.setResult(tl.TaskResult.Failed, error.message)
+       tl.setResult(tl.TaskResult.Failed, error.message);
        connection.close();
     });
 }
@@ -71,5 +71,7 @@ async function run(clusterConnection: ClusterConnection, registryAuthenticationT
 function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
     var command = tl.getInput("command", true);
     var result = "";
-    return kubectl.run(clusterConnection, command, (data) => result += data);
+    return kubectl.run(clusterConnection, command, (data) => result += data).fin(function cleanup() {
+         tl.setVariable('KubectlOutput', result);
+    });
 }

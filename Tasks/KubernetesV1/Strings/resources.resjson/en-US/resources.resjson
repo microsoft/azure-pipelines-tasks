@@ -64,6 +64,7 @@
   "loc.input.help.specifyLocation": "Full path to the kubectl.exe",
   "loc.input.label.cwd": "Working directory",
   "loc.input.help.cwd": "Working directory for the Kubectl command.",
+  "loc.messages.CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
   "loc.messages.DownloadingClient": "Downloading kubernetes client.",
   "loc.messages.KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
   "loc.messages.CreatingSecret": "Executing create %s secret.",
