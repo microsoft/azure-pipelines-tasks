@@ -134,6 +134,15 @@
             "visibleRule": "registryCredentials = UsernamePassword"
         },
         {
+            "name": "upgrade",
+            "type": "boolean",
+            "label": "Upgrade",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Upgrade an existing deployment rather than removing it.",
+            "groupName": "advanced"
+        },
+        {
             "name": "deployTimeoutSec",
             "type": "string",
             "label": "Deploy Timeout (s)",

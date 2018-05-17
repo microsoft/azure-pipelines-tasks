@@ -22,6 +22,7 @@ try
     $deployTimeoutSec = Get-VstsInput -Name deployTimeoutSec
     $removeTimeoutSec = Get-VstsInput -Name removeTimeoutSec
     $getStatusTimeoutSec = Get-VstsInput -Name getStatusTimeoutSec
+    $upgrade = (Get-VstsInput -Name upgrade) -eq "true"
 
     $apiVersion = '2.8'
     $regKey = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric SDK\' -ErrorAction SilentlyContinue
@@ -176,7 +177,7 @@ try
     $existingApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
     if ($existingApplication -ne $null)
     {
-        if ($apiVersion -eq "2.8")
+        if ($apiVersion -eq "2.8" -and $upgrade)
         {
             $upgrading = $true
         }

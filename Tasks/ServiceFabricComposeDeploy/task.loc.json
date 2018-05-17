@@ -134,6 +134,15 @@
       "visibleRule": "registryCredentials = UsernamePassword"
     },
     {
+      "name": "upgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.upgrade",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.upgrade",
+      "groupName": "advanced"
+    },
+    {
       "name": "deployTimeoutSec",
       "type": "string",
       "label": "ms-resource:loc.input.label.deployTimeoutSec",

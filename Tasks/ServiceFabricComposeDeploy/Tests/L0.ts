@@ -36,6 +36,9 @@ describe('ServiceFabricComposeDeploy Suite', function () {
         it('Deploy Preview', (done) => {
             psr.run(path.join(__dirname, 'DeployPreview.ps1'), done);
         })
+        it('Replace 2.8', (done) => {
+            psr.run(path.join(__dirname, 'Replace.2.8.ps1'), done);
+        })
         it('Upgrade 2.7', (done) => {
             psr.run(path.join(__dirname, 'Upgrade.2.7.ps1'), done);
         })
