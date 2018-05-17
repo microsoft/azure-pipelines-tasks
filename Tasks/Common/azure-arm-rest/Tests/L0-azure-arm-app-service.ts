@@ -39,6 +39,10 @@ export function AzureAppServiceMockTests() {
             getMetadata(tr);
             console.log("\tvalidating updateMetadata");
             updateMetadata(tr);
+            console.log("\tvalidating getConnectionstrings");
+            getConnectionstrings(tr);
+            console.log("\tvalidating updateConnectionstrings");
+            updateConnectionstrings(tr);
         }
         catch(error) {
             passed = false;
@@ -82,8 +86,8 @@ function swap(tr) {
     assert(tr.stdOutContained('SwappingAppServiceSlotSlots MOCK_APP_SERVICE_NAME production MOCK_TARGET_SLOT'), 'Should have printed: SwappingAppServiceSlotSlots MOCK_APP_SERVICE_NAME production MOCK_TARGET_SLOT');
     assert(tr.stdOutContained('SwappedAppServiceSlotSlots MOCK_APP_SERVICE_NAME production MOCK_TARGET_SLOT'), 'Should have printed: SwappedAppServiceSlotSlots MOCK_APP_SERVICE_NAME production MOCK_TARGET_SLOT');
     assert(tr.stdOutContained('SwappingAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT'), 'Should have printed: SwappingAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT');
-    assert(tr.stdOutContained('Error: FailedToSwapAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT one of the slots is in stopped state. (CODE: 409)'),
-        'Should have printed: Error: FailedToSwapAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT one of the slots is in stopped state. (CODE: 409)');
+    assert(tr.stdOutContained('Error: FailedToSwapAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT one of the slots is in stopped state. (CODE: 501)'),
+        'Should have printed: Error: FailedToSwapAppServiceSlotSlots MOCK_APP_SERVICE_NAME MOCK_SLOT_NAME MOCK_TARGET_SLOT one of the slots is in stopped state. (CODE: 501)');
 }
 
 function get(tr) {
@@ -157,4 +161,18 @@ function updateMetadata(tr) {
         'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_METADATA UPDATE ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata');
     assert(tr.stdOutContained(' FailedToUpdateAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
         'Should have printed: FailedToUpdateAppServiceMetadata MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
+}
+
+function getConnectionstrings(tr) {
+    assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_CONNECTIONSTRINGS GET ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/connectionstrings'),
+        'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_CONNECTIONSTRINGS GET ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/connectionstrings');
+    assert(tr.stdOutContained(' FailedToGetAppServiceConnectionStrings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed:  FailedToGetAppServiceConnectionStrings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
+}
+
+function updateConnectionstrings(tr) {
+    assert(tr.stdOutContained('MOCK_APP_SERVICE_NAME CONFIG_CONNECTIONSTRINGS UPDATE ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/connectionstrings'),
+        'Should have printed: MOCK_APP_SERVICE_NAME CONFIG_CONNECTIONSTRINGS UPDATE ID: /subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/connectionstrings');
+    assert(tr.stdOutContained(' FailedToUpdateAppServiceConnectionStrings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)'), 
+        'Should have printed: FailedToUpdateAppServiceConnectionStrings MOCK_APP_SERVICE_NAME-MOCK_SLOT_NAME internal error occurred (CODE: 501)');
 }
