@@ -12,11 +12,10 @@
   "loc.input.help.arguments": "Arguments passed to the script execution, available through `sys.argv`.",
   "loc.input.label.script": "Script",
   "loc.input.help.script": "The Python script to run",
-  "loc.input.label.pythonInterpreter": "Python Interpreter",
+  "loc.input.label.pythonInterpreter": "Python interpreter",
   "loc.input.help.pythonInterpreter": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.",
   "loc.input.label.workingDirectory": "Working directory",
   "loc.input.label.failOnStderr": "Fail on standard error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any text are written to the stderr stream.",
-  "loc.messages.NotAFile": "The given path was not to a file: '%s'.",
-  "loc.messages.ScriptContents": "Script contents:"
+  "loc.messages.NotAFile": "The given path was not to a file: '%s'."
 }

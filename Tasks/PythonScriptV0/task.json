@@ -77,7 +77,7 @@
         {
             "name": "pythonInterpreter",
             "type": "filePath",
-            "label": "Python Interpreter",
+            "label": "Python interpreter",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.",
