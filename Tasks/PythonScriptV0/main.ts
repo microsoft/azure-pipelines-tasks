@@ -10,7 +10,7 @@ import { pythonScript } from './pythonscript';
             filePath: task.getPathInput('filePath', true),
             arguments: task.getInput('arguments'),
             script: task.getInput('script'),
-            pythonInterpreter: task.getPathInput('pythonInterpreter'),
+            // pythonInterpreter: task.getPathInput('pythonInterpreter'),
             workingDirectory: task.getPathInput('workingDirectory'),
             failOnStderr: task.getBoolInput('failOnStderr')
         });
