@@ -69,7 +69,7 @@ export function copySetParamFileIfItExists(setParametersFile: string) : string {
  */
 export function canUseWebDeploy(useWebDeploy: boolean) {
     var win = tl.osType().match(/^Win/);
-    return (useWebDeploy || win);
+    return (useWebDeploy && win);
 }
 
 
