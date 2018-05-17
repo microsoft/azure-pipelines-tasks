@@ -108,7 +108,6 @@
     }
   },
   "messages": {
-    "NotAFile": "ms-resource:loc.messages.NotAFile",
-    "ScriptContents": "ms-resource:loc.messages.ScriptContents"
+    "NotAFile": "ms-resource:loc.messages.NotAFile"
   }
 }
