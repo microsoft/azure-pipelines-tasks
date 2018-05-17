@@ -66,7 +66,7 @@
       "label": "ms-resource:loc.input.label.script",
       "visibleRule": "targetType = inline",
       "required": true,
-      "defaultValue": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"\n\n# Use the environment variables input below to pass secret variables to this script.",
+      "defaultValue": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script",
       "properties": {
         "resizable": "true",
         "rows": "10",
@@ -75,43 +75,20 @@
       "helpMarkDown": ""
     },
     {
-      "name": "errorActionPreference",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.errorActionPreference",
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "defaultValue": "",
       "required": false,
-      "defaultValue": "stop",
-      "options": {
-        "stop": "Stop",
-        "continue": "Continue",
-        "silentlyContinue": "SilentlyContinue"
-      },
-      "helpMarkDown": "ms-resource:loc.input.help.errorActionPreference"
+      "groupName": "advanced"
     },
     {
       "name": "failOnStderr",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.failOnStderr",
-      "required": false,
       "defaultValue": "false",
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failOnStderr",
-      "groupName": "advanced"
-    },
-    {
-      "name": "ignoreLASTEXITCODE",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.ignoreLASTEXITCODE",
-      "required": false,
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.ignoreLASTEXITCODE",
-      "groupName": "advanced"
-    },
-    {
-      "name": "workingDirectory",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.workingDirectory",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
       "groupName": "advanced"
     }
   ],

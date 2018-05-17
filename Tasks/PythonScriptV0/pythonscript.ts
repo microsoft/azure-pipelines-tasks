@@ -9,41 +9,6 @@ import * as tr from 'vsts-task-lib/toolrunner';
 
 import { Platform } from './taskutil';
 
-// async function run() {
-//     try {
-//         tl.setResourcePath(path.join(__dirname, 'task.json'));
-
-//         // Get inputs.
-//         let input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
-//         switch (input_errorActionPreference.toUpperCase()) {
-//             case 'STOP':
-//             case 'CONTINUE':
-//             case 'SILENTLYCONTINUE':
-//                 break;
-//             default:
-//                 throw new Error(tl.loc('JS_InvalidErrorActionPreference', input_errorActionPreference));
-//         }
-//         let input_failOnStderr = tl.getBoolInput('failOnStderr', false);
-//         let input_ignoreLASTEXITCODE = tl.getBoolInput('ignoreLASTEXITCODE', false);
-//         let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
-//         let input_filePath: string;
-//         let input_arguments: string;
-//         let input_script: string;
-//         let input_targetType: string = tl.getInput('targetType') || '';
-//         if (input_targetType.toUpperCase() == 'FILEPATH') {
-//             input_filePath = tl.getPathInput('filePath', /*required*/ true);
-//             if (!tl.stats(input_filePath).isFile() || !input_filePath.toUpperCase().match(/\.PS1$/)) {
-//                 throw new Error(tl.loc('JS_InvalidFilePath', input_filePath));
-//             }
-
-//             input_arguments = tl.getInput('arguments') || '';
-//         }
-//         else {
-//             input_script = tl.getInput('script', false) || '';
-//         }
-
-
-
 interface TaskParameters {
     // versionSpec: string,
     // addToPath: boolean,
@@ -51,50 +16,54 @@ interface TaskParameters {
 }
 
 export async function pythonScript(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    // Generate the script contents.
+    // // Generate the script contents.
     // console.log(tl.loc('GeneratingScript'));
-    // let contents = [];
-    // // contents.push(`$ErrorActionPreference = '${input_errorActionPreference}'`);
+    // let bashPath: string = tl.which('bash', true);
+    // let contents: string;
     // if (input_targetType.toUpperCase() == 'FILEPATH') {
-    //     contents.push(`. '${input_filePath.replace("'", "''")}' ${input_arguments}`.trim());
-    //     console.log(tl.loc('JS_FormattedCommand', contents[contents.length - 1]));
+    //     // Translate the target file path from Windows to the Linux file system.
+    //     let targetFilePath: string;
+    //     if (process.platform == 'win32') {
+    //         targetFilePath = await translateDirectoryPath(bashPath, path.dirname(input_filePath)) + '/' + path.basename(input_filePath);
+    //     }
+    //     else {
+    //         targetFilePath = input_filePath;
+    //     }
+
+    //     contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
+    //     console.log(tl.loc('JS_FormattedCommand', contents));
     // }
     // else {
-    //     contents.push(input_script);
-    // }
+    //     contents = input_script;
 
-    // if (!input_ignoreLASTEXITCODE) {
-    //     contents.push(`if (!(Test-Path -LiteralPath variable:\LASTEXITCODE)) {`);
-    //     contents.push(`    Write-Host '##vso[task.debug]$LASTEXITCODE is not set.'`);
-    //     contents.push(`} else {`);
-    //     contents.push(`    Write-Host ('##vso[task.debug]$LASTEXITCODE: {0}' -f $LASTEXITCODE)`);
-    //     contents.push(`    exit $LASTEXITCODE`);
-    //     contents.push(`}`);
+    //     // Print one-liner scripts.
+    //     if (contents.indexOf('\n') < 0 && contents.toUpperCase().indexOf('##VSO[') < 0) {
+    //         console.log(tl.loc('JS_ScriptContents'));
+    //         console.log(contents);
+    //     }
     // }
 
     // // Write the script to disk.
     // tl.assertAgent('2.115.0');
     // let tempDirectory = tl.getVariable('agent.tempDirectory');
     // tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-    // let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-    // await fs.writeFile(
+    // let fileName = uuidV4() + '.sh';
+    // let filePath = path.join(tempDirectory, fileName);
+    // await fs.writeFileSync(
     //     filePath,
-    //     '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-    //     { encoding: 'utf8' });            // Since UTF8 encoding is specified, node will
-    // //                                    // encode the BOM into its UTF8 binary sequence.
+    //     contents,
+    //     { encoding: 'utf8' });
 
-    // // Run the script.
-    // //
-    // // Note, prefer "pwsh" over "powershell". At some point we can remove support for "powershell".
-    // //
-    // // Note, use "-Command" instead of "-File" to match the Windows implementation. Refer to
-    // // comment on Windows implementation for an explanation why "-Command" is preferred.
-    // let powershell = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
-    //     .arg('-NoLogo')
-    //     .arg('-NoProfile')
-    //     .arg('-NonInteractive')
-    //     .arg('-Command')
-    //     .arg(`. '${filePath.replace("'", "''")}'`);
+    // // Translate the script file path from Windows to the Linux file system.
+    // if (process.platform == 'win32') {
+    //     filePath = await translateDirectoryPath(bashPath, tempDirectory) + '/' + fileName;
+    // }
+
+    // // Create the tool runner.
+    // let bash = tl.tool(bashPath)
+    //     .arg('--noprofile')
+    //     .arg('--norc')
+    //     .arg(filePath);
     // let options = <tr.IExecOptions>{
     //     cwd: input_workingDirectory,
     //     failOnStdErr: false,
@@ -106,12 +75,13 @@ export async function pythonScript(parameters: Readonly<TaskParameters>, platfor
     // // Listen for stderr.
     // let stderrFailure = false;
     // if (input_failOnStderr) {
-    //     powershell.on('stderr', (data) => {
+    //     bash.on('stderr', (data) => {
     //         stderrFailure = true;
     //     });
     // }
 
-    // let exitCode: number = await powershell.exec(options);
+    // // Run bash.
+    // let exitCode: number = await bash.exec(options);
 
     // // Fail on exit code.
     // if (exitCode !== 0) {
