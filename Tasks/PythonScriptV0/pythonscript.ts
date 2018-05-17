@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
 
 import * as task from 'vsts-task-lib/task';
 import * as toolRunner from 'vsts-task-lib/toolrunner';
@@ -21,17 +20,16 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
     // Get the script to run
     const scriptPath = await (async () => {
         if (parameters.targetType.toLowerCase() === 'filepath') { // Run script file
-            const filePath = parameters.filePath!; // Required if `targetType` is 'filepath'
+            // Required if `targetType` is 'filepath':
+            const filePath = parameters.filePath!;
+
             if (!fs.statSync(filePath).isFile()) {
                 throw new Error(task.loc('NotAFile', filePath));
             }
             return filePath;
         } else { // Run inline script
-            // Print one-line scripts
-            const script = parameters.script!; // Required if `targetType` is 'script'
-            if (!(script.includes('\n') || script.toLowerCase().includes('##vso['))) {
-                console.log(script);
-            }
+            // Required if `targetType` is 'script':
+            const script = parameters.script!;
 
             // Write the script to disk
             task.assertAgent('2.115.0');
