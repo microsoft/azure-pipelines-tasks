@@ -19,7 +19,7 @@ interface TaskParameters {
 
 export async function pythonScript(parameters: Readonly<TaskParameters>): Promise<void> {
     // Get the script to run
-    const scriptPath = (async () => {
+    const scriptPath = await (async () => {
         if (parameters.targetType.toUpperCase() === 'FILEPATH') { // Run script file
             if (!fs.statSync(parameters.filePath).isFile()) {
                 throw new Error(task.loc('NotAFile', parameters.filePath));
@@ -48,7 +48,7 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
     // Create the tool runner
     // const pythonPath = parameters.pythonInterpreter || task.which('python');
     const pythonPath = task.which('python');
-    const python = task.tool(pythonPath);
+    const python = task.tool(pythonPath).arg(scriptPath);
 
     // Run the script
     // TODO use `any` to work around what I suspect are bugs with `IExecOptions`'s type annotations:
