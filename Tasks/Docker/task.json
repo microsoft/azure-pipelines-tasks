@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 3,
+        "Minor": 4,
         "Patch": 12
     },
     "demands": [],
@@ -163,6 +163,19 @@
             "defaultValue": "false",
             "visibleRule": "action = Build an image || action = Push an image || action = Push images",
             "helpMarkDown": "Include the 'latest' tag when building or pushing the Docker image."
+        },
+        {
+            "name": "labels",
+            "type": "multiLine",
+            "properties": {
+                "resizable": "true",
+                "rows": "2",
+                "editorExtension": "ms.vss-services-azure.docker-parameters-grid"
+            },
+            "label": "Labels",
+            "defaultValue":"",
+            "helpMarkDown": "Specify keys and values for label image. For example, --label=key1=value1 --label=key2=\"test image\".",
+            "visibleRule": "action = Build an image"       
         },
         {
             "name": "imageDigestFile",

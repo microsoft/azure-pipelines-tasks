@@ -9,7 +9,8 @@ export let TestEnvVars = {
     imageName: "__imageName__",
     additionalImageTags: "__additionalImageTags__",
     enforceDockerNamingConvention: "__enforceDockerNamingConvention__",
-    memory: "__memory__"
+    memory: "__memory__",
+    labels: "__labels__"
 };
 
 export let OperatingSystems = {

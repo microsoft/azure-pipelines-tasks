@@ -70,6 +70,11 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-t", baseImageName]);
     }
 
+    var imageLabels= tl.getInput("labels");
+    if (imageLabels) {     
+        command.line(imageLabels);
+    }
+
     var memory = tl.getInput("memory");
     if (memory) {
         command.arg(["-m", memory]);
