@@ -12,7 +12,7 @@ interface TaskParameters {
     filePath: string,
     arguments: string,
     script: string,
-    // pythonInterpreter: string,
+    pythonInterpreter: string,
     workingDirectory: string,
     failOnStderr: boolean
 }
@@ -46,8 +46,7 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
     })();
 
     // Create the tool runner
-    // const pythonPath = parameters.pythonInterpreter || task.which('python');
-    const pythonPath = task.which('python');
+    const pythonPath = parameters.pythonInterpreter || task.which('python');
     const python = task.tool(pythonPath).arg(scriptPath);
 
     // Run the script

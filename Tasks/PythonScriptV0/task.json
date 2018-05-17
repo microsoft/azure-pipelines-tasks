@@ -76,7 +76,7 @@
         },
         {
             "name": "pythonInterpreter",
-            "type": "filePath",
+            "type": "string",
             "label": "Python interpreter",
             "defaultValue": "",
             "required": false,

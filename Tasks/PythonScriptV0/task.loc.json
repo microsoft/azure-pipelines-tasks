@@ -76,7 +76,7 @@
     },
     {
       "name": "pythonInterpreter",
-      "type": "filePath",
+      "type": "string",
       "label": "ms-resource:loc.input.label.pythonInterpreter",
       "defaultValue": "",
       "required": false,
