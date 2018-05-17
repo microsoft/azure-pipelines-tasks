@@ -36,9 +36,9 @@
             "label": "Type",
             "required": false,
             "defaultValue": "filePath",
-            "helpMarkDown": "Target script type: File Path or Inline",
+            "helpMarkDown": "Target script type: File path or Inline",
             "options": {
-                "filePath": "File Path",
+                "filePath": "File path",
                 "inline": "Inline"
             }
         },
@@ -58,7 +58,7 @@
             "visibleRule": "targetType = filePath",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters."
+            "helpMarkDown": "Arguments passed to the script execution, available through `sys.argv`."
         },
         {
             "name": "script",
@@ -66,18 +66,27 @@
             "label": "Script",
             "visibleRule": "targetType = inline",
             "required": true,
-            "defaultValue": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script",
+            "defaultValue": "",
             "properties": {
                 "resizable": "true",
                 "rows": "10",
                 "maxLength": "5000"
             },
-            "helpMarkDown": ""
+            "helpMarkDown": "The Python script to run"
+        },
+        {
+            "name": "pythonInterpreter",
+            "type": "filePath",
+            "label": "Python Interpreter",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.",
+            "groupName": "advanced"
         },
         {
             "name": "workingDirectory",
             "type": "filePath",
-            "label": "Working Directory",
+            "label": "Working directory",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced"
@@ -85,10 +94,10 @@
         {
             "name": "failOnStderr",
             "type": "boolean",
-            "label": "Fail on Standard Error",
+            "label": "Fail on standard error",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "If this is true, this task will fail if any errors are written to the StandardError stream.",
+            "helpMarkDown": "If this is true, this task will fail if any text are written to the stderr stream.",
             "groupName": "advanced"
         }
     ],
@@ -99,16 +108,7 @@
         }
     },
     "messages": {
-        "GeneratingScript": "Generating script.",
-        "JS_ExitCode": "PowerShell exited with code '%s'.",
-        "JS_FormattedCommand": "Formatted command: %s",
-        "JS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '%s'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
-        "JS_InvalidFilePath": "Invalid file path '%s'. A path to a .ps1 file is required.",
-        "JS_Stderr": "PowerShell wrote one or more lines to the standard error stream.",
-        "PS_ExitCode": "PowerShell exited with code '{0}'.",
-        "PS_FormattedCommand": "Formatted command: {0}",
-        "PS_InvalidErrorActionPreference": "Invalid ErrorActionPreference '{0}'. The value must be one of: 'Stop', 'Continue', or 'SilentlyContinue'",
-        "PS_InvalidFilePath": "Invalid file path '{0}'. A path to a .ps1 file is required.",
-        "PS_UnableToDetermineExitCode": "Unexpected exception. Unable to determine the exit code from powershell."
+        "NotAFile": "The given path was not to a file: '%s'.",
+        "ScriptContents": "Script contents:"
     }
 }

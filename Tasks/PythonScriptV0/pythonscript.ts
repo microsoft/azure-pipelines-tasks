@@ -2,94 +2,71 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 
-import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
+import * as task from 'vsts-task-lib/task';
+import * as toolRunner from 'vsts-task-lib/toolrunner';
 
-// import * as uuidV4 from 'uuid/v4';
-
-import { Platform } from './taskutil';
+import * as uuidV4 from 'uuid/v4';
 
 interface TaskParameters {
-    // versionSpec: string,
-    // addToPath: boolean,
-    // architecture: string
+    targetType: string,
+    filePath: string,
+    arguments: string,
+    script: string,
+    pythonInterpreter: string,
+    workingDirectory: string,
+    failOnStderr: boolean
 }
 
-export async function pythonScript(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
-    // // Generate the script contents.
-    // console.log(tl.loc('GeneratingScript'));
-    // let bashPath: string = tl.which('bash', true);
-    // let contents: string;
-    // if (input_targetType.toUpperCase() == 'FILEPATH') {
-    //     // Translate the target file path from Windows to the Linux file system.
-    //     let targetFilePath: string;
-    //     if (process.platform == 'win32') {
-    //         targetFilePath = await translateDirectoryPath(bashPath, path.dirname(input_filePath)) + '/' + path.basename(input_filePath);
-    //     }
-    //     else {
-    //         targetFilePath = input_filePath;
-    //     }
+export async function pythonScript(parameters: Readonly<TaskParameters>): Promise<void> {
+    // Get the script to run
+    const scriptPath = (async () => {
+        if (parameters.targetType.toUpperCase() === 'FILEPATH') { // Run script file
+            if (!fs.statSync(parameters.filePath).isFile()) {
+                throw new Error(task.loc('NotAFile', parameters.filePath));
+            }
+            return parameters.filePath;
+        } else { // Run inline script
+            // Print one-liner scripts.
+            if (parameters.script.indexOf('\n') < 0 && parameters.script.toUpperCase().indexOf('##VSO[') < 0) {
+                console.log(task.loc('ScriptContents'));
+                console.log(parameters.script);
+            }
 
-    //     contents = `. '${targetFilePath.replace("'", "'\\''")}' ${input_arguments}`.trim();
-    //     console.log(tl.loc('JS_FormattedCommand', contents));
-    // }
-    // else {
-    //     contents = input_script;
+            // Write the script to disk.
+            task.assertAgent('2.115.0');
+            const tempDirectory = task.getVariable('agent.tempDirectory');
+            task.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
+            const filePath = path.join(tempDirectory, `${uuidV4()}.py`);
+            await fs.writeFileSync(
+                filePath,
+                parameters.script,
+                { encoding: 'utf8' });
 
-    //     // Print one-liner scripts.
-    //     if (contents.indexOf('\n') < 0 && contents.toUpperCase().indexOf('##VSO[') < 0) {
-    //         console.log(tl.loc('JS_ScriptContents'));
-    //         console.log(contents);
-    //     }
-    // }
+            return filePath;
+        }
+    })();
 
-    // // Write the script to disk.
-    // tl.assertAgent('2.115.0');
-    // let tempDirectory = tl.getVariable('agent.tempDirectory');
-    // tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-    // let fileName = uuidV4() + '.sh';
-    // let filePath = path.join(tempDirectory, fileName);
-    // await fs.writeFileSync(
-    //     filePath,
-    //     contents,
-    //     { encoding: 'utf8' });
+    // Create the tool runner
+    const pythonPath = parameters.pythonInterpreter || task.which('python');
+    const python = task.tool(pythonPath);
 
-    // // Translate the script file path from Windows to the Linux file system.
-    // if (process.platform == 'win32') {
-    //     filePath = await translateDirectoryPath(bashPath, tempDirectory) + '/' + fileName;
-    // }
+    let stderrFailure = false;
+    if (parameters.failOnStderr) { // Listen for stderr
+        python.on('stderr', () => {
+            stderrFailure = true;
+        });
+    }
 
-    // // Create the tool runner.
-    // let bash = tl.tool(bashPath)
-    //     .arg('--noprofile')
-    //     .arg('--norc')
-    //     .arg(filePath);
-    // let options = <tr.IExecOptions>{
-    //     cwd: input_workingDirectory,
-    //     failOnStdErr: false,
-    //     errStream: process.stdout, // Direct all output to STDOUT, otherwise the output may appear out
-    //     outStream: process.stdout, // of order since Node buffers it's own STDOUT but not STDERR.
-    //     ignoreReturnCode: true
-    // };
-
-    // // Listen for stderr.
-    // let stderrFailure = false;
-    // if (input_failOnStderr) {
-    //     bash.on('stderr', (data) => {
-    //         stderrFailure = true;
-    //     });
-    // }
-
-    // // Run bash.
-    // let exitCode: number = await bash.exec(options);
-
-    // // Fail on exit code.
-    // if (exitCode !== 0) {
-    //     tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));
-    // }
-
-    // // Fail on stderr.
-    // if (stderrFailure) {
-    //     tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
-    // }
+    // Run the script
+    // TODO cast to `any` to work around what I suspect are bugs with `IExecOptions`'s type annotations:
+    // - optional fields need to be typed as optional
+    // - `errStream` and `outStream` should be `NodeJs.WritableStream`, not `NodeJS.Writable`
+    await python.exec(<any>{
+        cwd: parameters.workingDirectory,
+        failOnStdErr: parameters.failOnStderr,
+        // Direct all output to stdout, otherwise the output may appear out-of-order since Node buffers its own stdout but not stderr
+        errStream: process.stdout,
+        outStream: process.stdout,
+        ignoreReturnCode: false
+    });
 }

@@ -1,19 +1,19 @@
 import * as path from 'path';
 import * as task from 'vsts-task-lib/task';
-import { getPlatform } from './taskutil';
 import { pythonScript } from './pythonscript';
 
 (async () => {
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await pythonScript({
-            // environmentName: task.getInput('environmentName', true),
-            // packageSpecs: task.getInput('packageSpecs', false),
-            // updateConda: task.getBoolInput('updateConda', false),
-            // createOptions: task.getInput('createOptions', false),
-            // cleanEnvironment: task.getBoolInput('cleanEnvironment', false)
-        },
-        getPlatform());
+            targetType: task.getInput('targetType'),
+            filePath: task.getPathInput('filePath', true),
+            arguments: task.getInput('arguments'),
+            script: task.getInput('script'),
+            pythonInterpreter: task.getPathInput('pythonInterpreter'),
+            workingDirectory: task.getPathInput('workingDirectorys'),
+            failOnStderr: task.getBoolInput('failOnStderr')
+        });
         task.setResult(task.TaskResult.Succeeded, "");
     } catch (error) {
         task.error(error.message);

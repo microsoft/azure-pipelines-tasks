@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/node": "^6.0.101",
     "@types/q": "^1.5.0",
+    "@types/uuid": "^3.4.3",
     "vsts-task-lib": "^2.4.0"
   }
 }
