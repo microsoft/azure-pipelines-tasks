@@ -321,6 +321,58 @@ class AzureAppServiceTests {
         }
     }
 
+    public static async getConnectionstrings() {
+        var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
+        try {
+            var value = await appSerivce.getConnectionstrings();
+            console.log('MOCK_APP_SERVICE_NAME CONFIG_CONNECTIONSTRINGS GET ID: ' + value.id);
+        }
+        catch(error) {
+            console.log(error);
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.getConnectionStrings() should have passed but failed');
+        }
+        
+        var appSerivceSlot: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME", "MOCK_SLOT_NAME");
+        try {
+            await appSerivceSlot.getConnectionstrings();
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.getConnectionStrings() should have failed but passed');
+        }
+        catch(error) {
+            console.log(error);
+        }
+    }
+
+    public static async updateConnectionstrings() {
+        var appSettings = {
+            id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/MOCK_APP_SERVICE_NAME/config/metadata",
+            name: "MOCK_APP_SERVICE_NAME",
+            type: "Microsoft.Web/sites",
+            kind: "app",
+            location: "South Central US",
+            properties: {
+                "alwaysOn": true
+            }
+        };
+
+        var appSerivce: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME");
+        try {
+            var value = await appSerivce.updateConnectionstrings(appSettings);
+            console.log('MOCK_APP_SERVICE_NAME CONFIG_CONNECTIONSTRINGS UPDATE ID: ' + value.id);
+        }
+        catch(error) {
+            console.log(error);
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.updateConnectionStrings() should have passed but failed');
+        }
+        
+        var appSerivceSlot: AzureAppService = new AzureAppService(endpoint, "MOCK_RESOURCE_GROUP_NAME", "MOCK_APP_SERVICE_NAME", "MOCK_SLOT_NAME");
+        try {
+            await appSerivceSlot.updateConnectionstrings(appSettings);
+            tl.setResult(tl.TaskResult.Failed, 'AzureAppServiceTests.updateConnectionStrings() should have failed but passed');
+        }
+        catch(error) {
+            console.log(error);
+        }
+    }
 }
 
 async function RUNTESTS() {
@@ -338,6 +390,8 @@ async function RUNTESTS() {
     await AzureAppServiceTests.patchConfiguration();
     await AzureAppServiceTests.getMetadata();
     await AzureAppServiceTests.updateMetadata();
+    await AzureAppServiceTests.getConnectionstrings();
+    await AzureAppServiceTests.updateConnectionstrings();
 }
 
 RUNTESTS();

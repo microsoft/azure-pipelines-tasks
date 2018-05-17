@@ -361,7 +361,7 @@ export class AzureAppService {
         await this.updateMetadata(applicationSettings);
     }
 
-    public async getConnectionStrings(): Promise<AzureAppServiceConfigurationDetails> {
+    public async getConnectionstrings(): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'POST';
@@ -384,7 +384,7 @@ export class AzureAppService {
         }
     }
 
-    public async updateConnectionStrings(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
+    public async updateConnectionstrings(applicationSettings): Promise<AzureAppServiceConfigurationDetails> {
         try {
             var httpRequest = new webClient.WebRequest();
             httpRequest.method = 'PUT';
@@ -409,12 +409,12 @@ export class AzureAppService {
     }
 
     public async patchConnectionStrings(properties): Promise<void> {
-        var applicationSettings = await this.getConnectionStrings();
+        var applicationSettings = await this.getConnectionstrings();
         for(var key in properties) {
             applicationSettings.properties[key] = properties[key];
         }
 
-        await this.updateConnectionStrings(applicationSettings);
+        await this.updateConnectionstrings(applicationSettings);
     }
 
     public getSlot(): string {
