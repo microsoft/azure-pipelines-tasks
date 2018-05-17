@@ -20,14 +20,14 @@ interface TaskParameters {
 export async function pythonScript(parameters: Readonly<TaskParameters>): Promise<void> {
     // Get the script to run
     const scriptPath = await (async () => {
-        if (parameters.targetType.toUpperCase() === 'FILEPATH') { // Run script file
+        if (parameters.targetType.toLowerCase() === 'filepath') { // Run script file
             if (!fs.statSync(parameters.filePath).isFile()) {
                 throw new Error(task.loc('NotAFile', parameters.filePath));
             }
             return parameters.filePath;
         } else { // Run inline script
             // Print one-line scripts
-            if (parameters.script.indexOf('\n') < 0 && parameters.script.toUpperCase().indexOf('##VSO[') < 0) {
+            if (!(parameters.script.includes('\n') || parameters.script.toLowerCase().includes('##vso['))) {
                 console.log(parameters.script);
             }
 
