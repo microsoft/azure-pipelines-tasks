@@ -59,7 +59,7 @@
             "visibleRule": "targetType = filePath",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters."
+            "helpMarkDown": "Arguments passed to the shell script. Either ordinal parameters or named parameters."
         },
         {
             "name": "script",
