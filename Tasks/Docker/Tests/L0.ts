@@ -20,6 +20,7 @@ describe('Docker Suite', function() {
         delete process.env[shared.TestEnvVars.additionalImageTags];
         delete process.env[shared.TestEnvVars.enforceDockerNamingConvention];
         delete process.env[shared.TestEnvVars.memory];
+        delete process.env[shared.TestEnvVars.labels];
     });
     after(function () {
     });
@@ -114,6 +115,21 @@ describe('Docker Suite', function() {
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t test/test:2 -t test/test`) != -1, "docker build should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Runs successfully for docker build label image', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.labels] = "--label=label1=1 --label=label2=testimage";
+        tr.run();
+
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} -t test/test:2 --label=label1=1 --label=label2=testimage`) != -1, "docker build should run");
         console.log(tr.stderr);
         done();
     });

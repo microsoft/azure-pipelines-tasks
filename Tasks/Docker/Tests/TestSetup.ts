@@ -24,6 +24,7 @@ tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", 
 tr.setInput('additionalImageTags', process.env[shared.TestEnvVars.additionalImageTags] || '');
 tr.setInput('enforceDockerNamingConvention', process.env[shared.TestEnvVars.enforceDockerNamingConvention]);
 tr.setInput('memory', process.env[shared.TestEnvVars.memory] || '');
+tr.setInput('labels', process.env[shared.TestEnvVars.labels] || '');
 
 console.log("Inputs have been set");
 
@@ -113,6 +114,9 @@ a.exec[`docker push ${shared.ImageNamesFileImageName}:latest`] = {
 a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6`] = {
     "code": 0,
     "stdout": "successfully build test/test:2 and test/test:6 image"
+};
+a.exec[`docker build -f ${DockerFilePath} -t test/test:2 --label=label1=1 --label=label2=testimage`] = {
+    "code": 0,    
 };
 
 tr.setAnswers(<any>a);

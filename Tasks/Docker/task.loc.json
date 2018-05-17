@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 3,
+    "Minor": 4,
     "Patch": 12
   },
   "demands": [],
@@ -167,6 +167,19 @@
       "defaultValue": "false",
       "visibleRule": "action = Build an image || action = Push an image || action = Push images",
       "helpMarkDown": "ms-resource:loc.input.help.includeLatestTag"
+    },
+    {
+      "name": "labels",
+      "type": "multiLine",
+      "properties": {
+        "resizable": "true",
+        "rows": "2",
+        "editorExtension": "ms.vss-services-azure.docker-parameters-grid"
+      },
+      "label": "ms-resource:loc.input.label.labels",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.labels",
+      "visibleRule": "action = Build an image"
     },
     {
       "name": "imageDigestFile",

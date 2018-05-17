@@ -34,6 +34,8 @@
   "loc.input.help.includeSourceTags": "Include Git tags when building or pushing the Docker image.",
   "loc.input.label.includeLatestTag": "Include Latest Tag",
   "loc.input.help.includeLatestTag": "Include the 'latest' tag when building or pushing the Docker image.",
+  "loc.input.label.labels": "Labels",
+  "loc.input.help.labels": "Specify keys and values for label image. For example, --label=key1=value1 --label=key2=\"test image\".",
   "loc.input.label.imageDigestFile": "Image Digest File",
   "loc.input.help.imageDigestFile": "Path to a file that is created and populated with the full image repository digest of the Docker image that was pushed.",
   "loc.input.label.containerName": "Container Name",
