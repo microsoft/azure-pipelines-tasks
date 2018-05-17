@@ -18,6 +18,8 @@ $LoadTest,
 $agentCount,
 [String] [Parameter(Mandatory = $true)]
 $runDuration,
+[String] [Parameter(Mandatory = $true)]
+$geoLocation,
 [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
 $machineType
 )
@@ -86,6 +88,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
+Write-Output "Load location = $geoLocation"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
@@ -116,7 +119,10 @@ Write-Output "CLT account Url = $CltAccountUrl" -Verbose
 
 #Upload the test drop
 $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
-$drop = CreateTestDrop $headers $CltAccountUrl
+
+$dropjson = ComposeTestDropJson $LoadTest $agentCount $runDuration $geoLocation
+
+$drop = CreateTestDrop $headers $dropjson $CltAccountUrl
 
 if ($drop.dropType -eq "TestServiceBlobDrop")
 {

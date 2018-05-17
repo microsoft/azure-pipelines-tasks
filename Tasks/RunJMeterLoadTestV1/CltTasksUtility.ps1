@@ -7,24 +7,29 @@ function InvokeRestMethod($headers, $contentType, $uri , $method= "Get", $body)
     return $result
 }
 
-function ComposeTestDropJson($name, $duration, $homepage, $vu, $geoLocation)
+function ComposeTestDropJson($name, $agentCount, $duration, $geoLocation)
 {
+    $coresPerAgent = 2
+    $coreCount = $agentCount*$coresPerAgent
     $tdjson = @"
     {
-        "dropType": "InplaceDrop",
+        "dropType": "TestServiceBlobDrop",
         "loadTestDefinition":{
             "loadTestName":"$name",
+            "agentCount":$agentCount,
             "runDuration":$duration,
-            "urls":["$homepage"],
-            "browserMixs":[
-                {"browserName":"Internet Explorer 11.0","browserPercentage":60.0},
-                {"browserName":"Chrome 2","browserPercentage":40.0}
-            ],
-            "loadPatternName":"Constant",
-            "maxVusers":$vu,
             "loadGenerationGeoLocations":[
                 {"Location":"$geoLocation","Percentage":100}
-            ]
+            ],
+
+            "coresPerAgent": $coresPerAgent,
+            "coreCount": $coreCount,
+            "samplingRate": 15,
+            "thinkTime": 0,
+            "urls": [],
+            "browserMixs": [],
+            "loadPatternName": "Constant",
+            "maxVusers": -1
         }
     }
 "@
@@ -32,10 +37,10 @@ function ComposeTestDropJson($name, $duration, $homepage, $vu, $geoLocation)
     return $tdjson
 }
 
-function CreateTestDrop($headers, $CltAccountUrl)
+function CreateTestDrop($headers, $dropjson, $CltAccountUrl)
 {
     $uri = [String]::Format("{0}/_apis/clt/testdrops?{1}", $CltAccountUrl, $global:apiVersion)
-    $drop = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers -method Post -body "{ ""dropType"": ""TestServiceBlobDrop"" }"
+    $drop = InvokeRestMethod -contentType "application/json" -uri $uri -headers $headers -method Post -body $dropJson
     return $drop
 }
 
