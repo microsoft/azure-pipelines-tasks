@@ -254,16 +254,16 @@ function Upload-FilesToAzureContainer
         {
             $fileInfo = Get-Item $sourcePath
             $resolvedSourcePath = $fileInfo.Directory.FullName
-            $additionalArguments += " /Pattern:$($fileInfo.Name)"
+            $additionalArguments += " /Pattern:`"$($fileInfo.Name)`""
         }
 
         $blobPrefix = $blobPrefix.Trim()
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        Write-Verbose "Executing command: & `"$azCopyExeLocation`" /Source:$resolvedSourcePath /Dest:$containerURL /DestKey:`"*****`" $additionalArguments"
+        Write-Verbose "Executing command: & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"*****`" $additionalArguments"
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$resolvedSourcePath /Dest:$containerURL /DestKey:`"$storageKey`" $additionalArguments"
+        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"$storageKey`" $additionalArguments"
 
         Invoke-Expression $uploadToBlobCommand
 
@@ -293,7 +293,7 @@ function Upload-FilesToAzureContainer
     }
     finally
     {
-        Handle-AzCopyLogs -isLogsPresent $useDefaultArguments -logsFilePath $azCopyLogFilePath -ErrorAction SilentlyContinue
+        Handle-AzCopyLogs -isLogsPresent $useDefaultArguments -logsFilePath "$azCopyLogFilePath" -ErrorAction SilentlyContinue
     }
 }
 
@@ -301,8 +301,8 @@ function Handle-AzCopyLogs
 {
     [CmdletBinding()]
     param(
-        [bool]$isLogsPresent,
-        [string]$logsFilePath
+        [Nullable[bool]]$isLogsPresent,
+        [AllowEmptyString()][string]$logsFilePath
     )
 
     if($isLogsPresent)
