@@ -107,6 +107,7 @@
     }
   },
   "messages": {
-    "NotAFile": "ms-resource:loc.messages.NotAFile"
+    "NotAFile": "ms-resource:loc.messages.NotAFile",
+    "ParameterRequired": "ms-resource:loc.messages.ParameterRequired"
   }
 }

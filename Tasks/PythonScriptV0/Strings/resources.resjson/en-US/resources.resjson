@@ -17,5 +17,6 @@
   "loc.input.label.workingDirectory": "Working directory",
   "loc.input.label.failOnStderr": "Fail on standard error",
   "loc.input.help.failOnStderr": "If this is true, this task will fail if any text are written to the stderr stream.",
-  "loc.messages.NotAFile": "The given path was not to a file: '%s'."
+  "loc.messages.NotAFile": "The given path was not to a file: '%s'.",
+  "loc.messages.ParameterRequired": "The `%s` parameter is required"
 }

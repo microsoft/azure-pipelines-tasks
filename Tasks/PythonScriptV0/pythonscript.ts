@@ -16,20 +16,40 @@ interface TaskParameters {
     failOnStderr?: boolean
 }
 
+/**
+ * Check for a parameter at runtime.
+ * Useful for conditionally-visible, required parameters.
+ */
+function assertParameter<T>(value: T | undefined, propertyName: string): T {
+    if (!value) {
+        throw new Error(task.loc('ParameterRequired', propertyName));
+    }
+
+    return value!;
+}
+
+// TODO Enable with TypeScript 2.8 (ensures correct property name in the error message)
+// function assertParameter<T extends keyof TaskParameters>(parameters: TaskParameters, propertyName: T): NonNullable<TaskParameters[T]> {
+//     const param = parameters[propertyName];
+//     if (!param) {
+//         throw new Error(task.loc('ParameterRequired', propertyName));
+//     }
+
+//     return param!;
+// }
+
 export async function pythonScript(parameters: Readonly<TaskParameters>): Promise<void> {
     // Get the script to run
     const scriptPath = await (async () => {
         if (parameters.targetType.toLowerCase() === 'filepath') { // Run script file
-            // Required if `targetType` is 'filepath':
-            const filePath = parameters.filePath!;
+            const filePath = assertParameter(parameters.filePath, 'filePath');
 
             if (!fs.statSync(filePath).isFile()) {
                 throw new Error(task.loc('NotAFile', filePath));
             }
             return filePath;
         } else { // Run inline script
-            // Required if `targetType` is 'script':
-            const script = parameters.script!;
+            const script = assertParameter(parameters.script, 'script');
 
             // Write the script to disk
             task.assertAgent('2.115.0');

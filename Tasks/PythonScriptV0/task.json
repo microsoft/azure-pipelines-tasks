@@ -107,6 +107,7 @@
         }
     },
     "messages": {
-        "NotAFile": "The given path was not to a file: '%s'."
+        "NotAFile": "The given path was not to a file: '%s'.",
+        "ParameterRequired": "The `%s` parameter is required"
     }
 }
