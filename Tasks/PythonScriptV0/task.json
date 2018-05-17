@@ -108,7 +108,6 @@
         }
     },
     "messages": {
-        "NotAFile": "The given path was not to a file: '%s'.",
-        "ScriptContents": "Script contents:"
+        "NotAFile": "The given path was not to a file: '%s'."
     }
 }

@@ -26,13 +26,12 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
             }
             return parameters.filePath;
         } else { // Run inline script
-            // Print one-liner scripts.
+            // Print one-line scripts
             if (parameters.script.indexOf('\n') < 0 && parameters.script.toUpperCase().indexOf('##VSO[') < 0) {
-                console.log(task.loc('ScriptContents'));
                 console.log(parameters.script);
             }
 
-            // Write the script to disk.
+            // Write the script to disk
             task.assertAgent('2.115.0');
             const tempDirectory = task.getVariable('agent.tempDirectory');
             task.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
