@@ -868,7 +868,7 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     taskMarkdown += 'ms.date: ' +
                     new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()) +
                     os.EOL;
-    taskMarkdown += 'monikerRange: \'VSTS\'' + os.EOL;
+    taskMarkdown += 'monikerRange: \'vsts\'' + os.EOL;
     taskMarkdown += '---' + os.EOL + os.EOL;
 
     taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
@@ -969,7 +969,7 @@ var getTaskYaml = function(taskJson) {
     });
 
     // Append endings
-    taskYaml += '```' + os.EOL + os.EOL;
+    taskYaml += '```' + os.EOL;// + os.EOL;
     //taskYaml += '::: moniker-end' + os.EOL + os.EOL;
     //taskYaml += '::: moniker range="< vsts"' + os.EOL + os.EOL;
     //taskYaml += '::: moniker-end' + os.EOL;
