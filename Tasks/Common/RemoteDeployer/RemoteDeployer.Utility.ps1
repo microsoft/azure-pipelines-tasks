@@ -80,7 +80,7 @@ function Get-TemporaryLogsFolder {
         $tempFolderName = [Guid]::NewGuid().ToString()
         $tempLogsFolder = [System.IO.Path]::Combine($agentTempDirectory, $tempFolderName)
         if((Test-Path -LiteralPath $tempLogsFolder -PathType 'Container') -eq $true) {
-            Remove-Item -LiteralPath $tempLogsFolder -Force
+            Get-ChildItem -Path $tempLogsFolder -Force -Recurse | Sort-Object -Property FullName -Descending | Remove-Item -Recurse -Force
         }
         $tempLogsFolder = (New-Item -Path $agentTempDirectory -Name $tempFolderName -ItemType 'Container').FullName
         return $tempLogsFolder
