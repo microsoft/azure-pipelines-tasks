@@ -8,65 +8,45 @@ var semver = require('semver');
 //------------------------------------------------------------------------------
 
 var buildTasksPath = path.join(__dirname, '..', '_build', 'Tasks');
-exports.buildTasksPath = buildTasksPath;
-
 var packagePath = path.join(__dirname, '..', '_package');
-exports.packagePath = packagePath;
-
 var tasksLayoutPath = path.join(packagePath, 'tasks-layout');
-exports.tasksLayoutPath = tasksLayoutPath;
-
 var tasksZipPath = path.join(packagePath, 'tasks.zip');
-exports.tasksZipPath = tasksZipPath;
-
 var hotfixLayoutPath = path.join(packagePath, 'hotfix-layout');
-exports.hotfixLayoutPath = hotfixLayoutPath;
-
 var milestoneLayoutPath = path.join(packagePath, 'milestone-layout');
-exports.milestoneLayoutPath = milestoneLayoutPath;
-
 var milestonePackSourcePath = path.join(packagePath, 'milestone-pack-source');
-exports.milestonePackSourcePath = milestonePackSourcePath;
-
 var milestonePackSourceContentsPath = path.join(packagePath, 'milestone-pack-source', 'contents');
-exports.milestonePackSourceContentsPath = milestonePackSourceContentsPath;
-
 var milestoneNuspecPath = path.join(packagePath, 'vsts-tasks-milestone.nuspec');
-exports.milestoneNuspecPath = milestoneNuspecPath;
-
 var restorePath = path.join(packagePath, 'restore');
-exports.restorePath = restorePath;
-
 var aggregateLayoutPath = path.join(packagePath, 'aggregate-layout');
-exports.aggregateLayoutPath = aggregateLayoutPath;
-
 var aggregatePackSourcePath = path.join(packagePath, 'aggregate-pack-source');
-exports.aggregatePackSourcePath = aggregatePackSourcePath;
-
 var aggregatePackSourceContentsPath = path.join(packagePath, 'aggregate-pack-source', 'contents');
-exports.aggregatePackSourceContentsPath = aggregatePackSourceContentsPath;
-
 var aggregatePackSourceContentsZipPath = path.join(packagePath, 'aggregate-pack-source', 'contents', 'Microsoft.TeamFoundation.Build.Tasks.zip');
-exports.aggregatePackSourceContentsZipPath = aggregatePackSourceContentsZipPath;
-
 var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
-exports.aggregatePackageName = aggregatePackageName;
-
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
-exports.aggregateNuspecPath = aggregateNuspecPath;
-
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
-exports.publishLayoutPath = publishLayoutPath;
-
 var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
-exports.publishPushCmdPath = publishPushCmdPath;
-
-// Nuget package per task paths
-
 var perTaskLayoutPath = path.join(packagePath, 'per-task-layout');
-exports.perTaskLayoutPath = perTaskLayoutPath;
-
 var perTaskPublishPath = path.join(packagePath, 'per-task-publish');
+
+exports.buildTasksPath = buildTasksPath;
+exports.packagePath = packagePath;
+exports.tasksLayoutPath = tasksLayoutPath;
+exports.tasksZipPath = tasksZipPath;
+exports.hotfixLayoutPath = hotfixLayoutPath;
+exports.milestoneLayoutPath = milestoneLayoutPath;
+exports.milestonePackSourcePath = milestonePackSourcePath;
+exports.milestonePackSourceContentsPath = milestonePackSourceContentsPath;
+exports.milestoneNuspecPath = milestoneNuspecPath;
+exports.restorePath = restorePath;
+exports.aggregateLayoutPath = aggregateLayoutPath;
+exports.aggregatePackSourcePath = aggregatePackSourcePath;
+exports.aggregatePackSourceContentsPath = aggregatePackSourceContentsPath;
+exports.aggregatePackSourceContentsZipPath = aggregatePackSourceContentsZipPath;
+exports.aggregatePackageName = aggregatePackageName;
+exports.aggregateNuspecPath = aggregateNuspecPath;
+exports.publishLayoutPath = publishLayoutPath;
+exports.publishPushCmdPath = publishPushCmdPath;
+exports.perTaskLayoutPath = perTaskLayoutPath;
 exports.perTaskPublishPath = perTaskPublishPath;
 
 //------------------------------------------------------------------------------
