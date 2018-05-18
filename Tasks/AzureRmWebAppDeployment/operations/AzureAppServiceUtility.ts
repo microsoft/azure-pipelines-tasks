@@ -130,7 +130,7 @@ export class AzureAppServiceUtility {
 
         console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(properties)));
         await this._appService.patchConfiguration({'properties': properties});
-        console.log(tl.loc('UpdatedAppServiceConnectionstrings'));
+        console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
     public async updateConnectionstrings(connectionstrings: any): Promise<void> {
@@ -151,7 +151,7 @@ export class AzureAppServiceUtility {
 
         console.log(tl.loc('UpdatingAppServiceConnectionstrings', JSON.stringify(connectionstringData)));
         await this._appService.patchConnectionStrings(connectionstringData);
-        console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
+        console.log(tl.loc('UpdatedAppServiceConnectionstrings'));
     }
 
     public async updateAndMonitorAppSettings(properties: any): Promise<void> {
