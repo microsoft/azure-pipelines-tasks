@@ -36,7 +36,7 @@
             "label": "Script source",
             "required": true,
             "defaultValue": "filePath",
-            "helpMarkDown": "Target script type: File path or Inline",
+            "helpMarkDown": "Whether the script is a file in the source tree or is written inline in this task.",
             "options": {
                 "filePath": "File path",
                 "inline": "Inline"
@@ -79,7 +79,7 @@
             "label": "Python interpreter",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.",
+            "helpMarkDown": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.<br /> Run the [Use Python Version](https://go.microsoft.com/fwlink/?linkid=871498) task to put a version of Python in PATH.",
             "groupName": "advanced"
         },
         {
