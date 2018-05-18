@@ -148,12 +148,15 @@
     {
       "endpointId": "tfs:teamfoundation",
       "target": "definition",
-      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?$top=1000",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=1000&continuationToken={{{continuationToken}}}&queryOrder=2",
       "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
       "parameters": {
           "project": "$(project)"
       },
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+      "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",
+      "callbackRequiredTemplate": "{{{#headers.x-ms-continuationtoken}}}true{{{/headers.x-ms-continuationtoken}}}",
+      "initialContextTemplate":"{\"continuationToken\" : \"{{{system.utcNow}}}\"}"
     },
     {
       "endpointId": "tfs:teamfoundation",
