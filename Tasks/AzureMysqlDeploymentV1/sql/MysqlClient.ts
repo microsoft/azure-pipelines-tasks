@@ -4,6 +4,7 @@ import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 import { Utility } from '../operations/MysqlUtiliy';
 import * as telemetry from 'utility-common/telemetry';
 import task = require("vsts-task-lib/task");
+var packageUtility = require('webdeployment-common/packageUtility.js');
 import Q = require('q');
 
 export class MysqlClient implements ISqlClient {
@@ -119,8 +120,9 @@ export class MysqlClient implements ISqlClient {
      * Get connection argument to run script from file or inline
      */
     private _getFileSourceArgument() : string{
+        const sqlFilePath = packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile());
         return this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask' ? 
             " -e" + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"' : 
-            " -e" + '" source ' + this._azureMysqlTaskParameter.getSqlFile() + '"';
+            " -e" + '" source ' + sqlFilePath + '"';
     }
 }
