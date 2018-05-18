@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 27
+        "Patch": 28
     },
     "demands": [
         "msbuild",
@@ -110,7 +110,7 @@
             "type": "string",
             "label": "Resource group rig",
             "required": false,
-            "defaultValue": "",
+            "defaultValue": "default",
             "visibleRule": "MachineType == 2",
             "helpMarkDown": "Name of Resource group hosting the self-provisioned rig of load test agents."
         },
@@ -119,7 +119,7 @@
             "type": "int",
             "label": "No. of agents to use",
             "required": false,
-            "defaultValue": "",
+            "defaultValue": 1,
             "visibleRule": "MachineType == 2",
             "helpMarkDown": "Number of self provisioned agents to use for this test."
         }
