@@ -130,6 +130,27 @@ export class AzureAppServiceUtility {
 
         console.log(tl.loc('UpdatingAppServiceConfigurationSettings', JSON.stringify(properties)));
         await this._appService.patchConfiguration({'properties': properties});
+        console.log(tl.loc('UpdatedAppServiceConnectionstrings'));
+    }
+
+    public async updateConnectionstrings(connectionstrings: any): Promise<void> {
+        try {
+            connectionstrings = JSON.parse(connectionstrings);
+        }
+        catch(exception) {
+            throw new Error(tl.loc('FailedToUpdateAppServiceConnectionStrings', this._appService.getName(), exception.toString()));
+        }
+
+        var connectionstringData = {};
+        for(var connectionstring of connectionstrings) {
+            connectionstringData[connectionstring.name] = {
+                'value': connectionstring.value,
+                'type': connectionstring.type
+            }
+        }
+
+        console.log(tl.loc('UpdatingAppServiceConnectionstrings', JSON.stringify(connectionstringData)));
+        await this._appService.patchConnectionStrings(connectionstringData);
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 

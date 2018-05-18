@@ -65,6 +65,10 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             await this.appServiceUtility.updateConfigurationSettings(customApplicationSettings);
         }
 
+        if(this.taskParams.Connectionstrings) {
+            await this.appServiceUtility.updateConnectionstrings(this.taskParams.Connectionstrings);
+        }
+
         if(this.taskParams.ScriptType) {
             await this.kuduServiceUtility.runPostDeploymentScript(this.taskParams, this.virtualApplicationPath);
         }

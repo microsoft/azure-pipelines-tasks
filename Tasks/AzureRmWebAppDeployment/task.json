@@ -42,8 +42,8 @@
             "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
         },
         {
-            "name": "ApplicationAndConfigurationSettings",
-            "displayName": "Application and Configuration Settings",
+            "name": "ApplicationConfigurationSettingsAndConnectionstrings",
+            "displayName": "Application Settings, Configuration Settings and Connection strings",
             "isExpanded": false,
             "visibleRule": "ConnectionType = AzureRM"
         }
@@ -272,7 +272,7 @@
             "label": "App settings",
             "defaultValue": "",
             "required": false,
-            "groupName": "ApplicationAndConfigurationSettings",
+            "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
             "helpMarkDown": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -284,10 +284,22 @@
             "label": "Configuration settings",
             "defaultValue": "",
             "required": false,
-            "groupName": "ApplicationAndConfigurationSettings",
+            "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
             "helpMarkDown": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
+            }
+        },
+        {
+            "name": "Connectionstrings",
+            "type": "multiLine",
+            "label": "Connection strings",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
+            "helpMarkDown": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.azure-app-service-connectionstring-view"
             }
         },
         {
@@ -559,6 +571,8 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
+        "UpdatingAppServiceConnectionstrings": "Updating App Service Connection strings. Data: %s",
+        "UpdatedAppServiceConnectionstrings": "Updated App Service Connection strings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
@@ -573,6 +587,8 @@
         "PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
         "InvalidConnectionType": "Invalid connection type",
         "InvalidImageSourceType": "Invalid Image source Type",
-        "InvalidPublishProfile": "Publish profile file is invalid."
+        "InvalidPublishProfile": "Publish profile file is invalid.",
+        "FailedToGetAppServiceConnectionStrings": "Failed to get '%s' App Service connection strings. Error: %s.",
+        "FailedToUpdateAppServiceConnectionStrings": "Failed to update '%s' App Service connection strings. Error: %s."
     }
 }

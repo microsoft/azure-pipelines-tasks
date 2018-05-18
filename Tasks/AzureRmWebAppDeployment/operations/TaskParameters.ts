@@ -24,7 +24,8 @@ export class TaskParametersUtility {
             DockerNamespace: tl.getInput('DockerNamespace', false),
             AppSettings: tl.getInput('AppSettings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
-            ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
+            ConfigurationSettings: tl.getInput('ConfigurationSettings', false),
+            Connectionstrings: tl.getInput('Connectionstrings', false)
         }
         
         if(taskParameters.ConnectionType === Constant.ConnectionType.PublishProfile) {
@@ -103,6 +104,7 @@ export interface TaskParameters {
     StartupCommand?: string;
     RuntimeStack?: string;
     ConfigurationSettings?: string;
+    Connectionstrings?: string;
     /** Additional parameters */
     isLinuxApp?: boolean;
     isBuiltinLinuxWebApp?: boolean;
