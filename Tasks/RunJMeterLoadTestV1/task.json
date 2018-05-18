@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 19
+        "Patch": 20
     },
     "demands": [
         "azureps"
@@ -71,6 +71,37 @@
                 "180": "180",
                 "240": "240",
                 "300": "300"
+            }
+        },
+        {
+            "name": "geoLocation",
+            "type": "pickList",
+            "label": "Load Location",
+            "required": false,
+            "helpMarkDown": "Geographical region to generate the load from.",
+            "defaultValue": "Default",
+            "options": {
+                "Default": "Default",
+                "Australia East": "Australia East (New South Wales)",
+                "Australia Southeast": "Australia Southeast (Victoria)",
+                "Brazil South": "Brazil South (Sao Paulo State)",
+                "Central India": "Central India (Pune)",
+                "Central US": "Central US (Iowa)",
+                "East Asia": "East Asia (Hong Kong)",
+                "East US 2": "East US 2 (Virginia)",
+                "East US": "East US (Virginia)",
+                "Japan East": "Japan East (Saitama Prefecture)",
+                "Japan West": "Japan West (Osaka Prefecture)",
+                "North Central US": "North Central US (Illinois)",
+                "North Europe": "North Europe (Ireland)",
+                "South Central US": "South Central US (Texas)",
+                "South India": "South India (Chennai)",
+                "Southeast Asia": "Southeast Asia (Singapore)",
+                "West Europe": "West Europe (Netherlands)",
+                "West US": "West US (California)"
+            },
+            "properties": {
+                "EditableOptions": "True"
             }
         },
         {

@@ -13,5 +13,7 @@
   "loc.input.help.agentCount": "Number of test agents (dual-core) used in the run.",
   "loc.input.label.runDuration": "Run Duration (sec)",
   "loc.input.help.runDuration": "Load test run duration in seconds.",
+  "loc.input.label.geoLocation": "Load Location",
+  "loc.input.help.geoLocation": "Geographical region to generate the load from.",
   "loc.input.label.machineType": "Run load test using"
 }
