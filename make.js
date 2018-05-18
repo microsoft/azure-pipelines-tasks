@@ -445,7 +445,18 @@ target.layout = function() {
     rm('-Rf', packagePath);
 
     var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
+
+    console.log('layout path: ' + layoutPath);
     util.createNugetPackagePerTask(packagePath, layoutPath);
+
+    // create nuget package per task for older major versions of tasks
+    var legacyPath = path.join(__dirname, '_packageLegacy');
+
+    if (test('-d', legacyPath)) {
+        rm('-rf', legacyPath);
+    }
+
+    util.createNugetPackagePerTask(legacyPath, 'E:\\AllTaskMajorVersions');
 }
 
 // used by CI that does official publish

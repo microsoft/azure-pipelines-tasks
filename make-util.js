@@ -1210,13 +1210,22 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     console.log();
     console.log('> Zipping task folders')
 
+    var unifiedDepsContent = '';
+
     fs.readdirSync(layoutPath)
+        // .filter(f => fs.statSync(f).isDirectory())
         .forEach(function (taskFolderName) {
-            if (taskFolderName === 'layout-version.txt') { // TODO: Clean this up. Make sure we have layout-version in each task nuget package? I think we need it? Is it applicable in nuget package per task setup?
+            var taskLayoutPath = path.join(layoutPath, taskFolderName);
+
+            if (!fs.statSync(taskLayoutPath).isDirectory) {
                 return;
             }
 
-            var taskLayoutPath = path.join(layoutPath, taskFolderName);
+            if (taskFolderName === 'layout-version.txt') { // TODO: Clean this up. Make sure we have layout-version in each task nuget package? I think we need it? Is it applicable in nuget package per task setup?
+                return;
+            }
+            
+            
             var taskJsonPath = path.join(taskLayoutPath, 'task.json');
             var taskJsonContents = JSON.parse(fs.readFileSync(taskJsonPath));
 
@@ -1224,6 +1233,10 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             var taskVersion = taskJsonContents.version.Major + '.' + taskJsonContents.version.Minor + '.' + taskJsonContents.version.Patch;
             var taskName = taskJsonContents.name;
             var fullTaskName = 'Mseng.MS.TF.DistributedTask.Tasks.' + taskName;
+
+            // Create xml entries for UnifiedDependencies
+            // <package id="Mseng.MS.TF.Build.Tasks.AzureCLI" version="1.132.0" availableAtDeployTime="true" />
+            unifiedDepsContent += `<package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />` + os.EOL;
 
             // Create a matching folder inside taskZipsPath
             var taskZipPath = path.join(tasksZipsPath, taskFolderName);
@@ -1261,13 +1274,19 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     // Create root push.cmd
     console.log();
     console.log('> Creating root push.cmd')
-    var contents = 'for /D %%s in (.\*) do (';
-    contents +=     'pushd %%s';
-    contents +=     'push.cmd';
-    contents +=     'popd';
+    var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
+    contents +=     'pushd %%s' + os.EOL;
+    contents +=     'push.cmd' + os.EOL;
+    contents +=     'popd' + os.EOL;
     contents += ')';
     var rootPushCmdPath = path.join(artifactsPath, 'push.cmd');
     fs.writeFileSync(rootPushCmdPath, contents);
+
+    // Create xml entries for UnifiedDependencies
+    // <package id="Mseng.MS.TF.Build.Tasks.AzureCLI" version="1.132.0" availableAtDeployTime="true" />
+    console.log('> Generating XML dependencies for UnifiedDependencies');
+    var depsContentPath = path.join(artifactsPath, 'unified_deps.xml');
+    fs.writeFileSync(depsContentPath, unifiedDepsContent);
 }
 exports.createNugetPackagePerTask = createNugetPackagePerTask;
 
