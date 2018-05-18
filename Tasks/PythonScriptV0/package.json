@@ -1,0 +1,25 @@
+{
+  "name": "python-script",
+  "version": "1.0.0",
+  "description": "Create and activate a Conda environment.",
+  "main": "pythonscript.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.5.0",
+    "@types/uuid": "^3.4.3",
+    "vsts-task-lib": "^2.4.0"
+  }
+}
