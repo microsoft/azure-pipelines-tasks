@@ -9,6 +9,7 @@ $invalidInputStorageAccount = "invalidInputStorageAccount"
 $exceptionMessage = "Exception thrown"
 
 Register-Mock Write-Telemetry { }
+Register-Mock Test-Path { return $false }
 
 # Test 1 "Should throw if Invoke-Expression fails"
 Register-Mock Invoke-Expression { throw $exceptionMessage }
@@ -31,6 +32,7 @@ Assert-WasCalled Remove-AzureContainer -Times 1
 # Test 3 "Success in Upload blob destination"
 Unregister-Mock Invoke-Expression
 Register-Mock Invoke-Expression { return $succeededCopyResponse }
+$LASTEXITCODE = 0
 
 Upload-FilesToAzureContainer -sourcePath $validInputSourcePath -storageAccountName $validInputStorageAccount -containerName $validInputContainerName `
                              -blobPrefix $validInputBlobPrefix -storageKey $validStorageKey -azCopyLocation $validAzCopyLocation -destinationType $validInputAzureBlobDestinationType
