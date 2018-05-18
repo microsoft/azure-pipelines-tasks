@@ -77,7 +77,7 @@ export default class VirtualMachineScaleSet {
             //return;
             var extensionMetadata: azureModel.VMExtensionMetadata = this._getCustomScriptExtensionMetadata(osType);
             var customScriptExtension: azureModel.VMExtension = {
-                name: "CustomScriptExtension" + Date.now().toString(),
+                name: "AzureVmssDeploymentTask",
                 properties: {
                     type: extensionMetadata.type,
                     publisher: extensionMetadata.publisher,
@@ -98,7 +98,7 @@ export default class VirtualMachineScaleSet {
 
             // if extension already exists, remove it
             if (!!matchingExtension) {
-                await this._deleteCustomScriptExtension(client, resourceGroupName, matchingExtension);
+                customScriptExtension.name = matchingExtension.name;
             }
 
             await this._installCustomScriptExtension(client, resourceGroupName, customScriptExtension);
