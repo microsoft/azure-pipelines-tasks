@@ -50,7 +50,7 @@
   "loc.input.label.ConfigurationSettings": "Configuration settings",
   "loc.input.help.ConfigurationSettings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
   "loc.input.label.Connectionstrings": "Connection strings",
-  "loc.input.help.Connectionstrings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+  "loc.input.help.Connectionstrings": "Edit App Service connection strings. Click [...] to add, remove or modify connection strings",
   "loc.input.label.TakeAppOfflineFlag": "Take App Offline",
   "loc.input.help.TakeAppOfflineFlag": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully.",
   "loc.input.label.UseWebDeploy": "Publish using Web Deploy",
