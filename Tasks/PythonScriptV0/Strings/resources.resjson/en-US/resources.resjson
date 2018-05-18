@@ -4,10 +4,10 @@
   "loc.description": "Run a Python script.",
   "loc.instanceNameFormat": "Run Python script",
   "loc.group.displayName.advanced": "Advanced",
-  "loc.input.label.targetType": "Type",
-  "loc.input.help.targetType": "Target script type: File path or Inline",
-  "loc.input.label.filePath": "Script Path",
-  "loc.input.help.filePath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
+  "loc.input.label.scriptSource": "Script source",
+  "loc.input.help.scriptSource": "Target script type: File path or Inline",
+  "loc.input.label.scriptPath": "Script path",
+  "loc.input.help.scriptPath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
   "loc.input.label.script": "Script",
   "loc.input.help.script": "The Python script to run",
   "loc.input.label.arguments": "Arguments",
@@ -16,7 +16,7 @@
   "loc.input.help.pythonInterpreter": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.",
   "loc.input.label.workingDirectory": "Working directory",
   "loc.input.label.failOnStderr": "Fail on standard error",
-  "loc.input.help.failOnStderr": "If this is true, this task will fail if any text are written to the stderr stream.",
+  "loc.input.help.failOnStderr": "If this is true, this task will fail if any text is written to the stderr stream.",
   "loc.messages.NotAFile": "The given path was not to a file: '%s'.",
   "loc.messages.ParameterRequired": "The `%s` parameter is required"
 }

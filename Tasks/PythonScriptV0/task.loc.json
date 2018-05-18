@@ -31,31 +31,31 @@
   ],
   "inputs": [
     {
-      "name": "targetType",
+      "name": "scriptSource",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.targetType",
+      "label": "ms-resource:loc.input.label.scriptSource",
       "required": true,
       "defaultValue": "filePath",
-      "helpMarkDown": "ms-resource:loc.input.help.targetType",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptSource",
       "options": {
         "filePath": "File path",
         "inline": "Inline"
       }
     },
     {
-      "name": "filePath",
+      "name": "scriptPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.filePath",
-      "visibleRule": "targetType = filePath",
+      "label": "ms-resource:loc.input.label.scriptPath",
+      "visibleRule": "scriptSource = filePath",
       "required": true,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.filePath"
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
     },
     {
       "name": "script",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
-      "visibleRule": "targetType = inline",
+      "visibleRule": "scriptSource = inline",
       "required": true,
       "defaultValue": "",
       "properties": {

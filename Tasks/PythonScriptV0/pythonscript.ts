@@ -7,8 +7,8 @@ import * as toolRunner from 'vsts-task-lib/toolrunner';
 import * as uuidV4 from 'uuid/v4';
 
 interface TaskParameters {
-    targetType: string,
-    filePath?: string,
+    scriptSource: string,
+    scriptPath?: string,
     script?: string,
     arguments?: string,
     pythonInterpreter?: string,
@@ -41,13 +41,13 @@ function assertParameter<T>(value: T | undefined, propertyName: string): T {
 export async function pythonScript(parameters: Readonly<TaskParameters>): Promise<void> {
     // Get the script to run
     const scriptPath = await (async () => {
-        if (parameters.targetType.toLowerCase() === 'filepath') { // Run script file
-            const filePath = assertParameter(parameters.filePath, 'filePath');
+        if (parameters.scriptSource.toLowerCase() === 'filepath') { // Run script file
+            const scriptPath = assertParameter(parameters.scriptPath, 'scriptPath');
 
-            if (!fs.statSync(filePath).isFile()) {
-                throw new Error(task.loc('NotAFile', filePath));
+            if (!fs.statSync(scriptPath).isFile()) {
+                throw new Error(task.loc('NotAFile', scriptPath));
             }
-            return filePath;
+            return scriptPath;
         } else { // Run inline script
             const script = assertParameter(parameters.script, 'script');
 
@@ -55,13 +55,13 @@ export async function pythonScript(parameters: Readonly<TaskParameters>): Promis
             task.assertAgent('2.115.0');
             const tempDirectory = task.getVariable('agent.tempDirectory');
             task.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-            const filePath = path.join(tempDirectory, `${uuidV4()}.py`);
+            const scriptPath = path.join(tempDirectory, `${uuidV4()}.py`);
             await fs.writeFileSync(
-                filePath,
+                scriptPath,
                 script,
                 { encoding: 'utf8' });
 
-            return filePath;
+            return scriptPath;
         }
     })();
 
