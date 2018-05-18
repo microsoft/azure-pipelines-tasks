@@ -22,22 +22,20 @@ phases:
       versionSpec: '$(PYTHON_VERSION)'
       architecture: 'x64'
 
-  - script: |
-      python - << 'END_DETECT'
-      from glob import iglob
-      from os import path
-
-      # Python >= 3.5
-      manage_py = next(iglob(path.join('**', 'manage.py'), recursive=True), None)
-
-      if not manage_py:
-          raise SystemExit('Could not find a Django project')
-
-      project_location = path.dirname(path.abspath(manage_py))
-
-      print('Found Django project in', project_location)
-      print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
-      END_DETECT
+  - task: PythonScript@0
+    inputs:
+      targetType: 'inline'
+      script: |
+        """Search all subdirectories for `manage.py`."""
+        from glob import iglob
+        from os import path
+        # Python >= 3.5
+        manage_py = next(iglob(path.join('**', 'manage.py'), recursive=True), None)
+        if not manage_py:
+            raise SystemExit('Could not find a Django project')
+        project_location = path.dirname(path.abspath(manage_py))
+        print('Found Django project in', project_location)
+        print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
     name: setvar
     displayName: 'Export project folder name'
       

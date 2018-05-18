@@ -1,6 +1,6 @@
 {
-  "id": "6C731C3C-3C68-459A-A5C9-BDE6E6595B5B",
-  "name": "Bash",
+  "id": "6392F95F-7E76-4A18-B3C7-7F078D2F7700",
+  "name": "PythonScript",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -15,14 +15,13 @@
   ],
   "author": "Microsoft Corporation",
   "version": {
-    "Major": 3,
+    "Major": 0,
     "Minor": 135,
-    "Patch": 1
+    "Patch": 0
   },
-  "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.115.0",
+  "preview": true,
+  "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "showEnvironmentVariables": true,
   "groups": [
     {
       "name": "advanced",
@@ -32,48 +31,56 @@
   ],
   "inputs": [
     {
-      "name": "targetType",
+      "name": "scriptSource",
       "type": "radio",
-      "label": "ms-resource:loc.input.label.targetType",
-      "required": false,
+      "label": "ms-resource:loc.input.label.scriptSource",
+      "required": true,
       "defaultValue": "filePath",
-      "helpMarkDown": "ms-resource:loc.input.help.targetType",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptSource",
       "options": {
-        "filePath": "File Path",
+        "filePath": "File path",
         "inline": "Inline"
       }
     },
     {
-      "name": "filePath",
+      "name": "scriptPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.filePath",
-      "visibleRule": "targetType = filePath",
+      "label": "ms-resource:loc.input.label.scriptPath",
+      "visibleRule": "scriptSource = filePath",
       "required": true,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.filePath"
-    },
-    {
-      "name": "arguments",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.arguments",
-      "visibleRule": "targetType = filePath",
-      "required": false,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+      "helpMarkDown": "ms-resource:loc.input.help.scriptPath"
     },
     {
       "name": "script",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.script",
-      "visibleRule": "targetType = inline",
+      "visibleRule": "scriptSource = inline",
       "required": true,
-      "defaultValue": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script",
+      "defaultValue": "",
       "properties": {
         "resizable": "true",
         "rows": "10",
         "maxLength": "5000"
       },
-      "helpMarkDown": ""
+      "helpMarkDown": "ms-resource:loc.input.help.script"
+    },
+    {
+      "name": "arguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.arguments",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.arguments"
+    },
+    {
+      "name": "pythonInterpreter",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pythonInterpreter",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pythonInterpreter",
+      "groupName": "advanced"
     },
     {
       "name": "workingDirectory",
@@ -95,17 +102,12 @@
   ],
   "execution": {
     "Node": {
-      "target": "bash.js",
+      "target": "main.js",
       "argumentFormat": ""
     }
   },
   "messages": {
-    "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
-    "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
-    "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
-    "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
-    "JS_ScriptContents": "ms-resource:loc.messages.JS_ScriptContents",
-    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
-    "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed"
+    "NotAFile": "ms-resource:loc.messages.NotAFile",
+    "ParameterRequired": "ms-resource:loc.messages.ParameterRequired"
   }
 }

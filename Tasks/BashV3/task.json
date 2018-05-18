@@ -17,7 +17,7 @@
     "version": {
         "Major": 3,
         "Minor": 135,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines and added support for Windows.",
     "minimumAgentVersion": "2.115.0",
@@ -59,7 +59,7 @@
             "visibleRule": "targetType = filePath",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters."
+            "helpMarkDown": "Arguments passed to the shell script. Either ordinal parameters or named parameters."
         },
         {
             "name": "script",
