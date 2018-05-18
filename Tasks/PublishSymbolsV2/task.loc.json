@@ -1,0 +1,168 @@
+{
+  "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
+  "name": "PublishSymbols",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "preview": false,
+  "version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 8
+  },
+  "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": true
+    }
+  ],
+  "inputs": [
+    {
+      "name": "SymbolsFolder",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsFolder",
+      "defaultValue": "$(Build.SourcesDirectory)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsFolder"
+    },
+    {
+      "name": "SearchPattern",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.SearchPattern",
+      "defaultValue": "**/bin/**/*.pdb",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SearchPattern"
+    },
+    {
+      "name": "IndexSources",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.IndexSources",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.IndexSources"
+    },
+    {
+      "name": "PublishSymbols",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.PublishSymbols",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.PublishSymbols"
+    },
+    {
+      "name": "SymbolServerType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.SymbolServerType",
+      "required": true,
+      "defaultValue": " ",
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolServerType",
+      "options": {
+        " ": "Select one",
+        "TeamServices": "Symbol Server in this account/collection (requires Package Management)",
+        "FileShare": "File share"
+      },
+      "visibleRule": "PublishSymbols = true"
+    },
+    {
+      "name": "SymbolsPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsPath",
+      "visibleRule": "PublishSymbols = true && SymbolServerType = FileShare"
+    },
+    {
+      "name": "DetailedLog",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.DetailedLog",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.DetailedLog",
+      "groupName": "advanced"
+    },
+    {
+      "name": "TreatNotIndexedAsWarning",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.TreatNotIndexedAsWarning",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.TreatNotIndexedAsWarning",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsMaximumWaitTime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsMaximumWaitTime",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsMaximumWaitTime",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsProduct",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsProduct",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsProduct",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsVersion",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsVersion",
+      "groupName": "advanced"
+    },
+    {
+      "name": "SymbolsArtifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SymbolsArtifactName",
+      "defaultValue": "Symbols_$(BuildConfiguration)",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.SymbolsArtifactName",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "PublishSymbols.ps1"
+    }
+  },
+  "messages": {
+    "CleanedUpSemaphoreFile0": "ms-resource:loc.messages.CleanedUpSemaphoreFile0",
+    "CleanUpSemaphoreFile0Error1": "ms-resource:loc.messages.CleanUpSemaphoreFile0Error1",
+    "Error0AccessingSemaphoreFile1Retrying2Seconds": "ms-resource:loc.messages.Error0AccessingSemaphoreFile1Retrying2Seconds",
+    "FailedToLoadDbghelpDllFrom0ErrorCode1": "ms-resource:loc.messages.FailedToLoadDbghelpDllFrom0ErrorCode1",
+    "Found0Files": "ms-resource:loc.messages.Found0Files",
+    "FreeLibraryDbghelpDllError0": "ms-resource:loc.messages.FreeLibraryDbghelpDllError0",
+    "NoFilesForIndexing": "ms-resource:loc.messages.NoFilesForIndexing",
+    "NoFilesForPublishing": "ms-resource:loc.messages.NoFilesForPublishing",
+    "NoSourcePathsIn0": "ms-resource:loc.messages.NoSourcePathsIn0",
+    "OneOrMoreSourceFilesNotIndexedFor0": "ms-resource:loc.messages.OneOrMoreSourceFilesNotIndexedFor0",
+    "ReachedPublishingMaxWaitTime0Seconds": "ms-resource:loc.messages.ReachedPublishingMaxWaitTime0Seconds",
+    "SemaphoreFile0ExistsRetrying1Seconds": "ms-resource:loc.messages.SemaphoreFile0ExistsRetrying1Seconds",
+    "SemaphoreFile0Minutes1AttemptingCleanup": "ms-resource:loc.messages.SemaphoreFile0Minutes1AttemptingCleanup",
+    "SkippingIndexing": "ms-resource:loc.messages.SkippingIndexing",
+    "SourceFolderDeprecated0": "ms-resource:loc.messages.SourceFolderDeprecated0",
+    "SourceInfoNotRetrievedFrom0Message1": "ms-resource:loc.messages.SourceInfoNotRetrievedFrom0Message1",
+    "SpacesInTemp": "ms-resource:loc.messages.SpacesInTemp",
+    "SymbolStoreLastIdTxtNotFoundAt0": "ms-resource:loc.messages.SymbolStoreLastIdTxtNotFoundAt0",
+    "UnableToDetermineWorkspaceFromSourceFolder0": "ms-resource:loc.messages.UnableToDetermineWorkspaceFromSourceFolder0",
+    "UnableToIndexSources": "ms-resource:loc.messages.UnableToIndexSources",
+    "UnexpectedDbghelpdllExpected0Actual1": "ms-resource:loc.messages.UnexpectedDbghelpdllExpected0Actual1",
+    "UnsupportedSourceProvider0": "ms-resource:loc.messages.UnsupportedSourceProvider0",
+    "Win32Error0FromMethod1": "ms-resource:loc.messages.Win32Error0FromMethod1"
+  }
+}

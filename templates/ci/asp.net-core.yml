@@ -7,6 +7,8 @@ variables:
   buildConfiguration: 'Release'
 steps:
 
+- task: DotNetCoreInstaller@0
+
 - task: DotNetCoreCLI@1
   inputs:
     command: 'restore'

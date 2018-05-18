@@ -1,5 +1,5 @@
 # Go
-# Build your Go project.
+# Build your Go application.
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux Preview'
@@ -15,11 +15,10 @@ steps:
 - task: Go@0
   inputs:
     command: 'build'
-    arguments: '-o "$(Build.Repository.Name)"'
+    arguments: '-o "$(build.repository.name)"'
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-    includeRootFolder: false
-
-- task: PublishBuildArtifacts@1
+#- task: ArchiveFiles@2
+#  inputs:
+#    rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#    includeRootFolder: false
+#- task: PublishBuildArtifacts@1

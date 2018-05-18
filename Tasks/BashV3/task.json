@@ -16,13 +16,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 127,
-        "Patch": 0
+        "Minor": 135,
+        "Patch": 1
     },
     "releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines and added support for Windows.",
-    "preview": true,
     "minimumAgentVersion": "2.115.0",
     "instanceNameFormat": "Bash Script",
+    "showEnvironmentVariables": true,
     "groups": [
         {
             "name": "advanced",
@@ -59,7 +59,7 @@
             "visibleRule": "targetType = filePath",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters."
+            "helpMarkDown": "Arguments passed to the shell script. Either ordinal parameters or named parameters."
         },
         {
             "name": "script",
@@ -67,7 +67,7 @@
             "label": "Script",
             "visibleRule": "targetType = inline",
             "required": true,
-            "defaultValue": "# Write your commands here",
+            "defaultValue": "# Write your commands here\n\n# Use the environment variables input below to pass secret variables to this script",
             "properties": {
                 "resizable": "true",
                 "rows": "10",

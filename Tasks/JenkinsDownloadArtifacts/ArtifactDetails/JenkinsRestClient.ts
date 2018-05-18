@@ -247,6 +247,10 @@ export class JenkinsRestClient {
                                 }
 
                                 var result = template(jsonResult);
+
+                                // back slash is an illegal character in json.
+                                // when we downloaded the api output has \\, but the previous parse method will strip of a single \. Adding it back.
+                                result = result.replace(/\\/g,"\\\\");
                                 defer.resolve(result);
                             }
                             catch(err) {
@@ -389,6 +393,42 @@ export class JenkinsRestClient {
         });
 
         console.log(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
+
+        return defer.promise;
+    }
+
+    public HasAssociatedArtifacts(artifactQueryUrl: string): Q.Promise<boolean> {
+        let defer = Q.defer<boolean>();
+        this.GetClient().get(artifactQueryUrl).then((response: HttpClientResponse) => {
+            response.readBody().then((body: string) => {
+                if (!!body && response.message.statusCode === 200) {
+                    let jsonResult;
+                    try {
+                        jsonResult = JSON.parse(body);
+
+                        if (!!jsonResult.artifacts && jsonResult.artifacts.length > 0) {
+                            defer.resolve(true);
+                        }
+                        else {
+                            defer.resolve(false);
+                        }
+                    } catch (error) {
+                        defer.reject(error);
+                    }
+                }
+                else {
+                    if (response.message.statusCode) {
+                        console.log(tl.loc('ServerCallErrorCode', response.message.statusCode));
+                    }
+
+                    if (body) {
+                        tl.debug(body);
+                    }
+
+                    defer.reject(new Error(tl.loc('ServerCallFailed')));
+                }
+            })
+        });
 
         return defer.promise;
     }
