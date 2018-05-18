@@ -42,8 +42,8 @@
       "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppkind != functionAppContainer"
     },
     {
-      "name": "ApplicationAndConfigurationSettings",
-      "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
+      "name": "ApplicationConfigurationSettingsAndConnectionstrings",
+      "displayName": "ms-resource:loc.group.displayName.ApplicationConfigurationSettingsAndConnectionstrings",
       "isExpanded": false,
       "visibleRule": "ConnectionType = AzureRM"
     }
@@ -298,7 +298,7 @@
       "label": "ms-resource:loc.input.label.AppSettings",
       "defaultValue": "",
       "required": false,
-      "groupName": "ApplicationAndConfigurationSettings",
+      "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
       "helpMarkDown": "ms-resource:loc.input.help.AppSettings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -310,7 +310,7 @@
       "label": "ms-resource:loc.input.label.ConfigurationSettings",
       "defaultValue": "",
       "required": false,
-      "groupName": "ApplicationAndConfigurationSettings",
+      "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
       "helpMarkDown": "ms-resource:loc.input.help.ConfigurationSettings",
       "properties": {
         "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -327,6 +327,18 @@
       "defaultValue": "false",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.UseWebDeploy"
+    },
+    {
+      "name": "Connectionstrings",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Connectionstrings",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
+      "helpMarkDown": "ms-resource:loc.input.help.Connectionstrings",
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.azure-app-service-connectionstring-view"
+      }
     },
     {
       "name": "DeploymentType",
@@ -612,6 +624,8 @@
     "UpdatedAppServiceConfigurationSettings": "ms-resource:loc.messages.UpdatedAppServiceConfigurationSettings",
     "UpdatingAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatingAppServiceApplicationSettings",
     "UpdatedAppServiceApplicationSettings": "ms-resource:loc.messages.UpdatedAppServiceApplicationSettings",
+    "UpdatingAppServiceConnectionstrings": "ms-resource:loc.messages.UpdatingAppServiceConnectionstrings",
+    "UpdatedAppServiceConnectionstrings": "ms-resource:loc.messages.UpdatedAppServiceConnectionstrings",
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
@@ -636,6 +650,8 @@
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError"
+    "RunFromZipPreventsFileInUseError": "ms-resource:loc.messages.RunFromZipPreventsFileInUseError",
+    "FailedToGetAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToGetAppServiceConnectionStrings",
+    "FailedToUpdateAppServiceConnectionStrings": "ms-resource:loc.messages.FailedToUpdateAppServiceConnectionStrings"
   }
 }

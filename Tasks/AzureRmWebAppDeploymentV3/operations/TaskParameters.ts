@@ -26,7 +26,8 @@ export class TaskParametersUtility {
             ImageSource: tl.getInput('ImageSource', false),
             StartupCommand: tl.getInput('StartupCommand', false),
             WebAppUri: tl.getInput('WebAppUri', false),
-            ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
+            ConfigurationSettings: tl.getInput('ConfigurationSettings', false),
+            Connectionstrings: tl.getInput('Connectionstrings', false)
         }
 
         taskParameters.isLinuxApp = taskParameters.WebAppKind && taskParameters.WebAppKind.indexOf("linux") >= 0;
@@ -110,6 +111,7 @@ export interface TaskParameters {
     RuntimeStack?: string;
     WebAppUri?: string;
     ConfigurationSettings?: string;
+    Connectionstrings?: string;
     /** Additional parameters */
     isLinuxApp?: boolean;
     isBuiltinLinuxWebApp?: boolean;

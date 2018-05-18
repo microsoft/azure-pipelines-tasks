@@ -42,8 +42,8 @@
             "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppkind != functionAppContainer"
         },
         {
-            "name": "ApplicationAndConfigurationSettings",
-            "displayName": "Application and Configuration Settings",
+            "name": "ApplicationConfigurationSettingsAndConnectionstrings",
+            "displayName": "Application Settings, Configuration Settings and Connection strings",
             "isExpanded": false,
             "visibleRule": "ConnectionType = AzureRM"
         }
@@ -298,7 +298,7 @@
             "label": "App settings",
             "defaultValue": "",
             "required": false,
-            "groupName": "ApplicationAndConfigurationSettings",
+            "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
             "helpMarkDown": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -310,7 +310,7 @@
             "label": "Configuration settings",
             "defaultValue": "",
             "required": false,
-            "groupName": "ApplicationAndConfigurationSettings",
+            "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
             "helpMarkDown": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
             "properties": {
                 "editorExtension": "ms.vss-services-azure.parameters-grid"
@@ -327,6 +327,18 @@
             "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "If unchecked we will auto-detect the best deployment method based on your app type, package format and other parameters. <br>Select the option to view the supported deployment methods and choose one for deploying your app."
+        },
+        {
+            "name": "Connectionstrings",
+            "type": "multiLine",
+            "label": "Connection strings",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationConfigurationSettingsAndConnectionstrings",
+            "helpMarkDown": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.azure-app-service-connectionstring-view"
+            }
         },
         {
             "name": "DeploymentType",
@@ -612,6 +624,8 @@
         "UpdatedAppServiceConfigurationSettings": "Updated App Service Configuration settings.",
         "UpdatingAppServiceApplicationSettings": "Updating App Service Application settings. Data: %s",
         "UpdatedAppServiceApplicationSettings": "Updated App Service Application settings and Kudu Application settings.",
+        "UpdatingAppServiceConnectionstrings": "Updating App Service Connection strings. Data: %s",
+        "UpdatedAppServiceConnectionstrings": "Updated App Service Connection strings.",
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
@@ -636,6 +650,8 @@
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "JarPathNotPresent": "Java jar path is not present",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
-        "RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method."
+        "RunFromZipPreventsFileInUseError": "Move from Web Deploy to RunFrom Package, which helps in avoiding FILE_IN_USE error. Note that Run From Package does not support msBuild package type. Please change your package format to use this deployment method.",
+        "FailedToGetAppServiceConnectionStrings": "Failed to get '%s' App Service connection strings. Error: %s.",
+        "FailedToUpdateAppServiceConnectionStrings": "Failed to update '%s' App Service connection strings. Error: %s."
     }
 }
