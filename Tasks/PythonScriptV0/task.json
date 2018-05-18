@@ -79,7 +79,7 @@
             "label": "Python interpreter",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.<br /> Run the [Use Python Version](https://go.microsoft.com/fwlink/?linkid=871498) task to put a version of Python in PATH.",
+            "helpMarkDown": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.<br /> Run the [Use Python Version](https://go.microsoft.com/fwlink/?linkid=871498) task to add a version of Python to PATH.",
             "groupName": "advanced"
         },
         {
