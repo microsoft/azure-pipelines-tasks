@@ -6,11 +6,18 @@ queue: 'Hosted Linux Preview'
 steps:
 
 - task: GoTool@0
+  inputs:
+    version: '1.10'
 
 - task: Go@0
   inputs:
     command: 'get'
-    arguments: '-d'
+    arguments: '-v -t -d'
+
+- task: Go@0
+  inputs:
+    command: 'test'
+    arguments: '-v'
 
 - task: Go@0
   inputs:
