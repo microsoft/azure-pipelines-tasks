@@ -9,7 +9,6 @@ export class TaskParametersUtility {
             WebAppKind: tl.getInput('WebAppKind', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
             VirtualApplication: tl.getInput('VirtualApplication', false),
-            Package: new Package(tl.getPathInput('Package', true)),
             GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
             WebConfigParameters: tl.getInput('WebConfigParameters', false),
             XmlTransformation: tl.getBoolInput('XmlTransformation', false),
@@ -43,6 +42,10 @@ export class TaskParametersUtility {
 
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
+
+        if(!taskParameters.isContainerWebApp){            
+            taskParameters.Package = new Package(tl.getPathInput('Package', true));
+        }
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
@@ -85,7 +88,7 @@ export interface TaskParameters {
     ResourceGroupName?: string;
     SlotName?: string;
     VirtualApplication?: string;
-    Package: Package;
+    Package?: Package;
     GenerateWebConfig?: boolean;
     WebConfigParameters?: string;
     XmlTransformation?: boolean;
