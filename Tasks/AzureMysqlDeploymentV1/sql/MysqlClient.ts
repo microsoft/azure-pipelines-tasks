@@ -119,10 +119,15 @@ export class MysqlClient implements ISqlClient {
     /**
      * Get connection argument to run script from file or inline
      */
-    private _getFileSourceArgument() : string{
-        const sqlFilePath = packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile());
-        return this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask' ? 
-            " -e" + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"' : 
-            " -e" + '" source ' + sqlFilePath + '"';
+    private _getFileSourceArgument() : string {
+        let  fileSourceArgument ;
+        if( this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask' ) {
+            fileSourceArgument = " -e" + '"' + this._azureMysqlTaskParameter.getSqlInline() + '"';
+        }
+        else {
+            fileSourceArgument = " -e" + '" source ' + packageUtility.PackageUtility.getPackagePath(this._azureMysqlTaskParameter.getSqlFile()) + '"';
+        }
+       
+        return  fileSourceArgument;       
     }
 }
