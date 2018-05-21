@@ -1,6 +1,6 @@
 {
     "tasks": [
-        "AzurePowerShellV3",
+        "AzurePowerShellV3"
     ],
     "taskResources": [
         "*.ps1",
