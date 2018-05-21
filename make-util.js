@@ -1236,7 +1236,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 
             // Create xml entries for UnifiedDependencies
             // <package id="Mseng.MS.TF.Build.Tasks.AzureCLI" version="1.132.0" availableAtDeployTime="true" />
-            unifiedDepsContent += `<package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />` + os.EOL;
+            unifiedDepsContent += `  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />` + os.EOL;
 
             // Create a matching folder inside taskZipsPath
             var taskZipPath = path.join(tasksZipsPath, taskFolderName);
