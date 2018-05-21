@@ -1211,6 +1211,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     console.log('> Zipping task folders')
 
     var unifiedDepsContent = '';
+    var servicingXmlContent = '';
 
     fs.readdirSync(layoutPath)
         .forEach(function (taskFolderName) {
@@ -1238,8 +1239,11 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             // <package id="Mseng.MS.TF.Build.Tasks.AzureCLI" version="1.132.0" availableAtDeployTime="true" />
             unifiedDepsContent += `  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />` + os.EOL;
 
+            // Create xml entries for servicing
+            // 	<File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XCode/*?version=2.121.0" />
+            servicingXmlContent += 	`<File Origin="nuget://${fullTaskName}}/*?version=${taskVersion}" />` + os.EOL;
+
             // Create a matching folder inside taskZipsPath
-            
             var taskZipPath = path.join(tasksZipsPath, taskFolderName);
             mkdir('-p', taskZipPath);
             console.log('root task folder: ' + taskZipPath);
@@ -1249,7 +1253,10 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             //  a second time.
             // TODO: Provide an example and downstream consumption case?
             // TODO: I think there is a bug here, tasksZipsPath should be taskZipPath?
-            var folderInsideFolderPath = path.join(tasksZipsPath, taskFolderName);
+            // Old, think theres a bug
+            //var folderInsideFolderPath = path.join(tasksZipsPath, taskFolderName);
+            // New, should be nested
+            var folderInsideFolderPath = path.join(taskZipPath, taskFolderName);
             mkdir('-p', folderInsideFolderPath);
             console.log('nested folder: ' + folderInsideFolderPath);
 
@@ -1293,6 +1300,12 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     console.log('> Generating XML dependencies for UnifiedDependencies');
     var depsContentPath = path.join(artifactsPath, 'unified_deps.xml');
     fs.writeFileSync(depsContentPath, unifiedDepsContent);
+
+    // Create xml entries for servicing
+    // 	<File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XCode/*?version=2.121.0" />
+    console.log('> Generating XML dependencies for Servicing');
+    var servicingContentPath = path.join(artifactsPath, 'servicing.xml');
+    fs.writeFileSync(servicingContentPath, servicingXmlContent);
 }
 exports.createNugetPackagePerTask = createNugetPackagePerTask;
 
