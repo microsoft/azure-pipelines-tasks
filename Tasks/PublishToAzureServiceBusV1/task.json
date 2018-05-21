@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 5
   },
   "groups": [
       {
@@ -108,7 +108,6 @@
             "JobId": "$(system.JobId)",
             "TimelineId": "$(system.TimelineId)",
             "TaskInstanceId": "$(system.TaskInstanceId)",
-            "TaskInstanceName": "$(system.TaskInstanceName)",
             "AuthToken": "$(system.AccessToken)"
         }
       }
