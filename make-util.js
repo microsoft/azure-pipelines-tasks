@@ -1241,7 +1241,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 
             // Create xml entries for servicing
             // 	<File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XCode/*?version=2.121.0" />
-            servicingXmlContent += 	`<File Origin="nuget://${fullTaskName}}/*?version=${taskVersion}" />` + os.EOL;
+            servicingXmlContent += 	`<File Origin="nuget://${fullTaskName}/*?version=${taskVersion}" />` + os.EOL;
 
             // Create a matching folder inside taskZipsPath
             var taskZipPath = path.join(tasksZipsPath, taskFolderName);
