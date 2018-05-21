@@ -1213,7 +1213,6 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     var unifiedDepsContent = '';
 
     fs.readdirSync(layoutPath)
-        // .filter(f => fs.statSync(f).isDirectory())
         .forEach(function (taskFolderName) {
             var taskLayoutPath = path.join(layoutPath, taskFolderName);
 
@@ -1221,6 +1220,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
                 return;
             }
 
+            // TODO: I think we can get rid of this.
             if (taskFolderName === 'layout-version.txt') { // TODO: Clean this up. Make sure we have layout-version in each task nuget package? I think we need it? Is it applicable in nuget package per task setup?
                 return;
             }
@@ -1239,15 +1239,21 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             unifiedDepsContent += `  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />` + os.EOL;
 
             // Create a matching folder inside taskZipsPath
+            
             var taskZipPath = path.join(tasksZipsPath, taskFolderName);
             mkdir('-p', taskZipPath);
+            console.log('root task folder: ' + taskZipPath);
 
             // Create a task folder inside the folder so that when we do a nuget pack the contents are inside a folder.
             // This makes things easier/cleaner downstream when we do servicing and prevents needing to zip the contents
             //  a second time.
+            // TODO: Provide an example and downstream consumption case?
+            // TODO: I think there is a bug here, tasksZipsPath should be taskZipPath?
             var folderInsideFolderPath = path.join(tasksZipsPath, taskFolderName);
             mkdir('-p', folderInsideFolderPath);
+            console.log('nested folder: ' + folderInsideFolderPath);
 
+            // TOOD: This is probably slow. Check other code to do hard sync?
             var copydir = require('copy-dir');
             copydir.sync(taskLayoutPath, folderInsideFolderPath);
             //fs.copyFileSync(taskLayoutPath, taskZipPath);

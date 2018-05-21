@@ -1,10 +1,6 @@
 {
     "tasks": [
         "AzurePowerShellV3",
-        "CmdLineV2",
-        "CopyFiles",
-        "DotNetCoreCLIV2",
-        "Xcode"
     ],
     "taskResources": [
         "*.ps1",
