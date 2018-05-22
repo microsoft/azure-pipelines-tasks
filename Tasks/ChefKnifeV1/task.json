@@ -3,7 +3,7 @@
     "name": "ChefKnife",
     "friendlyName": "Chef Knife",
     "description": "Run Scripts with knife commands on your chef workstation",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/ChefKnife/README.md)",
+    "helpMarkDown": "[More Information](https://aka.ms/chef-knife-readme)",
     "category": "Deploy",
     "visibility": [
         "Preview",
@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "deprecated": true,
     "demands": [
