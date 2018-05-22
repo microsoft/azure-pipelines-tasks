@@ -83,7 +83,7 @@ Register-Mock New-ServiceFabricComposeApplication {
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeployV0\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
-@( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
+@( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeployV0/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
 Assert-WasCalled Get-ServiceFabricComposeApplicationStatus -Times 2
