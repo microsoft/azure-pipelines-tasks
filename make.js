@@ -452,11 +452,13 @@ target.layout = function() {
     // TODO: Will have to rerun this with new Task folder layout, then push to local NuGet, then regen the entire thing with push.cmd
     // that goes to actual packaging, then push them up there. Don't do that until it's fully working end to end.
     // create nuget package per task for older major versions of tasks
-    var legacyPath = path.join(__dirname, '_packageLegacy');
-    if (test('-d', legacyPath)) {
-        rm('-rf', legacyPath);
-    }
-    util.createNugetPackagePerTask(legacyPath, 'E:\\AllTaskMajorVersions');
+
+    
+    // var legacyPath = path.join(__dirname, '_packageLegacy');
+    // if (test('-d', legacyPath)) {
+    //     rm('-rf', legacyPath);
+    // }
+    // util.createNugetPackagePerTask(legacyPath, 'E:\\AllTaskMajorVersions');
 }
 
 // used by CI that does official publish

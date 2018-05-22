@@ -1330,6 +1330,13 @@ var createNuspecFile = function (taskLayoutPath, fullTaskName, taskVersion) {
     contents += '      <description>For VSS internal use only</description>' + os.EOL;
     contents += '      <tags>VSSInternal</tags>' + os.EOL;
     contents += '   </metadata>' + os.EOL;
+
+    // // start experiment
+    // contents += '<files>' + os.EOL;
+    // contents += '<file src="**\*.*" target="MyLib" />' + os.EOL;
+    // contents += '</files>' + os.EOL;
+    // // end experiment
+
     contents += '</package>' + os.EOL;
 
     var taskNuspecPath = path.join(taskLayoutPath, fullTaskName + '.nuspec');
@@ -1353,6 +1360,9 @@ var createNuGetPackage = function (publishPath, taskFolderName, taskNuspecPath, 
     var taskPublishFolder = path.join(publishPath, taskFolderName);
     fs.mkdirSync(taskPublishFolder);
     process.chdir(taskPublishFolder);
+
+    console.log('task nuspec path: ' + taskNuspecPath);
+    console.log('base path: ' + taskLayoutPath)
     run(`nuget pack "${taskNuspecPath}" -BasePath "${taskLayoutPath}" -NoDefaultExcludes`, /*inheritStreams:*/ true);
 
     return taskPublishFolder;
