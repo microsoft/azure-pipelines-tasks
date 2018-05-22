@@ -98,8 +98,8 @@ Copy-Item -LiteralPath "$PSScriptRoot\data\DockerSupportAssets\AppPkg\" -Destina
 try
 {
     # Act
-    . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
-    . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeploy\ps_modules\ServiceFabricHelpers\Get-ServiceFabricEncryptedText.ps1
+    . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeployV1\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+    . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeployV1\ps_modules\ServiceFabricHelpers\Get-ServiceFabricEncryptedText.ps1
     @( & $PSScriptRoot/../../../Tasks/ServiceFabricDeploy/deploy.ps1 )
 
     # Assert
