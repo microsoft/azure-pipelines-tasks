@@ -703,7 +703,7 @@
         "PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
         "SSLCertificateThumbprintMissingInHttpsBinding": "SSL Certificate thumbprint missing in the https binding : ( {0}/{1}:{2} )",
         "InvalidSslThumbprintInBinding": "Invalid thumbprint in binding ( {0}/{1}:{2} ). Length is not 40 characters or contains invalid characters.",
-        "SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}/{1}:{2} ) . Trimming all non-hexadecimal characters."
+        "SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}/{1}:{2} ). Trimming all non-hexadecimal characters."
     }
 
 }
