@@ -2,17 +2,18 @@
     "id": "ff50fc97-da8c-4683-b014-34c15315ee5f",
     "name": "XamarinComponentRestore",
     "friendlyName": "Xamarin Component Restore",
-    "description": "Restores Xamarin components for the specified solution",
+    "description": "[Deprecated] Restores Xamarin components for the specified solution",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=786653)",
     "category": "Package",
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 131,
+        "Minor": 136,
         "Patch": 0
     },
     "minimumAgentVersion": "1.96.0",
     "instanceNameFormat": "Xamarin component restore $(solution)",
+    "deprecated": true,
     "inputs": [
         {
             "name": "solution",
