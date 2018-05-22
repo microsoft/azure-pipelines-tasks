@@ -88,4 +88,4 @@ Register-Mock New-ServiceFabricComposeApplication {
 # Assert
 Assert-WasCalled Get-ServiceFabricComposeApplicationStatusPaged -Times 3
 Assert-WasCalled Remove-ServiceFabricComposeApplication -Times 1
-Assert-WasCalled New-ServiceFabricComposeApplication -Times 1
+Assert-WasCalled New-ServiceFabricComposeApplication -Times 1 
