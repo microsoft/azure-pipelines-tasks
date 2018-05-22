@@ -19,7 +19,7 @@ function Invoke-VstsTaskScript { } # Detached from the task SDK module
 $null = Get-Item function:SomeVstsTaskSdkFunction1 # Sanity check to verify the function was imported.
 
 # Act.
-. $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShell\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+. $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShellV1\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 $actual = & $PSScriptRoot\..\ServiceFabricPowerShell.ps1
 $global:ErrorActionPreference = 'Stop' # Reset to stop.
 

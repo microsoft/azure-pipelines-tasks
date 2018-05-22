@@ -82,7 +82,7 @@ Register-Mock New-ServiceFabricComposeDeployment {
 } -- -DeploymentName: $applicationName -Compose: $composeFilePath
 
 # Act
-. $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+. $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeployV0\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
 
 # Assert

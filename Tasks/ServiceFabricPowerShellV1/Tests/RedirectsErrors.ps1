@@ -8,7 +8,7 @@ Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { "$PSScriptRoot/RedirectsErrors_TargetScript.ps1" } -- -Name ScriptPath
 
 # Act.
-. $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShell\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+. $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShellV1\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 $actual = @( & $PSScriptRoot\..\ServiceFabricPowerShell.ps1 )
 $global:ErrorActionPreference = 'Stop' # Reset to stop.
 

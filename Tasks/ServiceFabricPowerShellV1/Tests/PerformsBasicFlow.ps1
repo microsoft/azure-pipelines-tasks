@@ -9,7 +9,7 @@ Register-Mock Get-VstsInput { "$PSScriptRoot/PerformsBasicFlow_TargetScript.ps1"
 Register-Mock Get-VstsInput { 'arg1 arg2' } -- -Name ScriptArguments
 
 # Act.
-. $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShell\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+. $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShellV1\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 $actual = & $PSScriptRoot\..\ServiceFabricPowerShell.ps1
 
 # Assert the error action preference was set to Continue.

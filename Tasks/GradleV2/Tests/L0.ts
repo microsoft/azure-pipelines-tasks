@@ -18,18 +18,18 @@ import { AnalysisResult } from 'codeanalysis-common/Common/AnalysisResult';
 let isWindows: RegExpMatchArray = os.type().match(/^Win/);
 let gradleWrapper: string = isWindows ? 'gradlew.bat' : 'gradlew';
 
-let gradleFile: string = '/Gradle/node_modules/codeanalysis-common/sonar.gradle';
+let gradleFile: string = '/GradleV2/node_modules/codeanalysis-common/sonar.gradle';
 let ccCoverageXmlFile: string = 'CCReport43F6D5EF/coverage.xml';
-let checkstyleFile: string = '/Gradle/node_modules/codeanalysis-common/checkstyle.gradle';
-let findbugsFile: string = '/Gradle/node_modules/codeanalysis-common/findbugs.gradle';
-let pmdFile: string = '/Gradle/node_modules/codeanalysis-common/pmd.gradle';
+let checkstyleFile: string = '/GradleV2/node_modules/codeanalysis-common/checkstyle.gradle';
+let findbugsFile: string = '/GradleV2/node_modules/codeanalysis-common/findbugs.gradle';
+let pmdFile: string = '/GradleV2/node_modules/codeanalysis-common/pmd.gradle';
 // Fix up argument paths for Windows
 if (isWindows) {
-    gradleFile = '\\Gradle\\node_modules\\codeanalysis-common\\sonar.gradle';
+    gradleFile = '\\GradleV2\\node_modules\\codeanalysis-common\\sonar.gradle';
     ccCoverageXmlFile = 'CCReport43F6D5EF\\coverage.xml';
-    checkstyleFile = '\\Gradle\\node_modules\\codeanalysis-common\\checkstyle.gradle';
-    findbugsFile = '\\Gradle\\node_modules\\codeanalysis-common\\findbugs.gradle';
-    pmdFile = '\\Gradle\\node_modules\\codeanalysis-common\\pmd.gradle';
+    checkstyleFile = '\\GradleV2\\node_modules\\codeanalysis-common\\checkstyle.gradle';
+    findbugsFile = '\\GradleV2\\node_modules\\codeanalysis-common\\findbugs.gradle';
+    pmdFile = '\\GradleV2\\node_modules\\codeanalysis-common\\pmd.gradle';
 }
 
  function assertFileDoesNotExistInDir(stagingDir:string, filePath:string): void {

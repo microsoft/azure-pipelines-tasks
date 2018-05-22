@@ -11,7 +11,7 @@ foreach ($arguments in @( "script`rarguments", "script`narguments" )) {
 
     # Act/Assert.
     Assert-Throws {
-        . $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShell\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+        . $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShellV1\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
         & $PSScriptRoot\..\ServiceFabricPowerShell.ps1
     } -MessagePattern "InvalidScriptArguments0*$arguments"
 }

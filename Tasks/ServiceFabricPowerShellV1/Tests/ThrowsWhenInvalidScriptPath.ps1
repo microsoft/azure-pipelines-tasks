@@ -12,7 +12,7 @@ foreach ($path in @( "script`rpath", "script`npath" )) {
 
     # Act/Assert.
     Assert-Throws {
-        . $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShell\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+        . $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShellV1\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
         & $PSScriptRoot\..\ServiceFabricPowerShell.ps1
     } -MessagePattern "InvalidScriptPath0*$path"
 }

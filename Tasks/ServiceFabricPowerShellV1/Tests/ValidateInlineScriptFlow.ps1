@@ -9,7 +9,7 @@ Register-Mock Get-VstsInput { "InlineScript" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { ",@( 'item 1', 'item 2')" } -- -Name Inline
 
 # Act.
-. $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShell\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+. $PSScriptRoot\..\..\..\Tasks\ServiceFabricPowerShellV1\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 $actual = @( & $PSScriptRoot\..\ServiceFabricPowerShell.ps1 )
 $global:ErrorActionPreference = 'Stop' # Reset to stop.
 
