@@ -132,7 +132,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async zipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
+    public async zipDeploy(packagePath: string, runFromZip?: boolean, appOffline?: boolean, customMessage?: any): Promise<string> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
             await this._preZipDeployOperation();
@@ -143,7 +143,7 @@ export class KuduServiceUtility {
                 tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
             }
 
-            if(appOffline) {
+            if(!runFromZip && appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, true);
                 tl.debug('Wait for 5 seconds for app_offline to take effect');
                 await webClient.sleepFor(5);
@@ -159,7 +159,9 @@ export class KuduServiceUtility {
             try {
                 var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
                 tl.debug(`logs from ZIP deploy: ${kuduDeploymentDetails.log_url}`);
-                await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
+                if(!runFromZip) {
+                    await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
+                }
             }
             catch(error) {
                 tl.debug(`Unable to fetch logs for kudu ZIP Deploy: ${JSON.stringify(error)}`)

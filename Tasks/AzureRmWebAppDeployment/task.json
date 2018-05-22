@@ -17,7 +17,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 1,
+        "Minor": 2,
         "Patch": 6
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
@@ -39,7 +39,7 @@
             "name": "PostDeploymentAction",
             "displayName": "Post Deployment Action",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\""
+            "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || UseWebDeploy = false || DeploymentType != zipDeploy || UseRunFromZip = false"
         },
         {
             "name": "ApplicationAndConfigurationSettings",
@@ -291,22 +291,47 @@
             }
         },
         {
+            "name": "UseWebDeploy",
+            "type": "boolean",
+            "label": "Choose custom deployment method",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "AdditionalDeploymentOptions",
+            "helpMarkDown": "If unchecked we will auto-detect the best deployment method based on your app type, package format and other parameters. <br>Select the option to see choice of deployment methods."
+        },
+        {
+            "name": "DeploymentType",
+            "type": "pickList",
+            "label": "Deployment method",
+            "defaultValue": "webDeploy",
+            "required": true,
+            "groupName": "AdditionalDeploymentOptions",
+            "options": {
+                "webDeploy": "Web Deploy",
+                "zipDeploy": "Zip Deploy"
+            },
+            "helpMarkDown": "Choose deployment mechanism for your app.",
+            "visibleRule": "UseWebDeploy == true"
+        },
+        {
+            "name": "UseRunFromZip",
+            "type": "boolean",
+            "label": "Publish using RunFromZip",
+            "required": false,
+            "defaultValue": "true",
+            "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "DeploymentType == zipDeploy",
+            "helpMarkDown": "Publish using RunFromZip."
+        },
+        {
             "name": "TakeAppOfflineFlag",
             "type": "boolean",
             "label": "Take App Offline",
             "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
+            "visibleRule": "UseWebDeploy = false || DeploymentType != zipDeploy || UseRunFromZip = false",
             "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
-        },
-        {
-            "name": "UseWebDeploy",
-            "type": "boolean",
-            "label": "Publish using Web Deploy",
-            "required": false,
-            "defaultValue": "false",
-            "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "Publish using Web Deploy options are supported only when using Windows agent. On other platforms, the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Azure App Service, and following options are not supported"
         },
         {
             "name": "SetParametersFile",
@@ -315,7 +340,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
+            "visibleRule": "DeploymentType == webDeploy",
             "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
         },
         {
@@ -325,7 +350,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
+            "visibleRule": "DeploymentType == webDeploy",
             "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder.<br /><br />Note: This will also remove all files related to any extension installed on this Azure App Service. To prevent this, select 'Exclude files from App_Data folder' checkbox. "
         },
         {
@@ -335,7 +360,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
+            "visibleRule": "DeploymentType == webDeploy",
             "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
         },
         {
@@ -345,7 +370,7 @@
             "required": false,
             "defaultValue": "-retryAttempts:6 -retryInterval:10000",
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy == true",
+            "visibleRule": "DeploymentType == webDeploy",
             "helpMarkDown": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471)."
         },
         {
@@ -354,7 +379,7 @@
             "label": "Rename locked files",
             "defaultValue": "true",
             "required": false,
-            "visibleRule": "UseWebDeploy == true",
+            "visibleRule": "DeploymentType == webDeploy",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_LOCKED_FILES=1 in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },
@@ -477,6 +502,8 @@
         "CannotPerformXdtTransformationOnNonWindowsPlatform": "Cannot perform XML transformations on a non-Windows platform.",
         "XdtTransformationErrorWhileTransforming": "XML transformation error while transforming %s using %s.",
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
+        "Publishusingzipdeploynotsupportedformsbuildpackage": "Publish using zip deploy option is not supported for msBuild package type.",
+        "Publishusingzipdeploynotsupportedforvirtualapplication": "Publish using zip deploy option is not supported for virtual application.",
         "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
         "UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
