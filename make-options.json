@@ -58,7 +58,7 @@
         "InstallSSHKeyV0",
         "InvokeRestApiV1",
         "JavaToolInstallerV0",
-        "JenkinsDownloadArtifacts",
+        "JenkinsDownloadArtifactsV1",
         "JenkinsQueueJobV2",
         "KubernetesV0",
         "ManualInterventionV8",
