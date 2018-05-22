@@ -101,7 +101,7 @@ Register-Mock Write-VstsTaskError
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeployV1\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
-@( & $PSScriptRoot/../../../Tasks/ServiceFabricDeploy/deploy.ps1 )
+@( & $PSScriptRoot/../../../Tasks/ServiceFabricDeployV1/deploy.ps1 )
 
 # Assert
 Assert-WasCalled Publish-NewServiceFabricApplication -Arguments $publishArgs
