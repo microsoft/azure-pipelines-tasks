@@ -161,7 +161,7 @@ describe('AppCenterTest L0 Suite', function () {
     });
 
     it('Favor system appcenter cli over bundled cli', (done: MochaDone) => {
-        this.timeout(2000);
+        this.timeout(5000);
 
         let tp = path.join(__dirname, 'L0FavorSystemToolPath.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
