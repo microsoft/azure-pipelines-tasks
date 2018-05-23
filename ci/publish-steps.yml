@@ -60,6 +60,18 @@ steps:
     artifactName: TaskPackage
     publishLocation: container
 
+# Stage per task NuGet package
+- script: npm run layout
+  displayName: npm run layout
+
+# Publish per task NuGet package artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish per task NuGet package artifact
+  inputs:
+    pathToPublish: _package/per-task-publish # is this still correct with the new local build?
+    artifactName: PerTaskPackages
+    publishLocation: container
+
 # Publish milestone package
 - task: NuGetCommand@2
   displayName: Publish milestone package
