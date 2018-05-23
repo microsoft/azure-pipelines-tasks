@@ -8,34 +8,16 @@ import * as kubectl from "./kubernetescommand";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 
-import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
-import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider"
-import RegistryAuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
-
 tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
-
-// get the registry server authentication provider 
-var registryType = tl.getInput("containerRegistryType", true);
-var authenticationProvider : AuthenticationTokenProvider;
-
-if(registryType ==  "Azure Container Registry"){
-    authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint2"), tl.getInput("azureContainerRegistry"));
-} 
-else {
-    authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
-}
-
-var registryAuthenticationToken = authenticationProvider.getAuthenticationToken();
 
 // open kubectl connection and run the command
 var connection = new ClusterConnection();
 try
 {
     connection.open().then(  
-        () => { return run(connection, registryAuthenticationToken) }
+        () => { return run(connection) }
     ).then(
        () =>  {
            tl.setResult(tl.TaskResult.Succeeded, "");
@@ -51,13 +33,13 @@ catch (error)
     tl.setResult(tl.TaskResult.Failed, error.message);
 }
 
-async function run(clusterConnection: ClusterConnection, registryAuthenticationToken: RegistryAuthenticationToken) 
+async function run(clusterConnection: ClusterConnection) 
 {
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
 
     if(secretName) {
-        await kubectlSecret.run(clusterConnection, registryAuthenticationToken, secretName);
+        await kubectlSecret.run(clusterConnection, secretName);
     }
 
     if(configMapName) {

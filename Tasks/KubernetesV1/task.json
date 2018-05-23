@@ -16,7 +16,7 @@
         "Patch": 0
     },
     "demands": [],
-    "releaseNotes": "What's new in Version 1.0: <br/>&nbsp;&nbsp; Use Azure service connection to select targeted AKS cluster.<br/>&nbsp;&nbsp;Output section has been removed as there already is an Output variables section.",
+    "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
     "preview": "true",
     "groups": [
         {
@@ -54,8 +54,7 @@
             "required": true,
             "options": {
                 "Azure Resource Manager": "Azure Resource Manager",
-                "Kubernetes Service Connection": "Kubernetes Service Connection",
-                "Not Applicable": "Not Applicable"
+                "Kubernetes Service Connection": "Kubernetes Service Connection"
             },
             "helpMarkDown": "Select a connection type."
         },
@@ -346,7 +345,23 @@
             "defaultValue": "$(System.DefaultWorkingDirectory)",
             "helpMarkDown": "Working directory for the Kubectl command.",
             "groupName": "advanced"
-        }       
+        },
+        {
+            "name": "outputFormat",
+            "type": "pickList",
+            "label": "Output format",
+            "defaultValue": "json",
+            "required": false,
+            "options": {
+                "json": "json",
+                "yaml": "yaml"
+            },
+            "helpMarkDown": "Output format.",
+            "groupName": "advanced",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        }     
     ],
     "dataSourceBindings": [
         {

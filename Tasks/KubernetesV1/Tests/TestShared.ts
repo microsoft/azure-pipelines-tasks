@@ -22,6 +22,7 @@ export let TestEnvVars = {
     versionSpec: "__versionSpec__",
     checkLatest: "__checkLatest__",
     specifyLocation: "__specifyLocation__",
+    outputFormat: "__outputFormat__",
     KubectlOutput: "__KubectlOutput__"
 };
 

@@ -54,8 +54,7 @@
       "required": true,
       "options": {
         "Azure Resource Manager": "Azure Resource Manager",
-        "Kubernetes Service Connection": "Kubernetes Service Connection",
-        "Not Applicable": "Not Applicable"
+        "Kubernetes Service Connection": "Kubernetes Service Connection"
       },
       "helpMarkDown": "ms-resource:loc.input.help.connectionType"
     },
@@ -356,6 +355,22 @@
       "defaultValue": "$(System.DefaultWorkingDirectory)",
       "helpMarkDown": "ms-resource:loc.input.help.cwd",
       "groupName": "advanced"
+    },
+    {
+      "name": "outputFormat",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.outputFormat",
+      "defaultValue": "json",
+      "required": false,
+      "options": {
+        "json": "json",
+        "yaml": "yaml"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.outputFormat",
+      "groupName": "advanced",
+      "properties": {
+        "EditableOptions": "True"
+      }
     }
   ],
   "dataSourceBindings": [

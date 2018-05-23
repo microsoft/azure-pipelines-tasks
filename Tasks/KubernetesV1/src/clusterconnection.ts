@@ -20,30 +20,21 @@ export default class ClusterConnection {
         this.userDir = utils.getNewUserDirPath();
     }
 
-    private getClusterType(connectionType: string): any {
+    private loadClusterType(connectionType: string): any {
         if(connectionType === "Azure Resource Manager") {
             return require("./clusters/armkubernetescluster");
         }
-        else if (connectionType === 'Kubernetes Service Connection'){
+        else {
             return require("./clusters/generickubernetescluster");
-        }
-        else
-        {
-            return null;
         }
     }
     
     // get kubeconfig file path
     private async getKubeConfig(): Promise<string> {
         var connectionType = tl.getInput("connectionType", true);
-        if(connectionType != 'Not Applicable')
-        {
-            return this.getClusterType(connectionType).getKubeConfig().then((config) => {
-                return config;
-            });
-        }
-
-        return null;     
+        return this.loadClusterType(connectionType).getKubeConfig().then((config) => {
+            return config;
+        });
     }
 
     private async initialize(): Promise<void> {

@@ -38,6 +38,7 @@ tr.setInput('versionOrLocation', process.env[shared.TestEnvVars.versionOrLocatio
 tr.setInput('versionSpec', process.env[shared.TestEnvVars.versionSpec] || "1.7.0");
 tr.setInput('checkLatest', process.env[shared.TestEnvVars.checkLatest] || "false");
 tr.setInput('specifyLocation', process.env[shared.TestEnvVars.specifyLocation] || "");
+tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || "json");
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('kubernetesServiceEndpoint', 'kubernetesEndpoint');
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
@@ -109,12 +110,7 @@ let a = {
     "exist": {
         [KubconfigFile]: true
     },
-    "exec": {
-        "kubectl get pods --dry-run":{
-            "code": 0,
-            "stdout": "successfully ran get pods command"
-        }
-    }
+    "exec": {}
 };
 
 // Add extra answer definitions that need to be dynamically generated
@@ -129,23 +125,23 @@ if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
     a.which["kubectl"] = "kubectl";
 }
 
-a.exec[`${KubectlPath} --kubeconfig ${KubconfigFile} get pods`] = {
+a.exec[`${KubectlPath} --kubeconfig ${KubconfigFile} get pods -o json`] = {
     "code": 0,
      "stdout": "successfully ran get pods command"
 },
-a.exec[`kubectl --kubeconfig ${KubconfigFile} apply -f ${ConfigurationFilePath}`] = {
+a.exec[`kubectl --kubeconfig ${KubconfigFile} apply -f ${ConfigurationFilePath} -o json`] = {
     "code": 0,
     "stdout": "successfully applied the configuration deployment.yaml"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get pods`] = {
+a.exec[`kubectl --kubeconfig ${KubconfigFile} get pods -o json`] = {
     "code": 0,
     "stdout": "successfully ran get pods command"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} expose -f ${ConfigurationFilePath} --port=80 --target-port=8000`] = {
+a.exec[`kubectl --kubeconfig ${KubconfigFile} expose -f ${ConfigurationFilePath} --port=80 --target-port=8000 -o json`] = {
     "code": 0,
-    "stdout": "successfully created a service for deployment in deployment.yaml using expose command "
+    "stdout": "successfully created a service for deployment in deployment.yaml using expose command"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get -n kube-system pods`] = {
+a.exec[`kubectl --kubeconfig ${KubconfigFile} get -n kube-system pods -o json`] = {
     "code": 0,
     "stdout": "successfully fetched the pods in the namespace"
 };
@@ -186,6 +182,11 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap someConfigMap --f
     "code": 1,
     "stdout" : "Error in configMap creation"
 };
+a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = {
+    "code": 0,
+    "stdout": "successfully got secret my-secret and printed it in the specified format"
+};
+
 tr.setAnswers(<any>a);
 
 // Create mock for fs module

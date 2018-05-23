@@ -7,22 +7,26 @@ import * as kubernetesCommand from "./kubernetescommand";
 import ClusterConnection from "./clusterconnection";
 
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
+import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
+import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
+import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider"
 
-export function run(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
-   
+export function run(connection: ClusterConnection, secret: string): any {
+
     if(tl.getBoolInput("forceUpdate") == true) {
         return deleteSecret(connection, secret).fin(() =>{
-            return createSecret(connection, authenticationToken, secret);
+            return createSecret(connection, secret);
         });
     } else {
-        return createSecret(connection, authenticationToken, secret);
+        return createSecret(connection, secret);
     } 
 }
 
-function createSecret(connection: ClusterConnection, authenticationToken: AuthenticationToken, secret: string): any {
+function createSecret(connection: ClusterConnection, secret: string): any {
     var typeOfSecret = tl.getInput("secretType", true);
     if (typeOfSecret === "dockerRegistry")
     {
+        var authenticationToken = getRegistryAuthenticationToken();
         return createDockerRegistrySecret(connection, authenticationToken, secret);
     }
     else if (typeOfSecret === "generic")
@@ -89,4 +93,19 @@ function createGenericSecret(connection: ClusterConnection, secret: string): any
     }
 
     return connection.execCommand(command);
+}
+
+function getRegistryAuthenticationToken(): AuthenticationToken {
+    var registryType = tl.getInput("containerRegistryType", true);
+    var authenticationProvider : AuthenticationTokenProvider;
+
+    if(registryType ==  "Azure Container Registry"){
+        authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint2"), tl.getInput("azureContainerRegistry"));
+    } 
+    else {
+        authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));
+    }
+
+    return authenticationProvider.getAuthenticationToken();
+
 }

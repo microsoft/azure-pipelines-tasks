@@ -23,15 +23,10 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
 }
 
 function getCommandOutputFormat() : string[] {
-    var args: string[] =[];
-    var ouputVariableName =  tl.getInput("kubectlOutput", false);  
+    var args: string[] =[];  
     var outputFormat = tl.getInput("outputFormat", false);
-    if(ouputVariableName)
-    {
-       args[0] = "-o";
-       args[1] = outputFormat;
-    }
-
+    args[0] = "-o";
+    args[1] = outputFormat;
     return args;
 }
 

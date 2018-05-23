@@ -31,6 +31,7 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.useConfigMapFile];
         delete process.env[shared.TestEnvVars.configMapFile];
         delete process.env[shared.TestEnvVars.configMapArguments];
+        delete process.env[shared.TestEnvVars.outputFormat];
     });
     after(function () {
     });
@@ -46,27 +47,11 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
 
-    it('Run successfully when the connectionType is Not applicable', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.Commands.get;
-        process.env[shared.TestEnvVars.arguments] = "pods --dry-run";    
-        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionType.NotApplicable;        
-        tr.run();
-
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.stdout.indexOf(`[command]kubectl get pods --dry-run`) != -1, "kubectl get should run");
-        console.log(tr.stderr);
-        done();
-    });
- 
     it('Run successfully when the user provides a specific location for kubectl', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -81,7 +66,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.stdout.indexOf(`Set kubectlPath to ${shared.formatPath("newUserDir/kubectl.exe")} and added permissions`) != -1, "Kubectl path should be set to the correct location");
-        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -101,7 +86,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`Got kubectl version v1.7.0`) != -1, "Got the specific version of kubectl");
         assert(tr.stdout.indexOf(`Downloaded kubectl version v1.7.0`) != -1, "Downloaded correct version of kubectl");
-        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -123,7 +108,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`Get stable kubectl version`) != -1, "Stable version of kubectl is downloaded");
         assert(tr.stdout.indexOf(`Got kubectl version v1.6.6`) != -1, "Got the latest version of kubectl");
         assert(tr.stdout.indexOf(`Downloaded kubectl version v1.6.6`) != -1, "Downloaded correct version of kubectl");
-        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -144,7 +129,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`Get stable kubectl version`) != -1, "Stable version of kubectl is downloaded");
         assert(tr.stdout.indexOf(`Got kubectl version v1.6.6`) != -1, "Got the latest version of kubectl");
         assert(tr.stdout.indexOf(`Downloaded kubectl version v1.6.6`) != -1, "Downloaded correct version of kubectl");
-        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -177,7 +162,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} apply -f ${shared.formatPath("dir/deployment.yaml")}`) != -1, "kubectl apply should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} apply -f ${shared.formatPath("dir/deployment.yaml")} -o json`) != -1, "kubectl apply should run");
         console.log(tr.stderr);
         done();
     });
@@ -193,7 +178,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} expose -f ${shared.formatPath("dir/deployment.yaml")} --port=80 --target-port=8000`) != -1, "kubectl expose should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} expose -f ${shared.formatPath("dir/deployment.yaml")} --port=80 --target-port=8000 -o json`) != -1, "kubectl expose should run");
         console.log(tr.stderr);
         done();
     });
@@ -208,7 +193,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -224,7 +209,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get -n kube-system pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get -n kube-system pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     }); 
@@ -243,7 +228,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) != -1, "kubectl delete should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret docker-registry my-secret --docker-server=https://index.docker.io/v1/ --docker-username=test --docker-password=regpassword --docker-email=test@microsoft.com`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -263,7 +248,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) == -1, "kubectl delete should not run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret docker-registry my-secret --docker-server=https://index.docker.io/v1/ --docker-username=test --docker-password=regpassword --docker-email=test@microsoft.com`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -282,7 +267,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) != -1, "kubectl delete should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=MOCK_SPN_ID --docker-password=MOCK_SPN_KEY --docker-email=ServicePrincipal@AzureRM`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -302,7 +287,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) == -1, "kubectl delete should not run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=MOCK_SPN_ID --docker-password=MOCK_SPN_KEY --docker-email=ServicePrincipal@AzureRM`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -322,7 +307,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) != -1, "kubectl delete should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -343,7 +328,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`DeleteSecret my-secret`) == -1, "kubectl delete should not run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -364,7 +349,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) == -1, "kubectl get should not run");
         assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) != -1, "kubectl delete should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=configmap.properties=${shared.formatPath("configMapDir/configmap.properties")}`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -385,7 +370,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) != -1, "kubectl get should run");
         assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) == -1, "kubectl delete should not run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-file=${shared.formatPath("kubernetes/configMapDir")}`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     }); 
@@ -406,7 +391,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) == -1, "kubectl get should not run");
         assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) != -1, "kubectl delete should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -426,7 +411,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`GetConfigMap myConfigMap`) != -1, "kubectl get should run");
         assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) == -1, "kubectl delete should not run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
@@ -451,7 +436,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`DeleteConfigMap myConfigMap`) != -1, "kubectl delete should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) < tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`), "kubectl create secrets should run before create configMap");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) < tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`), "kubectl create configMap should run before get");
         console.log(tr.stderr);
@@ -476,7 +461,7 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`GetConfigMap someConfigMap`) != -1, "kubectl get should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap someConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) != -1, "kubectl create should run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) == -1, "kubectl get should not run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) == -1, "kubectl get should not run");
         console.log(tr.stderr);
         done();
     });
@@ -496,8 +481,24 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`GetConfigMap existingConfigMap`) != -1, "kubectl get should run");
         assert(tr.stdout.indexOf(`DeleteConfigMap existingConfigMap`) == -1, "kubectl delete should not run");
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} create configmap existingConfigMap --from-literal=key1=value1 --from-literal=key2=value2`) == -1, "kubectl create should not run");
-        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
     });
+
+    it('Runs successfully for kubectl get and print the output in a particular format', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "secrets my-secret";
+        process.env[shared.TestEnvVars.outputFormat] = 'yaml';
+        tr.run();
+        
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get secrets my-secret -o yaml`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    }); 
 });
