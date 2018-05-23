@@ -363,6 +363,7 @@
     "ContinuationTokenExistsFetchingRemainingFiles": "ms-resource:loc.messages.ContinuationTokenExistsFetchingRemainingFiles",
     "GetArtifactItemsNotSupported": "ms-resource:loc.messages.GetArtifactItemsNotSupported",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "NoAssociatedArtifacts": "ms-resource:loc.messages.NoAssociatedArtifacts"
   }
 }

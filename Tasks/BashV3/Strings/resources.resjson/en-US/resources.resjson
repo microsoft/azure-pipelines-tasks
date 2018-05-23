@@ -10,7 +10,7 @@
   "loc.input.label.filePath": "Script Path",
   "loc.input.help.filePath": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory).",
   "loc.input.label.arguments": "Arguments",
-  "loc.input.help.arguments": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters.",
+  "loc.input.help.arguments": "Arguments passed to the shell script. Either ordinal parameters or named parameters.",
   "loc.input.label.script": "Script",
   "loc.input.label.workingDirectory": "Working Directory",
   "loc.input.label.failOnStderr": "Fail on Standard Error",

@@ -64,7 +64,7 @@ export class dotNetExe {
         if (tl.osType() === 'Windows_NT') {
             try {
                 tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
-            } 
+            }
             catch (ex) {
                 tl.warning(tl.loc("CouldNotSetCodePaging", JSON.stringify(ex)))
             }
@@ -114,9 +114,9 @@ export class dotNetExe {
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
 
         if (enablePublishTestResults && enablePublishTestResults === true) {
-            this.arguments = this.arguments.concat(` --logger trx --results-directory ${resultsDirectory}`);
+            this.arguments = this.arguments.concat(` --logger trx --results-directory "${resultsDirectory}"`);
         }
-        
+
         // Remove old trx files
         this.removeOldTestResultFiles(resultsDirectory);
 
@@ -171,7 +171,7 @@ export class dotNetExe {
             return;
         }
         for (const fileIndex of Object.keys(matchingTestResultsFiles)) {
-            const resultFile = matchingTestResultsFiles[fileIndex];            
+            const resultFile = matchingTestResultsFiles[fileIndex];
             tl.rmRF(resultFile)
             tl.debug("Successfuly removed: " + resultFile);
         }

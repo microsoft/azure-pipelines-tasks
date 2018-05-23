@@ -228,6 +228,7 @@
     "PS_TM_ParseSessionVariablesKeyNotFound": "ms-resource:loc.messages.PS_TM_ParseSessionVariablesKeyNotFound",
     "PS_TM_InvalidSessionVariablesInputFormat": "ms-resource:loc.messages.PS_TM_InvalidSessionVariablesInputFormat",
     "PS_TM_TaskFailed": "ms-resource:loc.messages.PS_TM_TaskFailed",
-    "PS_TM_SessionConfigurationNameCannotBeNull": "ms-resource:loc.messages.PS_TM_SessionConfigurationNameCannotBeNull"
+    "PS_TM_SessionConfigurationNameCannotBeNull": "ms-resource:loc.messages.PS_TM_SessionConfigurationNameCannotBeNull",
+    "PS_TM_UnableToParseSessionVariables": "ms-resource:loc.messages.PS_TM_UnableToParseSessionVariables"
   }
 }

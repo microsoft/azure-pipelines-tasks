@@ -62,80 +62,6 @@ function Get-NewPSSessionOption {
     }
 }
 
-function Get-TokensFromSequence {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [AllowEmptyString()]
-        [string] $tokenPattern,
-        [Parameter(Mandatory = $true)]
-        [string] $tokenSequence
-    )
-    $regexOption = [System.Text.RegularExpressions.RegexOptions]::Compiled
-    $regex = New-Object regex -ArgumentList $tokenPattern, $regexOption
-    return ($regex.Matches($tokenSequence))
-}
-
-function ConvertTo-HashTable {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [AllowEmptyString()]
-        [string] $tokenSequence
-    )
-    Trace-VstsEnteringInvocation $MyInvocation
-    try {
-        $result = @{}
-        if (![string]::IsNullOrEmpty($tokenSequence))  {
-            # Matches all keys and values present in a comma separated list of key value pairs. Key-Values are separated
-            # by '=' and a pair is separated by ','. Parsed values can be of form : val, "val val2", val"val2"val3.
-            $tokenPattern = "([^`" =,]*(`"[^`"]*`")[^`" =,]*)|[^`" =,]+"
-            $tokens = Get-TokensFromSequence $tokenPattern $tokenSequence
-            $currentKey = [string]::Empty
-
-            foreach ($token in $tokens) {
-                if ($token.Value.StartsWith('$')) {
-                    if (![string]::IsNullOrEmpty($currentKey)) {
-                        throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList $($token.Value), $currentKey)
-                    }
-                    $currentKey = $token.Value.Trim('$')
-                    Write-Verbose "Adding Key:'$currentKey'"
-                    $result.Add($currentKey, [string]::Empty)
-                } elseif (!$token.Value.StartsWith('$') -and ![string]::IsNullOrEmpty($currentKey)) {
-                    Write-Verbose "Setting Key:'$currentKey' Value:'$($token.Value)'"
-                    $result[$currentKey] = $token.Value
-                    $currentKey = [string]::Empty
-                } else {
-                    throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesKeyNotFound" -ArgumentList $($token.Value), $currentKey)
-                }
-            }
-    
-            if (![string]::IsNullOrEmpty($currentKey)) {
-                throw (Get-VstsLocString -Key "PS_TM_ParseSessionVariablesValueNotFound" -ArgumentList [string]::Empty, $currentKey)
-            }
-    
-            # Matches keys in the list. A key begins with '$' and ends with '='. It cannot contain spaces, double quotes.
-            $keyTokenPattern = "(\$[^`" =]+)[ ]*="
-            $allKeyTokens_SemiParsed = Get-TokensFromSequence $keyTokenPattern $tokenSequence
-
-            # Matches values in the list. A value begins after '=' and ends with either ',' or end of string. Values containing
-            # spaces must be enclosed in double quotes.
-            $valueTokenPattern = "=[ ]*([^`" ]*(`"[^`"]*`")[^`" ]*|[^`" ,]+)[ ]*(,|$)"
-            $allValueTokens_SemiParsed = Get-TokensFromSequence $valueTokenPattern $tokenSequence
-            
-            Write-Verbose "Number of keys: $($allKeyTokens_SemiParsed.Count)"
-            Write-Verbose "Number of values: $($allValueTokens_SemiParsed.Count)"
-            if (($allKeyTokens_SemiParsed.Count -ne $result.Count) -or 
-                ($allValueTokens_SemiParsed.Count -ne $result.Count)) {
-                throw (Get-VstsLocString -Key "PS_TM_InvalidSessionVariablesInputFormat")
-            }
-        }
-        return $result
-    } finally {
-        Trace-VstsLeavingInvocation $MyInvocation
-    }
-}
-
 function Get-RemoteScriptJobArguments {
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -159,16 +85,16 @@ function Get-RemoteScriptJobArguments {
             $input_ScriptArguments = Get-VstsInput -Name "ScriptArguments"
             $input_initializationScriptPath = Get-VstsInput -Name "InitializationScript"
             $input_sessionVariables = Get-VstsInput -Name "SessionVariables"
-            $sessionVariables = ConvertTo-HashTable -tokenSequence $input_sessionVariables
-            # sessionVariables is a newline separated list of set-item commands which are executed right before the target script.
-            $newVarCmds = @()
-            foreach ($key in $sessionVariables.Keys) {
-                $newVarCmds += "Set-Item -LiteralPath variable:\$key -Value '$($sessionVariables[$key])'"
+            try {
+                $sessionVariablesScript = [scriptblock]::Create($input_sessionVariables)
+            } catch {
+                Write-Verbose $($_.Exception.ToString())
+                throw (Get-VstsLocString -Key "PS_TM_UnableToParseSessionVariables" -ArgumentList $($_.Exception.Message))
             }
-            $allNewVarCommands = [System.String]::Join([Environment]::NewLine, $newVarCmds)
             $inline = $false
         } else {
             $input_InlineScript = Get-VstsInput -Name "InlineScript"
+            $sessionVariablesScript = ""
             $input_initializationScriptPath = ""
             $inline = $true
         }
@@ -187,7 +113,7 @@ function Get-RemoteScriptJobArguments {
         $scriptArgumentsByName.ignoreLASTEXITCODE = $input_ignoreLASTEXITCODE
         $scriptArgumentsByName.failOnStdErr = $input_failOnStderr
         $scriptArgumentsByName.initializationScriptPath = $input_initializationScriptPath
-        $scriptArgumentsByName.sessionVariables = $allNewVarCommands
+        $scriptArgumentsByName.sessionVariables = $sessionVariablesScript.ToString()
 
         return $scriptArgumentsByName
     } finally {

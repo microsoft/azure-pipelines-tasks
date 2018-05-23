@@ -18,9 +18,8 @@ steps:
     gruntFile: 'gruntfile.js'
     targets: ''
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-    includeRootFolder: false
-
-- task: PublishBuildArtifacts@1
+#- task: ArchiveFiles@2
+#  inputs:
+#    rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#    includeRootFolder: false
+#- task: PublishBuildArtifacts@1

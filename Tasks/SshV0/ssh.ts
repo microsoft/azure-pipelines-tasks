@@ -53,8 +53,12 @@ async function run() {
         var scriptFile : string;
         var args : string;
 
-        if(runOptions === 'commands') {
-            commands = tl.getDelimitedInput('commands', '\n', true);
+        if (runOptions === 'commands') {
+            // Split on '\n' and ';', flatten, and remove empty entries
+            commands = tl.getDelimitedInput('commands', '\n', true)
+                         .map(s => s.split(';'))
+                         .reduce((a, b) => a.concat(b))
+                         .filter(s => s.length > 0);
         } else if (runOptions === 'inline') {
             var inlineScript: string = tl.getInput('inline', true);
             const scriptHeader:string = '#!';

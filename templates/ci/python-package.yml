@@ -4,27 +4,25 @@
 
 phases:
 
-# =============
 # Phase 1: Test
-# =============
 - phase: 'Test'
   queue:
     name: 'Hosted Linux Preview'
     parallel: 1
     matrix:
       Python27:
-        PYTHON_VERSION: '2.7'
+        python.version: '2.7'
       Python35:
-        PYTHON_VERSION: '3.5'
+        python.version: '3.5'
       Python36:
-        PYTHON_VERSION: '3.6'
+        python.version: '3.6'
       Python37-dev:
-        PYTHON_VERSION: '>= 3.7.0a'
+        python.version: '>= 3.7.0a'
   steps:
 
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '$(PYTHON_VERSION)'
+      versionSpec: '$(python.version)'
       architecture: 'x64'
 
   - script: python -m pip install --upgrade pip && pip install -r requirements.txt
@@ -41,9 +39,7 @@ phases:
       testResultsFiles: '**/test-results.xml'
       testRunTitle: 'Python $(python.version)'
 
-# ================
 # Phase 2: Publish
-# ================
 - phase: 'Publish'
   dependsOn: 'Test'
   queue: 'Hosted Linux Preview'
@@ -57,14 +53,13 @@ phases:
   - script: python setup.py sdist
     displayName: 'Build sdist'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: 'dist'
-      publishLocation: 'container'
-      artifactName: 'dist'
+#  - task: PublishBuildArtifacts@1
+#    inputs:
+#      pathToPublish: 'dist'
+#      artifactName: 'dist'
 
 #  - task: PyPIPublisher@0
 #    inputs:
-#      serviceEndpoint: ''
-#      wd: '$(Build.SourcesDirectory)'
-#      wheel: 'false'
+#      pypiConnection: ''
+#      packageDirectory: '$(build.sourcesDirectory)'
+#      alsoPublishWheel: false
