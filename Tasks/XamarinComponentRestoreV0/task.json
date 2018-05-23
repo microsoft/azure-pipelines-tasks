@@ -2,7 +2,7 @@
     "id": "ff50fc97-da8c-4683-b014-34c15315ee5f",
     "name": "XamarinComponentRestore",
     "friendlyName": "Xamarin Component Restore",
-    "description": "This task is deprecated. Please use 'NuGet' instead.",
+    "description": "This task is deprecated. Use 'NuGet' instead.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=786653)",
     "category": "Package",
     "author": "Microsoft Corporation",
