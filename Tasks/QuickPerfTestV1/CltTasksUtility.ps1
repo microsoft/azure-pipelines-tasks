@@ -157,11 +157,6 @@ function ValidateInputs($websiteUrl, $tfsCollectionUrl, $connectedServiceName, $
 		throw "Website Url is not well formed."
 	}
 	
-	if([string]::IsNullOrWhiteSpace($connectedServiceName) -and $tfsCollectionUrl -notlike "*VISUALSTUDIO.COM*" -and $tfsCollectionUrl -notlike "*TFSALLIN.NET*")
-	{
-		throw "VS Team Services Connection is mandatory for using performance test tasks on non hosted TFS builds.Please specify a VS Team Services connection and try again "
-	}
-
     # validate load test name
     # code taken from definitionNameInvalid    
     $invalidPattern1 = "(^\\.$|^\\.\\.$|^-$|^_$)"

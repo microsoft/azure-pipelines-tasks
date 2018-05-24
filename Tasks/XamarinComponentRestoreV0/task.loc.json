@@ -8,11 +8,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 131,
+    "Minor": 136,
     "Patch": 0
   },
   "minimumAgentVersion": "1.96.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "deprecated": true,
   "inputs": [
     {
       "name": "solution",

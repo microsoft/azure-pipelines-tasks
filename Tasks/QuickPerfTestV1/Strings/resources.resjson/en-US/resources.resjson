@@ -16,6 +16,10 @@
   "loc.input.label.geoLocation": "Load Location",
   "loc.input.help.geoLocation": "Geographical region to generate the load from.",
   "loc.input.label.machineType": "Run load test using",
+  "loc.input.label.resourceGroupName": "Resource group rig",
+  "loc.input.help.resourceGroupName": "Name of Resource group hosting the self-provisioned rig of load test agents.",
+  "loc.input.label.numOfSelfProvisionedAgents": "No. of agents to use",
+  "loc.input.help.numOfSelfProvisionedAgents": "Number of self provisioned agents to use for this test.",
   "loc.input.label.avgResponseTimeThreshold": "Fail test if Avg.Response Time(ms) exceeds",
   "loc.input.help.avgResponseTimeThreshold": "Average response time above which the load test outcome is considered unsuccessful."
 }

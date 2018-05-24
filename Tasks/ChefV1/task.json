@@ -3,7 +3,7 @@
     "name": "Chef",
     "friendlyName": "Chef",
     "description": "Deploy to Chef environments by editing environment attributes",
-    "helpMarkDown": "[More Information](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/Chef/README.md)",
+    "helpMarkDown": "[More Information](https://aka.ms/chef-readme)",
     "category": "Deploy",
     "visibility": [
         "Preview",
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 17
     },
     "deprecated": true,
     "demands": [

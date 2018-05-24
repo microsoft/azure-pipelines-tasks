@@ -45,7 +45,7 @@ export function getMockMysqlServers() {
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
             "content-type": "application/json; charset=utf-8"
         }
-    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/providers/Microsoft.DBforMySQL/servers?api-version=2017-04-30-preview")
+    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/providers/Microsoft.DBforMySQL/servers?api-version=2017-12-01")
         .reply(200, {
              value: [{
                 "id": "/subscriptions/ffffffff-ffff-ffff-ffff-ffffffffffff/resourceGroups/TestGroup/providers/Microsoft.DBforMySQL/servers/testserver",
@@ -76,7 +76,7 @@ export function getMockFirewallRules(){
             "authorization": "Bearer DUMMY_ACCESS_TOKEN",
             "content-type": "application/json; charset=utf-8"
         }
-    }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/servers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCK_RELEASE_ID12345?api-version=2017-04-30-preview").reply(201, {
+    }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/servers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCK_RELEASE_ID12345?api-version=2017-12-01").reply(201, {
         "id": "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/servers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCKID",
         "name": "rule1",
         "type": "Microsoft.DBforMySQL/servers/firewallRules",
@@ -92,7 +92,7 @@ export function getMockFirewallRules(){
             "content-type": "application/json; charset=utf-8"
         }
     })
-    .delete("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/servers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCK_RELEASE_ID12345?api-version=2017-04-30-preview")
+    .delete("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.DBforMySQL/servers/MOCK_SERVER_NAME/firewallRules/IPAddressRange_MOCK_RELEASE_ID12345?api-version=2017-12-01")
     .reply(200).persist();
 
 }
