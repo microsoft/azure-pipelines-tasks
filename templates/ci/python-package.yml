@@ -1,13 +1,12 @@
 # Python package
-# Create and test a Python package on multiple Python versions. Then, upload it to a Python package index.
+# Create and test a Python package on multiple Python versions. Then, upload it to a PyPI-compatible index.
 # https://aka.ms/yaml
 
 phases:
 
-# Phase 1: Test
 - phase: 'Test'
   queue:
-    name: 'Hosted Linux Preview'
+    name: 'Hosted Linux'
     parallel: 1
     matrix:
       Python27:
@@ -39,10 +38,10 @@ phases:
       testResultsFiles: '**/test-results.xml'
       testRunTitle: 'Python $(python.version)'
 
-# Phase 2: Publish
+
 - phase: 'Publish'
   dependsOn: 'Test'
-  queue: 'Hosted Linux Preview'
+  queue: 'Hosted Linux'
   steps:
 
   - task: UsePythonVersion@0
