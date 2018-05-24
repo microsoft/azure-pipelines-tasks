@@ -209,5 +209,7 @@
   "loc.messages.PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
   "loc.messages.InvalidConnectionType": "Invalid connection type",
   "loc.messages.InvalidImageSourceType": "Invalid Image source Type",
-  "loc.messages.InvalidPublishProfile": "Publish profile file is invalid."
+  "loc.messages.InvalidPublishProfile": "Publish profile file is invalid.",
+  "loc.messages.ZipDeployLogsURL": "Zip Deploy logs can be viewed at %s.",
+  "loc.messages.AppServiceApplicationURL": "App Service Application URL: %s"
 }

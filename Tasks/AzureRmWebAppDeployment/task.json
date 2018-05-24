@@ -600,6 +600,8 @@
         "PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
         "InvalidConnectionType": "Invalid connection type",
         "InvalidImageSourceType": "Invalid Image source Type",
-        "InvalidPublishProfile": "Publish profile file is invalid."
+        "InvalidPublishProfile": "Publish profile file is invalid.",
+        "ZipDeployLogsURL": "Zip Deploy logs can be viewed at %s.",
+        "AppServiceApplicationURL": "App Service Application URL: %s"
     }
 }
