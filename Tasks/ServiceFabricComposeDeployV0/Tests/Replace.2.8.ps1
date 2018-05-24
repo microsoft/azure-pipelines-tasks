@@ -138,8 +138,8 @@ Register-Mock Start-ServiceFabricComposeDeploymentUpgrade {
 Register-Mock Start-Sleep { } -ParametersEvaluator { $true }
 
 # Act
-. $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeploy\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
-@( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeploy/ServiceFabricComposeDeploy.ps1 )
+. $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeployV0\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
+@( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeployV0/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
 Assert-WasCalled Get-ServiceFabricComposeDeploymentStatus -Times 3
