@@ -1,7 +1,7 @@
 {
-    "id": "94A74903-F93F-4075-884F-DC11F34058B5",
+    "id": "94A74903-F93F-4075-884F-DC11F34058B4",
     "name": "AzureResourceGroupDeployment",
-    "friendlyName": "Azure RG Deployment - MSITesting",
+    "friendlyName": "Azure Resource Group Deployment",
     "description": "Deploy an Azure resource manager (ARM) template to a resource group. You can also start, stop, delete, deallocate all Virtual Machines (VM) in a resource group",
     "helpMarkDown": "[More Information](https://aka.ms/argtaskreadme)",
     "category": "Deploy",
