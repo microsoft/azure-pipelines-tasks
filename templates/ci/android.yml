@@ -10,6 +10,18 @@ steps:
     gradleWrapperFile: 'gradlew'
     tasks: 'assembleRelease'
 
+#- task: AndroidSigning@2
+#  inputs:
+#    apkFiles: '**/*.apk'
+#    jarsign: true
+#    jarsignerKeystoreFile: ''
+#    jarsignerKeystorePassword: ''
+#    jarsignerKeystoreAlias: ''
+#    jarsignerKeyPassword: ''
+#    jarsignerArguments: '-verbose -sigalg MD5withRSA -digestalg SHA1'
+#    zipalign: true
+#    zipalignFile: ''
+
 #- task: CopyFiles@2
 #  inputs:
 #    contents: '**/*.apk'
