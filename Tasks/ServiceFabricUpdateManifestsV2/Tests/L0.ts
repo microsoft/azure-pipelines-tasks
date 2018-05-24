@@ -108,5 +108,8 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         it('test Docker image settings', done => {
             psr.run(path.join(__dirname, 'Test-DockerImageSettings.ps1'), done);
         })
+        it('test Tagged Docker image settings', done => {
+            psr.run(path.join(__dirname, 'Test-TaggedDockerImageSettings.ps1'), done);
+        })
     }
 });
