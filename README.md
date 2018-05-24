@@ -9,9 +9,9 @@ This provides open examples on how we write tasks which will help you write othe
 ## Status
 |   | Build & Test |
 |---|:-----:|
-|![macOS](docs/res/apple_med.png) **macOS**|![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4213/badge?branch=master)| 
-|![Ubuntu14](docs/res/ubuntu_med.png) **Ubuntu 14.04**|![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4088/badge?branch=master)|
-|![Win](docs/res/win_med.png) **Windows**|![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/1474/badge?branch=master)|
+|![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4213/badge?branch=master)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=1474&branchName=master)| 
+|![Ubuntu14](docs/res/ubuntu_med.png) **Ubuntu 14.04**|[![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4088/badge?branch=master)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=1474&branchName=master)|
+|![Win](docs/res/win_med.png) **Windows**|[![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/1474/badge?branch=master)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=1474&branchName=master)|
 
 ## How to Use Tasks
 
