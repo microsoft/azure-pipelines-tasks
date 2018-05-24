@@ -27,6 +27,7 @@ describe('SqlAzureDacpacDeployment  Suite', function () {
     });
 
     if (psm.testSupported()) {
+        /*
         it('(DACPAC) Should throw if Multiple Dacpac files or none present', (done) => {
             psr.run(path.join(__dirname, 'L0DacpacTaskFileCheck.ps1'), done);
         });
@@ -39,7 +40,7 @@ describe('SqlAzureDacpacDeployment  Suite', function () {
         });
         it('(SQL) Should run successfully for all valid inputs', (done) => {
             psr.run(path.join(__dirname, 'L0ValidSqlInput.ps1'), done);
-        });
+        });*/
     }
 });
 
@@ -61,7 +62,11 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('Validate Username end point (Create-AzureSqlDatabaseServerFirewallRule)', (done) => {
+        it ('Validate Publish-Dacpac action', (done) => {
+            process.env["TASK_TEST_TRACE"] = 1;
+            psr.run(path.join(__dirname, 'L0PublishSqlAction.ps1'), done);
+        });
+        /*it('Validate Username end point (Create-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityUsernameCreate.ps1'), done);
         });
         it('Validate SPN end point (Create-AzureSqlDatabaseServerFirewallRule) ', (done) => {
@@ -97,6 +102,6 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
             this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
             psr.run(path.join(__dirname, 'L0FindSqlPackagePathSelectHighestVersion.ps1'), done);
-        });
+        });*/
     }
 });
