@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 2,
-        "Patch": 6
+        "Minor": 3,
+        "Patch": 0
     },
     "demands": [
         "Cmd"
@@ -134,6 +134,15 @@
             "visibleRule": "registryCredentials = UsernamePassword"
         },
         {
+            "name": "upgrade",
+            "type": "boolean",
+            "label": "Upgrade",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Upgrade an existing deployment rather than removing it.",
+            "groupName": "advanced"
+        },
+        {
             "name": "deployTimeoutSec",
             "type": "string",
             "label": "Deploy Timeout (s)",
@@ -177,12 +186,16 @@
         "ApplicationRemoved": "Application removed.",
         "EncryptingPassword": "Encrypting the password with the Server Certificate.",
         "CreatingApplication": "Creating application",
+        "UpgradingApplication": "Upgrading application",
         "WaitingForDeploy": "Waiting for deploy...",
+        "WaitingForUpgrade": "Waiting for upgrade...",
         "CurrentStatus": "Current Status: {0}",
         "DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
+        "UpgradeFailed": "Upgrade Failed\nStatus: {0}\nDetails: {1}",
         "CheckingComposeFile": "Checking compose file",
         "UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
         "UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}.",
-        "InvalidApplicationNameWarning": "Latest Service Fabric has stopped supporting compose application name starting with 'fabric:/' and hence compose deployment might fail with ServiceDnsName error for application name '{0}'. You can provide a different application name and re-run if required."
+        "InvalidApplicationNameWarning": "Latest Service Fabric has stopped supporting compose application name starting with 'fabric:/' and hence compose deployment might fail with ServiceDnsName error for application name '{0}'. You can provide a different application name and re-run if required.",
+        "UpgradeInProgress": "An upgrade for the application '{0}' is already in progress."
     }
 }
