@@ -2,7 +2,7 @@
 # Build your Go application.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 steps:
 
 - task: GoTool@0

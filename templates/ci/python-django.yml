@@ -6,7 +6,7 @@ phases:
 
 - phase: 'Test'
   queue:
-    name: 'Hosted Linux Preview'
+    name: 'Hosted Linux'
     parallel: 3
     matrix:
       Python35:
@@ -23,6 +23,7 @@ phases:
       architecture: 'x64'
 
   - task: PythonScript@0
+    displayName: 'Export project path'
     inputs:
       targetType: 'inline'
       script: |
@@ -36,8 +37,6 @@ phases:
         project_location = path.dirname(path.abspath(manage_py))
         print('Found Django project in', project_location)
         print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
-    name: setvar
-    displayName: 'Export project folder name'
       
   - script: python -m pip install --upgrade pip setuptools wheel
     displayName: 'Install dependencies'
@@ -57,9 +56,8 @@ phases:
       testRunTitle: 'Python $(PYTHON_VERSION)'
 
 # - phase: 'Publish'
-#   dependsOn:
-#     - 'Test'
-#   queue: 'Hosted Linux Preview'
+#   dependsOn: 'Test'
+#   queue: 'Hosted Linux'
 #   steps:
 #   - task: CopyFiles@2
 #     inputs:
