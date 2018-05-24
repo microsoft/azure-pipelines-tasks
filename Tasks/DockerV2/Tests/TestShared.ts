@@ -10,6 +10,7 @@ export let TestEnvVars = {
     enforceDockerNamingConvention: "__enforceDockerNamingConvention__",
     memory: "__memory__",
     pushMultipleImages: "__pushMultipleImages__",
+    tagMultipleImages: "__tagMultipleImages__",
     arguments: "__arguments__"
 };
 

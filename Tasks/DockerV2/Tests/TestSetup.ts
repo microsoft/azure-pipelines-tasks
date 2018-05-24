@@ -23,6 +23,7 @@ tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", 
 tr.setInput('enforceDockerNamingConvention', process.env[shared.TestEnvVars.enforceDockerNamingConvention]);
 tr.setInput('memory', process.env[shared.TestEnvVars.memory] || '');
 tr.setInput('pushMultipleImages', process.env[shared.TestEnvVars.pushMultipleImages] || "false");
+tr.setInput('tagMultipleImages', process.env[shared.TestEnvVars.tagMultipleImages] || "false");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
 
 console.log("Inputs have been set");

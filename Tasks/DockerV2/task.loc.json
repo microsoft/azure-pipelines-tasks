@@ -126,12 +126,20 @@
       "helpMarkDown": "ms-resource:loc.input.help.pushMultipleImages"
     },
     {
+      "name": "tagMultipleImages",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.tagMultipleImages",
+      "defaultValue": "false",
+      "visibleRule": "action = Tag images",
+      "helpMarkDown": "ms-resource:loc.input.help.tagMultipleImages"
+    },
+    {
       "name": "imageName",
       "type": "string",
       "label": "ms-resource:loc.input.label.imageName",
       "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
       "required": true,
-      "visibleRule": "action = Build an image || action = Run an image || pushMultipleImages = false",
+      "visibleRule": "action = Build an image || action = Run an image || pushMultipleImages = false || tagMultipleImages = false",
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
     },
     {
@@ -139,7 +147,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.imageNamesPath",
       "required": true,
-      "visibleRule": "action = Tag images || pushMultipleImages = true",
+      "visibleRule": "tagMultipleImages = true || pushMultipleImages = true",
       "helpMarkDown": "ms-resource:loc.input.help.imageNamesPath"
     },
     {

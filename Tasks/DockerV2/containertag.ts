@@ -19,7 +19,14 @@ function dockerTag(connection: ContainerConnection, sourceImage: string, targetI
 }
 
 export function run(connection: ContainerConnection): Q.Promise<void> {
-    let imageNames = utils.getImageNames();
+    let imageNames;
+    let useMultiImageMode = tl.getBoolInput("tagMultipleImages");
+    if (useMultiImageMode) {
+        imageNames = utils.getImageNames();
+    } else {
+        imageNames = [utils.getImageName()];
+    }
+    
     let imageMappings = utils.getImageMappings(connection, imageNames);
 
     let firstMapping = imageMappings.shift();

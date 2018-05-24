@@ -24,6 +24,8 @@
   "loc.input.help.context": "Path to the build context.",
   "loc.input.label.pushMultipleImages": "Push multiple images",
   "loc.input.help.pushMultipleImages": "Push multiple images.",
+  "loc.input.label.tagMultipleImages": "Tag multiple images",
+  "loc.input.help.tagMultipleImages": "Tag multiple images.",
   "loc.input.label.imageName": "Image Name",
   "loc.input.help.imageName": "Name of the Docker image to build, push, or run.",
   "loc.input.label.imageNamesPath": "Image Names Path",

@@ -122,12 +122,20 @@
             "helpMarkDown": "Push multiple images."
         },
         {
+            "name": "tagMultipleImages",
+            "type": "boolean",
+            "label": "Tag multiple images",
+            "defaultValue": "false",
+            "visibleRule": "action = Tag images",
+            "helpMarkDown": "Tag multiple images."
+        },
+        {
             "name": "imageName",
             "type": "string",
             "label": "Image Name",
             "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
             "required": true,
-            "visibleRule": "action = Build an image || action = Run an image || pushMultipleImages = false",
+            "visibleRule": "action = Build an image || action = Run an image || pushMultipleImages = false || tagMultipleImages = false",
             "helpMarkDown": "Name of the Docker image to build, push, or run."
         },
         {
@@ -135,7 +143,7 @@
             "type": "filePath",
             "label": "Image Names Path",
             "required": true,
-            "visibleRule": "action = Tag images || pushMultipleImages = true",
+            "visibleRule": "tagMultipleImages = true || pushMultipleImages = true",
             "helpMarkDown": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line."
         },
         {
