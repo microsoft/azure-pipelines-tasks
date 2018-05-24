@@ -172,7 +172,6 @@ try{
 
 
 } finally {
-        Write-Verbose "Validate-ServiceStatus -ServiceName $ServiceName -Slot $Slot"
         Trace-VstsLeavingInvocation $MyInvocation
 }
 
