@@ -53,6 +53,9 @@
     {
       "name": "otherOptions",
       "type": "string",
+      "aliases": [
+        "createOptions"
+      ],
       "label": "ms-resource:loc.input.label.otherOptions",
       "required": false,
       "defaultValue": "",

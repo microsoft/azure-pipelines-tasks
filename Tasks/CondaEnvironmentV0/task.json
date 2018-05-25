@@ -53,6 +53,9 @@
         {
             "name": "otherOptions",
             "type": "string",
+            "aliases": [
+                "createOptions"
+            ],
             "label": "Other options",
             "required": false,
             "defaultValue": "",
