@@ -29,7 +29,7 @@
       "name": "environmentName",
       "type": "string",
       "label": "ms-resource:loc.input.label.environmentName",
-      "required": true,
+      "required": false,
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.environmentName"
     },
@@ -39,6 +39,7 @@
       "label": "ms-resource:loc.input.label.packageSpecs",
       "required": false,
       "defaultValue": "python=3",
+      "visibileIf": "environmentName != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.packageSpecs"
     },
     {
@@ -50,12 +51,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.updateConda"
     },
     {
-      "name": "createOptions",
+      "name": "otherOptions",
       "type": "string",
-      "label": "ms-resource:loc.input.label.createOptions",
+      "label": "ms-resource:loc.input.label.otherOptions",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.createOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.otherOptions",
       "groupName": "advanced"
     },
     {
@@ -78,6 +79,7 @@
     "CleanEnvironment": "ms-resource:loc.messages.CleanEnvironment",
     "CreateFailed": "ms-resource:loc.messages.CreateFailed",
     "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
+    "InstallFailed": "ms-resource:loc.messages.InstallFailed",
     "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   }

@@ -7,10 +7,10 @@ import * as internal from './conda_internal';
 import { Platform } from './taskutil';
 
 interface TaskParameters {
-    environmentName: string,
+    environmentName?: string,
     packageSpecs?: string,
     updateConda?: boolean,
-    createOptions?: string,
+    otherOptions?: string,
     cleanEnvironment?: boolean
 }
 
@@ -31,19 +31,22 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
 
     internal.prependCondaToPath(condaRoot, platform);
 
-    // Activate the environment, creating it if it does not exist
-    const environmentsDir = path.join(condaRoot, 'envs');
-    const environmentPath = path.join(environmentsDir, parameters.environmentName);
+    if (parameters.environmentName) { // activate the environment, creating it if it does not exist
+        const environmentsDir = path.join(condaRoot, 'envs');
+        const environmentPath = path.join(environmentsDir, parameters.environmentName);
 
-    if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {
-        console.log(task.loc('ReactivateExistingEnvironment', environmentPath));
-    } else { // create the environment
-        if (fs.existsSync(environmentPath)) {
-            console.log(task.loc('CleanEnvironment', environmentPath));
-            task.rmRF(environmentPath);
+        if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {
+            console.log(task.loc('ReactivateExistingEnvironment', environmentPath));
+        } else { // create the environment
+            if (fs.existsSync(environmentPath)) {
+                console.log(task.loc('CleanEnvironment', environmentPath));
+                task.rmRF(environmentPath);
+            }
+            await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.otherOptions);
         }
-        await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
-    }
 
-    internal.activateEnvironment(environmentsDir, parameters.environmentName, platform);
+        internal.activateEnvironment(environmentsDir, parameters.environmentName, platform);
+    } else if (parameters.packageSpecs) {
+        internal.installPackagesGlobally(parameters.packageSpecs, parameters.otherOptions);
+    }
 }

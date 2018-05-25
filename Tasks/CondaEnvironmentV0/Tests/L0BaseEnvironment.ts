@@ -7,7 +7,8 @@ import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
-taskRunner.setInput('environmentName', 'test');
+taskRunner.setInput('packageSpecs', 'python=3');
+taskRunner.setInput('otherOptions', '--json');
 
 // Mock vsts-task-lib
 taskRunner.setAnswers({
@@ -15,12 +16,9 @@ taskRunner.setAnswers({
         'conda': '/miniconda/bin/conda'
     },
     exec: {
-        'conda create --quiet --prefix /miniconda/envs/test --mkdir --yes': {
+        'conda install python=3 --quiet --yes --json': {
             'code': 0
-        },
-        'conda create --quiet --prefix \\miniconda\\envs\\test --mkdir --yes': {
-            'code': 0
-        },
+        }
     }
 });
 
@@ -30,8 +28,8 @@ taskRunner.registerMock('vsts-task-tool-lib/tool', {
 });
 
 // Mock other dependencies
-mockery.registerMock('fs', {
-    existsSync: () => false
-});
+// mockery.registerMock('fs', {
+//     existsSync: () => false
+// });
 
 taskRunner.run();
