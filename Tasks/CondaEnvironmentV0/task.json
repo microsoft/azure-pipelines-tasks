@@ -39,7 +39,6 @@
             "label": "Package specs",
             "required": false,
             "defaultValue": "python=3",
-            "visibileIf": "environmentName != \"\"",
             "helpMarkDown": "Space-delimited list of packages to install when creating the environment, or to install to `base` if no environment is specified."
         },
         {

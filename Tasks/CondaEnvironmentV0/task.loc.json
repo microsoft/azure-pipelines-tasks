@@ -39,7 +39,6 @@
       "label": "ms-resource:loc.input.label.packageSpecs",
       "required": false,
       "defaultValue": "python=3",
-      "visibileIf": "environmentName != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.packageSpecs"
     },
     {
