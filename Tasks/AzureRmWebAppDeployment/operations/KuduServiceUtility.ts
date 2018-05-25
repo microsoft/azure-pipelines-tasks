@@ -155,7 +155,7 @@ export class KuduServiceUtility {
             ];
 
             if(runFromZip) {
-                var deploymentMessage = this._getUpdateHistoryRequest(true, null, customMessage).message;
+                var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
                 queryParameters.push('message=' + deploymentMessage);
             }
 
