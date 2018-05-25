@@ -101,8 +101,10 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
                 var result = response.body.value;
                 return new azureServiceClient.ApiResult(null, result);
             }
+            else if (response.statusCode == 400) {
+                return new azureServiceClient.ApiResult(tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
+            }
             else {
-                console.error('##[error]' + tl.loc('GetSecretFailedBecauseOfInvalidCharacters', secretName));
                 return new azureServiceClient.ApiResult(azureServiceClient.ToError(response));
             }
         }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
