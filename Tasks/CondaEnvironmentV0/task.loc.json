@@ -51,15 +51,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.updateConda"
     },
     {
-      "name": "otherOptions",
+      "name": "createOptions",
       "type": "string",
       "aliases": [
-        "createOptions"
+        "otherOptions"
       ],
-      "label": "ms-resource:loc.input.label.otherOptions",
+      "label": "ms-resource:loc.input.label.createOptions",
       "required": false,
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.otherOptions",
+      "helpMarkDown": "ms-resource:loc.input.help.createOptions",
       "groupName": "advanced"
     },
     {

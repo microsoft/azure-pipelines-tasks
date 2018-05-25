@@ -10,7 +10,7 @@ import { condaEnvironment } from './conda';
             environmentName: task.getInput('environmentName'),
             packageSpecs: task.getInput('packageSpecs'),
             updateConda: task.getBoolInput('updateConda'),
-            otherOptions: task.getInput('otherOptions'),
+            otherOptions: task.getInput('createOptions'), // TODO change this to "otherOptions" with next major version
             cleanEnvironment: task.getBoolInput('cleanEnvironment')
         },
         getPlatform());
