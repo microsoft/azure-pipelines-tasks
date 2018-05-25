@@ -65,17 +65,17 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-t", baseImageName]);
     }
 
-    var memory = tl.getInput("memory");
-    if (memory) {
-        command.arg(["-m", memory]);
+    var memoryLimit = tl.getInput("memoryLimit");
+    if (memoryLimit) {
+        command.arg(["-m", memoryLimit]);
     }
 
     var context: string;
-    var defaultContext = tl.getBoolInput("defaultContext");
-    if (defaultContext) {
+    var useDefaultContext = tl.getBoolInput("useDefaultContext");
+    if (useDefaultContext) {
         context = path.dirname(dockerFile);
     } else {
-        context = tl.getPathInput("context");
+        context = tl.getPathInput("buildContext");
     }
     command.arg(context);
     return connection.execCommand(command);

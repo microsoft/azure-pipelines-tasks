@@ -2,13 +2,13 @@ import tl = require('vsts-task-lib');
 
 export let TestEnvVars = {
     operatingSystem: "__operating_system__",
-    action: "__command__",
+    command: "__command__",
     containerType: "__container_type__",
     qualifyImageName: "__qualifyImageName__",
     includeLatestTag: "__includeLatestTag__",
     imageName: "__imageName__",
     enforceDockerNamingConvention: "__enforceDockerNamingConvention__",
-    memory: "__memory__",
+    memoryLimit: "__memoryLimit__",
     pushMultipleImages: "__pushMultipleImages__",
     tagMultipleImages: "__tagMultipleImages__",
     arguments: "__arguments__"
@@ -19,9 +19,9 @@ export let OperatingSystems = {
     Other: "Other"
 };
 
-export let ActionTypes = {
+export let CommandTypes = {
     buildImage: "Build an image",
-    tagImages: "Tag images",
+    tagImages: "Tag image",
     pushImage: "Push an image",
     runImage: "Run an image"
 };

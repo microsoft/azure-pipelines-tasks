@@ -11,14 +11,14 @@ describe('Docker Suite', function() {
         done();
     });
     beforeEach(() => {
-        delete process.env[shared.TestEnvVars.action];
+        delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.containerType];
         delete process.env[shared.TestEnvVars.includeLatestTag];
         delete process.env[shared.TestEnvVars.qualifyImageName];
         delete process.env[shared.TestEnvVars.includeLatestTag];
         delete process.env[shared.TestEnvVars.imageName];
         delete process.env[shared.TestEnvVars.enforceDockerNamingConvention];
-        delete process.env[shared.TestEnvVars.memory];
+        delete process.env[shared.TestEnvVars.memoryLimit];
         delete process.env[shared.TestEnvVars.pushMultipleImages];
         delete process.env[shared.TestEnvVars.tagMultipleImages];
         delete process.env[shared.TestEnvVars.arguments];
@@ -29,7 +29,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker build', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -43,8 +43,8 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker build with memory limit', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
-        process.env[shared.TestEnvVars.memory] = "2GB";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
+        process.env[shared.TestEnvVars.memoryLimit] = "2GB";
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -58,7 +58,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker build for invalid image name', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
         process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'true';
         tr.run();
@@ -74,7 +74,7 @@ describe('Docker Suite', function() {
     it('Runs fails for docker build for invalid image name and modify image name false', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
         process.env[shared.TestEnvVars.imageName] = 'test/Te st:2';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'false';
         tr.run();
@@ -90,7 +90,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker build for invalid image name and additional image tag', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
         process.env[shared.TestEnvVars.imageName] = 'test/Test:2';
         process.env[shared.TestEnvVars.enforceDockerNamingConvention] = 'true';
         tr.run();
@@ -107,7 +107,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker build with latest tag', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
         process.env[shared.TestEnvVars.includeLatestTag] = "true";
         tr.run();
 
@@ -122,7 +122,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker build with arguments', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
         process.env[shared.TestEnvVars.arguments] = "-t test:testtag";
         tr.run();
 
@@ -137,7 +137,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker run image', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.runImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.runImage;
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -151,8 +151,8 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker run image with memory limit', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.runImage;
-        process.env[shared.TestEnvVars.memory] = "2GB";
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.runImage;
+        process.env[shared.TestEnvVars.memoryLimit] = "2GB";
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -166,7 +166,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker tag image from image names file', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.tagImages;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.tagImages;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
         process.env[shared.TestEnvVars.qualifyImageName] = "true";
         process.env[shared.TestEnvVars.tagMultipleImages] = "true";
@@ -183,7 +183,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker tag image', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.tagImages;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.tagImages;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
         process.env[shared.TestEnvVars.qualifyImageName] = "true";
         tr.run();
@@ -199,7 +199,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker push image', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.pushImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.pushImage;
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
@@ -213,7 +213,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker push image with arguments', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.pushImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.pushImage;
         process.env[shared.TestEnvVars.arguments] = "-t testtag:testimage";
         tr.run();
 
@@ -228,7 +228,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker push image from image names file', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.pushImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.pushImage;
         process.env[shared.TestEnvVars.pushMultipleImages] = "true";
         tr.run();
 
@@ -243,7 +243,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker pull image', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = "pull";
+        process.env[shared.TestEnvVars.command] = "pull";
         process.env[shared.TestEnvVars.arguments] = "test/test:2";
         tr.run();
 
@@ -258,7 +258,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker build with ACR', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
         tr.run();
 
@@ -273,7 +273,7 @@ describe('Docker Suite', function() {
     it('Runs successfully for docker build with ACR and qualify image name', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
         process.env[shared.TestEnvVars.containerType] = shared.ContainerTypes.AzureContainerRegistry;
         process.env[shared.TestEnvVars.qualifyImageName] = "true";
         tr.run();

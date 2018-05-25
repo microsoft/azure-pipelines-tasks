@@ -11,7 +11,7 @@ let taskPath = path.join(__dirname, '..', 'container.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('containerregistrytype', process.env[shared.TestEnvVars.containerType] || shared.ContainerTypes.ContainerRegistry);
-tr.setInput('action', process.env[shared.TestEnvVars.action] || shared.ActionTypes.buildImage);
+tr.setInput('command', process.env[shared.TestEnvVars.command] || shared.CommandTypes.buildImage);
 tr.setInput('imageName', process.env[shared.TestEnvVars.imageName] || 'test/test:2');
 tr.setInput('imageNamesPath', ImageNamesPath);
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
@@ -21,7 +21,7 @@ tr.setInput('qualifyImageName', process.env[shared.TestEnvVars.qualifyImageName]
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', '{"loginServer":"ajgtestacr1.azurecr.io", "id" : "/subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/ajgtestacr1rg/providers/Microsoft.ContainerRegistry/registries/ajgtestacr1"}')
 tr.setInput('enforceDockerNamingConvention', process.env[shared.TestEnvVars.enforceDockerNamingConvention]);
-tr.setInput('memory', process.env[shared.TestEnvVars.memory] || '');
+tr.setInput('memoryLimit', process.env[shared.TestEnvVars.memoryLimit] || '');
 tr.setInput('pushMultipleImages', process.env[shared.TestEnvVars.pushMultipleImages] || "false");
 tr.setInput('tagMultipleImages', process.env[shared.TestEnvVars.tagMultipleImages] || "false");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');

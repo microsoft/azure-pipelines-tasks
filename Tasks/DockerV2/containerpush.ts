@@ -39,7 +39,7 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
 }
 
 export function run(connection: ContainerConnection): any {
-    let action = tl.getInput("action", true);
+    let command = tl.getInput("command", true);
     var commandArguments = tl.getInput("arguments", false); 
 
     let imageNames;

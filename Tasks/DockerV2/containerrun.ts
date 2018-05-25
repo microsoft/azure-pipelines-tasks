@@ -10,14 +10,14 @@ export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
     command.arg("run");
 
-    var detached = tl.getBoolInput("detached");
-    if (detached) {
+    var runInBackground = tl.getBoolInput("runInBackground");
+    if (runInBackground) {
         command.arg("-d");
     }
 
-    var entrypoint = tl.getInput("entrypoint");
-    if (entrypoint) {
-        command.arg(["--entrypoint", entrypoint]);
+    var entrypointOverride = tl.getInput("entrypointOverride");
+    if (entrypointOverride) {
+        command.arg(["--entrypoint", entrypointOverride]);
     }
 
     tl.getDelimitedInput("envVars", "\n").forEach(envVar => {
@@ -33,7 +33,7 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-p", port]);
     });
 
-    if (!detached) {
+    if (!runInBackground) {
         command.arg("--rm");
     } else {
         var restartPolicy = {
@@ -44,9 +44,9 @@ export function run(connection: ContainerConnection): any {
         }[tl.getInput("restartPolicy")];
         if (restartPolicy) {
             if (restartPolicy === "on-failure") {
-                var restartMaxRetries = tl.getInput("restartMaxRetries");
-                if (restartMaxRetries) {
-                    var restartMaxRetriesNum = parseInt(restartMaxRetries, 10);
+                var maxRestartRetries = tl.getInput("maxRestartRetries");
+                if (maxRestartRetries) {
+                    var restartMaxRetriesNum = parseInt(maxRestartRetries, 10);
                     if (isNaN(restartMaxRetriesNum)) {
                         throw new Error("Maximum Restart Retries is not a number.");
                     }
@@ -61,14 +61,14 @@ export function run(connection: ContainerConnection): any {
         command.arg(["-v", volume]);
     });
 
-    var workDir = tl.getInput("workDir");
-    if (workDir) {
-        command.arg(["-w", workDir]);
+    var workingDirectory = tl.getInput("workingDirectory");
+    if (workingDirectory) {
+        command.arg(["-w", workingDirectory]);
     }
 
-    var memory = tl.getInput("memory");
-    if (memory) {
-        command.arg(["-m", memory]);
+    var memoryLimit = tl.getInput("memoryLimit");
+    if (memoryLimit) {
+        command.arg(["-m", memoryLimit]);
     }
 
     var imageName = utils.getImageName();
