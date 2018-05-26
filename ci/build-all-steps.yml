@@ -69,3 +69,11 @@ steps:
   - powershell: ./ci/stop-collect-diagnostics.ps1
     displayName: Stop collect diagnostics
     condition: and(always(), eq(variables.collect_diagnostics, 'true'))
+
+- task: NodeTool@0
+  displayName: Use node 10
+  inputs:
+    versionSpec: "10.x"
+
+- script: npm audit
+  displayName: npm audit
