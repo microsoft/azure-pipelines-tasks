@@ -75,5 +75,8 @@ steps:
   inputs:
     versionSpec: "10.x"
 
+- script: npm install npm@latest -g
+  displayName: npm install npm@latest -g
+
 - script: npm audit
   displayName: npm audit
