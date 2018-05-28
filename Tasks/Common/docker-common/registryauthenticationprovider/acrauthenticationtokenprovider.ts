@@ -9,19 +9,29 @@ export default class ACRAuthenticationTokenProvider extends AuthenticationTokenP
     // URL to registry like jitekuma-microsoft.azurecr.io
     private registryURL: string;
 
-    // name of the azure subscription endpoint like RMDev
-    private endpointName: string;
-
     // ACR fragment like /subscriptions/c00d16c7-6c1f-4c03-9be1-6934a4c49682/resourcegroups/jitekuma-RG/providers/Microsoft.ContainerRegistry/registries/jitekuma
     private acrFragmentUrl: string;
+
+    // name of the azure subscription endpoint like RMDev
+    private endpointName: string;
 
     constructor(endpointName?: string, registerNameValue?: string) {
         super();
 
         if(endpointName && registerNameValue) {
-            var obj = JSON.parse(registerNameValue);
+          try
+          {
+            tl.debug("Reading the acr registry in old versions");
+            var obj = JSON.parse(registerNameValue);  
             this.registryURL = obj.loginServer;
             this.acrFragmentUrl = obj.id;
+          }  
+          catch(e)
+          {
+            tl.debug("Reading the acr registry in kubernetesV1");
+            this.registryURL = registerNameValue;
+          }
+
             this.endpointName = endpointName;
         }
     }
