@@ -227,10 +227,10 @@ Try
             $SqlAdditionalArguments = $SqlAdditionalArguments + " -ConnectionTimeout $defaultTimeout"
         }
 
-        $additionalArguments = EscapeSpecialChars $additionalArguments
+        $SqlAdditionalArguments = EscapeSpecialChars $SqlAdditionalArguments
 
-        Write-Verbose "Invoke-SqlCmd arguments : $commandToLog  $additionalArguments"
-        Invoke-Expression "Invoke-SqlCmd @sqlArguments $additionalArguments"
+        Write-Verbose "Invoke-SqlCmd arguments : $commandToLog  $SqlAdditionalArguments"
+        Invoke-Expression "Invoke-SqlCmd @sqlArguments $SqlAdditionalArguments"
     }
     
 }
