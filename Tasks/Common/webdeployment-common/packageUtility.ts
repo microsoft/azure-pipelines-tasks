@@ -20,7 +20,6 @@ export class PackageUtility {
 export class Package {
     constructor(packagePath: string) {
         this._path = PackageUtility.getPackagePath(packagePath);
-        console.log(this._path);
         this._isMSBuildPackage = undefined;
         this._isFolder = undefined;
     }

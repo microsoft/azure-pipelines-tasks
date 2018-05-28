@@ -49,7 +49,7 @@
   "loc.input.help.AppSettings": "Edit web app application settings following the syntax -key value . Value containing spaces should be enclosed in double quotes.<br /> <b>Example</b> : -Port 5000 -RequestTimeout 5000 <br /> -WEBSITE_TIME_ZONE \"Eastern Standard Time\"",
   "loc.input.label.ConfigurationSettings": "Configuration settings",
   "loc.input.help.ConfigurationSettings": "Edit web app configuration settings following the syntax -key value. Value containing spaces should be enclosed in double quotes.<br /> Example : -phpVersion 5.6 -linuxFxVersion: node|6.11",
-  "loc.input.label.UseWebDeploy": "Choose custom deployment method",
+  "loc.input.label.UseWebDeploy": "Select deployment method",
   "loc.input.help.UseWebDeploy": "If unchecked we will auto-detect the best deployment method based on your app type, package format and other parameters. <br>Select the option to see choice of deployment methods.",
   "loc.input.label.DeploymentType": "Deployment method",
   "loc.input.help.DeploymentType": "Choose deployment mechanism for your app.",
@@ -209,5 +209,7 @@
   "loc.messages.PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
   "loc.messages.InvalidConnectionType": "Invalid connection type",
   "loc.messages.InvalidImageSourceType": "Invalid Image source Type",
-  "loc.messages.InvalidPublishProfile": "Publish profile file is invalid."
+  "loc.messages.InvalidPublishProfile": "Publish profile file is invalid.",
+  "loc.messages.ZipDeployLogsURL": "Zip Deploy logs can be viewed at %s",
+  "loc.messages.AppServiceApplicationURL": "App Service Application URL: %s"
 }
