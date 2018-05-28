@@ -33,7 +33,8 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
 
             await this.deployUsingZipDeploy(webPackage, this.taskParams.UseRunFromZip);
         }
-        else if(this.taskParams.ScriptType) {
+        // if post deployment script is present or app offline flag is checked we use pure zipDeploy
+        else if(this.taskParams.ScriptType || this.taskParams.TakeAppOfflineFlag) {
             await this.deployUsingZipDeploy(webPackage, false);
         }
         else {

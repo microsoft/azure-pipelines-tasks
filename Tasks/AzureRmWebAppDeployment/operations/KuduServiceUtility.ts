@@ -143,7 +143,7 @@ export class KuduServiceUtility {
                 tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
             }
 
-            if(!runFromZip && appOffline) {
+            if(appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, true);
                 tl.debug('Wait for 5 seconds for app_offline to take effect');
                 await webClient.sleepFor(5);
