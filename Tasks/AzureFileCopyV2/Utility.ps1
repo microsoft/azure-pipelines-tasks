@@ -247,16 +247,34 @@ function Upload-FilesToAzureContainer
     {
         Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
 
+        $resolvedSourcePath = $sourcePath
+
+        # Check if source path is a file. If yes, then add /Pattern additional argument.
+        if(Test-Path -Path $sourcePath -PathType Leaf)
+        {
+            $fileInfo = Get-Item $sourcePath
+            $resolvedSourcePath = $fileInfo.Directory.FullName
+            $additionalArguments += " /Pattern:`"$($fileInfo.Name)`""
+        }
+
         $blobPrefix = $blobPrefix.Trim()
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        Write-Verbose "Executing command: & `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /DestKey:`"*****`" $additionalArguments"
+        Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"*****`" $additionalArguments"
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:$sourcePath /Dest:$containerURL /DestKey:`"$storageKey`" $additionalArguments"
+        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"$storageKey`" $additionalArguments"
 
         Invoke-Expression $uploadToBlobCommand
-        Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+
+        if($LASTEXITCODE -eq 0)
+        {
+            Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        }
+        else
+        {
+            throw (Get-VstsLocString -Key "AFC_AzCopyBlobUploadNonZeroExitCode")
+        }
     }
     catch
     {
@@ -283,8 +301,8 @@ function Handle-AzCopyLogs
 {
     [CmdletBinding()]
     param(
-        [bool]$isLogsPresent,
-        [string]$logsFilePath
+        [Nullable[bool]]$isLogsPresent,
+        [AllowEmptyString()][string]$logsFilePath
     )
 
     if($isLogsPresent)
