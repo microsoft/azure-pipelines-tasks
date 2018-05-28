@@ -229,7 +229,7 @@ Try
 
         $SqlAdditionalArguments = EscapeSpecialChars $SqlAdditionalArguments
 
-        Write-Verbose "Invoke-SqlCmd arguments : $commandToLog  $SqlAdditionalArguments"
+        Write-Host "Invoke-SqlCmd arguments : $commandToLog  $SqlAdditionalArguments"
         Invoke-Expression "Invoke-SqlCmd @sqlArguments $SqlAdditionalArguments"
     }
     
