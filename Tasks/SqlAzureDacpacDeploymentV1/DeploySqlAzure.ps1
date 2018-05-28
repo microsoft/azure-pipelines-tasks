@@ -191,9 +191,11 @@ Try
             $SqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
         }
 
-        $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$ServerName`" -Database `"$DatabaseName`" -Username `"$SqlUsername`" "
+        $SqlUsername = $SqlUsername -replace "'" , "''"
+        $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$ServerName`" -Database `"$DatabaseName`" -Username '$SqlUsername' "
 
-        $commandToRun = $scriptArgument + " -Password `"$SqlPassword`" "
+        $SqlPassword = $SqlPassword -replace "'" , "''"
+        $commandToRun = $scriptArgument + " -Password '$SqlPassword' "
         $commandToLog = $scriptArgument + " -Password ****** "
 
         # Increase Timeout to 120 seconds in case its not provided by User
