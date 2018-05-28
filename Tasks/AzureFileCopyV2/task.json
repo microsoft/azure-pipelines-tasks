@@ -207,7 +207,7 @@
             "label": "Optional Arguments (for uploading files to blob)",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when uploading to blob like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /SetContentType, /Z, /V,<br> /S (only if container name is not $root),<br> /BlobType:page (only if specified storage account is a premium account).<br> If source path is a file, /Pattern will always be added irrespective of whether or not you have specified optional arguments."
+            "helpMarkDown": "Optional AzCopy.exe arguments that will be applied when uploading to blob like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /SetContentType, /Z, /V,<br> /S (only if container name is not $root),<br> /BlobType:page (only if specified storage account is a premium account).<br> If source path is a file, /Pattern will always be added irrespective of whether or not specified in optional arguments."
         },
         {
             "name": "AdditionalArgumentsForVMCopy",
