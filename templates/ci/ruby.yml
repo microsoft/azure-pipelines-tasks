@@ -2,7 +2,7 @@
 # Package your Ruby application.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 steps:
 
 - task: UseRubyVersion@0

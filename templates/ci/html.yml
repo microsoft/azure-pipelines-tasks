@@ -2,7 +2,7 @@
 # Package your static HTML application.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 steps:
 
 - task: ArchiveFiles@2

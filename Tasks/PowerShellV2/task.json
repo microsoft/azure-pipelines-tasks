@@ -2,7 +2,7 @@
     "id": "E213FF0F-5D5C-4791-802D-52EA3E7BE1F1",
     "name": "PowerShell",
     "friendlyName": "PowerShell",
-    "description": "This is an early preview. Run a PowerShell script on Windows, macOS, or Linux.",
+    "description": "Run a PowerShell script on Windows, macOS, or Linux.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
     "category": "Utility",
     "visibility": [
@@ -16,10 +16,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 135,
+        "Minor": 136,
         "Patch": 0
     },
-    "releaseNotes": "This is an early preview. Script task consistency. Added support for macOS and Linux.",
+    "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
     "minimumAgentVersion": "2.115.0",
     "showEnvironmentVariables": true,
     "groups": [

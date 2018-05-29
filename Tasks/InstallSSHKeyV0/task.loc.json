@@ -9,11 +9,10 @@
     "Build",
     "Release"
   ],
-  "preview": true,
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 119,
+    "Minor": 136,
     "Patch": 0
   },
   "runsOn": [

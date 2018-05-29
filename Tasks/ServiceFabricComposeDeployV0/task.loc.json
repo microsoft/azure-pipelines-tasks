@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 2,
-    "Patch": 6
+    "Minor": 3,
+    "Patch": 0
   },
   "demands": [
     "Cmd"
@@ -134,6 +134,15 @@
       "visibleRule": "registryCredentials = UsernamePassword"
     },
     {
+      "name": "upgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.upgrade",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.upgrade",
+      "groupName": "advanced"
+    },
+    {
       "name": "deployTimeoutSec",
       "type": "string",
       "label": "ms-resource:loc.input.label.deployTimeoutSec",
@@ -177,12 +186,16 @@
     "ApplicationRemoved": "ms-resource:loc.messages.ApplicationRemoved",
     "EncryptingPassword": "ms-resource:loc.messages.EncryptingPassword",
     "CreatingApplication": "ms-resource:loc.messages.CreatingApplication",
+    "UpgradingApplication": "ms-resource:loc.messages.UpgradingApplication",
     "WaitingForDeploy": "ms-resource:loc.messages.WaitingForDeploy",
+    "WaitingForUpgrade": "ms-resource:loc.messages.WaitingForUpgrade",
     "CurrentStatus": "ms-resource:loc.messages.CurrentStatus",
     "DeployFailed": "ms-resource:loc.messages.DeployFailed",
+    "UpgradeFailed": "ms-resource:loc.messages.UpgradeFailed",
     "CheckingComposeFile": "ms-resource:loc.messages.CheckingComposeFile",
     "UnsupportedAPIVersion": "ms-resource:loc.messages.UnsupportedAPIVersion",
     "UsingAPIVersion": "ms-resource:loc.messages.UsingAPIVersion",
-    "InvalidApplicationNameWarning": "ms-resource:loc.messages.InvalidApplicationNameWarning"
+    "InvalidApplicationNameWarning": "ms-resource:loc.messages.InvalidApplicationNameWarning",
+    "UpgradeInProgress": "ms-resource:loc.messages.UpgradeInProgress"
   }
 }

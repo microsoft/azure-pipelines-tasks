@@ -5,7 +5,8 @@ param()
 
 $serviceConnectionName = "random connection name"
 $composeFilePath = "docker-compose.yml"
-$applicationName = "fabric:/Application1"
+$deploymentName = "fabric:/Application1"
+$applicationName = "fabric:/fabric:/Application1"
 $serverCertThumbprint = "random thumbprint"
 $userName = "random user"
 $password = "random password"
@@ -15,11 +16,12 @@ $connectionEndpoint = ([System.Uri]$connectionEndpointFullUrl).Authority
 # Setup input arguments
 Register-Mock Get-VstsInput { $serviceConnectionName } -Name serviceConnectionName -Require
 Register-Mock Get-VstsInput { $composeFilePath } -Name composeFilePath -Require
-Register-Mock Get-VstsInput { $applicationName } -Name applicationName -Require
+Register-Mock Get-VstsInput { $deploymentName } -Name applicationName -Require
 Register-Mock Get-VstsInput { $null } -Name deployTimeoutSec
 Register-Mock Get-VstsInput { $null } -Name removeTimeoutSec
 Register-Mock Get-VstsInput { $null } -Name getStatusTimeoutSec
 Register-Mock Get-VstsInput { "None" } -Name registryCredentials -Require
+Register-Mock Get-VstsInput { "true" } -Name upgrade
 
 # Setup file resolution
 Register-Mock Find-VstsFiles { $composeFilePath } -- -LegacyPattern $composeFilePath
@@ -50,42 +52,86 @@ Register-Mock Get-ItemProperty { $SfRegistry } -- -Path 'HKLM:\SOFTWARE\Microsof
 # Setup mock results of cluster connection
 Register-Mock Connect-ServiceFabricClusterFromServiceEndpoint { } -- -ClusterConnectionParameters @{} -ConnectedServiceEndpoint $vstsEndpoint
 
-$serviceFabricComposeDeploymentStatus = @{
-    "DeploymentName"          = $applicationName
-    "ComposeDeploymentStatus" = "Created"
+$deploymentStatus = @{
+    "ApplicationName"         = $applicationName
+    "DeploymentName"          = $deploymentName
+    "ComposeDeploymentStatus" = "Ready"
     "StatusDetails"           = ""
 }
 
+$deploymentUpgraded = @{
+    "ApplicationName"      = $applicationName
+    "DeploymentName"       = $deploymentName
+    "UpgradeState"         = "RollingForwardCompleted"
+    "UpgradeStatusDetails" = ""
+}
+$applicationUpgraded = @{
+    "ApplicationName" = $applicationName
+    "UpgradeState"    = "RollingForwardCompleted"
+}
+
+$deploymentUpgrading = @{
+    "ApplicationName"      = $applicationName
+    "DeploymentName"       = $deploymentName
+    "UpgradeState"         = "RollingForwardInProgress"
+    "UpgradeStatusDetails" = ""
+}
+$applicationUpgrading = @{
+    "ApplicationName" = $applicationName
+    "UpgradeState"    = "RollingForwardInProgress"
+}
+
 # Need to store the bool in an object so the lambdas will share the reference
-$removed = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
-$removed.Value = $false
+$isUpgrading = New-Object 'System.Collections.Generic.Dictionary[string, bool]'
+$isUpgrading.Value = $false
 
 Register-Mock Get-ServiceFabricComposeDeploymentStatus {
-    if (($removed.Value -eq $true))
+    return $deploymentStatus
+} -DeploymentName: $deploymentName
+
+Register-Mock Remove-ServiceFabricComposeDeployment {
+} -DeploymentName: $deploymentName -Force: $true
+
+Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath $composeFilePath -ErrorAction Stop
+
+Register-Mock New-ServiceFabricComposeDeployment {
+} -- -DeploymentName: $deploymentName -Compose: $composeFilePath
+
+Register-Mock Get-ServiceFabricComposeDeploymentUpgrade {
+    if ($isUpgrading.Value -eq $true)
     {
-        return $null;
+        return $deploymentUpgrading;
     }
     else
     {
-        return $serviceFabricComposeDeploymentStatus
+        return $deploymentUpgraded
     }
-} -DeploymentName: $applicationName
+} -DeploymentName: $deploymentName
 
-Register-Mock Remove-ServiceFabricComposeDeployment {
-    $removed.Value = $true
-} -DeploymentName: $applicationName -Force: True
+Register-Mock Get-ServiceFabricApplicationUpgrade {
+    if ($isUpgrading.Value -eq $true)
+    {
+        $isUpgrading.Value = $false
+        return $applicationUpgrading;
+    }
+    else
+    {
+        return $applicationUpgraded
+    }
+} -ApplicationName: $applicationName
 
-Register-Mock Test-ServiceFabricApplicationPackage { } -- -ComposeFilePath: $composeFilePath -ErrorAction: Stop
+Register-Mock Start-ServiceFabricComposeDeploymentUpgrade {
+    $isUpgrading.Value = $true
+} -Force: True -ConsiderWarningAsError: True -FailureAction: Rollback -DeploymentName: $deploymentName -Monitored: True -Compose: $composeFilePath
 
-Register-Mock New-ServiceFabricComposeDeployment {
-    $removed.Value = $false
-} -- -DeploymentName: $applicationName -Compose: $composeFilePath
+Register-Mock Start-Sleep { } -ParametersEvaluator { $true }
 
 # Act
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricComposeDeployV0\ps_modules\ServiceFabricHelpers\Connect-ServiceFabricClusterFromServiceEndpoint.ps1
 @( & $PSScriptRoot/../../../Tasks/ServiceFabricComposeDeployV0/ServiceFabricComposeDeploy.ps1 )
 
 # Assert
-Assert-WasCalled Get-ServiceFabricComposeDeploymentStatus -Times 3
-Assert-WasCalled Remove-ServiceFabricComposeDeployment -Times 1
-Assert-WasCalled New-ServiceFabricComposeDeployment -Times 1
+Assert-WasCalled Get-ServiceFabricComposeDeploymentStatus -Times 1
+Assert-WasCalled Get-ServiceFabricComposeDeploymentUpgrade -Times 3
+Assert-WasCalled Remove-ServiceFabricComposeDeployment -Times 0
+Assert-WasCalled New-ServiceFabricComposeDeployment -Times 0

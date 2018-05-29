@@ -2,7 +2,7 @@
 # Build a Docker image and push it to a container registry.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 steps:
 
 - task: Docker@0
