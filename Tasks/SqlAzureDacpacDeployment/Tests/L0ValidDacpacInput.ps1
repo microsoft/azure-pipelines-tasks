@@ -10,6 +10,7 @@ Register-Mock Get-VstsInput { "DacpacTask" } -ParametersEvaluator { $Name -eq "T
 Register-Mock Get-VstsInput { "DacpacFile.dacpac" } -ParametersEvaluator { $Name -eq "DacpacFile" }
 Register-Mock Get-VstsInput { "SqlFile.sql" } -ParametersEvaluator { $Name -eq "SqlFile" }
 Register-Mock Get-VstsInput { $databaseName } -ParametersEvaluator { $Name -eq "DatabaseName" }
+Register-Mock Get-VstsInput { "Publish" } -ParametersEvaluator { $Name -eq "DeploymentAction" }
 Register-Mock Get-VstsInput { $serverName } -ParametersEvaluator { $Name -eq "ServerName" }
 Register-Mock Get-VstsInput { "ConnectedServiceName" } -ParametersEvaluator { $Name -eq "ConnectedServiceName" }
 Register-Mock Get-VstsInput { "ConnectedServiceNameARM" } -ParametersEvaluator { $Name -eq "ConnectedServiceNameARM" }
@@ -27,6 +28,7 @@ Register-Mock Find-VstsFiles { "dacpacFile.dacpac" } -ArgumentsEvaluator {$args.
 Register-Mock Find-VstsFiles { "PublishProfile.xml" } -ArgumentsEvaluator {$args.count -eq 2 -and $args[0] -like "LegacyPattern" -and $args[1] -like "C:\Test\publish.xml" }
 
 Register-Mock Get-Endpoint { $usernameEndpoint } -ParametersEvaluator { $connectedServiceName  -eq "connectedServiceName"}
+Register-Mock Import-SqlPs { }
 Register-Mock Add-AzureSqlDatabaseServerFirewallRule { 
     $fireWallRule = @{ }
     $fireWallRule.RuleName = "Mock File Wall Rule Name"

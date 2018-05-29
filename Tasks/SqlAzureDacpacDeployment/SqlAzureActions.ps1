@@ -81,7 +81,7 @@ function Deploy-Report {
 
     $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
     
-    $sqlpackageArguments = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfile -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
+    $sqlpackageArguments = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
     $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfile -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure 
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
@@ -260,7 +260,6 @@ function Run-SqlCmd {
         [string] $sqlcmdAdditionalArguments
     )
 
-    Write-Host "sqlUsername =  $sqlUsername"
     if ($sqlUsername) {
         $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
     }

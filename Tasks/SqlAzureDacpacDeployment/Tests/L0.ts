@@ -27,20 +27,42 @@ describe('SqlAzureDacpacDeployment  Suite', function () {
     });
 
     if (psm.testSupported()) {
-        /*
-        it('(DACPAC) Should throw if Multiple Dacpac files or none present', (done) => {
-            psr.run(path.join(__dirname, 'L0DacpacTaskFileCheck.ps1'), done);
+        
+        it('Validate with valid inputs', (done) => {            
+            psr.run(path.join(__dirname, 'L0ValidSqlAzureInputs.ps1'), done);
+        });
+    }
+});
+
+describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
+    this.timeout(10000);
+
+    before((done) => {
+        if (psm.testSupported()) {
+            psr = new psm.PSRunner();
+            psr.start();
+        }
+        done();
+    });
+
+    after(function () {
+        if (psr) {
+            psr.kill();
+        }
+    });
+
+    if (psm.testSupported()) {
+        it ('Validate all SqlPackage.exe actions', (done) => {
+            psr.run(path.join(__dirname, 'L0SqlPackageActions.ps1'), done);
         });
 
-        it('(SQL) Should throw if Multiple Sql files or none present', (done) => {
-            psr.run(path.join(__dirname, 'L0SqlTaskFileCheck.ps1'), done);
+        it ('Validate Invoke-SqlCmd related actions', (done) => {
+            psr.run(path.join(__dirname, 'L0SqlcmdTests.ps1'), done);
         });
-        it('(DACPAC) Should run successfully for all valid inputs', (done) => {
-            psr.run(path.join(__dirname, 'L0ValidDacpacInput.ps1'), done);
+
+        it ('Validate helper methods', (done) => {
+            psr.run(path.join(__dirname, 'L0SqlAzureActionsUtilityTests.ps1'), done);
         });
-        it('(SQL) Should run successfully for all valid inputs', (done) => {
-            psr.run(path.join(__dirname, 'L0ValidSqlInput.ps1'), done);
-        });*/
     }
 });
 
@@ -62,16 +84,7 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
     });
 
     if (psm.testSupported()) {
-        /*it ('Validate Publish-Dacpac action', (done) => {
-            process.env["TASK_TEST_TRACE"] = 1;
-            psr.run(path.join(__dirname, 'L0PublishSqlAction.ps1'), done);
-        });*/
-
-        it ('Validate SQL files related actions', (done) => {
-            process.env["TASK_TEST_TRACE"] = 1;
-            psr.run(path.join(__dirname, 'L0SqlcmdTests.ps1'), done);
-        });
-        /*it('Validate Username end point (Create-AzureSqlDatabaseServerFirewallRule)', (done) => {
+        it('Validate Username end point (Create-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityUsernameCreate.ps1'), done);
         });
         it('Validate SPN end point (Create-AzureSqlDatabaseServerFirewallRule) ', (done) => {
@@ -107,6 +120,6 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
             this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
             psr.run(path.join(__dirname, 'L0FindSqlPackagePathSelectHighestVersion.ps1'), done);
-        });*/
+        });
     }
 });
