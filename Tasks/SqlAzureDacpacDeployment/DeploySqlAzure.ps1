@@ -60,32 +60,39 @@ try {
     # Create the directory for output files
     $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
     if (Test-Path $generatedOutputFilesRoot) {
-        Remove-Item -Path $generatedOutputFilesRoot -Recurce -Force
+        Remove-Item -Path $generatedOutputFilesRoot -Recurse -Force 
     }
 
-    New-Item -Path $generatedOutputFilesRoot -ItemType Directory | Out-Null
+    New-Item -Path $generatedOutputFilesRoot -ItemType Directory 
 
     switch ($deploymentAction) {
         "Publish" {
+            Write-Verbose "Executing 'Publish' action."
             Execute-PublishAction -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -taskNameSelector $taskNameSelector -dacpacFile $dacpacFile `
                 -publishProfile $publishProfile -sqlFile $sqlFile -sqlInline $sqlInline -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -sqlcmdInlineAdditionalArguments $sqlcmdInlineAdditionalArguments
         }
         "Extract" {
+            Write-Verbose "Executing 'Extract' action."
             Extract-Dacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments    
         }
         "Export" {
+            Write-Verbose "Executing 'Export' action."
             Export-Bacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "Import" {
+            Write-Verbose "Executing 'Import' action."
             Import-Bacpac -bacpacFile $bacpacFile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "DriftReport" {
+            Write-Verbose "Executing 'DriftReport' action."
             Drift-Report -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "Script" {
+            Write-Verbose "Executing 'Script' action."
             Script-Action -dacpacFile $dacpacFile -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "DeployReport" {
+            Write-Verbose "Executing 'DeployReport' action."
             Deploy-Report -dacpacFile $dacpacFile -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         default {
@@ -139,7 +146,7 @@ finally {
 # Function to import SqlPS module & avoid directory switch
 function Import-Sqlps {
     Push-Location
-    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | out-null
+    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
     Pop-Location
 }
 
