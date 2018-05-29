@@ -61,6 +61,7 @@
         "JenkinsDownloadArtifactsV1",
         "JenkinsQueueJobV2",
         "KubernetesV0",
+        "KubernetesV1",
         "ManualInterventionV8",
         "MavenV2",
         "MSBuildV1",
