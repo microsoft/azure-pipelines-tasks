@@ -2,7 +2,7 @@
 
 ### Overview
 
-Following set of steps helps in collecting the test execution process dump in case of test hangs, vstest task exits abnormally.
+Following are set of steps help you in collecting the test execution process dump in case of test hangs, vstest task exits abnormally.
 
 - For test hangs, we suggest using `Blame data collector` which is shipped as default in Visual Studio 2017 (Release 15.6 onwards)
 - For process crashes/unexpected test task exists, we suggest using `ProcDump` for collection of process dumps
@@ -35,9 +35,16 @@ If(!(Test-Path "C:\logs\"))
 Write-Host "Copying files"
 cp \\SharedPath\procdump*.exe "C:\logs\" -Force
 
+## Works for Visual Studio 2017
 powershell.exe -Command "Start-Process C:\logs\procdump64.exe -ArgumentList 'testhost c:\logs\test.dmp -w -t -ma' -WindowStyle Hidden"
+## Works for Visual Studio 2015
+powershell.exe -Command "Start-Process C:\logs\procdump64.exe -ArgumentList 'vstest.executionengine c:\logs\test.dmp -w -t -ma' -WindowStyle Hidden"
 ```
 
 - Process dump files will be generated in `c:\logs\` folder and make sure script is modified according to your requirements. Please refer `ProcDump` documentation for details
+
+- Note: The above script works only if tests are not running with parallelism (`--parallel`). Make sure to remove lines from script based on Visual Studio version`
+
+
 
 
