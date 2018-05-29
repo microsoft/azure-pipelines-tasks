@@ -1,3 +1,4 @@
+# Tests for helper methods in SqlAzureActions.ps1
 [CmdletBinding()]
 param()
 
@@ -52,7 +53,7 @@ Register-Mock Execute-SqlPackage { }
 
 Import-Bacpac -bacpacFile $bacpacFile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
 
-Assert-MockCalled Find-SqlFiles -Times 1
+Assert-WasCalled Find-SqlFiles -Times 1
 Assert-WasCalled Get-SqlPackageCommandArguments -Times 2
 Assert-WasCalled Execute-SqlPackage -Times 1
 
@@ -80,7 +81,7 @@ Register-Mock Execute-SqlPackage { }
 
 Deploy-Report -dacpacFile $dacpacFile -publishProfile $publishProfile -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
 
-Assert-MockCalled Find-SqlFiles -Times 2
+Assert-WasCalled Find-SqlFiles -Times 2
 Assert-WasCalled Get-SqlPackageCommandArguments -Times 2
 Assert-WasCalled Execute-SqlPackage -Times 1
 

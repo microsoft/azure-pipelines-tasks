@@ -62,9 +62,14 @@ describe('SqlAzureDacpacDeployment - Utility Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it ('Validate Publish-Dacpac action', (done) => {
+        /*it ('Validate Publish-Dacpac action', (done) => {
             process.env["TASK_TEST_TRACE"] = 1;
             psr.run(path.join(__dirname, 'L0PublishSqlAction.ps1'), done);
+        });*/
+
+        it ('Validate SQL files related actions', (done) => {
+            process.env["TASK_TEST_TRACE"] = 1;
+            psr.run(path.join(__dirname, 'L0SqlcmdTests.ps1'), done);
         });
         /*it('Validate Username end point (Create-AzureSqlDatabaseServerFirewallRule)', (done) => {
             psr.run(path.join(__dirname, 'L0UtilityUsernameCreate.ps1'), done);
