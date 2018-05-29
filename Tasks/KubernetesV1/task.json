@@ -134,7 +134,7 @@
         {
             "name": "useConfigurationFile",
             "type": "boolean",
-            "label": "Use Configuration files",
+            "label": "Use configuration files",
             "defaultValue": "false",
             "helpMarkDown": "Use Kubernetes configuration file with the kubectl command. Filename, directory, or URL to Kubernetes configuration files can also be provided.",
             "groupName": "commands"
@@ -191,7 +191,7 @@
         {
             "name": "containerRegistryType",
             "type": "pickList",
-            "label": "Container Registry type",
+            "label": "Container registry type",
             "defaultValue": "Azure Container Registry",
             "required": true,
             "options": {
@@ -205,7 +205,7 @@
         {
             "name": "dockerRegistryEndpoint",
             "type": "connectedService:dockerregistry",
-            "label": "Docker Registry connection",
+            "label": "Docker registry connection",
             "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "secretType = dockerRegistry && containerRegistryType = Container Registry",
             "groupName": "secrets"
@@ -221,7 +221,7 @@
         },
         {
             "name": "azureContainerRegistry",
-            "label": "Azure Container Registry",
+            "label": "Azure container registry",
             "type": "pickList",
             "helpMarkDown": "Select an Azure Container Registry which will be used for pulling container images and deploying applications to the Kubernetes cluster. Required for commands that need to authenticate with a registry.",
             "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
@@ -326,7 +326,7 @@
         {
             "name": "specifyLocation",
             "type": "filePath",
-            "label": "Path to Kubectl",
+            "label": "Path to kubectl",
             "defaultValue": "",
             "helpMarkDown": "Full path to the kubectl.exe",
             "required": true,
