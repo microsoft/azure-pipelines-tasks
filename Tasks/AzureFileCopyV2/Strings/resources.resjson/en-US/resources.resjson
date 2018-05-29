@@ -37,7 +37,7 @@
   "loc.input.label.TargetPath": "Destination Folder",
   "loc.input.help.TargetPath": "Local path on the target machines for copying the files from the source. Environment variable can be used like $env:windir\\BudgetIT\\Web.",
   "loc.input.label.AdditionalArgumentsForBlobCopy": "Optional Arguments (for uploading files to blob)",
-  "loc.input.help.AdditionalArgumentsForBlobCopy": "Optional AzCopy.exe arguments that will be applied when uploading to blob like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /SetContentType, /Z, /V,<br> /S (only if container name is not $root),<br> /BlobType:page (only if specified storage account is a premium account)",
+  "loc.input.help.AdditionalArgumentsForBlobCopy": "Optional AzCopy.exe arguments that will be applied when uploading to blob like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /SetContentType, /Z, /V,<br> /S (only if container name is not $root),<br> /BlobType:page (only if specified storage account is a premium account).<br> If source path is a file, /Pattern will always be added irrespective of whether or not you have specified optional arguments.",
   "loc.input.label.AdditionalArgumentsForVMCopy": "Optional Arguments (for downloading files to VM)",
   "loc.input.help.AdditionalArgumentsForVMCopy": "Optional AzCopy.exe arguments that will be applied when downloading to VM like, /NC:10. If no optional arguments are specified here, the following optional arguments will be added by default.<br> /Y, /S, /Z, /V",
   "loc.input.label.enableCopyPrerequisites": "Enable Copy Prerequisites",
@@ -93,5 +93,6 @@
   "loc.messages.AFC_BlobStorageNotFound": "Storage account: {0} not found. Please specify existing storage account",
   "loc.messages.AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers.",
   "loc.messages.AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
-  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
+  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null.",
+  "loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage."
 }

@@ -25,6 +25,6 @@ steps:
 #    pathtoPublish: '$(outputDirectory)'
 
 # Next steps:
-# Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
-# Distribute apps to testers and users with the App Center Distribute task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterDistribute
+# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest
+# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/build-release/tasks/deploy/appcenterdistribute
 # Release to Google Play with the Google Play extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play

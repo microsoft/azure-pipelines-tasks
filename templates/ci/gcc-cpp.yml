@@ -2,7 +2,7 @@
 # Build your C++ project with GNU GCC.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 steps:
 
 - script: 'make'
