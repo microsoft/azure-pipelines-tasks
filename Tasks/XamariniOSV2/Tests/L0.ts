@@ -241,7 +241,7 @@ describe('XamariniOS L0 Suite', function () {
     it('fails when configuration is missing', (done) => {
         this.timeout(1000);
 
-        const tp = path.join(__dirname, 'L0MissingCOnfig.js');
+        const tp = path.join(__dirname, 'L0MissingConfig.js');
         const tr = new ttm.MockTestRunner(tp);
 
         tr.run();
