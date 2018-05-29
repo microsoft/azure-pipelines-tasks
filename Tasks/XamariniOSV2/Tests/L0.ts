@@ -14,6 +14,24 @@ describe('XamariniOS L0 Suite', function () {
 
     });
 
+    it('run XamariniOSV2 with all default inputs', (done) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0DefaultInputs.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'it should have run nuget restore');
+        assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'), 'it should have run msbuild');
+        assert(tr.invokedToolCount == 3, 'should have only run 3 commands');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+        
+    });
+
     it('XamariniOS signing with identifiers', function (done: MochaDone) {
         this.timeout(1000);
 
@@ -186,4 +204,103 @@ describe('XamariniOS L0 Suite', function () {
 
         done();
     })
+
+    it('run XamariniOSV2 with buildToolLocation set', (done) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0BuildToolLocation.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        
+        assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'it should have run nuget restore');
+        assert(tr.ran('/home/bin2/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'), 'it should have run msbuild');
+        assert(tr.invokedToolCount == 2, 'should have only run 2 commands');
+        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    })
+
+   it('fails when solution is missing', (done) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0MissingSolution.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.errorIssues.length > 0, 'should have written to stderr');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues[0].indexOf('Input required: solution') >= 0, 'wrong error message');    
+
+        done();
+    })     
+    
+    it('fails when configuration is missing', (done) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0MissingCOnfig.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        
+        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.errorIssues.length > 0, 'should have written to stderr');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues[0].indexOf('Input required: configuration') >= 0, 'wrong error message');   
+
+        done();
+    })
+         
+    it('fails when msbuildLocation not provided and msbuild is not found', (done) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0ToolsNotFound.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+    
+        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.errorIssues.length > 0, 'should have written to stderr');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues[0].indexOf('loc_mock_XamariniOSFailed loc_mock_MSB_BuildToolNotFound') >= 0, 'wrong error message');            
+        
+        done();
+    });
+    
+    it('fails when msbuildLocation is provided but is incorrect', (done) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0MSBuildNotFound.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        
+        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.errorIssues.length > 0, 'should have written to stderr');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues[0].indexOf('Error: Not found /user/bin/') >= 0, 'wrong error message');   
+
+        done();
+    });
+    
+    // fails when nuget not found
+    it('fails when nuget not found', (done) => {
+        this.timeout(1000);
+
+        const tp = path.join(__dirname, 'L0NuGetNotFound.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        tr.run()
+        
+        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.errorIssues.length > 0, 'should have written to stderr');
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues[0].indexOf('Not found null') >= 0, 'wrong error message');          
+
+        done();
+        
+    });    
 })
