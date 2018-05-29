@@ -24,7 +24,7 @@ describe('XamariniOS Suite', function() {
     it('run XamariniOS with all default inputs', (done) => {
         setResponseFile('response.json');
         
-        var tr = new trm.TaskRunner('XamariniOS', true, true);
+        var tr = new trm.TaskRunner('XamariniOSV2', true, true);
         // Required inputs
         tr.setInput('solution', 'src/project.sln'); //path
         tr.setInput('configuration', 'Release');
@@ -55,7 +55,7 @@ describe('XamariniOS Suite', function() {
     it('run XamariniOS with buildToolLocation set', (done) => {
         setResponseFile('response.json');
         
-        var tr = new trm.TaskRunner('XamariniOS', true, true);
+        var tr = new trm.TaskRunner('XamariniOSV2', true, true);
         // Required inputs
         tr.setInput('solution', 'src/project.sln'); //path
         tr.setInput('configuration', 'Release');
@@ -86,7 +86,7 @@ describe('XamariniOS Suite', function() {
     it('fails when solution is missing', (done) => {
         setResponseFile('response.json');
         
-        var tr = new trm.TaskRunner('XamariniOS', true, true);
+        var tr = new trm.TaskRunner('XamariniOSV2', true, true);
         // Required inputs
         tr.setInput('solution', ''); //path
         tr.setInput('configuration', 'Release');
@@ -115,7 +115,7 @@ describe('XamariniOS Suite', function() {
     it('fails when solution is missing', (done) => {
         setResponseFile('response.json');
         
-        var tr = new trm.TaskRunner('XamariniOS', true, true);
+        var tr = new trm.TaskRunner('XamariniOSV2', true, true);
         // Required inputs
         tr.setInput('solution', 'src/project.sln'); //path
         tr.setInput('configuration', '');
@@ -144,7 +144,7 @@ describe('XamariniOS Suite', function() {
     it('fails when msbuildLocation not provided and msbuild is not found', (done) => {
         setResponseFile('responseNoToolsFound.json');
         
-        var tr = new trm.TaskRunner('XamariniOS', true, true);
+        var tr = new trm.TaskRunner('XamariniOSV2', true, true);
         // Required inputs
         tr.setInput('solution', 'src/project.sln'); //path
         tr.setInput('configuration', 'Release');
@@ -173,7 +173,7 @@ describe('XamariniOS Suite', function() {
     it('fails when msbuildLocation is provided but is incorrect', (done) => {
         setResponseFile('response.json');
         
-        var tr = new trm.TaskRunner('XamariniOS', true, true);
+        var tr = new trm.TaskRunner('XamariniOSV2', true, true);
         // Required inputs
         tr.setInput('solution', 'src/project.sln'); //path
         tr.setInput('configuration', 'Release');
@@ -203,7 +203,7 @@ describe('XamariniOS Suite', function() {
     it('fails when nuget not found', (done) => {
         setResponseFile('responseNoToolsFound.json');
         
-        var tr = new trm.TaskRunner('XamariniOS', true, true);
+        var tr = new trm.TaskRunner('XamariniOSV2', true, true);
         // Required inputs
         tr.setInput('solution', 'src/project.sln'); //path
         tr.setInput('configuration', 'Release');

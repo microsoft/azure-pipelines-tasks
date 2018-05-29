@@ -11,11 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-<<<<<<< HEAD
     "Minor": 136,
-=======
-    "Minor": 135,
->>>>>>> Fail task early if run on windows or linux
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
