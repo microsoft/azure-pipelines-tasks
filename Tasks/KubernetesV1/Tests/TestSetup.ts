@@ -42,7 +42,7 @@ tr.setInput('outputFormat', process.env[shared.TestEnvVars.outputFormat] || 'jso
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('kubernetesServiceEndpoint', 'kubernetesEndpoint');
 tr.setInput('azureSubscriptionEndpoint', 'AzureRMSpn');
-tr.setInput('azureSubscriptionEndpoint2', 'AzureRMSpn');
+tr.setInput('azureSubscriptionEndpointForSecrets', 'AzureRMSpn');
 tr.setInput('azureContainerRegistry', 'ajgtestacr1.azurecr.io');
 tr.setInput('azureResourceGroup', 'myResourceGroup');
 tr.setInput('kubernetesCluster', 'myCluster1');

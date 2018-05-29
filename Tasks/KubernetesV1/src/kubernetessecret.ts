@@ -100,7 +100,7 @@ function getRegistryAuthenticationToken(): AuthenticationToken {
     var authenticationProvider : AuthenticationTokenProvider;
 
     if(registryType ==  "Azure Container Registry"){
-        authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpoint2"), tl.getInput("azureContainerRegistry"));
+        authenticationProvider = new ACRAuthenticationTokenProvider(tl.getInput("azureSubscriptionEndpointForSecrets"), tl.getInput("azureContainerRegistry"));
     } 
     else {
         authenticationProvider = new GenericAuthenticationTokenProvider(tl.getInput("dockerRegistryEndpoint"));

@@ -8,11 +8,6 @@ import * as kubectl from "./kubernetescommand";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 
-import AuthenticationTokenProvider  from "docker-common/registryauthenticationprovider/authenticationtokenprovider"
-import ACRAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
-import GenericAuthenticationTokenProvider from "docker-common/registryauthenticationprovider/genericauthenticationtokenprovider"
-import RegistryAuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
-
 tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
