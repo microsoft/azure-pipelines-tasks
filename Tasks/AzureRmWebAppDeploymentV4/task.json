@@ -18,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 1,
-        "Patch": 7
+        "Patch": 8
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -573,6 +573,7 @@
         "PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
         "InvalidConnectionType": "Invalid connection type",
         "InvalidImageSourceType": "Invalid Image source Type",
-        "InvalidPublishProfile": "Publish profile file is invalid."
+        "InvalidPublishProfile": "Publish profile file is invalid.",
+        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition"
     }
 }
