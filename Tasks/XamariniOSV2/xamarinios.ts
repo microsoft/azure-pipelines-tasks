@@ -30,7 +30,7 @@ async function run() {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         // Check platform is macOS since demands are not evaluated on Hosted pools
-        if (!/^darwin/.test(os.platform())) {
+        if (os.platform() !== 'darwin') {
             throw new Error(tl.loc('BuildRequiresMac'));
         }
         

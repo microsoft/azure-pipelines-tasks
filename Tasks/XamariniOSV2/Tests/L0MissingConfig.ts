@@ -47,7 +47,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tr.setAnswers(a);
 
-os.platform =  () => {
+os.platform = () => {
     return 'darwin';
 }
 tr.registerMock('os', os);
