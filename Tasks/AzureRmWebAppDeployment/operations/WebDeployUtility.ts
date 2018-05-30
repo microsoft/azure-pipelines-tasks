@@ -84,6 +84,12 @@ export class WebDeployUtility {
                 tl.warning(tl.loc("Updatemachinetoenablesecuretlsprotocol"));
                 break;
             }
+            case 'ERROR_CERTIFICATE_VALIDATION_FAILED': {
+                if(isRecommendation) {
+                    tl.warning(tl.loc('ASE_WebDeploySSLIssueRecommendation'));
+                }
+                break;
+            }
             default:
                 break;
         }
