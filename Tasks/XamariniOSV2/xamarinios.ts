@@ -21,7 +21,7 @@ function expandSolutionWildcardPatterns(solutionPattern: string): string {
 
         return result;
     } else {
-        throw tl.loc('SolutionDoesNotExist', solutionPattern);
+        throw new Error (tl.loc('SolutionDoesNotExist', solutionPattern));
     }
 }
 
@@ -31,7 +31,7 @@ async function run() {
 
         // Check platform is macOS since demands are not evaluated on Hosted pools
         if (!/^darwin/.test(os.platform())) {
-            throw tl.loc('BuildRequiresMac');
+            throw new Error(tl.loc('BuildRequiresMac'));
         }
         
         // Get build inputs
