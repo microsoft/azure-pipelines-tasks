@@ -261,22 +261,6 @@ export default class VirtualMachineScaleSet {
         });
     }
 
-    private _deleteCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, customScriptExtension: azureModel.VMExtension): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            console.log(tl.loc("RemovingCustomScriptExtension", customScriptExtension.name));
-            client.virtualMachineExtensions.deleteMethod(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, customScriptExtension.name, (error, result, request, response) => {
-                if (error) {
-                    // Just log warning, do not fail
-                    tl.warning(tl.loc("RemoveVMSSExtensionsFailed", customScriptExtension.name, utils.getError(error)));
-                } else {
-                    console.log(tl.loc("CustomScriptExtensionRemoved", customScriptExtension.name));
-                }
-
-                return resolve();
-            });
-        });
-    }
-
     private _installCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, customScriptExtension: azureModel.VMExtension): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             client.virtualMachineExtensions.createOrUpdate(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, customScriptExtension.name, customScriptExtension, (error, result, request, response) => {
