@@ -602,6 +602,7 @@
         "InvalidImageSourceType": "Invalid Image source Type",
         "InvalidPublishProfile": "Publish profile file is invalid.",
         "ZipDeployLogsURL": "Zip Deploy logs can be viewed at %s",
-        "AppServiceApplicationURL": "App Service Application URL: %s"
+        "AppServiceApplicationURL": "App Service Application URL: %s",
+        "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option."
     }
 }
