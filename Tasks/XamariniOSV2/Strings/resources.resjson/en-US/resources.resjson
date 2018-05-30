@@ -38,5 +38,6 @@
   "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
   "loc.messages.MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s",
+  "loc.messages.BuildRequiresMac": "Xamarin iOS builds require a macOS agent. Running on a Windows or Linux agent is not supported by Apple."
 }

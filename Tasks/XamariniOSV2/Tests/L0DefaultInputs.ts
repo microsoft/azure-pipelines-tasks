@@ -1,4 +1,3 @@
-
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
@@ -9,18 +8,20 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME']='/user/home'; //replace with mock of setVariable when task-lib has the support
 
-tr.setInput('solution', '**/*.sln'); //path
+// Required inputs
+tr.setInput('solution', 'src/project.sln'); //path
 tr.setInput('configuration', 'Release');
+// Optional inputs
 tr.setInput('args', '');
-tr.setInput('clean', 'true');
 tr.setInput('packageApp', ''); //boolean
 tr.setInput('forSimulator', ''); //boolean
+tr.setInput('buildToolLocation', '');
 tr.setInput('runNugetRestore', 'true'); //boolean
 tr.setInput('iosSigningIdentity', '');
 tr.setInput('provProfileUuid', '');
 
 // provide answers for task mock
-const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
+let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "getVariable": {
         "HOME": "/user/home"
     },
@@ -46,14 +47,14 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "msbuild"
         }
     },
-    "checkPath": {
+    "checkPath" : {
         "/user/build": true,
         "/home/bin/msbuild": true,
         "/home/bin/nuget": true,
         "src/project.sln": true
     },
-    "findMatch": {
-        "**/*.sln": []
+    "findMatch" : {
+        "src/project.sln": ["src/project.sln"]
     }
 };
 tr.setAnswers(a);
