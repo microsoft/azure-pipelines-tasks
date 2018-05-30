@@ -14,7 +14,7 @@ describe('XamariniOS L0 Suite', function () {
 
     });
 
-    it('run XamariniOSV2 with all default inputs', (done) => {
+    it('run XamariniOSV2 with all default inputs', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0DefaultInputs.js');
@@ -24,12 +24,11 @@ describe('XamariniOS L0 Suite', function () {
 
         assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'it should have run nuget restore');
         assert(tr.ran('/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'), 'it should have run msbuild');
-        assert(tr.invokedToolCount == 3, 'should have only run 3 commands');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.invokedToolCount === 3, 'should have only run 3 commands');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
-        
     });
 
     it('XamariniOS signing with identifiers', function (done: MochaDone) {
@@ -205,7 +204,7 @@ describe('XamariniOS L0 Suite', function () {
         done();
     })
 
-    it('run XamariniOSV2 with buildToolLocation set', (done) => {
+    it('run XamariniOSV2 with buildToolLocation set', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0BuildToolLocation.js');
@@ -215,14 +214,14 @@ describe('XamariniOS L0 Suite', function () {
         
         assert(tr.ran('/home/bin/nuget restore src/project.sln'), 'it should have run nuget restore');
         assert(tr.ran('/home/bin2/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone'), 'it should have run msbuild');
-        assert(tr.invokedToolCount == 2, 'should have only run 2 commands');
-        assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.invokedToolCount === 2, 'should have only run 2 commands');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
     })
 
-   it('fails when solution is missing', (done) => {
+   it('fails when solution is missing', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0MissingSolution.js');
@@ -230,7 +229,7 @@ describe('XamariniOS L0 Suite', function () {
 
         tr.run();
 
-        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.invokedToolCount === 0, 'should not have run XamariniOS');
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues[0].indexOf('Input required: solution') >= 0, 'wrong error message');    
@@ -238,7 +237,7 @@ describe('XamariniOS L0 Suite', function () {
         done();
     })     
     
-    it('fails when configuration is missing', (done) => {
+    it('fails when configuration is missing', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0MissingConfig.js');
@@ -246,7 +245,7 @@ describe('XamariniOS L0 Suite', function () {
 
         tr.run();
         
-        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.invokedToolCount === 0, 'should not have run XamariniOS');
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues[0].indexOf('Input required: configuration') >= 0, 'wrong error message');   
@@ -254,7 +253,7 @@ describe('XamariniOS L0 Suite', function () {
         done();
     })
          
-    it('fails when msbuildLocation not provided and msbuild is not found', (done) => {
+    it('fails when msbuildLocation not provided and msbuild is not found', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0ToolsNotFound.js');
@@ -262,7 +261,7 @@ describe('XamariniOS L0 Suite', function () {
 
         tr.run();
     
-        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.invokedToolCount === 0, 'should not have run XamariniOS');
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues[0].indexOf('loc_mock_XamariniOSFailed loc_mock_MSB_BuildToolNotFound') >= 0, 'wrong error message');            
@@ -270,7 +269,7 @@ describe('XamariniOS L0 Suite', function () {
         done();
     });
     
-    it('fails when msbuildLocation is provided but is incorrect', (done) => {
+    it('fails when msbuildLocation is provided but is incorrect', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0MSBuildNotFound.js');
@@ -278,7 +277,7 @@ describe('XamariniOS L0 Suite', function () {
 
         tr.run();
         
-        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.invokedToolCount === 0, 'should not have run XamariniOS');
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues[0].indexOf('Error: Not found /user/bin/') >= 0, 'wrong error message');   
@@ -287,7 +286,7 @@ describe('XamariniOS L0 Suite', function () {
     });
     
     // fails when nuget not found
-    it('fails when nuget not found', (done) => {
+    it('fails when nuget not found', function (done: MochaDone) {
         this.timeout(1000);
 
         const tp = path.join(__dirname, 'L0NuGetNotFound.js');
@@ -295,7 +294,7 @@ describe('XamariniOS L0 Suite', function () {
 
         tr.run()
         
-        assert(tr.invokedToolCount == 0, 'should not have run XamariniOS');
+        assert(tr.invokedToolCount === 0, 'should not have run XamariniOS');
         assert(tr.errorIssues.length > 0, 'should have written to stderr');
         assert(tr.failed, 'task should have failed');
         assert(tr.errorIssues[0].indexOf('Not found null') >= 0, 'wrong error message');          

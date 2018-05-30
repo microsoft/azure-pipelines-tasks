@@ -58,7 +58,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tr.setAnswers(a);
 
-os.platform =  () => {
+os.platform = () => {
     return 'win32';
 }
 tr.registerMock('os', os);
