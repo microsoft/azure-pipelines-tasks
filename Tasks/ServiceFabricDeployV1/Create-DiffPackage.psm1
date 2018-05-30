@@ -83,6 +83,7 @@ function New-DiffPackage
             $localServiceManifest = ([XML](Get-Content -LiteralPath $localServiceManifestPath)).ServiceManifest
             $diffServicePkgPath = [System.IO.Path]::Combine($diffPackagePath, $localServiceManifestName)
             $clusterServiceManifest = $clusterServiceManifestByName[$localServiceManifestName].ServiceManifest
+            $diffPkgServiceManifestPath = Join-Path $diffServicePkgPath $serviceManifestName
 
             # If there's no matching manifest from the cluster it means this is a newly added service that doesn't exist yet on the cluster.
             if (!$clusterServiceManifest)
@@ -105,8 +106,12 @@ function New-DiffPackage
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.ConfigPackage -localPackages $localServiceManifest.ConfigPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.DataPackage -localPackages $localServiceManifest.DataPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
 
-            Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localServiceManifestPath, (Join-Path $diffServicePkgPath $serviceManifestName)))
-            Copy-Item -LiteralPath $localServiceManifestPath (Join-Path $diffServicePkgPath $serviceManifestName) -Force
+            Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localServiceManifestPath, $diffPkgServiceManifestPath))
+            if (!(Test-Path -PathType Container -LiteralPath $diffServicePkgPath))
+            {
+                $diffServicePkgPath = New-Item -ItemType Directory -Path $diffServicePkgPath -Force
+            }
+            Copy-Item -LiteralPath $localServiceManifestPath $diffPkgServiceManifestPath -Force
         }
 
         Return $diffPackagePath
