@@ -231,6 +231,9 @@ export function getWebDeployErrorCode(errorMessage): string {
         else if(errorMessage.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
             return "ERROR_CONNECTION_TERMINATED"
         }
+        else if(errorMessage.indexOf("ERROR_CERTIFICATE_VALIDATION_FAILED") != -1) {
+            return "ERROR_CERTIFICATE_VALIDATION_FAILED";
+        }
     }
 
     return "";

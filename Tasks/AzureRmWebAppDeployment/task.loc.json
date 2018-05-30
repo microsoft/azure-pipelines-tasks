@@ -613,6 +613,7 @@
     "InvalidImageSourceType": "ms-resource:loc.messages.InvalidImageSourceType",
     "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile",
     "ZipDeployLogsURL": "ms-resource:loc.messages.ZipDeployLogsURL",
-    "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL"
+    "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL",
+    "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation"
   }
 }
