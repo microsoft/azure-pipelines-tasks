@@ -7,6 +7,25 @@ import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import { Platform } from './taskutil';
 
+const log = {
+    info(message: string) {
+        console.log(`[INFO] ${message}`);
+    },
+    warning(message: string) {
+        console.log(`[WARNING] ${message}`);
+    },
+    error(message: string) {
+        console.error(`[ERROR] ${message}`)
+    }
+};
+
+/** Log `label: ${value}` and pass the value through. */
+function trace(label: string, value: any) {
+    log.info(`${label}: ${value}`);
+    return value;
+}
+
+
 /**
  * Whether `searchDir` has a `conda` executable for `platform`.
  * @param searchDir Absolute path to a directory to look for a `conda` executable in.
@@ -29,17 +48,19 @@ function hasConda(searchDir: string, platform: Platform): boolean {
  *   - The directory where the agent will install Conda if missing
  */
 export function findConda(platform: Platform): string | null {
-    const condaFromPath: string | undefined = task.which('conda');
+    log.info('Entering `findConda`');
+    const condaFromPath: string | undefined = trace('condaFromPath', task.which('conda'));
     if (condaFromPath) {
         // On all platforms, the `conda` executable lives in a directory off the root of the installation
-        return path.dirname(path.dirname(condaFromPath));
+        return trace('`findConda` returning', path.dirname(path.dirname(condaFromPath)));
     }
 
-    const condaFromEnvironment: string | undefined = task.getVariable('CONDA');
+    const condaFromEnvironment: string | undefined = trace('condaFromEnvironment', task.getVariable('CONDA'));
     if (condaFromEnvironment && hasConda(condaFromEnvironment, platform)) {
         return condaFromEnvironment;
     }
 
+    log.info('`findConda` returning `null`');
     return null;
 }
 

@@ -5,24 +5,24 @@ import * as path from 'path';
 import { MockTestRunner } from 'vsts-task-lib/mock-test';
 
 describe('CondaEnvironment L0 Suite', function () {
-    describe('conda.ts', function () {
-        require('./L0_conda');
-    });
+    // describe('conda.ts', function () {
+    //     require('./L0_conda');
+    // });
 
-    describe('conda_internal.ts', function () {
-        require('./L0_conda_internal');
-    });
+    // describe('conda_internal.ts', function () {
+    //     require('./L0_conda_internal');
+    // });
 
-    it('succeeds when creating and activating an environment', function () {
-        const testFile = path.join(__dirname, 'L0CreateEnvironment.js');
-        const testRunner = new MockTestRunner(testFile);
+    // it('succeeds when creating and activating an environment', function () {
+    //     const testFile = path.join(__dirname, 'L0CreateEnvironment.js');
+    //     const testRunner = new MockTestRunner(testFile);
 
-        testRunner.run();
+    //     testRunner.run();
 
-        assert(testRunner.ran(`conda create --quiet --prefix ${path.join('/', 'miniconda', 'envs', 'test')} --mkdir --yes`));
-        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
-        assert(testRunner.succeeded, 'task should have succeeded');
-    });
+    //     assert(testRunner.ran(`conda create --quiet --prefix ${path.join('/', 'miniconda', 'envs', 'test')} --mkdir --yes`));
+    //     assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+    //     assert(testRunner.succeeded, 'task should have succeeded');
+    // });
 
     it('fails when a Conda installation is not found', function () {
         const testFile = path.join(__dirname, 'L0CondaNotFound.js');
@@ -30,6 +30,10 @@ describe('CondaEnvironment L0 Suite', function () {
 
         testRunner.run();
 
+        console.log('testRunner.stdout:')
+        console.log(testRunner.stdout);
+        console.log('testRunner.cmdlines');
+        console.log(testRunner.cmdlines);
         assert(testRunner.createdErrorIssue('loc_mock_CondaNotFound'));
         assert(testRunner.failed, 'task should have failed');
     });
