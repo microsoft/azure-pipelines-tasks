@@ -11,12 +11,13 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 2,
+        "Major": 1,
         "Minor": 0,
         "Patch": 0
     },
     "demands": [],
-    "preview": "false",
+    "preview": "true",
+    "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
     "groups": [
         {
             "name": "advanced",
@@ -295,7 +296,7 @@
             "target": "azureContainerRegistry",
             "endpointId": "$(azureSubscriptionEndpoint)",
             "dataSourceName": "AzureRMContainerRegistries",
-            "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+            "resultTemplate": "{\"Value\":\"{{{properties.loginServer}}}\",\"DisplayValue\":\"{{{name}}}\"}"
         }
     ],
     "instanceNameFormat": "$(command)",
