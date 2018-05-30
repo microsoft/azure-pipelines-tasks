@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 134,
-    "Patch": 1
+    "Minor": 136,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "runsOn": [
@@ -134,6 +134,7 @@
     "NoP12PwdWarning": "ms-resource:loc.messages.NoP12PwdWarning",
     "P12PrivateKeyNameNotFound": "ms-resource:loc.messages.P12PrivateKeyNameNotFound",
     "SetKeyPartitionListCommandNotFound": "ms-resource:loc.messages.SetKeyPartitionListCommandNotFound",
-    "SetKeyPartitionListCommandFailed": "ms-resource:loc.messages.SetKeyPartitionListCommandFailed"
+    "SetKeyPartitionListCommandFailed": "ms-resource:loc.messages.SetKeyPartitionListCommandFailed",
+    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac"
   }
 }
