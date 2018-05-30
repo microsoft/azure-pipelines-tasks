@@ -220,7 +220,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments",
-      "visibleRule": "DeploymentAction = Publish && TaskNameSelector = SqlTask"
+      "visibleRule": "TaskNameSelector = SqlTask"
     },
     {
       "name": "InlineAdditionalArguments",
@@ -230,7 +230,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.InlineAdditionalArguments",
-      "visibleRule": "DeploymentAction = Publish && TaskNameSelector = InlineSqlTask"
+      "visibleRule": "TaskNameSelector = InlineSqlTask"
     },
     {
       "name": "IpDetectionMethod",
@@ -277,7 +277,7 @@
   ],
   "outputVariables": [
     {
-      "name": "OutputFile",
+      "name": "SqlDeploymentOutputFile",
       "description": "Generated output file path for Extract, Export, Script, DriftReport and DeployReport actions."
     }
   ],

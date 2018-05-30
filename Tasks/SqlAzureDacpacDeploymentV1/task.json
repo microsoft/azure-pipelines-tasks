@@ -215,7 +215,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors.",
-            "visibleRule": "DeploymentAction = Publish && TaskNameSelector = SqlTask"
+            "visibleRule": "TaskNameSelector = SqlTask"
         },
         {
             "name": "InlineAdditionalArguments",
@@ -225,7 +225,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when executing the given SQL query on the Azure SQL Database like, -ConnectionTimeout 100 -OutputSqlErrors",
-            "visibleRule": "DeploymentAction = Publish && TaskNameSelector = InlineSqlTask"
+            "visibleRule": "TaskNameSelector = InlineSqlTask"
         },
         {
             "name": "IpDetectionMethod",
@@ -272,7 +272,7 @@
     ],
     "outputVariables": [
         {
-            "name": "OutputFile",
+            "name": "SqlDeploymentOutputFile",
             "description": "Generated output file path for Extract, Export, Script, DriftReport and DeployReport actions."
         }
     ],

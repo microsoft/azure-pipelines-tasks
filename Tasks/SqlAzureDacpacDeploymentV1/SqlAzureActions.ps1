@@ -15,8 +15,8 @@ function Extract-Dacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated dacpac file: $targetDacpacFilePath. Uploading the dacpac file to the logs."
-    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $targetDacpacFilePath)
-    Write-Host "##vso[task.setVariable variable=OutputFile]$targetDacpacFilePath"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $targetDacpacFilePath)
+    Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile]$targetDacpacFilePath"
     Write-Host "##vso[task.uploadfile]$targetDacpacFilePath"
 }
 
@@ -37,8 +37,8 @@ function Export-Bacpac {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated bacpac file: $targetBacpacFilePath. Uploading the bacpac file to the logs."
-    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $targetBacpacFilePath)
-    Write-Host "##vso[task.setVariable variable=OutputFile] $targetBacpacFilePath"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $targetBacpacFilePath)
+    Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile] $targetBacpacFilePath"
     Write-Host "##vso[task.uploadfile] $targetBacpacFilePath"
 }
 
@@ -87,8 +87,8 @@ function Deploy-Report {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated deploy report: $outputXmlPath. Uploading the deploy report file to the logs."
-    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $outputXmlPath)
-    Write-Host "##vso[task.setVariable variable=OutputFile]$outputXmlPath"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $outputXmlPath)
+    Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile]$outputXmlPath"
     Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
 
@@ -109,8 +109,8 @@ function Drift-Report {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated drift report: $outputXmlPath. Uploading the drift report file to the logs."
-    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $outputXmlPath)
-    Write-Host "##vso[task.setVariable variable=OutputFile]$outputXmlPath"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $outputXmlPath)
+    Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile]$outputXmlPath"
     Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
 
@@ -141,8 +141,8 @@ function Script-Action {
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
     Write-Host "Generated script: $outputSqlPath. Uploading the script file to the logs."
-    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "OutputFile", $outputSqlPath)
-    Write-Host "##vso[task.setVariable variable=OutputFile]$outputSqlPath"
+    Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $outputSqlPath)
+    Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile]$outputSqlPath"
     Write-Host "##vso[task.uploadfile]$outputSqlPath"
 }
 

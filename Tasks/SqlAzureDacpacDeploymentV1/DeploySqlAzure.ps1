@@ -143,11 +143,4 @@ finally {
     }
 }
 
-# Function to import SqlPS module & avoid directory switch
-function Import-Sqlps {
-    Push-Location
-    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
-    Pop-Location
-}
-
 Write-Verbose "Leaving script DeploySqlAzure.ps1"
