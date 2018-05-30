@@ -10,8 +10,8 @@ import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
 import * as inputdatacontract from './inputdatacontract';
-const uuid = require('uuid');
-const regedit = require('regedit');
+import * as uuid from 'uuid';
+import * as regedit from 'regedit';
 
 export function getvsTestConfigurations() {
     const vsTestConfiguration = {} as models.VsTestConfigurations;

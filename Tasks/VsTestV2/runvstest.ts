@@ -1,7 +1,6 @@
 import * as tl from 'vsts-task-lib/task';
 import * as models from './models';
-import * as taskInputParser from './taskinputparser';
-import * as localTest from './vstest';
+import * as nondistributedtest from './nondistributedtest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
@@ -26,8 +25,9 @@ if (osPlat !== 'win32') {
         if (blockRun) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('MultiConfigNotSupportedWithOnDemand'));
         }
-        const useDtaExecutionEngine = isDtaEngineRequired();
-        if (useDtaExecutionEngine) {
+        const serverBasedRun = isServerBasedRun();
+        inputParser.setIsServerBasedRun(serverBasedRun);
+        if (serverBasedRun) {
             ci.publishEvent({
                 runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
                 testtype: tl.getInput('testSelector')
@@ -35,14 +35,14 @@ if (osPlat !== 'win32') {
 
             console.log(tl.loc('distributedTestWorkflow'));
             console.log('======================================================');
-            const inputDataContract = inputParser.getDistributedTestConfigurations();
+            const inputDataContract = inputParser.parseInputsForDistributedTestRun();
             console.log('======================================================');
 
             const test = new distributedTest.DistributedTest(inputDataContract);
             test.runDistributedTest();
         } else {
             ci.publishEvent({ runmode: 'vstest' });
-            localTest.startTest();
+            nondistributedtest.startTest();
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -64,7 +64,7 @@ function isMultiConfigOnDemandRun(): boolean {
     return false;
 }
 
-function isDtaEngineRequired(): boolean {
+function isServerBasedRun(): boolean {
     const batchType = tl.getInput('distributionBatchType');
     if (batchType && batchType === 'basedOnTestCases') {
         const batchSize = tl.getInput('batchingBasedOnAgentsOption');
