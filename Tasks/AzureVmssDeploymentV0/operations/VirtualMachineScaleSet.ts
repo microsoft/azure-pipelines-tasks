@@ -96,7 +96,7 @@ export default class VirtualMachineScaleSet {
 
             var matchingExtension = await this._getExistingCustomScriptExtension(client, resourceGroupName, customScriptExtension);
 
-            // if extension already exists, remove it
+            // if extension already exists, use the same name as the existing extension.
             if (!!matchingExtension) {
                 customScriptExtension.name = matchingExtension.name;
             }
