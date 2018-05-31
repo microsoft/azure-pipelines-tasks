@@ -10,7 +10,7 @@
   "loc.input.help.dockerRegistryEndpoint": "Seleccione una conexión de registro de Docker. Es necesaria para los comandos que deben autenticarse en un registro.",
   "loc.input.label.azureSubscriptionEndpoint": "Suscripción de Azure",
   "loc.input.help.azureSubscriptionEndpoint": "Seleccione una suscripción de Azure",
-  "loc.input.label.azureContainerRegistry": "Azure Container Registry",
+  "loc.input.label.azureContainerRegistry": "Azure container registry",
   "loc.input.help.azureContainerRegistry": "Seleccione una instancia de Azure Container Registry",
   "loc.input.label.command": "Acción",
   "loc.input.help.command": "Seleccione una acción de Docker.",
