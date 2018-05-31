@@ -4,33 +4,28 @@ import path = require('path');
 import fs = require('fs');
 import os = require('os');
 
-let taskPath = path.join(__dirname, '..', 'installprovprofile.js');
+let taskPath = path.join(__dirname, '..', 'preinstallcert.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('provisioningProfileLocation', 'sourceRepository');
-tr.setInput('provProfileSourceRepository', '/build/source/doesnotexist.moblieprovision');
+tr.setInput('certSecureFile', 'mySecureFileId');
+tr.setInput('certPwd', 'mycertPwd');
+tr.setInput('keychain', 'temp');
 
 process.env['AGENT_VERSION'] = '2.116.0';
+process.env['AGENT_TEMPDIRECTORY'] = '/build/temp';
 process.env['HOME'] = '/users/test';
 
 let secureFileHelperMock = require('securefiles-common/securefiles-common-mock');
 tr.registerMock('securefiles-common/securefiles-common', secureFileHelperMock);
 
-tr.registerMock('fs', {
-    writeFileSync: function (filePath, contents) {
-    }
-});
-
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "exist": { 
-        "/build/source/doesnotexist.moblieprovision": false
-    }
+    
 };
 tr.setAnswers(a);
 
 os.platform = () => {
-    return 'darwin';
+    return 'win32';
 }
 tr.registerMock('os', os);
 
