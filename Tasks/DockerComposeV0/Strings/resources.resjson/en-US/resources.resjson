@@ -61,7 +61,7 @@
   "loc.input.label.dockerHostEndpoint": "Docker Host Connection",
   "loc.input.help.dockerHostEndpoint": "Select a Docker host connection. Defaults to the agent's host.",
   "loc.input.label.nopIfNoDockerComposeFile": "No-op if no Docker Compose File",
-  "loc.input.help.nopIfNoDockerComposeFile": "If the Docker Compose file does not exist, skip this step. This is useful when the step offers optional behavior based on the existence of a Docker Compose file in the repository.",
+  "loc.input.help.nopIfNoDockerComposeFile": "If the Docker Compose file does not exist, skip this task. This is useful when the task offers optional behavior based on the existence of a Docker Compose file in the repository.",
   "loc.input.label.requireAdditionalDockerComposeFiles": "Require Additional Docker Compose Files",
   "loc.input.help.requireAdditionalDockerComposeFiles": "Produces an error if the additional Docker Compose files do not exist. This overrides the default behavior which is to ignore a file if it does not exist.",
   "loc.input.label.cwd": "Working Directory",
