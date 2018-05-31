@@ -36,6 +36,7 @@
         "DeleteFilesV1",
         "DeployVisualStudioTestAgentV2",
         "DockerV0",
+        "DockerV1",
         "DockerComposeV0",
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
