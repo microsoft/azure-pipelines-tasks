@@ -22,6 +22,10 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
-    "vsts-task-tool-lib": "0.4.0"
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
+    "typed-rest-client": "1.0.7",
+    "vsts-task-lib": "2.4.0",
+    "vsts-task-tool-lib": "0.9.0"
   }
 }
