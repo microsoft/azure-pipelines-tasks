@@ -146,32 +146,6 @@ function Publish-UpgradedServiceFabricApplication
         throw $errMsg
     }
 
-    # Get image store connection string
-    $clusterManifestText = Get-ServiceFabricClusterManifest
-    $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
-
-    if (!$SkipPackageValidation)
-    {
-        $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
-        if (!$packageValidationSuccess)
-        {
-            $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
-            throw $errMsg
-        }
-    }
-
-    $ApplicationManifestPath = "$AppPkgPathToUse\ApplicationManifest.xml"
-
-    try
-    {
-        [void](Test-ServiceFabricClusterConnection)
-    }
-    catch
-    {
-        Write-Warning (Get-VstsLocString -Key SFSDK_UnableToVerifyClusterConnection)
-        throw
-    }
-
     # If ApplicationName is not specified on command line get application name from Application parameter file.
     if (!$ApplicationName)
     {
@@ -183,17 +157,44 @@ function Publish-UpgradedServiceFabricApplication
         Write-Error (Get-VstsLocString -Key EmptyApplicationName)
     }
 
+    # Get image store connection string
+    $clusterManifestText = Get-ServiceFabricClusterManifest
+    $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
+    $ApplicationManifestPath = "$AppPkgPathToUse\ApplicationManifest.xml"
     $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
     if (!$names)
     {
         return
+    }
+    $oldApplication = Get-ServiceFabricApplication -ApplicationName $ApplicationName
+    if (!$SkipPackageValidation)
+    {
+        $packageValidationSuccess = $true
+        if (!($oldApplication.ApplicationTypeVersion -eq $names.ApplicationTypeVersion))
+        {
+            $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
+        }
+        if (!$packageValidationSuccess)
+        {
+            $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
+            throw $errMsg
+        }
+    }
+
+    try
+    {
+        [void](Test-ServiceFabricClusterConnection)
+    }
+    catch
+    {
+        Write-Warning (Get-VstsLocString -Key SFSDK_UnableToVerifyClusterConnection)
+        throw
     }
 
     $ApplicationTypeAlreadyRegistered = $false
     if ($Action.Equals('RegisterAndUpgrade') -or $Action.Equals('Register'))
     {
         ## Check existence of the application
-        $oldApplication = Get-ServiceFabricApplication -ApplicationName $ApplicationName
 
         if (!$oldApplication)
         {
