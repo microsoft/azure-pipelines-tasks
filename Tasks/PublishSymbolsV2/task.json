@@ -104,7 +104,7 @@
             "label": "Max wait time (min)",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The number of minutes to wait before failing the step",
+            "helpMarkDown": "The number of minutes to wait before failing this task.",
             "groupName": "advanced"
         },
         {
