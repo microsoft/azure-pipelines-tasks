@@ -1,4 +1,3 @@
-
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
@@ -9,13 +8,14 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 process.env['HOME']='/user/home'; //replace with mock of setVariable when task-lib has the support
 
-tr.setInput('solution', 'src/project.sln'); //path
+// Required inputs
+tr.setInput('solution', ''); //path
 tr.setInput('configuration', 'Release');
+// Optional inputs
 tr.setInput('args', '');
-tr.setInput('clean', 'true');
 tr.setInput('packageApp', ''); //boolean
 tr.setInput('forSimulator', ''); //boolean
-tr.setInput('runNugetRestore', 'true'); //boolean
+tr.setInput('buildToolLocation', '');
 tr.setInput('iosSigningIdentity', '');
 tr.setInput('provProfileUuid', '');
 
@@ -32,18 +32,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/home/bin/msbuild /version /nologo": {
             "code": 0,
             "stdout": "15.1.0.0"
-        },
-        "/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone /t:Clean": {
-            "code": 0,
-            "stdout": "msbuild"
-        },
-        "/home/bin/nuget restore src/project.sln": {
-            "code": 0,
-            "stdout": "nuget restore"
-        },
-        "/home/bin/msbuild src/project.sln /p:Configuration=Release /p:Platform=iPhone": {
-            "code": 0,
-            "stdout": "msbuild"
         }
     },
     "checkPath" : {
@@ -64,4 +52,3 @@ os.platform = () => {
 tr.registerMock('os', os);
 
 tr.run();
-

@@ -25,8 +25,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "HOME": "/user/home"
     },
     "which": {
-        "msbuild": "/home/bin/msbuild",
-        "nuget": "/home/bin/nuget"
+        "nuget": "/home/bin/nuget",
+        "msbuild": "/home/bin/msbuild"
     },
     "exec": {
         "/home/bin/msbuild /version /nologo": {
@@ -59,7 +59,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 tr.setAnswers(a);
 
 os.platform = () => {
-    return 'darwin';
+    return 'win32';
 }
 tr.registerMock('os', os);
 
