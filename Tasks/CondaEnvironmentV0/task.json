@@ -30,7 +30,7 @@
             "name": "environmentName",
             "type": "string",
             "label": "Environment name",
-            "required": false,
+            "required": true,
             "defaultValue": "",
             "visibleRule": "customEnvironment == true",
             "helpMarkDown": "Name of the Conda environment to create and activate, or reactivate if it already exists."

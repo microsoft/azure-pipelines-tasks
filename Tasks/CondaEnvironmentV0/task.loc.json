@@ -30,7 +30,7 @@
       "name": "environmentName",
       "type": "string",
       "label": "ms-resource:loc.input.label.environmentName",
-      "required": false,
+      "required": true,
       "defaultValue": "",
       "visibleRule": "customEnvironment == true",
       "helpMarkDown": "ms-resource:loc.input.help.environmentName"

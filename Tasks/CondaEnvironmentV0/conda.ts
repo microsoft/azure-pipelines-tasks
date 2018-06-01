@@ -16,6 +16,19 @@ interface TaskParameters {
     cleanEnvironment?: boolean
 }
 
+// TODO copied from PythonScript. Find a way to share between tasks.
+/**
+ * Check for a parameter at runtime.
+ * Useful for conditionally-visible, required parameters.
+ */
+function assertParameter<T>(value: T | undefined, propertyName: string): T {
+    if (!value) {
+        throw new Error(task.loc('ParameterRequired', propertyName));
+    }
+
+    return value!;
+}
+
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     // Find Conda on the system
     const condaRoot = await (async () => {
@@ -33,9 +46,11 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
 
     internal.prependCondaToPath(condaRoot, platform);
 
-    if (parameters.environmentName) { // activate the environment, creating it if it does not exist
+    if (parameters.customEnvironment) { // activate the environment, creating it if it does not exist
+        const environmentName = assertParameter(parameters.environmentName, 'environmentName');
+
         const environmentsDir = path.join(condaRoot, 'envs');
-        const environmentPath = path.join(environmentsDir, parameters.environmentName);
+        const environmentPath = path.join(environmentsDir, environmentName);
 
         if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {
             console.log(task.loc('ReactivateExistingEnvironment', environmentPath));
@@ -47,7 +62,7 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
             await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
         }
 
-        internal.activateEnvironment(environmentsDir, parameters.environmentName, platform);
+        internal.activateEnvironment(environmentsDir, environmentName, platform);
     } else if (parameters.packageSpecs) {
         internal.installPackagesGlobally(parameters.packageSpecs, parameters.installOptions);
     }
