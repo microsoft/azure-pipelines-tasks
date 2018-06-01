@@ -8,7 +8,7 @@ const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
 taskRunner.setInput('packageSpecs', 'python=3');
-taskRunner.setInput('createOptions', '--json');
+taskRunner.setInput('installOptions', '--json');
 
 // Mock vsts-task-lib
 taskRunner.setAnswers({

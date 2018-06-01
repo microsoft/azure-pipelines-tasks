@@ -7,10 +7,12 @@ import * as internal from './conda_internal';
 import { Platform } from './taskutil';
 
 interface TaskParameters {
+    customEnvironment?: boolean,
     environmentName?: string,
     packageSpecs?: string,
     updateConda?: boolean,
-    otherOptions?: string,
+    installOptions?: string,
+    createOptions?: string,
     cleanEnvironment?: boolean
 }
 
@@ -42,11 +44,11 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
                 console.log(task.loc('CleanEnvironment', environmentPath));
                 task.rmRF(environmentPath);
             }
-            await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.otherOptions);
+            await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
         }
 
         internal.activateEnvironment(environmentsDir, parameters.environmentName, platform);
     } else if (parameters.packageSpecs) {
-        internal.installPackagesGlobally(parameters.packageSpecs, parameters.otherOptions);
+        internal.installPackagesGlobally(parameters.packageSpecs, parameters.installOptions);
     }
 }
