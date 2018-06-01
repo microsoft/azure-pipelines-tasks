@@ -297,7 +297,7 @@
             "required": false,
             "defaultValue": "false",
             "groupName": "AdditionalDeploymentOptions",
-            "helpMarkDown": "If unchecked we will auto-detect the best deployment method based on your app type, package format and other parameters. <br>Select the option to see choice of deployment methods."
+            "helpMarkDown": "If unchecked we will auto-detect the best deployment method based on your app type, package format and other parameters. <br>Select the option to view the supported deployment methods and choose one for deploying your app."
         },
         {
             "name": "DeploymentType",
@@ -310,7 +310,7 @@
                 "webDeploy": "Web Deploy",
                 "zipDeploy": "Zip Deploy"
             },
-            "helpMarkDown": "Choose deployment mechanism for your app.",
+            "helpMarkDown": "Choose the deployment method for the app.",
             "visibleRule": "UseWebDeploy == true"
         },
         {
@@ -321,7 +321,7 @@
             "defaultValue": "true",
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "DeploymentType == zipDeploy",
-            "helpMarkDown": "Publish using RunFromZip."
+            "helpMarkDown": "Publish using RunFromZip, run a Web App or Function App by simply pointing it to a zip file containing your app files."
         },
         {
             "name": "TakeAppOfflineFlag",
@@ -331,7 +331,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy = false || DeploymentType != zipDeploy || UseRunFromZip = false",
-            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully. <br>This option will not be honoured for function apps."
+            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully. <br>This option will not be honored for function apps."
         },
         {
             "name": "SetParametersFile",

@@ -32,7 +32,7 @@ export class DeploymentFactory{
                     }
                     else {             
                         var _isMSBuildPackage = await taskParams.Package.isMSBuildPackage();           
-                        if(_isMSBuildPackage || taskParams.VirtualApplication) {
+                        if(_isMSBuildPackage || taskParams.VirtualApplication || taskParams.Package.isWarFile()) {
                             return new WindowsWebAppWebDeployProvider(taskParams);
                         }
                         else {
