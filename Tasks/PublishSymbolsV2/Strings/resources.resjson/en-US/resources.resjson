@@ -21,7 +21,7 @@
   "loc.input.label.TreatNotIndexedAsWarning": "Warn if not indexed",
   "loc.input.help.TreatNotIndexedAsWarning": "Indicates whether to warn if sources are not indexed for a PDB file. Otherwise the messages are logged as normal output.",
   "loc.input.label.SymbolsMaximumWaitTime": "Max wait time (min)",
-  "loc.input.help.SymbolsMaximumWaitTime": "The number of minutes to wait before failing the step",
+  "loc.input.help.SymbolsMaximumWaitTime": "The number of minutes to wait before failing this task.",
   "loc.input.label.SymbolsProduct": "Product",
   "loc.input.help.SymbolsProduct": "Specify the product parameter to symstore.exe.  The default is $(Build.DefinitionName)",
   "loc.input.label.SymbolsVersion": "Version",

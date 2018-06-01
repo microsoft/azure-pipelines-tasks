@@ -35,10 +35,7 @@ describe('CondaEnvironment L0 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    // TODO 1263674 There seems to be an issue on the official build
-    // where the test really finds Conda on the build machine
-    // Fix and re-enable
-    xit('fails when a Conda installation is not found', function () {
+    it('fails when a Conda installation is not found', function () {
         const testFile = path.join(__dirname, 'L0CondaNotFound.js');
         const testRunner = new MockTestRunner(testFile);
 

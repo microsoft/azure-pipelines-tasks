@@ -64,8 +64,8 @@ function updateDeployment(tr) {
     assert(tr.stdOutContained('Successfullyupdateddeploymenthistory http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID'),
         'Should have printed: Successfullyupdateddeploymenthistory http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID');
 
-    assert(tr.stdOutContained('FailedToUpdateDeploymentHistory null (CODE: 501)'),
-        'Should have printed: FailedToUpdateDeploymentHistory null (CODE: 501)');
+    assert(tr.stdOutContained('Failedtoupdatedeploymenthistory null (CODE: 501)'),
+        'Should have printed: Failedtoupdatedeploymenthistory null (CODE: 501)');
 }
 
 function getContinuousJobs(tr) {

@@ -58,6 +58,15 @@ function ThrowIfMultipleFilesOrNoFilePresent($files, $pattern)
     }
 }
 
+function EscapeSpecialChars
+{
+    param(
+        [string]$str
+    )
+
+    return $str.Replace('`', '``').Replace('$', '`$')
+}
+
 Try
 {
     $firewallRuleName = ""
@@ -191,10 +200,25 @@ Try
             $SqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUserName -serverName $serverName
         }
 
-        $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$ServerName`" -Database `"$DatabaseName`" -Username `"$SqlUsername`" "
-
-        $commandToRun = $scriptArgument + " -Password `"$SqlPassword`" "
-        $commandToLog = $scriptArgument + " -Password ****** "
+        $sqlArguments = @{
+            ServerInstance = $serverName
+            Database = $DatabaseName
+            InputFile = $FilePath
+            Username = $sqlUsername
+            Password = $sqlPassword
+        }
+        
+        $commandToLog = "Invoke-SqlCmd"
+        foreach ($arg in $sqlArguments.Keys) {
+            if($arg -ne "Password")
+            {
+                $commandToLog += " -${arg} $($sqlArguments.Item($arg))"
+            }
+            else
+            {
+                $commandToLog += " -${arg} *******"
+            }
+        }
 
         # Increase Timeout to 120 seconds in case its not provided by User
         if (-not ($SqlAdditionalArguments.ToLower().Contains("-connectiontimeout")))
@@ -203,11 +227,10 @@ Try
             $SqlAdditionalArguments = $SqlAdditionalArguments + " -ConnectionTimeout $defaultTimeout"
         }
 
-        $commandToRun += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
-        $commandToLog += " -Inputfile `"$FilePath`" " + $SqlAdditionalArguments
+        $SqlAdditionalArguments = EscapeSpecialChars $SqlAdditionalArguments
 
-        Write-Host $commandToLog
-        Invoke-Expression $commandToRun
+        Write-Host "$commandToLog  $SqlAdditionalArguments"
+        Invoke-Expression "Invoke-SqlCmd @sqlArguments $SqlAdditionalArguments"
     }
     
 }

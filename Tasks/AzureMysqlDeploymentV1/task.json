@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -183,7 +183,7 @@
             "endpointId": "$(ConnectedServiceName)",
             "dataSourceName": "AzureMysqlServers",
             "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
-        }  
+        }
     ],
     "instanceNameFormat": "Execute Azure MySQL : $(TaskNameSelector)",
     "execution": {

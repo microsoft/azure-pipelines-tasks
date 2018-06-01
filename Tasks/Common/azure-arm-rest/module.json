@@ -133,6 +133,7 @@
         "FailedToListPath": "Failed to list path '%s'. Error: %s",
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-        "ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+        "ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s",
+        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition"
     }
 }

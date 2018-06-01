@@ -15,13 +15,8 @@ taskRunner.setAnswers({
     }
 });
 
-const getVariable = sinon.stub();
-getVariable.withArgs('CONDA').returns(undefined);
-
-taskRunner.registerMock('vsts-task-lib/task', {
-    // `getVariable` is not supported by `TaskLibAnswers`
-    getVariable: getVariable
-});
+// `getVariable` is not supported by `TaskLibAnswers`
+process.env['CONDA'] = undefined;
 
 // Mock vsts-task-tool-lib
 taskRunner.registerMock('vsts-task-tool-lib/tool', {
