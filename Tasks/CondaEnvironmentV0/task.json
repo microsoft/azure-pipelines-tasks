@@ -11,27 +11,29 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 136,
         "Patch": 0
     },
     "demands": [],
     "instanceNameFormat": "Conda environment $(environmentName)",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
     "inputs": [
+        {
+            "name": "customEnvironment",
+            "type": "boolean",
+            "label": "Create a custom environment",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "Create or reactivate a Conda environment instead of using the `base` environment (recommended for self-hosted agents)."
+        },
         {
             "name": "environmentName",
             "type": "string",
             "label": "Environment name",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Name of the Conda environment to create and activate. If left empty, subsequent build tasks will run in the global `base` environment."
+            "visibleRule": "customEnvironment == true",
+            "helpMarkDown": "Name of the Conda environment to create and activate, or reactivate if it already exists."
         },
         {
             "name": "packageSpecs",
@@ -50,16 +52,22 @@
             "helpMarkDown": "Update Conda to the latest version. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable."
         },
         {
-            "name": "createOptions",
+            "name": "installOptions",
             "type": "string",
-            "aliases": [
-                "otherOptions"
-            ],
-            "label": "Other options",
+            "label": "Additional arguments to `conda install`",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Space-delimited list of other options to pass to the `conda create` command, or to the `conda install` command if no environment is specified.",
-            "groupName": "advanced"
+            "visibleRule": "customEnvironment == false",
+            "helpMarkDown": "Space-delimited list of other options to pass to the `conda install` command."
+        },
+        {
+            "name": "createOptions",
+            "type": "string",
+            "label": "Additional arguments to `conda create`",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "customEnvironment == true",
+            "helpMarkDown": "Space-delimited list of other options to pass to the `conda create` command."
         },
         {
             "name": "cleanEnvironment",
@@ -67,8 +75,8 @@
             "label": "Clean the environment",
             "required": false,
             "defaultValue": false,
-            "helpMarkDown": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment.",
-            "groupName": "advanced"
+            "visibleRule": "customEnvironment == true",
+            "helpMarkDown": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment."
         }
     ],
     "execution": {
