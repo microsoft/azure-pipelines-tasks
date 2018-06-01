@@ -91,6 +91,7 @@
         "CondaNotFound": "The `conda` executable was not found on the system. Ask your administrator to install Miniconda or Anaconda. Then add the `conda` executable to `PATH` or set the `CONDA` environment variable to the root of the installation.",
         "InstallFailed": "Failed to install packages. %s",
         "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
+        "ParameterRequired": "The `%s` parameter is required",
         "PlatformNotRecognized": "Platform not recognized"
     }
 }

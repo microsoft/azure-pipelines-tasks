@@ -91,6 +91,7 @@
     "CondaNotFound": "ms-resource:loc.messages.CondaNotFound",
     "InstallFailed": "ms-resource:loc.messages.InstallFailed",
     "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
+    "ParameterRequired": "ms-resource:loc.messages.ParameterRequired",
     "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
   }
 }
