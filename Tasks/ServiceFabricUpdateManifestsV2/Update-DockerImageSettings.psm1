@@ -26,7 +26,7 @@ function Update-DockerImageSettings
             $imageNames = (Get-Content -LiteralPath $imageNamesPath).Replace("`r`n", "`n").Split("`n")
             if ($imageNames.Count -ne $imageDigestValues.Count)
             {
-                throw (Get-VstsLocString -Key ImageDigestMissmatch -ArgumentList @($imageNames.Count, $imageDigestValues.Count))
+                throw (Get-VstsLocString -Key ImageDigestMismatch -ArgumentList @($imageNames.Count, $imageDigestValues.Count))
             }
         }
 
