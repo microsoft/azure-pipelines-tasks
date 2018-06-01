@@ -16,7 +16,7 @@
         "Patch": 0
     },
     "demands": [],
-    "instanceNameFormat": "Conda Environment $(environmentName)",
+    "instanceNameFormat": "Conda environment $(environmentName)",
     "groups": [
         {
             "name": "advanced",
@@ -31,7 +31,7 @@
             "label": "Environment name",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Name of the Conda environment to create and activate. If left empty, subsequent build steps will run in the global `base` environment."
+            "helpMarkDown": "Name of the Conda environment to create and activate. If left empty, subsequent build tasks will run in the global `base` environment."
         },
         {
             "name": "packageSpecs",
@@ -39,7 +39,7 @@
             "label": "Package specs",
             "required": false,
             "defaultValue": "python=3",
-            "helpMarkDown": "Space-delimited list of packages to install when creating the environment, or to install to `base` if no environment is specified."
+            "helpMarkDown": "Space-delimited list of packages to install in the environment."
         },
         {
             "name": "updateConda",
