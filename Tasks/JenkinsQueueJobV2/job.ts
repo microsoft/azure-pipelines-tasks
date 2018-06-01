@@ -424,8 +424,17 @@ export class Job {
             } else if (httpResponse.statusCode == 404) {
                 // got here too fast, stream not yet available, try again in the future
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-            } else if (httpResponse.statusCode != 200) {
+            } else if (httpResponse.statusCode == 401) {
+                    Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
+                    thisJob.queue.TaskOptions.captureConsole = false;
+                    thisJob.queue.TaskOptions.capturePipeline = false;
+                    thisJob.queue.TaskOptions.shouldFail = true;
+                    thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
+                    thisJob.stopWork(0, JobState.Finishing);
+            } 
+            else if (httpResponse.statusCode != 200) {
                 Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
+                thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
             } else {
                 thisJob.consoleLog(body); // redirect Jenkins console to task console
                 const xMoreData: string = httpResponse.headers['x-more-data'];
@@ -437,7 +446,10 @@ export class Job {
                     thisJob.stopWork(0, JobState.Finishing);
                 }
             }
-        }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true);
+        }).auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
+        .on('error', (err) => { 
+            throw err; 
+        });
     }
 
     public EnableConsole() {
