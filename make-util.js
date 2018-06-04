@@ -899,9 +899,6 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
 
 var getTaskYaml = function(taskJson) {
     var taskYaml = '';
-
-    ///taskYaml += '::: moniker range="vsts"' + os.EOL + os.EOL;
-    taskYaml += '## YAML snippet' + os.EOL + os.EOL;
     taskYaml += '```YAML' + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.description) + os.EOL;
@@ -969,10 +966,7 @@ var getTaskYaml = function(taskJson) {
     });
 
     // Append endings
-    taskYaml += '```' + os.EOL;// + os.EOL;
-    //taskYaml += '::: moniker-end' + os.EOL + os.EOL;
-    //taskYaml += '::: moniker range="< vsts"' + os.EOL + os.EOL;
-    //taskYaml += '::: moniker-end' + os.EOL;
+    taskYaml += '```' + os.EOL;
 
     return taskYaml;
 };

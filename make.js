@@ -125,11 +125,11 @@ target.gendocs = function() {
             validateTask(taskDef);
 
             // create YAML snippet Markdown
-            var yamlOutputFilename = taskName + '.' + taskDef.version.Major + '.md';
+            var yamlOutputFilename = taskName + '.md';
             createYamlSnippetFile(taskDef, docsDir, yamlOutputFilename);
 
             // create Markdown documentation file
-            var mdDocOutputFilename = taskName + '.' + taskDef.version.Major + '.md';
+            var mdDocOutputFilename = taskName + '.md';
             createMarkdownDocFile(taskDef, taskJsonPath, docsDir, mdDocOutputFilename);
         }
     });
