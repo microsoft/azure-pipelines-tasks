@@ -107,7 +107,12 @@ try {
 
         if (!$skipValidation)
         {
-            $isPackageValid = Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath
+            $ApplicationManifestPath = Get-ApplicationManifestPath -ApplicationPackagePath $applicationPackagePath
+            $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
+            if (!($isUpgrade -and $app -and $names -and ($app.ApplicationTypeVersion -eq $names.ApplicationTypeVersion)))
+            {
+                $isPackageValid = Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath
+            }
         }
 
         if ($isPackageValid)
