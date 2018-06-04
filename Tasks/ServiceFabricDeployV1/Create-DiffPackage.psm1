@@ -102,15 +102,13 @@ function New-DiffPackage
             }
             Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackageForService -ArgumentList @($localServiceManifestName, $clusterServiceManifest.Version, $localServiceManifestVersion))
 
+            $diffServicePkgPath = New-Item -ItemType Directory -Path $diffServicePkgPath -Force
+
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.CodePackage -localPackages $localServiceManifest.CodePackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.ConfigPackage -localPackages $localServiceManifest.ConfigPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
             Copy-DiffPackage -clusterPackages $clusterServiceManifest.DataPackage -localPackages $localServiceManifest.DataPackage -localParentPkgPath $localServicePkgPath -diffParentPkgPath $diffServicePkgPath
 
             Write-Host (Get-VstsLocString -Key DIFFPKG_CopyingToDiffPackge -ArgumentList @($localServiceManifestPath, $diffPkgServiceManifestPath))
-            if (!(Test-Path -PathType Container -LiteralPath $diffServicePkgPath))
-            {
-                $diffServicePkgPath = New-Item -ItemType Directory -Path $diffServicePkgPath -Force
-            }
             Copy-Item -LiteralPath $localServiceManifestPath $diffPkgServiceManifestPath -Force
         }
 
