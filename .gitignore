@@ -24,7 +24,8 @@ gulp-tsc-tmp-*
 [Dd]ebugPublic/
 [Rr]elease/
 x64/
-build/
+build/**/*
+!**/data/**/build/**/*.*
 bld/
 [Bb]in/
 [Oo]bj/
@@ -169,7 +170,7 @@ csx/
 AppPackages/
 
 # Others
-sql/
+# sql/
 *.Cache
 ClientBin/
 [Ss]tyle[Cc]op.*

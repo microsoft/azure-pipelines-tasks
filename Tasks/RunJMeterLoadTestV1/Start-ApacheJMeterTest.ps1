@@ -18,6 +18,8 @@ $LoadTest,
 $agentCount,
 [String] [Parameter(Mandatory = $true)]
 $runDuration,
+[String] [Parameter(Mandatory = $true)]
+$geoLocation,
 [String] [Parameter(Mandatory = $true)] [ValidateNotNullOrEmpty()]
 $machineType
 )
@@ -86,6 +88,7 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 Write-Output "Test drop = $TestDrop"
 Write-Output "Load test = $LoadTest"
+Write-Output "Load location = $geoLocation"
 Write-Output "Load generator machine type = $machineType"
 Write-Output "Run source identifier = build/$env:SYSTEM_DEFINITIONID/$env:BUILD_BUILDID"
 
@@ -116,7 +119,10 @@ Write-Output "CLT account Url = $CltAccountUrl" -Verbose
 
 #Upload the test drop
 $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
-$drop = CreateTestDrop $headers $CltAccountUrl
+
+$dropjson = ComposeTestDropJson $LoadTest $agentCount $runDuration $geoLocation
+
+$drop = CreateTestDrop $headers $dropjson $CltAccountUrl
 
 if ($drop.dropType -eq "TestServiceBlobDrop")
 {
@@ -159,7 +165,7 @@ if ($drop.dropType -eq "TestServiceBlobDrop")
 	Remove-Item $resultsMDFolder\$resultFilePattern -Exclude $excludeFilePattern -Force
 	$summaryFile =  ("{0}\ApacheJMeterTestResults_{1}_{2}_{3}_{4}.md" -f $resultsMDFolder, $env:AGENT_ID, $env:SYSTEM_DEFINITIONID, $env:BUILD_BUILDID, $run.id)
 
-	$summary = ('[Test Run: {0}]({1}) using {2}.<br/>' -f  $run.runNumber, $webResultsUrl , $run.name)
+	$summary = ('<a href="{1}" target="_blank">Test Run: {0}</a> using {2}.' -f  $run.runNumber, $webResultsUrl , $run.name)
 	
 	('<p>{0}</p>' -f $summary) | Out-File  $summaryFile -Encoding ascii -Append
 	UploadSummaryMdReport $summaryFile

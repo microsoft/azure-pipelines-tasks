@@ -32,6 +32,8 @@ async function getDotnetCore(packageType: string, version: string): Promise<void
 
     // prepend the tools path. instructs the agent to prepend for future tasks
     toolLib.prependPath(toolPath);
+    // set DOTNET_ROOT for dotnet core Apphost to find runtime since it is installed to a non well-known location.
+    taskLib.setVariable('DOTNET_ROOT', toolPath);
 }
 
 function getCachedToolName(packageType: string): string {

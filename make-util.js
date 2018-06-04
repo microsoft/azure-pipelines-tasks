@@ -803,7 +803,7 @@ var createMarkdownDocFile = function(taskJson, taskJsonPath, docsDir, mdDocOutpu
         fs.copyFileSync(iconPath, docIconPath);
     }
 
-    fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson));
+    fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson, mdDocOutputFilename));
 }
 exports.createMarkdownDocFile = createMarkdownDocFile;
 
@@ -853,7 +853,7 @@ var cleanString = function(str) {
     }
 }
 
-var getTaskMarkdownDoc = function(taskJson) {
+var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     var taskMarkdown = '';
 
     taskMarkdown += '---' + os.EOL;
@@ -868,15 +868,14 @@ var getTaskMarkdownDoc = function(taskJson) {
     taskMarkdown += 'ms.date: ' +
                     new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()) +
                     os.EOL;
-    taskMarkdown += 'monikerRange: \'VSTS\'' + os.EOL;
+    taskMarkdown += 'monikerRange: \'vsts\'' + os.EOL;
     taskMarkdown += '---' + os.EOL + os.EOL;
 
     taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
     taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
 
     taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
-    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
-    taskMarkdown += getTaskYaml(taskJson) + os.EOL + os.EOL;
+    taskMarkdown += '[!INCLUDE [temp](../_shared/yaml/' + mdDocOutputFilename + ')]' + os.EOL + os.EOL;
     taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
 
     taskMarkdown += '## Arguments' + os.EOL + os.EOL;
@@ -901,7 +900,7 @@ var getTaskMarkdownDoc = function(taskJson) {
 var getTaskYaml = function(taskJson) {
     var taskYaml = '';
 
-    taskYaml += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    ///taskYaml += '::: moniker range="vsts"' + os.EOL + os.EOL;
     taskYaml += '## YAML snippet' + os.EOL + os.EOL;
     taskYaml += '```YAML' + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
@@ -970,8 +969,11 @@ var getTaskYaml = function(taskJson) {
     });
 
     // Append endings
-    taskYaml += '```' + os.EOL + os.EOL;
-    taskYaml += '::: moniker-end';
+    taskYaml += '```' + os.EOL;// + os.EOL;
+    //taskYaml += '::: moniker-end' + os.EOL + os.EOL;
+    //taskYaml += '::: moniker range="< vsts"' + os.EOL + os.EOL;
+    //taskYaml += '::: moniker-end' + os.EOL;
+
     return taskYaml;
 };
 //------------------------------------------------------------------------------

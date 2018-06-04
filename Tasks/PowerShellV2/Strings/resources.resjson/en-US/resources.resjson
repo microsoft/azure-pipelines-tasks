@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "PowerShell",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613736)",
-  "loc.description": "This is an early preview. Run a PowerShell script on Windows, macOS, or Linux.",
+  "loc.description": "Run a PowerShell script on Windows, macOS, or Linux.",
   "loc.instanceNameFormat": "PowerShell Script",
-  "loc.releaseNotes": "This is an early preview. Script task consistency. Added support for macOS and Linux.",
+  "loc.releaseNotes": "Script task consistency. Added support for macOS and Linux.",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.targetType": "Type",
   "loc.input.help.targetType": "Target script type: File Path or Inline",

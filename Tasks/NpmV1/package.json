@@ -1,6 +1,6 @@
 {
   "name": "vsts-npm-task",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "VSTS NPM Task",
   "main": "npmtask.js",
   "scripts": {
