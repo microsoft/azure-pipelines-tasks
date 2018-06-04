@@ -8,7 +8,7 @@ import tool = require('vsts-task-tool-lib/tool');
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('versionSpec', '2.5');
+tr.setInput('versionSpec', '3.x');
 tr.setInput('addToPath', 'false');
 
 process.env['AGENT_VERSION'] = '2.116.0';
@@ -20,7 +20,8 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 tr.setAnswers(a);
 
 tr.registerMock('vsts-task-tool-lib/tool', {
-    findLocalTool: () => path.join('/', 'Ruby', '2.5.4')
+    findLocalTool: () => null,
+    findLocalToolVersions: () => ['2.7.13']
 });
 
 fs.symlinkSync = (s) => {
