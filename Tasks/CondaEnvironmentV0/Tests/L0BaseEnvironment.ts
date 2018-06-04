@@ -27,9 +27,4 @@ taskRunner.registerMock('vsts-task-tool-lib/tool', {
     prependPath: () => undefined,
 });
 
-// Mock other dependencies
-// mockery.registerMock('fs', {
-//     existsSync: () => false
-// });
-
 taskRunner.run();

@@ -19,7 +19,7 @@
     "instanceNameFormat": "Conda environment $(environmentName)",
     "inputs": [
         {
-            "name": "customEnvironment",
+            "name": "createCustomEnvironment",
             "type": "boolean",
             "label": "Create a custom environment",
             "required": false,
@@ -32,7 +32,7 @@
             "label": "Environment name",
             "required": true,
             "defaultValue": "",
-            "visibleRule": "customEnvironment == true",
+            "visibleRule": "createCustomEnvironment == true",
             "helpMarkDown": "Name of the Conda environment to create and activate, or reactivate if it already exists."
         },
         {
@@ -54,20 +54,20 @@
         {
             "name": "installOptions",
             "type": "string",
-            "label": "Additional arguments to `conda install`",
+            "label": "Other options for `conda install`",
             "required": false,
             "defaultValue": "",
-            "visibleRule": "customEnvironment == false",
-            "helpMarkDown": "Space-delimited list of other options to pass to the `conda install` command."
+            "visibleRule": "createCustomEnvironment == false",
+            "helpMarkDown": "Space-delimited list of additional arguments to pass to the `conda install` command."
         },
         {
             "name": "createOptions",
             "type": "string",
-            "label": "Additional arguments to `conda create`",
+            "label": "Other options for `conda create`",
             "required": false,
             "defaultValue": "",
-            "visibleRule": "customEnvironment == true",
-            "helpMarkDown": "Space-delimited list of other options to pass to the `conda create` command."
+            "visibleRule": "createCustomEnvironment == true",
+            "helpMarkDown": "Space-delimited list of additional arguments to pass to the `conda create` command."
         },
         {
             "name": "cleanEnvironment",
@@ -75,7 +75,7 @@
             "label": "Clean the environment",
             "required": false,
             "defaultValue": false,
-            "visibleRule": "customEnvironment == true",
+            "visibleRule": "createCustomEnvironment == true",
             "helpMarkDown": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment."
         }
     ],

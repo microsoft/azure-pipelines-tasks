@@ -7,7 +7,7 @@ import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
-taskRunner.setInput('customEnvironment', 'true');
+taskRunner.setInput('createCustomEnvironment', 'true');
 taskRunner.setInput('environmentName', 'test');
 
 // Mock vsts-task-lib

@@ -7,7 +7,7 @@ import { condaEnvironment } from './conda';
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await condaEnvironment({
-            customEnvironment: task.getBoolInput('customEnvironment'),
+            createCustomEnvironment: task.getBoolInput('createCustomEnvironment'),
             environmentName: task.getInput('environmentName'),
             packageSpecs: task.getInput('packageSpecs'),
             updateConda: task.getBoolInput('updateConda'),

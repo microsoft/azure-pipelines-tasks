@@ -51,7 +51,7 @@ it('creates and activates environment', async function () {
 
     const uut = reload('../conda');
     const parameters = {
-        customEnvironment: true,
+        createCustomEnvironment: true,
         environmentName: 'env',
         updateConda: false
     };
@@ -63,7 +63,7 @@ it('creates and activates environment', async function () {
     assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', Platform.Linux));
 });
 
-it('requires `customEnvironment` to be set to create a custom environment', async function () {
+it('requires `createCustomEnvironment` to be set to create a custom environment', async function () {
     mockery.registerMock('fs', {
         existsSync: () => false
     });

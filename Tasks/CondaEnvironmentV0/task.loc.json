@@ -19,12 +19,12 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
-      "name": "customEnvironment",
+      "name": "createCustomEnvironment",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.customEnvironment",
+      "label": "ms-resource:loc.input.label.createCustomEnvironment",
       "required": false,
       "defaultValue": false,
-      "helpMarkDown": "ms-resource:loc.input.help.customEnvironment"
+      "helpMarkDown": "ms-resource:loc.input.help.createCustomEnvironment"
     },
     {
       "name": "environmentName",
@@ -32,7 +32,7 @@
       "label": "ms-resource:loc.input.label.environmentName",
       "required": true,
       "defaultValue": "",
-      "visibleRule": "customEnvironment == true",
+      "visibleRule": "createCustomEnvironment == true",
       "helpMarkDown": "ms-resource:loc.input.help.environmentName"
     },
     {
@@ -57,7 +57,7 @@
       "label": "ms-resource:loc.input.label.installOptions",
       "required": false,
       "defaultValue": "",
-      "visibleRule": "customEnvironment == false",
+      "visibleRule": "createCustomEnvironment == false",
       "helpMarkDown": "ms-resource:loc.input.help.installOptions"
     },
     {
@@ -66,7 +66,7 @@
       "label": "ms-resource:loc.input.label.createOptions",
       "required": false,
       "defaultValue": "",
-      "visibleRule": "customEnvironment == true",
+      "visibleRule": "createCustomEnvironment == true",
       "helpMarkDown": "ms-resource:loc.input.help.createOptions"
     },
     {
@@ -75,7 +75,7 @@
       "label": "ms-resource:loc.input.label.cleanEnvironment",
       "required": false,
       "defaultValue": false,
-      "visibleRule": "customEnvironment == true",
+      "visibleRule": "createCustomEnvironment == true",
       "helpMarkDown": "ms-resource:loc.input.help.cleanEnvironment"
     }
   ],

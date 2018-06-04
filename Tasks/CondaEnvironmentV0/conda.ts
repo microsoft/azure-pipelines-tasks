@@ -7,7 +7,7 @@ import * as internal from './conda_internal';
 import { Platform } from './taskutil';
 
 interface TaskParameters {
-    customEnvironment?: boolean,
+    createCustomEnvironment?: boolean,
     environmentName?: string,
     packageSpecs?: string,
     updateConda?: boolean,
@@ -46,7 +46,7 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
 
     internal.prependCondaToPath(condaRoot, platform);
 
-    if (parameters.customEnvironment) { // activate the environment, creating it if it does not exist
+    if (parameters.createCustomEnvironment) { // activate the environment, creating it if it does not exist
         const environmentName = assertParameter(parameters.environmentName, 'environmentName');
 
         const environmentsDir = path.join(condaRoot, 'envs');
