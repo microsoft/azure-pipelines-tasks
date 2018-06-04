@@ -264,8 +264,6 @@ export class JobQueue {
                 jobContent += '</ul>';
             }
 
-            //close out the element for the entire job
-            //jobContent += '</ul>';
             return jobContent;
         }
 
