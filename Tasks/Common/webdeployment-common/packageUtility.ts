@@ -22,6 +22,7 @@ export class Package {
         this._path = PackageUtility.getPackagePath(packagePath);
         this._isMSBuildPackage = undefined;
         this._isFolder = undefined;
+        this._isWarFile = undefined;
     }
 
     public getPath(): string {
@@ -57,8 +58,19 @@ export class Package {
 
         return this._isFolder;
     }
+    public isWarFile(): boolean {
+        if (this._isWarFile == undefined) {
+            this._isWarFile = false;
+            if (this._path.toString().toLowerCase().endsWith('.war')) {
+                this._isWarFile = true;
+            }
+        }
+        tl.debug("Is this a war file : " + this._isWarFile)
+        return this._isWarFile;
+    }
     
     private _path: string;
     private _isMSBuildPackage?: boolean;
     private _isFolder?: boolean;
+    private _isWarFile?: boolean;
 }

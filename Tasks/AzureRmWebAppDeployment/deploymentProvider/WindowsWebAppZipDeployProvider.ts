@@ -33,8 +33,8 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
 
             await this.deployUsingZipDeploy(webPackage, this.taskParams.UseRunFromZip);
         }
-        // if post deployment script is present or app offline flag is checked we use pure zipDeploy
-        else if(this.taskParams.ScriptType || this.taskParams.TakeAppOfflineFlag) {
+        // if post deployment script is present or app offline flag is checked for a non function app we use pure zipDeploy
+        else if(this.taskParams.ScriptType || (this.taskParams.WebAppKind !== "functionApp" && this.taskParams.TakeAppOfflineFlag)) {
             await this.deployUsingZipDeploy(webPackage, false);
         }
         else {
@@ -59,9 +59,9 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(!this.runFromZip && this.kuduServiceUtility) {
+        if((!this.runFromZip || this.taskParams.ScriptType) && this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
-            if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
+            if(!this.runFromZip && this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
                 await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
             }
         }

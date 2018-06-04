@@ -33,7 +33,7 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
 
         var msDeployPublishingProfile = await this.appServiceUtility.getWebDeployPublishingProfile();
 
-        if(webPackage.toString().toLowerCase().endsWith('.war')) {
+        if(this.taskParams.Package.isWarFile()) {
             await DeployWar(webPackage, this.taskParams, msDeployPublishingProfile, this.kuduService, this.appServiceUtility);
         }
         else {
