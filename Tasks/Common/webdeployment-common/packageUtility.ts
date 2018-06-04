@@ -58,7 +58,7 @@ export class Package {
 
         return this._isFolder;
     }
-    public isWarFile() {
+    public isWarFile(): boolean {
         if (this._isWarFile == undefined) {
             this._isWarFile = false;
             if (this._path.toString().toLowerCase().endsWith('.war')) {
