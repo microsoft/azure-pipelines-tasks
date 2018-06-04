@@ -95,7 +95,7 @@
       "name": "useDiffPackage",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.useDiffPackage",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "groupname": "upgrade",
       "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage"
