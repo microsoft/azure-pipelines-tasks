@@ -30,6 +30,15 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
             else if(this.taskParams.VirtualApplication) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedforvirtualapplication"));
             }
+            else if(this.taskParams.UseRunFromZip && this.taskParams.ScriptType) {
+                var debugMode = tl.getVariable('system.debug');
+                if(debugMode && debugMode.toLowerCase() == 'true') {
+                    tl.warning(tl.loc('Publishusingrunfromzipwithpostdeploymentscript'));
+                }
+                else {
+                    console.log(tl.loc('Publishusingrunfromzipwithpostdeploymentscript'));
+                }
+            }
 
             await this.deployUsingZipDeploy(webPackage, this.taskParams.UseRunFromZip);
         }
