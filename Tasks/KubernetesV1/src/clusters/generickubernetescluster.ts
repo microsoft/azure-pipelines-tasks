@@ -9,7 +9,6 @@ export async function getKubeConfig(): Promise<string> {
     if (authorizationType === "Kubeconfig")
     {
         return tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'kubeconfig', false);
-
     }
     else if (authorizationType === "ServiceAccount")
     {
