@@ -8,7 +8,7 @@ import * as tr from "vsts-task-lib/toolrunner";
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as utils from "./utilities";
 import * as os from "os";
-var Base64 = require('js-base64').Base64;
+import kubectlutility = require("utility-common/kubectlutility");
 
 export default class ClusterConnection {
     private kubectlPath: string;
@@ -43,16 +43,20 @@ export default class ClusterConnection {
     public async open(kubernetesEndpoint?: string){
          return this.initialize().then(() => {
             var authorizationType = tl.getEndpointDataParameter(kubernetesEndpoint, 'authorizationType', false);
+            var kubeconfig = null;
             if (authorizationType === "Kubeconfig")
             {
                 if (kubernetesEndpoint) {
-                    this.downloadKubeconfigFileFromEndpoint(kubernetesEndpoint);
+                     kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
                 } 
             }
             else if (authorizationType === "ServiceAccount")
             {
-                this.createKubeconfig(kubernetesEndpoint);
-            }            
+                kubeconfig = kubectlutility.createKubeconfig(kubernetesEndpoint);
+            }
+            
+            this.kubeconfigFile = path.join(this.userDir, "config");
+            fs.writeFileSync(this.kubeconfigFile, kubeconfig);
          });
     }
 
@@ -71,27 +75,6 @@ export default class ClusterConnection {
             errlines.forEach(line => tl.error(line));
             throw error;
         });
-    }
-
-    // download kubernetes cluster config file from endpoint
-    private downloadKubeconfigFileFromEndpoint(kubernetesEndpoint: string) : void {
-        this.kubeconfigFile = path.join(this.userDir, "config");
-        var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
-        fs.writeFileSync(this.kubeconfigFile, kubeconfig);
-    }
-
-    private createKubeconfig(kubernetesEndpoint: string): void {
-
-        var kubeconfigTemplateString = '{"apiVersion":"v1","kind":"Config","clusters":[{"cluster":{"certificate-authority-data": null,"server": null}}], "users":[{"user":{"token": null}}]}';
-        var kubeconfigTemplate = JSON.parse(kubeconfigTemplateString);
-
-        //populate server url, ca cert and token fields
-        kubeconfigTemplate.clusters[0].cluster.server = tl.getEndpointUrl(kubernetesEndpoint, false);
-        kubeconfigTemplate.clusters[0].cluster["certificate-authority-data"] = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'serviceAccountCertificate', false);
-        kubeconfigTemplate.users[0].user.token = Base64.decode(tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'serviceAccountToken', false));
-
-        this.kubeconfigFile = path.join(this.userDir, "config");
-        fs.writeFileSync(this.kubeconfigFile, JSON.stringify(kubeconfigTemplate));
     }
 
     private getExecutableExtention(): string {
