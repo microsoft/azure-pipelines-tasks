@@ -2,7 +2,7 @@
 # Start with an empty pipeline and add your own build steps.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 steps:
 
 #- script: |

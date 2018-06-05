@@ -2,7 +2,7 @@
 # Build a Xamarin.iOS app and Xamarin.UITest assembly.
 # https://aka.ms/yaml
 
-queue: 'Hosted macOS Preview'
+queue: 'Hosted macOS'
 steps:
 
 - task: XamariniOS@1
@@ -18,6 +18,6 @@ steps:
 #- task: PublishBuildArtifacts@1
 
 # Next steps:
-# Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
-# Distribute apps to testers and users with the App Center Distribute task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterDistribute
+# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest
+# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/build-release/tasks/deploy/appcenterdistribute
 # Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store

@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 135,
-    "Patch": 4
+    "Minor": 136,
+    "Patch": 3
   },
   "demands": [
     "vstest"
@@ -472,6 +472,7 @@
     },
     {
       "target": "testConfiguration",
+      "endpointId": "tfs:teamfoundation",
       "endpoint": "/$(system.teamProject)/_apis/test/configurations?api-version=3.0-preview.1",
       "selector": "jsonpath:$.value[*].name",
       "keySelector": "jsonpath:$.value[*].id",

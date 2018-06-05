@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 134,
+    "Minor": 136,
     "Patch": 0
   },
   "runsOn": [
@@ -93,6 +93,7 @@
     }
   },
   "messages": {
-    "InputProvisioningProfileNotFound": "ms-resource:loc.messages.InputProvisioningProfileNotFound"
+    "InputProvisioningProfileNotFound": "ms-resource:loc.messages.InputProvisioningProfileNotFound",
+    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac"
   }
 }

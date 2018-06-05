@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 1,
-    "Patch": 7
+    "Patch": 9
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -584,6 +584,7 @@
     "PropertyDoesntExistPublishProfile": "ms-resource:loc.messages.PropertyDoesntExistPublishProfile",
     "InvalidConnectionType": "ms-resource:loc.messages.InvalidConnectionType",
     "InvalidImageSourceType": "ms-resource:loc.messages.InvalidImageSourceType",
-    "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile"
+    "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile",
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation"
   }
 }

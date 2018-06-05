@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 131,
+        "Minor": 136,
         "Patch": 0
     },
     "groups": [
@@ -34,7 +34,7 @@
             "label": "Working directory",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify the working directory in which to execute this step. If left empty, the repository directory will be used."
+            "helpMarkDown": "Specify the working directory in which to execute this task. If left empty, the repository directory will be used."
         },
         {
             "name": "forceRepoUpdate",

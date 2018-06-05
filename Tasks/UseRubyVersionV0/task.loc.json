@@ -12,10 +12,9 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 134,
-    "Patch": 1
+    "Minor": 136,
+    "Patch": 0
   },
-  "preview": true,
   "demands": [],
   "minimumAgentVersion": "2.115.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

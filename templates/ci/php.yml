@@ -2,7 +2,7 @@
 # Package your PHP application.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 steps:
 
 #- script: composer install

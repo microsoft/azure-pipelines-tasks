@@ -32,13 +32,19 @@
   "loc.input.label.enableDeploymentPrerequisites": "Enable prerequisites",
   "loc.input.help.enableDeploymentPrerequisites": "These options would be applicable only when the Resource group contains virtual machines. <br><br>Choosing Deployment Group option would configure Deployment Group agent on each of the virtual machines. <br><br>Selecting WinRM option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing deployment operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986).",
   "loc.input.label.deploymentGroupEndpoint": "TFS/VSTS endpoint",
-  "loc.input.help.deploymentGroupEndpoint": "Agent registration with Deployment group requires access to your Visual Studio project.​ <br><br>Click \"Add\" to create an endpoint using personal access token (PAT) with scope restricted to \"Deployment Group\" and a default expiration time of 90 days. <br><br>​Click \"Manage\" to update endpoint details.​",
+  "loc.input.help.deploymentGroupEndpoint": "Specify the endpoint to connect to VSTS/TFS account for agent registration.<br><br>You can create an endpoint using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup an endpoint. <br><br>​Click \"Manage\" to update endpoint details.",
   "loc.input.label.project": "Team project",
   "loc.input.help.project": "Specify the Team Project which has the Deployment Group defined in it​",
   "loc.input.label.deploymentGroupName": "Deployment Group",
   "loc.input.help.deploymentGroupName": "Specify the Deployment Group against which the Agent(s) will be registered. For more guidance, refer to [Deployment Groups](https://aka.ms/832442)",
   "loc.input.label.copyAzureVMTags": "Copy Azure VM tags to agents",
   "loc.input.help.copyAzureVMTags": "Choose if the tags configured on the Azure VM need to be copied to the corresponding Deployment Group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)",
+  "loc.input.label.runAgentServiceAsUser": "Run agent service as a user",
+  "loc.input.help.runAgentServiceAsUser": "Decide whether to run the agent service as a user other than the default. <br>The default user is \"NT AUTHORITY\\SYSTEM\" in Windows and \"root\" in Linux.",
+  "loc.input.label.userName": "User name",
+  "loc.input.help.userName": "The username to run the agent service on the virtual machines. <br>For domain users, please enter values as \"domain\\username\" or \"username@domain.com\". For local users, please enter just the user name. <br>It is assumed that the same domain user\\a local user with the same name, respectively, is present on all the virtual machines in the resource group.",
+  "loc.input.label.password": "Password",
+  "loc.input.help.password": "The password for the user to run the agent service on the Windows VMs. <br>It is assumed that the password is the same for the specified user on all the VMs. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it. <br>For linux VMs, password is not required and will be ignored. ",
   "loc.input.label.outputVariable": "VM details for WinRM",
   "loc.input.help.outputVariable": "Provide a name for the variable for the resource group. The variable can be used as $(variableName) to refer to the resource group in subsequent tasks like in the PowerShell on Target Machines task for deploying applications. <br>Valid only when the selected action is Create, Update or Select, and required when an existing resource group is selected.",
   "loc.input.label.deploymentOutputs": "Deployment outputs",
@@ -171,5 +177,6 @@
   "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+  "loc.messages.UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null."
 }

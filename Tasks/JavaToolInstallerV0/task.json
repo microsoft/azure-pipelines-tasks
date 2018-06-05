@@ -3,7 +3,7 @@
     "name": "JavaToolInstaller",
     "friendlyName": "Java Tool Installer",
     "description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
-    "helpMarkDown": "[More Information]()",
+    "helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer?view=vsts)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -12,10 +12,9 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 134,
-        "Patch": 1
+        "Minor": 136,
+        "Patch": 0
     },
-    "preview": true,
     "satisfies": ["Java"],
     "demands": [],
     "groups": [
