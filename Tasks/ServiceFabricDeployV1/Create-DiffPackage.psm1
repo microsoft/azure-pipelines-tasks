@@ -1,4 +1,4 @@
-function Create-DiffPackage
+function New-DiffPackage
 {
     [CmdletBinding()]
     param(
