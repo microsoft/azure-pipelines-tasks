@@ -4,14 +4,6 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import { DeployWar } from '../operations/WarDeploymentUtilities';
 import * as Constant from '../operations/Constants';
 import { WebDeployUtility } from '../operations/WebDeployUtility';
-import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
-import { Package } from 'webdeployment-common/packageUtility';
-import * as ParameterParser from '../operations/parameterparser'
-
-var packageUtility = require('webdeployment-common/packageUtility.js');
-var deployUtility = require('webdeployment-common/utility.js');
-var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
-const runFromZipAppSetting: string = 'WEBSITE_RUN_FROMZIP 1';
 
 export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvider{
  

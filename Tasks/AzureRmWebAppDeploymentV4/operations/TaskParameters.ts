@@ -62,9 +62,6 @@ export class TaskParametersUtility {
                 taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
                 taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
             }
-            else if(taskParameters.DeploymentType == "zipDeploy") {
-                taskParameters.UseRunFromZip = tl.getBoolInput('UseRunFromZip', false);
-            }
         }
         else {
             // Retry Attempt is passed by default
@@ -100,7 +97,6 @@ export interface TaskParameters {
     XmlVariableSubstitution?: boolean;
     UseWebDeploy?: boolean;
     DeploymentType?: string;
-    UseRunFromZip?: boolean;
     RemoveAdditionalFilesFlag?: boolean;
     SetParametersFile?: string;
     ExcludeFilesFromAppDataFlag?: boolean;

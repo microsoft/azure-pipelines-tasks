@@ -5,6 +5,7 @@ import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploy
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppWebDeployProvider } from './WindowsWebAppWebDeployProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
+import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { Package } from 'webdeployment-common/packageUtility';
@@ -30,13 +31,19 @@ export class DeploymentFactory{
                     else if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'zipDeploy') {
                         return new WindowsWebAppZipDeployProvider(taskParams);
                     }
+                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'runFromZip'){
+                        return new WindowsWebAppRunFromZipProvider(taskParams);
+                    }
                     else {             
                         var _isMSBuildPackage = await taskParams.Package.isMSBuildPackage();           
                         if(_isMSBuildPackage || taskParams.VirtualApplication || taskParams.Package.isWarFile()) {
                             return new WindowsWebAppWebDeployProvider(taskParams);
                         }
-                        else {
+                        else if(taskParams.ScriptType) {
                             return new WindowsWebAppZipDeployProvider(taskParams);
+                        }
+                        else {
+                            return new WindowsWebAppRunFromZipProvider(taskParams);
                         }
                     }
                 }

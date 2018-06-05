@@ -18,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 2,
-        "Patch": 6
+        "Patch": 0
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -308,20 +308,11 @@
             "groupName": "AdditionalDeploymentOptions",
             "options": {
                 "webDeploy": "Web Deploy",
-                "zipDeploy": "Zip Deploy"
+                "zipDeploy": "Zip Deploy",
+                "runFromZip": "RunFromZip"
             },
             "helpMarkDown": "Choose the deployment method for the app.",
             "visibleRule": "UseWebDeploy == true"
-        },
-        {
-            "name": "UseRunFromZip",
-            "type": "boolean",
-            "label": "Publish using RunFromZip",
-            "required": false,
-            "defaultValue": "true",
-            "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "DeploymentType == zipDeploy",
-            "helpMarkDown": "Publish using RunFromZip, run a Web App or Function App by simply pointing it to a zip file containing your app files."
         },
         {
             "name": "TakeAppOfflineFlag",
@@ -330,7 +321,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy = true && UseRunFromZip = false",
+            "visibleRule": "UseWebDeploy  = true && DeploymentType != runFromZip",
             "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {

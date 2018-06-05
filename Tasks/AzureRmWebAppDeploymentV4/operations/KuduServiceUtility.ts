@@ -60,7 +60,7 @@ export class KuduServiceUtility {
 
         }
         catch(error) {
-            if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'zipDeploy' && taskParams.UseRunFromZip) {
+            if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'runFromZip') {
                 var debugMode = tl.getVariable('system.debug');
                 if(debugMode && debugMode.toLowerCase() == 'true') {
                     tl.warning(tl.loc('Publishusingrunfromzipwithpostdeploymentscript'));
