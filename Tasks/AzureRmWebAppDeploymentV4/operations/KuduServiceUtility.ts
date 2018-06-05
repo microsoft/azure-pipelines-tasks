@@ -60,6 +60,15 @@ export class KuduServiceUtility {
 
         }
         catch(error) {
+            if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'zipDeploy' && taskParams.UseRunFromZip) {
+                var debugMode = tl.getVariable('system.debug');
+                if(debugMode && debugMode.toLowerCase() == 'true') {
+                    tl.warning(tl.loc('Publishusingrunfromzipwithpostdeploymentscript'));
+                }
+                else {
+                    console.log(tl.loc('Publishusingrunfromzipwithpostdeploymentscript'));
+                }
+            }
             throw Error(tl.loc('FailedToRunScriptOnKuduError', error));
         }
         finally {

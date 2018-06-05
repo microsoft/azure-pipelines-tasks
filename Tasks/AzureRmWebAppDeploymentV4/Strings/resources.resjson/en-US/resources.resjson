@@ -113,7 +113,7 @@
   "loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
   "loc.messages.Publishusingzipdeploynotsupportedformsbuildpackage": "Publish using zip deploy option is not supported for msBuild package type.",
   "loc.messages.Publishusingzipdeploynotsupportedforvirtualapplication": "Publish using zip deploy option is not supported for virtual application.",
-  "loc.messages.Publishusingrunfromzipwithpostdeploymentscript": "Publish using RunFromZip might not support post deployment script as wwwroot has no write access.",
+  "loc.messages.Publishusingrunfromzipwithpostdeploymentscript": "Publish using RunFromZip might not support post deployment script if it makes changes to wwwroot, since the folder is ReadOnly.",
   "loc.messages.ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
   "loc.messages.EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
   "loc.messages.UnknownFileEncodeError": "Unable to detect encoding of the file %s (typeCode: %s). Supported encodings are UTF-8 and UTF-16 LE.",
