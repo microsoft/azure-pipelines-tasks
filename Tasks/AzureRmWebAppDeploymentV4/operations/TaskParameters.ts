@@ -55,12 +55,16 @@ export class TaskParametersUtility {
             ? taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
 
         if(taskParameters.UseWebDeploy) {
-            taskParameters.RemoveAdditionalFilesFlag = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
-            taskParameters.SetParametersFile = tl.getPathInput('SetParametersFile', false);
-            taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
-            taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
             taskParameters.DeploymentType = tl.getInput('DeploymentType', false);
-            taskParameters.UseRunFromZip = tl.getBoolInput('UseRunFromZip', false);
+            if(taskParameters.DeploymentType == "webDeploy") {                
+                taskParameters.RemoveAdditionalFilesFlag = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
+                taskParameters.SetParametersFile = tl.getPathInput('SetParametersFile', false);
+                taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
+                taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
+            }
+            else if(taskParameters.DeploymentType == "zipDeploy") {
+                taskParameters.UseRunFromZip = tl.getBoolInput('UseRunFromZip', false);
+            }
         }
         else {
             // Retry Attempt is passed by default

@@ -338,7 +338,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy = false || DeploymentType != zipDeploy || UseRunFromZip = false",
+      "visibleRule": "UseWebDeploy = true && UseRunFromZip = false",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     },
     {

@@ -12,6 +12,7 @@ var packageUtility = require('webdeployment-common/packageUtility.js');
 var deployUtility = require('webdeployment-common/utility.js');
 var msDeploy = require('webdeployment-common/deployusingmsdeploy.js');
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
+const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 0';
 
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
     
@@ -21,7 +22,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
 
-        if(this.taskParams.DeploymentType === "zipDeploy") {
+        if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === "zipDeploy") {
 
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage(); 
             if(_isMSBuildPackage) {
@@ -33,8 +34,8 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
 
             await this.deployUsingZipDeploy(webPackage, this.taskParams.UseRunFromZip);
         }
-        // if post deployment script is present or app offline flag is checked for a non function app we use pure zipDeploy
-        else if(this.taskParams.ScriptType || (this.taskParams.WebAppKind !== "functionApp" && this.taskParams.TakeAppOfflineFlag)) {
+        // if post deployment script is present we use pure zipDeploy
+        else if(this.taskParams.ScriptType) {
             await this.deployUsingZipDeploy(webPackage, false);
         }
         else {
@@ -49,8 +50,10 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
 
         if(runFromZip) {
             var customApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
-            await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
+        } else {
+            var customApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting);
         }
+        await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
 
         this.zipDeploymentID = await this.kuduServiceUtility.zipDeploy(webPackage, runFromZip, this.taskParams.TakeAppOfflineFlag, 
             { slotName: this.appService.getSlot() });

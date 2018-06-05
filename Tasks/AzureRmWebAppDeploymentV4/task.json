@@ -330,8 +330,8 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy = false || DeploymentType != zipDeploy || UseRunFromZip = false",
-            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully. <br>This option will not be honored for function apps."
+            "visibleRule": "UseWebDeploy = true && UseRunFromZip = false",
+            "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {
             "name": "SetParametersFile",
