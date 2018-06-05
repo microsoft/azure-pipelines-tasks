@@ -58,7 +58,7 @@ export function createKubeconfig(kubernetesServiceEndpoint: string): string
     //populate server url, ca cert and token fields
     kubeconfigTemplate.clusters[0].cluster.server = tl.getEndpointUrl(kubernetesServiceEndpoint, false);
     kubeconfigTemplate.clusters[0].cluster["certificate-authority-data"] = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'serviceAccountCertificate', false);
-    kubeconfigTemplate.users[0].user.token = Base64.decode(tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'serviceAccountToken', false));
+    kubeconfigTemplate.users[0].user.token = Base64.decode(tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'apiToken', false));
 
     return JSON.stringify(kubeconfigTemplate);
 }

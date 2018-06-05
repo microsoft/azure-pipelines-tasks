@@ -56,7 +56,7 @@ process.env["ENDPOINT_AUTH_kubernetesEndpoint"] = "{\"parameters\":{\"kubeconfig
 process.env["ENDPOINT_AUTH_PARAMETER_kubernetesEndpoint_KUBECONFIG"] =  "{\"apiVersion\":\"v1\", \"clusters\": [{\"cluster\": {\"insecure-skip-tls-verify\":\"true\", \"server\":\"https://5.6.7.8\", \"name\" : \"scratch\"}}], \"contexts\": [{\"context\" : {\"cluster\": \"scratch\", \"namespace\" : \"default\", \"user\": \"experimenter\", \"name\" : \"exp-scratch\"}], \"current-context\" : \"exp-scratch\", \"kind\": \"Config\", \"users\" : [{\"user\": {\"password\": \"regpassword\", \"username\" : \"test\"}]}";
 process.env["ENDPOINT_DATA_kubernetesEndpoint_AUTHORIZATIONTYPE"] = process.env[shared.endpointAuthorizationType];
 process.env["ENDPOINT_URL_kubernetesEndpoint"] = "https://mycluster.azure.com";
-process.env["ENDPOINT_AUTH_PARAMETER_kubernetesEndpoint_SERVICEACCOUNTTOKEN"] =  "saToken";
+process.env["ENDPOINT_AUTH_PARAMETER_kubernetesEndpoint_APITOKEN"] =  "saToken";
 process.env["ENDPOINT_AUTH_PARAMETER_kubernetesEndpoint_SERVICEACCOUNTCERTIFICATE"] =  "saCert";
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
