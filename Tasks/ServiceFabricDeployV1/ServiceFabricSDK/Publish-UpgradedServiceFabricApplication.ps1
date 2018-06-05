@@ -140,6 +140,31 @@ function Publish-UpgradedServiceFabricApplication
         $AppPkgPathToUse = $ApplicationPackagePath
     }
 
+    $ApplicationManifestPath = "$AppPkgPathToUse\ApplicationManifest.xml"
+    $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
+    if (!$names)
+    {
+        return
+    }
+
+    # If ApplicationName is not specified on command line get application name from Application parameter file.
+    if (!$ApplicationName)
+    {
+        $ApplicationName = Get-ApplicationNameFromApplicationParameterFile $ApplicationParameterFilePath
+    }
+
+    if (!$ApplicationName)
+    {
+        Write-Error (Get-VstsLocString -Key EmptyApplicationName)
+    }
+
+    $oldApplication = Get-ServiceFabricApplication -ApplicationName $ApplicationName
+    if ($SkipUpgradeSameTypeAndVersion -And $oldApplication.ApplicationTypeVersion -eq $names.ApplicationTypeVersion)
+    {
+        Write-Warning (Get-VstsLocString -Key SFSDK_SkipUpgradeWarning -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
+        return
+    }
+
     if ($PSBoundParameters.ContainsKey('ApplicationParameterFilePath') -and !(Test-Path -LiteralPath $ApplicationParameterFilePath -PathType Leaf))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
@@ -160,8 +185,6 @@ function Publish-UpgradedServiceFabricApplication
         }
     }
 
-    $ApplicationManifestPath = "$AppPkgPathToUse\ApplicationManifest.xml"
-
     try
     {
         [void](Test-ServiceFabricClusterConnection)
@@ -172,29 +195,10 @@ function Publish-UpgradedServiceFabricApplication
         throw
     }
 
-    # If ApplicationName is not specified on command line get application name from Application parameter file.
-    if (!$ApplicationName)
-    {
-        $ApplicationName = Get-ApplicationNameFromApplicationParameterFile $ApplicationParameterFilePath
-    }
-
-    if (!$ApplicationName)
-    {
-        Write-Error (Get-VstsLocString -Key EmptyApplicationName)
-    }
-
-    $names = Get-NamesFromApplicationManifest -ApplicationManifestPath $ApplicationManifestPath
-    if (!$names)
-    {
-        return
-    }
-
     $ApplicationTypeAlreadyRegistered = $false
     if ($Action.Equals('RegisterAndUpgrade') -or $Action.Equals('Register'))
     {
         ## Check existence of the application
-        $oldApplication = Get-ServiceFabricApplication -ApplicationName $ApplicationName
-
         if (!$oldApplication)
         {
             $errMsg = (Get-VstsLocString -Key SFSDK_AppDoesNotExist -ArgumentList $ApplicationName)
@@ -206,12 +210,6 @@ function Publish-UpgradedServiceFabricApplication
             {
                 $errMsg = (Get-VstsLocString -Key SFSDK_AppTypeMismatch -ArgumentList $ApplicationName)
                 throw $errMsg
-            }
-
-            if ($SkipUpgradeSameTypeAndVersion -And $oldApplication.ApplicationTypeVersion -eq $names.ApplicationTypeVersion)
-            {
-                Write-Warning (Get-VstsLocString -Key SFSDK_SkipUpgradeWarning -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                return
             }
         }
 
