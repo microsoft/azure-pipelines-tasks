@@ -421,18 +421,17 @@ export class Job {
                 Util.handleConnectionResetError(err); // something went bad
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 return;
-            } else if (httpResponse.statusCode == 404) {
+            } else if (httpResponse.statusCode === 404) {
                 // got here too fast, stream not yet available, try again in the future
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
-            } else if (httpResponse.statusCode == 401) {
+            } else if (httpResponse.statusCode === 401) {
                     Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
                     thisJob.queue.TaskOptions.captureConsole = false;
                     thisJob.queue.TaskOptions.capturePipeline = false;
                     thisJob.queue.TaskOptions.shouldFail = true;
                     thisJob.queue.TaskOptions.failureMsg = 'Job progress tracking failed to read job progress';
                     thisJob.stopWork(0, JobState.Finishing);
-            } 
-            else if (httpResponse.statusCode != 200) {
+            } else if (httpResponse.statusCode !== 200) {
                 Util.failReturnCode(httpResponse, 'Job progress tracking failed to read job progress');
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
             } else {

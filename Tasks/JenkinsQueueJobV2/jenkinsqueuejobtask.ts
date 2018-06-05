@@ -101,15 +101,6 @@ export class TaskOptions {
     }
 }
 
-export class taskShouldFail {
-
-    shouldFail: boolean;
-
-    constructor() {
-        this.shouldFail = false;
-    }
-}
-
 async function doWork() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
