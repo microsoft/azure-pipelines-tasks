@@ -93,7 +93,7 @@ export class AzureRGTaskParameters {
     }
 
     private async getARMCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
-    	var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
+        var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
         return azureEndpoint.applicationTokenCredentials;
     }
 
