@@ -39,7 +39,7 @@ export class AzureRMEndpoint {
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
-            if(this.endpoint.environment != null && this.endpoint.environment.toLowerCase() == this._environments.AzureStack && ( !this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID)) {
+            if(!!this.endpoint.environment && this.endpoint.environment.toLowerCase() == this._environments.AzureStack && ( !this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID)) {
                 this.endpoint = await this._updateAzureStackData(this.endpoint);
             }
             else {
@@ -48,7 +48,7 @@ export class AzureRMEndpoint {
             }
 
             this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
-                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId);
+                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId);
         }
 
         return this.endpoint;
