@@ -18,9 +18,9 @@ tr.registerMock('fs', {
     symlinkSync: () => { },
     unlinkSync: () => { },
     existsSync: () => { return false; },
-    statSync: () => fs.statSync,
-    writeFileSync: () => fs.writeFileSync,
-    readFileSync: () => fs.readFileSync
+    statSync: fs.statSync,
+    writeFileSync: fs.writeFileSync,
+    readFileSync: fs.readFileSync
 });
 
 tr.registerMock('os', {
