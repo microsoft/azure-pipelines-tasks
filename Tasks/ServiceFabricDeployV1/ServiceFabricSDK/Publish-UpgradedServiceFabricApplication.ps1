@@ -173,6 +173,12 @@ function Publish-UpgradedServiceFabricApplication
         throw $errMsg
     }
 
+    if ($oldApplication.ApplicationTypeName -ne $names.ApplicationTypeName)
+    {
+        $errMsg = (Get-VstsLocString -Key SFSDK_AppTypeMismatch -ArgumentList $ApplicationName)
+        throw $errMsg
+    }
+
     if ($SkipUpgradeSameTypeAndVersion -And $oldApplication.ApplicationTypeVersion -eq $names.ApplicationTypeVersion)
     {
         Write-Warning (Get-VstsLocString -Key SFSDK_SkipUpgradeWarning -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
@@ -206,11 +212,6 @@ function Publish-UpgradedServiceFabricApplication
     $ApplicationTypeAlreadyRegistered = $false
     if ($Action.Equals('RegisterAndUpgrade') -or $Action.Equals('Register'))
     {
-        if ($oldApplication.ApplicationTypeName -ne $names.ApplicationTypeName)
-        {
-            $errMsg = (Get-VstsLocString -Key SFSDK_AppTypeMismatch -ArgumentList $ApplicationName)
-            throw $errMsg
-        }
         ## Check upgrade status
         $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
         if ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted")
