@@ -322,7 +322,7 @@ function Assert-RoleInstancesAreReady {
     )
     Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation
     try {
-        $roleInstances = Get-AzureRole -ServiceName $CloudServiceName -Slot $Slot -InstanceDetails | Select-Object InstanceName, InstanceStatus
+        $roleInstances = Get-AzureRole -ServiceName $CloudServiceName -Slot $Slot -InstanceDetails
         $readyRoleInstanceCount = ($roleInstances | Where-Object { $_.InstanceStatus.ToLowerInvariant() -eq 'readyrole' }).Length
         if ($readyRoleInstanceCount -ne $roleInstances.Length) {
             Write-Verbose "One or more Role Instances are not in 'ReadyRole' state."
