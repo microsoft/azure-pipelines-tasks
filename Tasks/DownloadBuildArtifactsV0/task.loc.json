@@ -137,7 +137,6 @@
         "rows": "3",
         "resizable": "true"
       },
-      "visibleRule": "downloadType == specific",
       "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
     {
