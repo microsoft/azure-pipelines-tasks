@@ -1,10 +1,11 @@
-import { TaskParameters } from '../operations/TaskParameters';
+import { TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import * as Constant from '../operations/Constants'
 import { PublishProfileWebAppDeploymentProvider } from './PublishProfileWebAppDeploymentProvider';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';
 import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { WindowsWebAppWebDeployProvider } from './WindowsWebAppWebDeployProvider';
 import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider';
+import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { Package } from 'webdeployment-common/packageUtility';
@@ -24,19 +25,25 @@ export class DeploymentFactory{
                         throw new Error(tl.loc('InvalidImageSourceType'));
                     }
                 } else {
-                    if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'webDeploy') {
+                    if(taskParams.UseWebDeploy && taskParams.DeploymentType === DeploymentType.webDeploy) {
                         return new WindowsWebAppWebDeployProvider(taskParams);
                     }
-                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'zipDeploy') {
+                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === DeploymentType.zipDeploy) {
                         return new WindowsWebAppZipDeployProvider(taskParams);
+                    }
+                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === DeploymentType.runFromZip){
+                        return new WindowsWebAppRunFromZipProvider(taskParams);
                     }
                     else {             
                         var _isMSBuildPackage = await taskParams.Package.isMSBuildPackage();           
                         if(_isMSBuildPackage || taskParams.VirtualApplication || taskParams.Package.isWarFile()) {
                             return new WindowsWebAppWebDeployProvider(taskParams);
                         }
-                        else {
+                        else if(taskParams.ScriptType) {
                             return new WindowsWebAppZipDeployProvider(taskParams);
+                        }
+                        else {
+                            return new WindowsWebAppRunFromZipProvider(taskParams);
                         }
                     }
                 }
