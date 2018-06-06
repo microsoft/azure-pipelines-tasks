@@ -39,8 +39,10 @@ export class AzureRMEndpoint {
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
-            if(!!this.endpoint.environment && this.endpoint.environment.toLowerCase() == this._environments.AzureStack && ( !this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID)) {
-                this.endpoint = await this._updateAzureStackData(this.endpoint);
+            if(!!this.endpoint.environment && this.endpoint.environment.toLowerCase() == this._environments.AzureStack) {
+                if(!this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID) {
+                    this.endpoint = await this._updateAzureStackData(this.endpoint);
+                }
             }
             else {
                 this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
