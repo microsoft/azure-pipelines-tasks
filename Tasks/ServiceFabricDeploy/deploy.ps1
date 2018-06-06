@@ -113,7 +113,7 @@ try {
         if ($isPackageValid)
         {
             Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
-            $diffPackagePath = New-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
+            $diffPackagePath = Create-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
         }
         else
         {
