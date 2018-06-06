@@ -321,7 +321,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "UseWebDeploy  = true && DeploymentType != runFromZip",
+            "visibleRule": "UseWebDeploy == true && DeploymentType != runFromZip",
             "helpMarkDown": "Select the option to take the Azure App Service offline by placing an app_offline.htm file in the root directory of the App Service before the sync operation begins. The file will be removed after the sync operation completes successfully."
         },
         {
@@ -331,7 +331,7 @@
             "defaultValue": "",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "DeploymentType == webDeploy",
+            "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
             "helpMarkDown": "Optional: location of the SetParameters.xml file to use."
         },
         {
@@ -341,7 +341,7 @@
             "defaultValue": "false",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "DeploymentType == webDeploy",
+            "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
             "helpMarkDown": "Select the option to delete files on the Azure App Service that have no matching files in the App Service package or folder.<br /><br />Note: This will also remove all files related to any extension installed on this Azure App Service. To prevent this, select 'Exclude files from App_Data folder' checkbox. "
         },
         {
@@ -351,7 +351,7 @@
             "defaultValue": "true",
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "DeploymentType == webDeploy",
+            "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
             "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
         },
         {
@@ -361,7 +361,7 @@
             "required": false,
             "defaultValue": "-retryAttempts:6 -retryInterval:10000",
             "groupName": "AdditionalDeploymentOptions",
-            "visibleRule": "DeploymentType == webDeploy",
+            "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
             "helpMarkDown": "Additional Web Deploy arguments following the syntax -key:value .<br />These will be applied when deploying the Azure App Service. Example: -disableLink:AppPoolExtension -disableLink:ContentExtension.<br />For more examples of Web Deploy operation settings, refer to  [this](https://go.microsoft.com/fwlink/?linkid=838471)."
         },
         {
@@ -370,7 +370,7 @@
             "label": "Rename locked files",
             "defaultValue": "true",
             "required": false,
-            "visibleRule": "DeploymentType == webDeploy",
+            "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
             "groupName": "AdditionalDeploymentOptions",
             "helpMarkDown": "Select the option to enable msdeploy flag MSDEPLOY_RENAME_LOCKED_FILES=1 in Azure App Service application settings. The option if set enables msdeploy to rename locked files that are locked during app deployment"
         },

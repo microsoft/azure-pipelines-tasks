@@ -329,7 +329,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "UseWebDeploy  = true && DeploymentType != runFromZip",
+      "visibleRule": "UseWebDeploy == true && DeploymentType != runFromZip",
       "helpMarkDown": "ms-resource:loc.input.help.TakeAppOfflineFlag"
     },
     {
@@ -339,7 +339,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "DeploymentType == webDeploy",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
       "helpMarkDown": "ms-resource:loc.input.help.SetParametersFile"
     },
     {
@@ -349,7 +349,7 @@
       "defaultValue": "false",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "DeploymentType == webDeploy",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
       "helpMarkDown": "ms-resource:loc.input.help.RemoveAdditionalFilesFlag"
     },
     {
@@ -359,7 +359,7 @@
       "defaultValue": "true",
       "required": false,
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "DeploymentType == webDeploy",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
       "helpMarkDown": "ms-resource:loc.input.help.ExcludeFilesFromAppDataFlag"
     },
     {
@@ -369,7 +369,7 @@
       "required": false,
       "defaultValue": "-retryAttempts:6 -retryInterval:10000",
       "groupName": "AdditionalDeploymentOptions",
-      "visibleRule": "DeploymentType == webDeploy",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
     },
     {
@@ -378,7 +378,7 @@
       "label": "ms-resource:loc.input.label.RenameFilesFlag",
       "defaultValue": "true",
       "required": false,
-      "visibleRule": "DeploymentType == webDeploy",
+      "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
       "groupName": "AdditionalDeploymentOptions",
       "helpMarkDown": "ms-resource:loc.input.help.RenameFilesFlag"
     },

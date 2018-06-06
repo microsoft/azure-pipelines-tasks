@@ -3,6 +3,7 @@ import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as Constant from '../operations/Constants';
 import * as ParameterParser from '../operations/parameterparser'
+import { DeploymentType } from '../operations/TaskParameters';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 0';
 
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
@@ -12,8 +13,9 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
 
-        if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === "zipDeploy") {
-            if(this.taskParams.Package.isMSBuildPackage()) {
+        if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.zipDeploy) {
+            var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage();
+            if(_isMSBuildPackage) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedformsbuildpackage"));
             }
             else if(this.taskParams.VirtualApplication) {

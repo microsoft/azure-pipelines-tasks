@@ -4,7 +4,7 @@ import path = require('path');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-arm-rest/constants';
 import webClient = require('azure-arm-rest/webClient');
-import { TaskParameters } from './TaskParameters';
+import { TaskParameters, DeploymentType } from './TaskParameters';
 var deployUtility = require('webdeployment-common/utility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 const physicalRootPath: string = '/site/wwwroot';
@@ -60,7 +60,7 @@ export class KuduServiceUtility {
 
         }
         catch(error) {
-            if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'runFromZip') {
+            if(taskParams.UseWebDeploy && taskParams.DeploymentType === DeploymentType.runFromZip) {
                 var debugMode = tl.getVariable('system.debug');
                 if(debugMode && debugMode.toLowerCase() == 'true') {
                     tl.warning(tl.loc('Publishusingrunfromzipwithpostdeploymentscript'));

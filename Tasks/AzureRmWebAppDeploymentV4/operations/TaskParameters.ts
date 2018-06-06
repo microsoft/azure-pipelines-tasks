@@ -2,6 +2,12 @@ import tl = require('vsts-task-lib/task');
 import * as Constant from '../operations/Constants'
 import { Package } from 'webdeployment-common/packageUtility';
 
+export enum DeploymentType {
+    webDeploy,
+    zipDeploy,
+    runFromZip
+}
+
 export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
         var taskParameters: TaskParameters = {
@@ -55,8 +61,8 @@ export class TaskParametersUtility {
             ? taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
 
         if(taskParameters.UseWebDeploy) {
-            taskParameters.DeploymentType = tl.getInput('DeploymentType', false);
-            if(taskParameters.DeploymentType == "webDeploy") {                
+            taskParameters.DeploymentType = this.getDeploymentType(tl.getInput('DeploymentType', false));
+            if(taskParameters.DeploymentType == DeploymentType.webDeploy) {                
                 taskParameters.RemoveAdditionalFilesFlag = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
                 taskParameters.SetParametersFile = tl.getPathInput('SetParametersFile', false);
                 taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
@@ -75,6 +81,14 @@ export class TaskParametersUtility {
         taskParameters.PublishProfilePath = tl.getInput('PublishProfilePath', true);
         taskParameters.PublishProfilePassword = tl.getInput('PublishProfilePassword', true);
         taskParameters.AdditionalArguments = "-retryAttempts:6 -retryInterval:10000";
+    }
+    
+    private static getDeploymentType(type): DeploymentType {
+        switch(type) {
+            case "webDeploy": return DeploymentType.webDeploy;
+            case "zipDeploy": return DeploymentType.zipDeploy;
+            case "runFromZip": return DeploymentType.runFromZip;
+        }
     }
 }
 
@@ -96,7 +110,7 @@ export interface TaskParameters {
     JSONFiles?: string[];
     XmlVariableSubstitution?: boolean;
     UseWebDeploy?: boolean;
-    DeploymentType?: string;
+    DeploymentType?: DeploymentType;
     RemoveAdditionalFilesFlag?: boolean;
     SetParametersFile?: string;
     ExcludeFilesFromAppDataFlag?: boolean;

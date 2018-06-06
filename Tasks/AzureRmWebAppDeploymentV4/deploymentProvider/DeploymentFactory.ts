@@ -1,4 +1,4 @@
-import { TaskParameters } from '../operations/TaskParameters';
+import { TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import * as Constant from '../operations/Constants'
 import { PublishProfileWebAppDeploymentProvider } from './PublishProfileWebAppDeploymentProvider';
 import { BuiltInLinuxWebAppDeploymentProvider } from './BuiltInLinuxWebAppDeploymentProvider';
@@ -25,13 +25,13 @@ export class DeploymentFactory{
                         throw new Error(tl.loc('InvalidImageSourceType'));
                     }
                 } else {
-                    if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'webDeploy') {
+                    if(taskParams.UseWebDeploy && taskParams.DeploymentType === DeploymentType.webDeploy) {
                         return new WindowsWebAppWebDeployProvider(taskParams);
                     }
-                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'zipDeploy') {
+                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === DeploymentType.zipDeploy) {
                         return new WindowsWebAppZipDeployProvider(taskParams);
                     }
-                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === 'runFromZip'){
+                    else if(taskParams.UseWebDeploy && taskParams.DeploymentType === DeploymentType.runFromZip){
                         return new WindowsWebAppRunFromZipProvider(taskParams);
                     }
                     else {             
