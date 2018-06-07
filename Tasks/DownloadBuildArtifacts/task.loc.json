@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 136,
-    "Patch": 1
+    "Patch": 2
   },
   "groups": [
     {
@@ -162,25 +162,19 @@
     {
       "endpointId": "tfs:teamfoundation",
       "target": "project",
-      "endpointUrl": "{{endpoint.url}}/_apis/projects?$skip={{skip}}&$top=1000",
+      "endpointUrl": "{{endpoint.url}}/_apis/projects",
       "resultSelector": "jsonpath:$.value[?(@.state=='wellFormed')]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
-      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
-      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
-      "initialContextTemplate": "{\"skip\": \"0\"}"
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "endpointId": "tfs:teamfoundation",
       "target": "definition",
-      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=1000&continuationToken={{{continuationToken}}}&queryOrder=2",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?$top=1000",
       "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
       "parameters": {
         "project": "$(project)"
       },
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
-      "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",
-      "callbackRequiredTemplate": "{{{#headers.x-ms-continuationtoken}}}true{{{/headers.x-ms-continuationtoken}}}",
-      "initialContextTemplate": "{\"continuationToken\" : \"{{{system.utcNow}}}\"}"
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
     {
       "endpointId": "tfs:teamfoundation",
