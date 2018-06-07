@@ -105,10 +105,6 @@ a.exec[`docker build -f ${DockerFilePath} --label com.visualstudio.image.system.
     "code": 0,
     "stdout": "successfully build image with labels"
 };
-a.exec[`docker build -f ${DockerFilePath} ${shared.releaseLabels} -t test/test:2`] = {
-    "code": 0,
-    "stdout": "successfully build image with labels"
-};
 a.exec[`docker tag test/test:2 ajgtestacr1.azurecr.io/test/test:2`] = {
     "code": 0
 };

@@ -135,37 +135,17 @@ describe('Docker Suite', function() {
         done();
     });
 
-    it('Runs successfully for docker build with labels', (done:MochaDone) => {
+    it('Runs successfully for docker build with release labels', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
-        process.env[shared.TestEnvVars.addDefaultLabels] = "true";
+        process.env[shared.TestEnvVars.addDefaultLabels] = "true";   
         tr.run();
 
         assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
         assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} --label com.visualstudio.image.system.teamfoundationcollectionuri=https://abc.visualstudio.com/ --label com.visualstudio.image.system.teamproject=testproj -t test/test:2`) != -1, "docker build should run");
-        console.log(tr.stderr);
-        done();
-    });
-
-    it('Runs successfully for docker build with release labels', (done:MochaDone) => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        process.env[shared.TestEnvVars.command] = shared.CommandTypes.buildImage;
-        process.env[shared.TestEnvVars.addDefaultLabels] = "true";
-        process.env["SYSTEM_HOSTTYPE"] = "release";
-        process.env["RELEASE_DEFINITIONNAME"] = "release1";
-        process.env["RELEASE_RELEASEID"] = "release2";
-        process.env["RELEASE_RELEASEWEBURL"] = "release3";
-        process.env["RELEASE_DEPLOYMENT_REQUESTEDFOR"] = "release4";  
-        tr.run();
-
-        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
-        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf(`[command]docker build -f ${shared.formatPath("dir1/DockerFile")} ${shared.releaseLabels} -t test/test:2`) != -1, "docker build should run");
         console.log(tr.stderr);
         done();
     });

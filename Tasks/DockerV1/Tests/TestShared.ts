@@ -33,9 +33,6 @@ export let ContainerTypes = {
 }
 
 export let ImageNamesFileImageName = "test_image";
-export let releaseLabels = "--label com.visualstudio.image.system.teamfoundationcollectionuri=https://abc.visualstudio.com/ --label com.visualstudio.image.system.teamproject=testproj \
---label com.visualstudio.image.release.definitionname=release1 --label com.visualstudio.image.release.releaseid=release2 --label com.visualstudio.image.release.releaseweburl=release3 \
---label com.visualstudio.image.release.deployment.requestedfor=release4";
 
 /**
  * Formats the given path to be appropriate for the operating system.
