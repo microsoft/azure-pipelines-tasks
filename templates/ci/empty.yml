@@ -1,10 +1,10 @@
 # Empty
-# Start with an empty pipeline and add your own build steps.
+# Start with an empty pipeline and add your own tasks.
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux'
 steps:
 
-#- script: |
-#    echo Write multiple lines of script here,
-#    echo or add other steps for your build configuration.
+#  - script: |
+#      echo Write multiple lines of script here,
+#      echo or add other tasks to build, test, and deploy your project.

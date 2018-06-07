@@ -5,12 +5,12 @@
 queue: 'Hosted VS2017'
 steps:
 
-- task: Ant@1
-  inputs:
-    buildFile: 'build.xml'
+  - task: Ant@1
+    inputs:
+      buildFile: 'build.xml'
 
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.{jar,war,ear}'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+#  - task: CopyFiles@2
+#    inputs:
+#      contents: '**/*.{jar,war,ear}'
+#      targetFolder: '$(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1
