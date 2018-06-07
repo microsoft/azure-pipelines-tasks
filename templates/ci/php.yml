@@ -6,12 +6,10 @@ queue: 'Hosted Linux'
 steps:
 
   - script: composer install
-    inputs:
-      displayName: 'composer install'
+    displayName: 'composer install'
 
-#  - script: vendor/bin/phpunit
-#     inputs:
-#      displayName: 'Run tests with phpunit'
+  - script: phpunit
+    displayName: 'Run tests with phpunit'
 
 #  - task: ArchiveFiles@2
 #    inputs:
