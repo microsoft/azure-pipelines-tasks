@@ -18,8 +18,14 @@ function Get-AadSecurityToken
         [Hashtable]
         $ClusterConnectionParameters,
 
-        $ConnectedServiceEndpoint
+        $ConnectedServiceEndpoint,
+
+        $RefreshToken
     )
+
+    Write-Host "%%%%%%%%%%%%%%%%%%-AadSecurityToken"
+    Write-Host $RefreshToken
+    Write-Host "%%%%%%%%%%%%%%%%%%-AadSecurityToken"
 
     # Configure connection parameters to get cluster metadata
     $connectionParametersWithGetMetadata = $ClusterConnectionParameters.Clone()
@@ -29,8 +35,6 @@ function Get-AadSecurityToken
     $connectResult = Connect-ServiceFabricCluster @connectionParametersWithGetMetadata
     $authority = $connectResult.AzureActiveDirectoryMetadata.Authority
     Write-Host (Get-VstsLocString -Key AadAuthority -ArgumentList $authority)
-    $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
-    Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $clusterApplicationId)
     $clientApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClientApplication
     Write-Host (Get-VstsLocString -Key ClientAppId -ArgumentList $clientApplicationId)
 
@@ -38,19 +42,25 @@ function Get-AadSecurityToken
     Add-Type -LiteralPath "$PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
     $authContext = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList @($authority)
     $authParams = $ConnectedServiceEndpoint.Auth.Parameters
-    $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
-
     try
     {
+        if($RefreshToken)
+        {
+            return $authContext.AcquireTokenByRefreshToken($accessToken.RefreshToken, $clientApplicationId)
+        }
+
+        $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
+        Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $clusterApplicationId)
+
+        $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
+
         # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
-        $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential).AccessToken
+        return $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential)
     }
     catch
     {
         throw (Get-VstsLocString -Key ErrorOnAcquireToken -ArgumentList $_)
     }
-
-    return $accessToken
 }
 
 function Add-Certificate
@@ -117,8 +127,14 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         [Hashtable]
         $ClusterConnectionParameters,
 
-        $ConnectedServiceEndpoint
+        $ConnectedServiceEndpoint,
+
+        $RefreshToken
     )
+
+    Write-Host "%%%%%%%%%%%%%%%%%%-Connect"
+    Write-Host $RefreshToken
+    Write-Host "%%%%%%%%%%%%%%%%%%-Connect"
 
     Trace-VstsEnteringInvocation $MyInvocation
 
@@ -154,9 +170,14 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
                 # requires a connection request to the cluster in order to get metadata and so these two parameters are needed for that request.
                 $clusterConnectionParameters["AzureActiveDirectory"] = $true
 
-                $securityToken = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
-                $clusterConnectionParameters["SecurityToken"] = $securityToken
+                $aadSecurityToken = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint -RefreshToken $RefreshToken
+                $clusterConnectionParameters["SecurityToken"] = $aadSecurityToken.AccessToken
                 $clusterConnectionParameters["WarningAction"] = "SilentlyContinue"
+                $RefreshToken = $aadSecurityToken.RefreshToken
+                Write-Host "%%%%%%%%%%%%%%%%%%-Connect-AAD"
+                Write-Host $aadSecurityToken.AccessToken
+                Write-Host $aadSecurityToken.RefreshToken
+                Write-Host "%%%%%%%%%%%%%%%%%%-Connect-AAD"
             }
             elseif ($ConnectedServiceEndpoint.Auth.Scheme -eq "Certificate")
             {
@@ -199,6 +220,10 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         # Reset the scope of the ClusterConnection variable that gets set by the call to Connect-ServiceFabricCluster so that it is available outside the scope of this module
         Set-Variable -Name ClusterConnection -Value $Private:ClusterConnection -Scope Global
 
+        Write-Host "%%%%%%%%%%%%%%%%%%-Connect-return"
+        Write-Host $RefreshToken
+        Write-Host "%%%%%%%%%%%%%%%%%%-Connect-return"
+        return $RefreshToken
     }
     catch
     {

@@ -52,7 +52,7 @@ try {
     }
 
     # Connect to cluster
-    Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+    $refreshToken = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     if ($configureDockerSettings)
     {
@@ -176,6 +176,9 @@ try {
         $publishParameters['UpgradeParameters'] = $upgradeParameters
         $publishParameters['UnregisterUnusedVersions'] = $unregisterUnusedVersions
         $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
+        $publishParameters['RefreshToken'] = $refreshToken
+        $publishParameters["ClusterConnectionParameters"] = $clusterConnectionParameters
+        $publishParameters["ConnectedServiceEndpoint"] = $connectedServiceEndpoint
 
         Publish-UpgradedServiceFabricApplication @publishParameters
     }

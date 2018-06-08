@@ -113,8 +113,23 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [Switch]$SkipUpgradeSameTypeAndVersion
+        [Switch]$SkipUpgradeSameTypeAndVersion,
+
+        [Parameter(ParameterSetName = "RefreshToken")]
+        [String]$RefreshToken,
+
+        [Parameter(ParameterSetName = "ClusterConnectionParameters")]
+        [Hashtable]$ClusterConnectionParameters,
+
+        [Parameter(ParameterSetName = "ConnectedServiceEndpoint")]
+        [String]$ConnectedServiceEndpoint
     )
+
+    Write-Host "%%%%%%%%%%%%%%%%%%-Upgrade"
+    Write-Host $RefreshToken
+    Write-Host $ClusterConnectionParameters
+    Write-Host $ConnectedServiceEndpoint
+    Write-Host "%%%%%%%%%%%%%%%%%%-Upgrade"
 
     if (!(Test-Path -LiteralPath $ApplicationPackagePath))
     {
@@ -366,12 +381,19 @@ function Publish-UpgradedServiceFabricApplication
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
         $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
         $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
-        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
-            -ActionSuccessValidator $upgradeStatusValidator `
-            -MaxTries 2147483647 `
-            -RetryIntervalInSeconds 3 `
-            -RetryableExceptions @("System.Fabric.FabricTransientException") `
-            -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+
+        try{
+            $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+                -ActionSuccessValidator $upgradeStatusValidator `
+                -MaxTries 2147483647 `
+                -RetryIntervalInSeconds 3 `
+                -RetryableExceptions @("System.Fabric.FabricTransientException") `
+                -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+        }
+        catch()
+        {
+            $refreshToken = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint -RefreshToken $refreshToken
+        }
 
         if ($UnregisterUnusedVersions)
         {
