@@ -51,6 +51,12 @@ function Initialize-AzureSubscription {
         }
     }
 
+    $scopeLevel = "Subscription"
+    if($Endpoint.Data.scopeLevel)
+    {
+        $scopeLevel = $Endpoint.Data.scopeLevel
+    }
+
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
         if (!$script:azureModule) {
@@ -137,29 +143,36 @@ function Initialize-AzureSubscription {
             throw (Get-VstsLocString -Key "AZ_ServicePrincipalAuthNotSupportedAzureVersion0" -ArgumentList $script:azureModule.Version)
         } else {
             # Else, this is AzureRM.
-            try {
-                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
-                    if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
-                        Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
-                        $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+            if($scopeLevel -eq "subscription")
+            {
+                try {
+                    if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                        if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                        }
+                        else {
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        }
                     }
                     else {
-                        Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                        $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                        $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
                     }
+                } catch {
+                    # Provide an additional, custom, credentials-related error message.
+                    Write-VstsTaskError -Message $_.Exception.Message
+                    Assert-TlsError -exception $_.Exception
+                    throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
                 }
-                else {
-                    Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                    $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
-                }
-            } catch {
-                # Provide an additional, custom, credentials-related error message.
-                Write-VstsTaskError -Message $_.Exception.Message
-                Assert-TlsError -exception $_.Exception
-                throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
-            }
 
-            Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+                Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+            }
+            else
+            {
+                // commands to set spn for managmenet group
+            }
         }
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         $accountId = $env:BUILD_BUILDID 
