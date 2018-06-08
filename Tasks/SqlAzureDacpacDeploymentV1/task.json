@@ -125,7 +125,7 @@
                 "DriftReport": "Drift Report",
                 "DeployReport": "Deploy Report"
             },
-            "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://msdn.microsoft.com/en-us/library/hh550080(v=vs.103).aspx\">link</a>.​"
+            "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
 
         },
         {
