@@ -367,12 +367,26 @@ function Publish-UpgradedServiceFabricApplication
         }
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-        $upgradeStatusFetcher = { $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName; Write-Host "Upgrade State:" $upgradeStatus.UpgradeState; Write-Host "`n Domain Wise Upgrade Status: " $upgradeStatus.UpgradeDomainsStatus ; if ($upgradeStatus.UnhealthyEvaluations -ne $null) { Write-Host "Upgrade errors: " $upgradeStatus.UnhealthyEvaluations; } $upgradeStatus }
+        $upgradeStatusFetcher = {
+            param(
+                $LastUpgradeStatus
+            )
+            $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName;
+            Write-Host "Current Upgrade State:" $upgradeStatus.UpgradeState;
+            Write-Host "`n Domain Wise Upgrade Status: " $upgradeStatus.UpgradeDomainsStatus ;
+            if (($upgradeStatus.UnhealthyEvaluations -ne $null) -and (($LastUpgradeStatus -eq $null) -or ($LastUpgradeStatus.UnhealthyEvaluations -ne $upgradeStatus.UnhealthyEvaluations)))
+            {
+                Write-Host "Unhealthy Evaluations: " $upgradeStatus.UnhealthyEvaluations;
+            }
+            
+            return $upgradeStatus;
+        }
+
         $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
         $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
             -ActionSuccessValidator $upgradeStatusValidator `
             -MaxTries 2147483647 `
-            -RetryIntervalInSeconds 60 `
+            -RetryIntervalInSeconds 5 `
             -RetryableExceptions @("System.Fabric.FabricTransientException") `
             -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 
