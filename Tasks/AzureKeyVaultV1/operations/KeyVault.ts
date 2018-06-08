@@ -55,11 +55,21 @@ export class KeyVault {
             this.taskParameters.keyVaultName,
             this.taskParameters.keyVaultUrl);
 
-        var scriptContentFormat = `$ErrorActionPreference=\"Stop\";
-Login-AzureRmAccount -SubscriptionId %s;
-$spn=(Get-AzureRmADServicePrincipal -SPN %s);
-$spnObjectId=$spn.Id;
-Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -PermissionsToSecrets get,list;`;
+        let scriptContentFormat;
+        if(this.taskParameters.scheme === "ManagedServiceIdentity") {
+            scriptContentFormat = `$ErrorActionPreference=\"Stop\";
+            Login-AzureRmAccount -SubscriptionId %s;
+            $vmMetadata = Invoke-RestMethod -Headers @{"Metadata"="true"} -URI http://169.254.169.254/metadata/instance?api-version=2017-08-01 -Method get
+            $vm = Get-AzureRmVM -ResourceGroupName $vmMetadata.compute.resourceGroupName  -Name  $vmMetadata.compute.name
+            $spn=(Get-AzureRmADServicePrincipal -SPN %s);
+            Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $vm.Identity.PrincipalId -PermissionsToSecrets get,list;`;
+        } else {
+            scriptContentFormat = `$ErrorActionPreference=\"Stop\";
+            Login-AzureRmAccount -SubscriptionId %s;
+            $spn=(Get-AzureRmADServicePrincipal -SPN %s);
+            $spnObjectId=$spn.Id;
+            Set-AzureRmKeyVaultAccessPolicy -VaultName %s -ObjectId $spnObjectId -PermissionsToSecrets get,list;`;
+        }
 
         this.provisionKeyVaultSecretsScript = util.format(scriptContentFormat, this.taskParameters.subscriptionId, this.taskParameters.servicePrincipalId, this.taskParameters.keyVaultName);
     }
