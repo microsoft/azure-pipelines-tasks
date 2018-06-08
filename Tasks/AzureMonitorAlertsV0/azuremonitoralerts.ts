@@ -22,7 +22,7 @@ async function run() {
 		let notifyEmails: string = tl.getInput("NotifyEmails");
 
 		let endpointScheme = tl.getEndpointAuthorizationScheme(connectedServiceName, true);
-		if (endpointScheme.toLowerCase() === "managedserviceidentity") {
+		if (endpointScheme === "ManagedServiceIdentity") {
 			throw tl.loc("MSINotSupported");
 		}
 
