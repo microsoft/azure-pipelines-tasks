@@ -18,14 +18,12 @@ function Get-AadSecurityToken
         [Hashtable]
         $ClusterConnectionParameters,
 
+        [object]
         $ConnectedServiceEndpoint,
 
+        [string]
         $RefreshToken
     )
-
-    Write-Host "%%%%%%%%%%%%%%%%%%-AadSecurityToken"
-    Write-Host $RefreshToken
-    Write-Host "%%%%%%%%%%%%%%%%%%-AadSecurityToken"
 
     # Configure connection parameters to get cluster metadata
     $connectionParametersWithGetMetadata = $ClusterConnectionParameters.Clone()
@@ -46,7 +44,7 @@ function Get-AadSecurityToken
     {
         if($RefreshToken)
         {
-            return $authContext.AcquireTokenByRefreshToken($accessToken.RefreshToken, $clientApplicationId)
+            return $authContext.AcquireTokenByRefreshToken($RefreshToken, $clientApplicationId)
         }
 
         $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
@@ -127,14 +125,12 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         [Hashtable]
         $ClusterConnectionParameters,
 
+        [object]
         $ConnectedServiceEndpoint,
 
+        [string]
         $RefreshToken
     )
-
-    Write-Host "%%%%%%%%%%%%%%%%%%-Connect"
-    Write-Host $RefreshToken
-    Write-Host "%%%%%%%%%%%%%%%%%%-Connect"
 
     Trace-VstsEnteringInvocation $MyInvocation
 
@@ -174,10 +170,6 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
                 $clusterConnectionParameters["SecurityToken"] = $aadSecurityToken.AccessToken
                 $clusterConnectionParameters["WarningAction"] = "SilentlyContinue"
                 $RefreshToken = $aadSecurityToken.RefreshToken
-                Write-Host "%%%%%%%%%%%%%%%%%%-Connect-AAD"
-                Write-Host $aadSecurityToken.AccessToken
-                Write-Host $aadSecurityToken.RefreshToken
-                Write-Host "%%%%%%%%%%%%%%%%%%-Connect-AAD"
             }
             elseif ($ConnectedServiceEndpoint.Auth.Scheme -eq "Certificate")
             {
@@ -220,14 +212,10 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         # Reset the scope of the ClusterConnection variable that gets set by the call to Connect-ServiceFabricCluster so that it is available outside the scope of this module
         Set-Variable -Name ClusterConnection -Value $Private:ClusterConnection -Scope Global
 
-        Write-Host "%%%%%%%%%%%%%%%%%%-Connect-return"
-        Write-Host $RefreshToken
-        Write-Host "%%%%%%%%%%%%%%%%%%-Connect-return"
         return $RefreshToken
     }
     catch
     {
-        Assert-TlsError -exception $_.Exception
         throw
     }
     finally

@@ -177,7 +177,6 @@ try {
         $publishParameters['UnregisterUnusedVersions'] = $unregisterUnusedVersions
         $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
         $publishParameters['RefreshToken'] = $refreshToken
-        $publishParameters["ClusterConnectionParameters"] = $clusterConnectionParameters
         $publishParameters["ConnectedServiceEndpoint"] = $connectedServiceEndpoint
 
         Publish-UpgradedServiceFabricApplication @publishParameters

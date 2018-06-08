@@ -115,21 +115,14 @@ function Publish-UpgradedServiceFabricApplication
         [Parameter(ParameterSetName = "ApplicationName")]
         [Switch]$SkipUpgradeSameTypeAndVersion,
 
-        [Parameter(ParameterSetName = "RefreshToken")]
+        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName = "ApplicationName")]
         [String]$RefreshToken,
 
-        [Parameter(ParameterSetName = "ClusterConnectionParameters")]
-        [Hashtable]$ClusterConnectionParameters,
-
-        [Parameter(ParameterSetName = "ConnectedServiceEndpoint")]
-        [String]$ConnectedServiceEndpoint
+        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName = "ApplicationName")]
+        [object]$ConnectedServiceEndpoint
     )
-
-    Write-Host "%%%%%%%%%%%%%%%%%%-Upgrade"
-    Write-Host $RefreshToken
-    Write-Host $ClusterConnectionParameters
-    Write-Host $ConnectedServiceEndpoint
-    Write-Host "%%%%%%%%%%%%%%%%%%-Upgrade"
 
     if (!(Test-Path -LiteralPath $ApplicationPackagePath))
     {
@@ -350,7 +343,7 @@ function Publish-UpgradedServiceFabricApplication
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_StartAppUpgrade)
-            Start-ServiceFabricApplicationUpgrade @UpgradeParameters
+            #Start-ServiceFabricApplicationUpgrade @UpgradeParameters
         }
         catch
         {
@@ -379,21 +372,17 @@ function Publish-UpgradedServiceFabricApplication
         }
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-        $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
-        $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
+        $upgradeStatusFetcher = { Start-Sleep -s 5 }
+        $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCsdompleted" -or $upgradeStatus.UpgradeState -eq "RollingsdForwardCompleted") }
 
-        try{
-            $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
-                -ActionSuccessValidator $upgradeStatusValidator `
-                -MaxTries 2147483647 `
-                -RetryIntervalInSeconds 3 `
-                -RetryableExceptions @("System.Fabric.FabricTransientException") `
-                -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-        }
-        catch()
-        {
-            $refreshToken = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint -RefreshToken $refreshToken
-        }
+        $upgradeStatus = Invoke-ActionWithRetriesUtil -Action $upgradeStatusFetcher `
+            -ActionSuccessValidator $upgradeStatusValidator `
+            -MaxTries 2147483647 `
+            -RetryIntervalInSeconds 3 `
+            -RetryableExceptions @("System.Fabric.FabricTransientException") `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade) `
+            -ConnectedServiceEndpoint $ConnectedServiceEndpoint `
+            -RefreshToken $RefreshToken
 
         if ($UnregisterUnusedVersions)
         {
@@ -419,5 +408,61 @@ function Publish-UpgradedServiceFabricApplication
         {
             Write-Error (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
         }
+    }
+}
+
+
+function Invoke-ActionWithRetriesUtil {
+    [CmdletBinding()]
+    param(
+        [scriptblock]
+        $Action,
+
+        [scriptblock]
+        $ActionSuccessValidator = { $true },
+
+        [int32]
+        $MaxTries = 10,
+
+        [int32]
+        $RetryIntervalInSeconds = 1,
+
+        [string[]]
+        [ValidateScript({[System.Exception].IsAssignableFrom([type]$_)})]
+        $RetryableExceptions,
+
+        [string]
+        $RetryMessage,
+
+        [string]
+        $RefreshToken,
+
+        [object]
+        $ConnectedServiceEndpoint
+    )
+
+    try
+    {
+        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+            -ActionSuccessValidator $upgradeStatusValidator `
+            -MaxTries 2147483647 `
+            -RetryIntervalInSeconds 3 `
+            -RetryableExceptions @("System.Fabric.FabricTransientException") `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+        return $upgradeStatus
+    }
+    catch
+    {
+        $clusterConnectionParams = @{}
+        Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParams -ConnectedServiceEndpoint $ConnectedServiceEndpoint -RefreshToken $RefreshToken
+        $upgradeStatus = Invoke-ActionWithRetriesUtil -Action $upgradeStatusFetcher `
+            -ActionSuccessValidator $upgradeStatusValidator `
+            -MaxTries 2147483647 `
+            -RetryIntervalInSeconds 3 `
+            -RetryableExceptions @("System.Fabric.FabricTransientException") `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade) `
+            -ConnectedServiceEndpoint $ConnectedServiceEndpoint `
+            -RefreshToken $RefreshToken
+        return $upgradeStatus
     }
 }

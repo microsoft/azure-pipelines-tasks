@@ -20,7 +20,6 @@ function Invoke-ActionWithRetries {
         [string]
         $RetryMessage
     )
-
     Trace-VstsEnteringInvocation $MyInvocation
 
     if(!$RetryMessage)
@@ -37,6 +36,10 @@ function Invoke-ActionWithRetries {
         try
         {
             $result = & $Action
+            if($retryIteration -eq 3)
+            {
+                throw
+            }
         }
         catch
         {
