@@ -12,6 +12,7 @@ export class KeyVaultTaskParameters {
     public vaultCredentials: msRestAzure.ApplicationTokenCredentials;
     public keyVaultUrl: string;
     public servicePrincipalId: string;
+    public scheme: string;
 
     constructor() {
         var connectedService = tl.getInput("ConnectedServiceName", true);
@@ -23,6 +24,7 @@ export class KeyVaultTaskParameters {
         this.servicePrincipalId = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', true);
         this.keyVaultUrl = util.format("https://%s.%s", this.keyVaultName, azureKeyVaultDnsSuffix);
         this.vaultCredentials = this.getVaultCredentials(connectedService, azureKeyVaultDnsSuffix);
+        this.scheme = tl.getEndpointAuthorizationScheme(connectedService, false);
     }
 
     private getVaultCredentials(connectedService: string, azureKeyVaultDnsSuffix: string): msRestAzure.ApplicationTokenCredentials {
@@ -33,9 +35,8 @@ export class KeyVaultTaskParameters {
         var armUrl: string = tl.getEndpointUrl(connectedService, true);
         var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
         envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-        var scheme = tl.getEndpointAuthorizationScheme(connectedService, false);
         var msiClientId = tl.getEndpointDataParameter(connectedService, 'msiclientId', true);
-        var credentials = new msRestAzure.ApplicationTokenCredentials(this.servicePrincipalId, tenantId, servicePrincipalKey, vaultUrl, envAuthorityUrl, vaultUrl, false, scheme, msiClientId);
+        var credentials = new msRestAzure.ApplicationTokenCredentials(this.servicePrincipalId, tenantId, servicePrincipalKey, vaultUrl, envAuthorityUrl, vaultUrl, false, this.scheme , msiClientId);
         return credentials;
     }
 }
