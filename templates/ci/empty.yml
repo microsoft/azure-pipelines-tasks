@@ -5,6 +5,6 @@
 queue: 'Hosted Linux'
 steps:
 
-#  - script: |
-#      echo Write multiple lines of script here,
-#      echo or add other tasks to build, test, and deploy your project.
+  - script: |
+      echo Write multiple lines of script here,
+      echo or add other tasks to build, test, and deploy your project.
