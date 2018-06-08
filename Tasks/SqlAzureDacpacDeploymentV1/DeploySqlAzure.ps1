@@ -57,13 +57,16 @@ try {
 
     $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress
     
-    # Create the directory for output files
-    $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
-    if (Test-Path $generatedOutputFilesRoot) {
-        Remove-Item -Path $generatedOutputFilesRoot -Recurse -Force 
-    }
+    if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
+        # Create the directory for output files
+        $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
+        if (Test-Path $generatedOutputFilesRoot) {
+            Remove-Item -Path $generatedOutputFilesRoot -Recurse -Force 
+        }
 
-    New-Item -Path $generatedOutputFilesRoot -ItemType Directory 
+        Write-Verbose "Creating output files directory: $generatedOutputFilesRoot"
+        New-Item -Path $generatedOutputFilesRoot -ItemType Directory | Out-Null
+    }
 
     switch ($deploymentAction) {
         "Publish" {
