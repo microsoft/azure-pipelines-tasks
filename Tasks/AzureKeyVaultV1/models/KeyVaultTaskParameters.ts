@@ -23,8 +23,8 @@ export class KeyVaultTaskParameters {
 
         this.servicePrincipalId = tl.getEndpointAuthorizationParameter(connectedService, 'serviceprincipalid', true);
         this.keyVaultUrl = util.format("https://%s.%s", this.keyVaultName, azureKeyVaultDnsSuffix);
-        this.vaultCredentials = this.getVaultCredentials(connectedService, azureKeyVaultDnsSuffix);
         this.scheme = tl.getEndpointAuthorizationScheme(connectedService, false);
+        this.vaultCredentials = this.getVaultCredentials(connectedService, azureKeyVaultDnsSuffix);
     }
 
     private getVaultCredentials(connectedService: string, azureKeyVaultDnsSuffix: string): msRestAzure.ApplicationTokenCredentials {
