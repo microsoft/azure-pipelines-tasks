@@ -1,5 +1,7 @@
 {
   "messages": {
-    "TokenUnavailable": "Could not retrieve token credentials for TFS/Team Services packaging."
+    "TokenUnavailable": "Could not retrieve token credentials for TFS/Team Services packaging.",
+    "UnableToReadResponseBody": "Unable to read response body. Error: %s",
+    "FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s"
   }
 }

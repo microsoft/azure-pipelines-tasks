@@ -1,3 +1,5 @@
 {
-  "loc.messages.TokenUnavailable": "Could not retrieve token credentials for TFS/Team Services packaging."
+  "loc.messages.TokenUnavailable": "Could not retrieve token credentials for TFS/Team Services packaging.",
+  "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s",
+  "loc.messages.FileFetchFailed": "Failed to download the file. URL: '%s'. Error: %s"
 }
