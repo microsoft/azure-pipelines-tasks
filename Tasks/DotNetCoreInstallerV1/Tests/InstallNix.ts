@@ -2,6 +2,7 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
+import fs = require('fs');
 
 let taskPath = path.join(__dirname, '..', 'dotnetcoreinstaller.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -14,24 +15,20 @@ process.env["AGENT_TEMPDIRECTORY"] = "/agent/_temp";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
-        "/somedir/currdir/externals/install-dotnet.sh --version 1.0.4 --dry-run": {
+        "/somedir/currdir/externals/get-os-distro.sh": {
             "code": process.env["__get_platform_failed__"] === "true" ? -1 : 0,
-            "stdout": process.env["__get_platform_failed__"] === "true" ? "" : "dotnet-install: Payload URLs:" + os.EOL + "dotnet-install: Payload URL: https://primary-url" + os.EOL + "dotnet-install: Legacy payload URL: https://legacy-url" + os.EOL + "dotnet-install: Repeatable invocation:",
-            "stderr": process.env["__get_platform_failed__"] === "true" ? "install-script failed to get donwload urls" : ""
-        },
-        "/somedir/currdir/externals/install-dotnet.sh --version 1.0.4 --dry-run --shared-runtime": {
-            "code": 0,
-            "stdout": "dotnet-install: Payload URLs:" + os.EOL + "dotnet-install: Payload URL: https://primary-runtime-url" + os.EOL + "dotnet-install: Legacy payload URL: https://legacy-runtime-url" + os.EOL + "dotnet-install: Repeatable invocation:"
+            "stdout": process.env["__get_platform_failed__"] === "true" ? "" : "Primary:linux-x64" + os.EOL + "Legacy:ubuntu.16.04",
+            "stderr": process.env["__get_platform_failed__"] === "true" ? "OS name could not be detected" : ""
         }
     },
     "osType": {
         "osType": "Linux"
     },
     "which": {
-        "/somedir/currdir/externals/install-dotnet.sh": "/somedir/currdir/externals/install-dotnet.sh"
+        "/somedir/currdir/externals/get-os-distro.sh": "/somedir/currdir/externals/get-os-distro.sh"
     },
     "checkPath": {
-        "/somedir/currdir/externals/install-dotnet.sh": true
+        "/somedir/currdir/externals/get-os-distro.sh": true
     }
 };
 
@@ -43,6 +40,25 @@ tr.registerMock('./utilities', {
     setFileAttribute: function (file, mode) {
         console.log("Changing attribute for file " + file + " to " + mode);
     }
+});
+
+tr.registerMock('utility-common/downloadutility', {
+    readFileContent: function (fileUrl: string) {
+        switch (process.env["__releases_info__"]) {
+            case "LegacyVersion":
+                return fs.readFileSync(path.join(__dirname, "MockReleaseJsons/LegacyVersion.json"));
+            case "RuntimeBlobUrlNotAvailable":
+                return fs.readFileSync(path.join(__dirname, "MockReleaseJsons/RuntimeBlobUrlNotAvailable.json"));
+            case "SdkBlobUrlNotAvailable":
+                return fs.readFileSync(path.join(__dirname, "MockReleaseJsons/SdkBlobUrlNotAvailable.json"));
+            case "RuntimeVersionInvalid":
+                return fs.readFileSync(path.join(__dirname, "MockReleaseJsons/RuntimeVersionInvalid.json"));
+            case "SdkVersionInvalid":
+                return fs.readFileSync(path.join(__dirname, "MockReleaseJsons/SdkVersionInvalid.json"));
+            default:
+                return fs.readFileSync(path.join(__dirname, "MockReleaseJsons/NewVersion.json"));
+        }
+    },
 });
 
 process.env["MOCK_NORMALIZE_SLASHES"] = "true";
