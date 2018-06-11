@@ -367,16 +367,38 @@ function Publish-UpgradedServiceFabricApplication
         }
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+        $unhealthyEvaluationMessageFunction = {
+            param(
+                $UnhealthyEvaluations,
+        
+                [string]$Indentation
+            )
+        
+            $indentatedErrorString = ""
+            foreach ($UnhealthyEvaluation in $UnhealthyEvaluations) {
+                $indentatedErrorString += $Indentation + $UnhealthyEvaluation.Description
+                # see if indentation needs to be increased. based on the type of evaluation. 
+                $indentatedErrorString += & $unhealthyEvaluationMessageFunction $UnhealthyEvaluation, $Indentation + "`t"
+            }
+        
+            if ($UnhealthyEvaluation.UnhealthyEvent) {
+                $indentatedErrorString += $Indentation + "Unhealthy Event Details: " + $UnhealthyEvaluation.UnhealthyEvent
+            }
+        
+            return $indentatedErrorString
+        }
+
         $upgradeStatusFetcher = {
             param(
                 $LastUpgradeStatus
             )
+
             $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName;
             Write-Host "Current Upgrade State:" $upgradeStatus.UpgradeState;
             Write-Host "`n Domain Wise Upgrade Status: " $upgradeStatus.UpgradeDomainsStatus ;
             if (($upgradeStatus.UnhealthyEvaluations -ne $null) -and (($LastUpgradeStatus -eq $null) -or ($LastUpgradeStatus.UnhealthyEvaluations -ne $upgradeStatus.UnhealthyEvaluations)))
             {
-                Write-Host "Unhealthy Evaluations: " $upgradeStatus.UnhealthyEvaluations;
+                Write-Host "Unhealthy Evaluations: " (& $unhealthyEvaluationMessageFunction $upgradeStatus.UnhealthyEvaluations, "");
             }
             
             return $upgradeStatus;

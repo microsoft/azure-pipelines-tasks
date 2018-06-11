@@ -28,6 +28,7 @@ function Invoke-ActionWithRetries {
         $RetryMessage = Get-VstsLocString -Key RetryAfterMessage $RetryIntervalInSeconds
     }
 
+    $lastResult = $null;
     $retryIteration = 1
     do
     {
@@ -36,7 +37,8 @@ function Invoke-ActionWithRetries {
 
         try
         {
-            $result = & $Action
+            $result = & $Action $lastResult
+            $lastResult = $result
         }
         catch
         {
