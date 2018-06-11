@@ -480,8 +480,11 @@ target.testLegacy = function() {
 target.layout = function() {
     banner('Starting layout process...')
 
-    console.log('> Cleaning packge path');
-    rm('-Rf', packagePath);
+    var files = getAllFiles(path.join(__dirname, '_package'));
+    files.forEach((x) => console.log(x));
+
+    // console.log('> Cleaning packge path');
+    // rm('-Rf', packagePath);
 
     var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
 
@@ -494,6 +497,19 @@ target.layout = function() {
     //renameFoldersFromAggregate('E:\\AllTaskMajorVersions');
     //generatePerTaskForLegacyPackages('E:\\AllTaskMajorVersions');
 }
+
+/**
+ * Find all files inside a dir, recursively.
+ * @function getAllFiles
+ * @param  {string} dir Dir path string.
+ * @return {string[]} Array with all file names that are inside the directory.
+ */
+const getAllFiles = dir =>
+  fs.readdirSync(dir).reduce((files, file) => {
+    const name = path.join(dir, file);
+    const isDirectory = fs.statSync(name).isDirectory();
+    return isDirectory ? [...files, ...getAllFiles(name)] : [...files, name];
+  }, []);
 
 function renameFoldersFromAggregate(pathWithLegacyFolders) {
     // Rename folders
