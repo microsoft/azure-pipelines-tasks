@@ -126,7 +126,7 @@ function getTestSelectionInputs(inputDataContract : idc.InputDataContract) : idc
 function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
         inputDataContract.TfsSpecificSettings = <idc.TfsSpecificSettings>{};
         inputDataContract.TfsSpecificSettings.BuildDefinitionId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.DefinitionId')) ? Number(tl.getVariable('System.DefinitionId')) : Number(tl.getVariable('Build.DefinitionId'));
-        inputDataContract.TfsSpecificSettings.ReleaseDefinitionId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.DefinitionId')) ? null : Number(tl.getVariable('Build.DefinitionId'));
+        inputDataContract.TfsSpecificSettings.ReleaseDefinitionId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.DefinitionId')) ? null : Number(tl.getVariable('Release.DefinitionId'));
         inputDataContract.TfsSpecificSettings.BuildId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Build.Buildid')) ? null : Number(tl.getVariable('Build.Buildid'));
         inputDataContract.TfsSpecificSettings.BuildUri = tl.getVariable('Build.BuildUri');
         inputDataContract.TfsSpecificSettings.ReleaseId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.ReleaseId')) ? null : Number(tl.getVariable('Release.ReleaseId'));

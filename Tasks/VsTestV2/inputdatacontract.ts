@@ -19,7 +19,7 @@ export interface InputDataContract {
 
 export interface TestReportingSettings {
     TestRunTitle : string;
-    TestResultDirectory : string;
+    TestResultsDirectory : string;
 }
 
 export interface TestSelectionSettings {

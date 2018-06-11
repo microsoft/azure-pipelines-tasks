@@ -101,6 +101,7 @@ export class DistributedTest {
     private createTestSourcesFile(): string {
         try {
             let sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+            console.log(tl.loc('UserProvidedSourceFilter', sourceFilter.toString()));
 
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
                 sourceFilter = ['**\\*', '!**\\obj\\*'];

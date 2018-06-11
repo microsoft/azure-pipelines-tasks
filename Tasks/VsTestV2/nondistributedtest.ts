@@ -195,12 +195,12 @@ async function executeVstest(): Promise<number> {
     let dtaExecutionHostTool = tl.tool(path.join(inputDataContract.VsTestConsolePath, 'vstest.console.exe'));
 
     //Re-calculate the results directory based on final runsettings and clean up again if required.
-    resultsDirectory = getTestResultsDirectory(inputDataContract.ExecutionSettings.SettingsFile, path.join(inputDataContract.TfsSpecificSettings.WorkFolder, 'TestResults'));
-    tl.rmRF(resultsDirectory);
-    tl.mkdirP(resultsDirectory);
+    //resultsDirectory = getTestResultsDirectory(inputDataContract.ExecutionSettings.SettingsFile, path.join(inputDataContract.TfsSpecificSettings.WorkFolder, 'TestResults'));
+    // tl.rmRF(resultsDirectory);
+    // tl.mkdirP(resultsDirectory);
 
-    // hydra: Validate this
-    inputDataContract.TestReportingSettings.TestResultDirectory = resultsDirectory;
+    // hydra: Validate this. not required anymore
+    //inputDataContract.TestReportingSettings.TestResultDirectory = resultsDirectory;
 
     inputDataContract.TestSelectionSettings.TestSourcesFile = createTestSourcesFile();
 
@@ -640,39 +640,6 @@ function isTestAdapterPresent(rootDirectory: string): boolean {
     return false;
 }
 
-// Move to C#
-function getTestResultsDirectory(settingsFile: string, defaultResultsDirectory: string): string {
-    let resultDirectory = defaultResultsDirectory;
-
-    if (!settingsFile || !utils.Helper.pathExistsAsFile(settingsFile)) {
-        return resultDirectory;
-    }
-
-    try {
-        const xmlContents = utils.Helper.readFileContentsSync(settingsFile, 'utf-8');
-        const parser = new xml2js.Parser();
-
-        parser.parseString(xmlContents, function (err: any, result: any) {
-            if (!err && result.RunSettings && result.RunSettings.RunConfiguration && result.RunSettings.RunConfiguration[0] &&
-                result.RunSettings.RunConfiguration[0].ResultsDirectory && result.RunSettings.RunConfiguration[0].ResultsDirectory[0].length > 0) {
-                let runSettingsResultDirectory = result.RunSettings.RunConfiguration[0].ResultsDirectory[0];
-                runSettingsResultDirectory = runSettingsResultDirectory.trim();
-
-                if (runSettingsResultDirectory) {
-                    // path.resolve will take care if the result directory given in settings files is not absolute.
-                    resultDirectory = path.resolve(path.dirname(settingsFile), runSettingsResultDirectory);
-                }
-            }
-        });
-    } catch (error) {
-        //In case of error return default directory.
-        tl.debug(error);
-        return resultDirectory;
-    }
-
-    return resultDirectory;
-}
-
 // function setRunInParallellIfApplicable() {
 //     if (vstestConfig.runInParallel) {
 //         if (vstestConfig.vsTestVersionDetails != null && vstestConfig.vsTestVersionDetails.isRunInParallelSupported()) {
@@ -695,6 +662,7 @@ function isEmptyResponseFile(responseFile: string): boolean {
 function createTestSourcesFile(): string {
     try {
         const sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+        console.log(tl.loc('UserProvidedSourceFilter', sourceFilter.toString()));
 
         const sources = tl.findMatch(inputDataContract.TestSelectionSettings.SearchFolder, sourceFilter);
         tl.debug('tl match count :' + sources.length);
