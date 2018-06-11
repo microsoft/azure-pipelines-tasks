@@ -13,12 +13,15 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 9
     },
-    "satisfies": ["DotNetCore"],
+    "satisfies": [
+        "DotNetCore"
+    ],
     "demands": [],
     "instanceNameFormat": "Use .NET Core $(packageType) $(version)",
-    "inputs": [{
+    "inputs": [
+        {
             "name": "packageType",
             "type": "pickList",
             "label": "Package to install",
