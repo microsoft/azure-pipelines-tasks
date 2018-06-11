@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 136,
-    "Patch": 1
+    "Patch": 3
   },
   "groups": [
     {
@@ -83,7 +83,7 @@
     {
       "name": "branchName",
       "type": "string",
-      "label": "Branch name", 
+      "label": "Branch name",
       "defaultValue": "refs/heads/master",
       "visibleRule": "buildType == specific && buildVersionToDownload == latestFromBranch",
       "required": true,

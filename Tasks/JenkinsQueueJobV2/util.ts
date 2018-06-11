@@ -14,17 +14,16 @@ import { TaskOptions } from './jenkinsqueuejobtask';
 export function getFullErrorMessage(httpResponse, message: string): string {
     const fullMessage: string = message +
         '\nHttpResponse.statusCode=' + httpResponse.statusCode +
-        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage +
-        '\nHttpResponse=\n' + JSON.stringify(httpResponse);
+        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage
     return fullMessage;
 }
 
 export function failReturnCode(httpResponse, message: string): void {
-    const fullMessage: string = message +
-        '\nHttpResponse.statusCode=' + httpResponse.statusCode +
-        '\nHttpResponse.statusMessage=' + httpResponse.statusMessage +
-        '\nHttpResponse=\n' + JSON.stringify(httpResponse);
-    fail(fullMessage);
+    const fullMessage = getFullErrorMessage(httpResponse, message);
+    tl.debug(message);
+    tl.error(fullMessage);
+    tl._writeError(message);
+    tl.setResult(tl.TaskResult.Failed, message);
 }
 
 export function handleConnectionResetError(err): void {

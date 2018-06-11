@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 9
+    "Patch": 12
   },
   "demands": [
     "Cmd"
@@ -92,15 +92,6 @@
       "helpMarkDown": "ms-resource:loc.input.help.compressPackage"
     },
     {
-      "name": "useDiffPackage",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.useDiffPackage",
-      "defaultValue": "false",
-      "required": false,
-      "groupname": "advanced",
-      "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage"
-    },
-    {
       "name": "copyPackageTimeoutSec",
       "type": "string",
       "label": "ms-resource:loc.input.label.copyPackageTimeoutSec",
@@ -149,6 +140,15 @@
       "required": false,
       "groupname": "advanced",
       "helpMarkDown": "ms-resource:loc.input.help.skipPackageValidation"
+    },
+    {
+      "name": "useDiffPackage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useDiffPackage",
+      "defaultValue": "false",
+      "required": false,
+      "groupname": "upgrade",
+      "helpMarkDown": "ms-resource:loc.input.help.useDiffPackage"
     },
     {
       "name": "overridePublishProfileSettings",

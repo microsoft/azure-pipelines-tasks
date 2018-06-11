@@ -8,21 +8,21 @@ variables:
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
 steps:
 
-- task: NuGetToolInstaller@0
+  - task: NuGetToolInstaller@0
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '**/*.sln'
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: '**/*.sln'
 
-- task: XamarinAndroid@1
-  inputs:
-    projectFile: '**/*Droid*.csproj'
-    outputDirectory: '$(outputDirectory)'
-    configuration: '$(buildConfiguration)'
+  - task: XamarinAndroid@1
+    inputs:
+      projectFile: '**/*Droid*.csproj'
+      outputDirectory: '$(outputDirectory)'
+      configuration: '$(buildConfiguration)'
 
-#- task: PublishBuildArtifacts@1
-#  inputs:
-#    pathtoPublish: '$(outputDirectory)'
+#  - task: PublishBuildArtifacts@1
+#    inputs:
+#      pathtoPublish: '$(outputDirectory)'
 
 # Next steps:
 # Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest

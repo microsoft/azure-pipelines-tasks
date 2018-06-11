@@ -5,13 +5,13 @@
 queue: 'Hosted Linux'
 steps:
 
-- task: Maven@2
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'package'
+  - task: Maven@2
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'package'
 
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/target/*.{jar,war,ear}'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+#  - task: CopyFiles@2
+#    inputs:
+#      contents: '**/target/*.{jar,war,ear}'
+#      targetFolder: '$(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1

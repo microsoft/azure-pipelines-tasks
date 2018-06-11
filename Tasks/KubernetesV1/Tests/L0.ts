@@ -12,6 +12,7 @@ describe('Kubernetes Suite', function() {
     });
     beforeEach(() => {
         process.env[shared.isKubectlPresentOnMachine] = "true";
+        process.env[shared.endpointAuthorizationType] = "Kubeconfig";
         delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.containerType];
         delete process.env[shared.TestEnvVars.connectionType];
@@ -42,6 +43,23 @@ describe('Kubernetes Suite', function() {
         process.env[shared.TestEnvVars.command] = shared.Commands.get;
         process.env[shared.TestEnvVars.arguments] = "pods";    
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionType.KubernetesServiceConnection;        
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods -o json`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    });
+
+    it('Run successfully when the authorization type of the endpoint is service account and connectionType is Kubernetes Service Connection', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";    
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionType.KubernetesServiceConnection;
+        process.env[shared.endpointAuthorizationType] = "ServiceAccount";
         tr.run();
 
         assert(tr.succeeded, 'task should have succeeded');

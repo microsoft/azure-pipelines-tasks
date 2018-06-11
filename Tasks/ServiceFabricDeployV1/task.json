@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 9
+        "Patch": 12
     },
     "demands": [
         "Cmd"
@@ -92,15 +92,6 @@
             "helpMarkDown": "Indicates whether the application package should be compressed before copying to the image store. If enabled, this will override the value in the publish profile."
         },
         {
-            "name": "useDiffPackage",
-            "type": "boolean",
-            "label": "Use Diff Package",
-            "defaultValue": "false",
-            "required": false,
-            "groupname": "advanced",
-            "helpMarkDown": "Upgrade by using a diff package that contains only the updated application files, the updated application manifest, and the service manifest files."
-        },
-        {
             "name": "copyPackageTimeoutSec",
             "type": "string",
             "label": "CopyPackageTimeoutSec",
@@ -149,6 +140,15 @@
             "required": false,
             "groupname": "advanced",
             "helpMarkDown": "Indicates whether the package should be validated or not before deployment."
+        },
+        {
+            "name": "useDiffPackage",
+            "type": "boolean",
+            "label": "Use Diff Package",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "upgrade",
+            "helpMarkDown": "Upgrade by using a diff package that contains only the updated application files, the updated application manifest, and the service manifest files."
         },
         {
             "name": "overridePublishProfileSettings",

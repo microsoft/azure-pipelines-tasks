@@ -10,22 +10,22 @@ variables:
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\'
 steps:
 
-- task: NuGetToolInstaller@0
+  - task: NuGetToolInstaller@0
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: '$(solution)'
 
-- task: VSBuild@1
-  inputs:
-    platform: 'x86'
-    solution: '$(solution)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+  - task: VSBuild@1
+    inputs:
+      platform: 'x86'
+      solution: '$(solution)'
+      configuration: '$(buildConfiguration)'
+      msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
 
-#- task: PublishBuildArtifacts@1
-#  inputs:
-#    pathToPublish: '$(appxPackageDir)'
+#  - task: PublishBuildArtifacts@1
+#    inputs:
+#      pathToPublish: '$(appxPackageDir)'
 
 # Next steps:
 # Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest

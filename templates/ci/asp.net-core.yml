@@ -7,27 +7,27 @@ variables:
   buildConfiguration: 'Release'
 steps:
 
-- task: DotNetCoreInstaller@0
+  - task: DotNetCoreInstaller@0
 
-- task: DotNetCoreCLI@1
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
+  - task: DotNetCoreCLI@1
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
 
-- task: DotNetCoreCLI@1
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+  - task: DotNetCoreCLI@1
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'
 
-- task: DotNetCoreCLI@1
-  inputs:
-    command: 'test'
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+  - task: DotNetCoreCLI@1
+    inputs:
+      command: 'test'
+      projects: '**/*Tests/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'
 
-#- task: DotNetCoreCLI@1
-#  inputs:
-#    command: 'publish'
-#    arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+#  - task: DotNetCoreCLI@1
+#    inputs:
+#      command: 'publish'
+#      arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1

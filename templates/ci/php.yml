@@ -1,14 +1,18 @@
 # PHP
-# Package your PHP application.
+# Test and package your PHP application.
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux'
 steps:
 
-#- script: composer install
+  - script: composer install
+    displayName: 'composer install'
 
-#- task: ArchiveFiles@2
-#  inputs:
-#    rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#    includeRootFolder: false
-#- task: PublishBuildArtifacts@1
+  - script: phpunit
+    displayName: 'Run tests with phpunit'
+
+#  - task: ArchiveFiles@2
+#    inputs:
+#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#      includeRootFolder: false
+#  - task: PublishBuildArtifacts@1

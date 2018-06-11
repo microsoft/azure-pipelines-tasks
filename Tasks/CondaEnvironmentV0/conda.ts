@@ -7,11 +7,26 @@ import * as internal from './conda_internal';
 import { Platform } from './taskutil';
 
 interface TaskParameters {
-    environmentName: string,
+    createCustomEnvironment?: boolean,
+    environmentName?: string,
     packageSpecs?: string,
     updateConda?: boolean,
+    installOptions?: string,
     createOptions?: string,
     cleanEnvironment?: boolean
+}
+
+// TODO copied from PythonScript. Find a way to share between tasks.
+/**
+ * Check for a parameter at runtime.
+ * Useful for conditionally-visible, required parameters.
+ */
+function assertParameter<T>(value: T | undefined, propertyName: string): T {
+    if (!value) {
+        throw new Error(task.loc('ParameterRequired', propertyName));
+    }
+
+    return value!;
 }
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
@@ -31,19 +46,24 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
 
     internal.prependCondaToPath(condaRoot, platform);
 
-    // Activate the environment, creating it if it does not exist
-    const environmentsDir = path.join(condaRoot, 'envs');
-    const environmentPath = path.join(environmentsDir, parameters.environmentName);
+    if (parameters.createCustomEnvironment) { // activate the environment, creating it if it does not exist
+        const environmentName = assertParameter(parameters.environmentName, 'environmentName');
 
-    if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {
-        console.log(task.loc('ReactivateExistingEnvironment', environmentPath));
-    } else { // create the environment
-        if (fs.existsSync(environmentPath)) {
-            console.log(task.loc('CleanEnvironment', environmentPath));
-            task.rmRF(environmentPath);
+        const environmentsDir = path.join(condaRoot, 'envs');
+        const environmentPath = path.join(environmentsDir, environmentName);
+
+        if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {
+            console.log(task.loc('ReactivateExistingEnvironment', environmentPath));
+        } else { // create the environment
+            if (fs.existsSync(environmentPath)) {
+                console.log(task.loc('CleanEnvironment', environmentPath));
+                task.rmRF(environmentPath);
+            }
+            await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
         }
-        await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
-    }
 
-    internal.activateEnvironment(environmentsDir, parameters.environmentName, platform);
+        internal.activateEnvironment(environmentsDir, environmentName, platform);
+    } else if (parameters.packageSpecs) {
+        internal.installPackagesGlobally(parameters.packageSpecs, parameters.installOptions);
+    }
 }

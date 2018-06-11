@@ -3,17 +3,19 @@
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux'
+variables:
+  imageName: $(build.repository.name):$(build.buildId)'
 steps:
 
-- task: Docker@0
-  inputs:
-    action: 'build an image'
-    dockerFile: '**/Dockerfile' 
-    imageName: '$(build.repository.name):$(build.buildId)'
+  - task: Docker@0
+    inputs:
+      action: 'build an image'
+      dockerFile: '**/Dockerfile' 
+      imageName: '$(imageName)'
 
-#- task: Docker@0
-#  inputs:
-#    action: 'Push an image'
-#    containerregistrytype: 'container registry'
-#    dockerRegistryEndpoint: ''
-#    imageName: '$(build.repository.name):$(build.buildId)'
+#  - task: Docker@0
+#    inputs:
+#      action: 'Push an image'
+#      containerregistrytype: 'container registry'
+#      dockerRegistryEndpoint: ''
+#      imageName: '$(imageName)'

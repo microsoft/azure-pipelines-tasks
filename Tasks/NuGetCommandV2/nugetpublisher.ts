@@ -70,7 +70,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
         if (filesList && filesList.length < 1)
         {
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
+            console.log(tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
             return;
         }
 

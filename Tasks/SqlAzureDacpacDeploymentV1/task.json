@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 31
+        "Minor": 2,
+        "Patch": 0
     },
     "demands": [
         "sqlpackage"
@@ -110,6 +110,25 @@
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
+            "name": "DeploymentAction",
+            "type": "picklist",
+            "label": "Action",
+            "required": true,
+            "groupName": "taskDetails",
+            "defaultValue": "Publish",
+            "options": {
+                "Publish": "Publish",
+                "Extract": "Extract",
+                "Export": "Export",
+                "Import": "Import",
+                "Script": "Script",
+                "DriftReport": "Drift Report",
+                "DeployReport": "Deploy Report"
+            },
+            "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
+
+        },
+        {
             "name": "TaskNameSelector",
             "type": "pickList",
             "label": "Type",
@@ -121,7 +140,8 @@
                 "DacpacTask": "SQL DACPAC File",
                 "SqlTask": "SQL Script File",
                 "InlineSqlTask": "Inline SQL Script"
-            }
+            },
+            "visibleRule": "DeploymentAction = Publish"
         },
         {
             "name": "DacpacFile",
@@ -131,7 +151,17 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Location of the DACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "TaskNameSelector = DacpacTask"
+            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+        },
+        {
+            "name": "BacpacFile",
+            "type": "filePath",
+            "label": "BACPAC File",
+            "required": true,
+            "groupName": "taskDetails",
+            "defaultValue": "",
+            "helpMarkDown": "Location of the BACPAC file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.bacpac. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
+            "visibleRule": "DeploymentAction = Import"
         },
         {
             "name": "SqlFile",
@@ -165,7 +195,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Publish profile provides fine-grained control over Azure SQL Database creation or upgrades. Specify the path to the Publish profile XML file on the automation agent or on a UNC share. Predefined system variables like, $(agent.buildDirectory) or $(agent.releaseDirectory) can also be used here.",
-            "visibleRule": "TaskNameSelector = DacpacTask"
+            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
         },
         {
             "name": "AdditionalArguments",
@@ -175,7 +205,7 @@
             "groupName": "taskDetails",
             "defaultValue": "",
             "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the Azure SQL Database, in case DACPAC option is selected like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided).",
-            "visibleRule": "TaskNameSelector = DacpacTask"
+            "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
         },
         {
             "name": "SqlAdditionalArguments",
@@ -240,7 +270,13 @@
             "helpMarkDown": "If selected, then after the task ends, the IP Addresses specified here are deleted from the 'Allowed IP Addresses' list of the Azure SQL Server's Firewall."
         }
     ],
-    "instanceNameFormat": "Execute Azure SQL : $(TaskNameSelector)",
+    "outputVariables": [
+        {
+            "name": "SqlDeploymentOutputFile",
+            "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
+        }
+    ],
+    "instanceNameFormat": "Azure SQL $(DeploymentAction)",
     "execution": {
         "PowerShell3": {
             "target": "DeploySqlAzure.ps1"
@@ -257,7 +293,15 @@
         "SAD_NoPassword": "No password specified for the SQL User: '{0}'",
         "SAD_InvalidPublishProfile": "Invalid Publish Profile '{0}' provided",
         "SAD_InvalidServerNameFormat": "Server name '{0}' is not in the right format. Use FQDN format like '{1}'",
-        "SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed.",
-        "SAD_TroubleshootingLink": "Checkout how to troubleshoot failures https://aka.ms/sqlazuredeployreadme#troubleshooting."
+        "SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac task failed. SqlPackage.exe exited with code {0}.",
+        "SAD_TroubleshootingLink": "Checkout how to troubleshoot failures https://aka.ms/sqlazuredeployreadme#troubleshooting-",
+        "SAD_InvalidDeploymentAction": "Invalid deployment action: {0}",
+        "SAD_SetOutputVariable": "Setting output variable '{0}' to '{1}'",
+        "SAD_TemporaryInlineSqlFile": "Temporary inline sql file: {0}",
+        "SAD_GeneratedFile": "Generated file {0}. Uploading file to the logs.",
+        "SAD_InvalidPublishOption": "Invalid option selected for publish action: {0}",
+        "SAD_DacpacFilePath": "Dacpac file path:",
+        "SAD_BacpacFilePath": "Bacpac file path:",
+        "SAD_PublishProfilePath": "Publish profile path:"
     }
 }

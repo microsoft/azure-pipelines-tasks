@@ -15,8 +15,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 31
+    "Minor": 2,
+    "Patch": 0
   },
   "demands": [
     "sqlpackage"
@@ -116,6 +116,24 @@
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
     },
     {
+      "name": "DeploymentAction",
+      "type": "picklist",
+      "label": "ms-resource:loc.input.label.DeploymentAction",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "Publish",
+      "options": {
+        "Publish": "Publish",
+        "Extract": "Extract",
+        "Export": "Export",
+        "Import": "Import",
+        "Script": "Script",
+        "DriftReport": "Drift Report",
+        "DeployReport": "Deploy Report"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.DeploymentAction"
+    },
+    {
       "name": "TaskNameSelector",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.TaskNameSelector",
@@ -127,7 +145,8 @@
         "DacpacTask": "SQL DACPAC File",
         "SqlTask": "SQL Script File",
         "InlineSqlTask": "Inline SQL Script"
-      }
+      },
+      "visibleRule": "DeploymentAction = Publish"
     },
     {
       "name": "DacpacFile",
@@ -137,7 +156,17 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.DacpacFile",
-      "visibleRule": "TaskNameSelector = DacpacTask"
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
+    },
+    {
+      "name": "BacpacFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.BacpacFile",
+      "required": true,
+      "groupName": "taskDetails",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.BacpacFile",
+      "visibleRule": "DeploymentAction = Import"
     },
     {
       "name": "SqlFile",
@@ -171,7 +200,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.PublishProfile",
-      "visibleRule": "TaskNameSelector = DacpacTask"
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Script || DeploymentAction = DeployReport"
     },
     {
       "name": "AdditionalArguments",
@@ -181,7 +210,7 @@
       "groupName": "taskDetails",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments",
-      "visibleRule": "TaskNameSelector = DacpacTask"
+      "visibleRule": "TaskNameSelector = DacpacTask || DeploymentAction = Extract || DeploymentAction = Export || DeploymentAction = Import || DeploymentAction = Script || DeploymentAction = DeployReport || DeploymentAction = DriftReport"
     },
     {
       "name": "SqlAdditionalArguments",
@@ -246,6 +275,12 @@
       "helpMarkDown": "ms-resource:loc.input.help.DeleteFirewallRule"
     }
   ],
+  "outputVariables": [
+    {
+      "name": "SqlDeploymentOutputFile",
+      "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
+    }
+  ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "PowerShell3": {
@@ -264,6 +299,14 @@
     "SAD_InvalidPublishProfile": "ms-resource:loc.messages.SAD_InvalidPublishProfile",
     "SAD_InvalidServerNameFormat": "ms-resource:loc.messages.SAD_InvalidServerNameFormat",
     "SAD_AzureSQLDacpacTaskFailed": "ms-resource:loc.messages.SAD_AzureSQLDacpacTaskFailed",
-    "SAD_TroubleshootingLink": "ms-resource:loc.messages.SAD_TroubleshootingLink"
+    "SAD_TroubleshootingLink": "ms-resource:loc.messages.SAD_TroubleshootingLink",
+    "SAD_InvalidDeploymentAction": "ms-resource:loc.messages.SAD_InvalidDeploymentAction",
+    "SAD_SetOutputVariable": "ms-resource:loc.messages.SAD_SetOutputVariable",
+    "SAD_TemporaryInlineSqlFile": "ms-resource:loc.messages.SAD_TemporaryInlineSqlFile",
+    "SAD_GeneratedFile": "ms-resource:loc.messages.SAD_GeneratedFile",
+    "SAD_InvalidPublishOption": "ms-resource:loc.messages.SAD_InvalidPublishOption",
+    "SAD_DacpacFilePath": "ms-resource:loc.messages.SAD_DacpacFilePath",
+    "SAD_BacpacFilePath": "ms-resource:loc.messages.SAD_BacpacFilePath",
+    "SAD_PublishProfilePath": "ms-resource:loc.messages.SAD_PublishProfilePath"
   }
 }
