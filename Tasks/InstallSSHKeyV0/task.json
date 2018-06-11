@@ -3,7 +3,7 @@
     "name": "InstallSSHKey",
     "friendlyName": "Install SSH Key",
     "description": "Install an SSH key prior to a build or release",
-    "helpMarkDown": "[More information](https://docs.microsoft.com/en-us/vsts/pipelines/tasks/utility/install-ssh-key?view=vsts)",
+    "helpMarkDown": "[More information](https://docs.microsoft.com/vsts/pipelines/tasks/utility/install-ssh-key)",
     "category": "Utility",
     "visibility": [
         "Build",
