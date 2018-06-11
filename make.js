@@ -486,10 +486,13 @@ target.layout = function() {
     // console.log('> Cleaning packge path');
     // rm('-Rf', packagePath);
 
-    var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
+    // TODO: Only need this when we run locally
+    //var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
+    var layoutPath = path.join(packagePath, 'milestone-layout');
 
     console.log('layout path: ' + layoutPath);
     // TODO: What is the layout path when running in CI?
+    
     util.createNugetPackagePerTask(packagePath, layoutPath);
 
     // These methods are to help with the migration to NuGet package per task.
