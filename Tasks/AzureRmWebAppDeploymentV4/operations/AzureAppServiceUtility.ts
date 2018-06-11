@@ -163,7 +163,7 @@ export class AzureAppServiceUtility {
             }
 
             noOftimesToIterate -= 1;
-            await webClient.sleepFor(10);
+            await webClient.sleepFor(5);
         }
 
         tl.debug('Timing out from app settings check');

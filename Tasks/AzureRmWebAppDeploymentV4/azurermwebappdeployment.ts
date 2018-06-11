@@ -9,7 +9,7 @@ async function main() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
-        var deploymentProvider = DeploymentFactory.GetDeploymentProvider(taskParams);
+        var deploymentProvider = await DeploymentFactory.GetDeploymentProvider(taskParams);
 
         tl.debug("Predeployment Step Started");
         await deploymentProvider.PreDeploymentStep();

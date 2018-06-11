@@ -64,7 +64,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdout.search('ARGUMENT WITH EXCLUDE APP DATA PASSED') > 0, 'should have printed ARGUMENT WITH EXCLUDE APP DATA PASSED');
             assert(tr.stdout.search('ARGUMENT WITH WAR PACKAGE PASSED') > 0, 'should have printed ARGUMENT WITH WAR PACKAGE PASSED');
             assert(tr.stdout.search('ARGUMENT WITH OVERRIDE RETRY FLAG PASSED') > 0, 'should have printed ARGUMENT WITH OVERRIDE RETRY FLAG PASSED');
-
+            assert(tr.stdout.search('MSDEPLOY getWebDeployErrorCode passed') > 0, 'should have printed MSDEPLOY getWebDeployErrorCode passed');
             done();
         });
     }
