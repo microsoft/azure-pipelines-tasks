@@ -4,16 +4,14 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as Constant from '../operations/Constants';
 import * as ParameterParser from '../operations/parameterparser'
 import { DeploymentType } from '../operations/TaskParameters';
-const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 0';
+const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
 
-export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
-    
-    private zipDeploymentID: string;
+export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
  
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
 
-        if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.zipDeploy) {
+        if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.runFromZip) {
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage();
             if(_isMSBuildPackage) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedformsbuildpackage"));
@@ -25,21 +23,18 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
         
-        var customApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
+        var customApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
         await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
 
-        this.zipDeploymentID = await this.kuduServiceUtility.zipDeploy(webPackage, false, this.taskParams.TakeAppOfflineFlag, 
+        await this.kuduServiceUtility.zipDeploy(webPackage, true, this.taskParams.TakeAppOfflineFlag, 
             { slotName: this.appService.getSlot() });
 
         await this.PostDeploymentStep();
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.kuduServiceUtility) {
+        if(this.taskParams.ScriptType && this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
-            if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
-                await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
-            }
         }
     }
 }
