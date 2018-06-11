@@ -1210,29 +1210,32 @@ var createNonAggregatedZip = function (buildPath, packagePath) {
 }
 exports.createNonAggregatedZip = createNonAggregatedZip;
 
-// Overview:
-// 
-// Create a NuGet package per task. This function assumes the tasks are already laid out on disk.
-// 
-// When running locally, layoutPath is something like: _package\non-aggregated-layout
-// Within this folder we have one of these folders per task:
-//  /CmdLineV2
-//      /Strings
-//      /task.json
-//      /task.loc.json
-//      /task.zip
-// 
-// Within the function we create an artifacts folder, this is what gets uploaded when we are done.
-// The contents look something like:
-//  /AndroidSigningV2
-//      /Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2.2.135.0.nupkg
-//      /push.cmd
-//  /AnotherTask
-//      /Mseng.MS.TF.DistributedTask.Tasks.AnotherTaskV1.1.0.0.nupkg
-//      /push.cmd
-// push.cmd * Root push.cmd that runs all nested push.cmd's.
-// servicing.xml * Convenience file. Generates all XML to update servicing configuration for tasks.
-// unified_deps.xml * Convenience file. Generates all XML to update unified dependencies file.
+/**
+ * Create a NuGet package per task. This function assumes the tasks are already laid out on disk.
+ * 
+ * When running locally, layoutPath is something like: _package\non-aggregated-layout
+ * Within this folder we have one of these folders per task:
+ *  /CmdLineV2
+ *      /Strings
+ *      /task.json
+ *      /task.loc.json
+ *      /task.zip
+ * 
+ * Within the function we create an artifacts folder, this is what gets uploaded when we are done.
+ * The contents look something like:
+ * /AndroidSigningV2
+ *      /Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2.2.135.0.nupkg
+ *      /push.cmd
+ *  /AnotherTask
+ *      /Mseng.MS.TF.DistributedTask.Tasks.AnotherTaskV1.1.0.0.nupkg
+ *     /push.cmd
+ * push.cmd * Root push.cmd that runs all nested push.cmd's.
+ * servicing.xml * Convenience file. Generates all XML to update servicing configuration for tasks.
+ * unified_deps.xml * Convenience file. Generates all XML to update unified dependencies file.
+ * 
+ * @param {*} packagePath Path of _packages folder.
+ * @param {*} layoutPath Path that has task layouts.
+ */
 var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath*/layoutPath) {
     console.log();
     console.log('> Creating NuGet package per task')

@@ -25,8 +25,6 @@ var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
 var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
-var perTaskLayoutPath = path.join(packagePath, 'per-task-layout'); // TODO: Is this being used?
-var perTaskPublishPath = path.join(packagePath, 'per-task-publish'); // TODO: Is this being used?
 
 exports.buildTasksPath = buildTasksPath;
 exports.packagePath = packagePath;
@@ -46,8 +44,6 @@ exports.aggregatePackageName = aggregatePackageName;
 exports.aggregateNuspecPath = aggregateNuspecPath;
 exports.publishLayoutPath = publishLayoutPath;
 exports.publishPushCmdPath = publishPushCmdPath;
-exports.perTaskLayoutPath = perTaskLayoutPath;
-exports.perTaskPublishPath = perTaskPublishPath;
 
 //------------------------------------------------------------------------------
 // generic functions
@@ -233,11 +229,6 @@ var linkAggregateLayoutContent = function (sourceRoot, destRoot, release, commit
             var sourceVersion = `${sourceTask.version.Major}.${sourceTask.version.Minor}.${sourceTask.version.Patch}`;
             var destVersion = `${destTask.version.Major}.${destTask.version.Minor}.${destTask.version.Patch}`;
             if (semver.gt(sourceVersion, destVersion)) {
-                console.log(`Source path: ${taskSourcePath}`);
-                console.log(`Source version: ${sourceVersion}`);
-                console.log(`Destination path: ${taskDestPath}`);
-                console.log(`Destination version: ${destVersion}`);
-
                 throw new Error(`Expected minor+patch version for task already in the aggregate layout, to be greater or equal than non-aggregate layout being merged. Source task: ${taskSourcePath}`);
             }
         }
