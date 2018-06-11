@@ -1238,13 +1238,16 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     console.log('> Creating NuGet package per task')
 
     // create folder for _package\task-zips
+    // Inside this folder we have one folder per task that contains the task.zip.
+    // It also has layout-version.txt and the nuspec file for the task.
+    // This folder is what we create the nupkg from.
     console.log();
     console.log('> Creating task zips folder');
     var tasksZipsPath = path.join(packagePath, 'task-zips');
     mkdir('-p', tasksZipsPath);
 
     // _package\artifacts
-    // This is the final state of the task content and what is published.
+    // This is the final state of the task content and what is published as a build artifact.
     console.log();
     console.log('> Creating artifacts folder');
     var artifactsPath = path.join(packagePath, "artifacts");
@@ -1262,16 +1265,12 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     // iterate all the tasks
     fs.readdirSync(layoutPath)
         .forEach(function (taskFolderName) {
+            // The non-aggregated-layout folder has a layout-version in it, skip when we hit it.
+            if (taskFolderName === 'layout-version.txt') {
+                return;
+            }
+
             var taskLayoutPath = path.join(layoutPath, taskFolderName);
-
-            if (!fs.statSync(taskLayoutPath).isDirectory) {
-                return;
-            }
-
-            if (taskFolderName === 'layout-version.txt') { // TODO: Clean this up. Make sure we have layout-version in each task nuget package? I think we need it? Is it applicable in nuget package per task setup?
-                return;
-            }
-
             var taskJsonPath = path.join(taskLayoutPath, 'task.json');
             var taskJsonContents = JSON.parse(fs.readFileSync(taskJsonPath));
             var taskVersion = taskJsonContents.version.Major + '.' + taskJsonContents.version.Minor + '.' + taskJsonContents.version.Patch;
@@ -1360,10 +1359,10 @@ var getServicingXmlContent = function (taskFolderName, fullTaskName, taskVersion
 /**
  * Create .nuspec file for a task.
  * 
- * @param {*} taskLayoutPath Layout path for the specific task we are creating nuspec for. e.g. - _package\per-task-layout\AzurePowerShellV3__v3
- * @param {*} fullTaskName Full name of the task. e.g - AzureCLIV2
- * @param {*} taskVersion taskVersion Version of the task. e.g - 1.132.0
- * @returns Path of the nuspec file that was created. // e.g. - _package\per-task-layout\AzureCLIV1__v1\Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1.nuspec  // TODO: Is this sample path correct?
+ * @param {*} taskLayoutPath Layout path for the specific task we are creating nuspec for
+ * @param {*} fullTaskName Full name of the task. e.g. - Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1
+ * @param {*} taskVersion Version of the task. e.g. - 1.132.0
+ * @returns Path of the nuspec file that was created.
  */
 var createNuspecFile = function (taskLayoutPath, fullTaskName, taskVersion) {
     console.log('> Creating nuspec file');
@@ -1390,11 +1389,11 @@ var createNuspecFile = function (taskLayoutPath, fullTaskName, taskVersion) {
 
 /**
  * Create .nupkg for a specific task.
- * @param {*} publishPath Path to publish tasks. e.g - _package\per-task-publish
- * @param {*} taskFolderName Folder name for the task we want to create a NuGet package for. e.g - AzurePowerShellV3__v3 // TODO: Is this sample path correct?
- * @param {*} taskNuspecPath Path to existing Nuspec file. e.g - _package\per-task-layout\AzureCLIV1__v1\Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1.nuspec
- * @param {*} taskLayoutPath Path where task contents are layed out on disk. e.g - _package\per-task-layout\AzurePowerShellV3__v3 // TODO: Is this sample path correct?
- * @returns Publish folder for the task. e.g - _package\per-task-publish\AzurePowerShellV3__v3 // TODO: Is this sample path correct?
+ * @param {*} publishPath Root path to publish tasks.
+ * @param {*} taskFolderName Folder name for the task we want to create a NuGet package for. e.g - AzurePowerShellV3
+ * @param {*} taskNuspecPath Path to existing Nuspec file. This is inside the layout folder for the task. e.g - _package\per-task-layout\AzureCLIV1\Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1.nuspec
+ * @param {*} taskLayoutPath Path where contents of a specific task are laid out on disk.
+ * @returns Publish folder for the task.
  */
 var createNuGetPackage = function (publishPath, taskFolderName, taskNuspecPath, taskLayoutPath) {
     console.log('> Creating nuget package for task ' + taskFolderName);
@@ -1412,8 +1411,8 @@ var createNuGetPackage = function (publishPath, taskFolderName, taskNuspecPath, 
 
 /**
  * Create push.cmd for the task.
- * @param {*} taskPublishFolder Folder where we are publishing tasks from. e.g - _package\per-task-publish\AzureCLIV1__v1
- * @param {*} fullTaskName Full name of the task. e.g - Mseng.MS.TF.Build.Tasks.AzureCLI
+ * @param {*} taskPublishFolder Folder for a specific task within the publish folder.
+ * @param {*} fullTaskName Full name of the task. e.g - Mseng.MS.TF.Build.Tasks.AzureCLIV1
  * @param {*} taskVersion Version of the task. e.g - 1.132.0
  */
 var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
@@ -1422,13 +1421,9 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
     var taskPushCmdPath = path.join(taskPublishFolder, 'push.cmd');
     var nupkgName = `${fullTaskName}.${taskVersion}.nupkg`;
 
-    // TODO: I think we just need to rename this, the name is not accurate. It's the tasks feed url that we happen to push the aggregate to. It's not a specific link for the aggregate.
-    var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL; // Need the task feed per task. This is based on task name from task.json too? Can we append based on name?
+    var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
     var apiKey = 'Skyrise';
 
-    var taskFeedUrl = "http://localhost:44396/nuget";
-    var apiKey = '123456';
-    
     fs.writeFileSync(taskPushCmdPath, `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`);
 }
 
