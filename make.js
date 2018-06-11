@@ -486,6 +486,7 @@ target.layout = function() {
     var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
 
     console.log('layout path: ' + layoutPath);
+    // TODO: What is the layout path when running in CI?
     util.createNugetPackagePerTask(packagePath, layoutPath);
 
     // These methods are to help with the migration to NuGet package per task.

@@ -1210,49 +1210,29 @@ var createNonAggregatedZip = function (buildPath, packagePath) {
 }
 exports.createNonAggregatedZip = createNonAggregatedZip;
 
-// TODO: Update all these comments considering changes for running locally.
 // Overview:
 // 
-// This script starts with having a folder per task with the content for each task inside(comes from combining the slices).
-// First we need to copy this to a per-task-layout folder.
-// We start by adding a .nuspec file for each task inside the task folder.
-// Then we iterate each of these tasks and create a .nupkg and push.cmd per task.
-// The pushed artifact has a folder per task that was built and inside that folder is a .nupkg and push.cmd for the task.
+// Create a NuGet package per task. This function assumes the tasks are already laid out on disk.
 // 
-// Folder structure: TODO, add examples at each stage
-
-// Stage 1: Build tasks
-
-// Stage 2: Create non aggregated zip
-
-// Stage 3: Zip entire task contents to FULL TASK NAME.zip
-
-// Stage 4: Create nuspec files
-
-// Stage 5: Create nuget packages and push.cmd and push-all.cmd
-
-
-// TODO: Redo this for new path structure that works both locally and on server
-// _package
-//  /per-task-layout (util.perTaskLayoutPath)
-//      /CmdLineV2__v2 // Keep "__v2" until everyone has version in their task name.
-//          /Strings
-//          /task.json
-//          /task.loc.json
-//          /task.zip
-//          /Mseng.MS.TF.DistributedTask.Tasks.CmdLineV2__v2.nuspec *created in this script
+// When running locally, layoutPath is something like: _package\non-aggregated-layout
+// Within this folder we have one of these folders per task:
+//  /CmdLineV2
+//      /Strings
+//      /task.json
+//      /task.loc.json
+//      /task.zip
 // 
-//  /per-task-publish (util.perTaskPublishPath)
-//      /CmdLineV2__v2 //  Keep "__v2" until everyone has version in their task name.
-//          Mseng.MS.TF.DistributedTask.Tasks.CmdLine.2.132.0.nupkg * created in this script
-//          push.cmd * created in this script
-//      push-all.cmd (courtesy script that runs all push.cmds, we will run this once a sprint and force a build all) TODO: Create this.
-// 
-// Notes:
-// 
-// Currently the code works within the legacy setup of having multiple slices that are pushed as artifacts and then recombined.
-// Once this code is live for a while we will remove that legacy code and it should simplify the setup here. We can use the original 
-//    build folders for each task in place of the per-task-layout.
+// Within the function we create an artifacts folder, this is what gets uploaded when we are done.
+// The contents look something like:
+//  /AndroidSigningV2
+//      /Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2.2.135.0.nupkg
+//      /push.cmd
+//  /AnotherTask
+//      /Mseng.MS.TF.DistributedTask.Tasks.AnotherTaskV1.1.0.0.nupkg
+//      /push.cmd
+// push.cmd * Root push.cmd that runs all nested push.cmd's.
+// servicing.xml * Convenience file. Generates all XML to update servicing configuration for tasks.
+// unified_deps.xml * Convenience file. Generates all XML to update unified dependencies file.
 var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath*/layoutPath) {
     console.log();
     console.log('> Creating NuGet package per task')
@@ -1288,10 +1268,9 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
                 return;
             }
 
-            // TODO: I think we can get rid of this.
-            // if (taskFolderName === 'layout-version.txt') { // TODO: Clean this up. Make sure we have layout-version in each task nuget package? I think we need it? Is it applicable in nuget package per task setup?
-            //     return;
-            // }
+            if (taskFolderName === 'layout-version.txt') { // TODO: Clean this up. Make sure we have layout-version in each task nuget package? I think we need it? Is it applicable in nuget package per task setup?
+                return;
+            }
 
             var taskJsonPath = path.join(taskLayoutPath, 'task.json');
             var taskJsonContents = JSON.parse(fs.readFileSync(taskJsonPath));
@@ -1324,17 +1303,9 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
         });
 
-    // Create root push.cmd
-    // This lets us run one script to execute all nested push.cmd's. This is a courtesy that we do every sprint.
     console.log();
     console.log('> Creating root push.cmd')
-    var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
-    contents +=     'pushd %%s' + os.EOL;
-    contents +=     'push.cmd' + os.EOL;
-    contents +=     'popd' + os.EOL;
-    contents += ')';
-    var rootPushCmdPath = path.join(artifactsPath, 'push.cmd');
-    fs.writeFileSync(rootPushCmdPath, contents);
+    createRootPushCmd(artifactsPath);
 
     // Write file that has XML for unified dependencies, makes it easier to setup that file.
     console.log('> Generating XML dependencies for UnifiedDependencies');
@@ -1348,14 +1319,26 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
 }
 exports.createNugetPackagePerTask = createNugetPackagePerTask;
 
-// Create xml content for servicing.
-// <Directory Path="[ServicingDir]Tasks\Individual\AndroidSigningV2\">
-//   <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2/*" />
-// </Directory>
+/**
+ * Create push.cmd at root of the artifacts path.
+ * 
+ * This makes it easier to run all the nested push.cmds within the task folders.
+ * @param {*} artifactsPath 
+ */
+var createRootPushCmd = function (artifactsPath) {
+    var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
+    contents +=     'pushd %%s' + os.EOL;
+    contents +=     'push.cmd' + os.EOL;
+    contents +=     'popd' + os.EOL;
+    contents += ')';
+    var rootPushCmdPath = path.join(artifactsPath, 'push.cmd');
+    fs.writeFileSync(rootPushCmdPath, contents);
+}
 
 /**
  * Create xml content for servicing.
  * 
+ * e.g. - 
  * <Directory Path="[ServicingDir]Tasks\Individual\AndroidSigningV2\">
  *   <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2/*" />
  * </Directory>
@@ -1376,6 +1359,7 @@ var getServicingXmlContent = function (taskFolderName, fullTaskName, taskVersion
 
 /**
  * Create .nuspec file for a task.
+ * 
  * @param {*} taskLayoutPath Layout path for the specific task we are creating nuspec for. e.g. - _package\per-task-layout\AzurePowerShellV3__v3
  * @param {*} fullTaskName Full name of the task. e.g - AzureCLIV2
  * @param {*} taskVersion taskVersion Version of the task. e.g - 1.132.0
