@@ -1223,15 +1223,16 @@ exports.createNonAggregatedZip = createNonAggregatedZip;
  * 
  * Within the function we create an artifacts folder, this is what gets uploaded when we are done.
  * The contents look something like:
- * /AndroidSigningV2
+ * /artifacts
+ *  /AndroidSigningV2
  *      /Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2.2.135.0.nupkg
  *      /push.cmd
  *  /AnotherTask
  *      /Mseng.MS.TF.DistributedTask.Tasks.AnotherTaskV1.1.0.0.nupkg
- *     /push.cmd
- * push.cmd * Root push.cmd that runs all nested push.cmd's.
- * servicing.xml * Convenience file. Generates all XML to update servicing configuration for tasks.
- * unified_deps.xml * Convenience file. Generates all XML to update unified dependencies file.
+ *      /push.cmd
+ *  /push.cmd * Root push.cmd that runs all nested push.cmd's.
+ *  /servicing.xml * Convenience file. Generates all XML to update servicing configuration for tasks.
+ *  /unified_deps.xml * Convenience file. Generates all XML to update unified dependencies file.
  * 
  * @param {*} packagePath Path of _packages folder.
  * @param {*} layoutPath Path that has task layouts.
@@ -1293,7 +1294,7 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             mkdir('-p', taskZipPath);
             console.log('root task folder: ' + taskZipPath);
 
-            // TOOD: This is probably slow. Check other code to do hard sync?
+            // TOOD: This is probably slow. Maybe look into a way to do it faster.
             fs.copyFileSync(path.join(taskLayoutPath, 'task.zip'), path.join(taskZipPath, 'task.zip'));
 
             // Write layout version file. This will help us if we change the structure of the individual NuGet packages in the future.
