@@ -480,19 +480,17 @@ target.testLegacy = function() {
 target.layout = function() {
     banner('Starting layout process...')
 
-    var files = getAllFiles(path.join(__dirname, '_package'));
-    files.forEach((x) => console.log(x));
 
+    // START LOCAL CONFIG
     // console.log('> Cleaning packge path');
     // rm('-Rf', packagePath);
-
     // TODO: Only need this when we run locally
     //var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
+    // END LOCAL CONFIG
+    // Note: The local section above is needed when running layout locally due to discrepancies between local build and
+    //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
     var layoutPath = path.join(packagePath, 'milestone-layout');
 
-    console.log('layout path: ' + layoutPath);
-    // TODO: What is the layout path when running in CI?
-    
     util.createNugetPackagePerTask(packagePath, layoutPath);
 
     // These methods are to help with the migration to NuGet package per task.
@@ -501,22 +499,10 @@ target.layout = function() {
     //generatePerTaskForLegacyPackages('E:\\AllTaskMajorVersions');
 }
 
-/**
- * Find all files inside a dir, recursively.
- * @function getAllFiles
- * @param  {string} dir Dir path string.
- * @return {string[]} Array with all file names that are inside the directory.
- */
-const getAllFiles = dir =>
-  fs.readdirSync(dir).reduce((files, file) => {
-    const name = path.join(dir, file);
-    const isDirectory = fs.statSync(name).isDirectory();
-    return isDirectory ? [...files, ...getAllFiles(name)] : [...files, name];
-  }, []);
-
+// Rename task folders that are created from the aggregate. Allows NuGet generation from aggregate using same process as normal.
 function renameFoldersFromAggregate(pathWithLegacyFolders) {
     // Rename folders
-    fs.readdirSync('E:\\AllTaskMajorVersions')
+    fs.readdirSync(pathWithLegacyFolders)
         .forEach(function (taskFolderName) {
             if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-1)
                 && taskFolderName.charAt(taskFolderName.length-2) === taskFolderName.charAt(taskFolderName.length-4))
@@ -536,6 +522,8 @@ function renameFoldersFromAggregate(pathWithLegacyFolders) {
         });
 }
 
+// Use the main layout process on Task folders that were extracted from the aggregate.
+// This is what we use to seed packaging with older major versions.
 function generatePerTaskForLegacyPackages(pathWithLegacyFolders) {
     // Generate NuGet package per task for legacy packages.
     var legacyPath = path.join(__dirname, '_packageLegacy');

@@ -25,7 +25,6 @@ var aggregatePackageName = 'Mseng.MS.TF.Build.Tasks';
 var aggregateNuspecPath = path.join(packagePath, 'Mseng.MS.TF.Build.Tasks.nuspec');
 var publishLayoutPath = path.join(packagePath, 'publish-layout');
 var publishPushCmdPath = path.join(packagePath, 'publish-layout', 'push.cmd');
-
 exports.buildTasksPath = buildTasksPath;
 exports.packagePath = packagePath;
 exports.tasksLayoutPath = tasksLayoutPath;
