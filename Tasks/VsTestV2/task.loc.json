@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 135,
-    "Patch": 4
+    "Minor": 137,
+    "Patch": 0
   },
   "demands": [
     "vstest"
@@ -584,6 +584,7 @@
     "MultiConfigNotSupportedWithOnDemand": "ms-resource:loc.messages.MultiConfigNotSupportedWithOnDemand",
     "disabledRerun": "ms-resource:loc.messages.disabledRerun",
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
-    "VsTestVersionEmpty": "ms-resource:loc.messages.VsTestVersionEmpty"
+    "VsTestVersionEmpty": "ms-resource:loc.messages.VsTestVersionEmpty",
+    "UserProvidedSourceFilter": "ms-resource:loc.messages.UserProvidedSourceFilter"
   }
 }
