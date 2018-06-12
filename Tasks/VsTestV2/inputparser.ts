@@ -36,6 +36,7 @@ export function parseInputsForDistributedTestRun() : idc.InputDataContract {
     inputDataContract.RunIdentifier = getRunIdentifier();
 
     logWarningForWER(tl.getBoolInput('uiTests'));
+    ci.publishEvent({ 'UiTestsOptionSelected': tl.getBoolInput('uiTests')} );
 
     return inputDataContract;
 }
