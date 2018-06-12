@@ -100,12 +100,12 @@ export class azureclitask {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
         var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-        var subscriptionName: string = tl.getEndpointDataParameter(connectedService, "SubscriptionName", true);
+        var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
         //login using svn
         this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\""));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
-        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionName + "\""));
+        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""));
     }
 
     private static logoutAzure() {
