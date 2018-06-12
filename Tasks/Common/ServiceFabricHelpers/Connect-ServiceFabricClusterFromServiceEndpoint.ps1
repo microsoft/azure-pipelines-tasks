@@ -33,8 +33,6 @@ function Get-AadSecurityToken
     $connectResult = Connect-ServiceFabricCluster @connectionParametersWithGetMetadata
     $authority = $connectResult.AzureActiveDirectoryMetadata.Authority
     Write-Host (Get-VstsLocString -Key AadAuthority -ArgumentList $authority)
-    $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
-    Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $clusterApplicationId)
     $clientApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClientApplication
     Write-Host (Get-VstsLocString -Key ClientAppId -ArgumentList $clientApplicationId)
 
@@ -42,7 +40,6 @@ function Get-AadSecurityToken
     Add-Type -LiteralPath "$PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
     $authContext = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList @($authority)
     $authParams = $ConnectedServiceEndpoint.Auth.Parameters
-    $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
 
     try
     {
