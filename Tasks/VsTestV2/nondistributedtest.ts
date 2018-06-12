@@ -117,22 +117,6 @@ function getTestAssemblies(): string[] {
     return tl.findMatch(inputDataContract.TestSelectionSettings.SearchFolder, sourceFilter);
 }
 
-function isTestAdapterPresent(rootDirectory: string): boolean {
-    const adapterFiles = tl.findMatch(rootDirectory, '**\\*TestAdapter.dll');
-
-    if (adapterFiles && adapterFiles.length !== 0) {
-        return true;
-    }
-    return false;
-}
-
-function isEmptyResponseFile(responseFile: string): boolean {
-    if (utils.Helper.pathExistsAsFile(responseFile) && tl.stats(responseFile).size) {
-        return false;
-    }
-    return true;
-}
-
 function createTestSourcesFile(): string {
     try {
         const sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);

@@ -160,9 +160,6 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
 
         inputDataContract.TestReportingSettings.TestRunTitle = `TestRun_${definitionName}_${buildOrReleaseName}`;
     }
-
-    //inputDataContract.TestReportingSettings.TestResultDirectory = read from xml here? or in C# layer?
-
     return inputDataContract;
 }
 
