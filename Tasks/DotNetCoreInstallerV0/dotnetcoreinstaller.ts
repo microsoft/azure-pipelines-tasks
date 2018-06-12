@@ -2,7 +2,7 @@ import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as trm from 'vsts-task-lib/toolrunner';
 import * as utils from "./utilities";
-import { DotNetCoreReleaseFetcher } from "./DotnetCoreReleasesFetcher";
+import { DotNetCoreReleaseFetcher } from "./releasesfetcher";
 
 import * as os from 'os';
 import * as path from 'path';
@@ -104,10 +104,10 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
     }
 
     console.log(taskLib.loc("GettingDownloadUrl", packageType, version));
-    let downloadUrl = await new DotNetCoreReleaseFetcher().getDownloadUrl(platforms, version, packageType);
-    let downloadPath: string;
+    try {
+        let downloadUrl = await new DotNetCoreReleaseFetcher().getDownloadUrl(platforms, version, packageType);
+        let downloadPath: string;
 
-    if (!!downloadUrl) {
         console.log(taskLib.loc("DownloadingUrl", downloadUrl));
         downloadPath = await toolLib.downloadTool(downloadUrl);
 
@@ -128,6 +128,9 @@ async function acquireDotNetCore(packageType: string, version: string): Promise<
         console.log(taskLib.loc("SuccessfullyInstalled", packageType, version));
         return cachedDir;
     }
+    catch (error) {
+        throw taskLib.loc("getDownloadUrlsFailed", JSON.stringify(error));
+    }
 }
 
 var taskManifestPath = path.join(__dirname, "task.json");
@@ -138,4 +141,4 @@ run().then((result) =>
     taskLib.setResult(taskLib.TaskResult.Succeeded, "")
 ).catch((error) =>
     taskLib.setResult(taskLib.TaskResult.Failed, !!error.message ? error.message : error)
-    );
+);

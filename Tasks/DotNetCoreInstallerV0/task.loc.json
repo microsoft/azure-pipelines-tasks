@@ -50,20 +50,19 @@
   "messages": {
     "ToolFailed": "ms-resource:loc.messages.ToolFailed",
     "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported",
-    "PrimaryUrlDownloadFailed": "ms-resource:loc.messages.PrimaryUrlDownloadFailed",
-    "LegacyUrlDownloadFailed": "ms-resource:loc.messages.LegacyUrlDownloadFailed",
-    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
-    "getDownloadUrlsFailed": "ms-resource:loc.messages.getDownloadUrlsFailed",
+    "getMachinePlatformFailed": "ms-resource:loc.messages.getMachinePlatformFailed",
     "UsingCachedTool": "ms-resource:loc.messages.UsingCachedTool",
     "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
     "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
-    "GettingDownloadUrls": "ms-resource:loc.messages.GettingDownloadUrls",
+    "GettingDownloadUrl": "ms-resource:loc.messages.GettingDownloadUrl",
     "NullDownloadUrls": "ms-resource:loc.messages.NullDownloadUrls",
-    "DownloadingPrimaryUrl": "ms-resource:loc.messages.DownloadingPrimaryUrl",
-    "DownloadingSecondaryUrl": "ms-resource:loc.messages.DownloadingSecondaryUrl",
+    "DownloadingUrl": "ms-resource:loc.messages.DownloadingUrl",
     "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
     "CachingTool": "ms-resource:loc.messages.CachingTool",
     "SuccessfullyInstalled": "ms-resource:loc.messages.SuccessfullyInstalled",
-    "ToolToInstall": "ms-resource:loc.messages.ToolToInstall"
+    "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
+    "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
+    "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
+    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"
   }
 }

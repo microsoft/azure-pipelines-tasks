@@ -45,6 +45,12 @@ tr.registerMock('./utilities', {
     }
 });
 
+tr.registerMock('./releasesfetcher', {
+    getDownloadUrl : function() {
+        return "https://primary-runtime-url";
+    }
+});
+
 process.env["MOCK_NORMALIZE_SLASHES"] = "true";
 tr.setAnswers(a);
 
