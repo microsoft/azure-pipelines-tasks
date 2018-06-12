@@ -38,16 +38,22 @@ export class KuduServiceUtility {
         }
     }
 
-    public async runPostDeploymentScript(taskParams: TaskParameters, directoryPath?: string): Promise<void> {
-        try {
-            directoryPath = (!!directoryPath) ? directoryPath : physicalRootPath.substring(1);
+    public async runPostDeploymentScript(taskParams: TaskParameters, directoryPath?: string): Promise<void> {  
+        try {      
+            var uniqueID = this.getDeploymentID();
+            var createNewFolder = false;
+            var appOfflineDirectoryPath = directoryPath;
+            if(!directoryPath) {                
+                appOfflineDirectoryPath = physicalRootPath.substring(1);
+                directoryPath = path.join(physicalRootPath.substring(1), '..', 'VSTS_PostDeployment_' + uniqueID);
+                createNewFolder = true;
+            }
 
             if(taskParams.TakeAppOfflineFlag) {
-                await this._appOfflineKuduService(directoryPath, true);
+                await this._appOfflineKuduService(appOfflineDirectoryPath, true);
             }
 
             var scriptFile = this._getPostDeploymentScript(taskParams.ScriptType, taskParams.InlineScript, taskParams.ScriptPath, taskParams.isLinuxApp);
-            var uniqueID = this.getDeploymentID();
             var fileExtension : string = taskParams.isLinuxApp ? '.sh' : '.cmd';
             var mainCmdFilePath = path.join(__dirname, '..', 'postDeploymentScript', 'mainCmdFile' + fileExtension);
             await this._appServiceKuduService.uploadFile(directoryPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
@@ -75,12 +81,15 @@ export class KuduServiceUtility {
             try {
                 await this._appServiceKuduService.uploadFile(directoryPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
                 await this.runCommand(directoryPath, 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
+                if(createNewFolder) {
+                    await this._appServiceKuduService.deleteFolder(directoryPath);
+                }
             }
             catch(error) {
                 tl.debug('Unable to delete log files : ' + error);
             }
             if(taskParams.TakeAppOfflineFlag) {
-                await this._appOfflineKuduService(directoryPath, false);
+                await this._appOfflineKuduService(appOfflineDirectoryPath, false);
             }
         }
     }
