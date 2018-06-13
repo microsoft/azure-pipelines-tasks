@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Java Tool Installer",
-  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer?view=vsts)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875287)",
   "loc.description": "Acquires a specific version of Java from a user supplied Azure blob or the tools cache and sets JAVA_HOME. Use this task to change the version of Java used in Java tasks.",
   "loc.instanceNameFormat": "Use Java $(versionSpec)",
   "loc.group.displayName.JavaInAzureGroup": "Download Java from an Azure blob",
