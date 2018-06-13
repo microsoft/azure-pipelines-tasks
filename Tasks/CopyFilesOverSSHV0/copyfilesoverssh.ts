@@ -163,7 +163,7 @@ async function run() {
             throw tl.loc('SourceNotFolder');
         }
 
-        // initialize the SSH helpers, setup the connection
+        // initialize the SSH helpers, set up the connection
         sshHelper = new SshHelper(sshConfig);
         await sshHelper.setupConnection();
 
