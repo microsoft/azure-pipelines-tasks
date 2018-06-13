@@ -1,8 +1,6 @@
 import tl = require("vsts-task-lib/task");
 import msRestAzure = require('azure-arm-rest/azure-arm-common');
-
-var azureStackUtility = require ('azurestack-common/azurestackrestutility.js'); 
-var azureStackEnvironment = "AzureStack";
+import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
 
 class TokenCredentials {
     private hostUrl: string;
@@ -30,6 +28,24 @@ class TokenCredentials {
     }
 }
 
+class AgentServiceUserCredentials {
+    private userName: string;
+    private password: string;
+
+    constructor(userName: string, password: string) {
+        this.userName = userName || "";
+        this.password = password || "";
+    }
+
+    public getUserName(): string {
+        return this.userName;
+    }
+
+    public getPassword(): string {
+        return this.password;
+    }
+}
+
 export class AzureRGTaskParameters {
 
     public action: string;
@@ -51,6 +67,8 @@ export class AzureRGTaskParameters {
     public deploymentGroupProjectName = "";
     public tokenCredentials: TokenCredentials;
     public deploymentOutputs: string;
+    public agentServiceUserCredentials: AgentServiceUserCredentials;
+    public runAgentServiceAsUser: boolean;
 
     private getVSTSPatToken(deploymentGroupEndpointName: string): TokenCredentials {
         var endpointAuth = tl.getEndpointAuthorization(deploymentGroupEndpointName, true);
@@ -75,37 +93,8 @@ export class AzureRGTaskParameters {
     }
 
     private async getARMCredentials(connectedService: string): Promise<msRestAzure.ApplicationTokenCredentials> {
-        var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
-        var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
-        var armUrl: string = tl.getEndpointUrl(connectedService, true);
-        var envAuthorityUrl: string = tl.getEndpointDataParameter(connectedService, 'environmentAuthorityUrl', true);
-        var environment: string = tl.getEndpointDataParameter(connectedService, 'environment', true);
-        var activeDirectoryResourceId: string = tl.getEndpointDataParameter(connectedService, 'activeDirectoryServiceEndpointResourceId', true);
-        var isAzureStackEnvironment = false;
-
-        if(environment != null && environment.toLowerCase() == azureStackEnvironment.toLowerCase()) {
-            isAzureStackEnvironment = true;
-            if(!envAuthorityUrl || !activeDirectoryResourceId) {
-                var endPoint =  await azureStackUtility.initializeAzureStackData({"url":armUrl});
-                envAuthorityUrl = endPoint["environmentAuthorityUrl"];
-                activeDirectoryResourceId = endPoint["activeDirectoryServiceEndpointResourceId"];
-                
-                if(envAuthorityUrl == null) {
-                    throw tl.loc("UnableToFetchAuthorityURL");
-                }
-
-                if(activeDirectoryResourceId == null) {
-                    throw tl.loc("UnableToFetchActiveDirectory");
-                }
-            } 
-        } else {
-            envAuthorityUrl = (envAuthorityUrl != null) ? envAuthorityUrl : "https://login.windows.net/";
-            activeDirectoryResourceId = armUrl;
-        }
-
-        var credentials = new msRestAzure.ApplicationTokenCredentials(servicePrincipalId, tenantId, servicePrincipalKey, armUrl, envAuthorityUrl, activeDirectoryResourceId, isAzureStackEnvironment);
-        return credentials;
+        var azureEndpoint = await new AzureRMEndpoint(connectedService).getEndpoint();
+        return azureEndpoint.applicationTokenCredentials;
     }
 
     public async getAzureRGTaskParameters() : Promise<AzureRGTaskParameters> 
@@ -134,6 +123,14 @@ export class AzureRGTaskParameters {
             if(deploymentGroupEndpointName){
                 this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
             }
+            this.runAgentServiceAsUser = tl.getBoolInput("runAgentServiceAsUser");
+            var userName = tl.getInput("userName");
+            if(this.runAgentServiceAsUser && !userName){
+                throw tl.loc("UserNameCannotBeNull");
+            }
+            var password = tl.getInput("password");
+            this.agentServiceUserCredentials = new AgentServiceUserCredentials(userName, password);
+            
             this.outputVariable = tl.getInput("outputVariable");
             this.deploymentMode = tl.getInput("deploymentMode");
             this.credentials = await this.getARMCredentials(connectedService);

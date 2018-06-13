@@ -714,7 +714,11 @@ var createResjson = function (task, taskPath) {
 
     var resjsonPath = path.join(taskPath, 'Strings', 'resources.resjson', 'en-US', 'resources.resjson');
     mkdir('-p', path.dirname(resjsonPath));
-    fs.writeFileSync(resjsonPath, JSON.stringify(resources, null, 2));
+    var resjsonContent = JSON.stringify(resources, null, 2);
+    if (process.platform == 'win32') {
+        resjsonContent = resjsonContent.replace(/\n/g, os.EOL);
+    }
+    fs.writeFileSync(resjsonPath, resjsonContent);
 };
 exports.createResjson = createResjson;
 
@@ -755,7 +759,11 @@ var createTaskLocJson = function (taskPath) {
         });
     }
 
-    fs.writeFileSync(path.join(taskPath, 'task.loc.json'), JSON.stringify(taskLoc, null, 2));
+    var taskLocContent = JSON.stringify(taskLoc, null, 2);
+    if (process.platform == 'win32') {
+        taskLocContent = taskLocContent.replace(/\n/g, os.EOL);
+    }
+    fs.writeFileSync(path.join(taskPath, 'task.loc.json'), taskLocContent);
 };
 exports.createTaskLocJson = createTaskLocJson;
 
@@ -899,9 +907,6 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
 
 var getTaskYaml = function(taskJson) {
     var taskYaml = '';
-
-    ///taskYaml += '::: moniker range="vsts"' + os.EOL + os.EOL;
-    taskYaml += '## YAML snippet' + os.EOL + os.EOL;
     taskYaml += '```YAML' + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
     taskYaml += '# ' + cleanString(taskJson.description) + os.EOL;
@@ -969,10 +974,7 @@ var getTaskYaml = function(taskJson) {
     });
 
     // Append endings
-    taskYaml += '```' + os.EOL;// + os.EOL;
-    //taskYaml += '::: moniker-end' + os.EOL + os.EOL;
-    //taskYaml += '::: moniker range="< vsts"' + os.EOL + os.EOL;
-    //taskYaml += '::: moniker-end' + os.EOL;
+    taskYaml += '```' + os.EOL;
 
     return taskYaml;
 };

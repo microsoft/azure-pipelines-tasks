@@ -7,12 +7,12 @@ import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
+taskRunner.setInput('createCustomEnvironment', 'true');
 taskRunner.setInput('environmentName', 'test');
 
 // Mock vsts-task-lib
 taskRunner.setAnswers({
     which: {
-        // 'conda': path.join('/', 'miniconda', 'bin', 'conda')
         'conda': '/miniconda/bin/conda'
     },
     exec: {

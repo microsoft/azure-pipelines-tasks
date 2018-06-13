@@ -484,6 +484,9 @@
       "target": "testSuite",
       "endpointId": "tfs:teamfoundation",
       "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?$asTreeView=true&api-version=3.0-preview.2",
+      "parameters": {
+        "testPlan": "$(testPlan)"
+      },
       "resultSelector": "jsonpath:$.value[*]"
     }
   ],

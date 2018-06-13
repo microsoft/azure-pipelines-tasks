@@ -1,7 +1,5 @@
-//import toolLib = require('vsts-task-tool-lib/tool');
-//import taskLib = require('vsts-task-lib/task');
-import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as taskLib from 'vsts-task-lib/task';
+import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
 import * as os from 'os';
 import * as path from 'path';
@@ -159,8 +157,8 @@ async function acquireNode(version: string): Promise<string> {
             throw new Error('Expected Agent.TempDirectory to be set');
         }
 
-        extPath = path.join(extPath, 'n'); // use as short a path as possible due to nested node_modules folders
-        extPath = await toolLib.extract7z(downloadPath, extPath);
+        let _7zPath = path.join(__dirname, '7zr.exe');
+        extPath = await toolLib.extract7z(downloadPath, extPath, _7zPath);
     }
     else {
         extPath = await toolLib.extractTar(downloadPath);

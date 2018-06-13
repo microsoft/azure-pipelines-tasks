@@ -2,39 +2,39 @@
 # Build, test, and archive an Xcode workspace on macOS.
 # https://aka.ms/yaml
 
-queue: 'Hosted macOS Preview'
+queue: 'Hosted macOS'
 steps:
 
-#- task: InstallAppleCertificate@1
-#  inputs:
-#    certSecureFile: ''
-#    certPwd: '$(P12password)'
+#  - task: InstallAppleCertificate@1
+#    inputs:
+#      certSecureFile: ''
+#      certPwd: '$(P12password)'
 
-#- task: InstallAppleProvisioningProfile@1
-#  inputs:
-#    provProfileSecureFile: ''
+#  - task: InstallAppleProvisioningProfile@1
+#    inputs:
+#      provProfileSecureFile: ''
 
-#- task: Xcode@4
-#  inputs:
-#    actions: 'test'
-#    configuration: 'Debug'
-#    scheme: ''
-#    sdk: 'iphonesimulator'
-#    publishJUnitResults: 'true'
+#  - task: Xcode@4
+#    inputs:
+#      actions: 'test'
+#      configuration: 'Debug'
+#      scheme: ''
+#      sdk: 'iphonesimulator'
+#      publishJUnitResults: 'true'
 
-- task: Xcode@4
-  inputs:
-    configuration: 'Release'
-    scheme: ''
-    sdk: 'iphoneos'
+  - task: Xcode@4
+    inputs:
+      configuration: 'Release'
+      scheme: ''
+      sdk: 'iphoneos'
 
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.ipa'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+#  - task: CopyFiles@2
+#    inputs:
+#      contents: '**/*.ipa'
+#      targetFolder: '$(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1
 
 # Next steps:
-# Test apps on real devices with the App Center Test task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterTest
-# Distribute apps to testers and users with the App Center Distribute task: https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AppCenterDistribute
+# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest
+# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/build-release/tasks/deploy/appcenterdistribute
 # Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store

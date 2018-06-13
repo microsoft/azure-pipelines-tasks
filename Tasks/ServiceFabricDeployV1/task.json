@@ -1,0 +1,465 @@
+{
+    "id": "c6650aa0-185b-11e6-a47d-df93e7a34c64",
+    "name": "ServiceFabricDeploy",
+    "friendlyName": "Service Fabric Application Deployment",
+    "description": "Deploy a Service Fabric application to a cluster.",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820528)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 7,
+        "Patch": 12
+    },
+    "demands": [
+        "Cmd"
+    ],
+    "minimumAgentVersion": "1.95.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Settings",
+            "isExpanded": false
+        },
+        {
+            "name": "upgrade",
+            "displayName": "Upgrade Settings",
+            "isExpanded": false
+        },
+        {
+            "name": "docker",
+            "displayName": "Docker Settings",
+            "isExpanded": false
+        }
+    ],
+    "instanceNameFormat": "Deploy Service Fabric Application",
+    "inputs": [
+        {
+            "name": "applicationPackagePath",
+            "type": "filePath",
+            "label": "Application Package",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to the application package that is to be deployed. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+        },
+        {
+            "name": "serviceConnectionName",
+            "type": "connectedService:servicefabric",
+            "label": "Cluster Connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select an Azure Service Fabric service endpoint to be used to connect to the cluster. The settings defined in this referenced endpoint will override those defined in the publish profile. Choose 'Manage' to register a new endpoint."
+        },
+        {
+            "name": "publishProfilePath",
+            "type": "filePath",
+            "label": "Publish Profile",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to the publish profile file that defines the settings to use. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+        },
+        {
+            "name": "applicationParameterPath",
+            "type": "filePath",
+            "label": "Application Parameters",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to the application parameters file. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path. If specified, this will override the value in the publish profile."
+        },
+        {
+            "name": "overrideApplicationParameter",
+            "type": "boolean",
+            "label": "Override Application Parameters",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'Parameter Name' entries in the application manifest file. \n Example: If your application has a parameter defined as below. \n <Parameters> \n <Parameter Name=\"SampleApp_PartitionCount\" Value=\"1\" /> \n <Parameter Name=\"SampleApp_InstanceCount\" DefaultValue=\"-1\" /> \n </Parameters> \n and you want to change the partition count to 2, you can define a release definition or an environment variable \"SampleApp_PartitionCount\" and its value as \"2\". \n\n Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables."
+        },
+        {
+            "name": "compressPackage",
+            "type": "boolean",
+            "label": "Compress Package",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "advanced",
+            "helpMarkDown": "Indicates whether the application package should be compressed before copying to the image store. If enabled, this will override the value in the publish profile."
+        },
+        {
+            "name": "copyPackageTimeoutSec",
+            "type": "string",
+            "label": "CopyPackageTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "advanced",
+            "helpMarkDown": "Timeout in seconds for copying application package to image store. If specified, this will override the value in the publish profile."
+        },
+        {
+            "name": "registerPackageTimeoutSec",
+            "type": "string",
+            "label": "RegisterPackageTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "advanced",
+            "helpMarkDown": "Timeout in seconds for registering or un-registering application package."
+        },
+        {
+            "name": "overwriteBehavior",
+            "type": "pickList",
+            "label": "Overwrite Behavior",
+            "defaultValue": "SameAppTypeAndVersion",
+            "required": true,
+            "options": {
+                "Always": "Always",
+                "Never": "Never",
+                "SameAppTypeAndVersion": "SameAppTypeAndVersion"
+            },
+            "groupname": "advanced",
+            "helpMarkDown": "Overwrite Behavior if an application exists in the cluster with the same name, and upgrades have not been configured."
+        },
+        {
+            "name": "skipUpgradeSameTypeAndVersion",
+            "type": "boolean",
+            "label": "Skip upgrade for same Type and Version",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "advanced",
+            "helpMarkDown": "Indicates whether an upgrade will be skipped if the same application type and version already exists in the cluster, otherwise the upgrade fails during validation. If enabled, re-deployments are idempotent."
+        },
+        {
+            "name": "skipPackageValidation",
+            "type": "boolean",
+            "label": "Skip package validation",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "advanced",
+            "helpMarkDown": "Indicates whether the package should be validated or not before deployment."
+        },
+        {
+            "name": "useDiffPackage",
+            "type": "boolean",
+            "label": "Use Diff Package",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "upgrade",
+            "helpMarkDown": "Upgrade by using a diff package that contains only the updated application files, the updated application manifest, and the service manifest files."
+        },
+        {
+            "name": "overridePublishProfileSettings",
+            "type": "boolean",
+            "label": "Override All Publish Profile Upgrade Settings",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "upgrade",
+            "helpMarkDown": "This will override all upgrade settings with either the values specified below or the default value if not specified."
+        },
+        {
+            "name": "isUpgrade",
+            "type": "boolean",
+            "label": "Upgrade the Application",
+            "defaultValue": "true",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true"
+        },
+        {
+            "name": "unregisterUnusedVersions",
+            "type": "boolean",
+            "label": "Unregister Unused Versions",
+            "defaultValue": "true",
+            "required": false,
+            "groupname": "upgrade",
+            "helpMarkDown": "Indicates whether all unused versions of the application type will be removed after an upgrade."
+        },
+        {
+            "name": "upgradeMode",
+            "type": "pickList",
+            "label": "Upgrade Mode",
+            "defaultValue": "Monitored",
+            "required": true,
+            "options": {
+                "Monitored": "Monitored",
+                "UnmonitoredAuto": "UnmonitoredAuto",
+                "UnmonitoredManual": "UnmonitoredManual"
+            },
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "FailureAction",
+            "type": "pickList",
+            "label": "FailureAction",
+            "defaultValue": "Rollback",
+            "required": true,
+            "options": {
+                "Rollback": "Rollback",
+                "Manual": "Manual"
+            },
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "UpgradeReplicaSetCheckTimeoutSec",
+            "type": "string",
+            "label": "UpgradeReplicaSetCheckTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "ReplicaQuorumTimeoutSec",
+            "type": "string",
+            "label": "ReplicaQuorumTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "TimeoutSec",
+            "type": "string",
+            "label": "TimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "ForceRestart",
+            "type": "boolean",
+            "label": "ForceRestart",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
+        },
+        {
+            "name": "HealthCheckRetryTimeoutSec",
+            "type": "string",
+            "label": "HealthCheckRetryTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "HealthCheckWaitDurationSec",
+            "type": "string",
+            "label": "HealthCheckWaitDurationSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "HealthCheckStableDurationSec",
+            "type": "string",
+            "label": "HealthCheckStableDurationSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "UpgradeDomainTimeoutSec",
+            "type": "string",
+            "label": "UpgradeDomainTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "ConsiderWarningAsError",
+            "type": "boolean",
+            "label": "ConsiderWarningAsError",
+            "defaultValue": "false",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "DefaultServiceTypeHealthPolicy",
+            "type": "string",
+            "label": "DefaultServiceTypeHealthPolicy",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "MaxPercentUnhealthyDeployedApplications",
+            "type": "string",
+            "label": "MaxPercentUnhealthyDeployedApplications",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "UpgradeTimeoutSec",
+            "type": "string",
+            "label": "UpgradeTimeoutSec",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "ServiceTypeHealthPolicyMap",
+            "type": "string",
+            "label": "ServiceTypeHealthPolicyMap",
+            "defaultValue": "",
+            "required": false,
+            "groupname": "upgrade",
+            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true && upgradeMode = Monitored"
+        },
+        {
+            "name": "configureDockerSettings",
+            "type": "boolean",
+            "label": "Configure Docker settings",
+            "defaultValue": "false",
+            "helpMarkDown": "Configures the application with the specified Docker settings.",
+            "groupname": "docker"
+        },
+        {
+            "name": "registryCredentials",
+            "type": "pickList",
+            "label": "Registry Credentials Source",
+            "defaultValue": "AzureResourceManagerEndpoint",
+            "required": true,
+            "options": {
+                "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
+                "ContainerRegistryEndpoint": "Container Registry Endpoint",
+                "UsernamePassword": "Username and Password"
+            },
+            "visibleRule": "configureDockerSettings = true",
+            "groupName": "docker",
+            "helpMarkDown": "Choose how credentials for the Docker registry will be provided."
+        },
+        {
+            "name": "dockerRegistryEndpoint",
+            "aliases": [
+                "dockerRegistryConnection"
+            ],
+            "type": "connectedService:dockerregistry",
+            "label": "Docker Registry Connection",
+            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = ContainerRegistryEndpoint",
+            "required": true,
+            "groupname": "docker"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription.<br/>Note: task will try to encrypt the registry secret before transmitting it to service fabric cluster. However, it needs cluster's server certiticate to be installed on agent machine in order to do so. If certificate is not present, secret will not be encrypted.",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
+            "required": true,
+            "groupname": "docker"
+        },
+        {
+            "name": "registryUserName",
+            "type": "string",
+            "label": "Registry User Name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Username for the Docker registry",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "registryPassword",
+            "type": "string",
+            "label": "Registry Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release definition secret variable to store it.",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "passwordEncrypted",
+            "type": "boolean",
+            "label": "Password Encrypted",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+            "groupName": "docker",
+            "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
+        }
+    ],
+    "execution": {
+        "PowerShell3": {
+            "target": "deploy.ps1"
+        }
+    },
+    "messages": {
+        "DIFFPKG_ApplicationDoesNotExist": "The application {0} to be upgraded by using diff package does not exist in the cluster {1}. Applying full application packge to do the deployment now...",
+        "DIFFPKG_ApplicationIsNotChanged": "The application {0} to be upgraded by using diff package has the same version {1} running in the cluster {2}. Skip upgrading it.",
+        "DIFFPKG_CopyingToDiffPackge": "Copying {0} from full application package to {1} in diff package...",
+        "DIFFPKG_CreatingDiffPackage": "Trying to create diff package...",
+        "DIFFPKG_CreatingDiffPackageForService": "Creating diff package for service: {0}, clusterServiceManifest.Version: {1}, localServiceManifest.Version: {2}",
+        "DIFFPKG_NoServicesRunning": "No services of application {0} are running in the cluster {1}. Applying full application package to do the deployment now...",
+        "DIFFPKG_PackageDoesNotExist": "The package {0} does not exist in the full application package. Skip copying it to diff package.",
+        "DIFFPKG_ServiceDoesNotExist": "The service {0} of application {1} to be upgraded by using diff package does not exist in the cluster {2}. Copying it to diff package now...",
+        "DIFFPKG_ServiceIsNotChanged": "The service {0} of application {1} to be upgraded by using diff package has the same version {2} running in the cluster {3}. Skip upgrading it.",
+        "DIFFPKG_TestAppPkgFailed": "Testing application package failed before creating diff package. Skip creating diff package.",
+        "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
+        "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
+        "SearchingForPath": "Searching for path: {0}",
+        "FoundPath": "Found path: {0}",
+        "PathDoesNotExist": "Path '{0}' does not exist.",
+        "EmptyApplicationName": "Application name should be a non-empty string",
+        "ServiceEndpointUpgradeWarning": "Your deploy task has been upgraded to a new version with possible breaking changes. The Cluster Endpoint defined in your service endpoint was previously ignored, but will now override the value in the publish profile. Verify the endpoint is correct and prefixed with 'https://'. In addition, a Server Certificate Thumbprint field has been added to the service endpoint and will also override the publish profile value. Your service endpoint may not have been updated to allow specifying the Server Certificate Thumbprint, in which case we will still use the value from the publish profile and you should try again soon.",
+        "OverrideApplicationParameterFile": "Overriding application parameter file specified in publish profile with '{0}' specified in the VSTS task.",
+        "OverrideUpgradeSettings": "Overriding upgrade settings specified in publish profile with the settings specified in the VSTS Task.",
+        "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the endpoint or a publish profile must be specified in the VSTS task.",
+        "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the VSTS task.",
+        "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the VSTS task.",
+        "UnsupportedDockerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
+        "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
+        "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
+        "SFSDK_UnableToVerifyClusterConnection": "Unable to verify connection to Service Fabric cluster.",
+        "SFSDK_UnableToReadAppTypeAndVersion": "Unable to read application type and version from application manifest file.",
+        "SFSDK_AppAlreadyExistsError": "An application with name '{0}' already exists, its type is '{1}' and version is '{2}'. You must first remove the existing application before a new application can be deployed or provide a new name for the application.",
+        "SFSDK_AppAlreadyExistsInfo": "An application with name '{0}' already exists in the cluster with application type '{1}' and version '{2}'. Removing it.",
+        "SFSDK_UnregisteringExistingAppType": "Application type '{0}' and version '{1}' was already registered with the cluster, unregistering it...",
+        "SFSDK_SkipUnregisteringExistingAppType": "Application type '{0}' and version '{1}' is already registered with the cluster and currently is in use, hence skipping unregistering Application Type",
+        "SFSDK_UnableToUnregisterAppType": "Unregistering the existing application type was unsuccessful.",
+        "SFSDK_CopyingAppToImageStore": "Copying application to image store...",
+        "SFSDK_CopyingAppToImageStoreFailed": "Copying of application package to image store failed. Cannot continue with registering the application.",
+        "SFSDK_RegisterAppType": "Registering application type...",
+        "SFSDK_RegisterAppTypeFailed": "Registration of application type failed.",
+        "SFSDK_RemoveAppPackage": "Removing application package from image store...",
+        "SFSDK_CreateApplication": "Creating application...",
+        "SFSDK_CreateApplicationFailed": "Creation of application failed.",
+        "SFSDK_CreateApplicationSuccess": "Create application succeeded.",
+        "SFSDK_AppDoesNotExist": "Application '{0}' doesn't exist in cluster.",
+        "SFSDK_AppTypeMismatch": "Application type of application '{0}' doesn't match the application type in the application manifest of the new application package. Please ensure that the application being upgraded has the same application type.",
+        "SFSDK_UpgradeInProgressError": "An upgrade for the application '{0}' is already in progress.",
+        "SFSDK_StartAppUpgrade": "Start upgrading application...",
+        "SFSDK_StartUpgradeFailed": "Failed to start application upgrade. Error {0}.",
+        "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Could not start upgrade sucessfully. Unregistering application type '{0}' and version '{1}'.",
+        "SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
+        "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
+        "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
+        "SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",
+        "SFSDK_UnzipPackage": "Attempting to unzip '{0}' to location '{1}'.",
+        "SFSDK_UnexpectedError": "Unexpected Error. Error details: $_.Exception.Message",
+        "SFSDK_CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
+        "SFSDK_CompressPackageWarning": "The CompressPackage parameter requires version '2.5' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
+        "SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster.",
+        "SFSDK_UnregisterAppTypeFailed": "Failed to unregister application type. Error: {0}."
+    }
+}

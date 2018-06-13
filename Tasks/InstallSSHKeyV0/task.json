@@ -3,17 +3,16 @@
     "name": "InstallSSHKey",
     "friendlyName": "Install SSH Key",
     "description": "Install an SSH key prior to a build or release",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
     "category": "Utility",
     "visibility": [
         "Build",
         "Release"
     ],
-    "preview": true,
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 119,
+        "Minor": 137,
         "Patch": 0
     },
     "runsOn": [

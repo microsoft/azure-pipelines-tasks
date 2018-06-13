@@ -272,7 +272,7 @@
             "type": "boolean",
             "label": "No-op if no Docker Compose File",
             "defaultValue": "false",
-            "helpMarkDown": "If the Docker Compose file does not exist, skip this step. This is useful when the step offers optional behavior based on the existence of a Docker Compose file in the repository.",
+            "helpMarkDown": "If the Docker Compose file does not exist, skip this task. This is useful when the task offers optional behavior based on the existence of a Docker Compose file in the repository.",
             "groupName": "advanced"
         },
         {

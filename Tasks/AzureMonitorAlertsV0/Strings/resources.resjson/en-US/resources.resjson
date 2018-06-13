@@ -26,5 +26,6 @@
   "loc.messages.CreatedRule": "Created rule : '%s'",
   "loc.messages.UpdatedRule": "Updated rule : '%s'",
   "loc.messages.Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
-  "loc.messages.SPNExpiredCheck": "Check if the SPN is valid and not expired."
+  "loc.messages.SPNExpiredCheck": "Check if the SPN is valid and not expired.",
+  "loc.messages.MSINotSupported": "Managed Service Identity(MSI) authentication is not supported for this task."
 }
