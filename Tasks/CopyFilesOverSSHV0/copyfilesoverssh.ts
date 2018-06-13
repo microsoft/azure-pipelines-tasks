@@ -10,14 +10,14 @@ import { SshHelper } from 'ssh-common/ssh-common';
 //This will be useful to put in the task-lib
 function getFilesToCopy(sourceFolder, contents: string[]): string[] {
     // include filter
-    var includeContents: string[] = [];
+    const includeContents: string[] = [];
     // exclude filter
-    var excludeContents: string[] = [];
+    const excludeContents: string[] = [];
 
-    for (let pattern of contents) {
-        pattern = pattern.trim();
-        var negate: boolean = false;
-        var numberOfNegations: number = 0;
+    // evaluate leading negations `!` on the pattern
+    for (const pattern of contents.map(x => x.trim())) {
+        let negate: boolean = false;
+        let numberOfNegations: number = 0;
         for (const c of pattern) {
             if (c === '!') {
                 negate = !negate;
@@ -29,19 +29,19 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
 
         if (negate) {
             tl.debug('exclude content pattern: ' + pattern);
-            var realPattern = pattern.substring(0, numberOfNegations) + path.join(sourceFolder, pattern.substring(numberOfNegations));
+            const realPattern = pattern.substring(0, numberOfNegations) + path.join(sourceFolder, pattern.substring(numberOfNegations));
             excludeContents.push(realPattern);
         } else {
             tl.debug('include content pattern: ' + pattern);
-            var realPattern = path.join(sourceFolder, pattern);
+            const realPattern = path.join(sourceFolder, pattern);
             includeContents.push(realPattern);
         }
     }
 
     // enumerate all files
-    var files: string[] = [];
-    var allPaths: string[] = tl.find(sourceFolder);
-    var allFiles: string[] = [];
+    let files: string[] = [];
+    const allPaths: string[] = tl.find(sourceFolder);
+    const allFiles: string[] = [];
 
     // remove folder path
     for (const p of allPaths) {
@@ -59,10 +59,10 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
         tl.debug("allFiles contains " + allFiles.length + " files");
 
         // a map to eliminate duplicates
-        var map = {};
+        const map = {};
 
         // minimatch options
-        var matchOptions = { matchBase: true, dot: true };
+        const matchOptions = { matchBase: true, dot: true };
         if (os.type().match(/^Win/)) {
             matchOptions["nocase"] = true;
         }
@@ -72,11 +72,10 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
             tl.debug('Include matching ' + pattern);
 
             // let minimatch do the actual filtering
-            var matches: string[] = tl.match(allFiles, pattern, matchOptions);
+            const matches: string[] = tl.match(allFiles, pattern, matchOptions);
 
             tl.debug('Include matched ' + matches.length + ' files');
-            for (var j: number = 0; j < matches.length; j++) {
-                var matchPath = matches[j];
+            for (const matchPath of matches) {
                 if (!map.hasOwnProperty(matchPath)) {
                     map[matchPath] = true;
                     files.push(matchPath);
@@ -89,7 +88,7 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
             tl.debug('Exclude matching ' + pattern);
 
             // let minimatch do the actual filtering
-            var matches: string[] = tl.match(files, pattern, matchOptions);
+            const matches: string[] = tl.match(files, pattern, matchOptions);
 
             tl.debug('Exclude matched ' + matches.length + ' files');
             files = [];
@@ -106,24 +105,24 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
 }
 
 async function run() {
-    var sshHelper: SshHelper;
+    let sshHelper: SshHelper;
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         //read SSH endpoint input
-        var sshEndpoint = tl.getInput('sshEndpoint', true);
-        var username: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
-        var password: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
-        var privateKey: string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
-        var hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
-        var port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
+        const sshEndpoint = tl.getInput('sshEndpoint', true);
+        const username: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
+        const password: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
+        const privateKey: string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
+        const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
+        let port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
         if (!port || port === '') {
             tl._writeLine(tl.loc('UseDefaultPort'));
             port = '22';
         }
 
         //setup the SSH connection configuration based on endpoint details
-        var sshConfig;
+        let sshConfig;
         if (privateKey && privateKey !== '') {
             tl.debug('Using private key for ssh connection.');
             sshConfig = {
@@ -145,9 +144,9 @@ async function run() {
         }
 
         // contents is a multiline input containing glob patterns
-        var contents: string[] = tl.getDelimitedInput('contents', '\n', true);
-        var sourceFolder: string = tl.getPathInput('sourceFolder', true, true);
-        var targetFolder: string = tl.getInput('targetFolder');
+        const contents: string[] = tl.getDelimitedInput('contents', '\n', true);
+        const sourceFolder: string = tl.getPathInput('sourceFolder', true, true);
+        let targetFolder: string = tl.getInput('targetFolder');
 
         if (!targetFolder) {
             targetFolder = "./";
@@ -157,10 +156,10 @@ async function run() {
         }
 
         // read the copy options
-        var cleanTargetFolder: boolean = tl.getBoolInput('cleanTargetFolder', false);
-        var overwrite: boolean = tl.getBoolInput('overwrite', false);
-        var failOnEmptySource: boolean = tl.getBoolInput('failOnEmptySource', false);
-        var flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
+        const cleanTargetFolder: boolean = tl.getBoolInput('cleanTargetFolder', false);
+        const overwrite: boolean = tl.getBoolInput('overwrite', false);
+        const failOnEmptySource: boolean = tl.getBoolInput('failOnEmptySource', false);
+        const flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 
         if (!tl.stats(sourceFolder).isDirectory()) {
             throw tl.loc('SourceNotFolder');
@@ -172,7 +171,7 @@ async function run() {
 
         if (cleanTargetFolder) {
             tl._writeLine(tl.loc('CleanTargetFolder', targetFolder));
-            var cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
+            const cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
@@ -181,8 +180,7 @@ async function run() {
         }
 
         //identify the files to copy
-        var filesToCopy: string[] = [];
-        filesToCopy = getFilesToCopy(sourceFolder, contents);
+        const filesToCopy: string[] = getFilesToCopy(sourceFolder, contents);
 
         //copy files to remote machine
         if (filesToCopy && filesToCopy.length > 0) {
@@ -195,7 +193,7 @@ async function run() {
                 try {
                     tl.debug('fileToCopy = ' + fileToCopy);
 
-                    var relativePath;
+                    let relativePath;
                     if (flattenFolders) {
                         relativePath = path.basename(fileToCopy);
                     } else {
@@ -204,11 +202,11 @@ async function run() {
                             .replace(/^\//g, "");
                     }
                     tl.debug('relativePath = ' + relativePath);
-                    var targetPath = path.posix.join(targetFolder, relativePath);
+                    const targetPath = path.posix.join(targetFolder, relativePath);
 
                     tl._writeLine(tl.loc('StartedFileCopy', fileToCopy, targetPath));
                     if (!overwrite) {
-                        var fileExists:boolean = await sshHelper.checkRemotePathExists(targetPath);
+                        const fileExists:boolean = await sshHelper.checkRemotePathExists(targetPath);
                         if (fileExists) {
                             throw tl.loc('FileExists', targetPath);
                         }
