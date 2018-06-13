@@ -191,34 +191,42 @@ async function run() {
             tl.debug('Number of files to copy = ' + filesToCopy.length);
             tl.debug('filesToCopy = ' + filesToCopy);
 
+            let failureCount = 0;
             tl._writeLine(tl.loc('CopyingFiles', filesToCopy.length));
-            var fileCopyProgress:Q.Promise<string> [] = [];
             for (var i:number = 0; i < filesToCopy.length; i++) {
-                var fileToCopy = filesToCopy[i];
-                tl.debug('fileToCopy = ' + fileToCopy);
+                try {
+                    var fileToCopy = filesToCopy[i];
+                    tl.debug('fileToCopy = ' + fileToCopy);
 
-                var relativePath;
-                if (flattenFolders) {
-                    relativePath = path.basename(fileToCopy);
-                } else {
-                    relativePath = fileToCopy.substring(sourceFolder.length)
-                        .replace(/^\\/g, "")
-                        .replace(/^\//g, "");
-                }
-                tl.debug('relativePath = ' + relativePath);
-                var targetPath = path.posix.join(targetFolder, relativePath);
-
-                tl._writeLine(tl.loc('StartedFileCopy', fileToCopy, targetPath));
-                if (!overwrite) {
-                    var fileExists:boolean = await sshHelper.checkRemotePathExists(targetPath);
-                    if (fileExists) {
-                        throw tl.loc('FileExists', targetPath);
+                    var relativePath;
+                    if (flattenFolders) {
+                        relativePath = path.basename(fileToCopy);
+                    } else {
+                        relativePath = fileToCopy.substring(sourceFolder.length)
+                            .replace(/^\\/g, "")
+                            .replace(/^\//g, "");
                     }
+                    tl.debug('relativePath = ' + relativePath);
+                    var targetPath = path.posix.join(targetFolder, relativePath);
+
+                    tl._writeLine(tl.loc('StartedFileCopy', fileToCopy, targetPath));
+                    if (!overwrite) {
+                        var fileExists:boolean = await sshHelper.checkRemotePathExists(targetPath);
+                        if (fileExists) {
+                            throw tl.loc('FileExists', targetPath);
+                        }
+                    }
+                    //looks like scp can only handle one file at a time reliably
+                    await sshHelper.uploadFile(fileToCopy, targetPath);
+                } catch (err) {
+                    tl.error(tl.loc('FailedOnFile', fileToCopy, err));
+                    failureCount++;
                 }
-                //looks like scp can only hanlde one file at a time reliably
-                await sshHelper.uploadFile(fileToCopy, targetPath);
             }
             tl._writeLine(tl.loc('CopyCompleted', filesToCopy.length));
+            if (failureCount) {
+                tl.setResult(tl.TaskResult.Failed, tl.loc('NumberFailed', failureCount));
+            }
         } else if(failOnEmptySource) {
             throw tl.loc('NothingToCopy');
         } else {
