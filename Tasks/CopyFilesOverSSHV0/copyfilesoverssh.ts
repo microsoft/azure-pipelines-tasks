@@ -2,7 +2,6 @@ import * as os from 'os';
 import * as path from 'path';
 
 import * as tl from 'vsts-task-lib/task';
-import * as sshCommon from 'ssh-common/ssh-common';
 import { SshHelper } from 'ssh-common/ssh-common';
 
 // This method will find the list of matching files for the specified contents
@@ -165,7 +164,7 @@ async function run() {
         }
 
         // initialize the SSH helpers, setup the connection
-        sshHelper = new sshCommon.SshHelper(sshConfig);
+        sshHelper = new SshHelper(sshConfig);
         await sshHelper.setupConnection();
 
         if (cleanTargetFolder) {
@@ -205,7 +204,7 @@ async function run() {
 
                     tl._writeLine(tl.loc('StartedFileCopy', fileToCopy, targetPath));
                     if (!overwrite) {
-                        const fileExists:boolean = await sshHelper.checkRemotePathExists(targetPath);
+                        const fileExists: boolean = await sshHelper.checkRemotePathExists(targetPath);
                         if (fileExists) {
                             throw tl.loc('FileExists', targetPath);
                         }
@@ -233,7 +232,6 @@ async function run() {
         if (sshHelper) {
             tl.debug('Closing the client connection');
             sshHelper.closeConnection();
-            sshHelper = null;
         }
     }
 }
