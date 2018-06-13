@@ -1,9 +1,8 @@
-import os = require('os');
-import path = require('path');
-import Q = require('q');
+import * as os from 'os';
+import * as path from 'path';
 
-import tl = require('vsts-task-lib/task');
-import sshCommon = require('ssh-common/ssh-common');
+import * as tl from 'vsts-task-lib/task';
+import * as sshCommon from 'ssh-common/ssh-common';
 import { SshHelper } from 'ssh-common/ssh-common';
 
 //This method will find the list of matching files for the specified contents
