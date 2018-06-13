@@ -1,10 +1,8 @@
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
-import * as  path from 'path';
+import * as path from 'path';
 import * as models from './models';
 import * as inputParser from './inputparser';
-import * as settingsHelper from './settingshelper';
-import * as vstestVersion from './vstestversion';
 import * as utils from './helpers';
 import * as outStream from './outputstream';
 import * as ci from './cieventlogger';
@@ -12,11 +10,8 @@ import * as testselectorinvoker from './testselectorinvoker';
 import { AreaCodes, ResultMessages } from './constants';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 import * as os from 'os';
-import * as regedit from 'regedit';
 import * as uuid from 'uuid';
 import * as fs from 'fs';
-import * as xml2js from 'xml2js';
-import * as perf from 'performance-now';
 import * as process from 'process';
 import { InputDataContract } from './inputdatacontract';
 

@@ -9,7 +9,7 @@ import { AreaCodes, ResultMessages, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
 import * as versionfinder from './versionfinder';
 import * as uuid from 'uuid';
-import * as regedit from 'regedit';
+const regedit = require('regedit');
 
 let serverBasedRun = false;
 
