@@ -5,9 +5,9 @@ import * as tl from 'vsts-task-lib/task';
 import * as sshCommon from 'ssh-common/ssh-common';
 import { SshHelper } from 'ssh-common/ssh-common';
 
-//This method will find the list of matching files for the specified contents
-//This logic is the same as the one used by CopyFiles task except for allowing dot folders to be copied
-//This will be useful to put in the task-lib
+// This method will find the list of matching files for the specified contents
+// This logic is the same as the one used by CopyFiles task except for allowing dot folders to be copied
+// This will be useful to put in the task-lib
 function getFilesToCopy(sourceFolder, contents: string[]): string[] {
     // include filter
     const includeContents: string[] = [];
@@ -108,7 +108,7 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        //read SSH endpoint input
+        // read SSH endpoint input
         const sshEndpoint = tl.getInput('sshEndpoint', true);
         const username: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
         const password: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
@@ -120,7 +120,7 @@ async function run() {
             port = '22';
         }
 
-        //setup the SSH connection configuration based on endpoint details
+        // set up the SSH connection configuration based on endpoint details
         let sshConfig;
         if (privateKey) {
             tl.debug('Using private key for ssh connection.');
@@ -132,7 +132,7 @@ async function run() {
                 passphrase: password
             }
         } else {
-            //use password
+            // use password
             tl.debug('Using username and password for ssh connection.');
             sshConfig = {
                 host: hostname,
@@ -164,7 +164,7 @@ async function run() {
             throw tl.loc('SourceNotFolder');
         }
 
-        //initialize the SSH helpers, setup the connection
+        // initialize the SSH helpers, setup the connection
         sshHelper = new sshCommon.SshHelper(sshConfig);
         await sshHelper.setupConnection();
 
@@ -178,10 +178,10 @@ async function run() {
             }
         }
 
-        //identify the files to copy
+        // identify the files to copy
         const filesToCopy: string[] = getFilesToCopy(sourceFolder, contents);
 
-        //copy files to remote machine
+        // copy files to remote machine
         if (filesToCopy) {
             tl.debug('Number of files to copy = ' + filesToCopy.length);
             tl.debug('filesToCopy = ' + filesToCopy);
@@ -210,7 +210,7 @@ async function run() {
                             throw tl.loc('FileExists', targetPath);
                         }
                     }
-                    //looks like scp can only handle one file at a time reliably
+                    // looks like scp can only handle one file at a time reliably
                     await sshHelper.uploadFile(fileToCopy, targetPath);
                 } catch (err) {
                     tl.error(tl.loc('FailedOnFile', fileToCopy, err));
@@ -229,7 +229,7 @@ async function run() {
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
-        //close the client connection to halt build execution
+        // close the client connection to halt build execution
         if (sshHelper) {
             tl.debug('Closing the client connection');
             sshHelper.closeConnection();
