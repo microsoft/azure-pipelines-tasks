@@ -22,8 +22,20 @@ export class KuduServiceManagementClient {
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
         
-        var httpResponse = webClient.sendRequest(request, reqOptions);
-        return httpResponse;
+        try {
+            let httpResponse = await webClient.sendRequest(request, reqOptions);
+            return httpResponse;
+        }
+        catch(exception) {
+            let exceptionString: string = exception.toString();
+            if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
+                || exceptionString.indexOf("unable to verify the first certificate") != -1) {
+                tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
+            }
+
+            throw new Error(exceptionString);
+        }
+
     }
 
     public getRequestUri(uriFormat: string, queryParameters?: Array<string>) {
@@ -66,7 +78,7 @@ export class Kudu {
             throw response;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToUpdateDeploymentHistory', this._getFormattedError(error)));
+            throw Error(tl.loc('Failedtoupdatedeploymenthistory', this._getFormattedError(error)));
         }
     }
 
@@ -522,8 +534,8 @@ export class Kudu {
                     return result;
                 }
                 else {
-                    tl.debug(`Deployment status: ${result.status} '${result.status_text}'. retry after 10 seconds`);
-                    await webClient.sleepFor(10);
+                    tl.debug(`Deployment status: ${result.status} '${result.status_text}'. retry after 5 seconds`);
+                    await webClient.sleepFor(5);
                     continue;
                 }
             }

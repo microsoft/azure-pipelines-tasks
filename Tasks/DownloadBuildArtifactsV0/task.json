@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 136,
+    "Minor": 137,
     "Patch": 0
   },
   "groups": [
@@ -83,7 +83,7 @@
     {
       "name": "branchName",
       "type": "string",
-      "label": "Branch name", 
+      "label": "Branch name",
       "defaultValue": "refs/heads/master",
       "visibleRule": "buildType == specific && buildVersionToDownload == latestFromBranch",
       "required": true,
@@ -162,9 +162,12 @@
     {
       "endpointId": "tfs:teamfoundation",
       "target": "project",
-      "endpointUrl": "{{endpoint.url}}/_apis/projects",
+      "endpointUrl": "{{endpoint.url}}/_apis/projects?$skip={{skip}}&$top=1000",
       "resultSelector": "jsonpath:$.value[?(@.state=='wellFormed')]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
+      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
+      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
+      "initialContextTemplate": "{\"skip\": \"0\"}"
     },
     {
       "endpointId": "tfs:teamfoundation",

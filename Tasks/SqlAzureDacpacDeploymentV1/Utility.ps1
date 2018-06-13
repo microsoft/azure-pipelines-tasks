@@ -146,20 +146,29 @@ function Delete-AzureSqlDatabaseServerFirewallRule
 
 function Get-SqlPackageCommandArguments
 {
-    param([String] $dacpacFile,
-          [String] $targetMethod,
-          [String] $serverName,
-          [String] $databaseName,
-          [String] $sqlUsername,
-          [String] $sqlPassword,
-          [String] $connectionString,
-          [String] $publishProfile,
-          [String] $additionalArguments,
-          [switch] $isOutputSecure)
+    param(
+        [String] $sqlpackageAction,
+        [String] $targetMethod,
+        [String] $sourceFile,
+        [String] $targetFile,
+        [String] $sourceServerName,
+        [String] $sourceDatabaseName,
+        [String] $targetServerName,
+        [String] $targetDatabaseName,
+        [String] $sourceUser,
+        [String] $sourcePassword,
+        [String] $targetUser,
+        [String] $targetPassword,
+        [String] $connectionString,
+        [String] $publishProfile,
+        [String] $outputPath,
+        [String] $additionalArguments,
+        [Switch] $isOutputSecure
+    )
 
     $ErrorActionPreference = 'Stop'
-    $dacpacFileExtension = ".dacpac"
-    $SqlPackageOptions =
+
+    $sqlPackageOptions =
     @{
         SourceFile = "/SourceFile:"; 
         Action = "/Action:"; 
@@ -169,63 +178,99 @@ function Get-SqlPackageCommandArguments
         TargetPassword = "/TargetPassword:";
         TargetConnectionString = "/TargetConnectionString:";
         Profile = "/Profile:";
+        SourceServerName = "/SourceServerName:";
+        SourceDatabaseName = "/SourceDatabaseName:";
+        SourceUser = "/SourceUser:";
+        SourcePassword = "/SourcePassword:";
+        TargetFile = "/TargetFile:";
+        OutputPath = "/OutputPath:";
     }
 
-    # validate dacpac file
-    if([System.IO.Path]::GetExtension($dacpacFile) -ne $dacpacFileExtension)
-    {
-        Write-Error (Get-VstsLocString -Key "SAD_InvalidDacpacFile" -ArgumentList $dacpacFile)
+    $sqlPackageArguments = @("$($sqlPackageOptions.Action)$sqlpackageAction")
+    
+    if ($sourceFile) {
+        $sqlPackageArguments += @("$($sqlPackageOptions.SourceFile)`"$sourceFile`"")
     }
 
-    $sqlPackageArguments = @($SqlPackageOptions.SourceFile + "`"$dacpacFile`"")
-    $sqlPackageArguments += @($SqlPackageOptions.Action + "Publish")
+    if ($targetFile) {
+        $sqlPackageArguments += @("$($sqlPackageOptions.TargetFile)`"$targetFile`"")
+    }
 
-    if($targetMethod -eq "server")
-    {
-        $sqlPackageArguments += @($SqlPackageOptions.TargetServerName + "`"$serverName`"")
-        if($databaseName)
-        {
-            $sqlPackageArguments += @($SqlPackageOptions.TargetDatabaseName + "`"$databaseName`"")
+    if ($targetMethod -eq "server") {
+        if ($sourceServerName -and $sourceDatabaseName) {
+            $sqlPackageArguments += @("$($sqlPackageOptions.SourceServerName)`"$sourceServerName`"", 
+                                      "$($sqlPackageOptions.SourceDatabaseName)`"$sourceDatabaseName`"")
         }
 
-        if($sqlUsername)
-        {
-            $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+        if ($targetServerName -and $targetDatabaseName) {
+            $sqlPackageArguments += @("$($sqlPackageOptions.TargetServerName)`"$targetServerName`"", 
+                                      "$($sqlPackageOptions.TargetDatabaseName)`"$targetDatabaseName`"")
+        }
 
-            $sqlPackageArguments += @($SqlPackageOptions.TargetUser + "`"$sqlUsername`"")
-            if(-not($sqlPassword))
-            {
+        $sqlUsername = ""
+        $sqlPassword = ""
+        if ($sourceUser -and $sourcePassword) {
+            $sqlUsername = $sourceUser
+            $sqlPassword = $sourcePassword
+        }
+
+        if ($targetUser -and $targetPassword) {
+            $sqlUsername = $targetUser
+            $sqlPassword = $targetPassword
+        }
+
+        if ($sqlUsername) {
+            $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
+            if(-not($sqlPassword)) {
                 Write-Error (Get-VstsLocString -Key "SAD_NoPassword" -ArgumentList $sqlUserName)
             }
 
-            if( $isOutputSecure ){
+            if ($isOutputSecure) {
                 $sqlPassword = "********"
             } 
-            else
-            {
+            else {
                 $sqlPassword = ConvertParamToSqlSupported $sqlPassword
             }
-            
-            $sqlPackageArguments += @($SqlPackageOptions.TargetPassword + "`"$sqlPassword`"")
+
+            if ($sourceUser -and $sourcePassword) {
+                $sqlPackageArguments += @("$($sqlPackageOptions.SourceUser)`"$sqlUsername`"",
+                                          "$($sqlPackageOptions.SourcePassword)`"$sqlPassword`"")
+            }
+
+            if ($targetUser -and $targetPassword) {
+                $sqlPackageArguments += @("$($sqlPackageOptions.TargetUser)`"$sqlUsername`"",
+                                          "$($sqlPackageOptions.TargetPassword)`"$sqlPassword`"")
+            }
         }
     }
-    elseif($targetMethod -eq "connectionString")
-    {
-        $sqlPackageArguments += @($SqlPackageOptions.TargetConnectionString + "`"$connectionString`"")
+    elseif ($targetMethod -eq "connectionString") { 
+        # check this for extract and export
+        $sqlPackageArguments += @("$($sqlPackageOptions.TargetConnectionString)`"$connectionString`"")
     }
+    
 
-    if($publishProfile)
-    {
+    if ($publishProfile) {
         # validate publish profile
-        if([System.IO.Path]::GetExtension($publishProfile) -ne ".xml")
-        {
+        if ([System.IO.Path]::GetExtension($publishProfile) -ne ".xml") {
             Write-Error (Get-VstsLocString -Key "SAD_InvalidPublishProfile" -ArgumentList $publishProfile)
         }
-        $sqlPackageArguments += @($SqlPackageOptions.Profile + "`"$publishProfile`"")
+
+        $sqlPackageArguments += @("$($sqlPackageOptions.Profile)`"$publishProfile`"")
+    }
+
+    if ($outputPath) {
+        $sqlPackageArguments += @("$($sqlPackageOptions.OutputPath)`"$outputPath`"")
+    }
+
+    # not supported in Extract Export
+    $defaultTimeout = 120
+    if (-not ($sqlpackageAction -eq "Extract" -or $sqlpackageAction -eq "Export") -and -not ($additionalArguments.ToLower().Contains("/targettimeout:") -or $additionalArguments.ToLower().Contains("/tt:"))) {
+        # Add Timeout of 120 Seconds
+        $additionalArguments = $additionalArguments + " /TargetTimeout:$defaultTimeout"
     }
 
     $sqlPackageArguments += @("$additionalArguments")
-    $scriptArgument = ($sqlPackageArguments -join " ") 
+    $scriptArgument = $sqlPackageArguments -join " " 
 
     return $scriptArgument
 }
@@ -252,7 +297,7 @@ function Execute-Command
     $ErrorActionPreference = 'Stop'
     if($LASTEXITCODE -ne 0)
     {
-         throw  (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed")
+         throw  (Get-VstsLocString -Key "SAD_AzureSQLDacpacTaskFailed" -ArgumentList $LASTEXITCODE)
     }
 }
 
@@ -263,4 +308,11 @@ function ConvertParamToSqlSupported
     $param = $param.Replace('"', '\"')
 
     return $param
+}
+
+# Function to import SqlPS module & avoid directory switch
+function Import-Sqlps {
+    Push-Location
+    Import-Module SqlPS -ErrorAction 'SilentlyContinue' 3>&1 | Out-Null
+    Pop-Location
 }

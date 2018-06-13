@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 134,
-        "Patch": 1
+        "Minor": 136,
+        "Patch": 0
     },
     "releaseNotes": "Fixes codesign hangs on a self hosted agent. Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
     "runsOn": [
@@ -134,6 +134,7 @@
         "NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon).",
         "P12PrivateKeyNameNotFound": "Failed to identify the private key name: %s",
         "SetKeyPartitionListCommandNotFound": "Skipping unnecessary keychain partition_id ACL assignment on older OS. The security command 'set-key-partition-list' was added in macOS Sierra (10.12).",
-        "SetKeyPartitionListCommandFailed": "Error setting partition_id ACL for private key. Check `Keychain password` is correct, or use `Temporary Keychain` instead."
+        "SetKeyPartitionListCommandFailed": "Error setting partition_id ACL for private key. Check `Keychain password` is correct, or use `Temporary Keychain` instead.",
+        "InstallRequiresMac": "Install Apple Certificate requires a macOS agent. Installing on Windows or Linux is not supported by Apple."
     }
 }

@@ -2,13 +2,17 @@
 # Build your C project with GNU GCC.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 steps:
 
-- script: 'make'
+  - script: ./configure
 
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.out'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+  - script: 'make'
+
+  - script: 'make test'
+
+#  - task: CopyFiles@2
+#    inputs:
+#      contents: '**/*.out'
+#      targetFolder: '$(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1

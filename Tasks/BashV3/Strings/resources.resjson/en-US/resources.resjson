@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Bash",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613738)",
-  "loc.description": "This is an early preview. Run a Bash script on macOS, Linux, or Windows",
+  "loc.description": "Run a Bash script on macOS, Linux, or Windows",
   "loc.instanceNameFormat": "Bash Script",
-  "loc.releaseNotes": "This is an early preview. Script task consistency. Added support for multiple lines and added support for Windows.",
+  "loc.releaseNotes": "Script task consistency. Added support for multiple lines and added support for Windows.",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.targetType": "Type",
   "loc.input.help.targetType": "Target script type: File Path or Inline",
