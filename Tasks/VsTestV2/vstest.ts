@@ -13,12 +13,12 @@ import * as testselectorinvoker from './testselectorinvoker';
 import { AreaCodes, ResultMessages } from './constants';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 import * as os from 'os';
-import * as regedit from 'regedit';
 import * as uuid from 'uuid';
 import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as perf from 'performance-now';
 import * as process from 'process';
+const regedit = require('regedit');
 
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
