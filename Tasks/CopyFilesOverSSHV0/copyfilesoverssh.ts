@@ -58,7 +58,7 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
         tl.debug("allFiles contains " + allFiles.length + " files");
 
         // a map to eliminate duplicates
-        const map = {};
+        const pathsSeen = {};
 
         // minimatch options
         const matchOptions: tl.MatchOptions = { matchBase: true, dot: true };
@@ -75,8 +75,8 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
 
             tl.debug('Include matched ' + matches.length + ' files');
             for (const matchPath of matches) {
-                if (!map.hasOwnProperty(matchPath)) {
-                    map[matchPath] = true;
+                if (!pathsSeen.hasOwnProperty(matchPath)) {
+                    pathsSeen[matchPath] = true;
                     files.push(matchPath);
                 }
             }
