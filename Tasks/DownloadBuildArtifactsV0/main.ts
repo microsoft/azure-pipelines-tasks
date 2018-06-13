@@ -182,7 +182,7 @@ async function main(): Promise<void> {
 
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
-            var artifactName = tl.getInput("artifactName");
+            var artifactName = tl.getInput("artifactName", true);
             var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimit).catch((reason) => {
                 reject(reason);
                 return;
