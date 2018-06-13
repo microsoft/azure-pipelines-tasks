@@ -11,7 +11,7 @@ import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
 import * as inputdatacontract from './inputdatacontract';
 import * as uuid from 'uuid';
-import * as regedit from 'regedit';
+const regedit = require('regedit');
 
 export function getvsTestConfigurations() {
     const vsTestConfiguration = {} as models.VsTestConfigurations;
