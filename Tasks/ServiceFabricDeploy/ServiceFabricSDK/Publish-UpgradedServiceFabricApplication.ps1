@@ -370,37 +370,69 @@ function Publish-UpgradedServiceFabricApplication
         $unhealthyEvaluationMessageFunction = {
             param(
                 $UnhealthyEvaluations,
-        
+
                 [string]$Indentation
             )
-        
+
+            if ($UnhealthyEvaluations -eq $null) {
+                return ""
+            }
+
             $indentatedErrorString = ""
             foreach ($UnhealthyEvaluation in $UnhealthyEvaluations) {
                 $indentatedErrorString += $Indentation + $UnhealthyEvaluation.Description
-                # see if indentation needs to be increased. based on the type of evaluation. 
-                $indentatedErrorString += & $unhealthyEvaluationMessageFunction $UnhealthyEvaluation, $Indentation + "`t"
+                # see if indentation needs to be increased. based on the type of evaluation.
+                $indentatedErrorString += & $unhealthyEvaluationMessageFunction $UnhealthyEvaluation, if($UnhealthyEvaluations.kind -eq ($UnhealthyEvaluation.kind + "s")) { return $Indentation } Else { return $Indentation + "`t" }
             }
-        
+
             if ($UnhealthyEvaluation.UnhealthyEvent) {
-                $indentatedErrorString += $Indentation + "Unhealthy Event Details: " + $UnhealthyEvaluation.UnhealthyEvent
+                $indentatedErrorString += $Indentation + $UnhealthyEvaluation.UnhealthyEvent
             }
-        
+
             return $indentatedErrorString
+        }
+
+        $DomainUpgradeStatusFormatterFunction = {
+            param(
+                $UpgradeDomainsStatus
+            )
+
+            if ($UpgradeDomainsStatus -eq $null) {
+                return ""
+            }
+
+            $enumerator = $UpgradeDomainsStatus.GetEnumerator()
+            $upgradeDomainStatusString = ""
+            while ($enumerator.MoveNext() -ne $False) {
+                 $currentElement = $enumerator.Current
+                 $upgradeDomainStatusString += $currentElement.Name + ": " + $currentElement.State + ", "
+            }
+            $upgradeDomainStatusString = $upgradeDomainStatusString.Trim()
+            $upgradeDomainStatusString = $upgradeDomainStatusString.SubString(0, $upgradeDomainStatusString.Length -1 ) #removing last "," from the string.
+            return $upgradeDomainStatusString
         }
 
         $upgradeStatusFetcher = {
             param(
                 $LastUpgradeStatus
             )
+            $upgradeStatus  = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+            Write-Host "Current Upgrade State:" $upgradeStatus.UpgradeState
 
-            $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName;
-            Write-Host "Current Upgrade State:" $upgradeStatus.UpgradeState;
-            Write-Host "`n Domain Wise Upgrade Status: " $upgradeStatus.UpgradeDomainsStatus ;
-            if (($upgradeStatus.UnhealthyEvaluations -ne $null) -and (($LastUpgradeStatus -eq $null) -or ($LastUpgradeStatus.UnhealthyEvaluations -ne $upgradeStatus.UnhealthyEvaluations)))
+            $currentDomainWiseUpgradeStatus = & $DomainUpgradeStatusFormatterFunction $upgradeStatus.UpgradeDomainsStatus
+            $lastDomainWiseUpgradeStatus = if ($LastUpgradeStatus -ne $null) { return & $DomainUpgradeStatusFormatterFunction $LastUpgradeStatus.$UpgradeDomainsStatus } else { return "" }
+            if ($currentDomainWiseUpgradeStatus -ne $lastDomainWiseUpgradeStatus -and $currentDomainWiseUpgradeStatus -ne "") { Write-Host "`n Domain Wise Upgrade Status: " $currentDomainWiseUpgradeStatus }
+
+            # unhealthy evaluations to be printed.
+            if ($upgradeStatus.UnhealthyEvaluations -ne $null)
             {
-                Write-Host "Unhealthy Evaluations: " (& $unhealthyEvaluationMessageFunction $upgradeStatus.UnhealthyEvaluations, "");
+                $currentUnhealthyEvaluation = & $unhealthyEvaluationMessageFunction $upgradeStatus.UnhealthyEvaluations, ""
+                $lastUnhealthyEvaluation = if ($LastUpgradeStatus -ne $null) { return & $unhealthyEvaluationMessageFunction $LastUpgradeStatus.UnhealthyEvaluations, "" } else { return "" }
+                if ($currentUnhealthyEvaluation -ne $lastUnhealthyEvaluation -and $currentUnhealthyEvaluation -ne "") {
+                    Write-Host $currentUnhealthyEvaluation
+                }
             }
-            
+
             return $upgradeStatus;
         }
 
