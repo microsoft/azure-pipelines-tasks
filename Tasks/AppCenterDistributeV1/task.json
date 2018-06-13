@@ -12,10 +12,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 136,
+        "Minor": 137,
         "Patch": 0
     },
-    "releaseNotes": "Add support for distribution to stores.",
+    "releaseNotes": "Provide commit details to distribution API for additional context.",
     "groups": [
         {
             "name": "symbols",
