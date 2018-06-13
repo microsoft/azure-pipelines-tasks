@@ -311,6 +311,11 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "PowerShell3": {
+      "target": "PreJobExecutionAzureFileCopy.js"
+    }
+  },
   "execution": {
     "PowerShell3": {
       "target": "AzureFileCopy.ps1"

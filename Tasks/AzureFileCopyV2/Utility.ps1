@@ -230,20 +230,55 @@ function ThrowError
 
 function Upload-FilesToAzureContainer
 {
-    param([string][Parameter(Mandatory=$true)]$sourcePath,
-          [string][Parameter(Mandatory=$true)]$storageAccountName,
-          [string][Parameter(Mandatory=$true)]$containerName,
-          [string]$blobPrefix,
-		  [string]$blobStorageEndpoint,
-          [string][Parameter(Mandatory=$true)]$storageKey,
-          [string][Parameter(Mandatory=$true)]$azCopyLocation,
-          [string]$additionalArguments,
-          [string][Parameter(Mandatory=$true)]$destinationType,
-          [bool]$useDefaultArguments,
-          [string]$azCopyLogFilePath
+    Param (
+        [Parameter(Mandatory=$true)]
+        [string] $sourcePath,
+
+        [Parameter(Mandatory=$true)]
+        [string] $storageAccountName,
+
+        [Parameter(Mandatory=$true)]
+        [string] $containerName,
+
+        [Parameter(Mandatory=$true)]
+        [AllowEmptyString()]
+        [string] $blobPrefix = "",
+
+        [Parameter(Mandatory=$true)]
+        [string] $blobStorageEndpoint,
+
+        [Parameter(Mandatory=$true)]
+        [string] $storageKey,
+
+        [Parameter(Mandatory=$true)]
+        [string] $azCopyLocation,
+
+        [string] $additionalArguments
     )
 
-    try
+    try {
+        Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        $containerURL = Get-AzureStorageBlobContainerUrl -StorageAccountUrl $blobStorageEndpoint -ContainerName $containerName -BlobPrefix $blobPrefix
+        $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
+
+        & $azCopyCommand -AzCopyExeLocation $azCopyExeLocation `
+                         -Source $sourcePath `
+                         -Destination $containerURL `
+                         -TypeOfTransfer 'upload' `
+                         -AuthScheme 'storageaccountkey' `
+                         -AuthToken $storageKey `
+                         -AdditionalArguments $additionalArguments `
+                         -AzCopyLogFilePath (Get-AzCopyLogFilePath)
+
+        Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+    } catch {
+        Write-Telemetry "Task_InternalError" "BlobUploadFailed"
+        Write-Verbose ($_.Exception.ToString())
+        $errMessage = $_.Exception.Message
+        throw (Get-VstsLocString -Key "AFC_UploadContainerStorageAccount" -ArgumentList $containerName, $storageAccountName, $blobPrefix, $errMessage)
+    }
+
+    <#try
     {
         Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
 
@@ -294,10 +329,10 @@ function Upload-FilesToAzureContainer
     finally
     {
         Handle-AzCopyLogs -isLogsPresent $useDefaultArguments -logsFilePath $azCopyLogFilePath -ErrorAction SilentlyContinue
-    }
+    }#>
 }
 
-function Handle-AzCopyLogs
+<#function Handle-AzCopyLogs
 {
     [CmdletBinding()]
     param(
@@ -310,6 +345,18 @@ function Handle-AzCopyLogs
         Get-Content -Path $logsFilePath | Out-String | Write-Verbose
         Remove-Item $logsFilePath
     }
+} #>
+
+function Get-AzureStorageBlobContainerUrl {
+    [CmdletBinding()]
+    Param (
+        [string] $StorageAccountUrl,
+        [string] $ContainerName,
+        [string] $BlobPrefix
+    )
+    $StorageAccountUrl = $StorageAccountUrl.Trim('/').Trim()
+    $BlobPrefix = $BlobPrefix.Trim()
+    return ([string]::Format("{0}/{1}/{2}", $BlobStorageEndpoint.Trim("/"), $ContainerName, $BlobPrefix).Trim("/"))
 }
 
 function Does-AzureVMMatchTagFilterCriteria
@@ -941,9 +988,16 @@ function Get-AzureVMResourcesProperties
 
 function Get-AzureVMsCredentials
 {
-    param([string][Parameter(Mandatory=$true)]$vmsAdminUserName,
-          [string][Parameter(Mandatory=$true)]$vmsAdminPassword)
-
+    Param (
+        [Parameter(Mandatory=$true)]
+        [string] $vmsAdminUserName,
+        [Parameter(Mandatory=$true)]
+        [string] $vmsAdminPassword
+    )
+    # Normalize admin username
+    if($vmsAdminUserName -and (-not $vmsAdminUserName.StartsWith(".\")) -and ($vmsAdminUserName.IndexOf("\") -eq -1) -and ($vmsAdminUserName.IndexOf("@") -eq -1)) {
+        $vmsAdminUserName = ".\" + $vmsAdminUserName 
+    }
     Write-Verbose "Azure VMs Admin Username: $vmsAdminUserName"
     $azureVmsCredentials = New-Object 'System.Net.NetworkCredential' -ArgumentList $vmsAdminUserName, $vmsAdminPassword
 
@@ -1398,4 +1452,55 @@ function Get-InvokeRemoteScriptParameters
         protocol = $protocol;
         sessionOption = $sessionOption
     }
+}
+
+$azCopyCommand = {
+    Param (
+        [string] $AzCopyExeLocation,
+        [string] $Source,
+        [string] $Destination,
+        [string] $TypeOfTransfer,
+        [string] $AuthScheme,
+        [string] $AuthToken,
+        [string] $AdditionalArguments,
+        [string] $AzCopyLogFilePath
+    )
+
+    $AuthSchemeSwitches = @{
+        "SASToken" = "SourceSAS";
+        "StorageAccountKey" = "DestKey";
+    }
+
+    function Run {
+        Write-Host "##vso[task.setsecret]$authToken"
+        $azCopyArgs = ""
+        if ($TypeOfTransfer.ToLowerInvariant() -eq "upload") {
+            if(Test-Path -Path $source -PathType Leaf) {
+                $filePattern = Split-Path -Path $source -Leaf
+                $source = Split-Path -Path $source -Parent
+                $AdditionalArguments += " /Pattern:`"$filePattern`""
+            }
+        }
+        $azCopyArgs += " /Source:`"$source`""
+        $azCopyArgs += " /Dest:`"$destination`""
+        $azCopyArgs += " /$($AuthSchemeSwitches[$authScheme]):`"$authToken`""
+        if (![string]::IsNullOrEmpty($azCopyLogFilePath)) {
+            Remove-Item -Path $azCopyLogFilePath -Force -ErrorAction 'SilentlyContinue'
+            $azCopyArgs += "/V:`"$azCopyLogFilePath`""
+        }
+        $azCopyArgs += " $AdditionalArguments"
+        $command = "`"$azCopyExeLocation`" $azCopyArgs"
+        Remove-Item -Path 'variable:\LASTEXITCODE' -Force -ErrorAction 'SilentlyContinue'
+        Write-Host "##[command]$command"
+        & $command
+        if ($LASTEXITCODE -ne 0) {
+            if (![string]::IsNullOrEmpty($azCopyLogFilePath)) {
+                Write-Verbose (Get-Content -Path $azCopyLogFilePath | Out-String)
+                Remove-Item -Path $azCopyLogFilePath -Force -ErrorAction 'SilentlyContinue'
+            }
+            throw "AzCopy failed. Consult logs for more details."
+        }
+    }
+
+    Run
 }

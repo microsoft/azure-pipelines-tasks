@@ -19,6 +19,12 @@
         {
             "module": "../Common/RemoteDeployer",
             "type": "ps"
+        },
+        {
+            "module": "../Common/azure-arm-rest",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
         }
     ],
     "externals": {
@@ -49,5 +55,13 @@
                 ]
             }
         ]
-    }
+    },
+    "rm": [
+        {
+            "items": [                
+                "node_modules/azure-arm-rest/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
 }
