@@ -51,20 +51,20 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
     }
 
     // if we only have exclude filters, we need add a include all filter, so we can have something to exclude.
-    if (includeContents.length == 0 && excludeContents.length > 0) {
+    if (!includeContents && excludeContents) {
         includeContents.push('**');
     }
 
-    if (includeContents.length > 0 && allFiles.length > 0) {
+    if (includeContents && allFiles) {
         tl.debug("allFiles contains " + allFiles.length + " files");
 
         // a map to eliminate duplicates
         const map = {};
 
         // minimatch options
-        const matchOptions = { matchBase: true, dot: true };
-        if (os.type().match(/^Win/)) {
-            matchOptions["nocase"] = true;
+        const matchOptions: tl.MatchOptions = { matchBase: true, dot: true };
+        if (os.platform() === 'win32') {
+            matchOptions.nocase = true;
         }
 
         // apply include filter
@@ -96,8 +96,7 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
                 files.push(matchPath);
             }
         }
-    }
-    else {
+    } else {
         tl.debug("Either includeContents or allFiles is empty");
     }
 
@@ -116,14 +115,14 @@ async function run() {
         const privateKey: string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
         const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
         let port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
-        if (!port || port === '') {
+        if (!port) {
             tl._writeLine(tl.loc('UseDefaultPort'));
             port = '22';
         }
 
         //setup the SSH connection configuration based on endpoint details
         let sshConfig;
-        if (privateKey && privateKey !== '') {
+        if (privateKey) {
             tl.debug('Using private key for ssh connection.');
             sshConfig = {
                 host: hostname,
@@ -183,7 +182,7 @@ async function run() {
         const filesToCopy: string[] = getFilesToCopy(sourceFolder, contents);
 
         //copy files to remote machine
-        if (filesToCopy && filesToCopy.length > 0) {
+        if (filesToCopy) {
             tl.debug('Number of files to copy = ' + filesToCopy.length);
             tl.debug('filesToCopy = ' + filesToCopy);
 
@@ -222,7 +221,7 @@ async function run() {
             if (failureCount) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('NumberFailed', failureCount));
             }
-        } else if(failOnEmptySource) {
+        } else if (failOnEmptySource) {
             throw tl.loc('NothingToCopy');
         } else {
             tl.warning(tl.loc('NothingToCopy'));
