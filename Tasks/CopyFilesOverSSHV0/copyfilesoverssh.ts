@@ -14,18 +14,22 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
     // exclude filter
     var excludeContents: string[] = [];
 
-    for (var i: number = 0; i < contents.length; i++) {
-        var pattern = contents[i].trim();
-        var negate: Boolean = false;
-        var negateOffset: number = 0;
-        for (var j = 0; j < pattern.length && pattern[j] === '!'; j++) {
-            negate = !negate;
-            negateOffset++;
+    for (let pattern of contents) {
+        pattern = pattern.trim();
+        var negate: boolean = false;
+        var numberOfNegations: number = 0;
+        for (const c of pattern) {
+            if (c === '!') {
+                negate = !negate;
+                numberOfNegations++;
+            } else {
+                break;
+            }
         }
 
         if (negate) {
             tl.debug('exclude content pattern: ' + pattern);
-            var realPattern = pattern.substring(0, negateOffset) + path.join(sourceFolder, pattern.substring(negateOffset));
+            var realPattern = pattern.substring(0, numberOfNegations) + path.join(sourceFolder, pattern.substring(numberOfNegations));
             excludeContents.push(realPattern);
         } else {
             tl.debug('include content pattern: ' + pattern);
@@ -40,9 +44,9 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
     var allFiles: string[] = [];
 
     // remove folder path
-    for (var i: number = 0; i < allPaths.length; i++) {
-        if (!tl.stats(allPaths[i]).isDirectory()) {
-            allFiles.push(allPaths[i]);
+    for (const p of allPaths) {
+        if (!tl.stats(p).isDirectory()) {
+            allFiles.push(p);
         }
     }
 
@@ -64,8 +68,7 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
         }
 
         // apply include filter
-        for (var i: number = 0; i < includeContents.length; i++) {
-            var pattern = includeContents[i];
+        for (const pattern of includeContents) {
             tl.debug('Include matching ' + pattern);
 
             // let minimatch do the actual filtering
@@ -82,8 +85,7 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
         }
 
         // apply exclude filter
-        for (var i: number = 0; i < excludeContents.length; i++) {
-            var pattern = excludeContents[i];
+        for (const pattern of excludeContents) {
             tl.debug('Exclude matching ' + pattern);
 
             // let minimatch do the actual filtering
@@ -91,8 +93,7 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
 
             tl.debug('Exclude matched ' + matches.length + ' files');
             files = [];
-            for (var j: number = 0; j < matches.length; j++) {
-                var matchPath = matches[j];
+            for (const matchPath of matches) {
                 files.push(matchPath);
             }
         }
@@ -190,9 +191,8 @@ async function run() {
 
             let failureCount = 0;
             tl._writeLine(tl.loc('CopyingFiles', filesToCopy.length));
-            for (var i:number = 0; i < filesToCopy.length; i++) {
+            for (const fileToCopy of filesToCopy) {
                 try {
-                    var fileToCopy = filesToCopy[i];
                     tl.debug('fileToCopy = ' + fileToCopy);
 
                     var relativePath;
