@@ -3,6 +3,7 @@ import path = require('path');
 import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import vsts = require('vso-node-api');
+import { IRequestOptions } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
 
 export class SecureFileHelpers {
     serverConnection: vsts.WebApi;
@@ -12,7 +13,10 @@ export class SecureFileHelpers {
         let serverCreds: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
         let authHandler = vsts.getPersonalAccessTokenHandler(serverCreds);
 
-        this.serverConnection = new vsts.WebApi(serverUrl, authHandler);
+        const proxy = tl.getHttpProxyConfiguration();
+        const options = proxy ? { proxy, ignoreSslError: true } : undefined;
+        
+        this.serverConnection = new vsts.WebApi(serverUrl, authHandler, options);
     }
 
     /**
