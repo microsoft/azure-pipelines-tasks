@@ -2,7 +2,7 @@
 # Build and test ASP.NET Core web applications targeting .NET Core.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Linux'
 variables:
   buildConfiguration: 'Release'
 steps:
