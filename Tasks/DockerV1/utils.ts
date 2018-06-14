@@ -8,7 +8,7 @@ import * as imageUtils from "docker-common/containerimageutils";
 export function getImageNames(): string[] {
     let imageNamesFilePath = tl.getPathInput("imageNamesPath", /* required */ true, /* check exists */ true);
     var enforceDockerNamingConvention = tl.getBoolInput("enforceDockerNamingConvention");
-    let imageNames = fs.readFileSync(imageNamesFilePath, "utf-8").trim().replace("\r\n", "\n").split("\n");
+    let imageNames = fs.readFileSync(imageNamesFilePath, "utf-8").trim().replace(/\r\n/gm, "\n").split("\n");
     if (!imageNames.length) {
         throw new Error(tl.loc("NoImagesInImageNamesFile", imageNamesFilePath));
     }
