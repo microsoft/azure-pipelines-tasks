@@ -68,7 +68,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Publish per task NuGet package artifact
   inputs:
-    pathToPublish: _package/artifacts
+    pathToPublish: _package/nuget-packages
     artifactName: PerTaskPackages
     publishLocation: container
 

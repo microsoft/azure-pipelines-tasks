@@ -1250,12 +1250,12 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
     var tasksZipsPath = path.join(packagePath, 'task-zips');
     mkdir('-p', tasksZipsPath);
 
-    // _package\artifacts
+    // _package\nuget-packages
     // This is the final state of the task content and what is published as a build artifact.
     console.log();
     console.log('> Creating artifacts folder');
-    var artifactsPath = path.join(packagePath, "artifacts");
-    mkdir('-p', artifactsPath);
+    var nugetPackagesPath = path.join(packagePath, "nuget-packages");
+    mkdir('-p', nugetPackagesPath);
 
     console.log();
     console.log('> Zipping task folders')
@@ -1294,47 +1294,49 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             mkdir('-p', taskZipPath);
             console.log('root task folder: ' + taskZipPath);
 
-            // TOOD: This is probably slow. Maybe look into a way to do it faster.
-            fs.copyFileSync(path.join(taskLayoutPath, 'task.zip'), path.join(taskZipPath, 'task.zip'));
+            // hard link task.zip from layout to nuget contents
+            var layoutZipPath = path.join(taskLayoutPath, 'task.zip');
+            var nugetContentsZipPath = path.join(taskZipPath, 'task.zip');
+            fs.linkSync(layoutZipPath, nugetContentsZipPath);
 
             // Write layout version file. This will help us if we change the structure of the individual NuGet packages in the future.
             fs.writeFileSync(path.join(taskZipPath, 'layout-version.txt'), '3');
 
             // Create the nuspec file, nupkg, and push.cmd
             var taskNuspecPath = createNuspecFile(taskZipPath, fullTaskName, taskVersion);
-            var taskPublishFolder = createNuGetPackage(artifactsPath, taskFolderName, taskNuspecPath, taskZipPath);
+            var taskPublishFolder = createNuGetPackage(nugetPackagesPath, taskFolderName, taskNuspecPath, taskZipPath);
             createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
         });
 
     console.log();
     console.log('> Creating root push.cmd')
-    createRootPushCmd(artifactsPath);
+    createRootPushCmd(nugetPackagesPath);
 
     // Write file that has XML for unified dependencies, makes it easier to setup that file.
     console.log('> Generating XML dependencies for UnifiedDependencies');
-    var depsContentPath = path.join(artifactsPath, 'unified_deps.xml');
-    fs.writeFileSync(depsContentPath, unifiedDepsContent.sort().join(os.EOL));
+    var depsContentPath = path.join(nugetPackagesPath, 'unified_deps.xml');
+    fs.writeFileSync(depsContentPath, unifiedDepsContent.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); }).join(os.EOL));
 
     // Write file that has XML for servicing, makes it easier to setup that file.
     console.log('> Generating XML dependencies for Servicing');
-    var servicingContentPath = path.join(artifactsPath, 'servicing.xml');
-    fs.writeFileSync(servicingContentPath, servicingXmlContent.sort().join(''));
+    var servicingContentPath = path.join(nugetPackagesPath, 'servicing.xml');
+    fs.writeFileSync(servicingContentPath, servicingXmlContent.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); }).join(''));
 }
 exports.createNugetPackagePerTask = createNugetPackagePerTask;
 
 /**
- * Create push.cmd at root of the artifacts path.
+ * Create push.cmd at root of the nuget packages path.
  * 
  * This makes it easier to run all the nested push.cmds within the task folders.
- * @param {*} artifactsPath 
+ * @param {*} nugetPackagesPath 
  */
-var createRootPushCmd = function (artifactsPath) {
+var createRootPushCmd = function (nugetPackagesPath) {
     var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
     contents +=     'pushd %%s' + os.EOL;
     contents +=     'push.cmd' + os.EOL;
     contents +=     'popd' + os.EOL;
     contents += ')';
-    var rootPushCmdPath = path.join(artifactsPath, 'push.cmd');
+    var rootPushCmdPath = path.join(nugetPackagesPath, 'push.cmd');
     fs.writeFileSync(rootPushCmdPath, contents);
 }
 
@@ -1430,6 +1432,44 @@ var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
 
     fs.writeFileSync(taskPushCmdPath, `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`);
 }
+
+// Rename task folders that are created from the aggregate. Allows NuGet generation from aggregate using same process as normal.
+// [stfrance]: remove this once we have fully migrated to nuget package per task.
+var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLegacyFolders) {
+    // Rename folders
+    fs.readdirSync(pathWithLegacyFolders)
+        .forEach(function (taskFolderName) {
+            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-1)
+                && taskFolderName.charAt(taskFolderName.length-2) === taskFolderName.charAt(taskFolderName.length-4))
+            {
+                var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
+                var newPath = path.join(pathWithLegacyFolders, taskFolderName.substring(0, taskFolderName.length - 2));
+
+                fs.renameSync(currentPath, newPath);
+            }
+
+            // var currentPath = path.join('E:\\AllTaskMajorVersions', taskFolderName);
+            // var s = taskFolderName.split('__');
+            // var newFolderName = s[0] + s[1].toUpperCase();
+            // var newPath = path.join('E:\\AllTaskMajorVersions', newFolderName);
+            
+            // fs.renameSync(currentPath, newPath);
+        });
+}
+exports.renameFoldersFromAggregate = renameFoldersFromAggregate;
+
+// Use the main layout process on Task folders that were extracted from the aggregate.
+// This is what we use to seed packaging with older major versions.
+// [stfrance]: remove this once we have fully migrated to nuget package per task.
+var generatePerTaskForLegacyPackages = function generatePerTaskForLegacyPackages(pathWithLegacyFolders) {
+    // Generate NuGet package per task for legacy packages.
+    var legacyPath = path.join(__dirname, '_packageLegacy');
+    if (test('-d', legacyPath)) {
+        rm('-rf', legacyPath);
+    }
+    util.createNugetPackagePerTask(legacyPath, pathWithLegacyFolders);
+}
+exports.generatePerTaskForLegacyPackages = generatePerTaskForLegacyPackages;
 
 // TODO: Do we need to fix this?
 var createHotfixLayout = function (packagePath, taskName) {

@@ -474,12 +474,11 @@ target.testLegacy = function() {
 }
 
 // 
-// node make.js layout
+// node make.js package
 // This will take the built tasks and create the files we need to publish them.
 // 
-target.layout = function() {
-    banner('Starting layout process...')
-
+target.package = function() {
+    banner('Starting package process...')
 
     // START LOCAL CONFIG
     // console.log('> Cleaning packge path');
@@ -495,42 +494,8 @@ target.layout = function() {
 
     // These methods are to help with the migration to NuGet package per task.
     // Get rid of them after transition is done.
-    //renameFoldersFromAggregate('E:\\AllTaskMajorVersions');
-    //generatePerTaskForLegacyPackages('E:\\AllTaskMajorVersions');
-}
-
-// Rename task folders that are created from the aggregate. Allows NuGet generation from aggregate using same process as normal.
-function renameFoldersFromAggregate(pathWithLegacyFolders) {
-    // Rename folders
-    fs.readdirSync(pathWithLegacyFolders)
-        .forEach(function (taskFolderName) {
-            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-1)
-                && taskFolderName.charAt(taskFolderName.length-2) === taskFolderName.charAt(taskFolderName.length-4))
-            {
-                var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
-                var newPath = path.join(pathWithLegacyFolders, taskFolderName.substring(0, taskFolderName.length - 2));
-
-                fs.renameSync(currentPath, newPath);
-            }
-
-            // var currentPath = path.join('E:\\AllTaskMajorVersions', taskFolderName);
-            // var s = taskFolderName.split('__');
-            // var newFolderName = s[0] + s[1].toUpperCase();
-            // var newPath = path.join('E:\\AllTaskMajorVersions', newFolderName);
-            
-            // fs.renameSync(currentPath, newPath);
-        });
-}
-
-// Use the main layout process on Task folders that were extracted from the aggregate.
-// This is what we use to seed packaging with older major versions.
-function generatePerTaskForLegacyPackages(pathWithLegacyFolders) {
-    // Generate NuGet package per task for legacy packages.
-    var legacyPath = path.join(__dirname, '_packageLegacy');
-    if (test('-d', legacyPath)) {
-        rm('-rf', legacyPath);
-    }
-    util.createNugetPackagePerTask(legacyPath, pathWithLegacyFolders);
+    //util.renameFoldersFromAggregate('E:\\AllTaskMajorVersions');
+    //util.generatePerTaskForLegacyPackages('E:\\AllTaskMajorVersions');
 }
 
 // used by CI that does official publish

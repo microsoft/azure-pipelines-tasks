@@ -10,7 +10,7 @@
     "build": "node make.js build",
     "test": "node make.js test",
     "testLegacy": "node make.js testLegacy",
-    "layout": "node make.js layout"
+    "package": "node make.js package"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks",
   "devDependencies": {
-    "adm-zip": "0.4.11",
+    "adm-zip": "0.4.7",
     "gulp": "3.9.0",
     "gulp-util": "3.0.4",
     "markdown-toc": "^1.2.0",
