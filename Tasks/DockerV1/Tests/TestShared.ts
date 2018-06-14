@@ -11,8 +11,7 @@ export let TestEnvVars = {
     memoryLimit: "__memoryLimit__",
     pushMultipleImages: "__pushMultipleImages__",
     tagMultipleImages: "__tagMultipleImages__",
-    arguments: "__arguments__",
-    addDefaultLabels: "__addDefaultLabels__"
+    arguments: "__arguments__"
 };
 
 export let OperatingSystems = {

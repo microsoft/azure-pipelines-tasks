@@ -25,14 +25,12 @@ tr.setInput('memoryLimit', process.env[shared.TestEnvVars.memoryLimit] || '');
 tr.setInput('pushMultipleImages', process.env[shared.TestEnvVars.pushMultipleImages] || "false");
 tr.setInput('tagMultipleImages', process.env[shared.TestEnvVars.tagMultipleImages] || "false");
 tr.setInput('arguments', process.env[shared.TestEnvVars.arguments] || '');
-tr.setInput('addDefaultLabels', process.env[shared.TestEnvVars.addDefaultLabels] || 'false');
 
 console.log("Inputs have been set");
 
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
-process.env["SYSTEM_TEAMPROJECT"] = "testproj";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -101,10 +99,6 @@ a.exec[`docker build -f ${DockerFilePath} -t ajgtestacr1.azurecr.io/test/test:2`
 a.exec[`docker build -f ${DockerFilePath} -t ${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
-a.exec[`docker build -f ${DockerFilePath} --label com.visualstudio.image.system.teamfoundationcollectionuri=https://abc.visualstudio.com/ --label com.visualstudio.image.system.teamproject=testproj -t test/test:2`] = {
-    "code": 0,
-    "stdout": "successfully build image with labels"
-};
 a.exec[`docker tag test/test:2 ajgtestacr1.azurecr.io/test/test:2`] = {
     "code": 0
 };
@@ -128,6 +122,7 @@ a.exec[`docker build -f ${DockerFilePath} -t test:testtag -t test/test:2`] = {
 a.exec[`docker push test/test:2 -t testtag:testimage`] = {
     "code": 0
 };
+
 
 tr.setAnswers(<any>a);
 
