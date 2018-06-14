@@ -105,7 +105,11 @@
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [Switch]$CompressPackage
+        [Switch]$CompressPackage,
+
+        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName = "ApplicationName")]
+        [ref]$status
     )
 
 
@@ -142,6 +146,7 @@
 
     if (!$SkipPackageValidation)
     {
+        $status = "NewApp-TestingApplicationPackage"
         $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse)
         if (!$packageValidationSuccess)
         {
@@ -217,6 +222,7 @@
 
                 try
                 {
+                    $status = "NewApp-RemovingApplication"
                     $app | Remove-ServiceFabricApplication -Force
                 }
                 catch [System.TimeoutException]
@@ -230,6 +236,7 @@
                     # It will unregister the existing application's type and version even if its different from the application being created,
                     if ((Get-ServiceFabricApplication | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
+                        $status = "NewApp-UnregisteringApplicationType"
                         Unregister-ServiceFabricApplicationType -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -Force -TimeoutSec $UnregisterPackageTimeoutSec
                     }
                 }
@@ -250,13 +257,14 @@
             }
             if (!$typeIsInUse)
             {
+                $status = "NewApp-UnregisteringRegisteredApplicationType"
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                 $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
-                $ApplicationTypeAlreadyRegistered = $false
                 if (!$?)
                 {
                     throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
                 }
+                $ApplicationTypeAlreadyRegistered = $false
             }
             else
             {
@@ -302,7 +310,7 @@
                     Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
                 }
             }
-
+            $status = "NewApp-CopyingApplicationPackage"
             Copy-ServiceFabricApplicationPackage @copyParameters
             if (!$?)
             {
@@ -319,12 +327,13 @@
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
+            $status = "NewApp-RegisteringApplicationType"
             Register-ServiceFabricApplicationType @registerParameters
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
             }
-
+            $status = "NewApp-RemovingApplicationPackage"
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
             Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
         }
@@ -347,7 +356,7 @@
                 $ApplicationParameter = Merge-Hashtables -HashTableOld $appParamsFromFile -HashTableNew $ApplicationParameter
             }
         }
-
+        $status = "NewApp-CreatingNewApplication"
         New-ServiceFabricApplication -ApplicationName $ApplicationName -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -ApplicationParameter $ApplicationParameter
         if (!$?)
         {

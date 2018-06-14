@@ -113,7 +113,11 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [Switch]$SkipUpgradeSameTypeAndVersion
+        [Switch]$SkipUpgradeSameTypeAndVersion,
+
+        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName = "ApplicationName")]
+        [ref]$status
     )
 
     if (!(Test-Path -LiteralPath $ApplicationPackagePath))
@@ -191,6 +195,7 @@ function Publish-UpgradedServiceFabricApplication
 
     if (!$SkipPackageValidation)
     {
+        $status = "UpgradeApp-TestingApplicationPackage"
         $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
         if (!$packageValidationSuccess)
         {
@@ -235,6 +240,7 @@ function Publish-UpgradedServiceFabricApplication
             if (!$typeIsInUse)
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
+                $status = "UpgradeApp-UnregisteringRegisteredApplicationType"
                 $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 $ApplicationTypeAlreadyRegistered = $false
             }
@@ -281,6 +287,7 @@ function Publish-UpgradedServiceFabricApplication
                 }
             }
 
+            $status = "UpgradeApp-CopyingApplicationPackage"
             Copy-ServiceFabricApplicationPackage @copyParameters
             if (!$?)
             {
@@ -296,6 +303,7 @@ function Publish-UpgradedServiceFabricApplication
                 $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
             }
 
+            $status = "UpgradeApp-RegisteringApplicationType"
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
             Register-ServiceFabricApplicationType @registerParameters
             if (!$?)
@@ -335,16 +343,17 @@ function Publish-UpgradedServiceFabricApplication
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_StartAppUpgrade)
+            $status = "UpgradeApp-StartingApplicationUpgrade"
             Start-ServiceFabricApplicationUpgrade @UpgradeParameters
         }
         catch
         {
             Write-Host (Get-VstsLocString -Key SFSDK_StartUpgradeFailed -ArgumentList $_.Exception.Message)
-
             try
             {
                 if (!$ApplicationTypeAlreadyRegistered)
                 {
+                    $status = "UpgradeApp-UnregisteringApplicationType"
                     Write-Host (Get-VstsLocString -Key SFSDK_UnregisterAppTypeOnUpgradeFailure -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                     Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 }
@@ -380,6 +389,7 @@ function Publish-UpgradedServiceFabricApplication
             {
                 try
                 {
+                    $status = "UpgradeApp-UnregisteringUnusedApplicationType"
                     $registeredAppTypes | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 }
                 catch [System.Fabric.FabricException]

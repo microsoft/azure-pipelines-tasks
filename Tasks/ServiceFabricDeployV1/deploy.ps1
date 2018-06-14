@@ -51,6 +51,7 @@ try {
         }
     }
 
+    $status = "ConnectingToCluster"
     # Connect to cluster
     Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
@@ -107,6 +108,7 @@ try {
 
         if (!$skipValidation)
         {
+            $status = "TestingApplicationPackage"
             $isPackageValid = Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath
         }
 
@@ -176,6 +178,7 @@ try {
         $publishParameters['UpgradeParameters'] = $upgradeParameters
         $publishParameters['UnregisterUnusedVersions'] = $unregisterUnusedVersions
         $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
+        $publishParameters['Status'] = [ref]$status
 
         Publish-UpgradedServiceFabricApplication @publishParameters
     }
@@ -183,9 +186,14 @@ try {
     {
         $publishParameters['Action'] = "RegisterAndCreate"
         $publishParameters['OverwriteBehavior'] = Get-VstsInput -Name overwriteBehavior
+        $publishParameters['Status'] = [ref]$status
 
         Publish-NewServiceFabricApplication @publishParameters
     }
-} finally {
+}
+catch {
+    Write-Telemetry "Task_InternalError" "TaskStatus: $status | Exception: $_.Exception.GetType().FullName"
+}
+finally {
     Trace-VstsLeavingInvocation $MyInvocation
 }
