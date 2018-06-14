@@ -61,8 +61,8 @@ steps:
     publishLocation: container
 
 # Stage per task NuGet package
-- script: npm run layout
-  displayName: npm run layout
+- script: npm run package
+  displayName: npm run package
 
 # Publish per task NuGet package artifact
 - task: PublishBuildArtifacts@1
