@@ -146,7 +146,7 @@
 
     if (!$SkipPackageValidation)
     {
-        $status = "NewApp-TestingApplicationPackage"
+        $status.value = "NewApp-TestingApplicationPackage"
         $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse)
         if (!$packageValidationSuccess)
         {
@@ -222,7 +222,7 @@
 
                 try
                 {
-                    $status = "NewApp-RemovingApplication"
+                    $status.value = "NewApp-RemovingApplication"
                     $app | Remove-ServiceFabricApplication -Force
                 }
                 catch [System.TimeoutException]
@@ -236,7 +236,7 @@
                     # It will unregister the existing application's type and version even if its different from the application being created,
                     if ((Get-ServiceFabricApplication | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
-                        $status = "NewApp-UnregisteringApplicationType"
+                        $status.value = "NewApp-UnregisteringApplicationType"
                         Unregister-ServiceFabricApplicationType -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -Force -TimeoutSec $UnregisterPackageTimeoutSec
                     }
                 }
@@ -257,7 +257,7 @@
             }
             if (!$typeIsInUse)
             {
-                $status = "NewApp-UnregisteringRegisteredApplicationType"
+                $status.value = "NewApp-UnregisteringRegisteredApplicationType"
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                 $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 if (!$?)
@@ -310,7 +310,7 @@
                     Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
                 }
             }
-            $status = "NewApp-CopyingApplicationPackage"
+            $status.value = "NewApp-CopyingApplicationPackage"
             Copy-ServiceFabricApplicationPackage @copyParameters
             if (!$?)
             {
@@ -327,13 +327,13 @@
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            $status = "NewApp-RegisteringApplicationType"
+            $status.value = "NewApp-RegisteringApplicationType"
             Register-ServiceFabricApplicationType @registerParameters
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
             }
-            $status = "NewApp-RemovingApplicationPackage"
+            $status.value = "NewApp-RemovingApplicationPackage"
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
             Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
         }
@@ -356,7 +356,7 @@
                 $ApplicationParameter = Merge-Hashtables -HashTableOld $appParamsFromFile -HashTableNew $ApplicationParameter
             }
         }
-        $status = "NewApp-CreatingNewApplication"
+        $status.value = "NewApp-CreatingNewApplication"
         New-ServiceFabricApplication -ApplicationName $ApplicationName -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -ApplicationParameter $ApplicationParameter
         if (!$?)
         {
