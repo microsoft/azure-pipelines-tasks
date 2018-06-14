@@ -2,17 +2,18 @@
 Param()
 Trace-VstsEnteringInvocation $MyInvocation
 
-# Import required modules
-Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
-Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
-Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
-
-# Constants
 $defaultSasTokenTimeOutInHours = 4
-$isPremiumStorage = $false
 
-$ErrorActionPreference = 'Stop'
-# Get inputs for the task
+# Import required modules
+Import-Module "$PSScriptRoot\ps_modules\RemoteDeployer"
+Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
+Import-Module "$PSScriptRoot\ps_modules\TelemetryHelper"
+Import-VstsLocStrings -LiteralPath "$PSScriptRoot\Task.json"
+
+# dot source required files into current context
+. "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
+. "$PSScriptRoot\Utility.ps1"
+
 $connectedServiceNameSelector = Get-VstsInput -Name ConnectedServiceNameSelector -Require
 
 if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM") {
@@ -23,11 +24,6 @@ if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM") {
     $storageAccount = Get-VstsInput -Name StorageAccount
 }
 $storageAccount = $storageAccount.Trim()
-
-# Importing required version of azure cmdlets according to azureps installed on machine
-$azureUtility = Get-AzureUtility $connectedServiceName
-Write-Verbose -Verbose "Loading $azureUtility"
-. "$PSScriptRoot/$azureUtility"
 
 $sourcePath = Get-VstsInput -Name SourcePath -Require
 $sourcePath = $sourcePath.Trim('"')
@@ -43,48 +39,25 @@ if ($destination -eq "AzureBlob") {
 $outputStorageContainerSasToken = Get-VstsInput -Name OutputStorageContainerSasToken
 $outputStorageURI = Get-VstsInput -Name OutputStorageUri
 
+# Importing required version of azure utility according to the type of service endpoint being used
+$azureUtility = Get-AzureUtility $connectedServiceName
+Write-Verbose -Verbose "Loading $azureUtility"
+. "$PSScriptRoot\$azureUtility"
+
 Initialize-Azure
-
-# Import the loc strings.
-Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
-
-# Load all dependent files for execution
-. "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
-. "$PSScriptRoot\Utility.ps1"
-
-# Enabling detailed logging only when system.debug is true
-$enableDetailedLogging = ($env:system_debug -eq "true")
-
-# Telemetry
-
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
 try
 {
     Publish-EndpointTelemetry -endpointId $connectedServiceName
 
-    # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
+    # connectionType is the endpoint auth scheme (spn | usernamepassword | certificate)
     $connectionType = Get-TypeOfConnection -connectedServiceName $connectedServiceName
-
-    # Getting storage key for the storage account based on the connection type
     $storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
-
-    # creating storage context to be used while creating container, sas token, deleting container
-    $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
-	
-    # Geting Azure Storage Account type
-    $storageAccountType = Get-StorageAccountType -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
-    Write-Verbose "Obtained Storage Account type: $storageAccountType"
-    if(-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.Contains('Premium'))
-    {
-        $isPremiumStorage = $true
-    }
-
-
-	
-    # Getting Azure Blob Storage Endpoint
+    $isPremiumStorage = Assert-IsStorageAccountPremium -StorageAccount $storageAccount -ConnectionType $connectionType -ConnectedServiceName $connectedServiceName
     $blobStorageEndpoint = Get-blobStorageEndpoint -storageAccountName $storageAccount -connectionType $connectionType -connectedServiceName $connectedServiceName
-
+    Create-AzureStorageBlobContainerIfRequired -ContainerName $containerName -Destination $destination -StorageAccountName $storageAccount -StorageAccountKey $storageKey -IsPremiumStorage $isPremiumStorage
+    $storageContext = Create-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
 }
 catch
 {
@@ -93,44 +66,9 @@ catch
     throw
 }
 
-# Set optional arguments for azcopy blob upload
-<#if ($useDefaultArgumentsForBlobCopy)
-{
-    # Adding default optional arguments:
-    # /XO: Excludes an older source resource
-    # /Y: Suppresses all AzCopy confirmation prompts
-    # /SetContentType: Sets each blob's MIME type according to its file extension
-    # /Z: Journal file location
-    # /V: AzCopy verbose logs file location
-
-    Write-Verbose "Using default AzCopy arguments for uploading to blob storage"
-
-    $logFileName = "AzCopyVerbose_" + [guid]::NewGuid() + ".log"
-    $logFilePath = Join-Path -Path $azCopyLocation -ChildPath $logFileName
-
-    $additionalArgumentsForBlobCopy = "/XO /Y /SetContentType /Z:`"$azCopyLocation`" /V:`"$logFilePath`""
-
-    # Add more arguments if required
-
-    # Premium storage accounts only support page blobs
-    if($isPremiumStorage)
-    {
-        Write-Verbose "Setting BlobType to page for Premium Storage account."
-        $additionalArgumentsForBlobCopy += " /BlobType:page"
-    }
-
-    # $root container does not support sub folders. So excluding recursive copy option for $root container.
-    if($containerName -ne '$root')
-    {
-        Write-Verbose "Adding argument for recursive copy"
-        $additionalArgumentsForBlobCopy += " /S"
-    }
-} #>
-
-#Check-ContainerNameAndArgs -containerName $containerName -additionalArguments $additionalArgumentsForBlobCopy
 try {
-    $additionalArgumentsForBlobCopy = Get-ArgsForBlobCopy -ContainerName $containerName -IsPremiumStorage $isPremiumStorage
     # Uploading files to container
+    $additionalArgumentsForBlobCopy = Get-ArgsForBlobCopy -ContainerName $containerName -IsPremiumStorage $isPremiumStorage
     $azCopyLocation = Get-AzCopyLocation
     Upload-FilesToAzureContainer -sourcePath $sourcePath `
                                  -storageAccountName $storageAccount `
@@ -180,7 +118,6 @@ try
     } else {
         $environmentName = Get-VstsInput -Name EnvironmentName
     }
-
     
     # getting azure vms properties(name, fqdn, winrmhttps port)
     $azureVMResourcesProperties = Get-AzureVMResourcesProperties -resourceGroupName $environmentName -connectionType $connectionType `
@@ -212,15 +149,13 @@ try
                                              -copyFilesInParallel $copyFilesInParallel `
                                              -additionalArguments $additionalArgumentsForVMCopy `
                                              -azCopyToolLocation $azCopyLocation `
-                                             -fileCopyJobScript $AzureFileCopyRemoteJob `
-                                             -enableDetailedLogging $enableDetailedLogging
+                                             -fileCopyJobScript $AzureFileCopyRemoteJob
 
     Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
 }
 catch
 {
     Write-Verbose $_.Exception.ToString()
-
     Write-Telemetry "Task_InternalError" "CopyingToAzureVMFailed"
     throw
 }
@@ -228,7 +163,6 @@ finally
 {
     Remove-AzureContainer -containerName $containerName -storageContext $storageContext
     Write-Verbose "Completed Azure File Copy Task for Azure VMs Destination" -Verbose
-    Trace-VstsLeavingInvocation $MyInvocation
 }
 
 function Get-AzCopyLocation {
@@ -308,14 +242,16 @@ function Create-AzureStorageBlobContainerIfRequired {
         [Parameter(Mandatory = $true)]
         [string] $StorageAccountName,
         [Parameter(Mandatory = $true)]
-        [string] $StorageAccountKey
+        [string] $StorageAccountKey,
+        [Parameter(Mandatory = $true)]
+        [bool] $IsPremiumStorage
     )
     # creating temporary container for uploading files if no input is provided for container name
     if([string]::IsNullOrEmpty($ContainerName) -or ($Destination -ne "AzureBlob"))
     {
         $ContainerName = [guid]::NewGuid().ToString()
         $storageContext = Create-AzureStorageContext -StorageAccountName $StorageAccountName  -StorageAccountKey $StorageAccountKey
-        Create-AzureContainer -containerName $ContainerName -storageContext $storageContext -isPremiumStorage $isPremiumStorage
+        Create-AzureContainer -containerName $ContainerName -storageContext $storageContext -isPremiumStorage $IsPremiumStorage
     }
 }
 
@@ -330,4 +266,24 @@ function Publish-EndpointTelemetry {
     }
     $telemetryJson = ConvertTo-Json -InputObject $telemetry -Compress
     Write-Host "##vso[telemetry.publish area=TaskEndpointId;feature=AzureFileCopy]$telemetryJson"
+}
+
+function Assert-IsStorageAccountPremium {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [string] $StorageAccount,
+        [Parameter(Mandatory = $true)]
+        [string] $ConnectionType,
+        [Parameter(Mandatory = $true)]
+        [string] $ConnectedServiceName
+    )
+    $storageAccountType = Get-StorageAccountType -storageAccountName $StorageAccount -connectionType $ConnectionType -connectedServiceName $ConnectedServiceName
+    Write-Verbose "Obtained Storage Account type: $storageAccountType"
+    if (-not [string]::IsNullOrEmpty($storageAccountType) -and $storageAccountType.ToLowerInvariant().Contains('premium')) {
+        $isPremiumStorage = $true
+    } else {
+        $isPremiumStorage = $false
+    }
+    return $isPremiumStorage
 }

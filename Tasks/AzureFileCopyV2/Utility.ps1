@@ -1120,10 +1120,10 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [bool]$copyFilesInParallel,
         [string]$additionalArguments,
         [string]$azCopyToolLocation,
-        [scriptblock]$fileCopyJobScript,
-        [bool]$enableDetailedLogging
+        [scriptblock]$fileCopyJobScript
     )
 
+    $enableDetailedLogging = ($env:System_Debug -eq 'true')
     # Generate storage container URL
     $containerURL = [string]::Format("{0}/{1}", $blobStorageEndpoint.Trim("/"), $containerName)
 
