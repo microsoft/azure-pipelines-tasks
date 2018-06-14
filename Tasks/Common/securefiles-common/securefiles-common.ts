@@ -13,19 +13,10 @@ export class SecureFileHelpers {
         let serverCreds: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'ACCESSTOKEN', false);
         let authHandler = vsts.getPersonalAccessTokenHandler(serverCreds);
 
-        let proxy = tl.getHttpProxyConfiguration();
-
-        let option: IRequestOptions = {
-            proxy: {
-                    proxyUrl: proxy.proxyUrl,
-                    proxyUsername: proxy.proxyUsername,
-                    proxyPassword: proxy.proxyPassword,
-                    proxyBypassHosts: proxy.proxyBypassHosts
-                },
-                ignoreSslError: true
-            };
-
-        this.serverConnection = new vsts.WebApi(serverUrl, authHandler, option);
+        const proxy = tl.getHttpProxyConfiguration();
+        const options = proxy ? { proxy, ignoreSslError: true } : undefined;
+        
+        this.serverConnection = new vsts.WebApi(serverUrl, authHandler, options);
     }
 
     /**
