@@ -14,10 +14,10 @@ function Extract-Dacpac {
     
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
-    Write-Host "Generated dacpac file: $targetDacpacFilePath. Uploading the dacpac file to the logs."
+    Write-Host (Get-VstsLocString -Key "SAD_GeneratedFile" -ArgumentList "$targetDacpacFilePath")
+    Write-Host "##vso[task.uploadfile]$targetDacpacFilePath"
     Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $targetDacpacFilePath)
     Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile]$targetDacpacFilePath"
-    Write-Host "##vso[task.uploadfile]$targetDacpacFilePath"
 }
 
 function Export-Bacpac {
@@ -36,10 +36,10 @@ function Export-Bacpac {
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
-    Write-Host "Generated bacpac file: $targetBacpacFilePath. Uploading the bacpac file to the logs."
+    Write-Host (Get-VstsLocString -Key "SAD_GeneratedFile" -ArgumentList "$targetBacpacFilePath")
+    Write-Host "##vso[task.uploadfile] $targetBacpacFilePath"
     Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $targetBacpacFilePath)
     Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile] $targetBacpacFilePath"
-    Write-Host "##vso[task.uploadfile] $targetBacpacFilePath"
 }
 
 function Import-Bacpac {
@@ -52,7 +52,7 @@ function Import-Bacpac {
         [string] $sqlpackageAdditionalArguments
     )
 
-    $bacpacFilePath = Find-SqlFiles -filePathPattern $bacpacFile -verboseMessage "Bacpac file:" -throwIfMultipleFilesOrNoFilePresent
+    $bacpacFilePath = Find-SqlFiles -filePathPattern $bacpacFile -verboseMessage (Get-VstsLocString -Key "SAD_BacpacFilePath") -throwIfMultipleFilesOrNoFilePresent
 
     $sqlpackageArguments = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments
     $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "Import" -sourceFile $bacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure
@@ -71,25 +71,25 @@ function Deploy-Report {
         [string] $sqlpackageAdditionalArguments
     )
 
-    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
+    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage (Get-VstsLocString -Key "SAD_DacpacFilePath") -throwIfMultipleFilesOrNoFilePresent
 
     # Publish profile path validations - Ensure that only one publish profile file is found
     $publishProfilePath = "" 
     if ([string]::IsNullOrWhitespace($publishProfile) -eq $false -and $publishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $publishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")) {
-        $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage "Publish profile path:" -throwIfMultipleFilesOrNoFilePresent
+        $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage (Get-VstsLocString -Key "SAD_PublishProfilePath") -throwIfMultipleFilesOrNoFilePresent
     }
 
     $outputXmlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_DeployReport.xml"
     
     $sqlpackageArguments = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments
-    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfile -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure 
+    $sqlpackageArgumentsToBeLogged = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "DeployReport" -sourceFile $dacpacFilePath -publishProfile $publishProfilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -outputPath $outputXmlPath -additionalArguments $sqlpackageAdditionalArguments -isOutputSecure 
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
-    Write-Host "Generated deploy report: $outputXmlPath. Uploading the deploy report file to the logs."
+    Write-Host (Get-VstsLocString -Key "SAD_GeneratedFile" -ArgumentList "$outputXmlPath")
+    Write-Host "##vso[task.uploadfile]$outputXmlPath"
     Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $outputXmlPath)
     Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile]$outputXmlPath"
-    Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
 
 function Drift-Report {
@@ -108,10 +108,10 @@ function Drift-Report {
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
-    Write-Host "Generated drift report: $outputXmlPath. Uploading the drift report file to the logs."
+    Write-Host (Get-VstsLocString -Key "SAD_GeneratedFile" -ArgumentList "$outputXmlPath")
+    Write-Host "##vso[task.uploadfile]$outputXmlPath"
     Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $outputXmlPath)
     Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile]$outputXmlPath"
-    Write-Host "##vso[task.uploadfile]$outputXmlPath"
 }
 
 function Script-Action {
@@ -125,12 +125,12 @@ function Script-Action {
         [string] $sqlpackageAdditionalArguments
     )
 
-    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac file:" -throwIfMultipleFilesOrNoFilePresent
+    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage (Get-VstsLocString -Key "SAD_DacpacFilePath") -throwIfMultipleFilesOrNoFilePresent
 
     # Publish profile path validations - Ensure that only one publish profile file is found
     $publishProfilePath = "" 
     if ([string]::IsNullOrWhitespace($publishProfile) -eq $false -and $publishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $publishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")) {
-        $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage "Publish profile path:" -throwIfMultipleFilesOrNoFilePresent
+        $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage (Get-VstsLocString -Key "SAD_PublishProfilePath") -throwIfMultipleFilesOrNoFilePresent
     }
 
     $outputSqlPath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_Script.sql"
@@ -140,10 +140,10 @@ function Script-Action {
 
     Execute-SqlPackage -sqlpackageArguments $sqlpackageArguments -sqlpackageArgumentsToBeLogged $sqlpackageArgumentsToBeLogged
 
-    Write-Host "Generated script: $outputSqlPath. Uploading the script file to the logs."
+    Write-Host (Get-VstsLocString -Key "SAD_GeneratedFile" -ArgumentList "$outputSqlPath")
+    Write-Host "##vso[task.uploadfile]$outputSqlPath"
     Write-Host (Get-VstsLocString -Key "SAD_SetOutputVariable" -ArgumentList "SqlDeploymentOutputFile", $outputSqlPath)
     Write-Host "##vso[task.setVariable variable=SqlDeploymentOutputFile]$outputSqlPath"
-    Write-Host "##vso[task.uploadfile]$outputSqlPath"
 }
 
 function Publish-Dacpac {
@@ -158,12 +158,12 @@ function Publish-Dacpac {
     )
     
     #Ensure that a single package (.dacpac) file is found
-    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage "Dacpac package file:" -throwIfMultipleFilesOrNoFilePresent
+    $dacpacFilePath = Find-SqlFiles -filePathPattern $dacpacFile -verboseMessage (Get-VstsLocString -Key "SAD_DacpacFilePath") -throwIfMultipleFilesOrNoFilePresent
 
     # Publish profile path validations - Ensure that only one publish profile file is found
     $publishProfilePath = "" 
     if ([string]::IsNullOrWhitespace($publishProfile) -eq $false -and $publishProfile -ne $env:SYSTEM_DEFAULTWORKINGDIRECTORY -and $publishProfile -ne [String]::Concat($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "\")) {
-        $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage "Publish profile path:" -throwIfMultipleFilesOrNoFilePresent
+        $publishProfilePath = Find-SqlFiles -filePathPattern $publishProfile -verboseMessage (Get-VstsLocString -Key "SAD_PublishProfilePath") -throwIfMultipleFilesOrNoFilePresent
     }
 
     $sqlpackageArguments = Get-SqlPackageCommandArguments -targetMethod "server" -sqlpackageAction "Publish" -sourceFile $dacpacFilePath -targetServerName $serverName -targetDatabaseName $databaseName -targetUser $sqlUsername -targetPassword $sqlPassword -publishProfile $publishProfilePath -additionalArguments $sqlpackageAdditionalArguments
@@ -199,7 +199,7 @@ function Execute-PublishAction {
             Run-InlineSql -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline $sqlInline -sqlcmdAdditionalArguments $sqlcmdInlineAdditionalArguments
         }
         default {
-            throw "Invalid option selected for publish action: $taskNameSelector"
+            throw Get-VstsLocString -Key "SAD_InvalidPublishOption" -ArgumentList $taskNameSelector
         }
     }
 }
@@ -273,7 +273,7 @@ function Run-SqlCmd {
     if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout")))
     {
         # Add Timeout of 120 Seconds
-        $sqlcmdAdditionalArguments = $sqlcmdAdditionalArguments + " -ConnectionTimeout $defaultTimeout"
+        $sqlcmdAdditionalArguments = $sqlcmdAdditionalArguments + " -ConnectionTimeout 120"
     }
 
     $commandToRun += " -Inputfile `"$sqlFilePath`" " + $sqlcmdAdditionalArguments

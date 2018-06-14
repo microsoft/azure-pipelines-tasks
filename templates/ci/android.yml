@@ -5,28 +5,28 @@
 queue: 'Hosted VS2017'
 steps:
 
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'assembleRelease'
+  - task: Gradle@2
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: 'assembleRelease'
 
-#- task: AndroidSigning@2
-#  inputs:
-#    apkFiles: '**/*.apk'
-#    jarsign: true
-#    jarsignerKeystoreFile: ''
-#    jarsignerKeystorePassword: ''
-#    jarsignerKeystoreAlias: ''
-#    jarsignerKeyPassword: ''
-#    jarsignerArguments: '-verbose -sigalg MD5withRSA -digestalg SHA1'
-#    zipalign: true
-#    zipalignFile: ''
+#  - task: AndroidSigning@2
+#    inputs:
+#      apkFiles: '**/*.apk'
+#      jarsign: true
+#      jarsignerKeystoreFile: ''
+#      jarsignerKeystorePassword: ''
+#      jarsignerKeystoreAlias: ''
+#      jarsignerKeyPassword: ''
+#      jarsignerArguments: '-verbose -sigalg MD5withRSA -digestalg SHA1'
+#      zipalign: true
+#      zipalignFile: ''
 
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.apk'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+#  - task: CopyFiles@2
+#    inputs:
+#      contents: '**/*.apk'
+#      targetFolder: '$(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1
 
 # Next steps:
 # Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest

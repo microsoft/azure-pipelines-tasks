@@ -125,7 +125,7 @@
                 "DriftReport": "Drift Report",
                 "DeployReport": "Deploy Report"
             },
-            "helpMarkDown": "Publish, Extract, Export, Import, Script, DriftReport, DeployReport actions. More info link."
+            "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
 
         },
         {
@@ -273,7 +273,7 @@
     "outputVariables": [
         {
             "name": "SqlDeploymentOutputFile",
-            "description": "Generated output file path for Extract, Export, Script, DriftReport and DeployReport actions."
+            "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
         }
     ],
     "instanceNameFormat": "Azure SQL $(DeploymentAction)",
@@ -297,6 +297,11 @@
         "SAD_TroubleshootingLink": "Checkout how to troubleshoot failures https://aka.ms/sqlazuredeployreadme#troubleshooting-",
         "SAD_InvalidDeploymentAction": "Invalid deployment action: {0}",
         "SAD_SetOutputVariable": "Setting output variable '{0}' to '{1}'",
-        "SAD_TemporaryInlineSqlFile": "Temporary inline sql file: {0}"
+        "SAD_TemporaryInlineSqlFile": "Temporary inline sql file: {0}",
+        "SAD_GeneratedFile": "Generated file {0}. Uploading file to the logs.",
+        "SAD_InvalidPublishOption": "Invalid option selected for publish action: {0}",
+        "SAD_DacpacFilePath": "Dacpac file path:",
+        "SAD_BacpacFilePath": "Bacpac file path:",
+        "SAD_PublishProfilePath": "Publish profile path:"
     }
 }

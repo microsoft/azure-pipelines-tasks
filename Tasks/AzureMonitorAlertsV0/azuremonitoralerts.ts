@@ -20,6 +20,12 @@ async function run() {
 		let alertRules: IAzureMetricAlertRulesList = JSON.parse(tl.getInput("AlertRules", true));
 		let notifyServiceOwners: boolean = tl.getInput("NotifyServiceOwners") && tl.getInput("NotifyServiceOwners").toLowerCase() === "true" ? true : false;
 		let notifyEmails: string = tl.getInput("NotifyEmails");
+
+		let endpointScheme = tl.getEndpointAuthorizationScheme(connectedServiceName, true);
+		if (endpointScheme === "ManagedServiceIdentity") {
+			throw tl.loc("MSINotSupported");
+		}
+
 		let endpoint = await initializeAzureRMEndpointData(connectedServiceName);
 
 		let resourceId: string = `/subscriptions/${endpoint["subscriptionId"]}/resourceGroups/${resourceGroupName}/providers/${resourceType}/${resourceName}`

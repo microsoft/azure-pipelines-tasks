@@ -5,17 +5,17 @@
 queue: 'Hosted macOS'
 steps:
 
-- task: XamariniOS@1
-  inputs:
-    solutionFile: '**/*.sln'
-    configuration: 'Release'
-    buildForSimulator: true
+  - task: XamariniOS@1
+    inputs:
+      solutionFile: '**/*.sln'
+      configuration: 'Release'
+      buildForSimulator: true
 
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.ipa'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+#  - task: CopyFiles@2
+#    inputs:
+#      contents: '**/*.ipa'
+#      targetFolder: '$(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1
 
 # Next steps:
 # Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest

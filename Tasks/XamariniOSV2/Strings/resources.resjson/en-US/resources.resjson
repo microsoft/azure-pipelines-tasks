@@ -17,7 +17,7 @@
   "loc.input.label.forSimulator": "Build for iOS Simulator",
   "loc.input.help.forSimulator": "Optionally build for the iOS Simulator instead of physical iOS devices.",
   "loc.input.label.runNugetRestore": "Run NuGet restore",
-  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The 'nuget' tool in the PATH of the build agent machine will be used. To use a different version of NuGet or set additional arguments, use the [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task.",
+  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The 'nuget' tool in the PATH of the build agent machine will be used. To use a different version of NuGet or set additional arguments, use the [NuGet Tool Installer](https://go.microsoft.com/fwlink/?linkid=852538) task.",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Additional command line arguments that should be used to build.",
   "loc.input.label.cwd": "Working directory",

@@ -179,14 +179,14 @@ export class VsoClient {
                         locationsLookup[resourceLocation.id.toLowerCase()] = resourceLocation;
                     }
 
+                    this._locationsByAreaPromises[area] = areaLocationsPromise;
+                    
                     resolve(locationsLookup);
                 })
                 .catch((err) => {
                     reject(err);
                 });
             });
-
-            this._locationsByAreaPromises[area] = areaLocationsPromise;
         }
 
         return areaLocationsPromise;

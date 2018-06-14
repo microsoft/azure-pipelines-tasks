@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.111.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -131,6 +131,7 @@
     "CreatedRule": "ms-resource:loc.messages.CreatedRule",
     "UpdatedRule": "ms-resource:loc.messages.UpdatedRule",
     "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken",
-    "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck"
+    "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck",
+    "MSINotSupported": "ms-resource:loc.messages.MSINotSupported"
   }
 }

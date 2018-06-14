@@ -1,5 +1,13 @@
 var msdeployUtility = require('webdeployment-common/msdeployutility.js');
 
+var errorMessages = {
+    'ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER': 'ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER',
+    "An error was encountered when processing operation 'Delete Directory' on 'D:\\home\\site\\wwwroot\\app_data\\jobs\\continous'": "WebJobsInProgressIssue",
+    "Cannot delete file main.dll. Error code: FILE_IN_USE": "FILE_IN_USE",
+    "transport connection": "transport connection",
+    "error code: ERROR_CONNECTION_TERMINATED": "ERROR_CONNECTION_TERMINATED"
+}
+
 function checkParametersIfPresent(argumentString: string, argumentCheckArray: Array<string>) {
     for(var argument of argumentCheckArray) {
         if(argumentString.indexOf(argument) == -1) {
@@ -97,3 +105,12 @@ if(checkParametersIfPresent(overrideRetryArgument, ['-retryAttempts:11', '-retry
 else {
     throw new Error('ARGUMENT WITH OVERRIDE RETRY FLAG FAILED');
 }
+
+// msdeployutility getWebDeployErrorCode
+for(var errorMessage in errorMessages) {
+    if(msdeployUtility.getWebDeployErrorCode(errorMessage) != errorMessages[errorMessage]) {
+        throw new Error('MSDEPLOY getWebDeployErrorCode failed');
+    }
+}
+
+console.log('MSDEPLOY getWebDeployErrorCode passed');
