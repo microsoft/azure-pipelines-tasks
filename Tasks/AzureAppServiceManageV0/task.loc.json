@@ -18,7 +18,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 32
+    "Patch": 33
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -191,6 +191,15 @@
       },
       "visibleRule": "Action == Enable Continuous Monitoring",
       "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsResourceName"
+    },
+    {
+      "name": "ApplicationInsightsWebTestName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ApplicationInsightsWebTestName",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "Action == Enable Continuous Monitoring",
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsWebTestName"
     }
   ],
   "outputVariables": [

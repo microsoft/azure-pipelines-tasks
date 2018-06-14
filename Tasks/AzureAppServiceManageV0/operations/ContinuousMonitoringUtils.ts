@@ -9,7 +9,7 @@ import { AzureApplicationInsightsWebTestsUtils } from './AzureApplicationInsight
 
 const APPLICATION_INSIGHTS_EXTENSION_NAME: string = "Microsoft.ApplicationInsights.AzureWebSites";
 
-export async function enableContinuousMonitoring(endpoint: AzureEndpoint, appService: AzureAppService, appInsights: AzureApplicationInsights) {
+export async function enableContinuousMonitoring(endpoint: AzureEndpoint, appService: AzureAppService, appInsights: AzureApplicationInsights, testName?: string) {
     try {
         console.log(tl.loc('EnablingContinousMonitoring', appService.getName()));
         var appDetails = await appService.get();
@@ -42,7 +42,7 @@ export async function enableContinuousMonitoring(endpoint: AzureEndpoint, appSer
         try {
             tl.debug('add web test for app service - app insights');
             var appInsightsWebTestsUtils: AzureApplicationInsightsWebTestsUtils = new AzureApplicationInsightsWebTestsUtils(appInsightsWebTests);
-            await appInsightsWebTestsUtils.addWebTest(appInsightsResource, applicationUrl);
+            await appInsightsWebTestsUtils.addWebTest(appInsightsResource,applicationUrl, testName);
         }
         catch(error) {
             tl.warning(error);
