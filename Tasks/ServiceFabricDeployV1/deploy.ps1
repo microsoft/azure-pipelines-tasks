@@ -13,6 +13,7 @@ try {
     . "$PSScriptRoot\utilities.ps1"
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
     Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
+    Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
     # Collect input values
 
@@ -192,7 +193,9 @@ try {
     }
 }
 catch {
-    Write-Telemetry "Task_InternalError" "TaskStatus: $status | Exception: $_.Exception.GetType().FullName"
+    $exceptionName = $_.Exception.GetType().FullName
+    Write-Telemetry "Task_InternalError" "$status | $exceptionName"
+    throw
 }
 finally {
     Trace-VstsLeavingInvocation $MyInvocation
