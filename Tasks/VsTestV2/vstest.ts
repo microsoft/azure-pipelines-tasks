@@ -643,7 +643,7 @@ function publishTestResults(testResultsDirectory: string): tl.TaskResult {
 
             if (resultFiles && resultFiles.length !== 0) {
                 const tp = new tl.TestPublisher('VSTest');
-                tp.publish(resultFiles, 'false', vstestConfig.buildPlatform, vstestConfig.buildConfig, vstestConfig.testRunTitle, vstestConfig.publishRunAttachments);
+                tp.publish(resultFiles, 'true', vstestConfig.buildPlatform, vstestConfig.buildConfig, vstestConfig.testRunTitle, vstestConfig.publishRunAttachments);
             } else {
                 console.log('##vso[task.logissue type=warning;code=002003;]');
                 tl.warning(tl.loc('NoResultsToPublish'));
