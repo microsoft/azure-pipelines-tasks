@@ -347,24 +347,6 @@ function Get-AzureRMResourceGroupResourcesDetails
     return $azureRGResourcesDetails
 }
 
-function Generate-AzureStorageContainerSASToken
-{
-    param([string]$containerName,
-          [object]$storageContext,
-          [System.Int32]$tokenTimeOutInHours)
-
-    if(-not [string]::IsNullOrEmpty($containerName) -and $storageContext)
-    {
-        $storageAccountName = $storageContext.StorageAccountName
-
-        Write-Verbose "[Azure Call]Generating SasToken for container: $containerName in storage: $storageAccountName with expiry time: $tokenTimeOutInHours hours"
-        $containerSasToken = New-AzureStorageContainerSASToken -Name $containerName -ExpiryTime (Get-Date).AddHours($tokenTimeOutInHours) -Context $storageContext -Permission rwdl
-        Write-Verbose "[Azure Call]Generated SasToken: $containerSasToken successfully for container: $containerName in storage: $storageAccountName"
-
-        return $containerSasToken
-    }
-}
-
 function Get-AzureMachineStatus
 {
     param([string]$resourceGroupName,

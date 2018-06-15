@@ -12,3 +12,21 @@ function Create-AzureStorageContext
         return $storageContext
     }
 }
+
+function Generate-AzureStorageContainerSASToken {
+    Param (
+        [Parameter(Mandatory = $true)]
+        [string] $ContainerName,
+        [Parameter(Mandatory = $true)]
+        [string] $StorageAccountName,
+        [Parameter(Mandatory = $true)]
+        [string] $StorageAccountKey,
+        [string] $Permission = "r",
+        [int] $SASTokenTimeoutInHrs = 4
+    )
+    $storageContext = Create-AzureStorageContext -StorageAccountName $StorageAccountName  -StorageAccountKey $StorageAccountKey
+    Write-Verbose "[Azure Call]Generating SasToken for container: $ContainerName in storage: $StorageAccountName with expiry time: $SASTokenTimeoutInHrs hours"
+    $storageContainerSaSToken = New-AzureStorageContainerSASToken -Name $ContainerName -Context $storageContext -Permission $Permission -ExpiryTime (Get-Date).AddHours($SASTokenTimeoutInHrs)
+    Write-Verbose "[Azure Call]Generated SasToken: $storageContainerSaSToken successfully for container: $ContainerName in storage: $StorageAccountName"
+    return $storageContainerSaSToken
+}
