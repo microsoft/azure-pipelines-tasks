@@ -1,8 +1,8 @@
 {
-  "name": "vsts-tasks-azurewebappslotswap",
+  "name": "vsts-tasks-azurepolicymanage",
   "version": "0.1.0",
-  "description": "VSTS Azure WebApp Slot Swap",
-  "main": "azurewebappslotswap.js",
+  "description": "VSTS Azure Policy Manage",
+  "main": "azurepolicymanage.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
