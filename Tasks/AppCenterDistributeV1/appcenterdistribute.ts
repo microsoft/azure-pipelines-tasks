@@ -167,6 +167,27 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
         ]
     };
 
+    const branchName = process.env['BUILD_SOURCEBRANCHNAME'];
+    const sourceVersion = process.env['BUILD_SOURCEVERSION'];
+
+    // Builds started by App Center has the commit message set when distribution is enabled
+    const commitMessage = process.env['LASTCOMMITMESSAGE'];
+
+    // Including these information for distribution notification to have additional context
+    // Commit message is optional
+    if (branchName && sourceVersion) {
+        const build = {
+            branch: branchName,
+            commit_hash: sourceVersion
+        }
+
+        if (commitMessage) {
+            build['commit_message'] = commitMessage;
+        }
+
+        publishBody = Object.assign(publishBody, { build: build });
+    }
+
     request.patch({ url: publishReleaseUrl, headers: headers, json: publishBody }, (err, res, body) => {
         responseHandler(defer, err, res, body, () => {
             defer.resolve();
