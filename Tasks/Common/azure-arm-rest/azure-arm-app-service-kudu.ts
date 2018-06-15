@@ -525,7 +525,7 @@ export class Kudu {
         physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
         var httpRequest = new webClient.WebRequest();
         httpRequest.method = 'DELETE';
-        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}}`);
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}`);
         httpRequest.headers = {
             'If-Match': '*'
         };
