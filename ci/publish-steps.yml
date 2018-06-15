@@ -69,7 +69,7 @@ steps:
   displayName: Publish per task NuGet package artifact
   inputs:
     pathToPublish: _package/nuget-packages
-    artifactName: PerTaskPackages
+    artifactName: IndividualNuGetPackages
     publishLocation: container
 
 # Publish milestone package
