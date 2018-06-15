@@ -227,6 +227,7 @@
                 }
                 catch [System.TimeoutException]
                 {
+                    Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout -ArgumentList $ApplicationName)
                     $app | Remove-ServiceFabricApplication -Force -ForceRemove
                 }
 
