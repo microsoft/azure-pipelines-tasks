@@ -105,11 +105,7 @@
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [Switch]$CompressPackage,
-
-        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
-        [Parameter(ParameterSetName = "ApplicationName")]
-        [ref]$status
+        [Switch]$CompressPackage
     )
 
 
@@ -146,7 +142,7 @@
 
     if (!$SkipPackageValidation)
     {
-        $status.value = "NewApp-TestingApplicationPackage"
+        $global:status = "TestingApplicationPackage"
         $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse)
         if (!$packageValidationSuccess)
         {
@@ -222,7 +218,7 @@
 
                 try
                 {
-                    $status.value = "NewApp-RemovingApplication"
+                    $global:status = "RemovingApplication"
                     $app | Remove-ServiceFabricApplication -Force
                 }
                 catch [System.TimeoutException]
@@ -237,7 +233,7 @@
                     # It will unregister the existing application's type and version even if its different from the application being created,
                     if ((Get-ServiceFabricApplication | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
-                        $status.value = "NewApp-UnregisteringApplicationType"
+                        $global:status = "UnregisteringApplicationType"
                         Unregister-ServiceFabricApplicationType -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -Force -TimeoutSec $UnregisterPackageTimeoutSec
                     }
                 }
@@ -258,7 +254,7 @@
             }
             if (!$typeIsInUse)
             {
-                $status.value = "NewApp-UnregisteringRegisteredApplicationType"
+                $global:status = "UnregisteringRegisteredApplicationType"
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                 $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 if (!$?)
@@ -311,7 +307,7 @@
                     Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
                 }
             }
-            $status.value = "NewApp-CopyingApplicationPackage"
+            $global:status = "CopyingApplicationPackage"
             Copy-ServiceFabricApplicationPackage @copyParameters
             if (!$?)
             {
@@ -328,13 +324,13 @@
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            $status.value = "NewApp-RegisteringApplicationType"
+            $global:status = "RegisteringApplicationType"
             Register-ServiceFabricApplicationType @registerParameters
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
             }
-            $status.value = "NewApp-RemovingApplicationPackage"
+            $global:status = "RemovingApplicationPackage"
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
             Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
         }
@@ -357,7 +353,7 @@
                 $ApplicationParameter = Merge-Hashtables -HashTableOld $appParamsFromFile -HashTableNew $ApplicationParameter
             }
         }
-        $status.value = "NewApp-CreatingNewApplication"
+        $global:status = "CreatingNewApplication"
         New-ServiceFabricApplication -ApplicationName $ApplicationName -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -ApplicationParameter $ApplicationParameter
         if (!$?)
         {

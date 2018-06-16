@@ -52,7 +52,7 @@ try {
         }
     }
 
-    $status = "ConnectingToCluster"
+    $global:status = "ConnectingToCluster"
     # Connect to cluster
     Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
@@ -109,7 +109,7 @@ try {
 
         if (!$skipValidation)
         {
-            $status = "TestingApplicationPackage"
+            $global:status = "TestingApplicationPackage"
             $isPackageValid = Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath
         }
 
@@ -179,7 +179,6 @@ try {
         $publishParameters['UpgradeParameters'] = $upgradeParameters
         $publishParameters['UnregisterUnusedVersions'] = $unregisterUnusedVersions
         $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
-        $publishParameters['Status'] = [ref]$status
 
         Publish-UpgradedServiceFabricApplication @publishParameters
     }
@@ -187,14 +186,13 @@ try {
     {
         $publishParameters['Action'] = "RegisterAndCreate"
         $publishParameters['OverwriteBehavior'] = Get-VstsInput -Name overwriteBehavior
-        $publishParameters['Status'] = [ref]$status
 
         Publish-NewServiceFabricApplication @publishParameters
     }
 }
 catch {
     $exceptionName = $_.Exception.GetType().FullName
-    Write-Telemetry "Task_InternalError" "$status | $exceptionName"
+    Write-Telemetry "Task_InternalError" "$global:status | $exceptionName"
     throw
 }
 finally {
