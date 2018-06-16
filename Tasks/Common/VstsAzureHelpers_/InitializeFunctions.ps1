@@ -53,8 +53,8 @@ function Initialize-AzureSubscription {
     $scopeLevel = "Subscription"
     if($Endpoint.Data.scope)
     {
-        $scopeLevel = $Endpoint.Data.scope
-    
+        $scopeLevel = $Endpoint.Data.scopeLevel
+    }
 
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
@@ -163,6 +163,7 @@ function Initialize-AzureSubscription {
                 Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
             }
+            
             if($scopeLevel -eq "Subscription")
             {
                 Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
