@@ -15,7 +15,7 @@ export class SecureFileHelpers {
 
         const proxy = tl.getHttpProxyConfiguration();
         const options = proxy ? { proxy, ignoreSslError: true } : undefined;
-        
+
         this.serverConnection = new vsts.WebApi(serverUrl, authHandler, options);
     }
 
@@ -30,8 +30,16 @@ export class SecureFileHelpers {
         const file: NodeJS.WritableStream = fs.createWriteStream(tempDownloadPath);
 
         const agentApi = await this.serverConnection.getTaskAgentApi();
+
+        const ticket = tl.getSecureFileTicket(secureFileId);
+        if (!ticket) {
+            // Workaround bug #7491. tl.loc only works if the consuming tasks define the resource string.
+            throw new Error(`Download ticket for SecureFileId ${secureFileId} not found.`);
+        }
+
         const stream = (await agentApi.downloadSecureFile(
-            tl.getVariable('SYSTEM.TEAMPROJECT'), secureFileId, tl.getSecureFileTicket(secureFileId), false)).pipe(file);
+            tl.getVariable('SYSTEM.TEAMPROJECT'), secureFileId, ticket, false)).pipe(file);
+
         const defer = Q.defer();
         stream.on('finish', () => {
             defer.resolve();
