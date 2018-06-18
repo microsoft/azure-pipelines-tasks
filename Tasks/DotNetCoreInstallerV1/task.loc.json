@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 2
   },
   "satisfies": [
     "DotNetCore"
@@ -34,12 +34,20 @@
       }
     },
     {
-      "name": "version",
+      "name": "versionSpec",
       "type": "string",
-      "label": "ms-resource:loc.input.label.version",
+      "label": "ms-resource:loc.input.label.versionSpec",
       "defaultValue": "1.0.4",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+    },
+    {
+      "name": "checkLatest",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.checkLatest",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.checkLatest"
     }
   ],
   "execution": {

@@ -9,9 +9,51 @@ import * as path from 'path';
 
 async function run() {
     let packageType = taskLib.getInput('packageType', true);
-    let version = taskLib.getInput('version', true).trim();
-    console.log(taskLib.loc("ToolToInstall", packageType, version));
-    await getDotnetCore(packageType, version);
+    let versionSpec = taskLib.getInput('versionSpec', true);
+    let checkLatest: boolean = taskLib.getBoolInput('checkLatest', false);
+    //let version = taskLib.getInput('version', true).trim();
+    console.log(taskLib.loc("ToolToInstall", packageType, versionSpec));
+    await getDotnetCore(packageType, versionSpec, checkLatest);
+}
+
+async function getDotnetCore(packageType: string, versionSpec: string, checkLatest: boolean) {
+    if (toolLib.isExplicitVersion(versionSpec)) {
+        checkLatest = false; // check latest doesn't make sense when explicit version
+    }
+
+    // check cache
+    let toolPath: string;
+    if (!checkLatest) {
+        toolPath = getLocalTool(packageType, versionSpec);
+    }
+
+    if (!toolPath) {
+        let version: string;
+        if (toolLib.isExplicitVersion(versionSpec)) {
+            // version to download
+            version = versionSpec;
+        }
+        else {
+            // query nodejs.org for a matching version
+            version = await queryLatestMatch(packageType, versionSpec);
+            if (!version) {
+                throw taskLib.loc("VersionNotFound", versionSpec);
+            }
+
+            // check cache
+            toolPath = getLocalTool(packageType, version)
+        }
+
+        if (!toolPath) {
+            // download, extract, cache
+            toolPath = await acquireDotNetCore(packageType, version);
+        }
+    }
+}
+
+async function queryLatestMatch(packageType: string, versionSpec: string): Promise<string> {
+    let allVersions = await new DotNetCoreReleaseFetcher().getAllVersions(packageType);
+    return toolLib.evaluateVersions(allVersions, versionSpec);
 }
 
 function getMachinePlatform(): string[] {
@@ -61,7 +103,7 @@ function getMachinePlatform(): string[] {
 }
 
 
-async function getDotnetCore(packageType: string, version: string): Promise<void> {
+async function acquireDotnetCore(packageType: string, version: string): Promise<void> {
     if (!toolLib.isExplicitVersion(version)) {
         throw taskLib.loc("ImplicitVersionNotSupported", version);
     }

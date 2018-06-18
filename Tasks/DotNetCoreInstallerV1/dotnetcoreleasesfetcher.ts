@@ -4,11 +4,25 @@ import * as taskLib from 'vsts-task-lib/task';
 import downloadutility = require("utility-common/downloadutility");
 
 export class DotNetCoreReleaseFetcher {
+    public async getAllVersions(packageType: string): Promise<string[]> {
+        await this._readReleasesFile();
+        let versions: string[] = [];
+        if (packageType === 'sdk') {
+            this._versionsInfo.forEach(versionInfo => {
+                versions.push(versionInfo['version-sdk']);
+            });
+        } else {
+            this._versionsInfo.forEach(versionInfo => {
+                versions.push(versionInfo['version-runtime']);
+            });
+        }
+
+        return versions.filter(version => !util.isNullOrUndefined(version));
+    }
 
     public async getDownloadUrl(platforms: string[], version: string, type: string) {
-        let content = await downloadutility.readFileContent(DotNetCoreReleasesUrl);
-        let versionsInfo = JSON.parse(content);
-        let selectedVersionInfos: any[] = versionsInfo.filter(versionInfo => {
+        await this._readReleasesFile();
+        let selectedVersionInfos: any[] = this._versionsInfo.filter(versionInfo => {
             if (type === 'sdk' && versionInfo['version-sdk'] === version) {
                 return true;
             }
@@ -56,6 +70,15 @@ export class DotNetCoreReleaseFetcher {
         let downloadUrl: string = util.format("%s%s", rootUrl, fileName);
         return downloadUrl;
     }
+
+    private async _readReleasesFile(): Promise<void> {
+        if (util.isNullOrUndefined(this._versionsInfo)) {
+            let content = await downloadutility.readFileContent(DotNetCoreReleasesUrl);
+            this._versionsInfo = JSON.parse(content);
+        }
+    }
+
+    private _versionsInfo: any;
 }
 
 const DotNetCoreReleasesUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.json";

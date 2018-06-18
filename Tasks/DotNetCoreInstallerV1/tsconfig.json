@@ -3,6 +3,6 @@
         "target": "ES6",
         "module": "commonjs",
         "sourceMap": true,
-        "sourceRoot": "C:\\github\\vsts-tasks\\tasks\\DotNetCoreInstaller\\"
+        "sourceRoot": "C:\\github\\vsts-tasks\\tasks\\DotNetCoreInstallerV1\\"
     }
 }

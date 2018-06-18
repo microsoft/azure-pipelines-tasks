@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 2
     },
     "satisfies": [
         "DotNetCore"
@@ -34,12 +34,20 @@
             }
         },
         {
-            "name": "version",
+            "name": "versionSpec",
             "type": "string",
             "label": "Version",
             "defaultValue": "1.0.4",
             "required": true,
             "helpMarkDown": "Specify exact version of .NET Core SDK or runtime to install.<br/><br/>Examples:<br/>1. To install 1.0.4 SDK, use 1.0.4<br/>2. To install 1.1.2 runtime, use 1.1.2<br/>2. To install 2.0 preview 2 runtime, use 2.0.0-preview2-25407-01<br/><br/>For getting more details about exact version, refer [here](https://github.com/dotnet/core/blob/master/release-notes/releases.csv)"
+        },
+        {
+            "name": "checkLatest",
+            "type": "boolean",
+            "label": "Check for Latest Version",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Always checks online for the latest available version that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool."
         }
     ],
     "execution": {
