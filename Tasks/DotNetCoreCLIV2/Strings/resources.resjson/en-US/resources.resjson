@@ -15,7 +15,7 @@
   "loc.input.label.publishWebProjects": "Publish Web Projects",
   "loc.input.help.publishWebProjects": "If true, the task will try to find the web projects in the repository and run the publish command on them. Web projects are identified by presence of either a web.config file or wwwroot folder in the directory.",
   "loc.input.label.projects": "Path to project(s)",
-  "loc.input.help.projects": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/.csproj for all .csproj files in all subfolders).",
+  "loc.input.help.projects": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders).",
   "loc.input.label.custom": "Custom command",
   "loc.input.help.custom": "The command to pass to dotnet.exe for execution.",
   "loc.input.label.arguments": "Arguments",
