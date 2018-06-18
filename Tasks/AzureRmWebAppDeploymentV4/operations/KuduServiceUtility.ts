@@ -59,9 +59,13 @@ export class KuduServiceUtility {
             await this._appServiceKuduService.uploadFile(directoryPath, 'mainCmdFile' + fileExtension, mainCmdFilePath);
             await this._appServiceKuduService.uploadFile(directoryPath, 'kuduPostDeploymentScript' + fileExtension, scriptFile.filePath);
             console.log(tl.loc('ExecuteScriptOnKudu'));
-            await this.runCommand(rootDirectoryPath,
-            taskParams.isLinuxApp ? '$Home' :'%Home%' + '\\site\\VSTS_PostDeployment_' + uniqueID + '\\mainCmdFile' + fileExtension + ' ' + uniqueID,
-              30, taskParams.isLinuxApp ? '$Home' :'%Home%' + '\\site\\VSTS_PostDeployment_' + uniqueID + '\\script_result.txt');
+            var cmdFilePath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\mainCmdFile' + fileExtension;
+            var scriprResultPath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\script_result.txt';
+            if (taskParams.isLinuxApp){
+                cmdFilePath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/mainCmdFile' + fileExtension
+                scriprResultPath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/script_result.txt';
+            }
+            await this.runCommand(rootDirectoryPath, cmdFilePath + ' ' + uniqueID, 30, scriprResultPath);
             await this._printPostDeploymentLogs(directoryPath);
 
         }
