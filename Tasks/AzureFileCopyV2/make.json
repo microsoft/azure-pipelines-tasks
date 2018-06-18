@@ -19,6 +19,12 @@
         {
             "module": "../Common/RemoteDeployer",
             "type": "ps"
+        },
+        {
+            "module": "../Common/azure-arm-rest",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
         }
     ],
     "externals": {

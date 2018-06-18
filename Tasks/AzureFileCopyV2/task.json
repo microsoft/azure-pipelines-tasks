@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 7
     },
     "preview": true,
     "demands": [
@@ -297,6 +297,11 @@
         }
     ],
     "instanceNameFormat": "$(Destination) File Copy",
+    "prejobexecution": {
+        "Node": {
+            "target": "PreJobExecutionAzureFileCopy.js"
+        }
+    },
     "execution": {
         "PowerShell3": {
             "target": "AzureFileCopy.ps1"
@@ -345,6 +350,7 @@
         "AFC_RootContainerAndDirectory": "'/S' option is not valid for $root containers.",
         "AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
         "AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null.",
-        "AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage."
+        "AFC_AzCopyBlobUploadNonZeroExitCode": "AzCopy.exe exited with non-zero exit code while uploading files to blob storage.",
+        "AFC_PreexecutionJob_UnableToGetStorageKey": "Unable to fetch storage account key. Error: '{0}'"
     }
 }

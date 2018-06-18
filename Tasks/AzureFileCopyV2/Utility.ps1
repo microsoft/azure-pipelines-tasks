@@ -260,14 +260,17 @@ function Upload-FilesToAzureContainer
         $blobPrefix = $blobPrefix.Trim()
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
-
-        $responseFile = Join-Path -Path (Get-VstsTaskVariable -Name 'Agent.TempDirectory') -ChildPath ([Guid]::NewGuid().ToString())
-        $responseFileContents = " /DestKey:`"$storageKey`" "
-        [System.IO.File]::WriteAllText(
-            $responseFile,
-            $responseFileContents,
-            [System.Text.Encoding]::UTF8
-        )
+        $responseFile = Get-VstsTaskVariable -Name "AFC_V2_ARM_STORAGE_KEY_FILE"
+        if ([string]::IsNullOrEmpty($responseFile) -or !(Test-Path -Path $responseFile -PathType Leaf)) {
+            Write-Verbose 'Creating response file'
+            $responseFile = Join-Path -Path (Get-VstsTaskVariable -Name 'Agent.TempDirectory') -ChildPath ([Guid]::NewGuid().ToString())
+            $responseFileContents = " /DestKey:`"$storageKey`" "
+            [System.IO.File]::WriteAllText(
+                $responseFile,
+                $responseFileContents,
+                [System.Text.Encoding]::UTF8
+            )
+        }
 
         Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
 
