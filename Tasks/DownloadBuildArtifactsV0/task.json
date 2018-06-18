@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 137,
+    "Minor": 138,
     "Patch": 0
   },
   "groups": [
@@ -76,7 +76,7 @@
       "required": true,
       "options": {
         "latest": "Latest",
-        "latestFromBranch": "Latest from specific branch",
+        "latestFromBranch": "Latest from specific branch and specified Build Tags",
         "specific": "Specific version"
       }
     },
@@ -103,14 +103,23 @@
       "helpMarkDown": "The build from which to download the artifacts"
     },
     {
+      "name": "Tags",
+      "type": "string",
+      "label": "Build Tags",
+      "defaultValue": "",
+      "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+      "required": false,
+      "helpMarkDown": "A comma-delimited list of tags. Only builds with these tags will be returned."
+    },
+    {
       "name": "downloadType",
       "type": "radio",
       "label": "Download type",
       "defaultValue": "single",
       "required": true,
       "options": {
-          "single": "Specific artifact",
-          "specific": "Specific files"
+        "single": "Specific artifact",
+        "specific": "Specific files"
       },
       "helpMarkDown": "Download a specific artifact or specific files from the build."
     },
