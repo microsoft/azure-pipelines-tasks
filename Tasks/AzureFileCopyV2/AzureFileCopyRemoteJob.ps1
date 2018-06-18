@@ -1,135 +1,90 @@
 $AzureFileCopyRemoteJob = {
     param(
-        [string]$containerURL,
-        [string]$targetPath,
-        [string]$containerSasToken,
-        [string]$additionalArguments,
-        [string]$azCopyToolFileNamesString,
-        [string]$azCopyToolFileContentsString,
-        [switch]$CleanTargetBeforeCopy,
-        [switch]$EnableDetailedLogging
+        [string] $ContainerURL,
+        [string] $TargetPath,
+        [string] $ContainerSASToken,
+        [string] $AzCopyArgs,
+        [string] $AzCopyToolFileNamesString,
+        [string] $AzCopyToolFileContentsString,
+        [string] $AzCopyToolRunner,
+        [string] $_VerbosePreference,
+        [switch] $CleanTargetBeforeCopy
     )
+    $VerbosePreference = $_VerbosePreference
+    $AzCopyToolRunner = [scriptblock]::Create($AzCopyToolRunner);
 
-    function Write-DetailLogs
-    {
-        [CmdletBinding()]
-        param(
-            [string]$message
+    function Get-ArgsForVMCopy {
+        Param (
+            [string] $JournalFileLocation
         )
-
-        if($EnableDetailedLogging)
-        {
-            Write-Verbose $message
-        }
+        $res = "/Z:`"$JournalFileLocation`" /S /Y "
+        Write-Verbose "AzCopy args for vm copy: '$res'"
+        return $res
     }
 
-    function Write-LogsAndCleanup
-    {
-        [CmdletBinding()]
-        param(
-            [Nullable[bool]]$isLogsPresent,
-            [AllowEmptyString()][string]$logFilePath,
-            [AllowEmptyString()][string]$azCopyLocation
+    function ConvertTo-Files {
+        Param (
+            [Parameter(Mandatory = $true)]
+            [string] $ParentDirectory
+            [Parameter(Mandatory = $true)]
+            [string[]] $FileNames,
+            [Parameter(Mandatory = $true)]
+            [string[]] $FileContents
         )
-        
-        # Print AzCopy.exe verbose logs
-        Get-AzCopyVerboseLogs -isLogsPresent $isLogsPresent -logFilePath $logFilePath -ErrorAction SilentlyContinue
-
-        # Delete AzCopy tool folder
-        Remove-AzCopyFolder -azCopyLocation $azCopyLocation -ErrorAction SilentlyContinue
+        Write-Verbose "Creating parent directory: $ParentDirectory"
+        New-Item -ItemType Directory -Force -Path $ParentDirectory
+        for ($i = 0 ; $i -lt $FileNames.Length ; $i++) {
+            $filePath = Join-Path -Path $ParentDirectory -ChildPath $FileNames[$i]
+            $content = [Convert]::FromBase64String($FileContents[$i])
+            Write-Verbose "Creating file: '$filePath'"
+            [System.IO.File]::WriteAllBytes($filePath, $content)
+        }
+        $fileCount = (Get-ChildItem -Path $ParentDirectory).Length
+        Write-Verbose "'$fileCount' files have been created under the directory: '$ParentDirectory'"
     }
 
-    function Get-AzCopyVerboseLogs
-    {
-        [CmdletBinding()]
-        param(
-            [bool]$isLogsPresent,
-            [string]$logFilePath
+    function Clear-Directory {
+        Param (
+            [string] $Path,
+            [switch] $IncludeRoot
         )
-
-        if($isLogsPresent)
-        {
-            Write-DetailLogs (Get-Content -Path $logFilePath | Out-String)
-        }
-    }
-
-    function Remove-AzCopyFolder
-    {
-        [CmdletBinding()]
-        param([string]$azCopyLocation)
-
-        $tempParentFolder = (Get-Item $azCopyLocation).Parent.FullName
-
-        Get-ChildItem -Path $azCopyLocation -Recurse -Force | Remove-Item -Force -Recurse
-        Remove-Item $azCopyLocation -Force
-        Remove-Item $tempParentFolder -Force
-    }
-
-    try
-    {
-        $useDefaultArguments = ($additionalArguments -eq "")
-        
-        $azCopyToolFileNames = $azCopyToolFileNamesString.Split(";")
-        $azCopyToolFileContents = $azCopyToolFileContentsString.Split(";")
-
-        $randomFolderName = "AFC_" + [guid]::NewGuid()
-        $randomFolderPath = Join-Path -Path $env:windir -ChildPath "DtlDownloads\$randomFolderName"
-        $azCopyDestinationPath = Join-Path -Path $randomFolderPath -ChildPath "AzCopy"
-
-        Write-DetailLogs "Copying AzCopy tool files to location: $azCopyDestinationPath"
-        New-Item -ItemType Directory -Force -Path $azCopyDestinationPath
-
-        for($i=0; $i -lt $azCopyToolFileNames.Length; $i++)
-        {
-            $path = Join-Path -Path $azCopyDestinationPath -ChildPath $azCopyToolFileNames[$i]
-            $content = [Convert]::FromBase64String($azCopyToolFileContents[$i])
-            [System.IO.File]::WriteAllBytes($path, $content)
-        }
-
-        Write-DetailLogs "Copied AzCopy tool files"
-
-        if($CleanTargetBeforeCopy)
-        {
-            if (Test-Path $targetPath -PathType Container)
-            {
-                Get-ChildItem -Path $targetPath -Recurse -Force | Remove-Item -Force -Recurse
-                Write-DetailLogs "Destination location cleaned"
+        if (Test-Path -Path $Path -PathType 'Container') {
+            Get-ChildItem -Path $Path -Force | Remove-Item -Force -Recurse   
+            Write-Host "Destination:'$Path' cleaned."
+            if ($IncludeRoot) {
+                Remove-Item -Path $Path -Force -ErrorAction 'SilentlyContinue'
             }
-            else
-            {
-                Write-DetailLogs "Folder at path $targtPath not found for cleanup."
-            }
+        } else {
+            Write-Host "Unable to clear destination. '$Path' is not a container"
+        }
+    }
+
+    try {        
+        $AzCopyToolFileNames = $AzCopyToolFileNamesString.Split(";")
+        $AzCopyToolFileContents = $AzCopyToolFileContentsString.Split(";")
+        $azCopyFolder = "AFC_" + [Guid]::NewGuid().ToString()
+        $azCopyLocation = Join-Path $env:WinDir -ChildPath "DtlDownloads\$azCopyFolder"
+        ConvertTo-Files -ParentDirectory $azCopyLocation -FileNames $AzCopyToolFileNames -FileContents $AzCopyToolFileContents
+
+        if($CleanTargetBeforeCopy) {
+            Clear-Directory -Path $TargetPath
         }
 
-        $azCopyExeLocation = Join-Path -Path $azCopyDestinationPath -ChildPath "AzCopy.exe"
-
-        $logFileName = "AzCopyVerbose_" + [guid]::NewGuid() + ".log"
-        $logFilePath = Join-Path -Path $azCopyDestinationPath -ChildPath $logFileName
-
-        if($useDefaultArguments)
-        {
-            # Adding default optional arguments:
-            # /Z: Journal file Location
-            # /V: AzCopy verbose logs file location
-            # /S: Recursive copy
-            # /Y: Suppresses all AzCopy confirmation prompts
-
-            Write-DetailLogs "Using default AzCopy arguments for dowloading to VM"
-            $additionalArguments = "/Z:`"$azCopyDestinationPath`" /V:`"$logFilePath`" /S /Y"
+        if ([string]::IsNullOrEmpty($AzCopyArgs.Trim())) {
+            $AzCopyArgs = Get-ArgsForVMCopy -JournalFileLocation $azCopyLocation
+            $logFilePath = Join-Path -Path $azCopyLocation -ChildPath ("AzCopyVerbose_" + [guid]::NewGuid() + ".log")
         }
 
-        Write-DetailLogs "##[command] & `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"*****`" $additionalArguments"
-
-        $azCopyCommand = "& `"$azCopyExeLocation`" /Source:`"$containerURL`" /Dest:`"$targetPath`" /SourceSAS:`"$containerSasToken`" $additionalArguments"
-        Invoke-Expression $azCopyCommand
-    }
-    catch
-    {
-        Write-Verbose "AzureFileCopyRemoteJob threw exception"
-        throw
-    }
-    finally
-    {
-        Write-LogsAndCleanup -isLogsPresent $useDefaultArguments -logFilePath "$logFilePath" -azCopyLocation "$azCopyDestinationPath" -ErrorAction SilentlyContinue
+        $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
+        & $AzCopyToolRunner -AzCopyExeLocation $azCopyExeLocation `
+                            -Source $ContainerURL `
+                            -Destination $TargetPath `
+                            -TypeOfTransfer 'download' `
+                            -AuthScheme 'SASToken' `
+                            -AuthToken $ContainerSASToken `
+                            -AdditionalArguments $AzCopyArgs `
+                            -AzCopyLogFilePath $logFilePath
+    } finally {
+        Clean-Directory -Path $azCopyLocation -IncludeRoot
     }
 }

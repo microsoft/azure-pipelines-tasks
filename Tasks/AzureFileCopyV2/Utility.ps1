@@ -1146,7 +1146,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     $scriptBlockArgs += " -additionalArguments '$additionalArguments'"
     $scriptBlockArgs += " -azCopyToolFileNamesString '$azCopyToolFileNamesString'"
     $scriptBlockArgs += " -azCopyToolFileContentsString '$azCopyToolFileContentsString'"
-    $scriptBlockArgs += " -azCopyCommand '$($azCopyCommandString.Replace("'","''"))'"
+    $scriptBlockArgs += " -azCopyScript '$($azCopyCommand.ToString().Replace("'","''"))'"
     if($cleanTargetBeforeCopy) {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
     }
@@ -1465,8 +1465,8 @@ $azCopyCommand = {
         [string] $TypeOfTransfer,
         [string] $AuthScheme,
         [string] $AuthToken,
-        [string] $AdditionalArguments,
-        [string] $AzCopyLogFilePath
+        [string] $AdditionalAzCopyArgs = "",
+        [string] $AzCopyLogFilePath = ""
     )
 
     $AuthSchemeSwitches = @{
@@ -1481,7 +1481,7 @@ $azCopyCommand = {
             if(Test-Path -Path $source -PathType Leaf) {
                 $filePattern = Split-Path -Path $source -Leaf
                 $source = Split-Path -Path $source -Parent
-                $AdditionalArguments += " /Pattern:`"$filePattern`""
+                $AdditionalAzCopyArgs += " /Pattern:`"$filePattern`""
             }
         }
         $azCopyArgs += " /Source:`"$source`""
@@ -1491,7 +1491,7 @@ $azCopyCommand = {
             Remove-Item -Path $azCopyLogFilePath -Force -ErrorAction "SilentlyContinue"
             $azCopyArgs += "/V:`"$azCopyLogFilePath`""
         }
-        $azCopyArgs += " $AdditionalArguments"
+        $azCopyArgs += " $AdditionalAzCopyArgs"
         $command = "`"$azCopyExeLocation`" $azCopyArgs"
         Remove-Item -Path 'variable:\LASTEXITCODE' -Force -ErrorAction "SilentlyContinue"
         Write-Host "##[command]$command"
