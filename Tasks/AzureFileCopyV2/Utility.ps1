@@ -261,9 +261,17 @@ function Upload-FilesToAzureContainer
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
 
-        Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"*****`" $additionalArguments"
+        $responseFile = Join-Path -Path (Get-VstsTaskVariable -Name 'Agent.TempDirectory') -ChildPath ([Guid]::NewGuid().ToString())
+        $responseFileContents = " /DestKey:`"$storageKey`" "
+        [System.IO.File]::WriteAllText(
+            $responseFile,
+            $responseFileContents,
+            [System.Text.Encoding]::UTF8
+        )
 
-        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /DestKey:`"$storageKey`" $additionalArguments"
+        Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
+
+        $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
 
         Invoke-Expression $uploadToBlobCommand
 
@@ -294,6 +302,9 @@ function Upload-FilesToAzureContainer
     finally
     {
         Handle-AzCopyLogs -isLogsPresent $useDefaultArguments -logsFilePath $azCopyLogFilePath -ErrorAction SilentlyContinue
+        if ((Test-Path -Path $responseFile -PathType Leaf) -eq $true) {
+            Remove-Item -Path $responseFile -Force
+        }
     }
 }
 
