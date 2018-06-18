@@ -1,6 +1,7 @@
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
+import * as constants from '../src/constants';
 
 const DefaultWorkingDirectory: string = "C:\\a\\w\\";
 
@@ -48,11 +49,11 @@ let a: any = <any>{
     "exec": {
         "packer --version": {
             "code": 0,
-            "stdout": process.env["__lower_version__"] === "true" ? "0.11.2" : "0.12.3"
+            "stdout": process.env["__lower_version__"] === "true" ? "0.11.2" : constants.CurrentSupportedPackerVersionString
         },
         "F:\\somedir\\tempdir\\100\\packer\\packer.exe --version": {
             "code": 0,
-            "stdout": process.env["__lower_version__"] === "true" ? "0.11.2" : "0.12.3"
+            "stdout": process.env["__lower_version__"] === "true" ? "0.11.2" : constants.CurrentSupportedPackerVersionString
         },
         "F:\\somedir\\tempdir\\100\\packer\\packer.exe fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
             "code": 0,
