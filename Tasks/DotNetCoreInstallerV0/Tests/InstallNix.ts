@@ -14,24 +14,19 @@ process.env["AGENT_TEMPDIRECTORY"] = "/agent/_temp";
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
-        "/somedir/currdir/externals/install-dotnet.sh --version 1.0.4 --dry-run": {
-            "code": process.env["__get_dlurls_failed__"] === "true" ? -1 : 0,
-            "stdout": process.env["__get_dlurls_failed__"] === "true" ? "" : "dotnet-install: Payload URLs:" + os.EOL + "dotnet-install: Payload URL: https://primary-url" + os.EOL + "dotnet-install: Legacy payload URL: https://legacy-url" + os.EOL + "dotnet-install: Repeatable invocation:",
-            "stderr": process.env["__get_dlurls_failed__"] === "true" ? "install-script failed to get donwload urls" : ""
-        },
-        "/somedir/currdir/externals/install-dotnet.sh --version 1.0.4 --dry-run --shared-runtime": {
+        "somedir/currdir/externals/get-os-distro.sh": {
             "code": 0,
-            "stdout": "dotnet-install: Payload URLs:" + os.EOL + "dotnet-install: Payload URL: https://primary-runtime-url" + os.EOL + "dotnet-install: Legacy payload URL: https://legacy-runtime-url" + os.EOL + "dotnet-install: Repeatable invocation:"
+            "stdout": "Primary: linux" + os.EOL,
         }
     },
     "osType": {
         "osType": "Linux"
     },
     "which": {
-        "/somedir/currdir/externals/install-dotnet.sh": "/somedir/currdir/externals/install-dotnet.sh"
+        "somedir/currdir/externals/get-os-distro.sh": "somedir/currdir/externals/get-os-distro.sh"
     },
     "checkPath": {
-        "/somedir/currdir/externals/install-dotnet.sh": true
+        "somedir/currdir/externals/get-os-distro.sh": true
     }
 };
 

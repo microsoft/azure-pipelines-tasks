@@ -97,16 +97,15 @@ class DotnetCoreInstaller {
             }
 
             try {
-                console.log(tl.loc("DownloadingUrl", downloadUrls[i]));
                 downloadPath = await toolLib.downloadTool(downloadUrls[i]);
                 downloaded = true;
             } catch (error) {
-                console.log(tl.loc("getDownloadUrlsFailed", JSON.stringify(error)));
+                tl.warning(tl.loc("CouldNotDownload", downloadUrls[i], JSON.stringify(error)));
             }
         }
 
         if (!downloaded) {
-            throw "Failed to download package";
+            throw tl.loc("FailedToDownloadPackage");
         }
 
         // extract
