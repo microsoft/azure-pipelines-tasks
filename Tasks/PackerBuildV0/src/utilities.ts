@@ -91,7 +91,7 @@ export function createTemplateVarFile (templateVariables: Map<string, string>): 
         res[key] = value
     });
     let content: string = JSON.stringify(res);
-    tl.writeFile(filePath, content);
+    writeFile(filePath, content);
     return filePath
 }
 
