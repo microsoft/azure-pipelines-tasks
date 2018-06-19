@@ -105,7 +105,7 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [int]$UnregisterPackageTimeoutSec= 120,
+        [int]$UnregisterPackageTimeoutSec = 120,
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
@@ -191,7 +191,7 @@ function Publish-UpgradedServiceFabricApplication
 
     if (!$SkipPackageValidation)
     {
-        $global:status = "TestingApplicationPackage"
+        $global:operationId = $SF_Operations.TestApplicationPackage
         $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
         if (!$packageValidationSuccess)
         {
@@ -236,7 +236,7 @@ function Publish-UpgradedServiceFabricApplication
             if (!$typeIsInUse)
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                $global:status = "UnregisteringRegisteredApplicationType"
+                $global:operationId = $SF_Operations.UnregisterApplicationType
                 $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 $ApplicationTypeAlreadyRegistered = $false
             }
@@ -283,7 +283,7 @@ function Publish-UpgradedServiceFabricApplication
                 }
             }
 
-            $global:status = "CopyingApplicationPackage"
+            $global:operationId = $SF_Operations.CopyApplicationPackage
             Copy-ServiceFabricApplicationPackage @copyParameters
             if (!$?)
             {
@@ -299,7 +299,7 @@ function Publish-UpgradedServiceFabricApplication
                 $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
             }
 
-            $global:status = "RegisteringApplicationType"
+            $global:operationId = $SF_Operations.RegisterApplicationType
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
             Register-ServiceFabricApplicationType @registerParameters
             if (!$?)
@@ -339,7 +339,7 @@ function Publish-UpgradedServiceFabricApplication
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_StartAppUpgrade)
-            $global:status = "StartingApplicationUpgrade"
+            $global:operationId = $SF_Operations.StartApplicationUpgrade
             Start-ServiceFabricApplicationUpgrade @UpgradeParameters
         }
         catch
@@ -349,7 +349,7 @@ function Publish-UpgradedServiceFabricApplication
             {
                 if (!$ApplicationTypeAlreadyRegistered)
                 {
-                    $global:status = "UnregisteringApplicationType"
+                    $global:operationId = $SF_Operations.UnregisterApplicationType
                     Write-Host (Get-VstsLocString -Key SFSDK_UnregisterAppTypeOnUpgradeFailure -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                     Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 }
@@ -369,6 +369,7 @@ function Publish-UpgradedServiceFabricApplication
         }
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+        $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
         $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
         $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
         $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
@@ -385,7 +386,7 @@ function Publish-UpgradedServiceFabricApplication
             {
                 try
                 {
-                    $global:status = "UnregisteringUnusedApplicationType"
+                    $global:operationId = $SF_Operations.UnregisterApplicationType
                     $registeredAppTypes | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 }
                 catch [System.Fabric.FabricException]

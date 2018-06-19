@@ -101,7 +101,7 @@
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [int]$UnregisterPackageTimeoutSec= 120,
+        [int]$UnregisterPackageTimeoutSec = 120,
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
@@ -142,7 +142,7 @@
 
     if (!$SkipPackageValidation)
     {
-        $global:status = "TestingApplicationPackage"
+        $global:operationId = $SF_Operations.TestApplicationPackage
         $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse)
         if (!$packageValidationSuccess)
         {
@@ -218,7 +218,7 @@
 
                 try
                 {
-                    $global:status = "RemovingApplication"
+                    $global:operationId = $SF_Operations.RemoveApplication
                     $app | Remove-ServiceFabricApplication -Force
                 }
                 catch [System.TimeoutException]
@@ -233,7 +233,7 @@
                     # It will unregister the existing application's type and version even if its different from the application being created,
                     if ((Get-ServiceFabricApplication | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
-                        $global:status = "UnregisteringApplicationType"
+                        $global:operationId = $SF_Operations.UnregisterApplicationType
                         Unregister-ServiceFabricApplicationType -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -Force -TimeoutSec $UnregisterPackageTimeoutSec
                     }
                 }
@@ -254,7 +254,7 @@
             }
             if (!$typeIsInUse)
             {
-                $global:status = "UnregisteringRegisteredApplicationType"
+                $global:operationId = $SF_Operations.UnregisterApplicationType
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                 $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 if (!$?)
@@ -307,7 +307,7 @@
                     Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
                 }
             }
-            $global:status = "CopyingApplicationPackage"
+            $global:operationId = $SF_Operations.CopyApplicationPackage
             Copy-ServiceFabricApplicationPackage @copyParameters
             if (!$?)
             {
@@ -324,13 +324,13 @@
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            $global:status = "RegisteringApplicationType"
+            $global:operationId = $SF_Operations.RegisterApplicationType
             Register-ServiceFabricApplicationType @registerParameters
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
             }
-            $global:status = "RemovingApplicationPackage"
+            $global:operationId = $SF_Operations.RemoveApplicationPackage
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
             Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
         }
@@ -353,7 +353,7 @@
                 $ApplicationParameter = Merge-Hashtables -HashTableOld $appParamsFromFile -HashTableNew $ApplicationParameter
             }
         }
-        $global:status = "CreatingNewApplication"
+        $global:operationId = $SF_Operations.CreateNewApplication
         New-ServiceFabricApplication -ApplicationName $ApplicationName -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -ApplicationParameter $ApplicationParameter
         if (!$?)
         {

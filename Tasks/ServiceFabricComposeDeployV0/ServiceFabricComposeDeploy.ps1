@@ -14,6 +14,8 @@ try
     . "$PSScriptRoot\utilities.ps1"
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
 
+    $global:operationId = $SF_Operations.Undefined
+
     # Get inputs.
     $serviceConnectionName = Get-VstsInput -Name serviceConnectionName -Require
     $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
@@ -98,6 +100,7 @@ try
 
     # Test the compose file
     Write-Host (Get-VstsLocString -Key CheckingComposeFile)
+    $global:operationId = $SF_Operations.TestApplicationPackage
     $valid = Test-ServiceFabricApplicationPackage -ComposeFilePath $composeFilePath -ErrorAction Stop
 
     # Connect to the cluster
@@ -247,8 +250,8 @@ try
         Write-Host (Get-VstsLocString -Key WaitingForDeploy)
         $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
         while (($newApplication -eq $null) -or `
-               ($newApplication.Status -eq 'Provisioning') -or `
-               ($newApplication.Status -eq 'Creating'))
+            ($newApplication.Status -eq 'Provisioning') -or `
+            ($newApplication.Status -eq 'Creating'))
         {
             if ($newApplication -eq $null)
             {
