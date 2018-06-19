@@ -84,6 +84,17 @@ export function readJsonFile(filePath: string): string {
     return content;
 }
 
+export function createTemplateVarFile (templateVariables: Map<string, string>): string {
+    let filePath: string = path.resolve(tl.getVariable('Agent.TempDirectory'), Math.random().toString(36).replace('0.', '') + '.json');
+    let res = {};
+    templateVariables.forEach((value: string, key: string) => {
+        res[key] = value
+    });
+    let content: string = JSON.stringify(res);
+    tl.writeFile(filePath, content);
+    return filePath
+}
+
 export function writeFile(filePath: string, content: string): void {
     tl.writeFile(filePath, content);
 }
