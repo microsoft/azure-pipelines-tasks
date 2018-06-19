@@ -8,8 +8,8 @@ import { HttpClientResponse } from 'typed-rest-client/HttpClient';
 export class DotNetCoreReleaseFetcher {
 
     public async getDownloadUrl(platforms: string[], version: string, type: string) {
-        let releasesCSV = await this.getReleasesCSV();
-        let versionsInfo = this.csvToJsonArray(await releasesCSV.readBody());
+        let releasesCSV = await this.getReleasesJson();
+        let versionsInfo =  JSON.parse(await releasesCSV.readBody());
         let selectedVersionInfos: any[] = versionsInfo.filter(versionInfo => {
             return (versionInfo['version-' + type] === version || versionInfo['version-' + type + '-display'] === version);
         });
@@ -36,7 +36,7 @@ export class DotNetCoreReleaseFetcher {
         return downloadUrl;
     }
 
-    private getReleasesCSV(): Promise<HttpClientResponse> {
+    private getReleasesJson(): Promise<HttpClientResponse> {
         let proxyUrl: string = taskLib.getVariable("agent.proxyurl");
         var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
             proxy: {
@@ -50,32 +50,6 @@ export class DotNetCoreReleaseFetcher {
         var httpCallbackClient = new httpClient.HttpClient(taskLib.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
         return httpCallbackClient.get(DotNetCoreReleasesUrl);
     }
-
-    private csvToJsonArray(content: string) {
-        let lines = content.split('\n');
-        let fieldDelimiter = ",";
-        let headers = lines[0].split(fieldDelimiter);
-        headers.forEach(header => header.trim());
-
-        let jsonResult = [];
-        for (let i = 1; i < lines.length; i++) {
-            let currentLine = lines[i].split(fieldDelimiter);
-            currentLine.forEach(field => field.trim());
-            jsonResult.push(this.buildJsonRow(headers, currentLine));
-        }
-
-        return jsonResult;
-    }
-
-    private buildJsonRow(headers, currentLine) {
-        let jsonObject = {};
-        for (let j = 0; j < headers.length; j++) {
-            let propertyName = headers[j];
-            let value = currentLine[j];
-            jsonObject[propertyName] = value;
-        }
-        return jsonObject;
-    }
 }
 
-const DotNetCoreReleasesUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.csv";
+const DotNetCoreReleasesUrl: string = "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.json";
