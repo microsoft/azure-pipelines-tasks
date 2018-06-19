@@ -155,6 +155,7 @@
 
     try
     {
+        $global:operationId = $SF_Operations.TestClusterConnection
         [void](Test-ServiceFabricClusterConnection)
     }
     catch
@@ -184,7 +185,7 @@
     if ($Action.Equals("Register") -or $Action.Equals("RegisterAndCreate"))
     {
         # Apply OverwriteBehavior if an applciation with same name already exists.
-        $app = Get-ServiceFabricApplication -ApplicationName $ApplicationName
+        $app = Get-ServiceFabricApplicationAction -ApplicationName $ApplicationName
         if ($app)
         {
             $removeApp = $false
@@ -231,7 +232,7 @@
                 {
                     # Unregsiter AppType and Version if there are no other applciations for the Type and Version.
                     # It will unregister the existing application's type and version even if its different from the application being created,
-                    if ((Get-ServiceFabricApplication | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
+                    if ((Get-ServiceFabricApplicationAction | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
                         $global:operationId = $SF_Operations.UnregisterApplicationType
                         Unregister-ServiceFabricApplicationType -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -Force -TimeoutSec $UnregisterPackageTimeoutSec
@@ -240,12 +241,12 @@
             }
         }
         $ApplicationTypeAlreadyRegistered = $false
-        $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
+        $reg = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
         if ($reg)
         {
             $ApplicationTypeAlreadyRegistered = $true
             $typeIsInUse = $false
-            $apps = Get-ServiceFabricApplication -ApplicationTypeName $names.ApplicationTypeName
+            $apps = Get-ServiceFabricApplicationAction -ApplicationTypeName $names.ApplicationTypeName
             $apps | ForEach-Object {
                 if (($_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion))
                 {
@@ -272,6 +273,7 @@
         {
             Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
             # Get image store connection string
+            $global:operationId = $SF_Operations.GetClusterManifest
             $clusterManifestText = Get-ServiceFabricClusterManifest
             $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
 

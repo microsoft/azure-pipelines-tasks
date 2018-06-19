@@ -1,8 +1,12 @@
 $SF_Operations = @{
-    Undefined                         = 'Undefined'
+    Undefined                         = 'Undefined';
     ConnectCluster                    = 'ConnectCluster';
     ConnectClusterMetadata            = 'ConnectClusterMetadata';
+    TestClusterConnection             = 'TestApplicationPackage';
     TestApplicationPackage            = 'TestApplicationPackage';
+    GetApplication                    = 'GetApplication';
+    GetApplicationType                = 'GetApplicationType';
+    GetClusterManifest                = 'GetClusterManifest';
     RemoveApplication                 = 'RemoveApplication';
     UnregisterApplicationType         = 'UnregisterApplicationType';
     CopyApplicationPackage            = 'CopyApplicationPackage';

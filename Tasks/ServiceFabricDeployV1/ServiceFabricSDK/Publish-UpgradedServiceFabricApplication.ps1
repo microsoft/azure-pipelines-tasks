@@ -165,7 +165,7 @@ function Publish-UpgradedServiceFabricApplication
         Write-Error (Get-VstsLocString -Key EmptyApplicationName)
     }
 
-    $oldApplication = Get-ServiceFabricApplication -ApplicationName $ApplicationName
+    $oldApplication = Get-ServiceFabricApplicationAction -ApplicationName $ApplicationName
     ## Check existence of the application
     if (!$oldApplication)
     {
@@ -186,6 +186,7 @@ function Publish-UpgradedServiceFabricApplication
     }
 
     # Get image store connection string
+    $global:operationId = $SF_Operations.GetClusterManifest
     $clusterManifestText = Get-ServiceFabricClusterManifest
     $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
 
@@ -202,6 +203,7 @@ function Publish-UpgradedServiceFabricApplication
 
     try
     {
+        $global:operationId = $SF_Operations.TestClusterConnection
         [void](Test-ServiceFabricClusterConnection)
     }
     catch
@@ -214,19 +216,19 @@ function Publish-UpgradedServiceFabricApplication
     if ($Action.Equals('RegisterAndUpgrade') -or $Action.Equals('Register'))
     {
         ## Check upgrade status
-        $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+        $upgradeStatus = Get-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName
         if ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted")
         {
             $errMsg = (Get-VstsLocString -Key SFSDK_UpgradeInProgressError -ArgumentList $ApplicationName)
             throw $errMsg
         }
 
-        $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
+        $reg = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
         if ($reg)
         {
             $ApplicationTypeAlreadyRegistered = $true
             $typeIsInUse = $false
-            $apps = Get-ServiceFabricApplication -ApplicationTypeName $names.ApplicationTypeName
+            $apps = Get-ServiceFabricApplicationAction -ApplicationTypeName $names.ApplicationTypeName
             $apps | ForEach-Object {
                 if (($_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion))
                 {
@@ -369,8 +371,7 @@ function Publish-UpgradedServiceFabricApplication
         }
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-        $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
-        $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
+        $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName }
         $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
         $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
             -ActionSuccessValidator $upgradeStatusValidator `
@@ -382,7 +383,7 @@ function Publish-UpgradedServiceFabricApplication
         if ($UnregisterUnusedVersions)
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UnregisterUnusedVersions)
-            foreach ($registeredAppTypes in Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -ne $names.ApplicationTypeVersion })
+            foreach ($registeredAppTypes in Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -ne $names.ApplicationTypeVersion })
             {
                 try
                 {

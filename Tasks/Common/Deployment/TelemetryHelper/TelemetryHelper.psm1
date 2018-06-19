@@ -25,10 +25,13 @@ function Write-Telemetry
     {
         $errorMsg = "No error details available"
     }
-    $erroCode = ('"{0}":{1}' -f $erroCodeMsg, $errorMsg)
-    ## Form errorcode as json string
-    $erroCode = '{' + $erroCode + '}'
 
+    $errorCode = @{
+        $erroCodeMsg = $errorMsg
+    }
+
+    ## Form errorcode as json string
+    $erroCode = ConvertTo-Json -InputObject $errorCode -Compress
     $telemetryString = "##vso[task.logissue type=error;code=" + $erroCode + ";]"
     Write-Host $telemetryString
 }
@@ -45,12 +48,23 @@ function Get-ExceptionData
     {
         $src = $error.InvocationInfo.PSCommandPath + "|" + $error.InvocationInfo.ScriptLineNumber
         $exceptionTypes = ""
+
         $exception = $error.Exception
-        do
+        if ($exception.GetType().Name -eq 'AggregateException')
         {
-            $exceptionTypes += $exception.GetType().FullName + ";"
-            $exception = $exception.InnerException
-        } while ($exception -ne $null)
+            $flattenedException = ([System.AggregateException]$exception).Flatten()
+            $flattenedException.InnerExceptions | ForEach-Object {
+                $exceptionTypes += $_.GetType().FullName + ";"
+            }
+        }
+        else
+        {
+            do
+            {
+                $exceptionTypes += $exception.GetType().FullName + ";"
+                $exception = $exception.InnerException
+            } while ($exception -ne $null)
+        }
         $exceptionData = "$exceptionTypes|$src"
     }
     catch
