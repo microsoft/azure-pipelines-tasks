@@ -37,17 +37,11 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 
 var ut = require('../utilities');
 tr.registerMock('./utilities', {
-    getCurrentDir : function() {
+    getCurrentDir: function () {
         return "/somedir/currdir";
     },
-    setFileAttribute: function(file, mode) {
+    setFileAttribute: function (file, mode) {
         console.log("Changing attribute for file " + file + " to " + mode);
-    }
-});
-
-tr.registerMock('./releasesfetcher', {
-    getDownloadUrl : function() {
-        return "https://primary-runtime-url";
     }
 });
 
@@ -56,4 +50,5 @@ tr.setAnswers(a);
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 tr.registerMock('vsts-task-tool-lib/tool', require('./mock_node_modules/tool'));
+tr.registerMock('./releasesfetcher', require("./mock_node_modules/releasesfetcher"));
 tr.run();

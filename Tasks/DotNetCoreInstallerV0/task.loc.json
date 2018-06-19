@@ -55,6 +55,7 @@
     "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
     "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
     "GettingDownloadUrl": "ms-resource:loc.messages.GettingDownloadUrl",
+    "CouldNotDetectPlatform": "ms-resource:loc.messages.CouldNotDetectPlatform",
     "NullDownloadUrls": "ms-resource:loc.messages.NullDownloadUrls",
     "DownloadingUrl": "ms-resource:loc.messages.DownloadingUrl",
     "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",

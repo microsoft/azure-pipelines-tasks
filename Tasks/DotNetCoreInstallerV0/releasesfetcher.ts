@@ -7,36 +7,42 @@ import { HttpClientResponse } from 'typed-rest-client/HttpClient';
 
 export class DotNetCoreReleaseFetcher {
 
-    public async getDownloadUrl(platforms: string[], version: string, type: string) {
+    public static async getDownloadUrls(osSuffixes: string[], version: string, type: string) {
+        let downloadUrls = [];
         let releasesCSV = await this.getReleasesJson();
-        let versionsInfo =  JSON.parse(await releasesCSV.readBody());
-        let selectedVersionInfos: any[] = versionsInfo.filter(versionInfo => {
-            return (versionInfo['version-' + type] === version || versionInfo['version-' + type + '-display'] === version);
+        let versionsInfo = JSON.parse(await releasesCSV.readBody());
+
+        let releasesInfo: any[] = versionsInfo.filter(releaseInfo => {
+            return releaseInfo['version-' + type] === version || releaseInfo['version-' + type + '-display'] === version;
         });
 
-        if (selectedVersionInfos === null || selectedVersionInfos.length == 0) {
+        if (releasesInfo.length == 0) {
             throw taskLib.loc("VersionNotFound", version);
         }
 
-        let selectedVersion = selectedVersionInfos[0];
-        let rootUrl: string = selectedVersion['blob-' + type];;
-        let fileName: string = selectedVersion[type + '-' + platforms[0]];;
-        if (!rootUrl) {
-            rootUrl = selectedVersion['dlc-' + type];
-        }
-        if (!fileName) {
-            fileName = selectedVersion[type + '-' + platforms[1]];
+        let release = releasesInfo[0];
+        let blobUrl: string = release['blob-' + type];
+        let dlcUrl: string = release['dlc-' + type];
+        let fileName: string = release[type + '-' + osSuffixes[0]] ? release[type + '-' + osSuffixes[0]] : release[type + '-' + osSuffixes[1]];
+
+        if (!!fileName) {
+            if (!!blobUrl) {
+                downloadUrls.push(util.format("%s%s", blobUrl.trim(), fileName.trim()));
+            }
+
+            if (!!dlcUrl) {
+                downloadUrls.push(util.format("%s%s", dlcUrl.trim(), fileName.trim()));
+            }
         }
 
-        if (!rootUrl || !fileName) {
+        if (downloadUrls.length == 0) {
             throw taskLib.loc("NullDownloadUrls", version);
         }
 
-        let downloadUrl: string = util.format("%s%s", rootUrl.trim(), fileName.trim());
-        return downloadUrl;
+        return downloadUrls;
     }
 
-    private getReleasesJson(): Promise<HttpClientResponse> {
+    private static getReleasesJson(): Promise<HttpClientResponse> {
         let proxyUrl: string = taskLib.getVariable("agent.proxyurl");
         var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
             proxy: {

@@ -55,6 +55,7 @@
         "CheckingToolCache": "Checking if a cached copy exists for this version...",
         "InstallingAfresh": "Cache does not contains this particular .NET Core. Will be downloaded and installed.",
         "GettingDownloadUrl": "Getting URL to download .NET Core %s version: %s.",
+        "CouldNotDetectPlatform": "Could not detect the machine's OS",
         "NullDownloadUrls": "Could not construct download Url. Please ensure that specified version %s is valid.",
         "DownloadingUrl": "Downloading .NET Core package from URL: %s",
         "ExtractingPackage": "Extracting downloaded package %s.",
