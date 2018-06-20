@@ -2,32 +2,35 @@
 # Build and test ASP.NET Core web applications targeting .NET Core.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
+queue: 'Hosted Linux'
 variables:
   buildConfiguration: 'Release'
 steps:
 
-  - task: DotNetCoreInstaller@0
+#  - task: DotNetCoreInstaller@0
+#    inputs:
+#      version: '2.1.300'
 
-  - task: DotNetCoreCLI@1
+  - task: DotNetCoreCLI@2
     inputs:
       command: 'restore'
       projects: '**/*.csproj'
 
-  - task: DotNetCoreCLI@1
+  - task: DotNetCoreCLI@2
     inputs:
       command: 'build'
       projects: '**/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
 
-  - task: DotNetCoreCLI@1
+  - task: DotNetCoreCLI@2
     inputs:
       command: 'test'
-      projects: '**/*Tests/*.csproj'
+      projects: '**/*[Tt]ests/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
 
-#  - task: DotNetCoreCLI@1
+#  - task: DotNetCoreCLI@2
 #    inputs:
 #      command: 'publish'
 #      arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
+
 #  - task: PublishBuildArtifacts@1
