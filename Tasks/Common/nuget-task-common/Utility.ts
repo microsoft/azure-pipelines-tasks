@@ -5,6 +5,7 @@ import * as vsts from "vso-node-api/WebApi";
 import {VersionInfo} from "./pe-parser/VersionResource";
 import locationHelpers = require("./LocationHelpers");
 import * as url from "url";
+import { NuGetQuirks, NuGetQuirkName } from "./NuGetQuirks";
 
 export function getPatternsArrayFromInput(pattern: string): string[]
 {
@@ -182,8 +183,12 @@ export function getBundledNuGetLocation(uxOption: string): string {
     return toolPath;
 }
 
-export function locateCredentialProvider(): string {
-    return path.join(__dirname, 'NuGet/CredentialProvider'); 
+export function locateCredentialProvider(quirks?: NuGetQuirks): string {
+    if (quirks && quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider)) {
+        return path.join(__dirname, 'NuGet/CredentialProviderV2/CredentialProvider.Microsoft.exe');
+    } else {
+        return path.join(__dirname, 'NuGet/CredentialProvider');
+    }
 }
 
 // set the console code page to "UTF-8"

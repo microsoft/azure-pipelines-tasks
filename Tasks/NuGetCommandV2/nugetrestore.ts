@@ -17,6 +17,7 @@ import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
 import * as commandHelper from "nuget-task-common/CommandHelper";
 import * as telemetry from 'utility-common/telemetry';
+import { NuGetQuirkName } from "nuget-task-common/NuGetQuirks";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -69,7 +70,8 @@ export async function run(nuGetPath: string): Promise<void> {
         // Discovering NuGet quirks based on the version
         tl.debug('Getting NuGet quirks');
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
-        let credProviderPath = nutil.locateCredentialProvider();
+        let credProviderPath = nutil.locateCredentialProvider(quirks);
+
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
         const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
@@ -90,9 +92,15 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken = auth.getSystemAccessToken();
         let externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
         const authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, useCredConfig), externalAuthArr);
+        const useCredProviderV2: boolean = quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider);
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
-            credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
-            extensionsDisabled: true
+            credProviderFolder: useCredProvider 
+                ? useCredProviderV2
+                    ? credProviderPath 
+                    : path.dirname(credProviderPath)
+                : null,
+            extensionsDisabled: true,
+            quirks
         };
 
         // Setting up sources, either from provided config file or from feed selection
@@ -124,7 +132,7 @@ export async function run(nuGetPath: string): Promise<void> {
             let sources: Array<IPackageSource> = new Array<IPackageSource>();
             let feed = tl.getInput("feedRestore");
             if (feed) {
-                let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(accessToken, feed, nuGetVersion);
+                let feedUrl: string = await nutil.getNuGetFeedRegistryUrl(accessToken, feed, nuGetVersion);
                 sources.push(<IPackageSource>
                 {
                     feedName: feed,

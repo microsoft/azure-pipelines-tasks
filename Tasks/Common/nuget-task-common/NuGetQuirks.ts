@@ -21,6 +21,9 @@ export enum NuGetQuirkName {
 
     /** Does not support the NuGet v3 protocol */
     NoV3,
+
+    /** Supports V2 plugin credential provider */
+    V2CredentialProvider,
 }
 
 export interface VersionRange {
@@ -61,6 +64,7 @@ const nuget350_1707 = new VersionInfoVersion(3, 5, 0, 1707);
 const nuget350_1829 = new VersionInfoVersion(3, 5, 0, 1829);
 const nuget351 = new VersionInfoVersion(3, 5, 1, 0);
 const nuget351_1707 = new VersionInfoVersion(3, 5, 1, 1707);
+const nuget480 = new VersionInfoVersion(4, 8, 0, 0);
 
 const allQuirks: QuirkDescriptor[] = [
     {
@@ -95,6 +99,10 @@ const allQuirks: QuirkDescriptor[] = [
     {
         quirk: NuGetQuirkName.NoTfsOnPremAuthCredentialProvider,
         versionRanges: [halfOpenRange(VersionInfoVersion.MIN_VERSION, nuget350_1829)],
+    },
+    {
+        quirk: NuGetQuirkName.V2CredentialProvider,
+        versionRanges: [halfOpenRange(nuget480, VersionInfoVersion.MAX_VERSION)],
     },
 ];
 
