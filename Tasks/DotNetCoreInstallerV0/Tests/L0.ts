@@ -137,7 +137,7 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
                 assert(tr.stdout.indexOf("Checking local tool for dncs and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
-                assert(tr.stdout.indexOf("Changing attribute for file /somedir/currdir/externals/install-dotnet.sh to 777") > -1, "should iset executable attribute for install script");
+                assert(tr.stdout.indexOf("Changing attribute for file /somedir/currdir/externals/get-os-distro.sh to 777") > -1, "should iset executable attribute for install script");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-url") > -1, "should download from correct url");
                 assert(tr.stdout.indexOf("Extracting tar archive from /agent/_temp/someArchive.tar") > -1, "Should extract downloaded archive corectly");
                 assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
