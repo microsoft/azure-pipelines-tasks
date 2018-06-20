@@ -300,6 +300,9 @@
     },
     {
       "name": "UseWebDeploy",
+      "aliases": [
+        "enableCustomDeployment"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.UseWebDeploy",
       "required": false,
@@ -506,6 +509,7 @@
     "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
     "Publishusingzipdeploynotsupportedformsbuildpackage": "ms-resource:loc.messages.Publishusingzipdeploynotsupportedformsbuildpackage",
     "Publishusingzipdeploynotsupportedforvirtualapplication": "ms-resource:loc.messages.Publishusingzipdeploynotsupportedforvirtualapplication",
+    "Publishusingzipdeploydoesnotsupportwarfile": "ms-resource:loc.messages.Publishusingzipdeploydoesnotsupportwarfile",
     "Publishusingrunfromzipwithpostdeploymentscript": "ms-resource:loc.messages.Publishusingrunfromzipwithpostdeploymentscript",
     "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",
@@ -571,6 +575,7 @@
     "FailedToFetchKuduAppSettings": "ms-resource:loc.messages.FailedToFetchKuduAppSettings",
     "FailedToCreatePath": "ms-resource:loc.messages.FailedToCreatePath",
     "FailedToDeleteFile": "ms-resource:loc.messages.FailedToDeleteFile",
+    "FailedToDeleteFolder": "ms-resource:loc.messages.FailedToDeleteFolder",
     "FailedToUploadFile": "ms-resource:loc.messages.FailedToUploadFile",
     "FailedToGetFileContent": "ms-resource:loc.messages.FailedToGetFileContent",
     "FailedToListPath": "ms-resource:loc.messages.FailedToListPath",

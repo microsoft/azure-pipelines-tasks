@@ -15,13 +15,11 @@ export interface InputDataContract {
     DistributionSettings : DistributionSettings;
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
-    TiaBaseLineBuildIdFile : string;
-    UseNewCollector : boolean;
 }
 
 export interface TestReportingSettings {
     TestRunTitle : string;
-    TestResultDirectory : string;
+    TestResultsDirectory : string;
 }
 
 export interface TestSelectionSettings {
@@ -40,12 +38,14 @@ export interface TestPlanTestSuiteSettings {
 }
 
 export interface TfsSpecificSettings {
-    DefinitionId : number;
+    BuildDefinitionId : number;
+    ReleaseDefinitionId : number;
     BuildId : number;
     BuildUri : string;
     ReleaseId : number;
     ReleaseUri : string;
     ReleaseEnvironmentUri : string;
+    WorkFolder : string;
 }
 
 export interface TestSpecificSettings {
@@ -82,14 +82,16 @@ export interface DistributionSettings {
 export interface ExecutionSettings {
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
-    CustomTestAdapters : string;
-    ExecutionMode : string;
+    PathToCustomTestAdapters : string;
     IgnoreTestFailures : boolean;
     ProceedAfterAbortedTestCase : boolean;
     SettingsFile : string;
+    AdditionalConsoleParameters : string;
     OverridenParameters : string;
     RerunSettings : RerunSettings;
+    RunTestsInIsolation : boolean;
     TiaSettings : TiaSettings;
+    TempFolder : string;
     VideoDataCollectorEnabled : boolean;
 }
 
@@ -100,7 +102,7 @@ export interface TiaSettings {
     SourcesDirectory : string;
     FileLevel : boolean;
     FilterPaths : string;
-    UserMapFile : string;    
+    UserMapFile : string;
     IsPrFlow : boolean;
 }
 

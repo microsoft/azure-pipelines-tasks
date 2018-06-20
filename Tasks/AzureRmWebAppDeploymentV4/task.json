@@ -292,6 +292,7 @@
         },
         {
             "name": "UseWebDeploy",
+            "aliases": [ "enableCustomDeployment" ],
             "type": "boolean",
             "label": "Select deployment method",
             "required": false,
@@ -495,6 +496,7 @@
         "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "Publish using webdeploy options are supported only when using Windows agent",
         "Publishusingzipdeploynotsupportedformsbuildpackage": "Publish using zip deploy option is not supported for msBuild package type.",
         "Publishusingzipdeploynotsupportedforvirtualapplication": "Publish using zip deploy option is not supported for virtual application.",
+        "Publishusingzipdeploydoesnotsupportwarfile": "Publish using zip deploy or RunFromZip options do not support war file deployment.",
         "Publishusingrunfromzipwithpostdeploymentscript": "Publish using RunFromZip might not support post deployment script if it makes changes to wwwroot, since the folder is ReadOnly.",
         "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
         "EncodeNotSupported": "Detected file encoding of the file %s as %s. Variable substitution is not supported with file encoding %s. Supported encodings are UTF-8 and UTF-16 LE.",
@@ -560,6 +562,7 @@
         "FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s",
         "FailedToCreatePath": "Failed to create path '%s' from Kudu. Error: %s",
         "FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
+        "FailedToDeleteFolder": "Failed to delete folder '%s' from Kudu. Error: %s",
         "FailedToUploadFile": "Failed to upload file '%s/%s' from Kudu. Error: %s",
         "FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
         "FailedToListPath": "Failed to list path '%s' from Kudu. Error: %s",
