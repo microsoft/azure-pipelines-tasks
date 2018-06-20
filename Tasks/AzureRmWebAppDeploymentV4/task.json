@@ -562,6 +562,7 @@
         "FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s",
         "FailedToCreatePath": "Failed to create path '%s' from Kudu. Error: %s",
         "FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
+        "FailedToDeleteFolder": "Failed to delete folder '%s' from Kudu. Error: %s",
         "FailedToUploadFile": "Failed to upload file '%s/%s' from Kudu. Error: %s",
         "FailedToGetFileContent": "Failed to get file content '%s/%s' from Kudu. Error: %s",
         "FailedToListPath": "Failed to list path '%s' from Kudu. Error: %s",
