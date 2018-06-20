@@ -8,9 +8,14 @@ import * as sinon from 'sinon';
 let taskPath = path.join(__dirname, '..', 'androidsigning.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput('files', '/some/path/a.apk');
-tr.setInput('jarsign', 'false');
-tr.setInput('zipalign', 'true');
+const getInput = sinon.stub();
+getInput.withArgs('files').returns('/some/path/a.apk');
+tr.registerMockExport('getInput', getInput);
+
+const getBoolInput = sinon.stub();
+getBoolInput.withArgs('jarsign').returns(false);
+getBoolInput.withArgs('zipalign').returns(true);
+tr.registerMockExport('getBoolInput', getBoolInput);
 
 const getVariable = sinon.stub();
 getVariable.withArgs('ANDROID_HOME').returns('');
