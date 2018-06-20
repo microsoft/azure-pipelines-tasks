@@ -1,6 +1,5 @@
-import fs = require('fs');
-import assert = require('assert');
-import path = require('path');
+import * as assert from 'assert';
+import * as path from 'path';
 import * as ttm from 'vsts-task-lib/mock-test';
 
 describe('AndroidSigning Suite', function () {

@@ -1,6 +1,6 @@
-import ma = require('vsts-task-lib/mock-answer');
-import tmrm = require('vsts-task-lib/mock-run');
-import path = require('path');
+import * as ma from 'vsts-task-lib/mock-answer';
+import * as tmrm from 'vsts-task-lib/mock-run';
+import * as path from 'path';
 
 import * as sinon from 'sinon';
  
