@@ -54,7 +54,7 @@ if (osPlat !== 'win32') {
             if (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests) {
-                    nondistributedtest.runNonDistributedTest();
+                    nondistributedtest.runNonDistributedTest(inputDataContract);
             } else {
                 localtest.startTest();
             }

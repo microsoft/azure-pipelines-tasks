@@ -19,14 +19,16 @@ const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
 const sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
 
-const inputDataContract: InputDataContract = undefined;
+let inputDataContract: InputDataContract = undefined;
 let testAssemblyFiles = undefined;
 
-export function runNonDistributedTest() {
+export function runNonDistributedTest(idc: InputDataContract) {
     try {
 
         console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
         console.log('========================================================');
+
+        inputDataContract = idc;
 
         testAssemblyFiles = getTestAssemblies();
         if (!testAssemblyFiles || testAssemblyFiles.length === 0) {
