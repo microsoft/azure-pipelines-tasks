@@ -13,12 +13,14 @@ tr.setInput('zipalign', 'false');
 
 const getVariable = sinon.stub();
 getVariable.withArgs('AGENT_VERSION').returns('2.116.0');
-getVariable.withArgs('VSTS_TASKVARIABLE_KEYSTORE_FILE_PATH').returns('/usr/lib/login.keystore');
 getVariable.withArgs('HOME').returns('/users/test');
 getVariable.withArgs('JAVA_HOME').returns('/fake/java/home');
 getVariable.withArgs('ANDROID_HOME').returns('/fake/android/home');
-
 tr.registerMockExport('getVariable', getVariable);
+
+const getTaskVariable = sinon.stub();
+getTaskVariable.withArgs('KEYSTORE_FILE_PATH').returns('/some/store');
+tr.registerMockExport('getTaskVariable', getTaskVariable);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

@@ -2,6 +2,8 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
+import * as sinon from 'sinon';
+
 let taskPath = path.join(__dirname, '..', 'androidsigning.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
@@ -13,7 +15,9 @@ tr.setInput('keystoreAlias', 'somealias');
 tr.setInput('keyPass', 'pass2');
 tr.setInput('zipalign', 'false');
 
-process.env['VSTS_TASKVARIABLE_KEYSTORE_FILE_PATH'] = '/some/store';
+const getTaskVariable = sinon.stub();
+getTaskVariable.withArgs('KEYSTORE_FILE_PATH').returns('/some/store');
+tr.registerMockExport('getTaskVariable', getTaskVariable);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
