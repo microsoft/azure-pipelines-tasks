@@ -509,6 +509,7 @@
     "PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent": "ms-resource:loc.messages.PublishusingwebdeployoptionsaresupportedonlywhenusingWindowsagent",
     "Publishusingzipdeploynotsupportedformsbuildpackage": "ms-resource:loc.messages.Publishusingzipdeploynotsupportedformsbuildpackage",
     "Publishusingzipdeploynotsupportedforvirtualapplication": "ms-resource:loc.messages.Publishusingzipdeploynotsupportedforvirtualapplication",
+    "Publishusingzipdeploydoesnotsupportwarfile": "ms-resource:loc.messages.Publishusingzipdeploydoesnotsupportwarfile",
     "Publishusingrunfromzipwithpostdeploymentscript": "ms-resource:loc.messages.Publishusingrunfromzipwithpostdeploymentscript",
     "ResourceDoesntExist": "ms-resource:loc.messages.ResourceDoesntExist",
     "EncodeNotSupported": "ms-resource:loc.messages.EncodeNotSupported",

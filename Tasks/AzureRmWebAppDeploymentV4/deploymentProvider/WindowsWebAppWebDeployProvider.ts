@@ -21,7 +21,7 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
 
         webPackage = await FileTransformsUtility.applyTransformations(webPackage, this.taskParams);
         
-        if(deployUtility.canUseWebDeploy(this.taskParams.UseWebDeploy)){
+        if(deployUtility.canUseWebDeploy(this.taskParams.UseWebDeploy)) {
             tl.debug("Performing the deployment of webapp.");
             
             if(!tl.osType().match(/^Win/)) {
