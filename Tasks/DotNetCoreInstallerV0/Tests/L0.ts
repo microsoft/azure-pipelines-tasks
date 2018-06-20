@@ -96,7 +96,7 @@ describe('DotNetCoreInstaller', function() {
 
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                assert(tr.stdout.indexOf("loc_mock_PrimaryUrlDownloadFailed 404 not found https://primary-url") >= -1, "should print primary url failure error")
+                assert(tr.stdout.indexOf("404 not found https://primary-url") > -1, "should print primary url failure error")
                 assert(tr.stdout.indexOf("Downloading tool from https://legacy-url") > -1, "should download from legacy url");
             }, tr, done);
         });
@@ -182,6 +182,20 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_UsingCachedTool") > -1, "should print that cached dir is being used");
                 assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncs version 1.0.4") == -1, "should not update cache again");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/oldCacheDir") > -1, "should pre-prend to PATH");
+            }, tr, done);
+        });
+
+        it("[nix]Should download using DLC url if primary url does not work", (done) => {
+            process.env["__primary_url_failed__"] = "true";
+            let tp = path.join(__dirname, "InstallNix.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            delete process.env["__primary_url_failed__"];
+
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                assert(tr.stdout.indexOf("404 not found https://primary-url") > -1, "should print primary url failure error")
+                assert(tr.stdout.indexOf("Downloading tool from https://legacy-url") > -1, "should download from legacy url");
             }, tr, done);
         });
     }
