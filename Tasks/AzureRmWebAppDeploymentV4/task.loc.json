@@ -300,6 +300,9 @@
     },
     {
       "name": "UseWebDeploy",
+      "aliases": [
+        "enableCustomDeployment"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.UseWebDeploy",
       "required": false,

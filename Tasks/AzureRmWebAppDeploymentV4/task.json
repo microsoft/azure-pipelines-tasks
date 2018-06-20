@@ -292,6 +292,7 @@
         },
         {
             "name": "UseWebDeploy",
+            "aliases": [ "enableCustomDeployment" ],
             "type": "boolean",
             "label": "Select deployment method",
             "required": false,
