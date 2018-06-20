@@ -23,7 +23,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "osType": "Linux"
     },
     "which": {
-        "/somedir/currdir/externals/get-os-distro.sh": "somedir/currdir/externals/get-os-distro.sh"
+        "/somedir/currdir/externals/get-os-distro.sh": "/somedir/currdir/externals/get-os-distro.sh"
     },
     "checkPath": {
         "/somedir/currdir/externals/get-os-distro.sh": true
