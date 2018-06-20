@@ -213,7 +213,7 @@ function Get-ServiceFabricApplicationAction
         [string]
         $ApplicationTypeName,
 
-        [HashTable]
+        [string]
         $ApplicationName
     )
 
@@ -229,7 +229,7 @@ function Get-ServiceFabricApplicationAction
     }
 
     $global:operationId = $SF_Operations.GetApplication
-    return Get-ServiceFabricApplication $getApplicationParams
+    return Get-ServiceFabricApplication @getApplicationParams
 }
 
 function Get-ServiceFabricApplicationTypeAction
@@ -240,7 +240,7 @@ function Get-ServiceFabricApplicationTypeAction
     )
 
     $global:operationId = $SF_Operations.GetApplicationType
-    return Get-ServiceFabricApplication -ApplicationTypeName $ApplicationTypeName
+    return Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName
 }
 
 function Get-ServiceFabricApplicationUpgradeAction
@@ -251,5 +251,5 @@ function Get-ServiceFabricApplicationUpgradeAction
     )
 
     $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
-    return Get-ServiceFabricApplication -ApplicationName $ApplicationName
+    return Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
 }
