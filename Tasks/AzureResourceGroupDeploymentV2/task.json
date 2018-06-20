@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 134,
-        "Patch": 0
+        "Minor": 136,
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -199,7 +199,7 @@
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Agent registration with Deployment group requires access to your Visual Studio project.​ <br><br>Click \"Add\" to create an endpoint using personal access token (PAT) with scope restricted to \"Deployment Group\" and a default expiration time of 90 days. <br><br>​Click \"Manage\" to update endpoint details.​",
+            "helpMarkDown": "Specify the endpoint to connect to VSTS/TFS account for agent registration.<br><br>You can create an endpoint using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup an endpoint. <br><br>​Click \"Manage\" to update endpoint details.",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -239,6 +239,35 @@
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "defaultValue": true,
             "helpMarkDown": "Choose if the tags configured on the Azure VM need to be copied to the corresponding Deployment Group agent. <br><br>​By default all Azure tags will be copied following the format “Key: Value”. Example: An Azure Tag “Role : Web” would be copied  as-is to the Agent machine. <br><br>For more information on how tag Azure resources refer to [link](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-using-tags​)"
+        },
+        {
+            "name": "runAgentServiceAsUser",
+            "type": "boolean",
+            "label": "Run agent service as a user",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+            "defaultValue": false,
+            "helpMarkDown": "Decide whether to run the agent service as a user other than the default. <br>The default user is \"NT AUTHORITY\\SYSTEM\" in Windows and \"root\" in Linux."
+        },
+        {
+            "name": "userName",
+            "type": "string",
+            "label": "User name",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The username to run the agent service on the virtual machines. <br>For domain users, please enter values as \"domain\\username\" or \"username@domain.com\". For local users, please enter just the user name. <br>It is assumed that the same domain user\\a local user with the same name, respectively, is present on all the virtual machines in the resource group."
+        },
+        {
+            "name": "password",
+            "type": "string",
+            "label": "Password",
+            "groupName": "AdvancedDeploymentOptions",
+            "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The password for the user to run the agent service on the Windows VMs. <br>It is assumed that the password is the same for the specified user on all the VMs. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it. <br>For linux VMs, password is not required and will be ignored. "
         },
         {
             "name": "outputVariable",
@@ -422,6 +451,7 @@
         "UnableToReadResponseBody": "Unable to read response body. Error: %s",
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null."
     }
 }

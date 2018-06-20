@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "For help with this task, visit the Visual Studio App Center [support site](https://aka.ms/appcentersupport/).",
   "loc.description": "Distribute app builds to testers and users via App Center",
   "loc.instanceNameFormat": "Deploy $(app) to Visual Studio App Center",
-  "loc.releaseNotes": "Add support for distribution to stores.",
+  "loc.releaseNotes": "Provide commit details to distribution API for additional context.",
   "loc.group.displayName.symbols": "Symbols",
   "loc.input.label.serverEndpoint": "App Center connection",
   "loc.input.help.serverEndpoint": "Select the service endpoint for your Visual Studio App Center connection. To create one, click the Manage link and create a new service endpoint.",

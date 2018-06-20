@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "PyPI Publisher",
-  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/vsts/build-release/tasks/package/pypi-publisher)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=875289)",
   "loc.description": "Create and upload an sdist or wheel to a PyPI-compatible index using Twine.",
   "loc.instanceNameFormat": "Package and publish to PyPI",
   "loc.input.label.serviceEndpoint": "PyPI connection",

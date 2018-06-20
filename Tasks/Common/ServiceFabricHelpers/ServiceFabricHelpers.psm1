@@ -7,3 +7,4 @@ Find-VstsFiles -LiteralDirectory $PSScriptRoot -LegacyPattern "*.ps1" | ForEach 
 
 Export-ModuleMember -Function Connect-ServiceFabricClusterFromServiceEndpoint
 Export-ModuleMember -Function Get-ServiceFabricEncryptedText
+Export-ModuleMember -Variable SF_Operations

@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 136,
-        "Patch": 0
+        "Minor": 137,
+        "Patch": 2
     },
     "demands": [
         "vstest"
@@ -484,6 +484,9 @@
             "target": "testSuite",
             "endpointId": "tfs:teamfoundation",
             "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?$asTreeView=true&api-version=3.0-preview.2",
+            "parameters": {
+                "testPlan": "$(testPlan)"
+            },
             "resultSelector": "jsonpath:$.value[*]"
         }
     ],

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Xamarin.iOS",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613729)",
-  "loc.description": "Build an iOS app with Xamarin on macOS",
+  "loc.description": "Build an iOS app with Xamarin on macOS.",
   "loc.instanceNameFormat": "Build Xamarin.iOS solution $(solution)",
   "loc.releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
   "loc.group.displayName.sign": "Signing & Provisioning",
@@ -17,7 +17,7 @@
   "loc.input.label.forSimulator": "Build for iOS Simulator",
   "loc.input.help.forSimulator": "Optionally build for the iOS Simulator instead of physical iOS devices.",
   "loc.input.label.runNugetRestore": "Run NuGet restore",
-  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The 'nuget' tool in the PATH of the build agent machine will be used. To use a different version of NuGet or set additional arguments, use the [NuGet Installer Task](https://www.visualstudio.com/docs/build/steps/package/nuget-installer).",
+  "loc.input.help.runNugetRestore": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The 'nuget' tool in the PATH of the build agent machine will be used. To use a different version of NuGet or set additional arguments, use the [NuGet Tool Installer](https://go.microsoft.com/fwlink/?linkid=852538) task.",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Additional command line arguments that should be used to build.",
   "loc.input.label.cwd": "Working directory",
@@ -35,8 +35,9 @@
   "loc.messages.MSB_Build0": "Build {0}",
   "loc.messages.MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
   "loc.messages.MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
-  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
+  "loc.messages.MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Tool Installer task to your build definition.",
   "loc.messages.MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
   "loc.messages.MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+  "loc.messages.SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s",
+  "loc.messages.BuildRequiresMac": "Xamarin iOS builds require a macOS agent. Running on a Windows or Linux agent is not supported by Apple."
 }

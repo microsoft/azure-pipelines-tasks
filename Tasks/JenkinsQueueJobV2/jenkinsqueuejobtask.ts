@@ -45,6 +45,9 @@ export class TaskOptions {
     NO_CRUMB: string;
     crumb: string;
 
+    shouldFail: boolean;
+    failureMsg: string;
+
     constructor() {
         this.serverEndpoint = tl.getInput('serverEndpoint', true);
         this.serverEndpointUrl = tl.getEndpointUrl(this.serverEndpoint, false);
@@ -92,6 +95,9 @@ export class TaskOptions {
 
         this.NO_CRUMB = 'NO_CRUMB';
         this.crumb = this.NO_CRUMB;
+
+        this.shouldFail = false;
+        this.failureMsg = '';
     }
 }
 
@@ -100,7 +106,6 @@ async function doWork() {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
 
         const taskOptions: TaskOptions = new TaskOptions();
-
         const jobQueue: JobQueue = new JobQueue(taskOptions);
         const queueUri = await util.pollSubmitJob(taskOptions);
         console.log(tl.loc('JenkinsJobQueued'));

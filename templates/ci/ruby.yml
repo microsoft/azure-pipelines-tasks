@@ -5,23 +5,23 @@
 queue: 'Hosted Linux'
 steps:
 
-- task: UseRubyVersion@0
-  inputs:
-    versionSpec: '>= 2.5' 
+  - task: UseRubyVersion@0
+    inputs:
+      versionSpec: '>= 2.5'
 
-#- script: gem install rails && rails -v
-#  displayName: 'gem install rails'
+#  - script: gem install rails && rails -v
+#    displayName: 'gem install rails'
 
-- script: |
-    gem install bundler
-    bundle install --retry=3 --jobs=3 # Add --deployment if a Gemfile.lock file exists
-  displayName: 'bundle install'
+  - script: |
+      gem install bundler
+      bundle install --retry=3 --jobs=3 # Add --deployment if a Gemfile.lock file exists
+    displayName: 'bundle install'
 
-- script: bundle exec rake
-  displayName: 'bundle exec rake'
+  - script: bundle exec rake
+    displayName: 'bundle exec rake'
 
-#- task: ArchiveFiles@2
-#  inputs:
-#    rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#    includeRootFolder: false
-#- task: PublishBuildArtifacts@1
+#  - task: ArchiveFiles@2
+#    inputs:
+#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#      includeRootFolder: false
+#  - task: PublishBuildArtifacts@1

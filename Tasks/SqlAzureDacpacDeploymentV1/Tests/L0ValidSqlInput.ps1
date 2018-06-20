@@ -41,11 +41,11 @@ Register-Mock Add-AzureSqlDatabaseServerFirewallRule {
 Register-Mock Remove-AzureSqlDatabaseServerFirewallRule { }
 
 Register-Mock Invoke-Expression { "Executing Command : $args" }  -ArgumentsEvaluator {
-    $args.count -eq 1 -and $args[0] -eq 'Invoke-Sqlcmd -ServerInstance "a0nuel7r2k.database.windows.net" -Database "TestDatabase" -Username "TestUser"  -Password "TestPassword"  -Inputfile "SqlFile.sql" SqlAdditionalArguments -ConnectionTimeout 120' 
+    $args.count -eq 1 -and $args[0] -eq 'Invoke-SqlCmd @sqlArguments SqlAdditionalArguments -ConnectionTimeout 120' 
 }
 
-Register-Mock Invoke-Expression { throw 'Invalid Argument passed !' } -ArgumentsEvaluator {
-    $args.count -eq 1 -and $args[0] -ne 'Invoke-Sqlcmd -ServerInstance "a0nuel7r2k.database.windows.net" -Database "TestDatabase" -Username "TestUser"  -Password "TestPassword"  -Inputfile "SqlFile.sql" SqlAdditionalArguments -ConnectionTimeout 120' 
+Register-Mock Invoke-Expression { throw "Invalid Argument passed !" } -ArgumentsEvaluator {
+    $args.count -eq 1 -and $args[0] -ne 'Invoke-SqlCmd @sqlArguments SqlAdditionalArguments -ConnectionTimeout 120' 
 }
 
 & "$PSScriptRoot\..\DeploySqlAzure.ps1"

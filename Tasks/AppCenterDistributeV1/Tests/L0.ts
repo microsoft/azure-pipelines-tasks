@@ -19,7 +19,9 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     after(() => {
-
+        delete process.env['BUILD_SOURCEBRANCHNAME'];
+        delete process.env['BUILD_SOURCEVERSION'];
+        delete process.env['LASTCOMMITMESSAGE'];
     });
 
     it('Positive path: upload one ipa file', (done: MochaDone) => {
@@ -79,7 +81,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.failed, 'task should have failed');
 
-        done()
+        done();
     });
 
     it('Positive path: single file with Include Parent', (done: MochaDone) => {
@@ -91,7 +93,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
 
-        done()
+        done();
     });
 
     it('Positive path: multiple dSYMs in the same foder', (done: MochaDone) => {
@@ -103,7 +105,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
 
-        done()
+        done();
     });
 
     it('Positive path: multiple dSYMs in parallel foders', (done: MochaDone) => {
@@ -115,7 +117,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
 
-        done()
+        done();
     });
 
     it('Positive path: multiple dSYMs in a tree', (done: MochaDone) => {
@@ -127,7 +129,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
 
-        done()
+        done();
     });
 
     it('Positive path: a single dSYM', (done: MochaDone) => {
@@ -139,7 +141,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
 
-        done()
+        done();
     });
 
     it('Positive path: a single PDB', (done: MochaDone) => {
@@ -151,7 +153,7 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
 
-        done()
+        done();
     });
 
 
@@ -164,7 +166,30 @@ describe('AppCenterDistribute L0 Suite', function () {
         tr.run();
         assert(tr.succeeded, 'task should have succeeded');
 
-        done()
+        done();
+    });
+
+    it('Positive path: publish commit info (including commit message)', (done: MochaDone) => {
+        this.timeout(2000);
+
+        let tp = path.join(__dirname, 'L0PublishCommitInfo_1.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
     });
    
+    it('Positive path: publish commit info (excluding commit message)', (done: MochaDone) => {
+        this.timeout(2000);
+
+        let tp = path.join(__dirname, 'L0PublishCommitInfo_2.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+
+        done();
+    });
 });

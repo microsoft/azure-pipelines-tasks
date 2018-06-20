@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 136,
-    "Patch": 0
+    "Minor": 137,
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -462,26 +462,32 @@
       "visibleRule": "rerunFailedTests = true"
     }
   ],
-  "sourceDefinitions": [
+  "dataSourceBindings": [
     {
       "target": "testPlan",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2",
-      "selector": "jsonpath:$.value[*].name",
-      "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:teamfoundation"
+      "endpointId": "tfs:teamfoundation",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans?filterActivePlans=true&api-version=3.0-preview.2&$skip={{skip}}&$top=1000",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }",
+      "callbackContextTemplate": "{\"skip\": \"{{add skip 1000}}\"}",
+      "callbackRequiredTemplate": "{{isEqualNumber result.count 1000}}",
+      "initialContextTemplate": "{\"skip\": \"0\"}"
     },
     {
       "target": "testConfiguration",
-      "endpoint": "/$(system.teamProject)/_apis/test/configurations?api-version=3.0-preview.1",
-      "selector": "jsonpath:$.value[*].name",
-      "keySelector": "jsonpath:$.value[*].id",
-      "authKey": "tfs:teamfoundation"
+      "endpointId": "tfs:teamfoundation",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/configurations?api-version=3.0-preview.1",
+      "resultSelector": "jsonpath:$.value[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{id}}} - {{{name}}}\" }"
     },
     {
       "target": "testSuite",
-      "endpoint": "/$(system.teamProject)/_apis/test/plans/$(testPlan)/suites?$asTreeView=true&api-version=3.0-preview.2",
-      "selector": "jsonpath:$.value[*]",
-      "authKey": "tfs:teamfoundation"
+      "endpointId": "tfs:teamfoundation",
+      "endpointUrl": "{{endpoint.url}}/{{system.teamProject}}/_apis/test/plans/{{testPlan}}/suites?$asTreeView=true&api-version=3.0-preview.2",
+      "parameters": {
+        "testPlan": "$(testPlan)"
+      },
+      "resultSelector": "jsonpath:$.value[*]"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

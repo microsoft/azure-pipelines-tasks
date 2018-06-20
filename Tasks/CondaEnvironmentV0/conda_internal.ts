@@ -118,3 +118,22 @@ export function activateEnvironment(environmentsDir: string, environmentName: st
     task.setVariable('CONDA_DEFAULT_ENV', environmentName)
     task.setVariable('CONDA_PREFIX', environmentPath)
 }
+
+/**
+ * Install the packages given by `packageSpecs` to the `base` environment.
+ */
+export async function installPackagesGlobally(packageSpecs: string, otherOptions?: string): Promise<void> {
+    const conda = task.tool('conda');
+    conda.line(`install ${packageSpecs} --quiet --yes`);
+
+    if (otherOptions) {
+        conda.line(otherOptions);
+    }
+
+    try {
+        await conda.exec();
+    } catch (e) {
+        // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
+        throw new Error(task.loc('InstallFailed', e));
+    }
+}

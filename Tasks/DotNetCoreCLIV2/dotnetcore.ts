@@ -186,11 +186,13 @@ export class dotNetExe {
     private async zipAfterPublishIfRequired(projectFile: string) {
         if (this.isPublishCommand() && this.zipAfterPublish) {
             var outputSource: string = "";
+            var moveZipToOutputSource = false;
             if (this.outputArgument) {
-                if (tl.getBoolInput("modifyOutputPath")) {
+                if (tl.getBoolInput("modifyOutputPath") && projectFile) {
                     outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 } else {
                     outputSource = this.outputArgument;
+                    moveZipToOutputSource = true;
                 }
 
             }
@@ -211,6 +213,10 @@ export class dotNetExe {
                 var outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
                 tl.rmRF(outputSource);
+                if (moveZipToOutputSource) {
+                    fs.mkdirSync(outputSource);
+                    fs.renameSync(outputTarget, path.join(outputSource, path.basename(outputTarget)));
+                }
             }
             else {
                 throw tl.loc("noPublishFolderFoundToZip", projectFile);
@@ -241,7 +247,7 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
-        if (!this.arguments || !this.arguments.trim()) {
+        if (!this.arguments || !this.arguments.trim()) {    
             return;
         }
 

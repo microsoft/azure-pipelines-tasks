@@ -11,27 +11,29 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 136,
         "Patch": 0
     },
     "demands": [],
-    "instanceNameFormat": "Conda Environment $(environmentName)",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
+    "instanceNameFormat": "Conda environment $(environmentName)",
     "inputs": [
+        {
+            "name": "createCustomEnvironment",
+            "type": "boolean",
+            "label": "Create a custom environment",
+            "required": false,
+            "defaultValue": false,
+            "helpMarkDown": "Create or reactivate a Conda environment instead of using the `base` environment (recommended for self-hosted agents)."
+        },
         {
             "name": "environmentName",
             "type": "string",
             "label": "Environment name",
             "required": true,
             "defaultValue": "",
-            "helpMarkDown": "Name of the Conda environment to create and activate."
+            "visibleRule": "createCustomEnvironment == true",
+            "helpMarkDown": "Name of the Conda environment to create and activate, or reactivate if it already exists."
         },
         {
             "name": "packageSpecs",
@@ -39,7 +41,7 @@
             "label": "Package specs",
             "required": false,
             "defaultValue": "python=3",
-            "helpMarkDown": "Space-delimited list of packages to install when creating the environment."
+            "helpMarkDown": "Space-delimited list of packages to install in the environment."
         },
         {
             "name": "updateConda",
@@ -50,13 +52,22 @@
             "helpMarkDown": "Update Conda to the latest version. This applies to the Conda installation found in `PATH` or at the path specified by the `CONDA` environment variable."
         },
         {
-            "name": "createOptions",
+            "name": "installOptions",
             "type": "string",
-            "label": "Environment creation options",
+            "label": "Other options for `conda install`",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Space-delimited list of other options to pass to the `conda create` command.",
-            "groupName": "advanced"
+            "visibleRule": "createCustomEnvironment == false",
+            "helpMarkDown": "Space-delimited list of additional arguments to pass to the `conda install` command."
+        },
+        {
+            "name": "createOptions",
+            "type": "string",
+            "label": "Other options for `conda create`",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "createCustomEnvironment == true",
+            "helpMarkDown": "Space-delimited list of additional arguments to pass to the `conda create` command."
         },
         {
             "name": "cleanEnvironment",
@@ -64,8 +75,8 @@
             "label": "Clean the environment",
             "required": false,
             "defaultValue": false,
-            "helpMarkDown": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment.",
-            "groupName": "advanced"
+            "visibleRule": "createCustomEnvironment == true",
+            "helpMarkDown": "Delete the environment and recreate it if it already exists. If not selected, the task will reactivate an existing environment."
         }
     ],
     "execution": {
@@ -76,9 +87,11 @@
     },
     "messages": {
         "CleanEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is set. Deleting ...",
-        "CreateFailed": "Failed to create Conda environment %s: %s",
+        "CreateFailed": "Failed to create Conda environment %s. %s",
         "CondaNotFound": "The `conda` executable was not found on the system. Ask your administrator to install Miniconda or Anaconda. Then add the `conda` executable to `PATH` or set the `CONDA` environment variable to the root of the installation.",
+        "InstallFailed": "Failed to install packages. %s",
         "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
+        "ParameterRequired": "The `%s` parameter is required",
         "PlatformNotRecognized": "Platform not recognized"
     }
 }

@@ -206,3 +206,50 @@ function Merge-HashTables
     $HashTableNew = $HashTableOld + $HashTableNew
     return $HashTableNew
 }
+
+function Get-ServiceFabricApplicationAction
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [HashTable]
+        $ApplicationName
+    )
+
+    $getApplicationParams = @{}
+    if ($ApplicationTypeName)
+    {
+        $getApplicationParams['ApplicationTypeName'] = $ApplicationTypeName
+    }
+
+    if ($ApplicationName)
+    {
+        $getApplicationParams['ApplicationName'] = $ApplicationName
+    }
+
+    $global:operationId = $SF_Operations.GetApplication
+    return Get-ServiceFabricApplication $getApplicationParams
+}
+
+function Get-ServiceFabricApplicationTypeAction
+{
+    Param (
+        [string]
+        $ApplicationTypeName
+    )
+
+    $global:operationId = $SF_Operations.GetApplicationType
+    return Get-ServiceFabricApplication -ApplicationTypeName $ApplicationTypeName
+}
+
+function Get-ServiceFabricApplicationUpgradeAction
+{
+    Param (
+        [string]
+        $ApplicationName
+    )
+
+    $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
+    return Get-ServiceFabricApplication -ApplicationName $ApplicationName
+}

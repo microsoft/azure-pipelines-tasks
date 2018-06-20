@@ -141,9 +141,15 @@ export class AzureAppServiceUtility {
         }
         
         console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(properties)));
-        await this._appService.patchApplicationSettings(properties);
+        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(properties);
+
+        if(!isNewValueUpdated) {
+            console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
+            return;
+        }
+
         var kuduService = await this.getKuduService();
-        var noOftimesToIterate: number = 6;
+        var noOftimesToIterate: number = 12;
         tl.debug('retrieving values from Kudu service to check if new values are updated');
         while(noOftimesToIterate > 0) {
             var kuduServiceAppSettings = await kuduService.getAppSettings();
@@ -163,7 +169,7 @@ export class AzureAppServiceUtility {
             }
 
             noOftimesToIterate -= 1;
-            await webClient.sleepFor(10);
+            await webClient.sleepFor(5);
         }
 
         tl.debug('Timing out from app settings check');

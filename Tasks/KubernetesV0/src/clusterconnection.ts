@@ -8,6 +8,7 @@ import * as tr from "vsts-task-lib/toolrunner";
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as utils from "./utilities";
 import * as os from "os";
+import kubectlutility = require("utility-common/kubectlutility");
 
 export default class ClusterConnection {
     private kubectlPath: string;
@@ -41,9 +42,21 @@ export default class ClusterConnection {
     // open kubernetes connection
     public async open(kubernetesEndpoint?: string){
          return this.initialize().then(() => {
-            if (kubernetesEndpoint) {
-                this.downloadKubeconfigFileFromEndpoint(kubernetesEndpoint);
+            var authorizationType = tl.getEndpointDataParameter(kubernetesEndpoint, 'authorizationType', false);
+            var kubeconfig = null;
+            if (authorizationType === "Kubeconfig")
+            {
+                if (kubernetesEndpoint) {
+                     kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
+                } 
             }
+            else if (authorizationType === "ServiceAccount")
+            {
+                kubeconfig = kubectlutility.createKubeconfig(kubernetesEndpoint);
+            }
+            
+            this.kubeconfigFile = path.join(this.userDir, "config");
+            fs.writeFileSync(this.kubeconfigFile, kubeconfig);
          });
     }
 
@@ -62,13 +75,6 @@ export default class ClusterConnection {
             errlines.forEach(line => tl.error(line));
             throw error;
         });
-    }
-
-    // download kubernetes cluster config file from endpoint
-    private downloadKubeconfigFileFromEndpoint(kubernetesEndpoint: string) : void {
-        this.kubeconfigFile = path.join(this.userDir, "config");
-        var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
-        fs.writeFileSync(this.kubeconfigFile, kubeconfig);
     }
 
     private getExecutableExtention(): string {
