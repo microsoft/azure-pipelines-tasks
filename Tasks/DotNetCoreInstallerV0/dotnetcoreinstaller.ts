@@ -27,7 +27,6 @@ class DotnetCoreInstaller {
             console.log(tl.loc("InstallingAfresh"));
             let osSuffixes = this.detectMachineOS();
             console.log(tl.loc("GettingDownloadUrl", this.packageType, this.version));
-            console.log("DotNetCoreReleaseFetcher ", JSON.stringify(DotNetCoreReleaseFetcher));
             let downloadUrls = await DotNetCoreReleaseFetcher.getDownloadUrls(osSuffixes, this.version, this.packageType);
             toolPath = await this.downloadAndInstall(downloadUrls);
         } else {
@@ -68,16 +67,16 @@ class DotnetCoreInstaller {
             let output: string = result.stdout;
 
             let index;
-            if (index = output.indexOf("Primary:")) {
-                let primary = output.substr(index).split(os.EOL)[0];
+            if ((index = output.indexOf("Primary:")) >= 0) {
+                let primary = output.substr(index + "Primary:".length).split(os.EOL)[0];
                 osSuffix.push(primary);
                 console.log(tl.loc("PrimaryPlatform", primary));
             }
 
-            if (index = output.indexOf("Legacy:")) {
-                let legacy = output.substr(index).split(os.EOL)[0];
+            if (index = output.indexOf("Legacy:") >= 0) {
+                let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
                 osSuffix.push(legacy);
-                console.log(tl.loc("PrimaryPlatform", legacy));
+                console.log(tl.loc("LegacyPlatform", legacy));
             }
 
             if (osSuffix.length == 0) {
@@ -92,13 +91,10 @@ class DotnetCoreInstaller {
         let downloaded = false;
         let downloadPath = "";
         for (var i = 0; i < downloadUrls.length; i++) {
-            if (downloaded) {
-                break;
-            }
-
             try {
                 downloadPath = await toolLib.downloadTool(downloadUrls[i]);
                 downloaded = true;
+                break;
             } catch (error) {
                 tl.warning(tl.loc("CouldNotDownload", downloadUrls[i], JSON.stringify(error)));
             }
@@ -117,7 +113,6 @@ class DotnetCoreInstaller {
         let cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version);
         console.log(tl.loc("SuccessfullyInstalled", this.packageType, this.version));
         return cachedDir;
-
     }
 
     private packageType: string;

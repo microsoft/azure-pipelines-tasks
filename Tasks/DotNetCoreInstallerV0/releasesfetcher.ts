@@ -7,12 +7,12 @@ import { HttpClientResponse } from 'typed-rest-client/HttpClient';
 
 export class DotNetCoreReleaseFetcher {
 
-    public static async getDownloadUrls(osSuffixes: string[], version: string, type: string) {
+    public static async getDownloadUrls(osSuffixes: string[], version: string, type: string): Promise<string[]> {
         let downloadUrls = [];
-        let releasesCSV = await this.getReleasesJson();
-        let versionsInfo = JSON.parse(await releasesCSV.readBody());
+        let releasesJSON = await this.getReleasesJson();
 
-        let releasesInfo: any[] = versionsInfo.filter(releaseInfo => {
+        let releasesInfo = JSON.parse(await releasesJSON.readBody());
+        releasesInfo = releasesInfo.filter(releaseInfo => {
             return releaseInfo['version-' + type] === version || releaseInfo['version-' + type + '-display'] === version;
         });
 
