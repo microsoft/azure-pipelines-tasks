@@ -305,9 +305,7 @@ function Upload-FilesToAzureContainer
     finally
     {
         Handle-AzCopyLogs -isLogsPresent $useDefaultArguments -logsFilePath $azCopyLogFilePath -ErrorAction SilentlyContinue
-        if ((Test-Path -Path $responseFile -PathType Leaf) -eq $true) {
-            Remove-Item -Path $responseFile -Force
-        }
+        Remove-Item -Path $responseFile -Force -ErrorAction 'SilentlyContinue'
     }
 }
 
