@@ -49,6 +49,11 @@ function Update-DockerImageSettings
                     throw (Get-VstsLocString -Key InvalidImageDigestValue -ArgumentList @($imageDigestValue, $imageDigestsPath))
                 }
                 $imageName = $imageDigestValue.Substring($slashIndex + 1, $hashSeparatorIndex - $slashIndex - 1)
+
+                if ($imageNameToDigestMapping.ContainsKey($imageName))
+                {
+                    throw (Get-VstsLocString -Key AmbiguousImages -ArgumentList @($imageName))
+                }
             }
             $imageNameToDigestMapping[$imageName] = $imageDigestValue
         }
@@ -67,7 +72,18 @@ function Update-DockerImageSettings
             {
                 if ($codePackage.EntryPoint -and $codePackage.EntryPoint.ContainerHost -and $codePackage.EntryPoint.ContainerHost.ImageName)
                 {
-                    $digest = $imageNameToDigestMapping[$codePackage.EntryPoint.ContainerHost.ImageName]
+                    $imageName = $codePackage.EntryPoint.ContainerHost.ImageName
+                    if ($imageNames -eq $null)
+                    {
+                        # If we don't have the list of images names with tags to map to remove the tag
+                        $tagSeparatorIndex = $imageName.IndexOf(":")
+                        if ($tagSeparatorIndex -ge 0)
+                        {
+                            $imageName = $imageName.Substring(0, $tagSeparatorIndex)
+                        }
+                    }
+
+                    $digest = $imageNameToDigestMapping[$imageName]
                     if ($digest)
                     {
                         $codePackage.EntryPoint.ContainerHost.ImageName = $digest

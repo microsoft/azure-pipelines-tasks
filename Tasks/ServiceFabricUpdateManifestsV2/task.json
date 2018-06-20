@@ -185,6 +185,7 @@
         "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
         "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
         "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'.",
-        "ImageDigestMismatch": "The list of image names and the list of digests must be the same length. Number of image names: '{0}', number of image digests: '{1}'."
+        "ImageDigestMismatch": "The list of image names and the list of digests must be the same length. Number of image names: '{0}', number of image digests: '{1}'.",
+        "AmbiguousImages": "The repository '{0}' has more than one digest. You must provide a path to the list of the original images names in the input \"Image Names Path\" to disambiguate."
     }
 }
