@@ -67,7 +67,7 @@ export class ServiceClient {
             throw new Error(tl.loc("CredentialsCannotBeNull"));
         }
         if (!subscriptionId) {
-            throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
+            //throw new Error(tl.loc("SubscriptionIdCannotBeNull"));
         }
     }
 
@@ -81,7 +81,11 @@ export class ServiceClient {
 
     public getRequestUriForBaseUri(baseUri: string, uriFormat: string, parameters: {}, queryParameters?: string[], apiVersion?: string): string {
         var requestUri = baseUri + uriFormat;
-        requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
+        
+        if(this.subscriptionId) {
+            requestUri = requestUri.replace('{subscriptionId}', encodeURIComponent(this.subscriptionId));
+        }
+        
         for (var key in parameters) {
             requestUri = requestUri.replace(key, encodeURIComponent(parameters[key]));
         }

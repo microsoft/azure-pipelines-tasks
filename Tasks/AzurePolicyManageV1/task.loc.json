@@ -1,0 +1,100 @@
+{
+  "id": "2f71572c-3969-49c5-98ac-8a46f259e349",
+  "name": "AzurePolicyManage",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 8
+  },
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "PolicyName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PolicyName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.PolicyName"
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Action",
+      "defaultValue": "CreatePolicy",
+      "options": {
+        "CreatePolicy": "Create Policy",
+        "AssignPolicy": "Assign Policy"
+      }
+    },
+    {
+      "name": "PolicyInputType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.PolicyInputType",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.PolicyInputType",
+      "defaultValue": "FilePath",
+      "options": {
+        "FilePath": "File Path",
+        "Inline": "Inline"
+      }
+    },
+    {
+      "name": "PolicyFilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.PolicyFilePath",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "PolicyInputType = FilePath",
+      "helpMarkDown": "ms-resource:loc.input.help.PolicyFilePath"
+    },
+    {
+      "name": "PolicyInline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.PolicyInline",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "PolicyInputType = Inline",
+      "helpMarkDown": "ms-resource:loc.input.help.PolicyInline",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    }
+  ],
+  "dataSourceBindings": [],
+  "execution": {
+    "Node": {
+      "target": "azurepolicymanage.js"
+    }
+  },
+  "messages": {}
+}
