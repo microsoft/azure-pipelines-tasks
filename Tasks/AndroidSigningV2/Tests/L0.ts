@@ -64,8 +64,8 @@ describe('AndroidSigning Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 1, 'should have run jarsigner');
-        assert(testRunner.stderr.length == 0, 'should have jarsigned file');
+        assert(testRunner.invokedToolCount === 1, 'should have run jarsigner');
+        assert(testRunner.stderr.length === 0, 'should have jarsigned file');
         assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
@@ -79,7 +79,7 @@ describe('AndroidSigning Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not run anything');
+        assert(testRunner.invokedToolCount === 0, 'should not run anything');
         assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have failed to locate jarsigner');
         assert(testRunner.failed, 'task should have failed');
 
@@ -94,8 +94,8 @@ describe('AndroidSigning Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.invokedToolCount == 0, 'should not run anything');
-        assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have jarsigned file');
+        assert(testRunner.invokedToolCount === 0, 'should not run anything');
+        assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have failed to locate jarsigner');
         assert(testRunner.failed, 'task should have failed');
 
         done();
@@ -125,7 +125,7 @@ describe('AndroidSigning Suite', function () {
         testRunner.run();
 
         assert(testRunner.invokedToolCount === 1, 'should run zipalign');
-        assert(testRunner.stderr.length === 0 || testRunner.errorIssues.length === 0, 'should not have written to stderr');
+        assert(testRunner.errorIssues.length === 0 && testRunner.stderr.length === 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
@@ -140,7 +140,7 @@ describe('AndroidSigning Suite', function () {
         testRunner.run();
 
         assert(testRunner.invokedToolCount === 4, 'should have run jarsigner and zipalign twice each');
-        assert(testRunner.stderr.length === 0 || testRunner.errorIssues.length === 0, 'should not have written to stderr');
+        assert(testRunner.errorIssues.length === 0 && testRunner.stderr.length === 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
