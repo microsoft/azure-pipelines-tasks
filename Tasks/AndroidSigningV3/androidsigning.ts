@@ -11,7 +11,7 @@ const findAndroidTool = (tool: string): string => {
     // add * in search as on Windows the tool may end with ".exe" or ".bat"
     const toolsList = tl.findMatch(tl.resolve(androidHome, 'build-tools'), tool + '*', null, { matchBase: true });
 
-    if (!toolsList) {
+    if (!toolsList || toolsList.length === 0) {
         throw new Error(tl.loc('CouldNotFindToolInAndroidHome', tool, androidHome));
     }
 
