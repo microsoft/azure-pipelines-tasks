@@ -14,6 +14,7 @@
         "Minor": 137,
         "Patch": 0
     },
+    "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
     "demands": [
         "JDK",
         "AndroidSDK"
@@ -108,12 +109,12 @@
             "name": "apksignerLocation",
             "aliases": ["apksignerFile"],
             "type": "string",
-            "label": "Apksigner location",
+            "label": "apksigner location",
             "defaultValue": "",
             "required": false,
             "visibleRule": "apksign = true",
             "groupName": "apksignerOptions",
-            "helpMarkDown": "Optionally specify the location of the apksign executable used during signing. This defaults to the apksign found in the Android SDK version folder that your application builds against."
+            "helpMarkDown": "Optionally specify the location of the apksigner executable used during signing. This defaults to the apksigner found in the Android SDK version folder that your application builds against."
         },
         {
             "name": "zipalign",
@@ -158,7 +159,6 @@
     "messages": {
         "AndroidHomeNotSet": "The ANDROID_HOME environment variable is not set for the running user.",
         "CouldNotFindToolInAndroidHome": "Could not find tool: %s inside ANDROID_HOME: %s",
-        "JavaHomeNotSet": "The JAVA_HOME environment variable is not set for the running user.",
         "NoMatchingFiles": "No matching files were found with search pattern: %s",
         "DeleteKeystoreFileFailed": "Failed to delete keystore file downloaded from the server: %s"
     }

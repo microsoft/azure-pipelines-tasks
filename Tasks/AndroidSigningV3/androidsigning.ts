@@ -2,17 +2,17 @@ import * as path from 'path';
 import * as Q from 'q';
 import * as tl from 'vsts-task-lib/task';
 
-const findAndroidTools = (tool: string): string => {
+const findAndroidTool = (tool: string): string => {
     const androidHome = tl.getVariable('ANDROID_HOME');
     if (!androidHome) {
-        throw tl.loc('AndroidHomeNotSet');
+        throw new Error(tl.loc('AndroidHomeNotSet'));
     }
 
     // add * in search as on Windows the tool may end with ".exe" or ".bat"
     const toolsList = tl.findMatch(tl.resolve(androidHome, 'build-tools'), tool + '*', null, { matchBase: true });
 
-    if (!toolsList || toolsList.length === 0) {
-        throw tl.loc('CouldNotFindToolInAndroidHome', tool, androidHome);
+    if (!toolsList) {
+        throw new Error(tl.loc('CouldNotFindToolInAndroidHome', tool, androidHome));
     }
 
     return toolsList[0];
@@ -30,7 +30,7 @@ const apksigning = (fn: string) => {
 
     // if the tool path is not set, let's find one (anyone) from the SDK folder
     if (!apksigner) {
-        apksigner = findAndroidTools('apksigner');
+        apksigner = findAndroidTool('apksigner');
     }
 
     const apksignerRunner = tl.tool(apksigner);
@@ -81,7 +81,7 @@ const zipaligning = (fn: string) => {
 
     // if the tool path is not set, let's find one (anyone) from the SDK folder
     if (!zipaligner) {
-        zipaligner = findAndroidTools('zipalign');
+        zipaligner = findAndroidTool('zipalign');
     }
 
     const zipalignRunner = tl.tool(zipaligner);
@@ -115,7 +115,7 @@ async function run() {
 
         // Fail if no matching files were found
         if (!filesToSign || filesToSign.length === 0) {
-            throw tl.loc('NoMatchingFiles', filesPattern);
+            throw new Error(tl.loc('NoMatchingFiles', filesPattern));
         }
 
         for (const file of filesToSign) {

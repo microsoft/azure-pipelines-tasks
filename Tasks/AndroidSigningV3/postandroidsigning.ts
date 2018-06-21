@@ -1,7 +1,6 @@
-import fs = require('fs');
-import path = require('path');
-import secureFilesCommon = require('securefiles-common/securefiles-common');
-import tl = require('vsts-task-lib/task');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as tl from 'vsts-task-lib/task';
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 

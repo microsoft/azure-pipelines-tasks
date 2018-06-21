@@ -1,6 +1,6 @@
-import path = require('path');
-import secureFilesCommon = require('securefiles-common/securefiles-common');
-import tl = require('vsts-task-lib/task');
+import * as path from 'path';
+import * as secureFilesCommon from 'securefiles-common/securefiles-common';
+import * as tl from 'vsts-task-lib/task';
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 

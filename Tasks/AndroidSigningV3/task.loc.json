@@ -14,6 +14,7 @@
     "Minor": 137,
     "Patch": 0
   },
+  "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "JDK",
     "AndroidSDK"
@@ -172,7 +173,6 @@
   "messages": {
     "AndroidHomeNotSet": "ms-resource:loc.messages.AndroidHomeNotSet",
     "CouldNotFindToolInAndroidHome": "ms-resource:loc.messages.CouldNotFindToolInAndroidHome",
-    "JavaHomeNotSet": "ms-resource:loc.messages.JavaHomeNotSet",
     "NoMatchingFiles": "ms-resource:loc.messages.NoMatchingFiles",
     "DeleteKeystoreFileFailed": "ms-resource:loc.messages.DeleteKeystoreFileFailed"
   }
