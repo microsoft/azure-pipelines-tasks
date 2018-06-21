@@ -384,16 +384,16 @@ function Publish-UpgradedServiceFabricApplication
         if ($UnregisterUnusedVersions)
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UnregisterUnusedVersions)
-            foreach ($registeredAppTypes in Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName)
+            foreach ($registeredAppType in Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName)
             {
                 try
                 {
                     $global:operationId = $SF_Operations.UnregisterApplicationType
-                    $registeredAppTypes | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
+                    $registeredAppType | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 }
-                catch [System.Fabric.FabricException]
+                catch
                 {
-                    # AppType and Version in use.
+                    Write-Warning (Get-VstsLocString -Key SFSDK_UnregisterAppTypeFailure -ArgumentList @($names.ApplicationTypeName, $registeredAppType.ApplicationTypeVersion, $_.Exception.ToString()))
                 }
             }
         }
