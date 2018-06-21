@@ -8,12 +8,16 @@ const taskPath = path.join(__dirname, '..', 'androidsigning.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
 taskRunner.setInput('files', '/some/path/a.apk');
-taskRunner.setInput('jarsign', 'true');
+
 taskRunner.setInput('keystoreFile', 'keystoreFileId');
 taskRunner.setInput('keystorePass', 'pass1');
 taskRunner.setInput('keystoreAlias', 'somealias');
 taskRunner.setInput('keyPass', 'pass2');
-taskRunner.setInput('zipalign', 'false');
+
+const getBoolInput = sinon.stub();
+getBoolInput.withArgs('jarsign').returns(true);
+getBoolInput.withArgs('zipalign').returns(false);
+taskRunner.registerMockExport('getBoolInput', getBoolInput);
 
 const getTaskVariable = sinon.stub();
 getTaskVariable.withArgs('KEYSTORE_FILE_PATH').returns('/some/store');

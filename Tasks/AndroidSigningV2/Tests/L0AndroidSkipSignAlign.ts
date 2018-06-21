@@ -8,8 +8,11 @@ const taskPath = path.join(__dirname, '..', 'androidsigning.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
 taskRunner.setInput('files', '/some/fake.apk');
-taskRunner.setInput('jarsign', 'false');
-taskRunner.setInput('zipalign', 'false');
+
+const getBoolInput = sinon.stub();
+getBoolInput.withArgs('jarsign').returns(false);
+getBoolInput.withArgs('zipalign').returns(false);
+taskRunner.registerMockExport('getBoolInput', getBoolInput);
 
 const getVariable = sinon.stub();
 getVariable.withArgs('AGENT_VERSION').returns('2.116.0');
