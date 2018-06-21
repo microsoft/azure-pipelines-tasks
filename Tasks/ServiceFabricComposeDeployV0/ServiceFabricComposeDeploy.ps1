@@ -5,6 +5,8 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
+Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
 try
 {
     # Import the localized strings.
@@ -272,6 +274,12 @@ try
         }
     }
 
+}
+catch
+{
+    $exceptionData = Get-ExceptionData $_
+    Write-Telemetry "Task_InternalError" "$global:operationId|$exceptionData"
+    throw
 }
 finally
 {
