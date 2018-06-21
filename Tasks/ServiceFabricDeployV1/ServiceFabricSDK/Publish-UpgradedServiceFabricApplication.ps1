@@ -117,10 +117,6 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [String]$RefreshToken,
-
-        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
-        [Parameter(ParameterSetName = "ApplicationName")]
         [object]$ConnectedServiceEndpoint
     )
 
@@ -380,8 +376,7 @@ function Publish-UpgradedServiceFabricApplication
             -RetryIntervalInSeconds 3 `
             -RetryableExceptions @("System.Fabric.FabricTransientException") `
             -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade) `
-            -ConnectedServiceEndpoint $ConnectedServiceEndpoint `
-            -RefreshToken $RefreshToken
+            -ConnectedServiceEndpoint $ConnectedServiceEndpoint
 
         if ($UnregisterUnusedVersions)
         {
@@ -432,9 +427,6 @@ function Invoke-ActionWithRetriesUtil {
         [string]
         $RetryMessage,
 
-        [string]
-        $RefreshToken,
-
         [object]
         $ConnectedServiceEndpoint
     )
@@ -454,15 +446,14 @@ function Invoke-ActionWithRetriesUtil {
         if($_.Exception.ErrorCode -eq "InvalidCredentials")
         {
             $clusterConnectionParams = @{}
-            Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParams -ConnectedServiceEndpoint $ConnectedServiceEndpoint -RefreshToken $RefreshToken
+            Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParams -ConnectedServiceEndpoint $ConnectedServiceEndpoint
             $upgradeStatus = Invoke-ActionWithRetriesUtil -Action $upgradeStatusFetcher `
                 -ActionSuccessValidator $upgradeStatusValidator `
                 -MaxTries $MaxTries `
                 -RetryIntervalInSeconds $RetryIntervalInSeconds `
                 -RetryableExceptions @("System.Fabric.FabricTransientException") `
                 -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade) `
-                -ConnectedServiceEndpoint $ConnectedServiceEndpoint `
-                -RefreshToken $RefreshToken
+                -ConnectedServiceEndpoint $ConnectedServiceEndpoint
 
             return $upgradeStatus
         }

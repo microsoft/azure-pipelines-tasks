@@ -19,10 +19,7 @@ function Get-AadSecurityToken
         $ClusterConnectionParameters,
 
         [object]
-        $ConnectedServiceEndpoint,
-
-        [string]
-        $RefreshToken
+        $ConnectedServiceEndpoint
     )
 
     # Configure connection parameters to get cluster metadata
@@ -43,18 +40,23 @@ function Get-AadSecurityToken
 
     try
     {
-        if($RefreshToken)
+        if($script:RefreshToken)
         {
-            return $authContext.AcquireTokenByRefreshToken($RefreshToken, $clientApplicationId)
+            $token = $authContext.AcquireTokenByRefreshToken($RefreshToken, $clientApplicationId)
+        }
+        else
+        {
+            $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
+            Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $clusterApplicationId)
+
+            $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
+
+            # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
+            $token = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential)
         }
 
-        $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
-        Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $clusterApplicationId)
-
-        $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
-
-        # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
-        return $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential)
+        $script:RefreshToken = $token.RefreshToken
+        return $token.AccessToken
     }
     catch
     {
@@ -129,10 +131,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         $ClusterConnectionParameters,
 
         [object]
-        $ConnectedServiceEndpoint,
-
-        [string]
-        $RefreshToken
+        $ConnectedServiceEndpoint
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -169,10 +168,8 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
                 # requires a connection request to the cluster in order to get metadata and so these two parameters are needed for that request.
                 $clusterConnectionParameters["AzureActiveDirectory"] = $true
 
-                $aadSecurityToken  = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint -RefreshToken $RefreshToken
-                $clusterConnectionParameters["SecurityToken"] = $aadSecurityToken.AccessToken
+                $clusterConnectionParameters["SecurityToken"] = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
                 $clusterConnectionParameters["WarningAction"] = "SilentlyContinue"
-                $RefreshToken = $aadSecurityToken.RefreshToken
             }
             elseif ($ConnectedServiceEndpoint.Auth.Scheme -eq "Certificate")
             {
@@ -215,7 +212,6 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         # Reset the scope of the ClusterConnection variable that gets set by the call to Connect-ServiceFabricCluster so that it is available outside the scope of this module
         Set-Variable -Name ClusterConnection -Value $Private:ClusterConnection -Scope Global
 
-         return $RefreshToken
     }
     catch
     {
