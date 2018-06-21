@@ -14,13 +14,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount === 0, 'should not run anything');
-        assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
+        assert(taskRunner.invokedToolCount === 0, 'should not run anything');
+        assert(taskRunner.stderr.length === 0, 'should not have written to stderr');
+        assert(taskRunner.succeeded, 'task should have succeeded');
 
         done();
     });
@@ -29,13 +29,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount === 0, 'should not run anything');
-        assert(tr.errorIssues.length || tr.stderr.length > 0, 'should have written to stderr');
-        assert(tr.failed, 'task should have failed');
+        assert(taskRunner.invokedToolCount === 0, 'should not run anything');
+        assert(taskRunner.errorIssues.length || taskRunner.stderr.length > 0, 'should have written to stderr');
+        assert(taskRunner.failed, 'task should have failed');
 
         done();
     });
@@ -44,13 +44,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount === 0, 'should not run anything');
-        assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have written to stderr');
-        assert(tr.failed, 'task should have failed');
+        assert(taskRunner.invokedToolCount === 0, 'should not run anything');
+        assert(taskRunner.errorIssues.length > 0 || taskRunner.stderr.length > 0, 'should have written to stderr');
+        assert(taskRunner.failed, 'task should have failed');
 
         done();
     });
@@ -59,13 +59,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount == 1, 'should have run jarsigner');
-        assert(tr.stderr.length == 0, 'should have jarsigned file');
-        assert(tr.succeeded, 'task should have succeeded');
+        assert(taskRunner.invokedToolCount == 1, 'should have run jarsigner');
+        assert(taskRunner.stderr.length == 0, 'should have jarsigned file');
+        assert(taskRunner.succeeded, 'task should have succeeded');
 
         done();
     });
@@ -74,13 +74,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount == 0, 'should not run anything');
-        assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have failed to locate jarsigner');
-        assert(tr.failed, 'task should have failed');
+        assert(taskRunner.invokedToolCount == 0, 'should not run anything');
+        assert(taskRunner.errorIssues.length > 0 || taskRunner.stderr.length > 0, 'should have failed to locate jarsigner');
+        assert(taskRunner.failed, 'task should have failed');
 
         done();
     });
@@ -89,13 +89,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount == 0, 'should not run anything');
-        assert(tr.errorIssues.length > 0 || tr.stderr.length > 0, 'should have jarsigned file');
-        assert(tr.failed, 'task should have failed');
+        assert(taskRunner.invokedToolCount == 0, 'should not run anything');
+        assert(taskRunner.errorIssues.length > 0 || taskRunner.stderr.length > 0, 'should have jarsigned file');
+        assert(taskRunner.failed, 'task should have failed');
 
         done();
     });
@@ -104,13 +104,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignSingleFile.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount === 1, 'should run jarsigner');
-        assert(tr.errorIssues.length === 0 && tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
+        assert(taskRunner.invokedToolCount === 1, 'should run jarsigner');
+        assert(taskRunner.errorIssues.length === 0 && taskRunner.stderr.length === 0, 'should not have written to stderr');
+        assert(taskRunner.succeeded, 'task should have succeeded');
 
         done();
     });
@@ -119,13 +119,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount === 1, 'should run zipalign');
-        assert(tr.stderr.length === 0 || tr.errorIssues.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
+        assert(taskRunner.invokedToolCount === 1, 'should run zipalign');
+        assert(taskRunner.stderr.length === 0 || taskRunner.errorIssues.length === 0, 'should not have written to stderr');
+        assert(taskRunner.succeeded, 'task should have succeeded');
 
         done();
     });
@@ -134,13 +134,13 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.invokedToolCount === 4, 'should have run jarsigner and zipalign twice each');
-        assert(tr.stderr.length === 0 || tr.errorIssues.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
+        assert(taskRunner.invokedToolCount === 4, 'should have run jarsigner and zipalign twice each');
+        assert(taskRunner.stderr.length === 0 || taskRunner.errorIssues.length === 0, 'should not have written to stderr');
+        assert(taskRunner.succeeded, 'task should have succeeded');
 
         done();
     });
@@ -149,12 +149,12 @@ describe('AndroidSigning Suite', function () {
         this.timeout(1000);
 
         let tp: string = path.join(__dirname, 'L0DownloadKeystoreFile.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        tr.run();
+        taskRunner.run();
 
-        assert(tr.stderr.length === 0, 'should not have written to stderr');
-        assert(tr.succeeded, 'task should have succeeded');
+        assert(taskRunner.stderr.length === 0, 'should not have written to stderr');
+        assert(taskRunner.succeeded, 'task should have succeeded');
 
         done();
     });

@@ -1,24 +1,24 @@
 import * as path from 'path';
 
 import * as ma from 'vsts-task-lib/mock-answer';
-import * as tmrm from 'vsts-task-lib/mock-run';
+import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 
 import * as sinon from 'sinon';
 
-let taskPath = path.join(__dirname, '..', 'androidsigning.js');
-let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
+const taskPath = path.join(__dirname, '..', 'androidsigning.js');
+const taskRunner = new TaskMockRunner(taskPath);
 
-tr.setInput('files', '/some/path/a.apk');
-tr.setInput('jarsign', 'true');
-tr.setInput('keystoreFile', 'keystoreFileId');
-tr.setInput('keystorePass', 'pass1');
-tr.setInput('keystoreAlias', 'somealias');
-tr.setInput('keyPass', 'pass2');
-tr.setInput('zipalign', 'false');
+taskRunner.setInput('files', '/some/path/a.apk');
+taskRunner.setInput('jarsign', 'true');
+taskRunner.setInput('keystoreFile', 'keystoreFileId');
+taskRunner.setInput('keystorePass', 'pass1');
+taskRunner.setInput('keystoreAlias', 'somealias');
+taskRunner.setInput('keyPass', 'pass2');
+taskRunner.setInput('zipalign', 'false');
 
 const getTaskVariable = sinon.stub();
 getTaskVariable.withArgs('KEYSTORE_FILE_PATH').returns('/some/store');
-tr.registerMockExport('getTaskVariable', getTaskVariable);
+taskRunner.registerMockExport('getTaskVariable', getTaskVariable);
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -40,6 +40,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         }
     }
 };
-tr.setAnswers(a);
+taskRunner.setAnswers(a);
 
-tr.run();
+taskRunner.run();
