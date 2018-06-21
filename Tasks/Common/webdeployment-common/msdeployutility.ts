@@ -3,6 +3,7 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 import path = require('path');
+import { Package } from './packageUtility';
 
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
@@ -105,6 +106,13 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     return msDeployCmdArgs;
 }
 
+
+export async function getWebDeployArgumentsString(webDeployArguments: WebDeployArguments, publishingProfile: any) {
+    return getMSDeployCmdArgs(webDeployArguments.package.getPath(), webDeployArguments.appName, publishingProfile, webDeployArguments.removeAdditionalFilesFlag,
+    webDeployArguments.excludeFilesFromAppDataFlag, webDeployArguments.takeAppOfflineFlag, webDeployArguments.virtualApplication, 
+    webDeployArguments.setParametersFile, webDeployArguments.additionalArguments, await webDeployArguments.package.isMSBuildPackage(), webDeployArguments.package.isFolder(), webDeployArguments.useWebDeploy);
+}
+
 /**
  * Gets the full path of MSDeploy.exe
  * 
@@ -204,4 +212,51 @@ export function redirectMSDeployErrorToConsole() {
 
         tl.rmRF(msDeployErrorFilePath);
     }
+}
+
+export function getWebDeployErrorCode(errorMessage): string {
+    if(errorMessage !== "") {
+        if(errorMessage.indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
+            return "ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER";
+        }
+        else if(errorMessage.indexOf("An error was encountered when processing operation 'Delete Directory' on 'D:\\home\\site\\wwwroot\\app_data\\jobs") !== -1) {
+            return "WebJobsInProgressIssue";
+        }
+        else if(errorMessage.indexOf("FILE_IN_USE") !== -1) {
+            return "FILE_IN_USE";
+        }
+        else if(errorMessage.indexOf("transport connection") != -1){
+            return "transport connection";
+        }
+        else if(errorMessage.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
+            return "ERROR_CONNECTION_TERMINATED"
+        }
+        else if(errorMessage.indexOf("ERROR_CERTIFICATE_VALIDATION_FAILED") != -1) {
+            return "ERROR_CERTIFICATE_VALIDATION_FAILED";
+        }
+    }
+
+    return "";
+}
+
+export interface WebDeployArguments {
+    package: Package;
+    appName: string;
+    publishUrl?: string;
+    userName?: string;
+    password?: string;
+    removeAdditionalFilesFlag?: boolean;
+    excludeFilesFromAppDataFlag?: boolean;
+    takeAppOfflineFlag?: boolean;
+    virtualApplication?: string;
+    setParametersFile?: string
+    additionalArguments?: string;
+    useWebDeploy?: boolean;
+}
+
+
+export interface WebDeployResult {
+    isSuccess: boolean;
+    errorCode?: string;
+    error?: string;
 }

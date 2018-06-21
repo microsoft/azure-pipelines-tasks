@@ -27,6 +27,7 @@ function Get-AadSecurityToken
     $connectionParametersWithGetMetadata.Add("GetMetadata", $true)
 
     # Query cluster metadata
+    $global:operationId = $SF_Operations.ConnectClusterMetadata
     $connectResult = Connect-ServiceFabricCluster @connectionParametersWithGetMetadata
     $authority = $connectResult.AzureActiveDirectoryMetadata.Authority
     Write-Host (Get-VstsLocString -Key AadAuthority -ArgumentList $authority)
@@ -122,7 +123,6 @@ function Add-Certificate
 
     return $certificate
 }
-
 function Connect-ServiceFabricClusterFromServiceEndpoint
 {
     [CmdletBinding()]
@@ -193,6 +193,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         }
 
         # Connect to cluster
+        $global:operationId = $SF_Operations.ConnectCluster
         try
         {
             [void](Connect-ServiceFabricCluster @clusterConnectionParameters)

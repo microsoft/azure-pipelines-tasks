@@ -9,7 +9,8 @@
   "scripts": {
     "build": "node make.js build",
     "test": "node make.js test",
-    "testLegacy": "node make.js testLegacy"
+    "testLegacy": "node make.js testLegacy",
+    "package": "node make.js package"
   },
   "repository": {
     "type": "git",

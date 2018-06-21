@@ -8,8 +8,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 136,
-    "Patch": 3
+    "Minor": 137,
+    "Patch": 0
   },
   "groups": [
     {
@@ -137,7 +137,6 @@
         "rows": "3",
         "resizable": "true"
       },
-      "visibleRule": "downloadType == specific",
       "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
     {

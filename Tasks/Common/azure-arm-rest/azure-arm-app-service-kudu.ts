@@ -520,6 +520,31 @@ export class Kudu {
         }
     }
 
+    public async deleteFolder(physicalPath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`deleteFolder. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204, 404].indexOf(response.statusCode) != -1) {
+                return ;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToDeleteFolder', physicalPath, this._getFormattedError(error)));
+        }
+    }
+
     private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
         let httpRequest = new webClient.WebRequest();
         httpRequest.method = 'GET';
@@ -534,8 +559,8 @@ export class Kudu {
                     return result;
                 }
                 else {
-                    tl.debug(`Deployment status: ${result.status} '${result.status_text}'. retry after 10 seconds`);
-                    await webClient.sleepFor(10);
+                    tl.debug(`Deployment status: ${result.status} '${result.status_text}'. retry after 5 seconds`);
+                    await webClient.sleepFor(5);
                     continue;
                 }
             }

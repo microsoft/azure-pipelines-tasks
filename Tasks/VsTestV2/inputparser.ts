@@ -7,12 +7,17 @@ import * as os from 'os';
 import * as ci from './cieventlogger';
 import { AreaCodes, ResultMessages, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
-import * as taskinputparser from './taskinputparser';
 import * as versionfinder from './versionfinder';
-const uuid = require('uuid');
+import * as uuid from 'uuid';
 const regedit = require('regedit');
 
-export function getDistributedTestConfigurations() : idc.InputDataContract {
+let serverBasedRun = false;
+
+// TODO: refactor all log messages to a separate function
+// replace else if ladders with switch if possible
+// unravel long else if chains
+
+export function parseInputsForDistributedTestRun() : idc.InputDataContract {
     let inputDataContract = {} as idc.InputDataContract;
 
     inputDataContract = getTestSelectionInputs(inputDataContract);
@@ -25,19 +30,37 @@ export function getDistributedTestConfigurations() : idc.InputDataContract {
     inputDataContract = getDistributionSettings(inputDataContract);
     inputDataContract = getExecutionSettings(inputDataContract);
 
-    taskinputparser.logWarningForWER(tl.getBoolInput('uiTests'));
+    inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
+    inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
+    inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
+    inputDataContract.RunIdentifier = getRunIdentifier();
 
-    inputDataContract.UseNewCollector = false;
-    const useNewCollector = tl.getVariable('tia.useNewCollector');
-    if (useNewCollector && useNewCollector.toUpperCase() === 'TRUE') {
-        inputDataContract.UseNewCollector = true;
-    }
+    logWarningForWER(tl.getBoolInput('uiTests'));
+    ci.publishEvent({ 'UiTestsOptionSelected': tl.getBoolInput('uiTests')} );
+
+    return inputDataContract;
+}
+
+export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
+    let inputDataContract = {} as idc.InputDataContract;
+
+    // hydra: should i create a separate function since testplan and testrun are never scenarios for local test?
+    inputDataContract = getTestSelectionInputs(inputDataContract);
+    inputDataContract = getTfsSpecificSettings(inputDataContract);
+    inputDataContract = getTargetBinariesSettings(inputDataContract);
+    inputDataContract = getTestReportingSettings(inputDataContract);
+    inputDataContract = getTestPlatformSettings(inputDataContract);
+    inputDataContract = getLoggingSettings(inputDataContract);
+    inputDataContract = getProxySettings(inputDataContract);
+    inputDataContract = getExecutionSettings(inputDataContract);
 
     inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
     inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
-    inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters['AccessToken'];
+    inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken;
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.RunIdentifier = getRunIdentifier();
+
+    logWarningForWER(tl.getBoolInput('uiTests'));
 
     return inputDataContract;
 }
@@ -103,11 +126,14 @@ function getTestSelectionInputs(inputDataContract : idc.InputDataContract) : idc
 
 function getTfsSpecificSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
         inputDataContract.TfsSpecificSettings = <idc.TfsSpecificSettings>{};
-        inputDataContract.TfsSpecificSettings.DefinitionId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.DefinitionId')) ? Number(tl.getVariable('System.DefinitionId')) : Number(tl.getVariable('Release.DefinitionId'));
+        inputDataContract.TfsSpecificSettings.BuildDefinitionId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.DefinitionId')) ? Number(tl.getVariable('System.DefinitionId')) : Number(tl.getVariable('Build.DefinitionId'));
+        inputDataContract.TfsSpecificSettings.ReleaseDefinitionId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.DefinitionId')) ? null : Number(tl.getVariable('Release.DefinitionId'));
         inputDataContract.TfsSpecificSettings.BuildId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Build.Buildid')) ? null : Number(tl.getVariable('Build.Buildid'));
         inputDataContract.TfsSpecificSettings.BuildUri = tl.getVariable('Build.BuildUri');
         inputDataContract.TfsSpecificSettings.ReleaseId = utils.Helper.isNullEmptyOrUndefined(tl.getVariable('Release.ReleaseId')) ? null : Number(tl.getVariable('Release.ReleaseId'));
         inputDataContract.TfsSpecificSettings.ReleaseUri = tl.getVariable('Release.ReleaseUri');
+        inputDataContract.TfsSpecificSettings.ReleaseEnvironmentUri = tl.getVariable('Release.EnvironmentUri');
+        inputDataContract.TfsSpecificSettings.WorkFolder = tl.getVariable('System.DefaultWorkingDirectory');
         return inputDataContract;
 }
 
@@ -134,7 +160,6 @@ function getTestReportingSettings(inputDataContract : idc.InputDataContract) : i
 
         inputDataContract.TestReportingSettings.TestRunTitle = `TestRun_${definitionName}_${buildOrReleaseName}`;
     }
-
     return inputDataContract;
 }
 
@@ -216,6 +241,7 @@ function getProxySettings(inputDataContract : idc.InputDataContract) : idc.Input
 function getDistributionSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.DistributionSettings = <idc.DistributionSettings>{};
     inputDataContract.DistributionSettings.NumberOfTestAgents = 1;
+
     const totalJobsInPhase = parseInt(tl.getVariable('SYSTEM_TOTALJOBSINPHASE'));
     if (!isNaN(totalJobsInPhase)) {
         inputDataContract.DistributionSettings.NumberOfTestAgents = totalJobsInPhase;
@@ -224,69 +250,85 @@ function getDistributionSettings(inputDataContract : idc.InputDataContract) : id
 
     const distributionType = tl.getInput('distributionBatchType');
 
-    if (distributionType && distributionType === 'basedOnTestCases') {
-        inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.NUMBEROFTESTMETHODSBASED;
-        // flow if the batch type = based on agents/custom batching
-        const distributeByAgentsOption = tl.getInput('batchingBasedOnAgentsOption');
-        if (distributeByAgentsOption && distributeByAgentsOption === 'customBatchSize') {
-            const batchSize = parseInt(tl.getInput('customBatchSizeValue'));
-            if (!isNaN(batchSize) && batchSize > 0) {
-                inputDataContract.DistributionSettings.NumberOfTestCasesPerSlice = batchSize;
-                console.log(tl.loc('numberOfTestCasesPerSlice', inputDataContract.DistributionSettings.NumberOfTestCasesPerSlice));
-            } else {
-                throw new Error(tl.loc('invalidTestBatchSize', batchSize));
+    switch (distributionType) {
+
+        case 'basedOnTestCases':
+            inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.NUMBEROFTESTMETHODSBASED;
+            const distributeByAgentsOption = tl.getInput('batchingBasedOnAgentsOption');
+
+            if (distributeByAgentsOption && distributeByAgentsOption === 'customBatchSize') {
+                const batchSize = parseInt(tl.getInput('customBatchSizeValue'));
+                if (!isNaN(batchSize) && batchSize > 0) {
+                    inputDataContract.DistributionSettings.NumberOfTestCasesPerSlice = batchSize;
+                    console.log(tl.loc('numberOfTestCasesPerSlice', inputDataContract.DistributionSettings.NumberOfTestCasesPerSlice));
+                } else {
+                    throw new Error(tl.loc('invalidTestBatchSize', batchSize));
+                }
             }
-        }
-        // by default we set the distribution = number of agents
-    } else if (distributionType && distributionType === 'basedOnExecutionTime') {
-        inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.EXECUTIONTIMEBASED;
-        // flow if the batch type = based on agents/custom batching
-        const batchBasedOnExecutionTimeOption = tl.getInput('batchingBasedOnExecutionTimeOption');
-        if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'customTimeBatchSize') {
-            const batchExecutionTimeInSec = parseInt(tl.getInput('customRunTimePerBatchValue'));
-            if (isNaN(batchExecutionTimeInSec) || batchExecutionTimeInSec <= 0) {
-                throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTimeInSec));
+            break;
+
+        case 'basedOnExecutionTime':
+            inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.EXECUTIONTIMEBASED;
+            const batchBasedOnExecutionTimeOption = tl.getInput('batchingBasedOnExecutionTimeOption');
+
+            if (batchBasedOnExecutionTimeOption && batchBasedOnExecutionTimeOption === 'customTimeBatchSize') {
+                const batchExecutionTimeInSec = parseInt(tl.getInput('customRunTimePerBatchValue'));
+                if (isNaN(batchExecutionTimeInSec) || batchExecutionTimeInSec <= 0) {
+                    throw new Error(tl.loc('invalidRunTimePerBatch', batchExecutionTimeInSec));
+                }
+                inputDataContract.DistributionSettings.RunTimePerSlice = batchExecutionTimeInSec;
+                console.log(tl.loc('RunTimePerBatch', inputDataContract.DistributionSettings.RunTimePerSlice));
             }
-            inputDataContract.DistributionSettings.RunTimePerSlice = batchExecutionTimeInSec;
-            console.log(tl.loc('RunTimePerBatch', inputDataContract.DistributionSettings.RunTimePerSlice));
-        }
-    } else if (distributionType && distributionType === 'basedOnAssembly') {
-        inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.ASSEMBLYBASED;
+            break;
+
+        case 'basedOnAssembly':
+            inputDataContract.DistributionSettings.DistributeTestsBasedOn = DistributionTypes.ASSEMBLYBASED;
+            break;
     }
+
     return inputDataContract;
 }
 
 function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.ExecutionSettings = <idc.ExecutionSettings>{};
-
     inputDataContract.ExecutionSettings.SettingsFile = tl.getPathInput('runSettingsFile');
+
+    inputDataContract.ExecutionSettings.TempFolder = utils.Helper.GetTempFolder();
+
     if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.SettingsFile)) {
         inputDataContract.ExecutionSettings.SettingsFile = path.resolve(inputDataContract.ExecutionSettings.SettingsFile);
     }
+
     if (inputDataContract.ExecutionSettings.SettingsFile === tl.getVariable('System.DefaultWorkingDirectory')) {
         delete inputDataContract.ExecutionSettings.SettingsFile;
     }
     console.log(tl.loc('runSettingsFileInput', inputDataContract.ExecutionSettings.SettingsFile));
 
     inputDataContract.ExecutionSettings.OverridenParameters = tl.getInput('overrideTestrunParameters');
+    tl.debug(`OverrideTestrunParameters set to ${inputDataContract.ExecutionSettings.OverridenParameters}`);
 
     inputDataContract.ExecutionSettings.AssemblyLevelParallelism = tl.getBoolInput('runInParallel');
     console.log(tl.loc('runInParallelInput', inputDataContract.ExecutionSettings.AssemblyLevelParallelism));
 
-    // hydra: do we want to shoot this warning?
-    if (tl.getBoolInput('runTestsInIsolation')) {
+    inputDataContract.ExecutionSettings.RunTestsInIsolation = tl.getBoolInput('runTestsInIsolation');
+    console.log(tl.loc('runInIsolationInput', inputDataContract.ExecutionSettings.RunTestsInIsolation));
+
+    if (serverBasedRun && inputDataContract.ExecutionSettings.RunTestsInIsolation) {
+        inputDataContract.ExecutionSettings.RunTestsInIsolation = null;
         tl.warning(tl.loc('runTestInIsolationNotSupported'));
     }
 
-    inputDataContract.ExecutionSettings.CustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
-    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
-        inputDataContract.ExecutionSettings.CustomTestAdapters = path.resolve(inputDataContract.ExecutionSettings.CustomTestAdapters);
+    inputDataContract.ExecutionSettings.PathToCustomTestAdapters = tl.getInput('pathtoCustomTestAdapters');
+
+    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.PathToCustomTestAdapters)) {
+        inputDataContract.ExecutionSettings.PathToCustomTestAdapters = path.resolve(inputDataContract.ExecutionSettings.PathToCustomTestAdapters);
     }
-    if (inputDataContract.ExecutionSettings.CustomTestAdapters &&
-        !utils.Helper.pathExistsAsDirectory(inputDataContract.ExecutionSettings.CustomTestAdapters)) {
-        throw new Error(tl.loc('pathToCustomAdaptersInvalid', inputDataContract.ExecutionSettings.CustomTestAdapters));
+
+    if (inputDataContract.ExecutionSettings.PathToCustomTestAdapters &&
+        !utils.Helper.pathExistsAsDirectory(inputDataContract.ExecutionSettings.PathToCustomTestAdapters)) {
+        throw new Error(tl.loc('pathToCustomAdaptersInvalid', inputDataContract.ExecutionSettings.PathToCustomTestAdapters));
     }
-    console.log(tl.loc('pathToCustomAdaptersInput', inputDataContract.ExecutionSettings.CustomTestAdapters));
+    console.log(tl.loc('pathToCustomAdaptersInput', inputDataContract.ExecutionSettings.PathToCustomTestAdapters));
 
     inputDataContract.ExecutionSettings.IgnoreTestFailures = utils.Helper.stringToBool(tl.getVariable('vstest.ignoretestfailures'));
 
@@ -301,8 +343,12 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
         tl.warning(tl.loc('uitestsparallel'));
     }
 
-    if (tl.getInput('otherConsoleOptions')) {
+    inputDataContract.ExecutionSettings.AdditionalConsoleParameters = tl.getInput('otherConsoleOptions');
+    console.log(tl.loc('otherConsoleOptionsInput', inputDataContract.ExecutionSettings.AdditionalConsoleParameters));
+
+    if (serverBasedRun && inputDataContract.ExecutionSettings.AdditionalConsoleParameters) {
         tl.warning(tl.loc('otherConsoleOptionsNotSupported'));
+        inputDataContract.ExecutionSettings.AdditionalConsoleParameters = null;
     }
 
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
@@ -326,7 +372,6 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
     inputDataContract.ExecutionSettings.TiaSettings.FileLevel = getTIALevel(tl.getVariable('tia.filelevel'));
     inputDataContract.ExecutionSettings.TiaSettings.SourcesDirectory = tl.getVariable('build.sourcesdirectory');
     inputDataContract.ExecutionSettings.TiaSettings.FilterPaths = tl.getVariable('TIA_IncludePathFilters');
-    inputDataContract.TiaBaseLineBuildIdFile = path.join(os.tmpdir(), uuid.v1() + '.txt');
 
     // User map file
     inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = tl.getVariable('tia.usermapfile');
@@ -339,12 +384,11 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
     }
 
     const buildReason = tl.getVariable('Build.Reason');
-    
+
     // https://www.visualstudio.com/en-us/docs/build/define/variables
     // PullRequest -> This is the case for TfsGit PR flow
     // CheckInShelveset -> This is the case for TFVC Gated Checkin
     if (buildReason && (buildReason === 'PullRequest' || buildReason === 'CheckInShelveset')) {
-        // hydra: Should this become a first class input or should we identify if it is a pr flow from the managed layer? First class input
         inputDataContract.ExecutionSettings.TiaSettings.IsPrFlow = true;
     } else {
         inputDataContract.ExecutionSettings.TiaSettings.IsPrFlow = utils.Helper.stringToBool(tl.getVariable('tia.isPrFlow'));
@@ -395,7 +439,7 @@ function getRerunSettings(inputDataContract : idc.InputDataContract) : idc.Input
 
 function getRunIdentifier(): string {
     let runIdentifier: string = '';
-    const taskInstanceId = taskinputparser.getDtaInstanceId();
+    const taskInstanceId = getDtaInstanceId();
     const dontDistribute = tl.getBoolInput('dontDistribute');
     const releaseId = tl.getVariable('Release.ReleaseId');
     const jobId = tl.getVariable('System.JobPositionInPhase');
@@ -450,4 +494,50 @@ function getTestPlatformPath(inputDataContract : idc.InputDataContract) {
 
     tl.debug('Searching for Visual Studio ' + vsVersion.toString());
     return versionfinder.getVSTestLocation(vsVersion);
+}
+
+async function logWarningForWER(runUITests: boolean) {
+    if (!runUITests) {
+        return;
+    }
+
+    const regPathHKLM = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
+    const regPathHKCU = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting';
+
+    const isEnabledInHKCU = await isDontShowUIRegKeySet(regPathHKCU);
+    const isEnabledInHKLM = await isDontShowUIRegKeySet(regPathHKLM);
+
+    if (!isEnabledInHKCU && !isEnabledInHKLM) {
+        tl.warning(tl.loc('DontShowWERUIDisabledWarning'));
+    }
+}
+
+function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
+    const defer = Q.defer<boolean>();
+    const regValue = 'DontShowUI';
+    regedit.list(regPath).on('data', (entry) => {
+        if (entry && entry.data && entry.data.values &&
+            entry.data.values[regValue] && (entry.data.values[regValue].value === 1)) {
+            defer.resolve(true);
+        }
+        defer.resolve(false);
+    });
+    return defer.promise;
+}
+
+export function setIsServerBasedRun(isServerBasedRun: boolean) {
+    serverBasedRun = isServerBasedRun;
+}
+
+export function getDtaInstanceId(): number {
+    const taskInstanceIdString = tl.getVariable('DTA_INSTANCE_ID');
+    let taskInstanceId: number = 1;
+    if (taskInstanceIdString) {
+        const instanceId: number = Number(taskInstanceIdString);
+        if (!isNaN(instanceId)) {
+            taskInstanceId = instanceId + 1;
+        }
+    }
+    tl.setVariable('DTA_INSTANCE_ID', taskInstanceId.toString());
+    return taskInstanceId;
 }
