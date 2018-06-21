@@ -7,11 +7,13 @@ import * as sinon from 'sinon';
 const taskPath = path.join(__dirname, '..', 'androidsigning.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
-taskRunner.setInput('files', '/some/path/*.apk');
-taskRunner.setInput('keystoreFile', '/some/store');
-taskRunner.setInput('keystorePass', 'pass1');
-taskRunner.setInput('keystoreAlias', 'somealias');
-taskRunner.setInput('keyPass', 'pass2');
+const getInput = sinon.stub();
+getInput.withArgs('files').returns('/some/path/*.apk');
+getInput.withArgs('keystoreFile').returns('/some/store');
+getInput.withArgs('keystorePass').returns('pass1');
+getInput.withArgs('keystoreAlias').returns('somealias');
+getInput.withArgs('keyPass').returns('pass2');
+taskRunner.registerMockExport('getInput', getInput);
 
 const getBoolInput = sinon.stub();
 getBoolInput.withArgs('jarsign').returns(true);
