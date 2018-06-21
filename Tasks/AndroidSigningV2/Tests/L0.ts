@@ -5,10 +5,10 @@ import { MockTestRunner} from 'vsts-task-lib/mock-test';
 
 describe('AndroidSigning Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-    before(() => {
+    before(function() {
     });
 
-    after(() => {
+    after(function() {
     });
 
     it('Do not sign or zipalign if nothing is selected', function() {
