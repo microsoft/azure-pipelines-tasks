@@ -5,7 +5,7 @@ import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 import * as secureFileHelperMock from 'securefiles-common/securefiles-common-mock';
 import * as sinon from 'sinon';
 
-const taskPath = path.join(__dirname, '..', 'preandroidsigning.js');
+const taskPath: string = path.join(__dirname, '..', 'preandroidsigning.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
 const getInput = sinon.stub();

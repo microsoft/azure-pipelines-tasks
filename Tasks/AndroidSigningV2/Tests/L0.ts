@@ -14,7 +14,7 @@ describe('AndroidSigning Suite', function () {
     it('does not sign or zipalign if nothing is selected', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -27,7 +27,7 @@ describe('AndroidSigning Suite', function () {
     it('does not align or sign if input single file does not exist', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -40,7 +40,7 @@ describe('AndroidSigning Suite', function () {
     it('does not align or sign if input pattern does not match any files', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -53,7 +53,7 @@ describe('AndroidSigning Suite', function () {
     it('uses jarsigner from PATH before searching in JAVA_HOME', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -66,7 +66,7 @@ describe('AndroidSigning Suite', function () {
     it('fails if jarsigner is not on PATH and JAVA_HOME is not set', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -79,7 +79,7 @@ describe('AndroidSigning Suite', function () {
     it('fails if ANDROID_HOME is not set', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -92,7 +92,7 @@ describe('AndroidSigning Suite', function () {
     it('signs a single file', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidSignSingleFile.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidSignSingleFile.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -105,7 +105,7 @@ describe('AndroidSigning Suite', function () {
     it('zipaligns a single file', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -118,7 +118,7 @@ describe('AndroidSigning Suite', function () {
     it('signs and aligns multiple files', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
+        const testPath: string = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();
@@ -131,7 +131,7 @@ describe('AndroidSigning Suite', function () {
     it('downloads keystore file from SecureFile', function () {
         this.timeout(1000);
 
-        const testPath = path.join(__dirname, 'L0DownloadKeystoreFile.js');
+        const testPath: string = path.join(__dirname, 'L0DownloadKeystoreFile.js');
         const testRunner = new MockTestRunner(testPath);
 
         testRunner.run();

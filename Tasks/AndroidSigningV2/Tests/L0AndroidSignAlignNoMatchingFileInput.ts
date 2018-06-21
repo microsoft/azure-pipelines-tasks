@@ -4,7 +4,7 @@ import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 
 import * as sinon from 'sinon';
 
-const taskPath = path.join(__dirname, '..', 'androidsigning.js');
+const taskPath: string = path.join(__dirname, '..', 'androidsigning.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
 const getInput = sinon.stub();
