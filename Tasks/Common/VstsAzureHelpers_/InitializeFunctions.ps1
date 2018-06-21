@@ -51,7 +51,7 @@ function Initialize-AzureSubscription {
         }
     }
     $scopeLevel = "Subscription"
-    if($Endpoint.Data.scope)
+    if($Endpoint.Data.scopeLevel)
     {
         $scopeLevel = $Endpoint.Data.scopeLevel
     }
