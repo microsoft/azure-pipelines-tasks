@@ -473,56 +473,29 @@ target.testLegacy = function() {
     run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
 }
 
+// 
+// node make.js package
+// This will take the built tasks and create the files we need to publish them.
+// 
 target.package = function() {
-    // clean
-    rm('-Rf', packagePath);
+    banner('Starting package process...')
 
-    // create the non-aggregated layout
-    util.createNonAggregatedZip(buildPath, packagePath);
+    // START LOCAL CONFIG
+    // console.log('> Cleaning packge path');
+    // rm('-Rf', packagePath);
+    // TODO: Only need this when we run locally
+    //var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
+    // END LOCAL CONFIG
+    // Note: The local section above is needed when running layout locally due to discrepancies between local build and
+    //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
+    var layoutPath = path.join(packagePath, 'milestone-layout');
 
-    // if task specified, create hotfix layout and short-circuit
-    if (options.task) {
-        util.createHotfixLayout(packagePath, options.task);
-        return;
-    }
+    util.createNugetPackagePerTask(packagePath, layoutPath);
 
-    // create the aggregated tasks layout
-    util.createAggregatedZip(packagePath);
-
-    // nuspec
-    var version = options.version;
-    if (!version) {
-        console.warn('Skipping nupkg creation. Supply version with --version.');
-        return;
-    }
-
-    if (!semver.valid(version)) {
-        fail('invalid semver version: ' + version);
-    }
-
-    var pkgName = 'Mseng.MS.TF.Build.Tasks';
-    console.log();
-    console.log('> Generating .nuspec file');
-    var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
-    contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
-    contents += '   <metadata>' + os.EOL;
-    contents += '      <id>' + pkgName + '</id>' + os.EOL;
-    contents += '      <version>' + version + '</version>' + os.EOL;
-    contents += '      <authors>bigbldt</authors>' + os.EOL;
-    contents += '      <owners>bigbldt,Microsoft</owners>' + os.EOL;
-    contents += '      <requireLicenseAcceptance>false</requireLicenseAcceptance>' + os.EOL;
-    contents += '      <description>For VSS internal use only</description>' + os.EOL;
-    contents += '      <tags>VSSInternal</tags>' + os.EOL;
-    contents += '   </metadata>' + os.EOL;
-    contents += '</package>' + os.EOL;
-    var nuspecPath = path.join(packagePath, 'pack-source', pkgName + '.nuspec');
-    fs.writeFileSync(nuspecPath, contents);
-
-    // package
-    ensureTool('nuget.exe');
-    var nupkgPath = path.join(packagePath, 'pack-target', `${pkgName}.${version}.nupkg`);
-    mkdir('-p', path.dirname(nupkgPath));
-    run(`nuget.exe pack ${nuspecPath} -OutputDirectory ${path.dirname(nupkgPath)}`);
+    // These methods are to help with the migration to NuGet package per task.
+    // Get rid of them after transition is done.
+    //util.renameFoldersFromAggregate('E:\\AllTaskMajorVersions');
+    //util.generatePerTaskForLegacyPackages('E:\\AllTaskMajorVersions');
 }
 
 // used by CI that does official publish

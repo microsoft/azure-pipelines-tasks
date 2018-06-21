@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 12
+        "Patch": 13
     },
     "demands": [
         "Cmd"
@@ -460,6 +460,7 @@
         "SFSDK_CopyPackageTimeoutSecWarning": "The CopyPackageTimeoutSec parameter requires version '2.3' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
         "SFSDK_CompressPackageWarning": "The CompressPackage parameter requires version '2.5' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
         "SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster.",
-        "SFSDK_UnregisterAppTypeFailed": "Failed to unregister application type. Error: {0}."
+        "SFSDK_UnregisterAppTypeFailed": "Failed to unregister application type. Error: {0}.",
+        "SFSDK_PerformingForceRemoveOnTimeout": "Removal of application '{0}' is timing out, this means that the service is stuck in ChangeRole/Close and the shutdown sequence cannot complete. Performing ForceRemove of the application."
     }
 }
