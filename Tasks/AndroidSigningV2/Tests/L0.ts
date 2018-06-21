@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import * as path from 'path';
-import * as ttm from 'vsts-task-lib/mock-test';
+
+import { MockTestRunner} from 'vsts-task-lib/mock-test';
 
 describe('AndroidSigning Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -10,151 +11,151 @@ describe('AndroidSigning Suite', function () {
     after(() => {
     });
 
-    it('Do not sign or zipalign if nothing is selected', (done: MochaDone) => {
+    it('Do not sign or zipalign if nothing is selected', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount === 0, 'should not run anything');
-        assert(taskRunner.stderr.length === 0, 'should not have written to stderr');
-        assert(taskRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.invokedToolCount === 0, 'should not run anything');
+        assert(testRunner.stderr.length === 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
     });
 
-    it('Do not align or sign if input single file does not exist', (done: MochaDone) => {
+    it('Do not align or sign if input single file does not exist', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount === 0, 'should not run anything');
-        assert(taskRunner.errorIssues.length || taskRunner.stderr.length > 0, 'should have written to stderr');
-        assert(taskRunner.failed, 'task should have failed');
+        assert(testRunner.invokedToolCount === 0, 'should not run anything');
+        assert(testRunner.errorIssues.length || testRunner.stderr.length > 0, 'should have written to stderr');
+        assert(testRunner.failed, 'task should have failed');
 
         done();
     });
 
-    it('Do not align or sign if input pattern does not match any files', (done: MochaDone) => {
+    it('Do not align or sign if input pattern does not match any files', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount === 0, 'should not run anything');
-        assert(taskRunner.errorIssues.length > 0 || taskRunner.stderr.length > 0, 'should have written to stderr');
-        assert(taskRunner.failed, 'task should have failed');
+        assert(testRunner.invokedToolCount === 0, 'should not run anything');
+        assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have written to stderr');
+        assert(testRunner.failed, 'task should have failed');
 
         done();
     });
 
-    it('Use jarsigner from PATH before searching in JAVA_HOME', (done: MochaDone) => {
+    it('Use jarsigner from PATH before searching in JAVA_HOME', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount == 1, 'should have run jarsigner');
-        assert(taskRunner.stderr.length == 0, 'should have jarsigned file');
-        assert(taskRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.invokedToolCount == 1, 'should have run jarsigner');
+        assert(testRunner.stderr.length == 0, 'should have jarsigned file');
+        assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
     });
 
-    it('Fail if jarsigner is not on PATH and JAVA_HOME is not set', (done: MochaDone) => {
+    it('Fail if jarsigner is not on PATH and JAVA_HOME is not set', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount == 0, 'should not run anything');
-        assert(taskRunner.errorIssues.length > 0 || taskRunner.stderr.length > 0, 'should have failed to locate jarsigner');
-        assert(taskRunner.failed, 'task should have failed');
+        assert(testRunner.invokedToolCount == 0, 'should not run anything');
+        assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have failed to locate jarsigner');
+        assert(testRunner.failed, 'task should have failed');
 
         done();
     });
 
-    it('Fail if ANDROID_HOME is not set', (done: MochaDone) => {
+    it('Fail if ANDROID_HOME is not set', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount == 0, 'should not run anything');
-        assert(taskRunner.errorIssues.length > 0 || taskRunner.stderr.length > 0, 'should have jarsigned file');
-        assert(taskRunner.failed, 'task should have failed');
+        assert(testRunner.invokedToolCount == 0, 'should not run anything');
+        assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have jarsigned file');
+        assert(testRunner.failed, 'task should have failed');
 
         done();
     });
 
-    it('Signing a single file', (done: MochaDone) => {
+    it('Signing a single file', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidSignSingleFile.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidSignSingleFile.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount === 1, 'should run jarsigner');
-        assert(taskRunner.errorIssues.length === 0 && taskRunner.stderr.length === 0, 'should not have written to stderr');
-        assert(taskRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.invokedToolCount === 1, 'should run jarsigner');
+        assert(testRunner.errorIssues.length === 0 && testRunner.stderr.length === 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
     });
 
-    it('zipalign a single file', (done: MochaDone) => {
+    it('zipalign a single file', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount === 1, 'should run zipalign');
-        assert(taskRunner.stderr.length === 0 || taskRunner.errorIssues.length === 0, 'should not have written to stderr');
-        assert(taskRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.invokedToolCount === 1, 'should run zipalign');
+        assert(testRunner.stderr.length === 0 || testRunner.errorIssues.length === 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
     });
 
-    it('Signing and aligning multiple files', (done: MochaDone) => {
+    it('Signing and aligning multiple files', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.invokedToolCount === 4, 'should have run jarsigner and zipalign twice each');
-        assert(taskRunner.stderr.length === 0 || taskRunner.errorIssues.length === 0, 'should not have written to stderr');
-        assert(taskRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.invokedToolCount === 4, 'should have run jarsigner and zipalign twice each');
+        assert(testRunner.stderr.length === 0 || testRunner.errorIssues.length === 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
     });
 
-    it('Download keystore file from SecureFile', (done: MochaDone) => {
+    it('Download keystore file from SecureFile', function(done: MochaDone) {
         this.timeout(1000);
 
-        let tp: string = path.join(__dirname, 'L0DownloadKeystoreFile.js');
-        let taskRunner: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const testPath = path.join(__dirname, 'L0DownloadKeystoreFile.js');
+        const testRunner = new MockTestRunner(testPath);
 
-        taskRunner.run();
+        testRunner.run();
 
-        assert(taskRunner.stderr.length === 0, 'should not have written to stderr');
-        assert(taskRunner.succeeded, 'task should have succeeded');
+        assert(testRunner.stderr.length === 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
 
         done();
     });
