@@ -393,7 +393,7 @@ function Publish-UpgradedServiceFabricApplication
                 }
                 catch
                 {
-                    Write-Warning (Get-VstsLocString -Key SFSDK_UnregisterAppTypeFailure -ArgumentList @($names.ApplicationTypeName, $registeredAppType.ApplicationTypeVersion, $_.Exception.ToString()))
+                    # AppType and Version in use.
                 }
             }
         }

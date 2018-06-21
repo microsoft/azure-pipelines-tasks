@@ -461,7 +461,6 @@
     "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
     "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning",
     "SFSDK_UnregisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailed",
-    "SFSDK_PerformingForceRemoveOnTimeout": "ms-resource:loc.messages.SFSDK_PerformingForceRemoveOnTimeout",
-    "SFSDK_UnregisterAppTypeFailure": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailure"
+    "SFSDK_PerformingForceRemoveOnTimeout": "ms-resource:loc.messages.SFSDK_PerformingForceRemoveOnTimeout"
   }
 }
