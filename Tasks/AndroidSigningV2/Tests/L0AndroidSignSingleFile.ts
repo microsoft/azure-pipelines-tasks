@@ -1,6 +1,5 @@
 import * as path from 'path';
 
-import * as ma from 'vsts-task-lib/mock-answer';
 import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 
 import * as sinon from 'sinon';
@@ -27,12 +26,11 @@ const getTaskVariable = sinon.stub();
 getTaskVariable.withArgs('KEYSTORE_FILE_PATH').returns('/some/store');
 taskRunner.registerMockExport('getTaskVariable', getTaskVariable);
 
-// provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "checkPath": {
+taskRunner.setAnswers({
+    checkPath: {
         "/some/fake.apk": true
     },
-    "findMatch": {
+    findMatch: {
         "/some/fake.apk": [
             "/some/fake.apk"
         ],
@@ -45,7 +43,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "/fake/android/home/sdk2/zipalign"
         ]
     },
-    "exec": {
+    exec: {
         "/fake/java/home/bin/jarsigner -keystore /some/store -storepass pass1 -keypass pass2 -signedjar /some/fake.apk /some/fake.apk.unsigned somealias": {
             "code": 0,
             "stdout": "jarsigner output here"
@@ -55,7 +53,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "stdout": "zipalign output here"
         }
     }
-};
-taskRunner.setAnswers(a);
+});
 
 taskRunner.run();

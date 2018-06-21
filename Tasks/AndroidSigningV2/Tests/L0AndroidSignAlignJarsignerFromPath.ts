@@ -1,6 +1,5 @@
 import * as path from 'path';
 
-import * as ma from 'vsts-task-lib/mock-answer';
 import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 
 import * as sinon from 'sinon';
@@ -20,26 +19,24 @@ const getTaskVariable = sinon.stub();
 getTaskVariable.withArgs('KEYSTORE_FILE_PATH').returns('/some/store');
 taskRunner.registerMockExport('getTaskVariable', getTaskVariable);
 
-// provide answers for task mock
-let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-    "findMatch": {
+taskRunner.setAnswers({
+    findMatch: {
         "/some/path/a.apk": [
             "/some/path/a.apk"
         ]
     },
-    "checkPath": {
+    checkPath: {
         "/some/path/a.apk": true
     },
-    "which": {
+    which: {
         "jarsigner": "/usr/bin/jarsigner"
     },
-    "exec": {
+    exec: {
         "/usr/bin/jarsigner -keystore /some/store -storepass pass1 -keypass pass2 -signedjar /some/path/a.apk /some/path/a.apk.unsigned somealias": {
             "code": 0,
             "stdout": "jarsigner output here"
         }
     }
-};
-taskRunner.setAnswers(a);
+});
 
 taskRunner.run();
