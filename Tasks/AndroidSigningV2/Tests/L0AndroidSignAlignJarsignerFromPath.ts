@@ -9,12 +9,11 @@ const taskRunner = new TaskMockRunner(taskPath);
 
 const getInput = sinon.stub();
 getInput.withArgs('files').returns('/some/path/a.apk');
-taskRunner.registerMockExport('getInput', getInput);
-
 getInput.withArgs('keystoreFile').returns('keystoreFileId');
 getInput.withArgs('keystorePass').returns('pass1');
 getInput.withArgs('keystoreAlias').returns('somealias');
 getInput.withArgs('keyPass').returns('pass2');
+taskRunner.registerMockExport('getInput', getInput);
 
 const getBoolInput = sinon.stub();
 getBoolInput.withArgs('jarsign').returns(true);
