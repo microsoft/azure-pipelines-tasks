@@ -50,53 +50,49 @@ function getFilesToCopy(sourceFolder, contents: string[]): string[] {
     }
 
     // if we only have exclude filters, we need add a include all filter, so we can have something to exclude.
-    if (!includeContents && excludeContents) {
+    if (includeContents.length === 0 && excludeContents.length > 0) {
         includeContents.push('**');
     }
 
-    if (includeContents && allFiles) {
-        tl.debug("allFiles contains " + allFiles.length + " files");
+    tl.debug("counted " + allFiles.length + " files in the source tree");
 
-        // a map to eliminate duplicates
-        const pathsSeen = {};
+    // a map to eliminate duplicates
+    const pathsSeen = {};
 
-        // minimatch options
-        const matchOptions: tl.MatchOptions = { matchBase: true, dot: true };
-        if (os.platform() === 'win32') {
-            matchOptions.nocase = true;
-        }
+    // minimatch options
+    const matchOptions: tl.MatchOptions = { matchBase: true, dot: true };
+    if (os.platform() === 'win32') {
+        matchOptions.nocase = true;
+    }
 
-        // apply include filter
-        for (const pattern of includeContents) {
-            tl.debug('Include matching ' + pattern);
+    // apply include filter
+    for (const pattern of includeContents) {
+        tl.debug('Include matching ' + pattern);
 
-            // let minimatch do the actual filtering
-            const matches: string[] = tl.match(allFiles, pattern, matchOptions);
+        // let minimatch do the actual filtering
+        const matches: string[] = tl.match(allFiles, pattern, matchOptions);
 
-            tl.debug('Include matched ' + matches.length + ' files');
-            for (const matchPath of matches) {
-                if (!pathsSeen.hasOwnProperty(matchPath)) {
-                    pathsSeen[matchPath] = true;
-                    files.push(matchPath);
-                }
-            }
-        }
-
-        // apply exclude filter
-        for (const pattern of excludeContents) {
-            tl.debug('Exclude matching ' + pattern);
-
-            // let minimatch do the actual filtering
-            const matches: string[] = tl.match(files, pattern, matchOptions);
-
-            tl.debug('Exclude matched ' + matches.length + ' files');
-            files = [];
-            for (const matchPath of matches) {
+        tl.debug('Include matched ' + matches.length + ' files');
+        for (const matchPath of matches) {
+            if (!pathsSeen.hasOwnProperty(matchPath)) {
+                pathsSeen[matchPath] = true;
                 files.push(matchPath);
             }
         }
-    } else {
-        tl.debug("Either includeContents or allFiles is empty");
+    }
+
+    // apply exclude filter
+    for (const pattern of excludeContents) {
+        tl.debug('Exclude matching ' + pattern);
+
+        // let minimatch do the actual filtering
+        const matches: string[] = tl.match(files, pattern, matchOptions);
+
+        tl.debug('Exclude matched ' + matches.length + ' files');
+        files = [];
+        for (const matchPath of matches) {
+            files.push(matchPath);
+        }
     }
 
     return files;
