@@ -16,6 +16,10 @@
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/CredentialProvider.TeamBuild/15.105.25712.0/CredentialProvider.TeamBuild.zip",
                 "dest": "./NuGet/CredentialProvider/"
+            },
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/Microsoft.NuGet.CredentialProvider/0.1.0/Microsoft.NuGet.CredentialProvider.0.1.0.zip",
+                "dest": "./NuGet/CredentialProviderV2/"
             }
         ]
     }

@@ -15,9 +15,11 @@ import * as commandHelper from "./CommandHelper";
 interface EnvironmentDictionary { [key: string]: string; }
 
 export interface NuGetEnvironmentSettings {
-    credProviderFolder: string;
+    /* V1 credential provider folder path. Only populated if V1 should be used. */
+    credProviderFolder?: string;
+    /* V2 credential provider path. Only populated if V2 should be used. */
+    V2CredProviderPath?: string
     extensionsDisabled: boolean;
-    quirks?: NuGetQuirks;
 }
 
 function prepareNuGetExeEnvironment(
@@ -27,8 +29,7 @@ function prepareNuGetExeEnvironment(
 
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string = null;
-    let pluginCredentialProviderPath: string = null;
-    let prefix: string = null;
+    let envVarCredProviderPathV2: string = null;
 
     for (let e in input) {
         if (!input.hasOwnProperty(e)) {
@@ -47,7 +48,7 @@ function prepareNuGetExeEnvironment(
 
         // New credential provider
         if (e.toUpperCase() === "NUGET_PLUGIN_PATHS") {
-            pluginCredentialProviderPath = input[e];
+            envVarCredProviderPathV2 = input[e];
             continue;
         }
 
@@ -57,47 +58,36 @@ function prepareNuGetExeEnvironment(
             continue;
         }
 
-        if (e.toUpperCase() === "VSS_NUGET_URI_PREFIXES") {
-            prefix = input[e];
-            continue;
-        }
-
         env[e] = input[e];
     }
 
-    let prefixes: string = null;
     if (authInfo && authInfo.internalAuthInfo) {
         env["VSS_NUGET_ACCESSTOKEN"] = authInfo.internalAuthInfo.accessToken;
-        prefixes = authInfo.internalAuthInfo.uriPrefixes.join(";");
-        env["VSS_NUGET_URI_PREFIXES"] = prefixes;
+        env["VSS_NUGET_URI_PREFIXES"] = authInfo.internalAuthInfo.uriPrefixes.join(";");
     }
 
     env["NUGET_CREDENTIAL_PROVIDER_OVERRIDE_DEFAULT"] = "true";
 
-    // If NUGET_CREDENTIALPROVIDERS_PATH is provided and NUGET_PLUGIN_PATHS is not, 
-    // use old cred provider regardles of which version on NuGet
-    if ((settings.quirks && settings.quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === false)
-        || (originalCredProviderPath != null && pluginCredentialProviderPath === null)
-        || !settings.quirks) {
-        let credProviderPath = settings.credProviderFolder || originalCredProviderPath;
-        if (settings.credProviderFolder && originalCredProviderPath) {
-            credProviderPath = settings.credProviderFolder + ";" + originalCredProviderPath;
-        }
+    // Old credential provider
+    if (settings.credProviderFolder != null || originalCredProviderPath != null) {
+        let credProviderPath = buildCredProviderPath(originalCredProviderPath, settings.credProviderFolder);
 
         if (credProviderPath) {
             env["NUGET_CREDENTIALPROVIDERS_PATH"] = credProviderPath;
-            tl.debug(`Using credential provider V1: ${credProviderPath}`);
-        }
-    } else {
-        let credProviderPath = pluginCredentialProviderPath || settings.credProviderFolder;
-        if (credProviderPath) {
-            env["NUGET_PLUGIN_PATHS"] = credProviderPath;
-            tl.debug(`Using credential provider V2: ${credProviderPath}`);
+            tl.debug(`V1 credential provider set`);
+            tl.debug(`credProviderPath = ${credProviderPath}`);
         }
     }
+    
+    // New credential provider
+    if (settings.V2CredProviderPath != null || envVarCredProviderPathV2 != null) {
+        let credProviderPath = buildCredProviderPath(envVarCredProviderPathV2, settings.V2CredProviderPath);
 
-    if (prefix != null) {
-        env["VSS_NUGET_URI_PREFIXES"] = prefixes + ";" + prefix;
+        if (credProviderPath) {
+            env["NUGET_PLUGIN_PATHS"] = credProviderPath;
+            tl.debug(`V2 credential provider set`);
+            tl.debug(`credProviderPath = ${credProviderPath}`);
+        }
     }
 
     let httpProxy = getNuGetProxyFromEnvironment();
@@ -107,6 +97,13 @@ function prepareNuGetExeEnvironment(
     }
 
     return env;
+}
+
+function buildCredProviderPath(credProviderPath1: string, credProviderPath2: string): string {
+    if (credProviderPath1 && credProviderPath2) {
+        return credProviderPath1 + ";" + credProviderPath2;
+    }
+    return credProviderPath1 || credProviderPath2;
 }
 
 export class NuGetToolRunner2 extends ToolRunner {
@@ -181,7 +178,6 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
 // identity's token.
 // Therefore, we are enabling credential provider on on-premises and disabling it on hosted (only when the version of NuGet does not support it). We allow for test
 // instances by an override variable.
-
 export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialProvider to "true" to force allowing the credential provider flow, "false"
     // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the 
@@ -211,6 +207,27 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
 
     tl.debug("Credential provider is enabled.");
     return true;
+}
+
+export function isCredentialProviderV2Enabled(quirks: NuGetQuirks): boolean {
+    const credentialProviderOverrideFlagV2 = tl.getVariable("NuGet.ForceEnableCredentialProviderV2");
+    if (credentialProviderOverrideFlagV2 === "true") {
+        tl.debug("V2 Credential provider is force-enabled.");
+        return true;
+    }
+
+    if (credentialProviderOverrideFlagV2 === "false") {
+        tl.debug("V2 Credential provider is force-disabled.");
+        return false;
+    }
+
+    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider)) {
+        tl.debug("V2 credential provider is enabled.");
+        return true;
+    }
+
+    tl.debug("V2 credential provider is not enabled.");
+    return false;
 }
 
 export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {

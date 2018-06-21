@@ -17,7 +17,6 @@ import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
 import * as commandHelper from "nuget-task-common/CommandHelper";
 import * as telemetry from 'utility-common/telemetry';
-import { NuGetQuirkName } from "nuget-task-common/NuGetQuirks";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -70,11 +69,12 @@ export async function run(nuGetPath: string): Promise<void> {
         // Discovering NuGet quirks based on the version
         tl.debug('Getting NuGet quirks');
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
-        let credProviderPath = nutil.locateCredentialProvider(quirks);
-
+        
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
-        const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
+        const useCredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
+        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks) && useCredProvider === true;
+        const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
         const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
 
         // Setting up auth-related variables
@@ -91,16 +91,14 @@ export async function run(nuGetPath: string): Promise<void> {
         }
         let accessToken = auth.getSystemAccessToken();
         let externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
-        const authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, useCredConfig), externalAuthArr);
-        const useCredProviderV2: boolean = quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider);
+        const authInfo = new auth.NuGetExtendedAuthInfo(
+            new auth.InternalAuthInfo(urlPrefixes, accessToken, (useCredProvider ? credProviderPath : null), useCredConfig),
+            externalAuthArr);
+
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
-            credProviderFolder: useCredProvider 
-                ? useCredProviderV2
-                    ? credProviderPath 
-                    : path.dirname(credProviderPath)
-                : null,
-            extensionsDisabled: true,
-            quirks
+            credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
+            V2CredProviderPath: useV2CredProvider === true ? credProviderPath : null,
+            extensionsDisabled: true
         };
 
         // Setting up sources, either from provided config file or from feed selection

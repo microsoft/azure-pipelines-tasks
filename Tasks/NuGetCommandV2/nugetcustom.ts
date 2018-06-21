@@ -9,8 +9,6 @@ import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import peParser = require('nuget-task-common/pe-parser/index');
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 import * as telemetry from 'utility-common/telemetry';
-import { VersionInfo } from "nuget-task-common/pe-parser/VersionResource";
-import { NuGetQuirkName } from "nuget-task-common/NuGetQuirks";
 
 class NuGetExecutionOptions {
     constructor(
@@ -40,8 +38,9 @@ export async function run(nuGetPath: string): Promise<void> {
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
-        let credProviderPath = nutil.locateCredentialProvider(quirks);
-        const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
+        const useCredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
+        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks) && useCredProvider === true;
+        const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
         // useCredConfig not placed here: This task will only support NuGet versions >= 3.5.0 which support credProvider both hosted and OnPrem
 
         let accessToken = auth.getSystemAccessToken();
@@ -56,17 +55,12 @@ export async function run(nuGetPath: string): Promise<void> {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
-        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, false), []);
-        
-        const useCredProviderV2: boolean = quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider);
+        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, (useCredProvider ? credProviderPath : null), false), []);
+
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
-            credProviderFolder: useCredProvider 
-                ? useCredProviderV2
-                    ? credProviderPath 
-                    : path.dirname(credProviderPath)
-                : null,
-            extensionsDisabled: true,
-            quirks
+            credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
+            V2CredProviderPath: useV2CredProvider === true ? credProviderPath : null,
+            extensionsDisabled: true
         };
 
         let executionOptions = new NuGetExecutionOptions(

@@ -7,7 +7,6 @@ import * as packUtils from "nuget-task-common/PackUtilities";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 import * as telemetry from 'utility-common/telemetry';
-import { VersionInfo } from "nuget-task-common/pe-parser/VersionResource";
 
 class PackOptions implements INuGetCommandOptions {
     constructor(
@@ -145,11 +144,8 @@ export async function run(nuGetPath: string): Promise<void> {
             props = props.concat(propertiesInput.split(";"));
         }
 
-        const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
-            credProviderFolder: null,
-            extensionsDisabled: true,
-            quirks
+            extensionsDisabled: true
         };
 
         let packOptions = new PackOptions(
