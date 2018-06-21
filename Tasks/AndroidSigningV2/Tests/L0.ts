@@ -11,7 +11,7 @@ describe('AndroidSigning Suite', function () {
     after(function() {
     });
 
-    it('Do not sign or zipalign if nothing is selected', function() {
+    it('does not sign or zipalign if nothing is selected', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
@@ -24,7 +24,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('Do not align or sign if input single file does not exist', function() {
+    it('does not align or sign if input single file does not exist', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
@@ -37,7 +37,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.failed, 'task should have failed');
     });
 
-    it('Do not align or sign if input pattern does not match any files', function() {
+    it('does not align or sign if input pattern does not match any files', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
@@ -50,7 +50,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.failed, 'task should have failed');
     });
 
-    it('Use jarsigner from PATH before searching in JAVA_HOME', function() {
+    it('uses jarsigner from PATH before searching in JAVA_HOME', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
@@ -63,7 +63,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('Fail if jarsigner is not on PATH and JAVA_HOME is not set', function() {
+    it('fails if jarsigner is not on PATH and JAVA_HOME is not set', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
@@ -76,7 +76,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.failed, 'task should have failed');
     });
 
-    it('Fail if ANDROID_HOME is not set', function() {
+    it('fails if ANDROID_HOME is not set', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
@@ -89,7 +89,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.failed, 'task should have failed');
     });
 
-    it('Signing a single file', function() {
+    it('signs a single file', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignSingleFile.js');
@@ -102,7 +102,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('zipalign a single file', function() {
+    it('zipaligns a single file', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
@@ -115,7 +115,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('Signing and aligning multiple files', function() {
+    it('signs and aligns multiple files', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
@@ -128,7 +128,7 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
-    it('Download keystore file from SecureFile', function() {
+    it('downloads keystore file from SecureFile', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0DownloadKeystoreFile.js');
