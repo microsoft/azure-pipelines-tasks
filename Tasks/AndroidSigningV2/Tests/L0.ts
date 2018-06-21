@@ -11,7 +11,7 @@ describe('AndroidSigning Suite', function () {
     after(() => {
     });
 
-    it('Do not sign or zipalign if nothing is selected', function(done: MochaDone) {
+    it('Do not sign or zipalign if nothing is selected', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSkipSignAlign.js');
@@ -22,11 +22,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 0, 'should not run anything');
         assert(testRunner.stderr.length === 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Do not align or sign if input single file does not exist', function(done: MochaDone) {
+    it('Do not align or sign if input single file does not exist', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignNoFileInput.js');
@@ -37,11 +35,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 0, 'should not run anything');
         assert(testRunner.errorIssues.length || testRunner.stderr.length > 0, 'should have written to stderr');
         assert(testRunner.failed, 'task should have failed');
-
-        done();
     });
 
-    it('Do not align or sign if input pattern does not match any files', function(done: MochaDone) {
+    it('Do not align or sign if input pattern does not match any files', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignNoMatchingFileInput.js');
@@ -52,11 +48,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 0, 'should not run anything');
         assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have written to stderr');
         assert(testRunner.failed, 'task should have failed');
-
-        done();
     });
 
-    it('Use jarsigner from PATH before searching in JAVA_HOME', function(done: MochaDone) {
+    it('Use jarsigner from PATH before searching in JAVA_HOME', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignJarsignerFromPath.js');
@@ -67,11 +61,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 1, 'should have run jarsigner');
         assert(testRunner.stderr.length === 0, 'should have jarsigned file');
         assert(testRunner.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Fail if jarsigner is not on PATH and JAVA_HOME is not set', function(done: MochaDone) {
+    it('Fail if jarsigner is not on PATH and JAVA_HOME is not set', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignFailJarsignerNotFound.js');
@@ -82,11 +74,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 0, 'should not run anything');
         assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have failed to locate jarsigner');
         assert(testRunner.failed, 'task should have failed');
-
-        done();
     });
 
-    it('Fail if ANDROID_HOME is not set', function(done: MochaDone) {
+    it('Fail if ANDROID_HOME is not set', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignAndroidHomeNotSet.js');
@@ -97,11 +87,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 0, 'should not run anything');
         assert(testRunner.errorIssues.length > 0 || testRunner.stderr.length > 0, 'should have failed to locate jarsigner');
         assert(testRunner.failed, 'task should have failed');
-
-        done();
     });
 
-    it('Signing a single file', function(done: MochaDone) {
+    it('Signing a single file', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignSingleFile.js');
@@ -112,11 +100,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 1, 'should run jarsigner');
         assert(testRunner.errorIssues.length === 0 && testRunner.stderr.length === 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('zipalign a single file', function(done: MochaDone) {
+    it('zipalign a single file', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidZipalignSingleFile.js');
@@ -127,11 +113,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 1, 'should run zipalign');
         assert(testRunner.errorIssues.length === 0 && testRunner.stderr.length === 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Signing and aligning multiple files', function(done: MochaDone) {
+    it('Signing and aligning multiple files', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0AndroidSignAlignMultipleFiles.js');
@@ -142,11 +126,9 @@ describe('AndroidSigning Suite', function () {
         assert(testRunner.invokedToolCount === 4, 'should have run jarsigner and zipalign twice each');
         assert(testRunner.errorIssues.length === 0 && testRunner.stderr.length === 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
-
-        done();
     });
 
-    it('Download keystore file from SecureFile', function(done: MochaDone) {
+    it('Download keystore file from SecureFile', function() {
         this.timeout(1000);
 
         const testPath = path.join(__dirname, 'L0DownloadKeystoreFile.js');
@@ -156,7 +138,5 @@ describe('AndroidSigning Suite', function () {
 
         assert(testRunner.stderr.length === 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
-
-        done();
     });
 });
