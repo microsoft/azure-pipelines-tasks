@@ -178,7 +178,7 @@ export class KuduServiceUtility {
 
             if(runFromZip) {
                 var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
-                queryParameters.push('message=' + deploymentMessage);
+                queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             }
 
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
