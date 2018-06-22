@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 12
+    "Patch": 13
   },
   "demands": [
     "Cmd"
@@ -460,6 +460,7 @@
     "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
     "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
     "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning",
-    "SFSDK_UnregisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailed"
+    "SFSDK_UnregisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailed",
+    "SFSDK_PerformingForceRemoveOnTimeout": "ms-resource:loc.messages.SFSDK_PerformingForceRemoveOnTimeout"
   }
 }

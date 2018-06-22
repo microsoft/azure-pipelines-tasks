@@ -15,7 +15,7 @@ import * as ci from './cieventlogger';
 import { TestSelectorInvoker } from './testselectorinvoker';
 import { writeFileSync } from 'fs';
 import { TaskResult } from 'vso-node-api/interfaces/TaskAgentInterfaces';
-const uuid = require('uuid');
+import * as uuid from 'uuid';
 
 const testSelector = new TestSelectorInvoker();
 
@@ -60,16 +60,15 @@ export class DistributedTest {
 
         // Temporary solution till this logic can move to the test platform itself
         if (this.inputDataContract.UsingXCopyTestPlatformPackage) {
-            envVars = this.setProfilerVariables(envVars);
+            envVars = utils.Helper.setProfilerVariables(envVars);
         }
 
         // Pass the acess token as an environment variable for security purposes
-        utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', this.inputDataContract.AccessToken);
-        this.inputDataContract.AccessToken = null;
+        utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
         // Invoke DtaExecutionHost with the input json file
         const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v1() + '.json');
-        DistributedTest.removeEmptyNodes(this.inputDataContract);
+        utils.Helper.removeEmptyNodes(this.inputDataContract);
 
         try {
             writeFileSync(inputFilePath, JSON.stringify(this.inputDataContract));
@@ -99,29 +98,10 @@ export class DistributedTest {
         return code;
     }
 
-    // Utility function used to remove empty or spurious nodes from the input json file
-    public static removeEmptyNodes(obj: any) {
-        if (obj === null || obj === undefined ) {
-            return;
-        }
-        if (typeof obj !== 'object' && typeof obj !== undefined) {
-            return;
-        }
-        const keys = Object.keys(obj);
-        for (var index in Object.keys(obj)) {
-            if (obj[keys[index]] && obj[keys[index]] != {}) {
-                DistributedTest.removeEmptyNodes(obj[keys[index]]);
-            }
-            if (obj[keys[index]] == undefined || obj[keys[index]] == null || (typeof obj[keys[index]] == "object" && Object.keys(obj[keys[index]]).length == 0)) {
-                tl.debug(`Removing node ${keys[index]} as its value is ${obj[keys[index]]}.`);
-                delete obj[keys[index]];
-            }
-        }
-    }
-
     private createTestSourcesFile(): string {
         try {
             let sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
+            console.log(tl.loc('UserProvidedSourceFilter', sourceFilter.toString()));
 
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
                 sourceFilter = ['**\\*', '!**\\obj\\*'];
@@ -148,41 +128,6 @@ export class DistributedTest {
         } catch (error) {
             throw new Error(tl.loc('testSourcesFilteringFailed', error));
         }
-    }
-
-    private setProfilerVariables(envVars: { [key: string]: string; }) : { [key: string]: string; } {
-        const vsTestPackageLocation = tl.getVariable(constants.VsTestToolsInstaller.PathToVsTestToolVariable);
-
-        // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (amd64)
-        let amd64ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\amd64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-        if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-
-            envVars['COR_PROFILER_PATH_64'] = amd64ProfilerProxy[0];
-        } else {
-            // Look in x64 also for Microsoft.IntelliTrace.ProfilerProxy.dll (x64)
-            amd64ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\x64\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-            if (amd64ProfilerProxy && amd64ProfilerProxy.length !== 0) {
-
-                envVars['COR_PROFILER_PATH_64'] = amd64ProfilerProxy[0];
-            } else {
-                utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1043, false);
-                tl.warning(tl.loc('testImpactAndCCWontWork'));
-            }
-
-            utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1042, false);
-            tl.warning(tl.loc('testImpactAndCCWontWork'));
-        }
-
-        // get path to Microsoft.IntelliTrace.ProfilerProxy.dll (x86)
-        const x86ProfilerProxy = tl.findMatch(vsTestPackageLocation, '**\\x86\\Microsoft.IntelliTrace.ProfilerProxy.dll');
-        if (x86ProfilerProxy && x86ProfilerProxy.length !== 0) {
-                envVars['COR_PROFILER_PATH_32'] = x86ProfilerProxy[0];
-        } else {
-            utils.Helper.publishEventToCi(constants.AreaCodes.TOOLSINSTALLERCACHENOTFOUND, tl.loc('testImpactAndCCWontWork'), 1044, false);
-            tl.warning(tl.loc('testImpactAndCCWontWork'));
-        }
-
-        return envVars;
     }
 
     private inputDataContract: inputdatacontract.InputDataContract;

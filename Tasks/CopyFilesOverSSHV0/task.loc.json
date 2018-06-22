@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 131,
+    "Minor": 137,
     "Patch": 0
   },
   "demands": [],
@@ -106,21 +106,23 @@
     }
   },
   "messages": {
-    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort",
-    "SourceNotFolder": "ms-resource:loc.messages.SourceNotFolder",
+    "CheckLogForStdErr": "ms-resource:loc.messages.CheckLogForStdErr",
     "CleanTargetFolder": "ms-resource:loc.messages.CleanTargetFolder",
     "CleanTargetFolderFailed": "ms-resource:loc.messages.CleanTargetFolderFailed",
-    "NothingToCopy": "ms-resource:loc.messages.NothingToCopy",
-    "CopyingFiles": "ms-resource:loc.messages.CopyingFiles",
-    "StartedFileCopy": "ms-resource:loc.messages.StartedFileCopy",
-    "CopyCompleted": "ms-resource:loc.messages.CopyCompleted",
-    "FileExists": "ms-resource:loc.messages.FileExists",
-    "SettingUpSSHConnection": "ms-resource:loc.messages.SettingUpSSHConnection",
-    "ConnectionNotSetup": "ms-resource:loc.messages.ConnectionNotSetup",
     "ConnectionFailed": "ms-resource:loc.messages.ConnectionFailed",
+    "ConnectionNotSetup": "ms-resource:loc.messages.ConnectionNotSetup",
+    "CopyCompleted": "ms-resource:loc.messages.CopyCompleted",
+    "CopyingFiles": "ms-resource:loc.messages.CopyingFiles",
+    "FailedOnFile": "ms-resource:loc.messages.FailedOnFile",
+    "FileExists": "ms-resource:loc.messages.FileExists",
+    "NothingToCopy": "ms-resource:loc.messages.NothingToCopy",
+    "NumberFailed": "ms-resource:loc.messages.NumberFailed",
     "RemoteCmdExecutionErr": "ms-resource:loc.messages.RemoteCmdExecutionErr",
-    "CheckLogForStdErr": "ms-resource:loc.messages.CheckLogForStdErr",
     "RemoteCmdNonZeroExitCode": "ms-resource:loc.messages.RemoteCmdNonZeroExitCode",
-    "UploadFileFailed": "ms-resource:loc.messages.UploadFileFailed"
+    "SettingUpSSHConnection": "ms-resource:loc.messages.SettingUpSSHConnection",
+    "SourceNotFolder": "ms-resource:loc.messages.SourceNotFolder",
+    "StartedFileCopy": "ms-resource:loc.messages.StartedFileCopy",
+    "UploadFileFailed": "ms-resource:loc.messages.UploadFileFailed",
+    "UseDefaultPort": "ms-resource:loc.messages.UseDefaultPort"
   }
 }

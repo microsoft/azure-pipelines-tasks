@@ -2,20 +2,22 @@
 # Build a Docker image and push it to a container registry.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux'
+queue: 'Hosted Linux Preview'
 variables:
-  imageName: $(build.repository.name):$(build.buildId)'
+  imageName: '$(build.repository.name):$(build.buildId)'
 steps:
 
-  - task: Docker@0
-    inputs:
-      action: 'build an image'
-      dockerFile: '**/Dockerfile' 
-      imageName: '$(imageName)'
+- task: Docker@1
+  inputs:
+  	displayName: 'Build the image'
+    action: 'build an image'
+    dockerFile: '**/Dockerfile' 
+    imageName: '$(imageName)'
 
-#  - task: Docker@0
-#    inputs:
-#      action: 'Push an image'
-#      containerregistrytype: 'container registry'
-#      dockerRegistryEndpoint: ''
-#      imageName: '$(imageName)'
+#- task: Docker@1
+#  inputs:
+#    displayName: 'Push the image'
+#    action: 'push an image'
+#    containerregistrytype: 'container registry'
+#    dockerRegistryEndpoint: ''
+#    imageName: '$(imageName)'

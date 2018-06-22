@@ -231,6 +231,17 @@ export class KuduServiceUtility {
         }
     }
 
+    public async warmpUp() {
+        try {
+            tl.debug('warming up Kudu Service');
+            await this._appServiceKuduService.getAppSettings();
+            tl.debug('warmed up Kudu Service');
+        }
+        catch(error) {
+            tl.debug('Failed to warm-up Kudu: ' + error.toString());
+        }
+    }
+
     private async _printZipDeployLogs(log_url: string): Promise<void> {
         if(!log_url) {
             return;

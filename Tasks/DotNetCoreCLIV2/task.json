@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 136,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -103,7 +103,7 @@
             "defaultValue": "",
             "visibleRule": "command = build || command = restore || command = run || command = test || command = custom || publishWebProjects = false",
             "required": false,
-            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/.csproj for all .csproj files in all subfolders)."
+            "helpMarkDown": "The path to the csproj file(s) to use. You can use wildcards (e.g. **/*.csproj for all .csproj files in all subfolders)."
         },
         {
             "name": "custom",
@@ -264,7 +264,7 @@
             "type": "filePath",
             "label": "Path to NuGet package(s) to publish",
             "defaultValue": "$(Build.ArtifactStagingDirectory)/*.nupkg",
-            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.nupkg;-:**\\*.Tests.nupkg`",
+            "helpMarkDown": "The pattern to match or path to nupkg files to be uploaded. Multiple patterns can be separated by a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**/*.nupkg;-:**/*.Tests.nupkg`",
             "required": true,
             "visibleRule": "command = push"
         },
@@ -311,7 +311,7 @@
             "type": "filePath",
             "label": "Path to csproj or nuspec file(s) to pack",
             "defaultValue": "**/*.csproj",
-            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**\\*.csproj;-:**\\*.Tests.csproj`",
+            "helpMarkDown": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**/*.csproj;-:**/*.Tests.csproj`",
             "required": true,
             "visibleRule": "command = pack"
         },

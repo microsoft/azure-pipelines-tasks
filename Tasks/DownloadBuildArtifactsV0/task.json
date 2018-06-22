@@ -8,8 +8,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 136,
-    "Patch": 3
+    "Minor": 137,
+    "Patch": 0
   },
   "groups": [
     {
@@ -137,8 +137,7 @@
         "rows": "3",
         "resizable": "true"
       },
-      "visibleRule": "downloadType == specific",
-      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts in the build. To download all files within artifact drop use drop/**.</p>"
+      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts in the build if \"Specific files\" option is selected. To download all files within artifact drop use drop/**.</p>"
     },
     {
       "name": "downloadPath",
