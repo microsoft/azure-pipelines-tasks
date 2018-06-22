@@ -7,6 +7,9 @@ import { HttpClientResponse } from 'typed-rest-client/HttpClient';
 
 export class DotNetCoreReleaseFetcher {
 
+    // OsSuffixes - The suffix which is a part of the file name ex- linux-x64, windows-x86
+    // Type - SDK / Runtime
+    // Version - Version of the SDK/Runtime
     public static async getDownloadUrls(osSuffixes: string[], version: string, type: string): Promise<string[]> {
         let downloadUrls = [];
         let releasesJSON = await this.getReleasesJson();
