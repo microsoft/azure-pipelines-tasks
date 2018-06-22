@@ -19,7 +19,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 3
+        "Patch": 4
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
@@ -176,6 +176,7 @@
         "NoChanges": "Found no changes.",
         "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
         "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
-        "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'."
+        "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'.",
+        "PreviousPackageLocation": "Previous manifest package location: '{0}'."
     }
 }
