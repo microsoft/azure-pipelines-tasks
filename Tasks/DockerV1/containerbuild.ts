@@ -31,41 +31,35 @@ function findDockerFile(dockerfilepath : string) : string {
     }
 }
 
-function addCommonLabels(command: ToolRunner, hostName: string): void {
-    command.arg(["--label", util.format("%s.image.system.teamfoundationcollectionuri=%s", hostName, tl.getVariable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"))]);
-    command.arg(["--label", util.format("%s.image.system.teamproject=%s", hostName, tl.getVariable("SYSTEM_TEAMPROJECT"))]);
-    var repoName = tl.getVariable("BUILD_REPOSITORY_NAME");
-    if (repoName) {
-        command.arg(["--label", util.format("%s.image.build.repository.name=%s", hostName, repoName)]);
+function addLabel(command: ToolRunner, hostName: string, labelName: string, variableName: string)
+{  
+    var labelValue = tl.getVariable(variableName);
+    if (labelValue) {
+        command.arg(["--label", util.format("%s.image.%s=%s", hostName, labelName, labelValue)]);
     }
+}
+
+function addCommonLabels(command: ToolRunner, hostName: string): void {
+    addLabel(command, hostName, "system.teamfoundationcollectionuri", "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
+    addLabel(command, hostName, "system.teamproject", "SYSTEM_TEAMPROJECT");
+    addLabel(command, hostName, "build.repository.name", "BUILD_REPOSITORY_NAME");
 }
 
 function addBuildLabels(command: ToolRunner, hostName: string): void {
-    var repoUri = tl.getVariable("BUILD_REPOSITORY_URI");
-    if (repoUri) {
-        command.arg(["--label", util.format("%s.image.build.repository.uri=%s", hostName, repoUri)]);
-    }
-    var branchName = tl.getVariable("BUILD_SOURCEBRANCHNAME");
-    if (branchName) {
-        command.arg(["--label", util.format("%s.image.build.sourcebranchname=%s", hostName, branchName)]);
-    }
-    var sourceVersion = tl.getVariable("BUILD_SOURCEVERSION");
-    if (sourceVersion) {
-        command.arg(["--label", util.format("%s.image.build.sourceversion=%s", hostName, sourceVersion)]);
-    }
-
-    command.arg(["--label", util.format("%s.image.build.definitionname=%s", hostName, tl.getVariable("BUILD_DEFINITIONNAME"))]);
-    command.arg(["--label", util.format("%s.image.build.buildnumber=%s", hostName, tl.getVariable("BUILD_BUILDNUMBER"))]);
-    command.arg(["--label", util.format("%s.image.build.builduri=%s", hostName, tl.getVariable("BUILD_BUILDURI"))]);
-    command.arg(["--label", util.format("%s.image.build.requestedfor=%s", hostName, tl.getVariable("BUILD_REQUESTEDFOR"))]);
+    addLabel(command, hostName, "build.repository.uri", "BUILD_REPOSITORY_URI");
+    addLabel(command, hostName, "build.sourcebranchname", "BUILD_SOURCEBRANCHNAME");
+    addLabel(command, hostName, "build.sourceversion", "BUILD_SOURCEVERSION");
+    addLabel(command, hostName, "build.definitionname", "BUILD_DEFINITIONNAME");
+    addLabel(command, hostName, "build.buildnumber", "BUILD_BUILDNUMBER");
+    addLabel(command, hostName, "build.builduri", "BUILD_BUILDURI");
+    addLabel(command, hostName, "build.requestedfor", "BUILD_REQUESTEDFOR");
 }
 
-function addReleaseLabels(command: ToolRunner, hostName: string): void {
-    
-    command.arg(["--label", util.format("%s.image.release.definitionname=%s", hostName, tl.getVariable("RELEASE_DEFINITIONNAME"))]);
-    command.arg(["--label", util.format("%s.image.release.releaseid=%s", hostName, tl.getVariable("RELEASE_RELEASEID"))]);
-    command.arg(["--label", util.format("%s.image.release.releaseweburl=%s", hostName, tl.getVariable("RELEASE_RELEASEWEBURL"))]);
-    command.arg(["--label", util.format("%s.image.release.deployment.requestedfor=%s", hostName, tl.getVariable("RELEASE_DEPLOYMENT_REQUESTEDFOR"))]);
+function addReleaseLabels(command: ToolRunner, hostName: string): void {    
+    addLabel(command, hostName, "release.definitionname", "RELEASE_DEFINITIONNAME");
+    addLabel(command, hostName, "release.releaseid", "RELEASE_RELEASEID");
+    addLabel(command, hostName, "release.releaseweburl", "RELEASE_RELEASEWEBURL");
+    addLabel(command, hostName, "release.deployment.requestedfor", "RELEASE_DEPLOYMENT_REQUESTEDFOR");
 }
 
 function getReverseDNSName(): string {
