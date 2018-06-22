@@ -14,6 +14,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "semver": "^5.4.1",
+    "typed-rest-client": "0.12.0",
     "vso-node-api": "6.0.1-preview",
     "vsts-task-lib": "2.0.6",
     "vsts-task-tool-lib": "0.4.0",
