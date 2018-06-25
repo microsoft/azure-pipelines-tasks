@@ -98,8 +98,11 @@ var utMock = {
     writeFile: function(filePath: string, content: string) {
         console.log("writing to file " + filePath + " content: " + content);
     },
-    createTemplateVarFile: function (templateVariables) {
+    generateTemporaryFilePath: function () {
         return "C:\\somefolder\\somevarfile.json";
+    },
+    getPackerVarFileContent: function(variables) {
+        return ut.getPackerVarFileContent(variables);
     },
     findMatch: function(root: string, patterns: string[] | string) {
         if(root === DefaultWorkingDirectory) {
