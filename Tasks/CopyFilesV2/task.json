@@ -72,6 +72,15 @@
             "groupName": "advanced"
         },
         {
+            "name": "FailIfAlreadyExists",
+            "type": "boolean",
+            "label": "Fail if file already exists",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "If file already exists in target folder and Overwrite is not selected, throw an error",
+            "groupName": "advanced"
+        },
+        {
             "name": "flattenFolders",
             "type": "boolean",
             "label": "Flatten Folders",
