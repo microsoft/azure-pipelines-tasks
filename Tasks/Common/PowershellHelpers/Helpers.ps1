@@ -22,7 +22,7 @@ function Invoke-ActionWithRetries
         $RetryMessage,
 
         [scriptblock]
-        $OnException = { $true }
+        $ShouldRetryOnException = { $true }
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -46,7 +46,7 @@ function Invoke-ActionWithRetries
         {
             if (($null -eq $RetryableExceptions) -or (Test-RetryableException -Exception $_.Exception -AllowedExceptions $RetryableExceptions))
             {
-                $shouldRetry = $OnException.Invoke($_.Exception)
+                $shouldRetry = $ShouldRetryOnException.Invoke($_.Exception)
                 if (!$shouldRetry)
                 {
                     return

@@ -253,7 +253,7 @@ function Copy-ServiceFabricApplicationPackageAction
     $global:operationId = $SF_Operations.CopyApplicationPackage
     $copyAction = { Copy-ServiceFabricApplicationPackage @CopyParameters }
 
-    Invoke-CommandWithRetries -Action $copyAction `
+    Invoke-ActionWithDefaultRetries -Action $copyAction `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingCopyApplicationPackage)
 }
 
@@ -308,9 +308,9 @@ function Register-ServiceFabricApplicationTypeAction
         throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
     }
 
-    Invoke-CommandWithRetries -Action $registerAction `
+    Invoke-ActionWithDefaultRetries -Action $registerAction `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRegisterApplicationType) `
-        -OnException $onException
+        -ShouldRetryOnException $onException
 
     Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioned)
 }
@@ -336,7 +336,7 @@ function Get-ServiceFabricApplicationTypeAction
     }
 
     $getAppTypeAction = { Get-ServiceFabricApplicationType @getApplicationTypeParams }
-    return Invoke-CommandWithRetries -Action $getAppTypeAction `
+    return Invoke-ActionWithDefaultRetries -Action $getAppTypeAction `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
 }
 
@@ -373,7 +373,7 @@ function Wait-ServiceFabricApplicationTypeStatusChange
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
 }
 
-function Invoke-CommandWithRetries
+function Invoke-ActionWithDefaultRetries
 {
     Param (
         [scriptblock]
@@ -383,7 +383,7 @@ function Invoke-CommandWithRetries
         $RetryMessage,
 
         [scriptblock]
-        $OnException
+        $ShouldRetryOnException
     )
 
     $parameters = @{
@@ -394,9 +394,9 @@ function Invoke-CommandWithRetries
         RetryMessage           = $RetryMessage;
     }
 
-    if ($onException)
+    if ($ShouldRetryOnException)
     {
-        $parameters['OnException'] = $OnException
+        $parameters['ShouldRetryOnException'] = $ShouldRetryOnException
     }
 
     Invoke-ActionWithRetries @parameters
