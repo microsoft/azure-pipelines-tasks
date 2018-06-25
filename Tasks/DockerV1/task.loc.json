@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "preview": "true",
@@ -67,10 +67,10 @@
       "defaultValue": "Build an image",
       "required": true,
       "options": {
-        "Build an image": "Build",
-        "Tag image": "Tag",
-        "Push an image": "Push",
-        "Run an image": "Run"
+        "Build an image": "build",
+        "Tag image": "tag",
+        "Push an image": "push",
+        "Run an image": "run"
       },
       "properties": {
         "EditableOptions": "True"
@@ -168,6 +168,14 @@
       "defaultValue": "false",
       "visibleRule": "command = Build an image || command = Push an image",
       "helpMarkDown": "ms-resource:loc.input.help.includeLatestTag"
+    },
+    {
+      "name": "addDefaultLabels",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addDefaultLabels",
+      "defaultValue": "true",
+      "visibleRule": "command = Build an image",
+      "helpMarkDown": "ms-resource:loc.input.help.addDefaultLabels"
     },
     {
       "name": "imageDigestFile",

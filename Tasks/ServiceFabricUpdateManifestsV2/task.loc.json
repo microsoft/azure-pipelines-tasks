@@ -185,6 +185,7 @@
     "PdbWarning": "ms-resource:loc.messages.PdbWarning",
     "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue",
     "CouldNotFindSubPath": "ms-resource:loc.messages.CouldNotFindSubPath",
+    "PreviousPackageLocation": "ms-resource:loc.messages.PreviousPackageLocation",
     "ImageDigestMismatch": "ms-resource:loc.messages.ImageDigestMismatch"
   }
 }

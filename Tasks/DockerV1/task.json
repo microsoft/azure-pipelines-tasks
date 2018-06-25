@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "preview": "true",
@@ -67,10 +67,10 @@
             "defaultValue": "Build an image",
             "required": true,
             "options": {
-                "Build an image": "Build",
-                "Tag image": "Tag",
-                "Push an image": "Push",
-                "Run an image": "Run"
+                "Build an image": "build",
+                "Tag image": "tag",
+                "Push an image": "push",
+                "Run an image": "run"
             },
             "properties": {
                 "EditableOptions": "True"
@@ -169,6 +169,14 @@
             "visibleRule": "command = Build an image || command = Push an image",
             "helpMarkDown": "Include the 'latest' tag when building or pushing the Docker image."
         },
+        {
+            "name": "addDefaultLabels",
+            "type": "boolean",
+            "label": "Add default labels",
+            "defaultValue": "true",
+            "visibleRule": "command = Build an image",
+            "helpMarkDown": "Add CI/CD metadata like repository, commit, build and release information to the container image by using Docker labels."
+        },        
         {
             "name": "imageDigestFile",
             "type": "filePath",

@@ -1,132 +1,123 @@
-import os = require('os');
-import path = require('path');
-import Q = require('q');
+import * as os from 'os';
+import * as path from 'path';
 
-import tl = require('vsts-task-lib/task');
-import sshCommon = require('ssh-common/ssh-common');
-import {SshHelper} from 'ssh-common/ssh-common';
+import * as tl from 'vsts-task-lib/task';
+import { SshHelper } from 'ssh-common/ssh-common';
 
-//This method will find the list of matching files for the specified contents
-//This logic is the same as the one used by CopyFiles task except for allowing dot folders to be copied
-//This will be useful to put in the task-lib
-function getFilesToCopy(sourceFolder, contents: string []) : string [] {
+// This method will find the list of matching files for the specified contents
+// This logic is the same as the one used by CopyFiles task except for allowing dot folders to be copied
+// This will be useful to put in the task-lib
+function getFilesToCopy(sourceFolder, contents: string[]): string[] {
     // include filter
-    var includeContents: string[] = [];
+    const includeContents: string[] = [];
     // exclude filter
-    var excludeContents: string[] = [];
+    const excludeContents: string[] = [];
 
-    for (var i: number = 0; i < contents.length; i++){
-        var pattern = contents[i].trim();
-        var negate: Boolean = false;
-        var negateOffset: number = 0;
-        for (var j = 0; j < pattern.length && pattern[j] === '!'; j++){
-            negate = !negate;
-            negateOffset++;
+    // evaluate leading negations `!` on the pattern
+    for (const pattern of contents.map(x => x.trim())) {
+        let negate: boolean = false;
+        let numberOfNegations: number = 0;
+        for (const c of pattern) {
+            if (c === '!') {
+                negate = !negate;
+                numberOfNegations++;
+            } else {
+                break;
+            }
         }
 
-        if(negate){
+        if (negate) {
             tl.debug('exclude content pattern: ' + pattern);
-            var realPattern = pattern.substring(0, negateOffset) + path.join(sourceFolder, pattern.substring(negateOffset));
+            const realPattern = pattern.substring(0, numberOfNegations) + path.join(sourceFolder, pattern.substring(numberOfNegations));
             excludeContents.push(realPattern);
-        }
-        else{
+        } else {
             tl.debug('include content pattern: ' + pattern);
-            var realPattern = path.join(sourceFolder, pattern);
+            const realPattern = path.join(sourceFolder, pattern);
             includeContents.push(realPattern);
         }
     }
 
     // enumerate all files
-    var files: string[] = [];
-    var allPaths: string[] = tl.find(sourceFolder);
-    var allFiles: string[] = [];
+    let files: string[] = [];
+    const allPaths: string[] = tl.find(sourceFolder);
+    const allFiles: string[] = [];
 
     // remove folder path
-    for (var i: number = 0; i < allPaths.length; i++) {
-        if (!tl.stats(allPaths[i]).isDirectory()) {
-            allFiles.push(allPaths[i]);
+    for (const p of allPaths) {
+        if (!tl.stats(p).isDirectory()) {
+            allFiles.push(p);
         }
     }
 
     // if we only have exclude filters, we need add a include all filter, so we can have something to exclude.
-    if(includeContents.length == 0 && excludeContents.length > 0) {
+    if (includeContents.length === 0 && excludeContents.length > 0) {
         includeContents.push('**');
     }
 
-    if (includeContents.length > 0 && allFiles.length > 0) {
-        tl.debug("allFiles contains " + allFiles.length + " files");
+    tl.debug("counted " + allFiles.length + " files in the source tree");
 
-        // a map to eliminate duplicates
-        var map = {};
+    // a map to eliminate duplicates
+    const pathsSeen = {};
 
-        // minimatch options
-        var matchOptions = { matchBase: true , dot: true};
-        if(os.type().match(/^Win/))
-        {
-            matchOptions["nocase"] = true;
-        }
+    // minimatch options
+    const matchOptions: tl.MatchOptions = { matchBase: true, dot: true };
+    if (os.platform() === 'win32') {
+        matchOptions.nocase = true;
+    }
 
-        // apply include filter
-        for (var i: number = 0; i < includeContents.length; i++) {
-            var pattern = includeContents[i];
-            tl.debug('Include matching ' + pattern);
+    // apply include filter
+    for (const pattern of includeContents) {
+        tl.debug('Include matching ' + pattern);
 
-            // let minimatch do the actual filtering
-            var matches: string[] = tl.match(allFiles, pattern, matchOptions);
+        // let minimatch do the actual filtering
+        const matches: string[] = tl.match(allFiles, pattern, matchOptions);
 
-            tl.debug('Include matched ' + matches.length + ' files');
-            for (var j: number = 0; j < matches.length; j++) {
-                var matchPath = matches[j];
-                if (!map.hasOwnProperty(matchPath)) {
-                    map[matchPath] = true;
-                    files.push(matchPath);
-                }
-            }
-        }
-
-        // apply exclude filter
-        for (var i: number = 0; i < excludeContents.length; i++) {
-            var pattern = excludeContents[i];
-            tl.debug('Exclude matching ' + pattern);
-
-            // let minimatch do the actual filtering
-            var matches: string[] = tl.match(files, pattern, matchOptions);
-
-            tl.debug('Exclude matched ' + matches.length + ' files');
-            files = [];
-            for (var j: number = 0; j < matches.length; j++) {
-                var matchPath = matches[j];
+        tl.debug('Include matched ' + matches.length + ' files');
+        for (const matchPath of matches) {
+            if (!pathsSeen.hasOwnProperty(matchPath)) {
+                pathsSeen[matchPath] = true;
                 files.push(matchPath);
             }
         }
     }
-    else {
-        tl.debug("Either includeContents or allFiles is empty");
+
+    // apply exclude filter
+    for (const pattern of excludeContents) {
+        tl.debug('Exclude matching ' + pattern);
+
+        // let minimatch do the actual filtering
+        const matches: string[] = tl.match(files, pattern, matchOptions);
+
+        tl.debug('Exclude matched ' + matches.length + ' files');
+        files = [];
+        for (const matchPath of matches) {
+            files.push(matchPath);
+        }
     }
 
     return files;
 }
 
 async function run() {
-    var sshHelper : SshHelper;
+    let sshHelper: SshHelper;
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        //read SSH endpoint input
-        var sshEndpoint = tl.getInput('sshEndpoint', true);
-        var username:string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
-        var password:string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
-        var privateKey:string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
-        var hostname:string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
-        var port:string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
-        if (!port || port === '') {
+        // read SSH endpoint input
+        const sshEndpoint = tl.getInput('sshEndpoint', true);
+        const username: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'username', false);
+        const password: string = tl.getEndpointAuthorizationParameter(sshEndpoint, 'password', true); //passphrase is optional
+        const privateKey: string = process.env['ENDPOINT_DATA_' + sshEndpoint + '_PRIVATEKEY']; //private key is optional, password can be used for connecting
+        const hostname: string = tl.getEndpointDataParameter(sshEndpoint, 'host', false);
+        let port: string = tl.getEndpointDataParameter(sshEndpoint, 'port', true); //port is optional, will use 22 as default port if not specified
+        if (!port) {
             tl._writeLine(tl.loc('UseDefaultPort'));
             port = '22';
         }
 
-        //setup the SSH connection configuration based on endpoint details
-        var sshConfig;
-        if (privateKey && privateKey !== '') {
+        // set up the SSH connection configuration based on endpoint details
+        let sshConfig;
+        if (privateKey) {
             tl.debug('Using private key for ssh connection.');
             sshConfig = {
                 host: hostname,
@@ -136,7 +127,7 @@ async function run() {
                 passphrase: password
             }
         } else {
-            //use password
+            // use password
             tl.debug('Using username and password for ssh connection.');
             sshConfig = {
                 host: hostname,
@@ -147,9 +138,9 @@ async function run() {
         }
 
         // contents is a multiline input containing glob patterns
-        var contents:string[] = tl.getDelimitedInput('contents', '\n', true);
-        var sourceFolder:string = tl.getPathInput('sourceFolder', true, true);
-        var targetFolder:string = tl.getInput('targetFolder');
+        const contents: string[] = tl.getDelimitedInput('contents', '\n', true);
+        const sourceFolder: string = tl.getPathInput('sourceFolder', true, true);
+        let targetFolder: string = tl.getInput('targetFolder');
 
         if (!targetFolder) {
             targetFolder = "./";
@@ -159,22 +150,22 @@ async function run() {
         }
 
         // read the copy options
-        var cleanTargetFolder:boolean = tl.getBoolInput('cleanTargetFolder', false);
-        var overwrite:boolean = tl.getBoolInput('overwrite', false);
-        var failOnEmptySource:boolean = tl.getBoolInput('failOnEmptySource', false);
-        var flattenFolders:boolean = tl.getBoolInput('flattenFolders', false);
+        const cleanTargetFolder: boolean = tl.getBoolInput('cleanTargetFolder', false);
+        const overwrite: boolean = tl.getBoolInput('overwrite', false);
+        const failOnEmptySource: boolean = tl.getBoolInput('failOnEmptySource', false);
+        const flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 
-        if(!tl.stats(sourceFolder).isDirectory()) {
+        if (!tl.stats(sourceFolder).isDirectory()) {
             throw tl.loc('SourceNotFolder');
         }
 
-        //initialize the SSH helpers, setup the connection
-        sshHelper = new sshCommon.SshHelper(sshConfig);
+        // initialize the SSH helpers, set up the connection
+        sshHelper = new SshHelper(sshConfig);
         await sshHelper.setupConnection();
 
-        if(cleanTargetFolder) {
+        if (cleanTargetFolder) {
             tl._writeLine(tl.loc('CleanTargetFolder', targetFolder));
-            var cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
+            const cleanTargetFolderCmd = 'rm -rf "' + targetFolder + '"/*';
             try {
                 await sshHelper.runCommandOnRemoteMachine(cleanTargetFolderCmd, null);
             } catch (err) {
@@ -182,23 +173,21 @@ async function run() {
             }
         }
 
-        //identify the files to copy
-        var filesToCopy: string [] = [];
-        filesToCopy = getFilesToCopy(sourceFolder, contents);
+        // identify the files to copy
+        const filesToCopy: string[] = getFilesToCopy(sourceFolder, contents);
 
-        //copy files to remote machine
-        if(filesToCopy && filesToCopy.length > 0) {
+        // copy files to remote machine
+        if (filesToCopy) {
             tl.debug('Number of files to copy = ' + filesToCopy.length);
             tl.debug('filesToCopy = ' + filesToCopy);
 
             let failureCount = 0;
             tl._writeLine(tl.loc('CopyingFiles', filesToCopy.length));
-            for (var i:number = 0; i < filesToCopy.length; i++) {
+            for (const fileToCopy of filesToCopy) {
                 try {
-                    var fileToCopy = filesToCopy[i];
                     tl.debug('fileToCopy = ' + fileToCopy);
 
-                    var relativePath;
+                    let relativePath;
                     if (flattenFolders) {
                         relativePath = path.basename(fileToCopy);
                     } else {
@@ -207,16 +196,16 @@ async function run() {
                             .replace(/^\//g, "");
                     }
                     tl.debug('relativePath = ' + relativePath);
-                    var targetPath = path.posix.join(targetFolder, relativePath);
+                    const targetPath = path.posix.join(targetFolder, relativePath);
 
                     tl._writeLine(tl.loc('StartedFileCopy', fileToCopy, targetPath));
                     if (!overwrite) {
-                        var fileExists:boolean = await sshHelper.checkRemotePathExists(targetPath);
+                        const fileExists: boolean = await sshHelper.checkRemotePathExists(targetPath);
                         if (fileExists) {
                             throw tl.loc('FileExists', targetPath);
                         }
                     }
-                    //looks like scp can only handle one file at a time reliably
+                    // looks like scp can only handle one file at a time reliably
                     await sshHelper.uploadFile(fileToCopy, targetPath);
                 } catch (err) {
                     tl.error(tl.loc('FailedOnFile', fileToCopy, err));
@@ -227,19 +216,18 @@ async function run() {
             if (failureCount) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('NumberFailed', failureCount));
             }
-        } else if(failOnEmptySource) {
+        } else if (failOnEmptySource) {
             throw tl.loc('NothingToCopy');
         } else {
             tl.warning(tl.loc('NothingToCopy'));
         }
-    } catch(err) {
+    } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
-        //close the client connection to halt build execution
-        if(sshHelper) {
+        // close the client connection to halt build execution
+        if (sshHelper) {
             tl.debug('Closing the client connection');
             sshHelper.closeConnection();
-            sshHelper = null;
         }
     }
 }
