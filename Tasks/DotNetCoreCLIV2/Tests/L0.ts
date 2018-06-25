@@ -460,6 +460,23 @@ describe('DotNetCoreExe Suite', function () {
         done();
     });
 
+    it('test command with publish test results directory containing spaces should call trx logger and publish test results', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp = path.join(__dirname, './TestCommandTests/publishtestsWithSpaceDir.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        console.log(tr.stdout);
+        assert(tr.invokedToolCount == 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent new\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent new\\home\\temp'), 'it should have run dotnet test');
+        assert(tr.stdOutContained('dotnet output'), "should have dotnet output");
+        assert(tr.stdOutContained('vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=true;resultFiles=c:\\agent new\\home\\temp\\sample.trx;]'), "should publish trx");
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+        done();
+    });
+
     it('test command with publish test results should call trx logger and publish test results without build props', (done: MochaDone) => {
         this.timeout(1000);
 

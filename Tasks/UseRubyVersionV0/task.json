@@ -1,0 +1,56 @@
+{
+    "id": "630C472C-CDE7-4CD8-BA13-E00CA5FF180B",
+    "name": "UseRubyVersion",
+    "friendlyName": "Use Ruby Version",
+    "description": "Retrieves the specified version of Ruby from the tool cache. Optionally add it to PATH.",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 136,
+        "Patch": 0
+    },
+    "demands": [],
+    "minimumAgentVersion": "2.115.0",
+    "instanceNameFormat": "Use Ruby $(versionSpec)",
+    "inputs": [
+        {
+            "name": "versionSpec",
+            "type": "string",
+            "label": "Version spec",
+            "required": true,
+            "defaultValue": ">= 2.4",
+            "helpMarkDown": "Version range or exact version of a Ruby version to use."
+        },
+        {
+            "name": "addToPath",
+            "type": "boolean",
+            "label": "Add to PATH",
+            "required": false,
+            "defaultValue": "true",
+            "helpMarkDown": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "rubyLocation",
+            "description": "The resolved folder of the Ruby distribution."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "ListAvailableVersions": "Available versions:",
+        "PlatformNotRecognized": "Platform not recognized",
+        "VersionNotFound": "Version spec %s did not match any version in the tool cache."
+    }
+}

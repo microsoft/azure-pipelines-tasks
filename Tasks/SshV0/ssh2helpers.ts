@@ -52,34 +52,29 @@ export function setupSshClientConnection(sshConfig: any) : Q.Promise<any> {
  * @returns {Promise<string>|Promise<T>}
  */
 export function runCommandOnRemoteMachine(command: string, sshClient: any, options: RemoteCommandOptions) : Q.Promise<string> {
-    var defer = Q.defer<string>();
-    var stdErrWritten:boolean = false;
+    const defer = Q.defer<string>();
+    let stdErrWritten: boolean = false;
 
-    if(!options) {
+    if (!options) {
         tl.debug('Options not passed to runCommandOnRemoteMachine, setting defaults.');
-        var options = new RemoteCommandOptions();
+        options = new RemoteCommandOptions();
         options.failOnStdErr = true;
     }
 
-    var cmdToRun = command;
-    if(cmdToRun.indexOf(';') > 0) {
-        //multiple commands were passed separated by ;
-        cmdToRun = cmdToRun.replace(/;/g, '\n');
-    }
-    tl.debug('cmdToRun = ' + cmdToRun);
+    tl.debug('command = ' + command);
 
-    sshClient.exec(cmdToRun, (err, stream) => {
-        if(err) {
-            defer.reject(tl.loc('RemoteCmdExecutionErr', err))
+    sshClient.exec(command, (err, stream) => {
+        if (err) {
+            defer.reject(tl.loc('RemoteCmdExecutionErr', err));
         }
         stream.on('close', (code, signal) => {
             tl.debug('code = ' + code + ', signal = ' + signal);
 
             //based on the options decide whether to fail the build or not if data was written to STDERR
-            if(stdErrWritten === true && options.failOnStdErr === true) {
+            if (stdErrWritten && options.failOnStdErr) {
                 defer.reject(tl.loc('RemoteCmdExecutionErr'));
-            } else if(code && code != 0) {
-                defer.reject(tl.loc('RemoteCmdNonZeroExitCode', cmdToRun, code));
+            } else if (code && code !== 0) {
+                defer.reject(tl.loc('RemoteCmdNonZeroExitCode', command, code));
             } else {
                 //success case - code is undefined or code is 0
                 defer.resolve('0');
@@ -89,7 +84,7 @@ export function runCommandOnRemoteMachine(command: string, sshClient: any, optio
         }).stderr.on('data', (data) => {
             stdErrWritten = true;
             tl.debug('stderr = ' + data);
-            if(data && data.toString().trim() !== '') {
+            if (data && data.toString().trim() !== '') {
                 tl.error(data);
             }
         });

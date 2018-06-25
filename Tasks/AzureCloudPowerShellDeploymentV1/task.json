@@ -1,0 +1,239 @@
+{
+    "id": "2CA8FE15-42EA-4B26-80F1-E0738EC17E89",
+    "name": "AzureCloudPowerShellDeployment",
+    "friendlyName": "Azure Cloud Service Deployment",
+    "description": "Deploy an Azure Cloud Service",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613748)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 3,
+        "Patch": 7
+    },
+    "demands": [
+        "azureps"
+    ],
+    "minimumAgentVersion": "1.103.0",
+    "groups": [
+        {
+            "name": "newServiceAdvancedOptions",
+            "displayName": "Advanced Options For Creating New Service",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": ["azureClassicSubscription"],
+            "type": "connectedService:Azure:Certificate,UsernamePassword",
+            "label": "Azure subscription (Classic)",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Classic subscription to target for deployment."
+        },
+        {
+            "name": "StorageAccount",
+            "type": "pickList",
+            "label": "Storage account",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Storage account must exist prior to deployment."
+        },
+        {
+            "name": "ServiceName",
+            "type": "pickList",
+            "label": "Service name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select or enter an existing cloud service name.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "ServiceLocation",
+            "type": "pickList",
+            "label": "Service location",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select a region for new service deployment.Possible options are **East US**, **East US 2**, **Central US**, **South Central US**, **West US**, **North Europe**, **West Europe** and others.",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "CsPkg",
+            "type": "filePath",
+            "label": "CsPkg",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of CsPkg under the default artifact directory."
+        },
+        {
+            "name": "CsCfg",
+            "type": "filePath",
+            "label": "CsCfg",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path of CsCfg under the default artifact directory."
+        },
+        {
+            "name": "Slot",
+            "aliases": ["slotName"],
+            "type": "string",
+            "label": "Environment (Slot)",
+            "defaultValue": "Production",
+            "required": true,
+            "helpMarkDown": "**Production** or **Staging**"
+        },
+        {
+            "name": "DeploymentLabel",
+            "type": "string",
+            "label": "Deployment label",
+            "defaultValue": "$(Build.BuildNumber)",
+            "required": false,
+            "helpMarkDown": "Specifies the label name for the new deployment. If not specified, a Globally Unique Identifier (GUID) is used."
+        },
+        {
+            "name": "AppendDateTimeToLabel",
+            "type": "boolean",
+            "label": "Append current date and time",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Appends current date and time to deployment label"
+        },
+        {
+            "name": "AllowUpgrade",
+            "type": "boolean",
+            "label": "Allow upgrade",
+            "defaultValue": "true",
+            "helpMarkDown": "When selected allows an upgrade to the Microsoft Azure deployment",
+            "required": true
+        },
+        {
+            "name": "SimultaneousUpgrade",
+            "type": "boolean",
+            "label": "Simultaneous upgrade",
+            "defaultValue": "false",
+            "visibleRule": "AllowUpgrade == true",
+            "helpMarkDown": "Updates all instances at once. Your cloud service will be unavailable during update.",
+            "required": false
+        },
+        {
+            "name": "ForceUpgrade",
+            "type": "boolean",
+            "label": "Force upgrade",
+            "defaultValue": "false",
+            "visibleRule": "AllowUpgrade == true",
+            "helpMarkDown": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.",
+            "required": false
+        },
+        {
+            "name": "DiagnosticStorageAccountKeys",
+            "type": "multiLine",
+            "label": "Diagnostic storage account keys",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide storage keys for diagnostics storage account in Role:Storagekey format. The diagnostics storage account name for each role will be obtained from diagnostics config file (.wadcfgx). If the .wadcfgx file for a role is not found, diagnostics extensions won’t be set for the role. If the storage account name is missing in the .wadcfgx file, the default storage account will be used for storing diagnostics results and the storage key parameters from deployment task will be ignored. It’s recommended to save <storage_account_key> as a secret variable unless there is no sensitive information in the diagnostics result for your environment. <br/><br/>For example,<br/> WebRole: &lt;WebRole_storage_account_key&gt;<br/>WorkerRole: &lt;WorkerRole_stoarge_account_key&gt;",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "resizable": "true",
+                "rows": "6",
+                "maxLength": "500"
+            }
+        },
+        {
+            "name": "NewServiceCustomCertificates",
+            "type": "multiLine",
+            "label": "Custom certificates to import",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Provide custom certificates in CertificatePfxBase64:CertificatePassword format. It’s recommended to save <certificate_password> as a secret variable. <br/><br/>For example,<br/> Certificate1: &lt;Certificate1_password&gt;<br/>Certificate2: &lt;Certificate2_password&gt;",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "resizable": "true",
+                "rows": "6",
+                "maxLength": "20000"
+            }
+        },
+        {
+            "name": "NewServiceAdditionalArguments",
+            "type": "string",
+            "label": "Additional arguments",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Pass in additional arguments while creating a brand new service. These will be passed on to `New-AzureService` cmdlet. Eg: `-Label 'MyTestService'`",
+            "groupName": "newServiceAdvancedOptions"
+        },
+        {
+            "name": "NewServiceAffinityGroup",
+            "type": "pickList",
+            "label": "Affinity group",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "While creating new service, this affinity group will be considered instead of using service location.",
+            "groupName": "newServiceAdvancedOptions",
+            "properties": {
+                "EditableOptions": "True"
+            }
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ServiceName",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureHostedServiceNames"
+        },
+        {
+            "target": "ServiceLocation",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureLocations"
+        },
+        {
+            "target": "NewServiceAffinityGroup",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureAffinityGroups"
+        },
+        {
+            "target": "StorageAccount",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "AzureStorageServiceNames"
+        }
+    ],
+    "instanceNameFormat": "Azure Deployment: $(CsPkg)",
+    "execution": {
+        "PowerShell3": {
+            "target": "Publish-AzureCloudDeployment.ps1"
+        }
+    },
+    "messages": {
+        "Couldnotgettheprimarystoragekeyforstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for storage account '{0}'. Unable to apply any diagnostics extensions.",
+        "Couldnotgettheprimarystoragekeyforthepublicconfigstorageaccount0Unabletoapplyanydiagnosticsextensions": "Could not get the primary storage key for the public config storage account '{0}'. Unable to apply any diagnostics extensions.",
+        "Applyinganyconfigureddiagnosticsextensions": "Applying any configured diagnostics extensions.",
+        "_0couldnotbeparsedintopartsforregisteringdiagnosticsextensions": "'{0}' could not be parsed into parts for registering diagnostics extensions.",
+        "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
+        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one.",
+        "Storagekeysaredefinedininvalidformat": "Storage keys are defined in invalid format.",
+        "Unabletofind0usingprovidedsubscription": "Unable to find {0} using provided subscription",
+        "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell does not support external storage account for configuring diagnostics.",
+        "Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format.",
+        "Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
+        "ValidateAzureCloudServiceStatus": "Validating status of Azure Cloud Service: '{0}'",
+        "RetryAzureCloudServiceStatusCheck": "Azure Cloud Service: '{0}' validation failed. Retrying in '{1}' seconds.",
+        "AzureCloudServiceIsReady": "Azure Cloud Service: '{0}' is ready.",
+        "AzureCloudServiceIsNotReady": "Azure Cloud Service: '{0}' is not ready. This can be due to one or more RoleInstances not being in 'ReadyRole' state. Check logs for more details.",
+        "AllRoleInstancesAreReady": "All role instances (count: '{1}') for Azure Cloud Service: '{0}' are in 'ReadyRole' state.",
+        "AzureCloudServiceNotFound": "Azure Cloud Service: '{0}' not found."
+    }
+}

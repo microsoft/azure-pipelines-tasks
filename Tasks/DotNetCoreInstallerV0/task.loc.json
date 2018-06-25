@@ -1,0 +1,71 @@
+{
+  "id": "B0CE7256-7898-45D3-9CB5-176B752BFEA6",
+  "name": "DotNetCoreInstaller",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 9
+  },
+  "satisfies": [
+    "DotNetCore"
+  ],
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "packageType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.packageType",
+      "defaultValue": "sdk",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageType",
+      "options": {
+        "runtime": "Runtime",
+        "sdk": "SDK (contains runtime)"
+      }
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.version",
+      "defaultValue": "1.0.4",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.version"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "dotnetcoreinstaller.js"
+    }
+  },
+  "messages": {
+    "ToolFailed": "ms-resource:loc.messages.ToolFailed",
+    "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported",
+    "getMachinePlatformFailed": "ms-resource:loc.messages.getMachinePlatformFailed",
+    "UsingCachedTool": "ms-resource:loc.messages.UsingCachedTool",
+    "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
+    "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
+    "GettingDownloadUrl": "ms-resource:loc.messages.GettingDownloadUrl",
+    "CouldNotDetectPlatform": "ms-resource:loc.messages.CouldNotDetectPlatform",
+    "NullDownloadUrls": "ms-resource:loc.messages.NullDownloadUrls",
+    "DownloadingUrl": "ms-resource:loc.messages.DownloadingUrl",
+    "ExtractingPackage": "ms-resource:loc.messages.ExtractingPackage",
+    "CachingTool": "ms-resource:loc.messages.CachingTool",
+    "SuccessfullyInstalled": "ms-resource:loc.messages.SuccessfullyInstalled",
+    "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
+    "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
+    "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
+    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
+    "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
+    "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage"
+  }
+}

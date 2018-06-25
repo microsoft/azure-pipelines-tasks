@@ -1,0 +1,169 @@
+{
+    "id": "0675668A-7BBA-4CCB-901D-5AD6554CA653",
+    "name": "PublishSymbols",
+    "friendlyName": "Index Sources & Publish Symbols",
+    "description": "Index your source code and publish symbols to a file share or Visual Studio Team Services Symbol Server",
+    "helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Visual Studio Team Services Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in VSTS.",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "preview": false,
+    "version": {
+        "Major": 2,
+        "Minor": 0,
+        "Patch": 8
+    },
+    "minimumAgentVersion": "1.95.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "SymbolsFolder",
+            "type": "string",
+            "label": "Path to symbols folder",
+            "defaultValue": "$(Build.SourcesDirectory)",
+            "required": false,
+            "helpMarkDown": "The path to the folder that is searched for symbol files.  The default is $(Build.SourcesDirectory).  Otherwise specify a rooted path, for example: $(Build.BinariesDirectory)/MyProject"
+        },
+        {
+            "name": "SearchPattern",
+            "type": "multiLine",
+            "label": "Search pattern",
+            "defaultValue": "**/bin/**/*.pdb",
+            "required": true,
+            "helpMarkDown": "The pattern used to discover the pdb files to publish."
+        },
+        {
+            "name": "IndexSources",
+            "type": "boolean",
+            "label": "Index sources",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Indicates whether to inject source server information into the PDB files."
+        },
+        {
+            "name": "PublishSymbols",
+            "type": "boolean",
+            "label": "Publish symbols",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Indicates whether to publish the symbol files."
+        },
+        {
+            "name": "SymbolServerType",
+            "type": "pickList",
+            "label": "Symbol server type",
+            "required": true,
+            "defaultValue": " ",
+            "helpMarkDown": "Choose where to publish symbols. Symbols published to the VSTS Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in VSTS.",
+            "options": 
+            {
+                " ": "Select one",
+                "TeamServices": "Symbol Server in this account/collection (requires Package Management)",
+                "FileShare": "File share"
+            },
+            "visibleRule": "PublishSymbols = true"
+        },
+        {
+            "name": "SymbolsPath",
+            "type": "string",
+            "label": "Path to publish symbols",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.",
+            "visibleRule": "PublishSymbols = true && SymbolServerType = FileShare"
+        },
+        {
+            "name": "DetailedLog",
+            "type": "boolean",
+            "label": "Verbose logging",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Use verbose logging.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "TreatNotIndexedAsWarning",
+            "type": "boolean",
+            "label": "Warn if not indexed",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Indicates whether to warn if sources are not indexed for a PDB file. Otherwise the messages are logged as normal output.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "SymbolsMaximumWaitTime",
+            "type": "string",
+            "label": "Max wait time (min)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The number of minutes to wait before failing this task.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "SymbolsProduct",
+            "type": "string",
+            "label": "Product",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify the product parameter to symstore.exe.  The default is $(Build.DefinitionName)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "SymbolsVersion",
+            "type": "string",
+            "label": "Version",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify the version parameter to symstore.exe.  The default is $(Build.BuildNumber)",
+            "groupName": "advanced"
+        },
+        {
+            "name": "SymbolsArtifactName",
+            "type": "string",
+            "label": "Artifact name",
+            "defaultValue": "Symbols_$(BuildConfiguration)",
+            "required": false,
+            "helpMarkDown": "Specify the artifact name to use for the Symbols artifact.  The default is Symbols_$(BuildConfiguration)",
+            "groupName": "advanced"
+        }
+    ],
+    "instanceNameFormat": "Publish symbols path",
+    "execution": {
+        "PowerShell3": {
+            "target": "PublishSymbols.ps1"
+        }
+    },
+    "messages": {
+        "CleanedUpSemaphoreFile0": "Successfully cleaned up semaphore file '{0}'.",
+        "CleanUpSemaphoreFile0Error1": "Could not clean up existing semaphore file '{0}'. {1}",
+        "Error0AccessingSemaphoreFile1Retrying2Seconds": "Error '{0}' accessing semaphore file '{1}'. Retrying in {2:N0} seconds.",
+        "FailedToLoadDbghelpDllFrom0ErrorCode1": "Failed to load dbghelp.dll from '{0}' with error code '{1}'.",
+        "Found0Files": "Found {0:N0} files.",
+        "FreeLibraryDbghelpDllError0": "Failed to free library dbghelp.dll. Error code '{0}'.",
+        "NoFilesForIndexing": "No files selected for indexing.",
+        "NoFilesForPublishing": "No files selected for publishing.",
+        "NoSourcePathsIn0": "Unable to index sources for symbols file '{0}'. The file does not contain any source path information.",
+        "OneOrMoreSourceFilesNotIndexedFor0": "Unable to index one or more source files for symbols file '{0}'.",
+        "ReachedPublishingMaxWaitTime0Seconds": "Symbol publishing could not be completed. Reached maximum wait time {0:N0} seconds.",
+        "SemaphoreFile0ExistsRetrying1Seconds": "Semaphore file '{0}' already exists. Retrying symbol publishing in {1:N0} seconds.",
+        "SemaphoreFile0Minutes1AttemptingCleanup": "Semaphore file '{0}' already exists. File was last accessed over '{1:N0}' minutes ago. Attempting to clean up the file.",
+        "SkippingIndexing": "Skipping indexing.",
+        "SourceFolderDeprecated0": "The source folder parameter has been deprecated. Ignoring the value '{0}'.",
+        "SourceInfoNotRetrievedFrom0Message1": "Indexed source information could not be retrieved from '{0}'. {1}",
+        "SpacesInTemp": "Source files may not be indexed properly. Temp folder contains spaces.",
+        "SymbolStoreLastIdTxtNotFoundAt0": "Symbol store lastid.txt not found at '{0}'.",
+        "UnableToDetermineWorkspaceFromSourceFolder0": "Unable to determine the workspace from the source folder '{0}'.",
+        "UnableToIndexSources": "Unable to index sources.",
+        "UnexpectedDbghelpdllExpected0Actual1": "Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{0}'.",
+        "UnsupportedSourceProvider0": "Unsupported source provider '{0}' for source indexing.",
+        "Win32Error0FromMethod1": "Encountered Win32 error '{0}' from method '{1}'."
+    }
+}

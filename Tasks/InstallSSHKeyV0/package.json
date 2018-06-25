@@ -1,0 +1,23 @@
+{
+  "name": "vsts-tasks-installsshkey",
+  "version": "1.0.0",
+  "description": "VSTS Install SSK Key Task",
+  "main": "preinstallsshkey.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "securefiles-common": "file:../../_build/Tasks/Common/securefiles-common-1.0.0.tgz",
+    "vsts-task-lib": "2.0.6"
+  }
+}

@@ -2,7 +2,7 @@
     "id": "3B5693D4-5777-4FEE-862A-BD2B7A374C68",
     "name": "PowerShellOnTargetMachines",
     "friendlyName": "PowerShell on Target Machines",
-    "description": "Execute PowerShell scripts on remote machine(s) using Invoke-Command cmdlet",
+    "description": "Execute PowerShell scripts on remote machine(s). This version of the task uses PSSession and Invoke-Command for remoting.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=873465)",
     "category": "Deploy",
     "visibility": [
@@ -38,7 +38,7 @@
             "isExpanded": false
         }
     ],
-    "releaseNotes": "What's new in Version 3.0: <br/>&nbsp;&nbsp; Use invoke-command to perform remote script execution",
+    "releaseNotes": "Use PSSession and invoke-command to perform remoting on target machines.<br/><br/>* Added support for inline script execution.<br/><br/>* Default and Credssp authentication are supported.<br/><br/>* Added options for error handling: ErrorActionPreference, ignoreLASTEXITCODE and Fail on Standard Error.",
     "minimumAgentVersion": "2.0.0",
     "inputs": [
         {
@@ -54,7 +54,7 @@
             "type": "string",
             "label": "Username",
             "defaultValue": "",
-            "helpMarkDown": "Username for the target machines. The username should be a part of Administrators group or WinRM remote management users group. <br> Eg: Format: Domain\\Admin User, Admin User@Domain, .\\Admin User"
+            "helpMarkDown": "Username for the target machines. The user should be a part of Administrators group or WinRM remote management users group. <br> Eg: Format: Domain\\Admin User, Admin User@Domain, .\\Admin User"
         },
         {
             "name": "UserPassword",
@@ -82,7 +82,7 @@
             "defaultValue": "",
             "visibleRule": "ScriptType = FilePath",
             "required": true,
-            "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\Website.ps1",
+            "helpMarkDown": "Location of the PowerShell script on the target machines or on a UNC path like C:\\BudgetIT\\Web\\Deploy\\Website.ps1 which should be accessible from the target machine.",
             "groupName": "ScriptOptions"
         },
         {
@@ -130,7 +130,7 @@
             "defaultValue": "",
             "required": false,
             "visibleRule": "ScriptType = FilePath",
-            "helpMarkDown": "Set common session variables for both the scripts. For example, $variable = value, $var1 = \"value, 123\"",
+            "helpMarkDown": "Set common session variables for both the scripts. Variable assignments should be valid PowerShell statements.",
             "groupName": "ScriptOptions"
         },
         {
@@ -154,7 +154,7 @@
                 "Credssp": "CredSSP"
             },
             "defaultValue": "Default",
-            "helpMarkDown": "Select the authentication mechanism to be used for creating pssession. If 'CredSSP' auth, credentials are mandatory.",
+            "helpMarkDown": "Select the authentication mechanism to be used for creating pssession. For 'CredSSP' authentication, username and password fields are mandatory.",
             "groupName": "SessionOptions"
         },        
         {
@@ -163,7 +163,7 @@
             "label": "Session Option parameters",
             "required": false,
             "defaultValue": "-SkipCACheck -IdleTimeout 7200000 -OperationTimeout 0 -OutputBufferingMode Block",
-            "helpMarkDown": "Advanced options for remote session (New-PSSessionOption). For example, -SkipCACheck, -SkipCNCheck, -SkipRevocationCheck etc.",
+            "helpMarkDown": "Advanced options for remote session (New-PSSessionOption). For example, -SkipCACheck, -SkipCNCheck, -SkipRevocationCheck etc. For a complete list of all session options, see [this](https://aka.ms/Vsts_PS_TM_v3_NewPSSessionOptions)",
             "groupName": "SessionOptions"
         },
         {
@@ -195,7 +195,7 @@
             "label": "Ignore $LASTEXITCODE",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
+            "helpMarkDown": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is executed at the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not executed to the end of your script.",
             "groupName": "ErrorHandlingOptions"
         },
         {
@@ -228,6 +228,7 @@
         "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
         "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input",
         "PS_TM_TaskFailed": "Task failed with error: '{0}'",
-        "PS_TM_SessionConfigurationNameCannotBeNull": "Session configuration name cannot be null"
+        "PS_TM_SessionConfigurationNameCannotBeNull": "Session configuration name cannot be null",
+        "PS_TM_UnableToParseSessionVariables": "Unable to parse session variables input. Verify that it is a valid script. Error: '{0}'"
     }
 }

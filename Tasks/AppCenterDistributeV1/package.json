@@ -1,0 +1,24 @@
+{
+  "name": "vsts-tasks-appcenterdistribute",
+  "version": "1.0.0",
+  "description": "Visual Studio App Center Distribute Task",
+  "main": "appcenterdistribute.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks",
+  "dependencies": {
+    "vsts-task-lib": "2.0.5",
+    "jszip": "^3.1.2",
+    "request": "2.87.0"
+  }
+}

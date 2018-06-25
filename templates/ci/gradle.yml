@@ -5,14 +5,14 @@
 queue: 'Hosted VS2017'
 steps:
 
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    testResultsFiles: '**/TEST-*.xml'
-    tasks: 'build'
+  - task: Gradle@2
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'build'
 
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.{jar,war,ear}'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+#  - task: CopyFiles@2
+#    inputs:
+#      contents: '**/*.{jar,war,ear}'
+#      targetFolder: '$(build.artifactStagingDirectory)'
+#  - task: PublishBuildArtifacts@1

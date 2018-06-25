@@ -64,7 +64,7 @@ export class dotNetExe {
         if (tl.osType() === 'Windows_NT') {
             try {
                 tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
-            } 
+            }
             catch (ex) {
                 tl.warning(tl.loc("CouldNotSetCodePaging", JSON.stringify(ex)))
             }
@@ -114,9 +114,9 @@ export class dotNetExe {
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
 
         if (enablePublishTestResults && enablePublishTestResults === true) {
-            this.arguments = this.arguments.concat(` --logger trx --results-directory ${resultsDirectory}`);
+            this.arguments = this.arguments.concat(` --logger trx --results-directory "${resultsDirectory}"`);
         }
-        
+
         // Remove old trx files
         this.removeOldTestResultFiles(resultsDirectory);
 
@@ -171,7 +171,7 @@ export class dotNetExe {
             return;
         }
         for (const fileIndex of Object.keys(matchingTestResultsFiles)) {
-            const resultFile = matchingTestResultsFiles[fileIndex];            
+            const resultFile = matchingTestResultsFiles[fileIndex];
             tl.rmRF(resultFile)
             tl.debug("Successfuly removed: " + resultFile);
         }
@@ -186,11 +186,13 @@ export class dotNetExe {
     private async zipAfterPublishIfRequired(projectFile: string) {
         if (this.isPublishCommand() && this.zipAfterPublish) {
             var outputSource: string = "";
+            var moveZipToOutputSource = false;
             if (this.outputArgument) {
-                if (tl.getBoolInput("modifyOutputPath")) {
+                if (tl.getBoolInput("modifyOutputPath") && projectFile) {
                     outputSource = dotNetExe.getModifiedOutputForProjectFile(this.outputArgument, projectFile);
                 } else {
                     outputSource = this.outputArgument;
+                    moveZipToOutputSource = true;
                 }
 
             }
@@ -211,6 +213,10 @@ export class dotNetExe {
                 var outputTarget = outputSource + ".zip";
                 await this.zip(outputSource, outputTarget);
                 tl.rmRF(outputSource);
+                if (moveZipToOutputSource) {
+                    fs.mkdirSync(outputSource);
+                    fs.renameSync(outputTarget, path.join(outputSource, path.basename(outputTarget)));
+                }
             }
             else {
                 throw tl.loc("noPublishFolderFoundToZip", projectFile);
@@ -241,7 +247,7 @@ export class dotNetExe {
     }
 
     private extractOutputArgument(): void {
-        if (!this.arguments || !this.arguments.trim()) {
+        if (!this.arguments || !this.arguments.trim()) {    
             return;
         }
 

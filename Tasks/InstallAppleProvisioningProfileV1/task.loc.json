@@ -1,0 +1,99 @@
+{
+  "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
+  "name": "InstallAppleProvisioningProfile",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 137,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "xcode"
+  ],
+  "minimumAgentVersion": "2.116.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "provisioningProfileLocation",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.provisioningProfileLocation",
+      "defaultValue": "secureFiles",
+      "required": true,
+      "options": {
+        "secureFiles": "Secure Files",
+        "sourceRepository": "Source Repository"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfileLocation"
+    },
+    {
+      "name": "provProfileSecureFile",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.provProfileSecureFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSecureFile",
+      "visibleRule": "provisioningProfileLocation == secureFiles"
+    },
+    {
+      "name": "provProfileSourceRepository",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.provProfileSourceRepository",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provProfileSourceRepository",
+      "visibleRule": "provisioningProfileLocation == sourceRepository"
+    },
+    {
+      "name": "removeProfile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.removeProfile",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.removeProfile"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "provisioningProfileUuid",
+      "description": "The UUID property for the selected provisioning profile."
+    },
+    {
+      "name": "provisioningProfileName",
+      "description": "The Name property for the selected provisioning profile."
+    }
+  ],
+  "prejobexecution": {
+    "Node": {
+      "target": "preinstallprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
+  "execution": {
+    "Node": {
+      "target": "installprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node": {
+      "target": "postinstallprovprofile.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "InputProvisioningProfileNotFound": "ms-resource:loc.messages.InputProvisioningProfileNotFound",
+    "InstallRequiresMac": "ms-resource:loc.messages.InstallRequiresMac"
+  }
+}
