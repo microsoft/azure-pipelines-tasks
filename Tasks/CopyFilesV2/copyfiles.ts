@@ -10,6 +10,7 @@ let sourceFolder: string = tl.getPathInput('SourceFolder', true, true);
 let targetFolder: string = tl.getPathInput('TargetFolder', true);
 let cleanTargetFolder: boolean = tl.getBoolInput('CleanTargetFolder', false);
 let overWrite: boolean = tl.getBoolInput('OverWrite', false);
+let failIfAlreadyExists: boolean = tl.getBoolInput('FailIfAlreadyExists', false);
 let flattenFolders: boolean = tl.getBoolInput('flattenFolders', false);
 
 // normalize the source folder path. this is important for later in order to accurately
@@ -102,7 +103,12 @@ if (matchedFiles.length > 0) {
 
             if (!overWrite) {
                 if (targetStats) { // exists, skip
-                    console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
+                    if (failIfAlreadyExists) {
+                        throw new Error(tl.loc('FileAlreadyExistAt', file, targetPath));
+                    }
+                    else {
+                        console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
+                    }
                 }
                 else { // copy
                     console.log(tl.loc('CopyingTo', file, targetPath));
