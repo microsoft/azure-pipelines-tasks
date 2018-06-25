@@ -232,17 +232,6 @@ function Get-ServiceFabricApplicationAction
     return Get-ServiceFabricApplication @getApplicationParams
 }
 
-function Get-ServiceFabricApplicationTypeAction
-{
-    Param (
-        [string]
-        $ApplicationTypeName
-    )
-
-    $global:operationId = $SF_Operations.GetApplicationType
-    return Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName
-}
-
 function Get-ServiceFabricApplicationUpgradeAction
 {
     Param (
@@ -252,4 +241,163 @@ function Get-ServiceFabricApplicationUpgradeAction
 
     $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
     return Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+}
+
+function Copy-ServiceFabricApplicationPackageAction
+{
+    Param (
+        [hashtable]
+        $CopyParameters
+    )
+
+    $global:operationId = $SF_Operations.CopyApplicationPackage
+    $copyAction = { Copy-ServiceFabricApplicationPackage @CopyParameters }
+
+    Invoke-CommandWithRetries -Action $copyAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingCopyApplicationPackage)
+}
+
+function Register-ServiceFabricApplicationTypeAction
+{
+    Param (
+        [hashtable]
+        $RegisterParameters,
+
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
+    )
+
+    $global:operationId = $SF_Operations.RegisterApplicationType
+    $registerAction = { Register-ServiceFabricApplicationType @RegisterParameters }
+
+    $onException = {
+        param($ex)
+        $appType = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+        # If provisioning not started, retry register
+        if (!$appType)
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioningNotStarted)
+            return $true
+        }
+
+        # if provisioning started, wait for it to complete
+        if (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioningStarted)
+            $appType = Wait-ServiceFabricApplicationTypeStatusChange -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+        }
+
+        # if app type got unprovisioned, retry register
+        if(!$appType)
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeUnprovisioned)
+            return $true
+        }
+
+        # if app type is provisioned, bail out
+        if ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioned)
+            return $false
+        }
+
+        # if provisioning failed, throw and don't retry
+        throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
+    }
+
+    Invoke-CommandWithRetries -Action $registerAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRegisterApplicationType) `
+        -OnException $onException
+
+    Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioned)
+}
+
+function Get-ServiceFabricApplicationTypeAction
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
+    )
+
+    $global:operationId = $SF_Operations.GetApplicationType
+    $getApplicationTypeParams = @{
+        'ApplicationTypeName' = $ApplicationTypeName
+    }
+
+    if ($ApplicationTypeVersion)
+    {
+        $getApplicationTypeParams['ApplicationTypeVersion'] = $ApplicationTypeVersion
+    }
+
+    $getAppTypeAction = { Get-ServiceFabricApplicationType @getApplicationTypeParams }
+    return Invoke-CommandWithRetries -Action $getAppTypeAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
+}
+
+function Wait-ServiceFabricApplicationTypeStatusChange
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
+    )
+
+    $global:operationId = $SF_Operations.GetApplicationType
+    $getAppTypeAction = { Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
+    $appTypeStatusValidator = {
+        param($appType)
+        # if app type does not exist (i.e it got unprovisioned) or if its status has changed to a terminal one, stop wait
+        if ((!$appType) -or (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        {
+            return $true
+        }
+        else
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeStatus -ArgumentList $appType.Status)
+        }
+    }
+
+    return Invoke-ActionWithRetries -Action $getAppTypeAction `
+        -ActionSuccessValidator $appTypeStatusValidator `
+        -MaxTries 86400 `
+        -RetryIntervalInSeconds 10 `
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
+}
+
+function Invoke-CommandWithRetries
+{
+    Param (
+        [scriptblock]
+        $Action,
+
+        [string]
+        $RetryMessage,
+
+        [scriptblock]
+        $OnException
+    )
+
+    $parameters = @{
+        Action                 = $Action
+        MaxTries               = 3;
+        RetryIntervalInSeconds = 10;
+        RetryableExceptions    = @("System.Fabric.FabricTransientException", "System.TimeoutException");
+        RetryMessage           = $RetryMessage;
+    }
+
+    if ($onException)
+    {
+        $parameters['OnException'] = $OnException
+    }
+
+    Invoke-ActionWithRetries @parameters
 }

@@ -48,5 +48,20 @@ describe('ServiceFabricDeploy Suite', function () {
         it('Deploy with diff pkg', (done) => {
             psr.run(path.join(__dirname, 'CreateDiffPkg.ps1'), done);
         })
+        it('Copy application package should retry', (done) => {
+            psr.run(path.join(__dirname, 'CopyApplicationPackageShouldRetry.ps1'), done);
+        })
+        it('Copy application package should retry till success', (done) => {
+            psr.run(path.join(__dirname, 'CopyApplicationPackageShouldRetryTillSuccess.ps1'), done);
+        })
+        it('Get appliction type should retry till success', (done) => {
+            psr.run(path.join(__dirname, 'GetApplicationTypeShouldRetryTillSuccess.ps1'), done);
+        })
+        it('Register appliction type should retry till success', (done) => {
+            psr.run(path.join(__dirname, 'RegisterApplicationTypeShouldRetryTillSuccess.ps1'), done);
+        })
+        it('Register appliction type should retry till success', (done) => {
+            psr.run(path.join(__dirname, 'RegisterApplicationTypeShouldRetry.ps1'), done);
+        })
     }
 });

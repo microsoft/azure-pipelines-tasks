@@ -19,7 +19,10 @@ function Invoke-ActionWithRetries
         $RetryableExceptions,
 
         [string]
-        $RetryMessage
+        $RetryMessage,
+
+        [scriptblock]
+        $OnException = { $true }
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -43,7 +46,14 @@ function Invoke-ActionWithRetries
         {
             if (($null -eq $RetryableExceptions) -or (Test-RetryableException -Exception $_.Exception -AllowedExceptions $RetryableExceptions))
             {
+                $shouldRetry = $OnException.Invoke($_.Exception)
+                if (!$shouldRetry)
+                {
+                    return
+                }
+
                 $exception = $_.Exception
+                Write-Host (Get-VstsLocString -Key ActionException -ArgumentList $exception.GetType().FullName)
             }
             else
             {
