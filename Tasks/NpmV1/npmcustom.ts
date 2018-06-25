@@ -42,14 +42,14 @@ export async function getCustomRegistries(): Promise<NpmRegistry[]> {
             let feedId = tl.getInput(NpmTaskInput.CustomFeed, true);
             npmRegistries.push(await NpmRegistry.FromFeedId(feedId));
             break;
-            case RegistryLocation.Npmrc:
-                tl.debug(tl.loc('UseNpmrc'));
-                let endpointIds = tl.getDelimitedInput(NpmTaskInput.CustomEndpoint, ',');
-                if (endpointIds && endpointIds.length > 0) {
-                    let endpointRegistries = endpointIds.map(e => NpmRegistry.FromServiceEndpoint(e, true));
-                    npmRegistries = npmRegistries.concat(endpointRegistries);
-                }
-                break;
+        case RegistryLocation.Npmrc:
+            tl.debug(tl.loc('UseNpmrc'));
+            let endpointIds = tl.getDelimitedInput(NpmTaskInput.CustomEndpoint, ',');
+            if (endpointIds && endpointIds.length > 0) {
+                let endpointRegistries = endpointIds.map(e => NpmRegistry.FromServiceEndpoint(e, true));
+                npmRegistries = npmRegistries.concat(endpointRegistries);
+            }
+            break;
     }
     return npmRegistries;
 }
