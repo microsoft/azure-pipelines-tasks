@@ -18,8 +18,10 @@ export async function run(packerHost: packerHost): Promise<any> {
     var variableProviders = packerHost.getTemplateVariablesProviders();
     for (var provider of variableProviders) {
         var variables = await provider.getTemplateVariables(packerHost);
-        let varFilePath = utils.createTemplateVarFile(variables);
-        command.arg(util.format("%s=%s", '-var-file', varFilePath));
+        let filePath: string = utils.generateTemporaryFilePath();
+        let content: string = utils.getPackerVarFileContent(variables);
+        utils.writeFile(filePath, content);
+        command.arg(util.format("%s=%s", '-var-file', filePath));
     }
 
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));
