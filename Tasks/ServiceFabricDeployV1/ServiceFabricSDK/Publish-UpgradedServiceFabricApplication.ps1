@@ -372,12 +372,80 @@ function Publish-UpgradedServiceFabricApplication
         }
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-        $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName }
+        $unhealthyEvaluationMessageFunction = {
+            param(
+                $UnhealthyEvaluations,
+
+                [string]$Indentation
+            )
+
+            if ($UnhealthyEvaluations -eq $null) {
+                return ""
+            }
+
+            $indentatedErrorString = ""
+            foreach ($UnhealthyEvaluation in $UnhealthyEvaluations) {
+                $indentatedErrorString += $Indentation + $UnhealthyEvaluation.Description
+                # see if indentation needs to be increased. based on the type of evaluation.
+                $indentatedErrorString += & $unhealthyEvaluationMessageFunction $UnhealthyEvaluation, if($UnhealthyEvaluations.kind -eq ($UnhealthyEvaluation.kind + "s")) { return $Indentation } Else { return $Indentation + "`t" }
+            }
+
+            if ($UnhealthyEvaluation.UnhealthyEvent) {
+                $indentatedErrorString += $Indentation + $UnhealthyEvaluation.UnhealthyEvent
+            }
+
+            return $indentatedErrorString
+        }
+
+        $DomainUpgradeStatusFormatterFunction = {
+            param(
+                $UpgradeDomainsStatus
+            )
+
+            if ($UpgradeDomainsStatus -eq $null) {
+                return ""
+            }
+
+            $enumerator = $UpgradeDomainsStatus.GetEnumerator()
+            $upgradeDomainStatusString = ""
+            while ($enumerator.MoveNext() -ne $False) {
+                 $currentElement = $enumerator.Current
+                 $upgradeDomainStatusString += $currentElement.Name + ": " + $currentElement.State + ", "
+            }
+            $upgradeDomainStatusString = $upgradeDomainStatusString.Trim()
+            $upgradeDomainStatusString = $upgradeDomainStatusString.SubString(0, $upgradeDomainStatusString.Length -1 ) #removing last "," from the string.
+            return $upgradeDomainStatusString
+        }
+
+        $upgradeStatusFetcher = {
+            param(
+                $LastUpgradeStatus
+            )
+            $upgradeStatus  = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+            Write-Host "Current Upgrade State:" $upgradeStatus.UpgradeState
+
+            $currentDomainWiseUpgradeStatus = & $DomainUpgradeStatusFormatterFunction $upgradeStatus.UpgradeDomainsStatus
+            $lastDomainWiseUpgradeStatus = if ($LastUpgradeStatus -ne $null) { return & $DomainUpgradeStatusFormatterFunction $LastUpgradeStatus.$UpgradeDomainsStatus } else { return "" }
+            if ($currentDomainWiseUpgradeStatus -ne $lastDomainWiseUpgradeStatus -and $currentDomainWiseUpgradeStatus -ne "") { Write-Host "`n Domain Wise Upgrade Status: " $currentDomainWiseUpgradeStatus }
+
+            # unhealthy evaluations to be printed.
+            if ($upgradeStatus.UnhealthyEvaluations -ne $null)
+            {
+                $currentUnhealthyEvaluation = & $unhealthyEvaluationMessageFunction $upgradeStatus.UnhealthyEvaluations, ""
+                $lastUnhealthyEvaluation = if ($LastUpgradeStatus -ne $null) { return & $unhealthyEvaluationMessageFunction $LastUpgradeStatus.UnhealthyEvaluations, "" } else { return "" }
+                if ($currentUnhealthyEvaluation -ne $lastUnhealthyEvaluation -and $currentUnhealthyEvaluation -ne "") {
+                    Write-Host $currentUnhealthyEvaluation
+                }
+            }
+
+            return $upgradeStatus;
+        }
+
         $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
         $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
             -ActionSuccessValidator $upgradeStatusValidator `
             -MaxTries 2147483647 `
-            -RetryIntervalInSeconds 3 `
+            -RetryIntervalInSeconds 5 `
             -RetryableExceptions @("System.Fabric.FabricTransientException") `
             -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 
