@@ -97,6 +97,10 @@ export class NpmRegistry implements INpmRegistry {
 
     public static async FromFeedId(feedId: string, authOnly?: boolean): Promise<NpmRegistry> {
         let url = NormalizeRegistry(await util.getFeedRegistryUrl(feedId));
+        return NpmRegistry.FromUrl(url, authOnly);
+    }
+
+    public static FromUrl(url: string, authOnly?: boolean): NpmRegistry {
         let nerfed = util.toNerfDart(url);
         let auth = `${nerfed}:_authToken=${util.getSystemAccessToken()}`;
 

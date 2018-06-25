@@ -1,12 +1,10 @@
 import * as assert from 'assert';
-import * as fs from 'fs';
 import * as path from 'path';
-import * as Q from 'q';
-
 import * as mockery from 'mockery';
 import * as ttm from 'vsts-task-lib/mock-test';
 
 import { NpmMockHelper } from './NpmMockHelper';
+import Lazy_NpmRegistry = require('npm-common/npmregistry');
 
 const BASIC_AUTH_PAT_PASSWD_REGEX = /\/\/.*\/:_password=.*/g;
 const BEARER_AUTH_REGEX = /\/\/.*\/:_authToken=AUTHTOKEN.*/g;
@@ -16,6 +14,7 @@ const AWLAYS_AUTH_REGEX = /\/\/.*\/:always-auth=true.*/g;
 
 describe('Npm Task', function () {
     before(() => {
+        mockery.disable(); // needed to ensure that we can mock vsts-task-lib/task
         mockery.enable({
             useCleanCache: true,
             warnOnUnregistered: false
@@ -236,15 +235,21 @@ describe('Npm Task', function () {
     });
 
     it('gets feed id from VSTS registry', (done: MochaDone) => {
-        mockery.registerMock('vsts-task-lib/task', {});
+        let mockTask = {
+            debug: message => {}
+        };
+        mockery.registerMock('vsts-task-lib/task', mockTask);
         let util = require('npm-common/util');
 
         assert.equal(util.getFeedIdFromRegistry(
-            'http://account.visualstudio.com/_packaging/feedId/npm/registry'),
+            'https://account.visualstudio.com/_packaging/feedId/npm/registry'),
             'feedId');
         assert.equal(util.getFeedIdFromRegistry(
-            'http://account.visualstudio.com/_packaging/feedId/npm/registry/'),
+            'https://account.visualstudio.com/_packaging/feedId/npm/registry/'),
             'feedId');
+        assert.equal(util.getFeedIdFromRegistry(
+            'https://account.visualstudio.com/_packaging/feedId@PreRelease/npm/registry/'),
+            'feedId@PreRelease');
         assert.equal(util.getFeedIdFromRegistry(
             'http://TFSSERVER/_packaging/feedId/npm/registry'),
             'feedId');
@@ -515,4 +520,39 @@ describe('Npm Task', function () {
         done();
     });
 
+    it('handles views in registry URL', async (done: MochaDone) => {
+        // Scenario: Includes view (e.g. @Release) within the registry entry
+        const hostName = 'https://mytfsserver.visualstudio.com';
+        const nerfedRegistry = "//mytfsserver.pkgs.visualstudio.com/npmRegistry@Release/npm/registry/";
+        const registry = `https:${nerfedRegistry}`;
+        const authToken = '**sometoken**';
+
+        const mockTask = {
+            loc: key => "LocValue",
+            debug: msg => null,
+            exist: path => true,
+            getVariable: v => {
+                return (v === 'System.TeamFoundationCollectionUri') ? hostName : null;
+            },
+            getEndpointAuthorization: (id, optional) => {
+                return { scheme: 'OAuth', parameters: { 'AccessToken': authToken } };
+            }
+        };
+        const mockParser = {
+            GetRegistries: (npmrc: string) => [registry]
+        };
+        mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('./npmrcparser', mockParser);
+        
+        const util = require('npm-common/util');
+        const registries = await util.getLocalNpmRegistries("somePath");
+
+        assert.equal(registries.length, 1, "Expected one response");
+        const npmRegistry: Lazy_NpmRegistry.INpmRegistry = registries[0];
+        assert.equal(npmRegistry.url, registry, "Registry needs to match");
+        assert.equal(npmRegistry.auth, `${nerfedRegistry}:_authToken=${authToken}`, "Auth needs to match");
+        assert.equal(npmRegistry.authOnly, true, "Authonly needs to match");
+        
+        done();
+    });
 });
