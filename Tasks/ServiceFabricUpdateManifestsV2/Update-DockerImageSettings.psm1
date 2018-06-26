@@ -102,6 +102,10 @@ function Update-DockerImageSettings
                         $codePackage.EntryPoint.ContainerHost.ImageName = $digest
                         $hasUpdates = $true
                     }
+                    else
+                    {
+                        Write-Verbose (Get-VstsLocString -Key NoDigestForImage -ArgumentList @($imageName))
+                    }
                 }
             }
 
