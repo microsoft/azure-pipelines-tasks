@@ -44,7 +44,9 @@ async function run() {
         // Sending allowBrokenSymbolicLinks as true, so we don't want to throw error when symlinks are broken.
         // And can continue with other files if there are any.
         const findOptions = <tl.FindOptions>{
-            allowBrokenSymbolicLinks: true
+            allowBrokenSymbolicLinks: true,
+            followSpecifiedSymbolicLink: true,
+            followSymbolicLinks: true
         };
 
         let matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
