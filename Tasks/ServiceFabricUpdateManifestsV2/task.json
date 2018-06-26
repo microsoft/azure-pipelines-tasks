@@ -131,7 +131,7 @@
             "label": "Image Names Path",
             "required": false,
             "visibleRule": "updateType = Docker image settings",
-            "helpMarkDown": "Path to a text file that contains the names of the Docker images associated with the Service Fabric application that should be updated with digests. Each image name must be on its own line and must be in the same order as the digests in Image Digests file."
+            "helpMarkDown": "Path to a text file that contains the names of the Docker images associated with the Service Fabric application that should be updated with digests. Each image name must be on its own line and must be in the same order as the digests in Image Digests file. If the images are created by the Service Fabric project, this file is generated as part of the Package target and its output location is controlled by the property BuiltDockerImagesFilePath."
         },
         {
             "name": "imageDigestsPath",
@@ -186,7 +186,9 @@
         "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
         "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'.",
         "PreviousPackageLocation": "Previous manifest package location: '{0}'.",
-        "ImageDigestMismatch": "The list of image names and the list of digests must be the same length. Number of image names: '{0}', number of image digests: '{1}'.",
-        "AmbiguousImages": "The repository '{0}' has more than one digest. You must provide a path to the list of the original images names in the input \"Image Names Path\" to disambiguate."
+        "ImageDigestListMismatch": "The list of image names and the list of digests must be the same length. Number of image names: '{0}', number of image digests: '{1}'.",
+        "AmbiguousImages": "The repository '{0}' has more than one digest. You must provide a path to the list of the original images names in the input \"Image Names Path\" to disambiguate.",
+        "ImageDigestNameMismatch": "The digest '{0}' does not match the image '{1}'.",
+        "NoDigestForImage": "No digest found for image '{0}'."
     }
 }

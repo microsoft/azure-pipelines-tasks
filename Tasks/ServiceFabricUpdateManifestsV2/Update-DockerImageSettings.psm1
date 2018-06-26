@@ -26,7 +26,7 @@ function Update-DockerImageSettings
             $imageNames = (Get-Content -LiteralPath $imageNamesPath).Replace("`r`n", "`n").Split("`n")
             if ($imageNames.Count -ne $imageDigestValues.Count)
             {
-                throw (Get-VstsLocString -Key ImageDigestMismatch -ArgumentList @($imageNames.Count, $imageDigestValues.Count))
+                throw (Get-VstsLocString -Key ImageDigestListMismatch -ArgumentList @($imageNames.Count, $imageDigestValues.Count))
             }
         }
 
@@ -36,19 +36,32 @@ function Update-DockerImageSettings
         {
             $imageDigestValue = $imageDigestValues[$ind]
             $imageName = $null
+
+            $slashIndex = $imageDigestValue.IndexOf("/")
+            $hashSeparatorIndex = $imageDigestValue.IndexOf("@")
+            if ($slashIndex -lt 0 -or $hashSeparatorIndex -lt 0)
+            {
+                throw (Get-VstsLocString -Key InvalidImageDigestValue -ArgumentList @($imageDigestValue, $imageDigestsPath))
+            }
+            $imageDigestRepoName = $imageDigestValue.Substring($slashIndex + 1, $hashSeparatorIndex - $slashIndex - 1)
+
             if ($imageNames -ne $null)
             {
                 $imageName = $imageNames[$ind]
+                $slashIndex = $imageName.IndexOf("/")
+                if ($slashIndex -lt 0) { $slashIndex = -1 }
+                $tagSeparatorIndex = $imageName.IndexOf(":")
+                if ($tagSeparatorIndex -lt 0) { $tagSeparatorIndex = $imageName.Length}
+
+                $imageRepoName = $imageName.Substring($slashIndex + 1, $tagSeparatorIndex - $slashIndex - 1)
+                if ($imageRepoName -ne $imageDigestRepoName)
+                {
+                    throw (Get-VstsLocString -Key ImageDigestNameMismatch -ArgumentList @($imageDigestValue, $imageName))
+                }
             }
             else
             {
-                $slashIndex = $imageDigestValue.IndexOf("/")
-                $hashSeparatorIndex = $imageDigestValue.IndexOf("@")
-                if ($slashIndex -lt 0 -or $hashSeparatorIndex -lt 0)
-                {
-                    throw (Get-VstsLocString -Key InvalidImageDigestValue -ArgumentList @($imageDigestValue, $imageDigestsPath))
-                }
-                $imageName = $imageDigestValue.Substring($slashIndex + 1, $hashSeparatorIndex - $slashIndex - 1)
+                $imageName = $imageDigestRepoName
 
                 if ($imageNameToDigestMapping.ContainsKey($imageName))
                 {

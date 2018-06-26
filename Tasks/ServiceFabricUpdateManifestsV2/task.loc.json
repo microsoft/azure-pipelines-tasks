@@ -186,6 +186,9 @@
     "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue",
     "CouldNotFindSubPath": "ms-resource:loc.messages.CouldNotFindSubPath",
     "PreviousPackageLocation": "ms-resource:loc.messages.PreviousPackageLocation",
-    "ImageDigestMismatch": "ms-resource:loc.messages.ImageDigestMismatch"
+    "ImageDigestListMismatch": "ms-resource:loc.messages.ImageDigestListMismatch",
+    "AmbiguousImages": "ms-resource:loc.messages.AmbiguousImages",
+    "ImageDigestNameMismatch": "ms-resource:loc.messages.ImageDigestNameMismatch",
+    "NoDigestForImage": "ms-resource:loc.messages.NoDigestForImage"
   }
 }
