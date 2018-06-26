@@ -311,8 +311,8 @@
                     Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
                 }
             }
-            $global:operationId = $SF_Operations.CopyApplicationPackage
-            Copy-ServiceFabricApplicationPackage @copyParameters
+
+            Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
@@ -328,8 +328,7 @@
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            $global:operationId = $SF_Operations.RegisterApplicationType
-            Register-ServiceFabricApplicationType @registerParameters
+            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)

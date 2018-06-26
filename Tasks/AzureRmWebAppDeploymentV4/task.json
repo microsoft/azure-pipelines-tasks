@@ -39,7 +39,7 @@
             "name": "PostDeploymentAction",
             "displayName": "Post Deployment Action",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && UseWebDeploy = true"
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer"
         },
         {
             "name": "ApplicationAndConfigurationSettings",
