@@ -1,6 +1,7 @@
 $SF_Operations = @{
     Undefined                         = 'Undefined';
     ConnectCluster                    = 'ConnectCluster';
+    GetClusterHealth                  = 'GetClusterHealth';
     ConnectClusterMetadata            = 'ConnectClusterMetadata';
     TestClusterConnection             = 'TestApplicationPackage';
     TestApplicationPackage            = 'TestApplicationPackage';

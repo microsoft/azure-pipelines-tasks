@@ -286,8 +286,7 @@ function Publish-UpgradedServiceFabricApplication
                 }
             }
 
-            $global:operationId = $SF_Operations.CopyApplicationPackage
-            Copy-ServiceFabricApplicationPackage @copyParameters
+            Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
@@ -302,9 +301,8 @@ function Publish-UpgradedServiceFabricApplication
                 $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
             }
 
-            $global:operationId = $SF_Operations.RegisterApplicationType
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            Register-ServiceFabricApplicationType @registerParameters
+            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
             if (!$?)
             {
                 throw Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
@@ -373,9 +371,9 @@ function Publish-UpgradedServiceFabricApplication
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
         $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName }
-        $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
+        $upgradeRetryEvaluator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted") }
         $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
-            -ActionSuccessValidator $upgradeStatusValidator `
+            -ResultRetryEvaluator $upgradeRetryEvaluator `
             -MaxTries 2147483647 `
             -RetryIntervalInSeconds 3 `
             -RetryableExceptions @("System.Fabric.FabricTransientException") `
