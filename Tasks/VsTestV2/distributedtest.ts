@@ -6,7 +6,6 @@ import * as tr from 'vsts-task-lib/toolrunner';
 import * as models from './models';
 import * as constants from './constants';
 import * as inputdatacontract from './inputdatacontract';
-import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
 import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
