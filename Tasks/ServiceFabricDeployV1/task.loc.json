@@ -467,9 +467,9 @@
     "SFSDK_RetryingGetApplicationType": "ms-resource:loc.messages.SFSDK_RetryingGetApplicationType",
     "SFSDK_ApplicationTypeProvisioningNotStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeProvisioningNotStarted",
     "SFSDK_ApplicationTypeProvisioningStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeProvisioningStarted",
-    "SFSDK_ApplicationTypeProvisioned": "ms-resource:loc.messages.SFSDK_ApplicationTypeProvisioned",
     "SFSDK_RegisterAppTypeFailedWithStatus": "ms-resource:loc.messages.SFSDK_RegisterAppTypeFailedWithStatus",
     "SFSDK_ApplicationTypeStatus": "ms-resource:loc.messages.SFSDK_ApplicationTypeStatus",
-    "SFSDK_ApplicationTypeUnprovisioned": "ms-resource:loc.messages.SFSDK_ApplicationTypeUnprovisioned"
+    "SFSDK_ApplicationTypeUnprovisioned": "ms-resource:loc.messages.SFSDK_ApplicationTypeUnprovisioned",
+    "SFSDK_ClusterHealth": "ms-resource:loc.messages.SFSDK_ClusterHealth"
   }
 }

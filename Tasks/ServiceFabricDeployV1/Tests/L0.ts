@@ -57,10 +57,10 @@ describe('ServiceFabricDeploy Suite', function () {
         it('Get appliction type should retry till success', (done) => {
             psr.run(path.join(__dirname, 'GetApplicationTypeShouldRetryTillSuccess.ps1'), done);
         })
-        it('Register appliction type should retry till success', (done) => {
+        it('Register application type should retry till success', (done) => {
             psr.run(path.join(__dirname, 'RegisterApplicationTypeShouldRetryTillSuccess.ps1'), done);
         })
-        it('Register appliction type should retry till success', (done) => {
+        it('Register application type should retry', (done) => {
             psr.run(path.join(__dirname, 'RegisterApplicationTypeShouldRetry.ps1'), done);
         })
     }

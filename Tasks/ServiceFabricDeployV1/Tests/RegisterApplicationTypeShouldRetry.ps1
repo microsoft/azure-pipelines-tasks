@@ -21,6 +21,7 @@ $getApplicationTypeParams = @{
 }
 $global:registerRetriesAttempted = 0
 $global:getRetriesAttempted = 0
+$global:clusterHealthPrinted = $false
 
 Register-Mock Register-ServiceFabricApplicationType {
     $global:registerRetriesAttempted++
@@ -60,6 +61,10 @@ Register-Mock Get-ServiceFabricApplicationType {
     throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
 } -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
 
+Register-Mock Get-ServiceFabricClusterHealth {
+    $global:clusterHealthPrinted = $true
+}
+
 Register-Mock Start-Sleep {}
 Register-Mock Write-VstsTaskError
 
@@ -72,3 +77,4 @@ Assert-Throws {
     Register-ServiceFabricApplicationTypeAction -RegisterParameters $RegisterParameters -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
 }
 Assert-AreEqual 3 $global:registerRetriesAttempted "Number of register retries not correct"
+Assert-AreEqual $true $global:clusterHealthPrinted "cluster health not printed in case of error"

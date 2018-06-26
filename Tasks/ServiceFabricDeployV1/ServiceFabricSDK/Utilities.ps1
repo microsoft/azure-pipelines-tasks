@@ -273,7 +273,7 @@ function Register-ServiceFabricApplicationTypeAction
     $global:operationId = $SF_Operations.RegisterApplicationType
     $registerAction = { Register-ServiceFabricApplicationType @RegisterParameters }
 
-    $onException = {
+    $exceptionRetryEvaluator = {
         param($ex)
         $appType = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
         # If provisioning not started, retry register
@@ -300,7 +300,6 @@ function Register-ServiceFabricApplicationTypeAction
         # if app type is provisioned, bail out
         if ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
         {
-            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioned)
             return $false
         }
 
@@ -308,11 +307,18 @@ function Register-ServiceFabricApplicationTypeAction
         throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
     }
 
-    Invoke-ActionWithDefaultRetries -Action $registerAction `
-        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRegisterApplicationType) `
-        -ShouldRetryOnException $onException
-
-    Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioned)
+    try
+    {
+        Invoke-ActionWithDefaultRetries -Action $registerAction `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRegisterApplicationType) `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator
+    }
+    catch
+    {
+        # print cluster health status if registering failed
+        Trace-ServiceFabricClusterHealth
+        throw
+    }
 }
 
 function Get-ServiceFabricApplicationTypeAction
@@ -352,25 +358,37 @@ function Wait-ServiceFabricApplicationTypeStatusChange
 
     $global:operationId = $SF_Operations.GetApplicationType
     $getAppTypeAction = { Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
-    $appTypeStatusValidator = {
+    $getAppTypeRetryEvaluator = {
         param($appType)
         # if app type does not exist (i.e it got unprovisioned) or if its status has changed to a terminal one, stop wait
         if ((!$appType) -or (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
         {
-            return $true
+            return $false
         }
         else
         {
-            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeStatus -ArgumentList $appType.Status)
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
+            return $true
         }
     }
 
     return Invoke-ActionWithRetries -Action $getAppTypeAction `
-        -ActionSuccessValidator $appTypeStatusValidator `
+        -ResultRetryEvaluator $getAppTypeRetryEvaluator `
         -MaxTries 86400 `
         -RetryIntervalInSeconds 10 `
         -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
+}
+
+function Trace-ServiceFabricClusterHealth
+{
+    try
+    {
+        Write-Host (Get-VstsLocString -Key SFSDK_ClusterHealth)
+        Get-ServiceFabricClusterHealth
+    }
+    catch
+    {}
 }
 
 function Invoke-ActionWithDefaultRetries
@@ -383,7 +401,7 @@ function Invoke-ActionWithDefaultRetries
         $RetryMessage,
 
         [scriptblock]
-        $ShouldRetryOnException
+        $ExceptionRetryEvaluator
     )
 
     $parameters = @{
@@ -394,9 +412,9 @@ function Invoke-ActionWithDefaultRetries
         RetryMessage           = $RetryMessage;
     }
 
-    if ($ShouldRetryOnException)
+    if ($ExceptionRetryEvaluator)
     {
-        $parameters['ShouldRetryOnException'] = $ShouldRetryOnException
+        $parameters['ExceptionRetryEvaluator'] = $ExceptionRetryEvaluator
     }
 
     Invoke-ActionWithRetries @parameters

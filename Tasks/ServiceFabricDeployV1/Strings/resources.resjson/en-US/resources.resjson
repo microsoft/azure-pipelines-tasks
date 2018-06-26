@@ -126,8 +126,8 @@
   "loc.messages.SFSDK_RetryingGetApplicationType": "Getting application type...",
   "loc.messages.SFSDK_ApplicationTypeProvisioningNotStarted": "Provisioning not started for application type.",
   "loc.messages.SFSDK_ApplicationTypeProvisioningStarted": "Provisioning started for application type. Waiting for it to complete..",
-  "loc.messages.SFSDK_ApplicationTypeProvisioned": "Successfully registered application type.",
   "loc.messages.SFSDK_RegisterAppTypeFailedWithStatus": "Failed to register application type. Status: {0}. Details: {1}.",
-  "loc.messages.SFSDK_ApplicationTypeStatus": "Application type status: {0}.",
-  "loc.messages.SFSDK_ApplicationTypeUnprovisioned": "Application type is unprovisioned. Will retry register."
+  "loc.messages.SFSDK_ApplicationTypeStatus": "Application type status: {0}. Details: {1}.",
+  "loc.messages.SFSDK_ApplicationTypeUnprovisioned": "Application type is unprovisioned. Will retry register.",
+  "loc.messages.SFSDK_ClusterHealth": "Cluster health:"
 }

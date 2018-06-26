@@ -5,8 +5,13 @@ function Invoke-ActionWithRetries
         [scriptblock]
         $Action,
 
+        # ResultRetryEvaluator delegate will be called when Action has been successfully executed. The delegate can check whether result is acceptable or further re-try should be performed
         [scriptblock]
-        $ActionSuccessValidator = { $true },
+        $ResultRetryEvaluator = { $false },
+
+        # ExceptionRetryEvaluator delegate will be called when Action throws retryable exception. The delegate can check whether exception is acceptable or further re-try should be performed
+        [scriptblock]
+        $ExceptionRetryEvaluator = { $true },
 
         [int32]
         $MaxTries = 10,
@@ -19,10 +24,7 @@ function Invoke-ActionWithRetries
         $RetryableExceptions,
 
         [string]
-        $RetryMessage,
-
-        [scriptblock]
-        $ShouldRetryOnException = { $true }
+        $RetryMessage
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -46,7 +48,7 @@ function Invoke-ActionWithRetries
         {
             if (($null -eq $RetryableExceptions) -or (Test-RetryableException -Exception $_.Exception -AllowedExceptions $RetryableExceptions))
             {
-                $shouldRetry = $ShouldRetryOnException.Invoke($_.Exception)
+                $shouldRetry = $ExceptionRetryEvaluator.Invoke($_.Exception)
                 if (!$shouldRetry)
                 {
                     return
@@ -61,7 +63,7 @@ function Invoke-ActionWithRetries
             }
         }
 
-        if (!$exception -and (!$result -or $ActionSuccessValidator.Invoke($result)))
+        if (!$exception -and (!$result -or !$ResultRetryEvaluator.Invoke($result)))
         {
             return $result
         }

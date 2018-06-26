@@ -22,6 +22,6 @@ Unregister-Mock Start-Sleep
 Register-Mock Start-Sleep {}
 
 # Act/Assert.
-& $module Invoke-ActionWithRetries -Action $action -RetryableExceptions @("System.IO.IOException") -ShouldRetryOnException $onException
+& $module Invoke-ActionWithRetries -Action $action -RetryableExceptions @("System.IO.IOException") -ExceptionRetryEvaluator $onException
 Assert-AreEqual 1 $global:retriesAttempted "Number of retries not correct"
-Assert-AreEqual $true $global:onExceptionCalled "ShouldRetryOnException callback not called"
+Assert-AreEqual $true $global:onExceptionCalled "ExceptionRetryEvaluator callback not called"
