@@ -120,5 +120,14 @@
   "loc.messages.SFSDK_CompressPackageWarning": "The CompressPackage parameter requires version '2.5' of the Service Fabric SDK, but the installed version is '{0}'. This parameter will be ignored.",
   "loc.messages.SFSDK_SkipUpgradeWarning": "Skipping upgrade, since application type '{0}' with version '{1}' already exists in cluster.",
   "loc.messages.SFSDK_UnregisterAppTypeFailed": "Failed to unregister application type. Error: {0}.",
-  "loc.messages.SFSDK_PerformingForceRemoveOnTimeout": "Removal of application '{0}' is timing out, this means that the service is stuck in ChangeRole/Close and the shutdown sequence cannot complete. Performing ForceRemove of the application."
+  "loc.messages.SFSDK_PerformingForceRemoveOnTimeout": "Remval of application '{0}' is timing out, this means that the service is stuck in ChangeRole/Close and the shutdown sequence cannot complete. Performing ForceRemove of the application.",
+  "loc.messages.SFSDK_RetryingCopyApplicationPackage": "Retrying upload...",
+  "loc.messages.SFSDK_RetryingRegisterApplicationType": "Retrying register...",
+  "loc.messages.SFSDK_RetryingGetApplicationType": "Getting application type...",
+  "loc.messages.SFSDK_ApplicationTypeProvisioningNotStarted": "Provisioning not started for application type.",
+  "loc.messages.SFSDK_ApplicationTypeProvisioningStarted": "Provisioning started for application type. Waiting for it to complete..",
+  "loc.messages.SFSDK_RegisterAppTypeFailedWithStatus": "Failed to register application type. Status: {0}. Details: {1}.",
+  "loc.messages.SFSDK_ApplicationTypeStatus": "Application type status: {0}. Details: {1}.",
+  "loc.messages.SFSDK_ApplicationTypeUnprovisioned": "Application type is unprovisioned. Will retry register.",
+  "loc.messages.SFSDK_ClusterHealth": "Cluster health:"
 }
