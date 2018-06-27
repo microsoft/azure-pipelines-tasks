@@ -1,6 +1,6 @@
 {
-    "id": "ac7eef36-6c2f-4d0a-a266-a7c45bd57218",
-    "name": "ManiPackerBuild",
+    "id": "845fd4f4-642d-4694-8514-047948a5a556",
+    "name": "PackerBuild",
     "friendlyName": "Build Machine Image",
     "description": "Build machine image using Packer. This image can be used for Azure Virtual machine scale set deployment",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=845329)",
@@ -10,7 +10,7 @@
         "Build",
         "Release"
     ],
-    "author": "Mani Bindra",
+    "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
         "Minor": 0,
