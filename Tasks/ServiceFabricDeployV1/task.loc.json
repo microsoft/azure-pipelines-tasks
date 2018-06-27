@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 14
+    "Patch": 15
   },
   "demands": [
     "Cmd"
@@ -336,8 +336,8 @@
       "defaultValue": "AzureResourceManagerEndpoint",
       "required": true,
       "options": {
-        "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
-        "ContainerRegistryEndpoint": "Container Registry Endpoint",
+        "AzureResourceManagerEndpoint": "Azure Resource Manager Service Connection",
+        "ContainerRegistryEndpoint": "Container Registry Service Connection",
         "UsernamePassword": "Username and Password"
       },
       "visibleRule": "configureDockerSettings = true",

@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "sqlpackage"
@@ -44,7 +44,7 @@
             "name": "ConnectedServiceNameSelector",
             "aliases": ["azureConnectionType"],
             "type": "pickList",
-            "label": "Azure Connection Type",
+            "label": "Azure Service Connection Type",
             "required": false,
             "helpMarkDown": "",
             "defaultValue": "ConnectedServiceNameARM",
@@ -107,7 +107,7 @@
             "required": false,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in Build/Release Definitions as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
+            "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."
         },
         {
             "name": "DeploymentAction",

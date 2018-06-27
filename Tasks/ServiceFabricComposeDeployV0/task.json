@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "Cmd"
@@ -43,10 +43,10 @@
                 "clusterConnection"
             ],
             "type": "connectedService:serviceFabric",
-            "label": "Cluster Connection",
+            "label": "Cluster Service Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select an Azure Service Fabric service endpoint to be used to connect to the cluster. Choose 'Manage' to register a new endpoint."
+            "helpMarkDown": "Select an Azure Service Fabric service connection to be used to connect to the cluster. Choose 'Manage' to register a new service connection."
         },
         {
             "name": "composeFilePath",
@@ -71,8 +71,8 @@
             "defaultValue": "AzureResourceManagerEndpoint",
             "required": true,
             "options": {
-                "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
-                "ContainerRegistryEndpoint": "Container Registry Endpoint",
+                "AzureResourceManagerEndpoint": "Azure Resource Manager service connection",
+                "ContainerRegistryEndpoint": "Container Registry service connection",
                 "UsernamePassword": "Username and Password",
                 "None": "None"
             },
@@ -85,9 +85,9 @@
                 "dockerRegistryConnection"
             ],
             "type": "connectedService:dockerRegistry",
-            "label": "Docker Registry Connection",
+            "label": "Docker Registry Service Connection",
             "required": false,
-            "helpMarkDown": "Select a Docker registry connection. If a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+            "helpMarkDown": "Select a Docker registry service connection. If a certificate matching the Server Certificate Thumbprint in the Cluster Service Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
             "groupName": "registry",
             "visibleRule": "registryCredentials = ContainerRegistryEndpoint"
         },
@@ -119,7 +119,7 @@
             "label": "Registry Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release definition secret variable to store it.",
+            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release pipeline secret variable to store it.",
             "groupName": "registry",
             "visibleRule": "registryCredentials = UsernamePassword"
         },
@@ -129,7 +129,7 @@
             "label": "Password Encrypted",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Service Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
             "groupName": "registry",
             "visibleRule": "registryCredentials = UsernamePassword"
         },
