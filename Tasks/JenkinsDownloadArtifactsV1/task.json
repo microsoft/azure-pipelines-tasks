@@ -146,7 +146,7 @@
             "required": false,
             "visibleRule": "downloadCommitsAndWorkItems == invalid",
             "groupName": "advanced",
-            "helpMarkDown": "Optional file name suffix for commits and work item attachments. Attachmenst will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided, attachments will be created with the name commits.json and workitems.json"
+            "helpMarkDown": "Optional file name suffix for commits and work item attachments. Attachments will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided, attachments will be created with the name commits.json and workitems.json"
         },
         {
             "name": "propagatedArtifacts",

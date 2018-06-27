@@ -24,7 +24,7 @@
   "loc.input.label.startJenkinsBuildNumber": "Download commits and work items from",
   "loc.input.help.startJenkinsBuildNumber": "Optional start build number for downloading commits and work items. If provided, all commits and work items between start build number and build number given as input to download artifacts will be downloaded.",
   "loc.input.label.artifactDetailsFileNameSuffix": "Commit and WorkItem FileName",
-  "loc.input.help.artifactDetailsFileNameSuffix": "Optional file name suffix for commits and work item attachments. Attachmenst will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided, attachments will be created with the name commits.json and workitems.json",
+  "loc.input.help.artifactDetailsFileNameSuffix": "Optional file name suffix for commits and work item attachments. Attachments will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided, attachments will be created with the name commits.json and workitems.json",
   "loc.input.label.propagatedArtifacts": "Artifacts are propagated to Azure",
   "loc.input.help.propagatedArtifacts": "Check this if Jenkins artifacts were propagated to Azure. To upload Jenkins artifacts to azure, refer to this [Jenkins plugin](https://wiki.jenkins.io/display/JENKINS/Windows+Azure+Storage+Plugin)",
   "loc.input.label.artifactProvider": "Artifact Provider",
