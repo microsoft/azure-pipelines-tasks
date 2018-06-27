@@ -56,7 +56,7 @@
         "EditableOptions": "True",
         "DisableManageLink": "True"
       },
-      "helpMarkDown": "Select the build definition name"
+      "helpMarkDown": "Select the build definition ID"
     },
     {
       "name": "specificBuildWithTriggering",
