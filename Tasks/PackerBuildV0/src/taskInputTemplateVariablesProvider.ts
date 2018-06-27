@@ -40,6 +40,10 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         this._templateVariables.set(constants.TemplateVariableResourceGroupName, taskParameters.resourceGroup);
         this._templateVariables.set(constants.TemplateVariableStorageAccountName, taskParameters.storageAccount);
 
+        if(taskParameters.isManagedImage && taskParameters.templateType === constants.TemplateTypeBuiltin){
+            this._templateVariables.set(constants.TemplateVariableManagedImageName, taskParameters.managedImageName) 
+        }
+
         if(taskParameters.baseImageSource === constants.BaseImageSourceCustomVhd) {
             this._templateVariables.set(constants.TemplateVariableImageUrlName, taskParameters.customBaseImageUrl);
         } else {

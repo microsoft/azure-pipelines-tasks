@@ -26,7 +26,7 @@ let a: any = <any>{
     "exec": {
         "packer --version": {
             "code": 0,
-            "stdout": "0.12.3"
+            "stdout": "1.2.4"
         },
         "packer fix -validate=false C:\\custom.template.json": {
             "code": 0,

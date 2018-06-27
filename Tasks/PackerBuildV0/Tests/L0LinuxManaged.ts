@@ -19,8 +19,10 @@ tr.setInput('deployScriptArguments', "\"subdir 1\" false");
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
-tr.setInput("additionalBuilderParameters", "{\"ssh_pty\": \"true\", \"type\":\"amazonaws\"}");
+tr.setInput("additionalBuilderParameters", "{}");
 tr.setInput("skipTempFileCleanupDuringVMDeprovision", "true");
+tr.setInput("isManagedImage","true")
+tr.setInput("managedImageName","builtInLinManagedImageName")
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -28,7 +30,7 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
-process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
+process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "";
 process.env["ENDPOINT_DATA_AzureRMSpn_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_GRAPHURL"] = "https://graph.windows.net/";
@@ -42,7 +44,7 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": true,
-        "/basedir/DefaultTemplates/default.linux.template.json": true,
+        "/basedir/DefaultTemplates/default.managed.linux.template.json": true,
         "/packer-user-scripts/deploy.sh": true
     },
     "exec": {
@@ -50,29 +52,29 @@ let a: any = <any>{
             "code": 0,
             "stdout": "1.2.4"
         },
-        "packer fix -validate=false /tmp/tempdir/100/default.linux.template-builderUpdated.json": {
+        "packer fix -validate=false /tmp/tempdir/100/default.managed.linux.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3/somedir/deploy.sh -var package_path=/tmp/dir1/somedir/dir2 -var package_name=dir2 -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId /tmp/tempdir/100/default.linux.template-builderUpdated-fixed.json": {
+        "packer validate -var resource_group=testrg -var storage_account=teststorage -var managed_image_name=builtInLinManagedImageName -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3/somedir/deploy.sh -var package_path=/tmp/dir1/somedir/dir2 -var package_name=dir2 -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id= /tmp/tempdir/100/default.managed.linux.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3/somedir/deploy.sh -var package_path=/tmp/dir1/somedir/dir2 -var package_name=dir2 -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId /tmp/tempdir/100/default.linux.template-builderUpdated-fixed.json": {
+        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var managed_image_name=builtInLinManagedImageName -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3/somedir/deploy.sh -var package_path=/tmp/dir1/somedir/dir2 -var package_name=dir2 -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id= /tmp/tempdir/100/default.linux.template-fixed.json": {
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
-            "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
+            "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nManagedImageResourceGroupName: packer-managed-res-grp\nManagedImageName: builtInWinManagedImageName\nManagedImageLocation: westus",
         },
-        "packer fix -validate=false \\tmp\\tempdir\\100\\default.linux.template-builderUpdated.json": {
+        "packer fix -validate=false \\tmp\\tempdir\\100\\default.managed.linux.template.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3/somedir/deploy.sh -var package_path=/tmp/dir1/somedir/dir2 -var package_name=dir2 -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId \\tmp\\tempdir\\100\\default.linux.template-builderUpdated-fixed.json": {
+        "packer validate -var resource_group=testrg -var storage_account=teststorage -var managed_image_name=builtInLinManagedImageName -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3/somedir/deploy.sh -var package_path=/tmp/dir1/somedir/dir2 -var package_name=dir2 -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id= \\tmp\\tempdir\\100\\default.managed.linux.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3/somedir/deploy.sh -var package_path=/tmp/dir1/somedir/dir2 -var package_name=dir2 -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId \\tmp\\tempdir\\100\\default.linux.template-builderUpdated-fixed.json": {
+        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var managed_image_name=builtInLinManagedImageName -var image_publisher=Canonical -var image_offer=UbuntuServer -var image_sku=14.04.4-LTS -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3/somedir/deploy.sh -var package_path=/tmp/dir1/somedir/dir2 -var package_name=dir2 -var script_arguments=\"subdir 1\" false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id= \\tmp\\tempdir\\100\\default.managed.linux.template-fixed.json": {
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
-            "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
+            "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nManagedImageResourceGroupName: packer-managed-res-grp\nManagedImageName: builtInWinManagedImageName\nManagedImageLocation: westus",
         }
     },
     "exist": {
@@ -103,9 +105,6 @@ tr.registerMock('./utilities', {
     },
     copyFile: function(source: string, destination: string) {
         console.log('copying ' + source + ' to ' + destination);
-    },
-    readJsonFile: function(filePath: string) {
-        return "{\"builders\":[{\"type\":\"azure-arm\"}]}";
     },
     writeFile: function(filePath: string, content: string) {
         console.log("writing to file " + filePath + " content: " + content);

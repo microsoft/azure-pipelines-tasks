@@ -16,7 +16,11 @@ export default class BuiltInTemplateFileProvider extends TemplateFileProviderBas
         this._builtInTemplateFiles.set(constants.BuiltinWindowsDefaultImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInWindowsDefaultImageTemplateName));
         this._builtInTemplateFiles.set(constants.BuiltinWindowsCustomImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInWindowsCustomImageTemplateName));
         this._builtInTemplateFiles.set(constants.BuiltinLinuxDefaultImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInLinuxDefaultImageTemplateName));        
-        this._builtInTemplateFiles.set(constants.BuiltinLinuxCustomImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInLinuxCustomImageTemplateName));        
+        this._builtInTemplateFiles.set(constants.BuiltinLinuxCustomImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInLinuxCustomImageTemplateName));
+        this._builtInTemplateFiles.set(constants.BuiltinManagedWindowsDefaultImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInManagedWindowsDefaultImageTemplateName));
+        this._builtInTemplateFiles.set(constants.BuiltinManagedWindowsCustomImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInManagedWindowsCustomImageTemplateName));
+        this._builtInTemplateFiles.set(constants.BuiltinManagedLinuxDefaultImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInManagedLinuxDefaultImageTemplateName));    
+        this._builtInTemplateFiles.set(constants.BuiltinManagedLinuxCustomImageTemplateKey, path.join(utils.getCurrentDirectory(), "..//DefaultTemplates", constants.BuiltInManagedLinuxCustomImageTemplateName));
     }
 
     public register(packerHost: definitions.IPackerHost): void {
@@ -32,6 +36,10 @@ export default class BuiltInTemplateFileProvider extends TemplateFileProviderBas
         var taskParameters = packerHost.getTaskParameters();
         var osType = taskParameters.osType;
         var imageType = taskParameters.baseImageSource;
+        if(taskParameters.isManagedImage)
+        {
+            imageType = imageType + ".managed"
+        }
         var templateKey = util.format("%s-%s", osType, imageType);
         if(this._builtInTemplateFiles.has(templateKey)) {
             var initialTemplateFileLocation = this._builtInTemplateFiles.get(templateKey);

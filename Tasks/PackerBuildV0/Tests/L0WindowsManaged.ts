@@ -21,6 +21,9 @@ tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
 tr.setInput("additionalBuilderParameters", "{}");
 tr.setInput("skipTempFileCleanupDuringVMDeprovision", "true");
+tr.setInput("skipTempFileCleanupDuringVMDeprovision", "true");
+tr.setInput("isManagedImage","true")
+tr.setInput("managedImageName","builtInWinManagedImageName")
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -29,49 +32,49 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
+process.env["ENDPOINT_URL_AzureRMSpn"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRMSpn_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_GRAPHURL"] = "https://graph.windows.net/";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 
+if(process.env["__spnObjectId_not_exists__"] === "true") {
+    delete process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"];
+}
+
 // provide answers for task mock
 let a: any = <any>{
     "which": {
-        "packer": process.env["__packer_exists__"] === "true" ? "packer" : null
+        "packer": "packer"
     },
     "checkPath": {
         "packer": true,
-        "basedir\\DefaultTemplates\\default.windows.template.json": true,
+        "basedir\\DefaultTemplates\\default.managed.windows.template.json": true,
         "C:\\deploy.ps1": true
     },
     "exec": {
         "packer --version": {
             "code": 0,
-            "stdout": process.env["__lower_version__"] === "true" ? "0.11.2" : "1.2.4"
+            "stdout": "1.2.4"
         },
-        "F:\\somedir\\tempdir\\100\\packer\\packer.exe --version": {
-            "code": 0,
-            "stdout": process.env["__lower_version__"] === "true" ? "0.11.2" : "1.2.4"
-        },
-        "F:\\somedir\\tempdir\\100\\packer\\packer.exe fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template.json": {
+        "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.managed.windows.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "F:\\somedir\\tempdir\\100\\packer\\packer.exe validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var script_arguments=-target \"subdir 1\" -shouldFail false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
+        "packer validate -var resource_group=testrg -var storage_account=teststorage -var managed_image_name=builtInWinManagedImageName -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var script_arguments=-target \"subdir 1\" -shouldFail false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.managed.windows.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "F:\\somedir\\tempdir\\100\\packer\\packer.exe build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var script_arguments=-target \"subdir 1\" -shouldFail false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
+        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var managed_image_name=builtInWinManagedImageName -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var script_arguments=-target \"subdir 1\" -shouldFail false -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.managed.windows.template-fixed.json": {
             "code": 0,
-            "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
+            "stdout": "Executed Successfully\nManagedImageResourceGroupName: packer-managed-res-grp\nManagedImageName: builtInWinManagedImageName\nManagedImageLocation: westus"
         }
     },
     "exist": {
         "F:\\somedir\\tempdir\\100": true,
         "F:\\somedir\\tempdir\\100\\": true,
-        "packer": true,
-        "F:\\somedir\\tempdir\\100\\packer\\packer.exe": true
+        "packer": true
     },
     "rmRF": {
         "F:\\somedir\\tempdir\\100": { 'success': true }
@@ -90,18 +93,6 @@ tr.registerMock('./utilities', {
     isGreaterVersion: ut.isGreaterVersion,
     deleteDirectory: function(dir) {
         console.log("rmRF " + dir);
-    },
-    download: function(packerDownloadUrl, downloadPath) {
-        if(process.env["__download_fails__"] === "true") {
-            throw "packer download failed!!";
-        }
-        console.log('downloading from url ' + packerDownloadUrl + ' to ' + downloadPath);
-    },
-    unzip: function(zipLocation, unzipLocation) {
-        if(process.env["__extract_fails__"] === "true") {
-            throw "packer zip extraction failed!!";
-        }
-        console.log('extracting from zip ' + zipLocation + ' to ' + unzipLocation);
     },
     copyFile: function(source: string, destination: string) {
         console.log('copying ' + source + ' to ' + destination);
@@ -128,4 +119,6 @@ tr.registerMock('./utilities', {
 });
 
 tr.setAnswers(a);
+
+tr.registerMock('azure-arm-rest/azure-graph', require('./mock_node_modules/azure-graph'));
 tr.run();
