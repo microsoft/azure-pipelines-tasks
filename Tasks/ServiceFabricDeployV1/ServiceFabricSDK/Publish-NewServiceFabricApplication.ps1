@@ -235,7 +235,6 @@
             }
             if (!$typeIsInUse)
             {
-                $global:operationId = $SF_Operations.UnregisterApplicationType
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                 Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                 if (!$?)

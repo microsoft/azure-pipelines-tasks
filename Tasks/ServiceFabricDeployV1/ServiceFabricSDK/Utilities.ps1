@@ -291,7 +291,7 @@ function Register-ServiceFabricApplicationTypeAction
         }
 
         # if app type got unprovisioned, retry register
-        if(!$appType)
+        if (!$appType)
         {
             Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeUnprovisioned)
             return $true
@@ -414,7 +414,7 @@ function Unregister-ServiceFabricApplicationTypeAction
         }
 
         # if app type got unprovisioned, don't retry
-        if(!$appType)
+        if (!$appType)
         {
             return $false
         }
@@ -556,7 +556,7 @@ function Trace-ServiceFabricApplicationHealth
     }
     catch
     {
-        if($_.Exception.Message -eq "Entity not found in Health Store.")
+        if ($_.Exception.Message -eq "Entity not found in Health Store.")
         {
             Trace-ServiceFabricClusterHealth
         }
@@ -587,7 +587,7 @@ function Invoke-ActionWithDefaultRetries
         RetryMessage           = $RetryMessage;
     }
 
-    if($RetryableExceptions)
+    if ($RetryableExceptions)
     {
         $parameters['RetryableExceptions'] = $RetryableExceptions
     }
