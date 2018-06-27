@@ -95,11 +95,11 @@ Let us understand few concepts/tips & tricks.
   
 
 #### Built-in server tasks making http requests : -
-  [InvokeRestApiV1](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/InvokeRestApiV1/task.json)  
-  [AzureMonitorV0](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitorV0/task.json)   
-  [AzureFunctionV1](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureFunctionV1/task.json)   
-  [QueryWorkItemsV0](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/QueryWorkItemsV0/task.json)   
+  [InvokeRestApi](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/InvokeRestApiV1/task.json)  
+  [AzureMonitor](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureMonitorV0/task.json)   
+  [AzureFunction](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/AzureFunctionV1/task.json)   
+  [QueryWorkItems](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/QueryWorkItemsV0/task.json)   
 
 #### Built-in server tasks publishing serviceBus messages : -
 
-  [PublishToAzureServiceBusV1](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PublishToAzureServiceBusV1/task.json)
+  [PublishToAzureServiceBus](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/PublishToAzureServiceBusV1/task.json)
