@@ -470,7 +470,7 @@ function Remove-ServiceFabricApplicationAction
         Invoke-ActionWithDefaultRetries -Action $removeAction `
             -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplication) `
             -ExceptionRetryEvaluator $exceptionRetryEvaluator `
-            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.Fabric.FabricElementNotFoundException")
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.Fabric.FabricElementNotFoundException", "System.TimeoutException")
     }
     catch [System.TimeoutException]
     {
@@ -479,7 +479,7 @@ function Remove-ServiceFabricApplicationAction
         Invoke-ActionWithDefaultRetries -Action $removeAction `
             -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplication) `
             -ExceptionRetryEvaluator $exceptionRetryEvaluator `
-            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.Fabric.FabricElementNotFoundException", "System.TimeoutException")
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.Fabric.FabricElementNotFoundException")
     }
 }
 
