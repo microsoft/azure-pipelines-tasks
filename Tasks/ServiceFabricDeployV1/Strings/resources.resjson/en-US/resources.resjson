@@ -129,11 +129,5 @@
   "loc.messages.SFSDK_RegisterAppTypeFailedWithStatus": "Failed to register application type. Status: {0}. Details: {1}.",
   "loc.messages.SFSDK_ApplicationTypeStatus": "Application type status: {0}. Details: {1}.",
   "loc.messages.SFSDK_ApplicationTypeUnprovisioned": "Application type is unprovisioned. Will retry register.",
-  "loc.messages.SFSDK_ClusterHealth": "Cluster health:",
-  "loc.messages.SFSDK_ApplicationTypeUnprovisioningStarted": "Unprovisioning started for application type. Waiting for it to complete..",
-  "loc.messages.SFSDK_UnregisterAppTypeFailedWithStatus": "Failed to unregister application type. Status: {0}. Details: {1}.",
-  "loc.messages.SFSDK_RetryingUnregisterApplicationType": "Retrying unregister..",
-  "loc.messages.SFSDK_RetryingRemoveApplication": "Retrying remove application..",
-  "loc.messages.SFSDK_RetryingCreateApplication": "Retrying create application..",
-  "loc.messages.SFSDK_ApplicationHealth": "Getting application health:"
+  "loc.messages.SFSDK_ClusterHealth": "Cluster health:"
 }
