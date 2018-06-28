@@ -50,10 +50,15 @@ function Initialize-AzureSubscription {
             Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
+    
     $scopeLevel = "Subscription"
-    If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
+    
+    If ($Endpoint.PSObject.Properties['Data'])
     {
-        $scopeLevel = $Endpoint.Data.scopeLevel
+        If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
+        {
+            $scopeLevel = $Endpoint.Data.scopeLevel
+        }
     }
 
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
