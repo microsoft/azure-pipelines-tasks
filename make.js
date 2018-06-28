@@ -489,13 +489,13 @@ target.package = function() {
     // Note: The local section above is needed when running layout locally due to discrepancies between local build and
     //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
     var layoutPath = path.join(packagePath, 'milestone-layout');
-
     util.createNugetPackagePerTask(packagePath, layoutPath);
 
     // These methods are to help with the migration to NuGet package per task.
     // Get rid of them after transition is done.
-    //util.renameFoldersFromAggregate('E:\\AllTaskMajorVersions');
-    //util.generatePerTaskForLegacyPackages('E:\\AllTaskMajorVersions');
+    //var path = '';
+    //util.renameFoldersFromAggregate(path);
+    //util.generatePerTaskForLegacyPackages(path);
 }
 
 // used by CI that does official publish

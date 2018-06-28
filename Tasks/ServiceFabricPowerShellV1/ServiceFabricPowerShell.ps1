@@ -25,6 +25,8 @@ if ($scriptArguments -match '[\r\n]')
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
 
+Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
 try
 {
     # Initialize Service Fabric.

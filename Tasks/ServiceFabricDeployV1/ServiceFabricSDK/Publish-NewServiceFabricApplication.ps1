@@ -140,16 +140,7 @@
         throw $errMsg
     }
 
-    if (!$SkipPackageValidation)
-    {
-        $global:operationId = $SF_Operations.TestApplicationPackage
-        $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse)
-        if (!$packageValidationSuccess)
-        {
-            $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
-            throw $errMsg
-        }
-    }
+
 
     $ApplicationManifestPath = "$AppPkgPathToUse\ApplicationManifest.xml"
 
@@ -271,6 +262,17 @@
         }
         if (!$reg -or !$ApplicationTypeAlreadyRegistered)
         {
+            if (!$SkipPackageValidation)
+            {
+                $global:operationId = $SF_Operations.TestApplicationPackage
+                $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse)
+                if (!$packageValidationSuccess)
+                {
+                    $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
+                    throw $errMsg
+                }
+            }
+
             Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
             # Get image store connection string
             $global:operationId = $SF_Operations.GetClusterManifest
@@ -309,8 +311,8 @@
                     Write-Warning (Get-VstsLocString -Key SFSDK_CompressPackageWarning $InstalledSdkVersion)
                 }
             }
-            $global:operationId = $SF_Operations.CopyApplicationPackage
-            Copy-ServiceFabricApplicationPackage @copyParameters
+
+            Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
@@ -326,8 +328,7 @@
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            $global:operationId = $SF_Operations.RegisterApplicationType
-            Register-ServiceFabricApplicationType @registerParameters
+            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)

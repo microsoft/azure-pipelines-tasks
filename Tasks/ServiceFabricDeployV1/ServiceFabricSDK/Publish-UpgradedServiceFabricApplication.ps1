@@ -189,21 +189,6 @@ function Publish-UpgradedServiceFabricApplication
         return
     }
 
-    # Get image store connection string
-    $global:operationId = $SF_Operations.GetClusterManifest
-    $clusterManifestText = Get-ServiceFabricClusterManifest
-    $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
-
-    if (!$SkipPackageValidation)
-    {
-        $global:operationId = $SF_Operations.TestApplicationPackage
-        $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
-        if (!$packageValidationSuccess)
-        {
-            $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
-            throw $errMsg
-        }
-    }
 
     try
     {
@@ -254,6 +239,22 @@ function Publish-UpgradedServiceFabricApplication
 
         if (!$reg -or !$ApplicationTypeAlreadyRegistered)
         {
+            # Get image store connection string
+            $global:operationId = $SF_Operations.GetClusterManifest
+            $clusterManifestText = Get-ServiceFabricClusterManifest
+            $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
+
+            if (!$SkipPackageValidation)
+            {
+                $global:operationId = $SF_Operations.TestApplicationPackage
+                $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
+                if (!$packageValidationSuccess)
+                {
+                    $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
+                    throw $errMsg
+                }
+            }
+
             $applicationPackagePathInImageStore = $names.ApplicationTypeName
             Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
 
@@ -289,8 +290,7 @@ function Publish-UpgradedServiceFabricApplication
                 }
             }
 
-            $global:operationId = $SF_Operations.CopyApplicationPackage
-            Copy-ServiceFabricApplicationPackage @copyParameters
+            Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
             if (!$?)
             {
                 throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
@@ -305,9 +305,8 @@ function Publish-UpgradedServiceFabricApplication
                 $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
             }
 
-            $global:operationId = $SF_Operations.RegisterApplicationType
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            Register-ServiceFabricApplicationType @registerParameters
+            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
             if (!$?)
             {
                 throw Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
@@ -376,9 +375,9 @@ function Publish-UpgradedServiceFabricApplication
 
         Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
         $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName }
-        $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
-        $upgradeStatus = Invoke-ActionWithRetriesUtil  -Action $upgradeStatusFetcher `
-            -ActionSuccessValidator $upgradeStatusValidator `
+        $upgradeRetryEvaluator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted") }
+        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+            -ResultRetryEvaluator $upgradeRetryEvaluator `
             -MaxTries 2147483647 `
             -RetryIntervalInSeconds 3 `
             -RetryableExceptions @("System.Fabric.FabricTransientException") `
@@ -388,14 +387,14 @@ function Publish-UpgradedServiceFabricApplication
         if ($UnregisterUnusedVersions)
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UnregisterUnusedVersions)
-            foreach ($registeredAppTypes in Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -ne $names.ApplicationTypeVersion })
+            foreach ($registeredAppType in Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName)
             {
                 try
                 {
                     $global:operationId = $SF_Operations.UnregisterApplicationType
-                    $registeredAppTypes | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
+                    $registeredAppType | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
                 }
-                catch [System.Fabric.FabricException]
+                catch
                 {
                     # AppType and Version in use.
                 }
