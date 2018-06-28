@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 43
+        "Patch": 44
     },
     "minimumAgentVersion": "1.104.0",
     "groups": [
@@ -54,7 +54,7 @@
             "label": "Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it. "
+            "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable as 'secret' to secure it. "
         },
         {
             "name": "TargetPath",

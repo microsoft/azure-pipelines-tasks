@@ -13,7 +13,7 @@ $copyParameters = @{
 
 Register-Mock Copy-ServiceFabricApplicationPackage {
     $global:retriesAttempted++;
-    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
+    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
 } -- @copyParameters
 
 Register-Mock Start-Sleep {}
@@ -26,5 +26,5 @@ Register-Mock Write-VstsTaskError
 # Act/Assert
 Assert-Throws {
     Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
-} -MessagePattern "Cound not ping!"
+} -MessagePattern "Could not ping!"
 Assert-AreEqual 3 $global:retriesAttempted "Number of retries not correct"

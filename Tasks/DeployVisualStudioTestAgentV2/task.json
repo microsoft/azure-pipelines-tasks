@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 35
+        "Patch": 36
     },
     "deprecated": true,
     "runsOn": [
@@ -64,7 +64,7 @@
             "label": "Admin password",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as `$(passwordVariable)`. <br>You may mark variable type as 'secret' to secure it.",
+            "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in build or release pipelines as `$(passwordVariable)`. <br>You may mark a variable as 'secret' to secure it.",
             "groupName": "testMachineGroups"
         },
         {
@@ -77,7 +77,7 @@
                 "Http": "Http",
                 "Https": "Https"
             },
-            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is `HTTP`.",
+            "helpMarkDown": "Select the protocol to use for the WinRM service connection with the machine(s). Default is `HTTP`.",
             "groupName": "testMachineGroups"
         },
         {

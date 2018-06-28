@@ -19,7 +19,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 5
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
@@ -30,7 +30,7 @@
             "label": "Update Type",
             "defaultValue": "Manifest versions",
             "required": true,
-            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build definition for each type of update to be executed.",
+            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build pipeline for each type of update to be executed.",
             "options": {
                 "Manifest versions": "Manifest versions",
                 "Docker image settings": "Docker image settings"
