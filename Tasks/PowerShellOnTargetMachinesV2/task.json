@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
     "minimumAgentVersion": "1.104.0",
@@ -52,7 +52,7 @@
             "label": "Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it."
+            "helpMarkDown": "Administrator password for the target machines. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it."
         },
         {
             "name": "Protocol",
@@ -64,7 +64,7 @@
                 "Http": "HTTP",
                 "Https": "HTTPS"
             },
-            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS."
+            "helpMarkDown": "Select the protocol to use for the WinRM service connection with the machine(s). Default is HTTPS."
         },
         {
             "name": "TestCertificate",

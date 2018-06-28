@@ -19,7 +19,7 @@
     "version": {
         "Major": 1,
         "Minor": 137,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -115,7 +115,7 @@
     "messages": {
         "ScriptReturnCode": "Script exited with return code: %d",
         "ScriptFailed": "Script failed with error: %s",
-        "UnsupportedEndpointScheme": "Unsupported Endpoint Authorization Scheme: Service Principal for AzureRM",
+        "UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
         "FailedToLogout": "The following error occurred while logging out: %s"
     }

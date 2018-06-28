@@ -26,7 +26,7 @@ $global:clusterHealthPrinted = $false
 Register-Mock Register-ServiceFabricApplicationType {
     $global:registerRetriesAttempted++
     $global:getRetriesAttempted = 0
-    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
+    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
 } -- @RegisterParameters
 
 Register-Mock Get-ServiceFabricApplicationType {
@@ -42,7 +42,7 @@ Register-Mock Get-ServiceFabricApplicationType {
         return $null
     }
 
-    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
+    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
 } -- @getApplicationTypeParams
 
 Register-Mock Get-ServiceFabricApplicationType {
@@ -58,7 +58,7 @@ Register-Mock Get-ServiceFabricApplicationType {
         return $applicationType
     }
 
-    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
+    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
 } -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
 
 Register-Mock Get-ServiceFabricClusterHealth {

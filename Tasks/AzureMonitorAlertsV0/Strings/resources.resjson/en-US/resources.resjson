@@ -20,7 +20,7 @@
   "loc.input.help.NotifyEmails": "Add additional email addresses separated by semicolons(;) if you want to send email notification to additional people (whether or not you checked the \"subscription owners...\" box).",
   "loc.messages.ProcessingRule": "Processing rule : '%s'",
   "loc.messages.AlertRuleCheck": "Checking if alert rule '%s' exists in the resource group '%s'.",
-  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with id '%s'. Please select a different alert rule name.",
+  "loc.messages.AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with ID '%s'. Please select a different alert rule name.",
   "loc.messages.AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
   "loc.messages.AlertRuleDoesNotExist": "Alert rule '%s' does not exist in the resource group '%s'. Creating a new alert rule.",
   "loc.messages.CreatedRule": "Created rule : '%s'",

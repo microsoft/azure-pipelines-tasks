@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "groups": [
       {
@@ -30,10 +30,10 @@
     "name": "connectedServiceName",
     "aliases": ["azureSubscription"],
     "type": "connectedService:AzureServiceBus",
-    "label": "Azure service bus connection",
+    "label": "Azure Service Bus service connection",
     "defaultValue": "",
     "required": true,
-    "helpMarkDown": "Select a Azure Service Bus connection."
+    "helpMarkDown": "Select an Azure Service Bus service connection."
   },
   {
     "name": "messageBody",
