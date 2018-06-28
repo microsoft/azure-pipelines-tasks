@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 137,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Provide commit details to distribution API for additional context.",
     "groups": [
@@ -27,10 +27,10 @@
         {
             "name": "serverEndpoint",
             "type": "connectedService:vsmobilecenter",
-            "label": "App Center connection",
+            "label": "App Center service connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the service endpoint for your Visual Studio App Center connection. To create one, click the Manage link and create a new service endpoint."
+            "helpMarkDown": "Select the service connection for Visual Studio App Center. To create one, click the Manage link and create a new service connection."
         },
         {
             "name": "appSlug",
@@ -166,7 +166,7 @@
         "CannotDecodeEndpoint": "Could not decode the endpoint.",
         "NoResponseFromServer": "No response from server.",
         "FailedToUploadFile": "Failed to complete file upload.",
-        "NoApiTokenFound": "No API token found on Visual Studio App Center connection.",
+        "NoApiTokenFound": "No API token found on the Visual Studio App Center service connection.",
         "Succeeded": "App Center Distribute task succeeded",
         "CannotFindAnyFile": "Cannot find any file based on %s.",
         "FoundMultipleFiles": "Found multiple files matching %s.",

@@ -24,7 +24,7 @@ Register-Mock Get-ServiceFabricApplicationType {
     }
 
     $global:retriesAttempted++;
-    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
+    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
 } -- @getApplicationTypeParams
 
 Register-Mock Start-Sleep {}

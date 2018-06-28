@@ -14,7 +14,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 20
+        "Patch": 21
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -68,7 +68,7 @@
         "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
         "DomainCannotBeEmpty": "domain must be a non empty string.",
         "SecretCannotBeEmpty": "secret must be a non empty string.",
-        "armUrlCannotBeEmpty": "arm Url must be a non empty string.",
+        "armUrlCannotBeEmpty": "arm URL must be a non empty string.",
         "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
         "CallbackCannotBeNull": "callback cannot be null.",
         "CredentialsCannotBeNull": "'credentials' cannot be null.",
@@ -88,7 +88,7 @@
         "NumberOfSecretsFound": "Number of secrets found in %s: %s",
         "NumberOfEnabledSecretsFound": "Number of enabled and unexpired secrets found in %s: %s",
         "DownloadingSecretValue": "Downloading secret value for: %s.",
-        "AccessDeniedError": "%s. Specified Azure endpoint needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download ProvisionKeyVaultPermissions.ps1 script from build/release logs and execute it OR set them from Azure portal.",
+        "AccessDeniedError": "%s. The specified Azure service connection needs to have Get, List secret management permissions on the selected key vault. To set these permissions, download the ProvisionKeyVaultPermissions.ps1 script from build/release logs and execute it, or set them from the Azure portal.",
         "GetSecretValueFailed": "Get secret value failed for: %s. Error: %s.",
         "ConflictingVariableFound": "Variable with name %s is defined in both environment and key vault",
         "GetSecretFailedBecauseOfInvalidCharacters": "Secret not found: %s. Secret name must be a string 1-127 characters in length containing only -, 0-9, a-z and A-Z.",

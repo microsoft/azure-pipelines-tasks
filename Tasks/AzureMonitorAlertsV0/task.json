@@ -13,7 +13,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 1,
-		"Patch": 1
+		"Patch": 2
 	},
 	"minimumAgentVersion": "2.111.0",
 	"instanceNameFormat": "Configure Azure Alerts : $(ResourceName)",
@@ -123,7 +123,7 @@
 	"messages": {
 		"ProcessingRule": "Processing rule : '%s'",
 		"AlertRuleCheck": "Checking if alert rule '%s' exists in the resource group '%s'.",
-		"AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with id '%s'. Please select a different alert rule name.",
+		"AlertRuleTargetResourceIdMismatchError": "Alert rule with name '%s' is already configured to monitor a different resource with ID '%s'. Please select a different alert rule name.",
 		"AlertRuleExists": "Alert rule '%s' already exists in the resource group '%s'. Updating the alert rule.",
 		"AlertRuleDoesNotExist": "Alert rule '%s' does not exist in the resource group '%s'. Creating a new alert rule.",
 		"CreatedRule":  "Created rule : '%s'",

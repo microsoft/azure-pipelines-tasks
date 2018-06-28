@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 11
+        "Patch": 12
     },
     "demands": [
         "Cmd"
@@ -30,10 +30,10 @@
                 "clusterConnection"
             ],
             "type": "connectedService:servicefabric",
-            "label": "Cluster Connection",
+            "label": "Cluster Service Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Azure Service Fabric cluster which will have an established connection when executing the specified PowerShell script."
+            "helpMarkDown": "Azure Service Fabric cluster which will have an established service connection when executing the specified PowerShell script."
         },
         {
             "name": "ScriptType",
