@@ -19,7 +19,7 @@
     "version": {
         "Major": 2,
         "Minor": 2,
-        "Patch": 3
+        "Patch": 5
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
@@ -30,7 +30,7 @@
             "label": "Update Type",
             "defaultValue": "Manifest versions",
             "required": true,
-            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build definition for each type of update to be executed.",
+            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build pipeline for each type of update to be executed.",
             "options": {
                 "Manifest versions": "Manifest versions",
                 "Docker image settings": "Docker image settings"
@@ -176,6 +176,7 @@
         "NoChanges": "Found no changes.",
         "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
         "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
-        "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'."
+        "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'.",
+        "PreviousPackageLocation": "Previous manifest package location: '{0}'."
     }
 }

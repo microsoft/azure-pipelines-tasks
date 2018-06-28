@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 137,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -47,6 +47,9 @@
     },
     {
       "name": "definition",
+      "aliases": [
+        "pipeline"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.definition",
       "defaultValue": "",
@@ -137,7 +140,6 @@
         "rows": "3",
         "resizable": "true"
       },
-      "visibleRule": "downloadType == specific",
       "helpMarkDown": "ms-resource:loc.input.help.itemPattern"
     },
     {

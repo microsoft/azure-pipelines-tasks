@@ -84,7 +84,7 @@ async function main(): Promise<void> {
         var templatePath: string = path.join(__dirname, 'vsts.handlebars.txt');
         var buildApi: IBuildApi = webApi.getBuildApi();
         var artifacts = [];
-        var itemPattern: string = '**';
+        var itemPattern: string = tl.getInput("itemPattern", false) || '**';
 
         if (isCurrentBuild) {
             projectId = tl.getVariable("System.TeamProjectId");
@@ -182,7 +182,7 @@ async function main(): Promise<void> {
 
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
-            var artifactName = tl.getInput("artifactName");
+            var artifactName = tl.getInput("artifactName", true);
             var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimit).catch((reason) => {
                 reject(reason);
                 return;
@@ -194,7 +194,6 @@ async function main(): Promise<void> {
             }
 
             artifacts.push(artifact);
-            itemPattern = '**';
         }
         else {
             var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimit).catch((reason) => {
@@ -209,7 +208,6 @@ async function main(): Promise<void> {
 
             console.log(tl.loc("LinkedArtifactCount", buildArtifacts.length));
             artifacts = artifacts.concat(buildArtifacts);
-            itemPattern = tl.getInput("itemPattern", false) || '**';
         }
 
         if (artifacts) {

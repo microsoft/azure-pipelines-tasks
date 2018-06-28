@@ -20,7 +20,6 @@ export class TaskParametersUtility {
             XmlTransformation: tl.getBoolInput('XmlTransformation', false),
             JSONFiles: tl.getDelimitedInput('JSONFiles', '\n', false),
             XmlVariableSubstitution: tl.getBoolInput('XmlVariableSubstitution', false),
-            UseWebDeploy: tl.getBoolInput('UseWebDeploy', false),
             TakeAppOfflineFlag: tl.getBoolInput('TakeAppOfflineFlag', false),
             RenameFilesFlag: tl.getBoolInput('RenameFilesFlag', false),
             AdditionalArguments: tl.getInput('AdditionalArguments', false),
@@ -52,6 +51,8 @@ export class TaskParametersUtility {
         if(!taskParameters.isContainerWebApp){            
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
         }
+          
+        taskParameters.UseWebDeploy = !taskParameters.isLinuxApp ? tl.getBoolInput('UseWebDeploy', false) : false;
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);

@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 28
+        "Patch": 29
     },
     "runsOn": [
         "Agent",
@@ -228,7 +228,7 @@
             "type": "connectedService:ExternalNuGetFeed",
             "label": "NuGet server",
             "required": true,
-            "helpMarkDown": "The NuGet service endpoint that contains the external NuGet server’s credentials.",
+            "helpMarkDown": "The NuGet service connection that contains the external NuGet server’s credentials.",
             "visibleRule": "command = push && nuGetFeedType = external"
         },
         {
@@ -438,7 +438,7 @@
         }
     },
     "messages": {
-        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build definition to choose a higher version of nuget or specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build pipeline to choose a higher version of nuget or specify a path to a NuGet.config containing the package sources you wish to use.",
         "Warning_ConflictingNuGetPreference": "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
         "PackagesInstalledSuccessfully": "Packages were restored successfully",
         "PackagesFailedToInstall": "Packages failed to restore",
@@ -458,7 +458,7 @@
         "Error_PackageFailure": "An error ocurred while trying to pack the files.",
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
 
-        "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
         "PackagesPublishedSuccessfully": "Packages were published successfully",
         "PackagesFailedToPublish": "Packages failed to publish",
         "UnknownFeedType": "Unknown feed type '%s'",
@@ -496,7 +496,7 @@
         "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
-        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task.",
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task.",
         "Error_NugetFailedWithCodeAndErr": "The nuget command failed with exit code(%s) and error(%s)"
     }
 }

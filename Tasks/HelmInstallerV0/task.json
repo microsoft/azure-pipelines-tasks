@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "satisfies": ["Helm"],
@@ -79,11 +79,11 @@
         }
     },
     "messages": {
-        "DownloadStableVersionFailed" : "Failed to read latest kubectl version from stable.txt. From url %s. Using default stable version %s.",
+        "DownloadStableVersionFailed" : "Failed to read latest kubectl version from stable.txt. From URL %s. Using default stable version %s.",
         "DownloadKubectlFailedFromLocation": "Failed to download kubectl from location %s. Error %s",
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
         "HelmNotFoundInFolder": "Helm executable not found in path %s",
-        "HelmDownloadFailed": "Failed to download helm from location %s. Error %s",
-        "HelmLatestNotKnown": "Can not get lateast helm info from %s. Error %s. Using default helm version %s."
+        "HelmDownloadFailed": "Failed to download Helm from location %s. Error %s",
+        "HelmLatestNotKnown": "Cannot get the latest Helm info from %s. Error %s. Using default Helm version %s."
     }
 }

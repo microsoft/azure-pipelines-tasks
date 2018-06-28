@@ -1,6 +1,7 @@
 {
     "tasks": [
         "AndroidSigningV2",
+        "AndroidSigningV3",
         "ANTV1",
         "AppCenterDistributeV1",
         "AppCenterTestV1",
@@ -41,6 +42,7 @@
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
         "DownloadBuildArtifactsV0",
+        "DownloadFileshareArtifactsV0",
         "DownloadPackageV0",
         "DownloadSecureFileV1",
         "ExtractFilesV1",

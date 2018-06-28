@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "What's new in Version 2.0: <br/>&nbsp;&nbsp;Proxy support is being added. <br/>&nbsp;&nbsp; Removed support of legacy DTL machines.",
     "minimumAgentVersion": "1.104.0",
@@ -55,7 +55,7 @@
             "label": "Password",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it. "
+            "helpMarkDown": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. "
         },
         {
             "name": "TargetPath",
@@ -109,7 +109,7 @@
         "WFC_CopyStartedFor0": "Copy started for - {0}",
         "WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
         "WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
-        "WFC_CopyingFailedForResource": "Copying failed for resource : {0}",
+        "WFC_CopyingFailedForResource": "Copying failed for resource: {0}",
         "WFC_FailedToCreatePSDrive": "Failed to Create PSDrive with Destination: '{0}', ErrorMessage: '{1}'",
         "WFC_RobocopyError": "Robocopy Error. Computer: '{0}'. ErrorMessage: '{1}'"
     }
