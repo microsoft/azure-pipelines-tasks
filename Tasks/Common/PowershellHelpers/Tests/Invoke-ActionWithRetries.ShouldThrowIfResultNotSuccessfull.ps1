@@ -10,9 +10,9 @@ $action = {
     return "some-result"
 }
 
-$successEvaluator = {
+$retryEvaluator = {
     param($result)
-    return $false
+    return $true
 }
 
 Register-Mock Set-UserAgent
@@ -21,6 +21,6 @@ Register-Mock Start-Sleep {}
 
 # Act/Assert.
 Assert-Throws {
-    & $module Invoke-ActionWithRetries -Action $action -ActionSuccessValidator $successEvaluator
+    & $module Invoke-ActionWithRetries -Action $action -ResultRetryEvaluator $retryEvaluator
 } -MessagePattern "ActionTimedOut"
 Assert-AreEqual 10 $global:retriesAttempted "Number of retries not correct"

@@ -1,15 +1,18 @@
-# C++ with GCC
-# Build your C++ project with GNU GCC.
+# C/C++ with GCC
+# Build your C/C++ project with GNU GCC.
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux'
 steps:
 
   - script: ./configure
+    displayName: 'configure'
 
   - script: 'make'
+    displayName: 'make'
 
   - script: 'make test'
+    displayName: 'make test'
 
 #  - task: CopyFiles@2
 #    inputs:

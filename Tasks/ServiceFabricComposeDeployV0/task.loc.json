@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "Cmd"
@@ -71,8 +71,8 @@
       "defaultValue": "AzureResourceManagerEndpoint",
       "required": true,
       "options": {
-        "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
-        "ContainerRegistryEndpoint": "Container Registry Endpoint",
+        "AzureResourceManagerEndpoint": "Azure Resource Manager service connection",
+        "ContainerRegistryEndpoint": "Container Registry service connection",
         "UsernamePassword": "Username and Password",
         "None": "None"
       },

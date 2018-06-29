@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 14
+        "Patch": 15
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -114,7 +114,7 @@
             "label": "Base image source",
             "required": true,
             "defaultValue": "default",
-            "helpMarkDown": "Select the source of base image. You can either choose from a curated gallery of OS images or provide url of your custom image.",
+            "helpMarkDown": "Select the source of base image. You can either choose from a curated gallery of OS images or provide URL of your custom image.",
             "options": {
                 "default": "Gallery",
                 "customVhd": "Custom"
@@ -156,7 +156,7 @@
             "type": "string",
             "label": "Base image URL",
             "required": true,
-            "helpMarkDown": "Specify url of base image. This will be used for installing pre-requisitie(s) and application(s) before capturing machine image.",
+            "helpMarkDown": "Specify URL of base image. This will be used for installing pre-requisite(s) and application(s) before capturing machine image.",
             "visibleRule": "baseImageSource = customVhd",
             "groupName": "DeploymentInputs"
         },
@@ -224,7 +224,7 @@
             "label": "Image URL",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Provide a name for the output variable which will store generated machine image url.",
+            "helpMarkDown": "Provide a name for the output variable which will store generated machine image URL.",
             "groupName": "Output"
         }
     ],
@@ -297,9 +297,9 @@
         "ParsingAdditionalBuilderParameters": "Parsing additional builder parameters json.",
         "ParsingTemplateFileContentFailed": "Unable to parse json content from template file %s with error: %s.",
         "ParsingCustomTemplateParameters": "Parsing custom template parameters json.",
-        "FetchingSPNDetailsRemotely": "Fetching SPN details for app id %s from azure AD graph endpoint...",
+        "FetchingSPNDetailsRemotely": "Fetching SPN details for app ID %s from the Azure AD graph service connection...",
         "FetchedSPNDetailsRemotely": "Fetched SPN details successfully. ObjectId: %s",
-        "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from graph endpoint. Error: %s.",
+        "FailedToFetchSPNDetailsRemotely": "Could not fetch SPN details from the graph service connection. Error: %s.",
         "GetArtifactItemsNotSupported": "Get artifact items not supported, invalid code path",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
