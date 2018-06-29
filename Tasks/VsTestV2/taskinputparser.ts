@@ -10,7 +10,7 @@ import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
 import * as inputdatacontract from './inputdatacontract';
-import * as uuid from 'uuid';
+const uuid = require('uuid');
 const regedit = require('regedit');
 
 export function getvsTestConfigurations() {

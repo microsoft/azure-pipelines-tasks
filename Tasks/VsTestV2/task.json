@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 137,
-        "Patch": 3
+        "Patch": 2
     },
     "demands": [
         "vstest"
@@ -586,8 +586,7 @@
         "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
         "MultiConfigNotSupportedWithOnDemand": "On demand runs are not supported with Multi-Configuration option. Please use 'None' or 'Multi-agent' parallelism option.",
         "disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s",
-        "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
-        "VsTestVersionEmpty": "VsTestVersion is null or empty",
-        "UserProvidedSourceFilter": "Source filter: %s"
+        "UpgradeAgentMessage": "Please upgrade your vsts-agent version. https://github.com/Microsoft/vsts-agent/releases",
+        "VsTestVersionEmpty": "VsTestVersion is null or empty"
     }
 }
