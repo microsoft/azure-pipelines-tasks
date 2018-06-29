@@ -46,9 +46,14 @@ if (osPlat !== 'win32') {
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
 
             if (inputDataContract.ExecutionSettings
+                && inputDataContract.ExecutionSettings.TiaSettings
+                && inputDataContract.ExecutionSettings.TiaSettings.Enabled) {
+                    localtest.startTest();
+            }
+
+            if (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
-                && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests
-                && (inputDataContract.ExecutionSettings.TiaSettings && !inputDataContract.ExecutionSettings.TiaSettings.Enabled)) {
+                && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests) {
                     nondistributedtest.runNonDistributedTest(inputDataContract);
             } else {
                 localtest.startTest();
