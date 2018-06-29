@@ -587,7 +587,6 @@
     "MultiConfigNotSupportedWithOnDemand": "ms-resource:loc.messages.MultiConfigNotSupportedWithOnDemand",
     "disabledRerun": "ms-resource:loc.messages.disabledRerun",
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
-    "VsTestVersionEmpty": "ms-resource:loc.messages.VsTestVersionEmpty",
-    "UserProvidedSourceFilter": "ms-resource:loc.messages.UserProvidedSourceFilter"
+    "VsTestVersionEmpty": "ms-resource:loc.messages.VsTestVersionEmpty"
   }
 }

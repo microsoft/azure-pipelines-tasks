@@ -1,7 +1,7 @@
 import * as tl from 'vsts-task-lib/task';
 import * as models from './models';
-import * as nondistributedtest from './nondistributedtest';
-import * as localtest from './vstest';
+import * as taskInputParser from './taskinputparser';
+import * as localTest from './vstest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
@@ -26,9 +26,8 @@ if (osPlat !== 'win32') {
         if (blockRun) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('MultiConfigNotSupportedWithOnDemand'));
         }
-        const serverBasedRun = isServerBasedRun();
-        inputParser.setIsServerBasedRun(serverBasedRun);
-        if (serverBasedRun) {
+        const useDtaExecutionEngine = isDtaEngineRequired();
+        if (useDtaExecutionEngine) {
             ci.publishEvent({
                 runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
                 testtype: tl.getInput('testSelector')
@@ -36,23 +35,14 @@ if (osPlat !== 'win32') {
 
             console.log(tl.loc('distributedTestWorkflow'));
             console.log('======================================================');
-            const inputDataContract = inputParser.parseInputsForDistributedTestRun();
+            const inputDataContract = inputParser.getDistributedTestConfigurations();
             console.log('======================================================');
 
             const test = new distributedTest.DistributedTest(inputDataContract);
             test.runDistributedTest();
         } else {
             ci.publishEvent({ runmode: 'vstest' });
-            const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
-
-            if (inputDataContract.ExecutionSettings
-                && inputDataContract.ExecutionSettings.RerunSettings
-                && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests
-                && (inputDataContract.ExecutionSettings.TiaSettings && !inputDataContract.ExecutionSettings.TiaSettings.Enabled)) {
-                    nondistributedtest.runNonDistributedTest(inputDataContract);
-            } else {
-                localtest.startTest();
-            }
+            localTest.startTest();
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -74,7 +64,7 @@ function isMultiConfigOnDemandRun(): boolean {
     return false;
 }
 
-function isServerBasedRun(): boolean {
+function isDtaEngineRequired(): boolean {
     const batchType = tl.getInput('distributionBatchType');
     if (batchType && batchType === 'basedOnTestCases') {
         const batchSize = tl.getInput('batchingBasedOnAgentsOption');
