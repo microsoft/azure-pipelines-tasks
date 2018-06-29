@@ -48,8 +48,10 @@ if (osPlat !== 'win32') {
             if (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests
-                && (inputDataContract.ExecutionSettings.TiaSettings && !inputDataContract.ExecutionSettings.TiaSettings.Enabled)) {
-                    nondistributedtest.runNonDistributedTest(inputDataContract);
+                && (!inputDataContract.ExecutionSettings.TiaSettings
+                    || inputDataContract.ExecutionSettings.TiaSettings
+                    && !inputDataContract.ExecutionSettings.TiaSettings.Enabled)) {
+                nondistributedtest.runNonDistributedTest(inputDataContract);
             } else {
                 localtest.startTest();
             }
