@@ -170,23 +170,67 @@ export class ResourceGroup {
             tl.error(error.message);
             if (error.details) {
                 tl.error(tl.loc("Details"));
+                var isPolicyVoilated = false;
                 for (var i = 0; i < error.details.length; i++) {
+                    var errorMessage = null;
                     if(error.details[i].code === "RequestDisallowedByPolicy")
                     {
-                        let newmessage = ((error.details[i].message).split('.'))[0];
-                        var errorMessage = util.format("%s: %s", error.details[i].code, newmessage);
-                        tl.error(errorMessage);
+                        if(!isPolicyVoilated)
+                        {
+                            /**
+                             * Get portal url and management group name from policy id in error
+                             */
+                            var managementGroupId = this.getmanagementGroupId(error.details[i]);
+                            let policyLink = "https://ms.portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + managementGroupId;
+                            tl.warning("Manage Azure policy : " + policyLink);
+                        }
+
+                        
+                        isPolicyVoilated = true;
+                        errorMessage = this.parsePolicyError(error.details[i]);
                     }
                     else
                     {
-                        var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
-                        tl.error(errorMessage);
+                        errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
                     }
+                    tl.error(errorMessage);
                 }
             }
         } else {
             tl.error(error);
         }
+    }
+
+    private getmanagementGroupId(errorDetail): string
+    {
+        let msg = (errorDetail).message;
+        let mg = "managementGroups";
+        let newmsgs = msg.split('/');
+        for (let i = 0; i < newmsgs.length; i++) {
+        if (newmsgs[i] === mg) {
+             mg = newmsgs[i + 1];
+             break;
+            }
+        }
+        return mg;
+    }
+
+    private parsePolicyError(errorDetail): void
+    {
+        var errorMessage = errorDetail.message;
+        
+        if(!!errorMessage) {
+            errorMessage = errorMessage.split(".")[0] + ".";
+        }
+
+        var additionalInfo = errorDetail.additionalInfo;
+        if(!!additionalInfo) {
+            for (var i =0; i < additionalInfo.length; i++) {
+                errorMessage += util.format(" Error type: %s, Policy definition name : %s, Policy assignment name: %s", additionalInfo[i].type, additionalInfo[i].info.policyDefinitionDisplayName, additionalInfo[i].info.policyAssignmentName);
+            }
+        }
+
+        return errorMessage;
     }
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {
@@ -471,21 +515,6 @@ export class ResourceGroup {
             return new Promise<void>((resolve, reject) => {
                 armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
                     if (error) {
-                        if((error.details[1]).code === "RequestDisallowedByPolicy")
-                        {
-                            let msg = (error.details[1]).message;
-                            let mg = "managementGroups";
-                            let newmsgs = msg.split('/');
-                            for (let i = 0; i < newmsgs.length; i++) {
-                                if (newmsgs[i] === mg) {
-                                    mg = newmsgs[i + 1];
-                                    break;
-                                }
-                            }
-                            let policylink = "https://ms.portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + mg;
-                            tl.warning(policylink);
-                        }
-
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
