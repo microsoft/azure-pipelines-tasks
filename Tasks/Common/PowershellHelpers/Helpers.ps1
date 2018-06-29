@@ -46,7 +46,7 @@ function Invoke-ActionWithRetries
         }
         catch
         {
-            if (($null -eq $RetryableExceptions) -or (Test-RetryableException -Exception $_.Exception -AllowedExceptions $RetryableExceptions))
+            if (($null -eq $RetryableExceptions) -or (Test-RetryableException -Exception $_.Exception -RetryableExceptions $RetryableExceptions))
             {
                 $shouldRetry = $ExceptionRetryEvaluator.Invoke($_.Exception)
                 if (!$shouldRetry)
@@ -115,10 +115,10 @@ function Test-RetryableException
         $Exception,
 
         [string[]]
-        $AllowedExceptions
+        $RetryableExceptions
     )
 
-    $AllowedExceptions | ForEach-Object {
+    $RetryableExceptions | ForEach-Object {
         if ($_ -and ($Exception -is ([type]$_)))
         {
             return $true;

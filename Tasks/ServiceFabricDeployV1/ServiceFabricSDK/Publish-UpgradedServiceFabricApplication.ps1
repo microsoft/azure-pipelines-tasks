@@ -286,10 +286,6 @@ function Publish-UpgradedServiceFabricApplication
             }
 
             Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
-            if (!$?)
-            {
-                throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
-            }
 
             $registerParameters = @{
                 'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
@@ -302,10 +298,6 @@ function Publish-UpgradedServiceFabricApplication
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
             Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
-            if (!$?)
-            {
-                throw Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
-            }
         }
     }
 

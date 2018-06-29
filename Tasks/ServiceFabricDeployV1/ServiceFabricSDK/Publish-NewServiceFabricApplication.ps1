@@ -237,10 +237,6 @@
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                 Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
-                if (!$?)
-                {
-                    throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
-                }
                 $ApplicationTypeAlreadyRegistered = $false
             }
             else
@@ -301,10 +297,6 @@
             }
 
             Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
-            if (!$?)
-            {
-                throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
-            }
 
             $registerParameters = @{
                 'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
@@ -317,10 +309,7 @@
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
             Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
-            if (!$?)
-            {
-                throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
-            }
+
             $global:operationId = $SF_Operations.RemoveApplicationPackage
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
             Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString

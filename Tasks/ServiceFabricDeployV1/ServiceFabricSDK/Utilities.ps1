@@ -251,7 +251,13 @@ function Copy-ServiceFabricApplicationPackageAction
     )
 
     $global:operationId = $SF_Operations.CopyApplicationPackage
-    $copyAction = { Copy-ServiceFabricApplicationPackage @CopyParameters }
+    $copyAction = {
+        Copy-ServiceFabricApplicationPackage @CopyParameters
+        if (!$?)
+        {
+            throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
+        }
+    }
 
     Invoke-ActionWithDefaultRetries -Action $copyAction `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingCopyApplicationPackage)
@@ -271,7 +277,13 @@ function Register-ServiceFabricApplicationTypeAction
     )
 
     $global:operationId = $SF_Operations.RegisterApplicationType
-    $registerAction = { Register-ServiceFabricApplicationType @RegisterParameters }
+    $registerAction = {
+        Register-ServiceFabricApplicationType @RegisterParameters
+        if (!$?)
+        {
+            throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
+        }
+    }
 
     $exceptionRetryEvaluator = {
         param($ex)
@@ -287,7 +299,7 @@ function Register-ServiceFabricApplicationTypeAction
         if (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
         {
             Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioningStarted)
-            $appType = Wait-ServiceFabricApplicationTypeStatusChange -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+            $appType = Wait-ServiceFabricApplicationTypeTerminalStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
         }
 
         # if app type got unprovisioned, retry register
@@ -346,7 +358,7 @@ function Get-ServiceFabricApplicationTypeAction
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
 }
 
-function Wait-ServiceFabricApplicationTypeStatusChange
+function Wait-ServiceFabricApplicationTypeTerminalStatus
 {
     Param (
         [string]
@@ -395,7 +407,13 @@ function Unregister-ServiceFabricApplicationTypeAction
 
     $global:operationId = $SF_Operations.UnregisterApplicationType
 
-    $unregisterAction = { Unregister-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec }
+    $unregisterAction = {
+        Unregister-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec
+        if (!$?)
+        {
+            throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
+        }
+    }
 
     $exceptionRetryEvaluator = {
         param($ex)
@@ -410,7 +428,7 @@ function Unregister-ServiceFabricApplicationTypeAction
         if (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
         {
             Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeUnprovisioningStarted)
-            $appType = Wait-ServiceFabricApplicationTypeStatusChange -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+            $appType = Wait-ServiceFabricApplicationTypeTerminalStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
         }
 
         # if app type got unprovisioned, don't retry
