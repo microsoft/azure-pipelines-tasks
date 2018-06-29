@@ -470,6 +470,12 @@
     "SFSDK_RegisterAppTypeFailedWithStatus": "ms-resource:loc.messages.SFSDK_RegisterAppTypeFailedWithStatus",
     "SFSDK_ApplicationTypeStatus": "ms-resource:loc.messages.SFSDK_ApplicationTypeStatus",
     "SFSDK_ApplicationTypeUnprovisioned": "ms-resource:loc.messages.SFSDK_ApplicationTypeUnprovisioned",
-    "SFSDK_ClusterHealth": "ms-resource:loc.messages.SFSDK_ClusterHealth"
+    "SFSDK_ClusterHealth": "ms-resource:loc.messages.SFSDK_ClusterHealth",
+    "SFSDK_ApplicationTypeUnprovisioningStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeUnprovisioningStarted",
+    "SFSDK_UnregisterAppTypeFailedWithStatus": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailedWithStatus",
+    "SFSDK_RetryingUnregisterApplicationType": "ms-resource:loc.messages.SFSDK_RetryingUnregisterApplicationType",
+    "SFSDK_RetryingRemoveApplication": "ms-resource:loc.messages.SFSDK_RetryingRemoveApplication",
+    "SFSDK_RetryingCreateApplication": "ms-resource:loc.messages.SFSDK_RetryingCreateApplication",
+    "SFSDK_ApplicationHealth": "ms-resource:loc.messages.SFSDK_ApplicationHealth"
   }
 }
