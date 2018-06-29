@@ -1,7 +1,6 @@
 export interface InputDataContract {
     AgentName : string;
     AccessToken : string;
-    AccessTokenType: string;
     CollectionUri : string;
     RunIdentifier : string;
     TeamProject : string;
