@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 15
+    "Patch": 16
   },
   "demands": [
     "Cmd"
@@ -476,6 +476,12 @@
     "SFSDK_RetryingUnregisterApplicationType": "ms-resource:loc.messages.SFSDK_RetryingUnregisterApplicationType",
     "SFSDK_RetryingRemoveApplication": "ms-resource:loc.messages.SFSDK_RetryingRemoveApplication",
     "SFSDK_RetryingCreateApplication": "ms-resource:loc.messages.SFSDK_RetryingCreateApplication",
-    "SFSDK_ApplicationHealth": "ms-resource:loc.messages.SFSDK_ApplicationHealth"
+    "SFSDK_ApplicationHealth": "ms-resource:loc.messages.SFSDK_ApplicationHealth",
+    "SFSDK_RetryingUpgradeApplication": "ms-resource:loc.messages.SFSDK_RetryingUpgradeApplication",
+    "SFSDK_RetryingGetApplicationUpgrade": "ms-resource:loc.messages.SFSDK_RetryingGetApplicationUpgrade",
+    "SFSDK_RetryingTestClusterConnection": "ms-resource:loc.messages.SFSDK_RetryingTestClusterConnection",
+    "SFSDK_RetryingTestAppPackage": "ms-resource:loc.messages.SFSDK_RetryingTestAppPackage",
+    "SFSDK_RetryingGetClusterManifest": "ms-resource:loc.messages.SFSDK_RetryingGetClusterManifest",
+    "SFSDK_RetryingRemoveApplicationPackage": "ms-resource:loc.messages.SFSDK_RetryingRemoveApplicationPackage"
   }
 }
