@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -100,7 +100,7 @@
             "label": "Upload test results files",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "Upload logs and other files containing diagnostic information from when the tests were run.",
+            "helpMarkDown": "Upload logs and other files containing diagnostic information collected when the tests were run.",
             "groupName": "advanced"
         }
     ],
