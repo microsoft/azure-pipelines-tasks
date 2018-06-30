@@ -20,7 +20,7 @@
   "loc.input.label.configuration": "Configuration",
   "loc.input.help.configuration": "Configuration for which the tests were run.",
   "loc.input.label.publishRunAttachments": "Upload test results files",
-  "loc.input.help.publishRunAttachments": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option.",
+  "loc.input.help.publishRunAttachments": "Upload logs and other files containing diagnostic information collected when the tests were run.",
   "loc.messages.NoMatchingFilesFound": "No test result files matching '%s' were found.",
   "loc.messages.ErrorTestResultsPublisher": "Error while executing TestResultsPublisher: %s."
 }
