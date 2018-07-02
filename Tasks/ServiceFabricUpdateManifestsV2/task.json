@@ -18,8 +18,8 @@
     ],
     "version": {
         "Major": 2,
-        "Minor": 2,
-        "Patch": 4
+        "Minor": 3,
+        "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
@@ -30,7 +30,7 @@
             "label": "Update Type",
             "defaultValue": "Manifest versions",
             "required": true,
-            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build definition for each type of update to be executed.",
+            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build pipeline for each type of update to be executed.",
             "options": {
                 "Manifest versions": "Manifest versions",
                 "Docker image settings": "Docker image settings"
@@ -126,6 +126,14 @@
             "helpMarkDown": "Always download a new copy of the artifact. Otherwise use an existing copy, if present."
         },
         {
+            "name": "imageNamesPath",
+            "type": "filePath",
+            "label": "Image Names Path",
+            "required": false,
+            "visibleRule": "updateType = Docker image settings",
+            "helpMarkDown": "Path to a text file that contains the names of the Docker images associated with the Service Fabric application that should be updated with digests. Each image name must be on its own line and must be in the same order as the digests in Image Digests file. If the images are created by the Service Fabric project, this file is generated as part of the Package target and its output location is controlled by the property BuiltDockerImagesFilePath."
+        },
+        {
             "name": "imageDigestsPath",
             "type": "filePath",
             "label": "Image Digests Path",
@@ -177,6 +185,10 @@
         "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
         "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
         "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'.",
-        "PreviousPackageLocation": "Previous manifest package location: '{0}'."
+        "PreviousPackageLocation": "Previous manifest package location: '{0}'.",
+        "ImageDigestListMismatch": "The list of image names and the list of digests must be the same length. Number of image names: '{0}', number of image digests: '{1}'.",
+        "AmbiguousImages": "The repository '{0}' has more than one digest. You must provide a path to the list of the original images names in the input \"Image Names Path\" to disambiguate.",
+        "ImageDigestNameMismatch": "The digest '{0}' does not match the image '{1}'.",
+        "NoDigestForImage": "No digest found for image '{0}'."
     }
 }

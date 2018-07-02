@@ -16,8 +16,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 136,
-        "Patch": 1
+        "Minor": 137,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -300,7 +300,7 @@
             "type": "connectedService:ExternalNuGetFeed",
             "label": "NuGet server",
             "required": true,
-            "helpMarkDown": "The NuGet service endpoint that contains the external NuGet server’s credentials.",
+            "helpMarkDown": "The NuGet service connection that contains the external NuGet server’s credentials.",
             "visibleRule": "command = push && nuGetFeedType = external"
         },
         {
@@ -519,6 +519,6 @@
         "NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
         "NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
         "NGCommon_UnableToFindTool": "Unable to find tool %s",
-        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+        "Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task."
     }
 }

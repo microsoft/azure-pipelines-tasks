@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 40
+        "Patch": 41
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
@@ -115,7 +115,7 @@
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables.<br/>"
+            "helpMarkDown": "Variables defined in the build or release pipeline will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the release pipeline and in the environment, then the environment variables will supersede the release pipeline variables.<br/>"
         },
         {
             "name": "JSONFiles",
@@ -124,7 +124,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: The build or release’s system definition variables are excluded in substitution."
         }
     ],
     "instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",
@@ -145,7 +145,7 @@
         "ErrorFetchingDeploymentPublishProfileStatusCode0": "Error Fetching Deployment Publish Profile [Status Code : '%s']",
         "ErrorOccurredStatusCode0": "Error Occurred : [Status Code : '%s']",
         "CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "Cannot update deployment status : uniquedeploymentIdCannotBeRetrieved",
-        "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at url %s",
+        "WebappsuccessfullypublishedatUrl0": "Web App successfully deployed at URL %s",
         "Failedtodeploywebsite": "Failed to deploy website.",
         "Runningcommand": "Running command: %s",
         "ConstructedmsDeploycommandlinearguments": "Constructed msDeploy command line arguments",
@@ -156,11 +156,11 @@
         "Requestingconfigdetails": "Requesting for config details : %s",
         "Deployingwebapplicationatvirtualpathandphysicalpath": "Deploying web package : %s at virtual path (physical path) : %s (%s)",
         "Successfullydeployedpackageusingkuduserviceat": "Successfully deployed package %s using kudu service at %s",
-        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy webapp package using kudu service : %s",
-        "Unabletodeploywebappresponsecode": "Unable to deploy webapp due to error code : %s",
+        "Failedtodeploywebapppackageusingkuduservice": "Failed to deploy Web App package using kudu service : %s",
+        "Unabletodeploywebappresponsecode": "Unable to deploy Web App due to error code : %s",
         "Unabletopackagecontentoffolder": "Unable to package content of folder : %s",
         "Compressedfolderintozip": "Compressed folder %s into zip : %s",
-        "Webappfolderisbeingarchivedtobytescompressed": "Webapp folder : %s is being archived to %s. %s bytes compressed.",
+        "Webappfolderisbeingarchivedtobytescompressed": "Web App folder : %s is being archived to %s. %s bytes compressed.",
         "MSDeploygeneratedpackageareonlysupportedforWindowsplatform": "MSDeploy generated package are only supported for Windows platform.",
         "UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove": "Unsupported installed version: %s found for MSDeploy. version should be at least 3 or above",
         "UnabletofindthelocationofMSDeployfromregistryonmachineError": "Unable to find the location of MS Deploy from registry on machine (Error : %s)",
