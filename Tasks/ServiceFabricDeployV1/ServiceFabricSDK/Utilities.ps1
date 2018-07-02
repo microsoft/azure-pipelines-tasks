@@ -240,7 +240,6 @@ function Get-ServiceFabricApplicationUpgradeAction
     )
 
     $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
-
     return Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
 }
 
@@ -263,6 +262,7 @@ function Wait-ServiceFabricApplicationUpgradeAction
         -RetryableExceptions @("System.Fabric.FabricTransientException") `
         -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 }
+
 function Copy-ServiceFabricApplicationPackageAction
 {
     Param (
