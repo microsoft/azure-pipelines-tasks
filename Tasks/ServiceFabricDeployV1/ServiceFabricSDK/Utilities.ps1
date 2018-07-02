@@ -241,6 +241,18 @@ function Get-ServiceFabricApplicationUpgradeAction
 
     $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
 
+    return Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+}
+
+function Wait-ServiceFabricApplicationUpgradeAction
+{
+    Param (
+        [string]
+        $ApplicationName
+    )
+
+    $global:operationId = $SF_Operations.WaitApplicationUpgradeStatus
+
     Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
     $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
     $upgradeRetryEvaluator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted") }
@@ -251,7 +263,6 @@ function Get-ServiceFabricApplicationUpgradeAction
         -RetryableExceptions @("System.Fabric.FabricTransientException") `
         -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 }
-
 function Copy-ServiceFabricApplicationPackageAction
 {
     Param (

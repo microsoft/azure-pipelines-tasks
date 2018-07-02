@@ -369,7 +369,7 @@ function Publish-UpgradedServiceFabricApplication
             return
         }
 
-        $upgradeStatus = Get-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName
+        $upgradeStatus = Wait-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName
 
         if ($UnregisterUnusedVersions)
         {
