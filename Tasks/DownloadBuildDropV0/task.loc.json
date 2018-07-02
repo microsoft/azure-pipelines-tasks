@@ -8,11 +8,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 137,
+    "Minor": 138,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.138.0",
   "inputs": [
     {
       "name": "buildid",
@@ -25,6 +27,7 @@
       "name": "artifactname",
       "type": "string",
       "label": "ms-resource:loc.input.label.artifactname",
+      "defaultValue": "drop",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.artifactname"
     },
@@ -32,7 +35,7 @@
       "name": "targetpath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.targetpath",
-      "defaultValue": "$(Build.DropDownloadingDirectory)",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.targetpath"
     }
