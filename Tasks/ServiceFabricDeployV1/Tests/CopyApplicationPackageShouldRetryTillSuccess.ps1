@@ -18,7 +18,7 @@ Register-Mock Copy-ServiceFabricApplicationPackage {
     }
 
     $global:retriesAttempted++;
-    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
+    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
 } -- @copyParameters
 
 Register-Mock Start-Sleep {}

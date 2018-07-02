@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 137,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.102.0",
@@ -33,10 +33,10 @@
         {
             "name": "sshEndpoint",
             "type": "connectedService:ssh",
-            "label": "SSH endpoint",
+            "label": "SSH service connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "SSH endpoint with connection details for the remote machine."
+            "helpMarkDown": "SSH service connection with connection details for the remote machine."
         },
         {
             "name": "sourceFolder",
@@ -109,8 +109,8 @@
         "CheckLogForStdErr": "Check the build log for STDERR from the command.",
         "CleanTargetFolder": "Cleaning target folder %s on the remote machine",
         "CleanTargetFolderFailed": "Failed to clean the target folder on the remote machine. %s",
-        "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. %s.",
-        "ConnectionNotSetup": "SSH connection is not set up.",
+        "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. %s.",
+        "ConnectionNotSetup": "SSH service connection is not set up.",
         "CopyCompleted": "Completed copying %s files to the remote machine.",
         "CopyingFiles": "Found %s files to copy to the remote machine.",
         "FailedOnFile": "Failed to copy %s. %s",
@@ -119,7 +119,7 @@
         "NumberFailed": "Failed to copy %d files",
         "RemoteCmdExecutionErr": "Command %s failed with errors on remote machine. %s.",
         "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",
-        "SettingUpSSHConnection": "Setting up SSH connection to remote host %s.",
+        "SettingUpSSHConnection": "Setting up SSH service connection to remote host %s.",
         "SourceNotFolder": "Source folder has to be a valid folder path.",
         "StartedFileCopy": "Copying file %s to %s on remote machine.",
         "UploadFileFailed": "Failed to upload %s to %s on remote machine. %s.",

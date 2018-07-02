@@ -53,11 +53,11 @@ let a: any = <any>{
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
+        "packer validate -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var resource_group=testrg -var storage_account=teststorage -var image_publisher=MicrosoftWindowsServer -var image_offer=WindowsServer -var image_sku=2012-R2-Datacenter -var location=South India -var capture_name_prefix=Release-1 -var skip_clean=true -var script_relative_path=dir3\\somedir\\deploy.ps1 -var package_path=C:\\dir1\\somedir\\dir2 -var package_name=dir2 -var subscription_id=sId -var client_id=spId -var client_secret=spKey -var tenant_id=tenant -var object_id=oId F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
+        "packer build -force -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
             "code": 0,
             "stdout": process.env["__build_output__"]
         }
@@ -72,7 +72,7 @@ let a: any = <any>{
 };
 
 var ut = require('../src/utilities');
-tr.registerMock('./utilities', {
+var utMock = {
     IsNullOrEmpty : ut.IsNullOrEmpty,
     HasItems : ut.HasItems,
     StringWritable: ut.StringWritable,
@@ -83,6 +83,12 @@ tr.registerMock('./utilities', {
     },
     copyFile: function(source: string, destination: string) {
         console.log('copying ' + source + ' to ' + destination);
+    },
+    generateTemporaryFilePath: function () {
+        return "C:\\somefolder\\somevarfile.json";
+    },
+    getPackerVarFileContent: function(variables) {
+        return ut.getPackerVarFileContent(variables);
     },
     writeFile: function(filePath: string, content: string) {
         console.log("writing to file " + filePath + " content: " + content);
@@ -103,7 +109,10 @@ tr.registerMock('./utilities', {
     getCurrentDirectory: function() {
         return "basedir\\currdir";
     }
-});
+};
+
+tr.registerMock('./utilities', utMock);
+tr.registerMock('../utilities', utMock);
 
 tr.setAnswers(a);
 tr.run();

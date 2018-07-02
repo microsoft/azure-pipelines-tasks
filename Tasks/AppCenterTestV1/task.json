@@ -11,7 +11,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 131,
+        "Minor": 137,
         "Patch": 0
     },
     "groups": [
@@ -269,20 +269,20 @@
             "visibleRule": "enableRun = true",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Use App Center service endpoint connection or enter credentials to connect to Visual Studio App Center.",
+            "helpMarkDown": "Use App Center service connection or enter credentials to connect to Visual Studio App Center.",
             "options": {
-                "serviceEndpoint": "App Center Connection",
+                "serviceEndpoint": "App Center service connection",
                 "inputs": "Credentials"
             }
         },
         {
             "name": "serverEndpoint",
             "type": "connectedService:vsmobilecenter",
-            "label": "App Center connection",
+            "label": "App Center service connection",
             "defaultValue": "",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Select the service endpoint for your Visual Studio App Center connection. To create one, click the Manage link and create a new service endpoint.",
+            "helpMarkDown": "Select the service connection for Visual Studio App Center. To create one, click the Manage link and create a new service connection.",
             "visibleRule": "enableRun = true && credsType = serviceEndpoint"
         },
         {
@@ -302,7 +302,7 @@
             "defaultValue": "",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "Visit https://appcenter.ms/settings/profile to set your password. It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
+            "helpMarkDown": "Visit https://appcenter.ms/settings/profile to set your password. It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it.",
             "visibleRule": "enableRun = true && credsType = inputs"
         },
         {
@@ -313,7 +313,7 @@
             "visibleRule": "enableRun = true",
             "required": true,
             "groupName": "run",
-            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://appcenter.ms/apps, and the resulting url is in the format of https://appcenter.ms/users/{username}/apps/{app_identifier}."
+            "helpMarkDown": "The app slug is in the format of {username}/{app_identifier}.  To locate {username} and {app_identifier} for an app, click on its name from https://appcenter.ms/apps, and the resulting URL is in the format of https://appcenter.ms/users/{username}/apps/{app_identifier}."
         },
         {
             "name": "devices",
