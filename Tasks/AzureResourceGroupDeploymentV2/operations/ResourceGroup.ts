@@ -299,6 +299,7 @@ export class ResourceGroup {
                     let contents: string = "";
                     try {
                         contents = await response.readBody();
+                        contents = contents.replace(/^\uFEFF/, ''); // Remove UTF-8 BOM if present.
                     } catch (error) {
                         reject(tl.loc("UnableToReadResponseBody", error));
                     }
