@@ -11,12 +11,9 @@ import * as ta from './testagent';
 import * as versionFinder from './versionfinder';
 import * as os from 'os';
 import * as ci from './cieventlogger';
-import { TestSelectorInvoker } from './testselectorinvoker';
 import { writeFileSync } from 'fs';
 import { TaskResult } from 'vso-node-api/interfaces/TaskAgentInterfaces';
 import * as uuid from 'uuid';
-
-const testSelector = new TestSelectorInvoker();
 
 export class DistributedTest {
     constructor(inputDataContract: inputdatacontract.InputDataContract) {

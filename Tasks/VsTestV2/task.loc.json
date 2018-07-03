@@ -535,6 +535,7 @@
     "configureDtaAgentFailed": "ms-resource:loc.messages.configureDtaAgentFailed",
     "otherConsoleOptionsNotSupported": "ms-resource:loc.messages.otherConsoleOptionsNotSupported",
     "distributedTestWorkflow": "ms-resource:loc.messages.distributedTestWorkflow",
+    "nonDistributedTestWorkflow": "ms-resource:loc.messages.nonDistributedTestWorkflow",
     "dtaNumberOfAgents": "ms-resource:loc.messages.dtaNumberOfAgents",
     "testSelectorInput": "ms-resource:loc.messages.testSelectorInput",
     "searchFolderInput": "ms-resource:loc.messages.searchFolderInput",

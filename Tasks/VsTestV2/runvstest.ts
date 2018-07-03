@@ -42,8 +42,13 @@ if (osPlat !== 'win32') {
             test.runDistributedTest();
         } else {
             ci.publishEvent({ runmode: 'nondistributed' });
+            console.log(tl.loc('nonDistributedTestWorkflow'));
+            console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
-            nondistributedtest.runNonDistributedTest(inputDataContract);
+            console.log('======================================================');
+
+            const test = new nondistributedtest.NonDistributedTest(inputDataContract);
+            test.runNonDistributedTest();
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
