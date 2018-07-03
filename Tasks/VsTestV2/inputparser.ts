@@ -384,7 +384,13 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
     } else {
         inputDataContract.ExecutionSettings.TiaSettings.DisableDataCollection = false;
     }
-
+    
+    if (tl.getVariable('tia.useTestCaseFilterInResponseFile') && tl.getVariable('tia.useTestCaseFilterInResponseFile').toUpperCase() === 'TRUE') {
+        inputDataContract.ExecutionSettings.TiaSettings.UseTestCaseFilterInResponseFile = true;
+    } else {
+        inputDataContract.ExecutionSettings.TiaSettings.UseTestCaseFilterInResponseFile = false;
+    }
+    
     const buildReason = tl.getVariable('Build.Reason');
 
     // https://www.visualstudio.com/en-us/docs/build/define/variables
