@@ -48,7 +48,7 @@
   "loc.input.label.feedPublish": "Target feed",
   "loc.input.help.feedPublish": "Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.",
   "loc.input.label.externalEndpoint": "NuGet server",
-  "loc.input.help.externalEndpoint": "The NuGet service endpoint that contains the external NuGet server’s credentials.",
+  "loc.input.help.externalEndpoint": "The NuGet service connection that contains the external NuGet server’s credentials.",
   "loc.input.label.searchPatternPack": "Path to csproj or nuspec file(s) to pack",
   "loc.input.help.searchPatternPack": "Pattern to search for csproj or nuspec files to pack.\n\nYou can separate multiple patterns with a semicolon, and you can make a pattern negative by prefixing it with '-:'. Example: `**/*.csproj;-:**/*.Tests.csproj`",
   "loc.input.label.configurationToPack": "Configuration to Package",
@@ -122,5 +122,5 @@
   "loc.messages.NGCommon_SpsNotFound": "Unable to find the '%s' [%s] area. There may be a problem with your Team Foundation Server installation.",
   "loc.messages.NGCommon_UnabletoDetectNuGetVersion": "Unknown NuGet version selected.",
   "loc.messages.NGCommon_UnableToFindTool": "Unable to find tool %s",
-  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, uncheck the 'Check for Latest Version' option in the task."
+  "loc.messages.Warning_UpdatingNuGetVersion": "Updating version of NuGet.exe to %s from %s. Behavior changes or breaking changes might occur as NuGet updates to a new version. If this is not desired, deselect the 'Check for Latest Version' option in the task."
 }
