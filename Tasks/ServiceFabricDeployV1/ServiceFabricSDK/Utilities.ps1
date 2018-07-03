@@ -232,17 +232,6 @@ function Get-ServiceFabricApplicationAction
     return Get-ServiceFabricApplication @getApplicationParams
 }
 
-function Get-ServiceFabricApplicationTypeAction
-{
-    Param (
-        [string]
-        $ApplicationTypeName
-    )
-
-    $global:operationId = $SF_Operations.GetApplicationType
-    return Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName
-}
-
 function Get-ServiceFabricApplicationUpgradeAction
 {
     Param (
@@ -252,4 +241,379 @@ function Get-ServiceFabricApplicationUpgradeAction
 
     $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
     return Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+}
+
+function Copy-ServiceFabricApplicationPackageAction
+{
+    Param (
+        [hashtable]
+        $CopyParameters
+    )
+
+    $global:operationId = $SF_Operations.CopyApplicationPackage
+    $copyAction = {
+        Copy-ServiceFabricApplicationPackage @CopyParameters
+        if (!$?)
+        {
+            throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
+        }
+    }
+
+    Invoke-ActionWithDefaultRetries -Action $copyAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingCopyApplicationPackage)
+}
+
+function Register-ServiceFabricApplicationTypeAction
+{
+    Param (
+        [hashtable]
+        $RegisterParameters,
+
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
+    )
+
+    $global:operationId = $SF_Operations.RegisterApplicationType
+    $registerAction = {
+        Register-ServiceFabricApplicationType @RegisterParameters
+        if (!$?)
+        {
+            throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
+        }
+    }
+
+    $exceptionRetryEvaluator = {
+        param($ex)
+        $appType = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+        # If provisioning not started, retry register
+        if (!$appType)
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioningNotStarted)
+            return $true
+        }
+
+        # if provisioning started, wait for it to complete
+        if (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioningStarted)
+            $appType = Wait-ServiceFabricApplicationTypeTerminalStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+        }
+
+        # if app type got unprovisioned, retry register
+        if (!$appType)
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeUnprovisioned)
+            return $true
+        }
+
+        # if app type is provisioned, bail out
+        if ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
+        {
+            return $false
+        }
+
+        # if provisioning failed, throw and don't retry
+        throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
+    }
+
+    try
+    {
+        Invoke-ActionWithDefaultRetries -Action $registerAction `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRegisterApplicationType) `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator
+    }
+    catch
+    {
+        # print cluster health status if registering failed
+        Trace-ServiceFabricClusterHealth
+        throw
+    }
+}
+
+function Get-ServiceFabricApplicationTypeAction
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
+    )
+
+    $global:operationId = $SF_Operations.GetApplicationType
+    $getApplicationTypeParams = @{
+        'ApplicationTypeName' = $ApplicationTypeName
+    }
+
+    if ($ApplicationTypeVersion)
+    {
+        $getApplicationTypeParams['ApplicationTypeVersion'] = $ApplicationTypeVersion
+    }
+
+    $getAppTypeAction = { Get-ServiceFabricApplicationType @getApplicationTypeParams }
+    return Invoke-ActionWithDefaultRetries -Action $getAppTypeAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
+}
+
+function Wait-ServiceFabricApplicationTypeTerminalStatus
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
+    )
+
+    $global:operationId = $SF_Operations.GetApplicationType
+    $getAppTypeAction = { Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
+    $getAppTypeRetryEvaluator = {
+        param($appType)
+        # if app type does not exist (i.e it got unprovisioned) or if its status has changed to a terminal one, stop wait
+        if ((!$appType) -or (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        {
+            return $false
+        }
+        else
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
+            return $true
+        }
+    }
+
+    return Invoke-ActionWithRetries -Action $getAppTypeAction `
+        -ResultRetryEvaluator $getAppTypeRetryEvaluator `
+        -MaxTries 86400 `
+        -RetryIntervalInSeconds 10 `
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
+}
+
+function Unregister-ServiceFabricApplicationTypeAction
+{
+    Param(
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion,
+
+        [int]
+        $TimeoutSec
+    )
+
+    $global:operationId = $SF_Operations.UnregisterApplicationType
+
+    $unregisterAction = {
+        Unregister-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec
+        if (!$?)
+        {
+            throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
+        }
+    }
+
+    $exceptionRetryEvaluator = {
+        param($ex)
+        $appType = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+        # If app type already unprovisioned, don't retry
+        if (!$appType)
+        {
+            return $false
+        }
+
+        # if unprovisioning started, wait for it to complete
+        if (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeUnprovisioningStarted)
+            $appType = Wait-ServiceFabricApplicationTypeTerminalStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+        }
+
+        # if app type got unprovisioned, don't retry
+        if (!$appType)
+        {
+            return $false
+        }
+
+        # if app type is still provisioned, retry unregister
+        if ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
+        {
+            return $true
+        }
+
+        # if unprovisioning failed, throw and don't retry
+        throw (Get-VstsLocString -Key SFSDK_UnregisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
+    }
+
+    try
+    {
+        Invoke-ActionWithDefaultRetries -Action $unregisterAction `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingUnregisterApplicationType) `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator
+    }
+    catch
+    {
+        # print cluster health status if unregistering failed
+        Trace-ServiceFabricClusterHealth
+        throw
+    }
+}
+
+function Remove-ServiceFabricApplicationAction
+{
+    Param(
+        [string]
+        $ApplicationName
+    )
+
+    $global:operationId = $SF_Operations.RemoveApplication
+
+    $removeAction = { Remove-ServiceFabricApplication -ApplicationName $ApplicationName -Force }
+    $exceptionRetryEvaluator = {
+        param($ex)
+
+        # If app already removed, don't retry
+        if ($ex.GetType().FullName -eq "System.Fabric.FabricElementNotFoundException")
+        {
+            return $false
+        }
+
+        return $true
+    }
+
+    try
+    {
+        Invoke-ActionWithDefaultRetries -Action $removeAction `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplication) `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.Fabric.FabricElementNotFoundException", "System.TimeoutException")
+    }
+    catch [System.TimeoutException]
+    {
+        Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout -ArgumentList $ApplicationName)
+        $removeAction = { Remove-ServiceFabricApplication -ApplicationName $ApplicationName -Force -ForceRemove }
+        Invoke-ActionWithDefaultRetries -Action $removeAction `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplication) `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.Fabric.FabricElementNotFoundException")
+    }
+}
+
+function New-ServiceFabricApplicationAction
+{
+    Param (
+        [string]
+        $ApplicationName,
+
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion,
+
+        [hashtable]
+        $ApplicationParameter
+    )
+
+    $global:operationId = $SF_Operations.CreateNewApplication
+
+
+    $createAction = { New-ServiceFabricApplication -ApplicationName $ApplicationName -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -ApplicationParameter $ApplicationParameter }
+    $exceptionRetryEvaluator = {
+        param($ex)
+
+        # If app already creted, don't retry
+        if ($ex.GetType().FullName -eq "System.Fabric.FabricElementAlreadyExistsException")
+        {
+            return $false
+        }
+
+        return $true
+    }
+
+    try
+    {
+        Invoke-ActionWithDefaultRetries -Action $createAction `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingCreateApplication) `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.Fabric.FabricElementAlreadyExistsException", "System.TimeoutException")
+    }
+    catch [System.TimeoutException]
+    {
+        Write-Host (Get-VstsLocString -Key SFSDK_CreateApplicationFailed)
+        # print application health status if create did not succeed
+        Trace-ServiceFabricApplicationHealth
+        throw
+    }
+}
+
+function Trace-ServiceFabricClusterHealth
+{
+    try
+    {
+        Write-Host (Get-VstsLocString -Key SFSDK_ClusterHealth)
+        Get-ServiceFabricClusterHealth
+    }
+    catch
+    {}
+}
+
+function Trace-ServiceFabricApplicationHealth
+{
+    Param (
+        [string]
+        $ApplicationName
+    )
+
+    try
+    {
+        Write-Host (Get-VstsLocString -Key SFSDK_ApplicationHealth)
+        Get-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
+    }
+    catch
+    {
+        if ($_.Exception.Message -eq "Entity not found in Health Store.")
+        {
+            Trace-ServiceFabricClusterHealth
+        }
+    }
+}
+
+function Invoke-ActionWithDefaultRetries
+{
+    Param (
+        [scriptblock]
+        $Action,
+
+        [string]
+        $RetryMessage,
+
+        [scriptblock]
+        $ExceptionRetryEvaluator,
+
+        [string[]]
+        $RetryableExceptions
+    )
+
+    $parameters = @{
+        Action                 = $Action
+        MaxTries               = 3;
+        RetryIntervalInSeconds = 10;
+        RetryableExceptions    = @("System.Fabric.FabricTransientException", "System.TimeoutException");
+        RetryMessage           = $RetryMessage;
+    }
+
+    if ($RetryableExceptions)
+    {
+        $parameters['RetryableExceptions'] = $RetryableExceptions
+    }
+
+    if ($ExceptionRetryEvaluator)
+    {
+        $parameters['ExceptionRetryEvaluator'] = $ExceptionRetryEvaluator
+    }
+
+    Invoke-ActionWithRetries @parameters
 }

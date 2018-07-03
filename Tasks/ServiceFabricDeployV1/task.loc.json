@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 13
+    "Patch": 15
   },
   "demands": [
     "Cmd"
@@ -336,8 +336,8 @@
       "defaultValue": "AzureResourceManagerEndpoint",
       "required": true,
       "options": {
-        "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
-        "ContainerRegistryEndpoint": "Container Registry Endpoint",
+        "AzureResourceManagerEndpoint": "Azure Resource Manager Service Connection",
+        "ContainerRegistryEndpoint": "Container Registry Service Connection",
         "UsernamePassword": "Username and Password"
       },
       "visibleRule": "configureDockerSettings = true",
@@ -461,6 +461,21 @@
     "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
     "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning",
     "SFSDK_UnregisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailed",
-    "SFSDK_PerformingForceRemoveOnTimeout": "ms-resource:loc.messages.SFSDK_PerformingForceRemoveOnTimeout"
+    "SFSDK_PerformingForceRemoveOnTimeout": "ms-resource:loc.messages.SFSDK_PerformingForceRemoveOnTimeout",
+    "SFSDK_RetryingCopyApplicationPackage": "ms-resource:loc.messages.SFSDK_RetryingCopyApplicationPackage",
+    "SFSDK_RetryingRegisterApplicationType": "ms-resource:loc.messages.SFSDK_RetryingRegisterApplicationType",
+    "SFSDK_RetryingGetApplicationType": "ms-resource:loc.messages.SFSDK_RetryingGetApplicationType",
+    "SFSDK_ApplicationTypeProvisioningNotStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeProvisioningNotStarted",
+    "SFSDK_ApplicationTypeProvisioningStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeProvisioningStarted",
+    "SFSDK_RegisterAppTypeFailedWithStatus": "ms-resource:loc.messages.SFSDK_RegisterAppTypeFailedWithStatus",
+    "SFSDK_ApplicationTypeStatus": "ms-resource:loc.messages.SFSDK_ApplicationTypeStatus",
+    "SFSDK_ApplicationTypeUnprovisioned": "ms-resource:loc.messages.SFSDK_ApplicationTypeUnprovisioned",
+    "SFSDK_ClusterHealth": "ms-resource:loc.messages.SFSDK_ClusterHealth",
+    "SFSDK_ApplicationTypeUnprovisioningStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeUnprovisioningStarted",
+    "SFSDK_UnregisterAppTypeFailedWithStatus": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailedWithStatus",
+    "SFSDK_RetryingUnregisterApplicationType": "ms-resource:loc.messages.SFSDK_RetryingUnregisterApplicationType",
+    "SFSDK_RetryingRemoveApplication": "ms-resource:loc.messages.SFSDK_RetryingRemoveApplication",
+    "SFSDK_RetryingCreateApplication": "ms-resource:loc.messages.SFSDK_RetryingCreateApplication",
+    "SFSDK_ApplicationHealth": "ms-resource:loc.messages.SFSDK_ApplicationHealth"
   }
 }

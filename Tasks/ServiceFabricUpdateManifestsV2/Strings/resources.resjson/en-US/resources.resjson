@@ -4,7 +4,7 @@
   "loc.description": "Automatically updates portions of the application and service manifests within a packaged Service Fabric application.",
   "loc.instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
   "loc.input.label.updateType": "Update Type",
-  "loc.input.help.updateType": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build definition for each type of update to be executed.",
+  "loc.input.help.updateType": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build pipeline for each type of update to be executed.",
   "loc.input.label.applicationPackagePath": "Application Package",
   "loc.input.help.applicationPackagePath": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path.",
   "loc.input.label.versionSuffix": "Version Value",
@@ -23,6 +23,8 @@
   "loc.input.help.buildNumber": "The build number for comparison.",
   "loc.input.label.overwriteExistingPkgArtifact": "Overwrite Existing Package Artifact",
   "loc.input.help.overwriteExistingPkgArtifact": "Always download a new copy of the artifact. Otherwise use an existing copy, if present.",
+  "loc.input.label.imageNamesPath": "Image Names Path",
+  "loc.input.help.imageNamesPath": "Path to a text file that contains the names of the Docker images associated with the Service Fabric application that should be updated with digests. Each image name must be on its own line and must be in the same order as the digests in Image Digests file. If the images are created by the Service Fabric project, this file is generated as part of the Package target and its output location is controlled by the property BuiltDockerImagesFilePath.",
   "loc.input.label.imageDigestsPath": "Image Digests Path",
   "loc.input.help.imageDigestsPath": "Path to a text file that contains the digest values of the Docker images associated with the Service Fabric application. This file can be output by the [Docker task](https://go.microsoft.com/fwlink/?linkid=848006) when using the push action. The file should contain lines of text in the format of 'registry/image_name@digest_value'.",
   "loc.messages.ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
@@ -61,5 +63,9 @@
   "loc.messages.PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
   "loc.messages.InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
   "loc.messages.CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'.",
-  "loc.messages.PreviousPackageLocation": "Previous manifest package location: '{0}'."
+  "loc.messages.PreviousPackageLocation": "Previous manifest package location: '{0}'.",
+  "loc.messages.ImageDigestListMismatch": "The list of image names and the list of digests must be the same length. Number of image names: '{0}', number of image digests: '{1}'.",
+  "loc.messages.AmbiguousImages": "The repository '{0}' has more than one digest. You must provide a path to the list of the original images names in the input \"Image Names Path\" to disambiguate.",
+  "loc.messages.ImageDigestNameMismatch": "The digest '{0}' does not match the image '{1}'.",
+  "loc.messages.NoDigestForImage": "No digest found for image '{0}'."
 }
