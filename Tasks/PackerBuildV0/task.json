@@ -291,7 +291,7 @@
         "ExecutingPackerBuild": "Running packer build command. Waiting for it to finish...",
         "PackerBuildCompleted": "packer build completed.",
         "ImageURIOutputVariableNotFound": "Could not get vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
-        "ManagedImageNameOutputVariableNotFound": "Could not managed image name from packer execution. Output variable will not be set.",
+        "ManagedImageNameOutputVariableNotFound": "Could not get managed image name from packer execution. Output variable will not be set.",
         "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
         "CustomTemplateNotFoundErrorMessagePathName": "Custom template not found at location: %s",
         "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",
