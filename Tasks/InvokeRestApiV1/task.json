@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 3
   }, 
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [{
@@ -27,6 +27,19 @@
 		}
 	],
   "inputs": [
+    { 
+      "name": "connectedServiceNameSelector", 
+      "aliases": ["connectionType"], 
+      "type": "pickList", 
+      "label": "Connection type", 
+      "required": true, 
+      "helpMarkDown": "Select the service connection type to use to invoke the REST API.", 
+      "defaultValue": "connectedServiceName", 
+      "options": { 
+        "connectedServiceName": "Generic", 
+        "connectedServiceNameARM": "Azure Resource Manager" 
+      } 
+    }, 
     {
       "name": "connectedServiceName",
       "aliases": ["serviceConnection"],
@@ -34,8 +47,19 @@
       "label": "Generic service connection",
       "defaultValue": "",
       "required": "true",
-      "helpMarkDown": "Select a generic service connection that should be used to pick the URL and construct authorization header for the http request."
+      "helpMarkDown": "Select a generic service connection that should be used to pick the URL and construct authorization header for the http request.",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceName" 
     },
+    { 
+      "name": "connectedServiceNameARM", 
+      "aliases": ["azureServiceConnection"], 
+      "type": "connectedService:AzureRM", 
+      "label": "Azure subscription", 
+      "defaultValue": "", 
+      "required": true, 
+      "helpMarkDown": "Select an Azure Resource Manager subscription that should be used to pick the url and construct authorization header for the http request.", 
+      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM" 
+    }, 
     {
       "name": "method",
       "type": "pickList",
@@ -116,7 +140,7 @@
   "execution": {
     "HttpRequest": {
       "Execute": {
-        "EndpointId":"$(connectedServiceName)",
+        "EndpointId":"TaskInputs[TaskInputs['connectedServiceNameSelector']]",
         "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",
