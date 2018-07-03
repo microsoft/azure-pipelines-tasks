@@ -1,6 +1,7 @@
 export interface InputDataContract {
     AgentName : string;
     AccessToken : string;
+    AccessTokenType : string;
     CollectionUri : string;
     RunIdentifier : string;
     TeamProject : string;
@@ -80,6 +81,7 @@ export interface DistributionSettings {
 }
 
 export interface ExecutionSettings {
+    DefaultTestBatchSize : number;
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
     PathToCustomTestAdapters : string;

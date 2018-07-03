@@ -32,11 +32,11 @@ let a: any = <any>{
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate -var client_id=abcdef -var drop-location=C:\\folder 1\\folder-2 C:\\custom.template-fixed.json": {
+        "packer validate -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json C:\\custom.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var client_id=abcdef -var drop-location=C:\\folder 1\\folder-2 C:\\custom.template-fixed.json": {
+        "packer build -force -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json C:\\custom.template-fixed.json": {
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
          }
@@ -54,7 +54,7 @@ let a: any = <any>{
 };
 
 var ut = require('../src/utilities');
-tr.registerMock('./utilities', {
+var utMock = {
     IsNullOrEmpty : ut.IsNullOrEmpty,
     HasItems : ut.HasItems,
     StringWritable: ut.StringWritable,
@@ -70,6 +70,12 @@ tr.registerMock('./utilities', {
             console.log('copying ' + source + ' to ' + destination);
         }
     },
+    generateTemporaryFilePath: function () {
+        return "C:\\somefolder\\somevarfile.json";
+    },
+    getPackerVarFileContent: function(variables) {
+        return ut.getPackerVarFileContent(variables);
+    },
     writeFile: function(filePath: string, content: string) {
         console.log("writing to file " + filePath + " content: " + content);
     },
@@ -82,7 +88,10 @@ tr.registerMock('./utilities', {
     getCurrentDirectory: function() {
         return "basedir\\currdir";
     }
-});
+};
+
+tr.registerMock('./utilities', utMock);
+tr.registerMock('../utilities', utMock);
 
 tr.setAnswers(a);
 tr.run();

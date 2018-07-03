@@ -33,6 +33,7 @@ export function parseInputsForDistributedTestRun() : idc.InputDataContract {
     inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
     inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
+    inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.RunIdentifier = getRunIdentifier();
 
     logWarningForWER(tl.getBoolInput('uiTests'));
@@ -57,6 +58,7 @@ export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
     inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
     inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
     inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken;
+    inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.RunIdentifier = getRunIdentifier();
 

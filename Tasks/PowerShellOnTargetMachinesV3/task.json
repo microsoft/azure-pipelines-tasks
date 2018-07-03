@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 0
+        "Patch": 1
     },
     "preview": true,
     "groups": [
@@ -61,7 +61,7 @@
             "type": "string",
             "label": "Password",
             "defaultValue": "",
-            "helpMarkDown": "password for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it."
+            "helpMarkDown": "password for the target machines. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it."
         },
         {
             "name": "ScriptType",
@@ -142,7 +142,7 @@
                 "Http": "HTTP",
                 "Https": "HTTPS"
             },
-            "helpMarkDown": "Select the protocol to use for the WinRM connection with the machine(s). Default is HTTPS.",
+            "helpMarkDown": "Select the protocol to use for the WinRM service connection with the machine(s). Default is HTTPS.",
             "groupName": "SessionOptions"
         },
         {
@@ -154,7 +154,7 @@
                 "Credssp": "CredSSP"
             },
             "defaultValue": "Default",
-            "helpMarkDown": "Select the authentication mechanism to be used for creating pssession. For 'CredSSP' authentication, username and password fields are mandatory.",
+            "helpMarkDown": "Select the authentication mechanism to be used for creating the pssession. For 'CredSSP' authentication, username and password fields are mandatory.",
             "groupName": "SessionOptions"
         },        
         {
@@ -226,7 +226,7 @@
     "messages": {
         "PS_TM_ParseSessionVariablesValueNotFound" : "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
         "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
-        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operationg failed. Check format of input",
+        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operation failed. Check format of input",
         "PS_TM_TaskFailed": "Task failed with error: '{0}'",
         "PS_TM_SessionConfigurationNameCannotBeNull": "Session configuration name cannot be null",
         "PS_TM_UnableToParseSessionVariables": "Unable to parse session variables input. Verify that it is a valid script. Error: '{0}'"

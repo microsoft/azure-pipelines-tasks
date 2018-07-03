@@ -27,7 +27,7 @@ function Get-AadSecurityToken
 
     # Query cluster metadata
     $global:operationId = $SF_Operations.ConnectClusterMetadata
-    $connectResult = Connect-ServiceFabricCluster @connectionParametersWithGetMetadata
+    $connectResult = Connect-ServiceFabricClusterAction -ClusterConnectionParameters $connectionParametersWithGetMetadata
     $authority = $connectResult.AzureActiveDirectoryMetadata.Authority
     Write-Host (Get-VstsLocString -Key AadAuthority -ArgumentList $authority)
     $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
@@ -123,6 +123,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
     Trace-VstsEnteringInvocation $MyInvocation
 
     Import-Module $PSScriptRoot/../TlsHelper_
+    Import-Module $PSScriptRoot/../PowershellHelpers
     Add-Tls12InSession
 
     try
@@ -183,7 +184,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         $global:operationId = $SF_Operations.ConnectCluster
         try
         {
-            [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
+            [void](Connect-ServiceFabricClusterAction -ClusterConnectionParameters $clusterConnectionParameters)
         }
         catch
         {
@@ -195,11 +196,6 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
             throw $_
         }
 
-        Write-Host (Get-VstsLocString -Key ConnectedToCluster)
-
-        # Reset the scope of the ClusterConnection variable that gets set by the call to Connect-ServiceFabricCluster so that it is available outside the scope of this module
-        Set-Variable -Name ClusterConnection -Value $Private:ClusterConnection -Scope Global
-
     }
     catch
     {
@@ -210,4 +206,35 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
     {
         Trace-VstsLeavingInvocation $MyInvocation
     }
+}
+
+function Connect-ServiceFabricClusterAction
+{
+    param(
+        [Hashtable]
+        $ClusterConnectionParameters
+    )
+
+    $connectResult = $null
+
+    try
+    {
+        # Call a trial Connect-ServiceFabricCluster first so that ServiceFabric PS module gets loaded. Retry only if this connect fails.
+        $connectResult = Connect-ServiceFabricCluster @clusterConnectionParameters
+    }
+    catch [System.Fabric.FabricTransientException], [System.TimeoutException]
+    {
+        $connectAction = { Connect-ServiceFabricCluster @clusterConnectionParameters }
+        $connectResult = Invoke-ActionWithRetries -Action $connectAction `
+            -MaxTries 3 `
+            -RetryIntervalInSeconds 10 `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
+            -RetryMessage (Get-VstsLocString -Key RetryingClusterConnection)
+    }
+
+    Write-Host (Get-VstsLocString -Key ConnectedToCluster)
+
+    # Reset the scope of the ClusterConnection variable that gets set by the call to Connect-ServiceFabricCluster so that it is available outside the scope of this module
+    Set-Variable -Name ClusterConnection -Value $Private:ClusterConnection -Scope Global
+    return $connectResult
 }

@@ -1444,7 +1444,7 @@ var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLeg
     // Rename folders
     fs.readdirSync(pathWithLegacyFolders)
         .forEach(function (taskFolderName) {
-            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-1)
+            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-3)
                 && taskFolderName.charAt(taskFolderName.length-2) === taskFolderName.charAt(taskFolderName.length-4))
             {
                 var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
@@ -1453,12 +1453,14 @@ var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLeg
                 fs.renameSync(currentPath, newPath);
             }
 
-            // var currentPath = path.join('E:\\AllTaskMajorVersions', taskFolderName);
-            // var s = taskFolderName.split('__');
-            // var newFolderName = s[0] + s[1].toUpperCase();
-            // var newPath = path.join('E:\\AllTaskMajorVersions', newFolderName);
-            
-            // fs.renameSync(currentPath, newPath);
+            var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
+            if (taskFolderName.indexOf('__') !== -1) {
+                var s = taskFolderName.split('__');
+                var newFolderName = s[0] + s[1].toUpperCase();
+                var newPath = path.join(pathWithLegacyFolders, newFolderName);
+                
+                fs.renameSync(currentPath, newPath);
+            }
         });
 }
 exports.renameFoldersFromAggregate = renameFoldersFromAggregate;
@@ -1472,7 +1474,8 @@ var generatePerTaskForLegacyPackages = function generatePerTaskForLegacyPackages
     if (test('-d', legacyPath)) {
         rm('-rf', legacyPath);
     }
-    util.createNugetPackagePerTask(legacyPath, pathWithLegacyFolders);
+    
+    createNugetPackagePerTask(legacyPath, pathWithLegacyFolders);
 }
 exports.generatePerTaskForLegacyPackages = generatePerTaskForLegacyPackages;
 

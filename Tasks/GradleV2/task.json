@@ -16,7 +16,7 @@
     "version": {
         "Major": 2,
         "Minor": 137,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -232,7 +232,7 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "CodeAnalysis",
-            "helpMarkDown": "This option has changed from version 1 of the **Gradle** task to use the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions. Enable this option to run [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing tasks in the **Tasks** field. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build definition before this Gradle task."
+            "helpMarkDown": "This option has changed from version 1 of the **Gradle** task to use the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) and [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) marketplace extensions. Enable this option to run [SonarQube or SonarCloud analysis](http://redirect.sonarsource.com/doc/install-configure-scanner-tfs-ts.html) after executing tasks in the **Tasks** field. You must also add a **Prepare Analysis Configuration** task from one of the extensions to the build pipeline before this Gradle task."
         },
         {
             "name": "sqGradlePluginVersionChoice",
@@ -309,7 +309,7 @@
         "sqAnalysis_BuildSummaryTitle": "SonarQube Analysis Report",
         "sqAnalysis_TaskReportInvalid": "Invalid or missing task report. Check SonarQube finished successfully.",
         "sqAnalysis_BuildSummary_LinkText": "Detailed SonarQube report",
-        "sqAnalysis_BuildSummary_CannotAuthenticate": "Cannot authenticate to the SonarQube server. Check the saved endpoint details and the status of the server.",
+        "sqAnalysis_BuildSummary_CannotAuthenticate": "Cannot authenticate to the SonarQube server. Check the saved service connection details and the status of the server.",
         "sqAnalysis_AnalysisTimeout": "The analysis did not complete in the allotted time of %d seconds.",
         "sqAnalysis_IsPullRequest_SkippingBuildSummary": "Pull request build: detailed SonarQube build summary will not be available.",
         "sqAnalysis_IsPullRequest_SkippingBuildBreaker": "Pull request build: build will not be broken if quality gate fails.",

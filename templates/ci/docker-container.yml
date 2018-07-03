@@ -8,15 +8,15 @@ variables:
 steps:
 
 - task: Docker@1
+  displayName: 'Build the image'
   inputs:
-  	displayName: 'Build the image'
     action: 'build an image'
     dockerFile: '**/Dockerfile' 
     imageName: '$(imageName)'
 
 #- task: Docker@1
+#  displayName: 'Push the image'
 #  inputs:
-#    displayName: 'Push the image'
 #    action: 'push an image'
 #    containerregistrytype: 'container registry'
 #    dockerRegistryEndpoint: ''

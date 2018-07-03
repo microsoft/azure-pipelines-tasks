@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 4
   },
   "preview": true,
   "demands": [
@@ -311,6 +311,11 @@
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "prejobexecution": {
+    "Node": {
+      "target": "PreJobExecutionAzureFileCopy.js"
+    }
+  },
   "execution": {
     "PowerShell3": {
       "target": "AzureFileCopy.ps1"
@@ -359,6 +364,7 @@
     "AFC_RootContainerAndDirectory": "ms-resource:loc.messages.AFC_RootContainerAndDirectory",
     "AFC_RedirectResponseInvalidStatusCode": "ms-resource:loc.messages.AFC_RedirectResponseInvalidStatusCode",
     "AFC_RedirectResponseLocationHeaderIsNull": "ms-resource:loc.messages.AFC_RedirectResponseLocationHeaderIsNull",
-    "AFC_AzCopyBlobUploadNonZeroExitCode": "ms-resource:loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode"
+    "AFC_AzCopyBlobUploadNonZeroExitCode": "ms-resource:loc.messages.AFC_AzCopyBlobUploadNonZeroExitCode",
+    "AFC_PreexecutionJob_UnableToGetStorageKey": "ms-resource:loc.messages.AFC_PreexecutionJob_UnableToGetStorageKey"
   }
 }
