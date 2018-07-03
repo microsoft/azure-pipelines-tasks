@@ -259,7 +259,7 @@ function Wait-ServiceFabricApplicationUpgradeAction
         -ResultRetryEvaluator $upgradeRetryEvaluator `
         -MaxTries 2147483647 `
         -RetryIntervalInSeconds 3 `
-        -RetryableExceptions @("System.Fabric.FabricTransientException") `
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
         -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
 }
 
