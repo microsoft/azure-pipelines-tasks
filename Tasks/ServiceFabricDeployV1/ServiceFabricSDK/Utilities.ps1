@@ -640,7 +640,7 @@ function Remove-ServiceFabricApplicationPackageAction
     )
 
     $global:operationId = $SF_Operations.RemoveApplicationPackage
-    $removeAction = { Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $ImageStoreConnectionString }
+    $removeAction = { Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $ApplicationPackagePathInImageStore -ImageStoreConnectionString $ImageStoreConnectionString }
     Invoke-ActionWithDefaultRetries -Action $removeAction `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplicationPackage) `
         -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
