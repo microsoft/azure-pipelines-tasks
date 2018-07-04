@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 15
+        "Patch": 16
     },
     "demands": [
         "Cmd"
@@ -476,6 +476,12 @@
         "SFSDK_RetryingUnregisterApplicationType": "Retrying unregister..",
         "SFSDK_RetryingRemoveApplication": "Retrying remove application..",
         "SFSDK_RetryingCreateApplication": "Retrying create application..",
-        "SFSDK_ApplicationHealth": "Getting application health:"
+        "SFSDK_ApplicationHealth": "Getting application health:",
+        "SFSDK_RetryingUpgradeApplication": "Retrying application upgrade..",
+        "SFSDK_RetryingGetApplicationUpgrade": "Getting application upgrade status...",
+        "SFSDK_RetryingTestClusterConnection": "Testing connection to cluster..",
+        "SFSDK_RetryingTestAppPackage": "Testing application package..",
+        "SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",
+        "SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package.."
     }
 }

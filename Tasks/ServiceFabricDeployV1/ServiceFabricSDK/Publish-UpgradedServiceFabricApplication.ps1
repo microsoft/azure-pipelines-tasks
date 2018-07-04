@@ -185,17 +185,7 @@ function Publish-UpgradedServiceFabricApplication
         return
     }
 
-
-    try
-    {
-        $global:operationId = $SF_Operations.TestClusterConnection
-        [void](Test-ServiceFabricClusterConnection)
-    }
-    catch
-    {
-        Write-Warning (Get-VstsLocString -Key SFSDK_UnableToVerifyClusterConnection)
-        throw
-    }
+    Test-ServiceFabricClusterConnectionAction
 
     $ApplicationTypeAlreadyRegistered = $false
     if ($Action.Equals('RegisterAndUpgrade') -or $Action.Equals('Register'))
@@ -235,14 +225,12 @@ function Publish-UpgradedServiceFabricApplication
         if (!$reg -or !$ApplicationTypeAlreadyRegistered)
         {
             # Get image store connection string
-            $global:operationId = $SF_Operations.GetClusterManifest
-            $clusterManifestText = Get-ServiceFabricClusterManifest
+            $clusterManifestText = Get-ServiceFabricClusterManifestAction
             $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
 
             if (!$SkipPackageValidation)
             {
-                $global:operationId = $SF_Operations.TestApplicationPackage
-                $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
+                $packageValidationSuccess = (Test-ServiceFabricApplicationPackageAction -AppPkgPath $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
                 if (!$packageValidationSuccess)
                 {
                     $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
@@ -331,8 +319,7 @@ function Publish-UpgradedServiceFabricApplication
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_StartAppUpgrade)
-            $global:operationId = $SF_Operations.StartApplicationUpgrade
-            Start-ServiceFabricApplicationUpgrade @UpgradeParameters
+            Start-ServiceFabricApplicationUpgradeAction -UpgradeParameters $UpgradeParameters
         }
         catch
         {
