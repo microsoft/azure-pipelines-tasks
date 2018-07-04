@@ -223,13 +223,16 @@ async function main(): Promise<void> {
 
                 if (artifact.resource.type.toLowerCase() === "container") {
                     let downloader = new engine.ArtifactEngine();
-                    var containerParts: string[] = artifact.resource.data.split('/', 3);
-                    if (containerParts.length !== 3) {
+
+                    console.log(tl.loc("DownloadingContainerResource", artifact.resource.data));
+                    var containerParts = artifact.resource.data.split('/');
+
+                    if (containerParts.length < 3) {
                         throw new Error(tl.loc("FileContainerInvalidArtifactData"));
                     }
-
-                    var containerId: number = parseInt(containerParts[1]);
-                    var containerPath: string = containerParts[2];
+                    
+                    var containerId = parseInt(containerParts[1]);
+                    var containerPath = containerParts.slice(2,containerParts.length).join('/');
 
                     var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
                     console.log(tl.loc("DownloadArtifacts", artifact.name, itemsUrl));
