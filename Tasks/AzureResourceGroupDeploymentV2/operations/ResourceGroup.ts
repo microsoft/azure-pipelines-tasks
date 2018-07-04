@@ -170,19 +170,17 @@ export class ResourceGroup {
             tl.error(error.message);
             if (error.details) {
                 tl.error(tl.loc("Details"));
-                var isPolicyVoilated = false;
+                var isPolicyViolated = false;
                 for (var i = 0; i < error.details.length; i++) {
                     var errorMessage = null;
                     if (error.details[i].code === "RequestDisallowedByPolicy") {
-                        if (!isPolicyVoilated) {
-                            let managementGroupId = this.getmanagementGroupId(error.details[i]);
-                            let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://ms.portal.azure.com";
-                            let policyLink = portalUrl + "#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + managementGroupId;
+                        if (!isPolicyViolated) {
+                            let policyLink = this.getPolicyHelpLink(error.details[i]);
                             tl.warning(tl.loc("ManageAzurePolicy") + policyLink);
                         }
 
-                        isPolicyVoilated = true;
-                        errorMessage = this.parsePolicyError(error.details[i]);
+                        isPolicyViolated = true;
+                        errorMessage = this.getPolicyErrorMessage(error.details[i]);
                     }
                     else {
                         errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
@@ -195,7 +193,14 @@ export class ResourceGroup {
         }
     }
 
-    private getmanagementGroupId(errorDetail): string {
+    private getPolicyHelpLink(errorDetailMessage): string {
+        let managementGroupId = this.parseManagementGroupId(errorDetailMessage);
+        let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
+        let policyLink = portalUrl + "#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + managementGroupId;
+        return policyLink;
+    }
+
+    private parseManagementGroupId(errorDetail): string {
         let errorMessage = errorDetail.message;
         let managementGroupString = "managementGroups";
         let splitErrorMessage = errorMessage.split('/');
@@ -210,7 +215,7 @@ export class ResourceGroup {
         return managementGroupString;
     }
 
-    private parsePolicyError(errorDetail): void {
+    private getPolicyErrorMessage(errorDetail): string {
         var errorMessage = errorDetail.message;
 
         if (!!errorMessage) {
@@ -220,7 +225,7 @@ export class ResourceGroup {
         var additionalInfo = errorDetail.additionalInfo;
         if (!!additionalInfo) {
             for (var i = 0; i < additionalInfo.length; i++) {
-                errorMessage += util.format(" Error type: %s, Policy definition name : %s, Policy assignment name: %s", additionalInfo[i].type, additionalInfo[i].info.policyDefinitionDisplayName, additionalInfo[i].info.policyAssignmentName);
+                errorMessage += util.format(tl.loc("ErrorType") + " %s, " + tl.loc("PolicyDefinitionName") + " %s, " + tl.loc("PolicyAssignmentName") + " %s ", additionalInfo[i].type, additionalInfo[i].info.policyDefinitionDisplayName, additionalInfo[i].info.policyAssignmentName);
             }
         }
 

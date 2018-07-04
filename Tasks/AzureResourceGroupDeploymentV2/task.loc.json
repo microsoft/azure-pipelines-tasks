@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 136,
-    "Patch": 6
+    "Minor": 138,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -338,6 +338,10 @@
     "CreateTemplateDeploymentFailed": "ms-resource:loc.messages.CreateTemplateDeploymentFailed",
     "ErrorsInYourDeployment": "ms-resource:loc.messages.ErrorsInYourDeployment",
     "Details": "ms-resource:loc.messages.Details",
+    "ManageAzurePolicy": "ms-resource:loc.messages.ManageAzurePolicy",
+    "ErrorType": "ms-resource:loc.messages.ErrorType",
+    "PolicyDefinitionName": "ms-resource:loc.messages.PolicyDefinitionName",
+    "PolicyAssignmentName": "ms-resource:loc.messages.PolicyAssignmentName",
     "StartingValidation": "ms-resource:loc.messages.StartingValidation",
     "ValidDeployment": "ms-resource:loc.messages.ValidDeployment",
     "CreateTemplateDeploymentValidationFailed": "ms-resource:loc.messages.CreateTemplateDeploymentValidationFailed",

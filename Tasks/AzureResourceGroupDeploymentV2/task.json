@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 136,
-        "Patch": 6
+        "Minor": 138,
+        "Patch": 0
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -339,6 +339,9 @@
         "ErrorsInYourDeployment": "There were errors in your deployment. Error code: %s.",
         "Details": "Details:",
         "ManageAzurePolicy": "Manage Azure Policy : ",
+        "ErrorType" : "Error Type:",
+        "PolicyDefinitionName" : "Policy Definition Name :",
+        "PolicyAssignmentName" : "Policy Assignment Name :",
         "StartingValidation": "Starting template validation.",
         "ValidDeployment": "Template deployment validation was completed successfully.",
         "CreateTemplateDeploymentValidationFailed": "Template validation failed. Error: %s.",
