@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 22
+        "Patch": 24
     },
     "demands": [],
     "preview": "false",
@@ -159,8 +159,8 @@
             "name": "dockerRegistryEndpoint",
             "aliases": ["dockerRegistryConnection"],
             "type": "connectedService:dockerregistry",
-            "label": "Docker Registry connection",
-            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+            "label": "Docker Registry service connection",
+            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "secretType = dockerRegistry && containerRegistryType = Container Registry",
             "groupName": "secrets"
         },
@@ -345,12 +345,13 @@
         "DeleteConfigMap": "Executing delete %s configmap",
         "ConfigMapExists": "ConfigMap %s already exists",
         "GetConfigMap": "Executing get %s configmap",
-        "DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
+        "DockerRegistryConnectionNotSpecified": "Docker Registry service connection details not specified",
         "FileNotFoundException": "Can not find file at location: %s",
-        "DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",
+        "DownloadingKubeCtlFromUrl": "Downloading Kubectl from URL: %s",
         "DownloadPathForStableTxt": "Download path for stable.txt: %s",
         "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
-        "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases"
+        "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
+        "ConfigurationFileNotFound":"No configuration file matching %s was found."
     }
 }

@@ -13,11 +13,11 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 3
     },
     "demands": [],
     "preview": "true",
-    "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
+    "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
     "groups": [
         {
             "name": "commands",
@@ -49,14 +49,14 @@
         {
             "name": "connectionType",
             "type": "pickList",
-            "label": "Connection type",
+            "label": "Service connection type",
             "defaultValue": "Azure Resource Manager",
             "required": true,
             "options": {
                 "Azure Resource Manager": "Azure Resource Manager",
                 "Kubernetes Service Connection": "Kubernetes Service Connection"
             },
-            "helpMarkDown": "Select a connection type."
+            "helpMarkDown": "Select a service connection type."
         },
         {
             "name": "kubernetesServiceEndpoint",
@@ -205,8 +205,8 @@
         {
             "name": "dockerRegistryEndpoint",
             "type": "connectedService:dockerregistry",
-            "label": "Docker registry connection",
-            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+            "label": "Docker registry service connection",
+            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "secretType = dockerRegistry && containerRegistryType = Container Registry",
             "groupName": "secrets"
         },
@@ -403,13 +403,14 @@
         "DeleteConfigMap": "Executing delete %s configmap",
         "ConfigMapExists": "ConfigMap %s already exists",
         "GetConfigMap": "Executing get %s configmap",
-        "DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
+        "DockerRegistryConnectionNotSpecified": "Docker Registry service connection details not specified",
         "FileNotFoundException": "Can not find file at location: %s",
-        "DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",
+        "DownloadingKubeCtlFromUrl": "Downloading Kubectl from URL: %s",
         "DownloadPathForStableTxt": "Download path for stable.txt: %s",
         "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
-        "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2."
+        "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
+        "ConfigurationFileNotFound":"No configuration file matching %s was found."
     }
 }

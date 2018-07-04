@@ -26,8 +26,8 @@
   "loc.input.help.secretArguments": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
   "loc.input.label.containerRegistryType": "Container Registry type",
   "loc.input.help.containerRegistryType": "Select a Container registry type. The task can use Azure Subscription details to work with an Azure Container registry. Other standard Container registries are also supported.",
-  "loc.input.label.dockerRegistryEndpoint": "Docker Registry connection",
-  "loc.input.help.dockerRegistryEndpoint": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+  "loc.input.label.dockerRegistryEndpoint": "Docker Registry service connection",
+  "loc.input.help.dockerRegistryEndpoint": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
   "loc.input.label.azureSubscriptionEndpoint": "Azure subscription",
   "loc.input.help.azureSubscriptionEndpoint": "Select the Azure Resource Manager subscription, which contains Azure Container Registry. Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
   "loc.input.label.azureContainerRegistry": "Azure Container Registry",
@@ -66,11 +66,12 @@
   "loc.messages.DeleteConfigMap": "Executing delete %s configmap",
   "loc.messages.ConfigMapExists": "ConfigMap %s already exists",
   "loc.messages.GetConfigMap": "Executing get %s configmap",
-  "loc.messages.DockerRegistryConnectionNotSpecified": "Docker Registry connection details not specified",
+  "loc.messages.DockerRegistryConnectionNotSpecified": "Docker Registry service connection details not specified",
   "loc.messages.FileNotFoundException": "Can not find file at location: %s",
-  "loc.messages.DownloadingKubeCtlFromUrl": "Downloading Kubectl from Url: %s",
+  "loc.messages.DownloadingKubeCtlFromUrl": "Downloading Kubectl from URL: %s",
   "loc.messages.DownloadPathForStableTxt": "Download path for stable.txt: %s",
   "loc.messages.DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
-  "loc.messages.UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases"
+  "loc.messages.UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
+  "loc.messages.ConfigurationFileNotFound": "No configuration file matching %s was found."
 }

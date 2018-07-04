@@ -13,8 +13,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 136,
-        "Patch": 0
+        "Minor": 137,
+        "Patch": 1
     },
     "groups": [
         {
@@ -28,10 +28,10 @@
         {
             "name": "serverEndpoint",
             "type": "connectedService:Jenkins",
-            "label": "Jenkins service endpoint",
+            "label": "Jenkins service connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins service endpoint."
+            "helpMarkDown": "Select the service connection for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins service connection."
         },
         {
             "name": "jobName",
@@ -91,7 +91,7 @@
             "label": "Job parameters",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value), leave off the parameter value. For example, specify <b>`<parameterName>=`</b><p>Variables are supported. For example, to set a <b>`commitId`</b> parameter value to the Git commit ID of the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://docs.microsoft.com/vsts/pipelines/build/variables) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
+            "helpMarkDown": "Specify job parameters, one per line, in the form <b>`<parameterName>=<parameterValue>`</b><p>To set a parameter to an empty value (useful for overriding a default value), leave off the parameter value. For example, specify <b>`<parameterName>=`</b><p>Variables are supported. For example, to set a <b>`commitId`</b> parameter value to the Git commit ID of the build, use: <b>`commitId=$(Build.SourceVersion)`</b>. See the [documentation on variables](https://go.microsoft.com/fwlink/?linkid=875288) for more details.<p>Supported Jenkins parameter types are: <ul><li>`Boolean`</li><li>`Choice`</li><li>`Password`</li><li>`String`</li></ul>",
             "groupName": "advanced",
             "visibleRule": "parameterizedJob = true",
             "properties": {

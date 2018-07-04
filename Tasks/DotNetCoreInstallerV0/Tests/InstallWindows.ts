@@ -48,4 +48,5 @@ tr.setAnswers(a);
 
 tr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
 tr.registerMock('vsts-task-tool-lib/tool', require('./mock_node_modules/tool'));
+tr.registerMock('./releasesfetcher', require("./mock_node_modules/releasesfetcher"));
 tr.run();

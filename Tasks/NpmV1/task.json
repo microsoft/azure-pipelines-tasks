@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 16
+        "Patch": 18
     },
     "runsOn": [
         "Agent",
@@ -163,8 +163,8 @@
         "NoBuildCredentials": "Could not find build credentials",
         "UnknownCommand": "Unknown command: %s",
         "MultipleProjectConfigs": "More than one project .npmrc found in $s",
-        "ServiceEndpointNotDefined": "Couldn't find Service Endpoint, make sure the selected endpoint still exists.",
-        "ServiceEndpointUrlNotDefined": "Couldn't find Url for Service Endpoint, make sure Service Endpoint is correctly configured.",
+        "ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
+        "ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
         "SavingFile": "Saving file %s",
         "RestoringFile": "Restoring file %s",
         "PublishFeed": "Publishing to internal feed",
@@ -175,7 +175,7 @@
         "UsingRegistry": "Using registry: %s",
         "AddingAuthRegistry": "Adding auth for registry: %s",
         "FoundLocalRegistries": "Found %d registries in this account/collection",
-        "ForcePackagingUrl": "Packaging collection url forced to: %s",
+        "ForcePackagingUrl": "Packaging collection URL forced to: %s",
         "DebugLogNotFound": "Couldn't find a debug log in the cache or working directory",
         "NpmFailed": "Npm failed with return code: %s",
         "FoundNpmDebugLog": "Found npm debug log, make sure the path matches with the one in npm's output: %s",

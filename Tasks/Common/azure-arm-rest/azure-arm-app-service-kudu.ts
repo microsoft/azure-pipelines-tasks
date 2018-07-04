@@ -29,8 +29,9 @@ export class KuduServiceManagementClient {
         catch(exception) {
             let exceptionString: string = exception.toString();
             if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
-                || exceptionString.indexOf("unable to verify the first certificate") != -1) {
-                tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
+                || exceptionString.indexOf("unable to verify the first certificate") != -1
+                || exceptionString.indexOf("unable to get local issuer certificate") != -1) {
+                    tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
             }
 
             throw new Error(exceptionString);
@@ -517,6 +518,31 @@ export class Kudu {
         }
         catch(error) {
             throw Error(tl.loc('FailedToDeleteFile', physicalPath, fileName, this._getFormattedError(error)));
+        }
+    }
+
+    public async deleteFolder(physicalPath: string): Promise<void> {
+        physicalPath = physicalPath.replace(/[\\]/g, "/");
+        physicalPath = physicalPath[0] == "/" ? physicalPath.slice(1): physicalPath;
+        var httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'DELETE';
+        httpRequest.uri = this._client.getRequestUri(`/api/vfs/${physicalPath}`);
+        httpRequest.headers = {
+            'If-Match': '*'
+        };
+
+        try {
+            var response = await this._client.beginRequest(httpRequest);
+            tl.debug(`deleteFolder. Data: ${JSON.stringify(response)}`);
+            if([200, 201, 204, 404].indexOf(response.statusCode) != -1) {
+                return ;
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw Error(tl.loc('FailedToDeleteFolder', physicalPath, this._getFormattedError(error)));
         }
     }
 

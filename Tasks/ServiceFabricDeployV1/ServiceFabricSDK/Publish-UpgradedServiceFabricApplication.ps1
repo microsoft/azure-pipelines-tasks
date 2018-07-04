@@ -105,7 +105,7 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [int]$UnregisterPackageTimeoutSec= 120,
+        [int]$UnregisterPackageTimeoutSec = 120,
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
@@ -165,7 +165,7 @@ function Publish-UpgradedServiceFabricApplication
         Write-Error (Get-VstsLocString -Key EmptyApplicationName)
     }
 
-    $oldApplication = Get-ServiceFabricApplication -ApplicationName $ApplicationName
+    $oldApplication = Get-ServiceFabricApplicationAction -ApplicationName $ApplicationName
     ## Check existence of the application
     if (!$oldApplication)
     {
@@ -185,47 +185,25 @@ function Publish-UpgradedServiceFabricApplication
         return
     }
 
-    # Get image store connection string
-    $clusterManifestText = Get-ServiceFabricClusterManifest
-    $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
-
-    if (!$SkipPackageValidation)
-    {
-        $packageValidationSuccess = (Test-ServiceFabricApplicationPackage $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
-        if (!$packageValidationSuccess)
-        {
-            $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
-            throw $errMsg
-        }
-    }
-
-    try
-    {
-        [void](Test-ServiceFabricClusterConnection)
-    }
-    catch
-    {
-        Write-Warning (Get-VstsLocString -Key SFSDK_UnableToVerifyClusterConnection)
-        throw
-    }
+    Test-ServiceFabricClusterConnectionAction
 
     $ApplicationTypeAlreadyRegistered = $false
     if ($Action.Equals('RegisterAndUpgrade') -or $Action.Equals('Register'))
     {
         ## Check upgrade status
-        $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+        $upgradeStatus = Get-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName
         if ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted")
         {
             $errMsg = (Get-VstsLocString -Key SFSDK_UpgradeInProgressError -ArgumentList $ApplicationName)
             throw $errMsg
         }
 
-        $reg = Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
+        $reg = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion }
         if ($reg)
         {
             $ApplicationTypeAlreadyRegistered = $true
             $typeIsInUse = $false
-            $apps = Get-ServiceFabricApplication -ApplicationTypeName $names.ApplicationTypeName
+            $apps = Get-ServiceFabricApplicationAction -ApplicationTypeName $names.ApplicationTypeName
             $apps | ForEach-Object {
                 if (($_.ApplicationTypeVersion -eq $names.ApplicationTypeVersion))
                 {
@@ -235,7 +213,7 @@ function Publish-UpgradedServiceFabricApplication
             if (!$typeIsInUse)
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
+                Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                 $ApplicationTypeAlreadyRegistered = $false
             }
             else
@@ -246,6 +224,20 @@ function Publish-UpgradedServiceFabricApplication
 
         if (!$reg -or !$ApplicationTypeAlreadyRegistered)
         {
+            # Get image store connection string
+            $clusterManifestText = Get-ServiceFabricClusterManifestAction
+            $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
+
+            if (!$SkipPackageValidation)
+            {
+                $packageValidationSuccess = (Test-ServiceFabricApplicationPackageAction -AppPkgPath $AppPkgPathToUse -ImageStoreConnectionString $imageStoreConnectionString)
+                if (!$packageValidationSuccess)
+                {
+                    $errMsg = (Get-VstsLocString -Key SFSDK_PackageValidationFailed -ArgumentList $ApplicationPackagePath)
+                    throw $errMsg
+                }
+            }
+
             $applicationPackagePathInImageStore = $names.ApplicationTypeName
             Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
 
@@ -281,11 +273,7 @@ function Publish-UpgradedServiceFabricApplication
                 }
             }
 
-            Copy-ServiceFabricApplicationPackage @copyParameters
-            if (!$?)
-            {
-                throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
-            }
+            Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
 
             $registerParameters = @{
                 'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
@@ -297,11 +285,7 @@ function Publish-UpgradedServiceFabricApplication
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            Register-ServiceFabricApplicationType @registerParameters
-            if (!$?)
-            {
-                throw Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
-            }
+            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
         }
     }
 
@@ -335,18 +319,17 @@ function Publish-UpgradedServiceFabricApplication
             }
 
             Write-Host (Get-VstsLocString -Key SFSDK_StartAppUpgrade)
-            Start-ServiceFabricApplicationUpgrade @UpgradeParameters
+            Start-ServiceFabricApplicationUpgradeAction -UpgradeParameters $UpgradeParameters
         }
         catch
         {
             Write-Host (Get-VstsLocString -Key SFSDK_StartUpgradeFailed -ArgumentList $_.Exception.Message)
-
             try
             {
                 if (!$ApplicationTypeAlreadyRegistered)
                 {
                     Write-Host (Get-VstsLocString -Key SFSDK_UnregisterAppTypeOnUpgradeFailure -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                    Unregister-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -Force -TimeoutSec $UnregisterPackageTimeoutSec
+                    Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -TimeoutSec $UnregisterPackageTimeoutSec
                 }
             }
             catch
@@ -363,26 +346,18 @@ function Publish-UpgradedServiceFabricApplication
             return
         }
 
-        Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
-        $upgradeStatusFetcher = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
-        $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
-        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
-            -ActionSuccessValidator $upgradeStatusValidator `
-            -MaxTries 2147483647 `
-            -RetryIntervalInSeconds 3 `
-            -RetryableExceptions @("System.Fabric.FabricTransientException") `
-            -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+        $upgradeStatus = Wait-ServiceFabricApplicationUpgradeAction -ApplicationName $ApplicationName
 
         if ($UnregisterUnusedVersions)
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UnregisterUnusedVersions)
-            foreach ($registeredAppTypes in Get-ServiceFabricApplicationType -ApplicationTypeName $names.ApplicationTypeName | Where-Object { $_.ApplicationTypeVersion -ne $names.ApplicationTypeVersion })
+            foreach ($registeredAppType in Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName)
             {
                 try
                 {
-                    $registeredAppTypes | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
+                    Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($registeredAppType.ApplicationTypeName) -ApplicationTypeVersion $($registeredAppType.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                 }
-                catch [System.Fabric.FabricException]
+                catch
                 {
                     # AppType and Version in use.
                 }

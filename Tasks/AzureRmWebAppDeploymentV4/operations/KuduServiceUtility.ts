@@ -38,25 +38,35 @@ export class KuduServiceUtility {
         }
     }
 
-    public async runPostDeploymentScript(taskParams: TaskParameters, directoryPath?: string): Promise<void> {
-        try {
-            directoryPath = (!!directoryPath) ? directoryPath : physicalRootPath.substring(1);
+    public async runPostDeploymentScript(taskParams: TaskParameters, directoryPath?: string): Promise<void> {  
+        try {      
+            var uniqueID = this.getDeploymentID();
+            var createNewFolder = false;
+            var rootDirectoryPath = directoryPath;
+            if(!directoryPath) {                
+                rootDirectoryPath = physicalRootPath.substring(1);
+                directoryPath = path.join(physicalRootPath.substring(1), '..', 'VSTS_PostDeployment_' + uniqueID);
+                createNewFolder = true;
+            }
 
             if(taskParams.TakeAppOfflineFlag) {
-                await this._appOfflineKuduService(directoryPath, true);
+                await this._appOfflineKuduService(rootDirectoryPath, true);
             }
 
             var scriptFile = this._getPostDeploymentScript(taskParams.ScriptType, taskParams.InlineScript, taskParams.ScriptPath, taskParams.isLinuxApp);
-            var uniqueID = this.getDeploymentID();
             var fileExtension : string = taskParams.isLinuxApp ? '.sh' : '.cmd';
             var mainCmdFilePath = path.join(__dirname, '..', 'postDeploymentScript', 'mainCmdFile' + fileExtension);
-            await this._appServiceKuduService.uploadFile(directoryPath, 'mainCmdFile_' + uniqueID + fileExtension, mainCmdFilePath);
-            await this._appServiceKuduService.uploadFile(directoryPath, 'kuduPostDeploymentScript_' + uniqueID + fileExtension, scriptFile.filePath);
+            await this._appServiceKuduService.uploadFile(directoryPath, 'mainCmdFile' + fileExtension, mainCmdFilePath);
+            await this._appServiceKuduService.uploadFile(directoryPath, 'kuduPostDeploymentScript' + fileExtension, scriptFile.filePath);
             console.log(tl.loc('ExecuteScriptOnKudu'));
-            await this.runCommand(directoryPath,
-             'mainCmdFile_' + uniqueID + fileExtension + ' ' + uniqueID,
-              30, 'script_result_' +  uniqueID + '.txt');
-            await this._printPostDeploymentLogs(directoryPath, uniqueID);
+            var cmdFilePath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\mainCmdFile' + fileExtension;
+            var scriprResultPath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\script_result.txt';
+            if (taskParams.isLinuxApp){
+                cmdFilePath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/mainCmdFile' + fileExtension
+                scriprResultPath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/script_result.txt';
+            }
+            await this.runCommand(rootDirectoryPath, cmdFilePath + ' ' + uniqueID, 30, scriprResultPath);
+            await this._printPostDeploymentLogs(directoryPath);
 
         }
         catch(error) {
@@ -73,14 +83,17 @@ export class KuduServiceUtility {
         }
         finally {
             try {
-                await this._appServiceKuduService.uploadFile(directoryPath, 'delete_log_file_' + uniqueID + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
-                await this.runCommand(directoryPath, 'delete_log_file_' + uniqueID + fileExtension + ' ' + uniqueID, 0, null);
+                await this._appServiceKuduService.uploadFile(directoryPath, 'delete_log_file' + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
+                await this.runCommand(directoryPath, 'delete_log_file' + fileExtension, 0, null);
+                if(createNewFolder) {
+                    await this._appServiceKuduService.deleteFolder(directoryPath);
+                }
             }
             catch(error) {
                 tl.debug('Unable to delete log files : ' + error);
             }
             if(taskParams.TakeAppOfflineFlag) {
-                await this._appOfflineKuduService(directoryPath, false);
+                await this._appOfflineKuduService(rootDirectoryPath, false);
             }
         }
     }
@@ -165,7 +178,7 @@ export class KuduServiceUtility {
 
             if(runFromZip) {
                 var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
-                queryParameters.push('message=' + deploymentMessage);
+                queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             }
 
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
@@ -218,6 +231,17 @@ export class KuduServiceUtility {
         }
     }
 
+    public async warmpUp() {
+        try {
+            tl.debug('warming up Kudu Service');
+            await this._appServiceKuduService.getAppSettings();
+            tl.debug('warmed up Kudu Service');
+        }
+        catch(error) {
+            tl.debug('Failed to warm-up Kudu: ' + error.toString());
+        }
+    }
+
     private async _printZipDeployLogs(log_url: string): Promise<void> {
         if(!log_url) {
             return;
@@ -232,13 +256,13 @@ export class KuduServiceUtility {
         }
     }
 
-    private async _printPostDeploymentLogs(physicalPath: string, uniqueID: string) : Promise<void> {
-        var stdoutLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stdout_' + uniqueID + '.txt');
-        var stderrLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stderr_' + uniqueID + '.txt');
-        var scriptReturnCode = await this._appServiceKuduService.getFileContent(physicalPath, 'script_result_' + uniqueID + '.txt');
+    private async _printPostDeploymentLogs(physicalPath: string) : Promise<void> {
+        var stdoutLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stdout.txt');
+        var stderrLog = await this._appServiceKuduService.getFileContent(physicalPath, 'stderr.txt');
+        var scriptReturnCode = await this._appServiceKuduService.getFileContent(physicalPath, 'script_result.txt');
 
         if(scriptReturnCode == null) {
-            throw new Error('File not found in Kudu Service. ' + 'script_result_' + uniqueID + '.txt');
+            throw new Error('File not found in Kudu Service. ' + 'script_result.txt');
         }
 
         if(stdoutLog) {
