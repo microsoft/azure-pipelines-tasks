@@ -16,6 +16,7 @@ $SF_Operations = @{
     CreateNewApplication              = 'CreateNewApplication'
     StartApplicationUpgrade           = 'StartApplicationUpgrade';
     GetApplicationUpgradeStatus       = 'GetApplicationUpgradeStatus';
+    WaitApplicationUpgradeStatus      = 'WaitApplicationUpgradeStatus';
     EncryptServiceFabricText          = 'EncryptServiceFabricText';
     CreateDiffPackage                 = 'CreateDiffPackage';
     GetComposeDeploymentStatus        = 'GetComposeDeploymentStatus';
