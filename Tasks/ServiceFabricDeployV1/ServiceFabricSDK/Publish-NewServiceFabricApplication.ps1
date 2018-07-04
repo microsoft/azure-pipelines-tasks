@@ -144,16 +144,7 @@
 
     $ApplicationManifestPath = "$AppPkgPathToUse\ApplicationManifest.xml"
 
-    try
-    {
-        $global:operationId = $SF_Operations.TestClusterConnection
-        [void](Test-ServiceFabricClusterConnection)
-    }
-    catch
-    {
-        Write-Warning (Get-VstsLocString -Key SFSDK_UnableToVerifyClusterConnection)
-        throw
-    }
+    Test-ServiceFabricClusterConnectionAction
 
     # If ApplicationName is not specified on command line get application name from Application Parameter file.
     if (!$ApplicationName)
@@ -259,8 +250,7 @@
 
             Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
             # Get image store connection string
-            $global:operationId = $SF_Operations.GetClusterManifest
-            $clusterManifestText = Get-ServiceFabricClusterManifest
+            $clusterManifestText = Get-ServiceFabricClusterManifestAction
             $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
 
             $applicationPackagePathInImageStore = $names.ApplicationTypeName
@@ -310,9 +300,8 @@
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
             Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
 
-            $global:operationId = $SF_Operations.RemoveApplicationPackage
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
-            Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
+            Remove-ServiceFabricApplicationPackageAction -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
         }
     }
 
