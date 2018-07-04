@@ -240,7 +240,9 @@ function Get-ServiceFabricApplicationUpgradeAction
     )
 
     $global:operationId = $SF_Operations.GetApplicationUpgradeStatus
-    return Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+    $getUpgradeAction = { Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName }
+    return Invoke-ActionWithDefaultRetries -Action $getUpgradeAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationUpgrade)
 }
 
 function Copy-ServiceFabricApplicationPackageAction
@@ -518,8 +520,6 @@ function New-ServiceFabricApplicationAction
     )
 
     $global:operationId = $SF_Operations.CreateNewApplication
-
-
     $createAction = { New-ServiceFabricApplication -ApplicationName $ApplicationName -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -ApplicationParameter $ApplicationParameter }
     $exceptionRetryEvaluator = {
         param($ex)
@@ -544,9 +544,106 @@ function New-ServiceFabricApplicationAction
     {
         Write-Host (Get-VstsLocString -Key SFSDK_CreateApplicationFailed)
         # print application health status if create did not succeed
-        Trace-ServiceFabricApplicationHealth
+        Trace-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
         throw
     }
+}
+
+function Start-ServiceFabricApplicationUpgradeAction
+{
+    Param (
+        [hashtable]
+        $UpgradeParameters
+    )
+
+    $global:operationId = $SF_Operations.StartApplicationUpgrade
+    $startAction = { Start-ServiceFabricApplicationUpgrade @UpgradeParameters }
+    $exceptionRetryEvaluator = {
+        param($ex)
+
+        # If upgrade already started, don't retry
+        $upgradeStatus = Get-ServiceFabricApplicationUpgradeAction -ApplicationName $($UpgradeParameters["ApplicationName"])
+        if ($upgradeStatus -and ($upgradeStatus.UpgradeState -ne "RollingBackCompleted" -and $upgradeStatus.UpgradeState -ne "RollingForwardCompleted"))
+        {
+            return $false
+        }
+
+        return $true
+    }
+
+    try
+    {
+        Invoke-ActionWithDefaultRetries -Action $startAction `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingUpgradeApplication) `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
+    }
+    catch
+    {
+        # print application health status if starting upgrade did not succeed
+        Trace-ServiceFabricApplicationHealth -ApplicationName $($UpgradeParameters["ApplicationName"])
+        throw
+    }
+}
+
+function Test-ServiceFabricClusterConnectionAction
+{
+    try
+    {
+        $global:operationId = $SF_Operations.TestClusterConnection
+        $testAction = { [void](Test-ServiceFabricClusterConnection) }
+        Invoke-ActionWithDefaultRetries -Action $testAction `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingTestClusterConnection) `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
+    }
+    catch
+    {
+        Write-Warning (Get-VstsLocString -Key SFSDK_UnableToVerifyClusterConnection)
+        throw
+    }
+}
+
+function Test-ServiceFabricApplicationPackageAction
+{
+    Param (
+        [string]
+        $AppPkgPath,
+
+        [string]
+        $ImageStoreConnectionString
+    )
+
+    $global:operationId = $SF_Operations.TestApplicationPackage
+    $testAction = { Test-ServiceFabricApplicationPackage -ApplicationPackagePath $AppPkgPath -ImageStoreConnectionString $ImageStoreConnectionString }
+    return Invoke-ActionWithDefaultRetries -Action $testAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingTestAppPackage) `
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
+}
+
+function Get-ServiceFabricClusterManifestAction
+{
+    $global:operationId = $SF_Operations.GetClusterManifest
+    $manifestAction = { Get-ServiceFabricClusterManifest }
+    return Invoke-ActionWithDefaultRetries -Action $manifestAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetClusterManifest) `
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
+}
+
+function Remove-ServiceFabricApplicationPackageAction
+{
+    Param (
+        [string]
+        $ApplicationPackagePathInImageStore,
+
+        [string]
+        $ImageStoreConnectionString
+    )
+
+    $global:operationId = $SF_Operations.RemoveApplicationPackage
+    $removeAction = { Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $ApplicationPackagePathInImageStore -ImageStoreConnectionString $ImageStoreConnectionString }
+    Invoke-ActionWithDefaultRetries -Action $removeAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplicationPackage) `
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
 }
 
 function Trace-ServiceFabricClusterHealth
