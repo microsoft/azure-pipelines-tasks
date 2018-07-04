@@ -254,9 +254,9 @@ function Publish-UpgradedServiceFabricApplication
             Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
 
             $copyParameters = @{
-                'ApplicationPackagePath'             = $AppPkgPathToUse
-                'ImageStoreConnectionString'         = $imageStoreConnectionString
-                'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
+            'ApplicationPackagePath'             = $AppPkgPathToUse
+            'ImageStoreConnectionString'         = $imageStoreConnectionString
+            'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
             }
 
             $InstalledSdkVersion = [version](Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
@@ -288,7 +288,7 @@ function Publish-UpgradedServiceFabricApplication
             Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
 
             $registerParameters = @{
-                'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
+            'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
             }
 
             if ($RegisterPackageTimeoutSec)
@@ -359,27 +359,36 @@ function Publish-UpgradedServiceFabricApplication
             return
         }
 
-        Write-Host (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
         $unhealthyEvaluationMessageFunction = {
             param(
-                $UnhealthyEvaluations,
+                [object]$UnhealthyEvaluations,
 
                 [string]$Indentation
             )
 
             if ($UnhealthyEvaluations -eq $null) {
-                return ""
+            return ""
             }
 
+            $unhealthyEvaluationsKind = ($UnhealthyEvaluations.kind | Out-String).Trim()
             $indentatedErrorString = ""
-            foreach ($UnhealthyEvaluation in $UnhealthyEvaluations) {
-                $indentatedErrorString += $Indentation + $UnhealthyEvaluation.Description
+            $indentatedErrorString += $Indentation + $UnhealthyEvaluations.Description + "`n"
+            foreach ($UnhealthyEvaluation in $UnhealthyEvaluations.UnhealthyEvaluations)
+            {
                 # see if indentation needs to be increased. based on the type of evaluation.
-                $indentatedErrorString += & $unhealthyEvaluationMessageFunction $UnhealthyEvaluation, if($UnhealthyEvaluations.kind -eq ($UnhealthyEvaluation.kind + "s")) { return $Indentation } Else { return $Indentation + "`t" }
+                $unhealthyEvaluationKind = ($UnhealthyEvaluation.kind | Out-String).Trim()
+                $newIndentation = $Indentation
+                if (!($unhealthyEvaluationsKind -eq ($unhealthyEvaluationKind + "s")))
+                {
+                    $newIndentation += "`t"
+                }
+
+                $indentatedErrorString += (& $unhealthyEvaluationMessageFunction -UnhealthyEvaluations $UnhealthyEvaluation -Indentation $newIndentation) + "`n"
             }
 
-            if ($UnhealthyEvaluation.UnhealthyEvent) {
-                $indentatedErrorString += $Indentation + $UnhealthyEvaluation.UnhealthyEvent
+            if ($UnhealthyEvaluations.UnhealthyEvent)
+            {
+                $indentatedErrorString += $Indentation + $UnhealthyEvaluations.UnhealthyEvent.HealthInformation.Description + "`n"
             }
 
             return $indentatedErrorString
@@ -387,71 +396,67 @@ function Publish-UpgradedServiceFabricApplication
 
         $DomainUpgradeStatusFormatterFunction = {
             param(
-                $UpgradeDomainsStatus
+                [object]$UpgradeDomainsStatus
             )
-
-            if ($UpgradeDomainsStatus -eq $null) {
+            if ($UpgradeDomainsStatus -eq $null)
+            {
                 return ""
             }
 
-            $enumerator = $UpgradeDomainsStatus.GetEnumerator()
-            $upgradeDomainStatusString = ""
-            while ($enumerator.MoveNext() -ne $False) {
-                 $currentElement = $enumerator.Current
-                 $upgradeDomainStatusString += $currentElement.Name + ": " + $currentElement.State + ", "
-            }
-            $upgradeDomainStatusString = $upgradeDomainStatusString.Trim()
-            $upgradeDomainStatusString = $upgradeDomainStatusString.SubString(0, $upgradeDomainStatusString.Length -1 ) #removing last "," from the string.
+            $upgradeDomainStatusString = ([String]($UpgradeDomainsStatus)).Trim()
             return $upgradeDomainStatusString
         }
 
         $upgradeStatusFetcher = {
             param(
-                $LastUpgradeStatus
+                [object]$LastUpgradeStatus
             )
-            $upgradeStatus  = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
-            Write-Host "Current Upgrade State:" $upgradeStatus.UpgradeState
+            $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
+            Write-Host (Get-VstsLocString -Key SFSDK_CurrentUpgradeState) $upgradeStatus.UpgradeState
 
-            $currentDomainWiseUpgradeStatus = & $DomainUpgradeStatusFormatterFunction $upgradeStatus.UpgradeDomainsStatus
-            $lastDomainWiseUpgradeStatus = if ($LastUpgradeStatus -ne $null) { return & $DomainUpgradeStatusFormatterFunction $LastUpgradeStatus.$UpgradeDomainsStatus } else { return "" }
-            if ($currentDomainWiseUpgradeStatus -ne $lastDomainWiseUpgradeStatus -and $currentDomainWiseUpgradeStatus -ne "") { Write-Host "`n Domain Wise Upgrade Status: " $currentDomainWiseUpgradeStatus }
+            $currentDomainWiseUpgradeStatus = & $DomainUpgradeStatusFormatterFunction -UpgradeDomainsStatus $upgradeStatus.UpgradeDomainsStatus
+            $lastDomainWiseUpgradeStatus = if ($LastUpgradeStatus -ne $null) { & $DomainUpgradeStatusFormatterFunction -UpgradeDomainsStatus $LastUpgradeStatus.UpgradeDomainsStatus } else { "" }
+            if (($currentDomainWiseUpgradeStatus -ne $lastDomainWiseUpgradeStatus) -and ($currentDomainWiseUpgradeStatus -ne ""))
+            {
+                Write-Host (Get-VstsLocString -Key SFSDK_DomainUpgradeStatus) $currentDomainWiseUpgradeStatus
+            }
 
             # unhealthy evaluations to be printed.
             if ($upgradeStatus.UnhealthyEvaluations -ne $null)
             {
-                $currentUnhealthyEvaluation = & $unhealthyEvaluationMessageFunction $upgradeStatus.UnhealthyEvaluations, ""
-                $lastUnhealthyEvaluation = if ($LastUpgradeStatus -ne $null) { return & $unhealthyEvaluationMessageFunction $LastUpgradeStatus.UnhealthyEvaluations, "" } else { return "" }
-                if ($currentUnhealthyEvaluation -ne $lastUnhealthyEvaluation -and $currentUnhealthyEvaluation -ne "") {
-                    Write-Host $currentUnhealthyEvaluation
+                $currentUnhealthyEvaluation = & $unhealthyEvaluationMessageFunction -UnhealthyEvaluations $upgradeStatus.UnhealthyEvaluations, -Indentation ""
+                $lastUnhealthyEvaluation = if ($LastUpgradeStatus -ne $null) { & $unhealthyEvaluationMessageFunction -UnhealthyEvaluations $LastUpgradeStatus.UnhealthyEvaluations, -Indentation "" } else { "" }
+                if (($currentUnhealthyEvaluation -ne $lastUnhealthyEvaluation) -and ($currentUnhealthyEvaluation -ne ""))
+                {
+                    Write-Host $currentUnhealthyEvaluation.Trim()
                 }
             }
 
             return $upgradeStatus;
         }
 
-        $upgradeStatusValidator = { param($upgradeStatus) return ($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
+        $upgradeStatusValidator = { param($upgradeStatus) return !($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
         $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
-            -ResultRetryEvaluator $upgradeRetryEvaluator `
+            -ResultRetryEvaluator $upgradeStatusValidator `
             -MaxTries 2147483647 `
             -RetryIntervalInSeconds 5 `
-            -RetryableExceptions @("System.Fabric.FabricTransientException") `
-            -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+            -RetryableExceptions @("System.Fabric.FabricTransientException")
 
-        if ($UnregisterUnusedVersions)
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_UnregisterUnusedVersions)
-            foreach ($registeredAppType in Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName)
-            {
-                try
+                if ($UnregisterUnusedVersions)
                 {
-                    Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($registeredAppType.ApplicationTypeName) -ApplicationTypeVersion $($registeredAppType.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
+                    Write-Host (Get-VstsLocString -Key SFSDK_UnregisterUnusedVersions)
+                    foreach ($registeredAppType in Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName)
+                    {
+                        try
+                        {
+                            Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($registeredAppType.ApplicationTypeName) -ApplicationTypeVersion $($registeredAppType.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
+                        }
+                        catch
+                        {
+                            # AppType and Version in use.
+                        }
+                    }
                 }
-                catch
-                {
-                    # AppType and Version in use.
-                }
-            }
-        }
 
         if ($upgradeStatus.UpgradeState -eq "RollingForwardCompleted")
         {

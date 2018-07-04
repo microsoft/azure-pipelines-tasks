@@ -29,11 +29,6 @@ function Invoke-ActionWithRetries
 
     Trace-VstsEnteringInvocation $MyInvocation
 
-    if (!$RetryMessage)
-    {
-        $RetryMessage = Get-VstsLocString -Key RetryAfterMessage $RetryIntervalInSeconds
-    }
-
     $lastResult = $null;
     $retryIteration = 1
     do
@@ -82,7 +77,11 @@ function Invoke-ActionWithRetries
             }
         }
 
-        Write-Host $RetryMessage
+        if (!$RetryMessage)
+        {
+            Write-Host $RetryMessage
+        }
+
         $retryIteration++
         Start-Sleep $RetryIntervalInSeconds
     } while ($true)
