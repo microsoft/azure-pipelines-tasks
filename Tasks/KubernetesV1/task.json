@@ -411,6 +411,6 @@
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
-        "ConfigurationFileNotFound":"No configuration file matching  %s  was found."
+        "ConfigurationFileNotFound":"No configuration file matching %s was found."
     }
 }

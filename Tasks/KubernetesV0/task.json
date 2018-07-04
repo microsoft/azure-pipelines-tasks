@@ -352,6 +352,6 @@
         "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
-        "ConfigurationFileNotFound":"No configuration file matching  %s  was found."
+        "ConfigurationFileNotFound":"No configuration file matching %s was found."
     }
 }
