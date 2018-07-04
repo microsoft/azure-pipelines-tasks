@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 137,
-        "Patch": 8
+        "Minor": 138,
+        "Patch": 1
     },
     "demands": [
         "vstest"
@@ -535,6 +535,7 @@
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
         "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
         "distributedTestWorkflow": "In distributed testing flow",
+        "nonDistributedTestWorkflow": "Running tests using vstest.console.exe runner.",
         "dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
         "testSelectorInput": "Test selector : %s",
         "searchFolderInput": "Search folder : %s",
