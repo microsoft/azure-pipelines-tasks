@@ -173,21 +173,19 @@ export class ResourceGroup {
                 var isPolicyVoilated = false;
                 for (var i = 0; i < error.details.length; i++) {
                     var errorMessage = null;
-                    if(error.details[i].code === "RequestDisallowedByPolicy")
-                    {
-                        if(!isPolicyVoilated)
-                        {
+                    if (error.details[i].code === "RequestDisallowedByPolicy") {
+                        if (!isPolicyVoilated) {
                             let managementGroupId = this.getmanagementGroupId(error.details[i]);
-                            let policyLink = "https://ms.portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + managementGroupId;
+                            let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://ms.portal.azure.com";
+                            let policyLink = portalUrl + "#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + managementGroupId;
                             tl.warning("Manage Azure policy : " + policyLink);
                         }
 
-                        
+
                         isPolicyVoilated = true;
                         errorMessage = this.parsePolicyError(error.details[i]);
                     }
-                    else
-                    {
+                    else {
                         errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
                     }
                     tl.error(errorMessage);
@@ -198,15 +196,14 @@ export class ResourceGroup {
         }
     }
 
-    private getmanagementGroupId(errorDetail): string
-    {
+    private getmanagementGroupId(errorDetail): string {
         let errorMessage = (errorDetail).message;
         let managementGroupString = "managementGroups";
-        let newmsgs = errorMessage.split('/');
-        
-        for (let i = 0; i < newmsgs.length; i++) {
-            if (newmsgs[i] === managementGroupString) {
-                managementGroupString = newmsgs[i + 1];
+        let splitErrorMessage = errorMessage.split('/');
+
+        for (let i = 0; i < splitErrorMessage.length; i++) {
+            if (splitErrorMessage[i] === managementGroupString) {
+                managementGroupString = splitErrorMessage[i + 1];
                 break;
             }
         }
@@ -214,17 +211,16 @@ export class ResourceGroup {
         return managementGroupString;
     }
 
-    private parsePolicyError(errorDetail): void
-    {
+    private parsePolicyError(errorDetail): void {
         var errorMessage = errorDetail.message;
-        
-        if(!!errorMessage) {
+
+        if (!!errorMessage) {
             errorMessage = errorMessage.split(".")[0] + ".";
         }
 
         var additionalInfo = errorDetail.additionalInfo;
-        if(!!additionalInfo) {
-            for (var i =0; i < additionalInfo.length; i++) {
+        if (!!additionalInfo) {
+            for (var i = 0; i < additionalInfo.length; i++) {
                 errorMessage += util.format(" Error type: %s, Policy definition name : %s, Policy assignment name: %s", additionalInfo[i].type, additionalInfo[i].info.policyDefinitionDisplayName, additionalInfo[i].info.policyAssignmentName);
             }
         }
