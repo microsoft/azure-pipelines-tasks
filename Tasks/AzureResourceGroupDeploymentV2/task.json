@@ -338,6 +338,7 @@
         "CreateTemplateDeploymentFailed": "Task failed while creating or updating the template deployment.",
         "ErrorsInYourDeployment": "There were errors in your deployment. Error code: %s.",
         "Details": "Details:",
+        "ManageAzurePolicy": "Manage Azure Policy : ",
         "StartingValidation": "Starting template validation.",
         "ValidDeployment": "Template deployment validation was completed successfully.",
         "CreateTemplateDeploymentValidationFailed": "Template validation failed. Error: %s.",

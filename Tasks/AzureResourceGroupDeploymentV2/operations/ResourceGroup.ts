@@ -178,9 +178,8 @@ export class ResourceGroup {
                             let managementGroupId = this.getmanagementGroupId(error.details[i]);
                             let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://ms.portal.azure.com";
                             let policyLink = portalUrl + "#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + managementGroupId;
-                            tl.warning("Manage Azure policy : " + policyLink);
+                            tl.warning(tl.loc("ManageAzurePolicy") + policyLink);
                         }
-
 
                         isPolicyVoilated = true;
                         errorMessage = this.parsePolicyError(error.details[i]);
@@ -197,7 +196,7 @@ export class ResourceGroup {
     }
 
     private getmanagementGroupId(errorDetail): string {
-        let errorMessage = (errorDetail).message;
+        let errorMessage = errorDetail.message;
         let managementGroupString = "managementGroups";
         let splitErrorMessage = errorMessage.split('/');
 
