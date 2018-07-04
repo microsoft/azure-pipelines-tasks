@@ -39,12 +39,6 @@ export class NonDistributedTest {
                 tl.warning(tl.loc('NoMatchingTestAssemblies', sourceFilter));
                 return;
             }
-    
-            const disableTIA = tl.getVariable('DisableTestImpactAnalysis');
-            if (disableTIA !== undefined && disableTIA.toLowerCase() === 'true') {
-                tl.debug('Disabling tia.');
-                this.inputDataContract.ExecutionSettings.TiaSettings.Enabled = false;
-            }
             
             const exitCode = await this.startDtaExecutionHost();
             tl.debug('DtaExecutionHost finished');

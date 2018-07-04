@@ -391,6 +391,11 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
         inputDataContract.ExecutionSettings.TiaSettings.UseTestCaseFilterInResponseFile = false;
     }
     
+    if (tl.getVariable('DisableTestImpactAnalysis') && tl.getVariable('DisableTestImpactAnalysis').toUpperCase() === 'TRUE') {
+        tl.debug('Disabling Test Impact Analysis.');
+        this.inputDataContract.ExecutionSettings.TiaSettings.Enabled = false;
+    }
+
     const buildReason = tl.getVariable('Build.Reason');
 
     // https://www.visualstudio.com/en-us/docs/build/define/variables
