@@ -254,9 +254,9 @@ function Publish-UpgradedServiceFabricApplication
             Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
 
             $copyParameters = @{
-            'ApplicationPackagePath'             = $AppPkgPathToUse
-            'ImageStoreConnectionString'         = $imageStoreConnectionString
-            'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
+                'ApplicationPackagePath'             = $AppPkgPathToUse
+                'ImageStoreConnectionString'         = $imageStoreConnectionString
+                'ApplicationPackagePathInImageStore' = $applicationPackagePathInImageStore
             }
 
             $InstalledSdkVersion = [version](Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKVersion).FabricSDKVersion
@@ -288,7 +288,7 @@ function Publish-UpgradedServiceFabricApplication
             Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
 
             $registerParameters = @{
-            'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
+                'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
             }
 
             if ($RegisterPackageTimeoutSec)
