@@ -307,7 +307,7 @@ function Register-ServiceFabricApplicationTypeAction
         {
             throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
         }
-        Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $RegisterParameters.ApplicationTypeName -ApplicationTypeVersion $RegisterParameters.ApplicationTypeVersion -TimeoutSec $RegisterPackageTimeoutSec -OperationType $SF_Operations.RegisterApplicationType
+        Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $RegisterParameters.TimeoutSec -OperationType $SF_Operations.RegisterApplicationType
     }
 
     $exceptionRetryEvaluator = {

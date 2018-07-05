@@ -292,6 +292,11 @@
                 'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
             }
 
+            if ($RegisterPackageTimeoutSec)
+            {
+                $registerParameters['TimeoutSec'] = $RegisterPackageTimeoutSec
+            }
+
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
             Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
