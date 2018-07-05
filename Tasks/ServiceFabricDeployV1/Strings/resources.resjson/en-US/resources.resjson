@@ -135,5 +135,11 @@
   "loc.messages.SFSDK_RetryingUnregisterApplicationType": "Retrying unregister..",
   "loc.messages.SFSDK_RetryingRemoveApplication": "Retrying remove application..",
   "loc.messages.SFSDK_RetryingCreateApplication": "Retrying create application..",
-  "loc.messages.SFSDK_ApplicationHealth": "Getting application health:"
+  "loc.messages.SFSDK_ApplicationHealth": "Getting application health:",
+  "loc.messages.SFSDK_RetryingUpgradeApplication": "Retrying application upgrade..",
+  "loc.messages.SFSDK_RetryingGetApplicationUpgrade": "Getting application upgrade status...",
+  "loc.messages.SFSDK_RetryingTestClusterConnection": "Testing connection to cluster..",
+  "loc.messages.SFSDK_RetryingTestAppPackage": "Testing application package..",
+  "loc.messages.SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",
+  "loc.messages.SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package.."
 }
