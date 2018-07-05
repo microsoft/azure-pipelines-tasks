@@ -338,8 +338,7 @@ function Register-ServiceFabricApplicationTypeAction
     }
 
     $timeoutAction = {
-        Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-        Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
+        Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
     }
 
     Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec -OperationType $SF_Operations.RegisterApplicationType -TimeoutAction $timeoutAction
@@ -428,17 +427,18 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
     $getAppTypeRetryEvaluator = {
         param($appType)
 
-        # if app type does not exist (i.e it got unprovisioned) or if its status has changed to a terminal one, stop wait
+        # if app type exist and if its status has not changed to a terminal one, do retry
         if ($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
         {
             return $true
         }
-        # if status has changed to a terminal one
+        # if app type exist and if its status has changed to a terminal one, throw
         elseif($appType -and (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
         {
             throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
         }
 
+        #If RegisterApplicationType operation
         if($OperationType -eq $SF_Operations.RegisterApplicationType)
         {
             # If provisioning not started, retry register
@@ -446,15 +446,16 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
             {
                 return $true
             }
-            # if app type is provisioned, bail out
+            # if app type is provisioned, don't retry
             elseif ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
             {
                 return $false
             }
         }
+        #If UnregisterApplicationType operation
         elseif($OperationType -eq $SF_Operations.UnregisterApplicationType)
         {
-            # If app type already unprovisioned, don't retry
+            # If app type unprovisioned, don't retry
             if(!$appType)
             {
                 return $false
