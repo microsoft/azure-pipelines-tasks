@@ -296,6 +296,8 @@ function Register-ServiceFabricApplicationTypeAction
         $ApplicationTypeVersion
     )
 
+    $RegisterParameters['Async'] = $true
+
     $global:operationId = $SF_Operations.RegisterApplicationType
     $registerAction = {
         Register-ServiceFabricApplicationType @RegisterParameters
@@ -307,6 +309,12 @@ function Register-ServiceFabricApplicationTypeAction
 
     $exceptionRetryEvaluator = {
         param($ex)
+        # If app already created, don't retry
+        if ($ex.GetType().FullName -eq "System.Fabric.FabricElementAlreadyExistsException")
+        {
+            return $false
+        }
+
         $appType = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
         # If provisioning not started, retry register
         if (!$appType)
@@ -412,9 +420,9 @@ function Wait-ServiceFabricApplicationTypeTerminalStatus
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
 }
 
-function Unregister-ServiceFabricApplicationTypeAction
+function Wait-ServiceFabricApplicationTypeRegistrationStatus
 {
-    Param(
+    Param (
         [string]
         $ApplicationTypeName,
 
@@ -422,13 +430,67 @@ function Unregister-ServiceFabricApplicationTypeAction
         $ApplicationTypeVersion,
 
         [int]
-        $TimeoutSec
+        $TimeoutSec,
+
+        [string]
+        $OperationType
+    )
+
+    $global:operationId = $SF_Operations.GetApplicationType
+    $getAppTypeAction = { Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
+    $getAppTypeRetryEvaluator = {
+        param($appType)
+        # if app type does not exist (i.e it got unprovisioned) or if its status has changed to a terminal one, stop wait
+        if ((!$appType) -or (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        {
+            return $false
+        }
+        else
+        {
+            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
+            return $true
+        }
+    }
+
+    $MaxTries = 1200
+    $RetryIntervalInSeconds = 3
+    if($TimeoutSec -ne $null)
+    {
+        $MaxTries = [int]($TimeoutSec/$RetryIntervalInSeconds)
+    }
+
+    $timeoutAction = $null
+    if($OperationType -eq $SF_Operations.RegisterApplicationType)
+    {
+        $timeoutAction = {
+            Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+            Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
+        }
+    }
+
+    return Invoke-ActionWithRetries -Action $getAppTypeAction `
+        -ResultRetryEvaluator $getAppTypeRetryEvaluator `
+        -MaxTries $MaxTries `
+        -RetryIntervalInSeconds $RetryIntervalInSeconds `
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType) `
+        -TimeoutAction $timeoutAction
+}
+
+function Unregister-ServiceFabricApplicationTypeAction
+{
+    Param(
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
     )
 
     $global:operationId = $SF_Operations.UnregisterApplicationType
 
     $unregisterAction = {
-        Unregister-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec
+        Unregister-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Async -Force
         if (!$?)
         {
             throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
@@ -544,7 +606,7 @@ function New-ServiceFabricApplicationAction
     $exceptionRetryEvaluator = {
         param($ex)
 
-        # If app already creted, don't retry
+        # If app already created, don't retry
         if ($ex.GetType().FullName -eq "System.Fabric.FabricElementAlreadyExistsException")
         {
             return $false

@@ -215,7 +215,8 @@
                     # It will unregister the existing application's type and version even if its different from the application being created,
                     if ((Get-ServiceFabricApplicationAction | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
-                        Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
+                        Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion)
+                        Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                     }
                 }
             }
@@ -236,7 +237,8 @@
             if (!$typeIsInUse)
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
+                Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion)
+                Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                 $ApplicationTypeAlreadyRegistered = $false
             }
             else
@@ -302,14 +304,9 @@
                 'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
             }
 
-            if ($RegisterPackageTimeoutSec)
-            {
-                $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
-            }
-
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
             Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
-
+            Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -TimeoutSec $RegisterPackageTimeoutSec -OperationType $SF_Operations.RegisterApplicationType
             $global:operationId = $SF_Operations.RemoveApplicationPackage
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
             Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
