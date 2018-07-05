@@ -18,16 +18,12 @@ function Get-FormattedSqlUsername
 
     if ($serverName)
     {
+        $serverName = ($serverName -replace "tcp:" -split "," )[0]
+
         $serverNameSplittedArgs = $serverName.Trim().Split(".")
         if ($serverNameSplittedArgs.Length -gt 0)
         {
             $sqlServerFirstName = $serverNameSplittedArgs[0]
-            if($sqlServerFirstName.StartsWith("tcp:", "CurrentCultureIgnoreCase"))
-            {
-                $sqlServerFirstName = $sqlServerFirstName -replace "tcp:"
-                $serverName = ($serverName -replace "tcp:" -split "," )[0]
-            }
-
             if ((-not $sqlUsername.Trim().Contains("@" + $sqlServerFirstName)) -and $sqlUsername.Contains('@'))
             {
                 $sqlUsername = $sqlUsername + "@" + $serverName 
