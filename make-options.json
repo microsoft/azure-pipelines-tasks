@@ -19,6 +19,7 @@
         "AzureNLBManagementV1",
         "AzurePowerShellV3",
         "AzureResourceGroupDeploymentV2",
+        "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
         "AzureVmssDeploymentV0",
         "BashV3",
