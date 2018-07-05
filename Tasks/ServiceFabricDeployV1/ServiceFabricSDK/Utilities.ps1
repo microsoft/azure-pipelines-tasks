@@ -320,15 +320,15 @@ function Register-ServiceFabricApplicationTypeAction
             return $false
         }
 
-        # if provisioning failed, throw and don't retry
-        throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
+        return $true
     }
 
     try
     {
         Invoke-ActionWithDefaultRetries -Action $registerAction `
             -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRegisterApplicationType) `
-            -ExceptionRetryEvaluator $exceptionRetryEvaluator
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.Fabric.FabricElementAlreadyExistsException", "System.TimeoutException")
     }
     catch
     {
@@ -337,7 +337,12 @@ function Register-ServiceFabricApplicationTypeAction
         throw
     }
 
-    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec -OperationType $SF_Operations.RegisterApplicationType
+    $timeoutAction = {
+        Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+        Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
+    }
+
+    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec -OperationType $SF_Operations.RegisterApplicationType -TimeoutAction $timeoutAction
 }
 
 function Get-ServiceFabricApplicationTypeAction
@@ -412,7 +417,7 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
         $TimeoutSec,
 
         [string]
-        $OperationType
+        $TimeoutAction
     )
 
     $global:operationId = $SF_Operations.GetApplicationType
@@ -438,22 +443,13 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
         $MaxTries = [int]($TimeoutSec/$RetryIntervalInSeconds)
     }
 
-    $timeoutAction = $null
-    if($OperationType -eq $SF_Operations.RegisterApplicationType)
-    {
-        $timeoutAction = {
-            Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-            Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
-        }
-    }
-
     return Invoke-ActionWithRetries -Action $getAppTypeAction `
         -ResultRetryEvaluator $getAppTypeRetryEvaluator `
         -MaxTries $MaxTries `
         -RetryIntervalInSeconds $RetryIntervalInSeconds `
         -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType) `
-        -TimeoutAction $timeoutAction
+        -TimeoutAction $TimeoutAction
 }
 
 function Unregister-ServiceFabricApplicationTypeAction
@@ -479,18 +475,10 @@ function Unregister-ServiceFabricApplicationTypeAction
         }
     }
 
-    $exceptionRetryEvaluator = {
-        param($ex)
-
-        # if unprovisioning failed, throw and don't retry
-        throw (Get-VstsLocString -Key SFSDK_UnregisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
-    }
-
     try
     {
         Invoke-ActionWithDefaultRetries -Action $unregisterAction `
-            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingUnregisterApplicationType) `
-            -ExceptionRetryEvaluator $exceptionRetryEvaluator
+            -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingUnregisterApplicationType)
     }
     catch
     {
