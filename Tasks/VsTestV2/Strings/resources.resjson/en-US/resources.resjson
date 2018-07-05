@@ -117,6 +117,7 @@
   "loc.messages.configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
   "loc.messages.otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
   "loc.messages.distributedTestWorkflow": "In distributed testing flow",
+  "loc.messages.nonDistributedTestWorkflow": "Running tests using vstest.console.exe runner.",
   "loc.messages.dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
   "loc.messages.testSelectorInput": "Test selector : %s",
   "loc.messages.searchFolderInput": "Search folder : %s",
