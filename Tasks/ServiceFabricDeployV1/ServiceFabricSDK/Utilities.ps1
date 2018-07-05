@@ -320,34 +320,6 @@ function Register-ServiceFabricApplicationTypeAction
             return $false
         }
 
-        $appType = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-        # If provisioning not started, retry register
-        if (!$appType)
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioningNotStarted)
-            return $true
-        }
-
-        # if provisioning started, wait for it to complete
-        if (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeProvisioningStarted)
-            $appType = Wait-ServiceFabricApplicationTypeTerminalStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-        }
-
-        # if app type got unprovisioned, retry register
-        if (!$appType)
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeUnprovisioned)
-            return $true
-        }
-
-        # if app type is provisioned, bail out
-        if ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
-        {
-            return $false
-        }
-
         # if provisioning failed, throw and don't retry
         throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
     }
@@ -509,31 +481,6 @@ function Unregister-ServiceFabricApplicationTypeAction
 
     $exceptionRetryEvaluator = {
         param($ex)
-        $appType = Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-        # If app type already unprovisioned, don't retry
-        if (!$appType)
-        {
-            return $false
-        }
-
-        # if unprovisioning started, wait for it to complete
-        if (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeUnprovisioningStarted)
-            $appType = Wait-ServiceFabricApplicationTypeTerminalStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-        }
-
-        # if app type got unprovisioned, don't retry
-        if (!$appType)
-        {
-            return $false
-        }
-
-        # if app type is still provisioned, retry unregister
-        if ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
-        {
-            return $true
-        }
 
         # if unprovisioning failed, throw and don't retry
         throw (Get-VstsLocString -Key SFSDK_UnregisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
