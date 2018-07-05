@@ -295,7 +295,10 @@ function Register-ServiceFabricApplicationTypeAction
         $ApplicationTypeName,
 
         [string]
-        $ApplicationTypeVersion
+        $ApplicationTypeVersion,
+
+        [int]
+        $TimeoutSec
     )
 
     $RegisterParameters['Async'] = $true
@@ -361,6 +364,8 @@ function Register-ServiceFabricApplicationTypeAction
         Trace-ServiceFabricClusterHealth
         throw
     }
+
+    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec -OperationType $SF_Operations.RegisterApplicationType
 }
 
 function Get-ServiceFabricApplicationTypeAction
@@ -486,7 +491,10 @@ function Unregister-ServiceFabricApplicationTypeAction
         $ApplicationTypeName,
 
         [string]
-        $ApplicationTypeVersion
+        $ApplicationTypeVersion,
+
+        [int]
+        $TimeoutSec
     )
 
     $global:operationId = $SF_Operations.UnregisterApplicationType
@@ -543,6 +551,8 @@ function Unregister-ServiceFabricApplicationTypeAction
         Trace-ServiceFabricClusterHealth
         throw
     }
+
+    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
 }
 
 function Remove-ServiceFabricApplicationAction
