@@ -456,7 +456,7 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
 
     $MaxTries = 1200
     $RetryIntervalInSeconds = 3
-    if($TimeoutSec -ne $null)
+    if($TimeoutSec)
     {
         $MaxTries = [int]($TimeoutSec/$RetryIntervalInSeconds)
     }

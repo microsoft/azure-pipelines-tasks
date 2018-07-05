@@ -79,7 +79,7 @@ function Invoke-ActionWithRetries
             }
             else
             {
-                if($TimeoutAction -ne $null)
+                if($TimeoutAction)
                 {
                     $TimeoutAction.Invoke()
                 }
