@@ -6,6 +6,7 @@ import * as utilities from "./utilities";
 
 import * as os from 'os';
 import * as path from 'path';
+import * as url from "url";
 
 class DotnetCoreInstaller {
     constructor(packageType, version) {
@@ -90,13 +91,14 @@ class DotnetCoreInstaller {
     private async downloadAndInstall(downloadUrls: string[]) {
         let downloaded = false;
         let downloadPath = "";
-        for (var i = 0; i < downloadUrls.length; i++) {
+
+        for (const url of downloadUrls) {
             try {
-                downloadPath = await toolLib.downloadTool(downloadUrls[i]);
+                downloadPath = await toolLib.downloadTool(url, this.getFileName(url));
                 downloaded = true;
                 break;
             } catch (error) {
-                tl.warning(tl.loc("CouldNotDownload", downloadUrls[i], JSON.stringify(error)));
+                tl.warning(tl.loc("CouldNotDownload", url, JSON.stringify(error)));
             }
         }
 
@@ -113,6 +115,12 @@ class DotnetCoreInstaller {
         let cachedDir = await toolLib.cacheDir(extPath, this.cachedToolName, this.version);
         console.log(tl.loc("SuccessfullyInstalled", this.packageType, this.version));
         return cachedDir;
+    }
+
+    private getFileName(x: string) {
+        const pathname = url.parse(x).pathname;
+        const parts = pathname.split('/');
+        return parts[parts.length - 1];
     }
 
     private packageType: string;
