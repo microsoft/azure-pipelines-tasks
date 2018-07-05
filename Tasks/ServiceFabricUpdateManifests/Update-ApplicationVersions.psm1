@@ -15,7 +15,7 @@
 
         $appManifestName = "ApplicationManifest.xml"
         $newAppManifestPath = Join-Path $newAppPackagePath $appManifestName
-        $newAppManifestXml = [XML](Get-Content $newAppManifestPath)
+        $newAppManifestXml = [XML](Get-Content -LiteralPath $newAppManifestPath)
         $appTypeName = $newAppManifestXml.ApplicationManifest.ApplicationTypeName
 
         $updateAllVersions = ((Get-VstsInput -Name updateOnlyChanged -Require) -ne "true")
@@ -50,7 +50,7 @@
                 $oldDropLocation = $null
             }
 
-            if ($oldDropLocation -and (Test-Path $oldDropLocation))
+            if ($oldDropLocation -and (Test-Path -LiteralPath $oldDropLocation))
             {
                 # Gather information on the previous application type
                 Write-Host (Get-VstsLocString -Key PreviousBuildLocationLabel -ArgumentList $oldDropLocation)
@@ -66,7 +66,7 @@
                 }
                 $relativePath.Trim([System.IO.Path]::DirectorySeparatorChar)
                 $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
-                while(!(Test-Path $oldAppPackagePath))
+                while(!(Test-Path -LiteralPath $oldAppPackagePath))
                 {
                     $firstSlash = $relativePath.IndexOf([System.IO.Path]::DirectorySeparatorChar)
                     if ($firstSlash -lt 0)
@@ -83,9 +83,9 @@
                 if ($oldAppPackagePath)
                 {
                     $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
-                    if (Test-Path $oldAppManifestPath)
+                    if (Test-Path -LiteralPath $oldAppManifestPath)
                     {
-                        $oldAppManifestXml = [XML](Get-Content $oldAppManifestPath)
+                        $oldAppManifestXml = [XML](Get-Content -LiteralPath $oldAppManifestPath)
 
                         # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
                         # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.

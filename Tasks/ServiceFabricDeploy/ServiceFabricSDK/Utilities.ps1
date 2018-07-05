@@ -21,14 +21,14 @@
         $Destination
     )
 
-    if (!(Test-Path $File))
+    if (!(Test-Path -LiteralPath $File))
     {
         return
     }
 
-    if (Test-Path $Destination)
+    if (Test-Path -LiteralPath $Destination)
     {
-        Remove-Item -Path $Destination -Recurse -ErrorAction Stop | Out-Null
+        Remove-Item -LiteralPath $Destination -Recurse -ErrorAction Stop | Out-Null
     }
 
     New-Item $Destination -ItemType directory | Out-Null
@@ -63,13 +63,13 @@ function Get-NamesFromApplicationManifest
         $ApplicationManifestPath
     )
 
-    if (!(Test-Path $ApplicationManifestPath))
+    if (!(Test-Path -LiteralPath $ApplicationManifestPath))
     {
         throw (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationManifestPath)
     }
 
 
-    $appXml = [xml] (Get-Content $ApplicationManifestPath)
+    $appXml = [xml] (Get-Content -LiteralPath $ApplicationManifestPath)
     if (!$appXml)
     {
         return
@@ -127,13 +127,13 @@ function Get-ApplicationNameFromApplicationParameterFile
         $ApplicationParameterFilePath
     )
 
-    if (!(Test-Path $ApplicationParameterFilePath))
+    if (!(Test-Path -LiteralPath $ApplicationParameterFilePath))
     {
         $errMsg = (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
         throw $errMsg
     }
 
-    return ([xml] (Get-Content $ApplicationParameterFilePath)).Application.Name
+    return ([xml] (Get-Content -LiteralPath $ApplicationParameterFilePath)).Application.Name
 }
 
 
@@ -154,12 +154,12 @@ function Get-ApplicationParametersFromApplicationParameterFile
         $ApplicationParameterFilePath
     )
 
-    if (!(Test-Path $ApplicationParameterFilePath))
+    if (!(Test-Path -LiteralPath $ApplicationParameterFilePath))
     {
         throw (Get-VstsLocString -Key PathDoesNotExist -ArgumentList $ApplicationParameterFilePath)
     }
 
-    $ParametersXml = ([xml] (Get-Content $ApplicationParameterFilePath)).Application.Parameters
+    $ParametersXml = ([xml] (Get-Content -LiteralPath $ApplicationParameterFilePath)).Application.Parameters
 
     $hash = @{}
     $ParametersXml.ChildNodes | foreach {

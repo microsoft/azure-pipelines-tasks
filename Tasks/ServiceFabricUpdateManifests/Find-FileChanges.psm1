@@ -11,13 +11,13 @@ function Find-FileChanges
     [OutputType([bool])]
     Param
     (
-        [Parameter(Mandatory=$true)]
-        [ValidateScript({Test-Path $_})]
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({Test-Path -LiteralPath $_})]
         [string]
         $NewPackageRoot,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateScript({Test-Path $_})]
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({Test-Path -LiteralPath $_})]
         [string]
         $OldPackageRoot,
 
@@ -29,7 +29,8 @@ function Find-FileChanges
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
+    try
+    {
         $LogIndent += "".PadLeft(2)
 
         if (Find-VstsFiles -LiteralDirectory $NewPackageRoot -LegacyPattern "**\*.pdb" -Force)
@@ -109,7 +110,9 @@ function Find-FileChanges
         }
 
         $result
-    } finally {
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }

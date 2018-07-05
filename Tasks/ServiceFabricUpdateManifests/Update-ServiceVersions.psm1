@@ -4,18 +4,18 @@
     [OutputType([string])]
     Param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]
         $VersionValue,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]
         $ServiceName,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateScript({Test-Path $_})]
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({Test-Path -LiteralPath $_})]
         [string]
         $NewPackageRoot,
 
@@ -36,14 +36,15 @@
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
+    try
+    {
         $LogIndent += "".PadLeft(2)
 
         $serviceManifestName = "ServiceManifest.xml"
 
         $newPackagePath = Join-Path $NewPackageRoot $ServiceName
         $newManifestPath = Join-Path $newPackagePath $serviceManifestName
-        $newManifest = [XML](Get-Content $newManifestPath)
+        $newManifest = [XML](Get-Content -LiteralPath $newManifestPath)
 
         $versionPrefix = $newManifest.ServiceManifest.Version
         $newVersion = if ($ReplaceVersion) { $versionValue } else { $versionPrefix + $VersionValue }
@@ -62,12 +63,12 @@
 
             $oldPackagePath = Join-Path $OldPackageRoot $ServiceName
             $oldManifestPath = Join-Path $oldPackagePath $serviceManifestName
-            if (Test-Path $oldManifestPath)
+            if (Test-Path -LiteralPath $oldManifestPath)
             {
-                $oldManifest = [XML](Get-Content $oldManifestPath)
+                $oldManifest = [XML](Get-Content -LiteralPath $oldManifestPath)
 
                 # Set the version to the version from the previous build (including its suffix). This will be overwritten if we find any changes, otherwise it will match the previous build by design.
-                # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive. 
+                # Set it before we search for changes so that we can compare the xml without the old version suffix causing a false positive.
                 $newManifest.ServiceManifest.Version = $oldManifest.ServiceManifest.Version
 
                 $oldPackagesXml = @()
@@ -109,7 +110,9 @@
         $newManifest.Save($newManifestPath)
 
         $newManifest.ServiceManifest.Version
-    } finally {
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }
