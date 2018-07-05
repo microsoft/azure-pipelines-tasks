@@ -214,6 +214,7 @@ function Publish-UpgradedServiceFabricApplication
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                 Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion)
+                Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                 $ApplicationTypeAlreadyRegistered = $false
             }
             else
@@ -281,6 +282,7 @@ function Publish-UpgradedServiceFabricApplication
 
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
             Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
+            Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -TimeoutSec $RegisterPackageTimeoutSec -OperationType $SF_Operations.RegisterApplicationType
         }
     }
 
@@ -325,6 +327,7 @@ function Publish-UpgradedServiceFabricApplication
                 {
                     Write-Host (Get-VstsLocString -Key SFSDK_UnregisterAppTypeOnUpgradeFailure -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
                     Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
+                    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -TimeoutSec $UnregisterPackageTimeoutSec
                 }
             }
             catch
@@ -351,6 +354,7 @@ function Publish-UpgradedServiceFabricApplication
                 try
                 {
                     Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($registeredAppType.ApplicationTypeName) -ApplicationTypeVersion $($registeredAppType.ApplicationTypeVersion)
+                    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $($registeredAppType.ApplicationTypeName) -ApplicationTypeVersion $($registeredAppType.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                 }
                 catch
                 {
