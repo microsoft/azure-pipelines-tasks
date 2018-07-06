@@ -73,7 +73,7 @@ class DotnetCoreInstaller {
                 console.log(tl.loc("PrimaryPlatform", primary));
             }
 
-            if (index = output.indexOf("Legacy:") >= 0) {
+            if ((index = output.indexOf("Legacy:")) >= 0) {
                 let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
                 osSuffix.push(legacy);
                 console.log(tl.loc("LegacyPlatform", legacy));
