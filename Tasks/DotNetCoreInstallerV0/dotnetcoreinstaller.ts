@@ -90,13 +90,13 @@ class DotnetCoreInstaller {
     private async downloadAndInstall(downloadUrls: string[]) {
         let downloaded = false;
         let downloadPath = "";
-        for (var i = 0; i < downloadUrls.length; i++) {
+        for (const url of downloadUrls) {
             try {
-                downloadPath = await toolLib.downloadTool(downloadUrls[i]);
+                downloadPath = await toolLib.downloadTool(url, url.split('/').pop());
                 downloaded = true;
                 break;
             } catch (error) {
-                tl.warning(tl.loc("CouldNotDownload", downloadUrls[i], JSON.stringify(error)));
+                tl.warning(tl.loc("CouldNotDownload", url, JSON.stringify(error)));
             }
         }
 
