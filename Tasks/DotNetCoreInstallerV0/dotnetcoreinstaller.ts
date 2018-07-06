@@ -92,7 +92,7 @@ class DotnetCoreInstaller {
         let downloadPath = "";
         for (const url of downloadUrls) {
             try {
-                downloadPath = await toolLib.downloadTool(url, url.split('/').pop());
+                downloadPath = await toolLib.downloadTool(url);
                 downloaded = true;
                 break;
             } catch (error) {
@@ -106,7 +106,7 @@ class DotnetCoreInstaller {
 
         // extract
         console.log(tl.loc("ExtractingPackage", downloadPath));
-        let extPath: string = downloadPath.endsWith(".zip") ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+        let extPath: string = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
 
         // cache tool
         console.log(tl.loc("CachingTool"));
