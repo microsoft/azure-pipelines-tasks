@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Publish Build Drop",
+  "loc.helpMarkDown": "Publish a local directory or file as a named drop artifact for the current build.",
+  "loc.description": "Publish Build Drop",
+  "loc.instanceNameFormat": "Publish Build Drop",
+  "loc.input.label.artifactname": "The name of this artifact",
+  "loc.input.help.artifactname": "The name of this artifact.",
+  "loc.input.label.targetpath": "Path to publish",
+  "loc.input.help.targetpath": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+}
