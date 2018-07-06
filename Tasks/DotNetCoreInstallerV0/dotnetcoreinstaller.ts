@@ -73,7 +73,7 @@ class DotnetCoreInstaller {
                 console.log(tl.loc("PrimaryPlatform", primary));
             }
 
-            if (index = output.indexOf("Legacy:") >= 0) {
+            if ((index = output.indexOf("Legacy:")) >= 0) {
                 let legacy = output.substr(index + "Legacy:".length).split(os.EOL)[0];
                 osSuffix.push(legacy);
                 console.log(tl.loc("LegacyPlatform", legacy));
@@ -90,13 +90,13 @@ class DotnetCoreInstaller {
     private async downloadAndInstall(downloadUrls: string[]) {
         let downloaded = false;
         let downloadPath = "";
-        for (var i = 0; i < downloadUrls.length; i++) {
+        for (const url of downloadUrls) {
             try {
-                downloadPath = await toolLib.downloadTool(downloadUrls[i]);
+                downloadPath = await toolLib.downloadTool(url);
                 downloaded = true;
                 break;
             } catch (error) {
-                tl.warning(tl.loc("CouldNotDownload", downloadUrls[i], JSON.stringify(error)));
+                tl.warning(tl.loc("CouldNotDownload", url, JSON.stringify(error)));
             }
         }
 
@@ -106,7 +106,7 @@ class DotnetCoreInstaller {
 
         // extract
         console.log(tl.loc("ExtractingPackage", downloadPath));
-        let extPath: string = downloadPath.endsWith(".zip") ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
+        let extPath: string = tl.osType().match(/^Win/) ? await toolLib.extractZip(downloadPath) : await toolLib.extractTar(downloadPath);
 
         // cache tool
         console.log(tl.loc("CachingTool"));
