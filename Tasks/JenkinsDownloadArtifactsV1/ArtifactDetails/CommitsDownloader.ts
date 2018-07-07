@@ -179,7 +179,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
 
                 return JSON.stringify(commitMessages);
 
-            } catch(error) {
+            } catch (error) {
                 console.log(tl.loc("CannotParseCommits", commits, error));
                 throw error;
             }
@@ -193,7 +193,6 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         if (!!commitUrl) {
             if (commitUrl.startsWith('git@')) {
                 tl.debug('repo url is a git protocol url');
-
                 
                 if (commitUrl.startsWith('git@gitlab.com')) {
                     result= commitUrl.replace('git@gitlab.com:', 'https://gitlab.com/').replace('.git/', '/');
