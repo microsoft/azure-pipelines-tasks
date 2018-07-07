@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 137,
+    "Minor": 138,
     "Patch": 0
   },
   "groups": [
@@ -304,6 +304,7 @@
     "SuccessfullyDownloadedCommitsAndWorkItems": "ms-resource:loc.messages.SuccessfullyDownloadedCommitsAndWorkItems",
     "CommitsAndWorkItemsDownloadFailed": "ms-resource:loc.messages.CommitsAndWorkItemsDownloadFailed",
     "CannotFindBuilds": "ms-resource:loc.messages.CannotFindBuilds",
+    "CannotParseCommits": "ms-resource:loc.messages.CannotParseCommits",
     "JenkinsNoCommitsToFetch": "ms-resource:loc.messages.JenkinsNoCommitsToFetch",
     "InvalidJenkinsBuildNumber": "ms-resource:loc.messages.InvalidJenkinsBuildNumber",
     "InvalidJenkinsStartBuildNumber": "ms-resource:loc.messages.InvalidJenkinsStartBuildNumber",

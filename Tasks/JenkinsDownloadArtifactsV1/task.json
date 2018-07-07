@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 137,
+        "Minor": 138,
         "Patch": 0
     },
     "groups": [
@@ -304,6 +304,7 @@
         "SuccessfullyDownloadedCommitsAndWorkItems": "Commits and work items downloaded successfully",
         "CommitsAndWorkItemsDownloadFailed": "Downloading commits and work items from Jenkins failed with an error: %s",
         "CannotFindBuilds": "Cannot find builds",
+        "CannotParseCommits": "Cannot parse commit objects %s. Error: %s",
         "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and work items will not be downloaded.",
         "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
         "InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number %s is not valid.",
