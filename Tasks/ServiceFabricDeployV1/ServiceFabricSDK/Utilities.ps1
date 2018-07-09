@@ -507,8 +507,7 @@ function Wait-ServiceFabricApplicationTypeUnregistrationStatus
         -MaxTries $MaxTries `
         -RetryIntervalInSeconds $RetryIntervalInSeconds `
         -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
-        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType) `
-        -TimeoutAction $TimeoutAction
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
 }
 
 function Unregister-ServiceFabricApplicationTypeAction
