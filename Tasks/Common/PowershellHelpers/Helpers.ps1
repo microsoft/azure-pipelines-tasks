@@ -24,10 +24,7 @@ function Invoke-ActionWithRetries
         $RetryableExceptions,
 
         [string]
-        $RetryMessage,
-
-        [scriptblock]
-        $TimeoutAction
+        $RetryMessage
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -79,14 +76,7 @@ function Invoke-ActionWithRetries
             }
             else
             {
-                if($TimeoutAction)
-                {
-                    $TimeoutAction.Invoke()
-                }
-                else
-                {
-                    throw (Get-VstsLocString -Key ActionTimedOut)
-                }
+                throw (Get-VstsLocString -Key ActionTimedOut)
             }
         }
 
