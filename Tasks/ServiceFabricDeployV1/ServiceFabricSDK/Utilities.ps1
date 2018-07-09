@@ -334,9 +334,13 @@ function Register-ServiceFabricApplicationTypeAction
     {
         try
         {
+            #In case of any failure we need to keep the cluster clean as much as possible
             Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
         }
-        catch {}
+        catch
+        {
+            #This is just for best effort, else no need to take any action here
+        }
         # print cluster health status if registering failed
         Trace-ServiceFabricClusterHealth
         throw
@@ -422,8 +426,18 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
     $getAppTypeRetryEvaluator = {
         param($appType)
 
+        # If provisioning not started, retry register
+        if(!$appType)
+        {
+            return $true
+        }
+        # if app type is provisioned, don't retry
+        elseif($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
+        {
+            return $false
+        }
         # if app type exist and if its status has not changed to a terminal one, do retry
-        if ($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        if($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
         {
             return $true
         }
@@ -431,17 +445,6 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
         elseif($appType -and (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
         {
             throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
-        }
-
-        # If provisioning not started, retry register
-        if(!$appType)
-        {
-            return $true
-        }
-        # if app type is provisioned, don't retry
-        elseif ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
-        {
-            return $false
         }
     }
 
@@ -478,8 +481,13 @@ function Wait-ServiceFabricApplicationTypeUnregistrationStatus
     $getAppTypeRetryEvaluator = {
         param($appType)
 
+        # If app type unprovisioned, don't retry
+        if(!$appType)
+        {
+            return $false
+        }
         # if app type exist and if its status has not changed to a terminal one, do retry
-        if ($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        elseif($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
         {
             return $true
         }
@@ -487,11 +495,6 @@ function Wait-ServiceFabricApplicationTypeUnregistrationStatus
         elseif($appType -and (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
         {
             throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
-        }
-        # If app type unprovisioned, don't retry
-        if(!$appType)
-        {
-            return $false
         }
     }
 
