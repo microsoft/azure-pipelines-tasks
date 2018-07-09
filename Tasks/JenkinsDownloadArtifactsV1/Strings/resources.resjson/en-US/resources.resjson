@@ -66,6 +66,7 @@
   "loc.messages.SuccessfullyDownloadedCommitsAndWorkItems": "Commits and work items downloaded successfully",
   "loc.messages.CommitsAndWorkItemsDownloadFailed": "Downloading commits and work items from Jenkins failed with an error: %s",
   "loc.messages.CannotFindBuilds": "Cannot find builds",
+  "loc.messages.CannotParseCommits": "Cannot parse commit objects %s. Error: %s",
   "loc.messages.JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and work items will not be downloaded.",
   "loc.messages.InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
   "loc.messages.InvalidJenkinsStartBuildNumber": "The specified Jenkins start build number %s is not valid.",
