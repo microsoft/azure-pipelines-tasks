@@ -228,7 +228,9 @@ export class ResourceGroup {
         var additionalInfo = errorDetail.additionalInfo;
         if (!!additionalInfo) {
             for (var i = 0; i < additionalInfo.length; i++) {
-                errorMessage += util.format(tl.loc("ErrorType") + " %s, " + tl.loc("PolicyDefinitionName") + " %s, " + tl.loc("PolicyAssignmentName") + " %s ", additionalInfo[i].type, additionalInfo[i].info.policyDefinitionDisplayName, additionalInfo[i].info.policyAssignmentName);
+                if (!!additionalInfo[i].info) {
+                    errorMessage = util.format("%s %s %s, %s %s, %s %s", errorMessage, tl.loc("ErrorType"), additionalInfo[i].type, tl.loc("PolicyDefinitionName"), additionalInfo[i].info.policyDefinitionDisplayName, tl.loc("PolicyAssignmentName"), additionalInfo[i].info.policyAssignmentName);
+                }
             }
         }
 
