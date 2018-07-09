@@ -106,6 +106,7 @@ export interface TiaSettings {
     FilterPaths : string;
     UserMapFile : string;
     IsPrFlow : boolean;
+    UseTestCaseFilterInResponseFile : boolean;
 }
 
 export interface Logging {

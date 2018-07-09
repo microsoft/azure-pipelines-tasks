@@ -40,6 +40,7 @@ $bacpacFile = "C:\Test\TestFile.bacpac"
 $sqlFile = "C:\Test\TestFile.sql"
 
 $serverName = "a0nuel7r2k.database.windows.net"
+$serverNameWithTcpPrefix = "tcp:a0nuel7r2k.database.windows.net,1433"
 $serverFriendlyName = "a0nuel7r2k"
 $databaseName = "TestDatabase"
 $sqlUsername = "TestUser"
