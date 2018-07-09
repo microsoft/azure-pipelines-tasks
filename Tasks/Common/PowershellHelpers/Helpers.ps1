@@ -97,7 +97,7 @@ function Poll-Action
         $RetryMessage = Get-VstsLocString -Key RetryAfterMessage $RetryIntervalInSeconds
     }
 
-    if ($MaxTries < 1)
+    if ($MaxTries -lt 1)
     {
         $MaxTries = 10;
     }
@@ -106,7 +106,7 @@ function Poll-Action
     do
     {
         $result = & $Action
-        if ($result -eq $true) 
+        if ($result -eq $true)
         {
             break;
         }

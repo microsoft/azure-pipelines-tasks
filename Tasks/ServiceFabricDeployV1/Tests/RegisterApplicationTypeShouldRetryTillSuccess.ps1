@@ -68,5 +68,7 @@ Register-Mock Write-VstsTaskError
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeployV1\ServiceFabricSDK\Utilities.ps1
 
 # Act/Assert
-Register-ServiceFabricApplicationTypeAction -RegisterParameters $RegisterParameters -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+Assert-Throws {
+    Register-ServiceFabricApplicationTypeAction -RegisterParameters $RegisterParameters -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+}
 Assert-AreEqual 2 $global:registerRetriesAttempted "Number of register retries not correct"
