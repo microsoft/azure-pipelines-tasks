@@ -81,5 +81,7 @@ Register-Mock Write-VstsTaskError
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeployV1\ServiceFabricSDK\Utilities.ps1
 
 # Act/Assert
-Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec
+Assert-Throws {
+    Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec
+}
 Assert-AreEqual 2 $global:unregisterRetriesAttempted "Number of unregister retries not correct"

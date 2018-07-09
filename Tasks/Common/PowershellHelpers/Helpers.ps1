@@ -5,10 +5,6 @@ function Invoke-ActionWithRetries
         [scriptblock]
         $Action,
 
-        # ResultRetryEvaluator delegate will be called when Action has been successfully executed. The delegate can check whether result is acceptable or further re-try should be performed
-        [scriptblock]
-        $ResultRetryEvaluator = { $false },
-
         # ExceptionRetryEvaluator delegate will be called when Action throws retryable exception. The delegate can check whether exception is acceptable or further re-try should be performed
         [scriptblock]
         $ExceptionRetryEvaluator = { $true },
@@ -43,6 +39,7 @@ function Invoke-ActionWithRetries
         try
         {
             $result = & $Action
+            return $result;
         }
         catch
         {
@@ -63,21 +60,60 @@ function Invoke-ActionWithRetries
             }
         }
 
-        if (!$exception -and (!$result -or !$ResultRetryEvaluator.Invoke($result)))
+        if ($retryIteration -eq $MaxTries)
         {
-            return $result
+            throw $exception
+        }
+
+        Write-Host $RetryMessage
+        $retryIteration++
+        Start-Sleep $RetryIntervalInSeconds
+    } while ($true)
+
+    Trace-VstsLeavingInvocation $MyInvocation
+}
+
+function Poll-Action
+{
+    [CmdletBinding()]
+    param(
+        [scriptblock]
+        $Action,
+
+        [int32]
+        $MaxTries = 10,
+
+        [int32]
+        $RetryIntervalInSeconds = 1,
+
+        [string]
+        $RetryMessage
+    )
+
+    Trace-VstsEnteringInvocation $MyInvocation
+
+    if (!$RetryMessage)
+    {
+        $RetryMessage = Get-VstsLocString -Key RetryAfterMessage $RetryIntervalInSeconds
+    }
+
+    if ($MaxTries -lt 1)
+    {
+        $MaxTries = 10;
+    }
+
+    $retryIteration = 1
+    do
+    {
+        $result = & $Action
+        if ($result -eq $true)
+        {
+            break;
         }
 
         if ($retryIteration -eq $MaxTries)
         {
-            if ($exception)
-            {
-                throw $exception
-            }
-            else
-            {
-                throw (Get-VstsLocString -Key ActionTimedOut)
-            }
+            throw (Get-VstsLocString -Key ActionTimedOut)
         }
 
         Write-Host $RetryMessage
