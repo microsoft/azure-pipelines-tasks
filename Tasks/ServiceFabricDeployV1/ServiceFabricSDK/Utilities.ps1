@@ -437,7 +437,7 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
             return $false
         }
         # if app type exist and if its status has not changed to a terminal one, do retry
-        if($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        elseif($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
         {
             return $true
         }
@@ -548,7 +548,7 @@ function Unregister-ServiceFabricApplicationTypeAction
         throw
     }
 
-    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
+    Wait-ServiceFabricApplicationTypeUnregistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
 }
 
 function Remove-ServiceFabricApplicationAction
