@@ -385,7 +385,7 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
     inputDataContract.ExecutionSettings.TiaSettings.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(tl.getVariable('tia.useTestCaseFilterInResponseFile'));
     
     // A legacy  switch to disable test impact from build variables
-    this.inputDataContract.ExecutionSettings.TiaSettings.Enabled = !utils.Helper.stringToBool(tl.getVariable('DisableTestImpactAnalysis'));
+    inputDataContract.ExecutionSettings.TiaSettings.Enabled = !utils.Helper.stringToBool(tl.getVariable('DisableTestImpactAnalysis'));
 
     const buildReason = tl.getVariable('Build.Reason');
 
