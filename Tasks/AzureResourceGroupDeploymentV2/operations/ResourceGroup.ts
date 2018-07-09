@@ -171,7 +171,7 @@ export class ResourceGroup {
             if (error.details) {
                 tl.error(tl.loc("Details"));
                 let policyLink = null;
-                
+
                 for (var i = 0; i < error.details.length; i++) {
                     var errorMessage = null;
                     if (error.details[i].code === "RequestDisallowedByPolicy") {
