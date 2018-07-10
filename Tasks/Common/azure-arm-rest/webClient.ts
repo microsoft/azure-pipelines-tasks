@@ -62,6 +62,11 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
         catch (error) {
             if (retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {
                 tl.debug(util.format("Encountered a retriable error:%s. Message: %s.", error.code, error.message));
+
+                if (error.code == "ECONNRESET" && request.uri.indexOf("northcentralus") == -1) {
+                    request.uri = request.uri.replace("management.azure.com", "northcentralus.management.azure.com");
+                }
+
                 await sleepFor(timeToWait);
                 timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
             }
