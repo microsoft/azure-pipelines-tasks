@@ -102,13 +102,6 @@ export class AzureRMEndpoint {
                 loginEndpoint += (loginEndpoint[loginEndpoint.length - 1] == "/") ? "" : "/";
                 endpoint.activeDirectoryAuthority = loginEndpoint;
                 endpoint.environmentAuthorityUrl = loginEndpoint;
-
-                // modify tenantID and logninendpoint for Azure AD FS
-                let environmentAuthorityUrlArray = endpoint.environmentAuthorityUrl.split("/");
-                if(environmentAuthorityUrlArray.length == 4) {
-                    endpoint.environmentAuthorityUrl = endpoint.environmentAuthorityUrl[0] + "//" + endpoint.environmentAuthorityUrl[2];
-                    endpoint.tenantID = endpoint.environmentAuthorityUrl[3];
-                }
             }
             else {
                 // change to login endpoint

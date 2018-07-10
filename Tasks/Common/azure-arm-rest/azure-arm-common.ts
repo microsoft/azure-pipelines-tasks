@@ -154,9 +154,7 @@ export class ApplicationTokenCredentials {
         return deferred.promise;
     }
 
-    private _getSPNAuthorizationToken(): Q.Promise<string> {
-
-        console.log(this._getSPNCertificateAuthorizationToken());
+    private _getSPNAuthorizationTokenFromCertificate(): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
@@ -165,7 +163,45 @@ export class ApplicationTokenCredentials {
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
             grant_type: "client_credentials",
-            client_secret: this.secret
+            client_secret: this._getSPNCertificateAuthorizationToken()
+        });
+
+        console.log(webRequest.body);
+        webClient.sendRequest(webRequest).then(
+            (response: webClient.WebResponse) => {
+                if (response.statusCode == 200) 
+                {
+                    deferred.resolve(response.body.access_token);
+                }
+                else 
+                {
+                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
+                }
+            },
+            (error) => {
+                deferred.reject(error)
+            }
+        );
+        return deferred.promise;
+    }
+
+    private _getSPNAuthorizationToken(): Q.Promise<string> {
+
+        if(1<2) {
+            console.log(this._getSPNCertificateAuthorizationToken());
+            return (this._getSPNAuthorizationTokenFromCertificate());  
+        }
+        
+        var deferred = Q.defer<string>();
+        let webRequest = new webClient.WebRequest();
+        webRequest.method = "POST";
+        webRequest.uri = this.authorityUrl + this.domain + "/oauth2/token/";
+        webRequest.body = querystring.stringify({
+            resource: this.activeDirectoryResourceId,
+            client_id: this.clientId,
+            grant_type: "client_credentials",
+            client_assertion: this.secret,
+            client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
         });
         webRequest.headers = {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
@@ -211,7 +247,9 @@ export class ApplicationTokenCredentials {
             console.log("FINGERPRINT CREATION SUCCESSFUL");
             let shaFingerprint = pemExecutionResult.stdout;
             let shaFingerPrintHashCode = shaFingerprint.split("=")[1].replace(new RegExp(":", 'g'), "");
-            let fingerPrintHashBase64: string = Buffer.from(shaFingerPrintHashCode.match(/\w{2}/g).map(function(a){return String.fromCharCode(parseInt(a, 16));} ).join(""), 'binary').toString('base64');
+            let fingerPrintHashBase64: string = Buffer.from(
+                shaFingerPrintHashCode.match(/\w{2}/g).map(function(a){return String.fromCharCode(parseInt(a, 16));} ).join(""), 'binary'
+            ).toString('base64');
             additionalHeaders["x5t"] = fingerPrintHashBase64;
         }
         else {
