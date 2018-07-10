@@ -295,7 +295,7 @@ function Wait-ServiceFabricApplicationUpgradeAction
         -ResultRetryEvaluator $upgradeStatusValidator `
         -MaxTries 2147483647 `
         -RetryIntervalInSeconds 5 `
-        -RetryableExceptions @("System.Fabric.FabricTransientException")
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutExceptionb")
 
     return $upgradeStatus
 }
