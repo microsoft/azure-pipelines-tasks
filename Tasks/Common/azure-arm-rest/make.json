@@ -1,0 +1,11 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "archiveName": "openssl-1.0.2l-x64_86-win64.zip",
+                "url": "https://indy.fulgan.com/SSL/openssl-1.0.2l-x64_86-win64.zip",
+                "dest": "./openssl"
+            }
+        ]
+    }
+}

@@ -208,7 +208,10 @@ export interface AzureEndpoint {
     subscriptionID: string;
     subscriptionName: string;
     servicePrincipalClientID?: string;
+    authenticationType?: string;
     servicePrincipalKey?: string;
+    servicePrincipalCertificate?: string;
+    servicePrincipalCertificatePath?: string
     tenantID: string;
     environmentAuthorityUrl: string;
     url: string;
