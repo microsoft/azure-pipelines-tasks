@@ -422,7 +422,7 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
     )
 
     $global:operationId = $SF_Operations.GetApplicationType
-    $getAppTypeAction = { Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
+    $getAppTypeAction = { Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
     $getAppTypeRetryEvaluator = {
         param($appType)
 
@@ -477,7 +477,7 @@ function Wait-ServiceFabricApplicationTypeUnregistrationStatus
     )
 
     $global:operationId = $SF_Operations.GetApplicationType
-    $getAppTypeAction = { Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
+    $getAppTypeAction = { Get-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
     $getAppTypeRetryEvaluator = {
         param($appType)
 
