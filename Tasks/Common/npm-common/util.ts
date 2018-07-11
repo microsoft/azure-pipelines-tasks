@@ -16,16 +16,14 @@ export function appendToNpmrc(npmrc: string, data: string): void {
 }
 
 export async function getLocalRegistries(npmrc: string): Promise<string[]> {
-    let localRegistries: string[] = [];
-    let registries = NpmrcParser.GetRegistries(npmrc);
-    let collectionUrl = url.parse(await getPackagingCollectionUrl());
+    // Local registries are VSTS feeds from the SAME collection host 
+    const collectionHost = url.parse(await getPackagingCollectionUrl()).host;
+    const registries = NpmrcParser.GetRegistries(npmrc);
 
-    for (let registry of registries) {
-        let registryUrl = url.parse(registry);
-        if (registryUrl.host.toLowerCase() === collectionUrl.host.toLowerCase()) {
-            localRegistries.push(registry);
-        }
-    }
+    const localRegistries = registries.filter(registry => {
+        const registryHost = url.parse(registry).host;
+        return registryHost.toLowerCase() === collectionHost.toLowerCase();
+    });
 
     tl.debug(tl.loc('FoundLocalRegistries', localRegistries.length));
     return localRegistries;
@@ -42,19 +40,14 @@ export function getFeedIdFromRegistry(registry: string) {
 }
 
 export async function getLocalNpmRegistries(workingDir: string): Promise<INpmRegistry[]> {
-    let localNpmRegistries: INpmRegistry[] = [];
     let npmrcPath = path.join(workingDir, '.npmrc');
 
     if (tl.exist(npmrcPath)) {
-        let npmRegistries: INpmRegistry[] = [];
-        for (let registry of await getLocalRegistries(npmrcPath)) {
-            npmRegistries.push(await NpmRegistry.FromFeedId(getFeedIdFromRegistry(registry), true));
-        }
-
-        localNpmRegistries = localNpmRegistries.concat(npmRegistries);
+        const localRegistries = await getLocalRegistries(npmrcPath);
+        return localRegistries.map(registry => NpmRegistry.FromUrl(registry, true));
     }
 
-    return localNpmRegistries;
+    return [];
 }
 
 export async function getPackagingCollectionUrl(): Promise<string> {

@@ -1,7 +1,6 @@
 import * as tl from 'vsts-task-lib/task';
 import * as models from './models';
 import * as nondistributedtest from './nondistributedtest';
-import * as localtest from './vstest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
@@ -42,22 +41,14 @@ if (osPlat !== 'win32') {
             const test = new distributedTest.DistributedTest(inputDataContract);
             test.runDistributedTest();
         } else {
-            ci.publishEvent({ runmode: 'vstest' });
+            ci.publishEvent({ runmode: 'nondistributed' });
+            console.log(tl.loc('nonDistributedTestWorkflow'));
+            console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
+            console.log('======================================================');
 
-            if (inputDataContract.ExecutionSettings
-                && inputDataContract.ExecutionSettings.TiaSettings
-                && inputDataContract.ExecutionSettings.TiaSettings.Enabled) {
-                    localtest.startTest();
-            }
-
-            if (inputDataContract.ExecutionSettings
-                && inputDataContract.ExecutionSettings.RerunSettings
-                && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests) {
-                    nondistributedtest.runNonDistributedTest(inputDataContract);
-            } else {
-                localtest.startTest();
-            }
+            const test = new nondistributedtest.NonDistributedTest(inputDataContract);
+            test.runNonDistributedTest();
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);

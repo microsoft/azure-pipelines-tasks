@@ -33,6 +33,7 @@ export function parseInputsForDistributedTestRun() : idc.InputDataContract {
     inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
     inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
+    inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.RunIdentifier = getRunIdentifier();
 
     logWarningForWER(tl.getBoolInput('uiTests'));
@@ -57,6 +58,7 @@ export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
     inputDataContract.TeamProject = tl.getVariable('System.TeamProject');
     inputDataContract.CollectionUri = tl.getVariable('System.TeamFoundationCollectionUri');
     inputDataContract.AccessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken;
+    inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.RunIdentifier = getRunIdentifier();
 
@@ -377,11 +379,13 @@ function getTiaSettings(inputDataContract : idc.InputDataContract) : idc.InputDa
     inputDataContract.ExecutionSettings.TiaSettings.UserMapFile = tl.getVariable('tia.usermapfile');
 
     // disable editing settings file to switch on data collector
-    if (tl.getVariable('tia.disabletiadatacollector') && tl.getVariable('tia.disabletiadatacollector').toUpperCase() === 'TRUE') {
-        inputDataContract.ExecutionSettings.TiaSettings.DisableDataCollection = true;
-    } else {
-        inputDataContract.ExecutionSettings.TiaSettings.DisableDataCollection = false;
-    }
+    inputDataContract.ExecutionSettings.TiaSettings.DisableDataCollection = utils.Helper.stringToBool(tl.getVariable('tia.disabletiadatacollector'));
+
+    // This option gives the user ability to add Fully Qualified name filters for test impact. Does not work with XUnit
+    inputDataContract.ExecutionSettings.TiaSettings.UseTestCaseFilterInResponseFile = utils.Helper.stringToBool(tl.getVariable('tia.useTestCaseFilterInResponseFile'));
+    
+    // A legacy  switch to disable test impact from build variables
+    inputDataContract.ExecutionSettings.TiaSettings.Enabled = !utils.Helper.stringToBool(tl.getVariable('DisableTestImpactAnalysis'));
 
     const buildReason = tl.getVariable('Build.Reason');
 

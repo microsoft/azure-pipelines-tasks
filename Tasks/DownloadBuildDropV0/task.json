@@ -1,0 +1,50 @@
+{
+  "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
+  "name": "DownloadBuildDrop",
+  "friendlyName": "Download Build Drop",
+  "description": "Download Build Drop",
+  "helpMarkDown": "Download named drop artifact from a build to a local path.",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 138,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.138.0",
+  "inputs": [
+	{
+      "name": "buildid",
+      "type": "string",
+      "label": "The specific build to download from",
+      "required": false,
+      "helpMarkDown": "The build to download from. Target the current build if left blank."
+    },
+	{
+      "name": "artifactname",
+      "type": "string",
+      "label": "The name of artifact to download.",
+      "defaultValue": "drop",
+      "required": true,
+      "helpMarkDown": "The name of artifact to download. The artifact must be a build drop."
+    },
+    {
+      "name": "targetpath",
+      "type": "filePath",
+      "label": "Path to download to",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The folder path to download the artifact to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+    }
+  ],
+  "instanceNameFormat": "Download Build Drop",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.BuildDrop.DownloadBuildDropTask, Agent.Plugins"
+    }
+  },
+  "messages": {}
+}

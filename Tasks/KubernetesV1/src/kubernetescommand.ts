@@ -38,11 +38,15 @@ function getCommandConfigurationFile() : string[] {
     var args: string[] =[];
     var useConfigurationFile : boolean  =  tl.getBoolInput("useConfigurationFile", false);
     if(useConfigurationFile) {
-        var configurationPath = tl.getInput("configuration", false);
+        var configurationPath = tl.getInput("configuration", true);
         if(configurationPath && tl.exist(configurationPath))
         {
             args[0] = "-f";
             args[1] = configurationPath;
+        }
+        else
+        {
+           throw new Error(tl.loc('ConfigurationFileNotFound', configurationPath));       
         }
     }
 

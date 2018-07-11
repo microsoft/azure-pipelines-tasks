@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 136,
-        "Patch": 2
+        "Minor": 137,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -195,11 +195,11 @@
                 "teamServicesConnection"
             ],
             "type": "connectedService:ExternalTfs",
-            "label": "TFS/VSTS endpoint",
+            "label": "VSTS/TFS service connection",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Specify the endpoint to connect to VSTS/TFS account for agent registration.<br><br>You can create an endpoint using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup an endpoint. <br><br>​Click \"Manage\" to update endpoint details.",
+            "helpMarkDown": "Specify the service connection to connect to a VSTS/TFS account for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -226,7 +226,7 @@
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Specify the Deployment Group against which the Agent(s) will be registered. For more guidance, refer to [Deployment Groups](https://aka.ms/832442)",
+            "helpMarkDown": "Specify the Deployment Group against which the agent(s) will be registered. For more guidance, refer to [Deployment Groups](https://aka.ms/832442)",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -267,7 +267,7 @@
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The password for the user to run the agent service on the Windows VMs. <br>It is assumed that the password is the same for the specified user on all the VMs. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. You may mark variable type as 'secret' to secure it. <br>For linux VMs, password is not required and will be ignored. "
+            "helpMarkDown": "The password for the user to run the agent service on the Windows VMs. <br>It is assumed that the password is the same for the specified user on all the VMs. <br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'. You may mark variable as 'secret' to secure it. <br>For linux VMs, a password is not required and will be ignored. "
         },
         {
             "name": "outputVariable",
@@ -388,7 +388,7 @@
         "ClientIdCannotBeEmpty": "clientId must be a non empty string.",
         "DomainCannotBeEmpty": "domain must be a non empty string.",
         "SecretCannotBeEmpty": "secret must be a non empty string.",
-        "armUrlCannotBeEmpty": "arm Url must be a non empty string.",
+        "armUrlCannotBeEmpty": "arm URL must be a non empty string.",
         "authorityUrlCannotBeEmpty": "authority must be a non empty string.",
         "LoadBalancerNameCannotBeNull": "'loadBalancerName cannot be null or undefined and it must be of type string.'",
         "NetworkInterfaceNameCannotBeNull": "networkInterfaceName cannot be null or undefined and it must be of type string.",
@@ -427,11 +427,11 @@
         "EncodingNotSupported": "Encoding of the file '%s' is '%s' which is not supported. Supported file encodings are ['utf-8', 'utf-16le']",
         "CouldNotDetectEncoding": "Could not detect encoding of file '%s'",
         "DetectedFileEncoding": "The detected encoding for file '%s' is '%s'",
-        "HostUrlCannotBeEmpty": "Host url must be a non empty string.",
+        "HostUrlCannotBeEmpty": "Host URL must be a non empty string.",
         "PatTokenCannotBeEmpty": "Personal access token must be a non empty string.",
-        "OnlyTokenAuthAllowed": "Endpoint can be of Token authorization type only.",
-        "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group endpoint url cannot be empty",
-        "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group endpoint personal access token cannot be empty",
+        "OnlyTokenAuthAllowed": "Service connection can be of Token authorization type only.",
+        "DeploymentGroupEndpointUrlCannotBeEmpty": "Deployment group service connection URL cannot be empty",
+        "DeploymentGroupEndpointPatTokenCannotBeEmpty": "Deployment group service connection personal access token cannot be empty",
         "ErrorWhileParsingParameter": "There was an error while overriding '%s' parameter because of '%s', make sure it follows JavaScript Object Notation (JSON)",
         "TemplateFilePatternMatchingMoreThanOneFile": "Found multiple files matching template file pattern: %s",
         "TemplateParameterFilePatternMatchingMoreThanOneFile": "Found multiple files matching template parameters file pattern: %s",
@@ -444,14 +444,15 @@
         "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
         "ExtensionNotFound": "Extension not found on the vm: %s",
         "AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
-        "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
-        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
-        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}",
+        "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
+        "UnableToFetchActiveDirectory": "Unable to fetch Active Directory resource ID.",
+        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm service connection URL: '{0}' is invalid.",
+        "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message: {0}",
         "UnableToReadResponseBody": "Unable to read response body. Error: %s",
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null."
+        "UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null.",
+        "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition."
     }
 }

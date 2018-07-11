@@ -18,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 2
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -39,7 +39,7 @@
             "name": "PostDeploymentAction",
             "displayName": "Post Deployment Action",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && UseWebDeploy = true"
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer"
         },
         {
             "name": "ApplicationAndConfigurationSettings",
@@ -59,7 +59,7 @@
                 "PublishProfile": "Publish Profile"
             },
             "required": true,
-            "helpMarkDown": "Select the connection type to use to deploy the WebApp."
+            "helpMarkDown": "Select the service connection type to use to deploy the Web App."
         },
         {
             "name": "ConnectedServiceName",
@@ -393,7 +393,7 @@
             "required": false,
             "defaultValue": false,
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Variables defined in the Build or Release Definition will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the Release Definition and in the Environment, then the Environment variables will supersede the Release Definition variables.<br/>"
+            "helpMarkDown": "Variables defined in the build or release pipelines will be matched against the 'key' or 'name' entries in the appSettings, applicationSettings, and connectionStrings sections of any config file and parameters.xml. Variable Substitution is run after config transforms. <br/><br/> Note: If same variables are defined in the release pipeline and in the environment, then the environment variables will supersede the release pipeline variables.<br/>"
         },
         {
             "name": "JSONFiles",
@@ -402,7 +402,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build/release definition (or release definition’s environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: Build/Release’s system definition variables are excluded in substitution"
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: the build or release's system definition variables are excluded in substitution."
         }
     ],
     "outputVariables": [
@@ -459,10 +459,10 @@
         "Invalidwebapppackageorfolderpathprovided": "Invalid App Service package or folder path provided: %s",
         "SetParamFilenotfound0": "Set parameters file not found: %s",
         "XDTTransformationsappliedsuccessfully": "XML Transformations applied successfully",
-        "GotconnectiondetailsforazureRMWebApp0": "Got connection details for Azure App Service:'%s'",
+        "GotconnectiondetailsforazureRMWebApp0": "Got service connection details for Azure App Service:'%s'",
         "ErrorNoSuchDeployingMethodExists": "Error : No such deploying method exists",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
-        "UnabletoretrieveResourceID": "Unable to retrieve connection details for Azure Resource:'%s'. Status Code: %s",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve service connection details for Azure App Service : %s. Status Code: %s (%s)",
+        "UnabletoretrieveResourceID": "Unable to retrieve service connection details for Azure Resource:'%s'. Status Code: %s",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history. Error: %s",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING : Cannot update deployment status : SCM endpoint is not enabled for this website",
@@ -542,15 +542,15 @@
         "FailedToApplyTransformationReason2": "2. Ensure that the config file and transformation files are present in the same folder inside the package.",
         "AutoParameterizationMessage": "ConnectionString attributes in Web.config is parameterized by default. Note that the transformation has no effect on connectionString attributes as the value is overridden during deployment by 'Parameters.xml or 'SetParameters.xml' files. You can disable the auto-parameterization by setting /p:AutoParameterizationWebConfigConnectionStrings=False during MSBuild package generation.",
         "UnsupportedAppType": "App type '%s' not supported in Web.config generation. Valid values for '-appType' are: 'python_Bottle', 'python_Django', 'python_Flask' and 'node'",
-        "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+        "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
+        "UnableToFetchActiveDirectory": "Unable to fetch Active Directory resource ID.",
         "SuccessfullyUpdatedRuntimeStackAndStartupCommand": "Successfully updated the Runtime Stack and Startup Command.",
         "FailedToUpdateRuntimeStackAndStartupCommand": "Failed to update the Runtime Stack and Startup Command. Error: %s.",
         "SuccessfullyUpdatedWebAppSettings": "Successfully updated the App settings.",
         "FailedToUpdateAppSettingsInConfigDetails": "Failed to update the App settings. Error: %s.",
         "UnableToGetAzureRMWebAppMetadata": "Failed to fetch AzureRM WebApp metadata. ErrorCode: %s",
         "UnableToUpdateAzureRMWebAppMetadata": "Unable to update AzureRM WebApp metadata. Error Code: %s",
-        "Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentails.[Status Code: '%s']",
+        "Unabletoretrieveazureregistrycredentials": "Unable to retrieve Azure Container Registry credentials.[Status Code: '%s']",
         "UnableToReadResponseBody": "Unable to read response body. Error: %s",
         "UnableToUpdateWebAppConfigDetails": "Unable to update WebApp config details. StatusCode: '%s'",
         "AddingReleaseAnnotation": "Adding release annotation for the Application Insights resource '%s'",
@@ -558,7 +558,7 @@
         "FailedAddingReleaseAnnotation": "Failed to add release annotation. %s",
         "RenameLockedFilesEnabled": "Rename locked files enabled for App Service.",
         "FailedToEnableRenameLockedFiles": "Failed to enable rename locked files. Error: %s",
-        "WebJobsInProgressIssue": "Few WebJobs in running state prevents the deployment from removing the files. You can disable 'Remove additional files at destinaton' option or Stop continuous Jobs before deployment.",
+        "WebJobsInProgressIssue": "Few WebJobs in running state prevents the deployment from removing the files. You can disable 'Remove additional files at destination' option or Stop continuous Jobs before deployment.",
         "FailedToFetchKuduAppSettings": "Failed to fetch Kudu App Settings. Error: %s",
         "FailedToCreatePath": "Failed to create path '%s' from Kudu. Error: %s",
         "FailedToDeleteFile": "Failed to delete file '%s/%s' from Kudu. Error: %s",
@@ -593,10 +593,10 @@
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
         "XmlParsingFailed":"Unable to parse publishProfileXML file, Error: %s",
         "PropertyDoesntExistPublishProfile": "[%s] Property does not exist in publish profile",
-        "InvalidConnectionType": "Invalid connection type",
+        "InvalidConnectionType": "Invalid service connection type",
         "InvalidImageSourceType": "Invalid Image source Type",
         "InvalidPublishProfile": "Publish profile file is invalid.",
-        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition",
+        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline",
         "ZipDeployLogsURL": "Zip Deploy logs can be viewed at %s",
         "AppServiceApplicationURL": "App Service Application URL: %s",
         "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option."

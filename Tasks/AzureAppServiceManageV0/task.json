@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 34
+        "Patch": 36
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -276,7 +276,7 @@
         "SourceAndTargetSlotCannotBeSame": "Source and target slot cannot be same",
         "Successfullyupdateddeploymenthistory": "Successfully updated deployment History at %s",
         "Failedtoupdatedeploymenthistory": "Failed to update deployment history.",
-        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve connection details for Azure App Service : %s. Status Code: %s (%s)",
+        "UnabletoretrieveconnectiondetailsforazureRMWebApp": "Unable to retrieve service connection details for Azure App Service: %s. Status Code: %s (%s)",
         "StartingAppService": "Starting App Service : %s",
         "AppServicestartedsuccessfully": "App Service '%s' started successfully",
         "FailedtoStartAppService": "Failed to start App Service for '%s'. Response Code : %s",
@@ -290,7 +290,7 @@
         "InvalidAction": "Invalid Action selected !",
         "WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "WARNING: Cannot update deployment status. SCM endpoint is not enabled for this website.",
         "WebAppDoesntExist": "Web app '%s' doesn't exist.",
-        "UnabletoretrieveWebAppID": "Unable to retrieve connection details for Azure App Service:'%s'. Status Code: %s",
+        "UnabletoretrieveWebAppID": "Unable to retrieve service connection details for Azure App Service:'%s'. Status Code: %s",
         "StartingSwapSlot": "Requesting swap slot for Web App : %s",
         "ExtensionInstallFailedError": "Failed to install extension: '%s'. Error: %s",
         "ExtensionInstallFailedResponseError": "Failed to install extension '%s'. Status Code: %s",
@@ -299,8 +299,8 @@
         "ExtensionListFailedError": "Failed to retrieve list of extensions installed in Azure App Service. Error %s.",
         "ExtensionListFailedResponseError": "Failed to retrieve list of extensions installed in Azure App Service. Status Code: %s",
         "FailedToFetchAppServiceState": "Failed to fetch App Service State for App Service: %s, Error Code: %s",
-        "UnableToFetchAuthorityURL": "Unable to fetch authority url.",
-        "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
+        "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
+        "UnableToFetchActiveDirectory": "Unable to fetch Active Directory resource ID.",
         "UnableToGetAppInsightsResource": "Unable to get Application Insights resource with name : %s",
         "UnableToIdentifyResourceGroupNameForAppInsightsResource": "Unable to identify resource group name for Application Insights resource : %s",
         "FailedToConfigureAlwaysOnProperty": "Failed to configure always on property.",
@@ -317,7 +317,7 @@
         "SlotNameCannotBeNull": "Slot name cannot be null or undefined and it must be of type string.",
         "SourceSlotNameCannotBeNull": "Source slot name cannot be null or undefined and it must be of type string.",
         "DestinationSlotNameCannotBeNull": "Destination slot name cannot be null or undefined and it must be of type string.",
-        "ResourceGroupNotFound": "Rescource Group for '%s' app service not found.",
+        "ResourceGroupNotFound": "Resource group for '%s' App Service not found.",
         "ResourceTypeCannotBeNull": "Resource type cannot be null or undefined and it must be of type string.",
         "StartedAppService": "App Service '%s' started successfully.",
         "StartedAppServiceSlot": "App Service '%s-%s' started successfully.",
@@ -357,7 +357,7 @@
         "TestNameCannotBeNull": "Test name cannot be null or undefined and it must be of type string.",
         "TestDefinitionCannotBeNull": "Test definition cannot be null or undefined.",
         "AppInsightsPropertiesCannotBeNullOrEmpty": "Application Insights properties cannot be null or undefined.",
-        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRM Endpoint is invalid: %s",
+        "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRM service connection is invalid: %s",
         "FailedToFetchAzureStackDependencyData": "Failed to fetch Azure stack dependency data. Status code: %s",
         "FailedToGetApplicationInsightsResource": "Failed to get Application Insights '%s' Resource. Error: %s",
         "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
@@ -403,6 +403,6 @@
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition"
+        "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your Web App gives you certificate validation errors, you're probably using a self-signed certificate. To resolve such errors, you must set a variable named `VSTS_ARM_REST_IGNORE_SSL_ERRORS` to the value `true` in the build or release pipeline."
     }
 }

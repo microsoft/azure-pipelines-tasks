@@ -4,6 +4,7 @@ import * as path from "path";
 import * as util from "util";
 import * as tl from "vsts-task-lib/task";
 import packerHost from "../packerHost";
+import * as utils from "../utilities"
 
 export async function run(packerHost: packerHost): Promise<void> {
     var command = packerHost.createPackerTool();
@@ -13,9 +14,10 @@ export async function run(packerHost: packerHost): Promise<void> {
     var variableProviders = packerHost.getTemplateVariablesProviders();
     for (var provider of variableProviders) {
         var variables = await provider.getTemplateVariables(packerHost);
-        variables.forEach((value: string, key: string) => {
-            command.arg(["-var", util.format("%s=%s", key, value)]);
-        });
+        let filePath: string = utils.generateTemporaryFilePath();
+        let content: string = utils.getPackerVarFileContent(variables);
+        utils.writeFile(filePath, content);
+        command.arg(util.format("%s=%s", '-var-file', filePath));
     }
 
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));

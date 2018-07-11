@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Download Build Drop",
+  "loc.helpMarkDown": "Download named drop artifact from a build to a local path.",
+  "loc.description": "Download Build Drop",
+  "loc.instanceNameFormat": "Download Build Drop",
+  "loc.input.label.buildid": "The specific build to download from",
+  "loc.input.help.buildid": "The build to download from. Target the current build if left blank.",
+  "loc.input.label.artifactname": "The name of artifact to download.",
+  "loc.input.help.artifactname": "The name of artifact to download. The artifact must be a build drop.",
+  "loc.input.label.targetpath": "Path to download to",
+  "loc.input.help.targetpath": "The folder path to download the artifact to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+}

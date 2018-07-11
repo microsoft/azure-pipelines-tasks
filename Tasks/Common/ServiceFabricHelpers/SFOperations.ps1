@@ -1,6 +1,7 @@
 $SF_Operations = @{
     Undefined                         = 'Undefined';
     ConnectCluster                    = 'ConnectCluster';
+    GetClusterHealth                  = 'GetClusterHealth';
     ConnectClusterMetadata            = 'ConnectClusterMetadata';
     TestClusterConnection             = 'TestApplicationPackage';
     TestApplicationPackage            = 'TestApplicationPackage';
@@ -15,6 +16,7 @@ $SF_Operations = @{
     CreateNewApplication              = 'CreateNewApplication'
     StartApplicationUpgrade           = 'StartApplicationUpgrade';
     GetApplicationUpgradeStatus       = 'GetApplicationUpgradeStatus';
+    WaitApplicationUpgradeStatus      = 'WaitApplicationUpgradeStatus';
     EncryptServiceFabricText          = 'EncryptServiceFabricText';
     CreateDiffPackage                 = 'CreateDiffPackage';
     GetComposeDeploymentStatus        = 'GetComposeDeploymentStatus';

@@ -11,7 +11,6 @@ export async function run(command?: string): Promise<void> {
     let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     let npmrc = util.getTempNpmrcPath();
     let npmRegistries: INpmRegistry[] = await getCustomRegistries();
-    let registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
     let overrideNpmrc = (tl.getInput(NpmTaskInput.CustomRegistry) == RegistryLocation.Feed) ? true : false;
 
     for (let registry of npmRegistries) {
