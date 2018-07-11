@@ -121,14 +121,19 @@ catch [System.Management.Automation.CommandNotFoundException] {
     throw
 }
 catch [Exception] {
-    $errorMessage = Get-VstsLocString -Key "SAD_TroubleshootingLink"
-
+    $errorMessage = ""
     if($_.Exception.Message) {
-        $errorMessage = $_.Exception.Message + " " + $errorMessage
+        $errorMessage = $_.Exception.Message
     }
     else {
-        $errorMessage = $_.Exception.ToString() + " " + $errorMessage
+        $errorMessage = $_.Exception.ToString()
     }
+
+    if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
+        $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
+    }
+       
+    $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
 
     throw $errorMessage
 }
