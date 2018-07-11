@@ -203,7 +203,7 @@ export class ApplicationTokenCredentials {
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
             grant_type: "client_credentials",
-            client_assertion: this.secret
+            client_secret: this.secret
         });
         webRequest.headers = {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
