@@ -105,7 +105,7 @@
       "label": "ms-resource:loc.input.label.script",
       "visibleRule": "type = inline && executeScript = true",
       "required": true,
-      "defaultValue": "# Write your Docker commands here.\n\ndocker images\n\n# Use the environment variables input below to pass secret variables to this script.",
+      "defaultValue": "# Write your Docker commands here.\n\ndocker version\n\n# Use the environment variables input below to pass secret variables to this script.",
       "properties": {
         "resizable": "true",
         "rows": "10",
