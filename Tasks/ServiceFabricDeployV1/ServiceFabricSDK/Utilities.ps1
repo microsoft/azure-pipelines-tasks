@@ -432,7 +432,7 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
             return $true
         }
         # if app type is provisioned, don't retry
-        elseif($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
+        elseif($appType -and ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available))
         {
             return $false
         }
