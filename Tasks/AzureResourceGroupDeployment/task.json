@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 131,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -420,6 +420,7 @@
         "UnableToFetchActiveDirectory": "Unable to fetch active directory resource id.",
         "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm endpoint url : '{0}' is invalid.",
         "FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data, error message : {0}",
-        "UnableToReadResponseBody": "Unable to read response body. Error: %s"
+        "UnableToReadResponseBody": "Unable to read response body. Error: %s",
+        "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition"
     }
 }

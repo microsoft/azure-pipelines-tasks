@@ -216,5 +216,6 @@
   "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
   "loc.messages.GoExeNameNotPresent": "Go exe name is not present",
   "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
-  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine."
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Make sure the machine is using TLS 1.2 protocol or higher. Check https://aka.ms/enableTlsv2 for more information on how to enable TLS in your machine.",
+  "loc.messages.ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition"
 }

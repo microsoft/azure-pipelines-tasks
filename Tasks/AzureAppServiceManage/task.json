@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 25
+        "Patch": 26
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -397,6 +397,7 @@
         "WebJobAlreadyInStoppedState": "WebJob '%s' is already in stopped state.",
         "RestartingKuduService": "Restarting Kudu Service.",
         "RestartedKuduService": "Kudu Service restarted.",
-        "FailedToRestartKuduService": "Failed to restart kudu Service. %s."
+        "FailedToRestartKuduService": "Failed to restart kudu Service. %s.",
+        "ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition"
     }
 }
