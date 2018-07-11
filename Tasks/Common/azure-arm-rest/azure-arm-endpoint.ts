@@ -43,11 +43,13 @@ export class AzureRMEndpoint {
 
             this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
             if(this.endpoint.authenticationType && this.endpoint.authenticationType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
+                tl.debug('certificate spn endpoint');
                 this.endpoint.servicePrincipalCertificate = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'servicePrincipalCertificate', false);
                 this.endpoint.servicePrincipalCertificatePath = path.join(tl.getVariable('Agent.TempDirectory'), 'spnCert.pem');
                 fs.writeFileSync(this.endpoint.servicePrincipalCertificatePath, this.endpoint.servicePrincipalCertificate);
             }
             else {
+                tl.debug('credentials spn endpoint');
                 this.endpoint.servicePrincipalKey = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', false);
             }
 
@@ -61,11 +63,13 @@ export class AzureRMEndpoint {
                 this.endpoint.activeDirectoryResourceID = this.endpoint.url;
             }
 
+            this.endpoint.isADFSEnabled = this.endpoint.environmentAuthorityUrl.endsWith('/adfs');
+
             this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
-                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath);
+                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath, this.endpoint.isADFSEnabled);
         }
 
-        console.log(this.endpoint);
+        tl.debug(JSON.stringify(this.endpoint));
         return this.endpoint;
     }
 

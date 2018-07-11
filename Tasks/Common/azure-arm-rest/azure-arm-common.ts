@@ -14,6 +14,7 @@ export class ApplicationTokenCredentials {
     private authType: string;
     private secret?: string;
     private certFilePath?: string;
+    private isADFSEnabled?: boolean;
     public baseUrl: string;
     public authorityUrl: string;
     public activeDirectoryResourceId: string;
@@ -22,7 +23,7 @@ export class ApplicationTokenCredentials {
     public msiClientId: string;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string) {
+    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string,isADFSEnabled?: boolean) {
 
         if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
@@ -81,6 +82,7 @@ export class ApplicationTokenCredentials {
             }
         }
         
+        this.isADFSEnabled = isADFSEnabled;
 
     }
 
@@ -154,11 +156,19 @@ export class ApplicationTokenCredentials {
         return deferred.promise;
     }
 
+    private _getSPNAuthorizationToken(): Q.Promise<string> {
+        if(this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+            return this._getSPNAuthorizationTokenFromKey();
+        }
+
+        return this._getSPNAuthorizationTokenFromCertificate()
+    }
+
     private _getSPNAuthorizationTokenFromCertificate(): Q.Promise<string> {
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
-        webRequest.uri = this.authorityUrl + this.domain + "/oauth2/token/";
+        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.domain) + "/oauth2/token/";
         webRequest.body = querystring.stringify({
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
@@ -185,13 +195,8 @@ export class ApplicationTokenCredentials {
         return deferred.promise;
     }
 
-    private _getSPNAuthorizationToken(): Q.Promise<string> {
 
-        if(1<2) {
-            console.log(this._getSPNCertificateAuthorizationToken());
-            return (this._getSPNAuthorizationTokenFromCertificate());  
-        }
-        
+    private _getSPNAuthorizationTokenFromKey(): Q.Promise<string> {        
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
@@ -227,7 +232,7 @@ export class ApplicationTokenCredentials {
     }
 
     private _getSPNCertificateAuthorizationToken(): string {
-        var openSSLPath = tl.which(path.join(__dirname, 'openssl', 'openssl'));
+        var openSSLPath =   tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, 'openssl', 'openssl')) : tl.which('openssl');
         var openSSLArgsArray= [
             "x509",
             "-noout",
@@ -242,32 +247,35 @@ export class ApplicationTokenCredentials {
             "typ": "JWT",
         };
 
-        console.log(pemExecutionResult);
         if(pemExecutionResult.code == 0) {
-            console.log("FINGERPRINT CREATION SUCCESSFUL");
+            tl.debug("FINGERPRINT CREATION SUCCESSFUL");
             let shaFingerprint = pemExecutionResult.stdout;
             let shaFingerPrintHashCode = shaFingerprint.split("=")[1].replace(new RegExp(":", 'g'), "");
             let fingerPrintHashBase64: string = Buffer.from(
-                shaFingerPrintHashCode.match(/\w{2}/g).map(function(a){return String.fromCharCode(parseInt(a, 16));} ).join(""), 'binary'
+                shaFingerPrintHashCode.match(/\w{2}/g).map(function(a) { 
+                    return String.fromCharCode(parseInt(a, 16));
+                } ).join(""),
+                'binary'
             ).toString('base64');
             additionalHeaders["x5t"] = fingerPrintHashBase64;
         }
         else {
-            throw new Error("FINGERPRINT CREATION Failed." + pemExecutionResult.stderr);
+            console.log(pemExecutionResult);
+            throw new Error(pemExecutionResult.stderr);
         }
 
-        return getJWT(this.authorityUrl, this.clientId, this.domain, this.certFilePath, additionalHeaders);
+        return getJWT(this.authorityUrl, this.clientId, this.domain, this.certFilePath, additionalHeaders, this.isADFSEnabled);
     }
 
 }
 
-function getJWT(url: string, applicationID: string, tenantID: string, pemFilePath: string, additionalHeaders) {
+function getJWT(url: string, clientId: string, tenantId: string, pemFilePath: string, additionalHeaders, isADFSEnabled: boolean) {
 
     var pemFileContent = fs.readFileSync(pemFilePath);
     var jwtObject = {
-        "aud": `${url}${tenantID}/oauth2/token`,
-        "iss": applicationID,
-        "sub": applicationID,
+        "aud": `${url}${isADFSEnabled ? tenantId : ""}/oauth2/token`,
+        "iss": clientId,
+        "sub": clientId,
         "jti": "" + Math.random(),
         "nbf":  (Math.floor(Date.now()/1000)-1000),
         "exp": (Math.floor(Date.now()/1000)+8640000)

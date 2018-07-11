@@ -226,6 +226,7 @@ export interface AzureEndpoint {
     msiClientId?: string;
     scheme?: string;
     applicationTokenCredentials: ApplicationTokenCredentials;
+    isADFSEnabled?: boolean;
 }
 
 export interface AzureAppServiceConfigurationDetails {
