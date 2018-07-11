@@ -1,15 +1,27 @@
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import * as toolLib from 'vsts-task-tool-lib/tool';
-import * as restm from 'typed-rest-client/RestClient';
+//import * as restm from 'typed-rest-client/RestClient';
+//import * as auth from 'nuget-task-common/Authentication';
+//import * as peParser from 'nuget-task-common/pe-parser';
+//import * as verInfo from 'nuget-task-common/pe-parser/VersionResource';
+//import { IPackageSource } from 'nuget-task-common/Authentication';
+//import { NuGetConfigHelper2 } from 'nuget-task-common/NuGetConfigHelper2';
+//import * as locationHelpers from 'nuget-task-common/LocationHelpers';
+//import * as nutil from 'nuget-task-common/Utility';
 import * as os from 'os';
 import * as path from 'path';
-import * as ci from './cieventlogger';
+import * as uuid from 'uuid';
+import * as fs from 'fs';
 import { exec } from 'child_process';
-const perf = require('performance-now');
+import * as perf from 'performance-now';
+import * as ci from './cieventlogger';
+import * as constants from './constants';
+import * as helpers from './helpers';
+import { TaskResult } from 'vsts-task-lib/task';
 
-const packageName = 'Microsoft.TestPlatform';
-let packageSource = 'https://api.nuget.org/v3/index.json';
+let packageSource = constants.defaultPackageSource;
+const consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
 
 async function startInstaller() {
     let executionStartTime;
@@ -17,6 +29,8 @@ async function startInstaller() {
     try {
         const osPlat: string = os.platform();
         executionStartTime = perf();
+        consolidatedCiData.executionStartTime = executionStartTime;
+        consolidatedCiData.result = 'failed';
 
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -24,44 +38,157 @@ async function startInstaller() {
         console.log('==============================================================================');
 
         ci.publishEvent('Start', { OS: osPlat, isSupportedOS: (osPlat === 'win32').toString(), startTime: executionStartTime } );
+        consolidatedCiData.operatingSystem = osPlat;
 
         if (osPlat !== 'win32') {
             // Fail the task if os is not windows
+            consolidatedCiData.executionEndTime = perf();
+            consolidatedCiData.failureReason = 'unsupportedOS';
             tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
             return;
         }
 
         // Read task inputs
-        const versionSelectorInput = tl.getInput('versionSelector', true);
+        const packageFeedSelectorInput = tl.getInput('packageFeedSelector', true);
+        const versionSelectorInput = tl.getInput('versionSelector', false);
         const testPlatformVersion = tl.getInput('testPlatformVersion', false);
+        const networkSharePath = tl.getInput('netShare', false);
+        const username = tl.getInput('username', false);
+        const password = tl.getInput('password', false);
+        const netSharePath = tl.getInput('netShare', false);
+        // Todo: Add an input for cleaning up the tool cache?
 
-        // Read backdoor variables used to tweak the task for testing/development purposes
-        // Change the package source, mainly used to get the latest from the myget feed
-        const overridenPackageSource = tl.getVariable('overridePackageSource');
-        if (overridenPackageSource && overridenPackageSource !== '') {
-            packageSource = overridenPackageSource;
-            ci.publishEvent('PackageSourceOverridden', {packageSource: packageSource} );
+        consolidatedCiData.packageFeedSelectorInput = packageFeedSelectorInput;
+
+        ci.publishEvent('Options', {
+            packageFeedSelectorInput: packageFeedSelectorInput,
+            versionSelectorInput: versionSelectorInput,
+            testPlatformVersion: testPlatformVersion
+        });
+
+        tl.debug(`Selected package feed: ${packageFeedSelectorInput}`);
+
+        if (packageFeedSelectorInput.toLowerCase() === 'netshare') {
+            if (helpers.pathExistsAsFile(netSharePath)) {
+                packageSource = path.dirname(netSharePath);
+            } else {
+                consolidatedCiData.failureReason = 'packageFileDoesNotExist';
+                throw new Error(tl.loc('SpecifiedFileDoesNotExist', netSharePath));
+            }
+
+            const fileName = path.basename(netSharePath);
+            const versionExtractionRegex = /microsoft\.testplatform\.(.*)\.nupkg/i;
+            const regexMatches = versionExtractionRegex.exec(fileName);
+
+            if (regexMatches.length !== 2) {
+                consolidatedCiData.failureReason = 'unexpectedPackageFileName';
+                throw new Error(tl.loc('UnexpectedFileName'));
+            }
+            const version = regexMatches[1];
+            consolidatedCiData.testPlatformVersion = version;
+
+            await getVsTestPlatformToolFromNetworkShare(version);
+
+        } else if (packageFeedSelectorInput.toLowerCase() === 'vstsfeed') {
+
+            // const feedId = tl.getInput('vstsFeed');
+            // const accessToken = auth.getSystemAccessToken();
+            // const nuGetVersion: verInfo.VersionInfo = await peParser.getFileVersionInfoAsync(path.join(__dirname, 'nuget.exe'));
+            // const feedUrl = await nutil.getNuGetFeedRegistryUrl(accessToken, feedId, nuGetVersion);
+
+            // const tempConfigFilePath = path.join(tl.getVariable('System.DefaultWorkingDirectory'), `${uuid.v1()}.config`);
+            // fs.writeFileSync(tempConfigFilePath, Constants.emptyNugetConfig, { encoding: 'utf-8' });
+
+            // const nugetTool = path.join(__dirname, 'nuget.exe');
+            // const args = `sources Add -NonInteractive -Name ${feedId} -Source ${feedUrl}` +
+            //     ` -Username "${}" -Password "${}" -ConfigFile ${tempConfigFilePath}`;
+
+            // const options = <tr.IExecOptions>{};
+            // const startTime = perf();
+            // const result = tl.execSync(nugetTool, args, options);
+
+            // // Assign the feed name we wrote into the config file to the packageSource variable
+            // packageSource = feedId;
+
+            // ci.publishEvent('PackageSourceOverridden', {packageSource: 'vstsFeed'} );
+            // await getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion, versionSelectorInput, tempConfigFilePath);
+
+        } else if (packageFeedSelectorInput.toLowerCase() === 'customfeed') {
+            let tempConfigFilePath = null;
+            if (!helpers.isNullEmptyOrUndefined(password)) {
+                tempConfigFilePath = prepareNugetConfigFile(username, password);
+                consolidatedCiData.passwordProvided = 'true';
+                consolidatedCiData.usernameProvided = `${!helpers.isNullEmptyOrUndefined(username)}`;
+            }
+            await getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion, versionSelectorInput, tempConfigFilePath);
+        } else {
+            await getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion, versionSelectorInput, null);
         }
-        tl.debug(`Using the package source ${packageSource} to get the ${packageName} nuget package.`);
 
-        ci.publishEvent('Options', { versionSelectorInput: versionSelectorInput, testPlatformVersion: testPlatformVersion } );
-
-        // TODO: Add an input for cleaning up the tool cache?
-
-        // Get the required version of the platform and make necessary preparation to allow its consumption down the phase
-        await getVsTestPlatformTool(testPlatformVersion, versionSelectorInput);
     } catch (error) {
         ci.publishEvent('Completed', { isSetupSuccessful: 'false', error: error.message } );
+        tl.debug(error);
         tl.setResult(tl.TaskResult.Failed, error.message);
-    } finally {
-        ci.publishEvent('Completed', { isSetupSuccessful: 'true', startTime: executionStartTime, endTime: perf() } );
     }
+
+    ci.publishEvent('Completed', { isSetupSuccessful: 'true', startTime: executionStartTime, endTime: perf() } );
 }
 
-async function getVsTestPlatformTool(testPlatformVersion: string, versionSelectorInput: string) {
+async function getVsTestPlatformToolFromNetworkShare(testPlatformVersion: string) {
+    let toolPath;
+
+    // If the version provided is not an explicit version (ie contains containing wildcards) then throw
+    if (!toolLib.isExplicitVersion(testPlatformVersion)) {
+        ci.publishEvent('InvalidVersionSpecified', { version: testPlatformVersion } );
+        throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
+    }
+
+    // Check cache for the specified version
+    tl.debug(`Looking for version ${testPlatformVersion} in the tools cache.`);
+    let cacheLookupStartTime = perf();
+    toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
+
+    ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(toolPath)).toString(),
+        isFallback: 'false', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
+
+    // If found in the cache then set the tool location and return
+    if (!helpers.isNullEmptyOrUndefined(toolPath)) {
+        setVsTestToolLocation(toolPath);
+        return;
+    }
+
+    // Download the required version and cache it
+    try {
+        tl.debug(`Could not find ${constants.packageId}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
+        toolPath = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion, null);
+    } catch (error) {
+        // Download failed, look for the latest version available in the cache
+        tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion, error));
+        ci.publishEvent('DownloadFailed', { action: 'getLatestAvailableInCache', error: error } );
+        testPlatformVersion = 'x';
+        cacheLookupStartTime = perf();
+        toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
+
+        ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(toolPath)).toString(),
+            isFallback: 'true', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
+
+        if (!toolPath || toolPath === 'undefined') {
+            // No version found in cache, fail the task
+            tl.warning(tl.loc('NoPackageFoundInCache'));
+            throw new Error(tl.loc('FailedToAcquireTestPlatform'));
+        }
+    }
+
+    // Set the vstest platform tool location for the vstest task to consume
+    setVsTestToolLocation(toolPath);
+}
+
+async function getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion: string, versionSelectorInput: string, nugetConfigFilePath: string) {
     // Should point to the location where the VsTest platform tool will be
     let toolPath: string;
     let includePreRelease: boolean;
+
+    tl.debug(`Using the package source ${packageSource} to get the ${constants.packageId} nuget package.`);
 
     if (versionSelectorInput.toLowerCase() === 'lateststable') {
         console.log(tl.loc('LookingForLatestStableVersion'));
@@ -75,8 +202,8 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
 
     if (versionSelectorInput.toLowerCase() !== 'specificversion') {
         try {
-            testPlatformVersion = getLatestPackageVersionNumber(includePreRelease);
-            if (testPlatformVersion === null) {
+            testPlatformVersion = getLatestPackageVersionNumber(includePreRelease, nugetConfigFilePath);
+            if (helpers.isNullEmptyOrUndefined(testPlatformVersion)) {
                 tl.warning(tl.loc('RequiredVersionNotListed'));
                 tl.debug('Looking for latest stable available version in cache.');
                 ci.publishEvent('RequestedVersionNotListed', { action: 'getLatestAvailableInCache' } );
@@ -99,10 +226,12 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
     tl.debug(`Looking for version ${testPlatformVersion} in the tools cache.`);
     let cacheLookupStartTime = perf();
     toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
-    ci.publishEvent('CacheLookup', { CacheHit: (toolPath !== null && toolPath !== undefined && toolPath !== 'undefined').toString(), isFallback: 'false', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
+
+    ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(toolPath)).toString(),
+        isFallback: 'false', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
 
     // If found in the cache then set the tool location and return
-    if (toolPath && toolPath !== 'undefined') {
+    if (!helpers.isNullEmptyOrUndefined(toolPath)) {
         setVsTestToolLocation(toolPath);
         return;
     }
@@ -122,16 +251,19 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
 
     // Download the required version and cache it
     try {
-        tl.debug(`Could not find ${packageName}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
-        toolPath = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion);
+        tl.debug(`Could not find ${constants.packageId}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
+        toolPath = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion, nugetConfigFilePath);
     } catch (error) {
         // Download failed, look for the latest version available in the cache
-        tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion));
+        tl.warning(tl.loc('TestPlatformDownloadFailed', testPlatformVersion, error));
         ci.publishEvent('DownloadFailed', { action: 'getLatestAvailableInCache', error: error } );
         testPlatformVersion = 'x';
         cacheLookupStartTime = perf();
         toolPath = toolLib.findLocalTool('VsTest', testPlatformVersion);
-        ci.publishEvent('CacheLookup', { CacheHit: (toolPath !== null && toolPath !== undefined && toolPath !== 'undefined').toString(), isFallback: 'true', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
+
+        ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(toolPath)).toString(),
+            isFallback: 'true', version: testPlatformVersion, startTime: cacheLookupStartTime, endTime: perf() } );
+
         if (!toolPath || toolPath === 'undefined') {
             // No version found in cache, fail the task
             tl.warning(tl.loc('NoPackageFoundInCache'));
@@ -143,29 +275,52 @@ async function getVsTestPlatformTool(testPlatformVersion: string, versionSelecto
     setVsTestToolLocation(toolPath);
 }
 
-function setVsTestToolLocation(toolPath: string) {
-    // Set the task variable so that the VsTest task can consume this path
-    tl.setVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
-    console.log(tl.loc('InstallationSuccessful', toolPath));
-    tl.debug(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${toolPath}.`);
-}
+function prepareNugetConfigFile(username: string, password: string) {
+    const feedUrl = tl.getInput('customFeed');
+    const feedId = uuid.v1();
 
-function getLatestPackageVersionNumber(includePreRelease: boolean): string {
-    const nugetTool = path.join(__dirname, 'nuget.exe');
-    let args = undefined;
+    const tempConfigFilePath = helpers.GenerateTempFile(`${uuid.v1()}.config`);
+    tl.debug(`Writing package source details to temp config file ${tempConfigFilePath}`);
 
-    if (includePreRelease === true) {
-        args = 'list ' + packageName + ' -PreRelease' + ' -Source ' + packageSource;
-    } else {
-        args = 'list ' + packageName + ' -Source ' + packageSource;
+    try {
+        fs.writeFileSync(tempConfigFilePath, constants.emptyNugetConfig, { encoding: 'utf-8' });
+    } catch (error) {
+        consolidatedCiData.failureReason = 'configFileWriteFailed';
+        throw new Error(tl.loc('ConfigFileWriteFailed', tempConfigFilePath, error));
     }
 
-    tl.debug(`Executing nuget.exe with args ${args} to list all available packages to identify latest version.`);
+    const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
+
+    nugetTool.arg('sources').arg('Add').arg('-NonInteractive').arg('-Name').arg(feedId).arg('-Source').arg(feedUrl)
+        .argIf(password, '-Username').argIf(password, username)
+        .argIf(password, '-Password').argIf(password, password)
+        .argIf(tempConfigFilePath, '-ConfigFile').argIf(tempConfigFilePath, tempConfigFilePath);
 
     const options = <tr.IExecOptions>{};
+    const startTime = perf();
+    const result = nugetTool.execSync(options);
+
+    if (result.code !== 0 || !(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
+        throw new Error(tl.loc('ConfigFileWriteFailed', tempConfigFilePath, result.stderr));
+    }
+
+    // Assign the feed name we wrote into the config file to the packageSource variable
+    tl.debug(`Setting the source to feed with id ${feedId} whose details were written to the config file.`);
+    packageSource = feedId;
+
+    ci.publishEvent('PackageSourceOverridden', {packageSource: 'customFeed'} );
+}
+
+function getLatestPackageVersionNumber(includePreRelease: boolean, nugetConfigFilePath: string): string {
+    const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
+
+    nugetTool.arg('list').arg(`packageid:${constants.packageId}`).argIf(includePreRelease, '-PreRelease').arg('-Source').arg(packageSource)
+        .argIf(nugetConfigFilePath, '-ConfigFile').argIf(nugetConfigFilePath, nugetConfigFilePath);
+
+    const options = <tr.IExecSyncOptions>{};
 
     const startTime = perf();
-    const result = tl.execSync(nugetTool, args, options);
+    const result = nugetTool.execSync(options);
 
     ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, startTime: startTime, endTime: perf() } );
 
@@ -177,9 +332,9 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
     const listOfPackages = result.stdout.split('\r\n');
     let version: string;
 
-    // Nuget returns latest vesions of all packages that match the given name, we need to filter out the exact package we need from this list
+    // parse the version number from the output string
     listOfPackages.forEach(nugetPackage => {
-        if (nugetPackage.split(' ')[0] === packageName) {
+        if (nugetPackage.split(' ')[0] === constants.packageId) {
             version = nugetPackage.split(' ')[1];
             return;
         }
@@ -188,10 +343,10 @@ function getLatestPackageVersionNumber(includePreRelease: boolean): string {
     return version;
 }
 
-async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): Promise<string> {
+async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string, nugetConfigFilePath: string): Promise<string> {
     testPlatformVersion = toolLib.cleanVersion(testPlatformVersion);
     const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
-    let downloadPath = tl.getVariable('Agent.TempDirectory');
+    let downloadPath = helpers.getTempFolder();
 
     // Ensure Agent.TempDirectory is set
     if (!downloadPath) {
@@ -206,7 +361,9 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
 
     // Use as short a path as possible due to nested folders in the package that may potentially exceed the 255 char windows path limit
     downloadPath = path.join(downloadPath, 'VsTest');
-    nugetTool.line('install ' + packageName + ' -Version ' + testPlatformVersion + ' -Source ' + packageSource + ' -OutputDirectory "' + downloadPath + '" -NoCache -DirectDownload');
+    nugetTool.arg('install').arg(constants.packageId).arg('-Version').arg(testPlatformVersion).arg('-Source')
+        .arg(packageSource).arg('-OutputDirectory').arg(downloadPath).arg('-NoCache').arg('-DirectDownload')
+        .argIf(nugetConfigFilePath, '-ConfigFile').argIf(nugetConfigFilePath, nugetConfigFilePath);
 
     tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
     let startTime = perf();
@@ -222,13 +379,20 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string): 
     ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: startTime, endTime: perf() } );
 
     // Install into the local tool cache
-    const toolRoot = path.join(downloadPath, packageName + '.' + testPlatformVersion);
+    const toolRoot = path.join(downloadPath, constants.packageId + '.' + testPlatformVersion);
 
     tl.debug(`Caching the downloaded folder ${toolRoot}.`);
     startTime = perf();
     const toolPath = await toolLib.cacheDir(toolRoot, 'VsTest', testPlatformVersion);
     ci.publishEvent('CacheDownloadedPackage', { startTime: startTime, endTime: perf() } );
     return toolPath;
+}
+
+function setVsTestToolLocation(toolPath: string) {
+    // Set the task variable so that the VsTest task can consume this path
+    tl.setVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
+    console.log(tl.loc('InstallationSuccessful', toolPath));
+    tl.debug(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${toolPath}.`);
 }
 
 // Execution start
