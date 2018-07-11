@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 25
+    "Patch": 26
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -399,6 +399,7 @@
     "WebJobAlreadyInStoppedState": "ms-resource:loc.messages.WebJobAlreadyInStoppedState",
     "RestartingKuduService": "ms-resource:loc.messages.RestartingKuduService",
     "RestartedKuduService": "ms-resource:loc.messages.RestartedKuduService",
-    "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService"
+    "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService",
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation"
   }
 }

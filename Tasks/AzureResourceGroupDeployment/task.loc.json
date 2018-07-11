@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 131,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -420,6 +420,7 @@
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
     "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
     "FailedToFetchAzureStackDependencyData": "ms-resource:loc.messages.FailedToFetchAzureStackDependencyData",
-    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody"
+    "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation"
   }
 }
