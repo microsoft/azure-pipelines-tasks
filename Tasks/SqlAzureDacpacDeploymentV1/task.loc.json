@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [
     "sqlpackage"
@@ -307,6 +307,7 @@
     "SAD_InvalidPublishOption": "ms-resource:loc.messages.SAD_InvalidPublishOption",
     "SAD_DacpacFilePath": "ms-resource:loc.messages.SAD_DacpacFilePath",
     "SAD_BacpacFilePath": "ms-resource:loc.messages.SAD_BacpacFilePath",
-    "SAD_PublishProfilePath": "ms-resource:loc.messages.SAD_PublishProfilePath"
+    "SAD_PublishProfilePath": "ms-resource:loc.messages.SAD_PublishProfilePath",
+    "SAD_DriftReportWarning": "ms-resource:loc.messages.SAD_DriftReportWarning"
   }
 }
