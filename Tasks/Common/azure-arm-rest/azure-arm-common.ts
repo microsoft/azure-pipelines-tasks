@@ -173,18 +173,16 @@ export class ApplicationTokenCredentials {
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
             grant_type: "client_credentials",
-            client_secret: this._getSPNCertificateAuthorizationToken()
+            client_assertion: this._getSPNCertificateAuthorizationToken(),
+            client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
         });
 
-        console.log(webRequest.body);
         webClient.sendRequest(webRequest).then(
             (response: webClient.WebResponse) => {
-                if (response.statusCode == 200) 
-                {
+                if (response.statusCode == 200) {
                     deferred.resolve(response.body.access_token);
                 }
-                else 
-                {
+                else {
                     deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
                 }
             },
@@ -205,8 +203,7 @@ export class ApplicationTokenCredentials {
             resource: this.activeDirectoryResourceId,
             client_id: this.clientId,
             grant_type: "client_credentials",
-            client_assertion: this.secret,
-            client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+            client_assertion: this.secret
         });
         webRequest.headers = {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
@@ -273,7 +270,7 @@ function getJWT(url: string, clientId: string, tenantId: string, pemFilePath: st
 
     var pemFileContent = fs.readFileSync(pemFilePath);
     var jwtObject = {
-        "aud": `${url}${isADFSEnabled ? tenantId : ""}/oauth2/token`,
+        "aud": (`${url}/${!isADFSEnabled ? tenantId : ""}/oauth2/token`).replace(/([^:]\/)\/+/g, "$1"),
         "iss": clientId,
         "sub": clientId,
         "jti": "" + Math.random(),
