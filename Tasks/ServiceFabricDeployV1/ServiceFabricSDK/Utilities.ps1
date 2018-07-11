@@ -432,17 +432,17 @@ function Wait-ServiceFabricApplicationTypeRegistrationStatus
             return $true
         }
         # if app type is provisioned, don't retry
-        elseif($appType -and ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available))
+        elseif($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Available)
         {
             return $false
         }
         # if app type exist and if its status has not changed to a terminal one, do retry
-        elseif($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        elseif(($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
         {
             return $true
         }
         # if app type exist and if its status has changed to a terminal one, throw
-        elseif($appType -and (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        elseif(($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
         {
             throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
         }
@@ -487,12 +487,12 @@ function Wait-ServiceFabricApplicationTypeUnregistrationStatus
             return $false
         }
         # if app type exist and if its status has not changed to a terminal one, do retry
-        elseif($appType -and (($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        elseif(($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -or ($appType.Status -eq [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
         {
             return $true
         }
         # if app type exist and if its status has changed to a terminal one, throw
-        elseif($appType -and (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
+        elseif(($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning))
         {
             throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailedWithStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
         }
