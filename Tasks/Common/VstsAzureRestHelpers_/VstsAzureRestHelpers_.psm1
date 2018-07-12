@@ -333,7 +333,12 @@ function Get-AzureRMAccessToken {
     }
     else
     {
-        Get-SpnAccessToken $endpoint
+        if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
+            Get-SpnAccessTokenUsingCertificate $endpoint
+        }
+        else {
+            Get-SpnAccessToken $endpoint
+        }
     }   
 }
 
@@ -473,6 +478,64 @@ function Get-MsiAccessToken {
     }
 }
 
+function Get-SpnAccessTokenUsingCertificate {
+    param(
+        [Parameter(Mandatory=$true)] $endpoint
+    )
+
+    # load the ADAL library 
+    Add-Type -Path $PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+
+    $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
+    if ($ENV:Agent_TempDirectory) {
+        $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
+    }
+    else {
+        $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"    
+    }
+
+    # save the PEM certificate to a PEM file
+    Set-Content -Path $pemFilePath -Value $pemFileContent
+
+    # using openssl to convert the PEM file to a PFX file
+    $pfxFilePassword = "ashish"#[System.Web.Security.Membership]::GeneratePassword(32, 0)
+    
+    $openSSLExePath = "C:\OpenSSL\openssl.exe"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
+     
+    Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs
+    
+    $clientCertificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $clientCertificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
+
+    $servicePrincipalId = $endpoint.Auth.Parameters.ServicePrincipalId
+    $tenantId = $endpoint.Auth.Parameters.TenantId
+    $clientAssertionCertificate = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.ClientAssertionCertificate -ArgumentList $servicePrincipalId, $clientCertificate
+
+    $envAuthUrl = $script:defaultEnvironmentAuthUri
+    if($endpoint.Data.environmentAuthorityUrl) {
+        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+    }
+
+    $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
+    $azureActiveDirectoryResourceId = Get-AzureActiverDirectoryResourceId -endpoint $endpoint
+    $authorityUrl = "$envAuthUrl$tenantId"
+
+    $authenticationContext = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList $authorityUrl
+    
+    $tokenResult = $authenticationContext.AcquireTokenAsync($azureActiveDirectoryResourceId, $clientAssertionCertificate).ConfigureAwait($false).GetAwaiter().GetResult()
+
+    if ($tokenResult) {
+        Write-Host "$($tokenResult.AccessToken)"
+        return $tokenResult.AccessToken  
+
+    }
+    else {
+        throw "Unable to fetch access token."
+    }
+}
 
 # Get the certificate from the Endpoint.
 function Get-Certificate {

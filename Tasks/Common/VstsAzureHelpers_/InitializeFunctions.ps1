@@ -10,14 +10,21 @@ function Add-Certificate {
 
     if ($ServicePrincipal) {
         $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
-        $pemFilePath = "$ENV:System_DefaultWorkingDirectory\pemclientcertificate.pem"
-        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\pemclientcertificate.pfx"
 
+        if ($ENV:Agent_TempDirectory) {
+            $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
+            $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
+        }
+        else {
+            $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+            $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"    
+        }
+        
         # save the PEM certificate to a PEM file
         Set-Content -Path $pemFilePath -Value $pemFileContent
 
         # convert the PEM file to a PFX file
-        $pfxFilePassword = [System.Web.Security.Membership]::GeneratePassword(32, 10)
+        $pfxFilePassword = "ashish"#[System.Web.Security.Membership]::GeneratePassword(32, 0)
         
         $openSSLExePath = "C:\OpenSSL\openssl.exe"
         $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
