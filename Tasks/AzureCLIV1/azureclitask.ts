@@ -74,6 +74,12 @@ export class azureclitask {
             if (scriptLocation === "inlineScript") {
                 this.deleteFile(scriptPath);
             }
+
+            if(this.cliPasswordPath) {
+                tl.debug('Removing spn certificate file');
+                tl.rmRF(this.cliPasswordPath);
+            }
+
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure();
@@ -90,6 +96,7 @@ export class azureclitask {
     }
 
     private static isLoggedIn: boolean = false;
+    private static cliPasswordPath: string = null;
 
     private static loginAzure() {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
@@ -105,6 +112,7 @@ export class azureclitask {
             let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
             cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
             fs.writeFileSync(cliPassword, certificateContent);
+            this.cliPasswordPath = cliPassword;
 
         }
         else {
