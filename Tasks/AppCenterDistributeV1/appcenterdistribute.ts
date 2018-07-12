@@ -178,9 +178,6 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
         headers["internal-request-source"] = "VSTS_APPCENTER";
     } 
 
-    console.log("Headers:"+JSON.stringify(headers));
-
-    console.log("Build details: buildId"+buildId + " branchName"+branchName +" sourceVersion "+sourceVersion+" commitMessage"+commitMessage);
     // Including these information for distribution notification to have additional context
     // Commit message is optional
     if (branchName && sourceVersion) {
