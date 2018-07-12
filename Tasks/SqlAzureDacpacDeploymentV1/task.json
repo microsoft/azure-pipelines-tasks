@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
         "sqlpackage"
@@ -302,6 +302,7 @@
         "SAD_InvalidPublishOption": "Invalid option selected for the publish action: {0}",
         "SAD_DacpacFilePath": "DACPAC file path:",
         "SAD_BacpacFilePath": "BACPAC file path:",
-        "SAD_PublishProfilePath": "Publish profile path:"
+        "SAD_PublishProfilePath": "Publish profile path:",
+        "SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application."
     }
 }

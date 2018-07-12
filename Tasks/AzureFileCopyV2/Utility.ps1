@@ -259,6 +259,7 @@ function Upload-FilesToAzureContainer
 
         $blobPrefix = $blobPrefix.Trim()
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix).Trim("/")
+        $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
         $responseFile = Get-VstsTaskVariable -Name "VSTS_TASKVARIABLE_AFC_V2_ARM_STORAGE_KEY_FILE"
         if ([string]::IsNullOrEmpty($responseFile) -or !(Test-Path -Path $responseFile -PathType Leaf)) {
