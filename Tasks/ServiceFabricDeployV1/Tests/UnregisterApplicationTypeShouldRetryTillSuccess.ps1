@@ -13,54 +13,21 @@ $applicationType = @{
     ApplicationTypeVersion = $ApplicationTypeVersion
     Status                 = [System.Fabric.Query.ApplicationTypeStatus]::Available
 }
-$RegisterParameters = @{
-    'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
-}
-$getApplicationTypeParams = @{
-    'ApplicationTypeName'    = $ApplicationTypeName;
-    'ApplicationTypeVersion' = $ApplicationTypeVersion
-}
-$global:unregisterRetriesAttempted = 0
 $global:getRetriesAttempted = 0
-$global:clusterHealthPrinted = $false
 
 Register-Mock Unregister-ServiceFabricApplicationType {
-    $global:unregisterRetriesAttempted++
-    #$global:getRetriesAttempted = 0
-    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
-} -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec
+    return $true
+} -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -Async -TimeoutSec $TimeoutSec
 
-Register-Mock Get-ServiceFabricApplicationType {
+Register-Mock Get-ServiceFabricApplicationTypeAction {
     $global:getRetriesAttempted++
-    if ($global:getRetriesAttempted -eq 5)
+
+    if ($global:getRetriesAttempted -eq 3)
     {
-        $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning
-        return $applicationType
+        return
     }
 
     if ($global:getRetriesAttempted -eq 2)
-    {
-        $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Available
-        return $applicationType
-    }
-
-    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
-} -- @getApplicationTypeParams
-
-Register-Mock Get-ServiceFabricApplicationType {
-    $global:waitRetriesAttempted++
-    if ($global:waitRetriesAttempted -eq 6)
-    {
-        return $null
-    }
-
-    if ($global:getRetriesAttempted -eq 4)
-    {
-        $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning
-        return $applicationType
-    }
-
-    if ($global:waitRetriesAttempted -eq 3)
     {
         $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning
         return $applicationType
@@ -68,10 +35,6 @@ Register-Mock Get-ServiceFabricApplicationType {
 
     throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
 } -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-
-Register-Mock Get-ServiceFabricClusterHealth {
-    $global:clusterHealthPrinted = $true
-}
 
 Register-Mock Start-Sleep {}
 Register-Mock Write-VstsTaskError
@@ -82,4 +45,4 @@ Register-Mock Write-VstsTaskError
 
 # Act/Assert
 Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec
-Assert-AreEqual 2 $global:unregisterRetriesAttempted "Number of unregister retries not correct"
+Assert-AreEqual 3 $global:getRetriesAttempted "Number of unregister retries not correct"
