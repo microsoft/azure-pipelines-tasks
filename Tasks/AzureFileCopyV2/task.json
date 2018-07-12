@@ -124,7 +124,7 @@
             "label": "Blob Prefix",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Useful for filtering files, for example, append build number to all the blobs to download files from that build only.",
+            "helpMarkDown": "Useful for filtering files, for example, append build number to all the blobs to download files from that build only. Example: If you specify blob prefix as <i>myvd1</i>, a virtual directory with this name will be created inside the container. The source files will be copied to <i>https://myaccount.blob.core.windows.net/mycontainer/myvd1/</i>.",
             "visibleRule": "Destination = AzureBlob"
         },
         {
