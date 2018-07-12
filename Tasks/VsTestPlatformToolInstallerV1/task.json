@@ -66,19 +66,6 @@
             "visibleRule": "versionSelector = specificVersion"
         },
         {
-            "name": "vstsFeed",
-            "type": "pickList",
-            "label": "VSTS/TFS Package Source",
-            "defaultValue": "",
-            "required": true,
-            "groupName": "packageSettings",
-            "helpMarkDown": "Fetch the testplatform package from the selected vsts/tfs feed.",
-            "visibleRule": "packageFeedSelector = vstsFeed",
-            "properties": {
-                "EditableOptions": "True"
-            }
-        },
-        {
             "name": "customFeed",
             "type": "string",
             "label": "Package Source",
@@ -113,15 +100,6 @@
             "groupName": "packageSettings",
             "helpMarkDown": "Specify the full UNC path to the folder containing the microsoft.testplatform nupkg file.",
             "visibleRule": "packageFeedSelector = netShare"
-        }
-    ],
-    "dataSourceBindings": [
-        {
-            "target": "vstsFeed",
-            "endpointId": "tfs:feed",
-            "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-            "resultSelector": "jsonpath:$.value[*]",
-            "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
         }
     ],
     "execution": {

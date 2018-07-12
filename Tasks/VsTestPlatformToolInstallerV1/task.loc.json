@@ -68,19 +68,6 @@
       "visibleRule": "versionSelector = specificVersion"
     },
     {
-      "name": "vstsFeed",
-      "type": "pickList",
-      "label": "ms-resource:loc.input.label.vstsFeed",
-      "defaultValue": "",
-      "required": true,
-      "groupName": "packageSettings",
-      "helpMarkDown": "ms-resource:loc.input.help.vstsFeed",
-      "visibleRule": "packageFeedSelector = vstsFeed",
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
       "name": "customFeed",
       "type": "string",
       "label": "ms-resource:loc.input.label.customFeed",
@@ -117,15 +104,6 @@
       "visibleRule": "packageFeedSelector = netShare"
     }
   ],
-  "dataSourceBindings": [
-    {
-      "target": "vstsFeed",
-      "endpointId": "tfs:feed",
-      "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
-      "resultSelector": "jsonpath:$.value[*]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-    }
-  ],
   "execution": {
     "Node": {
       "target": "vstestplatformtoolinstaller.js",
@@ -147,6 +125,9 @@
     "AgentWorkDirectoryPathTooLong": "ms-resource:loc.messages.AgentWorkDirectoryPathTooLong",
     "ListPackagesFailed": "ms-resource:loc.messages.ListPackagesFailed",
     "NugetErrorCode": "ms-resource:loc.messages.NugetErrorCode",
-    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage"
+    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
+    "SpecifiedFileDoesNotExist": "ms-resource:loc.messages.SpecifiedFileDoesNotExist",
+    "UnexpectedFileName": "ms-resource:loc.messages.UnexpectedFileName",
+    "ConfigFileWriteFailed": "ms-resource:loc.messages.ConfigFileWriteFailed"
   }
 }
