@@ -5,7 +5,8 @@ import { Package } from 'webdeployment-common/packageUtility';
 export enum DeploymentType {
     webDeploy,
     zipDeploy,
-    runFromZip
+    runFromZip,
+    warDeploy
 }
 
 export class TaskParametersUtility {
@@ -89,6 +90,7 @@ export class TaskParametersUtility {
             case "webDeploy": return DeploymentType.webDeploy;
             case "zipDeploy": return DeploymentType.zipDeploy;
             case "runFromZip": return DeploymentType.runFromZip;
+            case "warDeploy": return DeploymentType.warDeploy;
         }
     }
 }
