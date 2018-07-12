@@ -39,9 +39,9 @@ export class KuduServiceUtility {
     }
 
     public async runPostDeploymentScript(taskParams: TaskParameters, directoryPath?: string): Promise<void> {  
+        var uniqueID = this.getDeploymentID();
         let vstsPostDeploymentFolderPath: string = path.join(physicalRootPath.substring(1), '..', 'VSTS_PostDeployment_' + uniqueID);
         try {      
-            var uniqueID = this.getDeploymentID();
             var rootDirectoryPath = directoryPath || physicalRootPath.substring(1);
 
             if(taskParams.TakeAppOfflineFlag) {
