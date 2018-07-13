@@ -61,6 +61,7 @@ async function startInstaller() {
     } catch (error) {
         ci.publishEvent('Completed', { isSetupSuccessful: 'false' } );
         tl.setResult(tl.TaskResult.Failed, error);
+        return;
     }
 
     consolidatedCiData.result = 'succeeded';
@@ -382,8 +383,8 @@ async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string, n
     return vstestPlatformInstalledLocation;
 }
 
+// Execution start
 try {
-    // Execution start
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     consolidatedCiData.executionStartTime = perf();
     startInstaller();
