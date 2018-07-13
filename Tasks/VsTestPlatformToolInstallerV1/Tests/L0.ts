@@ -22,7 +22,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         delete process.env[constants.versionSelector];
         delete process.env[constants.testPlatformVersion];
         delete process.env[constants.downloadPath];
-        delete process.env[constants.expectedTestPlatformVersion];
+        delete process.env[testConstants.expectedTestPlatformVersion];
         delete process.env[testConstants.findLocalToolFirstCallReturnValue];
         delete process.env[testConstants.findLocalToolSecondCallReturnValue];
         delete process.env[testConstants.listPackagesReturnCode];
@@ -49,8 +49,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[constants.expectedTestPlatformVersion]}`;
+        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[testConstants.listPackagesReturnCode] = 0;
 
         // Start the run
@@ -60,10 +60,10 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained(`LookingForLatestPreReleaseVersion`), `Should have looked for latest pre-release version.`);
-        assert(tr.stdOutContained(`Found the latest version to be ${process.env[constants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Cache hit for ${process.env[constants.expectedTestPlatformVersion]}`), `Expected a cache hit.`);
-        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Found the latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Cache hit for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Expected a cache hit.`);
+        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
         done();
@@ -81,7 +81,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.listPackagesReturnCode] = 0;
         process.env[testConstants.downloadPackageReturnCode] = 0;
 
@@ -92,12 +92,12 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained(`LookingForLatestPreReleaseVersion`), `Should have looked for latest pre-release version.`);
-        assert(tr.stdOutContained(`Found the latest version to be ${process.env[constants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Could not find Microsoft.TestPlatform.${process.env[constants.expectedTestPlatformVersion]} in the tools cache. Fetching it from nuget.`), `Should have encountered a cache miss for ${process.env[constants.expectedTestPlatformVersion]}.`);
-        assert(tr.stdOutContained(`Downloading Test Platform version ${process.env[constants.expectedTestPlatformVersion]} from ${constants.defaultPackageSource} to ${process.env[constants.downloadPath]}.`), `Should have attempted download of version ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Caching the downloaded folder temp\\VsTest\\${constants.packageId}.${process.env[constants.expectedTestPlatformVersion]}.`), `Should have cached ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Found the latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Could not find Microsoft.TestPlatform.${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache. Fetching it from nuget.`), `Should have encountered a cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Downloading Test Platform version ${process.env[testConstants.expectedTestPlatformVersion]} from ${constants.defaultPackageSource} to ${process.env[constants.downloadPath]}.`), `Should have attempted download of version ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Caching the downloaded folder temp\\VsTest\\${constants.packageId}.${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have cached ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
         done();
@@ -115,7 +115,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = 'x';
+        process.env[testConstants.expectedTestPlatformVersion] = 'x';
         process.env[testConstants.listPackagesReturnCode] = 1;
         process.env[testConstants.downloadPackageReturnCode] = 0;
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\15.6.0`;
@@ -128,8 +128,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained(`LookingForLatestPreReleaseVersion`), `Should have looked for latest pre-release version.`);
         assert(tr.stdOutContained(`FailedToListAvailablePackagesFromNuget`), `Listing packages should have failed.`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Cache hit for ${process.env[constants.expectedTestPlatformVersion]}`), `Should have been a cache hit for ${process.env[constants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Cache hit for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Should have been a cache hit for ${process.env[testConstants.expectedTestPlatformVersion]}`);
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${process.env[testConstants.findLocalToolFirstCallReturnValue]}.`), `Should have set variable to ${process.env[testConstants.findLocalToolFirstCallReturnValue]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
@@ -159,8 +159,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.failed, `Task should have failed`);
         assert(tr.stdOutContained(`LookingForLatestPreReleaseVersion`), `Should have looked for latest pre-release version.`);
         assert(tr.stdOutContained(`FailedToListAvailablePackagesFromNuget`), `Listing packages should have failed.`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Cache miss for ${process.env[constants.expectedTestPlatformVersion]}`), `Should have been a cache miss for ${process.env[constants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Should have been a cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}`);
         assert(tr.stdOutContained('NoPackageFoundInCache'), `Should warn no stable package found in cache`);
         assert(tr.stdOutContained('FailedToAcquireTestPlatform'), `Should fail with failed to acquire test platform`);
 
@@ -179,7 +179,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.listPackagesReturnCode] = 0;
         process.env[testConstants.downloadPackageReturnCode] = 1;
         process.env[testConstants.findLocalToolSecondCallReturnValue] = `VsTest\\15.6.0`;
@@ -191,10 +191,10 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained(`LookingForLatestPreReleaseVersion`), `Should have looked for latest pre-release version.`);
-        assert(tr.stdOutContained(`Found the latest version to be ${process.env[constants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Could not find Microsoft.TestPlatform.${process.env[constants.expectedTestPlatformVersion]} in the tools cache. Fetching it from nuget.`), `Should have encountered a cache miss for ${process.env[constants.expectedTestPlatformVersion]}.`);
-        assert(tr.stdOutContained(`Downloading Test Platform version ${process.env[constants.expectedTestPlatformVersion]} from ${constants.defaultPackageSource} to ${process.env[constants.downloadPath]}.`), `Should have attempted download of version ${process.env[constants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Found the latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Could not find Microsoft.TestPlatform.${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache. Fetching it from nuget.`), `Should have encountered a cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Downloading Test Platform version ${process.env[testConstants.expectedTestPlatformVersion]} from ${constants.defaultPackageSource} to ${process.env[constants.downloadPath]}.`), `Should have attempted download of version ${process.env[testConstants.expectedTestPlatformVersion]}`);
         assert(tr.stdOutContained(`TestPlatformDownloadFailed`), `Download should have failed`);
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${process.env[testConstants.findLocalToolSecondCallReturnValue]}.`), `Should have set variable to ${process.env[testConstants.findLocalToolSecondCallReturnValue]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
@@ -214,7 +214,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.listPackagesReturnCode] = 0;
         process.env[testConstants.downloadPackageReturnCode] = 1;
 
@@ -225,13 +225,13 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stderr.length !== 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.failed, `Task should have failed`);
         assert(tr.stdOutContained(`LookingForLatestPreReleaseVersion`), `Should have looked for latest pre-release version.`);
-        assert(tr.stdOutContained(`Found the latest version to be ${process.env[constants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Could not find Microsoft.TestPlatform.${process.env[constants.expectedTestPlatformVersion]} in the tools cache. Fetching it from nuget.`), `Should have encountered a cache miss for ${process.env[constants.expectedTestPlatformVersion]}.`);
-        assert(tr.stdOutContained(`Downloading Test Platform version ${process.env[constants.expectedTestPlatformVersion]} from ${constants.defaultPackageSource} to ${process.env[constants.downloadPath]}.`), `Should have attempted download of version ${process.env[constants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Found the latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Could not find Microsoft.TestPlatform.${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache. Fetching it from nuget.`), `Should have encountered a cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Downloading Test Platform version ${process.env[testConstants.expectedTestPlatformVersion]} from ${constants.defaultPackageSource} to ${process.env[constants.downloadPath]}.`), `Should have attempted download of version ${process.env[testConstants.expectedTestPlatformVersion]}`);
         assert(tr.stdOutContained(`TestPlatformDownloadFailed`), `Download should have failed`);
-        process.env[constants.expectedTestPlatformVersion] = 'x';
-        assert(tr.stdOutContained(`Cache miss for ${process.env[constants.expectedTestPlatformVersion]}`), `Should have been a cache miss for ${process.env[constants.expectedTestPlatformVersion]}`);
+        process.env[testConstants.expectedTestPlatformVersion] = 'x';
+        assert(tr.stdOutContained(`Cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Should have been a cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}`);
         assert(tr.stdOutContained('NoPackageFoundInCache'), `Should warn no stable package found in cache`);
         assert(tr.stdOutContained('FailedToAcquireTestPlatform'), `Should fail with failed to acquire test platform`);
 
@@ -250,8 +250,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestStable';
         process.env[constants.testPlatformVersion] = '';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = '15.6.0';
-        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[constants.expectedTestPlatformVersion]}`;
+        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0';
+        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[testConstants.listPackagesReturnCode] = 0;
 
         // Start the run
@@ -261,10 +261,10 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained(`LookingForLatestStableVersion`), `Should have looked for latest stable version.`);
-        assert(tr.stdOutContained(`Found the latest version to be ${process.env[constants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Cache hit for ${process.env[constants.expectedTestPlatformVersion]}`), `Expected a cache hit.`);
-        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Found the latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have found latest version to be ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Cache hit for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Expected a cache hit.`);
+        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
         done();
@@ -282,7 +282,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestStable';
         process.env[constants.testPlatformVersion] = '';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = 'x';
+        process.env[testConstants.expectedTestPlatformVersion] = 'x';
         process.env[testConstants.listPackagesReturnCode] = 0;
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\15.6.0`;
         process.env[testConstants.listPackagesOutput] = '';
@@ -295,8 +295,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.succeeded, `Task should have succeeded`);
         assert(tr.stdOutContained(`LookingForLatestStableVersion`), `Should have looked for latest stable version.`);
         assert(tr.stdOutContained(`FailedToListAvailablePackagesFromNuget`), `Listing packages should have failed.`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Cache hit for ${process.env[constants.expectedTestPlatformVersion]}`), `Should have been a cache hit for ${process.env[constants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Cache hit for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Should have been a cache hit for ${process.env[testConstants.expectedTestPlatformVersion]}`);
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${process.env[testConstants.findLocalToolFirstCallReturnValue]}.`), `Should have set variable to ${process.env[testConstants.findLocalToolFirstCallReturnValue]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
@@ -315,8 +315,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'specificVersion';
         process.env[constants.testPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[constants.expectedTestPlatformVersion]}`;
+        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
 
         // Start the run
         tr.run();
@@ -324,9 +324,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Cache hit for ${process.env[constants.expectedTestPlatformVersion]}`), `Expected a cache hit.`);
-        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Cache hit for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Expected a cache hit.`);
+        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
         done();
@@ -344,7 +344,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'specificVersion';
         process.env[constants.testPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[constants.downloadPath] = 'temp\\VsTest';
-        process.env[constants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.downloadPackageReturnCode] = 0;
 
         // Start the run
@@ -353,11 +353,11 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
-        assert(tr.stdOutContained(`Looking for version ${process.env[constants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[constants.expectedTestPlatformVersion]} in the cache.`);
-        assert(tr.stdOutContained(`Could not find Microsoft.TestPlatform.${process.env[constants.expectedTestPlatformVersion]} in the tools cache. Fetching it from nuget.`), `Should have encountered a cache miss for ${process.env[constants.expectedTestPlatformVersion]}.`);
-        assert(tr.stdOutContained(`Downloading Test Platform version ${process.env[constants.expectedTestPlatformVersion]} from ${constants.defaultPackageSource} to ${process.env[constants.downloadPath]}.`), `Should have attempted download of version ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Caching the downloaded folder temp\\VsTest\\${constants.packageId}.${process.env[constants.expectedTestPlatformVersion]}.`), `Should have cached ${process.env[constants.expectedTestPlatformVersion]}`);
-        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[constants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Looking for version ${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache.`), `Should have looked for ${process.env[testConstants.expectedTestPlatformVersion]} in the cache.`);
+        assert(tr.stdOutContained(`Could not find Microsoft.TestPlatform.${process.env[testConstants.expectedTestPlatformVersion]} in the tools cache. Fetching it from nuget.`), `Should have encountered a cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}.`);
+        assert(tr.stdOutContained(`Downloading Test Platform version ${process.env[testConstants.expectedTestPlatformVersion]} from ${constants.defaultPackageSource} to ${process.env[constants.downloadPath]}.`), `Should have attempted download of version ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Caching the downloaded folder temp\\VsTest\\${constants.packageId}.${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have cached ${process.env[testConstants.expectedTestPlatformVersion]}`);
+        assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
         done();

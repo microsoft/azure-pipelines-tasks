@@ -14,7 +14,7 @@ tr.setInput(constants.packageFeedSelector, process.env[constants.packageFeedSele
 tr.setInput('versionSelector', process.env[constants.versionSelector]);
 tr.setInput('testPlatformVersion', process.env[constants.testPlatformVersion]);
 
-const expectedTestPlatformVersion = process.env[constants.expectedTestPlatformVersion];
+const expectedTestPlatformVersion = process.env[testConstants.expectedTestPlatformVersion];
 const nugetToolPath = path.join(__dirname, '..', 'nuget.exe');
 const downloadPath = process.env[constants.downloadPath];
 
