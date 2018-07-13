@@ -527,7 +527,7 @@ function Get-SpnAccessTokenUsingCertificate {
     }
     catch {
         $script:certificateAccessToken = $null
-        throw "Failed to obtain access token using client certificate for service principal id: $servicePrincipalId. $_"
+        throw (Get-VstsLocString -Key "AZ_SPNCertificateAccessTokenFetchFailure" -ArgumentList $servicePrincipalId, $_)
     }
 
     if ($tokenResult) {
@@ -541,7 +541,7 @@ function Get-SpnAccessTokenUsingCertificate {
     }
     else {
         $script:certificateAccessToken = $null
-        throw "Failed to obtain access token using client certificate for service principal id: $servicePrincipalId, tokenResult is null."
+        throw (Get-VstsLocString -Key "AZ_SPNCertificateAccessTokenFetchFailureTokenNull" -ArgumentList $servicePrincipalId)
     }
 }
 
