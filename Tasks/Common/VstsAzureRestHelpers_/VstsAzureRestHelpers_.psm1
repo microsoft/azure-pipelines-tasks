@@ -1404,7 +1404,7 @@ function ConvertTo-Pfx {
     Set-Content -Path $pemFilePath -Value $pemFileContent
 
     # using openssl to convert the PEM file to a PFX file
-    $pfxFilePassword = "ashish"#[System.Web.Security.Membership]::GeneratePassword(32, 0)
+    $pfxFilePassword = [System.Guid]::NewGuid().ToString()
     
     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
     $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
