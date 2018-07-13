@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 136,
-    "Patch": 4
+    "Patch": 5
   },
   "groups": [
     {
@@ -228,6 +228,7 @@
     "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
     "LatestBuildFound": "Latest build found:  %s",
     "LatestBuildNotFound":"Latest build not found",
-    "LatestBuildFromBranchNotFound":"Latest build from branch %s not found"
+    "LatestBuildFromBranchNotFound":"Latest build from branch %s not found",
+    "DownloadingContainerResource": "Downloading items from container resource %s"
   }
 }

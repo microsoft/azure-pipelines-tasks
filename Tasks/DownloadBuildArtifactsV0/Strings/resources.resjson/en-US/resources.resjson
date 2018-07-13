@@ -42,5 +42,6 @@
   "loc.messages.ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
   "loc.messages.LatestBuildFound": "Latest build found:  %s",
   "loc.messages.LatestBuildNotFound": "Latest build not found",
-  "loc.messages.LatestBuildFromBranchNotFound": "Latest build from branch %s not found"
+  "loc.messages.LatestBuildFromBranchNotFound": "Latest build from branch %s not found",
+  "loc.messages.DownloadingContainerResource": "Downloading items from container resource %s"
 }
