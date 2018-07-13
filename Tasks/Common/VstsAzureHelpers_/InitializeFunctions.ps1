@@ -10,26 +10,7 @@ function Add-Certificate {
 
     if ($ServicePrincipal) {
         $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
-
-        if ($ENV:Agent_TempDirectory) {
-            $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
-            $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
-        }
-        else {
-            $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
-            $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"    
-        }
-        
-        # save the PEM certificate to a PEM file
-        Set-Content -Path $pemFilePath -Value $pemFileContent
-
-        # convert the PEM file to a PFX file
-        $pfxFilePassword = "ashish"#[System.Web.Security.Membership]::GeneratePassword(32, 0)
-        
-        $openSSLExePath = "C:\OpenSSL\openssl.exe"
-        $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
-         
-        Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs
+        $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
         
         $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
     }
@@ -555,4 +536,32 @@ function Get-ProxyUri
     }
 
     return $proxyUri
+}
+
+function ConvertTo-Pfx {
+    param(
+        [String][Parameter(Mandatory = $true)] $pemFileContent
+    )
+
+    if ($ENV:Agent_TempDirectory) {
+        $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
+    }
+    else {
+        $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"    
+    }
+
+    # save the PEM certificate to a PEM file
+    Set-Content -Path $pemFilePath -Value $pemFileContent
+
+    # using openssl to convert the PEM file to a PFX file
+    $pfxFilePassword = "ashish"#[System.Web.Security.Membership]::GeneratePassword(32, 0)
+    
+    $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
+     
+    Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
+
+    return $pfxFilePath, $pfxFilePassword
 }

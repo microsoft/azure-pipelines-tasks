@@ -3,6 +3,7 @@ $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
 $script:defaultAuthUri = "https://login.microsoftonline.com/"
 $script:defaultEnvironmentAuthUri = "https://login.windows.net/"
+$script:certificateAccessToken = $null
 
 # Connection Types
 $certificateConnection = 'Certificate'
@@ -483,37 +484,31 @@ function Get-SpnAccessTokenUsingCertificate {
         [Parameter(Mandatory=$true)] $endpoint
     )
 
+    if ($script:certificateAccessToken) {
+        # there exists a token cache
+        $currentTime = [System.DateTime]::UtcNow
+        $tokenExpiryTime = $script:certificateAccessToken.expires_on.UtcDateTime
+        $timeDifference = $tokenExpiryTime - $currentTime
+
+        if ($timeDifference.Minutes -gt 5) {
+            Write-Verbose "Returning access token from cache."
+            return $script:certificateAccessToken
+        }
+    }
+
+    Write-Verbose "Fetching access token using client certificate."
+    
     # load the ADAL library 
     Add-Type -Path $PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
 
     $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
-    if ($ENV:Agent_TempDirectory) {
-        $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
-        $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
-    }
-    else {
-        $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
-        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"    
-    }
-
-    # save the PEM certificate to a PEM file
-    Set-Content -Path $pemFilePath -Value $pemFileContent
-
-    # using openssl to convert the PEM file to a PFX file
-    $pfxFilePassword = "ashish"#[System.Web.Security.Membership]::GeneratePassword(32, 0)
-    
-    $openSSLExePath = "C:\OpenSSL\openssl.exe"
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
-     
-    Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs
+    $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
     
     $clientCertificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
     $clientCertificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
 
     $servicePrincipalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
-    $clientAssertionCertificate = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.ClientAssertionCertificate -ArgumentList $servicePrincipalId, $clientCertificate
-
     $envAuthUrl = $script:defaultEnvironmentAuthUri
     if($endpoint.Data.environmentAuthorityUrl) {
         $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
@@ -521,19 +516,32 @@ function Get-SpnAccessTokenUsingCertificate {
 
     $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
     $azureActiveDirectoryResourceId = Get-AzureActiverDirectoryResourceId -endpoint $endpoint
-    $authorityUrl = "$envAuthUrl$tenantId"
 
-    $authenticationContext = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList $authorityUrl
+    # add check -- if envAuthUrl ends with adfs then ignore tenantId
+    $authorityUrl = "$envAuthUrl$tenantId"
     
-    $tokenResult = $authenticationContext.AcquireTokenAsync($azureActiveDirectoryResourceId, $clientAssertionCertificate).ConfigureAwait($false).GetAwaiter().GetResult()
+    try {
+        $clientAssertionCertificate = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.ClientAssertionCertificate -ArgumentList $servicePrincipalId, $clientCertificate
+        $authenticationContext = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList $authorityUrl
+        $tokenResult = $authenticationContext.AcquireTokenAsync($azureActiveDirectoryResourceId, $clientAssertionCertificate).ConfigureAwait($false).GetAwaiter().GetResult()
+    }
+    catch {
+        $script:certificateAccessToken = $null
+        throw "Failed to obtain access token using client certificate for service principal id: $servicePrincipalId. $_"
+    }
 
     if ($tokenResult) {
-        Write-Host "$($tokenResult.AccessToken)"
-        return $tokenResult.AccessToken  
+        $script:certificateAccessToken = @{
+            token_type = $tokenResult.AccessTokenType;
+            access_token = $tokenResult.AccessToken;
+            expires_on = $tokenResult.ExpiresOn;
+        }
 
+        return $script:certificateAccessToken
     }
     else {
-        throw "Unable to fetch access token."
+        $script:certificateAccessToken = $null
+        throw "Failed to obtain access token using client certificate for service principal id: $servicePrincipalId, tokenResult is null."
     }
 }
 
@@ -1376,6 +1384,34 @@ function Add-PropertiesToRoot
     }
 
     return $rootObject
+}
+
+function ConvertTo-Pfx {
+    param(
+        [String][Parameter(Mandatory = $true)] $pemFileContent
+    )
+
+    if ($ENV:Agent_TempDirectory) {
+        $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
+    }
+    else {
+        $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"    
+    }
+
+    # save the PEM certificate to a PEM file
+    Set-Content -Path $pemFilePath -Value $pemFileContent
+
+    # using openssl to convert the PEM file to a PFX file
+    $pfxFilePassword = "ashish"#[System.Web.Security.Membership]::GeneratePassword(32, 0)
+    
+    $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
+     
+    Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
+
+    return $pfxFilePath, $pfxFilePassword
 }
 
 # Export only the public function.
