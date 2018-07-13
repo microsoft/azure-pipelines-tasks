@@ -34,6 +34,6 @@
   "loc.messages.NugetErrorCode": "Nuget.exe returned error code: %s",
   "loc.messages.UpgradeAgentMessage": "Please upgrade your agent to the latest available in https://github.com/Microsoft/vsts-agent/releases.",
   "loc.messages.SpecifiedFileDoesNotExist": "The specified file %s does not exist.",
-  "loc.messages.UnexpectedFileName": "Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
+  "loc.messages.UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
   "loc.messages.ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s"
 }

@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 28
+        "Minor": 1,
+        "Patch": 0
     },
     "satisfies": ["VsTest"],
     "demands": [],
@@ -36,8 +36,8 @@
             "groupName": "packageSettings",
             "helpMarkDown": "Specify the feed from which the Visual Studio Test Platform nuget packge should be fetched.",
             "options": {
-                "nugetOrg": "Nuget Org",
-                "customFeed": "Custom",
+                "nugetOrg": "Official Nuget",
+                "customFeed": "Custom Feed",
                 "netShare": "Network path"
             }
         },
@@ -125,7 +125,7 @@
       "NugetErrorCode": "Nuget.exe returned error code: %s",
       "UpgradeAgentMessage": "Please upgrade your agent to the latest available in https://github.com/Microsoft/vsts-agent/releases.",
       "SpecifiedFileDoesNotExist": "The specified file %s does not exist.",
-      "UnexpectedFileName": "Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
+      "UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
       "ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s"
     }
 }

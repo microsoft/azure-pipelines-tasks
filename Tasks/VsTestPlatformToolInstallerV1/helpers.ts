@@ -3,6 +3,21 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
 
+export function setVsTestToolLocation(toolPath: string) {
+    // Set the task variable so that the VsTest task can consume this path
+    tl.setVariable('VsTestToolsInstallerInstalledToolLocation', toolPath);
+    console.log(tl.loc('InstallationSuccessful', toolPath));
+    tl.debug(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${toolPath}.`);
+}
+
+export function cleanUpTempConfigFile(tempConfigFilePath: string) {
+    try {
+        fs.unlinkSync(tempConfigFilePath);
+    } catch (error) {
+        tl.debug(`Failed to delete temp confi file ${tempConfigFilePath} with error ${error}.`);
+    }
+}
+
 export function pathExistsAsFile(path: string) {
     return tl.exist(path) && tl.stats(path).isFile();
 }
