@@ -13,13 +13,13 @@ import { TaskResult } from 'vsts-task-lib/task';
 import { async } from 'q';
 import { toolFolderName } from './constants';
 
-let packageSource = constants.defaultPackageSource;
 const consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
 
 // First function to be invoke starting the installation
 async function startInstaller() {
     try {
         const osPlat: string = os.platform();
+        const packageSource = constants.defaultPackageSource;
         consolidatedCiData.operatingSystem = osPlat;
         consolidatedCiData.result = constants.installationStatusFailed;
 
@@ -52,11 +52,11 @@ async function startInstaller() {
                 break;
 
             case 'customfeed':
-                await getVsTestPlatformToolFromCustomFeed(versionSelectorInput, testPlatformVersion, username, password);
+                await getVsTestPlatformToolFromCustomFeed(packageSource, versionSelectorInput, testPlatformVersion, username, password);
                 break;
 
             case 'nugetorg':
-                await getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion, versionSelectorInput, null);
+                await getVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, null);
                 break;
         }
 
@@ -71,16 +71,16 @@ async function startInstaller() {
 }
 
 // Installs the test platform from a custom feed provided by the user along with credentials for authentication against said feed
-async function getVsTestPlatformToolFromCustomFeed(versionSelectorInput: string, testPlatformVersion: string, username: string, password: string) {
+async function getVsTestPlatformToolFromCustomFeed(packageSource: string, versionSelectorInput: string, testPlatformVersion: string, username: string, password: string) {
     const tempConfigFilePath = helpers.GenerateTempFile(`${uuid.v1()}.config`);
 
     try {
         if (!helpers.isNullEmptyOrUndefined(password)) {
-            prepareNugetConfigFile(tempConfigFilePath, username, password);
+            prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password);
             consolidatedCiData.passwordProvided = 'true';
             consolidatedCiData.usernameProvided = `${!helpers.isNullEmptyOrUndefined(username)}`;
         }
-        await getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion, versionSelectorInput, tempConfigFilePath);
+        await getVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, tempConfigFilePath);
 
     } finally {
         helpers.cleanUpTempConfigFile(tempConfigFilePath);
@@ -90,6 +90,7 @@ async function getVsTestPlatformToolFromCustomFeed(versionSelectorInput: string,
 // Installs the test platform from a network share path provided by the user. The path should point to a .nupkg file.
 async function getVsTestPlatformToolFromNetworkShare(netSharePath: string) {
     let vstestPlatformInstalledLocation;
+    let packageSource;
 
     tl.debug(`Attempting to fetch the vstest platform from the specified network share path ${netSharePath}.`);
 
@@ -137,15 +138,15 @@ async function getVsTestPlatformToolFromNetworkShare(netSharePath: string) {
 
     consolidatedCiData.firstCacheLookupSucceeded = 'false';
 
-    vstestPlatformInstalledLocation = await attemptPackageDownload(testPlatformVersion);
+    vstestPlatformInstalledLocation = await attemptPackageDownload(packageSource, testPlatformVersion);
 
     // Set the vstest platform tool location for the vstest task to consume
     helpers.setVsTestToolLocation(vstestPlatformInstalledLocation);
 }
 
-// Installs the test platform from the feed specified in the packageSource global variable. If platfornVersion is null then the versionSelectorInput is read and the version
+// Installs the test platform from the feed specified. If platfornVersion is null then the versionSelectorInput is read and the version
 // is determined accordingly. Additionally provide the config file to help with authentication if the feed is a custom feed.
-async function getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion: string, versionSelectorInput: string, nugetConfigFilePath: string) {
+async function getVsTestPlatformToolFromSpecifiedFeed(packageSource: string, testPlatformVersion: string, versionSelectorInput: string, nugetConfigFilePath: string) {
     let vstestPlatformInstalledLocation: string;
     let includePreRelease: boolean;
 
@@ -167,7 +168,7 @@ async function getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion: strin
 
         try {
             consolidatedCiData.latestVersionIdentified = 'false';
-            testPlatformVersion = getLatestPackageVersionNumber(includePreRelease, nugetConfigFilePath);
+            testPlatformVersion = getLatestPackageVersionNumber(packageSource, includePreRelease, nugetConfigFilePath);
 
             if (helpers.isNullEmptyOrUndefined(testPlatformVersion)) {
 
@@ -226,14 +227,14 @@ async function getVsTestPlatformToolFromSpecifiedFeed(testPlatformVersion: strin
         throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
     }
 
-    vstestPlatformInstalledLocation = await attemptPackageDownload(testPlatformVersion);
+    vstestPlatformInstalledLocation = await attemptPackageDownload(packageSource, testPlatformVersion);
 
     // Set the vstest platform tool location for the vstest task to consume
     helpers.setVsTestToolLocation(vstestPlatformInstalledLocation);
 }
 
 // Utility function that writes the feed url along with username and password if provided into the specified nuget config file
-function prepareNugetConfigFile(configFilePath: string, username: string, password: string) {
+function prepareNugetConfigFile(packageSource: string, configFilePath: string, username: string, password: string) {
     const feedUrl = tl.getInput(constants.customFeed);
     const feedId = uuid.v1();
 
@@ -270,8 +271,8 @@ function prepareNugetConfigFile(configFilePath: string, username: string, passwo
     ci.publishEvent('PackageSourceOverridden', {packageSource: 'customFeed'} );
 }
 
-// Lists the latest version of the package available in the feed specified in the packageSource global variable
-function getLatestPackageVersionNumber(includePreRelease: boolean, nugetConfigFilePath: string): string {
+// Lists the latest version of the package available in the feed specified.
+function getLatestPackageVersionNumber(packageSource: string, includePreRelease: boolean, nugetConfigFilePath: string): string {
     const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
 
     consolidatedCiData.includePreRelease = `${includePreRelease}`;
@@ -307,13 +308,13 @@ function getLatestPackageVersionNumber(includePreRelease: boolean, nugetConfigFi
 }
 
 // Attemps to download the package and on failure looks for the latest stable version already present in the cache
-async function attemptPackageDownload(testPlatformVersion: string) : Promise<string> {
+async function attemptPackageDownload(packageSource: string, testPlatformVersion: string) : Promise<string> {
     let vstestPlatformInstalledLocation;
     try {
         tl.debug(`Could not find ${constants.packageId}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
 
         // Download the required version and cache it
-        vstestPlatformInstalledLocation = await acquireAndCacheVsTestPlatformNuget(testPlatformVersion, null);
+        vstestPlatformInstalledLocation = await acquireAndCacheVsTestPlatformNuget(packageSource, testPlatformVersion, null);
 
     } catch (error) {
         tl.error(tl.loc('TestPlatformDownloadFailed', testPlatformVersion, error));
@@ -346,7 +347,7 @@ async function attemptPackageDownload(testPlatformVersion: string) : Promise<str
 }
 
 // Downloads and caches the test platform package
-async function acquireAndCacheVsTestPlatformNuget(testPlatformVersion: string, nugetConfigFilePath: string): Promise<string> {
+async function acquireAndCacheVsTestPlatformNuget(packageSource: string, testPlatformVersion: string, nugetConfigFilePath: string): Promise<string> {
     testPlatformVersion = toolLib.cleanVersion(testPlatformVersion);
     const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
     let downloadPath = helpers.getTempFolder();
