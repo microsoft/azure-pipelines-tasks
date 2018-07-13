@@ -56,9 +56,6 @@ export class TaskParametersUtility {
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
-        }
-
-        if(taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.TakeAppOfflineFlag = false;
         }
 
