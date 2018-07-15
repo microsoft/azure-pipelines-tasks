@@ -338,7 +338,6 @@
     "CreateTemplateDeploymentFailed": "ms-resource:loc.messages.CreateTemplateDeploymentFailed",
     "ErrorsInYourDeployment": "ms-resource:loc.messages.ErrorsInYourDeployment",
     "Details": "ms-resource:loc.messages.Details",
-    "ManageAzurePolicy": "ms-resource:loc.messages.ManageAzurePolicy",
     "ErrorType": "ms-resource:loc.messages.ErrorType",
     "PolicyDefinitionName": "ms-resource:loc.messages.PolicyDefinitionName",
     "PolicyAssignmentName": "ms-resource:loc.messages.PolicyAssignmentName",
@@ -457,6 +456,7 @@
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "UserNameCannotBeNull": "ms-resource:loc.messages.UserNameCannotBeNull",
-    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation"
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
+    "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal"
   }
 }

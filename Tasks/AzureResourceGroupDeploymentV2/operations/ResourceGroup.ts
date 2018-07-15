@@ -188,7 +188,7 @@ export class ResourceGroup {
                 }
 
                 if (policyLink) {
-                    tl.warning(tl.loc("ManageAzurePolicy") + policyLink);
+                    tl.error(util.format("[%s](%s)", tl.loc("MoreInformationOnAzurePortal"), policyLink));
                 }
             }
         } else {
@@ -196,26 +196,18 @@ export class ResourceGroup {
         }
     }
 
-    private getPolicyHelpLink(errorDetailMessage): string {
-        let managementGroupId = this.parseManagementGroupId(errorDetailMessage);
-        let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
-        let policyLink = portalUrl + "#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + managementGroupId;
-        return policyLink;
-    }
-
-    private parseManagementGroupId(errorDetail): string {
-        let errorMessage = errorDetail.message;
-        let managementGroupString = "managementGroups";
-        let splitErrorMessage = errorMessage.split('/');
-
-        for (let i = 0; i < splitErrorMessage.length; i++) {
-            if (splitErrorMessage[i] === managementGroupString) {
-                managementGroupString = splitErrorMessage[i + 1];
-                break;
+    private getPolicyHelpLink(errorDetail) {
+        var additionalInfo = errorDetail.additionalInfo;
+        if (!!additionalInfo) {
+            for (var i = 0; i < additionalInfo.length; i++) {
+                if (!!additionalInfo[i].info && !!additionalInfo[i].info.policyAssignmentId) {
+                    let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
+                    return portalUrl + "#blade/Microsoft_Azure_Policy/EditAssignmentBlade/id/" + encodeURIComponent(additionalInfo[i].info.policyAssignmentId);
+                }
             }
         }
 
-        return managementGroupString;
+        return null;
     }
 
     private getPolicyErrorMessage(errorDetail): string {
