@@ -62,6 +62,7 @@ export class AzureRGTaskParameters {
     public copyAzureVMTags: boolean;
     public outputVariable: string;
     public subscriptionId: string;
+    public endpointPortalUrl: string;
     public deploymentMode: string;
     public credentials: msRestAzure.ApplicationTokenCredentials;
     public deploymentGroupProjectName = "";
@@ -104,6 +105,7 @@ export class AzureRGTaskParameters {
             var endpointTelemetry = '{"endpointId":"' + connectedService + '"}';
             console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureResourceGroupDeployment]" + endpointTelemetry);
             this.subscriptionId = tl.getEndpointDataParameter(connectedService, "SubscriptionId", true);
+            this.endpointPortalUrl = tl.getEndpointDataParameter(connectedService, "armManagementPortalUrl", true);
             this.resourceGroupName = tl.getInput("resourceGroupName", true);
             this.action = tl.getInput("action");
             this.location = tl.getInput("location");
