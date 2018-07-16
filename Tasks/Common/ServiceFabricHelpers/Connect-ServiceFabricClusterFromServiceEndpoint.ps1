@@ -80,7 +80,7 @@ function Add-Certificate
 
         # Explicitly set the key storage to use UserKeySet.  This will ensure the private key is stored in a folder location which the user has access to.
         # If we don't explicitly set it to UserKeySet, it's possible the MachineKeySet will be used which the user doesn't have access to that folder location, resulting in an access denied error.
-        $certificate.Import($bytes, $certPassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
+        $certificate.Import($bytes, $certPassword, "PersistKeySet,UserKeySet")
     }
     catch
     {
