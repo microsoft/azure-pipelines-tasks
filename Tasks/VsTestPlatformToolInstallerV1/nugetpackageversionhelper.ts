@@ -6,7 +6,7 @@ import * as ci from './cieventlogger';
 import * as constants from './constants';
 
 export class NugetPackageVersionHelper {
-    public consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
+    private consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
 
     public constructor(consolidatedCiData: { [key: string]: string; }) {
         this.consolidatedCiData = consolidatedCiData;

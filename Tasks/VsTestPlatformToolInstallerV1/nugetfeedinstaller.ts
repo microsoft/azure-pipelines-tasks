@@ -11,7 +11,7 @@ import { NugetDownloadHelper } from './nugetdownloadhelper';
 import { async } from 'q';
 
 export class NugetFeedInstaller {
-    public consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
+    private consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
 
     public constructor(consolidatedCiData: { [key: string]: string; }) {
         this.consolidatedCiData = consolidatedCiData;
