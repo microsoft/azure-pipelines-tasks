@@ -30,7 +30,7 @@
             "type": "string",
             "label": "Version spec",
             "required": true,
-            "defaultValue": ">= 3.3",
+            "defaultValue": "3.x",
             "helpMarkDown": "Version range or exact version of a Python version to use."
         },
         {
