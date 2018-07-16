@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 13
+        "Minor": 1,
+        "Patch": 0
     },
     "satisfies": ["VsTest"],
     "demands": [],
@@ -36,7 +36,9 @@
             "groupName": "packageSettings",
             "helpMarkDown": "Specify the feed from which the Visual Studio Test Platform nuget packge should be fetched.",
             "options": {
-                "nugetOrg": "Official Nuget"
+                "nugetOrg": "Official Nuget",
+                "customFeed": "Custom Feed",
+                "netShare": "Network path"
             }
         },
         {
