@@ -6,6 +6,8 @@ import * as perf from 'performance-now';
 import * as ci from './cieventlogger';
 import * as constants from './constants';
 import * as helpers from './helpers';
+import * as uuid from 'uuid';
+import * as fs from 'fs';
 import { NugetPackageVersionHelper } from './nugetpackageversionhelper';
 import { NugetDownloadHelper } from './nugetdownloadhelper';
 import { async } from 'q';
@@ -15,6 +17,23 @@ export class NugetFeedInstaller {
 
     public constructor(consolidatedCiData: { [key: string]: string; }) {
         this.consolidatedCiData = consolidatedCiData;
+    }
+
+    // Installs the test platform from a custom feed provided by the user along with credentials for authentication against said feed
+    public async getVsTestPlatformToolFromCustomFeed(packageSource: string, versionSelectorInput: string, testPlatformVersion: string, username: string, password: string) {
+        const tempConfigFilePath = helpers.GenerateTempFile(`${uuid.v1()}.config`);
+
+        try {
+            if (!helpers.isNullEmptyOrUndefined(password)) {
+                this.prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password);
+                this.consolidatedCiData.passwordProvided = 'true';
+                this.consolidatedCiData.usernameProvided = `${!helpers.isNullEmptyOrUndefined(username)}`;
+            }
+            await this.getVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, tempConfigFilePath);
+
+        } finally {
+            helpers.cleanUpTempConfigFile(tempConfigFilePath);
+        }
     }
 
     // Installs the test platform from the feed specified. If platfornVersion is null then the versionSelectorInput is read and the version
@@ -107,5 +126,44 @@ export class NugetFeedInstaller {
 
         // Set the vstest platform tool location for the vstest task to consume
         helpers.setVsTestToolLocation(vstestPlatformInstalledLocation);
+    }
+
+    // Utility function that writes the feed url along with username and password if provided into the specified nuget config file
+    private prepareNugetConfigFile(packageSource: string, configFilePath: string, username: string, password: string) {
+        const feedUrl = tl.getInput(constants.customFeed);
+        const feedId = uuid.v1();
+
+        tl.debug(`Writing package source details to temp config file ${configFilePath}`);
+
+        try {
+            // Write the skeleton nuget config contents to the config file
+            fs.writeFileSync(configFilePath, constants.emptyNugetConfig, { encoding: 'utf-8' });
+        } catch (error) {
+            this.consolidatedCiData.failureReason = 'configFileWriteFailed';
+            throw new Error(tl.loc('ConfigFileWriteFailed', configFilePath, error));
+        }
+
+        const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
+
+        nugetTool.arg(constants.sources).arg(constants.add).arg(constants.noninteractive)
+            .arg(constants.name).arg(feedId).arg(constants.source).arg(feedUrl)
+            .argIf(password, constants.usernameParam).argIf(password, username)
+            .argIf(password, constants.passwordParam).argIf(password, password)
+            .argIf(configFilePath, constants.configFile).argIf(configFilePath, configFilePath);
+
+        this.consolidatedCiData.prepareConfigFileStartTime = perf();
+        const result = nugetTool.execSync();
+        this.consolidatedCiData.prepareConfigFileEndTime = perf();
+
+        if (result.code !== 0 || !(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
+            this.consolidatedCiData.failureReason = constants.configFileWriteFailed;
+            throw new Error(tl.loc('ConfigFileWriteFailed', configFilePath, result.stderr));
+        }
+
+        // Assign the feed name we wrote into the config file to the packageSource variable
+        tl.debug(`Setting the source to feed with id ${feedId} whose details were written to the config file.`);
+        packageSource = feedId;
+
+        ci.publishEvent('PackageSourceOverridden', {packageSource: 'customFeed'} );
     }
 }

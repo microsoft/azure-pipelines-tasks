@@ -22,6 +22,9 @@ async function startInstaller() {
         const packageSource = constants.defaultPackageSource;
         consolidatedCiData.operatingSystem = osPlat;
         consolidatedCiData.result = constants.installationStatusFailed;
+        const networkSharePath = tl.getInput(constants.netShare, false);
+        const username = tl.getInput(constants.username, false);
+        const password = tl.getInput(constants.password, false);
 
         console.log(tl.loc('StartingInstaller'));
         console.log('==============================================================================');
@@ -46,6 +49,15 @@ async function startInstaller() {
             case 'nugetorg':
                 await new NugetFeedInstaller(consolidatedCiData)
                     .getVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, null);
+                break;
+
+            case 'customfeed':
+                await new NugetFeedInstaller(consolidatedCiData)
+                .getVsTestPlatformToolFromCustomFeed(packageSource, versionSelectorInput, testPlatformVersion, username, password);
+            break;
+
+            case 'netshare':
+                await getVsTestPlatformToolFromNetworkShare(netSharePath);
                 break;
         }
 
