@@ -27,13 +27,12 @@ function Invoke-ActionWithRetries
         $RetryMessage
     )
 
-    Trace-VstsEnteringInvocation $MyInvocation
-
     if (!$RetryMessage)
     {
         $RetryMessage = Get-VstsLocString -Key RetryAfterMessage $RetryIntervalInSeconds
     }
 
+    $lastResult = $null;
     $retryIteration = 1
     do
     {
@@ -84,8 +83,6 @@ function Invoke-ActionWithRetries
         $retryIteration++
         Start-Sleep $RetryIntervalInSeconds
     } while ($true)
-
-    Trace-VstsLeavingInvocation $MyInvocation
 }
 
 function Get-TempDirectoryPath
