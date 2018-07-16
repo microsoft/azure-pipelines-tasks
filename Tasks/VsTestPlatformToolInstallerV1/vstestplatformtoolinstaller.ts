@@ -19,16 +19,13 @@ const consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string;
 // First function to be invoke starting the installation
 async function startInstaller() {
     try {
-        const osPlat: string = os.platform();
-        const packageSource = constants.defaultPackageSource;
-        consolidatedCiData.operatingSystem = osPlat;
-        consolidatedCiData.result = constants.installationStatusFailed;
-        const networkSharePath = tl.getInput(constants.netShare, false);
-        const username = tl.getInput(constants.username, false);
-        const password = tl.getInput(constants.password, false);
 
         console.log(tl.loc('StartingInstaller'));
         console.log('==============================================================================');
+
+        const osPlat: string = os.platform();
+        consolidatedCiData.operatingSystem = osPlat;
+        consolidatedCiData.result = constants.installationStatusFailed;
 
         // Fail the task if os is not windows
         if (osPlat !== 'win32') {
@@ -41,6 +38,10 @@ async function startInstaller() {
         const packageFeedSelectorInput = tl.getInput(constants.packageFeedSelector, true);
         const versionSelectorInput = tl.getInput(constants.versionSelector, false);
         const testPlatformVersion = tl.getInput(constants.testPlatformVersion, false);
+        const networkSharePath = tl.getInput(constants.netShare, false);
+        const username = tl.getInput(constants.username, false);
+        const password = tl.getInput(constants.password, false);
+        const packageSource = constants.defaultPackageSource;
 
         consolidatedCiData.packageFeedSelectorInput = packageFeedSelectorInput;
 
@@ -54,7 +55,7 @@ async function startInstaller() {
 
             case 'customfeed':
                 await new NugetFeedInstaller(consolidatedCiData)
-                .getVsTestPlatformToolFromCustomFeed(packageSource, versionSelectorInput, testPlatformVersion, username, password);
+                    .getVsTestPlatformToolFromCustomFeed(packageSource, versionSelectorInput, testPlatformVersion, username, password);
             break;
 
             case 'netshare':

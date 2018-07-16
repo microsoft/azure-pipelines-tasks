@@ -18,15 +18,16 @@ export class NugetPackageVersionHelper {
 
         this.consolidatedCiData.includePreRelease = `${includePreRelease}`;
 
-        nugetTool.arg(constants.list).arg(`packageid:${constants.packageId}`).argIf(includePreRelease, constants.preRelease)
-            .arg(constants.source).arg(packageSource).argIf(nugetConfigFilePath, constants.configFile)
+        nugetTool.arg(constants.list).arg(`${constants.packageId}`).argIf(includePreRelease, constants.preRelease)
+            .arg(constants.noninteractive).arg(constants.source).arg(packageSource)
+            .argIf(nugetConfigFilePath, constants.configFile)
             .argIf(nugetConfigFilePath, nugetConfigFilePath);
 
         this.consolidatedCiData.ListLatestPackageStartTime = perf();
         const result = nugetTool.execSync();
 
         this.consolidatedCiData.ListLatestPackageEndTime = perf();
-        ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, 
+        ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease,
             startTime: this.consolidatedCiData.ListLatestPackageStartTime,
             endTime: this.consolidatedCiData.ListLatestPackageEndTime } );
 

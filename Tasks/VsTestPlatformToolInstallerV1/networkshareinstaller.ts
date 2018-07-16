@@ -68,7 +68,7 @@ export class NetworkShareInstaller {
         this.consolidatedCiData.firstCacheLookupSucceeded = 'false';
 
         vstestPlatformInstalledLocation = await new NugetDownloadHelper(this.consolidatedCiData)
-            .attemptPackageDownload(packageSource, testPlatformVersion);
+            .attemptPackageDownload(packageSource, testPlatformVersion, null);
 
         // Set the vstest platform tool location for the vstest task to consume
         helpers.setVsTestToolLocation(vstestPlatformInstalledLocation);

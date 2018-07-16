@@ -9,20 +9,21 @@ import * as helpers from './helpers';
 import { async } from 'q';
 
 export class NugetDownloadHelper {
-    public consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
+    private consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
 
     public constructor(consolidatedCiData: { [key: string]: string; }) {
         this.consolidatedCiData = consolidatedCiData;
     }
 
     // Attemps to download the package and on failure looks for the latest stable version already present in the cache
-    public async attemptPackageDownload(packageSource: string, testPlatformVersion: string) : Promise<string> {
+    public async attemptPackageDownload(packageSource: string, testPlatformVersion: string, nugetConfigFilePath: string) : Promise<string> {
         let vstestPlatformInstalledLocation;
         try {
             tl.debug(`Could not find ${constants.packageId}.${testPlatformVersion} in the tools cache. Fetching it from nuget.`);
 
             // Download the required version and cache it
-            vstestPlatformInstalledLocation = await this.acquireAndCacheVsTestPlatformNuget(packageSource, testPlatformVersion, null);
+            vstestPlatformInstalledLocation = await this.acquireAndCacheVsTestPlatformNuget(packageSource,
+                testPlatformVersion, nugetConfigFilePath);
 
         } catch (error) {
             tl.error(tl.loc('TestPlatformDownloadFailed', testPlatformVersion, error));
@@ -38,7 +39,7 @@ export class NugetDownloadHelper {
 
             this.consolidatedCiData.secondCacheLookupEndTime = perf();
             ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(vstestPlatformInstalledLocation)).toString(),
-                isFallback: 'true', version: testPlatformVersion, startTime: this.consolidatedCiData.secondCacheLookupStartTime, 
+                isFallback: 'true', version: testPlatformVersion, startTime: this.consolidatedCiData.secondCacheLookupStartTime,
                 endTime: this.consolidatedCiData.secondCacheLookupEndTime } );
 
             // No version found in cache, fail the task
@@ -77,7 +78,7 @@ export class NugetDownloadHelper {
         downloadPath = path.join(downloadPath, constants.toolFolderName);
         nugetTool.arg(constants.install).arg(constants.packageId).arg(constants.version).arg(testPlatformVersion).arg(constants.source)
             .arg(packageSource).arg(constants.outputDirectory).arg(downloadPath).arg(constants.noCache).arg(constants.directDownload)
-            .argIf(nugetConfigFilePath, constants.configFile).argIf(nugetConfigFilePath, nugetConfigFilePath);
+            .argIf(nugetConfigFilePath, constants.configFile).argIf(nugetConfigFilePath, nugetConfigFilePath).arg(constants.noninteractive);
 
         tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
         this.consolidatedCiData.downloadStartTime = perf();
@@ -91,7 +92,7 @@ export class NugetDownloadHelper {
             throw new Error(tl.loc('DownloadFailed', resultCode));
         }
 
-        ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: this.consolidatedCiData.downloadStartTime, 
+        ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: this.consolidatedCiData.downloadStartTime,
             endTime: this.consolidatedCiData.downloadEndTime } );
 
         // Install into the local tool cache
@@ -101,7 +102,7 @@ export class NugetDownloadHelper {
         this.consolidatedCiData.cacheStartTime = perf();
         const vstestPlatformInstalledLocation = await toolLib.cacheDir(toolRoot, constants.toolFolderName, testPlatformVersion);
         this.consolidatedCiData.cacheEndTime = perf();
-        ci.publishEvent('CacheDownloadedPackage', { startTime: this.consolidatedCiData.cacheStartTime, 
+        ci.publishEvent('CacheDownloadedPackage', { startTime: this.consolidatedCiData.cacheStartTime,
             endTime: this.consolidatedCiData.cacheEndTime } );
         return vstestPlatformInstalledLocation;
     }

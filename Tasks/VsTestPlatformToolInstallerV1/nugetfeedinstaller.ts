@@ -25,7 +25,7 @@ export class NugetFeedInstaller {
 
         try {
             if (!helpers.isNullEmptyOrUndefined(password)) {
-                this.prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password);
+                packageSource = this.prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password);
                 this.consolidatedCiData.passwordProvided = 'true';
                 this.consolidatedCiData.usernameProvided = `${!helpers.isNullEmptyOrUndefined(username)}`;
             }
@@ -44,6 +44,10 @@ export class NugetFeedInstaller {
 
         this.consolidatedCiData.versionSelectorInput = versionSelectorInput;
         tl.debug(`Using the package source ${packageSource} to get the ${constants.packageId} nuget package.`);
+
+        if (!helpers.isNullEmptyOrUndefined(nugetConfigFilePath)) {
+            tl.debug(`Using provided config file ${nugetConfigFilePath}.`);
+        }
 
         if (versionSelectorInput.toLowerCase() === constants.latestStable) {
             console.log(tl.loc('LookingForLatestStableVersion'));
@@ -94,7 +98,7 @@ export class NugetFeedInstaller {
 
         this.consolidatedCiData.cacheLookupEndTime = perf();
         ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(vstestPlatformInstalledLocation)).toString(),
-            isFallback: 'false', version: testPlatformVersion, startTime: this.consolidatedCiData.cacheLookupStartTime, 
+            isFallback: 'false', version: testPlatformVersion, startTime: this.consolidatedCiData.cacheLookupStartTime,
             endTime: this.consolidatedCiData.cacheLookupEndTime } );
 
         // If found in the cache then set the tool location and return
@@ -122,14 +126,14 @@ export class NugetFeedInstaller {
         }
 
         vstestPlatformInstalledLocation = await new NugetDownloadHelper(this.consolidatedCiData)
-            .attemptPackageDownload(packageSource, testPlatformVersion);
+            .attemptPackageDownload(packageSource, testPlatformVersion, nugetConfigFilePath);
 
         // Set the vstest platform tool location for the vstest task to consume
         helpers.setVsTestToolLocation(vstestPlatformInstalledLocation);
     }
 
     // Utility function that writes the feed url along with username and password if provided into the specified nuget config file
-    private prepareNugetConfigFile(packageSource: string, configFilePath: string, username: string, password: string) {
+    private prepareNugetConfigFile(packageSource: string, configFilePath: string, username: string, password: string) : string {
         const feedUrl = tl.getInput(constants.customFeed);
         const feedId = uuid.v1();
 
@@ -141,6 +145,10 @@ export class NugetFeedInstaller {
         } catch (error) {
             this.consolidatedCiData.failureReason = 'configFileWriteFailed';
             throw new Error(tl.loc('ConfigFileWriteFailed', configFilePath, error));
+        }
+
+        if (!helpers.isNullEmptyOrUndefined(password) && helpers.isNullEmptyOrUndefined(username)) {
+            username = 'vstestPlatformToolInstaller';
         }
 
         const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
@@ -162,8 +170,8 @@ export class NugetFeedInstaller {
 
         // Assign the feed name we wrote into the config file to the packageSource variable
         tl.debug(`Setting the source to feed with id ${feedId} whose details were written to the config file.`);
-        packageSource = feedId;
-
         ci.publishEvent('PackageSourceOverridden', {packageSource: 'customFeed'} );
+
+        return feedId;
     }
 }
