@@ -85,8 +85,6 @@ function Invoke-ActionWithRetries
         $retryIteration++
         Start-Sleep $RetryIntervalInSeconds
     } while ($true)
-
-    Trace-VstsLeavingInvocation $MyInvocation
 }
 
 function Get-TempDirectoryPath
