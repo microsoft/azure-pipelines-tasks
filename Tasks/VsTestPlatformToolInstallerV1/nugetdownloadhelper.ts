@@ -63,7 +63,7 @@ export class NugetDownloadHelper {
 
         // Ensure Agent.TempDirectory is set
         if (!downloadPath) {
-            throw new Error('Expected Agent.TempDirectory to be set.');
+            throw new Error(tl.loc('ExpectedTempToBeSet'));
         }
 
         // Call out a warning if the agent work folder path is longer than 50 characters as anything longer may cause the download to fail
@@ -88,7 +88,7 @@ export class NugetDownloadHelper {
 
         if (resultCode !== 0) {
             tl.error(tl.loc('NugetErrorCode', resultCode));
-            throw new Error(`Download failed with error code: ${resultCode}.`);
+            throw new Error(tl.loc('DownloadFailed', resultCode));
         }
 
         ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: this.consolidatedCiData.downloadStartTime, 

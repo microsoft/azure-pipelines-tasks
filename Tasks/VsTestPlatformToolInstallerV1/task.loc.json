@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 1,
-    "Patch": 0
+    "Minor": 0,
+    "Patch": 13
   },
   "satisfies": [
     "VsTest"
@@ -38,9 +38,7 @@
       "groupName": "packageSettings",
       "helpMarkDown": "ms-resource:loc.input.help.packageFeedSelector",
       "options": {
-        "nugetOrg": "Official Nuget",
-        "customFeed": "Custom Feed",
-        "netShare": "Network path"
+        "nugetOrg": "Official Nuget"
       }
     },
     {
@@ -128,6 +126,8 @@
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
     "SpecifiedFileDoesNotExist": "ms-resource:loc.messages.SpecifiedFileDoesNotExist",
     "UnexpectedFileName": "ms-resource:loc.messages.UnexpectedFileName",
-    "ConfigFileWriteFailed": "ms-resource:loc.messages.ConfigFileWriteFailed"
+    "ConfigFileWriteFailed": "ms-resource:loc.messages.ConfigFileWriteFailed",
+    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
+    "ExpectedTempToBeSet": "ms-resource:loc.messages.ExpectedTempToBeSet"
   }
 }

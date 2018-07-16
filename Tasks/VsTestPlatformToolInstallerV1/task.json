@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 1,
-        "Patch": 0
+        "Minor": 0,
+        "Patch": 13
     },
     "satisfies": ["VsTest"],
     "demands": [],
@@ -36,9 +36,7 @@
             "groupName": "packageSettings",
             "helpMarkDown": "Specify the feed from which the Visual Studio Test Platform nuget packge should be fetched.",
             "options": {
-                "nugetOrg": "Official Nuget",
-                "customFeed": "Custom Feed",
-                "netShare": "Network path"
+                "nugetOrg": "Official Nuget"
             }
         },
         {
@@ -126,6 +124,8 @@
       "UpgradeAgentMessage": "Please upgrade your agent to the latest available in https://github.com/Microsoft/vsts-agent/releases.",
       "SpecifiedFileDoesNotExist": "The specified file %s does not exist.",
       "UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
-      "ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s"
+      "ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s",
+      "DownloadFailed": "`Download failed with error code: %s.",
+      "ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set."
     }
 }
