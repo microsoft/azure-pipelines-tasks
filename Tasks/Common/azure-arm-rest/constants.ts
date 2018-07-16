@@ -9,7 +9,8 @@ export const productionSlot: string = "production";
 export const mysqlApiVersion: string = '2017-12-01';
 
 export const APIVersions = {
-    azure_arm_appinsights: '2015-05-01'
+    azure_arm_appinsights: '2015-05-01',
+    azure_arm_appinsights_alerts: '2016-03-01'
 }
 
 export const KUDU_DEPLOYMENT_CONSTANTS = {
