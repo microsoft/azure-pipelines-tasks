@@ -27,8 +27,6 @@ function Invoke-ActionWithRetries
         $RetryMessage
     )
 
-    Write-Host (Get-VstsLocString -Key EnteringInvokeActionWithRetries)
-
     $lastResult = $null;
     $retryIteration = 1
     do
