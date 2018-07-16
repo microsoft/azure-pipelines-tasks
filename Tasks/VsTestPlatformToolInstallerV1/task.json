@@ -80,7 +80,7 @@
             "label": "User Name",
             "required": false,
             "groupName": "packageSettings",
-            "helpMarkDown": "User name for authenticating against the specified feed.",
+            "helpMarkDown": "User name for authenticating against the specified feed. If providing a PAT token as password, username is optional.",
             "visibleRule": "packageFeedSelector = customFeed"
         },
         {

@@ -13,7 +13,7 @@
   "loc.input.label.customFeed": "Package Source",
   "loc.input.help.customFeed": "Fetch the testplatform package from the specified package feed.",
   "loc.input.label.username": "User Name",
-  "loc.input.help.username": "User name for authenticating against the specified feed.",
+  "loc.input.help.username": "User name for authenticating against the specified feed. If providing a PAT token as password, username is optional.",
   "loc.input.label.password": "Password",
   "loc.input.help.password": "Password or PAT token for authenticating against the specified feed.",
   "loc.input.label.netShare": "UNC Path",

@@ -11,15 +11,16 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
 tr.setInput(constants.packageFeedSelector, process.env[constants.packageFeedSelector]);
-tr.setInput('versionSelector', process.env[constants.versionSelector]);
-tr.setInput('testPlatformVersion', process.env[constants.testPlatformVersion]);
+tr.setInput(constants.versionSelector, process.env[constants.versionSelector]);
+tr.setInput(constants.testPlatformVersion, process.env[constants.testPlatformVersion]);
 
 const expectedTestPlatformVersion = process.env[testConstants.expectedTestPlatformVersion];
 const nugetToolPath = path.join(__dirname, '..', 'nuget.exe');
 const downloadPath = process.env[constants.downloadPath];
 
 // Construct commands to be mocked
-const listPackagesCommand = nugetToolPath + ` list packageid:${constants.packageId} ` + (process.env[constants.versionSelector] === 'latestPreRelease' ? '-PreRelease ' : '') + '-Source ' + constants.defaultPackageSource;
+const listPackagesCommand = `${nugetToolPath} list packageid:${constants.packageId} ${(process.env[constants.versionSelector] === 'latestPreRelease' ? '-PreRelease ' : '')}-Source ${constants.defaultPackageSource}`;
+
 const downloadNugetPackageCommand = nugetToolPath + ' install ' + constants.packageId + ' -Version ' + expectedTestPlatformVersion + ' -Source ' + constants.defaultPackageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload';
 let listPackagesCommandOutput;
 
