@@ -39,15 +39,10 @@ export class KuduServiceUtility {
     }
 
     public async runPostDeploymentScript(taskParams: TaskParameters, directoryPath?: string): Promise<void> {  
+        var uniqueID = this.getDeploymentID();
+        let vstsPostDeploymentFolderPath: string = path.join(physicalRootPath.substring(1), '..', 'VSTS_PostDeployment_' + uniqueID);
         try {      
-            var uniqueID = this.getDeploymentID();
-            var createNewFolder = false;
-            var rootDirectoryPath = directoryPath;
-            if(!directoryPath) {                
-                rootDirectoryPath = physicalRootPath.substring(1);
-                directoryPath = path.join(physicalRootPath.substring(1), '..', 'VSTS_PostDeployment_' + uniqueID);
-                createNewFolder = true;
-            }
+            var rootDirectoryPath = directoryPath || physicalRootPath.substring(1);
 
             if(taskParams.TakeAppOfflineFlag) {
                 await this._appOfflineKuduService(rootDirectoryPath, true);
@@ -56,8 +51,8 @@ export class KuduServiceUtility {
             var scriptFile = this._getPostDeploymentScript(taskParams.ScriptType, taskParams.InlineScript, taskParams.ScriptPath, taskParams.isLinuxApp);
             var fileExtension : string = taskParams.isLinuxApp ? '.sh' : '.cmd';
             var mainCmdFilePath = path.join(__dirname, '..', 'postDeploymentScript', 'mainCmdFile' + fileExtension);
-            await this._appServiceKuduService.uploadFile(directoryPath, 'mainCmdFile' + fileExtension, mainCmdFilePath);
-            await this._appServiceKuduService.uploadFile(directoryPath, 'kuduPostDeploymentScript' + fileExtension, scriptFile.filePath);
+            await this._appServiceKuduService.uploadFile(vstsPostDeploymentFolderPath, 'mainCmdFile' + fileExtension, mainCmdFilePath);
+            await this._appServiceKuduService.uploadFile(vstsPostDeploymentFolderPath, 'kuduPostDeploymentScript' + fileExtension, scriptFile.filePath);
             console.log(tl.loc('ExecuteScriptOnKudu'));
             var cmdFilePath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\mainCmdFile' + fileExtension;
             var scriprResultPath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\script_result.txt';
@@ -66,7 +61,7 @@ export class KuduServiceUtility {
                 scriprResultPath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/script_result.txt';
             }
             await this.runCommand(rootDirectoryPath, cmdFilePath + ' ' + uniqueID, 30, scriprResultPath);
-            await this._printPostDeploymentLogs(directoryPath);
+            await this._printPostDeploymentLogs(vstsPostDeploymentFolderPath);
 
         }
         catch(error) {
@@ -83,11 +78,9 @@ export class KuduServiceUtility {
         }
         finally {
             try {
-                await this._appServiceKuduService.uploadFile(directoryPath, 'delete_log_file' + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
-                await this.runCommand(directoryPath, 'delete_log_file' + fileExtension, 0, null);
-                if(createNewFolder) {
-                    await this._appServiceKuduService.deleteFolder(directoryPath);
-                }
+                await this._appServiceKuduService.uploadFile(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
+                await this.runCommand(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension, 0, null);
+                await this._appServiceKuduService.deleteFolder(vstsPostDeploymentFolderPath);
             }
             catch(error) {
                 tl.debug('Unable to delete log files : ' + error);

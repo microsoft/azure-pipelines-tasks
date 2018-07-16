@@ -77,7 +77,7 @@ function Invoke-ActionWithRetries
             }
         }
 
-        if (!$RetryMessage)
+        if ($RetryMessage)
         {
             Write-Host $RetryMessage
         }
