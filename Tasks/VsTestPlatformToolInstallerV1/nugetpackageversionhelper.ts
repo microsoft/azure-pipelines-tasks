@@ -18,7 +18,10 @@ export class NugetPackageVersionHelper {
 
         this.consolidatedCiData.includePreRelease = `${includePreRelease}`;
 
-        nugetTool.arg(constants.list).arg(`${constants.packageId}`).argIf(includePreRelease, constants.preRelease)
+        nugetTool.arg(constants.list)
+            .argIf(packageSource === constants.defaultPackageSource , `packageid:${constants.packageId}`)
+            .argIf(packageSource !== constants.defaultPackageSource , `${constants.packageId}`)
+            .argIf(includePreRelease, constants.preRelease)
             .arg(constants.noninteractive).arg(constants.source).arg(packageSource)
             .argIf(nugetConfigFilePath, constants.configFile)
             .argIf(nugetConfigFilePath, nugetConfigFilePath);

@@ -19,9 +19,9 @@ const nugetToolPath = path.join(__dirname, '..', 'nuget.exe');
 const downloadPath = process.env[constants.downloadPath];
 
 // Construct commands to be mocked
-const listPackagesCommand = `${nugetToolPath} list packageid:${constants.packageId} ${(process.env[constants.versionSelector] === 'latestPreRelease' ? '-PreRelease ' : '')}-Source ${constants.defaultPackageSource}`;
+const listPackagesCommand = `${nugetToolPath} list packageid:${constants.packageId} ${(process.env[constants.versionSelector] === 'latestPreRelease' ? '-PreRelease ' : '')}${constants.noninteractive} -Source ${constants.defaultPackageSource}`;
 
-const downloadNugetPackageCommand = nugetToolPath + ' install ' + constants.packageId + ' -Version ' + expectedTestPlatformVersion + ' -Source ' + constants.defaultPackageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload';
+const downloadNugetPackageCommand = nugetToolPath + ' install ' + constants.packageId + ' -Version ' + expectedTestPlatformVersion + ' -Source ' + constants.defaultPackageSource + ' -OutputDirectory ' + downloadPath + ' -NoCache -DirectDownload' + ` ${constants.noninteractive}`;
 let listPackagesCommandOutput;
 
 if (process.env[testConstants.listPackagesOutput] !== undefined) {
