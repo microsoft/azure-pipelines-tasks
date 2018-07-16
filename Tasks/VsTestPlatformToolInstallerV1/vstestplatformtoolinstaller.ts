@@ -11,6 +11,7 @@ import * as constants from './constants';
 import * as helpers from './helpers';
 import { TaskResult } from 'vsts-task-lib/task';
 import { NugetFeedInstaller } from './nugetfeedinstaller';
+import { NetworkShareInstaller } from './networkshareinstaller';
 import { async } from 'q';
 
 const consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
@@ -57,7 +58,7 @@ async function startInstaller() {
             break;
 
             case 'netshare':
-                await getVsTestPlatformToolFromNetworkShare(netSharePath);
+                await new NetworkShareInstaller(consolidatedCiData).getVsTestPlatformToolFromNetworkShare(networkSharePath);
                 break;
         }
 

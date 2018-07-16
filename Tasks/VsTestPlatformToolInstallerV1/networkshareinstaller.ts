@@ -8,7 +8,7 @@ import * as constants from './constants';
 import * as helpers from './helpers';
 import { NugetDownloadHelper } from './nugetdownloadhelper';
 
-export class NugetFeedInstaller {
+export class NetworkShareInstaller {
     private consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
 
     public constructor(consolidatedCiData: { [key: string]: string; }) {
