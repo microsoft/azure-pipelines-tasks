@@ -16,14 +16,13 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 0,
-        "Patch": 5
+        "Minor": 1,
+        "Patch": 0
     },
-    "releaseNotes": "This is an early preview. Added support for Fail on standard error and ErrorActionPreference",
+    "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [
         "azureps"
     ],
-    "preview": true,
     "groups": [
         {
             "name": "AzurePowerShellVersionOptions",

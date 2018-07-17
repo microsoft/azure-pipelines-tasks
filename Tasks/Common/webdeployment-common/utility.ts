@@ -177,7 +177,8 @@ export function copyDirectory(sourceDirectory: string, destDirectory: string) {
 }
 
 export async function generateTemporaryFolderForDeployment(isFolderBasedDeployment: boolean, webDeployPkg: string) {
-    var folderPath = generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), true);
+    var folderName = tl.getVariable('Agent.TempDirectory') ? tl.getVariable('Agent.TempDirectory') : tl.getVariable('System.DefaultWorkingDirectory');
+    var folderPath = generateTemporaryFolderOrZipPath(folderName, true);
         
     if(isFolderBasedDeployment) {
         tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
@@ -199,7 +200,6 @@ export async function archiveFolderForDeployment(isFolderBasedDeployment: boolea
     else {
         var tempWebPackageZip = generateTemporaryFolderOrZipPath(tl.getVariable('System.DefaultWorkingDirectory'), false);
         webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
-        tl.rmRF(folderPath, true);
     }
 
     return {

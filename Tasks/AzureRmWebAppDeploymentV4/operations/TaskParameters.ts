@@ -56,6 +56,7 @@ export class TaskParametersUtility {
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
+            taskParameters.TakeAppOfflineFlag = false;
         }
 
         taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') 
