@@ -144,16 +144,7 @@
 
     $ApplicationManifestPath = "$AppPkgPathToUse\ApplicationManifest.xml"
 
-    try
-    {
-        $global:operationId = $SF_Operations.TestClusterConnection
-        [void](Test-ServiceFabricClusterConnection)
-    }
-    catch
-    {
-        Write-Warning (Get-VstsLocString -Key SFSDK_UnableToVerifyClusterConnection)
-        throw
-    }
+    Test-ServiceFabricClusterConnectionAction
 
     # If ApplicationName is not specified on command line get application name from Application Parameter file.
     if (!$ApplicationName)
@@ -207,17 +198,7 @@
             if ($removeApp)
             {
                 Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @($ApplicationName, $app.ApplicationTypeName, $app.ApplicationTypeVersion))
-
-                try
-                {
-                    $global:operationId = $SF_Operations.RemoveApplication
-                    $app | Remove-ServiceFabricApplication -Force
-                }
-                catch [System.TimeoutException]
-                {
-                    Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout -ArgumentList $ApplicationName)
-                    $app | Remove-ServiceFabricApplication -Force -ForceRemove
-                }
+                Remove-ServiceFabricApplicationAction -ApplicationName $($app.ApplicationName)
 
                 if ($OverwriteBehavior.Equals("Always"))
                 {
@@ -225,8 +206,7 @@
                     # It will unregister the existing application's type and version even if its different from the application being created,
                     if ((Get-ServiceFabricApplicationAction | Where-Object {$_.ApplicationTypeVersion -eq $($app.ApplicationTypeVersion) -and $_.ApplicationTypeName -eq $($app.ApplicationTypeName)}).Count -eq 0)
                     {
-                        $global:operationId = $SF_Operations.UnregisterApplicationType
-                        Unregister-ServiceFabricApplicationType -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -Force -TimeoutSec $UnregisterPackageTimeoutSec
+                        Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($app.ApplicationTypeName) -ApplicationTypeVersion $($app.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                     }
                 }
             }
@@ -246,13 +226,8 @@
             }
             if (!$typeIsInUse)
             {
-                $global:operationId = $SF_Operations.UnregisterApplicationType
                 Write-Host (Get-VstsLocString -Key SFSDK_UnregisteringExistingAppType -ArgumentList @($names.ApplicationTypeName, $names.ApplicationTypeVersion))
-                $reg | Unregister-ServiceFabricApplicationType -Force -TimeoutSec $UnregisterPackageTimeoutSec
-                if (!$?)
-                {
-                    throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
-                }
+                Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $($reg.ApplicationTypeName) -ApplicationTypeVersion $($reg.ApplicationTypeVersion) -TimeoutSec $UnregisterPackageTimeoutSec
                 $ApplicationTypeAlreadyRegistered = $false
             }
             else
@@ -275,8 +250,7 @@
 
             Write-Host (Get-VstsLocString -Key SFSDK_CopyingAppToImageStore)
             # Get image store connection string
-            $global:operationId = $SF_Operations.GetClusterManifest
-            $clusterManifestText = Get-ServiceFabricClusterManifest
+            $clusterManifestText = Get-ServiceFabricClusterManifestAction
             $imageStoreConnectionString = Get-ImageStoreConnectionStringFromClusterManifest ([xml] $clusterManifestText)
 
             $applicationPackagePathInImageStore = $names.ApplicationTypeName
@@ -313,29 +287,15 @@
             }
 
             Copy-ServiceFabricApplicationPackageAction -CopyParameters $copyParameters
-            if (!$?)
-            {
-                throw (Get-VstsLocString -Key SFSDK_CopyingAppToImageStoreFailed)
-            }
 
             $registerParameters = @{
                 'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
             }
 
-            if ($RegisterPackageTimeoutSec)
-            {
-                $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
-            }
-
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
-            if (!$?)
-            {
-                throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
-            }
-            $global:operationId = $SF_Operations.RemoveApplicationPackage
+            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -TimeoutSec $RegisterPackageTimeoutSec
             Write-Host (Get-VstsLocString -Key SFSDK_RemoveAppPackage)
-            Remove-ServiceFabricApplicationPackage -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
+            Remove-ServiceFabricApplicationPackageAction -ApplicationPackagePathInImageStore $applicationPackagePathInImageStore -ImageStoreConnectionString $imageStoreConnectionString
         }
     }
 
@@ -356,13 +316,8 @@
                 $ApplicationParameter = Merge-Hashtables -HashTableOld $appParamsFromFile -HashTableNew $ApplicationParameter
             }
         }
-        $global:operationId = $SF_Operations.CreateNewApplication
-        New-ServiceFabricApplication -ApplicationName $ApplicationName -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -ApplicationParameter $ApplicationParameter
-        if (!$?)
-        {
-            throw (Get-VstsLocString -Key SFSDK_CreateApplicationFailed)
-        }
 
+        New-ServiceFabricApplicationAction -ApplicationName $ApplicationName -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -ApplicationParameter $ApplicationParameter
         Write-Host (Get-VstsLocString -Key SFSDK_CreateApplicationSuccess)
     }
 }
