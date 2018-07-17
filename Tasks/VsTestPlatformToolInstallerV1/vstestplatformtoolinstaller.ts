@@ -2,19 +2,15 @@ import * as tl from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as os from 'os';
 import * as path from 'path';
-import * as uuid from 'uuid';
-import * as fs from 'fs';
-import { exec } from 'child_process';
 import * as perf from 'performance-now';
 import * as ci from './cieventlogger';
 import * as constants from './constants';
-import * as helpers from './helpers';
 import { TaskResult } from 'vsts-task-lib/task';
 import { NugetFeedInstaller } from './nugetfeedinstaller';
 import { NetworkShareInstaller } from './networkshareinstaller';
 import { async } from 'q';
 
-const consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
+const consolidatedCiData: { [key: string]: any; } = <{ [key: string]: any; }>{};
 
 // First function to be invoke starting the installation
 async function startInstaller() {
@@ -49,17 +45,20 @@ async function startInstaller() {
         switch (packageFeedSelectorInput.toLowerCase()) {
 
             case 'nugetorg':
+                tl.debug('Going via nuget org download flow.');
                 await new NugetFeedInstaller(consolidatedCiData)
-                    .getVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, null);
+                    .installVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, null);
                 break;
 
             case 'customfeed':
+                tl.debug('Going via custom feed download flow.');
                 await new NugetFeedInstaller(consolidatedCiData)
-                    .getVsTestPlatformToolFromCustomFeed(packageSource, versionSelectorInput, testPlatformVersion, username, password);
+                    .installVsTestPlatformToolFromCustomFeed(packageSource, versionSelectorInput, testPlatformVersion, username, password);
             break;
 
             case 'netshare':
-                await new NetworkShareInstaller(consolidatedCiData).getVsTestPlatformToolFromNetworkShare(networkSharePath);
+                tl.debug('Going via net share copy flow.');
+                await new NetworkShareInstaller(consolidatedCiData).installVsTestPlatformToolFromNetworkShare(networkSharePath);
                 break;
         }
 
@@ -76,7 +75,7 @@ async function startInstaller() {
 // Execution start
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-    consolidatedCiData.executionStartTime = perf();
+    const executionStartTime = perf();
     startInstaller();
 } finally {
     consolidatedCiData.executionEndTime = perf();

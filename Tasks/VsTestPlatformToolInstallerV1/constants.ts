@@ -1,6 +1,7 @@
 // general constants
 export const toolFolderName = 'VsTest';
 export const downloadPath = 'downloadPath';
+export const defaultUsername = 'vstestPlatformToolInstaller';
 export const vsTestToolsInstallerInstalledToolLocation = 'VsTestToolsInstallerInstalledToolLocation';
 
 // agent related constants

@@ -20,16 +20,31 @@ export class NugetFeedInstaller {
     }
 
     // Installs the test platform from a custom feed provided by the user along with credentials for authentication against said feed
-    public async getVsTestPlatformToolFromCustomFeed(packageSource: string, versionSelectorInput: string, testPlatformVersion: string, username: string, password: string) {
-        const tempConfigFilePath = helpers.GenerateTempFile(`${uuid.v1()}.config`);
-
+    public async installVsTestPlatformToolFromCustomFeed(packageSource: string, versionSelectorInput: string, testPlatformVersion: string, username: string, password: string) {
+        let tempConfigFilePath = null;
         try {
-            if (!helpers.isNullEmptyOrUndefined(password)) {
-                packageSource = this.prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password);
-                this.consolidatedCiData.passwordProvided = 'true';
-                this.consolidatedCiData.usernameProvided = `${!helpers.isNullEmptyOrUndefined(username)}`;
+            try {
+                if (!helpers.isNullEmptyOrUndefined(password)) {
+                    tl.debug('Attempting to write feed details along with provided credentials to temporary config file.');
+                    tempConfigFilePath = helpers.GenerateTempFile(`${uuid.v1()}.config`);
+                    const feedId = uuid.v1();
+                    this.prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password, feedId);
+                    packageSource = feedId;
+                    this.consolidatedCiData.passwordProvided = 'true';
+                    this.consolidatedCiData.usernameProvided = `${!helpers.isNullEmptyOrUndefined(username)}`;
+                } else {
+                    packageSource = tl.getInput(constants.customFeed);
+                    tl.debug(`Credentials were not provided. Skipping writing to config file. Will use custom package feed provided by user ${packageSource}`);
+                }
+            } catch (error) {
+                tl.error(error);
+                console.log(tl.loc('LatestStableCached'));
+                // Look for the latest stable version available in the cache as a fallback.
+                testPlatformVersion = 'x';
+                tempConfigFilePath = null;
             }
-            await this.getVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, tempConfigFilePath);
+
+            await this.installVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, tempConfigFilePath);
 
         } finally {
             helpers.cleanUpTempConfigFile(tempConfigFilePath);
@@ -38,7 +53,7 @@ export class NugetFeedInstaller {
 
     // Installs the test platform from the feed specified. If platfornVersion is null then the versionSelectorInput is read and the version
     // is determined accordingly. Additionally provide the config file to help with authentication if the feed is a custom feed.
-    public async getVsTestPlatformToolFromSpecifiedFeed(packageSource: string, testPlatformVersion: string, versionSelectorInput: string, nugetConfigFilePath: string) {
+    public async installVsTestPlatformToolFromSpecifiedFeed(packageSource: string, testPlatformVersion: string, versionSelectorInput: string, nugetConfigFilePath: string) {
         let vstestPlatformInstalledLocation: string;
         let includePreRelease: boolean;
 
@@ -133,9 +148,8 @@ export class NugetFeedInstaller {
     }
 
     // Utility function that writes the feed url along with username and password if provided into the specified nuget config file
-    private prepareNugetConfigFile(packageSource: string, configFilePath: string, username: string, password: string) : string {
+    private prepareNugetConfigFile(packageSource: string, configFilePath: string, username: string, password: string, feedId: string) {
         const feedUrl = tl.getInput(constants.customFeed);
-        const feedId = uuid.v1();
 
         tl.debug(`Writing package source details to temp config file ${configFilePath}`);
 
@@ -148,7 +162,7 @@ export class NugetFeedInstaller {
         }
 
         if (!helpers.isNullEmptyOrUndefined(password) && helpers.isNullEmptyOrUndefined(username)) {
-            username = 'vstestPlatformToolInstaller';
+            username = constants.defaultUsername;
         }
 
         const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
@@ -171,7 +185,5 @@ export class NugetFeedInstaller {
         // Assign the feed name we wrote into the config file to the packageSource variable
         tl.debug(`Setting the source to feed with id ${feedId} whose details were written to the config file.`);
         ci.publishEvent('PackageSourceOverridden', {packageSource: 'customFeed'} );
-
-        return feedId;
     }
 }

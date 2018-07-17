@@ -129,6 +129,7 @@
     "SpecifiedFileDoesNotExist": "ms-resource:loc.messages.SpecifiedFileDoesNotExist",
     "UnexpectedFileName": "ms-resource:loc.messages.UnexpectedFileName",
     "ConfigFileWriteFailed": "ms-resource:loc.messages.ConfigFileWriteFailed",
+    "LatestStableCached": "ms-resource:loc.messages.LatestStableCached",
     "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
     "ExpectedTempToBeSet": "ms-resource:loc.messages.ExpectedTempToBeSet"
   }

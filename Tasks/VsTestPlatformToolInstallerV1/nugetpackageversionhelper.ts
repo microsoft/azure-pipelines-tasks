@@ -18,6 +18,8 @@ export class NugetPackageVersionHelper {
 
         this.consolidatedCiData.includePreRelease = `${includePreRelease}`;
 
+        // Only search by package id if the feed is the offial nuget feed, otherwise search by package name as not all feeds
+        // support searching by package id
         nugetTool.arg(constants.list)
             .argIf(packageSource === constants.defaultPackageSource , `packageid:${constants.packageId}`)
             .argIf(packageSource !== constants.defaultPackageSource , `${constants.packageId}`)

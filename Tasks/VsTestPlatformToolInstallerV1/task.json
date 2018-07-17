@@ -127,6 +127,7 @@
       "SpecifiedFileDoesNotExist": "The specified file %s does not exist.",
       "UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
       "ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s",
+      "LatestStableCached": "Looking for latest stable version cached.",
       "DownloadFailed": "`Download failed with error code: %s.",
       "ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set."
     }

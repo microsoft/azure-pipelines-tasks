@@ -16,7 +16,7 @@ export class NetworkShareInstaller {
     }
 
     // Installs the test platform from a network share path provided by the user. The path should point to a .nupkg file.
-    public async getVsTestPlatformToolFromNetworkShare(netSharePath: string) {
+    public async installVsTestPlatformToolFromNetworkShare(netSharePath: string) {
         let vstestPlatformInstalledLocation;
         let packageSource;
 
