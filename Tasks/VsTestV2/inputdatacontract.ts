@@ -81,6 +81,7 @@ export interface DistributionSettings {
 }
 
 export interface ExecutionSettings {
+    TestPlatformExecutionMode : string;
     DefaultTestBatchSize : number;
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
