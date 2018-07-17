@@ -2,6 +2,7 @@ import * as tl from 'vsts-task-lib/task';
 
 const area: string = 'TestExecution';
 const feature: string = 'VsTestToolsInstaller';
+const consolidatedCiData: { [key: string]: any; } = <{ [key: string]: any; }>{};
 
 function getDefaultProps() {
     return {
@@ -10,6 +11,14 @@ function getDefaultProps() {
         builduri: tl.getVariable('Build.BuildUri'),
         buildid: tl.getVariable('Build.Buildid')
     };
+}
+
+export function addToConsolidatedCi(key: string, value: any) {
+    consolidatedCiData['key'] = value;
+}
+
+export function fireConsolidatedCi() {
+    publishEvent('vstestToolInstallerConsolidatedCiEvent', consolidatedCiData);
 }
 
 export function publishEvent(subFeature: string, properties: { [key: string]: any }): void {

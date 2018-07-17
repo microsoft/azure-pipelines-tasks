@@ -131,6 +131,7 @@
     "ConfigFileWriteFailed": "ms-resource:loc.messages.ConfigFileWriteFailed",
     "LatestStableCached": "ms-resource:loc.messages.LatestStableCached",
     "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
-    "ExpectedTempToBeSet": "ms-resource:loc.messages.ExpectedTempToBeSet"
+    "ExpectedTempToBeSet": "ms-resource:loc.messages.ExpectedTempToBeSet",
+    "ParsedVersion": "ms-resource:loc.messages.ParsedVersion"
   }
 }

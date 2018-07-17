@@ -12,13 +12,9 @@ import { NugetPackageVersionHelper } from './nugetpackageversionhelper';
 import { NugetDownloadHelper } from './nugetdownloadhelper';
 import { async } from 'q';
 
+let startTime: number;
+
 export class NugetFeedInstaller {
-    private consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
-
-    public constructor(consolidatedCiData: { [key: string]: string; }) {
-        this.consolidatedCiData = consolidatedCiData;
-    }
-
     // Installs the test platform from a custom feed provided by the user along with credentials for authentication against said feed
     public async installVsTestPlatformToolFromCustomFeed(packageSource: string, versionSelectorInput: string, testPlatformVersion: string, username: string, password: string) {
         let tempConfigFilePath = null;
@@ -30,8 +26,8 @@ export class NugetFeedInstaller {
                     const feedId = uuid.v1();
                     this.prepareNugetConfigFile(packageSource, tempConfigFilePath, username, password, feedId);
                     packageSource = feedId;
-                    this.consolidatedCiData.passwordProvided = 'true';
-                    this.consolidatedCiData.usernameProvided = `${!helpers.isNullEmptyOrUndefined(username)}`;
+                    ci.addToConsolidatedCi('passwordProvided', 'true');
+                    ci.addToConsolidatedCi('usernameProvided', `${!helpers.isNullEmptyOrUndefined(username)}`);
                 } else {
                     packageSource = tl.getInput(constants.customFeed);
                     tl.debug(`Credentials were not provided. Skipping writing to config file. Will use custom package feed provided by user ${packageSource}`);
@@ -57,7 +53,7 @@ export class NugetFeedInstaller {
         let vstestPlatformInstalledLocation: string;
         let includePreRelease: boolean;
 
-        this.consolidatedCiData.versionSelectorInput = versionSelectorInput;
+        ci.addToConsolidatedCi('versionSelectorInput', versionSelectorInput);
         tl.debug(`Using the package source ${packageSource} to get the ${constants.packageId} nuget package.`);
 
         if (!helpers.isNullEmptyOrUndefined(nugetConfigFilePath)) {
@@ -78,8 +74,8 @@ export class NugetFeedInstaller {
         if (versionSelectorInput.toLowerCase() !== constants.specificVersion) {
 
             try {
-                this.consolidatedCiData.latestVersionIdentified = 'false';
-                testPlatformVersion = new NugetPackageVersionHelper(this.consolidatedCiData)
+                ci.addToConsolidatedCi('latestVersionIdentified', 'false');
+                testPlatformVersion = new NugetPackageVersionHelper()
                     .getLatestPackageVersionNumber(packageSource, includePreRelease, nugetConfigFilePath);
 
                 if (helpers.isNullEmptyOrUndefined(testPlatformVersion)) {
@@ -91,7 +87,7 @@ export class NugetFeedInstaller {
                     testPlatformVersion = 'x';
 
                 } else {
-                    this.consolidatedCiData.latestVersionIdentified = 'true';
+                    ci.addToConsolidatedCi('latestVersionIdentified', 'true');
                     tl.debug(`Found the latest version to be ${testPlatformVersion}.`);
                     ci.publishEvent('RequestedVersionListed', { action: 'lookInCacheForListedVersion', version: testPlatformVersion } );
                 }
@@ -106,41 +102,38 @@ export class NugetFeedInstaller {
         }
 
         tl.debug(`Looking for version ${testPlatformVersion} in the tools cache.`);
-        this.consolidatedCiData.cacheLookupStartTime = perf();
+        startTime = perf();
 
         // Check cache for the specified version
         vstestPlatformInstalledLocation = toolLib.findLocalTool(constants.toolFolderName, testPlatformVersion);
 
-        this.consolidatedCiData.cacheLookupEndTime = perf();
-        ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(vstestPlatformInstalledLocation)).toString(),
-            isFallback: 'false', version: testPlatformVersion, startTime: this.consolidatedCiData.cacheLookupStartTime,
-            endTime: this.consolidatedCiData.cacheLookupEndTime } );
+        ci.addToConsolidatedCi('cacheLookupTime', perf() - startTime);
 
         // If found in the cache then set the tool location and return
         if (!helpers.isNullEmptyOrUndefined(vstestPlatformInstalledLocation)) {
-            this.consolidatedCiData.firstCacheLookupSucceeded = 'true';
+            ci.addToConsolidatedCi('firstCacheLookupSucceeded', 'true');
             helpers.setVsTestToolLocation(vstestPlatformInstalledLocation);
             return;
         }
 
-        this.consolidatedCiData.firstCacheLookupSucceeded = 'false';
+        ci.addToConsolidatedCi('firstCacheLookupSucceeded', 'false');
 
         // If the testPlatformVersion is 'x' meaning listing failed and we were looking for a stable version in the cache
         // and the cache lookup failed, then fail the task
         if (!testPlatformVersion || testPlatformVersion === 'x') {
             tl.error(tl.loc('NoPackageFoundInCache'));
-            this.consolidatedCiData.failureReason = constants.listingFailed;
+            ci.addToConsolidatedCi('failureReason', constants.listingFailed);
             throw new Error(tl.loc('FailedToAcquireTestPlatform'));
         }
 
         // If the version provided is not an explicit version (ie contains containing wildcards) then throw
         if (!toolLib.isExplicitVersion(testPlatformVersion)) {
             ci.publishEvent('InvalidVersionSpecified', { version: testPlatformVersion } );
-            this.consolidatedCiData.failureReason = constants.notExplicitVersion;
+            ci.addToConsolidatedCi('failureReason', constants.notExplicitVersion);
             throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
         }
 
-        vstestPlatformInstalledLocation = await new NugetDownloadHelper(this.consolidatedCiData)
+        vstestPlatformInstalledLocation = await new NugetDownloadHelper()
             .attemptPackageDownload(packageSource, testPlatformVersion, nugetConfigFilePath);
 
         // Set the vstest platform tool location for the vstest task to consume
@@ -157,7 +150,7 @@ export class NugetFeedInstaller {
             // Write the skeleton nuget config contents to the config file
             fs.writeFileSync(configFilePath, constants.emptyNugetConfig, { encoding: 'utf-8' });
         } catch (error) {
-            this.consolidatedCiData.failureReason = 'configFileWriteFailed';
+            ci.addToConsolidatedCi('failureReason', 'configFileWriteFailed');
             throw new Error(tl.loc('ConfigFileWriteFailed', configFilePath, error));
         }
 
@@ -173,12 +166,12 @@ export class NugetFeedInstaller {
             .argIf(password, constants.passwordParam).argIf(password, password)
             .argIf(configFilePath, constants.configFile).argIf(configFilePath, configFilePath);
 
-        this.consolidatedCiData.prepareConfigFileStartTime = perf();
+        startTime = perf();
         const result = nugetTool.execSync();
-        this.consolidatedCiData.prepareConfigFileEndTime = perf();
+        ci.addToConsolidatedCi('prepareConfigFileTime', perf() - startTime);
 
         if (result.code !== 0 || !(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
-            this.consolidatedCiData.failureReason = constants.configFileWriteFailed;
+            ci.addToConsolidatedCi('failureReason', constants.configFileWriteFailed);
             throw new Error(tl.loc('ConfigFileWriteFailed', configFilePath, result.stderr));
         }
 

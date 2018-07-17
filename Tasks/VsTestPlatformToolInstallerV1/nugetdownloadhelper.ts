@@ -8,13 +8,9 @@ import * as constants from './constants';
 import * as helpers from './helpers';
 import { async } from 'q';
 
+let startTime: number;
+
 export class NugetDownloadHelper {
-    private consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
-
-    public constructor(consolidatedCiData: { [key: string]: string; }) {
-        this.consolidatedCiData = consolidatedCiData;
-    }
-
     // Attemps to download the package and on failure looks for the latest stable version already present in the cache
     public async attemptPackageDownload(packageSource: string, testPlatformVersion: string, nugetConfigFilePath: string) : Promise<string> {
         let vstestPlatformInstalledLocation;
@@ -30,27 +26,24 @@ export class NugetDownloadHelper {
 
             testPlatformVersion = 'x';
 
-            this.consolidatedCiData.downloadSucceeded = 'false';
+            ci.addToConsolidatedCi('downloadSucceeded', 'false');
             ci.publishEvent('DownloadFailed', { action: 'getLatestAvailableInCache', error: error } );
-            this.consolidatedCiData.secondCacheLookupStartTime = perf();
+            startTime = perf();
 
             // Download failed, look for the latest version available in the cache
             vstestPlatformInstalledLocation = toolLib.findLocalTool(constants.toolFolderName, testPlatformVersion);
 
-            this.consolidatedCiData.secondCacheLookupEndTime = perf();
-            ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(vstestPlatformInstalledLocation)).toString(),
-                isFallback: 'true', version: testPlatformVersion, startTime: this.consolidatedCiData.secondCacheLookupStartTime,
-                endTime: this.consolidatedCiData.secondCacheLookupEndTime } );
+            ci.addToConsolidatedCi('secondCacheLookupTime', perf() - startTime);
 
             // No version found in cache, fail the task
             if (!vstestPlatformInstalledLocation || vstestPlatformInstalledLocation === 'undefined') {
-                this.consolidatedCiData.secondCacheLookupSucceeded = 'false';
-                this.consolidatedCiData.failureReason = constants.downloadFailed;
+                ci.addToConsolidatedCi('secondCacheLookupSucceeded', 'false');
+                ci.addToConsolidatedCi('failureReason', constants.downloadFailed);
                 tl.error(tl.loc('NoPackageFoundInCache'));
                 throw new Error(tl.loc('FailedToAcquireTestPlatform'));
             }
 
-            this.consolidatedCiData.secondCacheLookupSucceeded = 'true';
+            ci.addToConsolidatedCi('secondCacheLookupSucceeded', 'true');
         }
 
         return vstestPlatformInstalledLocation;
@@ -70,7 +63,7 @@ export class NugetDownloadHelper {
         // Call out a warning if the agent work folder path is longer than 50 characters as anything longer may cause the download to fail
         // Note: This upper limit was calculated for a particular test platform package version and is subject to change
         if (tl.getVariable(constants.agentWorkFolder) && tl.getVariable(constants.agentWorkFolder).length > 50) {
-            this.consolidatedCiData.agentWorkDirectoryPathTooLong = 'true';
+            ci.addToConsolidatedCi('agentWorkDirectoryPathTooLong', 'true');
             tl.warning(tl.loc('AgentWorkDirectoryPathTooLong'));
         }
 
@@ -81,9 +74,9 @@ export class NugetDownloadHelper {
             .argIf(nugetConfigFilePath, constants.configFile).argIf(nugetConfigFilePath, nugetConfigFilePath).arg(constants.noninteractive);
 
         tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
-        this.consolidatedCiData.downloadStartTime = perf();
+        startTime = perf();
         const resultCode = await nugetTool.exec();
-        this.consolidatedCiData.downloadEndTime = perf();
+        ci.addToConsolidatedCi('downloadTime', perf() - startTime);
 
         tl.debug(`Nuget.exe returned with result code ${resultCode}`);
 
@@ -92,18 +85,14 @@ export class NugetDownloadHelper {
             throw new Error(tl.loc('DownloadFailed', resultCode));
         }
 
-        ci.publishEvent('DownloadPackage', { version: testPlatformVersion, startTime: this.consolidatedCiData.downloadStartTime,
-            endTime: this.consolidatedCiData.downloadEndTime } );
-
         // Install into the local tool cache
         const toolRoot = path.join(downloadPath, constants.packageId + '.' + testPlatformVersion);
 
         tl.debug(`Caching the downloaded folder ${toolRoot}.`);
-        this.consolidatedCiData.cacheStartTime = perf();
+        startTime = perf();
         const vstestPlatformInstalledLocation = await toolLib.cacheDir(toolRoot, constants.toolFolderName, testPlatformVersion);
-        this.consolidatedCiData.cacheEndTime = perf();
-        ci.publishEvent('CacheDownloadedPackage', { startTime: this.consolidatedCiData.cacheStartTime,
-            endTime: this.consolidatedCiData.cacheEndTime } );
+        ci.addToConsolidatedCi('cacheTime', perf() - startTime);
+
         return vstestPlatformInstalledLocation;
     }
 }

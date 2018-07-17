@@ -10,7 +10,7 @@ import { NugetFeedInstaller } from './nugetfeedinstaller';
 import { NetworkShareInstaller } from './networkshareinstaller';
 import { async } from 'q';
 
-const consolidatedCiData: { [key: string]: any; } = <{ [key: string]: any; }>{};
+let startTime: number;
 
 // First function to be invoke starting the installation
 async function startInstaller() {
@@ -20,12 +20,12 @@ async function startInstaller() {
         console.log('==============================================================================');
 
         const osPlat: string = os.platform();
-        consolidatedCiData.operatingSystem = osPlat;
-        consolidatedCiData.result = constants.installationStatusFailed;
+        ci.addToConsolidatedCi('operatingSystem', osPlat);
+        ci.addToConsolidatedCi('result', constants.installationStatusFailed);
 
         // Fail the task if os is not windows
         if (osPlat !== 'win32') {
-            consolidatedCiData.failureReason = constants.unsupportedOS;
+            ci.addToConsolidatedCi('failureReason', constants.unsupportedOS);
             tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
             return;
         }
@@ -39,26 +39,26 @@ async function startInstaller() {
         const password = tl.getInput(constants.password, false);
         const packageSource = constants.defaultPackageSource;
 
-        consolidatedCiData.packageFeedSelectorInput = packageFeedSelectorInput;
+        ci.addToConsolidatedCi('packageFeedSelectorInput', packageFeedSelectorInput);
 
         tl.debug(`Selected package feed: ${packageFeedSelectorInput}`);
         switch (packageFeedSelectorInput.toLowerCase()) {
 
             case 'nugetorg':
                 tl.debug('Going via nuget org download flow.');
-                await new NugetFeedInstaller(consolidatedCiData)
+                await new NugetFeedInstaller()
                     .installVsTestPlatformToolFromSpecifiedFeed(packageSource, testPlatformVersion, versionSelectorInput, null);
                 break;
 
             case 'customfeed':
                 tl.debug('Going via custom feed download flow.');
-                await new NugetFeedInstaller(consolidatedCiData)
+                await new NugetFeedInstaller()
                     .installVsTestPlatformToolFromCustomFeed(packageSource, versionSelectorInput, testPlatformVersion, username, password);
             break;
 
             case 'netshare':
                 tl.debug('Going via net share copy flow.');
-                await new NetworkShareInstaller(consolidatedCiData).installVsTestPlatformToolFromNetworkShare(networkSharePath);
+                await new NetworkShareInstaller().installVsTestPlatformToolFromNetworkShare(networkSharePath);
                 break;
         }
 
@@ -68,16 +68,15 @@ async function startInstaller() {
         return;
     }
 
-    consolidatedCiData.result = constants.installationStatusSucceeded;
-    ci.publishEvent('Completed', { isSetupSuccessful: 'true', startTime: consolidatedCiData.executionStartTime, endTime: perf() } );
+    ci.addToConsolidatedCi('result', constants.installationStatusSucceeded);
 }
 
 // Execution start
 try {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-    const executionStartTime = perf();
+    startTime = perf();
     startInstaller();
 } finally {
-    consolidatedCiData.executionEndTime = perf();
-    ci.publishEvent('vstestToolInstallerConsolidatedCiEvent', consolidatedCiData);
+    ci.addToConsolidatedCi('executionEndTime', perf() - startTime);
+    ci.fireConsolidatedCi();
 }

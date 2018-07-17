@@ -8,13 +8,9 @@ import * as constants from './constants';
 import * as helpers from './helpers';
 import { NugetDownloadHelper } from './nugetdownloadhelper';
 
+let startTime: number;
+
 export class NetworkShareInstaller {
-    private consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
-
-    public constructor(consolidatedCiData: { [key: string]: string; }) {
-        this.consolidatedCiData = consolidatedCiData;
-    }
-
     // Installs the test platform from a network share path provided by the user. The path should point to a .nupkg file.
     public async installVsTestPlatformToolFromNetworkShare(netSharePath: string) {
         let vstestPlatformInstalledLocation;
@@ -25,7 +21,7 @@ export class NetworkShareInstaller {
         if (helpers.pathExistsAsFile(netSharePath)) {
             packageSource = path.dirname(netSharePath);
         } else {
-            this.consolidatedCiData.failureReason = constants.packageFileDoesNotExist;
+            ci.addToConsolidatedCi('failureReason', constants.packageFileDoesNotExist);
             throw new Error(tl.loc('SpecifiedFileDoesNotExist', netSharePath));
         }
 
@@ -34,40 +30,38 @@ export class NetworkShareInstaller {
         const regexMatches = versionExtractionRegex.exec(fileName);
 
         if (regexMatches.length !== 2) {
-            this.consolidatedCiData.failureReason = constants.unexpectedPackageFileName;
+            ci.addToConsolidatedCi('failureReason', constants.unexpectedPackageFileName);
             throw new Error(tl.loc('UnexpectedFileName', fileName));
         }
         const testPlatformVersion = regexMatches[1];
-        this.consolidatedCiData.testPlatformVersion = testPlatformVersion;
+        ci.addToConsolidatedCi('testPlatformVersion', testPlatformVersion);
 
         // If the version provided is not an explicit version (ie contains containing wildcards) then throw
         if (!toolLib.isExplicitVersion(testPlatformVersion)) {
             ci.publishEvent('InvalidVersionSpecified', { version: testPlatformVersion } );
-            this.consolidatedCiData.failureReason = constants.notExplicitVersion;
+            ci.addToConsolidatedCi('failureReason', constants.notExplicitVersion);
             throw new Error(tl.loc('ProvideExplicitVersion', testPlatformVersion));
         }
 
+        console.log(tl.loc('ParsedVersion', testPlatformVersion));
         tl.debug(`Looking for version ${testPlatformVersion} in the tools cache.`);
-        this.consolidatedCiData.cacheLookupStartTime = perf();
+        startTime = perf();
 
         // Check cache for the specified version
         vstestPlatformInstalledLocation = toolLib.findLocalTool(constants.toolFolderName, testPlatformVersion);
 
-        this.consolidatedCiData.cacheLookupEndTime = perf();
-        ci.publishEvent('CacheLookup', { CacheHit: (!helpers.isNullEmptyOrUndefined(vstestPlatformInstalledLocation)).toString(),
-            isFallback: 'false', version: testPlatformVersion, startTime: this.consolidatedCiData.cacheLookupStartTime,
-            endTime: this.consolidatedCiData.cacheLookupEndTime } );
+        ci.addToConsolidatedCi('cacheLookupTime', perf() - startTime);
 
         // If found in the cache then set the tool location and return
         if (!helpers.isNullEmptyOrUndefined(vstestPlatformInstalledLocation)) {
-            this.consolidatedCiData.firstCacheLookupSucceeded = 'true';
+            ci.addToConsolidatedCi('firstCacheLookupSucceeded', 'true');
             helpers.setVsTestToolLocation(vstestPlatformInstalledLocation);
             return;
         }
 
-        this.consolidatedCiData.firstCacheLookupSucceeded = 'false';
+        ci.addToConsolidatedCi('firstCacheLookupSucceeded', 'false');
 
-        vstestPlatformInstalledLocation = await new NugetDownloadHelper(this.consolidatedCiData)
+        vstestPlatformInstalledLocation = await new NugetDownloadHelper()
             .attemptPackageDownload(packageSource, testPlatformVersion, null);
 
         // Set the vstest platform tool location for the vstest task to consume
