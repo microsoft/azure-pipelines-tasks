@@ -63,5 +63,29 @@ describe('ServiceFabricDeploy Suite', function () {
         it('Register application type should retry', (done) => {
             psr.run(path.join(__dirname, 'RegisterApplicationTypeShouldRetry.ps1'), done);
         })
+        it('Unregister application type should retry till success', (done) => {
+            psr.run(path.join(__dirname, 'UnregisterApplicationTypeShouldRetryTillSuccess.ps1'), done);
+        })
+        it('Unregister application type should retry', (done) => {
+            psr.run(path.join(__dirname, 'UnregisterApplicationTypeShouldRetry.ps1'), done);
+        })
+        it('Create application type should retry till success', (done) => {
+            psr.run(path.join(__dirname, 'CreateApplicationShouldRetryTillSuccess.ps1'), done);
+        })
+        it('Create application type should retry', (done) => {
+            psr.run(path.join(__dirname, 'CreateApplicationShouldRetry.ps1'), done);
+        })
+        it('Remove application type should retry till success', (done) => {
+            psr.run(path.join(__dirname, 'RemoveApplicationShouldRetryTillSuccess.ps1'), done);
+        })
+        it('Remove application type should retry', (done) => {
+            psr.run(path.join(__dirname, 'RemoveApplicationShouldRetry.ps1'), done);
+        })
+        it('Start application upgrade should retry till success', (done) => {
+            psr.run(path.join(__dirname, 'StartApplicationUpgradeShouldRetryTillSuccess.ps1'), done);
+        })
+        it('Start application upgrade should retry', (done) => {
+            psr.run(path.join(__dirname, 'StartApplicationUpgradeShouldRetry.ps1'), done);
+        })
     }
 });

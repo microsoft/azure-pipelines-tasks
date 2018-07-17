@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 15
+        "Patch": 16
     },
     "demands": [
         "Cmd"
@@ -451,7 +451,8 @@
         "SFSDK_StartAppUpgrade": "Start upgrading application...",
         "SFSDK_StartUpgradeFailed": "Failed to start application upgrade. Error {0}.",
         "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Could not start upgrade successfully. Unregistering application type '{0}' and version '{1}'.",
-        "SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
+        "SFSDK_CurrentUpgradeState":"Current Upgrade State:",
+        "SFSDK_DomainUpgradeStatus":"Domain Wise Upgrade Status: ",
         "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
         "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
         "SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",
@@ -470,6 +471,18 @@
         "SFSDK_RegisterAppTypeFailedWithStatus": "Failed to register application type. Status: {0}. Details: {1}.",
         "SFSDK_ApplicationTypeStatus": "Application type status: {0}. Details: {1}.",
         "SFSDK_ApplicationTypeUnprovisioned": "Application type is unprovisioned. Will retry register.",
-        "SFSDK_ClusterHealth": "Cluster health:"
+        "SFSDK_ClusterHealth": "Cluster health:",
+        "SFSDK_ApplicationTypeUnprovisioningStarted": "Unprovisioning started for application type. Waiting for it to complete..",
+        "SFSDK_UnregisterAppTypeFailedWithStatus": "Failed to unregister application type. Status: {0}. Details: {1}.",
+        "SFSDK_RetryingUnregisterApplicationType": "Retrying unregister..",
+        "SFSDK_RetryingRemoveApplication": "Retrying remove application..",
+        "SFSDK_RetryingCreateApplication": "Retrying create application..",
+        "SFSDK_ApplicationHealth": "Getting application health:",
+        "SFSDK_RetryingUpgradeApplication": "Retrying application upgrade..",
+        "SFSDK_RetryingGetApplicationUpgrade": "Getting application upgrade status...",
+        "SFSDK_RetryingTestClusterConnection": "Testing connection to cluster..",
+        "SFSDK_RetryingTestAppPackage": "Testing application package..",
+        "SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",
+        "SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package.."
     }
 }

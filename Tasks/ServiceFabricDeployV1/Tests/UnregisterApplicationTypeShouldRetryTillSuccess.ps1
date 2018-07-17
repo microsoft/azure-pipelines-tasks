@@ -7,29 +7,33 @@ Import-Module ServiceFabric
 $ApplicationTypeName = "app type name"
 $ApplicationTypeVersion = "app type version"
 $applicationPackagePathInImageStore = "image path"
+$TimeoutSec = 120
 $applicationType = @{
     ApplicationTypeName    = $ApplicationTypeName
     ApplicationTypeVersion = $ApplicationTypeVersion
-    Status                 = [System.Fabric.Query.ApplicationTypeStatus]::Provisioning
-}
-$RegisterParameters = @{
-    'ApplicationPathInImageStore' = $applicationPackagePathInImageStore;
-    'Async' = $true
+    Status                 = [System.Fabric.Query.ApplicationTypeStatus]::Available
 }
 $global:getRetriesAttempted = 0
 
-Register-Mock Register-ServiceFabricApplicationType {
-    return $true;
-} -- @RegisterParameters
+Register-Mock Unregister-ServiceFabricApplicationType {
+    return $true
+} -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -Async -TimeoutSec $TimeoutSec
 
 Register-Mock Get-ServiceFabricApplicationTypeAction {
-    $global:getRetriesAttempted++;
+    $global:getRetriesAttempted++
+
     if ($global:getRetriesAttempted -eq 3)
     {
-        $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Available
+        return
+    }
+
+    if ($global:getRetriesAttempted -eq 2)
+    {
+        $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning
         return $applicationType
     }
-    throw [System.Fabric.FabricTransientException]::new("Could not ping!!")
+
+    throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
 } -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
 
 Register-Mock Start-Sleep {}
@@ -40,5 +44,5 @@ Register-Mock Write-VstsTaskError
 . $PSScriptRoot\..\..\..\Tasks\ServiceFabricDeployV1\ServiceFabricSDK\Utilities.ps1
 
 # Act/Assert
-Register-ServiceFabricApplicationTypeAction -RegisterParameters $RegisterParameters -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-Assert-AreEqual 3 $global:getRetriesAttempted "Number of register retries not correct"
+Unregister-ServiceFabricApplicationTypeAction -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -Force -TimeoutSec $TimeoutSec
+Assert-AreEqual 3 $global:getRetriesAttempted "Number of unregister retries not correct"
