@@ -171,5 +171,6 @@
   "loc.messages.disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s",
   "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
   "loc.messages.VsTestVersionEmpty": "VsTestVersion is null or empty",
-  "loc.messages.UserProvidedSourceFilter": "Source filter: %s"
+  "loc.messages.UserProvidedSourceFilter": "Source filter: %s",
+  "loc.messages.UnableToGetFeatureFlag": "Unable to get feature flag: %s"
 }

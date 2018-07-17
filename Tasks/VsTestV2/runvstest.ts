@@ -18,7 +18,7 @@ async function execute() {
     const taskProps = { state: 'started', result: '' };
     ci.publishEvent(taskProps);
 
-    const enableApiExecution = await getFeatureFlag(tl.getVariable('System.TeamFoundationCollectionUri'),
+    const enableApiExecution = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
         'TestExecution.EnableTranslationApi', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
     try {
@@ -49,7 +49,10 @@ async function execute() {
             if (enableApiExecution || (inputDataContract.ExecutionSettings
                 && inputDataContract.ExecutionSettings.RerunSettings
                 && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
-                console.log('================== API Execution =====================');
+                if (enableApiExecution) {
+                    console.log('================== API Execution =====================');
+                    inputDataContract.ExecutionSettings.TestPlatformExecutionMode = 'api';
+                }
                 const test = new nondistributedtest.NonDistributedTest(inputDataContract);
                 test.runNonDistributedTest();
             } else {
@@ -67,7 +70,7 @@ async function execute() {
     }
 }
 
-function getFeatureFlag(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
+function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
     let state = false;
     const options = {
         url: collectionUri + '/_apis/FeatureFlags/' + featureFlag,
@@ -81,7 +84,8 @@ function getFeatureFlag(collectionUri: string, featureFlag: string, token: strin
     return new Promise((resolve, reject) => {
         request(options, (err, res, faModel) => {
             if (err) {
-                console.warn('Unable to get feature flag ' + featureFlag + ' Error:' + err.message);
+                tl.warning(tl.loc('UnableToGetFeatureFlag', featureFlag));
+                tl.debug('Unable to get feature flag ' + featureFlag + ' Error:' + err.message);
                 resolve(state);
             }
             if (faModel.effectiveState) {
