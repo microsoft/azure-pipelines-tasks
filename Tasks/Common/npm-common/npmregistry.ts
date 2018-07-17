@@ -1,7 +1,9 @@
 import * as os from 'os';
 import * as tl from 'vsts-task-lib/task';
 import * as URL from 'url';
-import * as ipaddress from 'ip-address';
+
+import { HttpClient, HttpClientResponse }  from 'typed-rest-client/HttpClient';
+import { IHeaders, IRequestOptions } from 'typed-rest-client/Interfaces';
 
 import { NormalizeRegistry } from './npmrcparser';
 import * as util from './util';
@@ -23,7 +25,7 @@ export class NpmRegistry implements INpmRegistry {
         this.authOnly = authOnly || false;
     }
 
-    public static FromServiceEndpoint(endpointId: string, authOnly?: boolean): NpmRegistry {
+    public static async FromServiceEndpoint(endpointId: string, authOnly?: boolean): Promise<NpmRegistry> {
         let lineEnd = os.EOL;
         let endpointAuth: tl.EndpointAuthorization;
         let url: string;
@@ -41,20 +43,11 @@ export class NpmRegistry implements INpmRegistry {
         }
 
         try {
-            let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-            let collectionUrlDomain = NpmRegistry.ParseHostnameForDomain(URL.parse(collectionUrl).hostname);
             url = NormalizeRegistry(tl.getEndpointUrl(endpointId, false));
-            let epUrlDomain = NpmRegistry.ParseHostnameForDomain(URL.parse(url).hostname);
 
             // To the reader, this could be optimized here but it is broken out for readability
-            if (endpointAuth.scheme === 'Token'){
-                if (collectionUrlDomain === epUrlDomain){
-                    // Same domain _OR_ matching IP addrs.  Use PAT+Basic
-                    isVstsTokenAuth = true;
-                } else if (epUrlDomain.toUpperCase() === 'VISUALSTUDIO.COM'){
-                    // If the endpoint is VSTS, full stop.  Use PAT+Basic
-                    isVstsTokenAuth = true;
-                }
+            if (endpointAuth.scheme === 'Token') {
+                isVstsTokenAuth = await NpmRegistry.isEndpointInternal(url);
             }
             nerfed = util.toNerfDart(url);
         } catch (exception) {
@@ -67,6 +60,7 @@ export class NpmRegistry implements INpmRegistry {
                 password = endpointAuth.parameters['password'];
                 email = username; // npm needs an email to be set in order to publish, this is ignored on npmjs
                 password64 = (new Buffer(password).toString('base64'));
+                console.log("##vso[task.setvariable variable=" + endpointId + "BASE64_PASSWORD;issecret=true;]" + password64);
 
                 auth = nerfed + ":username=" + username + lineEnd;
                 auth += nerfed + ":_password=" + password64 + lineEnd;
@@ -95,6 +89,29 @@ export class NpmRegistry implements INpmRegistry {
         return new NpmRegistry(url, auth, authOnly);
     }
 
+    private static async isEndpointInternal(endpointUri: string): Promise<boolean> {
+        const proxyUrl: string = tl.getVariable('agent.proxyurl');
+        const requestOptions: IRequestOptions = proxyUrl ? {
+            proxy: {
+                proxyUrl: proxyUrl,
+                proxyUsername: tl.getVariable('agent.proxyusername'),
+                proxyPassword: tl.getVariable('agent.proxypassword'),
+                proxyBypassHosts: tl.getVariable('agent.proxybypasslist') ? JSON.parse(tl.getVariable('agent.proxybypasslist')) : null
+            }
+        } : {};
+
+        const headers: IHeaders = {};
+        headers['X-TFS-FedAuthRedirect'] = 'Suppress';
+
+        const endpointClient = new HttpClient(tl.getVariable('AZURE_HTTP_USER_AGENT'), null, requestOptions);
+        try {
+            const resp = await endpointClient.get(endpointUri, headers);
+            return resp.message.rawHeaders !== null && resp.message.rawHeaders.some( t => t.indexOf('x-tfs') >= 0 || t.indexOf('x-vss') >= 0 );
+        } catch (error) {
+            return Promise.resolve(false);
+        }
+    }
+
     public static async FromFeedId(feedId: string, authOnly?: boolean): Promise<NpmRegistry> {
         let url = NormalizeRegistry(await util.getFeedRegistryUrl(feedId));
         return NpmRegistry.FromUrl(url, authOnly);
@@ -105,22 +122,5 @@ export class NpmRegistry implements INpmRegistry {
         let auth = `${nerfed}:_authToken=${util.getSystemAccessToken()}`;
 
         return new NpmRegistry(url, auth, authOnly);
-    }
-
-    /**
-     * Helper function to return the domain name given a hostname.
-     * @param hostname This should be the output from: url.parse('http://myserver.example.com').hostname
-     * @returns Given a FQDN the domain name will be returned.  Given a hostname the
-     * hostname will be return.  Given an IP address, the IP will be returned.
-     */
-    private static ParseHostnameForDomain(hostname: string): string {
-        if (hostname &&
-            (!new ipaddress.Address6(hostname).isValid() &&
-             !new ipaddress.Address4(hostname).isValid())) {
-                // We know we have a non-null string that is not an IP addr
-                let hnAry = hostname.split('.');
-                return hnAry.slice(-2).join('.')
-        }
-        return hostname;
     }
 }

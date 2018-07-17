@@ -332,7 +332,7 @@ describe('Npm Task', function () {
     });
 
     it('does Basic auth for hosted when service endpoint auth is Token and endpoint is in the .visualstudio.com domain',
-        (done: MochaDone) => {
+        async (done: MochaDone) => {
         // Scenario: Cross account on visualstudio.com
         let mockTask = {
             getVariable: (v) => {
@@ -345,11 +345,34 @@ describe('Npm Task', function () {
             },
             getEndpointUrl: (id, optional) => {
                 return 'http://serviceendpoint.visualstudio.com';
+            },
+            loc: (n, ...param) => {
+                console.log(n);
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
+
+        mockery.registerMock('typed-rest-client/HttpClient', {
+            HttpClient: function() {
+                return {
+                    get: function(url, headers) {
+                        return {
+                        then: function(handler) {
+                            handler({
+                                message: {
+                                    statusCode: 401,
+                                    rawHeaders: ['x-tfs-foo: abc', 'x-content-type-options: nosniff', 'X-Powered-By: ASP.NET']
+                                }
+                            });
+                        }
+                        };
+                    }
+                };
+            }
+        });
+
         const npmregistry = require("npm-common/npmregistry");
-        let registry = npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
+        let registry = await npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
 
         assert(registry.auth.match(BASIC_AUTH_PAT_PASSWD_REGEX), `Auth must contain a password. Auth is: (${registry.auth})`);
         assert(registry.auth.match(BASIC_AUTH_PAT_EML_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
@@ -359,7 +382,7 @@ describe('Npm Task', function () {
         done();
     });
 
-    it('does Bearer auth for hosted when service endpoint auth is Token and endpoint is 3rd party', (done: MochaDone) => {
+    it('does Bearer auth for hosted when service endpoint auth is Token and endpoint is 3rd party', async (done: MochaDone) => {
         // Scenario: User is connecting to a non-visualstudio.com registry
         let mockTask = {
             getVariable: (v) => {
@@ -375,146 +398,30 @@ describe('Npm Task', function () {
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
+
+        mockery.registerMock('typed-rest-client/HttpClient', {
+            HttpClient: function() {
+                return {
+                    get: function(url, headers) {
+                        return {
+                        then: function(handler) {
+                            handler({
+                                message: {
+                                    statusCode: 401,
+                                    rawHeaders: ['x-content-type-options: nosniff', 'X-Powered-By: ASP.NET']
+                                }
+                            });
+                        }
+                        };
+                    }
+                };
+            }
+        });
+
         const npmregistry = require("npm-common/npmregistry");
-        let registry = npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
+        let registry = await npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
 
         assert(registry.auth.match(BEARER_AUTH_REGEX), `Auth must contain _authToken. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(AWLAYS_AUTH_REGEX), `Auth must contain always-auth. Auth is: (${registry.auth})`);
-
-        done();
-    });
-
-    it('does Basic auth for onprem when service endpoint auth is Token and the endpoint is in the same domain', (done: MochaDone) => {
-        // Scenario: onprem server A registry/feed in to onprem server B within same domain
-        let mockTask = {
-            getVariable: (v) => {
-                if (v === 'System.TeamFoundationCollectionUri') {
-                    // Any collectionuri not ending in .visualstudio.com is onprem
-                    return 'http://mytfsserver.example.com';
-                }
-            },
-            getEndpointAuthorization: (id, optional) => {
-                return { scheme: 'Token', parameters: { 'apitoken': 'AUTHTOKEN' } };
-            },
-            getEndpointUrl: (id, optional) => {
-                return 'http://serviceendpoint.visualstudio.com';
-            }
-        };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-        const npmregistry = require("npm-common/npmregistry");
-        let registry = npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
-
-        assert(registry.auth.match(BASIC_AUTH_PAT_PASSWD_REGEX), `Auth must contain a password. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(BASIC_AUTH_PAT_EML_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(BASIC_AUTH_PAT_USERNAME_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(AWLAYS_AUTH_REGEX), `Auth must contain always-auth. Auth is: (${registry.auth})`);
-
-        done();
-    });
-
-    it('does Bearer auth for onprem when service endpoint auth is Token and the endpoint is 3rd party', (done: MochaDone) => {
-        // Scenario: Onprem connecting to a 3rd party registry.
-        let mockTask = {
-            getVariable: (v) => {
-                if (v === 'System.TeamFoundationCollectionUri') {
-                    return 'http://mytfsserver.example.com';
-                }
-            },
-            getEndpointAuthorization: (id, optional) => {
-                return { scheme: 'Token', parameters: { 'apitoken': 'AUTHTOKEN' } };
-            },
-            getEndpointUrl: (id, optional) => {
-                return 'http://somepublicrepo.contoso.com:8080/some/random/path';
-            }
-        };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-        const npmregistry = require("npm-common/npmregistry");
-        let registry = npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
-
-        assert(registry.auth.match(BEARER_AUTH_REGEX), `Auth must contain _authToken. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(AWLAYS_AUTH_REGEX), `Auth must contain always-auth. Auth is: (${registry.auth})`);
-
-        done();
-    });
-
-    it('does Bearer auth for onprem when service endpoint auth is Token and the endpoint is an IP addr', (done: MochaDone) => {
-        // Scenario: Onprem and user supplied an IP for the endpoint.  We must assume that it  is a 3rd party repo
-        // and, as such, will use bearer auth.
-        let mockTask = {
-            getVariable: (v) => {
-                if (v === 'System.TeamFoundationCollectionUri') {
-                    return 'http://mytfsserver.example.com';
-                }
-            },
-            getEndpointAuthorization: (id, optional) => {
-                return { scheme: 'Token', parameters: { 'apitoken': 'AUTHTOKEN' } };
-            },
-            getEndpointUrl: (id, optional) => {
-                return 'http://10.10.10.10:8080/some/random/path';
-            }
-        };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-        const npmregistry = require("npm-common/npmregistry");
-        let registry = npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
-
-        assert(registry.auth.match(BEARER_AUTH_REGEX), `Auth must contain _authToken. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(AWLAYS_AUTH_REGEX), `Auth must contain always-auth. Auth is: (${registry.auth})`);
-
-        done();
-    });
-
-    it('does Basic auth for onprem when service endpoint auth is Token and the TFS server and EP have the same IP', (done: MochaDone) => {
-        // Scenario: Onprem and user supplied an IP for the endpoint and the TeamFoundationCollectionUri is a _matching_ IP
-        let mockTask = {
-            getVariable: (v) => {
-                if (v === 'System.TeamFoundationCollectionUri') {
-                    return 'http://10.10.10.10:8080/';
-                }
-            },
-            getEndpointAuthorization: (id, optional) => {
-                return { scheme: 'Token', parameters: { 'apitoken': 'AUTHTOKEN' } };
-            },
-            getEndpointUrl: (id, optional) => {
-                return 'http://10.10.10.10:8080/some/random/path';
-            }
-        };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-        const npmregistry = require("npm-common/npmregistry");
-        let registry = npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
-
-        assert(registry.auth.match(BASIC_AUTH_PAT_PASSWD_REGEX), `Auth must contain a password. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(BASIC_AUTH_PAT_EML_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(BASIC_AUTH_PAT_USERNAME_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
-        assert(registry.auth.match(AWLAYS_AUTH_REGEX), `Auth must contain always-auth. Auth is: (${registry.auth})`);
-
-        done();
-    });
-
-    it('does Basic auth for onprem when service endpoint auth is Token and the TFS server and EP have the same IP', (done: MochaDone) => {
-        // Scenario: Onprem and user supplied an IP for the endpoint and the TeamFoundationCollectionUri is a _matching_ IP
-        let mockTask = {
-            getVariable: (v) => {
-                if (v === 'System.TeamFoundationCollectionUri') {
-                    return 'http://mytfsserver.example.com';
-                }
-            },
-            getEndpointAuthorization: (id, optional) => {
-                return { scheme: 'UsernamePassword', parameters: { 'username': 'USERNAME', 'password': 'PASSWORD' } };
-            },
-            getEndpointUrl: (id, optional) => {
-                return 'http://somepublicrepo.contoso.com:8080/some/random/path';
-            }
-        };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-        const npmregistry = require("npm-common/npmregistry");
-        let registry = npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
-
-        const BASIC_AUTH_PASSWD_REGEX = /\/\/.*\/:_password=PASSWORD.*/g;
-        assert(registry.auth.match(BASIC_AUTH_PAT_PASSWD_REGEX), `Auth must contain a password. Auth is: (${registry.auth})`);
-        const BASIC_AUTH_PAT_EML_REGEX = /\/\/.*\/:email=USERNAME.*/g;
-        assert(registry.auth.match(BASIC_AUTH_PAT_EML_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
-        const BASIC_AUTH_PAT_USERNAME_REGEX = /\/\/.*\/:username=USERNAME.*/g;
-        assert(registry.auth.match(BASIC_AUTH_PAT_USERNAME_REGEX), `Auth must contain a email. Auth is: (${registry.auth})`);
         assert(registry.auth.match(AWLAYS_AUTH_REGEX), `Auth must contain always-auth. Auth is: (${registry.auth})`);
 
         done();
