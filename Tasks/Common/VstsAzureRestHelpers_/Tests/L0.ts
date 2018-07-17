@@ -37,7 +37,7 @@ describe('Common-VstsAzureRestHelpers_ Suite', function () {
             psr.run(path.join(__dirname, 'Get-AzureRMAccessToken.ps1'), done);
         })
         it('Get-SpnAccessTokenUsingCertificate should return access token', (done) => {
-            psr.run(path.join(__dirname, 'Get-SpnAccessTokenUsingCertificateSuccess.ps1'), done);
+            psr.run(path.join(__dirname, 'Get-SpnAccessTokenUsingCertificate.ps1'), done);
         });
     }
 });

@@ -488,7 +488,7 @@ function Get-SpnAccessTokenUsingCertificate {
         [Parameter(Mandatory=$true)] $endpoint
     )
 
-    if ($script:certificateAccessToken) {
+    if ($script:certificateAccessToken -and $script:certificateAccessToken.expires_on) {
         # there exists a token cache
         $currentTime = [System.DateTime]::UtcNow
         $tokenExpiryTime = $script:certificateAccessToken.expires_on.UtcDateTime

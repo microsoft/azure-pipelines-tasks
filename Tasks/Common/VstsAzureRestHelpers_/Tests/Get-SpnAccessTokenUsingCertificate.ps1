@@ -99,4 +99,3 @@ Assert-WasCalled Get-PfxCertificate -Times 1
 Assert-Throws {
     $result = & $module Get-SpnAccessTokenUsingCertificate -Endpoint $faultyEndpoint 
 } -MessagePattern "AZ_SPNCertificateAccessTokenFetchFailure*"
-
