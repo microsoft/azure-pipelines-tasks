@@ -523,7 +523,6 @@ function Get-SpnAccessTokenUsingCertificate {
         $clientAssertionCertificate = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.ClientAssertionCertificate -ArgumentList $servicePrincipalId, $clientCertificate
         $authenticationContext = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList $authorityUrl
         $tokenResult = $authenticationContext.AcquireTokenAsync($azureActiveDirectoryResourceId, $clientAssertionCertificate).ConfigureAwait($false).GetAwaiter().GetResult()
-        $tokenResult
     }
     catch {
         $script:certificateAccessToken = $null
