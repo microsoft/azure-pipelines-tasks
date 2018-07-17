@@ -11,10 +11,14 @@ export function setVsTestToolLocation(toolPath: string) {
 }
 
 export function cleanUpTempConfigFile(tempConfigFilePath: string) {
+    if (isNullEmptyOrUndefined(tempConfigFilePath)) {
+        return;
+    }
+
     try {
         fs.unlinkSync(tempConfigFilePath);
     } catch (error) {
-        tl.debug(`Failed to delete temp confi file ${tempConfigFilePath} with error ${error}.`);
+        tl.debug(`Failed to delete temp config file ${tempConfigFilePath} with error ${error}.`);
     }
 }
 

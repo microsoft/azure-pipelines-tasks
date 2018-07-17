@@ -13,8 +13,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 13
+        "Minor": 1,
+        "Patch": 0
     },
     "satisfies": ["VsTest"],
     "demands": [],
@@ -36,7 +36,9 @@
             "groupName": "packageSettings",
             "helpMarkDown": "Specify the feed from which the Visual Studio Test Platform nuget packge should be fetched.",
             "options": {
-                "nugetOrg": "Official Nuget"
+                "nugetOrg": "Official Nuget",
+                "customFeed": "Custom Feed",
+                "netShare": "Network path"
             }
         },
         {
@@ -125,7 +127,9 @@
       "SpecifiedFileDoesNotExist": "The specified file %s does not exist.",
       "UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
       "ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s",
-      "DownloadFailed": "`Download failed with error code: %s.",
-      "ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set."
+      "LatestStableCached": "Looking for latest stable version cached.",
+      "DownloadFailed": "Download failed with error code: %s.",
+      "ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set.",
+      "ParsedVersion": "Parsed the version of the Microsoft.Testplatform package to be %s from the file name. Please ensure that the file name is the same as when the .nupkg file is downloaded from the official nuget feed."
     }
 }

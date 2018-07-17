@@ -36,6 +36,8 @@
   "loc.messages.SpecifiedFileDoesNotExist": "The specified file %s does not exist.",
   "loc.messages.UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
   "loc.messages.ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s",
-  "loc.messages.DownloadFailed": "`Download failed with error code: %s.",
-  "loc.messages.ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set."
+  "loc.messages.LatestStableCached": "Looking for latest stable version cached.",
+  "loc.messages.DownloadFailed": "Download failed with error code: %s.",
+  "loc.messages.ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set.",
+  "loc.messages.ParsedVersion": "Parsed the version of the Microsoft.Testplatform package to be %s from the file name. Please ensure that the file name is the same as when the .nupkg file is downloaded from the official nuget feed."
 }
