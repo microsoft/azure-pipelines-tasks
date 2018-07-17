@@ -18,7 +18,6 @@ import { condaEnvironment } from './conda';
         getPlatform());
         task.setResult(task.TaskResult.Succeeded, "");
     } catch (error) {
-        task.error(error.message);
         task.setResult(task.TaskResult.Failed, error.message);
     }
 })();

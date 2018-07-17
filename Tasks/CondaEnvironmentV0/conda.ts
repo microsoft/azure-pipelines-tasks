@@ -16,7 +16,6 @@ interface TaskParameters {
     cleanEnvironment?: boolean
 }
 
-// TODO copied from PythonScript. Find a way to share between tasks.
 /**
  * Check for a parameter at runtime.
  * Useful for conditionally-visible, required parameters.
