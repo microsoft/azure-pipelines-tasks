@@ -185,6 +185,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         try
         {
             [void](Connect-ServiceFabricClusterAction -ClusterConnectionParameters $clusterConnectionParameters)
+            return $certificate
         }
         catch
         {
