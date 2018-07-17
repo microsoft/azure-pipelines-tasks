@@ -343,7 +343,7 @@ target.test = function() {
     // setup the version of node to run the tests
     util.installNode(options.node);
 
-    var configFile = path.join(__dirname, 'config.json');
+    var configFile = path.join(__dirname, 'testconfig.json');
     run('mocha ' + testsSpec.join(' ') + ' --reporter mocha-multi-reporters --reporter-options configFile=' + configFile + '', /*inheritStreams:*/true);
 }
 
@@ -472,7 +472,7 @@ target.testLegacy = function() {
     contents += '});' + os.EOL;
     fs.writeFileSync(testsSpecPath, contents);
 
-    var configFile = path.join(__dirname, 'config.json');
+    var configFile = path.join(__dirname, 'testconfig.json');
     run('mocha ' + testsSpecPath + ' --reporter mocha-multi-reporters --reporter-options configFile=' + configFile + '', /*inheritStreams:*/true);
 }
 
