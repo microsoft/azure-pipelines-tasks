@@ -110,6 +110,31 @@ function Add-Certificate
 
     return $certificate
 }
+function Remove-ClientCertificate
+{
+    [CmdletBinding()]
+    Param (
+        $Certificate
+    )
+
+    Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList "foo")
+
+    try
+    {
+        if ($null -ne $Certificate)
+        {
+            $thumbprint = $Certificate.Thumbprint
+            if (Test-Path "Cert:\CurrentUser\My\$thumbprint")
+            {
+                Remove-Item "Cert:\CurrentUser\My\$thumbprint" -Force
+            }
+        }
+    }
+    catch
+    {
+        Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList $_)
+    }
+}
 function Connect-ServiceFabricClusterFromServiceEndpoint
 {
     [CmdletBinding()]
