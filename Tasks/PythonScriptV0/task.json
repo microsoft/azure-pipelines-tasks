@@ -3,7 +3,7 @@
     "name": "PythonScript",
     "friendlyName": "Python Script",
     "description": "Run a Python script.",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More information](https://docs.microsoft.com/vsts/pipelines/tasks/utility/python-script)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 136,
+        "Minor": 138,
         "Patch": 0
     },
     "demands": [],
