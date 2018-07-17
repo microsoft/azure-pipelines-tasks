@@ -117,8 +117,6 @@ function Remove-ClientCertificate
         $Certificate
     )
 
-    Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList "foo")
-
     try
     {
         if ($null -ne $Certificate)
