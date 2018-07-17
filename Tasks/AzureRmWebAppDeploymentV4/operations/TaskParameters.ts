@@ -1,5 +1,12 @@
 import tl = require('vsts-task-lib/task');
 import * as Constant from '../operations/Constants'
+import { Package } from 'webdeployment-common/packageUtility';
+
+export enum DeploymentType {
+    webDeploy,
+    zipDeploy,
+    runFromZip
+}
 
 export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
@@ -8,13 +15,11 @@ export class TaskParametersUtility {
             WebAppKind: tl.getInput('WebAppKind', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
             VirtualApplication: tl.getInput('VirtualApplication', false),
-            Package: tl.getPathInput('Package', true),
             GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
             WebConfigParameters: tl.getInput('WebConfigParameters', false),
             XmlTransformation: tl.getBoolInput('XmlTransformation', false),
             JSONFiles: tl.getDelimitedInput('JSONFiles', '\n', false),
             XmlVariableSubstitution: tl.getBoolInput('XmlVariableSubstitution', false),
-            UseWebDeploy: tl.getBoolInput('UseWebDeploy', false),
             TakeAppOfflineFlag: tl.getBoolInput('TakeAppOfflineFlag', false),
             RenameFilesFlag: tl.getBoolInput('RenameFilesFlag', false),
             AdditionalArguments: tl.getInput('AdditionalArguments', false),
@@ -43,18 +48,28 @@ export class TaskParametersUtility {
         var endpointTelemetry = '{"endpointId":"' + taskParameters.connectedServiceName + '"}';
         console.log("##vso[telemetry.publish area=TaskEndpointId;feature=AzureRmWebAppDeployment]" + endpointTelemetry);
 
+        if(!taskParameters.isContainerWebApp){            
+            taskParameters.Package = new Package(tl.getPathInput('Package', true));
+        }
+          
+        taskParameters.UseWebDeploy = !taskParameters.isLinuxApp ? tl.getBoolInput('UseWebDeploy', false) : false;
+
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
+            taskParameters.TakeAppOfflineFlag = false;
         }
 
         taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') 
             ? taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
 
         if(taskParameters.UseWebDeploy) {
-            taskParameters.RemoveAdditionalFilesFlag = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
-            taskParameters.SetParametersFile = tl.getPathInput('SetParametersFile', false);
-            taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
-            taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
+            taskParameters.DeploymentType = this.getDeploymentType(tl.getInput('DeploymentType', false));
+            if(taskParameters.DeploymentType == DeploymentType.webDeploy) {                
+                taskParameters.RemoveAdditionalFilesFlag = tl.getBoolInput('RemoveAdditionalFilesFlag', false);
+                taskParameters.SetParametersFile = tl.getPathInput('SetParametersFile', false);
+                taskParameters.ExcludeFilesFromAppDataFlag = tl.getBoolInput('ExcludeFilesFromAppDataFlag', false)
+                taskParameters.AdditionalArguments = tl.getInput('AdditionalArguments', false) || '';
+            }
         }
         else {
             // Retry Attempt is passed by default
@@ -67,7 +82,16 @@ export class TaskParametersUtility {
     private static _initializeDefaultParametersForPublishProfile(taskParameters: TaskParameters): void {
         taskParameters.PublishProfilePath = tl.getInput('PublishProfilePath', true);
         taskParameters.PublishProfilePassword = tl.getInput('PublishProfilePassword', true);
+        taskParameters.Package = new Package(tl.getPathInput('Package', true));
         taskParameters.AdditionalArguments = "-retryAttempts:6 -retryInterval:10000";
+    }
+    
+    private static getDeploymentType(type): DeploymentType {
+        switch(type) {
+            case "webDeploy": return DeploymentType.webDeploy;
+            case "zipDeploy": return DeploymentType.zipDeploy;
+            case "runFromZip": return DeploymentType.runFromZip;
+        }
     }
 }
 
@@ -82,13 +106,14 @@ export interface TaskParameters {
     ResourceGroupName?: string;
     SlotName?: string;
     VirtualApplication?: string;
-    Package: string;
+    Package?: Package;
     GenerateWebConfig?: boolean;
     WebConfigParameters?: string;
     XmlTransformation?: boolean;
     JSONFiles?: string[];
     XmlVariableSubstitution?: boolean;
     UseWebDeploy?: boolean;
+    DeploymentType?: DeploymentType;
     RemoveAdditionalFilesFlag?: boolean;
     SetParametersFile?: string;
     ExcludeFilesFromAppDataFlag?: boolean;

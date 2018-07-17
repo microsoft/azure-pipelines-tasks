@@ -1,6 +1,7 @@
 {
     "tasks": [
         "AndroidSigningV2",
+        "AndroidSigningV3",
         "ANTV1",
         "AppCenterDistributeV1",
         "AppCenterTestV1",
@@ -18,6 +19,7 @@
         "AzureNLBManagementV1",
         "AzurePowerShellV3",
         "AzureResourceGroupDeploymentV2",
+        "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",
         "AzureVmssDeploymentV0",
         "BashV3",
@@ -41,6 +43,7 @@
         "DotNetCoreCLIV2",
         "DotNetCoreInstallerV0",
         "DownloadBuildArtifactsV0",
+        "DownloadFileshareArtifactsV0",
         "DownloadPackageV0",
         "DownloadSecureFileV1",
         "ExtractFilesV1",

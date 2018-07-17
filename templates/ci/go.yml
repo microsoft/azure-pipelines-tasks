@@ -5,27 +5,27 @@
 queue: 'Hosted Linux'
 steps:
 
-- task: GoTool@0
-  inputs:
-    version: '1.10'
+  - task: GoTool@0
+    inputs:
+      version: '1.10'
 
-- task: Go@0
-  inputs:
-    command: 'get'
-    arguments: '-v -t -d'
+  - task: Go@0
+    inputs:
+      command: 'get'
+      arguments: '-v -t -d'
 
-- task: Go@0
-  inputs:
-    command: 'test'
-    arguments: '-v'
+  - task: Go@0
+    inputs:
+      command: 'test'
+      arguments: '-v'
 
-- task: Go@0
-  inputs:
-    command: 'build'
-    arguments: '-o "$(build.repository.name)"'
+  - task: Go@0
+    inputs:
+      command: 'build'
+      arguments: '-o "$(build.repository.name)"'
 
-#- task: ArchiveFiles@2
-#  inputs:
-#    rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#    includeRootFolder: false
-#- task: PublishBuildArtifacts@1
+#  - task: ArchiveFiles@2
+#    inputs:
+#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#      includeRootFolder: false
+#  - task: PublishBuildArtifacts@1

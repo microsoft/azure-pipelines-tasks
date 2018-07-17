@@ -53,12 +53,6 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
     public static GetCommitMessagesFromCommits(commits: string): string[] {
         console.log(tl.loc("GetCommitMessages"));
 
-        // remove the extra comma at the end of the commit item
-        let index: number = commits.lastIndexOf(",");
-        if (index > -1) {
-            commits = commits.substring(0, index) + commits.substring(index + 1);
-        }
-
         let template = handlebars.compile(GetCommitMessagesTemplate);
         try {
             var result = template(JSON.parse(commits));
@@ -111,7 +105,9 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
 
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitTemplate, null).then((commitsResult) => {
             tl.debug(`Downloaded commits: ${commitsResult}`);
-            defer.resolve(commitsResult);
+
+            var commits: string = this.TransformCommits(commitsResult);
+            defer.resolve(commits);
         }, (error) => {
             defer.reject(error);
         });
@@ -128,7 +124,9 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         tl.debug(`Downloading commits from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {
             tl.debug(`Downloaded commits: ${commitsResult}`);
-            defer.resolve(commitsResult);
+            
+            var commits: string = this.TransformCommits(commitsResult);
+            defer.resolve(commits);
         }, (error) => {
             defer.reject(error);
         });
@@ -160,5 +158,56 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         }
 
         return fileName;
+    }
+
+    private TransformCommits(commits: string): string {
+        if (!!commits) {
+
+            // remove the extra comma at the end of the commit item
+            let index: number = commits.lastIndexOf(",");
+            if (index > -1) {
+                commits = commits.substring(0, index) + commits.substring(index + 1);
+            }
+
+            try {
+                var commitMessages = JSON.parse(commits);
+
+                commitMessages.forEach((commit) => {
+                    tl.debug('Normalizing url' + commit.DisplayUri);
+                    commit.DisplayUri = this.ConvertGitProtocolUrlToHttpProtocol(commit.DisplayUri);
+                });
+
+                return JSON.stringify(commitMessages);
+
+            } catch (error) {
+                console.log(tl.loc("CannotParseCommits", commits, error));
+                throw error;
+            }
+        }
+                
+        return '';
+    };
+
+    private ConvertGitProtocolUrlToHttpProtocol(commitUrl: string): string {
+        var result: string = '';
+        if (!!commitUrl) {
+            if (commitUrl.startsWith('git@')) {
+                tl.debug('repo url is a git protocol url');
+                
+                if (commitUrl.startsWith('git@gitlab.com')) {
+                    result= commitUrl.replace('git@gitlab.com:', 'https://gitlab.com/').replace('.git/', '/');
+                }
+                else if (commitUrl.startsWith('git@github.com')) {
+                    result = commitUrl.replace('git@github.com:', 'https://github.com/').replace('.git/', '/');
+                }                
+            }
+            else if (commitUrl.startsWith('http')) {
+                // if its http return the url as is.
+                result = commitUrl;
+            }
+        }
+
+        tl.debug(`Translated url ${commitUrl} to ${result}`);
+        return result;
     }
 }

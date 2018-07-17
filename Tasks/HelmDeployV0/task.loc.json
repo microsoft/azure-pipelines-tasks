@@ -12,11 +12,10 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 1,
-    "Patch": 8
+    "Minor": 137,
+    "Patch": 2
   },
   "demands": [],
-  "preview": "true",
   "groups": [
     {
       "name": "cluster",

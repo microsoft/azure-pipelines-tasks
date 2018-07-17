@@ -169,10 +169,8 @@ try{
             $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
         }
     }
-
-
+    Validate-AzureCloudServiceStatus -CloudServiceName $ServiceName -Slot $Slot
 } finally {
-			Write-Verbose "Validate-ServiceStatus -ServiceName $ServiceName -Slot $Slot"
-			Trace-VstsLeavingInvocation $MyInvocation
+	Trace-VstsLeavingInvocation $MyInvocation
 }
 

@@ -57,13 +57,16 @@ try {
 
     $firewallRuleName, $isFirewallConfigured = Add-FirewallRule -endpoint $endpoint -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -ipDetectionMethod $ipDetectionMethod -startIPAddress $startIpAddress -endIPAddress $endIpAddress
     
-    # Create the directory for output files
-    $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
-    if (Test-Path $generatedOutputFilesRoot) {
-        Remove-Item -Path $generatedOutputFilesRoot -Recurse -Force 
-    }
+    if (@("Extract", "Export", "DriftReport", "DeployReport", "Script") -contains $deploymentAction) {
+        # Create the directory for output files
+        $generatedOutputFilesRoot = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles"
+        if (Test-Path $generatedOutputFilesRoot) {
+            Remove-Item -Path $generatedOutputFilesRoot -Recurse -Force 
+        }
 
-    New-Item -Path $generatedOutputFilesRoot -ItemType Directory 
+        Write-Verbose "Creating output files directory: $generatedOutputFilesRoot"
+        New-Item -Path $generatedOutputFilesRoot -ItemType Directory | Out-Null
+    }
 
     switch ($deploymentAction) {
         "Publish" {
@@ -118,14 +121,19 @@ catch [System.Management.Automation.CommandNotFoundException] {
     throw
 }
 catch [Exception] {
-    $errorMessage = Get-VstsLocString -Key "SAD_TroubleshootingLink"
-
+    $errorMessage = ""
     if($_.Exception.Message) {
-        $errorMessage = $_.Exception.Message + " " + $errorMessage
+        $errorMessage = $_.Exception.Message
     }
     else {
-        $errorMessage = $_.Exception.ToString() + " " + $errorMessage
+        $errorMessage = $_.Exception.ToString()
     }
+
+    if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
+        $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
+    }
+       
+    $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
 
     throw $errorMessage
 }

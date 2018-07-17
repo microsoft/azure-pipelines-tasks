@@ -5,21 +5,21 @@
 queue: 'Hosted Linux'
 steps:
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '8.x' 
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '8.x' 
 
-- task: Npm@1
-  inputs:
-    command: 'install'
+  - task: Npm@1
+    inputs:
+      command: 'install'
 
-- task: Grunt@0
-  inputs:
-    gruntFile: 'gruntfile.js'
-    targets: ''
+  - task: Grunt@0
+    inputs:
+      gruntFile: 'gruntfile.js'
+      targets: ''
 
-#- task: ArchiveFiles@2
-#  inputs:
-#    rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#    includeRootFolder: false
-#- task: PublishBuildArtifacts@1
+#  - task: ArchiveFiles@2
+#    inputs:
+#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#      includeRootFolder: false
+#  - task: PublishBuildArtifacts@1

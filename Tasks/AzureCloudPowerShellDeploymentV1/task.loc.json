@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 5
+    "Patch": 7
   },
   "demands": [
     "azureps"
@@ -233,14 +233,11 @@
     "Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "ms-resource:loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics",
     "Customcertificatesaredefinedininvalidformat": "ms-resource:loc.messages.Customcertificatesaredefinedininvalidformat",
     "Addinganyconfiguredcustomcertificates": "ms-resource:loc.messages.Addinganyconfiguredcustomcertificates",
-    "AllInstancesReadyRole0status": "ms-resource:loc.messages.AllInstancesReadyRole0status",
-    "EachInstancesNameAndStatus0": "ms-resource:loc.messages.EachInstancesNameAndStatus0",
-    "Instance0Name": "ms-resource:loc.messages.Instance0Name",
-    "RetryForService0Availablity": "ms-resource:loc.messages.RetryForService0Availablity",
-    "Role0OrRoleInstanceNotfound": "ms-resource:loc.messages.Role0OrRoleInstanceNotfound",
-    "ServiceNotFound0": "ms-resource:loc.messages.ServiceNotFound0",
-    "Unabletofindservicestatus0": "ms-resource:loc.messages.Unabletofindservicestatus0",
-    "WaitingForInstance0Beforefindstatus": "ms-resource:loc.messages.WaitingForInstance0Beforefindstatus",
-    "WaitingForService0Available": "ms-resource:loc.messages.WaitingForService0Available"
+    "ValidateAzureCloudServiceStatus": "ms-resource:loc.messages.ValidateAzureCloudServiceStatus",
+    "RetryAzureCloudServiceStatusCheck": "ms-resource:loc.messages.RetryAzureCloudServiceStatusCheck",
+    "AzureCloudServiceIsReady": "ms-resource:loc.messages.AzureCloudServiceIsReady",
+    "AzureCloudServiceIsNotReady": "ms-resource:loc.messages.AzureCloudServiceIsNotReady",
+    "AllRoleInstancesAreReady": "ms-resource:loc.messages.AllRoleInstancesAreReady",
+    "AzureCloudServiceNotFound": "ms-resource:loc.messages.AzureCloudServiceNotFound"
   }
 }

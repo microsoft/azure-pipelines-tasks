@@ -18,6 +18,8 @@ function Get-FormattedSqlUsername
 
     if ($serverName)
     {
+        $serverName = ($serverName -replace "tcp:" -split "," )[0]
+
         $serverNameSplittedArgs = $serverName.Trim().Split(".")
         if ($serverNameSplittedArgs.Length -gt 0)
         {

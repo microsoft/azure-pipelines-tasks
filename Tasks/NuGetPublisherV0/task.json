@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 37
+        "Patch": 38
     },
     "runsOn": [
         "Agent",
@@ -48,9 +48,9 @@
         {
             "name": "connectedServiceName",
             "type": "connectedService:Generic",
-            "label": "NuGet Server Endpoint",
+            "label": "NuGet Service Connection",
             "required": true,
-            "helpMarkDown": "The NuGet server generic endpoint, set the key 'Password/Token Key' field to your NuGet API key.",
+            "helpMarkDown": "The NuGet server generic service connection, set the key 'Password/Token Key' field to your NuGet API key.",
             "visibleRule": "nuGetFeedType = external"
         },
         {
@@ -127,8 +127,8 @@
         }
     },
     "messages": {
-        "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
-        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build definition to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
         "Warning_ConflictingNuGetPreference": "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
         "PackagesPublishedSuccessfully": "Packages were published successfully",
         "PackagesFailedToPublish": "Packages failed to publish",

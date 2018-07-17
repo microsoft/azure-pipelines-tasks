@@ -7,8 +7,8 @@
   "loc.input.label.files": "Files",
   "loc.input.help.files": "File(s) to be uploaded. Wildcards can be used. For example, `**/*.zip` for all ZIP files in all subfolders.",
   "loc.input.label.authType": "Authentication Method",
-  "loc.input.label.serviceEndpoint": "Service Endpoint",
-  "loc.input.help.serviceEndpoint": "The service endpoint with the credentials for the server authentication. Use the Generic connection type for the service endpoint.",
+  "loc.input.label.serviceEndpoint": "Service Connection",
+  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
   "loc.input.label.username": "Username",
   "loc.input.help.username": "Specify the username for server authentication.",
   "loc.input.label.password": "Password",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "Uploading file(s): %s",
   "loc.messages.CurlNotFound": "curl was not found in the PATH.",
   "loc.messages.NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d",
-  "loc.messages.IncompleteEndpoint": "The service endpoint does not contain all required fields."
+  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
 }

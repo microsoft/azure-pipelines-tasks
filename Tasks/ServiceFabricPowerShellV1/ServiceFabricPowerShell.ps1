@@ -25,14 +25,16 @@ if ($scriptArguments -match '[\r\n]')
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
 
+Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
 try
 {
     # Initialize Service Fabric.
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
+
+    $global:operationId = $SF_Operations.Undefined
     $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
-
     $clusterConnectionParameters = @{}
-
     Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     # Trace the expression as it will be invoked.
@@ -86,6 +88,12 @@ try
             "##vso[task.complete result=Failed]"
         }
     }
+}
+catch
+{
+    $exceptionData = Get-ExceptionData $_
+    Write-Telemetry "Task_InternalError" "$global:operationId|$exceptionData"
+    throw
 }
 Finally
 {

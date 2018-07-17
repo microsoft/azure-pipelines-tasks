@@ -12,7 +12,7 @@
   "loc.input.label.AdminUserName": "Admin Login",
   "loc.input.help.AdminUserName": "Administrator login for the target machines.",
   "loc.input.label.AdminPassword": "Password",
-  "loc.input.help.AdminPassword": "Password for administrator login for the target machines. <br>It can accept variable defined in Build/Release definitions as '$(passwordVariable)'. <br>You may mark variable type as 'secret' to secure it. ",
+  "loc.input.help.AdminPassword": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. ",
   "loc.input.label.TargetPath": "Destination Folder",
   "loc.input.help.TargetPath": "Local Path on the target machines or an accessible UNC path for copying the files from the source like d:\\fabrikam or \\\\\\\\fabrikam\\Web.",
   "loc.input.label.CleanTargetBeforeCopy": "Clean Target",
@@ -30,7 +30,7 @@
   "loc.messages.WFC_CopyStartedFor0": "Copy started for - {0}",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "No machine exists under environment: '{0}' for deployment",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "No machine exists under environment: '{0}' for deployment",
-  "loc.messages.WFC_CopyingFailedForResource": "Copying failed for resource : {0}",
+  "loc.messages.WFC_CopyingFailedForResource": "Copying failed for resource: {0}",
   "loc.messages.WFC_FailedToCreatePSDrive": "Failed to Create PSDrive with Destination: '{0}', ErrorMessage: '{1}'",
   "loc.messages.WFC_RobocopyError": "Robocopy Error. Computer: '{0}'. ErrorMessage: '{1}'"
 }

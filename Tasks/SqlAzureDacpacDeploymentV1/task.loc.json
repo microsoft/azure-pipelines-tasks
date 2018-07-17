@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [
     "sqlpackage"
@@ -278,7 +278,7 @@
   "outputVariables": [
     {
       "name": "SqlDeploymentOutputFile",
-      "description": "Generated output file path for Extract, Export, Script, DriftReport and DeployReport actions."
+      "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -302,6 +302,12 @@
     "SAD_TroubleshootingLink": "ms-resource:loc.messages.SAD_TroubleshootingLink",
     "SAD_InvalidDeploymentAction": "ms-resource:loc.messages.SAD_InvalidDeploymentAction",
     "SAD_SetOutputVariable": "ms-resource:loc.messages.SAD_SetOutputVariable",
-    "SAD_TemporaryInlineSqlFile": "ms-resource:loc.messages.SAD_TemporaryInlineSqlFile"
+    "SAD_TemporaryInlineSqlFile": "ms-resource:loc.messages.SAD_TemporaryInlineSqlFile",
+    "SAD_GeneratedFile": "ms-resource:loc.messages.SAD_GeneratedFile",
+    "SAD_InvalidPublishOption": "ms-resource:loc.messages.SAD_InvalidPublishOption",
+    "SAD_DacpacFilePath": "ms-resource:loc.messages.SAD_DacpacFilePath",
+    "SAD_BacpacFilePath": "ms-resource:loc.messages.SAD_BacpacFilePath",
+    "SAD_PublishProfilePath": "ms-resource:loc.messages.SAD_PublishProfilePath",
+    "SAD_DriftReportWarning": "ms-resource:loc.messages.SAD_DriftReportWarning"
   }
 }

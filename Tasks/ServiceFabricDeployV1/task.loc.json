@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 10
+    "Patch": 16
   },
   "demands": [
     "Cmd"
@@ -336,8 +336,8 @@
       "defaultValue": "AzureResourceManagerEndpoint",
       "required": true,
       "options": {
-        "AzureResourceManagerEndpoint": "Azure Resource Manager Endpoint",
-        "ContainerRegistryEndpoint": "Container Registry Endpoint",
+        "AzureResourceManagerEndpoint": "Azure Resource Manager Service Connection",
+        "ContainerRegistryEndpoint": "Container Registry Service Connection",
         "UsernamePassword": "Username and Password"
       },
       "visibleRule": "configureDockerSettings = true",
@@ -451,7 +451,8 @@
     "SFSDK_StartAppUpgrade": "ms-resource:loc.messages.SFSDK_StartAppUpgrade",
     "SFSDK_StartUpgradeFailed": "ms-resource:loc.messages.SFSDK_StartUpgradeFailed",
     "SFSDK_UnregisterAppTypeOnUpgradeFailure": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeOnUpgradeFailure",
-    "SFSDK_WaitingForUpgrade": "ms-resource:loc.messages.SFSDK_WaitingForUpgrade",
+    "SFSDK_CurrentUpgradeState": "ms-resource:loc.messages.SFSDK_CurrentUpgradeState",
+    "SFSDK_DomainUpgradeStatus": "ms-resource:loc.messages.SFSDK_DomainUpgradeStatus",
     "SFSDK_UnregisterUnusedVersions": "ms-resource:loc.messages.SFSDK_UnregisterUnusedVersions",
     "SFSDK_UpgradeSuccess": "ms-resource:loc.messages.SFSDK_UpgradeSuccess",
     "SFSDK_UpgradeRolledBack": "ms-resource:loc.messages.SFSDK_UpgradeRolledBack",
@@ -460,6 +461,28 @@
     "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
     "SFSDK_CompressPackageWarning": "ms-resource:loc.messages.SFSDK_CompressPackageWarning",
     "SFSDK_SkipUpgradeWarning": "ms-resource:loc.messages.SFSDK_SkipUpgradeWarning",
-    "SFSDK_UnregisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailed"
+    "SFSDK_UnregisterAppTypeFailed": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailed",
+    "SFSDK_PerformingForceRemoveOnTimeout": "ms-resource:loc.messages.SFSDK_PerformingForceRemoveOnTimeout",
+    "SFSDK_RetryingCopyApplicationPackage": "ms-resource:loc.messages.SFSDK_RetryingCopyApplicationPackage",
+    "SFSDK_RetryingRegisterApplicationType": "ms-resource:loc.messages.SFSDK_RetryingRegisterApplicationType",
+    "SFSDK_RetryingGetApplicationType": "ms-resource:loc.messages.SFSDK_RetryingGetApplicationType",
+    "SFSDK_ApplicationTypeProvisioningNotStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeProvisioningNotStarted",
+    "SFSDK_ApplicationTypeProvisioningStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeProvisioningStarted",
+    "SFSDK_RegisterAppTypeFailedWithStatus": "ms-resource:loc.messages.SFSDK_RegisterAppTypeFailedWithStatus",
+    "SFSDK_ApplicationTypeStatus": "ms-resource:loc.messages.SFSDK_ApplicationTypeStatus",
+    "SFSDK_ApplicationTypeUnprovisioned": "ms-resource:loc.messages.SFSDK_ApplicationTypeUnprovisioned",
+    "SFSDK_ClusterHealth": "ms-resource:loc.messages.SFSDK_ClusterHealth",
+    "SFSDK_ApplicationTypeUnprovisioningStarted": "ms-resource:loc.messages.SFSDK_ApplicationTypeUnprovisioningStarted",
+    "SFSDK_UnregisterAppTypeFailedWithStatus": "ms-resource:loc.messages.SFSDK_UnregisterAppTypeFailedWithStatus",
+    "SFSDK_RetryingUnregisterApplicationType": "ms-resource:loc.messages.SFSDK_RetryingUnregisterApplicationType",
+    "SFSDK_RetryingRemoveApplication": "ms-resource:loc.messages.SFSDK_RetryingRemoveApplication",
+    "SFSDK_RetryingCreateApplication": "ms-resource:loc.messages.SFSDK_RetryingCreateApplication",
+    "SFSDK_ApplicationHealth": "ms-resource:loc.messages.SFSDK_ApplicationHealth",
+    "SFSDK_RetryingUpgradeApplication": "ms-resource:loc.messages.SFSDK_RetryingUpgradeApplication",
+    "SFSDK_RetryingGetApplicationUpgrade": "ms-resource:loc.messages.SFSDK_RetryingGetApplicationUpgrade",
+    "SFSDK_RetryingTestClusterConnection": "ms-resource:loc.messages.SFSDK_RetryingTestClusterConnection",
+    "SFSDK_RetryingTestAppPackage": "ms-resource:loc.messages.SFSDK_RetryingTestAppPackage",
+    "SFSDK_RetryingGetClusterManifest": "ms-resource:loc.messages.SFSDK_RetryingGetClusterManifest",
+    "SFSDK_RetryingRemoveApplicationPackage": "ms-resource:loc.messages.SFSDK_RetryingRemoveApplicationPackage"
   }
 }

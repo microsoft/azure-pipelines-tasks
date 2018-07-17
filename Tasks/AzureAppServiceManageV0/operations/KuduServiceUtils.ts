@@ -133,8 +133,8 @@ export class KuduServiceUtils {
                 throw new Error(tl.loc('TimeoutWhileWaiting'));
             }
 
-            tl.debug(`sleep for 10 seconds`)
-            await webClient.sleepFor(10);
+            tl.debug(`sleep for 5 seconds`)
+            await webClient.sleepFor(5);
         }
     }
 
