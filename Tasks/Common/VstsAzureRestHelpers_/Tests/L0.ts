@@ -8,7 +8,7 @@ import path = require('path');
 var psm = require('../../../../Tests/lib/psRunner');
 var psr = null;
 
-describe('Common-VstsAzureHelpers_ Suite', function () {
+describe('Common-VstsAzureRestHelpers_ Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
@@ -36,5 +36,8 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('Get-AzureRMAccessToken should return access token', (done) => {
             psr.run(path.join(__dirname, 'Get-AzureRMAccessToken.ps1'), done);
         })
+        it('Get-SpnAccessTokenUsingCertificate should return access token', (done) => {
+            psr.run(path.join(__dirname, 'Get-SpnAccessTokenUsingCertificateSuccess.ps1'), done);
+        });
     }
 });

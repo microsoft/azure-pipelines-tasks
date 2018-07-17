@@ -30,7 +30,11 @@ if ($global:DebugPreference -eq 'Continue') {
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/module.json
 
-Import-Module $PSScriptRoot/../TlsHelper_
+$mod = Import-Module $PSScriptRoot/../TlsHelper_
+$mod
+
+Write-Host "$PSScriptRoot/../TlsHelper_"
+
 Add-Tls12InSession
 
 function Get-AzureUri
@@ -504,8 +508,7 @@ function Get-SpnAccessTokenUsingCertificate {
     $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
     
-    $clientCertificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
-    $clientCertificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
+    $clientCertificate = Get-PfxCertificate -pfxFilePath $pfxFilePath -pfxFilePassword $pfxFilePassword
 
     $servicePrincipalId = $endpoint.Auth.Parameters.ServicePrincipalId
     $tenantId = $endpoint.Auth.Parameters.TenantId
@@ -524,6 +527,7 @@ function Get-SpnAccessTokenUsingCertificate {
         $clientAssertionCertificate = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.ClientAssertionCertificate -ArgumentList $servicePrincipalId, $clientCertificate
         $authenticationContext = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList $authorityUrl
         $tokenResult = $authenticationContext.AcquireTokenAsync($azureActiveDirectoryResourceId, $clientAssertionCertificate).ConfigureAwait($false).GetAwaiter().GetResult()
+        $tokenResult
     }
     catch {
         $script:certificateAccessToken = $null
@@ -531,6 +535,7 @@ function Get-SpnAccessTokenUsingCertificate {
     }
 
     if ($tokenResult) {
+        Write-Verbose "Successfully fetched access token using client certificate."
         $script:certificateAccessToken = @{
             token_type = $tokenResult.AccessTokenType;
             access_token = $tokenResult.AccessToken;
@@ -543,6 +548,18 @@ function Get-SpnAccessTokenUsingCertificate {
         $script:certificateAccessToken = $null
         throw (Get-VstsLocString -Key "AZ_SPNCertificateAccessTokenFetchFailureTokenNull" -ArgumentList $servicePrincipalId)
     }
+}
+
+function Get-PfxCertificate {
+    param(
+        [string][Parameter(Mandatory=$true)] $pfxFilePath, 
+        [string][Parameter(Mandatory=$true)] $pfxFilePassword
+    )
+
+    $clientCertificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $clientCertificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
+
+    return $clientCertificate
 }
 
 # Get the certificate from the Endpoint.
