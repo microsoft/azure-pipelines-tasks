@@ -14,7 +14,7 @@ function getDefaultProps() {
 }
 
 export function addToConsolidatedCi(key: string, value: any) {
-    consolidatedCiData['key'] = value;
+    consolidatedCiData[key] = value;
 }
 
 export function fireConsolidatedCi() {
