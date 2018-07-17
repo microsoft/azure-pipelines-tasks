@@ -15,7 +15,7 @@
         "Minor": 139,
         "Patch": 0
     },
-    "releaseNotes": "Provide build id to distribution API for additional context.",
+    "releaseNotes": "Updating request source for AppCenter triggered builds.",
     "groups": [
         {
             "name": "symbols",
