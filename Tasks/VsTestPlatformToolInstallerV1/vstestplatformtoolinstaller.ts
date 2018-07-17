@@ -77,6 +77,6 @@ try {
     startTime = perf();
     startInstaller();
 } finally {
-    ci.addToConsolidatedCi('executionEndTime', perf() - startTime);
+    ci.addToConsolidatedCi('executionTime', perf() - startTime);
     ci.fireConsolidatedCi();
 }
