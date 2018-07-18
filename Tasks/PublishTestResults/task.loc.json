@@ -13,7 +13,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -112,7 +112,6 @@
     }
   },
   "messages": {
-    "mergeFiles": "ms-resource:loc.messages.mergeFiles",
     "NoMatchingFilesFound": "ms-resource:loc.messages.NoMatchingFilesFound",
     "ErrorTestResultsPublisher": "ms-resource:loc.messages.ErrorTestResultsPublisher"
   }
