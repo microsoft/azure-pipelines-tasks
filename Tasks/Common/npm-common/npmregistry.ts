@@ -92,15 +92,14 @@ export class NpmRegistry implements INpmRegistry {
     // make a request to the endpoint uri, and take a look at the response header to
     // determine whether this is our service, or an external service.
     private static async isEndpointInternal(endpointUri: string): Promise<boolean> {
-        const proxyUrl: string = tl.getVariable('agent.proxyurl');
-        const requestOptions: IRequestOptions = proxyUrl ? {
-            proxy: {
-                proxyUrl: proxyUrl,
-                proxyUsername: tl.getVariable('agent.proxyusername'),
-                proxyPassword: tl.getVariable('agent.proxypassword'),
-                proxyBypassHosts: tl.getVariable('agent.proxybypasslist') ? JSON.parse(tl.getVariable('agent.proxybypasslist')) : null
-            }
-        } : {};
+        let requestOptions: IRequestOptions;
+        try {
+            const proxy = tl.getHttpProxyConfiguration();
+            requestOptions = proxy ? { proxy } : {};
+        } catch (error) {
+            tl.debug('unable to determine proxy configuration: ' + error);
+            requestOptions = {};
+        }
 
         const headers: IHeaders = {};
         headers['X-TFS-FedAuthRedirect'] = 'Suppress';

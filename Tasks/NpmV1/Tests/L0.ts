@@ -348,6 +348,9 @@ describe('Npm Task', function () {
             },
             loc: (n, ...param) => {
                 console.log(n);
+            },
+            getHttpProxyConfiguration: (endpoint) => {
+                return null;
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
@@ -395,6 +398,9 @@ describe('Npm Task', function () {
             },
             getEndpointUrl: (id, optional) => {
                 return 'http://somepublicrepo.contoso.com:8080/some/random/path';
+            },
+            getHttpProxyConfiguration: (endpoint) => {
+                return null;
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
