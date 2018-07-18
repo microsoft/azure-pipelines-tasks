@@ -21,12 +21,9 @@ export default class ClusterConnection {
     }
 
     private async initialize(): Promise<void> {
-        if(!this.kubectlPath || !fs.existsSync(this.kubectlPath))
-        {
-            return this.getKubectl().then((kubectlpath)=> {
-                this.kubectlPath = kubectlpath;
-            });
-        }
+        return this.getKubectl().then((kubectlpath)=> {
+            this.kubectlPath = kubectlpath;
+        });
     }
 
     public createCommand(): tr.ToolRunner {
@@ -93,13 +90,31 @@ export default class ClusterConnection {
             return pathToKubectl;
         }
         else if(versionOrLocation === "version") {
-            tl.debug(tl.loc("DownloadingClient"));
+            var defaultVersionSpec = "1.7.0";
             var kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
             let versionSpec = tl.getInput("versionSpec");
             let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
-            return utils.getKubectlVersion(versionSpec, checkLatest).then((version) => {
+
+            if (versionSpec != defaultVersionSpec || checkLatest)
+            {
+                tl.debug(tl.loc("DownloadingClient"));
+                return utils.getKubectlVersion(versionSpec, checkLatest).then((version) => {
+                    return utils.downloadKubectl(version, kubectlPath);
+                });
+            }
+
+            // Reached here => default version
+            // Now to handle back-compat, return the version installed on the machine
+            if(this.kubectlPath && fs.existsSync(this.kubectlPath))
+            {
+                return this.kubectlPath;
+            }
+
+             // Download the default version
+             tl.debug(tl.loc("DownloadingClient"));
+             return utils.getKubectlVersion(versionSpec, checkLatest).then((version) => {
                 return utils.downloadKubectl(version, kubectlPath);
-            })
+            });
         }
     }
 }

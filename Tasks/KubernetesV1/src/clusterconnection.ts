@@ -37,16 +37,13 @@ export default class ClusterConnection {
     }
 
     private async initialize(): Promise<void> {
-        if(!this.kubectlPath || !fs.existsSync(this.kubectlPath))
-        {
-            return this.getKubectl().then((kubectlpath)=> {
-                this.kubectlPath = kubectlpath; 
-                // prepend the tools path. instructs the agent to prepend for future tasks
-                if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
-                    toolLib.prependPath(path.dirname(this.kubectlPath));
-                }     
-            });
-        }
+        return this.getKubectl().then((kubectlpath)=> {
+            this.kubectlPath = kubectlpath; 
+            // prepend the tools path. instructs the agent to prepend for future tasks
+            if(!process.env['PATH'].toLowerCase().startsWith(path.dirname(this.kubectlPath.toLowerCase()))) {
+                toolLib.prependPath(path.dirname(this.kubectlPath));
+            }     
+        });
     }
 
     public createCommand(): tr.ToolRunner {
@@ -99,11 +96,28 @@ export default class ClusterConnection {
             return pathToKubectl;
         }
         else if(versionOrLocation === "version") {
-            tl.debug(tl.loc("DownloadingClient"));
+            var defaultVersionSpec = "1.7.0";
             let versionSpec = tl.getInput("versionSpec");
             let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
             var version = await utils.getKubectlVersion(versionSpec, checkLatest);
-            return await utils.downloadKubectl(version); 
+            if (versionSpec != defaultVersionSpec || checkLatest)
+            {
+               tl.debug(tl.loc("DownloadingClient"));
+               var version = await utils.getKubectlVersion(versionSpec, checkLatest);
+               return await utils.downloadKubectl(version); 
+            }
+
+            // Reached here => default version
+            // Now to handle back-compat, return the version installed on the machine
+            if(this.kubectlPath && fs.existsSync(this.kubectlPath))
+            {
+                return this.kubectlPath;
+            }
+            
+           // Download the default version
+           tl.debug(tl.loc("DownloadingClient"));
+           var version = await utils.getKubectlVersion(versionSpec, checkLatest);
+           return await utils.downloadKubectl(version); 
         }
     }
 }
