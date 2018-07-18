@@ -175,7 +175,7 @@ function publishRelease(apiServer: string, releaseUrl: string, releaseNotes: str
     const commitMessage = process.env['LASTCOMMITMESSAGE'];
     // Updating the internal_request_source to distinguish the AppCenter triggered build and custom build
     if(!!commitMessage) {
-        headers["internal-request-source"] = "VSTS_APPCENTER";
+        headers["internal-request-source"] = "VSTS-APPCENTER";
     } 
 
     // Including these information for distribution notification to have additional context
