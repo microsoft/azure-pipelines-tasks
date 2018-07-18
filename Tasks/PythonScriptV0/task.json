@@ -20,7 +20,7 @@
         "Patch": 1
     },
     "demands": [],
-    "instanceNameFormat": "Run Python script",
+    "instanceNameFormat": "Run a Python script",
     "groups": [
         {
             "name": "advanced",
