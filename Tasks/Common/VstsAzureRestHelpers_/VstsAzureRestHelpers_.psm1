@@ -1415,11 +1415,12 @@ function ConvertTo-Pfx {
     # save the PEM certificate to a PEM file
     Set-Content -Path $pemFilePath -Value $pemFileContent
 
-    # using openssl to convert the PEM file to a PFX file
+    # use openssl to convert the PEM file to a PFX file
     $pfxFilePassword = [System.Guid]::NewGuid().ToString()
-    
+    $ENV:pfxFilePassword = $pfxFilePassword
+
     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password env:pfxFilePassword"
      
     Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 

@@ -26,6 +26,10 @@ function Add-Certificate {
     $store.Add($certificate)
     $store.Close()
 
+    #store the thumbprint in an environment variable which will be used to remove the certificate later on
+    $ENV:Endpoint_Authentication_Certificate = $certificate.Thumbprint
+
+    Write-Verbose "Added certificate to the certificate store."
     return $certificate
 }
 
@@ -557,11 +561,44 @@ function ConvertTo-Pfx {
 
     # using openssl to convert the PEM file to a PFX file
     $pfxFilePassword = [System.Guid]::NewGuid().ToString()
-    
+    $ENV:pfxFilePassword = $pfxFilePassword
+
     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password pass:$pfxFilePassword"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password env:pfxFilePassword"
      
     Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
     return $pfxFilePath, $pfxFilePassword
+}
+
+function Remove-EndpointSecrets {
+    # remove any certificate files
+    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem") {
+        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+    }
+
+    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx") {
+        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
+        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
+    }
+
+    if ($ENV:Endpoint_Authentication_Certificate) {
+        # remove the certificate from certificate store
+        $certificateStore = New-Object System.Security.Cryptography.X509Certificates.X509Store(
+            ([System.Security.Cryptography.X509Certificates.StoreName]::My),
+            ([System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser))
+
+        $certificateStore.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
+
+        $certificates =  $certificateStore.Certificates.Find([System.Security.Cryptography.X509Certificates.X509FindType]::FindByThumbprint, $ENV:Endpoint_Authentication_Certificate, $false)
+
+        foreach ($certificate in $certificates) {
+            $certificateStore.Remove($certificate)
+        }
+
+        $certificateStore.Close()
+
+        Write-Verbose "Removed certificate from certificate store."
+    }
 }

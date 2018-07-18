@@ -149,6 +149,8 @@ finally {
     else {
         Write-Verbose "No Firewall Rule was added"
     }
+
+    Remove-EndpointSecrets
 }
 
 Write-Verbose "Leaving script DeploySqlAzure.ps1"

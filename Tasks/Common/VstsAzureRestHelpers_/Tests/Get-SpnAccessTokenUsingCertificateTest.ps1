@@ -57,7 +57,6 @@ $MicrosoftIdentityModelClientsActiveDirectorySource = @"
             public ClientAssertionCertificate(string servicePrincipalId, System.Security.Cryptography.X509Certificates.X509Certificate2 certificate) {
                 
                 if (servicePrincipalId == "Service Principal Id 2") {
-                    Console.WriteLine("Service Principal Id" + servicePrincipalId);
                     this.isValid = false;
                 }
             }
@@ -89,7 +88,7 @@ Add-Type -TypeDefinition $MicrosoftIdentityModelClientsActiveDirectorySource -La
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $result = & $module Get-SpnAccessTokenUsingCertificate -Endpoint $validEndpoint 
 
-Assert-AreEqual "RandomAccessToken" $result.AccessToken
+Assert-AreEqual "RandomAccessToken" $result.access_token
 Assert-WasCalled Get-EnvironmentAuthUrl -Times 1
 Assert-WasCalled Get-AzureActiverDirectoryResourceId -Times 1
 Assert-WasCalled ConvertTo-Pfx -Times 1
