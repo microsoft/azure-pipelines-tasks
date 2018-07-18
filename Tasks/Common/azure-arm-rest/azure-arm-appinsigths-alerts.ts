@@ -40,7 +40,7 @@ export class AzureApplicationInsightsAlerts {
             throw response;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToGetApplicationInsightsResourceAlerts', alertRuleName, this._client.getFormattedError(error)))
+            throw Error(tl.loc('FailedToGetApplicationInsightsResourceAlerts', alertRuleName, this._client.getFormattedError(error)));
         }
     }
 
@@ -68,7 +68,7 @@ export class AzureApplicationInsightsAlerts {
             throw ToError(response);
         }
         catch(error) {
-            throw Error(tl.loc('FailedToUpdateApplicationInsightsResourceAlerts', alertRuleName, this._client.getFormattedError(error)))
+            throw Error(tl.loc('FailedToUpdateApplicationInsightsResourceAlerts', alertRuleName, this._client.getFormattedError(error)));
         }
     }
 

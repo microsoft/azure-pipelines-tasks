@@ -44,7 +44,8 @@ export class AzureMonitorAlertsUtility {
 			console.log(tl.loc("AlertRuleCheck", rule.alertName, resourceGroupName));
 		
 			existingAlertRule = await azureApplicationInsightsAlerts.get(rule.alertName);
-			let existingAlertRuleTargetResourceUri: string = existingAlertRule["properties"].condition.dataSource.resourceUri;
+			let existingAlertRuleTargetResourceUri: string = existingAlertRule["properties"] && existingAlertRule["properties"].condition
+				&& existingAlertRule["properties"].condition.dataSource ? existingAlertRule["properties"].condition.dataSource.resourceUri: "";
 			if(existingAlertRuleTargetResourceUri && existingAlertRuleTargetResourceUri.toLowerCase() !== resourceUri.toLowerCase()) {
 				return Q.reject(tl.loc("AlertRuleTargetResourceIdMismatchError", rule.alertName, existingAlertRuleTargetResourceUri));
 			}
