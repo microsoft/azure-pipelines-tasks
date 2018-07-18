@@ -46,9 +46,9 @@ export async function getCustomRegistries(): Promise<NpmRegistry[]> {
             tl.debug(tl.loc('UseNpmrc'));
             const endpointIds = tl.getDelimitedInput(NpmTaskInput.CustomEndpoint, ',');
             if (endpointIds && endpointIds.length > 0) {
-                endpointIds.forEach(async e => {
+                await Promise.all(endpointIds.map(async e => {
                     npmRegistries.push(await NpmRegistry.FromServiceEndpoint(e, true));
-                });
+                }));
             }
             break;
     }

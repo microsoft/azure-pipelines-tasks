@@ -89,6 +89,8 @@ export class NpmRegistry implements INpmRegistry {
         return new NpmRegistry(url, auth, authOnly);
     }
 
+    // make a request to the endpoint uri, and take a look at the response header to
+    // determine whether this is our service, or an external service.
     private static async isEndpointInternal(endpointUri: string): Promise<boolean> {
         const proxyUrl: string = tl.getVariable('agent.proxyurl');
         const requestOptions: IRequestOptions = proxyUrl ? {
@@ -106,9 +108,10 @@ export class NpmRegistry implements INpmRegistry {
         const endpointClient = new HttpClient(tl.getVariable('AZURE_HTTP_USER_AGENT'), null, requestOptions);
         try {
             const resp = await endpointClient.get(endpointUri, headers);
-            return resp.message.rawHeaders !== null && resp.message.rawHeaders.some( t => t.indexOf('x-tfs') >= 0 || t.indexOf('x-vss') >= 0 );
+            return resp.message.rawHeaders !== null && resp.message.rawHeaders.some( t => t.toLowerCase().indexOf('x-tfs') >= 0 || t.toLowerCase().indexOf('x-vss') >= 0 );
         } catch (error) {
-            return Promise.resolve(false);
+            tl.debug(error);
+            return false;
         }
     }
 

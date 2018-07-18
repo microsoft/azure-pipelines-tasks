@@ -60,9 +60,9 @@ async function main(): Promise<void> {
     let endpointRegistries: npmregistry.INpmRegistry[];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
-        endpointIds.forEach(async e => {
+        await Promise.all(endpointIds.map(async e => {
             endpointRegistries.push(await npmregistry.NpmRegistry.FromServiceEndpoint(e, true));
-        });
+        }));
     }
     let LocalNpmRegistries = await util.getLocalNpmRegistries(workingDirectory);
     
