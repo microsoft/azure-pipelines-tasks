@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Python Script",
-  "loc.helpMarkDown": "[More information](https://docs.microsoft.com/vsts/pipelines/tasks/utility/python-script)",
+  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=2006181)",
   "loc.description": "Run a Python script.",
   "loc.instanceNameFormat": "Run Python script",
   "loc.group.displayName.advanced": "Advanced",
