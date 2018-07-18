@@ -151,7 +151,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
 
     try
     {
-
+        $certificate = $null
         $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
         if (!(Test-Path $regKey))
         {
@@ -184,7 +184,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
             }
             elseif ($ConnectedServiceEndpoint.Auth.Scheme -eq "Certificate")
             {
-                Add-Certificate -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
+                $certificate = Add-Certificate -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
                 $clusterConnectionParameters["X509Credential"] = $true
             }
         }
