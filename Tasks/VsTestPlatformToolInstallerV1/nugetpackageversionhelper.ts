@@ -5,34 +5,34 @@ import * as perf from 'performance-now';
 import * as ci from './cieventlogger';
 import * as constants from './constants';
 
-export class NugetPackageVersionHelper {
-    private consolidatedCiData: { [key: string]: string; } = <{ [key: string]: string; }>{};
+let startTime: number;
 
-    public constructor(consolidatedCiData: { [key: string]: string; }) {
-        this.consolidatedCiData = consolidatedCiData;
-    }
+export class NugetPackageVersionHelper {
 
     // Lists the latest version of the package available in the feed specified.
     public getLatestPackageVersionNumber(packageSource: string, includePreRelease: boolean, nugetConfigFilePath: string): string {
         const nugetTool = tl.tool(path.join(__dirname, 'nuget.exe'));
 
-        this.consolidatedCiData.includePreRelease = `${includePreRelease}`;
+        ci.addToConsolidatedCi('includePreRelease', `${includePreRelease}`);
 
-        nugetTool.arg(constants.list).arg(`packageid:${constants.packageId}`).argIf(includePreRelease, constants.preRelease)
-            .arg(constants.source).arg(packageSource).argIf(nugetConfigFilePath, constants.configFile)
+        // Only search by package id if the feed is the offial nuget feed, otherwise search by package name as not all feeds
+        // support searching by package id
+        nugetTool.arg(constants.list)
+            .argIf(packageSource === constants.defaultPackageSource , `packageid:${constants.packageId}`)
+            .argIf(packageSource !== constants.defaultPackageSource , `${constants.packageId}`)
+            .argIf(includePreRelease, constants.preRelease)
+            .arg(constants.noninteractive).arg(constants.source).arg(packageSource)
+            .argIf(nugetConfigFilePath, constants.configFile)
             .argIf(nugetConfigFilePath, nugetConfigFilePath);
 
-        this.consolidatedCiData.ListLatestPackageStartTime = perf();
+        startTime = perf();
         const result = nugetTool.execSync();
 
-        this.consolidatedCiData.ListLatestPackageEndTime = perf();
-        ci.publishEvent('ListLatestVersion', { includePreRelease: includePreRelease, 
-            startTime: this.consolidatedCiData.ListLatestPackageStartTime,
-            endTime: this.consolidatedCiData.ListLatestPackageEndTime } );
+        ci.addToConsolidatedCi('ListLatestPackageTime', perf() - startTime);
 
         if (result.code !== 0 || !(result.stderr === null || result.stderr === undefined || result.stderr === '')) {
             tl.error(tl.loc('NugetErrorCode', result.code));
-            this.consolidatedCiData.listingPackagesFailed = 'true';
+            ci.addToConsolidatedCi('listingPackagesFailed', 'true');
             throw new Error(tl.loc('ListPackagesFailed', result.code, result.stderr, result.stdout));
         }
 
