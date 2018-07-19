@@ -1,0 +1,18 @@
+{
+  "loc.friendlyName": "Azure policy Manage",
+  "loc.helpMarkDown": "More Information here",
+  "loc.description": "Manage Azure Policies",
+  "loc.instanceNameFormat": "Assign Azure Policy",
+  "loc.input.label.ConnectedServiceName": "Azure subscription",
+  "loc.input.help.ConnectedServiceName": "Select the Azure Resource Manager subscription",
+  "loc.input.label.PolicyName": "Policy Name",
+  "loc.input.help.PolicyName": "Name of Azure Policy.",
+  "loc.input.label.Action": "Action",
+  "loc.input.help.Action": "Action to be performed for Azure Policies. It includes List Policy, Create a policy and assign policy to management group.",
+  "loc.input.label.PolicyInputType": "Policy Input Type",
+  "loc.input.help.PolicyInputType": "Input type for policy",
+  "loc.input.label.PolicyFilePath": "Policy file path",
+  "loc.input.help.PolicyFilePath": "File path of policy file. Policy file should be in json format.",
+  "loc.input.label.PolicyInline": "Policy Inline",
+  "loc.input.help.PolicyInline": "InlinePolicy"
+}

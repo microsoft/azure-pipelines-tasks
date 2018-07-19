@@ -205,8 +205,9 @@ export interface StorageAccount extends AzureBaseObject {
 }
 
 export interface AzureEndpoint {
-    subscriptionID: string;
-    subscriptionName: string;
+    subscriptionID?: string;
+    subscriptionName?: string;
+    managementGroupId?: string;
     servicePrincipalClientID?: string;
     servicePrincipalKey?: string;
     tenantID: string;

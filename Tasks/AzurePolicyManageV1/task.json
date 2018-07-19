@@ -1,0 +1,100 @@
+{
+    "id": "2f71572c-3969-49c5-98ac-8a46f259e349",
+    "name": "AzurePolicyManage",
+    "friendlyName": "Azure policy Manage",
+    "description": "Manage Azure Policies",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "More Information here",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 9
+    },
+    "instanceNameFormat": "Assign Azure Policy",
+    "groups": [],
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": ["azureSubscription"],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription"
+        },
+        {
+          "name": "PolicyName",
+          "type": "string",
+          "label": "Policy Name",
+          "defaultValue": "",
+          "required": true,
+          "helpMarkDown": "Name of Azure Policy."
+        },
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "required": true,
+            "helpMarkDown": "Action to be performed for Azure Policies. It includes List Policy, Create a policy and assign policy to management group.",
+            "defaultValue": "CreatePolicy",
+            "options": {
+                "CreatePolicy": "Create Policy",
+                "AssignPolicy": "Assign Policy"
+            }
+        },
+        {
+            "name": "PolicyInputType",
+            "type": "pickList",
+            "label": "Policy Input Type",
+            "required": false,
+            "helpMarkDown": "Input type for policy",
+            "defaultValue": "FilePath",
+            "options": {
+                "FilePath": "File Path",
+                "Inline": "Inline"
+            }
+        },
+        {
+            "name": "PolicyFilePath",
+            "type": "filePath",
+            "label": "Policy file path",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "PolicyInputType = FilePath",
+            "helpMarkDown": "File path of policy file. Policy file should be in json format."
+        },
+        {
+          "name": "PolicyInline",
+          "type": "multiLine",
+          "label": "Policy Inline",
+          "defaultValue": "",
+          "required": false,
+          "visibleRule": "PolicyInputType = Inline",
+          "helpMarkDown": "InlinePolicy",
+          "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "500"
+          }
+        }
+    ],
+    "dataSourceBindings": [
+    ],
+    "execution": {
+        "Node": {
+            "target": "azurepolicymanage.js"
+        }
+    },
+    "messages": {
+    }
+}

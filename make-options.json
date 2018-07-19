@@ -18,6 +18,7 @@
         "AzureMysqlDeploymentV1",
         "AzureNLBManagementV1",
         "AzurePowerShellV3",
+        "AzurePolicyManageV1",
         "AzureResourceGroupDeploymentV2",
         "AzureRmWebAppDeploymentV3",
         "AzureRmWebAppDeploymentV4",

@@ -512,6 +512,21 @@ export class ResourceGroup {
             return new Promise<void>((resolve, reject) => {
                 armClient.deployments.createOrUpdate(this.taskParameters.resourceGroupName, this.createDeploymentName(), deployment, (error, result, request, response) => {
                     if (error) {
+                        if((error.details[1]).code === "RequestDisallowedByPolicy")
+                            {
+                                let msg = (error.details[1]).message;
+                                let mg = "managementGroups";
+                                let newmsgs = msg.split('/');
+                                for (let i = 0; i < newmsgs.length; i++) {
+                                    if (newmsgs[i] === mg) {
+                                        mg = newmsgs[i + 1];
+                                        break;
+                                    }
+                                }
+                                let policylink = "https://ms.portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Assignments/scope/%2Fproviders%2FMicrosoft.Management%2FmanagementGroups%2F" + mg;
+                                
+                                console.log(policylink);
+                            }
                         this.writeDeploymentErrors(error);
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }

@@ -36,7 +36,8 @@ export class AzureRMEndpoint {
                 environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
                 scheme: tl.getEndpointAuthorizationScheme(this._connectedServiceName, true),
                 msiClientId:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiclientId', true),
-                activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
+                activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true),
+                managementGroupId: tl.getEndpointDataParameter(this._connectedServiceName, 'managementGroupId', true)
             } as AzureEndpoint;
 
             if(!!this.endpoint.environment && this.endpoint.environment.toLowerCase() == this._environments.AzureStack) {
