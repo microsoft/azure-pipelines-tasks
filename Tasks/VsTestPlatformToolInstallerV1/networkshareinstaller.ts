@@ -16,6 +16,9 @@ export class NetworkShareInstaller {
         let vstestPlatformInstalledLocation;
         let packageSource;
 
+        // Remove all double quotes from the path.
+        netSharePath = netSharePath.replace(/["]+/g, '');
+
         tl.debug(`Attempting to fetch the vstest platform from the specified network share path ${netSharePath}.`);
 
         if (helpers.pathExistsAsFile(netSharePath)) {
@@ -29,7 +32,7 @@ export class NetworkShareInstaller {
         const versionExtractionRegex = constants.versionExtractionRegex;
         const regexMatches = versionExtractionRegex.exec(fileName);
 
-        if (regexMatches.length !== 2) {
+        if (!regexMatches || regexMatches.length !== 2) {
             ci.addToConsolidatedCi('failureReason', constants.unexpectedPackageFileName);
             throw new Error(tl.loc('UnexpectedFileName', fileName));
         }
