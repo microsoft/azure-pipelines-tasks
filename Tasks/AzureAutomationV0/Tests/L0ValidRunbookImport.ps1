@@ -7,7 +7,6 @@ param()
 Register-Mock Get-VstsInput { "ConnectedServiceNameARM" } -ParametersEvaluator { $Name -eq "ConnectedServiceName" }
 Register-Mock Get-VstsInput { "SurabhiSonali" } -ParametersEvaluator { $Name -eq "ResourceGroupName" }
 Register-Mock Get-VstsInput { "SurabhiTrial" } -ParametersEvaluator { $Name -eq "AutomationAccountName" }
-Register-Mock Get-VstsInput { "SurabhiTrial" } -ParametersEvaluator { $Name -eq "AutomationAccountName" }
 Register-Mock Get-VstsInput { "$(System.DefaultWorkingDirectory)/MyFirstProject/drop/testrunbook.ps1" } -ParametersEvaluator { $Name -eq "RunbookFile" }
 Register-Mock Initialize-Azure
 

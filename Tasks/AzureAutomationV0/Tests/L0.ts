@@ -30,7 +30,7 @@ describe('DeployToAzureAutomation  Suite', function () {
     if (psm.testSupported()) {
 
         it('Validate with valid inputs', (done) => {            
-            psr.run(path.join(__dirname, 'L0ValidSqlAzureInputs.ps1'), done);
+            psr.run(path.join(__dirname, 'L0ValidAzureAutomationAuthentication.ps1'), done);
         });
     }
 });
