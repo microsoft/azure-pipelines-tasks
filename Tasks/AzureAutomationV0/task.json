@@ -1,0 +1,299 @@
+{
+  "id": "5e55c600-8962-11e8-bb8e-1372c75a02a3",
+  "name": "DeployToAzureAutomation",
+  "friendlyName": "Deploy to Azure Automation",
+  "description": "Deploy resources to Azure Automation: runbooks, DSC configurations, and modules",
+  "helpMarkDown": "[More Information](https://github.com/vsts-tasks)",
+  "category": "Deploy",
+    "visibility": [
+        "Preview",
+        "Build",
+        "Release"
+    ],
+  
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.95.0",
+    "groups": [
+      {
+        "name": "deployrunbooks",
+        "displayName": "Deploy Runbooks",
+        "isExpanded": false
+    },
+    {
+        "name": "deploydsc",
+        "displayName": "Deploy DSC Configurations",
+        "isExpanded": false
+    },
+    {
+        "name": "deploymodules",
+        "displayName": "Deploy Modules",
+        "isExpanded": false
+    }
+    ],
+    "inputs": [
+      {
+        "name": "ConnectedServiceName",
+        "aliases": ["azureSubscription"],
+        "type": "connectedService:AzureRM",
+        "label": "Azure Subscription",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Select the Azure Resource Manager subscription"
+    },
+    {
+        "name": "ResourceGroupName",
+        "type": "pickList",
+        "label": "Resource Group",
+        "defaultValue": "",
+        "required": true,
+        "properties": {
+            "EditableOptions": "True"
+        },
+        "helpMarkDown": "Enter or select the Azure Resource Group that contains the Automation account"
+    },
+    {
+        "name": "AutomationAccountName", 
+        "type": "pickList", 
+        "label": "Automation Account",
+        "required": true,
+        "properties": {
+            "EditableOptions": "True"
+        },
+        "helpMarkDown": "Enter or select the Automation Account to deploy to"
+    },
+    {
+      "name": "AutomationRunbook",
+      "type": "pickList",
+      "label": "Choose Runbook from Automation Account",
+      "defaultValue": "",
+      "required": false,
+      "groupName":"deployrunbooks",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Choose a runbook from your Automation Account or provide a different runbook below"
+    },
+    {
+      "name": "RunbookFile", 
+      "type": "filepath", 
+      "label": "Provide a Runbook File", 
+      "defaultValue":"",
+      "required": false,
+      "groupName":"deployrunbooks",
+      "helpMarkDown": "Provide a runbook from your artifacts folder or choose a runbook from your Automation Account above"
+    },
+    {
+      "name": "StartRunbookJob",
+      "type": "boolean",
+      "label": "Start Runbook Job",
+      "defaultValue": false,
+      "required": false,
+      "groupName":"deployrunbooks",
+      "helpMarkDown": "Select the checkbox if you want to start the runbook you are specifying"
+    },
+    {
+      "name": "RunbookParametersFile", 
+      "type": "filePath", 
+      "label": "Runbook Parameters", 
+      "defaultValue": "",
+      "required": false,
+      "groupName":"deployrunbooks",
+      "helpMarkDown": "Specify any parameters for the runbook in a json file"
+    },
+    {
+      "name": "HybridWorker",
+      "type": "pickList",
+      "defaultValue": "Azure",
+      "label": "Hybrid Worker",
+      "helpMarkDown": "Choose a hybrid worker to run on. If a hybrid worker group is not specified, the job will run in Azure",
+      "required": false,
+      "groupName":"deployrunbooks",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "AutomationDscConfiguration",
+      "type": "pickList",
+      "label": "Choose Configuration from Automation Account",
+      "defaultValue": "",
+      "required": false,
+      "groupName":"deploydsc",
+      "properties": {
+        "EditableOptions": "True"
+       },
+      "helpMarkDown": "Choose a configuration from your Automation Account or provide a different configuration file below"
+    },
+    {
+      "name": "DscConfigurationFile",
+      "type": "filePath",
+      "label": "Provide a Configuration Script",
+      "defaultValue":"",
+      "required": false,
+      "groupName":"deploydsc",
+      "helpMarkDown": "Provide a configuration file or select a configuration from your Automation Account above"
+    },
+    {
+      "name": "DscStorageAccountName",
+      "type": "pickList",
+      "label": "Storage Account for DSC Resources",
+      "defaultValue": "",
+      "required": false,
+      "groupName":"deploydsc",
+      "properties": {
+        "EditableOptions": "True"
+       },
+      "helpMarkDown": "If you want any DSC resources used by your configuration to be imported into your Automation Account, specify a Storage Account. A container called 'dscmodules' will be created to store them. (The DSC resources used by your configuratin must be from the Powershell Gallery)"
+    },
+    {
+      "name": "CompileDscConfiguration",
+      "type": "boolean",
+      "label": "Compile DSC Configuration",
+      "defaultValue": false,
+      "required": false,
+      "groupName":"deploydsc",
+      "helpMarkDown": "Select the checkbox if you want to compile the configuration you are specifying"
+    },
+    {
+      "name": "DscParametersFile", 
+      "type": "filePath", 
+      "label": "Configuration Parameters file", 
+      "defaultValue":"",
+      "required": false,
+      "groupName":"deploydsc",
+      "helpMarkDown": "Any parameters needed by the DSC configuration for compilation in a json or psd1 file"
+    },
+    {
+      "name": "DscConfigurationDataFile",
+      "type": "filepath",
+      "label": "Configuration Data file",
+      "defaultValue":"",
+      "required": false,
+      "groupName":"deploydsc",
+      "helpMarkDown": "Path to the psd1 file containing configuration data"
+    },
+    {
+      "name": "DscNodes",
+      "type": "pickList",
+      "label": "Nodes to assign configuration to",
+      "defaultValue": "",
+      "required": false,
+      "groupName":"deploydsc",
+      "properties": {
+        "EditableOptions": true,
+        "MultiSelectFlatList": true
+       },
+      "helpMarkDown": "If you want to assign your configuration to certain nodes, select the nodes from the dropdown list"
+    },
+    {
+      "name": "ModulesFile", 
+      "type": "filePath", 
+      "label": "Module file or folder", 
+      "defaultValue":"",
+      "required": false,
+      "groupName":"deploymodules",
+      "helpMarkDown": "Specify an individual file or folder containing the modules you want to import to Automation"
+    },
+    {
+      "name": "ModuleStorageAccountName",
+      "type": "pickList",
+      "label": "Storage Account",
+      "defaultValue": "",
+      "required": false,
+      "groupName":"deploymodules",
+      "properties": {
+          "EditableOptions": "True"
+      },
+      "helpMarkDown": "Specify a pre-existing Azure Storage account to store modules in. A container called 'modules' will be created to store them."
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "name": "AutomationAccounts",
+      "target": "AutomationAccountName",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts?api-version=2015-10-31",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)"
+      }
+    },
+    {
+      "name": "ModuleStorageAccount",
+      "target": "ModuleStorageAccountName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "name": "DscStorageAccount",
+      "target": "DscStorageAccountName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "name": "AutomationDscConfiguration",
+      "target": "AutomationDscConfiguration",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts/$(AutomationAccountName)/configurations?api-version=2015-10-31",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "AutomationAccountName": "$(AutomationAccountName)"
+      }
+    },
+    {
+      "name": "DscNodes",
+      "target": "DscNodes",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts/$(AutomationAccountName)/nodes?api-version=2015-10-31",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "AutomationAccountName": "$(AutomationAccountName)"
+      }
+    },
+    {
+      "name": "AutomationRunbook",
+      "target": "AutomationRunbook",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts/$(AutomationAccountName)/runbooks?api-version=2015-10-31",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "AutomationAccountName": "$(AutomationAccountName)"
+      }
+    },
+    {
+      "name": "RunOn",
+      "target": "HybridWorker",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts/$(AutomationAccountName)/hybridRunbookWorkerGroups?$filter=groupType%20eq%20'User'&api-version=2018-01-15",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "AutomationAccountName": "$(AutomationAccountName)"
+      }
+    }
+  ],
+  "instanceNameFormat": "Deploy to Azure Automation",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\DeployToAzureAutomation.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

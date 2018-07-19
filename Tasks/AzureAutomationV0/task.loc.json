@@ -1,0 +1,300 @@
+{
+  "id": "5e55c600-8962-11e8-bb8e-1372c75a02a3",
+  "name": "DeployToAzureAutomation",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "demands": [
+    "azureps"
+  ],
+  "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "deployrunbooks",
+      "displayName": "ms-resource:loc.group.displayName.deployrunbooks",
+      "isExpanded": false
+    },
+    {
+      "name": "deploydsc",
+      "displayName": "ms-resource:loc.group.displayName.deploydsc",
+      "isExpanded": false
+    },
+    {
+      "name": "deploymodules",
+      "displayName": "ms-resource:loc.group.displayName.deploymodules",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName"
+    },
+    {
+      "name": "AutomationAccountName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AutomationAccountName",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AutomationAccountName"
+    },
+    {
+      "name": "AutomationRunbook",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AutomationRunbook",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deployrunbooks",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AutomationRunbook"
+    },
+    {
+      "name": "RunbookFile",
+      "type": "filepath",
+      "label": "ms-resource:loc.input.label.RunbookFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deployrunbooks",
+      "helpMarkDown": "ms-resource:loc.input.help.RunbookFile"
+    },
+    {
+      "name": "StartRunbookJob",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.StartRunbookJob",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "deployrunbooks",
+      "helpMarkDown": "ms-resource:loc.input.help.StartRunbookJob"
+    },
+    {
+      "name": "RunbookParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.RunbookParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deployrunbooks",
+      "helpMarkDown": "ms-resource:loc.input.help.RunbookParametersFile"
+    },
+    {
+      "name": "HybridWorker",
+      "type": "pickList",
+      "defaultValue": "Azure",
+      "label": "ms-resource:loc.input.label.HybridWorker",
+      "helpMarkDown": "ms-resource:loc.input.help.HybridWorker",
+      "required": false,
+      "groupName": "deployrunbooks",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "AutomationDscConfiguration",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AutomationDscConfiguration",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deploydsc",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AutomationDscConfiguration"
+    },
+    {
+      "name": "DscConfigurationFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.DscConfigurationFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deploydsc",
+      "helpMarkDown": "ms-resource:loc.input.help.DscConfigurationFile"
+    },
+    {
+      "name": "DscStorageAccountName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DscStorageAccountName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deploydsc",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.DscStorageAccountName"
+    },
+    {
+      "name": "CompileDscConfiguration",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CompileDscConfiguration",
+      "defaultValue": false,
+      "required": false,
+      "groupName": "deploydsc",
+      "helpMarkDown": "ms-resource:loc.input.help.CompileDscConfiguration"
+    },
+    {
+      "name": "DscParametersFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.DscParametersFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deploydsc",
+      "helpMarkDown": "ms-resource:loc.input.help.DscParametersFile"
+    },
+    {
+      "name": "DscConfigurationDataFile",
+      "type": "filepath",
+      "label": "ms-resource:loc.input.label.DscConfigurationDataFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deploydsc",
+      "helpMarkDown": "ms-resource:loc.input.help.DscConfigurationDataFile"
+    },
+    {
+      "name": "DscNodes",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.DscNodes",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deploydsc",
+      "properties": {
+        "EditableOptions": true,
+        "MultiSelectFlatList": true
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.DscNodes"
+    },
+    {
+      "name": "ModulesFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ModulesFile",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deploymodules",
+      "helpMarkDown": "ms-resource:loc.input.help.ModulesFile"
+    },
+    {
+      "name": "ModuleStorageAccountName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ModuleStorageAccountName",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deploymodules",
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ModuleStorageAccountName"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "name": "AutomationAccounts",
+      "target": "AutomationAccountName",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts?api-version=2015-10-31",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)"
+      }
+    },
+    {
+      "name": "ModuleStorageAccount",
+      "target": "ModuleStorageAccountName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "name": "DscStorageAccount",
+      "target": "DscStorageAccountName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureStorageAccountRM"
+    },
+    {
+      "name": "AutomationDscConfiguration",
+      "target": "AutomationDscConfiguration",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts/$(AutomationAccountName)/configurations?api-version=2015-10-31",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "AutomationAccountName": "$(AutomationAccountName)"
+      }
+    },
+    {
+      "name": "DscNodes",
+      "target": "DscNodes",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts/$(AutomationAccountName)/nodes?api-version=2015-10-31",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "AutomationAccountName": "$(AutomationAccountName)"
+      }
+    },
+    {
+      "name": "AutomationRunbook",
+      "target": "AutomationRunbook",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts/$(AutomationAccountName)/runbooks?api-version=2015-10-31",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "AutomationAccountName": "$(AutomationAccountName)"
+      }
+    },
+    {
+      "name": "RunOn",
+      "target": "HybridWorker",
+      "endpointId": "$(ConnectedServiceName)",
+      "EndpointUrl": "{{endpoint.url}}/subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.Automation/automationAccounts/$(AutomationAccountName)/hybridRunbookWorkerGroups?$filter=groupType%20eq%20'User'&api-version=2018-01-15",
+      "resultSelector": "jsonpath:$.value[*].name",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)",
+        "AutomationAccountName": "$(AutomationAccountName)"
+      }
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AzurePowerShell": {
+      "target": "$(currentDirectory)\\DeployToAzureAutomation.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
