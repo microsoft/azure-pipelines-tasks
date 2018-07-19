@@ -130,6 +130,7 @@
 		"UpdatedRule": "Updated rule : '%s'",
 		"Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
 		"SPNExpiredCheck": "Check if the SPN is valid and not expired.",
-		"MSINotSupported": "Managed Service Identity(MSI) authentication is not supported for this task."
+		"FailedToGetApplicationInsightsResourceAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
+        "FailedToUpdateApplicationInsightsResourceAlerts": "Failed to update Application Insights Alert rule '%s' Resource. Error: %s"
 	}
 }

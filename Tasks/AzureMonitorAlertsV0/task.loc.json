@@ -132,6 +132,7 @@
     "UpdatedRule": "ms-resource:loc.messages.UpdatedRule",
     "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken",
     "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck",
-    "MSINotSupported": "ms-resource:loc.messages.MSINotSupported"
+    "FailedToGetApplicationInsightsResourceAlerts": "ms-resource:loc.messages.FailedToGetApplicationInsightsResourceAlerts",
+    "FailedToUpdateApplicationInsightsResourceAlerts": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResourceAlerts"
   }
 }
