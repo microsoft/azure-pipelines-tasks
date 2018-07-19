@@ -148,7 +148,11 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.
             try {
-                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {                    
+                    Write-Host "##[command]Clear-AzureRmContext -Scope Process"
+                    $null = Clear-AzureRmContext -Scope Process
+                    Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+                    $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
                     if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
                         $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
