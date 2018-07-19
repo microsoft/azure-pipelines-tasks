@@ -5,6 +5,7 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
+$certificate = $null;
 try
 {
     # Import the localized strings.
@@ -56,7 +57,7 @@ try
     }
 
     # Connect to cluster
-    Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+    $certificate = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     if ($configureDockerSettings)
     {
@@ -201,5 +202,6 @@ catch
 }
 finally
 {
+    Remove-ClientCertificate $certificate
     Trace-VstsLeavingInvocation $MyInvocation
 }

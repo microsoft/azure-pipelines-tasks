@@ -39,9 +39,9 @@ export default class ClusterConnection {
     // open kubernetes connection
     public async open(kubernetesEndpoint?: string){
          return this.initialize().then(() => {
-            var authorizationType = tl.getEndpointDataParameter(kubernetesEndpoint, 'authorizationType', false);
+            var authorizationType = tl.getEndpointDataParameter(kubernetesEndpoint, 'authorizationType', true);
             var kubeconfig = null;
-            if (authorizationType === "Kubeconfig")
+            if (authorizationType == null || authorizationType === "Kubeconfig")
             {
                 if (kubernetesEndpoint) {
                      kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
