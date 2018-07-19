@@ -102,11 +102,12 @@ export class AzureRMEndpoint {
         endpoint.portalEndpoint = azureStackResult.portalEndpoint;
         var authenticationData = azureStackResult.authentication;
         if(!!authenticationData) {
-            var loginEndpoint = authenticationData.loginEndpoint;
+            var loginEndpoint: string = authenticationData.loginEndpoint;
             if(!!loginEndpoint) {
                 loginEndpoint += (loginEndpoint[loginEndpoint.length - 1] == "/") ? "" : "/";
                 endpoint.activeDirectoryAuthority = loginEndpoint;
                 endpoint.environmentAuthorityUrl = loginEndpoint;
+                endpoint.isADFSEnabled = loginEndpoint.endsWith('/adfs');
             }
             else {
                 // change to login endpoint
