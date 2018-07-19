@@ -219,7 +219,7 @@
     "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
     "UnsupportedArtifactType" :"Unsupported artifact type: %s",
     "BuildNotFound": "Build with ID %s not found",
-    "BuildArtifactNotFound": "Artifact %s not found for build %s",
+    "BuildArtifactNotFound": "Artifact %s not found for build %s. Please ensure you have published artifacts in any previous phases of the current build.",
     "NoArtifactsFound": "No artifacts found for build %s",
     "BuildIdBuildDefinitionMismatch": "Build with ID %s not found for build pipeline ID %s",
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
