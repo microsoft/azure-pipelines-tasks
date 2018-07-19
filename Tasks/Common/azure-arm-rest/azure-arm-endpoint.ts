@@ -63,7 +63,8 @@ export class AzureRMEndpoint {
                 this.endpoint.activeDirectoryResourceID = this.endpoint.url;
             }
 
-            this.endpoint.isADFSEnabled = this.endpoint.environmentAuthorityUrl.endsWith('/adfs');
+            var isADFSEnabled = tl.getEndpointDataParameter(this._connectedServiceName, 'EnableAdfsAuthentication', true);
+            this.endpoint.isADFSEnabled = isADFSEnabled ? (isADFSEnabled.toLowerCase() == "true") : this.endpoint.environmentAuthorityUrl.endsWith('/adfs');
 
             this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
                 this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath, this.endpoint.isADFSEnabled);
