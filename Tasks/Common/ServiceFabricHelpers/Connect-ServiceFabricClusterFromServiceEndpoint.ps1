@@ -18,6 +18,7 @@ function Get-AadSecurityToken
         [Hashtable]
         $ClusterConnectionParameters,
 
+        [object]
         $ConnectedServiceEndpoint
     )
 
@@ -30,8 +31,6 @@ function Get-AadSecurityToken
     $connectResult = Connect-ServiceFabricClusterAction -ClusterConnectionParameters $connectionParametersWithGetMetadata
     $authority = $connectResult.AzureActiveDirectoryMetadata.Authority
     Write-Host (Get-VstsLocString -Key AadAuthority -ArgumentList $authority)
-    $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
-    Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $clusterApplicationId)
     $clientApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClientApplication
     Write-Host (Get-VstsLocString -Key ClientAppId -ArgumentList $clientApplicationId)
 
@@ -39,12 +38,26 @@ function Get-AadSecurityToken
     Add-Type -LiteralPath "$PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
     $authContext = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList @($authority)
     $authParams = $ConnectedServiceEndpoint.Auth.Parameters
-    $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
 
     try
     {
-        # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
-        $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential).AccessToken
+        if($script:RefreshToken)
+        {
+            $token = $authContext.AcquireTokenByRefreshToken($RefreshToken, $clientApplicationId)
+        }
+        else
+        {
+            $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
+            Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $clusterApplicationId)
+
+            $userCredential = Create-Object -TypeName Microsoft.IdentityModel.Clients.ActiveDirectory.UserCredential -ArgumentList @($authParams.Username, $authParams.Password)
+
+            # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
+            $token = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential)
+        }
+
+        $script:RefreshToken = $token.RefreshToken
+        return $token.AccessToken
     }
     catch
     {
@@ -140,6 +153,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         [Hashtable]
         $ClusterConnectionParameters,
 
+        [object]
         $ConnectedServiceEndpoint
     )
 
@@ -178,8 +192,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
                 # requires a connection request to the cluster in order to get metadata and so these two parameters are needed for that request.
                 $clusterConnectionParameters["AzureActiveDirectory"] = $true
 
-                $securityToken = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
-                $clusterConnectionParameters["SecurityToken"] = $securityToken
+                $clusterConnectionParameters["SecurityToken"] = Get-AadSecurityToken -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
                 $clusterConnectionParameters["WarningAction"] = "SilentlyContinue"
             }
             elseif ($ConnectedServiceEndpoint.Auth.Scheme -eq "Certificate")

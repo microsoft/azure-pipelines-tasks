@@ -113,7 +113,11 @@ function Publish-UpgradedServiceFabricApplication
 
         [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
         [Parameter(ParameterSetName = "ApplicationName")]
-        [Switch]$SkipUpgradeSameTypeAndVersion
+        [Switch]$SkipUpgradeSameTypeAndVersion,
+
+        [Parameter(ParameterSetName = "ApplicationParameterFilePath")]
+        [Parameter(ParameterSetName = "ApplicationName")]
+        [object]$ConnectedServiceEndpoint
     )
 
     if (!(Test-Path -LiteralPath $ApplicationPackagePath))
@@ -367,5 +371,61 @@ function Publish-UpgradedServiceFabricApplication
         {
             Write-Error (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
         }
+    }
+}
+
+function Invoke-ActionWithRetriesUtil {
+    [CmdletBinding()]
+    param(
+        [scriptblock]
+        $Action,
+
+        [scriptblock]
+        $ActionSuccessValidator = { $true },
+
+        [int32]
+        $MaxTries = 10,
+
+        [int32]
+        $RetryIntervalInSeconds = 1,
+
+        [string[]]
+        [ValidateScript({[System.Exception].IsAssignableFrom([type]$_)})]
+        $RetryableExceptions,
+
+        [string]
+        $RetryMessage,
+
+        [object]
+        $ConnectedServiceEndpoint
+    )
+
+    try
+    {
+        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+            -ActionSuccessValidator $upgradeStatusValidator `
+            -MaxTries $MaxTries `
+            -RetryIntervalInSeconds $RetryIntervalInSeconds `
+            -RetryableExceptions @("System.Fabric.FabricTransientException") `
+            -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade)
+        return $upgradeStatus
+    }
+    catch
+    {
+        if($_.Exception.ErrorCode -eq "InvalidCredentials")
+        {
+            $clusterConnectionParams = @{}
+            Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParams -ConnectedServiceEndpoint $ConnectedServiceEndpoint
+            $upgradeStatus = Invoke-ActionWithRetriesUtil -Action $upgradeStatusFetcher `
+                -ActionSuccessValidator $upgradeStatusValidator `
+                -MaxTries $MaxTries `
+                -RetryIntervalInSeconds $RetryIntervalInSeconds `
+                -RetryableExceptions @("System.Fabric.FabricTransientException") `
+                -RetryMessage (Get-VstsLocString -Key SFSDK_WaitingForUpgrade) `
+                -ConnectedServiceEndpoint $ConnectedServiceEndpoint
+
+            return $upgradeStatus
+        }
+        throw
     }
 }

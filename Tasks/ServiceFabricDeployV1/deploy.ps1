@@ -183,6 +183,7 @@ try
         $publishParameters['UpgradeParameters'] = $upgradeParameters
         $publishParameters['UnregisterUnusedVersions'] = $unregisterUnusedVersions
         $publishParameters['SkipUpgradeSameTypeAndVersion'] = $skipUpgrade
+        $publishParameters["ConnectedServiceEndpoint"] = $connectedServiceEndpoint
 
         Publish-UpgradedServiceFabricApplication @publishParameters
     }
