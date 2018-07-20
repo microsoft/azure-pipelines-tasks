@@ -73,7 +73,7 @@ try {
     # Prepare the external command values.
     #
     # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
-    # errors do not cause a non-zero exit code
+    # errors do not cause a non-zero exit code.
     #
     # Adds in logic to try and use pwsh.exe first over powershell if installed on the agent.   
     #
