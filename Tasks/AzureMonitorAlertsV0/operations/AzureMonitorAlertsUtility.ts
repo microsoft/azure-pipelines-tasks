@@ -126,8 +126,7 @@ export class AzureMonitorAlertsUtility {
 		} as IAzureMetricAlertRequestBody;
     }
     
-    public async getAzureRmResourceDetails(
-		resourceUri: string) : Promise<any> {
+    public async getAzureRmResourceDetails(resourceUri: string) : Promise<any> {
 		
 		let deferred: Q.Deferred<any> = Q.defer<any>();
 
@@ -138,9 +137,9 @@ export class AzureMonitorAlertsUtility {
 
 		tl.debug(`Getting AzureRm resource details - '${resourceName}' in resource group '${resourceGroupName}'`);
 		let resources: Resources = new Resources(this._azureEndpoint);
-        let resourceValues = await resources.getResources(resourceType, resourceName);
-        
-        return resourceValues[0];
+		let resourceValues = await resources.getResources(resourceType, resourceName);
+
+		return resourceValues[0];
 	}
 }
 
