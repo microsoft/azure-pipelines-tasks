@@ -18,11 +18,18 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 33
+        "Patch": 42
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
-    "groups": [],
+    "groups": [
+        {
+            "name": "AdvancedSettings",
+            "displayName": "Advanced Settings",
+            "isExpanded": false,
+            "visibleRule": "Action == Enable Continuous Monitoring"
+        }
+    ],
     "inputs": [
         {
             "name": "ConnectedServiceName",
@@ -192,9 +199,9 @@
             "name": "ApplicationInsightsWebTestName",
             "type": "string",
             "label": "Application Insights web test name",
+            "groupName": "AdvancedSettings",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "Action == Enable Continuous Monitoring",
             "helpMarkDown": "Enter Application Insights Web Test name to be created or updated. <br/>If not provided, the default test name will be used."
         }
     ],
