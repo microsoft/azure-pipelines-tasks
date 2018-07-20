@@ -54,8 +54,8 @@ export function copySetParamFileIfItExists(setParametersFile: string) : string {
         throw Error(tl.loc('SetParamFilenotfound0', setParametersFile));
     }
     else if(fileExists(setParametersFile)) {
-        var tempSetParametersFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"tempSetParameters.xml");
-        tl.cp(setParametersFile, tempSetParametersFile);
+        var tempSetParametersFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'), Date.now() + "_tempSetParameters.xml");
+        tl.cp(setParametersFile, tempSetParametersFile, '-f');
         setParametersFile = tempSetParametersFile;
     }
     
