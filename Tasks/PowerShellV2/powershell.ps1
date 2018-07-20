@@ -73,12 +73,23 @@ try {
     # Prepare the external command values.
     #
     # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
-    # errors do not cause a non-zero exit code.
+    # errors do not cause a non-zero exit code
+    #
+    # Adds in logic to try and use pwsh.exe first over powershell if installed on the agent.   
+    #
+    if ((Get-Command -name pwsh.exe -CommandType Application -ErrorAction SilentlyContinue).count -gt 0) 
+                    { $pwshPath = Get-Command -name pwsh.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path }
     $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+    
+    If ($pwshpath) {Assert-VstsPath -LiteralPath $pwshPath -PathType 'Leaf'}
     Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
     $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($filePath.Replace("'", "''"))'`""
+    
+    If ($pwshPath) {$PowerShellExePath = $pwshPath}
+    else { $PowershellExePath = $powerShellPath }
+    
     $splat = @{
-        'FileName' = $powershellPath
+        'FileName' = $PowershellExePath
         'Arguments' = $arguments
         'WorkingDirectory' = $input_workingDirectory
     }
