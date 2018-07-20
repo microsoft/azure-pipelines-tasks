@@ -515,13 +515,22 @@ function Get-SpnAccessTokenUsingCertificate {
 
     $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
     $azureActiveDirectoryResourceId = Get-AzureActiverDirectoryResourceId -endpoint $endpoint
+    $authorityUrl = $envAuthUrl
 
-    # add check -- if envAuthUrl ends with adfs then ignore tenantId
-    $authorityUrl = "$envAuthUrl$tenantId"
-    
+    $isADFSEnabled = $false
+    if ($endpoint.Data.EnableAdfsAuthentication -eq "true") {
+        $isADFSEnabled = $true
+    }
+
+    if (-not $isADFSEnabled) {
+        $authorityUrl = "$envAuthUrl$tenantId"
+    }
+
     try {
         $clientAssertionCertificate = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.ClientAssertionCertificate -ArgumentList $servicePrincipalId, $clientCertificate
-        $authenticationContext = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList $authorityUrl
+
+        $validateAuthority = -not $isADFSEnabled
+        $authenticationContext = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList $authorityUrl, $validateAuthority
         $tokenResult = $authenticationContext.AcquireTokenAsync($azureActiveDirectoryResourceId, $clientAssertionCertificate).ConfigureAwait($false).GetAwaiter().GetResult()
     }
     catch {
