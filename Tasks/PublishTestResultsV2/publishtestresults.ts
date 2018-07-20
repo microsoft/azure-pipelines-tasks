@@ -7,6 +7,7 @@ import * as tr from 'vsts-task-lib/toolrunner';
 import { publishEvent } from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
+const TESTRUN_SYSTEM = "PublishTestResults";
 
 function isNullOrWhitespace(input: any) {
     if (typeof input === 'undefined' || input === null) {
@@ -77,12 +78,12 @@ async function run() {
                 if (exitCode === 20000) {
                     // The exe returns with exit code: 20000 if the Feature flag is off or if it fails to fetch the Feature flag value
                     const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-                    tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
-                }                
+                    tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments, TESTRUN_SYSTEM);
+                }
             }
             else {
                 const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-                tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
+                tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments, TESTRUN_SYSTEM);
             }
         }
 
