@@ -8,7 +8,7 @@ import Q = require('q');
 import { AzureEndpoint, IAzureMetricAlertRequestBody } from './azureModels';
 import { APIVersions } from './constants';
 
-export class AzureApplicationInsightsAlerts {
+export class AzureMonitorAlerts {
     private _resourceGroupName: string;
     private _endpoint: AzureEndpoint;
     private _client: ServiceClient;

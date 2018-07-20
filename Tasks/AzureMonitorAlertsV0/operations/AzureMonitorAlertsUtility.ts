@@ -1,6 +1,6 @@
 import * as tl from "vsts-task-lib/task";
 import { IAzureMetricAlertRule, AzureEndpoint, IAzureMetricAlertRequestBody } from 'azure-arm-rest/azureModels';
-import {AzureApplicationInsightsAlerts} from 'azure-arm-rest/azure-arm-appinsigths-alerts';
+import {AzureMonitorAlerts} from 'azure-arm-rest/azure-arm-appinsigths-alerts';
 import {Resources} from 'azure-arm-rest/azure-arm-resource';
 import * as Q from "q";
 
@@ -21,7 +21,7 @@ export class AzureMonitorAlertsUtility {
 
         let resourceId: string = `/subscriptions/${this._azureEndpoint.subscriptionID}/resourceGroups/${this._resourceGroupName}/providers/${this._resourceType}/${this._resourceName}`;
         
-        let azureApplicationInsightsAlerts :AzureApplicationInsightsAlerts = new AzureApplicationInsightsAlerts(this._azureEndpoint, this._resourceGroupName);
+        let azureApplicationInsightsAlerts :AzureMonitorAlerts = new AzureMonitorAlerts(this._azureEndpoint, this._resourceGroupName);
         for(let rule of alertRules) {
             let requestBody: IAzureMetricAlertRequestBody = await this._getRequestBodyForAddingAlertRule(azureApplicationInsightsAlerts, this._resourceGroupName, resourceId, rule, notifyServiceOwners, notifyEmails);
             await azureApplicationInsightsAlerts.update(rule.alertName, requestBody);
@@ -30,7 +30,7 @@ export class AzureMonitorAlertsUtility {
 
 
     private async _getRequestBodyForAddingAlertRule(
-        azureApplicationInsightsAlerts :AzureApplicationInsightsAlerts,
+        azureApplicationInsightsAlerts :AzureMonitorAlerts,
 		resourceGroupName: string, 
 		resourceUri: string, 
 		rule: IAzureMetricAlertRule, 
@@ -150,8 +150,8 @@ export function getDeploymentUri(): string {
 	let buildUri = tl.getVariable("Build.BuildUri");
 	let releaseWebUrl = tl.getVariable("Release.ReleaseWebUrl");
 	let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri'); 
-    let teamProject = tl.getVariable('System.TeamProjectId');
-    let buildId = tl.getVariable('build.buildId');
+	let teamProject = tl.getVariable('System.TeamProjectId');
+	let buildId = tl.getVariable('build.buildId');
 
 	if(!!releaseWebUrl) {
 		return releaseWebUrl;
