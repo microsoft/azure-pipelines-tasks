@@ -5,6 +5,9 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
+Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
+
+$certificate = $null
 try
 {
     # Import the localized strings.
@@ -13,6 +16,8 @@ try
     # Load utility functions
     . "$PSScriptRoot\utilities.ps1"
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
+
+    $global:operationId = $SF_Operations.Undefined
 
     # Get inputs.
     $serviceConnectionName = Get-VstsInput -Name serviceConnectionName -Require
@@ -98,11 +103,12 @@ try
 
     # Test the compose file
     Write-Host (Get-VstsLocString -Key CheckingComposeFile)
+    $global:operationId = $SF_Operations.TestApplicationPackage
     $valid = Test-ServiceFabricApplicationPackage -ComposeFilePath $composeFilePath -ErrorAction Stop
 
     # Connect to the cluster
     $clusterConnectionParameters = @{}
-    Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+    $certificate = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     $registryCredentials = Get-VstsInput -Name registryCredentials -Require
     switch ($registryCredentials)
@@ -247,8 +253,8 @@ try
         Write-Host (Get-VstsLocString -Key WaitingForDeploy)
         $newApplication = Get-ServiceFabricComposeApplicationStatusHelper -ApiVersion $apiVersion -GetStatusParameters $getStatusParameters
         while (($newApplication -eq $null) -or `
-               ($newApplication.Status -eq 'Provisioning') -or `
-               ($newApplication.Status -eq 'Creating'))
+            ($newApplication.Status -eq 'Provisioning') -or `
+            ($newApplication.Status -eq 'Creating'))
         {
             if ($newApplication -eq $null)
             {
@@ -268,9 +274,15 @@ try
             Write-Error (Get-VstsLocString -Key DeployFailed -ArgumentList @($newApplication.Status.ToString(), $newApplication.StatusDetails))
         }
     }
-
+}
+catch
+{
+    $exceptionData = Get-ExceptionData $_
+    Write-Telemetry "Task_InternalError" "$global:operationId|$exceptionData"
+    throw
 }
 finally
 {
+    Remove-ClientCertificate $certificate
     Trace-VstsLeavingInvocation $MyInvocation
 }

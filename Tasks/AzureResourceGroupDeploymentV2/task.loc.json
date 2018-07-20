@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 134,
+    "Minor": 138,
     "Patch": 0
   },
   "demands": [],
@@ -241,6 +241,35 @@
       "helpMarkDown": "ms-resource:loc.input.help.copyAzureVMTags"
     },
     {
+      "name": "runAgentServiceAsUser",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.runAgentServiceAsUser",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.runAgentServiceAsUser"
+    },
+    {
+      "name": "userName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userName",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.userName"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.password",
+      "groupName": "AdvancedDeploymentOptions",
+      "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent && runAgentServiceAsUser = true",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.password"
+    },
+    {
       "name": "outputVariable",
       "type": "string",
       "label": "ms-resource:loc.input.label.outputVariable",
@@ -309,6 +338,9 @@
     "CreateTemplateDeploymentFailed": "ms-resource:loc.messages.CreateTemplateDeploymentFailed",
     "ErrorsInYourDeployment": "ms-resource:loc.messages.ErrorsInYourDeployment",
     "Details": "ms-resource:loc.messages.Details",
+    "ErrorType": "ms-resource:loc.messages.ErrorType",
+    "PolicyDefinitionName": "ms-resource:loc.messages.PolicyDefinitionName",
+    "PolicyAssignmentName": "ms-resource:loc.messages.PolicyAssignmentName",
     "StartingValidation": "ms-resource:loc.messages.StartingValidation",
     "ValidDeployment": "ms-resource:loc.messages.ValidDeployment",
     "CreateTemplateDeploymentValidationFailed": "ms-resource:loc.messages.CreateTemplateDeploymentValidationFailed",
@@ -422,6 +454,9 @@
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "UserNameCannotBeNull": "ms-resource:loc.messages.UserNameCannotBeNull",
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
+    "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal"
   }
 }

@@ -13,7 +13,7 @@
   "version": {
     "Major": 3,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": true,
   "groups": [
@@ -39,7 +39,7 @@
     }
   ],
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.134.0",
   "inputs": [
     {
       "name": "Machines",

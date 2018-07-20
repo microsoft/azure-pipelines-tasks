@@ -255,88 +255,89 @@ function Add-CustomCertificates($serviceName, $customCertificatesMap)
         }
     }
 }
-function Validate-ServiceStatus ($ServiceName, $Slot)
+
+function Validate-AzureCloudServiceStatus
 {
-		$RoleInstances=$null;
-		$deployment =$null;
-	    $retryCount = 0;
-		$readyRoleInstanceCount =0;
-	    $timeout = 0;
-	try{
-		Write-Verbose "First check for  existence of Azure Cloud Service with Service Name: $ServiceName "
-		if (Test-AzureName -Service -Name $ServiceName)
-		{
-			do
-			{
-				Write-Host "##[command]Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError"
-				$azureDeployment = Get-AzureDeployment -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError
-				if($azureDeploymentError){
-					$retryCount = $retryCount + 1
-					$azureDeploymentError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
-				}
-				Write-Verbose "Found that the azure cloud Service exists with $ServiceName with Status=$($azureDeployment.Status)"
-				if ($azureDeployment.Status -eq "Running")
-				{
-					Write-Host "##[command]Get-AzureRole -ServiceName $ServiceName -Slot $Slot -ErrorAction SilentlyContinue -ErrorVariable azureDeploymentError"
-					$RoleInstances = Get-AzureRole -ServiceName $ServiceName -Slot $Slot -InstanceDetails -ErrorAction SilentlyContinue -ErrorVariable azureRoleError
-					if($azureRoleError){
-						$retryCount = $retryCount + 1
-						$azureRoleError | ForEach-Object { Write-Verbose $_.Exception.ToString() }
-					}
-					if($RoleInstances)
-					{
-						Write-Verbose "Loop through all instances to find the role instance status as ReadyRole, instances count:  $($RoleInstances.Count)"
-						foreach($instance in $RoleInstances)
-						{
-							$readyRoleInstanceCount=0
-							Write-Verbose "Status for role $($instance.InstanceName) is: $($instance.InstanceStatus)"
-							if($instance.InstanceStatus -ne "ReadyRole")
-							{ 
-								Write-Warning (Get-VstsLocString -Key Unabletofindservicestatus0 -ArgumentList $($instance.InstanceName))
-							}
-							else
-							{
-								Write-Host (Get-VstsLocString -Key EachInstancesNameAndStatus0 -ArgumentList $($instance.InstanceName))
-								$readyRoleInstanceCount = $readyRoleInstanceCount + 1
-							}
-						}
-						if($readyRoleInstanceCount -eq $RoleInstances.Count )
-						{
-							    Write-Host (Get-VstsLocString -Key AllInstancesReadyRole0status -ArgumentList $($RoleInstances.Count))
-								break; 
-						}
-					}
-					else
-					{
-						Write-Warning (Get-VstsLocString -Key Role0OrRoleInstanceNotfound -ArgumentList $ServiceName)
-					}
-				}
-				else
-				{
-					if ($retryCount -gt 3)
-					{
-							Write-Host (Get-VstsLocString -Key RetryForService0Availablity)
-							break;
-					}
-					Write-Host (Get-VstsLocString -Key WaitingForInstance0Beforefindstatus -ArgumentList $ServiceName) 
-					Start-Sleep -Seconds 120
-					$timeout = $timeout + 30
-					if($timeout -gt 210)
-					{
-						Write-Host (Get-VstsLocString -Key WaitingForService0Available) 
-						break;
-					}
-				}
-			  } while($true)
-		}
-		else
-		{
-		    Write-Warning (Get-VstsLocString -Key ServiceNotFound0 -ArgumentList $ServiceName)
-		}
-	}
-	catch [Exception]{
-		$msg = $_.Exception.Message;
-		Write-Warning $msg
-		Write-Warning (Get-VstsLocString -Key ServiceNotFound0 -ArgumentList $ServiceName)
-	}
+    Param (
+        [Parameter(Mandatory = $true)]
+        [string] $CloudServiceName,
+        [string] $Slot = ''
+    )
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $retryLimit = 4
+        $retryCount = 0
+        $retryDelay = 30
+        Write-Host (Get-VstsLocString -Key 'ValidateAzureCloudServiceStatus' -ArgumentList $CloudServiceName)
+        while ($retryCount -lt $retryLimit) {
+            if (Test-AzureName -Service -Name $CloudServiceName) {
+                Write-Verbose "Azure Cloud Service with name:'$CloudServiceName' exists."
+                if (Assert-AzureCloudServiceIsReady -CloudServiceName $CloudServiceName -Slot $Slot) {
+                    Write-Host (Get-VstsLocString -Key 'AzureCloudServiceIsReady' -ArgumentList $CloudServiceName)
+                    return
+                }
+            } else {
+                Write-Warning (Get-VstsLocString -Key 'AzureCloudServiceNotFound' -ArgumentList $CloudServiceName)
+            }
+            $retryCount++
+            Write-Host (Get-VstsLocString -Key "RetryAzureCloudServiceStatusCheck" -ArgumentList $CloudServiceName, $retryDelay)
+            Start-Sleep -Seconds $retryDelay
+        }
+        Write-Warning (Get-VstsLocString -Key 'AzureCloudServiceIsNotReady' -ArgumentList $CloudServiceName)
+    } catch {
+        Write-Verbose "An error occurred while validating Azure Cloud Service: '$CloudServiceName' status. Error: $($_.Exception.ToString())"
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Assert-AzureCloudServiceIsReady {
+    Param (
+        [Parameter(Mandatory = $true)]
+        [string] $CloudServiceName,
+        [string] $Slot = ''
+    )
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $serviceStatus = (Get-AzureDeployment -ServiceName $CloudServiceName -Slot $Slot).Status.ToLowerInvariant()
+        if ($serviceStatus -eq 'running') {
+            return (Assert-RoleInstancesAreReady -CloudServiceName $CloudServiceName -Slot $Slot)
+        } else {
+            Write-Verbose "Azure Cloud Service: '$CloudServiceName' (State: $serviceStatus) is not in 'running' State"
+            return $false
+        }
+    } catch {
+        Write-Verbose "An exception occurred while validating status of Azure Cloud Service: '$CloudServiceName'. Error: $($_.Exception.ToString())"
+        return $false
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Assert-RoleInstancesAreReady {
+    Param (
+        [Parameter(Mandatory = $true)]
+        [string] $CloudServiceName,
+        [string] $Slot = ''
+    )
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation
+    try {
+        $roleInstances = Get-AzureRole -ServiceName $CloudServiceName -Slot $Slot -InstanceDetails
+        $readyRoleInstanceCount = ($roleInstances | Where-Object { $_.InstanceStatus.ToLowerInvariant() -eq 'readyrole' }).Length
+        if ($readyRoleInstanceCount -ne $roleInstances.Length) {
+            Write-Verbose "One or more Role Instances are not in 'ReadyRole' state."
+            foreach ($roleInstance in $roleInstances) {
+                Write-Verbose "InstanceName: $($roleInstance.InstanceName), InstanceStatus: $($roleInstance.InstanceStatus)"
+            }
+            return $false
+        } else {
+            Write-Host (Get-VstsLocString -Key 'AllRoleInstancesAreReady' -ArgumentList $CloudServiceName, $readyRoleInstanceCount)
+            return $true
+        }
+    } catch {
+        Write-Verbose "An error occurred while trying to check all role instances are ready. Error: $($_.Exception.ToString())"
+        return $false
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
 }

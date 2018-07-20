@@ -422,6 +422,7 @@
     "FailedToRestartKuduService": "ms-resource:loc.messages.FailedToRestartKuduService",
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation"
   }
 }

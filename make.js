@@ -125,11 +125,11 @@ target.gendocs = function() {
             validateTask(taskDef);
 
             // create YAML snippet Markdown
-            var yamlOutputFilename = taskName + '.' + taskDef.version.Major + '.md';
+            var yamlOutputFilename = taskName + '.md';
             createYamlSnippetFile(taskDef, docsDir, yamlOutputFilename);
 
             // create Markdown documentation file
-            var mdDocOutputFilename = taskName + '.' + taskDef.version.Major + '.md';
+            var mdDocOutputFilename = taskName + '.md';
             createMarkdownDocFile(taskDef, taskJsonPath, docsDir, mdDocOutputFilename);
         }
     });
@@ -343,7 +343,7 @@ target.test = function() {
     // setup the version of node to run the tests
     util.installNode(options.node);
 
-    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+    run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
 }
 
 //
@@ -470,59 +470,32 @@ target.testLegacy = function() {
     });
     contents += '});' + os.EOL;
     fs.writeFileSync(testsSpecPath, contents);
-    run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
+    run('mocha ' + testsSpecPath /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-legacy-results.xml' */, /*inheritStreams:*/true);
 }
 
+// 
+// node make.js package
+// This will take the built tasks and create the files we need to publish them.
+// 
 target.package = function() {
-    // clean
-    rm('-Rf', packagePath);
+    banner('Starting package process...')
 
-    // create the non-aggregated layout
-    util.createNonAggregatedZip(buildPath, packagePath);
+    // START LOCAL CONFIG
+    // console.log('> Cleaning packge path');
+    // rm('-Rf', packagePath);
+    // TODO: Only need this when we run locally
+    //var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
+    // END LOCAL CONFIG
+    // Note: The local section above is needed when running layout locally due to discrepancies between local build and
+    //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
+    var layoutPath = path.join(packagePath, 'milestone-layout');
+    util.createNugetPackagePerTask(packagePath, layoutPath);
 
-    // if task specified, create hotfix layout and short-circuit
-    if (options.task) {
-        util.createHotfixLayout(packagePath, options.task);
-        return;
-    }
-
-    // create the aggregated tasks layout
-    util.createAggregatedZip(packagePath);
-
-    // nuspec
-    var version = options.version;
-    if (!version) {
-        console.warn('Skipping nupkg creation. Supply version with --version.');
-        return;
-    }
-
-    if (!semver.valid(version)) {
-        fail('invalid semver version: ' + version);
-    }
-
-    var pkgName = 'Mseng.MS.TF.Build.Tasks';
-    console.log();
-    console.log('> Generating .nuspec file');
-    var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
-    contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
-    contents += '   <metadata>' + os.EOL;
-    contents += '      <id>' + pkgName + '</id>' + os.EOL;
-    contents += '      <version>' + version + '</version>' + os.EOL;
-    contents += '      <authors>bigbldt</authors>' + os.EOL;
-    contents += '      <owners>bigbldt,Microsoft</owners>' + os.EOL;
-    contents += '      <requireLicenseAcceptance>false</requireLicenseAcceptance>' + os.EOL;
-    contents += '      <description>For VSS internal use only</description>' + os.EOL;
-    contents += '      <tags>VSSInternal</tags>' + os.EOL;
-    contents += '   </metadata>' + os.EOL;
-    contents += '</package>' + os.EOL;
-    var nuspecPath = path.join(packagePath, 'pack-source', pkgName + '.nuspec');
-    fs.writeFileSync(nuspecPath, contents);
-
-    // package
-    ensureTool('nuget.exe');
-    var nupkgPath = path.join(packagePath, 'pack-target', `${pkgName}.${version}.nupkg`);
-    mkdir('-p', path.dirname(nupkgPath));
-    run(`nuget.exe pack ${nuspecPath} -OutputDirectory ${path.dirname(nupkgPath)}`);
+    // These methods are to help with the migration to NuGet package per task.
+    // Get rid of them after transition is done.
+    //var path = '';
+    //util.renameFoldersFromAggregate(path);
+    //util.generatePerTaskForLegacyPackages(path);
 }
 
 // used by CI that does official publish

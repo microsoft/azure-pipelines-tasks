@@ -15,10 +15,27 @@ function getDefaultProps() {
 
 export function publishEvent(properties: { [key: string]: any }): void {
     try {
-        tl.assertAgent('2.125.0');
-        tl.publishTelemetry(area, feature, Object.assign(getDefaultProps(), properties));
-
+        _writeTelemetry(area, feature, Object.assign(getDefaultProps(), properties));
     } catch (err) {
         tl.debug('Unable to publish telemetry due to lower agent version.');
+    }
+}
+
+
+function _writeTelemetry(area, feature, properties) {
+    // The telemetry command was added in agent version 2.120.0.
+    try {
+        var splitVersion = (process.env.AGENT_VERSION || '').split('.');
+        var major = parseInt(splitVersion[0] || '0');
+        var minor = parseInt(splitVersion[1] || '0');
+        if (major > 2 || (major == 2 && minor >= 120)) {
+            console.log(`##vso[telemetry.publish area=${area};feature=${feature}]${JSON.stringify(properties)}`);
+        }
+        else {
+            tl.debug(`cannot write telemetry in agent ${process.env.AGENT_VERSION}`);
+        }
+    }
+    catch (err) {
+        tl.debug(`Error in writing telemetry : ${err}`);
     }
 }

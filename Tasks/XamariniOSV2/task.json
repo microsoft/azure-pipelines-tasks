@@ -2,7 +2,7 @@
     "id": "0F077E3A-AF59-496D-81BC-AD971B7464E0",
     "name": "XamariniOS",
     "friendlyName": "Xamarin.iOS",
-    "description": "Build an iOS app with Xamarin on macOS",
+    "description": "Build an iOS app with Xamarin on macOS.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613729)",
     "category": "Build",
     "visibility": [
@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 136,
-        "Patch": 0
+        "Minor": 137,
+        "Patch": 1
     },
     "releaseNotes": "iOS signing set up has been removed from the task. Use `Secure Files` with supporting tasks `Install Apple Certificate` and `Install Apple Provisioning Profile` to setup signing. Updated options to work better with `Visual Studio for Mac`.",
     "demands": [
@@ -79,7 +79,7 @@
             "label": "Run NuGet restore",
             "defaultValue": "false",
             "required": true,
-            "helpMarkDown": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The 'nuget' tool in the PATH of the build agent machine will be used. To use a different version of NuGet or set additional arguments, use the [NuGet Installer Task](https://www.visualstudio.com/docs/build/steps/package/nuget-installer).",
+            "helpMarkDown": "Optionally run `nuget restore` on the Xamarin iOS solution to install all referenced packages before build. The 'nuget' tool in the PATH of the build agent machine will be used. To use a different version of NuGet or set additional arguments, use the [NuGet Tool Installer](https://go.microsoft.com/fwlink/?linkid=852538) task.",
             "groupName": "advanced"
         },
         {
@@ -141,13 +141,14 @@
         "SignIdNotFound": "Failed to find iOS signing identity. Verify the signing and provisioning information provided.",
         "ProvProfileUUIDNotFound": "Failed to find provisioning profile UUID for provisioning profile: %s",
         "XamariniOSSucceeded": "Xamarin.iOS task execution completed with no errors.",
-        "XamariniOSFailed": "Xamarin.iOS task failed with error %s. For guidance on setting up the build definition, see https://go.microsoft.com/fwlink/?LinkId=760847.",
+        "XamariniOSFailed": "Xamarin.iOS task failed with error %s. For guidance on setting up the build pipeline, see https://go.microsoft.com/fwlink/?LinkId=760847.",
         "MSB_Build0" : "Build {0}",
         "MSB_DetectedNuGetExtensionsLoaderPath0": "Detected NuGet extensions loader path. Environment variable NUGET_EXTENSIONS_PATH is set to '{0}'.",
         "MSB_SolutionNotFoundUsingSearchPattern0": "Solution not found using search pattern '{0}'.",
-        "MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Installer task to your build definition.",
+        "MSB_RestoreNuGetPackagesDeprecated": "The 'Restore NuGet Packages' option is deprecated. To restore NuGet packages in your build, add a NuGet Tool Installer task to your build pipeline.",
         "MSB_BuildToolNotFound": "MSBuild or xbuild (Mono) were not found on the macOS or Linux agent.",
         "MultipleSolutionsFound": "Multiple solution file matches were found. The first match will be used: %s",
-        "SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s"
+        "SolutionDoesNotExist": "The solution file was specified, but it does not exist: %s",
+        "BuildRequiresMac": "Xamarin iOS builds require a macOS agent. Apple does not support iOS builds on a Linux or Windows agent."
     }
 }

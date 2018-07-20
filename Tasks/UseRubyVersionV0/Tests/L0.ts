@@ -1,163 +1,75 @@
 import * as assert from 'assert';
-import { EOL } from 'os';
 import * as path from 'path';
-
-import * as mockery from 'mockery';
-import * as mockTask from 'vsts-task-lib/mock-task';
-import * as useRubyVersion from '../userubyversion';
-
-/** Reload the unit under test to use mocks that have been registered. */
-function reload(): typeof useRubyVersion {
-    return require('../userubyversion');
-}
+import * as ttm from 'vsts-task-lib/mock-test';
 
 describe('UseRubyVersion L0 Suite', function () {
-    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 2000);
 
-    before(function () {
-        mockery.enable({
-            useCleanCache: true,
-            warnOnUnregistered: false
-        });
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+    before(() => {
     });
 
-    after(function () {
-        mockery.disable();
+    after(() => {
     });
 
-    afterEach(function () {
-        mockery.deregisterAll();
-        mockery.resetCache();
+    it('finds version in cache in Linux', function (done: MochaDone) {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0FindVersionInLinuxCache.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
+        assert(tr.stdout.includes(path.join('/', 'Ruby', '2.5.4', 'bin')), 'ruby location is not set as expected');
+
+        done();
     });
 
-    it('finds version in cache in Linux', async function () {
-        const buildVariables: { [key: string]: string } = {};
-        const mockTaskRun = {
-            setVariable: (variable: string, value: string) => {
-                buildVariables[variable] = value;
-            },
-            getVariable: (variable: string) => buildVariables[variable]
-        };
-        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockTaskRun));
-        mockery.registerMock('fs', {
-            symlinkSync: () => {},
-            unlinkSync: () => {},
-            existsSync: () => {}
-        });
 
-        let mockPath = '';
-        const toolPath = path.join('/', 'Ruby', '2.5.4');
-        mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
-                mockPath = s + ':' + mockPath;
-            }
-        });
-        const uut = reload();
-        const parameters = {
-            versionSpec: '= 2.5',
-            addToPath: false
-        };
+    it('rejects version not in cache', function (done: MochaDone) {
+        this.timeout(1000);
 
-        assert.strictEqual(buildVariables['rubyLocation'], undefined);
+        let tp: string = path.join(__dirname, 'L0RejectVersionNotInCache.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        await uut.useRubyVersion(parameters, uut.Platform.Linux);
-        assert.strictEqual(buildVariables['rubyLocation'], path.join(toolPath, 'bin'));
+        tr.run();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdout.includes('loc_mock_VersionNotFound 3.x'), 'error message not as expected');
+        assert(tr.stdout.includes('loc_mock_ListAvailableVersions'), 'list of available versions is not printed as expected');
+        assert(tr.stdout.includes('2.7.13'), 'list of available versions is not printed as expected');
+
+        done();
     });
 
-    it('rejects version not in cache', async function (done: MochaDone) {
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-        mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => null,
-            findLocalToolVersions: () => ['2.7.13']
-        });
+    it('sets PATH correctly on Linux', function (done: MochaDone) {
+        this.timeout(1000);
 
-        const uut = reload();
-        const parameters = {
-            versionSpec: '3.x',
-            addToPath: false
-        };
+        let tp: string = path.join(__dirname, 'L0SetPathOnLinux.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        try {
-            await uut.useRubyVersion(parameters, uut.Platform.Linux);
-            done(new Error('should not have succeeded'));
-        } catch (e) {
-            const expectedMessage = [
-                'loc_mock_VersionNotFound 3.x',
-                'loc_mock_ListAvailableVersions',
-                '2.7.13'
-            ].join(EOL);
+        tr.run();
 
-            assert.strictEqual(e.message, expectedMessage);
-            done();
-        }
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
+        assert(tr.stdout.includes(path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby location is not set as expected');
+        assert(tr.stdout.includes('##vso[task.prependpath]' + path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby tool location was not added to PATH as expected');
+        done();
     });
 
-    it('sets PATH correctly on Linux', async function () {
-        const buildVariables: { [key: string]: string } = { 'PATH': '' };
-        const mockTaskRun = {
-            setVariable: (variable: string, value: string) => {
-                buildVariables[variable] = value;
-            },
-            getVariable: (variable: string) => buildVariables[variable]
-        };
-        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockTaskRun));
-        mockery.registerMock('fs', {
-            symlinkSync: () => {},
-            unlinkSync: () => {},
-            existsSync: () => {}
-        });
+    it('sets PATH correctly on Windows', function (done: MochaDone) {
+        this.timeout(1000);
 
-        let mockPath = '';
-        const toolPath = path.join('/', 'Ruby', '2.4.4');
-        mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
-                mockPath = s + ':' + mockPath;
-            }
-        });
+        let tp: string = path.join(__dirname, 'L0SetPathOnWindows.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-        const uut = reload();
-        const parameters = {
-            versionSpec: '2.4',
-            addToPath: true
-        };
+        tr.run();
 
-        await uut.useRubyVersion(parameters, uut.Platform.Linux);
-        assert.strictEqual(`${path.join(toolPath, 'bin')}:`, mockPath);
-    });
-
-    it('sets PATH correctly on Windows', async function () {
-        const buildVariables: { [key: string]: string } = { 'PATH': '' };
-        const mockTaskRun = {
-            setVariable: (variable: string, value: string) => {
-                buildVariables[variable] = value;
-            },
-            getVariable: (variable: string) => buildVariables[variable]
-        };
-        mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, mockTaskRun));
-        mockery.registerMock('fs', {
-            symlinkSync: () => {},
-            unlinkSync: () => {},
-            existsSync: () => {}
-        });
-
-        let mockPath = '';
-        const toolPath = path.join('/', 'Ruby', '2.4.4');
-        mockery.registerMock('vsts-task-tool-lib/tool', {
-            findLocalTool: () => toolPath,
-            prependPath: (s: string) => {
-                mockPath = s + ';' + mockPath;
-            }
-        });
-
-        const uut = reload();
-        const parameters = {
-            versionSpec: '2.4',
-            addToPath: true
-        };
-
-        await uut.useRubyVersion(parameters, uut.Platform.Windows);
-        assert.strictEqual(`${path.join(toolPath, 'bin')};`, mockPath);
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.includes("task.setvariable variable=rubyLocation"), 'variable was not set as expected');
+        assert(tr.stdout.includes(path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby location is not set as expected');
+        assert(tr.stdout.includes('##vso[task.prependpath]' + path.join('/', 'Ruby', '2.4.4', 'bin')), 'ruby tool location was not added to PATH as expected');
+        done();
     });
 });

@@ -45,6 +45,7 @@ export let Commands = {
 };
 
 export let isKubectlPresentOnMachine = "true"; 
+export let endpointAuthorizationType = "Kubeconfig";
 
 export let ContainerTypes = {
     AzureContainerRegistry: "Azure Container Registry",

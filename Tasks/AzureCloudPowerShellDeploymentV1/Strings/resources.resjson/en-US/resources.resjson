@@ -47,13 +47,10 @@
   "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell does not support external storage account for configuring diagnostics.",
   "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format.",
   "loc.messages.Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
-  "loc.messages.AllInstancesReadyRole0status": "All instances are in ReadyRole state now, and instances count is '{0}' ",
-  "loc.messages.EachInstancesNameAndStatus0": "Status is 'ReadyRole' for the Instance name '{0}'",
-  "loc.messages.Instance0Name": "Service instance name {0} to find status",
-  "loc.messages.RetryForService0Availablity": "Retried for service availability for 4 times, 30 secs each, after 4 retries still service not available, check teh service deployment again",
-  "loc.messages.Role0OrRoleInstanceNotfound": "Either Role or Role Instance not found for a service '{0}'",
-  "loc.messages.ServiceNotFound0": "Either Service not found or Test AzureName returned nothing for service '{0}'",
-  "loc.messages.Unabletofindservicestatus0": "Status is not 'ReadyRole' for instance name '{0}'",
-  "loc.messages.WaitingForInstance0Beforefindstatus": "Service not yet ready sleeping for 120 seconds ...Waiting for roles of '{0}' to come on-line..",
-  "loc.messages.WaitingForService0Available": "Service not yet ready sleeping for 210 seconds ... retry the task again"
+  "loc.messages.ValidateAzureCloudServiceStatus": "Validating status of Azure Cloud Service: '{0}'",
+  "loc.messages.RetryAzureCloudServiceStatusCheck": "Azure Cloud Service: '{0}' validation failed. Retrying in '{1}' seconds.",
+  "loc.messages.AzureCloudServiceIsReady": "Azure Cloud Service: '{0}' is ready.",
+  "loc.messages.AzureCloudServiceIsNotReady": "Azure Cloud Service: '{0}' is not ready. This can be due to one or more RoleInstances not being in 'ReadyRole' state. Check logs for more details.",
+  "loc.messages.AllRoleInstancesAreReady": "All role instances (count: '{1}') for Azure Cloud Service: '{0}' are in 'ReadyRole' state.",
+  "loc.messages.AzureCloudServiceNotFound": "Azure Cloud Service: '{0}' not found."
 }

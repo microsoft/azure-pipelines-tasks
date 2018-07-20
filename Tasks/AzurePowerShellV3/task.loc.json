@@ -16,14 +16,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 0,
-    "Patch": 4
+    "Minor": 1,
+    "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "azureps"
   ],
-  "preview": true,
   "groups": [
     {
       "name": "AzurePowerShellVersionOptions",
