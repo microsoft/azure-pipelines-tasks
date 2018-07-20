@@ -28,5 +28,5 @@
   "loc.messages.Couldnotfetchaccesstoken": "Could not fetch access token for Azure. Status Code: %s (%s) %s.",
   "loc.messages.SPNExpiredCheck": "Check if the SPN is valid and not expired.",
   "loc.messages.FailedToGetApplicationInsightsResourceAlerts": "Failed to get Application Insights Alert rule: %s. Error: %s",
-  "loc.messages.FailedToUpdateApplicationInsightsResourceAlerts": "Failed to update Application Insights Alert rule '%s' Resource. Error: %s"
+  "loc.messages.FailedToUpdateApplicationInsightsResourceAlertsFailedToUpdateApplicationInsightsResourceAlerts": "Failed to update Application Insights Alert rule '%s' Resource. Error: %s"
 }

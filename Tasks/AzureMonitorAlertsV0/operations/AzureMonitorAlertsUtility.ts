@@ -137,8 +137,7 @@ export class AzureMonitorAlertsUtility {
 		let resourceName: string = splittedResourceUri[8];
 
 		tl.debug(`Getting AzureRm resource details - '${resourceName}' in resource group '${resourceGroupName}'`);
-        
-        let resources: Resources = new Resources(this._azureEndpoint);
+		let resources: Resources = new Resources(this._azureEndpoint);
         let resourceValues = await resources.getResources(resourceType, resourceName);
         
         return resourceValues[0];
