@@ -24,6 +24,12 @@ export class NugetDownloadHelper {
         } catch (error) {
             tl.error(tl.loc('TestPlatformDownloadFailed', testPlatformVersion, error));
 
+            if ((tl.getInput(constants.packageFeedSelector) === constants.nugetOrg || tl.getInput(constants.packageFeedSelector) === constants.customFeed)
+                && tl.getInput(constants.versionSelector) === constants.specificVersion) {
+                return null;
+            }
+
+            console.log(tl.loc('LatestStableCached'));
             testPlatformVersion = 'x';
 
             ci.addToConsolidatedCi('downloadSucceeded', 'false');
