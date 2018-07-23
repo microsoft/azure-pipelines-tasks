@@ -15,7 +15,6 @@ try
     . "$PSScriptRoot\utilities.ps1"
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
     Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
-    Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
     $global:operationId = $SF_Operations.Undefined
 
@@ -196,8 +195,7 @@ try
 }
 catch
 {
-    $exceptionData = Get-ExceptionData $_
-    Write-Telemetry "Task_InternalError" "$global:operationId|$exceptionData"
+    Publish-Telemetry -TaskName 'ServiceFabricDeploy' -ErrorData $_
     throw
 }
 finally
