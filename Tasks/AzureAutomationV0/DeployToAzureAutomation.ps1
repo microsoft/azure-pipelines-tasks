@@ -24,7 +24,6 @@ $VerbosePreference = "Continue"
 # If the user wants to deploy runbooks to Azure Automation
 if ($AutomationRunbook -or ($RunbookFile -and (($RunbookFile.Split('.')[-1] -match "ps1") -or ($RunbookFile.Split('.')[-1] -match "py")))) {
     if ($AutomationRunbook -and (-not($RunbookFile) -or (-not($RunbookFile.Split('.')[-1] -match "ps1") -or (-not($RunbookFile.Split('.')[-1] -match "py"))))) {
-        Write-Host "We are in the runbook if if "
         if ($StartRunbookJob) {
             & ".\StartAzureAutomationRunbook.ps1" -ConnectedServiceName $ConnectedServiceName -ResourceGroupName $ResourceGroupName `
             -AutomationAccountName $AutomationAccountName -RunbookName $AutomationRunbook -RunbookParametersFile $RunbookParametersFile -RunOn $HybridWorker

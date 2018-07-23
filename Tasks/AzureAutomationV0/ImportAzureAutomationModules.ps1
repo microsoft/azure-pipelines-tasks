@@ -92,13 +92,13 @@ $ModuleZips = Get-ChildItem -Path $CompressedModulesPath -Filter *.zip -File
     $Link = New-AzureStorageBlobSASToken -Container 'modules' -Blob $StorageLocation.Name -Context $StorageAccount.Context -FullUri `
             -Permission rwd -StartTime (Get-Date) -ExpiryTime (Get-Date).AddMinutes(60)
 
-    Write-Host "Saved module $ModuleZip.Name to Storage Account container 'modules'... publishing to Azure Automation"
+    Write-Host "Saved module $($ModuleZip.BaseName) to Storage Account container 'modules'... publishing to Azure Automation"
 
     # Use the blob SAS token to publish modules from Azure Storage to Automation Account
     $Module = New-AzureRmAutomationModule -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName `
             -Name $ModuleZip.BaseName -ContentLink $Link
 
-    Write-Host "Module $ModuleZip.Name uploaded to Automation"
+    Write-Host "Uploading module $($ModuleZip.BaseName) to Automation Account..."
 
     # Wait until the current module is successfully imported before moving to next module
     While ((Get-AzureRmAutomationModule -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName `
@@ -106,9 +106,9 @@ $ModuleZips = Get-ChildItem -Path $CompressedModulesPath -Filter *.zip -File
     {
         Start-Sleep -Seconds 5
     }
+
+    Write-Host "Successfully uploaded module $($ModuleZip.BaseName) uploaded to Automation Account"
  }
 
 # Remove the temp folder where modules were temporarily stored 
 Remove-Item $DestinationFolder -Recurse -Force -ea SilentlyContinue
-
-    

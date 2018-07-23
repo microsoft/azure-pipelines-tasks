@@ -77,7 +77,7 @@ if ($StorageAccountName)
                 if ($ExistingModules.Get_Item($ModuleName) -eq $Version) 
                 {
                     continue
-                } 
+                }
             }
 
             <# If the same version of the module is not already in Automation, rename module folders to match 
@@ -92,7 +92,9 @@ if ($StorageAccountName)
     # Get the name of the Azure Storage Account and create a new container called 'dscmodules' in it
     $StorageAccount = Get-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $StorageAccountName
     New-AzureStorageContainer -Name 'dscmodules' -Context $StorageAccount.Context
-    
+
+    Write-Host "Created new Storage container 'dscmodules' to import resources"
+
     # Get all module zip files saved in compressed folder
     $ModuleZips = Get-ChildItem -Path $CompressedModulesPath -Filter *.zip -File
 
@@ -103,16 +105,22 @@ if ($StorageAccountName)
         $Link = New-AzureStorageBlobSASToken -Container 'dscmodules' -Blob $StorageLocation.Name -Context $StorageAccount.Context -FullUri `
                 -Permission rwd -StartTime (Get-Date) -ExpiryTime (Get-Date).AddMinutes(60)
 
+        Write-Host "Uploaded DSC resource $($ModuleZip.BaseName) to Storage Account"
+
         # Use the blob SAS token to publish modules from Azure Storage to Automation Account
         $Module = New-AzureRmAutomationModule -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName `
                 -Name $ModuleZip.BaseName -ContentLink $Link
 
+        Write-Host "Uploading DSC resource $($ModuleZip.BaseName) to Automation Account..."
+
         # Wait until the current module is successfully imported before moving to next module
         While ((Get-AzureRmAutomationModule -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName `
-                -Name $ModuleZip.BaseName).ProvisioningState -ne 'Succeeded') 
+                -Name $ModuleZip.BaseName).ProvisioningState -ne 'Succeeded')
         {
             Start-Sleep -Seconds 5
         }
+
+        Write-Host "Successfully uploaded DSC resource $($ModuleZip.BaseName) to Automation Account"
     }
 }
 

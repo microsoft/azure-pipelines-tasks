@@ -2,7 +2,7 @@
   "id": "5e55c600-8962-11e8-bb8e-1372c75a02a3",
   "name": "DeployToAzureAutomation",
   "friendlyName": "Deploy to Azure Automation",
-  "description": "Deploy resources to Azure Automation: runbooks, DSC configurations, and modules",
+  "description": "Deploy resources to Azure Automation: runbooks, DSC configurations, DSC resources, and modules",
   "helpMarkDown": "[More Information](https://github.com/vsts-tasks)",
   "category": "Deploy",
     "visibility": [
