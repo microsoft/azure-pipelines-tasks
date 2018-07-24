@@ -36,44 +36,6 @@ function Write-Telemetry
     Write-Host $telemetryString
 }
 
-function Get-ExceptionData
-{
-    param(
-        [System.Management.Automation.ErrorRecord]
-        $error
-    )
-
-    $exceptionData = ""
-    try
-    {
-        $src = $error.InvocationInfo.PSCommandPath + "|" + $error.InvocationInfo.ScriptLineNumber
-        $exceptionTypes = ""
-
-        $exception = $error.Exception
-        if ($exception.GetType().Name -eq 'AggregateException')
-        {
-            $flattenedException = ([System.AggregateException]$exception).Flatten()
-            $flattenedException.InnerExceptions | ForEach-Object {
-                $exceptionTypes += $_.GetType().FullName + ";"
-            }
-        }
-        else
-        {
-            do
-            {
-                $exceptionTypes += $exception.GetType().FullName + ";"
-                $exception = $exception.InnerException
-            } while ($exception -ne $null)
-        }
-        $exceptionData = "$exceptionTypes|$src"
-    }
-    catch
-    {}
-
-    return $exceptionData
-}
-
 # Export only the public function.
 Export-ModuleMember -Function Write-Telemetry
-Export-ModuleMember -Function Get-ExceptionData
 Export-ModuleMember -Variable telemetryCodes

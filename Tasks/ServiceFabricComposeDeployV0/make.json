@@ -9,10 +9,6 @@
             "type": "ps"
         },
         {
-            "module": "../Common/Deployment/TelemetryHelper",
-            "type": "ps"
-        },
-        {
             "module": "../Common/PowershellHelpers",
             "type": "ps"
         }
