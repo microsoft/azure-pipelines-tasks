@@ -1,13 +1,9 @@
 import * as tl from "vsts-task-lib/task";
 import * as path from "path";
+import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import { AzureEndpoint, IAzureMetricAlertRulesList } from 'azure-arm-rest/azureModels';
 
-import { initializeAzureRMEndpointData } from "azurestack-common/azurestackrestutility";
-
-import { AzureRmAlertRulesRestClient } from "./azurermalertrulesrestclient";
-import { 
-	IAzureMetricAlertRulesList,
-	IAzureMetricAlertRule 
-} from "./interfaces";
+import { AzureMonitorAlertsUtility } from './operations/AzureMonitorAlertsUtility'
 
 async function run() {
 	try {
@@ -21,39 +17,14 @@ async function run() {
 		let notifyServiceOwners: boolean = tl.getInput("NotifyServiceOwners") && tl.getInput("NotifyServiceOwners").toLowerCase() === "true" ? true : false;
 		let notifyEmails: string = tl.getInput("NotifyEmails");
 
-		let endpointScheme = tl.getEndpointAuthorizationScheme(connectedServiceName, true);
-		if (endpointScheme === "ManagedServiceIdentity") {
-			throw tl.loc("MSINotSupported");
-		}
-
-		let endpoint = await initializeAzureRMEndpointData(connectedServiceName);
-
-		let resourceId: string = `/subscriptions/${endpoint["subscriptionId"]}/resourceGroups/${resourceGroupName}/providers/${resourceType}/${resourceName}`
-
-		await addOrUpdateAlertRules(endpoint, resourceGroupName, resourceId, alertRules.rules, notifyServiceOwners, notifyEmails);
+		var azureEndpoint: AzureEndpoint = await new AzureRMEndpoint(connectedServiceName).getEndpoint();
+		let azureMonitorAlertsUtility :AzureMonitorAlertsUtility = new AzureMonitorAlertsUtility(azureEndpoint, resourceGroupName, resourceType, resourceName);
+		await azureMonitorAlertsUtility.addOrUpdateAlertRules(alertRules.rules, notifyServiceOwners, notifyEmails);
 	}
 	catch (error) {
 		tl.setResult(tl.TaskResult.Failed, error);
 	}
 }
 
-async function addOrUpdateAlertRules(endpoint, resourceGroupName: string, resourceId: string, alertRules: IAzureMetricAlertRule[], notifyServiceOwners: boolean, notifyEmails: string) {
-	
-	let azureRmRestClient = new AzureRmAlertRulesRestClient(endpoint);
-
-	for(let rule of alertRules) {
-		
-		console.log(tl.loc("ProcessingRule", rule.alertName));
-		let responseObject = await azureRmRestClient.addOrUpdateAzureMetricAlertRule(resourceGroupName, resourceId, rule, notifyServiceOwners, notifyEmails);
-		if (responseObject.statusCode === 201) {
-			console.log(tl.loc("CreatedRule", rule.alertName));
-		}
-		else {
-			console.log(tl.loc("UpdatedRule", rule.alertName));
-		}
-
-		tl.debug(JSON.stringify(responseObject, null, 2));
-	}
-}
 
 run();
