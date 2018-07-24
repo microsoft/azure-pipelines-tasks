@@ -110,7 +110,8 @@
   "loc.messages.SFSDK_StartAppUpgrade": "Start upgrading application...",
   "loc.messages.SFSDK_StartUpgradeFailed": "Failed to start application upgrade. Error {0}.",
   "loc.messages.SFSDK_UnregisterAppTypeOnUpgradeFailure": "Could not start upgrade successfully. Unregistering application type '{0}' and version '{1}'.",
-  "loc.messages.SFSDK_WaitingForUpgrade": "Waiting for upgrade...",
+  "loc.messages.SFSDK_CurrentUpgradeState": "Current Upgrade State:",
+  "loc.messages.SFSDK_DomainUpgradeStatus": "Domain Wise Upgrade Status: ",
   "loc.messages.SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
   "loc.messages.SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
   "loc.messages.SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",
@@ -129,5 +130,17 @@
   "loc.messages.SFSDK_RegisterAppTypeFailedWithStatus": "Failed to register application type. Status: {0}. Details: {1}.",
   "loc.messages.SFSDK_ApplicationTypeStatus": "Application type status: {0}. Details: {1}.",
   "loc.messages.SFSDK_ApplicationTypeUnprovisioned": "Application type is unprovisioned. Will retry register.",
-  "loc.messages.SFSDK_ClusterHealth": "Cluster health:"
+  "loc.messages.SFSDK_ClusterHealth": "Cluster health:",
+  "loc.messages.SFSDK_ApplicationTypeUnprovisioningStarted": "Unprovisioning started for application type. Waiting for it to complete..",
+  "loc.messages.SFSDK_UnregisterAppTypeFailedWithStatus": "Failed to unregister application type. Status: {0}. Details: {1}.",
+  "loc.messages.SFSDK_RetryingUnregisterApplicationType": "Retrying unregister..",
+  "loc.messages.SFSDK_RetryingRemoveApplication": "Retrying remove application..",
+  "loc.messages.SFSDK_RetryingCreateApplication": "Retrying create application..",
+  "loc.messages.SFSDK_ApplicationHealth": "Getting application health:",
+  "loc.messages.SFSDK_RetryingUpgradeApplication": "Retrying application upgrade..",
+  "loc.messages.SFSDK_RetryingGetApplicationUpgrade": "Getting application upgrade status...",
+  "loc.messages.SFSDK_RetryingTestClusterConnection": "Testing connection to cluster..",
+  "loc.messages.SFSDK_RetryingTestAppPackage": "Testing application package..",
+  "loc.messages.SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",
+  "loc.messages.SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package.."
 }

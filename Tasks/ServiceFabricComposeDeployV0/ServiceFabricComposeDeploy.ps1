@@ -5,8 +5,8 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
-Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
+$certificate = $null
 try
 {
     # Import the localized strings.
@@ -107,7 +107,7 @@ try
 
     # Connect to the cluster
     $clusterConnectionParameters = @{}
-    Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+    $certificate = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     $registryCredentials = Get-VstsInput -Name registryCredentials -Require
     switch ($registryCredentials)
@@ -273,15 +273,14 @@ try
             Write-Error (Get-VstsLocString -Key DeployFailed -ArgumentList @($newApplication.Status.ToString(), $newApplication.StatusDetails))
         }
     }
-
 }
 catch
 {
-    $exceptionData = Get-ExceptionData $_
-    Write-Telemetry "Task_InternalError" "$global:operationId|$exceptionData"
+    Publish-Telemetry -TaskName 'ServiceFabricComposeDeploy' -OperationId $global:operationId -ErrorData $_
     throw
 }
 finally
 {
+    Remove-ClientCertificate $certificate
     Trace-VstsLeavingInvocation $MyInvocation
 }

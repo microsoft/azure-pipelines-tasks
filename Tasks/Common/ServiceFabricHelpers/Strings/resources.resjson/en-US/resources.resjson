@@ -9,5 +9,8 @@
   "loc.messages.ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
   "loc.messages.ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it.",
   "loc.messages.UseWindowsSecurity": "Windows security is specified. -WindowsCredential switch will be used while connecting.",
-  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "The cluster's server certificate with thumbprint '{0}' is required in order to encrypt text but the certificate could not be found on the agent machine in the 'CurrentUser\\My' certificate store location."
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "The cluster's server certificate with thumbprint '{0}' is required in order to encrypt text but the certificate could not be found on the agent machine in the 'CurrentUser\\My' certificate store location.",
+  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
+  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
+  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}."
 }
