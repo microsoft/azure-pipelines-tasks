@@ -26,7 +26,6 @@ export async function download(options: any, downloadPath: string, printData: bo
                         && !isRedirectUrl
                         && res.headers 
                         && res.headers.location) {
-                            file.end(null, null, file.close);
                             var redirectUrl = res.headers.location;
                             tl.debug("Download latest release from redirect uri: " + redirectUrl);
                             if (typeof options === 'string') {
