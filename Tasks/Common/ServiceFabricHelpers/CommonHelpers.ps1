@@ -4,19 +4,22 @@ function Publish-Telemetry
         [String]
         $TaskName,
 
+        [String]
+        $OperationId,
+
         [System.Management.Automation.ErrorRecord]
         $ErrorData
     )
 
     try
     {
-        $telemeteryData = @{
-            'OperationId'   = $global:operationId
+        $telemetryData = @{
+            'OperationId'   = $OperationId
             'ExceptionData' = (Get-ExceptionData $ErrorData)
             'JobId' = (Get-VstsTaskVariable -Name 'System.JobId')
         }
 
-        $telemetryJson = ConvertTo-Json $telemeteryData -Compress
+        $telemetryJson = ConvertTo-Json $telemetryData -Compress
         Write-Host "##vso[telemetry.publish area=TaskHub;feature=$TaskName]$telemetryJson"
     }
     catch

@@ -276,7 +276,7 @@ try
 }
 catch
 {
-    Publish-Telemetry -TaskName 'ServiceFabricComposeDeploy' -ErrorData $_
+    Publish-Telemetry -TaskName 'ServiceFabricComposeDeploy' -OperationId $global:operationId -ErrorData $_
     throw
 }
 finally

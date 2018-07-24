@@ -41,7 +41,7 @@ try
     }
     catch
     {
-        Publish-Telemetry -TaskName 'ServiceFabricPowerShell' -ErrorData $_
+        Publish-Telemetry -TaskName 'ServiceFabricPowerShell' -OperationId $global:operationId  -ErrorData $_
         throw
     }
 
