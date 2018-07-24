@@ -29,7 +29,7 @@ export class AzureMonitorAlerts {
         {
             '{resourceGroupName}': this._resourceGroupName,
             '{resourceName}': alertRuleName,
-        }, null, APIVersions.azure_arm_appinsights_alerts);
+        }, null, APIVersions.azure_arm_metric_alerts);
 
         try {
             var response = await this._client.beginRequest(httpRequest);
@@ -40,7 +40,7 @@ export class AzureMonitorAlerts {
             throw response;
         }
         catch(error) {
-            throw Error(tl.loc('FailedToGetApplicationInsightsResourceAlerts', alertRuleName, this._client.getFormattedError(error)));
+            throw Error(tl.loc('FailedToGetAzureMetricAlerts', alertRuleName, this._client.getFormattedError(error)));
         }
     }
 
@@ -52,7 +52,7 @@ export class AzureMonitorAlerts {
         {
             '{resourceGroupName}': this._resourceGroupName,
             '{resourceName}': alertRuleName,
-        }, null, APIVersions.azure_arm_appinsights_alerts);
+        }, null, APIVersions.azure_arm_metric_alerts);
 
         try {
             var response = await this._client.beginRequest(httpRequest);
@@ -68,7 +68,7 @@ export class AzureMonitorAlerts {
             throw ToError(response);
         }
         catch(error) {
-            throw Error(tl.loc('FailedToUpdateApplicationInsightsResourceAlerts', alertRuleName, this._client.getFormattedError(error)));
+            throw Error(tl.loc('FailedToUpdateAzureMetricAlerts', alertRuleName, this._client.getFormattedError(error)));
         }
     }
 

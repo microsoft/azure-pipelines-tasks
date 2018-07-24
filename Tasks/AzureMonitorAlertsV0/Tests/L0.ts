@@ -56,7 +56,7 @@ describe("AzureMonitorAlerts Suite", () => {
         tmr.run();
 
 		assert(tmr.stderr.length > 0 || tmr.errorIssues.length > 0, "should have written to stderr");
-        let expectedError = "Error: loc_mock_FailedToUpdateApplicationInsightsResourceAlerts Rule1 failed (CODE: 501)";
+        let expectedError = "Error: loc_mock_FailedToUpdateAzureMetricAlerts Rule1 failed (CODE: 501)";
         assert(tmr.stdErrContained(expectedError) || tmr.createdErrorIssue(expectedError), "should have thrown proper error message");
         assert(!tmr.succeeded, "task should have failed");
     	done();

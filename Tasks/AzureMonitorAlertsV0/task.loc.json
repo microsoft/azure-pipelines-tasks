@@ -132,7 +132,7 @@
     "UpdatedRule": "ms-resource:loc.messages.UpdatedRule",
     "Couldnotfetchaccesstoken": "ms-resource:loc.messages.Couldnotfetchaccesstoken",
     "SPNExpiredCheck": "ms-resource:loc.messages.SPNExpiredCheck",
-    "FailedToGetApplicationInsightsResourceAlerts": "ms-resource:loc.messages.FailedToGetApplicationInsightsResourceAlerts",
-    "FailedToUpdateApplicationInsightsResourceAlertsFailedToUpdateApplicationInsightsResourceAlerts": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResourceAlertsFailedToUpdateApplicationInsightsResourceAlerts"
+    "FailedToGetAzureMetricAlerts": "ms-resource:loc.messages.FailedToGetAzureMetricAlerts",
+    "FailedToUpdateAzureMetricAlerts": "ms-resource:loc.messages.FailedToUpdateAzureMetricAlerts"
   }
 }

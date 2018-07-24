@@ -21,16 +21,16 @@ export class AzureMonitorAlertsUtility {
 
         let resourceId: string = `/subscriptions/${this._azureEndpoint.subscriptionID}/resourceGroups/${this._resourceGroupName}/providers/${this._resourceType}/${this._resourceName}`;
         
-        let azureApplicationInsightsAlerts :AzureMonitorAlerts = new AzureMonitorAlerts(this._azureEndpoint, this._resourceGroupName);
+        let azureMetricAlerts :AzureMonitorAlerts = new AzureMonitorAlerts(this._azureEndpoint, this._resourceGroupName);
         for(let rule of alertRules) {
-            let requestBody: IAzureMetricAlertRequestBody = await this._getRequestBodyForAddingAlertRule(azureApplicationInsightsAlerts, this._resourceGroupName, resourceId, rule, notifyServiceOwners, notifyEmails);
-            await azureApplicationInsightsAlerts.update(rule.alertName, requestBody);
+            let requestBody: IAzureMetricAlertRequestBody = await this._getRequestBodyForAddingAlertRule(azureMetricAlerts , this._resourceGroupName, resourceId, rule, notifyServiceOwners, notifyEmails);
+            await azureMetricAlerts.update(rule.alertName, requestBody);
         }
     }
 
 
     private async _getRequestBodyForAddingAlertRule(
-        azureApplicationInsightsAlerts :AzureMonitorAlerts,
+        azureMetricAlerts :AzureMonitorAlerts,
 		resourceGroupName: string, 
 		resourceUri: string, 
 		rule: IAzureMetricAlertRule, 
@@ -43,7 +43,7 @@ export class AzureMonitorAlertsUtility {
 		try {
 			console.log(tl.loc("AlertRuleCheck", rule.alertName, resourceGroupName));
 		
-			existingAlertRule = await azureApplicationInsightsAlerts.get(rule.alertName);
+			existingAlertRule = await azureMetricAlerts.get(rule.alertName);
 			let existingAlertRuleTargetResourceUri: string = existingAlertRule["properties"] && existingAlertRule["properties"].condition
 				&& existingAlertRule["properties"].condition.dataSource ? existingAlertRule["properties"].condition.dataSource.resourceUri: "";
 			if(existingAlertRuleTargetResourceUri && existingAlertRuleTargetResourceUri.toLowerCase() !== resourceUri.toLowerCase()) {
@@ -53,7 +53,6 @@ export class AzureMonitorAlertsUtility {
 			console.log(tl.loc("AlertRuleExists", rule.alertName, resourceGroupName));
 		}
 		catch (error) {
-            console.log(error);
 			if(error.toString().indexOf("404") != -1) {
 				console.log(tl.loc("AlertRuleDoesNotExist", rule.alertName, resourceGroupName));
             }
@@ -142,8 +141,6 @@ export class AzureMonitorAlertsUtility {
 		return resourceValues[0];
 	}
 }
-
-
 
 export function getDeploymentUri(): string {
 	let buildUri = tl.getVariable("Build.BuildUri");
