@@ -3,7 +3,6 @@ import * as util from "../utilities";
 import * as tl from "vsts-task-lib/task";
 import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
-import * as str from "string";
 import * as os from "os";
 import * as Q from "q";
 import * as path from "path";
@@ -22,7 +21,7 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     // -----------------------------------------------------
     // Enable code coverage for Jacoco Ant Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
-    // -----------------------------------------------------    
+    // -----------------------------------------------------
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
@@ -52,9 +51,9 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
         let ccfilter = [];
 
         if (!util.isNullOrWhitespace(filter)) {
-            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
+            util.trimToEmptyString(filter).replace(/\./g, "/").s.split(":").forEach(exFilter => {
                 if (exFilter) {
-                    ccfilter.push(str(exFilter).endsWith("*") ? ("**/" + exFilter + "/**") : ("**/" + exFilter + ".class"));
+                    ccfilter.push(exFilter.endsWith("*") ? ("**/" + exFilter + "/**") : ("**/" + exFilter + ".class"));
                 }
             });
         }
@@ -67,12 +66,12 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
         let srcData = "";
         let srcDirs = this.sourceDirs === null ? "" : this.sourceDirs;
         srcDirs.split(",").forEach(dir => {
-            if (!str(dir).isEmpty()) {
+            if (!util.isNullOrWhitespace(dir)) {
                 srcData += `<fileset dir="${dir}"/>`;
                 srcData += os.EOL;
             }
         });
-        if (str(srcData).isEmpty()) {
+        if (util.isNullOrWhitespace(srcData)) {
             srcData = `<fileset dir="."/>`;
             srcData += os.EOL;
         }
@@ -92,7 +91,7 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
             classData +=  `/>`;
             classData += os.EOL;
         });
-        if (str(classData).isEmpty()) {
+        if (util.isNullOrWhitespace(classData)) {
             classData += `<fileset dir="."${this.includeFilter} ${this.excludeFilter} />`;
             classData += os.EOL;
         }
@@ -145,10 +144,10 @@ export class JacocoAntCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
         let testNodes = ["junit", "java", "testng", "batchtest"];
         let coverageNode = ccc.jacocoAntCoverageEnable(_this.reportDir);
 
-        if (!str(_this.includeFilter).isEmpty()) {
+        if (!util.isNullOrWhitespace(_this.includeFilter)) {
             coverageNode.$.includes = _this.includeFilterExec;
         }
-        if (!str(_this.excludeFilter).isEmpty()) {
+        if (!util.isNullOrWhitespace(_this.excludeFilter)) {
             coverageNode.$.excludes = _this.excludeFilterExec;
         }
 
