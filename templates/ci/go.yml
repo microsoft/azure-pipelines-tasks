@@ -2,7 +2,7 @@
 # Build your Go application.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux'
+queue: 'Hosted Ubuntu 1604'
 steps:
 
   - task: GoTool@0

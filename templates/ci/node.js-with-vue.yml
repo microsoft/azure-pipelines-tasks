@@ -1,15 +1,18 @@
-# PHP
-# Test and package your PHP application.
+# Node.js with Vue
+# Build a Node.js application using the Vue CLI.
 # https://aka.ms/yaml
 
 queue: 'Hosted Ubuntu 1604'
 steps:
 
-  - script: composer install
-    displayName: 'composer install'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '8.x' 
 
-  - script: phpunit
-    displayName: 'Run tests with phpunit'
+  - script: |
+      npm install -g @vue/cli
+      vue build
+    displayName: 'Install and build'
 
 #  - task: ArchiveFiles@2
 #    inputs:

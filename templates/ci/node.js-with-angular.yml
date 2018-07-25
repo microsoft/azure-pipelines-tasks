@@ -1,5 +1,5 @@
-# Node.js with gulp
-# Build a Node.js application using the gulp task runner.
+# Node.js with Angular
+# Build a Node.js application using the Angular CLI.
 # https://aka.ms/yaml
 
 queue: 'Hosted Ubuntu 1604'
@@ -9,14 +9,10 @@ steps:
     inputs:
       versionSpec: '8.x' 
 
-  - task: Npm@1
-    inputs:
-      command: 'install'
-
-  - task: Gulp@0
-    inputs:
-      gulpFile: 'gulpfile.js'
-      targets: ''
+  - script: |
+      npm install -g @angular/cli
+      ng build --prod
+    displayName: 'Install and build'
 
 #  - task: ArchiveFiles@2
 #    inputs:

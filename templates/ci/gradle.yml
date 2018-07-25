@@ -2,14 +2,17 @@
 # Build your Java projects and run tests with Gradle using a Gradle wrapper script.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
+queue: 'Hosted Windows Container'
 steps:
 
   - task: Gradle@2
     inputs:
-      gradleWrapperFile: 'gradlew'
-      testResultsFiles: '**/TEST-*.xml'
       tasks: 'build'
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.10'
+      jdkArchitectureOption: 'x64'
+      testResultsFiles: '**/TEST-*.xml'
 
 #  - task: CopyFiles@2
 #    inputs:

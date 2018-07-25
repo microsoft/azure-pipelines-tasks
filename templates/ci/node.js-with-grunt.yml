@@ -2,7 +2,7 @@
 # Build a Node.js application using the Grunt task runner.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux'
+queue: 'Hosted Ubuntu 1604'
 steps:
 
   - task: NodeTool@0
