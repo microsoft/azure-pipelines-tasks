@@ -3,7 +3,6 @@ import * as util from "../utilities";
 import * as tl from "vsts-task-lib/task";
 import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
-import * as str from "string";
 import * as Q from "q";
 
 export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
@@ -18,7 +17,7 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
     // -----------------------------------------------------
     // Enable code coverage for Jacoco Maven Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
-    // -----------------------------------------------------    
+    // -----------------------------------------------------
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
@@ -46,9 +45,9 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
         let ccfilter = [];
 
         if (!util.isNullOrWhitespace(filter)) {
-            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
+            util.trimToEmptyString(filter).replace(/\./g, "/").s.split(":").forEach(exFilter => {
                 if (exFilter) {
-                    ccfilter.push(str(exFilter).endsWith("*") ? ("**/" + exFilter + "/**") : ("**/" + exFilter + ".class"));
+                    ccfilter.push(exFilter.endsWith("*") ? ("**/" + exFilter + "/**") : ("**/" + exFilter + ".class"));
                 }
             });
         }
@@ -136,10 +135,10 @@ export class JacocoMavenCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler
         let includeFilter = _this.includeFilter.join(",");
         let excludeFilter = _this.excludeFilter.join(",");
 
-        if (str(srcDirs).isEmpty()) {
+        if (util.isNullOrWhitespace(srcDirs)) {
             srcDirs = ".";
         }
-        if (str(classDirs).isEmpty()) {
+        if (util.isNullOrWhitespace(classDirs)) {
             classDirs = ".";
         }
 
