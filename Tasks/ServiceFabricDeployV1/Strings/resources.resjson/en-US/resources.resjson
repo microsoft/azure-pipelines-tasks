@@ -142,5 +142,6 @@
   "loc.messages.SFSDK_RetryingTestClusterConnection": "Testing connection to cluster..",
   "loc.messages.SFSDK_RetryingTestAppPackage": "Testing application package..",
   "loc.messages.SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",
-  "loc.messages.SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package.."
+  "loc.messages.SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package..",
+  "loc.messages.SFSDK_UsingNewSdk": "Using new SDK {0}."
 }
