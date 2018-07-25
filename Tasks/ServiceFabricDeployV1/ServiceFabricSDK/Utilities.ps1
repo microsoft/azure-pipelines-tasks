@@ -881,20 +881,18 @@ function Invoke-ActionWithDefaultRetries
 function Test-OldSdk
 {
     $sdkVersionString = (Get-SfSdkVersion)
-    if ($sdkVersionString -match "^\d+\.\d+")
+    $sdkVersion = New-Object Version
+    if ([Version]::TryParse($sdkVersionString, [ref]$sdkVersion))
     {
-        $sdkVersion = New-Object Version
-        if ([Version]::TryParse($matches[0], [ref]$sdkVersion))
+        $minVersion = New-Object -TypeName Version -ArgumentList '3.1.183.9494'
+        if ($sdkVersion -ge $minVersion)
         {
-            $minVersion = New-Object -TypeName Version -ArgumentList '3.1'
-            if ($sdkVersion -ge $minVersion)
-            {
-                Write-Host (Get-VstsLocString -Key SFSDK_UsingNewSdk -ArgumentList $sdkVersionString)
-                return $false
-            }
+            Write-Host (Get-VstsLocString -Key SFSDK_UsingNewSdk -ArgumentList $sdkVersionString)
+            return $false
         }
     }
 
+    Write-Host (Get-VstsLocString -Key SFSDK_UsingOldSdk -ArgumentList $sdkVersionString)
     return $true
 }
 

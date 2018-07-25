@@ -484,6 +484,7 @@
         "SFSDK_RetryingTestAppPackage": "Testing application package..",
         "SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",
         "SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package..",
-        "SFSDK_UsingNewSdk": "Using new SDK {0}."
+        "SFSDK_UsingNewSdk": "Using new SDK {0}.",
+        "SFSDK_UsingOldSdk": "Using old SDK {0}."
     }
 }
