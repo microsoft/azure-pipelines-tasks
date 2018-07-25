@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 19
+    "Patch": 20
   },
   "demands": [
     "Cmd"
@@ -483,8 +483,6 @@
     "SFSDK_RetryingTestClusterConnection": "ms-resource:loc.messages.SFSDK_RetryingTestClusterConnection",
     "SFSDK_RetryingTestAppPackage": "ms-resource:loc.messages.SFSDK_RetryingTestAppPackage",
     "SFSDK_RetryingGetClusterManifest": "ms-resource:loc.messages.SFSDK_RetryingGetClusterManifest",
-    "SFSDK_RetryingRemoveApplicationPackage": "ms-resource:loc.messages.SFSDK_RetryingRemoveApplicationPackage",
-    "SFSDK_UsingNewSdk": "ms-resource:loc.messages.SFSDK_UsingNewSdk",
-    "SFSDK_UsingOldSdk": "ms-resource:loc.messages.SFSDK_UsingOldSdk"
+    "SFSDK_RetryingRemoveApplicationPackage": "ms-resource:loc.messages.SFSDK_RetryingRemoveApplicationPackage"
   }
 }
