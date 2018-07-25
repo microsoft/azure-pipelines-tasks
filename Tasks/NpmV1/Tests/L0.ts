@@ -70,25 +70,6 @@ describe('Npm Task', function () {
         let tp = path.join(__dirname, 'custom-singleEndpoint.js');
         let tr = new ttm.MockTestRunner(tp);
 
-        mockery.registerMock('typed-rest-client/HttpClient', {
-            HttpClient: function() {
-                return {
-                    get: function(url, headers) {
-                        return {
-                        then: function(handler) {
-                            handler({
-                                message: {
-                                    statusCode: 401,
-                                    rawHeaders: ['x-tfs-foo: abc', 'x-content-type-options: nosniff', 'X-Powered-By: ASP.NET']
-                                }
-                            });
-                        }
-                        };
-                    }
-                };
-            }
-        });
-
         tr.run();
 
         assert(tr.stdOutContained('npm custom successful'), 'npm custom command should have run');
@@ -179,25 +160,6 @@ describe('Npm Task', function () {
         let tp = path.join(__dirname, 'install-multipleEndpoints.js');
         let tr = new ttm.MockTestRunner(tp);
 
-        mockery.registerMock('typed-rest-client/HttpClient', {
-            HttpClient: function() {
-                return {
-                    get: function(url, headers) {
-                        return {
-                        then: function(handler) {
-                            handler({
-                                message: {
-                                    statusCode: 401,
-                                    rawHeaders: ['x-tfs-foo: abc', 'x-content-type-options: nosniff', 'X-Powered-By: ASP.NET']
-                                }
-                            });
-                        }
-                        };
-                    }
-                };
-            }
-        });
-
         tr.run();
 
         assert(tr.stdOutContained('npm install successful'), 'npm should have installed the package');
@@ -229,25 +191,6 @@ describe('Npm Task', function () {
         this.timeout(1000);
         let tp = path.join(__dirname, 'publish-external.js');
         let tr = new ttm.MockTestRunner(tp);
-
-        mockery.registerMock('typed-rest-client/HttpClient', {
-            HttpClient: function() {
-                return {
-                    get: function(url, headers) {
-                        return {
-                        then: function(handler) {
-                            handler({
-                                message: {
-                                    statusCode: 401,
-                                    rawHeaders: ['x-content-type-options: nosniff', 'X-Powered-By: ASP.NET']
-                                }
-                            });
-                        }
-                        };
-                    }
-                };
-            }
-        });
 
         tr.run();
 

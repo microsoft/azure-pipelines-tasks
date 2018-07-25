@@ -54,6 +54,26 @@ export class NpmMockHelper extends TaskMockRunner {
         this.answers.rmRF[tempNpmPath] = { success: true };
         const tempNpmrcPath = path.join(tempNpmPath, `${NpmMockHelper.BuildBuildId}.npmrc`);
         this.answers.rmRF[tempNpmrcPath] = { success: true };
+
+        this.registerMock('typed-rest-client/HttpClient', {
+            HttpClient: function() {
+                return {
+                    get: function(url, headers) {
+                        console.log("\tchecking endpoint: " + url);
+                        return {
+                        then: function(handler) {
+                            handler({
+                                message: {
+                                    statusCode: 401,
+                                    rawHeaders: ['x-tfs-foo: abc', 'x-content-type-options: nosniff', 'X-Powered-By: ASP.NET']
+                                }
+                            });
+                        }
+                        };
+                    }
+                };
+            }
+        });
     }
 
     public run(noMockTask?: boolean): void {
