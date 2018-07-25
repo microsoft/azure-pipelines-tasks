@@ -65,7 +65,7 @@ describe('Npm Task', function () {
     });
 
     // custom
-    it('custom command succeeds with single service endpoint', (done: MochaDone) => {
+    it('custom command succeeds with single service endpoint', async (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'custom-singleEndpoint.js');
         let tr = new ttm.MockTestRunner(tp);
@@ -155,7 +155,7 @@ describe('Npm Task', function () {
         done();
     });
 
-    it('install using multiple endpoints', (done: MochaDone) => {
+    it('install using multiple endpoints', async (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'install-multipleEndpoints.js');
         let tr = new ttm.MockTestRunner(tp);
@@ -187,7 +187,7 @@ describe('Npm Task', function () {
         done();
     });
 
-    it ('publish using external registry', (done: MochaDone) => {
+    it ('publish using external registry', async (done: MochaDone) => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'publish-external.js');
         let tr = new ttm.MockTestRunner(tp);
