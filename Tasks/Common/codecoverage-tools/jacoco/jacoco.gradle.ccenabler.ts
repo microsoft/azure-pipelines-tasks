@@ -3,14 +3,13 @@ import * as util from "../utilities";
 import * as tl from "vsts-task-lib/task";
 import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
-import * as str from "string";
 import * as Q from "q";
 
 export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnabler {
     // -----------------------------------------------------
     // Enable code coverage for Jacoco Gradle Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
-    // -----------------------------------------------------    
+    // -----------------------------------------------------
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
@@ -48,9 +47,9 @@ export class JacocoGradleCodeCoverageEnabler extends cc.JacocoCodeCoverageEnable
         let ccfilter = [];
 
         if (!util.isNullOrWhitespace(filter)) {
-            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
+            util.trimToEmptyString(filter).replace(/\./g, "/").s.split(":").forEach(exFilter => {
                 if (exFilter) {
-                    ccfilter.push(str(exFilter).endsWith("*") ? ("'" + exFilter + "/**'") : ("'" + exFilter + ".class'"));
+                    ccfilter.push(exFilter.endsWith("*") ? ("'" + exFilter + "/**'") : ("'" + exFilter + ".class'"));
                 }
             });
         }
