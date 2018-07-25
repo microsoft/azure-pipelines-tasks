@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 18
+        "Patch": 19
     },
     "demands": [
         "Cmd"
@@ -483,6 +483,8 @@
         "SFSDK_RetryingTestClusterConnection": "Testing connection to cluster..",
         "SFSDK_RetryingTestAppPackage": "Testing application package..",
         "SFSDK_RetryingGetClusterManifest": "Getting cluster manifest..",
-        "SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package.."
+        "SFSDK_RetryingRemoveApplicationPackage": "Retrying to remove application package..",
+        "SFSDK_UsingNewSdk": "Using new SDK {0}.",
+        "SFSDK_UsingOldSdk": "Using old SDK {0}."
     }
 }
