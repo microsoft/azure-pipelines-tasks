@@ -961,7 +961,7 @@ function Unregister-ServiceFabricApplicationTypeWithoutAsyncAction
 function Get-ServiceFabricApplicationActionOldSdk
 {
     Param (
-        [hashtable]
+        [string]
         $ApplicationTypeName,
 
         [string]
