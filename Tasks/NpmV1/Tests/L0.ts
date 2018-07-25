@@ -346,8 +346,8 @@ describe('Npm Task', function () {
             getEndpointUrl: (id, optional) => {
                 return 'http://serviceendpoint.visualstudio.com';
             },
-            loc: (n, ...param) => {
-                console.log(n);
+            loc: (key: string) => {
+                // no-op
             },
             getHttpProxyConfiguration: (endpoint) => {
                 return null;

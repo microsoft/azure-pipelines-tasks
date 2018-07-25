@@ -104,12 +104,9 @@ export class NpmRegistry implements INpmRegistry {
         const headers: IHeaders = {};
         headers['X-TFS-FedAuthRedirect'] = 'Suppress';
 
-        console.log("doing HttpClient lookup: " + endpointUri);
-
         const endpointClient = new HttpClient(tl.getVariable('AZURE_HTTP_USER_AGENT'), null, requestOptions);
         try {
             const resp = await endpointClient.get(endpointUri, headers);
-            console.log("HttpClient lookup done " + endpointUri);
             return resp.message.rawHeaders !== null && resp.message.rawHeaders.some( t => t.toLowerCase().indexOf('x-tfs') >= 0 || t.toLowerCase().indexOf('x-vss') >= 0 );
         } catch (error) {
             tl.debug(error);
