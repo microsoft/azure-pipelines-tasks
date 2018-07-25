@@ -11,7 +11,7 @@ steps:
     displayName: 'Build the image'
     inputs:
       action: 'build an image'
-      dockerFile: '**/Dockerfile' 
+      dockerFile: 'Dockerfile' 
       imageName: '$(imageName)'
 
 #  - task: Docker@1
