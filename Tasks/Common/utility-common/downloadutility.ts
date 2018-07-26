@@ -17,7 +17,7 @@ function isRedirect(response: any): boolean {
 }
 
 function getRedirectOptions(options: any, redirectUrl: string): any {
-    tl.debug("Download latest release from redirect uri: " + redirectUrl);
+    tl.debug("redirect url: " + redirectUrl);
     if (typeof options === 'string') {
         options = redirectUrl;
     }
