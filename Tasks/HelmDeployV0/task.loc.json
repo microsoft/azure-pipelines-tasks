@@ -13,14 +13,15 @@
   "version": {
     "Major": 0,
     "Minor": 137,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "groups": [
     {
       "name": "cluster",
       "displayName": "ms-resource:loc.group.displayName.cluster",
-      "isExpanded": true
+      "isExpanded": true,
+      "visibleRule": "command != package"
     },
     {
       "name": "commands",
@@ -30,12 +31,14 @@
     {
       "name": "tls",
       "displayName": "ms-resource:loc.group.displayName.tls",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != package"
     },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != package"
     }
   ],
   "inputs": [
