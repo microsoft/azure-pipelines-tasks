@@ -5,12 +5,15 @@ var fs      = require('fs');
 var url = require('url');
 import * as tl from "vsts-task-lib/task";
 
-function isDownloadSucceeded(res: any): boolean {
-    return res.statusCode >= 200 && res.statusCode < 300;
+function isDownloadSucceeded(response: any): boolean {
+    return response.statusCode >= 200 && response.statusCode < 300;
 }
 
-function isRedirect(res: any): boolean {
-    return res.statusCode >= 300 && res.statusCode < 400 && res.headers && res.headers.location;
+function isRedirect(response: any): boolean {
+    return response.statusCode >= 300
+             && response.statusCode < 400
+             && response.headers
+             && response.headers.location;
 }
 
 function getRedirectOptions(options: any, redirectUrl: string): any {
