@@ -98,11 +98,11 @@ param (
 
     function Clean-Target
     {
-        $cleanupArgument = "/NOCOPY /PURGE" 
+        $cleanupArgument = "/NOCOPY /E /PURGE" 
         $guid = [GUID]::NewGuid()
         $tempDirectory = "$scriptRoot\temp$guid" 
         New-Item -ItemType Directory -Force -Path $tempDirectory         
-        Invoke-Expression "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
+        Invoke-Expression "robocopy `"$tempDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
         Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
     }
 
