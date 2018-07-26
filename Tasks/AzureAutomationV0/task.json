@@ -84,7 +84,7 @@
     {
       "name": "RunbookFile", 
       "type": "filepath", 
-      "label": "Provide a Runbook File", 
+      "label": "Import Runbook(s)", 
       "defaultValue":"",
       "required": false,
       "groupName":"deployrunbooks",
@@ -98,6 +98,16 @@
       "required": false,
       "groupName":"deployrunbooks",
       "helpMarkDown": "Select the checkbox if you want to start the runbook you are specifying"
+    },
+    {
+      "name": "RunbookToStart",
+      "type": "string",
+      "label": "Name of Runbook to start",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "deployrunbooks",
+      "visibleRule": "StartRunbookJob = true && RunbookFile != \"\" && AutomationRunbook = \"\"",
+      "helpMarkDown": "If you have provided a folder of runbooks to import instead of a single runbook script, specify the name of the runbook from the folder you want to run (without the extension)"
     },
     {
       "name": "RunbookParametersFile", 
@@ -135,11 +145,11 @@
     {
       "name": "DscConfigurationFile",
       "type": "filePath",
-      "label": "Provide a Configuration Script",
+      "label": "Import Configuration Script",
       "defaultValue":"",
       "required": false,
       "groupName":"deploydsc",
-      "helpMarkDown": "Provide a configuration file or select a configuration from your Automation Account above"
+      "helpMarkDown": "Provide a configuration script to import to the Automation Account or select a configuration from your Automation Account above"
     },
     {
       "name": "DscStorageAccountName",

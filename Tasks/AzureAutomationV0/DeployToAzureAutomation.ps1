@@ -5,6 +5,7 @@ param (
     [string][Parameter(Mandatory=$false)]$AutomationRunbook = $null,
     [string][Parameter(Mandatory=$false)]$RunbookFile = $null,
     [string][Parameter(Mandatory=$false)]$StartRunbookJob,
+    [string][Parameter(Mandatory=$false)]$RunbookToStart,
     [string][Parameter(Mandatory=$false)]$RunbookParametersFile = $null,
     [string][Parameter(Mandatory=$false)]$HybridWorker = $null,
     [string][Parameter(Mandatory=$false)]$AutomationDscConfiguration = $null,
@@ -22,7 +23,7 @@ $ErrorActionPreference = "Stop"
 $VerbosePreference = "Continue"
 
 # If the user wants to deploy runbooks to Azure Automation
-if ($AutomationRunbook -or ($RunbookFile -and (($RunbookFile.Split('.')[-1] -match "ps1") -or ($RunbookFile.Split('.')[-1] -match "py")))) {
+if ($AutomationRunbook -or ($RunbookFile -and ($RunbookFile -ne "D:\a\r1\a"))) {
     if ($AutomationRunbook -and (-not($RunbookFile) -or (-not($RunbookFile.Split('.')[-1] -match "ps1") -or (-not($RunbookFile.Split('.')[-1] -match "py"))))) {
         if ($StartRunbookJob) {
             & ".\StartAzureAutomationRunbook.ps1" -ConnectedServiceName $ConnectedServiceName -ResourceGroupName $ResourceGroupName `
@@ -30,13 +31,12 @@ if ($AutomationRunbook -or ($RunbookFile -and (($RunbookFile.Split('.')[-1] -mat
         }
     }
 
-    elseif ($RunbookFile -and (-not($AutomationRunbook))) {
+    elseif ($RunbookFile -and ($RunbookFile -ne "D:\a\r1\a") -and (-not($AutomationRunbook))) {
         & ".\ImportAzureAutomationRunbook.ps1" -ConnectedServiceName $ConnectedServiceName -ResourceGroupName $ResourceGroupName `
         -AutomationAccountName $AutomationAccountName -RunbookPath $RunbookFile
         if ($StartRunbookJob) {
-            $RunbookName = Get-ChildItem -Path $RunbookFile -File -Include ('*.ps1', '*.py') -Recurse -Depth 1
             & ".\StartAzureAutomationRunbook.ps1" -ConnectedServiceName $ConnectedServiceName -ResourceGroupName $ResourceGroupName `
-            -AutomationAccountName $AutomationAccountName -RunbookName $RunbookName.BaseName -RunbookParametersFile $RunbookParametersFile -RunOn $HybridWorker
+            -AutomationAccountName $AutomationAccountName -RunbookName $RunbookToStart -RunbookParametersFile $RunbookParametersFile -RunOn $HybridWorker
         }
     }
 }

@@ -84,19 +84,20 @@ else
     -AutomationAccountName $AutomationAccountName -ResourceGroupName $ResourceGroupName
 }
 
-Write-Host "Configuration compilation job started"
+Write-Host "Compilation job of configuration '$ConfigurationName' started"
 
-# Wait to make sure the configuration compilation was successful 
+# Wait to make sure the configuration compilation was successful
 $Timeout = 180
 while (($CompilationJob.Status -ne "Completed") -and ($CompilationJob.Status -ne "Suspended") -and ($Timeout -gt 0))
 {
      $CompilationJob = $CompilationJob | Get-AzureRmAutomationDscCompilationJob
      Start-Sleep -Seconds 5
      $Timeout = $Timeout - 5
-} 
+}
 
 if ($CompilationJob.Status -ne "Completed") {
     Write-Host "Compilation suspended or failed to complete"
+    Throw $Error
     exit -1
 }
 
@@ -143,6 +144,29 @@ if ($DscNodeNames)
         }
 
         Write-Host "Assigning node configuration $DscConfigFilename to $NodeName"
+    }
+
+    foreach ($NodeName in $DscNodeNames) {
+        # Check to make sure the configuration was successfully applied to the VM
+        $Id = [GUID](Get-AzureRmAutomationdscnode -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName `
+             | Where {$_.Name -eq $NodeName} | Select Id | Format-Table -HideTableHeaders | out-string)
+        $Node = Get-AzureRmAutomationDscNode -AutomationAccountName $AutomationAccountName `
+        -ResourceGroupName $ResourceGroupName -NodeId $Id
+
+        while ($Node.Status -eq "Pending") {
+            Start-Sleep -Seconds 10
+            $Node = $Node | Get-AzureRmAutomationDscNode
+            if ($Node.Status -eq "Failed")
+            {
+                Write-Host "Failed to apply configuration to node: $NodeName"
+                Throw $Error
+                exit -1
+            }
+            elseif ($Node.Status -eq "Compliant")
+            {
+                Write-Host "Configuration successfully applied to Node: $NodeName. Node is compliant"
+            }
+        }
     }
 }
 
