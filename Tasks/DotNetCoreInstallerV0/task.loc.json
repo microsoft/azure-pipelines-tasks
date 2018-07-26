@@ -65,7 +65,7 @@
     "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
     "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
     "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
-    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
+    "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
     "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage"
   }

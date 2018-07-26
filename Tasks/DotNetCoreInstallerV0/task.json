@@ -65,7 +65,7 @@
         "ToolToInstall": "Tool to install: .NET Core %s version %s.",
         "PrimaryPlatform": "Detected platform (Primary): %s",
         "LegacyPlatform": "Detected platform (Legacy): %s",
-        "VersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer https://github.com/dotnet/core/blob/master/release-notes/releases.json",
+        "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
         "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
         "FailedToDownloadPackage": "Failed to download package for installation"
     }
