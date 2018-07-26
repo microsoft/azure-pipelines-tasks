@@ -10,6 +10,7 @@
   "loc.messages.ToolFailed": "Tool install failed: %s",
   "loc.messages.ImplicitVersionNotSupported": "Version should be a valid and explicit version: %s",
   "loc.messages.getMachinePlatformFailed": "Failed to get machine platform details. Error: %s.",
+  "loc.messages.getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
   "loc.messages.UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
   "loc.messages.CheckingToolCache": "Checking if a cached copy exists for this version...",
   "loc.messages.InstallingAfresh": "Cache does not contains this particular .NET Core. Will be downloaded and installed.",
