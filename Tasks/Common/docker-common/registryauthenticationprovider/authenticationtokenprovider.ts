@@ -11,7 +11,7 @@ export abstract class AuthenticationTokenProvider {
 
     protected getXMetaSourceClient(): string {
         var serverType = tl.getVariable('System.ServerType');
-        return serverType.toLocaleLowerCase() === "hosted" ? "VSTS" : "TFS";
+        return serverType.toLowerCase() === "hosted" ? "VSTS" : "TFS";
     }
 }
 
