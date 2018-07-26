@@ -5,7 +5,35 @@ var fs      = require('fs');
 var url = require('url');
 import * as tl from "vsts-task-lib/task";
 
-export async function download(options: any, downloadPath: string, printData: boolean, isRedirectUrl: boolean = false): Promise<void> {
+function isDownloadSucceeded(res: any): boolean {
+    return res.statusCode >= 200 && res.statusCode < 300;
+}
+
+function isRedirect(res: any): boolean {
+    return res.statusCode >= 300 && res.statusCode < 400 && res.headers && res.headers.location;
+}
+
+function getRedirectOptions(options: any, redirectUrl: string): any {
+    tl.debug("Download latest release from redirect uri: " + redirectUrl);
+    if (typeof options === 'string') {
+        options = redirectUrl;
+    }
+    else {
+        try {
+            var redirectUrlOptions = url.parse(redirectUrl);
+            options.path = redirectUrlOptions.path;
+            options.hostname = redirectUrlOptions.hostname;
+        }
+        catch(error) {
+            tl.warning("Unable to parse url:" + redirectUrl);
+            options = redirectUrl;
+        }
+    }
+
+    return options;
+}
+
+export async function download(options: any, downloadPath: string, printData: boolean, handleRedirect: boolean = true): Promise<void> {
     var file = fs.createWriteStream(downloadPath);
     var body = ''
     return new Promise<void>((resolve, reject) => {
@@ -21,38 +49,17 @@ export async function download(options: any, downloadPath: string, printData: bo
                     tl.debug(body);
                 }
 
-                if(res.statusCode < 200 || res.statusCode >= 300) {         
-                    if((res.statusCode >= 300 || res.statusCode < 400)
-                        && !isRedirectUrl
-                        && res.headers 
-                        && res.headers.location) {
-                            var redirectUrl = res.headers.location;
-                            tl.debug("Download latest release from redirect uri: " + redirectUrl);
-                            if (typeof options === 'string') {
-                                options = redirectUrl;
-                            }
-                            else {
-                                try {
-                                    var redirectUrlOptions = url.parse(redirectUrl, true, true);
-                                    options.path = redirectUrlOptions.pathname;
-                                    options.hostname = redirectUrlOptions.hostname;
-                                }
-                                catch(error) {
-                                    tl.warning("Unable to parse url:" + redirectUrl);
-                                    options = redirectUrl;
-                                }
-                            }
-
-                            resolve(this.download(options, downloadPath, printData, true));
-                    }
-                    else {
-                        tl.debug("File download failed");
-                        reject(new Error('Failed to download file status code: ' + res.statusCode));
-                    }
-                }
-                else {
+                if (isDownloadSucceeded(res)) {
                     tl.debug("File download completed");
                     resolve();
+                }
+                else if (isRedirect(res) && handleRedirect) {
+                    var redirectOptions = getRedirectOptions(options, res.headers.location);
+                    resolve(this.download(redirectOptions, downloadPath, printData, false));
+                }
+                else {
+                    tl.debug("File download failed");
+                    reject(new Error('Failed to download file status code: ' + res.statusCode));
                 }
             });
         });
