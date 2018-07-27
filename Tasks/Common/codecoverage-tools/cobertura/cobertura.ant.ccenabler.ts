@@ -49,7 +49,7 @@ export class CoberturaAntCodeCoverageEnabler extends cc.CoberturaCodeCoverageEna
         let ccfilter = [];
 
         if (!util.isNullOrWhitespace(filter)) {
-            util.trimToEmptyString(filter).replace(/\./g, "/").s.split(":").forEach(exFilter => {
+            util.trimToEmptyString(filter).replace(/\./g, "/").split(":").forEach(exFilter => {
                 if (exFilter) {
                     ccfilter.push(exFilter.endsWith("*") ? ("**/" + exFilter + "/**") : ("**/" + exFilter + ".class"));
                 }
