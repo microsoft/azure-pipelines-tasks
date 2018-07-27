@@ -34,10 +34,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    //ApplicationInsightsTests.ApplicationInsightsTests();
-    //AppServiceTests.AzureAppServiceMockTests();
-    //KuduServiceTests.KuduServiceTests();
-    //ResourcesTests.ResourcesTests();
+    ApplicationInsightsTests.ApplicationInsightsTests();
+    AppServiceTests.AzureAppServiceMockTests();
+    KuduServiceTests.KuduServiceTests();
+    ResourcesTests.ResourcesTests();
     
     if (tl.osType().match(/^Win/)) {
         it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {
