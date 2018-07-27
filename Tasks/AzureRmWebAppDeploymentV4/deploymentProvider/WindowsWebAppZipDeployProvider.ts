@@ -2,7 +2,7 @@ import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvid
 import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as Constant from '../operations/Constants';
-import * as ParameterParser from '../operations/parameterparser'
+import * as ParameterParser from '../operations/ParameterParserUtility'
 import { DeploymentType } from '../operations/TaskParameters';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 0';
 

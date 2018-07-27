@@ -17,7 +17,7 @@ export function parse(input: string): {[key: string]: any} {
             }
             obj.name = literal.substr(1, literal.length);
         }
-        else {
+        else if(obj.name && literal.replace(/\s/g, "")) {
             obj.value = literal;
             result[obj.name] = { value: obj.value };
             obj = { name: "", value: "" };
