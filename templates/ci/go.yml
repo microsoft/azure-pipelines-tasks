@@ -8,21 +8,12 @@ steps:
   - task: GoTool@0
     inputs:
       version: '1.10'
-
-  - task: Go@0
-    inputs:
-      command: 'get'
-      arguments: '-v -t -d'
-
-  - task: Go@0
-    inputs:
-      command: 'test'
-      arguments: '-v'
-
-  - task: Go@0
-    inputs:
-      command: 'build'
-      arguments: '-o "$(build.repository.name)"'
+  
+  - script: |
+      go get -v -t -d
+      go test -v
+      go build -o "$(build.repository.name)"
+    displayName: 'Go get, test, and build'
 
 #  - task: ArchiveFiles@2
 #    inputs:
