@@ -145,5 +145,5 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('## Copy Files Successful ##') >=0, 'should have copied the files');
         assert(tr.stdout.search('## mkdir Successful ##') >= 0, 'should have created dir including dest folder');
         done();
-    }); 
+    });
 });
