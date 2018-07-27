@@ -63,7 +63,7 @@ $MicrosoftIdentityModelClientsActiveDirectorySource = @"
         }
 
         public class AuthenticationContext {
-            public AuthenticationContext(string authorityUrl) {
+            public AuthenticationContext(string authorityUrl, bool validateAuthority = true) {
             }
 
             public Task<AuthenticationResult> AcquireTokenAsync(string resource, ClientAssertionCertificate certificate) {
