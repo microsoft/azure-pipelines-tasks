@@ -17,6 +17,7 @@ function Publish-Telemetry
             'OperationId'   = $OperationId
             'ExceptionData' = (Get-ExceptionData $ErrorData)
             'JobId' = (Get-VstsTaskVariable -Name 'System.JobId')
+            'SDKVersion' = (Get-SfSdkVersion)
         }
 
         $telemetryJson = ConvertTo-Json $telemetryData -Compress
@@ -64,4 +65,24 @@ function Get-ExceptionData
     {}
 
     return $exceptionData
+}
+
+function Get-SfSdkVersion
+{
+    if($global:sfSdkVersion)
+    {
+        return $global:sfSdkVersion
+    }
+
+    $regKey = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Service Fabric SDK\' -ErrorAction SilentlyContinue
+    if ($regKey)
+    {
+        if ($regKey.FabricSDKVersion)
+        {
+            $global:sfSdkVersion = $regKey.FabricSDKVersion
+            Write-Host (Get-VstsLocString -Key SfSdkVersion -ArgumentList $global:sfSdkVersion)
+        }
+    }
+
+    return $global:sfSdkVersion
 }
