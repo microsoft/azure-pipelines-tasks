@@ -65,9 +65,13 @@ export class JavaFilesExtractor {
 
     private async tarExtract(file, destinationFolder) {
         console.log(taskLib.loc('TarExtractFile', file));
-        const tr: tr.ToolRunner = taskLib.tool('tar');
-        tr.arg(['xzC', destinationFolder, '-f', file]);
-        tr.exec();
+        var xpTarLocation = taskLib.which('tar', true);
+        var tar = taskLib.tool(xpTarLocation);
+        tar.arg('-xvf');
+        tar.arg(file);
+        tar.arg('-C');
+        tar.arg(destinationFolder);
+        return tar.execSync();
     }
 
     private extractFiles(file: string, fileEnding: string) {
