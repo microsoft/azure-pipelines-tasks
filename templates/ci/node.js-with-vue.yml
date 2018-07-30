@@ -10,8 +10,8 @@ steps:
       versionSpec: '8.x' 
 
   - script: |
-      npm install -g @vue/cli
-      vue build
+      npm install
+      npm run build
     displayName: 'Install and build'
 
 #  - task: ArchiveFiles@2
