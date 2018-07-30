@@ -12,6 +12,7 @@ import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
 import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
 import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUtils';
+import * as Endpoint from 'azure-arm-rest/azure-arm-endpoint';
 
 async function run() {
     try {
@@ -153,6 +154,9 @@ async function run() {
     }
     catch(error) {
         tl.debug(error);
+    }
+    finally {
+        Endpoint.dispose();
     }
 
     if (!taskResult) {

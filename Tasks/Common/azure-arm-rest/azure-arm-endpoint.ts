@@ -6,6 +6,7 @@ import { ApplicationTokenCredentials } from './azure-arm-common';
 import constants = require('./constants');
 import fs = require('fs');
 import path = require('path');
+const certFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), 'spnCert.pem');
 
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
@@ -45,7 +46,7 @@ export class AzureRMEndpoint {
             if(this.endpoint.authenticationType && this.endpoint.authenticationType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
                 tl.debug('certificate spn endpoint');
                 this.endpoint.servicePrincipalCertificate = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'servicePrincipalCertificate', false);
-                this.endpoint.servicePrincipalCertificatePath = path.join(tl.getVariable('Agent.TempDirectory'), 'spnCert.pem');
+                this.endpoint.servicePrincipalCertificatePath = certFilePath;
                 fs.writeFileSync(this.endpoint.servicePrincipalCertificatePath, this.endpoint.servicePrincipalCertificate);
             }
             else {
@@ -134,5 +135,12 @@ export class AzureRMEndpoint {
         }
 
         return endpoint;
+    }
+}
+
+export function dispose() {
+    if(tl.exist(certFilePath)) {
+        tl.rmRF(certFilePath);
+        tl.debug('Removed cert endpoint file');
     }
 }
