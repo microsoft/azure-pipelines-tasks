@@ -5,7 +5,7 @@
 queue: 'Hosted Ubuntu 1604'
 steps:
 
-  - task: Maven@2
+  - task: Maven@3
     inputs:
       mavenPomFile: 'pom.xml'
       goals: 'package'

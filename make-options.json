@@ -68,6 +68,7 @@
         "KubernetesV1",
         "ManualInterventionV8",
         "MavenV2",
+        "MavenV3",
         "MSBuildV1",
         "NodeToolV0",
         "NpmV1",
