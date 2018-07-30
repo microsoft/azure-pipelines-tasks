@@ -41,7 +41,7 @@ export class DotNetCoreReleaseFetcher {
             }
         }
         else {
-            taskLib.warning(taskLib.loc("WarningVersionNotFound", version));
+            console.log(taskLib.loc("WarningVersionNotFound", version));
             downloadUrls = this.getFallbackDownloadUrls(type, version);
         }
 
