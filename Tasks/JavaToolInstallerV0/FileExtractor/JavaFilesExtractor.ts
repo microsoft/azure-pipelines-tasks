@@ -71,7 +71,7 @@ export class JavaFilesExtractor {
         tar.arg(file);
         tar.arg('-C');
         tar.arg(destinationFolder);
-        return tar.execSync();
+        tar.execSync();
     }
 
     private extractFiles(file: string, fileEnding: string) {
