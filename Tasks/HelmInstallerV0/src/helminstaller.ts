@@ -82,7 +82,7 @@ async function getStableHelmVersion() : Promise<string>{
     }
 
     try{
-        await downloadutility.download(options, downloadPath, true);
+        await downloadutility.download(options, downloadPath, true, true);
         var version = await getReleaseVersion(downloadPath);
         return version;
     } catch(error) {
