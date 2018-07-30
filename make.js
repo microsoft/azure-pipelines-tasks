@@ -343,7 +343,7 @@ target.test = function() {
     // setup the version of node to run the tests
     util.installNode(options.node);
 
-    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+    run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
 }
 
 //
@@ -470,7 +470,7 @@ target.testLegacy = function() {
     });
     contents += '});' + os.EOL;
     fs.writeFileSync(testsSpecPath, contents);
-    run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
+    run('mocha ' + testsSpecPath /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-legacy-results.xml' */, /*inheritStreams:*/true);
 }
 
 // 
@@ -489,13 +489,13 @@ target.package = function() {
     // Note: The local section above is needed when running layout locally due to discrepancies between local build and
     //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
     var layoutPath = path.join(packagePath, 'milestone-layout');
-
     util.createNugetPackagePerTask(packagePath, layoutPath);
 
     // These methods are to help with the migration to NuGet package per task.
     // Get rid of them after transition is done.
-    //util.renameFoldersFromAggregate('E:\\AllTaskMajorVersions');
-    //util.generatePerTaskForLegacyPackages('E:\\AllTaskMajorVersions');
+    //var path = '';
+    //util.renameFoldersFromAggregate(path);
+    //util.generatePerTaskForLegacyPackages(path);
 }
 
 // used by CI that does official publish

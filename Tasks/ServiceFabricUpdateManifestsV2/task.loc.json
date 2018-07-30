@@ -18,8 +18,8 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 2,
-    "Patch": 4
+    "Minor": 3,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -126,6 +126,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.overwriteExistingPkgArtifact"
     },
     {
+      "name": "imageNamesPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageNamesPath",
+      "required": false,
+      "visibleRule": "updateType = Docker image settings",
+      "helpMarkDown": "ms-resource:loc.input.help.imageNamesPath"
+    },
+    {
       "name": "imageDigestsPath",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.imageDigestsPath",
@@ -177,6 +185,10 @@
     "PdbWarning": "ms-resource:loc.messages.PdbWarning",
     "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue",
     "CouldNotFindSubPath": "ms-resource:loc.messages.CouldNotFindSubPath",
-    "PreviousPackageLocation": "ms-resource:loc.messages.PreviousPackageLocation"
+    "PreviousPackageLocation": "ms-resource:loc.messages.PreviousPackageLocation",
+    "ImageDigestListMismatch": "ms-resource:loc.messages.ImageDigestListMismatch",
+    "AmbiguousImages": "ms-resource:loc.messages.AmbiguousImages",
+    "ImageDigestNameMismatch": "ms-resource:loc.messages.ImageDigestNameMismatch",
+    "NoDigestForImage": "ms-resource:loc.messages.NoDigestForImage"
   }
 }

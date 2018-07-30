@@ -11,10 +11,6 @@
         {
             "module": "../Common/TlsHelper_",
             "type": "ps"
-        },
-        {
-            "module": "../Common/Deployment/TelemetryHelper",
-            "type": "ps"
         }
     ],
     "externals": {

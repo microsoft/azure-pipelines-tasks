@@ -1,8 +1,8 @@
 {
     "id": "BD1BED02-F04E-11E7-8C3F-9A214CF093AE",
     "name": "AzureMysqlDeployment",
-    "friendlyName": "Azure Database for Mysql Deployment",
-    "description": "This is an early preview. Run your scripts and make changes to your Azure DB for Mysql​.",
+    "friendlyName": "Azure Database for MySQL Deployment",
+    "description": "This is an early preview. Run your scripts and make changes to your Azure Database for MySQL.",
     "helpMarkDown": "[More Information](https://aka.ms/mysqlazuredeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -56,7 +56,7 @@
             "required": true,
             "defaultValue": "",
             "groupName": "target",
-            "helpMarkDown": "Server name of 'Azure DB for Mysql'.Example: fabrikam.mysql.database.azure.com. When you connect using Mysql Workbench, this is the same value that is used for 'Hostname' in 'Parameters'",
+            "helpMarkDown": "Server name of 'Azure Database for MySQL'.Example: fabrikam.mysql.database.azure.com. When you connect using MySQL Workbench, this is the same value that is used for 'Hostname' in 'Parameters'",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -77,7 +77,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Azure Database for MySQL server supports native MySQL authentication. You can connect and authenticate to a server with the server's admin login. Example:  bbo1@fabrikam. When you connect using Mysql Workbench, this is the same value that is used for 'Username' in 'Parameters'."
+            "helpMarkDown": "Azure Database for MySQL server supports native MySQL authentication. You can connect and authenticate to a server with the server's admin login. Example:  bbo1@fabrikam. When you connect using MySQL Workbench, this is the same value that is used for 'Username' in 'Parameters'."
         },
         {
             "name": "SqlPassword",
@@ -86,7 +86,7 @@
             "required": true,
             "groupName": "target",
             "defaultValue": "",
-            "helpMarkDown": "Administrator password for Azure DB for Mysql. In case you don’t recall the password you can change the password from [Azure portal](https://docs.microsoft.com/en-us/azure/mysql/howto-create-manage-server-portal).<br>It can be variable defined in the definition. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
+            "helpMarkDown": "Administrator password for Azure Database for MySQL. In case you don’t recall the password you can change the password from [Azure portal](https://docs.microsoft.com/en-us/azure/mysql/howto-create-manage-server-portal).<br>It can be variable defined in the pipeline. Example : $(password).<br>Also, you may mark the variable type as 'secret' to secure it."
         },
         {
             "name": "TaskNameSelector",
@@ -128,11 +128,11 @@
         {
             "name": "SqlAdditionalArguments",
             "type": "string",
-            "label": "Additional Mysql Arguments",
+            "label": "Additional MySQL Arguments",
             "required": false,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Additional options supported by mysql simple SQL shell.  These options will be applied when executing the given file on the Azure DB for Mysql.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​"
+            "helpMarkDown": "Additional options supported by MySQL simple SQL shell.  These options will be applied when executing the given file on the Azure Database for MySQL.​<br>Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option.​"
         },
         {
             "name": "IpDetectionMethod",
@@ -192,35 +192,35 @@
         }
     },
     "messages": {
-        "ARGD_ConstructorFailed": "Task failed while initializing. Error: %s .",
-        "FirewallRuleNameCannotBeEmpty": "Firewall rule name cannot be null.",
-        "FirewallAddressRangeCannotBeEmpty": "Firewall address cannot be null.",
-        "StartIpAddressCannotBeEmpty": "Start ip address of firewall rule cannot be null.",
-        "EndIpAddressCannotBeEmpty": "End ip address of firewall rule cannot be null.",
-        "MysqlServerNameCannotBeEmpty": "Mysql server name cannot be null.",
-        "MysqlFullyQualifiedServerNameCannotBeEmpty": "Mysql server fully qualified name cannot be null.",
-        "ResourceGroupCannotBeEmpty": "Resource group name cannot be null.",
-        "NotAbleToAddFirewallRule": "Getting error in adding firewall rule to mysql server. Error: %s .",
-        "NotAbleToDeleteFirewallRule": "Getting error in deleting firewall rule to mysql server. Error: %s .",
-        "AgentIpAddressIsMissingInAddedFirewallRule": "Agent ip address is missing in manually added firewall rule.",
-        "NotAbleToGetAllServers": "Not able to fetch all mysql server of a subscription. Error: %s .",
-        "EmptyOrNullServerList": "Mysql server list is empty. Invalid mysql server host name.",
-        "UnableToFindResourceGroupDueToNullId": "Unable to find resource group due to null id.",
-        "UnableToFindResourceGroupDueToInvalidId":  "Unable to find resource group due to invalid id.",
-        "NotAbleToGetInstalledLocationOfMysqlFromPath": "Missing mysql client in agent box.",
-        "UnableToFindMysqlFromRegistryOnMachineError": "Unable to find mysql from registry on machine error.",
-        "UnableToFindMysqlFromRegistry": "Unable to find mysql from registry. Error: %s .",
-        "UnableToFindTheLocationOfMysqlFromRegistryOnMachineError": "Unable to find the location of mysql from registry on machine error. Error: %s .",
-        "AzureMysqlTaskParameterCannotBeEmpty": "Azure mysql task parameter cannot be null.",
+        "ARGD_ConstructorFailed": "The task failed while initializing. Error: %s .",
+        "FirewallRuleNameCannotBeEmpty": "The firewall rule name cannot be null.",
+        "FirewallAddressRangeCannotBeEmpty": "The firewall address cannot be null.",
+        "StartIpAddressCannotBeEmpty": "The start IP address of the firewall rule cannot be null.",
+        "EndIpAddressCannotBeEmpty": "The end IP address of the firewall rule cannot be null.",
+        "MysqlServerNameCannotBeEmpty": "The MySQL server name cannot be null.",
+        "MysqlFullyQualifiedServerNameCannotBeEmpty": "The MySQL server fully qualified name cannot be null.",
+        "ResourceGroupCannotBeEmpty": "The resource group name cannot be null.",
+        "NotAbleToAddFirewallRule": "An error occurred while adding the firewall rule to the MySQL server. Error: %s .",
+        "NotAbleToDeleteFirewallRule": "An error occurred while deleting the firewall rule from the MySQL server. Error: %s .",
+        "AgentIpAddressIsMissingInAddedFirewallRule": "The agent IP address is missing in the manually added firewall rule.",
+        "NotAbleToGetAllServers": "Failed to retrieve all MySQL servers of a subscription. Error: %s .",
+        "EmptyOrNullServerList": "The MySQL server list is empty. The MySQL server host name is invalid.",
+        "UnableToFindResourceGroupDueToNullId": "Unable to find the resource group due to a null ID.",
+        "UnableToFindResourceGroupDueToInvalidId":  "Unable to find the resource group due to an invalid ID.",
+        "NotAbleToGetInstalledLocationOfMysqlFromPath": "The MySQL client is missing on the agent machine.",
+        "UnableToFindMysqlFromRegistryOnMachineError": "Unable to find MySQL using the registry on the machine.",
+        "UnableToFindMysqlFromRegistry": "Unable to find MySQL using the registry. Error: %s .",
+        "UnableToFindTheLocationOfMysqlFromRegistryOnMachineError": "Unable to find the location of MySQL using the registry on the machine. Error: %s .",
+        "AzureMysqlTaskParameterCannotBeEmpty": "The Azure MySQL task parameter cannot be null.",
         "ToolPathCannotBeNull": "Tool path cannot be null.",
-        "SqlExecutionException": "Sql execution exception. Please Check the sql script. Error: %s .",
-        "AzureEndpointCannotBeNull": "Invalid subscription name. Azure endpoint can't be null.",
-        "CallbackCannotBeNull": "callback cannot be null.",
+        "SqlExecutionException": "A SQL execution exception occurred. Please check the SQL script. Error: %s .",
+        "AzureEndpointCannotBeNull": "Invalid subscription name. The Azure service connection cannot be null.",
+        "CallbackCannotBeNull": "The callback cannot be null.",
         "UnableToCreateDatabaseException": "Unable to create database.",
-        "WindowMysqlClientMissingError": "Mysql Client is missing in window agent box. Please install it by running mysql client installer 'https://aka.ms/window-mysqlcli-installer' script file in your agent box.",
-        "LinuxMysqlClientMissingError": "Mysql Client is missing in linux agent box. Please install it by running 'apt-get install mysql-client'.",
-        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+        "WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",
+        "LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.",
+        "CouldNotFetchAccessTokenforAzureStatusCode": "Could not retrieve an access token for Azure. Status code: %s. Status message: %s",
+        "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not retrieve an access token for the managed service principal. Please configure Managed Service Identity (MSI) for the virtual machine. See 'https://aka.ms/azure-msi-docs'. Status code: %s. Status message: %s",
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not retrieve an access token for the managed service principal. Status code: %s. Status message: %s"
     }
 }

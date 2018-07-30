@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 16
+        "Patch": 17
     },
     "demands": [],
     "preview": "false",
@@ -40,8 +40,8 @@
         {
             "name": "dockerRegistryEndpoint",
             "type": "connectedService:dockerregistry",
-            "label": "Docker Registry Connection",
-            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+            "label": "Docker Registry Service Connection",
+            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "containerregistrytype = Container Registry"
         },
         {
@@ -100,7 +100,7 @@
             "type": "boolean",
             "label": "Qualify Image Names",
             "defaultValue": "true",
-            "helpMarkDown": "Qualify image names for built services with the Docker registry connection's hostname if not otherwise specified."
+            "helpMarkDown": "Qualify image names for built services with the Docker registry service connection's hostname if not otherwise specified."
         },
         {
             "name": "action",
@@ -192,7 +192,7 @@
         {
             "name": "entrypoint",
             "type": "string",
-            "label": "Entrypoint Override",
+            "label": "Entry Point Override",
             "visibleRule": "action = Run a specific service",
             "helpMarkDown": "Override the default entry point for the specific service container."
         },
@@ -206,7 +206,7 @@
         {
             "name": "detached",
             "type": "boolean",
-            "label": "Run In Background",
+            "label": "Run in Background",
             "defaultValue": "true",
             "visibleRule": "action = Run services || action = Run a specific service",
             "helpMarkDown": "Run the service containers in the background."
@@ -263,8 +263,8 @@
         {
             "name": "dockerHostEndpoint",
             "type": "connectedService:dockerhost",
-            "label": "Docker Host Connection",
-            "helpMarkDown": "Select a Docker host connection. Defaults to the agent's host.",
+            "label": "Docker Host Service Connection",
+            "helpMarkDown": "Select a Docker host service connection. Defaults to the agent's host.",
             "groupName": "advanced"
         },
         {

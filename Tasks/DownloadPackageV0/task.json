@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 8
+    "Patch": 9
   },
   "demands": [],
   "minimumAgentVersion": "1.99.0",
@@ -34,7 +34,7 @@
       "properties": {
         "EditableOptions": "True"
       },
-      "helpMarkDown": "Select the package to download, only nuget packages are supported currently"
+      "helpMarkDown": "Select the package to download. Only NuGet packages are currently supported."
     },
     {
       "name": "version",

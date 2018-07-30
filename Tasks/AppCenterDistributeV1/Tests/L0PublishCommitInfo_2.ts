@@ -19,6 +19,7 @@ tmr.setInput('releaseNotesInput', 'my release notes');
 tmr.setInput('symbolsType', 'AndroidJava');
 tmr.setInput('mappingTxtPath', '/test/path/to/mappings.txt');
 
+process.env['BUILD_BUILDID'] = '2';
 process.env['BUILD_SOURCEBRANCHNAME'] = 'master';
 process.env['BUILD_SOURCEVERSION'] = 'commitsha';
 
@@ -54,6 +55,7 @@ nock('https://example.test')
         release_notes: "my release notes",
         destinations: [{ id: "00000000-0000-0000-0000-000000000000" }],
         build: {
+            id: '2',
             branch: 'master',
             commit_hash: 'commitsha'
         }

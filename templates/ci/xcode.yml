@@ -35,6 +35,6 @@ steps:
 #  - task: PublishBuildArtifacts@1
 
 # Next steps:
-# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/build-release/tasks/deploy/appcenterdistribute
+# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/appcentertest
+# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/appcenterdistribute
 # Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store

@@ -2,7 +2,7 @@
     "id": "EF087383-EE5E-42C7-9A53-AB56C98420F9",
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
-    "description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test runner. Test frameworks that have a Visual Studio test adapter such as xUnit, NUnit, Chutzpah, etc. can also be run. Tests can be distributed on multiple agents using this task (version 2).",
+    "description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 137,
-        "Patch": 4
+        "Minor": 138,
+        "Patch": 8
     },
     "demands": [
         "vstest"
@@ -67,7 +67,7 @@
         {
             "name": "testAssemblyVer2",
             "type": "multiLine",
-            "label": "Test assemblies",
+            "label": "Test files",
             "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
             "required": true,
             "helpMarkDown": "Run tests from the specified files.<br>Ordered tests and webtests can be run by specifying the .orderedtest and .webtest files respectively. To run .webtest, Visual Studio 2017 Update 4 or higher is needed. <br><br>The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
@@ -525,7 +525,7 @@
         "UnexpectedVersionString": "Unexpected version string detected for vstest.console.exe: %s.",
         "UnexpectedVersionNumber": "Unexpected version number detected for vstest.console.exe: %s.",
         "VstestDiagNotSupported": "vstest.console.exe version does not support the /diag flag. Enable diagnostics via the exe.config files",
-        "NoIncludePatternFound": "No include pattern found. Specify atleast one include pattern to search test assemblies.",
+        "NoIncludePatternFound": "No include pattern found. Specify at least one include pattern to search test assemblies.",
         "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
         "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
@@ -535,6 +535,7 @@
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
         "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
         "distributedTestWorkflow": "In distributed testing flow",
+        "nonDistributedTestWorkflow": "Running tests using vstest.console.exe runner.",
         "dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
         "testSelectorInput": "Test selector : %s",
         "searchFolderInput": "Search folder : %s",
@@ -558,7 +559,7 @@
         "testAssembliesSelector": "Test assemblies",
         "testPlanSelector": "Test plan",
         "testRunSelector": "Test run",
-        "testRunIdInvalid": "The test selection is 'Test run', but the test run id '%s' given is invalid",
+        "testRunIdInvalid": "The test selection is 'Test run', but the test run ID '%s' given is invalid",
         "testRunIdInput": "Test run Id : '%s'",
         "testSourcesFilteringFailed": "Preparing the test sources file failed. Error : %s",
         "noTestSourcesFound": "No test sources found matching the given filter '%s'",
@@ -567,13 +568,13 @@
         "numberOfTestCasesPerSlice": "Number of test cases per batch : %s",
         "invalidTestBatchSize": "Invalid batch size provided: %s",
         "invalidRunTimePerBatch": "Invalid 'Running time (sec) per batch': %s",
-        "minimumRunTimePerBatchWarning": "'Running time (sec) per batch' should be atleast '%s' secs, defaulting to the minimum supported value.",
+        "minimumRunTimePerBatchWarning": "'Running time (seconds) per batch' should be at least '%s' seconds. Defaulting to the minimum supported value.",
         "RunTimePerBatch": "Run time per batch(sec) : %s",
         "searchLocationNotDirectory": "Search folder: '%s' should be a directory and it should exist.",
         "rerunFailedTests": "Rerun failed tests: %s",
         "rerunFailedThreshold": "Rerun failed tests threshold: %s",
         "invalidRerunFailedThreshold": "Invalid rerun failed tests threshold, defaulting to 30%",
-        "rerunFailedTestCasesMaxLimit": "Rerun maxmimum failed test case limit: %s",
+        "rerunFailedTestCasesMaxLimit": "Rerun maximum failed test case limit: %s",
         "invalidRerunFailedTestCasesMaxLimit": "Invalid rerun failed tests case limit, defaulting to 5",
         "rerunMaxAttempts": "Rerun maximum attempts: %s",
         "invalidRerunMaxAttempts": "Invalid/Exceeded rerun maximum attempts, defaulting to 3",
@@ -586,8 +587,9 @@
         "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
         "MultiConfigNotSupportedWithOnDemand": "On demand runs are not supported with Multi-Configuration option. Please use 'None' or 'Multi-agent' parallelism option.",
         "disabledRerun": "Disabling the rerun of failed tests as the rerun threshold provided is %s",
-        "UpgradeAgentMessage": "Please upgrade your vsts-agent version. https://github.com/Microsoft/vsts-agent/releases",
+        "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
         "VsTestVersionEmpty": "VsTestVersion is null or empty",
-        "UserProvidedSourceFilter": "Source filter: %s"
+        "UserProvidedSourceFilter": "Source filter: %s",
+        "UnableToGetFeatureFlag": "Unable to get feature flag: %s"
     }
 }

@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 137,
+    "Minor": 138,
     "Patch": 0
   },
   "groups": [
@@ -47,8 +47,9 @@
     },
     {
       "name": "definition",
+      "aliases": [ "pipeline" ],
       "type": "pickList",
-      "label": "Build definition",
+      "label": "Build pipeline",
       "defaultValue": "",
       "required": true,
       "visibleRule": "buildType == specific",
@@ -56,7 +57,7 @@
         "EditableOptions": "True",
         "DisableManageLink": "True"
       },
-      "helpMarkDown": "Select the build definition name"
+      "helpMarkDown": "Select the build pipeline name"
     },
     {
       "name": "specificBuildWithTriggering",
@@ -65,7 +66,7 @@
       "defaultValue": "false",
       "required": false,
       "visibleRule": "buildType == specific",
-      "helpMarkDown": "If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build from the specified definition, it will download artifacts from the build specified in the options below."
+      "helpMarkDown": "If checked, this build task will try to download artifacts from the triggering build. If there is no triggering build from the specified pipeline, it will download artifacts from the build specified in the options below."
     },
     {
       "name": "buildVersionToDownload",
@@ -217,16 +218,17 @@
     "LinkedArtifactCount": "Linked artifacts count:  %s",
     "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
     "UnsupportedArtifactType" :"Unsupported artifact type: %s",
-    "BuildNotFound": "Build with id %s not found",
+    "BuildNotFound": "Build with ID %s not found",
     "BuildArtifactNotFound": "Artifact %s not found for build %s",
     "NoArtifactsFound": "No artifacts found for build %s",
-    "BuildIdBuildDefinitionMismatch": "Build with id %s not found for build definition id %s",
+    "BuildIdBuildDefinitionMismatch": "Build with ID %s not found for build pipeline ID %s",
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
-    "RetryingOperation" : "Error : in %s, so retrying => retries pending  : %s",
+    "RetryingOperation" : "Error: in %s, so retrying => retries pending  : %s",
     "OperationFailed": "Failed in %s with error: %s",
     "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
     "LatestBuildFound": "Latest build found:  %s",
     "LatestBuildNotFound":"Latest build not found",
-    "LatestBuildFromBranchNotFound":"Latest build from branch %s not found"
+    "LatestBuildFromBranchNotFound":"Latest build from branch %s not found",
+    "DownloadingContainerResource": "Downloading items from container resource %s"
   }
 }

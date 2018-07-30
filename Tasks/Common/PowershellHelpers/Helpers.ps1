@@ -5,8 +5,13 @@ function Invoke-ActionWithRetries
         [scriptblock]
         $Action,
 
+        # ResultRetryEvaluator delegate will be called when Action has been successfully executed. The delegate can check whether result is acceptable or further re-try should be performed
         [scriptblock]
-        $ActionSuccessValidator = { $true },
+        $ResultRetryEvaluator = { $false },
+
+        # ExceptionRetryEvaluator delegate will be called when Action throws retryable exception. The delegate can check whether exception is acceptable or further re-try should be performed
+        [scriptblock]
+        $ExceptionRetryEvaluator = { $true },
 
         [int32]
         $MaxTries = 10,
@@ -22,13 +27,7 @@ function Invoke-ActionWithRetries
         $RetryMessage
     )
 
-    Trace-VstsEnteringInvocation $MyInvocation
-
-    if (!$RetryMessage)
-    {
-        $RetryMessage = Get-VstsLocString -Key RetryAfterMessage $RetryIntervalInSeconds
-    }
-
+    $lastResult = $null;
     $retryIteration = 1
     do
     {
@@ -37,13 +36,21 @@ function Invoke-ActionWithRetries
 
         try
         {
-            $result = & $Action
+            $result = & $Action $lastResult
+            $lastResult = $result
         }
         catch
         {
-            if (($null -eq $RetryableExceptions) -or (Test-RetryableException -Exception $_.Exception -AllowedExceptions $RetryableExceptions))
+            if (($null -eq $RetryableExceptions) -or (Test-RetryableException -Exception $_.Exception -RetryableExceptions $RetryableExceptions))
             {
+                $shouldRetry = $ExceptionRetryEvaluator.Invoke($_.Exception)
+                if (!$shouldRetry)
+                {
+                    return
+                }
+
                 $exception = $_.Exception
+                Write-Host (Get-VstsLocString -Key ActionException -ArgumentList $exception.GetType().FullName)
             }
             else
             {
@@ -51,7 +58,7 @@ function Invoke-ActionWithRetries
             }
         }
 
-        if (!$exception -and (!$result -or $ActionSuccessValidator.Invoke($result)))
+        if (!$exception -and (!$result -or !$ResultRetryEvaluator.Invoke($result)))
         {
             return $result
         }
@@ -68,12 +75,14 @@ function Invoke-ActionWithRetries
             }
         }
 
-        Write-Host $RetryMessage
+        if ($RetryMessage)
+        {
+            Write-Host $RetryMessage
+        }
+
         $retryIteration++
         Start-Sleep $RetryIntervalInSeconds
     } while ($true)
-
-    Trace-VstsLeavingInvocation $MyInvocation
 }
 
 function Get-TempDirectoryPath
@@ -103,10 +112,10 @@ function Test-RetryableException
         $Exception,
 
         [string[]]
-        $AllowedExceptions
+        $RetryableExceptions
     )
 
-    $AllowedExceptions | ForEach-Object {
+    $RetryableExceptions | ForEach-Object {
         if ($_ -and ($Exception -is ([type]$_)))
         {
             return $true;

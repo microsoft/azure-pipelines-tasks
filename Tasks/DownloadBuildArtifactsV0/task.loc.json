@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 137,
+    "Minor": 138,
     "Patch": 0
   },
   "groups": [
@@ -47,6 +47,9 @@
     },
     {
       "name": "definition",
+      "aliases": [
+        "pipeline"
+      ],
       "type": "pickList",
       "label": "ms-resource:loc.input.label.definition",
       "defaultValue": "",
@@ -227,6 +230,7 @@
     "ArtifactNameDirectoryNotFound": "ms-resource:loc.messages.ArtifactNameDirectoryNotFound",
     "LatestBuildFound": "ms-resource:loc.messages.LatestBuildFound",
     "LatestBuildNotFound": "ms-resource:loc.messages.LatestBuildNotFound",
-    "LatestBuildFromBranchNotFound": "ms-resource:loc.messages.LatestBuildFromBranchNotFound"
+    "LatestBuildFromBranchNotFound": "ms-resource:loc.messages.LatestBuildFromBranchNotFound",
+    "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource"
   }
 }

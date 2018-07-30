@@ -13,14 +13,16 @@ export async function run(packerHost: packerHost): Promise<any> {
     var command = packerHost.createPackerTool();
     command.arg("build");
     command.arg("-force");
+    command.arg("-color=false");
 
     // add all variables
     var variableProviders = packerHost.getTemplateVariablesProviders();
     for (var provider of variableProviders) {
         var variables = await provider.getTemplateVariables(packerHost);
-        variables.forEach((value: string, key: string) => {
-            command.arg(["-var", util.format("%s=%s", key, value)]);
-        });
+        let filePath: string = utils.generateTemporaryFilePath();
+        let content: string = utils.getPackerVarFileContent(variables);
+        utils.writeFile(filePath, content);
+        command.arg(util.format("%s=%s", '-var-file', filePath));
     }
 
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));
@@ -28,7 +30,7 @@ export async function run(packerHost: packerHost): Promise<any> {
     console.log(tl.loc("ExecutingPackerBuild"));
     var taskParameters = packerHost.getTaskParameters();
     var outputVariablesParser: definitions.IOutputParser;
-    if(!taskParameters.isManagedImage){
+    if (!taskParameters.isManagedImage) {
         outputVariablesParser = new OutputVariablesParser([constants.PackerLogTokenImageUri, constants.PackerLogTokenStorageLocation]);
     } else {
         outputVariablesParser = new OutputVariablesParser([constants.PackerLogTokenManagedImageName, constants.PackerLogTokenManagedResourceGroupName, constants.PackerLogTokenManagedImageLocation]);
@@ -41,26 +43,25 @@ export async function run(packerHost: packerHost): Promise<any> {
 }
 
 function setOutputVariables(packerHost: packerHost, outputs: Map<string, string>): void {
-   var taskParameters = packerHost.getTaskParameters();
-   var imageUri;
-   if(!taskParameters.isManagedImage) {
-       imageUri = outputs.get(constants.PackerLogTokenImageUri);
-   } else {
-       imageUri = outputs.get(constants.PackerLogTokenManagedImageName);
-   }
+    var taskParameters = packerHost.getTaskParameters();
+    var imageUri;
 
-    if(!utils.IsNullOrEmpty(taskParameters.imageUri)) {
-        if(!utils.IsNullOrEmpty(imageUri)) {
-            if(!taskParameters.isManagedImage){
+    if (!taskParameters.isManagedImage) {
+        imageUri = outputs.get(constants.PackerLogTokenImageUri);
+        if (!utils.IsNullOrEmpty(taskParameters.imageUri)) {
+            if (!utils.IsNullOrEmpty(imageUri)) {
                 tl.debug("Setting image URI variable to: " + imageUri);
+                tl.setVariable(taskParameters.imageUri, imageUri);
             } else {
-                tl.debug("Setting image URI variable which contains the managed image name to: " + imageUri);
-            }
-            
-            tl.setVariable(taskParameters.imageUri, imageUri);
-        } else {
-            if(!taskParameters.isManagedImage){
                 throw tl.loc("ImageURIOutputVariableNotFound");
+            }
+        }
+    } else {
+        imageUri = outputs.get(constants.PackerLogTokenManagedImageName);
+        if (!utils.IsNullOrEmpty(taskParameters.imageUri)) {
+            if (!utils.IsNullOrEmpty(imageUri)) {
+                tl.debug("Setting image URI variable which contains the managed image name to: " + imageUri);
+                tl.setVariable(taskParameters.imageUri, imageUri);
             } else {
                 throw tl.loc("ManagedImageNameOutputVariableNotFound");
             }

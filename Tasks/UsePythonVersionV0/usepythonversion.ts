@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -40,7 +39,7 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
             .join(os.EOL);
 
         throw new Error([
-            task.loc('VersionNotFound', parameters.versionSpec),
+            task.loc('VersionNotFound', parameters.versionSpec, parameters.architecture),
             task.loc('ListAvailableVersions'),
             x86Versions,
             x64Versions

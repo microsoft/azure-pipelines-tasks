@@ -2,7 +2,7 @@
 # Build your Java projects and run tests with Apache Maven.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux'
+queue: 'Hosted Ubuntu 1604'
 steps:
 
   - task: Maven@2

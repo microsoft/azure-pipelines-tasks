@@ -2,7 +2,7 @@
 # Build a Universal Windows Platform application using Visual Studio.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
+queue: 'Hosted Windows Container'
 variables:
   solution: '**/*.sln'
   buildPlatform: 'x86|x64|ARM'
@@ -28,6 +28,6 @@ steps:
 #      pathToPublish: '$(appxPackageDir)'
 
 # Next steps:
-# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/build-release/tasks/deploy/appcenterdistribute
+# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/appcentertest
+# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/appcenterdistribute
 # Release to the Windows Store with the Windows Store extension: https://marketplace.visualstudio.com/items?itemName=MS-RDX-MRO.windows-store-publish

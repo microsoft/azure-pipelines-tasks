@@ -2,7 +2,7 @@
 # Start with an empty pipeline and add your own tasks.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux'
+queue: 'Hosted Ubuntu 1604'
 steps:
 
   - script: |

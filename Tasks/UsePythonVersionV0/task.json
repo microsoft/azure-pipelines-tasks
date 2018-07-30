@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 136,
-        "Patch": 0
+        "Minor": 138,
+        "Patch": 1
     },
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",
@@ -30,8 +30,8 @@
             "type": "string",
             "label": "Version spec",
             "required": true,
-            "defaultValue": ">= 3.3",
-            "helpMarkDown": "Version range or exact version of a Python version to use."
+            "defaultValue": "3.x",
+            "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
         },
         {
             "name": "addToPath",
@@ -71,6 +71,6 @@
         "ListAvailableVersions": "Available versions:",
         "PlatformNotRecognized": "Platform not recognized",
         "PrependPath": "Prepending PATH environment variable with directory: %s",
-        "VersionNotFound": "Version spec %s did not match any version in the tool cache."
+        "VersionNotFound": "Version spec %s for architecture %s did not match any version in the tool cache."
     }
 }

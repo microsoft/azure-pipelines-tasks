@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 137,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Package and publish to PyPI",
@@ -23,9 +23,9 @@
       "name": "serviceEndpoint",
       "aliases": [ "pypiConnection" ],
       "type": "connectedService:generic",
-      "label": "PyPI connection",
+      "label": "PyPI service connection",
       "required": true,
-      "helpMarkDown": "A generic service endpoint for connecting to the package index."
+      "helpMarkDown": "A generic service connection for connecting to the package index."
     },    
     {
       "name": "wd",

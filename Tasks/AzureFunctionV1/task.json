@@ -17,7 +17,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 3
+		"Patch": 4
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{
@@ -29,10 +29,10 @@
 	"inputs": [{
 			"name": "function",
 			"type": "string",
-			"label": "Azure function url",
+			"label": "Azure function URL",
 			"defaultValue": "",
 			"required": true,
-			"helpMarkDown": "Url of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1"
+			"helpMarkDown": "URL of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1"
 		}, {
 			"name": "key",
 			"type": "string",
@@ -75,7 +75,7 @@
 			"label": "Query parameters",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Query parameters string append to the function Url. Should not start with with \"?\" and \"&\"."
+			"helpMarkDown": "Query parameters string append to the function URL. Should not start with with \"?\" and \"&\"."
 		}, {
 			"name": "body",
 			"type": "multiLine",

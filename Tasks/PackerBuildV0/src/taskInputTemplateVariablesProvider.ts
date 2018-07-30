@@ -40,7 +40,7 @@ export default class TaskInputTemplateVariablesProvider implements definitions.I
         this._templateVariables.set(constants.TemplateVariableResourceGroupName, taskParameters.resourceGroup);
         this._templateVariables.set(constants.TemplateVariableStorageAccountName, taskParameters.storageAccount);
 
-        if(taskParameters.isManagedImage && taskParameters.templateType === constants.TemplateTypeBuiltin){
+        if(taskParameters.isManagedImage){
             this._templateVariables.set(constants.TemplateVariableManagedImageName, taskParameters.managedImageName) 
         }
 

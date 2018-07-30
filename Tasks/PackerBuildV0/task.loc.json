@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 14
+    "Patch": 16
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -55,6 +55,22 @@
         "custom": "User provided"
       },
       "defaultValue": "builtin"
+    },
+    {
+      "name": "isManagedImage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isManagedImage",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.isManagedImage",
+      "defaultValue": false
+    },
+    {
+      "name": "managedImageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.managedImageName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.managedImageName",
+      "visibleRule": "isManagedImage = true && templateType = builtin"
     },
     {
       "name": "customTemplateLocation",
@@ -257,7 +273,7 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node": {
-      "target": "src//main.js"
+      "target": "./src//main.js"
     }
   },
   "messages": {
@@ -275,6 +291,7 @@
     "ExecutingPackerBuild": "ms-resource:loc.messages.ExecutingPackerBuild",
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
+    "ManagedImageNameOutputVariableNotFound": "ms-resource:loc.messages.ManagedImageNameOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
     "CustomTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.CustomTemplateNotFoundErrorMessagePathName",
     "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
