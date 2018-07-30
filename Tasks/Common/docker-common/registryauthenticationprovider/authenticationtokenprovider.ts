@@ -10,8 +10,8 @@ export abstract class AuthenticationTokenProvider {
     public abstract getAuthenticationToken(): RegistryAuthenticationToken
 
     protected getXMetaSourceClient(): string {
-        var serverType = tl.getVariable('System.ServerType');
-        return (serverType && serverType.toLowerCase()) === "hosted" ? "VSTS" : "TFS";
+        var serverType = tl.getVariable('System.ServerType');       
+        return (serverType && serverType.toLowerCase() === "hosted") ? "VSTS" : "TFS";
     }
 }
 
