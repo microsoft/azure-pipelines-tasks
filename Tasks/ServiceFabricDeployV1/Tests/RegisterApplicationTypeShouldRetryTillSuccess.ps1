@@ -13,53 +13,26 @@ $applicationType = @{
     Status                 = [System.Fabric.Query.ApplicationTypeStatus]::Provisioning
 }
 $RegisterParameters = @{
-    'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
+    'ApplicationPathInImageStore' = $applicationPackagePathInImageStore;
+    'Async' = $true
 }
-$getApplicationTypeParams = @{
-    'ApplicationTypeName'    = $ApplicationTypeName;
-    'ApplicationTypeVersion' = $ApplicationTypeVersion
-}
-$global:registerRetriesAttempted = 0
 $global:getRetriesAttempted = 0
 
 Register-Mock Register-ServiceFabricApplicationType {
-    $global:registerRetriesAttempted++;
-    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
+    return $true;
 } -- @RegisterParameters
 
-Register-Mock Get-ServiceFabricApplicationType {
+Register-Mock Get-ServiceFabricApplicationTypeAction {
     $global:getRetriesAttempted++;
     if ($global:getRetriesAttempted -eq 3)
-    {
-        $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Provisioning
-        return $applicationType
-    }
-
-    if ($global:getRetriesAttempted -eq 2)
-    {
-        return $null
-    }
-
-    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
-} -- @getApplicationTypeParams
-
-Register-Mock Get-ServiceFabricApplicationType {
-    $global:waitRetriesAttempted++;
-    if ($global:waitRetriesAttempted -eq 4)
     {
         $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Available
         return $applicationType
     }
-
-    if ($global:waitRetriesAttempted -eq 2)
-    {
-        $applicationType.Status = [System.Fabric.Query.ApplicationTypeStatus]::Provisioning
-        return $applicationType
-    }
-
-    throw [System.Fabric.FabricTransientException]::new("Could not ping!")
+    throw [System.Fabric.FabricTransientException]::new("Could not ping!!")
 } -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
 
+Register-Mock Get-SfSdkVersion { '3.1.183.9494' }
 Register-Mock Start-Sleep {}
 Register-Mock Write-VstsTaskError
 
@@ -69,4 +42,4 @@ Register-Mock Write-VstsTaskError
 
 # Act/Assert
 Register-ServiceFabricApplicationTypeAction -RegisterParameters $RegisterParameters -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
-Assert-AreEqual 2 $global:registerRetriesAttempted "Number of register retries not correct"
+Assert-AreEqual 3 $global:getRetriesAttempted "Number of register retries not correct"

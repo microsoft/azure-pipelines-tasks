@@ -2,7 +2,7 @@
 # Test and package your PHP application.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux'
+queue: 'Hosted Ubuntu 1604'
 steps:
 
   - script: composer install

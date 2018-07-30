@@ -31,6 +31,7 @@ async function run() {
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
         var extensionList = tl.getInput('ExtensionsList', false);
         var extensionOutputVariables = tl.getInput('OutputVariable');
+        var appInsightsWebTestName = tl.getInput('ApplicationInsightsWebTestName', false);
         var taskResult = true;
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
@@ -108,7 +109,7 @@ async function run() {
             }
             case "Enable Continuous Monitoring": {
                 var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
-                await enableContinuousMonitoring(azureEndpoint, appService, appInsights);
+                await enableContinuousMonitoring(azureEndpoint, appService, appInsights, appInsightsWebTestName);
                 break;
             }
             default: {

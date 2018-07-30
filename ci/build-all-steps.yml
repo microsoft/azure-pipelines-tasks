@@ -56,11 +56,25 @@ steps:
 - script: node make.js testLegacy --task "$(task_pattern)"
   displayName: Legacy tests with node 6
 
+# Publish test results
+- task: PublishTestResults@2
+  displayName: Publish Test Results test-*.xml
+  inputs:
+    testResultsFiles: 'test-*.xml'
+    testRunTitle: 'Node 6 Test Results'
+    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+
 # Test with node 5
 - script: node make.js test --node 5 --runner ts
   displayName: Test with node 5
 - script: node make.js testLegacy --node 5 --runner ts --task "$(task_pattern)"
   displayName: Legacy tests with node 5
+- task: PublishTestResults@2
+  displayName: Publish Test Results test-*.xml
+  inputs:
+    testResultsFiles: 'test-*.xml'
+    testRunTitle: 'Node 5 Test Results'
+    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
 
 # Only when building on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:

@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 137,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -208,9 +208,9 @@
                 "externalFeedCredentials"
             ],
             "type": "connectedService:ExternalNuGetFeed",
-            "label": "Credentials for feeds outside this account/collection",
+            "label": "Credentials for feeds outside this organization/collection",
             "required": false,
-            "helpMarkDown": "Credentials to use for external registries located in the selected NuGet.config. For feeds in this account/collection, leave this blank; the build’s credentials are used automatically.",
+            "helpMarkDown": "Credentials to use for external registries located in the selected NuGet.config. For feeds in this organization/collection, leave this blank; the build’s credentials are used automatically.",
             "properties": {
                 "EditableOptions": "False",
                 "MultiSelectFlatList": "True"
@@ -275,8 +275,8 @@
             "required": true,
             "defaultValue": "internal",
             "options": {
-                "internal": "This account/collection",
-                "external": "External NuGet server (including other accounts/collections)"
+                "internal": "This organization/collection",
+                "external": "External NuGet server (including other organizations/collections)"
             },
             "visibleRule": "command = push"
         },
@@ -289,7 +289,7 @@
             "label": "Target feed",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select a feed hosted in this account. You must have Package Management installed and licensed to select a feed here.",
+            "helpMarkDown": "Select a feed hosted in this organization. You must have Package Management installed and licensed to select a feed here.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {

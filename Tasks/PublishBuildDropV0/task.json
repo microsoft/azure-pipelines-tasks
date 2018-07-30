@@ -1,0 +1,44 @@
+{
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishBuildDrop",
+  "friendlyName": "Publish Build Drop",
+  "description": "Publish Build Drop",
+  "helpMarkDown": "Publish a local directory or file as a named drop artifact for the current build.",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 138,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.138.0",
+  "inputs": [
+    {
+      "name": "artifactname",
+      "type": "string",
+      "label": "The name of this artifact",
+      "defaultValue": "drop",
+      "required": true,
+      "helpMarkDown": "The name of this artifact."
+    },
+    {
+      "name": "targetpath",
+      "type": "filePath",
+      "label": "Path to publish",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+    }
+  ],
+  "instanceNameFormat": "Publish Build Drop",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.BuildDrop.PublishBuildDropTask, Agent.Plugins"
+    }
+  },
+  "messages": {
+  }
+}

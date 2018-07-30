@@ -19,6 +19,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     after(() => {
+        delete process.env['BUILD_BUILDID'];
         delete process.env['BUILD_SOURCEBRANCHNAME'];
         delete process.env['BUILD_SOURCEVERSION'];
         delete process.env['LASTCOMMITMESSAGE'];

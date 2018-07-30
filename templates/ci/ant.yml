@@ -2,7 +2,7 @@
 # Build your Java projects and run tests with Apache Ant.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
+queue: 'Hosted Windows Container'
 steps:
 
   - task: Ant@1

@@ -2,7 +2,7 @@
 # Build and run tests for .NET Desktop or Windows classic desktop solutions.
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
+queue: 'Hosted Windows Container'
 variables:
   buildConfiguration: 'Release'
   buildPlatform: 'Any CPU'
