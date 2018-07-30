@@ -17,7 +17,7 @@ export async function getStableKubectlVersion() : Promise<string> {
     var version;
     var stableVersionUrl = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
     var downloadPath = path.join(getTempDirectory(), uuidV4() +".txt");
-    return downloadutility.download(stableVersionUrl, downloadPath, false).then((resolve) => {
+    return downloadutility.download(stableVersionUrl, downloadPath, false, true).then((resolve) => {
         version = fs.readFileSync(downloadPath, "utf8").toString().trim();
         if(!version){
             version = stableKubectlVersion;
