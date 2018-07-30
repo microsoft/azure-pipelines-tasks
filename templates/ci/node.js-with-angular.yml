@@ -1,5 +1,5 @@
 # Node.js with Angular
-# Build a Node.js application using the Angular CLI.
+# Build a Node.js application that uses Angular.
 # https://aka.ms/yaml
 
 queue: 'Hosted Ubuntu 1604'
@@ -11,7 +11,8 @@ steps:
 
   - script: |
       npm install -g @angular/cli
-      ng build --prod
+      npm install
+      npm run build
     displayName: 'Install and build'
 
 #  - task: ArchiveFiles@2
