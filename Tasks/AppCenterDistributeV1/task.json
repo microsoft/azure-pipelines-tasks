@@ -15,7 +15,7 @@
         "Minor": 139,
         "Patch": 0
     },
-    "releaseNotes": "Updating request source for AppCenter triggered builds.",
+    "releaseNotes": "Add support for distribution to stores.",
     "groups": [
         {
             "name": "symbols",
