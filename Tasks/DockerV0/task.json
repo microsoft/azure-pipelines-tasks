@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 13
+        "Patch": 14
     },
     "demands": [],
     "preview": "false",
@@ -41,8 +41,8 @@
             "name": "dockerRegistryEndpoint",
             "aliases": ["dockerRegistryConnection"],
             "type": "connectedService:dockerregistry",
-            "label": "Docker Registry Connection",
-            "helpMarkDown": "Select a Docker registry connection. Required for commands that need to authenticate with a registry.",
+            "label": "Docker Registry Service Connection",
+            "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
             "visibleRule": "containerregistrytype = Container Registry"
         },
         {
@@ -135,7 +135,7 @@
             "label": "Qualify Image Name",
             "defaultValue": "true",
             "visibleRule": "action = Build an image || action = Tag images || action = Push an image || action = Push images || action = Run an image",
-            "helpMarkDown": "Qualify the image name with the Docker registry connection's hostname if not otherwise specified."
+            "helpMarkDown": "Qualify the image name with the Docker registry service connection's hostname if not otherwise specified."
         },
         {
             "name": "additionalImageTags",
@@ -221,9 +221,9 @@
         {
             "name": "entrypoint",
             "type": "string",
-            "label": "Entrypoint Override",
+            "label": "Entry Point Override",
             "visibleRule": "action = Run an image",
-            "helpMarkDown": "Override the default entrypoint for the Docker container."
+            "helpMarkDown": "Override the default entry point for the Docker container."
         },
         {
             "name": "containerCommand",
@@ -273,8 +273,8 @@
         {
             "name": "dockerHostEndpoint",
             "type": "connectedService:dockerhost",
-            "label": "Docker Host Connection",
-            "helpMarkDown": "Select a Docker host connection. Defaults to the agent's host.",
+            "label": "Docker Host Service Connection",
+            "helpMarkDown": "Select a Docker host service connection. Defaults to the agent's host.",
             "groupName": "advanced"
         },
         {

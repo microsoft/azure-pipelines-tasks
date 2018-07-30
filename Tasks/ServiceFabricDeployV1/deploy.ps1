@@ -5,7 +5,9 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
-try {
+$certificate = $null;
+try
+{
     # Import the localized strings.
     Import-VstsLocStrings "$PSScriptRoot\task.json"
 
@@ -13,6 +15,8 @@ try {
     . "$PSScriptRoot\utilities.ps1"
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
     Import-Module $PSScriptRoot\ps_modules\PowershellHelpers
+
+    $global:operationId = $SF_Operations.Undefined
 
     # Collect input values
 
@@ -30,8 +34,8 @@ try {
     $copyPackageTimeoutSec = Get-VstsInput -Name copyPackageTimeoutSec
     $registerPackageTimeoutSec = Get-VstsInput -Name registerPackageTimeoutSec
     $compressPackage = [System.Boolean]::Parse((Get-VstsInput -Name compressPackage))
-    $skipUpgrade =  [System.Boolean]::Parse((Get-VstsInput -Name skipUpgradeSameTypeAndVersion))
-    $skipValidation =  [System.Boolean]::Parse((Get-VstsInput -Name skipPackageValidation))
+    $skipUpgrade = [System.Boolean]::Parse((Get-VstsInput -Name skipUpgradeSameTypeAndVersion))
+    $skipValidation = [System.Boolean]::Parse((Get-VstsInput -Name skipPackageValidation))
     $unregisterUnusedVersions = [System.Boolean]::Parse((Get-VstsInput -Name unregisterUnusedVersions))
     $configureDockerSettings = [System.Boolean]::Parse((Get-VstsInput -Name configureDockerSettings))
     $overrideApplicationParameters = [System.Boolean]::Parse((Get-VstsInput -Name overrideApplicationParameter))
@@ -52,7 +56,7 @@ try {
     }
 
     # Connect to cluster
-    Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+    $certificate = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
     if ($configureDockerSettings)
     {
@@ -107,11 +111,13 @@ try {
 
         if (!$skipValidation)
         {
+            $global:operationId = $SF_Operations.TestApplicationPackage
             $isPackageValid = Test-ServiceFabricApplicationPackage -ApplicationPackagePath $applicationPackagePath
         }
 
         if ($isPackageValid)
         {
+            $global:operationId = $SF_Operations.CreateDiffPackage
             Import-Module "$PSScriptRoot\Create-DiffPackage.psm1"
             $diffPackagePath = New-DiffPackage -ApplicationName $applicationName -ApplicationPackagePath $applicationPackagePath -ConnectedServiceEndpoint $connectedServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters
         }
@@ -121,9 +127,9 @@ try {
         }
     }
     $publishParameters = @{
-        'ApplicationPackagePath' = if (!$diffPackagePath) {$applicationPackagePath} else {[string]$diffPackagePath}
+        'ApplicationPackagePath'       = if (!$diffPackagePath) {$applicationPackagePath} else {[string]$diffPackagePath}
         'ApplicationParameterFilePath' = $applicationParameterFile
-        'ErrorAction' = "Stop"
+        'ErrorAction'                  = "Stop"
     }
 
     if ($publishProfile.CopyPackageParameters)
@@ -186,6 +192,14 @@ try {
 
         Publish-NewServiceFabricApplication @publishParameters
     }
-} finally {
+}
+catch
+{
+    Publish-Telemetry -TaskName 'ServiceFabricDeploy' -OperationId $global:operationId  -ErrorData $_
+    throw
+}
+finally
+{
+    Remove-ClientCertificate $certificate
     Trace-VstsLeavingInvocation $MyInvocation
 }

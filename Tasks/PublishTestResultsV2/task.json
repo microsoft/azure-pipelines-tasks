@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 6
+        "Patch": 8
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -44,7 +44,7 @@
             "name": "testResultsFiles",
             "type": "multiLine",
             "label": "Test results files",
-            "defaultValue": "**\\TEST-*.xml",
+            "defaultValue": "**/TEST-*.xml",
             "required": true,
             "helpMarkDown": "Test results files path. Supports multiple lines of minimatch patterns. [More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
             "properties": {
@@ -100,7 +100,7 @@
             "label": "Upload test results files",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "A test run is created for each results file. Check this option to merge results into a single test run. To optimize for better performance, results will be merged into a single run if there are more than 100 result files, irrespective of this option.",
+            "helpMarkDown": "Upload logs and other files containing diagnostic information collected when the tests were run.",
             "groupName": "advanced"
         }
     ],

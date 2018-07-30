@@ -1,24 +1,25 @@
 import * as tl from 'vsts-task-lib/task';
 import * as models from './models';
-import * as taskInputParser from './taskinputparser';
-import * as localTest from './vstest';
+import * as nondistributedtest from './nondistributedtest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
 import * as ci from './cieventlogger';
 import * as utils from './helpers';
 import * as inputParser from './inputparser';
 import * as os from 'os';
+import * as localtest from './vstest';
+
+const request = require('request');
 const osPlat: string = os.platform();
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-if (osPlat !== 'win32') {
-    // Fail the task if os is not windows
-    tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
-} else {
-    //Starting the VsTest execution
+async function execute() {
     const taskProps = { state: 'started', result: '' };
     ci.publishEvent(taskProps);
+
+    const enableApiExecution = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+        'TestExecution.EnableTranslationApi', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
     try {
         utils.Helper.setConsoleCodePage();
@@ -26,31 +27,74 @@ if (osPlat !== 'win32') {
         if (blockRun) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('MultiConfigNotSupportedWithOnDemand'));
         }
-        const useDtaExecutionEngine = isDtaEngineRequired();
-        if (useDtaExecutionEngine) {
+        const serverBasedRun = isServerBasedRun();
+        inputParser.setIsServerBasedRun(serverBasedRun);
+
+        if (serverBasedRun) {
             ci.publishEvent({
                 runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),
                 testtype: tl.getInput('testSelector')
             });
-
             console.log(tl.loc('distributedTestWorkflow'));
             console.log('======================================================');
-            const inputDataContract = inputParser.getDistributedTestConfigurations();
+            const inputDataContract = inputParser.parseInputsForDistributedTestRun();
             console.log('======================================================');
-
             const test = new distributedTest.DistributedTest(inputDataContract);
             test.runDistributedTest();
         } else {
-            ci.publishEvent({ runmode: 'vstest' });
-            localTest.startTest();
+            ci.publishEvent({ runmode: 'nondistributed' });
+            console.log(tl.loc('nonDistributedTestWorkflow'));
+            console.log('======================================================');
+            const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
+            if (enableApiExecution || (inputDataContract.ExecutionSettings
+                && inputDataContract.ExecutionSettings.RerunSettings
+                && inputDataContract.ExecutionSettings.RerunSettings.RerunFailedTests)) {
+                if (enableApiExecution) {
+                    console.log('================== API Execution =====================');
+                    inputDataContract.ExecutionSettings.TestPlatformExecutionMode = 'api';
+                }
+                const test = new nondistributedtest.NonDistributedTest(inputDataContract);
+                test.runNonDistributedTest();
+            } else {
+                localtest.startTest();
+            }
+            console.log('======================================================');
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
         taskProps.result = error;
-    } finally {
+    }
+    finally {
         taskProps.state = 'completed';
         ci.publishEvent(taskProps);
     }
+}
+
+function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
+    let state = false;
+    const options = {
+        url: collectionUri + '/_apis/FeatureFlags/' + featureFlag,
+        json: true,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    };
+
+    return new Promise((resolve, reject) => {
+        request(options, (err, res, faModel) => {
+            if (err) {
+                tl.warning(tl.loc('UnableToGetFeatureFlag', featureFlag));
+                tl.debug('Unable to get feature flag ' + featureFlag + ' Error:' + err.message);
+                resolve(state);
+            }
+            if (faModel.effectiveState) {
+                state = ('on' === faModel.effectiveState.toLowerCase());
+                tl.debug(' Final feature flag state: ' + state);
+            }
+            resolve(state);
+        });
+    });
 }
 
 function isMultiConfigOnDemandRun(): boolean {
@@ -64,7 +108,7 @@ function isMultiConfigOnDemandRun(): boolean {
     return false;
 }
 
-function isDtaEngineRequired(): boolean {
+function isServerBasedRun(): boolean {
     const batchType = tl.getInput('distributionBatchType');
     if (batchType && batchType === 'basedOnTestCases') {
         const batchSize = tl.getInput('batchingBasedOnAgentsOption');
@@ -95,4 +139,12 @@ function isDtaEngineRequired(): boolean {
     }
 
     return false;
+}
+
+if (osPlat !== 'win32') {
+    // Fail the task if os is not windows
+    tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+} else {
+    //Starting the VsTest execution
+    execute();
 }

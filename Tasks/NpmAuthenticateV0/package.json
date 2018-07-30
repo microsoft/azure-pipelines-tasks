@@ -1,6 +1,6 @@
 {
   "name": "vsts-npm-authenticate-task",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "VSTS npm Authenticate Task",
   "main": "npmauth.js",
   "scripts": {

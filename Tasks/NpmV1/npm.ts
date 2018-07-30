@@ -60,9 +60,8 @@ async function _logNpmStartupVariables() {
                 break;
         }
         for (let registry of npmRegistriesAry) {
-            registryUrlAry.push(registry.url)
+            registryUrlAry.push(registry.url);
         }
-
 
         let npmTelem = {
             'command': command,

@@ -105,8 +105,23 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         it('(Find-FileChanges) only the first change is logged', (done) => {
             psr.run(path.join(__dirname, 'Find-FileChanges.LogOnlyFirst.ps1'), done);
         })
-        it('test Docker image settings', done => {
-            psr.run(path.join(__dirname, 'Test-DockerImageSettings.ps1'), done);
+        it('(Update-DockerImageSettings.psm1) test untagged Docker image settings with names file', done => {
+            psr.run(path.join(__dirname, 'Test-UntaggedDockerImageSettingsWithNames.ps1'), done);
+        })
+        it('(Update-DockerImageSettings.psm1) test untagged Docker image settings without names file', done => {
+            psr.run(path.join(__dirname, 'Test-UntaggedDockerImageSettingsWithoutNames.ps1'), done);
+        })
+        it('(Update-DockerImageSettings.psm1) test tagged Docker image settings with names file', done => {
+            psr.run(path.join(__dirname, 'Test-TaggedDockerImageSettingsWithNames.ps1'), done);
+        })
+        it('(Update-DockerImageSettings.psm1) test Tagged Docker image settings without names file', done => {
+            psr.run(path.join(__dirname, 'Test-TaggedDockerImageSettingsWithoutNames.ps1'), done);
+        })
+        it('(Update-DockerImageSettings.psm1) test ambiguous tagged Docker image settings with names file', done => {
+            psr.run(path.join(__dirname, 'Test-AmbiguousTaggedDockerImageSettingsWithNames.ps1'), done);
+        })
+        it('(Update-DockerImageSettings.psm1) test ambiguous tagged Docker image settings without names file', done => {
+            psr.run(path.join(__dirname, 'Test-AmbiguousTaggedDockerImageSettingsWithoutNames.ps1'), done);
         })
     }
 });

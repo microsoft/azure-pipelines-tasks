@@ -11,7 +11,6 @@ export async function run(command?: string): Promise<void> {
     let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     let npmrc = util.getTempNpmrcPath();
     let npmRegistries: INpmRegistry[] = await getCustomRegistries();
-    let registryLocation = tl.getInput(NpmTaskInput.CustomRegistry);
     let overrideNpmrc = (tl.getInput(NpmTaskInput.CustomRegistry) == RegistryLocation.Feed) ? true : false;
 
     for (let registry of npmRegistries) {
@@ -45,10 +44,11 @@ export async function getCustomRegistries(): Promise<NpmRegistry[]> {
             break;
         case RegistryLocation.Npmrc:
             tl.debug(tl.loc('UseNpmrc'));
-            let endpointIds = tl.getDelimitedInput(NpmTaskInput.CustomEndpoint, ',');
+            const endpointIds = tl.getDelimitedInput(NpmTaskInput.CustomEndpoint, ',');
             if (endpointIds && endpointIds.length > 0) {
-                let endpointRegistries = endpointIds.map(e => NpmRegistry.FromServiceEndpoint(e, true));
-                npmRegistries = npmRegistries.concat(endpointRegistries);
+                await Promise.all(endpointIds.map(async e => {
+                    npmRegistries.push(await NpmRegistry.FromServiceEndpoint(e, true));
+                }));
             }
             break;
     }

@@ -19,6 +19,9 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             else if(this.taskParams.VirtualApplication) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedforvirtualapplication"));
             }
+            else if(this.taskParams.Package.isWarFile()) {
+                throw Error(tl.loc("Publishusingzipdeploydoesnotsupportwarfile"));
+            }
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
