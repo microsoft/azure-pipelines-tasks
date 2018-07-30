@@ -18,6 +18,7 @@ export class dotNetExe {
     private outputArgument: string = "";
     private outputArgumentIndex: number = 0;
     private workingDirectory: string;
+    private testRunSystem: string = "VSTS - dotnet";
 
     constructor() {
         this.command = tl.getInput("command");
@@ -159,7 +160,7 @@ export class dotNetExe {
             tl.warning('No test result files were found.');
         } else {
             const tp: tl.TestPublisher = new tl.TestPublisher('VSTest');
-            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true');
+            tp.publish(matchingTestResultsFiles, 'false', buildPlaform, buildConfig, '', 'true', this.testRunSystem);
             //refer https://github.com/Microsoft/vsts-task-lib/blob/master/node/task.ts#L1620
         }
     }
