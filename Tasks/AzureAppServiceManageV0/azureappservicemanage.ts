@@ -1,7 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import { AzureRMEndpoint, dispose } from 'azure-arm-rest/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import {AzureAppService  } from 'azure-arm-rest/azure-arm-app-service';
 import { AzureApplicationInsights } from 'azure-arm-rest/azure-arm-appinsights';
@@ -12,7 +12,6 @@ import { AzureAppServiceUtils } from './operations/AzureAppServiceUtils';
 import { KuduServiceUtils } from './operations/KuduServiceUtils';
 import { AzureResourceFilterUtils } from './operations/AzureResourceFilterUtils';
 import { enableContinuousMonitoring } from './operations/ContinuousMonitoringUtils';
-import * as Endpoint from 'azure-arm-rest/azure-arm-endpoint';
 
 async function run() {
     try {
@@ -157,7 +156,7 @@ async function run() {
         tl.debug(error);
     }
     finally {
-        Endpoint.dispose();
+        dispose();
     }
 
     if (!taskResult) {
