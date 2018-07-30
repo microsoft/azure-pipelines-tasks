@@ -65,8 +65,8 @@ export class JavaFilesExtractor {
 
     private async tarExtract(file, destinationFolder) {
         console.log(taskLib.loc('TarExtractFile', file));
-        var xpTarLocation = taskLib.which('tar', true);
-        var tar = taskLib.tool(xpTarLocation);
+        const tarLocation = taskLib.which('tar', true);
+        const tar = taskLib.tool(tarLocation);
         tar.arg('-xvf');
         tar.arg(file);
         tar.arg('-C');
