@@ -157,6 +157,7 @@ export async function run(nuGetPath: string): Promise<void> {
             let authType: auth.ExternalAuthType = externalAuth.authType;
             switch(authType) {
                 case (auth.ExternalAuthType.UsernamePassword):
+                    break;
                 case (auth.ExternalAuthType.Token):
                     apiKey = "RequiredApiKey";
                     break;
