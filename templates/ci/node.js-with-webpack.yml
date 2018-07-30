@@ -1,0 +1,21 @@
+# Node.js with webpack
+# Build a Node.js application using the webpack CLI.
+# https://aka.ms/yaml
+
+queue: 'Hosted Ubuntu 1604'
+steps:
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '8.x' 
+
+  - script: |
+      npm install -g webpack webpack-cli --save-dev
+      npx webpack # --config webpack.config.js
+    displayName: 'Install and run webpack'
+
+#  - task: ArchiveFiles@2
+#    inputs:
+#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#      includeRootFolder: false
+#  - task: PublishBuildArtifacts@1

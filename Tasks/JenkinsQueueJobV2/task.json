@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 137,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -28,10 +28,10 @@
         {
             "name": "serverEndpoint",
             "type": "connectedService:Jenkins",
-            "label": "Jenkins service endpoint",
+            "label": "Jenkins service connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins service endpoint."
+            "helpMarkDown": "Select the service connection for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins service connection."
         },
         {
             "name": "jobName",

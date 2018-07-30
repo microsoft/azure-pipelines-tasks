@@ -882,7 +882,8 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
     taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
 
-    taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskMarkdown += '::: moniker range="> tfs-2018"' + os.EOL + os.EOL;
+    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
     taskMarkdown += '[!INCLUDE [temp](../_shared/yaml/' + mdDocOutputFilename + ')]' + os.EOL + os.EOL;
     taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
 
@@ -1294,13 +1295,18 @@ var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath
             mkdir('-p', taskZipPath);
             console.log('root task folder: ' + taskZipPath);
 
+            // Following NuGet conventions, we want the NuGet content to go inside a content folder
+            // Our task.zip and layout-version.txt will go inside the content folder
+            var nugetContentPath = path.join(taskZipPath, 'content');
+            mkdir('-p', nugetContentPath);
+
             // hard link task.zip from layout to nuget contents
             var layoutZipPath = path.join(taskLayoutPath, 'task.zip');
-            var nugetContentsZipPath = path.join(taskZipPath, 'task.zip');
+            var nugetContentsZipPath = path.join(nugetContentPath, 'task.zip');
             fs.linkSync(layoutZipPath, nugetContentsZipPath);
 
             // Write layout version file. This will help us if we change the structure of the individual NuGet packages in the future.
-            fs.writeFileSync(path.join(taskZipPath, 'layout-version.txt'), '3');
+            fs.writeFileSync(path.join(nugetContentPath, 'layout-version.txt'), '3');
 
             // Create the nuspec file, nupkg, and push.cmd
             var taskNuspecPath = createNuspecFile(taskZipPath, fullTaskName, taskVersion);
@@ -1439,7 +1445,7 @@ var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLeg
     // Rename folders
     fs.readdirSync(pathWithLegacyFolders)
         .forEach(function (taskFolderName) {
-            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-1)
+            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-3)
                 && taskFolderName.charAt(taskFolderName.length-2) === taskFolderName.charAt(taskFolderName.length-4))
             {
                 var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
@@ -1448,12 +1454,14 @@ var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLeg
                 fs.renameSync(currentPath, newPath);
             }
 
-            // var currentPath = path.join('E:\\AllTaskMajorVersions', taskFolderName);
-            // var s = taskFolderName.split('__');
-            // var newFolderName = s[0] + s[1].toUpperCase();
-            // var newPath = path.join('E:\\AllTaskMajorVersions', newFolderName);
-            
-            // fs.renameSync(currentPath, newPath);
+            var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
+            if (taskFolderName.indexOf('__') !== -1) {
+                var s = taskFolderName.split('__');
+                var newFolderName = s[0] + s[1].toUpperCase();
+                var newPath = path.join(pathWithLegacyFolders, newFolderName);
+                
+                fs.renameSync(currentPath, newPath);
+            }
         });
 }
 exports.renameFoldersFromAggregate = renameFoldersFromAggregate;
@@ -1467,7 +1475,8 @@ var generatePerTaskForLegacyPackages = function generatePerTaskForLegacyPackages
     if (test('-d', legacyPath)) {
         rm('-rf', legacyPath);
     }
-    util.createNugetPackagePerTask(legacyPath, pathWithLegacyFolders);
+    
+    createNugetPackagePerTask(legacyPath, pathWithLegacyFolders);
 }
 exports.generatePerTaskForLegacyPackages = generatePerTaskForLegacyPackages;
 

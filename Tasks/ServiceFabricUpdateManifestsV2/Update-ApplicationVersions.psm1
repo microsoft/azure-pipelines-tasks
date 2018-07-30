@@ -4,7 +4,8 @@
     Param()
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
+    try
+    {
         #region Collect and parse input values
         $appPackagePathSearchPattern = (Get-VstsInput -Name applicationPackagePath -Require)
         Write-Host (Get-VstsLocString -Key SearchingForApplicationPackage -ArgumentList $appPackagePathSearchPattern)
@@ -60,17 +61,25 @@
                 # Try and find the old app package path by finding the largest substring of the path that exists in the artifact path
                 $relativePath = $newAppPackagePath
                 $pathRoot = [System.IO.Path]::GetPathRoot($relativePath)
-                if(![System.String]::IsNullOrEmpty($pathRoot))
+                if (![System.String]::IsNullOrEmpty($pathRoot))
                 {
                     $relativePath = $relativePath.SubString($pathRoot.Length)
                 }
                 $relativePath.Trim([System.IO.Path]::DirectorySeparatorChar)
                 $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
-                while(!(Test-Path -LiteralPath $oldAppPackagePath))
+                while (!(Test-Path -LiteralPath $oldAppPackagePath))
                 {
                     $firstSlash = $relativePath.IndexOf([System.IO.Path]::DirectorySeparatorChar)
                     if ($firstSlash -lt 0)
                     {
+                        # No sub-directory of top level directory found
+                        # Check if the top level directory itself contains manifest package
+                        if (Test-Path -LiteralPath (Join-Path $oldDropLocation $appManifestName))
+                        {
+                            $oldAppPackagePath = $oldDropLocation
+                            break;
+                        }
+
                         Write-Warning (Get-VstsLocString -Key CouldNotFindSubPath -ArgumentList @($newAppPackagePath, $oldDropLocation))
                         $updateAllVersions = $true
                         $oldAppPackagePath = $null
@@ -82,6 +91,7 @@
 
                 if ($oldAppPackagePath)
                 {
+                    Write-Host (Get-VstsLocString -Key PreviousPackageLocation -ArgumentList $oldAppPackagePath)
                     $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
                     if (Test-Path -LiteralPath $oldAppManifestPath)
                     {
@@ -117,7 +127,7 @@
         if ($updateAllVersions)
         {
             # Force update application type version
-            Write-Host (Get-VstsLocString -Key UpdatedApplicationTypeVersion -ArgumentList @($appTypeName,$newVersion))
+            Write-Host (Get-VstsLocString -Key UpdatedApplicationTypeVersion -ArgumentList @($appTypeName, $newVersion))
             $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $newVersion
         }
         elseif ((!$replaceVersion -and !$oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion.StartsWith($versionPrefix)) -or !(Test-XmlEqual $oldAppManifestXml $newAppManifestXml))
@@ -135,7 +145,9 @@
         }
 
         $newAppManifestXml.Save($newAppManifestPath)
-    } finally {
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
 }

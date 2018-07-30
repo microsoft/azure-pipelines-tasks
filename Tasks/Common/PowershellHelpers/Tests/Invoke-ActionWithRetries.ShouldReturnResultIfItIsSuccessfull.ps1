@@ -14,10 +14,10 @@ $action = {
     }
 }
 
-$successEvaluator = {
+$retryEvaluator = {
     param($result)
-    if($result -eq "success") { return $true }
-    return $false
+    if($result -eq "success") { return $false }
+    return $true
 }
 
 Register-Mock Set-UserAgent
@@ -25,6 +25,6 @@ Unregister-Mock Start-Sleep
 Register-Mock Start-Sleep {}
 
 # Act/Assert.
-$actionResult = & $module Invoke-ActionWithRetries -Action $action -ActionSuccessValidator $successEvaluator
+$actionResult = & $module Invoke-ActionWithRetries -Action $action -ResultRetryEvaluator $retryEvaluator
 Assert-AreEqual "success" $actionResult "action result should be success"
 Assert-AreEqual 5 $global:retriesAttempted "Number of retries not correct"

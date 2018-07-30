@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 3
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -29,6 +29,21 @@
   ],
   "inputs": [
     {
+      "name": "connectedServiceNameSelector",
+      "aliases": [
+        "connectionType"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.connectedServiceNameSelector",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameSelector",
+      "defaultValue": "connectedServiceName",
+      "options": {
+        "connectedServiceName": "Generic",
+        "connectedServiceNameARM": "Azure Resource Manager"
+      }
+    },
+    {
       "name": "connectedServiceName",
       "aliases": [
         "serviceConnection"
@@ -37,7 +52,20 @@
       "label": "ms-resource:loc.input.label.connectedServiceName",
       "defaultValue": "",
       "required": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceName"
+    },
+    {
+      "name": "connectedServiceNameARM",
+      "aliases": [
+        "azureServiceConnection"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.connectedServiceNameARM",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM"
     },
     {
       "name": "method",
@@ -118,7 +146,7 @@
   "execution": {
     "HttpRequest": {
       "Execute": {
-        "EndpointId": "$(connectedServiceName)",
+        "EndpointId": "TaskInputs[TaskInputs['connectedServiceNameSelector']]",
         "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",

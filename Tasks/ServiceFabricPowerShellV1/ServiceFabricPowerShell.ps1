@@ -25,15 +25,25 @@ if ($scriptArguments -match '[\r\n]')
     throw (Get-VstsLocString -Key InvalidScriptArguments0 -ArgumentList $scriptArguments)
 }
 
+$certificate = $null
 try
 {
     # Initialize Service Fabric.
     Import-Module $PSScriptRoot\ps_modules\ServiceFabricHelpers
-    $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
 
+    $global:operationId = $SF_Operations.Undefined
+    $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
     $clusterConnectionParameters = @{}
 
-    Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+    try
+    {
+        $certificate = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+    }
+    catch
+    {
+        Publish-Telemetry -TaskName 'ServiceFabricPowerShell' -OperationId $global:operationId  -ErrorData $_
+        throw
+    }
 
     # Trace the expression as it will be invoked.
     If ($scriptType -eq "InlineScript")
@@ -95,6 +105,23 @@ Finally
     }
 
     Remove-Variable -Name scriptPath
+
+    # Can't use Remove-ClientCertificate as we removed all funcitons above
+    try
+    {
+        if ($null -ne $Certificate)
+        {
+            $thumbprint = $Certificate.Thumbprint
+            if (Test-Path "Cert:\CurrentUser\My\$thumbprint")
+            {
+                Remove-Item "Cert:\CurrentUser\My\$thumbprint" -Force
+            }
+        }
+    }
+    catch
+    {
+        Write-Warning $_
+    }
 }
 
 # We don't call Trace-VstsLeavingInvocation at the end because that command was removed prior to calling the user script.

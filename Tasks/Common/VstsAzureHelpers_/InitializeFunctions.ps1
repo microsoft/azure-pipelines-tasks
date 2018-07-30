@@ -50,6 +50,16 @@ function Initialize-AzureSubscription {
             Add-AzureStackAzureRmEnvironment -endpoint $Endpoint -name "AzureStack"
         }
     }
+    
+    $scopeLevel = "Subscription"
+    
+    If ($Endpoint.PSObject.Properties['Data'])
+    {
+        If ($Endpoint.Data.PSObject.Properties['scopeLevel'])
+        {
+            $scopeLevel = $Endpoint.Data.scopeLevel
+        }
+    }
 
     if ($Endpoint.Auth.Scheme -eq 'Certificate') {
         # Certificate is only supported for the Azure module.
@@ -138,7 +148,13 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.
             try {
-                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                if(Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue"){
+                    Write-Host "##[command]Clear-AzureRmContext -Scope Process"
+                    $null = Clear-AzureRmContext -Scope Process
+                    Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+                    $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+                }
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {                    
                     if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
                         $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
@@ -158,8 +174,11 @@ function Initialize-AzureSubscription {
                 Assert-TlsError -exception $_.Exception
                 throw (New-Object System.Exception((Get-VstsLocString -Key AZ_ServicePrincipalError), $_.Exception))
             }
-
-            Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+            
+            if($scopeLevel -eq "Subscription")
+            {
+                Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId -TenantId $Endpoint.Auth.Parameters.TenantId
+            }
         }
     } elseif ($Endpoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
         $accountId = $env:BUILD_BUILDID 

@@ -1,0 +1,43 @@
+{
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishBuildDrop",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 138,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.138.0",
+  "inputs": [
+    {
+      "name": "artifactname",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactname",
+      "defaultValue": "drop",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactname"
+    },
+    {
+      "name": "targetpath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.targetpath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.targetpath"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.BuildDrop.PublishBuildDropTask, Agent.Plugins"
+    }
+  },
+  "messages": {}
+}

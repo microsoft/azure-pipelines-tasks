@@ -17,7 +17,7 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 128,
+    "Minor": 137,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -40,8 +40,8 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.credsType",
       "options": {
-        "serviceEndpoint": "FTP Service Endpoint",
-        "inputs": "Enter Credentials"
+        "serviceEndpoint": "FTP service connection",
+        "inputs": "Enter credentials"
       }
     },
     {
