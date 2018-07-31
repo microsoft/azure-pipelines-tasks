@@ -8,21 +8,26 @@ import { PackageType } from 'webdeployment-common/packageUtility';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
 
 export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvider{
- 
+    
+    private zipDeploymentID: string;
+
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
 
-        tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
+        tl.debug("Initiated deployment via kudu service for webapp war package : "+ webPackage);
 
-        await this.kuduServiceUtility.deployUsingWarDeploy(webPackage, true, this.taskParams.TakeAppOfflineFlag, 
+        this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(webPackage, true, this.taskParams.TakeAppOfflineFlag, 
             { slotName: this.appService.getSlot() });
 
         await this.PostDeploymentStep();
     }
     
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        if(this.taskParams.ScriptType && this.kuduServiceUtility) {
+        if(this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
+            if(this.zipDeploymentID && this.activeDeploymentID && isDeploymentSuccess) {
+                await this.kuduServiceUtility.postZipDeployOperation(this.zipDeploymentID, this.activeDeploymentID);
+            }
         }
     }
 }

@@ -12,7 +12,9 @@ import { Package, PackageType } from 'webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
 
 export class DeploymentFactory {
+
     private _taskParams: TaskParameters;
+
     constructor(taskParams: TaskParameters) {
         this._taskParams = taskParams;
     }
@@ -47,6 +49,7 @@ export class DeploymentFactory {
             case PackageType.war:
                 return new WindowsWebAppWarDeployProvider(this._taskParams);
             case PackageType.jar:
+                this._taskParams.webConfigParameters['appType'] = 'java_springboot';
                 return await this._getWindowsDeploymentProviderForZipDeployAndRunFromZipMethod();
             default:
                 return await this._getWindwosDeploymentProviderForZipAndFolderPackageType();

@@ -257,7 +257,7 @@
         {
             "name": "WebConfigParameters",
             "type": "multiLine",
-            "label": "Generate web.config parameters for Python, Node.js and Go apps",
+            "label": "Generate web.config parameters for Python, Node.js, Go and Java apps",
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
