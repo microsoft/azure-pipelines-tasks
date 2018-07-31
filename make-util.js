@@ -882,7 +882,8 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
     taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
 
-    taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskMarkdown += '::: moniker range="> tfs-2018"' + os.EOL + os.EOL;
+    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
     taskMarkdown += '[!INCLUDE [temp](../_shared/yaml/' + mdDocOutputFilename + ')]' + os.EOL + os.EOL;
     taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
 

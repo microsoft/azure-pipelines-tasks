@@ -1,24 +1,24 @@
 # Jekyll container
 # Package your Jekyll site in a Docker container.
 # https://aka.ms/yaml
-queue: Hosted Linux Preview
+queue: Hosted Ubuntu 1604
 steps:
 
-- task: Docker@0
-  displayName: Run jekyll
-  inputs:
-    containerRegistryType: 'Container Registry'
-    action: 'Run an image'
-    imageName: 'jekyll/builder:latest'
-    volumes: |
-     $(Build.SourcesDirectory):/srv/jekyll
-     $(Build.BinariesDirectory):/srv/jekyll/_site
-    containerCommand: 'jekyll build --future'
-    detached: false
+  - task: Docker@0
+    displayName: Run jekyll
+    inputs:
+      containerRegistryType: 'Container Registry'
+      action: 'Run an image'
+      imageName: 'jekyll/builder:latest'
+      volumes: |
+      $(Build.SourcesDirectory):/srv/jekyll
+      $(Build.BinariesDirectory):/srv/jekyll/_site
+      containerCommand: 'jekyll build --future'
+      detached: false
 
-- task: ArchiveFiles@1
-  inputs:
-    includeRootFolder: false
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+  - task: ArchiveFiles@1
+    inputs:
+      includeRootFolder: false
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'

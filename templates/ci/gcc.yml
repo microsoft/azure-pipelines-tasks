@@ -2,7 +2,7 @@
 # Build your C/C++ project with GNU GCC.
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux'
+queue: 'Hosted Ubuntu 1604'
 steps:
 
   - script: ./configure

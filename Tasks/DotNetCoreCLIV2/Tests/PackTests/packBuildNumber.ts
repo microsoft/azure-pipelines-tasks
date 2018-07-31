@@ -23,7 +23,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "dotnet": "c:\\path\\dotnet.exe"
     },
     "exec": {
-        "c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\single.csproj --output C:\\out\\dir /p:PackageVersion=1.2.3": {
+        "c:\\path\\dotnet.exe pack c:\\agent\\home\\directory\\single.csproj --output C:\\out\\dir /p:PackageVersion=1.2.3-prerelease": {
             "code": 0,
             "stdout": "dotnet output",
             "stderr": ""
@@ -43,7 +43,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 nmh.setAnswers(a);
 
-process.env['BUILD_BUILDNUMBER'] = '1.2.3'
+process.env['BUILD_BUILDNUMBER'] = '1.2.3-prerelease'
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.csproj"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();

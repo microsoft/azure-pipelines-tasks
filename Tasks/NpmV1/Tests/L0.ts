@@ -179,7 +179,7 @@ describe('Npm Task', function () {
         tr.run();
 
         assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
-        assert(tr.stdOutContained('npm publish successful'), 'npm should have installed the package');
+        assert(tr.stdOutContained('npm publish successful'), 'npm should have published the package');
         assert(tr.stdOutContained('OverridingProjectNpmrc'), 'publish should always ooverrideverride project .npmrc');
         assert(tr.stdOutContained('RestoringProjectNpmrc'), 'publish should always restore project .npmrc');
         assert(tr.succeeded, 'task should have succeeded');
@@ -195,7 +195,7 @@ describe('Npm Task', function () {
         tr.run();
 
         assert.equal(tr.invokedToolCount, 3, 'task should have run npm');
-        assert(tr.stdOutContained('npm publish successful'), 'npm should have installed the package');
+        assert(tr.stdOutContained('npm publish successful'), 'npm should have published the package');
         assert(tr.succeeded, 'task should have succeeded');
 
         done();
@@ -346,8 +346,8 @@ describe('Npm Task', function () {
             getEndpointUrl: (id, optional) => {
                 return 'http://serviceendpoint.visualstudio.com';
             },
-            loc: (n, ...param) => {
-                console.log(n);
+            loc: (key: string) => {
+                // no-op
             },
             getHttpProxyConfiguration: (endpoint) => {
                 return null;
