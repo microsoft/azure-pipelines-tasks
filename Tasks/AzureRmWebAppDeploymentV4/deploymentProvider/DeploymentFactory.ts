@@ -49,7 +49,9 @@ export class DeploymentFactory {
             case PackageType.war:
                 return new WindowsWebAppWarDeployProvider(this._taskParams);
             case PackageType.jar:
-                this._taskParams.webConfigParameters['appType'] = 'java_springboot';
+                var rootDirectoryPath: string = "D:\\home\\site\\wwwroot\\";
+                var jarPath = rootDirectoryPath + path.win32.basename(this._taskParams.Package.getPath()) +".jar";
+                this._taskParams.WebConfigParameters = "-appType java_springboot -JAR_PATH " + jarPath;
                 return await this._getWindowsDeploymentProviderForZipDeployAndRunFromZipMethod();
             default:
                 return await this._getWindwosDeploymentProviderForZipAndFolderPackageType();

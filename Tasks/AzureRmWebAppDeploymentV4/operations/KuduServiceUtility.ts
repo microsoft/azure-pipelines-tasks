@@ -211,12 +211,6 @@ export class KuduServiceUtility {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
 
-            if(appOffline) {
-                await this._appOfflineKuduService(physicalRootPath, true);
-                tl.debug('Wait for 5 seconds for app_offline to take effect');
-                await webClient.sleepFor(5);
-            }
-
             let queryParameters: Array<string> = [
                 'isAsync=true'
             ];
