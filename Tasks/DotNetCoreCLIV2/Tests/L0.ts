@@ -449,7 +449,7 @@ describe('DotNetCoreExe Suite', function () {
 
         let tp = path.join(__dirname, './TestCommandTests/publishtests.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-
+        
         tr.run();
         assert(tr.invokedToolCount == 1, 'should have run dotnet once');
         assert(tr.ran('c:\\path\\dotnet.exe test c:\\agent\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent\\home\\temp'), 'it should have run dotnet test');
