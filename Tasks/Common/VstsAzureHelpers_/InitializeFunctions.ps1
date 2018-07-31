@@ -26,9 +26,8 @@ function Add-Certificate {
     $store.Add($certificate)
     $store.Close()
 
-    #store the thumbprint in an environment variable which will be used to remove the certificate later on
-    $ENV:Endpoint_Authentication_Certificate = $certificate.Thumbprint
-
+    #store the thumbprint in a global variable which will be used to remove the certificate later on
+    $script:Endpoint_Authentication_Certificate = $certificate.Thumbprint
     Write-Verbose "Added certificate to the certificate store."
     return $certificate
 }
@@ -550,21 +549,23 @@ function ConvertTo-Pfx {
     if ($ENV:Agent_TempDirectory) {
         $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
         $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
+        $pfxPasswordFilePath = "$ENV:Agent_TempDirectory\clientcertificatepassword.txt"
     }
     else {
         $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
-        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"    
+        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
+        $pfxPasswordFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"    
     }
 
     # save the PEM certificate to a PEM file
     Set-Content -Path $pemFilePath -Value $pemFileContent
 
-    # using openssl to convert the PEM file to a PFX file
+    # use openssl to convert the PEM file to a PFX file
     $pfxFilePassword = [System.Guid]::NewGuid().ToString()
-    $ENV:pfxFilePassword = $pfxFilePassword
+    Set-Content -Path $pfxPasswordFilePath -Value $pfxFilePassword -NoNewline
 
     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password env:pfxFilePassword"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
      
     Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
@@ -583,7 +584,12 @@ function Remove-EndpointSecrets {
         Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
     }
 
-    if ($ENV:Endpoint_Authentication_Certificate) {
+    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt") {
+        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"
+        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"
+    }
+
+    if ($script:Endpoint_Authentication_Certificate) {
         # remove the certificate from certificate store
         $certificateStore = New-Object System.Security.Cryptography.X509Certificates.X509Store(
             ([System.Security.Cryptography.X509Certificates.StoreName]::My),
@@ -591,7 +597,7 @@ function Remove-EndpointSecrets {
 
         $certificateStore.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
 
-        $certificates =  $certificateStore.Certificates.Find([System.Security.Cryptography.X509Certificates.X509FindType]::FindByThumbprint, $ENV:Endpoint_Authentication_Certificate, $false)
+        $certificates =  $certificateStore.Certificates.Find([System.Security.Cryptography.X509Certificates.X509FindType]::FindByThumbprint, $script:Endpoint_Authentication_Certificate, $false)
 
         foreach ($certificate in $certificates) {
             $certificateStore.Remove($certificate)

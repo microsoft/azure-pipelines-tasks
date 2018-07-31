@@ -1415,10 +1415,12 @@ function ConvertTo-Pfx {
     if ($ENV:Agent_TempDirectory) {
         $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
         $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
+        $pfxPasswordFilePath = "$ENV:Agent_TempDirectory\clientcertificatepassword.txt"
     }
     else {
         $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
-        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"    
+        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
+        $pfxPasswordFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"    
     }
 
     # save the PEM certificate to a PEM file
@@ -1426,10 +1428,10 @@ function ConvertTo-Pfx {
 
     # use openssl to convert the PEM file to a PFX file
     $pfxFilePassword = [System.Guid]::NewGuid().ToString()
-    $ENV:pfxFilePassword = $pfxFilePassword
+    Set-Content -Path $pfxPasswordFilePath -Value $pfxFilePassword -NoNewline
 
     $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
-    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password env:pfxFilePassword"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
      
     Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
