@@ -29,15 +29,10 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
             }
     
             var msDeployPublishingProfile = await this.appServiceUtility.getWebDeployPublishingProfile();
-    
-            if(this.taskParams.Package.isWarFile()) {
-                await DeployWar(webPackage, this.taskParams, msDeployPublishingProfile, this.kuduService, this.appServiceUtility);
-            }
-            else {
-                await WebDeployUtility.publishUsingWebDeploy(this.taskParams,
-                    WebDeployUtility.constructWebDeployArguments(this.taskParams, msDeployPublishingProfile), this.appServiceUtility
-                );
-            }
+            await WebDeployUtility.publishUsingWebDeploy(this.taskParams,
+                WebDeployUtility.constructWebDeployArguments(this.taskParams, msDeployPublishingProfile), this.appServiceUtility
+            );
+            
         }
         else {
             tl.debug("Initiated deployment via kudu service for webapp package : ");

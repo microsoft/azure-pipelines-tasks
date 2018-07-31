@@ -3,7 +3,7 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 import path = require('path');
-import { Package } from './packageUtility';
+import { Package, PackageType } from './packageUtility';
 
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
@@ -110,7 +110,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
 export async function getWebDeployArgumentsString(webDeployArguments: WebDeployArguments, publishingProfile: any) {
     return getMSDeployCmdArgs(webDeployArguments.package.getPath(), webDeployArguments.appName, publishingProfile, webDeployArguments.removeAdditionalFilesFlag,
     webDeployArguments.excludeFilesFromAppDataFlag, webDeployArguments.takeAppOfflineFlag, webDeployArguments.virtualApplication, 
-    webDeployArguments.setParametersFile, webDeployArguments.additionalArguments, await webDeployArguments.package.isMSBuildPackage(), webDeployArguments.package.isFolder(), webDeployArguments.useWebDeploy);
+    webDeployArguments.setParametersFile, webDeployArguments.additionalArguments, await webDeployArguments.package.isMSBuildPackage(), webDeployArguments.package.getPackageType() === PackageType.folder, webDeployArguments.useWebDeploy);
 }
 
 /**

@@ -1,5 +1,6 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
+import { PackageType } from 'webdeployment-common/packageUtility';
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
 
@@ -10,8 +11,20 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         tl.debug('Performing Linux built-in package deployment');
 
         await this.kuduServiceUtility.warmpUp();
-        this.zipDeploymentID = await this.kuduServiceUtility.zipDeploy(this.taskParams.Package.getPath(), false, this.taskParams.TakeAppOfflineFlag, 
-            { slotName: this.appService.getSlot() });
+        switch(this.taskParams.Package.getPackageType()){
+            case PackageType.folder:
+            case PackageType.zip:
+            case PackageType.jar:
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
+                { slotName: this.appService.getSlot() });
+            break;
+            case PackageType.war:
+                await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
+                { slotName: this.appService.getSlot() });
+            break;
+            default:
+                throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', this.taskParams.Package.getPath()));
+        }
 
         await this.appServiceUtility.updateStartupCommandAndRuntimeStack(this.taskParams.RuntimeStack, this.taskParams.StartupCommand);
 
