@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 3
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [],
   "preview": "true",
@@ -22,7 +22,8 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "executeScript = false"
     }
   ],
   "inputs": [
@@ -61,6 +62,58 @@
       "defaultValue": ""
     },
     {
+      "name": "executeScript",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.executeScript",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.executeScript"
+    },
+    {
+      "name": "type",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.type",
+      "required": false,
+      "defaultValue": "filePath",
+      "visibleRule": "executeScript = true",
+      "helpMarkDown": "ms-resource:loc.input.help.type",
+      "options": {
+        "filePath": "File Path",
+        "inline": "Inline"
+      }
+    },
+    {
+      "name": "filePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.filePath",
+      "visibleRule": "type = filePath && executeScript = true",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.filePath"
+    },
+    {
+      "name": "scriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.scriptArguments",
+      "visibleRule": "type = filePath && executeScript = true",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.scriptArguments"
+    },
+    {
+      "name": "script",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.script",
+      "visibleRule": "type = inline && executeScript = true",
+      "required": true,
+      "defaultValue": "# Write your Docker commands here.\n\ndocker version\n\n# Use the environment variables input below to pass secret variables to this script.",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "5000"
+      },
+      "helpMarkDown": ""
+    },
+    {
       "name": "command",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.command",
@@ -75,6 +128,7 @@
       "properties": {
         "EditableOptions": "True"
       },
+      "visibleRule": "executeScript = false",
       "helpMarkDown": "ms-resource:loc.input.help.command"
     },
     {
@@ -320,6 +374,13 @@
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
-    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced"
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "GeneratingScript": "ms-resource:loc.messages.GeneratingScript",
+    "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
+    "JS_FormattedCommand": "ms-resource:loc.messages.JS_FormattedCommand",
+    "JS_InvalidFilePath": "ms-resource:loc.messages.JS_InvalidFilePath",
+    "JS_ScriptContents": "ms-resource:loc.messages.JS_ScriptContents",
+    "JS_Stderr": "ms-resource:loc.messages.JS_Stderr",
+    "JS_TranslatePathFailed": "ms-resource:loc.messages.JS_TranslatePathFailed"
   }
 }

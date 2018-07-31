@@ -9,6 +9,8 @@ import * as tr from "vsts-task-lib/toolrunner";
 import * as imageUtils from "./containerimageutils";
 import AuthenticationToken from "./registryauthenticationprovider/registryauthenticationtoken"
 import * as fileutils from "./fileutils";
+import * as psscript from "./containerexecpsscript";
+import * as bashscript from "./containerexecbashscript";
 import * as os from "os";
 
 export default class ContainerConnection {
@@ -46,6 +48,15 @@ export default class ContainerConnection {
             errlines.forEach(line => tl.error(line));
             throw error;
         });
+    }
+
+    public execScript() {
+        if (tl.osType() === 'Windows_NT') {
+            return psscript.psRun();        
+        }
+        else {
+            return bashscript.bashRun();
+        }
     }
 
     public open(hostEndpoint?: string, authenticationToken?: AuthenticationToken): void {

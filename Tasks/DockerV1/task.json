@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 3
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [],
     "preview": "true",
@@ -22,7 +22,8 @@
         {
             "name": "advanced",
             "displayName": "Advanced Options",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "executeScript = false"
         }
     ],
     "inputs": [
@@ -61,6 +62,58 @@
             "defaultValue": ""
         },
         {
+            "name": "executeScript",
+            "type": "boolean",
+            "label": "Execute Script",
+            "defaultValue": "false",            
+            "helpMarkDown": "Executes the commands in specified script."
+        },
+        {
+            "name": "type",
+            "type": "radio",
+            "label": "Type",
+            "required": false,
+            "defaultValue": "filePath",
+            "visibleRule": "executeScript = true",
+            "helpMarkDown": "Target script type: File Path or Inline",
+            "options": {
+                "filePath": "File Path",
+                "inline": "Inline"
+            }
+        },
+        {
+            "name": "filePath",
+            "type": "filePath",
+            "label": "Script Path",
+            "visibleRule": "type = filePath && executeScript = true",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+            "name": "scriptArguments",
+            "type": "string",
+            "label": "Script Arguments",
+            "visibleRule": "type = filePath && executeScript = true",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Arguments passed to the PowerShell script. Either ordinal parameters or named parameters."
+        },
+        {
+            "name": "script",
+            "type": "multiLine",
+            "label": "Script",
+            "visibleRule": "type = inline && executeScript = true",
+            "required": true,
+            "defaultValue": "# Write your Docker commands here.\n\ndocker version\n\n# Use the environment variables input below to pass secret variables to this script.",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"
+            },
+            "helpMarkDown": ""
+        },
+        {
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -75,6 +128,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
+            "visibleRule": "executeScript = false",
             "helpMarkDown": "Select a Docker command."
         },
         {
@@ -320,6 +374,13 @@
         "NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
         "NoDataWrittenOnFile":"No data was written into the file %s",
-        "FileContentSynced": "Synced the file content to the disk. The content is %s."
+        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "GeneratingScript": "Generating script.",
+        "JS_ExitCode": "Script exited with code '%s'.",
+        "JS_FormattedCommand": "Formatted command: %s",
+        "JS_InvalidFilePath": "Invalid file path '%s'.",
+        "JS_ScriptContents": "Script contents:",
+        "JS_Stderr": "Script wrote one or more lines to the standard error stream.",
+        "JS_TranslatePathFailed": "Unable to translate the path '%s' to the Linux file system."
     }
 }

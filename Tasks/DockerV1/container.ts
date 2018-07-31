@@ -27,20 +27,25 @@ var registryAuthenticationToken = authenticationProvider.getAuthenticationToken(
 var connection = new ContainerConnection();
 connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 
-// Run the specified command
-var command = tl.getInput("command", true);
-/* tslint:disable:no-var-requires */
+var executeScript = tl.getBoolInput("executeScript");
+var commandImplementation = require("./containerscript");
+tl.debug(`executeScript ${executeScript}.`);
+if (!executeScript) {
+    // Run the specified command
+    var command = tl.getInput("command", true);
+    /* tslint:disable:no-var-requires */
 
-var dockerCommandMap = {
-    "Build an image": "./containerbuild",
-    "Tag image": "./containertag",
-    "Push an image": "./containerpush",
-    "Run an image": "./containerrun"    
-}  
+    var dockerCommandMap = {
+        "Build an image": "./containerbuild",
+        "Tag image": "./containertag",
+        "Push an image": "./containerpush",
+        "Run an image": "./containerrun"    
+    }  
 
-var commandImplementation = require("./containercommand");
-if(command in dockerCommandMap) {
-    commandImplementation = require(dockerCommandMap[command]);
+    commandImplementation = require("./containercommand");
+    if(command in dockerCommandMap) {
+        commandImplementation = require(dockerCommandMap[command]);
+    }
 }
 
 commandImplementation.run(connection)
