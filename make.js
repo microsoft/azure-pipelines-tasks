@@ -346,6 +346,28 @@ target.test = function() {
     run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
 }
 
+target.yamlschema = function() {
+    var sprint = 'm139';
+    var schemaFilePath = path.join(__dirname, `${sprint}-${new Date().toDateString()}-yamlschema.json`);
+
+    var tasksDir = 'E:\\Full Tasks Zip\\TaskPackage (3)\\TaskPackage\\Mseng.MS.TF.Build.Tasks.1.20180405.64653-m132-e04490d9\\contents\\Microsoft.TeamFoundation.Build.Tasks';
+    var taskJsonPaths = [];
+
+    var taskFolders = fs.readdirSync(tasksDir);
+    taskFolders.forEach(function (taskFolder) {
+        var taskJsonPath = path.join(tasksDir, taskFolder, 'task.json');
+        taskJsonPaths.push(taskJsonPath);
+    });
+
+    console.log('2');
+    console.log(JSON.stringify(taskJsonPaths));
+
+    var schemaFileContent = util.generateYamlSchema(taskJsonPaths);
+    fs.writeFileSync(schemaFilePath, schemaFileContent);
+
+    console.log('File writing complete. ' + schemaFilePath);
+}
+
 //
 // node make.js testLegacy
 // node make.js testLegacy --suite L0/XCode

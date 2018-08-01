@@ -1623,4 +1623,98 @@ var storeNonAggregatedZip = function (zipPath, release, commit) {
     fs.writeFileSync(destMarker, '');
 }
 exports.storeNonAggregatedZip = storeNonAggregatedZip;
+
+// Generate Yaml schema based on a list of task json paths.
+var generateYamlSchema = function (taskJsonPaths) {
+    var yamlSchema = '';
+
+    yamlSchema += 'aaaaa';
+
+    taskJsonPaths.forEach(function (taskJsonPath) {
+        console.log(taskJsonPath);
+        yamlSchema += getYamlForTask(taskJsonPath);
+    });
+
+    yamlSchema += 'bbbbb';
+
+    return yamlSchema;
+}
+exports.generateYamlSchema = generateYamlSchema;
+
+var makeCaseInsensitiveRegexFromTaskName = function(taskName) {
+    let response = "";
+
+    for (var c of taskName) {
+        if (c == c.toUpperCase()) {
+            response += "[" + c.toLowerCase() + c.toUpperCase() + "]";
+        } else {
+            response += c;
+        }
+    }
+
+    return response;
+};
+
+var getYamlForTask = function (taskJsonPath) {
+    var taskJson = fileToJson(taskJsonPath);
+
+    var schema = {
+        properties: {
+            task: {},
+            inputs: {
+                properties: {}
+            }
+        }
+    };
+    
+    schema.properties.task.pattern = '^' + makeCaseInsensitiveRegexFromTaskName(taskJson.name) + '@' + taskJson.version.Major.toString() + '$';
+    schema.properties.task.description = cleanString(taskJson.friendlyName) + '\n\n' + cleanString(taskJson.description);
+    schema.properties.inputs.description = cleanString(taskJson.friendlyName) + " inputs";
+    
+    var requiredArgs = [];
+    
+    if (taskJson.inputs) {
+        taskJson.inputs.forEach(function(input) {
+            let thisProp = {};
+             let name = cleanString(input.name);
+            let description = input.label;
+             thisProp = {
+                description: description
+            };
+             if ((input.type == 'pickList' || input.type == 'radio') && input.options) {
+                thisProp['enum'] = Object.keys(input.options);
+            }
+            else if (input.type == 'pickList' || input.type == 'radio') {
+                thisProp.type = 'string';
+            }
+            else if (input.type == 'boolean') {
+                thisProp.type = 'boolean';
+            }
+            else if (input.type == 'multiLine' || input.type == 'string' || input.type == 'filePath') {
+                thisProp.type = 'string';
+            }
+            else if (input.type.startsWith('connectedService')) {
+                thisProp.type = 'string';
+            }
+             schema.properties.inputs.properties[name] = thisProp;
+             let inputReallyRequired =
+                   input.required   // schema says it's required
+                && input.required !== "false" // and it's not false-y
+                && !(input.defaultValue && input.defaultValue.length > 0)  // and there's no default value
+                && (!input.visibleRule || input.visibleRule.length == 0) // and it's unconditionally displayed in the UI
+            ;
+             if (inputReallyRequired) {
+                requiredArgs.push(name);
+            }
+        });
+    }
+    
+    if (requiredArgs.length > 0) {
+        schema.required = ["inputs"];
+        schema.properties.inputs.required = requiredArgs;
+    }
+
+    return JSON.stringify(schema, null, 2);
+}
+
 //------------------------------------------------------------------------------
