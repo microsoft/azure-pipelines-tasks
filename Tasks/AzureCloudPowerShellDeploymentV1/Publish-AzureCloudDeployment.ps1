@@ -14,7 +14,7 @@ try{
     $AllowUpgrade = Get-VstsInput -Name AllowUpgrade -Require -AsBool
     $SimultaneousUpgrade = Get-VstsInput -Name SimultaneousUpgrade -AsBool
     $ForceUpgrade = Get-VstsInput -Name ForceUpgrade -AsBool
-    $CheckForInstancesReady = Get-VstsInput -Name CheckForInstancesReady -AsBool
+    $VerifyRoleInstanceStatus = Get-VstsInput -Name VerifyRoleInstanceStatus -AsBool
     $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
@@ -171,7 +171,7 @@ try{
         }
     }
 
-    if ($CheckForInstancesReady -eq $true)
+    if ($VerifyRoleInstanceStatus -eq $true)
     {
         Validate-AzureCloudServiceStatus -CloudServiceName $ServiceName -Slot $Slot
     }

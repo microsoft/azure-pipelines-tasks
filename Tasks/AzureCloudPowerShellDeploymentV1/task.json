@@ -140,11 +140,11 @@
             "required": false
         },
         {
-            "name": "CheckForInstancesReady",
+            "name": "VerifyRoleInstanceStatus",
             "type": "boolean",
-            "label": "Check for instances ready",
+            "label": "Verify role instance status",
             "defaultValue": "false",
-            "helpMarkDown": "When selected then the task will check if instances are ready.",
+            "helpMarkDown": "When selected then the task will check if role instances are in ready state.",
             "required": false
         },
         {

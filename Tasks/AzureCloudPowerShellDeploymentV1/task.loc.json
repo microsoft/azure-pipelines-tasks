@@ -144,11 +144,11 @@
       "required": false
     },
     {
-      "name": "CheckForInstancesReady",
+      "name": "VerifyRoleInstanceStatus",
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.CheckForInstancesReady",
+      "label": "ms-resource:loc.input.label.VerifyRoleInstanceStatus",
       "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.CheckForInstancesReady",
+      "helpMarkDown": "ms-resource:loc.input.help.VerifyRoleInstanceStatus",
       "required": false
     },
     {
