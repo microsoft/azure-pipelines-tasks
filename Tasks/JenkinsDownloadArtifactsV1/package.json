@@ -13,6 +13,7 @@
     "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-1.0.0.tgz",
     "decompress-zip": "0.3.0",
     "fs-extra": "5.0.0",
+    "moment": "2.21.0",
     "vsts-task-lib": "2.1.0"
   }
 }
