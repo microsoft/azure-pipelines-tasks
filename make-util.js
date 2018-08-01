@@ -1676,12 +1676,14 @@ var getYamlForTask = function (taskJsonPath) {
     if (taskJson.inputs) {
         taskJson.inputs.forEach(function(input) {
             let thisProp = {};
-             let name = cleanString(input.name);
+            let name = cleanString(input.name);
             let description = input.label;
-             thisProp = {
+            thisProp = {
                 description: description
             };
-             if ((input.type == 'pickList' || input.type == 'radio') && input.options) {
+            
+            // map input types to those that are allowed by json-schema
+            if ((input.type == 'pickList' || input.type == 'radio') && input.options) {
                 thisProp['enum'] = Object.keys(input.options);
             }
             else if (input.type == 'pickList' || input.type == 'radio') {
@@ -1696,14 +1698,10 @@ var getYamlForTask = function (taskJsonPath) {
             else if (input.type.startsWith('connectedService')) {
                 thisProp.type = 'string';
             }
-             schema.properties.inputs.properties[name] = thisProp;
-             let inputReallyRequired =
-                   input.required   // schema says it's required
-                && input.required !== "false" // and it's not false-y
-                && !(input.defaultValue && input.defaultValue.length > 0)  // and there's no default value
-                && (!input.visibleRule || input.visibleRule.length == 0) // and it's unconditionally displayed in the UI
-            ;
-             if (inputReallyRequired) {
+            
+            schema.properties.inputs.properties[name] = thisProp;
+            
+            if (inputIsRequired(input)) {
                 requiredArgs.push(name);
             }
         });
@@ -1715,6 +1713,13 @@ var getYamlForTask = function (taskJsonPath) {
     }
 
     return JSON.stringify(schema, null, 2);
+}
+
+function inputIsRequired(input) {
+    return input.required   // schema says it's required
+           && input.required !== "false" // and it's not false-y
+           && !(input.defaultValue && input.defaultValue.length > 0)  // and there's no default value
+           && (!input.visibleRule || input.visibleRule.length == 0) // and it's unconditionally displayed in the UI
 }
 
 //------------------------------------------------------------------------------
