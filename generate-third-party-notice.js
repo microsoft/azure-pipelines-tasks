@@ -167,7 +167,7 @@ function writeLines(writeStream, lines) {
 }
 
 /** Join zero or more iterables into a single iterable. */
-function* concat(...iterables) {
+function* chain(...iterables) {
     for (const it of iterables) {
         yield* it;
     }
@@ -189,7 +189,7 @@ function main(args) {
 
         const nodeModuleDir = path.join(taskPath, 'node_modules');
         const testsNodeModuleDir = path.join(taskPath, 'Tests', 'node_modules');
-        const licenseInfo = concat(
+        const licenseInfo = chain(
             collectLicenseInfo(nodeModuleDir),
             fs.existsSync(testsNodeModuleDir) ? collectLicenseInfo(testsNodeModuleDir) : []);
 
