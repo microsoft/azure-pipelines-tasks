@@ -2,6 +2,9 @@
  * Run from the root of the vsts-tasks repo.
  * Usage: `node generate-third-party-notice.js <task name>`
  */
+
+'use strict';
+
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -50,7 +53,7 @@ function findLicense(packagePath) {
     ].map(x => x.toLowerCase());
 
     const candidates = children.filter(x => licenseNames.includes(x.toLowerCase()));
-    if (!candidates) {
+    if (candidates.length === 0) {
         log.warning(`Could not find a license for ${packagePath}`);
         return null;
     } else {
@@ -68,12 +71,23 @@ function findLicense(packagePath) {
  */
 function* collectLicenseInfo(modulesRoot) {
     const packagePaths = fs.readdirSync(modulesRoot).map(x => path.join(modulesRoot, x));
-    for (let absolutePath of packagePaths) {
+    for (const absolutePath of packagePaths) {
         log.info(`Collecting license information from ${absolutePath} ...`);
+
+        const basename = path.basename(absolutePath);
+        if (basename.startsWith('@')) {
+            // This is a scoped package: recurse into children
+            yield* collectLicenseInfo(absolutePath);
+            continue;
+        }
+
+        const parentDir = path.basename(path.dirname(absolutePath));
+        const isScopedPackage = parentDir.startsWith('@');
+
         const name = (() => {
-            const basename = path.basename(absolutePath);
-            if (path.dirname(absolutePath).endsWith('@types')) {
-                return `@types/${basename}`;
+            if (isScopedPackage) {
+                // "scoped package" -- parent directory is part of name (e.g. @types/node, @sinonjs/formatio)
+                return `${parentDir}/${basename}`;
             } else {
                 return basename;
             }
@@ -83,14 +97,9 @@ function* collectLicenseInfo(modulesRoot) {
             continue;
         }
 
-        if (name === '@types') {
-            yield* collectLicenseInfo(absolutePath);
-            continue;
-        }
-
         const manifest = readPackageJson(absolutePath);
         const license = findLicense(absolutePath);
-        const licenseText = fs.readFileSync(license, { encoding: 'utf-8' });
+        const licenseText = license ? fs.readFileSync(license, { encoding: 'utf-8' }) : 'NO LICENSE FOUND';
 
         yield {
             name: name,
@@ -112,7 +121,7 @@ function* thirdPartyNotice(taskName, licenseInfo) {
 
     // Enumerated modules
     let num = 1;
-    for (let item of licenseInfo) {
+    for (const item of licenseInfo) {
         if (item.url) {
             yield `${num}.\t${item.name} (${item.url})`;
         } else {
@@ -125,7 +134,7 @@ function* thirdPartyNotice(taskName, licenseInfo) {
     yield '';
 
     // Module licenses
-    for (let item of licenseInfo) {
+    for (const item of licenseInfo) {
         yield `%% ${item.name} NOTICES, INFORMATION, AND LICENSE BEGIN HERE`;
         yield '=========================================';
         yield item.licenseText.trim();
@@ -146,6 +155,13 @@ function writeLines(writeStream, lines) {
     }
 }
 
+/** Join zero or more iterables into a single iterable. */
+function* concat(...iterables) {
+    for (const it of iterables) {
+        yield* it;
+    }
+}
+
 function main(args) {
     try {
         if (!(args && args.length > 2)) {
@@ -157,10 +173,23 @@ function main(args) {
         trace('task path', taskPath);
 
         const nodeModuleDir = path.join(taskPath, 'node_modules');
-        const licenseInfo = Array.from(collectLicenseInfo(nodeModuleDir));
+        const testsNodeModuleDir = path.join(taskPath, 'Tests', 'node_modules');
+        const licenseInfo = concat(collectLicenseInfo(nodeModuleDir), collectLicenseInfo(testsNodeModuleDir));
+
+        function compareStrings(a, b) {
+            if (a < b) {
+                return -1;
+            } else if (a > b) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        const sortedLicenseInfo = Array.from(licenseInfo).sort((x, y) => compareStrings(x.name, y.name));
 
         const writeStream = fs.createWriteStream(path.join(taskPath, 'ThirdPartyNotice.txt'));
-        writeLines(writeStream, thirdPartyNotice(taskName, licenseInfo));
+        writeLines(writeStream, thirdPartyNotice(taskName, sortedLicenseInfo));
         writeStream.end();
     } catch (e) {
         log.error(e.message);
