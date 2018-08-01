@@ -35,8 +35,10 @@ var dockerCommandMap = {
     "Build an image": "./containerbuild",
     "Tag image": "./containertag",
     "Push an image": "./containerpush",
-    "Run an image": "./containerrun"    
-}  
+    "Run an image": "./containerrun",
+    "login": "./dockerlogin",
+    "logout": "./dockerlogout"
+}
 
 var commandImplementation = require("./containercommand");
 if(command in dockerCommandMap) {
@@ -46,7 +48,9 @@ if(command in dockerCommandMap) {
 commandImplementation.run(connection)
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
-    connection.close();
+    if (command !== "login" ) {
+        connection.close();
+    }
 })
 .then(function success() {
     tl.setResult(tl.TaskResult.Succeeded, "");

@@ -73,5 +73,6 @@
   "loc.messages.NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
   "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
   "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
-  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
+  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s.",
+  "loc.messages.DockerRegistryNotFound": "Docker registry service connection not specified."
 }

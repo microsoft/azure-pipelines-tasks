@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 3
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [],
     "preview": "true",
@@ -22,7 +22,8 @@
         {
             "name": "advanced",
             "displayName": "Advanced Options",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout"
         }
     ],
     "inputs": [
@@ -70,7 +71,9 @@
                 "Build an image": "build",
                 "Tag image": "tag",
                 "Push an image": "push",
-                "Run an image": "run"
+                "Run an image": "run",
+                "login": "login",
+                "logout": "logout"
             },
             "properties": {
                 "EditableOptions": "True"
@@ -93,7 +96,7 @@
                 "resizable": "true",
                 "rows": "2"
             },
-            "visibleRule": "command != Run an image && command != Tag image",
+            "visibleRule": "command != Run an image && command != Tag image && command != login && command != logout",
             "label": "Arguments",
             "helpMarkDown": "Command arguments."
         },
@@ -313,6 +316,11 @@
             "target": "container.js"
         }
     },
+    "postjobexecution": {
+        "Node": {
+            "target": "postjobdockerlogout.js"
+        }
+    },    
     "messages": {
         "ContainerPatternFound": "Pattern found in Docker filepath parameter",
         "ContainerPatternNotFound": "No pattern found in Docker filepath parameter",
@@ -320,6 +328,7 @@
         "NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
         "NoDataWrittenOnFile":"No data was written into the file %s",
-        "FileContentSynced": "Synced the file content to the disk. The content is %s."
+        "FileContentSynced": "Synced the file content to the disk. The content is %s.",
+        "DockerRegistryNotFound": "Docker registry service connection not specified."
     }
 }

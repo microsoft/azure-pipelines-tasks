@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 3
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [],
   "preview": "true",
@@ -22,7 +22,8 @@
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
     }
   ],
   "inputs": [
@@ -70,7 +71,9 @@
         "Build an image": "build",
         "Tag image": "tag",
         "Push an image": "push",
-        "Run an image": "run"
+        "Run an image": "run",
+        "login": "login",
+        "logout": "logout"
       },
       "properties": {
         "EditableOptions": "True"
@@ -93,7 +96,7 @@
         "resizable": "true",
         "rows": "2"
       },
-      "visibleRule": "command != Run an image && command != Tag image",
+      "visibleRule": "command != Run an image && command != Tag image && command != login && command != logout",
       "label": "ms-resource:loc.input.label.arguments",
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
@@ -313,6 +316,11 @@
       "target": "container.js"
     }
   },
+  "postjobexecution": {
+    "Node": {
+      "target": "postjobdockerlogout.js"
+    }
+  },
   "messages": {
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",
@@ -320,6 +328,7 @@
     "NoImagesInImageNamesFile": "ms-resource:loc.messages.NoImagesInImageNamesFile",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
-    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced"
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "DockerRegistryNotFound": "ms-resource:loc.messages.DockerRegistryNotFound"
   }
 }

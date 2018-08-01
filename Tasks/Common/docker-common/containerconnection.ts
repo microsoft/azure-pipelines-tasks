@@ -73,6 +73,26 @@ export default class ContainerConnection {
         }
     }
     
+    public setDockerConfigEnvVariable() {
+        if (this.configurationDirPath && fs.existsSync(this.configurationDirPath)) {
+            tl.setVariable("DOCKER_CONFIG", this.configurationDirPath, true);
+        }
+        else {
+            tl.error(tl.loc('DockerRegistryNotFound'));
+            throw new Error(tl.loc('DockerRegistryNotFound'));
+        }
+    }
+    
+    public unsetDockerConfigEnvVariable(deleteConfigFile: boolean = true) {
+        var dockerConfigPath = tl.getVariable("DOCKER_CONFIG");
+        if (dockerConfigPath) {
+            tl.setVariable("DOCKER_CONFIG", "");
+            if (fs.existsSync(dockerConfigPath)) {
+                del.sync(dockerConfigPath, {force: true});
+            }
+        }    
+    }
+
     private openHostEndPoint(hostEndpoint?: string): void {
         if (hostEndpoint) {
             this.hostUrl = tl.getEndpointUrl(hostEndpoint, false);
