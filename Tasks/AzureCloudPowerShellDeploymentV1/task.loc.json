@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [
     "azureps"
@@ -141,6 +141,14 @@
       "defaultValue": "false",
       "visibleRule": "AllowUpgrade == true",
       "helpMarkDown": "ms-resource:loc.input.help.ForceUpgrade",
+      "required": false
+    },
+    {
+      "name": "CheckForInstancesReady",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CheckForInstancesReady",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.CheckForInstancesReady",
       "required": false
     },
     {
