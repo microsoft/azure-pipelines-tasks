@@ -9,9 +9,13 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
+let verboseLogging = false;
+
 const log = {
     info(message) {
-        console.log(`[INFO] ${message}`);
+        if (verboseLogging) {
+            console.log(`[INFO] ${message}`);
+        }
     },
     warning(message) {
         console.log(`[WARNING] ${message}`);
@@ -164,8 +168,12 @@ function* concat(...iterables) {
 
 function main(args) {
     try {
-        if (!(args && args.length > 2)) {
-            throw new Error(`Usage: node generate-third-party-notice.js <task name>`);
+        if (!args || args.length < 2) {
+            throw new Error(`Usage: node generate-third-party-notice.js <task name> [--verbose]`);
+        }
+
+        if (args.includes('--verbose')) {
+            verboseLogging = true;
         }
 
         const taskName = args[2];
