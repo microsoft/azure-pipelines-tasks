@@ -34,6 +34,7 @@ _common/
 _build/
 _download/
 _package/
+_packageLegacy/
 _test/
 _working/
 _gendocs/

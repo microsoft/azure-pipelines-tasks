@@ -1361,7 +1361,7 @@ var getServicingXmlContent = function (taskFolderName, fullTaskName, taskVersion
     var servicingXmlContent = '';
 
     servicingXmlContent += `  <Directory Path="[ServicingDir]Tasks\\Individual\\${taskFolderName}\\">` + os.EOL;
-    servicingXmlContent += `    <File Origin="nuget://${fullTaskName}/*" />` + os.EOL;
+    servicingXmlContent += `    <File Origin="nuget://${fullTaskName}/content/*" />` + os.EOL;
     servicingXmlContent += `  </Directory>` + os.EOL;
 
     return servicingXmlContent;
