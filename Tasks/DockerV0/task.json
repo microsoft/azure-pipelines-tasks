@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 14
+        "Patch": 15
     },
     "demands": [],
     "preview": "false",
@@ -59,7 +59,10 @@
             "type": "pickList",
             "helpMarkDown": "Select an Azure Container Registry",
             "visibleRule": "containerregistrytype = Azure Container Registry",
-            "defaultValue": ""
+            "defaultValue": "",
+            "properties": {
+                "EditableOptions": "True"
+            }
         },
         {
             "name": "action",
