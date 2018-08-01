@@ -53,10 +53,9 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 const tl = require('vsts-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
 tlClone.getVariable = function(variable: string) {
-    console.log(`Called for ${variable}`);
-    if (variable == "Agent.TempDirectory")
+    if (variable.toUpperCase() === "Agent.TempDirectory".toUpperCase())
     {
-        return process.env[variable];
+        return process.env[variable.toUpperCase()];
     }
     else
     {
