@@ -1626,18 +1626,64 @@ exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
 // Generate Yaml schema based on a list of task json paths.
 var generateYamlSchema = function (taskJsonPaths) {
-    var yamlSchema = '';
-
-    yamlSchema += 'aaaaa';
-
+    var anyOf = [];
     taskJsonPaths.forEach(function (taskJsonPath) {
-        console.log(taskJsonPath);
-        yamlSchema += getYamlForTask(taskJsonPath);
+        //console.log(taskJsonPath);
+        anyOf.push(JSON.parse(getYamlForTask(taskJsonPath)));
     });
 
-    yamlSchema += 'bbbbb';
+    let fullSchema = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$id": "https://github.com/Microsoft/vsts-agent/blob/master/src/Misc/task-schema.json",
+        "$comment": "generated " + new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()),
+        "title": "Pipeline task schema",
+        "description": "A task definition",
+        "type": "object",
+        "required": [ "task" ],
+        "anyOf": anyOf,
+        "properties": {
+            "task": {
+              "enum": ["Task1@1", "Task1@2"],
+              "description": "Task reference including major version"
+            },
+            "displayName": {
+              "type": "string",
+              "description": "Human-readable name for the task"
+            },
+            "name": {
+              "type": "string",
+              "description": "ID of the task instance",
+              "pattern": "^[_A-Za-z0-9]*$"
+            },
+            "condition": {
+              "type": "string",
+              "description": "Evaluate this condition expression to determine whether to run this task"
+            },
+            "continueOnError": {
+              "type": "boolean",
+              "description": "Continue running the parent phase even on failure?"
+            },
+            "enabled": {
+              "type": "boolean",
+              "description": "Run this task when the phase runs?"
+            },
+            "timeoutInMinutes": {
+              "type": "integer",
+              "description": "Time to wait for this task to complete before the server kills it"
+            },
+            "inputs": {
+              "type": "object",
+              "description": "Task-specific inputs"
+            },
+            "env": {
+              "type": "object",
+              "description": "Variables to map into the process's environment"
+            }
+          },
+          "additionalProperties": false
+        };
 
-    return yamlSchema;
+    return JSON.stringify(fullSchema, null, 2);
 }
 exports.generateYamlSchema = generateYamlSchema;
 
