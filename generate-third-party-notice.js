@@ -58,7 +58,6 @@ function findLicense(packagePath) {
 
     const candidates = children.filter(x => licenseNames.includes(x.toLowerCase()));
     if (candidates.length === 0) {
-        log.warning(`Could not find a license for ${packagePath}`);
         return null;
     } else {
         if (candidates.length > 1) {
@@ -102,13 +101,21 @@ function* collectLicenseInfo(modulesRoot) {
         }
 
         const manifest = readPackageJson(absolutePath);
+        const url = manifest.repository ? manifest.repository.url : null;
+        if (!url) {
+            log.warning(`Could not find a repository URL for ${absolutePath}`);
+        }
+
         const license = findLicense(absolutePath);
-        const licenseText = license ? fs.readFileSync(license, { encoding: 'utf-8' }) : 'NO LICENSE FOUND';
+        const licenseText = license ? fs.readFileSync(license, { encoding: 'utf-8' }) : null;
+        if (!licenseText) {
+            log.warning(`Could not find a license for ${absolutePath}`);
+        }
 
         yield {
             name: name,
-            url: manifest.repository.url,
-            licenseText: licenseText
+            url: url || 'NO URL FOUND',
+            licenseText: licenseText || 'NO LICENSE FOUND'
         };
     }
 }
@@ -182,7 +189,9 @@ function main(args) {
 
         const nodeModuleDir = path.join(taskPath, 'node_modules');
         const testsNodeModuleDir = path.join(taskPath, 'Tests', 'node_modules');
-        const licenseInfo = concat(collectLicenseInfo(nodeModuleDir), collectLicenseInfo(testsNodeModuleDir));
+        const licenseInfo = concat(
+            collectLicenseInfo(nodeModuleDir),
+            fs.existsSync(testsNodeModuleDir) ? collectLicenseInfo(testsNodeModuleDir) : []);
 
         function compareStrings(a, b) {
             if (a < b) {
