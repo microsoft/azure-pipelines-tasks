@@ -117,6 +117,12 @@ function* collectLicenseInfo(modulesRoot) {
             url: url || 'NO URL FOUND',
             licenseText: licenseText || 'NO LICENSE FOUND'
         };
+
+        // See if this package has its own `node_modules` directory
+        const child_packages = path.join(absolutePath, 'node_modules');
+        if (fs.existsSync(child_packages)) {
+            yield* collectLicenseInfo(child_packages);
+        }
     }
 }
 
@@ -161,7 +167,7 @@ function writeLines(writeStream, lines) {
         writeStream.write(os.EOL);
     };
 
-    for (let line of lines) {
+    for (const line of lines) {
         writeLine(line);
     }
 }
