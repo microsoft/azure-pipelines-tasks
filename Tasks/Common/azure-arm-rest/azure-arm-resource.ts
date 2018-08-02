@@ -28,7 +28,7 @@ export class ResourceManagementClient extends azureServiceClient.ServiceClient {
 
 export class Resources {
     private _client: ServiceClient;
-    
+
     constructor(endpoint: AzureEndpoint) {
         this._client = new ServiceClient(endpoint.applicationTokenCredentials, endpoint.subscriptionID, 30);
     }
@@ -38,17 +38,17 @@ export class Resources {
         httpRequest.method = 'GET';
 
         httpRequest.uri = this._client.getRequestUri('//subscriptions/{subscriptionId}/resources', {},
-        [`$filter=resourceType EQ \'${encodeURIComponent(resourceType)}\' AND name EQ \'${encodeURIComponent(resourceName)}\'`], '2016-07-01');
+            [`$filter=resourceType EQ \'${encodeURIComponent(resourceType)}\' AND name EQ \'${encodeURIComponent(resourceName)}\'`], '2016-07-01');
 
         var result = [];
         try {
             var response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if (response.statusCode != 200) {
                 throw ToError(response);
             }
 
             result = result.concat(response.body.value);
-            if(response.body.nextLink) {
+            if (response.body.nextLink) {
                 var nextResult = await this._client.accumulateResultFromPagedResult(response.body.nextLink);
                 if (nextResult.error) {
                     throw Error(nextResult.error);
@@ -58,11 +58,12 @@ export class Resources {
 
             return result;
         }
-        catch(error) {
+        catch (error) {
             throw Error(tl.loc('FailedToGetResourceID', resourceType, resourceName, this._client.getFormattedError(error)))
         }
     }
 }
+
 export class ResourceGroups {
     private client: ResourceManagementClient;
 
@@ -245,23 +246,28 @@ export class Deployments {
                     resolve(new azureServiceClient.ApiResult(azureServiceClient.ToError(response)));
                 }
                 else {
-                    this.client.getLongRunningOperationResult(response).then((operationResponse) => {
-                        this.get(resourceGroupName, deploymentName, (error, response) => {
-                            if (error) {
-                                resolve(new azureServiceClient.ApiResult(error));
-                            } else {
-                                if (response.properties.provisioningState === "Succeeded") {
-                                    resolve(new azureServiceClient.ApiResult(null, response));
-                                } else {
-                                    resolve(new azureServiceClient.ApiResult(response.properties.error));
+                    this.client.getLongRunningOperationResult(response)
+                        .then((operationResponse) => {
+                            this.get(resourceGroupName, deploymentName, (error, response) => {
+                                if (error) {
+                                    resolve(new azureServiceClient.ApiResult(error));
                                 }
-                            }
-                        });
-                    }, (error) => reject(error));
+                                else {
+                                    if (!response.properties) {
+                                        resolve(new azureServiceClient.ApiResult(response));
+                                    }
+                                    else if (response.properties.provisioningState === "Succeeded") {
+                                        resolve(new azureServiceClient.ApiResult(null, response));
+                                    } else {
+                                        resolve(new azureServiceClient.ApiResult(response.properties.error));
+                                    }
+                                }
+                            });
+                        }).catch((error) => reject(error));
                 }
             });
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result))
+            .catch((error) => callback(error));
     }
 
     public get(resourceGroupName, deploymentName, callback) {
@@ -287,8 +293,8 @@ export class Deployments {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
-            (error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result))
+            .catch((error) => callback(error));
     }
 
     public validate(resourceGroupName, deploymentName, parameters, callback) {
