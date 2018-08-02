@@ -266,8 +266,8 @@ export class Deployments {
                         }).catch((error) => reject(error));
                 }
             });
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result))
-            .catch((error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public get(resourceGroupName, deploymentName, callback) {
@@ -293,8 +293,8 @@ export class Deployments {
                 deferred.resolve(new azureServiceClient.ApiResult(null, response.body));
             }
             return deferred.promise;
-        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result))
-            .catch((error) => callback(error));
+        }).then((apiResult: azureServiceClient.ApiResult) => callback(apiResult.error, apiResult.result),
+            (error) => callback(error));
     }
 
     public validate(resourceGroupName, deploymentName, parameters, callback) {
