@@ -28,6 +28,7 @@ $deleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
 $ErrorActionPreference = 'Stop'
 
 # Initialize Rest API Helpers.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 # Import the loc strings.
