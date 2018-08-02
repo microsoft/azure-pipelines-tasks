@@ -20,6 +20,7 @@ Register-Mock Get-VstsInput { "InlineAdditionalArguments" } -ParametersEvaluator
 Register-Mock Get-VstsInput { $ipDetectionMethodRange } -ParametersEvaluator { $Name -eq "IpDetectionMethod" }
 Register-Mock Get-VstsInput { $startIPAddress } -ParametersEvaluator { $Name -eq "StartIpAddress" }
 Register-Mock Get-VstsInput { $endIPAddress } -ParametersEvaluator { $Name -eq "EndIpAddress" }
+Register-Mock Remove-EndpointSecrets
 
 Register-Mock Get-Endpoint { return $spnEndpoint }
 Register-Mock Import-SqlPs { }

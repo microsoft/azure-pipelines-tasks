@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
+    "Minor": 139,
     "Patch": 0
   },
   "groups": [
@@ -79,7 +79,7 @@
       "required": true,
       "options": {
         "latest": "Latest",
-        "latestFromBranch": "Latest from specific branch",
+        "latestFromBranch": "Latest from specific branch and specified Build Tags",
         "specific": "Specific version"
       }
     },
@@ -104,6 +104,15 @@
         "DisableManageLink": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.buildId"
+    },
+    {
+      "name": "Tags",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Tags",
+      "defaultValue": "",
+      "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Tags"
     },
     {
       "name": "downloadType",

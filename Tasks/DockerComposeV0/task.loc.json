@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 4,
-    "Patch": 17
+    "Patch": 18
   },
   "demands": [],
   "preview": "false",
@@ -60,7 +60,10 @@
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
       "visibleRule": "containerregistrytype = Azure Container Registry",
-      "defaultValue": ""
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "dockerComposeFile",
