@@ -99,6 +99,7 @@
         "SqlAzureDacpacDeploymentV1",
         "SqlDacpacDeploymentOnMachineGroupV0",
         "SshV0",
+        "UPackCommandV0",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
         "VSBuildV1",

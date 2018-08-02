@@ -23,8 +23,19 @@ function getUriForAccessMapping(mapping: locationApi.AccessMapping): string {
     return accessPoint + virtualDirectory;
 }
 
-function getConnectionData(uri: string, accessToken: string): Q.Promise<locationApi.ConnectionData> {
-    return new locationApi.QLocationApi(uri, [vstsWebApi.getBearerHandler(accessToken)]).getConnectionData();
+function getConnectionData(uri: string, username: string, password: string): Q.Promise<locationApi.ConnectionData> {
+    let defer = Q.defer<locationApi.ConnectionData>();
+    new locationApi.LocationApi(uri, [vstsWebApi.getBasicHandler(username, password)]).getConnectionData((err: any,
+        statusCode: number, connectionData: locationApi.ConnectionData) => {
+        if (err) {
+            err.statusCode = statusCode;
+            defer.reject(err);
+        }
+        else {
+            defer.resolve(connectionData);
+        }
+    });
+    return defer.promise;
 }
 
 function getUriForServiceDefinition(serviceDefinition: locationApi.ServiceDefinition): string {
@@ -103,9 +114,9 @@ export function getConnectionDataForArea(
     serviceUri: string,
     areaName: string,
     areaId: string,
+    username: string,
     accessToken: string): Q.Promise<locationApi.ConnectionData> {
-
-    return getConnectionData(serviceUri, accessToken)
+    return getConnectionData(serviceUri, username, accessToken)
         .then(connectionData => {
             tl.debug("successfully loaded origin service location data");
             if (hasServicesOfType(connectionData, areaName)) {
@@ -124,8 +135,7 @@ export function getConnectionDataForArea(
 
                 let spsUri = getUriForServiceDefinition(sps);
                 tl.debug(util.format("found SPS at %s", spsUri));
-
-                return getConnectionData(spsUri, accessToken)
+                return getConnectionData(spsUri, username, accessToken)
                     .then(spsConnectionData => {
                         tl.debug("successfully loaded SPS location data");
                         let areaService = findServiceByIdentifier(spsConnectionData, areaId);
@@ -137,7 +147,7 @@ export function getConnectionDataForArea(
 
                         let areaServiceUri = getUriForServiceDefinition(areaService);
                         tl.debug(util.format("found %s service in SPS at %s", areaId, areaServiceUri));
-                        return getConnectionData(areaServiceUri, accessToken)
+                        return getConnectionData(areaServiceUri, username, accessToken)
                             .then(targetConnectionData => {
                                 tl.debug("successfully loaded target service location data");
                                 return targetConnectionData;
@@ -148,7 +158,7 @@ export function getConnectionDataForArea(
 }
 
 export function getNuGetConnectionData(serviceUri: string, accessToken: string): Q.Promise<locationApi.ConnectionData> {
-    return getConnectionDataForArea(serviceUri, "nuget", "b3be7473-68ea-4a81-bfc7-9530baaa19ad", accessToken);
+    return getConnectionDataForArea(serviceUri, "nuget", "b3be7473-68ea-4a81-bfc7-9530baaa19ad", "fakeUsername", accessToken);
 }
 
 /** 

@@ -1,0 +1,390 @@
+{
+  "id": "e0b79640-8625-11e8-91be-db2878ff888a",
+  "name": "UniversalPackages",
+  "friendlyName": "Universal Packages",
+  "description": "Download or publish universal packages.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
+  "category": "Package",
+  "version": {
+    "Major": "0",
+    "Minor": "0",
+    "Patch": "1"
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "groups": [{
+    "name": "packageDownloadDetails",
+    "displayName": "Feed & package details",
+    "isExpanded": true,
+    "visibleRule": "command = download"
+  },
+  {
+    "name": "packagePublishDetails",
+    "displayName": "Feed & package details",
+    "isExpanded": true,
+    "visibleRule": "command = publish"
+  },
+  {
+    "name": "advanced",
+    "displayName": "Advanced",
+    "isExpanded": false
+  }],
+
+  "instanceNameFormat": "Universal $(message)",
+
+  "inputs": [{
+    "name": "command",
+    "type": "pickList",
+    "label": "Command",
+    "defaultValue": "download",
+    "helpMarkDown": "The universal package command to run.",
+    "required": "true",
+    "properties": {
+        "EditableOptions": "False"
+    },
+    "options": {
+        "download": "Download",
+        "publish": "Publish"
+    }
+  },
+
+  {
+    "name": "downloadDirectory",
+    "aliases": ["downloadDirectory"],
+    "type": "filePath",
+    "label": "Destination directory",
+    "defaultValue": "$(Build.ArtifactStagingDirectory)",
+    "helpMarkDown": "Specifies the folder path where package will be downloaded.",
+    "required": "true",
+    "visibleRule": "command = download",
+    "properties": {
+      "EditableOptions": "True"
+    }
+  },
+  {
+    "name": "internalOrExternalDownload",
+    "aliases": ["feedsToUse"],
+    "type": "radio",
+    "label": "Feed location",
+    "defaultValue": "internal",
+    "helpMarkDown": "You can either select a feed from this collection or any other collection in VSTS.",
+    "required": "true",
+    "options": {
+        "internal": "This account/collection",
+        "external": "Another account/collection"
+    },
+    "groupName": "packageDownloadDetails"
+  },
+  {
+    "name": "externalEndpoint",
+    "aliases": ["externalFeedCredentials"],
+    "type": "connectedService:externaltfs",
+    "label": "Account/collection connection",
+    "required": false,
+    "helpMarkDown": "Credentials to use for external feeds.",
+    "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+    },
+    "groupName": "packageDownloadDetails",
+    "visibleRule": "internalOrExternalDownload = external"
+  },
+  {
+    "name": "feedListDownload",
+    "aliases": ["vstsFeed"],
+    "type": "pickList",
+    "label": "Feed",
+    "defaultValue": "",
+    "helpMarkDown": "Select the feed.",
+    "required": "true",
+    "groupName": "packageDownloadDetails",
+    "visibleRule": "internalOrExternalDownload = internal",
+    "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+    }
+  },
+  {
+    "name": "packageListDownload",
+    "aliases": ["vstsFeedPackage"],
+    "type": "pickList",
+    "label": "Package Name",
+    "defaultValue": "",
+    "helpMarkDown": "Select the package.",
+    "required": "true",
+    "groupName": "packageDownloadDetails",
+    "visibleRule": "internalOrExternalDownload = internal",
+    "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+    }
+  },
+  {
+    "name": "versionListDownload",
+    "aliases": ["vstsPackageVersion"],
+    "type": "pickList",
+    "label": "Version",
+    "defaultValue": "",
+    "helpMarkDown": "Select the package version.",
+    "required": "true",
+    "groupName": "packageDownloadDetails",
+    "visibleRule": "internalOrExternalDownload = internal",
+    "properties": {
+        "EditableOptions": "True",
+        "DisableManageLink": "True"
+    }
+  },
+  {
+    "name": "feedDownloadExternal",
+    "type": "string",
+    "label": "Feed",
+    "defaultValue": "",
+    "helpMarkDown": "Feed name",
+    "required": "true",
+    "groupName": "packageDownloadDetails",
+    "visibleRule": "internalOrExternalDownload = external"
+  },
+  {
+    "name": "packageDownloadExternal",
+    "type": "string",
+    "label": "Package Name",
+    "defaultValue": "",
+    "helpMarkDown": "Package name",
+    "required": "true",
+    "groupName": "packageDownloadDetails",
+    "visibleRule": "internalOrExternalDownload = external"
+  },
+  {
+    "name": "versionDownloadExternal",
+    "type": "string",
+    "label": "Version",
+    "defaultValue": "",
+    "helpMarkDown": "Package version to download",
+    "required": "true",
+    "groupName": "packageDownloadDetails",
+    "visibleRule": "internalOrExternalDownload = external"
+  },
+
+  {
+    "name": "publishDirectory",
+    "aliases": ["publishDirectory"],
+    "type": "filePath",
+    "label": "Path to file(s) to publish",
+    "defaultValue": "",
+    "helpMarkDown": "Specifies the path to list of files to be published.",
+    "required": "true",
+    "visibleRule": "command = publish"
+  },
+  {
+    "name": "internalOrExternalPublish",
+    "aliases": ["feedsToUsePublish"],
+    "type": "radio",
+    "label": "Feed location",
+    "defaultValue": "internal",
+    "helpMarkDown": "You can either select a feed from this collection or any other collection in VSTS.",
+    "required": "true",
+    "options": {
+        "internal": "This account/collection",
+        "external": "Another account/collection"
+    },
+    "groupName": "packagePublishDetails"
+  },
+  {
+    "name": "externalEndpoints",
+    "aliases": ["publishFeedCredentials"],
+    "type": "connectedService:externaltfs",
+    "label": "Account/collection connection",
+    "required": true,
+    "helpMarkDown": "Credentials to use for external feeds.",
+    "properties": {
+        "EditableOptions": "False",
+        "MultiSelectFlatList": "False"
+    },
+    "groupName": "packagePublishDetails",
+    "visibleRule": "internalOrExternalPublish = external"
+  },
+  {
+    "name": "feedListPublish",
+    "aliases": ["vstsFeedPublish"],
+    "type": "pickList",
+    "label": "Destination Feed",
+    "defaultValue": "",
+    "helpMarkDown": "Select the detination feed.",
+    "required": "true",
+    "groupName": "packagePublishDetails",
+    "visibleRule": "internalOrExternalPublish = internal",
+    "properties": {
+        "EditableOptions": "True"
+    }
+  },
+  {
+    "name": "packageListPublish",
+    "aliases": ["vstsFeedPackagePublish"],
+    "type": "pickList",
+    "label": "Package Name",
+    "defaultValue": "",
+    "helpMarkDown": "Select the package to publish.",
+    "required": "true",
+    "groupName": "packagePublishDetails",
+    "visibleRule": "internalOrExternalPublish = internal",
+    "properties": {
+        "EditableOptions": "True"
+    }
+  },
+  {
+    "name": "feedPublishExternal",
+    "type": "string",
+    "label": "Feed",
+    "defaultValue": "",
+    "helpMarkDown": "Feed name",
+    "required": "true",
+    "groupName": "packagePublishDetails",
+    "visibleRule": "internalOrExternalPublish = external",
+    "properties": {
+      "EditableOptions": "False"
+  }
+  },
+  {
+    "name": "packagePublishExternal",
+    "type": "string",
+    "label": "Package Name",
+    "defaultValue": "",
+    "helpMarkDown": "Package name",
+    "required": "true",
+    "groupName": "packagePublishDetails",
+    "visibleRule": "internalOrExternalPublish = external"
+  },
+  {
+    "name": "versionPublishSelector",
+    "aliases": ["versionOption"],
+    "type": "radio",
+    "label": "Version",
+    "defaultValue": "patch",
+    "required": "true",
+    "options": {
+        "major": "Next major",
+        "minor": "Next minor",
+        "patch": "Next patch",
+        "custom": "Custom"
+    },
+    "groupName": "packagePublishDetails"
+  },
+  {
+    "name": "versionPublish",
+    "type": "string",
+    "label": "Custom version",
+    "defaultValue": "",
+    "helpMarkDown": "Select the custom package version.",
+    "required": "true",
+    "groupName": "packagePublishDetails",
+    "properties": {
+        "EditableOptions": "True"
+    },
+    "visibleRule": "versionPublishSelector = custom"
+  },  
+  {
+    "name": "packagePublishDescription",
+    "type": "string",
+    "label": "Package Description",
+    "defaultValue": "",
+    "helpMarkDown": "Package description",
+    "required": "false",
+    "groupName": "packagePublishDetails"
+  },
+  {
+    "name": "verbosity",
+    "type": "pickList",
+    "label": "Verbosity",
+    "defaultValue": "None",
+    "helpMarkDown": "Specifies the amount of detail displayed in the output.",
+    "required": "false",
+    "groupName": "advanced",
+    "options": {
+        "None": "None",
+        "Trace": "Trace",
+        "Debug": "Debug",
+        "Information": "Information",
+        "Warning": "Warning",
+        "Error": "Error",
+        "Critical": "Citical"
+    }
+}],
+
+  "dataSourceBindings": [{
+    "target": "feedListDownload",
+    "endpointId": "tfs:feed",
+    "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+    "resultSelector": "jsonpath:$.value[*]",
+    "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+  }, 
+  {
+    "target": "packageListDownload",
+    "endpointId": "tfs:feed",
+    "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListDownload)/packages?includeUrls=false&protocolType=UPack",
+    "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
+    "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+  }, 
+  {
+    "target": "versionListDownload",
+    "endpointId": "tfs:feed",
+    "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListDownload)/packages/$(packageListDownload)/versions?includeUrls=false&isDeleted=false",
+    "resultSelector": "jsonpath:$.value[*]",
+    "resultTemplate": "{ \"Value\" : \"{{{version}}}\", \"DisplayValue\" : \"{{{normalizedVersion}}}\" }"
+  },
+  {
+    "target": "feedListPublish",
+    "endpointId": "tfs:feed",
+    "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
+    "resultSelector": "jsonpath:$.value[*]",
+    "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+  }, 
+  {
+    "target": "packageListPublish",
+    "endpointId": "tfs:feed",
+    "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListPublish)/packages?includeUrls=false&includeDeleted=false",
+    "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
+    "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+  }],
+  
+  "execution": {
+    "Node": {
+      "target": "upackcommandmain.js",
+      "argumentFormat": ""
+    }
+  },
+
+  "messages": {
+    "PackagesDownloadedSuccessfully": "Package were downloaded successfully",
+    "PackagesFailedToDownload": "Packages failed to download",
+    "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
+    "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
+    "CouldNotFindUPackService": "Could not find the Universal packages service. This task will not be able to authenticate to feeds hosted in your Team Services account/TFS project collection.",
+    "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
+    "PackagesPublishedSuccessfully": "Packages were published successfully",
+    "PackagesFailedToPublish": "Packages failed to publish",
+    "UnknownFeedType": "Unknown feed type '%s'",
+    "Error_NoSourceSpecifiedForPublish": "No external source was specified for publish",
+    "Error_NoSourceSpecifiedForDownload": "No external source was specified for download",
+    "Error_UnexpectedErrorArtifactTool": "An unexpected error occurred while trying to push the package. Exit code(%s) and error(%s)",
+    "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
+    "Info_NoPackagesMatchedTheSearchPattern": "No directory matched the search pattern.",
+    "Error_CommandNotRecognized": "The command %s was not recognized.",
+    "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
+    "Error_AuthNotSupported": "Authentication using username/password not supported for universal packages. Please use personal access tokens.",
+    "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
+    "Info_Downloading": "Downloading package: %s, version: %s usign feed id: %s",
+    "Info_Publishing": "Publishing package: %s, version: %s usign feed id: %s",
+    "Info_UsingArtifactToolPublish": "Using artifact tool to publish the package",
+    "Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
+    "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
+    "Info_UsingToolPath": "Using tool path: %s",
+    "Info_UsingVersion": "Using version: %s",
+    "FailedToGetPackageMetadata": "Failed to get package metadata.",
+    "FailedToGetLatestPackageVersion": "Failed to get package versions",
+    "Warn_CredentialsNotFound": "Could not determine credentials to use for universal packages"
+  }
+}
