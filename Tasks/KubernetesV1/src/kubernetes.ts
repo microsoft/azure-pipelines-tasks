@@ -4,7 +4,6 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 
 import ClusterConnection from "./clusterconnection";
-import * as kubectl from "./kubernetescommand";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 
@@ -21,7 +20,10 @@ try
     ).then(
        () =>  {
            tl.setResult(tl.TaskResult.Succeeded, "");
-           connection.close();
+           var command = tl.getInput("command", true);
+           if (command !== "login") {
+               connection.close();
+           }
        }
     ).catch((error) => {
        tl.setResult(tl.TaskResult.Failed, error.message)
@@ -52,8 +54,19 @@ async function run(clusterConnection: ClusterConnection)
 // execute kubectl command
 function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
     var command = tl.getInput("command", true);
+
+    var commandMap = {
+        "login": "./kuberneteslogin",
+        "logout": "./kuberneteslogout"
+    }
+    
+    var commandImplementation = require("./kubernetescommand");
+    if(command in commandMap) {
+        commandImplementation = require(commandMap[command]);
+    }
+
     var result = "";
-    return kubectl.run(clusterConnection, command, (data) => result += data)
+    return commandImplementation.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
         tl.setVariable('KubectlOutput', result);
     });

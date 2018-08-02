@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 0,
-        "Patch": 4
+        "Minor": 1,
+        "Patch": 0
     },
     "demands": [],
     "preview": "true",
@@ -27,22 +27,26 @@
         {
             "name": "secrets",
             "displayName": "Secrets",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout"
         },
         {
             "name": "configMaps",
             "displayName": "ConfigMaps",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout"
         },
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout"
         },
         {
             "name": "output",
             "displayName": "Output",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout"
         }
     ],
     "inputs": [
@@ -120,6 +124,8 @@
                 "exec": "exec",
                 "expose": "expose",
                 "get": "get",
+                "login": "login",
+                "logout": "logout",
                 "logs": "logs",
                 "run": "run",
                 "set": "set",
@@ -137,7 +143,8 @@
             "label": "Use configuration files",
             "defaultValue": "false",
             "helpMarkDown": "Use Kubernetes configuration file with the kubectl command. Filename, directory, or URL to Kubernetes configuration files can also be provided.",
-            "groupName": "commands"
+            "groupName": "commands",
+            "visibleRule": "command != login && command != logout"
         },
         {
             "name": "configuration",
@@ -159,7 +166,8 @@
             },
             "label": "Arguments",
             "helpMarkDown": "Arguments to the specified kubectl command.",
-            "groupName": "commands"
+            "groupName": "commands",
+            "visibleRule": "command != login && command != logout"
         },
         {
             "name": "secretType",
@@ -411,6 +419,7 @@
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
-        "ConfigurationFileNotFound":"No configuration file matching %s was found."
+        "ConfigurationFileNotFound":"No configuration file matching %s was found.",
+        "KubernetesServiceConnectionNotFound":"Kubernetes service connection details not found."
     }
 }

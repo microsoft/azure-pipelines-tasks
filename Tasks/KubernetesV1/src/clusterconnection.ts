@@ -51,11 +51,6 @@ export default class ClusterConnection {
 
     public createCommand(): tr.ToolRunner {
         var command = tl.tool(this.kubectlPath);
-        if(this.kubeconfigFile)
-        {
-            command.arg("--kubeconfig");
-            command.arg(this.kubeconfigFile);
-        }
         return command;
     }
 
@@ -67,6 +62,7 @@ export default class ClusterConnection {
             {
                 this.kubeconfigFile = path.join(this.userDir, "config");
                 fs.writeFileSync(this.kubeconfigFile, kubeconfig);
+                process.env["KUBECONFIG"] = this.kubeconfigFile;
             }
          });
     }
@@ -74,9 +70,27 @@ export default class ClusterConnection {
     // close kubernetes connection
     public close(): void {
         if (this.kubeconfigFile != null && fs.exists(this.kubeconfigFile))
-        {          
+        {
+           delete process.env["KUBECONFIG"];
            fs.rmdirSync(this.kubeconfigFile);
         }    
+    }
+
+    public setKubeConfigEnvVariable() {
+        if (this.kubeconfigFile && fs.existsSync(this.kubeconfigFile)) {
+            tl.setVariable("KUBECONFIG", this.kubeconfigFile);
+        }
+        else {
+            tl.error(tl.loc('KubernetesServiceConnectionNotFound'));
+            throw new Error(tl.loc('KubernetesServiceConnectionNotFound'));
+        }
+    }
+    
+    public unsetKubeConfigEnvVariable() {
+        var kubeConfigPath = tl.getVariable("KUBECONFIG");
+        if (kubeConfigPath) {
+            tl.setVariable("KUBECONFIG", "");
+        }
     }
 
     //excute kubernetes command

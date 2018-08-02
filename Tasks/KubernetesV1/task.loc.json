@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 4
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [],
   "preview": "true",
@@ -27,22 +27,26 @@
     {
       "name": "secrets",
       "displayName": "ms-resource:loc.group.displayName.secrets",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
     },
     {
       "name": "configMaps",
       "displayName": "ms-resource:loc.group.displayName.configMaps",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
     },
     {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
     },
     {
       "name": "output",
       "displayName": "ms-resource:loc.group.displayName.output",
-      "isExpanded": false
+      "isExpanded": false,
+      "visibleRule": "command != login && command != logout"
     }
   ],
   "inputs": [
@@ -120,6 +124,8 @@
         "exec": "exec",
         "expose": "expose",
         "get": "get",
+        "login": "login",
+        "logout": "logout",
         "logs": "logs",
         "run": "run",
         "set": "set",
@@ -137,7 +143,8 @@
       "label": "ms-resource:loc.input.label.useConfigurationFile",
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.useConfigurationFile",
-      "groupName": "commands"
+      "groupName": "commands",
+      "visibleRule": "command != login && command != logout"
     },
     {
       "name": "configuration",
@@ -159,7 +166,8 @@
       },
       "label": "ms-resource:loc.input.label.arguments",
       "helpMarkDown": "ms-resource:loc.input.help.arguments",
-      "groupName": "commands"
+      "groupName": "commands",
+      "visibleRule": "command != login && command != logout"
     },
     {
       "name": "secretType",
@@ -413,6 +421,7 @@
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
     "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
-    "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound"
+    "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
+    "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound"
   }
 }
