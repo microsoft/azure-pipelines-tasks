@@ -27,6 +27,11 @@
             "name": "newServiceAdvancedOptions",
             "displayName": "Advanced Options For Creating New Service",
             "isExpanded": false
+        },
+        {
+            "name": "advancedSettings",
+            "displayName": "Advanced Settings",
+            "isExpanded": false
         }
     ],
     "inputs": [
@@ -140,14 +145,6 @@
             "required": false
         },
         {
-            "name": "VerifyRoleInstanceStatus",
-            "type": "boolean",
-            "label": "Verify role instance status",
-            "defaultValue": "false",
-            "helpMarkDown": "When selected then the task will check if role instances are in ready state.",
-            "required": false
-        },
-        {
             "name": "DiagnosticStorageAccountKeys",
             "type": "multiLine",
             "label": "Diagnostic storage account keys",
@@ -195,6 +192,15 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "VerifyRoleInstanceRetryLimit",
+            "type": "string",
+            "label": "Verify role instance retry count",
+            "defaultValue": "4",
+            "helpMarkDown": "Retry count for verifying role instance status. Each retry will wait for 30 seconds, hence the total wait time will be equal to the retry count * 30 seconds. To disable verify role status, set retry count value to 0 (zero).",
+            "required": false,
+            "groupName": "advancedSettings"
         }
     ],
     "dataSourceBindings": [

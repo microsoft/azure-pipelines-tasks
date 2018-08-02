@@ -27,6 +27,11 @@
       "name": "newServiceAdvancedOptions",
       "displayName": "ms-resource:loc.group.displayName.newServiceAdvancedOptions",
       "isExpanded": false
+    },
+    {
+      "name": "advancedSettings",
+      "displayName": "ms-resource:loc.group.displayName.advancedSettings",
+      "isExpanded": false
     }
   ],
   "inputs": [
@@ -144,14 +149,6 @@
       "required": false
     },
     {
-      "name": "VerifyRoleInstanceStatus",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.VerifyRoleInstanceStatus",
-      "defaultValue": "false",
-      "helpMarkDown": "ms-resource:loc.input.help.VerifyRoleInstanceStatus",
-      "required": false
-    },
-    {
       "name": "DiagnosticStorageAccountKeys",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.DiagnosticStorageAccountKeys",
@@ -199,6 +196,15 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "VerifyRoleInstanceRetryLimit",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.VerifyRoleInstanceRetryLimit",
+      "defaultValue": "4",
+      "helpMarkDown": "ms-resource:loc.input.help.VerifyRoleInstanceRetryLimit",
+      "required": false,
+      "groupName": "advancedSettings"
     }
   ],
   "dataSourceBindings": [

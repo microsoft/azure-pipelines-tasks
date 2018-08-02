@@ -261,15 +261,31 @@ function Validate-AzureCloudServiceStatus
     Param (
         [Parameter(Mandatory = $true)]
         [string] $CloudServiceName,
-        [string] $Slot = ''
+        [string] $Slot = '',
+        [string] $RetryLimit
     )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        $retryLimit = 4
+        
+        try
+        {
+            $retryLimitValue = [int]$RetryLimit
+
+            if ($retryLimitValue -eq 0)
+            {
+                return;
+            }
+        }
+        catch
+        {
+            Write-Verbose "Setting retry count limit to 4 (default value) as unable to parse value of input 'verify role instance status retry count': '$RetryLimit'. Error: $($_.Exception.ToString())"
+            $retryLimitValue = 4 
+        }
+
         $retryCount = 0
         $retryDelay = 30
         Write-Host (Get-VstsLocString -Key 'ValidateAzureCloudServiceStatus' -ArgumentList $CloudServiceName)
-        while ($retryCount -lt $retryLimit) {
+        while ($retryCount -lt $retryLimitValue) {
             if (Test-AzureName -Service -Name $CloudServiceName) {
                 Write-Verbose "Azure Cloud Service with name:'$CloudServiceName' exists."
                 if (Assert-AzureCloudServiceIsReady -CloudServiceName $CloudServiceName -Slot $Slot) {
