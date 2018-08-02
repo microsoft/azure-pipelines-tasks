@@ -83,13 +83,10 @@ export default class ContainerConnection {
         }
     }
     
-    public unsetDockerConfigEnvVariable(deleteConfigFile: boolean = true) {
+    public unsetDockerConfigEnvVariable() {
         var dockerConfigPath = tl.getVariable("DOCKER_CONFIG");
         if (dockerConfigPath) {
             tl.setVariable("DOCKER_CONFIG", "");
-            if (fs.existsSync(dockerConfigPath)) {
-                del.sync(dockerConfigPath, {force: true});
-            }
         }    
     }
 

@@ -316,11 +316,6 @@
       "target": "container.js"
     }
   },
-  "postjobexecution": {
-    "Node": {
-      "target": "postjobdockerlogout.js"
-    }
-  },
   "messages": {
     "ContainerPatternFound": "ms-resource:loc.messages.ContainerPatternFound",
     "ContainerPatternNotFound": "ms-resource:loc.messages.ContainerPatternNotFound",

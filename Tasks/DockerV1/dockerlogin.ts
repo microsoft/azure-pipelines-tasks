@@ -5,8 +5,8 @@ import * as tl from "vsts-task-lib/task";
 import ContainerConnection from "docker-common/containerconnection";
 
 export function run(connection: ContainerConnection): any {
-    connection.setDockerConfigEnvVariable();   
     var defer = Q.defer<any>();
+    connection.setDockerConfigEnvVariable();   
     defer.resolve(undefined);
-    return <Q.Promise<any>>defer.promise;
+    return defer.promise;
 }
