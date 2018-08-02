@@ -36,7 +36,7 @@ function Get-SymbolServiceUri ([string]$collectionUri)
         Write-Host "Retrieved artifact service url: '$artifactsUri'"
     }
     else { # Fallback
-        if ( [RegEx]::Match($collectionUri, '\.(visualstudio\.com|vsts\.me)') ) {
+        if ( [RegEx]::Match($collectionUri, '\.(visualstudio\.com|vsts\.me)').Success ) {
             $artifactsUri = [RegEx]::Replace($collectionUri, '\.(visualstudio\.com|vsts\.me)', '.artifacts.$1')
         }
         else {
