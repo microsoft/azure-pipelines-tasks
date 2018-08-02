@@ -457,6 +457,7 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "UserNameCannotBeNull": "ms-resource:loc.messages.UserNameCannotBeNull",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
-    "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal"
+    "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
+    "ResponseNotValid": "ms-resource:loc.messages.ResponseNotValid"
   }
 }

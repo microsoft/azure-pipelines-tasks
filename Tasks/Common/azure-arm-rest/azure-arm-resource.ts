@@ -254,7 +254,7 @@ export class Deployments {
                                 }
                                 else {
                                     if (!response.properties) {
-                                        resolve(new azureServiceClient.ApiResult(response));
+                                        reject(new Error(tl.loc("ResponseNotValid")));
                                     }
                                     else if (response.properties.provisioningState === "Succeeded") {
                                         resolve(new azureServiceClient.ApiResult(null, response));
