@@ -132,64 +132,64 @@ if (JSON.parse(process.env[shared.isKubectlPresentOnMachine]))
     a.which["kubectl"] = "kubectl";
 }
 
-a.exec[`${KubectlPath} --kubeconfig ${KubconfigFile} get pods -o json`] = {
+a.exec[`${KubectlPath} get pods -o json`] = {
     "code": 0,
      "stdout": "successfully ran get pods command"
 },
-a.exec[`kubectl --kubeconfig ${KubconfigFile} apply -f ${ConfigurationFilePath} -o json`] = {
+a.exec[`kubectl apply -f ${ConfigurationFilePath} -o json`] = {
     "code": 0,
     "stdout": "successfully applied the configuration deployment.yaml"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get pods -o json`] = {
+a.exec[`kubectl get pods -o json`] = {
     "code": 0,
     "stdout": "successfully ran get pods command"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} expose -f ${ConfigurationFilePath} --port=80 --target-port=8000 -o json`] = {
+a.exec[`kubectl expose -f ${ConfigurationFilePath} --port=80 --target-port=8000 -o json`] = {
     "code": 0,
     "stdout": "successfully created a service for deployment in deployment.yaml using expose command"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get -n kube-system pods -o json`] = {
+a.exec[`kubectl get -n kube-system pods -o json`] = {
     "code": 0,
     "stdout": "successfully fetched the pods in the namespace"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} delete secret my-secret`] = {
+a.exec[`kubectl delete secret my-secret`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=MOCK_SPN_ID --docker-password=MOCK_SPN_KEY --docker-email=ServicePrincipal@AzureRM`] = {
+a.exec[`kubectl create secret docker-registry my-secret --docker-server=ajgtestacr1.azurecr.io --docker-username=MOCK_SPN_ID --docker-password=MOCK_SPN_KEY --docker-email=ServicePrincipal@AzureRM`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret docker-registry my-secret --docker-server=https://index.docker.io/v1/ --docker-username=test --docker-password=regpassword --docker-email=test@microsoft.com`] = {
+a.exec[`kubectl create secret docker-registry my-secret --docker-server=https://index.docker.io/v1/ --docker-username=test --docker-password=regpassword --docker-email=test@microsoft.com`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`] = {
+a.exec[`kubectl create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} delete configmap myConfigMap`] = {
+a.exec[`kubectl delete configmap myConfigMap`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get configmap existingConfigMap`] = {
+a.exec[`kubectl get configmap existingConfigMap`] = {
     "code": 0  
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get configmap someConfigMap`] = {
+a.exec[`kubectl get configmap someConfigMap`] = {
     "code": 1  
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get configmap myConfigMap`] = {
+a.exec[`kubectl get configmap myConfigMap`] = {
     "code": 1  
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-file=configmap.properties=${ConfigMapFilePath}`] = {
+a.exec[`kubectl create configmap myConfigMap --from-file=configmap.properties=${ConfigMapFilePath}`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-file=${ConfigMapDirectoryPath}`] = {
+a.exec[`kubectl create configmap myConfigMap --from-file=${ConfigMapDirectoryPath}`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
+a.exec[`kubectl create configmap myConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
     "code": 0
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} create configmap someConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
+a.exec[`kubectl create configmap someConfigMap --from-literal=key1=value1 --from-literal=key2=value2`] = {
     "code": 1,
     "stdout" : "Error in configMap creation"
 };
-a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = {
+a.exec[`kubectl get secrets my-secret -o yaml`] = {
     "code": 0,
     "stdout": "successfully got secret my-secret and printed it in the specified format"
 };
