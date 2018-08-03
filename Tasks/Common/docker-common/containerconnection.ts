@@ -152,6 +152,6 @@ export default class ContainerConnection {
     }
 
     private getTempDirectory(): string {
-        return os.tmpdir();
+        return tl.getVariable('agent.tempDirectory') || os.tmpdir();
     }
 }
