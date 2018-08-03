@@ -18,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 2,
-        "Patch": 2
+        "Patch": 17
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -27,13 +27,13 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp"
+            "visibleRule": "WebAppKind != webAppContainer && WebAppKind != webAppLinux && Package NotEndsWith .war"
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
         },
         {
             "name": "PostDeploymentAction",
@@ -45,7 +45,7 @@
             "name": "ApplicationAndConfigurationSettings",
             "displayName": "Application and Configuration Settings",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM"
+            "visibleRule": "ConnectionType = AzureRM && Package NotEndsWith .war && Package NotEndsWith .jar"
         }
     ],
     "inputs": [

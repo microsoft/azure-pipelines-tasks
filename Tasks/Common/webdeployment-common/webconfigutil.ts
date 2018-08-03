@@ -47,7 +47,8 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
         },
         'java_springboot': {
             'JAVA_PATH' : '%JAVA_HOME%\\bin\\java.exe',
-            'JAR_PATH' : ''
+            'JAR_PATH' : '',
+            'ADDITIONAL_OPTIONS' : ''
         }
     };
 
@@ -105,7 +106,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
                 || webConfigParameters['JAR_PATH'].value.length <=0) {
                     throw Error(tl.loc('JarPathNotPresent'));
                 }
-                selectedAppTypeParams['JAR_PATH'] = rootDirectoryPath + "\\" + webConfigParameters['JAR_PATH'].value; 
+                selectedAppTypeParams['JAR_PATH'] = rootDirectoryPath + "\\" + webConfigParameters['JAR_PATH'].value;
             }
 
             generateWebConfigFile(webConfigPath, appType, selectedAppTypeParams);

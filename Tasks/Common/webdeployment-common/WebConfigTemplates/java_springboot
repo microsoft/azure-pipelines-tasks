@@ -1,15 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated web.config for Microsoft Azure App Service. 
 This is used to execute java command to bring embedded tomcat ot jetty server 
 -->
-
-<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <system.webServer>
         <handlers>
             <add name="httpPlatformHandler" path="*" verb="*" modules="httpPlatformHandler" resourceType="Unspecified"/>
         </handlers>
         <httpPlatform processPath="{JAVA_PATH}"
-                      arguments="-Djava.net.preferIPv4Stack=true -Dserver.port=%HTTP_PLATFORM_PORT% -jar {JAR_PATH}">
+                      arguments="-Djava.net.preferIPv4Stack=true -Dserver.port=%HTTP_PLATFORM_PORT% -jar {JAR_PATH} {ADDITIONAL_OPTIONS}">
         </httpPlatform>
     </system.webServer>
 </configuration>

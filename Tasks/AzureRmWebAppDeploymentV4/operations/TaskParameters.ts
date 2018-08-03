@@ -1,6 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import * as Constant from '../operations/Constants'
-import { Package } from 'webdeployment-common/packageUtility';
+import { Package, PackageType } from 'webdeployment-common/packageUtility';
+import path = require('path');
 
 export enum DeploymentType {
     webDeploy,
@@ -51,6 +52,13 @@ export class TaskParametersUtility {
 
         if(!taskParameters.isContainerWebApp){            
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
+            if(taskParameters.Package.getPackageType() === PackageType.jar){
+                taskParameters.WebConfigParameters = " -appType java_springboot ";
+                if(!taskParameters.WebConfigParameters || taskParameters.WebConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") > -1) {
+                    var jarPath = path.win32.basename(taskParameters.Package.getPath());
+                    taskParameters.WebConfigParameters += " -JAR_PATH " + jarPath;
+                }
+            }
         }
           
         taskParameters.UseWebDeploy = !taskParameters.isLinuxApp ? tl.getBoolInput('UseWebDeploy', false) : false;

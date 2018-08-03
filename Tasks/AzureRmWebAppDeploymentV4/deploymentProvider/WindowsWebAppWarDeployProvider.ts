@@ -15,9 +15,10 @@ export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvi
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
 
         tl.debug("Initiated deployment via kudu service for webapp war package : "+ webPackage);
+        var warName = path.win32.basename(this.taskParams.Package.getPath(), ".war");
 
-        this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(webPackage, true, this.taskParams.TakeAppOfflineFlag, 
-            { slotName: this.appService.getSlot() });
+        this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(webPackage, 
+            { slotName: this.appService.getSlot() }, warName);
 
         await this.PostDeploymentStep();
     }

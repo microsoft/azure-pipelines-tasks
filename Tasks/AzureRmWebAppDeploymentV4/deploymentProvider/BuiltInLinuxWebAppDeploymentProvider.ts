@@ -19,7 +19,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 { slotName: this.appService.getSlot() });
             break;
             case PackageType.war:
-                await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
+            this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
                 { slotName: this.appService.getSlot() });
             break;
             default:

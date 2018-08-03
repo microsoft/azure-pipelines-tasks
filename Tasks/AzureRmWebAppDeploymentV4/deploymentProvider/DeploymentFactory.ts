@@ -10,6 +10,8 @@ import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentPr
 import tl = require('vsts-task-lib/task');
 import { Package, PackageType } from 'webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
+var zipUtility = require('webdeployment-common/ziputility.js');
+var webCommonUtility = require('webdeployment-common/utility.js');
 
 export class DeploymentFactory {
 
@@ -25,8 +27,10 @@ export class DeploymentFactory {
                 return new PublishProfileWebAppDeploymentProvider(this._taskParams);
             case Constant.ConnectionType.AzureRM:
                 if(this._taskParams.isLinuxApp) {
+                    tl.debug("Depolyment started for linux app service");
                     return await this._getLinuxDeploymentProvider();
                 } else {
+                    tl.debug("Depolyment started for windows app service");
                     return await this._getWindowsDeploymentProvider()
                 }
             default:
@@ -45,14 +49,12 @@ export class DeploymentFactory {
     }
 
     private async _getWindowsDeploymentProvider(): Promise<IWebAppDeploymentProvider> {
+        tl.debug("Package type of deployment is: "+ this._taskParams.Package.getPackageType());
         switch(this._taskParams.Package.getPackageType()){
             case PackageType.war:
                 return new WindowsWebAppWarDeployProvider(this._taskParams);
             case PackageType.jar:
-                var rootDirectoryPath: string = "D:\\home\\site\\wwwroot\\";
-                var jarPath = rootDirectoryPath + path.win32.basename(this._taskParams.Package.getPath()) +".jar";
-                this._taskParams.WebConfigParameters = "-appType java_springboot -JAR_PATH " + jarPath;
-                return await this._getWindowsDeploymentProviderForZipDeployAndRunFromZipMethod();
+                return new WindowsWebAppZipDeployProvider(this._taskParams);
             default:
                 return await this._getWindwosDeploymentProviderForZipAndFolderPackageType();
             }
@@ -65,8 +67,10 @@ export class DeploymentFactory {
             var _isMSBuildPackage = await this._taskParams.Package.isMSBuildPackage();           
             if(_isMSBuildPackage || this._taskParams.VirtualApplication) {
                 return new WindowsWebAppWebDeployProvider(this._taskParams);
+            } else if(this._taskParams.ScriptType) {
+                return new WindowsWebAppZipDeployProvider(this._taskParams);
             } else {
-                return await this._getWindowsDeploymentProviderForZipDeployAndRunFromZipMethod();
+                return new WindowsWebAppRunFromZipProvider(this._taskParams);
             }
         }
     }
@@ -79,14 +83,6 @@ export class DeploymentFactory {
                 return new WindowsWebAppZipDeployProvider(this._taskParams);
             case DeploymentType.runFromZip:
                 return new WindowsWebAppRunFromZipProvider(this._taskParams);
-        }
-    }
-
-    private async _getWindowsDeploymentProviderForZipDeployAndRunFromZipMethod(): Promise<IWebAppDeploymentProvider> {
-        if(this._taskParams.ScriptType) {
-            return new WindowsWebAppZipDeployProvider(this._taskParams);
-        } else {
-            return new WindowsWebAppRunFromZipProvider(this._taskParams);
         }
     }
 

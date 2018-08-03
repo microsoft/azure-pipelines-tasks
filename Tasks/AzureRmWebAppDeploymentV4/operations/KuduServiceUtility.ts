@@ -207,7 +207,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async deployUsingWarDeploy(packagePath: string, appOffline?: boolean, customMessage?: any, targetFolderName?: any): Promise<string> {
+    public async deployUsingWarDeploy(packagePath: string, customMessage?: any, targetFolderName?: any): Promise<string> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
 
@@ -224,9 +224,6 @@ export class KuduServiceUtility {
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
             console.log(tl.loc('PackageDeploymentSuccess'));
-            if(appOffline) {
-                await this._appOfflineKuduService(physicalRootPath, false);
-            }
 
             return deploymentDetails.id;
         }
