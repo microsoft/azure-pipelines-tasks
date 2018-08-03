@@ -121,11 +121,7 @@ export function isOnPremisesTfs(): boolean {
         return false;
     }
 
-    // not an ideal way to detect hosted, but there isn't a variable for it, and we can't make network calls from here
-    // due to proxy issues.
-    const collectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
-    const parsedCollectionUri = url.parse(collectionUri);
-    return !(/\.visualstudio\.com$/i.test(parsedCollectionUri.hostname));
+    return tl.getVariable("System.ServerType") !== "Hosted";
 }
 
 export function isWindowsAgent(): boolean {
