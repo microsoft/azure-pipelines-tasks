@@ -1,0 +1,23 @@
+# Node.js
+# Build a general Node.js application with no specific framework.
+# https://aka.ms/yaml
+
+queue: 'Hosted Ubuntu 1604'
+steps:
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '8.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+      npm run build
+    displayName: 'npm install and build'
+
+# Uncomment to save the artifacts of this build with the build record
+#  - task: ArchiveFiles@2
+#    inputs:
+#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
+#      includeRootFolder: false
+#  - task: PublishBuildArtifacts@1
