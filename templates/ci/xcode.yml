@@ -2,7 +2,7 @@
 # Build, test, and archive an Xcode workspace on macOS.
 # https://aka.ms/yaml
 
-queue: 'Hosted macOS'
+queue: 'Hosted macOS Preview'
 steps:
 
 #  - task: InstallAppleCertificate@1
@@ -28,6 +28,7 @@ steps:
       scheme: ''
       sdk: 'iphoneos'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: CopyFiles@2
 #    inputs:
 #      contents: '**/*.ipa'
@@ -35,6 +36,6 @@ steps:
 #  - task: PublishBuildArtifacts@1
 
 # Next steps:
-# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/appcentertest
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/appcenterdistribute
+# Test apps on hosted, physical devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/app-center-test
+# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/app-center-distribute
 # Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store

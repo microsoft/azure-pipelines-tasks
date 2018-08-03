@@ -56,6 +56,7 @@ phases:
           testResultsFiles: "**/TEST-*.xml"
           testRunTitle: 'Python $(PYTHON_VERSION)'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - phase: 'Publish'
 #    dependsOn: 'Test'
 #    queue: 'Hosted Ubuntu 1604'

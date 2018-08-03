@@ -2,13 +2,15 @@
 # Build your Java projects and run tests with Apache Ant.
 # https://aka.ms/yaml
 
-queue: 'Hosted Windows Container'
+queue: 'Hosted VS2017'
 steps:
 
+# To do: edit the path to 'build.xml' as needed
   - task: Ant@1
     inputs:
       buildFile: 'build.xml'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: CopyFiles@2
 #    inputs:
 #      contents: '**/*.{jar,war,ear}'

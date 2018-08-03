@@ -5,6 +5,7 @@
 queue: 'Hosted Ubuntu 1604'
 steps:
 
+# Zip the contents of the repository and save the archive with the build record
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: '$(system.defaultWorkingDirectory)'

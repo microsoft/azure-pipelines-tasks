@@ -5,11 +5,13 @@
 queue: 'Hosted Ubuntu 1604'
 steps:
 
+# To do: edit the path to 'pom.xml' as needed
   - task: Maven@3
     inputs:
       mavenPomFile: 'pom.xml'
       goals: 'package'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: CopyFiles@2
 #    inputs:
 #      contents: '**/target/*.{jar,war,ear}'

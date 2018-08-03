@@ -14,6 +14,7 @@ steps:
   - script: 'make test'
     displayName: 'make test'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: CopyFiles@2
 #    inputs:
 #      contents: '**/*.out'

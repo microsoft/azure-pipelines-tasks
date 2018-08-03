@@ -28,9 +28,12 @@ steps:
       projects: '**/*[Tt]ests/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
 
+# Uncomment to create a .zip file archive that is ready for publishing
+# See https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
 #  - task: DotNetCoreCLI@2
 #    inputs:
 #      command: 'publish'
 #      arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: PublishBuildArtifacts@1

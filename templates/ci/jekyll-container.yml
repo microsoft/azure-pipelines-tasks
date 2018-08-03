@@ -4,18 +4,20 @@
 queue: Hosted Ubuntu 1604
 steps:
 
+# Run the latest 'jekyll/builder' container and from within the container, package the Jekyll site
   - task: Docker@0
-    displayName: Run jekyll
+    displayName: Run Jekyll
     inputs:
       containerRegistryType: 'Container Registry'
       action: 'Run an image'
       imageName: 'jekyll/builder:latest'
       volumes: |
-      $(Build.SourcesDirectory):/srv/jekyll
-      $(Build.BinariesDirectory):/srv/jekyll/_site
+        $(build.sourcesDirectory):/srv/jekyll
+        $(build.binariesDirectory):/srv/jekyll/_site
       containerCommand: 'jekyll build --future'
       detached: false
 
+# Zip the contents of the repository and save the archive in the build record
   - task: ArchiveFiles@1
     inputs:
       includeRootFolder: false

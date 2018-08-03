@@ -8,9 +8,11 @@ steps:
   - script: composer install
     displayName: 'composer install'
 
-  - script: phpunit
-    displayName: 'Run tests with phpunit'
+# Uncomment to run tests with phpunit
+#  - script: phpunit
+#    displayName: 'Run tests with phpunit'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: ArchiveFiles@2
 #    inputs:
 #      rootFolderOrFile: '$(system.defaultWorkingDirectory)'

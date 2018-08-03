@@ -9,6 +9,7 @@ steps:
     inputs:
       versionSpec: '>= 2.5'
 
+# Uncomment to install rails
 #  - script: gem install rails && rails -v
 #    displayName: 'gem install rails'
 
@@ -20,6 +21,7 @@ steps:
   - script: bundle exec rake
     displayName: 'bundle exec rake'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: ArchiveFiles@2
 #    inputs:
 #      rootFolderOrFile: '$(system.defaultWorkingDirectory)'

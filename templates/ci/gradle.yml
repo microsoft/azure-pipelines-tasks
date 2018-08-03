@@ -2,7 +2,7 @@
 # Build your Java projects and run tests with Gradle using a Gradle wrapper script.
 # https://aka.ms/yaml
 
-queue: 'Hosted Windows Container'
+queue: 'Hosted VS2017'
 steps:
 
   - task: Gradle@2
@@ -14,6 +14,7 @@ steps:
       jdkArchitectureOption: 'x64'
       testResultsFiles: '**/TEST-*.xml'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: CopyFiles@2
 #    inputs:
 #      contents: '**/*.{jar,war,ear}'

@@ -7,7 +7,8 @@ steps:
 
   - task: NodeTool@0
     inputs:
-      versionSpec: '8.x' 
+      versionSpec: '8.x'
+    displayName: 'Install Node.js'
 
   - task: Npm@1
     inputs:
@@ -18,6 +19,7 @@ steps:
       gruntFile: 'gruntfile.js'
       targets: ''
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: ArchiveFiles@2
 #    inputs:
 #      rootFolderOrFile: '$(system.defaultWorkingDirectory)'

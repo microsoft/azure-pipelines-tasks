@@ -15,6 +15,7 @@ steps:
       go build -o "$(build.repository.name)"
     displayName: 'Go get, test, and build'
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: ArchiveFiles@2
 #    inputs:
 #      rootFolderOrFile: '$(system.defaultWorkingDirectory)'

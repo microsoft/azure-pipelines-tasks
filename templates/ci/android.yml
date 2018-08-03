@@ -2,7 +2,7 @@
 # Build your Android projects, run tests, and sign and align Android App Package files.
 # https://aka.ms/yaml
 
-queue: 'Hosted Windows Container'
+queue: 'Hosted VS2017'
 steps:
 
   - task: Gradle@2
@@ -10,6 +10,8 @@ steps:
       gradleWrapperFile: 'gradlew'
       tasks: 'assembleRelease'
 
+# Uncomment and edit to sign your APK with a keystore file
+# See https://docs.microsoft.com/vsts/pipelines/languages/android
 #  - task: AndroidSigning@3
 #    inputs:
 #      apkFiles: '**/*.apk'
@@ -22,6 +24,7 @@ steps:
 #      zipalign: true
 #      zipalignFile: ''
 
+# Uncomment to save the artifacts of this build with the build record
 #  - task: CopyFiles@2
 #    inputs:
 #      contents: '**/*.apk'
@@ -29,6 +32,6 @@ steps:
 #  - task: PublishBuildArtifacts@1
 
 # Next steps:
-# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/appcentertest
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/appcenterdistribute
+# Test apps on hosted, physical devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/app-center-test
+# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/app-center-distribute
 # Release to Google Play with the Google Play extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play

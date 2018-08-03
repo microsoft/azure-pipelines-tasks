@@ -27,8 +27,9 @@ phases:
       - script: python -m pip install --upgrade pip && pip install -r requirements.txt
         displayName: 'Install dependencies'
 
+# Uncomment to install and run Flake8 style enforcement
 #      - script: 'pip install flake8 && flake8'
-#        displayName: 'Flake8'
+#        displayName: 'Flake8 style enforcement'
 
       - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
         displayName: 'pytest'
@@ -52,11 +53,13 @@ phases:
       - script: python setup.py sdist
         displayName: 'Build sdist'
 
+# Uncomment to save the dist in the build record
 #      - task: PublishBuildArtifacts@1
 #        inputs:
 #          pathToPublish: 'dist'
 #          artifactName: 'dist'
 
+# Uncomment to publish the dist to a package index
 #      - task: PyPIPublisher@0
 #        inputs:
 #          pypiConnection: ''
