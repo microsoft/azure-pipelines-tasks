@@ -3,15 +3,15 @@ import * as locatorHelper from "nuget-task-common/LocationHelpers"
 import os = require("os");
 import * as path from "path";
 import * as semver from 'semver';
-import * as vsts from "vso-node-api/WebApi"
-import * as tl from "vsts-task-lib/task";
+import * as vsts from "vso-node-api"
+import * as tl from "vsts-task-lib";
 import * as toollib from "vsts-task-tool-lib/tool"
 import AdmZip = require('adm-zip');
 
 export function getArtifactToolLocation(dirName: string): string {
     let toolPath: string = path.join(dirName, "ArtifactTool.exe");
     if (tl.osType() !== "Windows_NT"){
-        toolPath = path.join(dirName, "ArtifactTool");
+        toolPath = path.join(dirName, "artifacttool");
     }
     return toolPath;
 }
@@ -115,7 +115,7 @@ export function getVersionUtility(versionRadio: string, highestVersion: string):
 }
 
 async function getServiceUriFromCollectionUri(serviceUri: string, accessToken: string, areaName: string, areaId: string): Promise<string>{
-    let connectionData = await locatorHelper.getConnectionDataForArea(serviceUri, areaName, areaId, "fakeUsername", accessToken);
+    let connectionData = await locatorHelper.getConnectionDataForArea(serviceUri, areaName, areaId, "vsts", accessToken);
 
     return connectionData.locationServiceData.accessMappings.find(
         (mapping) => mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker)
@@ -141,7 +141,7 @@ export async function getPackageNameFromId(serviceUri: string, accessToken: stri
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
-    const credentialHandler = vsts.getBasicHandler("fakeUsername", accessToken);
+    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
     const feedConnection = new vsts.WebApi(serviceUri, credentialHandler);
 
     let feedApi = feedConnection.getCoreApi();
@@ -177,7 +177,7 @@ export async function getHighestPackageVersionFromFeed(serviceUri: string, acces
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
-    const credentialHandler = vsts.getBasicHandler("fakeUsername", accessToken);
+    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
     const feedConnection = new vsts.WebApi(serviceUri, credentialHandler);
 
     let feedApi = feedConnection.getCoreApi();

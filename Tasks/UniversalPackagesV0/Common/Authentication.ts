@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "vsts-task-lib";
 
 export interface IPackageSource {
     accountUrl: string;

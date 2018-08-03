@@ -376,7 +376,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "upackcommandmain.js",
+      "target": "universalmain.js",
       "argumentFormat": ""
     }
   },

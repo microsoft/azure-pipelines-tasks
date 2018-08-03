@@ -1,10 +1,10 @@
 import * as path from "path";
 import * as telemetry from "utility-common/telemetry";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "vsts-task-lib";
 import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
 import * as auth from "./Common/Authentication";
-import * as upackDownload from "./upackdownload";
-import * as upackPublish from "./upackpublish";
+import * as universalDownload from "./universaldownload";
+import * as universalPublish from "./universalpublish";
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
@@ -37,10 +37,10 @@ async function main(): Promise<void> {
     const upackCommand = tl.getInput("command", true);
     switch (upackCommand) {
         case "download":
-            upackDownload.run(artifactToolPath);
+            universalDownload.run(artifactToolPath);
             break;
         case "publish":
-            upackPublish.run(artifactToolPath);
+            universalPublish.run(artifactToolPath);
             break;
         default:
             tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", upackCommand));

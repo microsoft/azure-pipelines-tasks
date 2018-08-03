@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "vsts-task-lib";
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 import * as telemetry from "utility-common/telemetry";
 import * as artifactToolRunner from "./Common/ArtifactToolRunner";
@@ -95,12 +95,11 @@ export async function run(artifactToolPath: string): Promise<void> {
                 accountUrl: serviceUri,
                 packageName,
                 packageVersion: version,
-                authInfo,
             } as artifactToolRunner.IArtifactToolOptions;
 
             publishPackageUsingArtifactTool(publishDir, publishOptions);
         } finally {
-            process.env.UPACK_PUBLISH_PAT = "";
+            delete process.env.UPACK_PUBLISH_PAT;
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesPublishedSuccessfully"));
@@ -118,7 +117,7 @@ export async function run(artifactToolPath: string): Promise<void> {
 function publishPackageUsingArtifactTool(publishDir: string, options: artifactToolRunner.IArtifactToolOptions) {
     let command = new Array<string>();
 
-    command.push("upack", "publish",
+    command.push("universal", "publish",
         "--feed", options.feedId,
         "--service", options.accountUrl,
         "--package-name", options.packageName,

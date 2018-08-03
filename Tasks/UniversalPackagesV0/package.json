@@ -1,8 +1,8 @@
 {
-    "name": "upackcommand",
+    "name": "universalpackages",
     "version": "0.0.1",
     "description": "Download or publish universal packages.",
-    "main": "upackcommandmain.js",
+    "main": "universalmain.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },

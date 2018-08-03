@@ -352,7 +352,7 @@
   
   "execution": {
     "Node": {
-      "target": "upackcommandmain.js",
+      "target": "universalmain.js",
       "argumentFormat": ""
     }
   },
@@ -376,8 +376,8 @@
     "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
     "Error_AuthNotSupported": "Authentication using username/password not supported for universal packages. Please use personal access tokens.",
     "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
-    "Info_Downloading": "Downloading package: %s, version: %s usign feed id: %s",
-    "Info_Publishing": "Publishing package: %s, version: %s usign feed id: %s",
+    "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s",
+    "Info_Publishing": "Publishing package: %s, version: %s using feed id: %s",
     "Info_UsingArtifactToolPublish": "Using artifact tool to publish the package",
     "Info_UsingArtifactToolDownload": "Using artifact tool to download the package",
     "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",

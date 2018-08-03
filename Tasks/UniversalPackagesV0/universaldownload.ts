@@ -1,4 +1,4 @@
-import * as tl from "vsts-task-lib/task";
+import * as tl from "vsts-task-lib";
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 
 import * as telemetry from "utility-common/telemetry";
@@ -88,12 +88,11 @@ export async function run(artifactToolPath: string): Promise<void> {
                 accountUrl: serviceUri,
                 packageName,
                 packageVersion: version,
-                authInfo: authInfo,
             } as artifactToolRunner.IArtifactToolOptions;
 
             downloadPackageUsingArtifactTool(downloadDir, downloadOptions);
         } finally {
-            process.env.UPACK_DOWNLOAD_PAT = "";
+            delete process.env.UPACK_DOWNLOAD_PAT;
         }
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesDownloadedSuccessfully"));
@@ -112,7 +111,7 @@ function downloadPackageUsingArtifactTool(downloadDir: string, options: artifact
 
     let command = new Array<string>();
 
-    command.push("upack", "download",
+    command.push("universal", "download",
         "--feed", options.feedId,
         "--service", options.accountUrl,
         "--package-name", options.packageName,

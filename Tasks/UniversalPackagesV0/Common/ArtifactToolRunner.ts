@@ -1,5 +1,4 @@
-import * as auth from "./Authentication";
-import * as tl from "vsts-task-lib/task";
+import * as tl from "vsts-task-lib";
 let fs = require("fs");
 let os = require("os");
 import child = require("child_process");
@@ -12,13 +11,12 @@ export interface IArtifactToolOptions {
     accountUrl: string;
     packageName: string;
     packageVersion: string;
-    authInfo: auth.UPackExtendedAuthInfo;
 }
 
 function getOptions(): IExecOptions{
     let result: IExecOptions = <IExecOptions>{
         cwd: process.cwd(),
-        env: process.env,
+        env: new Object(process.env),
         silent: false,
         failOnStdErr: false,
         ignoreReturnCode: false,
@@ -38,13 +36,14 @@ function getCommandString(toolPath: string, command: string[]){
 }
 
 export function runArtifactTool(artifactToolPath: string, command: string[]): IExecSyncResult{
+
+    let execOptions = getOptions();
+
     if (tl.osType() === "Windows_NT" || artifactToolPath.trim().toLowerCase().endsWith(".exe")) {
-        return tl.execSync(artifactToolPath, command);
+        return tl.execSync(artifactToolPath, command, execOptions);
     }
     else{
         fs.chmodSync(artifactToolPath, "755");
-
-        let execOptions = getOptions();
 
         if (!execOptions.silent) {
             execOptions.outStream.write(getCommandString(artifactToolPath, command) + os.EOL);
