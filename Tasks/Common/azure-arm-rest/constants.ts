@@ -18,3 +18,7 @@ export const KUDU_DEPLOYMENT_CONSTANTS = {
     FAILED: 3
 }
 
+export const AzureServicePrinicipalAuthentications = {
+    "servicePrincipalKey": "spnKey",
+    "servicePrincipalCertificate": "spnCertificate"
+}

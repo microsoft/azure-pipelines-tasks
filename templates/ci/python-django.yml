@@ -37,7 +37,7 @@ phases:
             project_location = path.dirname(path.abspath(manage_py))
             print('Found Django project in', project_location)
             print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
-          
+
       - script: python -m pip install --upgrade pip setuptools wheel
         displayName: 'Install dependencies'
 
@@ -49,6 +49,7 @@ phases:
 
       - script: pushd '$(projectRoot)' && python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
         displayName: 'Run tests'
+        continueOnError: true
 
       - task: PublishTestResults@2
         inputs:

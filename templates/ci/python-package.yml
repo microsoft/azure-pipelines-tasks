@@ -32,6 +32,7 @@ phases:
 
       - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
         displayName: 'pytest'
+        continueOnError: true
 
       - task: PublishTestResults@2
         inputs:
