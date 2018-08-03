@@ -21,7 +21,7 @@ Web Deploy (msdeploy.exe) is used to deploy the web application on the IIS serve
 
 ### IIS Web Server
 
-There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. The task updates websites and application pools, and deploys IIS web applications but does not install or configure IIS web server on the machines.
+There should be a IIS web server already installed and configured on the pre-existing machines or virtual machines. The task updates websites and application pools, and deploys IIS web applications. It also gives the option to enable the IIS web server along with all of its sub-features on the machine (applicable only for Windows server machines).
 
 ### Pre-existing Deployment Group
 
