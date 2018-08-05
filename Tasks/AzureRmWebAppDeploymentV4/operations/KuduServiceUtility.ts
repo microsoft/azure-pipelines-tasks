@@ -221,7 +221,7 @@ export class KuduServiceUtility {
 
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+            let deploymentDetails = await this._appServiceKuduService.warDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
             console.log(tl.loc('PackageDeploymentSuccess'));
 

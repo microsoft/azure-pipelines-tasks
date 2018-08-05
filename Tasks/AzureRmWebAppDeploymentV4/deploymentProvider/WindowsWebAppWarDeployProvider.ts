@@ -6,18 +6,18 @@ import * as ParameterParser from '../operations/parameterparser'
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common/packageUtility';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
+import path = require('path');
 
 export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvider{
     
     private zipDeploymentID: string;
 
     public async DeployWebAppStep() {
-        var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
 
-        tl.debug("Initiated deployment via kudu service for webapp war package : "+ webPackage);
+        tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
         var warName = path.win32.basename(this.taskParams.Package.getPath(), ".war");
 
-        this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(webPackage, 
+        this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
             { slotName: this.appService.getSlot() }, warName);
 
         await this.PostDeploymentStep();
