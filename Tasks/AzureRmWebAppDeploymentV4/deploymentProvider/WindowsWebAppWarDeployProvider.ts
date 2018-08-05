@@ -6,7 +6,8 @@ import * as ParameterParser from '../operations/parameterparser'
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common/packageUtility';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
-import path = require('path');
+var webCommonUtility = require('webdeployment-common/utility.js');
+
 
 export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvider{
     
@@ -15,7 +16,7 @@ export class WindowsWebAppWarDeployProvider extends AzureRmWebAppDeploymentProvi
     public async DeployWebAppStep() {
 
         tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
-        var warName = path.win32.basename(this.taskParams.Package.getPath(), ".war");
+        var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
 
         this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
             { slotName: this.appService.getSlot() }, warName);

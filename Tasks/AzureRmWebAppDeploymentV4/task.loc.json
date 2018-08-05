@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 2,
-    "Patch": 17
+    "Patch": 20
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -45,7 +45,7 @@
       "name": "ApplicationAndConfigurationSettings",
       "displayName": "ms-resource:loc.group.displayName.ApplicationAndConfigurationSettings",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && Package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "ConnectionType = AzureRM"
     }
   ],
   "inputs": [

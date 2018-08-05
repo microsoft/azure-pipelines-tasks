@@ -1,7 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import * as Constant from '../operations/Constants'
 import { Package, PackageType } from 'webdeployment-common/packageUtility';
-import path = require('path');
+var webCommonUtility = require('webdeployment-common/utility.js');
 
 export enum DeploymentType {
     webDeploy,
@@ -57,7 +57,7 @@ export class TaskParametersUtility {
                 	taskParameters.WebConfigParameters += " -appType java_springboot ";
                 }
                 if(!taskParameters.WebConfigParameters || taskParameters.WebConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") > -1) {
-                    var jarPath = path.win32.basename(taskParameters.Package.getPath());
+                    var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
                     taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("D:\\home\\site\\wwwroot\\*.jar", jarPath);
                 }
             }

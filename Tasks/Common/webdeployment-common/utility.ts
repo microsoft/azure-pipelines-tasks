@@ -2,6 +2,7 @@ import path = require('path');
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import { PackageUtility, PackageType } from './packageUtility';
+import os = require('os');
 
 var zipUtility = require('webdeployment-common/ziputility.js');
 /**
@@ -206,4 +207,17 @@ export async function archiveFolderForDeployment(isFolderBasedDeployment: boolea
         "webDeployPkg": webDeployPkg,
         "tempPackagePath": webDeployPkg
     };
+}
+
+export function getFileNameFromPath(filePath: string, extension?: string): string {
+    var isWindows = os.type().match(/^Win/);
+    var fileName;
+    if(isWindows) {
+        fileName = path.win32.basename(filePath, extension);
+    }
+    else {
+        fileName = path.posix.basename(filePath, extension);
+    }
+
+    return fileName;
 }

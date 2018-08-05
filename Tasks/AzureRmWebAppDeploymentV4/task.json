@@ -18,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 2,
-        "Patch": 17
+        "Patch": 20
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -45,7 +45,7 @@
             "name": "ApplicationAndConfigurationSettings",
             "displayName": "Application and Configuration Settings",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && Package NotEndsWith .war && Package NotEndsWith .jar"
+            "visibleRule": "ConnectionType = AzureRM"
         }
     ],
     "inputs": [
