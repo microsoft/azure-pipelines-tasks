@@ -139,6 +139,15 @@ export class DotnetMockHelper {
         this.tmr.setAnswers(a);
     }
 
+    public registerNugetLocationHelpersMock() {
+        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
+            assumeNuGetUriPrefixes: function(input) {
+                return [input];
+            },
+            NUGET_ORG_V3_URL: 'https://api.nuget.org/v3/index.json'
+        });
+    }
+
     private registerMockWithMultiplePaths(paths: string[], mock: any) {
         for(let i = 0; i < paths.length; i++) {
             this.tmr.registerMock(paths[i], mock);
