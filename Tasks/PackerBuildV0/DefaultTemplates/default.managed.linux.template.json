@@ -27,15 +27,13 @@
         "managed_image_name": "{{user `managed_image_name`}}",
         "subscription_id": "{{user `subscription_id`}}",
         "tenant_id": "{{user `tenant_id`}}",
-        "object_id": "{{user `object_id`}}",
-                
+        "object_id": "{{user `object_id`}}",        
         "os_type": "Linux",
         "image_publisher": "{{user `image_publisher`}}",
         "image_offer": "{{user `image_offer`}}",
         "image_sku": "{{user `image_sku`}}",
         "location": "{{user `location`}}",
         "vm_size": "Standard_D3_v2"
-
     }],
     "provisioners": [{
         "type": "shell",

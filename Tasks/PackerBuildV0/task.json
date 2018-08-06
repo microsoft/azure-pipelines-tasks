@@ -61,7 +61,7 @@
             "type": "boolean",
             "label": "Managed VM disk image",
             "required": true,
-            "helpMarkDown": "Check if generated image is a managed image.",
+            "helpMarkDown": "Check if generated image should be a managed image.",
             "defaultValue": false
         },
         {
@@ -240,7 +240,7 @@
             "label": "Image URL or Name",
             "required": false,
             "defaultValue": "",
-            "helpMarkDown": "Provide a name for the output variable which will store generated machine image url for unmanaged VM disk or image name for managed VM disk.",
+            "helpMarkDown": "Provide a name for the output variable which will store generated machine image VHD url for un-managed VM image or image name for managed VM image.",
             "groupName": "Output"
         }
     ],
