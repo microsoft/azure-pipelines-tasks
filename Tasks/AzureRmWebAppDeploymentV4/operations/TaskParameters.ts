@@ -52,11 +52,14 @@ export class TaskParametersUtility {
 
         if(!taskParameters.isContainerWebApp){            
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
-            if(taskParameters.Package.getPackageType() === PackageType.jar){
-                if(taskParameters.WebConfigParameters.indexOf("-appType java_springboot") < 0) {
-                	taskParameters.WebConfigParameters += " -appType java_springboot ";
+            if(taskParameters.Package.getPackageType() === PackageType.jar && (!taskParameters.isLinuxApp)) {
+                if(!taskParameters.WebConfigParameters) {
+                    taskParameters.WebConfigParameters = "-appType java_springboot";
                 }
-                if(!taskParameters.WebConfigParameters || taskParameters.WebConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") > -1) {
+                if(taskParameters.WebConfigParameters.indexOf("-appType java_springboot") < 0) {
+                    taskParameters.WebConfigParameters += " -appType java_springboot";
+                }
+                if(taskParameters.WebConfigParameters.indexOf("-JAR_PATH ") < 0 || taskParameters.WebConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") >= 0) {
                     var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
                     taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("D:\\home\\site\\wwwroot\\*.jar", jarPath);
                 }

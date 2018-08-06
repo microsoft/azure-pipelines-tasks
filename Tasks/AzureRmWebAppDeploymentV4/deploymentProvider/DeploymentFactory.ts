@@ -56,11 +56,11 @@ export class DeploymentFactory {
             case PackageType.jar:
                 return new WindowsWebAppZipDeployProvider(this._taskParams);
             default:
-                return await this._getWindwosDeploymentProviderForZipAndFolderPackageType();
+                return await this._getWindowsDeploymentProviderForZipAndFolderPackageType();
             }
     }
 
-    private async _getWindwosDeploymentProviderForZipAndFolderPackageType(): Promise<IWebAppDeploymentProvider> {
+    private async _getWindowsDeploymentProviderForZipAndFolderPackageType(): Promise<IWebAppDeploymentProvider> {
         if(this._taskParams.UseWebDeploy) {
             return await this._getUserSelectedDeploymentProviderForWindow();
         } else {             

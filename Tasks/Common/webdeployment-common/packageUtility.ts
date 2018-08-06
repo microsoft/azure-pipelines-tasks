@@ -58,13 +58,13 @@ export class Package {
             if (!tl.exist(this._path)) {
                 throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', this._path));
             } else{
-                if (this._path.toString().toLowerCase().endsWith('.war')) {
+                if (this._path.toLowerCase().endsWith('.war')) {
                     this._packageType = PackageType.war;
                     tl.debug("This is war package ");
-                } else if(this._path.toString().toLowerCase().endsWith('.jar')){
+                } else if(this._path.toLowerCase().endsWith('.jar')){
                     this._packageType = PackageType.jar;
                     tl.debug("This is jar package ");
-                } else if (this._path.toString().toLowerCase().endsWith('.zip')){
+                } else if (this._path.toLowerCase().endsWith('.zip')){
                     this._packageType = PackageType.zip;
                     tl.debug("This is zip package ");
                 } else if(!tl.stats(this._path).isFile()){

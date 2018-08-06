@@ -23,18 +23,19 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             case PackageType.jar:
                 var folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
                 var jarName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".jar");
-                var script = 'java -jar "/home/site/wwwroot/'+ jarName + '.jar' + '" --server.port=80';
+                var destRootPath = "/home/site/wwwroot/";
+                var script = 'java -jar "' + destRootPath + jarName + '.jar' + '" --server.port=80';
                 var initScriptFileName = "startupscript_" + jarName + ".sh";
                 var initScriptFile = path.join(folderPath, initScriptFileName);
-                var destInitScriptPath = "/home/site/wwwroot/" + initScriptFileName;
-                if(!this.taskParams.AppSettings || this.taskParams.AppSettings.indexOf("-INIT_SCRIPT") < 0) {
-                    this.taskParams.AppSettings = " -INIT_SCRIPT " + destInitScriptPath;
+                var destInitScriptPath = path.join(destRootPath, initScriptFileName);
+                if(!this.taskParams.AppSettings) {
+                    this.taskParams.AppSettings = "-INIT_SCRIPT " + destInitScriptPath;
+                }
+                if(this.taskParams.AppSettings.indexOf("-INIT_SCRIPT") < 0) {
+                    this.taskParams.AppSettings += "-INIT_SCRIPT " + destInitScriptPath;
                 }
                 this.taskParams.AppSettings = this.taskParams.AppSettings.trim();
-                await fs.writeFileSync(
-                    initScriptFile,
-                    script, // Don't add a BOM. It causes the script to fail on some operating systems (e.g. on Ubuntu 14).
-                    { encoding: 'utf8' });
+                tl.writeFile(initScriptFile, script, { encoding: 'utf8' });
                 var output = await webCommonUtility.archiveFolderForDeployment(false, folderPath);
                 var webPackage = output.webDeployPkg;
                 tl.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);

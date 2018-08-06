@@ -210,7 +210,7 @@ export async function archiveFolderForDeployment(isFolderBasedDeployment: boolea
 }
 
 export function getFileNameFromPath(filePath: string, extension?: string): string {
-    var isWindows = os.type().match(/^Win/);
+    var isWindows = tl.osType().match(/^Win/);
     var fileName;
     if(isWindows) {
         fileName = path.win32.basename(filePath, extension);
