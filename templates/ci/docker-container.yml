@@ -8,8 +8,8 @@ variables:
 steps:
 - script: docker build -f Dockerfile -t $(imageName) .
 
-# For more information on how to extend this YAML to:
-# - correctly tag your image
-# - push the image to Docker Hub or Azure Container Registry
-# - build and test your app prior to creating the Docker image
-# see https://docs.microsoft.com/vsts/pipelines/languages/docker
+# For information on extending this YAML to:
+# - Correctly tag your image
+# - Push the image to Docker Hub or Azure Container Registry
+# - Build and test your app prior to creating the Docker image
+# See https://docs.microsoft.com/vsts/pipelines/languages/docker

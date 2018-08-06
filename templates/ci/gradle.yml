@@ -1,8 +1,8 @@
 # Gradle
 # Build your Java projects and run tests with Gradle using a Gradle wrapper script.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/apps/java/build-gradle
 
-queue: 'Hosted VS2017'
+queue: 'Hosted Ubuntu 1604'
 steps:
 
   - task: Gradle@2
@@ -14,9 +14,6 @@ steps:
       jdkArchitectureOption: 'x64'
       testResultsFiles: '**/TEST-*.xml'
 
-# Uncomment to save the artifacts of this build with the build record
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/*.{jar,war,ear}'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/apps/java/build-gradle

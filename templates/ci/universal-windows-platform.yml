@@ -23,12 +23,9 @@ steps:
       configuration: '$(buildConfiguration)'
       msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
 
-# Uncomment to save the artifacts of this build with the build record
-#  - task: PublishBuildArtifacts@1
-#    inputs:
-#      pathToPublish: '$(appxPackageDir)'
-
-# Next steps:
-# Test apps on hosted, physical devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/app-center-test
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/app-center-distribute
-# Release to the Windows Store with the Windows Store extension: https://marketplace.visualstudio.com/items?itemName=MS-RDX-MRO.windows-store-publish
+# For information on extending this YAML to:
+# - Test apps on hosted, physical devices with the App Center Test task
+# - Distribute apps to testers and users with the App Center Distribute task
+# - Release to the Windows Store with the Windows Store extension
+# - Save the artifacts of this build with the build record
+# See https://aka.ms/yaml

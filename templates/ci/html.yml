@@ -11,3 +11,7 @@ steps:
       rootFolderOrFile: '$(system.defaultWorkingDirectory)'
       includeRootFolder: false
   - task: PublishBuildArtifacts@1
+
+# For information on extending this YAML to:
+# - Deploy to a web app
+# See https://aka.ms/yaml

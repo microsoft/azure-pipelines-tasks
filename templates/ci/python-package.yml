@@ -1,6 +1,6 @@
 # Python package
 # Create and test a Python package on multiple Python versions. Then, upload it to a PyPI-compatible index.
-# https://aka.ms/yaml
+# # https://docs.microsoft.com/vsts/pipelines/languages/python
 
 phases:
 
@@ -53,15 +53,14 @@ phases:
       - script: python setup.py sdist
         displayName: 'Build sdist'
 
-# Uncomment to save the dist in the build record
-#      - task: PublishBuildArtifacts@1
-#        inputs:
-#          pathToPublish: 'dist'
-#          artifactName: 'dist'
-
 # Uncomment to publish the dist to a package index
 #      - task: PyPIPublisher@0
 #        inputs:
 #          pypiConnection: ''
 #          packageDirectory: '$(build.sourcesDirectory)'
 #          alsoPublishWheel: false
+
+# For more information on extending this YAML to:
+# - Publish the dist to a package index
+# - Save the dist with the build record
+# See https://docs.microsoft.com/vsts/pipelines/languages/python

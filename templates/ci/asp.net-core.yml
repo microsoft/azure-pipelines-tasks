@@ -1,5 +1,5 @@
 # Build and test ASP.NET Core web applications targeting .NET Core.
-# https://docs.microsoft.com/vsts/pipelines/languages/dotnetcore
+# https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
 
 queue: 'Hosted Ubuntu 1604'
 
@@ -9,10 +9,10 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
 
-# For more information on how to extend this YAML to:
-# - use a specific version of .NET Core SDK
-# - run tests and publish test results
-# - create a NuGet package or zip archive from outputs
-# - publish artifacts with the build
-# - deploy to a web app
-# see https://docs.microsoft.com/vsts/pipelines/languages/dotnetcore
+# For information on extending this YAML to:
+# - Use a specific version of .NET Core SDK
+# - Run tests and publish test results
+# - Deploy to a web app
+# - Create a NuGet package or zip archive from outputs
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core

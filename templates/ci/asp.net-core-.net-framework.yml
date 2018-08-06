@@ -1,6 +1,6 @@
 # ASP.NET Core (.NET Framework)
 # Build and test ASP.NET Core web applications targeting the full .NET Framework.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
 
 queue: 'Hosted VS2017'
 variables:
@@ -27,8 +27,7 @@ steps:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
 
-# Uncomment to publish .pdb symbols for debugging artifacts of this build
-#  - task: PublishSymbols@1
-#    inputs:
-#      searchPattern: '**/bin/$(buildConfiguration)/*.pdb'
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Publish .pdb file symbols for debugging artifacts of this build
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core

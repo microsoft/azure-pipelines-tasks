@@ -15,9 +15,6 @@ steps:
       npx webpack # --config webpack.config.js
     displayName: 'npm install and run webpack'
 
-# Uncomment to save the artifacts of this build with the build record
-#  - task: ArchiveFiles@2
-#    inputs:
-#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#      includeRootFolder: false
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://aka.ms/yaml

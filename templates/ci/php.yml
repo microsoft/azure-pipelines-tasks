@@ -8,13 +8,7 @@ steps:
   - script: composer install
     displayName: 'composer install'
 
-# Uncomment to run tests with phpunit
-#  - script: phpunit
-#    displayName: 'Run tests with phpunit'
-
-# Uncomment to save the artifacts of this build with the build record
-#  - task: ArchiveFiles@2
-#    inputs:
-#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#      includeRootFolder: false
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Run tests with phpunit
+# - Save the artifacts of this build with the build record
+# See https://aka.ms/yaml

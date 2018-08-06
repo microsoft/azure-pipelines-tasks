@@ -1,6 +1,6 @@
 # .NET Desktop
 # Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/apps/windows/dot-net
 
 queue: 'Hosted VS2017'
 variables:
@@ -26,14 +26,7 @@ steps:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
 
-# Uncomment to publish .pdb symbols for debugging artifacts of this build
-#  - task: PublishSymbols@1
-#    inputs:
-#      searchPattern: '**/bin/$(buildConfiguration)/*.pdb'
-
-# Uncomment to save the artifacts of this build with the build record
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/bin/$(buildConfiguration)/**'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Publish .pdb file symbols for debugging artifacts of this build
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/apps/windows/dot-net

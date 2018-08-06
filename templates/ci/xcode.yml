@@ -1,26 +1,9 @@
 # Xcode
 # Build, test, and archive an Xcode workspace on macOS.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/apps/mobile/xcode-ios
 
 queue: 'Hosted macOS Preview'
 steps:
-
-#  - task: InstallAppleCertificate@1
-#    inputs:
-#      certSecureFile: ''
-#      certPwd: '$(P12password)'
-
-#  - task: InstallAppleProvisioningProfile@1
-#    inputs:
-#      provProfileSecureFile: ''
-
-#  - task: Xcode@4
-#    inputs:
-#      actions: 'test'
-#      configuration: 'Debug'
-#      scheme: ''
-#      sdk: 'iphonesimulator'
-#      publishJUnitResults: 'true'
 
   - task: Xcode@4
     inputs:
@@ -28,14 +11,13 @@ steps:
       scheme: ''
       sdk: 'iphoneos'
 
-# Uncomment to save the artifacts of this build with the build record
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/*.ipa'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
-
-# Next steps:
-# Test apps on hosted, physical devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/app-center-test
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/app-center-distribute
-# Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store
+# For information on extending this YAML to:
+# - Install an Apple certificate
+# - Install an Apple provisioning profile
+# - Sign your app
+# - Run tests with Xcode
+# - Test apps on hosted, physical devices with the App Center Test task
+# - Distribute apps to testers and users with the App Center Distribute task
+# - Release to the Apple App Store with the Apple App Store extension
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/apps/mobile/xcode-ios

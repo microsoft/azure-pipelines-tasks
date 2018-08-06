@@ -1,6 +1,6 @@
 # C/C++ with GCC
 # Build your C/C++ project with GNU GCC.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/apps/c-cpp/gcc
 
 queue: 'Hosted Ubuntu 1604'
 steps:
@@ -14,9 +14,6 @@ steps:
   - script: 'make test'
     displayName: 'make test'
 
-# Uncomment to save the artifacts of this build with the build record
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/*.out'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/apps/c-cpp/gcc

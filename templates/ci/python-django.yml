@@ -1,6 +1,6 @@
 # Python Django
 # Test a Django project on multiple versions of Python.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/languages/python
 
 phases:
 
@@ -56,13 +56,6 @@ phases:
           testResultsFiles: "**/TEST-*.xml"
           testRunTitle: 'Python $(PYTHON_VERSION)'
 
-# Uncomment to save the artifacts of this build with the build record
-#  - phase: 'Publish'
-#    dependsOn: 'Test'
-#    queue: 'Hosted Ubuntu 1604'
-#    steps:
-#      - task: CopyFiles@2
-#        inputs:
-#          sourceFolder: '$(build.sourcesDirectory)'
-#          targetFolder: '$(build.artifactStagingDirectory)'
-#      - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/languages/python

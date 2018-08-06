@@ -1,12 +1,13 @@
 # Jekyll container
-# Package your Jekyll site in a Docker container.
+# Package your Jekyll site from within the Jekyll Docker container image.
 # https://aka.ms/yaml
-queue: Hosted Ubuntu 1604
+
+queue: 'Hosted Ubuntu 1604'
 steps:
 
-# Run the latest 'jekyll/builder' container and from within the container, package the Jekyll site
+  # Run the latest 'jekyll/builder' container and from within the container, package the Jekyll site
   - task: Docker@0
-    displayName: Run Jekyll
+    displayName: 'Run Jekyll'
     inputs:
       containerRegistryType: 'Container Registry'
       action: 'Run an image'
@@ -17,7 +18,7 @@ steps:
       containerCommand: 'jekyll build --future'
       detached: false
 
-# Zip the contents of the repository and save the archive in the build record
+  # Zip the contents of the repository and save the archive in the build record
   - task: ArchiveFiles@1
     inputs:
       includeRootFolder: false

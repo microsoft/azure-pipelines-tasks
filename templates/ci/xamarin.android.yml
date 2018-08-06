@@ -1,8 +1,8 @@
 # Xamarin.Android
 # Build a Xamarin.Android app and Xamarin.UITest assembly.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/apps/mobile/xamarin
 
-queue: 'Hosted VS2017'
+queue: 'Hosted macOS Preview'
 variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
@@ -20,12 +20,10 @@ steps:
       outputDirectory: '$(outputDirectory)'
       configuration: '$(buildConfiguration)'
 
-# Uncomment to save the artifacts of this build with the build record
-#  - task: PublishBuildArtifacts@1
-#    inputs:
-#      pathtoPublish: '$(outputDirectory)'
-
-# Next steps:
-# Test apps on hosted, physical devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/app-center-test
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/app-center-distribute
-# Release to Google Play with the Google Play extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play
+# For information on extending this YAML to:
+# - Sign your APK with a keystore file
+# - Test apps on hosted, physical devices with the App Center Test task
+# - Distribute apps to testers and users with the App Center Distribute task
+# - Release to Google Play with the Google Play extension
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/apps/mobile/xamarin
