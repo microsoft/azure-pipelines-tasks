@@ -216,7 +216,7 @@ export class KuduServiceUtility {
             ];
             
             if(targetFolderName) {
-                queryParameters['name'] = targetFolderName
+                queryParameters.push('name=' + encodeURIComponent(targetFolderName));
             }
 
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
