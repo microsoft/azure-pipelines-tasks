@@ -72,4 +72,12 @@ export class NugetMockHelper {
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
     }
+
+    public registerNugetLocationHelpersMock() {
+        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
+            assumeNuGetUriPrefixes: function(input) {
+                return [input];
+            }
+        });
+    }
 }
