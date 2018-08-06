@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 138,
-    "Patch": 5
+    "Minor": 139,
+    "Patch": 2
   },
   "demands": [
     "vstest"
@@ -589,6 +589,7 @@
     "disabledRerun": "ms-resource:loc.messages.disabledRerun",
     "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
     "VsTestVersionEmpty": "ms-resource:loc.messages.VsTestVersionEmpty",
-    "UserProvidedSourceFilter": "ms-resource:loc.messages.UserProvidedSourceFilter"
+    "UserProvidedSourceFilter": "ms-resource:loc.messages.UserProvidedSourceFilter",
+    "UnableToGetFeatureFlag": "ms-resource:loc.messages.UnableToGetFeatureFlag"
   }
 }

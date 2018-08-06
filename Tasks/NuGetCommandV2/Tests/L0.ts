@@ -242,7 +242,7 @@ describe('NuGetCommand Suite', function () {
 
         tr.run()
         assert(tr.invokedToolCount == 1, 'should have run VstsNuGetPush once');
-        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\VstsNuGetPush.exe c:\\agent\\home\\directory\\foo.nupkg -Source https://vsts/packagesource -AccessToken token -NonInteractive'), 'it should have run NuGet');
+        assert(tr.ran('c:\\agent\\home\\directory\\externals\\nuget\\VstsNuGetPush.exe c:\\agent\\home\\directory\\foo.nupkg -Source https://vsts/packagesource -AccessToken token -NonInteractive'), 'it should have run VstsNuGetPush');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('VstsNuGetPush output here'), "should have VstsNuGetPush output");
         assert(tr.succeeded, 'should have succeeded');

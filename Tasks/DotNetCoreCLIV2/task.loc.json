@@ -16,8 +16,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 137,
-    "Patch": 0
+    "Minor": 139,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -275,8 +275,8 @@
       "required": true,
       "defaultValue": "internal",
       "options": {
-        "internal": "This account/collection",
-        "external": "External NuGet server (including other accounts/collections)"
+        "internal": "This organization/collection",
+        "external": "External NuGet server (including other organizations/collections)"
       },
       "visibleRule": "command = push"
     },

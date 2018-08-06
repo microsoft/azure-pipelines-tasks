@@ -18,11 +18,18 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 36
+        "Patch": 40
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
-    "groups": [],
+    "groups": [
+        {
+            "name": "AdvancedSettings",
+            "displayName": "Advanced Settings",
+            "isExpanded": false,
+            "visibleRule": "Action == Enable Continuous Monitoring"
+        }
+    ],
     "inputs": [
         {
             "name": "ConnectedServiceName",
@@ -187,6 +194,15 @@
             },
             "visibleRule": "Action == Enable Continuous Monitoring",
             "helpMarkDown": "Select Application Insights resource where continuous monitoring data will be recorded. <br/>If your application insights resource is not listed here and you want to create a new resource, click on [+New] button. Once the resource is created on Azure Portal, come back here and click on refresh button."
+        },
+        {
+            "name": "ApplicationInsightsWebTestName",
+            "type": "string",
+            "label": "Application Insights web test name",
+            "groupName": "AdvancedSettings",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Enter Application Insights Web Test name to be created or updated. <br/>If not provided, the default test name will be used."
         }
     ],
     "outputVariables": [

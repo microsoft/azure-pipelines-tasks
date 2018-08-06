@@ -7,13 +7,11 @@ import { condaEnvironment } from './conda';
     try {
         task.setResourcePath(path.join(__dirname, 'task.json'));
         await condaEnvironment({
-            createCustomEnvironment: task.getBoolInput('createCustomEnvironment'),
-            environmentName: task.getInput('environmentName'),
-            packageSpecs: task.getInput('packageSpecs'),
-            updateConda: task.getBoolInput('updateConda'),
-            installOptions: task.getInput('installOptions'),
-            createOptions: task.getInput('createOptions'),
-            cleanEnvironment: task.getBoolInput('cleanEnvironment')
+            environmentName: task.getInput('environmentName', true),
+            packageSpecs: task.getInput('packageSpecs', false),
+            updateConda: task.getBoolInput('updateConda', false),
+            createOptions: task.getInput('createOptions', false),
+            cleanEnvironment: task.getBoolInput('cleanEnvironment', false)
         },
         getPlatform());
         task.setResult(task.TaskResult.Succeeded, "");

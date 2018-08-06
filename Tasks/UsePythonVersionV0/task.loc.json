@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 136,
-    "Patch": 0
+    "Minor": 138,
+    "Patch": 1
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -30,7 +30,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
       "required": true,
-      "defaultValue": ">= 3.3",
+      "defaultValue": "3.x",
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },
     {

@@ -92,7 +92,7 @@ export class NugetMockHelper {
         });
     }
 
-        public registerNugetUtilityMockUnix() {
+    public registerNugetUtilityMockUnix() {
         this.tmr.registerMock('nuget-task-common/Utility', {
             getPatternsArrayFromInput: function(input) {
                 return [input];
@@ -109,6 +109,14 @@ export class NugetMockHelper {
             setConsoleCodePage: function() {
                 var tlm = require('vsts-task-lib/mock-task');
                 tlm.debug(`setting console code page`);
+            }
+        });
+    }
+
+    public registerNugetLocationHelpersMock() {
+        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
+            assumeNuGetUriPrefixes: function(input) {
+                return [input];
             }
         });
     }

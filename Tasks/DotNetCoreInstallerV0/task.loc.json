@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 11
+    "Patch": 13
   },
   "satisfies": [
     "DotNetCore"
@@ -51,6 +51,7 @@
     "ToolFailed": "ms-resource:loc.messages.ToolFailed",
     "ImplicitVersionNotSupported": "ms-resource:loc.messages.ImplicitVersionNotSupported",
     "getMachinePlatformFailed": "ms-resource:loc.messages.getMachinePlatformFailed",
+    "getDownloadUrlsFailed": "ms-resource:loc.messages.getDownloadUrlsFailed",
     "UsingCachedTool": "ms-resource:loc.messages.UsingCachedTool",
     "CheckingToolCache": "ms-resource:loc.messages.CheckingToolCache",
     "InstallingAfresh": "ms-resource:loc.messages.InstallingAfresh",
@@ -64,7 +65,7 @@
     "ToolToInstall": "ms-resource:loc.messages.ToolToInstall",
     "PrimaryPlatform": "ms-resource:loc.messages.PrimaryPlatform",
     "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
-    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound",
+    "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
     "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
     "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage"
   }

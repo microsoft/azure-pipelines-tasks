@@ -1,17 +1,34 @@
 function Add-Certificate {
     [CmdletBinding()]
-    param([Parameter(Mandatory=$true)]$Endpoint)
+    param(
+        [Parameter(Mandatory=$true)] $Endpoint,
+        [Switch] $ServicePrincipal
+    )
 
     # Add the certificate to the cert store.
-    $bytes = [System.Convert]::FromBase64String($Endpoint.Auth.Parameters.Certificate)
     $certificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
-    $certificate.Import($bytes)
+
+    if ($ServicePrincipal) {
+        $pemFileContent = $Endpoint.Auth.Parameters.ServicePrincipalCertificate
+        $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
+        
+        $certificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
+    }
+    else {
+        $bytes = [System.Convert]::FromBase64String($Endpoint.Auth.Parameters.Certificate)
+        $certificate.Import($bytes)
+    }
+
     $store = New-Object System.Security.Cryptography.X509Certificates.X509Store(
-        ([System.Security.Cryptography.X509Certificates.StoreName]::My),
-        ([System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser))
+            ([System.Security.Cryptography.X509Certificates.StoreName]::My),
+            ([System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser))
     $store.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
     $store.Add($certificate)
     $store.Close()
+
+    #store the thumbprint in a global variable which will be used to remove the certificate later on
+    $script:Endpoint_Authentication_Certificate = $certificate.Thumbprint
+    Write-Verbose "Added certificate to the certificate store."
     return $certificate
 }
 
@@ -125,10 +142,18 @@ function Initialize-AzureSubscription {
         if ($script:azureRMProfileModule) {
             Set-CurrentAzureRMSubscription -SubscriptionId $Endpoint.Data.SubscriptionId
         }
-    } elseif ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
-        $psCredential = New-Object System.Management.Automation.PSCredential(
-            $Endpoint.Auth.Parameters.ServicePrincipalId,
-            (ConvertTo-SecureString $Endpoint.Auth.Parameters.ServicePrincipalKey -AsPlainText -Force))
+    } 
+    elseif ($Endpoint.Auth.Scheme -eq 'ServicePrincipal') {
+        
+        if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
+            $servicePrincipalCertificate = Add-Certificate -Endpoint $Endpoint -ServicePrincipal
+        }
+        else {
+            $psCredential = New-Object System.Management.Automation.PSCredential(
+                $Endpoint.Auth.Parameters.ServicePrincipalId,
+                (ConvertTo-SecureString $Endpoint.Auth.Parameters.ServicePrincipalKey -AsPlainText -Force))
+        }
+
         if ($script:azureModule -and $script:azureModule.Version -lt ([version]'0.9.9')) {
             # Service principals arent supported from 0.9.9 and greater in the Azure module.
             try {
@@ -147,22 +172,49 @@ function Initialize-AzureSubscription {
             throw (Get-VstsLocString -Key "AZ_ServicePrincipalAuthNotSupportedAzureVersion0" -ArgumentList $script:azureModule.Version)
         } else {
             # Else, this is AzureRM.
+            
             try {
-                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {
+                if(Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue"){
+                    Write-Host "##[command]Clear-AzureRmContext -Scope Process"
+                    $null = Clear-AzureRmContext -Scope Process
+                    Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+                    $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+                }
+                if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {                    
                     if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
-                        Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
-                        $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                        
+                        if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -EnvironmentName $environmentName"
+                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -EnvironmentName $environmentName
+                        }
+                        else {
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -EnvironmentName $environmentName
+                        }
                     }
                     else {
-                        Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                        $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
+                            $null = Add-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                        }
+                        else {
+                            Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                            $null = Add-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                        }
                     }
                 }
                 else {
-                    Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
-                    $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                    if ($Endpoint.Auth.Parameters.AuthenticationType -eq "SPNCertificate") {
+                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -CertificateThumbprint ****** -ApplicationId $($Endpoint.Auth.Parameters.ServicePrincipalId) -Environment $environmentName"
+                        $null = Connect-AzureRmAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -CertificateThumbprint $servicePrincipalCertificate.Thumbprint -ApplicationId $Endpoint.Auth.Parameters.ServicePrincipalId -Environment $environmentName
+                    }
+                    else {
+                        Write-Host "##[command]Connect-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -Environment $environmentName"
+                        $null = Connect-AzureRMAccount -ServicePrincipal -Tenant $Endpoint.Auth.Parameters.TenantId -Credential $psCredential -Environment $environmentName
+                    }
                 }
-            } catch {
+            } 
+            catch {
                 # Provide an additional, custom, credentials-related error message.
                 Write-VstsTaskError -Message $_.Exception.Message
                 Assert-TlsError -exception $_.Exception
@@ -493,4 +545,72 @@ function Get-ProxyUri
     }
 
     return $proxyUri
+}
+
+function ConvertTo-Pfx {
+    param(
+        [String][Parameter(Mandatory = $true)] $pemFileContent
+    )
+
+    if ($ENV:Agent_TempDirectory) {
+        $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
+        $pfxPasswordFilePath = "$ENV:Agent_TempDirectory\clientcertificatepassword.txt"
+    }
+    else {
+        $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
+        $pfxPasswordFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"    
+    }
+
+    # save the PEM certificate to a PEM file
+    Set-Content -Path $pemFilePath -Value $pemFileContent
+
+    # use openssl to convert the PEM file to a PFX file
+    $pfxFilePassword = [System.Guid]::NewGuid().ToString()
+    Set-Content -Path $pfxPasswordFilePath -Value $pfxFilePassword -NoNewline
+
+    $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
+     
+    Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
+
+    return $pfxFilePath, $pfxFilePassword
+}
+
+function Remove-EndpointSecrets {
+    # remove any certificate files
+    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem") {
+        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+    }
+
+    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx") {
+        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
+        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
+    }
+
+    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt") {
+        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"
+        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"
+    }
+
+    if ($script:Endpoint_Authentication_Certificate) {
+        # remove the certificate from certificate store
+        $certificateStore = New-Object System.Security.Cryptography.X509Certificates.X509Store(
+            ([System.Security.Cryptography.X509Certificates.StoreName]::My),
+            ([System.Security.Cryptography.X509Certificates.StoreLocation]::CurrentUser))
+
+        $certificateStore.Open(([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite))
+
+        $certificates =  $certificateStore.Certificates.Find([System.Security.Cryptography.X509Certificates.X509FindType]::FindByThumbprint, $script:Endpoint_Authentication_Certificate, $false)
+
+        foreach ($certificate in $certificates) {
+            $certificateStore.Remove($certificate)
+        }
+
+        $certificateStore.Close()
+
+        Write-Verbose "Removed certificate from certificate store."
+    }
 }

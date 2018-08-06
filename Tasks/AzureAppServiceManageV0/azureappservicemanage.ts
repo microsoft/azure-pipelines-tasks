@@ -1,7 +1,7 @@
 import tl = require('vsts-task-lib/task');
 import Q = require('q');
 import path = require('path');
-import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint';
+import { AzureRMEndpoint, dispose } from 'azure-arm-rest/azure-arm-endpoint';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import {AzureAppService  } from 'azure-arm-rest/azure-arm-app-service';
 import { AzureApplicationInsights } from 'azure-arm-rest/azure-arm-appinsights';
@@ -30,6 +30,7 @@ async function run() {
         var preserveVnet: boolean = tl.getBoolInput('PreserveVnet', false);
         var extensionList = tl.getInput('ExtensionsList', false);
         var extensionOutputVariables = tl.getInput('OutputVariable');
+        var appInsightsWebTestName = tl.getInput('ApplicationInsightsWebTestName', false);
         var taskResult = true;
         var errorMessage: string = "";
         var updateDeploymentStatus: boolean = true;
@@ -107,7 +108,7 @@ async function run() {
             }
             case "Enable Continuous Monitoring": {
                 var appInsights: AzureApplicationInsights = new AzureApplicationInsights(azureEndpoint, appInsightsResourceGroupName, appInsightsResourceName);
-                await enableContinuousMonitoring(azureEndpoint, appService, appInsights);
+                await enableContinuousMonitoring(azureEndpoint, appService, appInsights, appInsightsWebTestName);
                 break;
             }
             default: {
@@ -153,6 +154,9 @@ async function run() {
     }
     catch(error) {
         tl.debug(error);
+    }
+    finally {
+        dispose();
     }
 
     if (!taskResult) {

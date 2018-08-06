@@ -30,6 +30,7 @@ Register-Mock Wait-ServiceFabricApplicationTypeRegistrationStatus {
     return
 } -- @waitApplicationTypeParams
 
+Register-Mock Get-SfSdkVersion { '3.1.183.9494' }
 Register-Mock Start-Sleep {}
 Register-Mock Write-VstsTaskError
 

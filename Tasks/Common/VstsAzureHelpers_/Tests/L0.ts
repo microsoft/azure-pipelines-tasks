@@ -87,6 +87,9 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('(Initialize-AzureSubscription) passes values when cert auth and environment', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.PassesValuesWhenCertAuthAndEnvironment.ps1'), done);
         })
+        it('(Initialize-AzureSubscription) passes values when cert auth with service principal scheme', (done) => {
+            psr.run(path.join(__dirname, 'Initialize-AzureSubscription.PassesValuesWhenSPNCertAuth.ps1'), done);
+        })
         it('(Initialize-AzureSubscription) throws when SP auth and classic 0.9.9', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.ThrowsWhenSPAuthAndClassic099.ps1'), done);
         })

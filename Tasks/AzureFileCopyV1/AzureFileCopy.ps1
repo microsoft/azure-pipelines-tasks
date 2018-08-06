@@ -154,7 +154,10 @@ if ($destination -eq "AzureBlob")
         $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
         Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
     }
+
+    Remove-EndpointSecrets
     Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
+    
     return
 }
 
@@ -193,6 +196,7 @@ catch
 finally
 {
     Remove-AzureContainer -containerName $containerName -storageContext $storageContext
+    Remove-EndpointSecrets
     Write-Verbose "Completed Azure File Copy Task for Azure VMs Destination" -Verbose
     Trace-VstsLeavingInvocation $MyInvocation
 }

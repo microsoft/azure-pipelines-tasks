@@ -18,11 +18,18 @@
   "version": {
     "Major": 0,
     "Minor": 2,
-    "Patch": 36
+    "Patch": 40
   },
   "minimumAgentVersion": "1.102.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "groups": [],
+  "groups": [
+    {
+      "name": "AdvancedSettings",
+      "displayName": "ms-resource:loc.group.displayName.AdvancedSettings",
+      "isExpanded": false,
+      "visibleRule": "Action == Enable Continuous Monitoring"
+    }
+  ],
   "inputs": [
     {
       "name": "ConnectedServiceName",
@@ -191,6 +198,15 @@
       },
       "visibleRule": "Action == Enable Continuous Monitoring",
       "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsResourceName"
+    },
+    {
+      "name": "ApplicationInsightsWebTestName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ApplicationInsightsWebTestName",
+      "groupName": "AdvancedSettings",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ApplicationInsightsWebTestName"
     }
   ],
   "outputVariables": [
