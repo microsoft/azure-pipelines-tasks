@@ -199,6 +199,7 @@
   "loc.messages.MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
   "loc.messages.PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
   "loc.messages.PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+  "loc.messages.WarPackageDeploymentInitiated": "Package deployment using WAR Deploy initiated.",
   "loc.messages.FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
   "loc.messages.GoExeNameNotPresent": "Go exe name is not present",
   "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",

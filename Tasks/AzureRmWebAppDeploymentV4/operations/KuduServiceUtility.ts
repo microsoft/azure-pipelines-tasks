@@ -209,7 +209,7 @@ export class KuduServiceUtility {
 
     public async deployUsingWarDeploy(packagePath: string, customMessage?: any, targetFolderName?: any): Promise<string> {
         try {
-            console.log(tl.loc('PackageDeploymentInitiated'));
+            console.log(tl.loc('WarPackageDeploymentInitiated'));
 
             let queryParameters: Array<string> = [
                 'isAsync=true'
