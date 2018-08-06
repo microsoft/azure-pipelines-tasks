@@ -418,20 +418,17 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
     // skip if already downloaded and extracted
     var scrubbedUrl = url.replace(/[/\:?]/g, '_');
-    var targetPath = path.join(downloadPath, 'archive', scrubbedUrl);
-    var marker = targetPath + '.completed';
+    var archiveDir = path.join(downloadPath, 'archive');
+    var markerDir = path.join(archiveDir, scrubbedUrl);
+    var marker = markerDir + '.completed';
     if (!test('-f', marker)) {
         // download the archive
         var archivePath = downloadFile(url);
         console.log('Extracting archive: ' + url);
 
-        // delete any previously attempted extraction directory
-        if (test('-d', targetPath)) {
-            rm('-rf', targetPath);
-        }
-
         // extract
-        mkdir('-p', targetPath);
+        mkdir('-p', archiveDir);
+        var targetPath = fs.mkdtempSync(`${archiveDir}${path.sep}`);
         if (isZip) {
             var zip = new admZip(archivePath);
             zip.extractAllTo(targetPath);
@@ -448,7 +445,10 @@ var downloadArchive = function (url, omitExtensionCheck) {
         }
 
         // write the completed marker
-        fs.writeFileSync(marker, '');
+        fs.writeFileSync(marker, targetPath);
+    } else {
+        // return the path from the completed marker
+        return fs.readFileSync(marker, {encoding: 'utf8'});
     }
 
     return targetPath;
