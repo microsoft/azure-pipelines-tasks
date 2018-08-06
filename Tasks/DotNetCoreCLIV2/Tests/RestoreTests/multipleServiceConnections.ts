@@ -63,5 +63,6 @@ nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.csproj"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerNugetConfigMock();
 nmh.registerToolRunnerMock();
+nmh.registerNugetLocationHelpersMock();
 
 tmr.run();

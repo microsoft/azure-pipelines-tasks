@@ -40,11 +40,13 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 nmh.setAnswers(a);
 
 process.env["NUGET_FORCEVSTSNUGETPUSHFORPUSH"] = "true";
+process.env["SYSTEM_SERVERTYPE"] = "Hosted";
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nupkg"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
 nmh.RegisterLocationServiceMocks();
 nmh.registerVstsNuGetPushRunnerMock();
+nmh.registerNugetLocationHelpersMock();
 
 tmr.run();
