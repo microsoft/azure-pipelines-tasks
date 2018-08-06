@@ -1,39 +1,18 @@
-# ASP.NET Core
 # Build and test ASP.NET Core web applications targeting .NET Core.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/languages/dotnetcore
 
 queue: 'Hosted Ubuntu 1604'
+
 variables:
   buildConfiguration: 'Release'
+
 steps:
+- script: dotnet build --configuration $(buildConfiguration)
 
-#  - task: DotNetCoreInstaller@0
-#    inputs:
-#      version: '2.1.300'
-
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'restore'
-      projects: '**/*.csproj'
-
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'build'
-      projects: '**/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
-
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'test'
-      projects: '**/*[Tt]ests/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
-
-# Uncomment to create a .zip file archive that is ready for publishing
-# See https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
-#  - task: DotNetCoreCLI@2
-#    inputs:
-#      command: 'publish'
-#      arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
-
-# Uncomment to save the artifacts of this build with the build record
-#  - task: PublishBuildArtifacts@1
+# For more information on how to extend this YAML to:
+# - use a specific version of .NET Core SDK
+# - run tests and publish test results
+# - create a NuGet package or zip archive from outputs
+# - publish artifacts with the build
+# - deploy to a web app
+# see https://docs.microsoft.com/vsts/pipelines/languages/dotnetcore

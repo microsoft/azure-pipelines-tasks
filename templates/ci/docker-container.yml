@@ -1,24 +1,15 @@
-# Docker container
-# Build a Docker image and push it to a container registry.
-# https://aka.ms/yaml
+# Build a Docker image
+# https://docs.microsoft.com/vsts/pipelines/languages/docker
 
 queue: 'Hosted Ubuntu 1604'
 variables:
-  imageName: '$(build.repository.name):$(build.buildId)'
+  imageName: '$(Build.Repository.Name):$(Build.BuildId)'
+
 steps:
+- script: docker build -f Dockerfile -t $(imageName) .
 
-  - task: Docker@1
-    displayName: 'Build the image'
-    inputs:
-      action: 'build an image'
-      dockerFile: 'Dockerfile' 
-      imageName: '$(imageName)'
-
-# Uncomment and edit to push the image to a container registry
-#  - task: Docker@1
-#    displayName: 'Push the image'
-#    inputs:
-#      action: 'push an image'
-#      containerRegistryType: 'container registry'
-#      dockerRegistryEndpoint: ''
-#      imageName: '$(imageName)'
+# For more information on how to extend this YAML to:
+# - correctly tag your image
+# - push the image to Docker Hub or Azure Container Registry
+# - build and test your app prior to creating the Docker image
+# see https://docs.microsoft.com/vsts/pipelines/languages/docker
