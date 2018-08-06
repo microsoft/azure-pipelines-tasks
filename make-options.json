@@ -104,6 +104,7 @@
         "SqlAzureDacpacDeploymentV1",
         "SqlDacpacDeploymentOnMachineGroupV0",
         "SshV0",
+        "UniversalPackagesV0",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
         "VSBuildV1",
