@@ -360,10 +360,13 @@ target.yamlschema = function() {
     });
 
     console.log('2');
-    console.log(JSON.stringify(taskJsonPaths));
+    //console.log(JSON.stringify(taskJsonPaths));
 
     var schemaFileContent = util.generateYamlSchema(taskJsonPaths);
     fs.writeFileSync(schemaFilePath, schemaFileContent);
+
+    fs.writeFileSync(path.join(__dirname, `yaml-task-array.json`), util.getTaskNameMajorVersionList(taskJsonPaths));
+    // getTaskNameMajorVersionList
 
     console.log('File writing complete. ' + schemaFilePath);
 }

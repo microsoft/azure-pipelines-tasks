@@ -1,0 +1,1 @@
+nuget.exe push Mseng.MS.TF.DistributedTask.Tasks.ServiceFabricDeployV1.1.7.20.nupkg -source "https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json" -apikey Skyrise

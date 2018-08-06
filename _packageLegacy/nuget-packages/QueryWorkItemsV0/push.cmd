@@ -1,0 +1,1 @@
+nuget.exe push Mseng.MS.TF.DistributedTask.Tasks.queryWorkItemsV0.0.0.9.nupkg -source "https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json" -apikey Skyrise

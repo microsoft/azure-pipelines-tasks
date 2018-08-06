@@ -1,0 +1,1 @@
+nuget.exe push Mseng.MS.TF.DistributedTask.Tasks.ManualInterventionV8.8.2.4.nupkg -source "https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json" -apikey Skyrise

@@ -1,0 +1,461 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://github.com/Microsoft/vsts-agent/blob/master/src/Misc/ci-schema.json",
+    "$comment": "v1.137.0",
+    "title": "Pipeline schema",
+    "description": "A pipeline definition",
+    "oneOf": [
+      { "$ref": "#/definitions/pipeline" },
+      { "$ref": "#/definitions/phase"}
+    ],
+    "definitions": {
+      "pipeline": {
+        "type": "object",
+        "required": [],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "description": "Pipeline name",
+            "type": "string"
+          },
+          "resources": {
+            "description": "Containers and repositories used in the build",
+            "type": "object",
+            "properties": {
+              "containers": {
+                "description": "Container images",
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/containerReference"
+                }
+              },
+              "repositories": {
+                "description": "External repositories",
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/repositoryReference"
+                }
+              }
+            }
+          },
+          "variables": {
+            "description": "Pipeline-wide variables",
+            "type": "object"
+          },
+          "phases": {
+            "description": "Phases of the pipeline",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/phase"
+            }
+          }
+        }
+      },
+      "phase": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "phase": {
+            "type": "string",
+            "description": "ID of the phase",
+            "pattern": "^[_A-Za-z0-9]*$"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable name of the phase"
+          },
+          "dependsOn": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Any phases which must complete before this one"
+          },
+          "condition": {
+            "type": "string",
+            "description": "Evaluate this condition expression to determine whether to run this phase"
+          },
+          "continueOnError": {
+            "type": "boolean",
+            "description": "Continue running this phase even on failure?"
+          },
+          "queue": {
+            "oneOf": [
+              { "type": "string" },
+              { "$ref": "#/definitions/queue" }
+            ],
+            "description": "Definition of the queue in which to run this phase",
+            "examples": [
+              "Hosted VS2017",
+              "Hosted macOS Preview",
+              "Hosted Linux Preview"
+            ]
+          },
+          "server": {
+            "type": "boolean",
+            "description": "True if this is an agent-less phase (runs on server)"
+          },
+          "variables": {
+            "type": "object",
+            "description": "Phase-specific variables"
+          },
+          "steps": {
+            "type": "array",
+            "description": "A list of steps to run",
+            "items": {
+              "oneOf": [
+                { "$ref": "#/definitions/script" },
+                { "$ref": "#/definitions/bash" },
+                { "$ref": "#/definitions/powershell" },
+                { "$ref": "#/definitions/checkout" },
+                { "$ref": "task-schema.json" },
+                { "$ref": "#/definitions/templateReference" }
+              ]
+            }
+          },
+          "template": {
+            "type": "string",
+            "description": "Reference to a template for this phase"
+          },
+          "parameters": {
+            "type": "object"
+          }
+        }
+      },
+      "queue": {
+        "type": "object",
+        "description": "Queue details",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of a queue"
+          },
+          "demands": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "object" }
+            ],
+            "description": "List of demands (for a private pool)"
+          },
+          "timeoutInMinutes": {
+            "type": "integer",
+            "description": "TODO"
+          },
+          "cancelTimeoutInMinutes": {
+            "type": "integer",
+            "description": "TODO"
+          },
+          "parallel": {
+            "type": "integer",
+            "description": "Maximum number of parallel agent executions"
+          },
+          "matrix": {
+            "$ref": "#/definitions/matrix"
+          }
+        }
+      },
+      "server": {
+        "type": "object",
+        "description": "Server phase details",
+        "additionalProperties": false,
+        "properties": {
+          "timeoutInMinutes": {
+            "type": "integer",
+            "description": "TODO"
+          },
+          "cancelTimeoutInMinutes": {
+            "type": "integer",
+            "description": "TODO"
+          },
+          "parallel": {
+            "type": "integer",
+            "description": "Maximum number of parallel agent executions"
+          },
+          "matrix": {
+            "$ref": "#/definitions/matrix"
+          }
+        }
+      },
+      "matrix": {
+        "type": "object",
+        "description": "List of permutations of variable values to run",
+        "minProperties": 1,
+        "patternProperties": {
+          "^[A-Za-z0-9_]+$": {
+            "type": "object",
+            "description": "Variable-value pair to pass in this matrix instance"
+          }
+        }
+      },
+      "script": {
+        "type": "object",
+        "description": "An inline script step",
+        "additionalProperties": false,
+        "required": ["script"],
+        "properties": {
+          "script": {
+            "type": "string",
+            "description": "An inline script"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable name for the step"
+          },
+          "name": {
+            "type": "string",
+            "description": "ID of the step",
+            "pattern": "^[_A-Za-z0-9]*$"
+          },
+          "failOnStderr": {
+            "type": "boolean",
+            "description": "Fail the task if output is sent to Stderr?"
+          },
+          "workingDirectory": {
+            "type": "string",
+            "description": "Start the script with this working directory"
+          },
+          "condition": {
+            "type": "string",
+            "description": "Evaluate this condition expression to determine whether to run this script"
+          },
+          "continueOnError": {
+            "type": "boolean",
+            "description": "Continue running the parent phase even on failure?"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Run this script when the phase runs?"
+          },
+          "timeoutInMinutes": {
+            "type": "integer",
+            "description": "Time to wait for this script to complete before the server kills it"
+          },
+          "env": {
+            "type": "object",
+            "description": "Variables to map into the process's environment"
+          }
+        }
+      },
+      "bash": {
+        "type": "object",
+        "required": ["bash"],
+        "additionalProperties": false,
+        "properties": {
+          "bash": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable name for the step"
+          },
+          "name": {
+            "type": "string",
+            "description": "ID of the step",
+            "pattern": "^[_A-Za-z0-9]*$"
+          },
+          "failOnStderr": {
+            "type": "boolean",
+            "description": "Fail the task if output is sent to Stderr?"
+          },
+          "workingDirectory": {
+            "type": "string",
+            "description": "Start the script with this working directory"
+          },
+          "condition": {
+            "type": "string",
+            "description": "Evaluate this condition expression to determine whether to run this script"
+          },
+          "continueOnError": {
+            "type": "boolean",
+            "description": "Continue running the parent phase even on failure?"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Run this script when the phase runs?"
+          },
+          "timeoutInMinutes": {
+            "type": "integer",
+            "description": "Time to wait for this script to complete before the server kills it"
+          },
+          "env": {
+            "type": "object",
+            "description": "Variables to map into the process's environment"
+          }
+        }
+      },
+      "powershell": {
+        "type": "object",
+        "required": ["powershell"],
+        "additionalProperties": false,
+        "properties": {
+          "powershell": {
+            "type": "string",
+            "description": "Inline PowerShell or reference to a PowerShell file"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Human-readable name for the step"
+          },
+          "name": {
+            "type": "string",
+            "description": "ID of the step",
+            "pattern": "^[_A-Za-z0-9]*$"
+          },
+          "errorActionPreference": {
+            "enum": ["stop", "continue", "silentlyContinue"],
+            "description": "Strategy for dealing with script errors"
+          },
+          "failOnStderr": {
+            "type": "boolean",
+            "description": "Fail the task if output is sent to Stderr?"
+          },
+          "ignoreLASTEXITCODE": {
+            "type": "boolean",
+            "description": "TODO"
+          },
+          "workingDirectory": {
+            "type": "string",
+            "description": "Start the script with this working directory"
+          },
+          "condition": {
+            "type": "string",
+            "description": "Evaluate this condition expression to determine whether to run this script"
+          },
+          "continueOnError": {
+            "type": "boolean",
+            "description": "Continue running the parent phase even on failure?"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Run this script when the phase runs?"
+          },
+          "timeoutInMinutes": {
+            "type": "integer",
+            "description": "Time to wait for this script to complete before the server kills it"
+          },
+          "env": {
+            "type": "object",
+            "description": "Variables to map into the process's environment"
+          }
+        }
+      },
+      "checkout": {
+        "type": "object",
+        "required": ["checkout"],
+        "additionalProperties": false,
+        "properties": {
+          "checkout": {
+            "enum": ["self", "none"],
+            "description": "Whether or not to check out the repository containing this pipeline definition"
+          },
+          "clean": {
+            "type": "boolean",
+            "description": "Start from a clean, freshly-fetched workdir?"
+          },
+          "fetchDepth": {
+            "type": "integer",
+            "description": "Depth of Git graph to fetch"
+          },
+          "lfs": {
+            "type": "boolean",
+            "description": "Fetch Git-LFS objects?"
+          }  
+        }
+      },
+      "templateReference": {
+        "type": "object",
+        "required": ["template"],
+        "additionalProperties": false,
+        "properties": {
+          "template": {
+            "type": "string",
+            "description": "A URL to a step template"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Step-specific parameters"
+          }
+        }
+      },
+      "repositoryReference": {
+        "type": "object",
+        "required": ["repository", "type"],
+        "additionalProperties": false,
+        "properties": {
+          "repository": {
+            "type": "string",
+            "description": "ID for the external repository",
+            "pattern": "^[A-Za-z0-9_]+$"
+          },
+          "type": {
+            "enum": ["github"],
+            "description": "Type of external repository"
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "ID of the service endpoint connecting to this repository"
+          },
+          "name": {
+            "type": "string",
+            "description": "Identity and repository name",
+            "examples": [
+              "contoso/foo"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "description": "Refname to retrieve",
+            "examples": [
+              "refs/heads/master",
+              "refs/tags/lkg"
+            ]
+          }
+        }
+      },
+      "containerReference": {
+        "type": "object",
+        "required": ["container", "image"],
+        "additionalProperties": false,
+        "properties": {
+          "container": {
+            "type": "string",
+            "description": "ID for the container",
+            "pattern": "^[A-Za-z0-9_]+$"
+          },
+          "image": {
+            "type": "string",
+            "description": "Container image name",
+            "examples": [
+              "ubuntu:16.04",
+              "windows:1803"
+            ]
+          },
+          "endpoint": {
+            "type": "string",
+            "description": "ID of the service endpoint connecting to a private container registry"
+          },
+          "options": {
+            "type": "string",
+            "description": "Options to pass into container host"
+          },
+          "localImage": {
+            "type": "boolean",
+            "description": "TODO - document localImage"
+          },
+          "env": {
+            "type": "object",
+            "description": "Variables to map into the container's environment"
+          }
+        }
+      }
+    }
+  }

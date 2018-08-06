@@ -1,0 +1,1 @@
+nuget.exe push Mseng.MS.TF.DistributedTask.Tasks.IISWebAppManagementOnMachineGroupV0.0.5.7.nupkg -source "https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json" -apikey Skyrise

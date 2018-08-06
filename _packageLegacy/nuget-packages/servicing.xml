@@ -1,0 +1,483 @@
+  <Directory Path="[ServicingDir]Tasks\Individual\AndroidBuildV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidBuildV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AndroidSigningV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AndroidSigningV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AndroidSigningV3\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV3/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ANTV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AntV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AppCenterDistributeV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AppCenterDistributeV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AppCenterDistributeV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AppCenterDistributeV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AppCenterTestV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AppCenterTestV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ArchiveFilesV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ArchiveFilesV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ArchiveFilesV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ArchiveFilesV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureAppServiceManageV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureAppServiceManageV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureCLIV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureCLIV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureCloudPowerShellDeploymentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureCloudPowerShellDeploymentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureFileCopyV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureFileCopyV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureFileCopyV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureFileCopyV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureFunctionV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureFunctionV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureFunctionV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureFunctionV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureKeyVaultV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureKeyVaultV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureMonitorAlertsV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureMonitorAlertsV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureMonitorV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureMonitorV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureMysqlDeploymentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureMysqlDeploymentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureNLBManagementV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureNLBManagementV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzurePowerShellV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzurePowerShellV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzurePowerShellV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzurePowerShellV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzurePowerShellV3\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzurePowerShellV3/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureResourceGroupDeploymentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureResourceGroupDeploymentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureResourceGroupDeploymentV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureResourceGroupDeploymentV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureRmWebAppDeploymentV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureRmWebAppDeploymentV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureRmWebAppDeploymentV3\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureRmWebAppDeploymentV3/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureRmWebAppDeploymentV4\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureRmWebAppDeploymentV4/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureVmssDeploymentV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureVmssDeploymentV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\AzureWebPowerShellDeploymentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AzureWebPowerShellDeploymentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\BashV3\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.BashV3/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\BatchScriptV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.BatchScriptV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ChefKnifeV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ChefKnifeV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ChefV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ChefV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CMakeV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CMakeV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CmdLineV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CmdLineV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CmdLineV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CmdLineV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CocoaPodsV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CocoaPodsV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CondaEnvironmentV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CondaEnvironmentV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CondaEnvironmentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CondaEnvironmentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CopyFilesOverSSHV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CopyFilesOverSSHV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CopyFilesV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CopyFilesV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CopyFilesV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CopyFilesV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CopyPublishBuildArtifactsV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CopyPublishBuildArtifactsV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\cURLUploaderV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.cURLUploaderV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\CUrlUploaderV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.cURLUploaderV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DecryptFileV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DecryptFileV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DelayV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DelayV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DeleteFilesV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DeleteFilesV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DeployVisualStudioTestAgentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DeployVisualStudioTestAgentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DeployVisualStudioTestAgentV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DeployVisualStudioTestAgentV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DockerComposeV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DockerComposeV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DockerV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DockerV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DockerV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DockerV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DotNetCoreCLIV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DotNetCoreCLIV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DotNetCoreCLIV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DotNetCoreCLIV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DotNetCoreCLIV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DotNetCoreCLIV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DotNetCoreInstallerV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DotNetCoreInstallerV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DownloadBuildArtifactsV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DownloadBuildArtifactsV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DownloadFileshareArtifactsV0V1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DownloadFileshareArtifactsV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DownloadPackageV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DownloadPackageV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\DownloadSecureFileV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.DownloadSecureFileV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ExtractFilesV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ExtractFilesV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\FtpUploadV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.FtpUploadV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\GoToolV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.GoToolV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\GoV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.GoV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\GradleV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.GradleV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\GradleV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.GradleV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\GruntV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.GruntV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\GulpV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.GulpV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\HelmDeployV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.HelmDeployV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\HelmInstallerV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.HelmInstallerV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\IISWebAppDeploymentOnMachineGroupV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.IISWebAppDeploymentOnMachineGroupV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\IISWebAppDeploymentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.IISWebAppDeploymentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\IISWebAppManagementOnMachineGroupV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.IISWebAppManagementOnMachineGroupV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\InstallAppleCertificateV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.InstallAppleCertificateV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\InstallAppleCertificateV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.InstallAppleCertificateV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\InstallAppleCertificateV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.InstallAppleCertificateV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\InstallAppleProvisioningProfileV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.InstallAppleProvisioningProfileV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\InstallAppleProvisioningProfileV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.InstallAppleProvisioningProfileV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\InstallSSHKeyV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.InstallSSHKeyV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\InvokeRESTAPIV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.InvokeRESTAPIV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\InvokeRestApiV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.InvokeRESTAPIV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\JavaToolInstallerV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.JavaToolInstallerV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\JenkinsDownloadArtifactsV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.JenkinsDownloadArtifactsV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\JenkinsQueueJobV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.JenkinsQueueJobV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\JenkinsQueueJobV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.JenkinsQueueJobV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\KubernetesV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.KubernetesV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\KubernetesV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.KubernetesV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ManualInterventionV8\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ManualInterventionV8/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\MavenV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.MavenV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\MavenV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.MavenV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\MavenV3\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.MavenV3/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\MSBuildV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.MSBuildV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NodeToolV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NodeToolV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NpmAuthenticateV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.npmAuthenticateV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NpmV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NpmV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NpmV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NpmV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NuGetCommandV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NuGetCommandV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NuGetInstallerV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NuGetInstallerV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NugetPackagerV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NuGetPackagerV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NuGetPublisherV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NuGetPublisherV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NuGetRestoreV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NuGetRestoreV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NuGetToolInstallerV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NuGetToolInstallerV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\NuGetV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.NuGetV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PackerBuildV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PackerBuildV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PowerShellOnTargetMachinesV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PowerShellOnTargetMachinesV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PowerShellOnTargetMachinesV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PowerShellOnTargetMachinesV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PowerShellOnTargetMachinesV3\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PowerShellOnTargetMachinesV3/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PowerShellV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PowerShellV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PowerShellV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PowerShellV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PublishBuildArtifactsV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PublishBuildArtifactsV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PublishCodeCoverageResultsV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PublishCodeCoverageResultsV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PublishSymbolsV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PublishSymbolsV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PublishSymbolsV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PublishSymbolsV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PublishTestResultsV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PublishTestResultsV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PublishTestResultsV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PublishTestResultsV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PublishToAzureServiceBusV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PublishToAzureServiceBusV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PublishToAzureServiceBusV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PublishToAzureServiceBusV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PyPIPublisherV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PyPIPublisherV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\PythonScriptV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.PythonScriptV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\QueryWorkItemsV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.queryWorkItemsV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\QuickPerfTestV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.QuickPerfTestV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\RunDistributedTestsV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.RunVisualStudioTestsusingTestAgentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\RunJMeterLoadTestV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ApacheJMeterLoadTestV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\RunLoadTestV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.CloudLoadTestV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ServiceFabricComposeDeployV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ServiceFabricComposeDeployV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ServiceFabricDeployV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ServiceFabricDeployV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ServiceFabricPowerShellV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ServiceFabricPowerShellV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ServiceFabricUpdateAppVersionsV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ServiceFabricUpdateAppVersionsV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ServiceFabricUpdateManifestsV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ServiceFabricUpdateManifestsV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\ShellScriptV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.ShellScriptV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\SonarQubePostTestV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.SonarQubePostTestV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\SonarQubePreBuildV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.SonarQubePreBuildV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\SqlAzureDacpacDeploymentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.SqlAzureDacpacDeploymentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\SqlDacpacDeploymentOnMachineGroupV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.SqlDacpacDeploymentOnMachineGroupV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\SqlServerDacpacDeploymentV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.SqlServerDacpacDeploymentV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\SshV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.SSHV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\UsePythonVersionV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.UsePythonVersionV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\UseRubyVersionV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.UseRubyVersionV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\VSBuildV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.VSBuildV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\VSMobileCenterTestV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.VSMobileCenterTestV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\VsTestPlatformToolInstallerV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.VisualStudioTestPlatformInstallerV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\VSTestV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.VSTestV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\VsTestV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.VSTestV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\WindowsMachineFileCopyV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.WindowsMachineFileCopyV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\WindowsMachineFileCopyV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.WindowsMachineFileCopyV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XamarinAndroidV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XamarinAndroidV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XamarinComponentRestoreV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XamarinComponentRestoreV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XamariniOSV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XamariniOSV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XamariniOSV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XamariniOSV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XamarinLicenseV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XamarinLicenseV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XamarinTestCloudV1\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XamarinTestCloudV1/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XcodePackageiOSV0\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XcodePackageiOSV0/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XcodeV2\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XcodeV2/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XcodeV3\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XcodeV3/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XcodeV4\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XcodeV4/*" />
+  </Directory>
+  <Directory Path="[ServicingDir]Tasks\Individual\XcodeV5\">
+    <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.XcodeV5/*" />
+  </Directory>

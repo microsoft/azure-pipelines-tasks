@@ -1,0 +1,1 @@
+nuget.exe push Mseng.MS.TF.DistributedTask.Tasks.NuGetPackagerV0.0.1.73.nupkg -source "https://mseng.pkgs.visualstudio.com/_packaging/Codex-Deps/nuget/v3/index.json" -apikey Skyrise

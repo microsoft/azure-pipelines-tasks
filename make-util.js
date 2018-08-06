@@ -1687,6 +1687,43 @@ var generateYamlSchema = function (taskJsonPaths) {
 }
 exports.generateYamlSchema = generateYamlSchema;
 
+var getTaskNameMajorVersionList = function (taskJsonPaths) {
+    var taskNames = {};
+
+    taskJsonPaths.forEach(function (taskJsonPath) {
+        var taskJson = fileToJson(taskJsonPath);
+
+        // we need task name and major version
+        if(!taskNames[taskJson.name]) {
+            taskNames[taskJson.name] = [];
+            //console.log('new array created');
+        }
+
+        taskNames[taskJson.name].push(taskJson.version.Major);
+    });
+
+    var keys = Object.keys(taskNames);
+    keys.sort(function (a, b) {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+    });
+
+    var taskNameAndVersion = [];
+    for (var i=0; i<keys.length; i++) {
+        var key = keys[i];
+        
+        // this is an array of major versions
+        var value = taskNames[key];
+        value.sort();
+
+        for (var j = value.length - 1; j >= 0; j--) {
+            taskNameAndVersion.push("\"" + key + "@" + value[j] + "\"");
+        }
+    }
+
+    return "[ " + taskNameAndVersion.join(', ') + " ]";
+}
+exports.getTaskNameMajorVersionList = getTaskNameMajorVersionList;
+
 var makeCaseInsensitiveRegexFromTaskName = function(taskName) {
     let response = "";
 
@@ -1732,17 +1769,23 @@ var getYamlForTask = function (taskJsonPath) {
             if ((input.type == 'pickList' || input.type == 'radio') && input.options) {
                 thisProp['enum'] = Object.keys(input.options);
             }
-            else if (input.type == 'pickList' || input.type == 'radio') {
-                thisProp.type = 'string';
-            }
             else if (input.type == 'boolean') {
                 thisProp.type = 'boolean';
             }
-            else if (input.type == 'multiLine' || input.type == 'string' || input.type == 'filePath') {
+            else if (input.type.toLowerCase() == 'multiline' 
+                     || input.type == 'string' 
+                     || input.type == 'filePath' 
+                     || input.type == 'secureFile' 
+                     || input.type == 'identities' 
+                     || input.type.startsWith('connectedService')
+                     || input.type == 'pickList' 
+                     || input.type == 'radio') {
                 thisProp.type = 'string';
             }
-            else if (input.type.startsWith('connectedService')) {
-                thisProp.type = 'string';
+            else if (input.type == 'int') {
+                thisProp.type = 'integer';
+            } else {
+                throw `Unable to find input type mapping '${input.type}'.`;
             }
             
             schema.properties.inputs.properties[name] = thisProp;
