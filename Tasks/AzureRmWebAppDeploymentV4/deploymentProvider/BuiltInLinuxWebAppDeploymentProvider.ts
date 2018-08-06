@@ -27,7 +27,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 var script = 'java -jar "' + destRootPath + jarName + '.jar' + '" --server.port=80';
                 var initScriptFileName = "startupscript_" + jarName + ".sh";
                 var initScriptFile = path.join(folderPath, initScriptFileName);
-                var destInitScriptPath = path.join(destRootPath, initScriptFileName);
+                var destInitScriptPath = destRootPath + initScriptFileName;
                 if(!this.taskParams.AppSettings) {
                     this.taskParams.AppSettings = "-INIT_SCRIPT " + destInitScriptPath;
                 }
