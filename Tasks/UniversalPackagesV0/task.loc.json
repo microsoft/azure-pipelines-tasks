@@ -385,7 +385,7 @@
     "PackagesFailedToDownload": "ms-resource:loc.messages.PackagesFailedToDownload",
     "ConnectingAs": "ms-resource:loc.messages.ConnectingAs",
     "BuildIdentityPermissionsHint": "ms-resource:loc.messages.BuildIdentityPermissionsHint",
-    "CouldNotFindUPackService": "ms-resource:loc.messages.CouldNotFindUPackService",
+    "CouldNotFindUniversalPackagesService": "ms-resource:loc.messages.CouldNotFindUniversalPackagesService",
     "Error_NoValueFoundForEnvVar": "ms-resource:loc.messages.Error_NoValueFoundForEnvVar",
     "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
     "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",

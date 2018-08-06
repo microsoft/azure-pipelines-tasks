@@ -5,13 +5,6 @@ export interface IPackageSource {
     isInternal: boolean;
 }
 
-export class UPackExtendedAuthInfo {
-    constructor(
-        public internalAuthInfo: InternalAuthInfo,
-        public externalAuthInfo?: ExternalAuthInfo) {
-    }
-}
-
 export class InternalAuthInfo
 {
     constructor(

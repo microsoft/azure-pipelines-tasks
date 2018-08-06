@@ -1,5 +1,5 @@
 import * as tl from "vsts-task-lib";
-import {IExecSyncResult} from "vsts-task-lib/toolrunner";
+import {IExecSyncResult, IExecOptions} from "vsts-task-lib/toolrunner";
 import * as telemetry from "utility-common/telemetry";
 import * as artifactToolRunner from "./Common/ArtifactToolRunner";
 import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
@@ -9,8 +9,6 @@ export async function run(artifactToolPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     try {
-        artifactToolUtilities.setConsoleCodePage();
-
         // Get directory to publish
         let publishDir: string = tl.getInput("publishDirectory");
         if (publishDir.length < 1)
@@ -28,20 +26,20 @@ export async function run(artifactToolPath: string): Promise<void> {
         const versionRadio = tl.getInput("versionPublishSelector");
 
         // Feed Auth
-        let uPackFeedType = tl.getInput("internalOrExternalPublish") || "internal";
+        let feedType = tl.getInput("internalOrExternalPublish") || "internal";
 
-        const normalizedUPackFeedType = ["internal", "external"].find((x) =>
-            uPackFeedType.toUpperCase() === x.toUpperCase());
-        if (!normalizedUPackFeedType) {
-            throw new Error(tl.loc("UnknownFeedType", uPackFeedType));
+        const normalizedFeedType = ["internal", "external"].find((x) =>
+            feedType.toUpperCase() === x.toUpperCase());
+        if (!normalizedFeedType) {
+            throw new Error(tl.loc("UnknownFeedType", feedType));
         }
-        uPackFeedType = normalizedUPackFeedType;
+        feedType = normalizedFeedType;
 
         let internalAuthInfo: auth.InternalAuthInfo;
 
-        let authInfo: auth.UPackExtendedAuthInfo;
+        let toolRunnerOptions = artifactToolRunner.getOptions();
 
-        if (uPackFeedType === "internal")
+        if (feedType === "internal")
         {
             // getting inputs
             serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
@@ -52,12 +50,10 @@ export async function run(artifactToolPath: string): Promise<void> {
             accessToken = auth.getSystemAccessToken();
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
-            authInfo = new auth.UPackExtendedAuthInfo(internalAuthInfo);
-            process.env.UPACK_PUBLISH_PAT = internalAuthInfo.accessToken;
+            toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
         }
         else {
             const externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoints");
-            authInfo = new auth.UPackExtendedAuthInfo(internalAuthInfo, externalAuthInfo);
             if (!externalAuthInfo)
             {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("Error_NoSourceSpecifiedForPublish"));
@@ -71,36 +67,31 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             // Assuming only auth via PAT works for now
             accessToken = (externalAuthInfo as auth.TokenExternalAuthInfo).token;
-
-            process.env.UPACK_PUBLISH_PAT = accessToken;
+            toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = accessToken;
         }
 
-        try {
-            if (versionRadio === "custom"){
-                version = tl.getInput("versionPublish");
-            }
-            else{
-                feedUri = await artifactToolUtilities.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
-
-                let highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(feedUri, accessToken, feedId, packageName);
-
-                version = artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
-            }
-            tl.debug(tl.loc("Info_UsingArtifactToolPublish"));
-
-            // tslint:disable-next-line:no-object-literal-type-assertion
-            const publishOptions = {
-                artifactToolPath,
-                feedId,
-                accountUrl: serviceUri,
-                packageName,
-                packageVersion: version,
-            } as artifactToolRunner.IArtifactToolOptions;
-
-            publishPackageUsingArtifactTool(publishDir, publishOptions);
-        } finally {
-            delete process.env.UPACK_PUBLISH_PAT;
+        if (versionRadio === "custom"){
+            version = tl.getInput("versionPublish");
         }
+        else{
+            feedUri = await artifactToolUtilities.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
+
+            let highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(feedUri, accessToken, feedId, packageName);
+
+            version = artifactToolUtilities.getVersionUtility(tl.getInput("versionPublishSelector"), highestVersion);
+        }
+        tl.debug(tl.loc("Info_UsingArtifactToolPublish"));
+
+        // tslint:disable-next-line:no-object-literal-type-assertion
+        const publishOptions = {
+            artifactToolPath,
+            feedId,
+            accountUrl: serviceUri,
+            packageName,
+            packageVersion: version,
+        } as artifactToolRunner.IArtifactToolOptions;
+
+        publishPackageUsingArtifactTool(publishDir, publishOptions, toolRunnerOptions);
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesPublishedSuccessfully"));
     } catch (err) {
@@ -114,27 +105,26 @@ export async function run(artifactToolPath: string): Promise<void> {
     }
 }
 
-function publishPackageUsingArtifactTool(publishDir: string, options: artifactToolRunner.IArtifactToolOptions) {
+function publishPackageUsingArtifactTool(publishDir: string, options: artifactToolRunner.IArtifactToolOptions, execOptions: IExecOptions) {
     let command = new Array<string>();
-
     command.push("universal", "publish",
         "--feed", options.feedId,
         "--service", options.accountUrl,
         "--package-name", options.packageName,
         "--package-version", options.packageVersion,
         "--path", publishDir,
-        "--patvar", "UPACK_PUBLISH_PAT",
+        "--patvar", "UNIVERSAL_PUBLISH_PAT",
         "--verbosity", tl.getInput("verbosity"),
         "--description", tl.getInput("packagePublishDescription"));
 
     console.log(tl.loc("Info_Publishing", options.packageName, options.packageVersion, options.feedId));
-    const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command);
+    const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
 
     if (execResult.code === 0) {
         return;
     }
 
-    telemetry.logResult("Packaging", "UPackCommand", execResult.code);
+    telemetry.logResult("Packaging", "UniversalPackagesCommand", execResult.code);
     throw new Error(tl.loc("Error_UnexpectedErrorArtifactTool",
         execResult.code,
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));

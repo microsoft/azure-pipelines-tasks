@@ -1,5 +1,5 @@
 import * as tl from "vsts-task-lib";
-import {IExecSyncResult} from "vsts-task-lib/toolrunner";
+import {IExecSyncResult, IExecOptions} from "vsts-task-lib/toolrunner";
 
 import * as telemetry from "utility-common/telemetry";
 import * as artifactToolRunner from "./Common/ArtifactToolRunner";
@@ -10,8 +10,6 @@ export async function run(artifactToolPath: string): Promise<void> {
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     try {
-        artifactToolUtilities.setConsoleCodePage();
-
         // Get directory to publish
         let downloadDir: string = tl.getInput("downloadDirectory");
         if (downloadDir.length < 1)
@@ -27,19 +25,20 @@ export async function run(artifactToolPath: string): Promise<void> {
         let version: string;
 
         // Feed Auth
-        let uPackFeedType = tl.getInput("internalOrExternalDownload") || "internal";
+        let feedType = tl.getInput("internalOrExternalDownload") || "internal";
 
-        const normalizedUPackFeedType = ["internal", "external"].find((x) =>
-            uPackFeedType.toUpperCase() === x.toUpperCase());
-        if (!normalizedUPackFeedType) {
-            throw new Error(tl.loc("UnknownFeedType", uPackFeedType));
+        const normalizedFeedType = ["internal", "external"].find((x) =>
+            feedType.toUpperCase() === x.toUpperCase());
+        if (!normalizedFeedType) {
+            throw new Error(tl.loc("UnknownFeedType", feedType));
         }
-        uPackFeedType = normalizedUPackFeedType;
+        feedType = normalizedFeedType;
 
-        let authInfo: auth.UPackExtendedAuthInfo;
         let internalAuthInfo: auth.InternalAuthInfo;
 
-        if (uPackFeedType === "internal")
+        let toolRunnerOptions = artifactToolRunner.getOptions();
+
+        if (feedType === "internal")
         {
             // getting inputs
             serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
@@ -56,13 +55,11 @@ export async function run(artifactToolPath: string): Promise<void> {
             packageName = await artifactToolUtilities.getPackageNameFromId(feedUri, accessToken, feedId, packageId);
 
             version = tl.getInput("versionListDownload");
-            authInfo = new auth.UPackExtendedAuthInfo(internalAuthInfo);
 
-            process.env.UPACK_DOWNLOAD_PAT = internalAuthInfo.accessToken;
+            toolRunnerOptions.env.UNIVERSAL_DOWNLOAD_PAT = internalAuthInfo.accessToken;
         }
         else {
             let externalAuthInfo = auth.GetExternalAuthInfo("externalEndpoint");
-            authInfo = new auth.UPackExtendedAuthInfo(internalAuthInfo, externalAuthInfo);
 
             if (!externalAuthInfo)
             {
@@ -77,25 +74,23 @@ export async function run(artifactToolPath: string): Promise<void> {
 
             // Assuming only auth via PAT works for now
             const tokenAuth = externalAuthInfo as auth.TokenExternalAuthInfo;
-            process.env.UPACK_DOWNLOAD_PAT = tokenAuth.token;
+            toolRunnerOptions.env.UNIVERSAL_DOWNLOAD_PAT = tokenAuth.token;
         }
-        try {
-            tl.debug(tl.loc("Info_UsingArtifactToolDownload"));
 
-            const downloadOptions = {
-                artifactToolPath,
-                feedId,
-                accountUrl: serviceUri,
-                packageName,
-                packageVersion: version,
-            } as artifactToolRunner.IArtifactToolOptions;
+        tl.debug(tl.loc("Info_UsingArtifactToolDownload"));
 
-            downloadPackageUsingArtifactTool(downloadDir, downloadOptions);
-        } finally {
-            delete process.env.UPACK_DOWNLOAD_PAT;
-        }
+        const downloadOptions = {
+            artifactToolPath,
+            feedId,
+            accountUrl: serviceUri,
+            packageName,
+            packageVersion: version,
+        } as artifactToolRunner.IArtifactToolOptions;
+
+        downloadPackageUsingArtifactTool(downloadDir, downloadOptions, toolRunnerOptions);
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc("PackagesDownloadedSuccessfully"));
+
     } catch (err) {
         tl.error(err);
 
@@ -107,7 +102,7 @@ export async function run(artifactToolPath: string): Promise<void> {
     }
 }
 
-function downloadPackageUsingArtifactTool(downloadDir: string, options: artifactToolRunner.IArtifactToolOptions) {
+function downloadPackageUsingArtifactTool(downloadDir: string, options: artifactToolRunner.IArtifactToolOptions, execOptions: IExecOptions) {
 
     let command = new Array<string>();
 
@@ -117,16 +112,16 @@ function downloadPackageUsingArtifactTool(downloadDir: string, options: artifact
         "--package-name", options.packageName,
         "--package-version", options.packageVersion,
         "--path", downloadDir,
-        "--patvar", "UPACK_DOWNLOAD_PAT",
+        "--patvar", "UNIVERSAL_DOWNLOAD_PAT",
         "--verbosity", tl.getInput("verbosity"));
 
     console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId));
-    const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command);
+    const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
     if (execResult.code === 0) {
         return;
     }
 
-    telemetry.logResult("Packaging", "UPackCommand", execResult.code);
+    telemetry.logResult("Packaging", "UniversalPackagesCommand", execResult.code);
     throw new Error(tl.loc("Error_UnexpectedErrorArtifactToolDownload",
         execResult.code,
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));

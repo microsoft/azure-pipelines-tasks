@@ -13,10 +13,10 @@ export interface IArtifactToolOptions {
     packageVersion: string;
 }
 
-function getOptions(): IExecOptions{
+export function getOptions(): IExecOptions{
     let result: IExecOptions = <IExecOptions>{
         cwd: process.cwd(),
-        env: new Object(process.env),
+        env: Object.assign({}, process.env),
         silent: false,
         failOnStdErr: false,
         ignoreReturnCode: false,
@@ -35,9 +35,7 @@ function getCommandString(toolPath: string, command: string[]){
     return cmd;
 }
 
-export function runArtifactTool(artifactToolPath: string, command: string[]): IExecSyncResult{
-
-    let execOptions = getOptions();
+export function runArtifactTool(artifactToolPath: string, command: string[], execOptions: IExecOptions): IExecSyncResult{
 
     if (tl.osType() === "Windows_NT" || artifactToolPath.trim().toLowerCase().endsWith(".exe")) {
         return tl.execSync(artifactToolPath, command, execOptions);
@@ -49,7 +47,7 @@ export function runArtifactTool(artifactToolPath: string, command: string[]): IE
             execOptions.outStream.write(getCommandString(artifactToolPath, command) + os.EOL);
         }
 
-        let result = child.spawnSync(artifactToolPath, command);
+        let result = child.spawnSync(artifactToolPath, command, execOptions);
 
         if (!execOptions.silent && result.stdout && result.stdout.length > 0) {
             execOptions.outStream.write(result.stdout);
@@ -60,8 +58,8 @@ export function runArtifactTool(artifactToolPath: string, command: string[]): IE
         }
 
         let res: IExecSyncResult = <IExecSyncResult>{ code: result.status, error: result.error };
-        res.stdout = (result.stdout) ? result.stdout : null;
-        res.stderr = (result.stderr) ? result.stderr : null;
+        res.stdout = (result.stdout) ? result.stdout.toString() : null;
+        res.stderr = (result.stderr) ? result.stderr.toString() : null;
         return res;
     }
 }

@@ -30,12 +30,12 @@ async function main(): Promise<void> {
         tl.setResult(tl.TaskResult.Failed, error.message);
         return;
     } finally{
-        _logUPackStartupVariables(artifactToolPath);
+        _logUniversalStartupVariables(artifactToolPath);
     }
 
     // Calling the command. download/publish
-    const upackCommand = tl.getInput("command", true);
-    switch (upackCommand) {
+    const universalPackageCommand = tl.getInput("command", true);
+    switch (universalPackageCommand) {
         case "download":
             universalDownload.run(artifactToolPath);
             break;
@@ -43,14 +43,14 @@ async function main(): Promise<void> {
             universalPublish.run(artifactToolPath);
             break;
         default:
-            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", upackCommand));
+            tl.setResult(tl.TaskResult.Failed, tl.loc("Error_CommandNotRecognized", universalPackageCommand));
             break;
     }
 }
 
-function _logUPackStartupVariables(artifactToolPath: string) {
+function _logUniversalStartupVariables(artifactToolPath: string) {
     try {
-        let upackTelemetry = {
+        let universalPackagesTelemetry = {
             "command": tl.getInput("command"),
             "buildProperties": tl.getInput("buildProperties"),
             "basePath": tl.getInput("basePath"),
@@ -60,9 +60,9 @@ function _logUPackStartupVariables(artifactToolPath: string) {
             "artifactToolPath": artifactToolPath,
             };
 
-        telemetry.emitTelemetry("Packaging", "UniversalPackages", upackTelemetry);
+        telemetry.emitTelemetry("Packaging", "UniversalPackages", universalPackagesTelemetry);
     } catch (err) {
-        tl.debug(`Unable to log universal packages task init telemetry. Err:( ${err} )`);
+        tl.debug(`Unable to log Universal Packages task init telemetry. Err:( ${err} )`);
     }
 }
 

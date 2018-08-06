@@ -2,7 +2,7 @@
   "id": "e0b79640-8625-11e8-91be-db2878ff888a",
   "name": "UniversalPackages",
   "friendlyName": "Universal Packages",
-  "description": "Download or publish universal packages.",
+  "description": "Download or publish Universal Packages.",
   "author": "Microsoft Corporation",
   "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
   "category": "Package",
@@ -41,7 +41,7 @@
     "type": "pickList",
     "label": "Command",
     "defaultValue": "download",
-    "helpMarkDown": "The universal package command to run.",
+    "helpMarkDown": "The Universal Package command to run.",
     "required": "true",
     "properties": {
         "EditableOptions": "False"
@@ -362,7 +362,7 @@
     "PackagesFailedToDownload": "Packages failed to download",
     "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
     "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
-    "CouldNotFindUPackService": "Could not find the Universal packages service. This task will not be able to authenticate to feeds hosted in your Team Services account/TFS project collection.",
+    "CouldNotFindUniversalPackagesService": "Could not find the Universal Packages service. This task will not be able to authenticate to feeds hosted in your Team Services account/TFS project collection.",
     "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
     "PackagesPublishedSuccessfully": "Packages were published successfully",
     "PackagesFailedToPublish": "Packages failed to publish",
@@ -374,7 +374,7 @@
     "Info_NoPackagesMatchedTheSearchPattern": "No directory matched the search pattern.",
     "Error_CommandNotRecognized": "The command %s was not recognized.",
     "Error_NoVersionWasFoundWhichMatches": "No version was found which matches the input %s",
-    "Error_AuthNotSupported": "Authentication using username/password not supported for universal packages. Please use personal access tokens.",
+    "Error_AuthNotSupported": "Authentication using username/password not supported for Universal Packages. Please use personal access tokens.",
     "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",
     "Info_Downloading": "Downloading package: %s, version: %s using feed id: %s",
     "Info_Publishing": "Publishing package: %s, version: %s using feed id: %s",
@@ -385,6 +385,6 @@
     "Info_UsingVersion": "Using version: %s",
     "FailedToGetPackageMetadata": "Failed to get package metadata.",
     "FailedToGetLatestPackageVersion": "Failed to get package versions",
-    "Warn_CredentialsNotFound": "Could not determine credentials to use for universal packages"
+    "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages"
   }
 }

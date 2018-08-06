@@ -3,9 +3,9 @@ import * as locatorHelper from "nuget-task-common/LocationHelpers"
 import os = require("os");
 import * as path from "path";
 import * as semver from 'semver';
-import * as vsts from "vso-node-api"
+import * as vsts from "vso-node-api";
 import * as tl from "vsts-task-lib";
-import * as toollib from "vsts-task-tool-lib/tool"
+import * as toollib from "vsts-task-tool-lib/tool";
 import AdmZip = require('adm-zip');
 
 export function getArtifactToolLocation(dirName: string): string {
@@ -94,13 +94,6 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
     return getArtifactToolLocation(artifactToolPath);
 }
 
-// set the console code page to "UTF-8"
-export function setConsoleCodePage() {
-    if (tl.osType() === "Windows_NT") {
-        tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
-    }
-}
-
 export function getVersionUtility(versionRadio: string, highestVersion: string): string {
     switch(versionRadio) {
         case "patch":
@@ -114,26 +107,18 @@ export function getVersionUtility(versionRadio: string, highestVersion: string):
     }
 }
 
-async function getServiceUriFromCollectionUri(serviceUri: string, accessToken: string, areaName: string, areaId: string): Promise<string>{
-    let connectionData = await locatorHelper.getConnectionDataForArea(serviceUri, areaName, areaId, "vsts", accessToken);
-
-    return connectionData.locationServiceData.accessMappings.find(
-        (mapping) => mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker)
-        .accessPoint;
-}
-
 // Feeds url from location service
 export async function getFeedUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string>{
     const feedAreaName = "Packaging";
     const feedAreaId = "7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5";
 
-    return getServiceUriFromCollectionUri(serviceUri, accesstoken, feedAreaName, feedAreaId);
+    return locatorHelper.getServiceUriFromCollectionUri(serviceUri, accesstoken, feedAreaName, feedAreaId);
 }
 
 export async function getBlobstoreUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string>{
     const blobAreaName = "blob";
     const blobAreaId = "5294ef93-12a1-4d13-8671-9d9d014072c8";
-    return getServiceUriFromCollectionUri(serviceUri, accesstoken, blobAreaName, blobAreaId);
+    return locatorHelper.getServiceUriFromCollectionUri(serviceUri, accesstoken, blobAreaName, blobAreaId);
 }
 
 export async function getPackageNameFromId(serviceUri: string, accessToken: string, feedId: string, packageId: string): Promise<string> {
