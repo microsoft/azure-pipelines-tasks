@@ -52,6 +52,7 @@ export class TaskParametersUtility {
 
         if(!taskParameters.isContainerWebApp){            
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
+            tl.debug("intially web config parameters :" + taskParameters.WebConfigParameters);
             if(taskParameters.Package.getPackageType() === PackageType.jar && (!taskParameters.isLinuxApp)) {
                 if(!taskParameters.WebConfigParameters) {
                     taskParameters.WebConfigParameters = "-appType java_springboot";
@@ -63,6 +64,10 @@ export class TaskParametersUtility {
                     var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
                     taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("D:\\home\\site\\wwwroot\\*.jar", jarPath);
                 }
+                if(taskParameters.WebConfigParameters.indexOf("-Dserver.port=%HTTP_PLATFORM_PORT%") > 0) {
+                    taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");  
+                }
+                tl.debug("web config parameters :" + taskParameters.WebConfigParameters);
             }
         }
           

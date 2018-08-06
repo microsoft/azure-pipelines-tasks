@@ -48,7 +48,7 @@ function addMissingParametersValue(appType: string, webConfigParameters) {
         'java_springboot': {
             'JAVA_PATH' : '%JAVA_HOME%\\bin\\java.exe',
             'JAR_PATH' : '',
-            'ADDITIONAL_OPTIONS' : ''
+            'ADDITIONAL_DEPLOYMENT_OPTIONS' : ''
         }
     };
 
