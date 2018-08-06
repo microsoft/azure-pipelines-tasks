@@ -14,8 +14,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         let downloadDir: string = tl.getInput("downloadDirectory");
         if (downloadDir.length < 1)
         {
-            //todo
-            tl.warning(tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
+            tl.warning(tl.loc("Info_DownloadDirectoryNotFound"));
             return;
         }
 

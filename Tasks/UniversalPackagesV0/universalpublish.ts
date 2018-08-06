@@ -13,7 +13,7 @@ export async function run(artifactToolPath: string): Promise<void> {
         let publishDir: string = tl.getInput("publishDirectory");
         if (publishDir.length < 1)
         {
-            tl.debug(tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
+            tl.debug(tl.loc("Info_PublishDirectoryNotFound"));
             return;
         }
 
