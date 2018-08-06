@@ -178,21 +178,62 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
 // identity's token.
 // Therefore, we are enabling credential provider on on-premises and disabling it on hosted (only when the version of NuGet does not support it). We allow for test
 // instances by an override variable.
+// This checks if V1 credential provider is enabled
 export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialProvider to "true" to force allowing the credential provider flow, "false"
     // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the 
     // hosted environment detection logic
-    const credentialProviderOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialProvider");
+    const credentialProviderOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialProvider"); // forces V1 credential provider
     if (credentialProviderOverrideFlag === "true") {
-        tl.debug("Credential provider is force-enabled for testing purposes.");
+        tl.debug("V1 credential provider is force-enabled for testing purposes.");
         return true;
     }
 
     if (credentialProviderOverrideFlag === "false") {
-        tl.debug("Credential provider is force-disabled for testing purposes.");
+        tl.debug("V1 credential provider is force-disabled for testing purposes.");
         return false;
     }
 
+    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
+        tl.debug("Credential provider V1 is disabled in favor of V2 plugin.");
+        return false;
+    }
+    
+    if (isAnyCredentialProviderEnabled(quirks)) {
+        tl.debug("V1 credential provider is enabled");
+        return true;
+    }
+
+    return false;
+}
+
+// This checks if V2 credential provider is enabled
+export function isCredentialProviderV2Enabled(quirks: NuGetQuirks): boolean {
+    const credentialProviderOverrideFlagV2 = tl.getVariable("NuGet_ForceEnableCredentialProviderV2");
+    if (credentialProviderOverrideFlagV2 === "true") {
+        tl.debug("V2 Credential provider is force-enabled.");
+        return true;
+    }
+
+    if (credentialProviderOverrideFlagV2 === "false") {
+        tl.debug("V2 Credential provider is force-disabled.");
+        return false;
+    }
+
+    if (isAnyCredentialProviderEnabled(quirks) === false) {
+        return false;
+    }
+
+    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
+        tl.debug("V2 credential provider is enabled.");
+        return true;
+    }
+
+    tl.debug("V2 credential provider is disabled due to quirks. To use V2 credential provider use NuGet version 4.8 or higher.");
+    return false;
+}
+
+function isAnyCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     if (quirks.hasQuirk(NuGetQuirkName.NoCredentialProvider)
         || quirks.hasQuirk(NuGetQuirkName.CredentialProviderRace)) {
         tl.debug("Credential provider is disabled due to quirks.");
@@ -205,29 +246,7 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    tl.debug("Credential provider is enabled.");
     return true;
-}
-
-export function isCredentialProviderV2Enabled(quirks: NuGetQuirks): boolean {
-    const credentialProviderOverrideFlagV2 = tl.getVariable("NuGet.ForceEnableCredentialProviderV2");
-    if (credentialProviderOverrideFlagV2 === "true") {
-        tl.debug("V2 Credential provider is force-enabled.");
-        return true;
-    }
-
-    if (credentialProviderOverrideFlagV2 === "false") {
-        tl.debug("V2 Credential provider is force-disabled.");
-        return false;
-    }
-
-    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider)) {
-        tl.debug("V2 credential provider is enabled.");
-        return true;
-    }
-
-    tl.debug("V2 credential provider is not enabled.");
-    return false;
 }
 
 export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {

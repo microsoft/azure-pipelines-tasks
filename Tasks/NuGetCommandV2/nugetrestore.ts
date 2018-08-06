@@ -72,10 +72,10 @@ export async function run(nuGetPath: string): Promise<void> {
         
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
-        const useCredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
-        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks) && useCredProvider === true;
+        const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
+        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
         const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
-        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && (!useV1CredProvider && !useV2CredProvider);
 
         // Setting up auth-related variables
         tl.debug('Setting up auth');
@@ -92,7 +92,7 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken = auth.getSystemAccessToken();
         let externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
         const authInfo = new auth.NuGetExtendedAuthInfo(
-            new auth.InternalAuthInfo(urlPrefixes, accessToken, (useCredProvider ? credProviderPath : null), useCredConfig),
+            new auth.InternalAuthInfo(urlPrefixes, accessToken, ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null), useCredConfig),
             externalAuthArr);
 
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {

@@ -101,12 +101,12 @@ export async function run(nuGetPath: string): Promise<void> {
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
-        const useCredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
-        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks) && useCredProvider === true;
+        const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
+        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
         const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
-        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && (!useV1CredProvider && !useV2CredProvider);
 
-        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, (useCredProvider ? credProviderPath : null), useCredConfig);
+        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, ((!useV1CredProvider && !useV2CredProvider) ? credProviderPath : null), useCredConfig);
 
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
