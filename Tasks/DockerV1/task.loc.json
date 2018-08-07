@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "preview": "true",
@@ -58,7 +58,10 @@
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
       "visibleRule": "containerregistrytype = Azure Container Registry",
-      "defaultValue": ""
+      "defaultValue": "",
+      "properties": {
+        "EditableOptions": "True"
+      }
     },
     {
       "name": "command",

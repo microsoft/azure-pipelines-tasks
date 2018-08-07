@@ -65,5 +65,6 @@
   "loc.messages.SAD_InvalidPublishOption": "Invalid option selected for the publish action: {0}",
   "loc.messages.SAD_DacpacFilePath": "DACPAC file path:",
   "loc.messages.SAD_BacpacFilePath": "BACPAC file path:",
-  "loc.messages.SAD_PublishProfilePath": "Publish profile path:"
+  "loc.messages.SAD_PublishProfilePath": "Publish profile path:",
+  "loc.messages.SAD_DriftReportWarning": "While generating a Drift Report of the database, ensure that the database is registered as a Data-tier Application."
 }

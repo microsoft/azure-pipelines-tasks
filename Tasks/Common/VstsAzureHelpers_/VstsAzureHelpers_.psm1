@@ -58,3 +58,4 @@ function Initialize-Azure {
 # Export only the public function.
 Export-ModuleMember -Function Initialize-Azure
 Export-ModuleMember -Function CmdletHasMember
+Export-ModuleMember -Function Remove-EndpointSecrets

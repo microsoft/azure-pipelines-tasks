@@ -21,6 +21,7 @@ export interface InputDataContract {
 export interface TestReportingSettings {
     TestRunTitle : string;
     TestResultsDirectory : string;
+    TestRunSystem : string;
 }
 
 export interface TestSelectionSettings {
@@ -81,6 +82,7 @@ export interface DistributionSettings {
 }
 
 export interface ExecutionSettings {
+    TestPlatformExecutionMode : string;
     DefaultTestBatchSize : number;
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;

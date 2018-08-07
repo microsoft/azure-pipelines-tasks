@@ -36,7 +36,7 @@ export async function getPublishRegistry(): Promise<INpmRegistry>{
         case RegistryLocation.External:
             tl.debug(tl.loc('PublishExternal'));
             let endpointId = tl.getInput(NpmTaskInput.PublishEndpoint, true);
-            npmRegistry = NpmRegistry.FromServiceEndpoint(endpointId);
+            npmRegistry = await NpmRegistry.FromServiceEndpoint(endpointId);
             break;
     }
     return npmRegistry;

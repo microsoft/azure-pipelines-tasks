@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [
@@ -69,7 +69,7 @@
         "Body": "",
         "Headers": "{\n\"Content-Type\":\"application/json\"\n, \"Authorization\":\"Bearer $(system.accesstoken)\"\n}",
         "WaitForCompletion": "false",
-        "Expression": "and(le(count(root['workItems']), $(maxThreshold)), ge(count(root['workItems']), $(minThreshold)))"
+        "Expression": "xor(and(or(eq(root['queryType'], 'oneHop'), eq(root['queryType'], 'tree')), and(le(count(root['workItemRelations']), $(maxThreshold)), ge(count(root['workItemRelations']), $(minThreshold)))), and(eq(root['queryType'], 'flat'), and(le(count(root['workItems']), $(maxThreshold)), ge(count(root['workItems']), $(minThreshold)))))"
       }
     }
   }

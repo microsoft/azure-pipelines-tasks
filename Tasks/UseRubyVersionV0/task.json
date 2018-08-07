@@ -3,7 +3,7 @@
     "name": "UseRubyVersion",
     "friendlyName": "Use Ruby Version",
     "description": "Retrieves the specified version of Ruby from the tool cache. Optionally add it to PATH.",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=2005989)",
     "category": "Tool",
     "runsOn": [
         "Agent",
@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 136,
-        "Patch": 0
+        "Minor": 138,
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "2.115.0",

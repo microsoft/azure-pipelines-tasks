@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import * as task from 'vsts-task-lib/task';
-import * as toolRunner from 'vsts-task-lib/toolrunner';
 
 import * as uuidV4 from 'uuid/v4';
 

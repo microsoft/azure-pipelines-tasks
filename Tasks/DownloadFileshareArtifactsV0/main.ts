@@ -63,7 +63,7 @@ async function main(): Promise<void> {
         const itemPattern: string = tl.getInput("itemPattern", false) || '**';
 
         const downloader = new engine.ArtifactEngine();
-        const downloadUrl = tl.getInput("location", true);
+        const downloadUrl = tl.getInput("filesharePath", true);
         let artifactName = tl.getInput("artifactName", true);
         artifactName = artifactName.replace('/', '\\');
         let artifactLocation = path.join(downloadUrl, artifactName);

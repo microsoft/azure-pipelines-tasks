@@ -41,20 +41,15 @@ async function run() {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
 
-        let matchingTestResultsFiles: string [];
-        try {
-            matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles);
-        }
-        catch(error) {
-            tl.debug('Error in find matching files : ' + error);
-            tl.debug('Trying without following symlinks.');
-            // Will remove this once we have right api in vsts-task-lib.
-            const findOptions = <tl.FindOptions>{
-                followSpecifiedSymbolicLink: false,
-                followSymbolicLinks: false
-            };
-            matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
-        }
+        // Sending allowBrokenSymbolicLinks as true, so we don't want to throw error when symlinks are broken.
+        // And can continue with other files if there are any.
+        const findOptions = <tl.FindOptions>{
+            allowBrokenSymbolicLinks: true,
+            followSpecifiedSymbolicLink: true,
+            followSymbolicLinks: true
+        };
+
+        let matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
 
         const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
 

@@ -28,6 +28,7 @@ $deleteFirewallRule = Get-VstsInput -Name "DeleteFirewallRule" -Require -AsBool
 $ErrorActionPreference = 'Stop'
 
 # Initialize Rest API Helpers.
+Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 
 # Import the loc strings.
@@ -121,14 +122,19 @@ catch [System.Management.Automation.CommandNotFoundException] {
     throw
 }
 catch [Exception] {
-    $errorMessage = Get-VstsLocString -Key "SAD_TroubleshootingLink"
-
+    $errorMessage = ""
     if($_.Exception.Message) {
-        $errorMessage = $_.Exception.Message + " " + $errorMessage
+        $errorMessage = $_.Exception.Message
     }
     else {
-        $errorMessage = $_.Exception.ToString() + " " + $errorMessage
+        $errorMessage = $_.Exception.ToString()
     }
+
+    if ($deploymentAction -eq "DriftReport" -and $LASTEXITCODE -eq 1) {
+        $errorMessage += Get-VstsLocString -Key "SAD_DriftReportWarning"
+    }
+       
+    $errorMessage += Get-VstsLocString -Key "SAD_TroubleshootingLink"
 
     throw $errorMessage
 }
@@ -144,6 +150,8 @@ finally {
     else {
         Write-Verbose "No Firewall Rule was added"
     }
+
+    Remove-EndpointSecrets
 }
 
 Write-Verbose "Leaving script DeploySqlAzure.ps1"

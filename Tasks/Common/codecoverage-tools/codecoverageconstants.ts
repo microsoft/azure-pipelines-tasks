@@ -2,7 +2,6 @@
 import * as path from "path";
 import * as util from "./utilities";
 import * as os from "os";
-import * as str from "string";
 
 
 // Enable Jacoco Code Coverage for Gradle builds using this props
@@ -19,16 +18,16 @@ allprojects {
 def jacocoExcludes = [${excludeFilter}]
 def jacocoIncludes = [${includeFilter}]
 
-subprojects {	
+subprojects {
     jacocoTestReport {
         doFirst {
             classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
         }
-		
+
         reports {
             html.enabled = true
             html.destination "\${buildDir}/jacocoHtml"
-            xml.enabled = true    
+            xml.enabled = true
             xml.destination "\${buildDir}/summary.xml"
         }
     }
@@ -45,7 +44,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     executionData = files(subprojects.jacocoTestReport.executionData)
     sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
     classDirectories = files()
-	
+
     doFirst {
         subprojects.each {
             if (new File("\${it.sourceSets.main.output.classesDir}").exists()) {
@@ -57,10 +56,10 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
             }
         }
     }
-	
+
     reports {
         html.enabled = true
-        xml.enabled = true    
+        xml.enabled = true
         xml.destination "${reportDir}/summary.xml"
         html.destination "${reportDir}/"
     }
@@ -79,20 +78,20 @@ allprojects {
 
 def jacocoExcludes = [${excludeFilter}]
 def jacocoIncludes = [${includeFilter}]
-	
+
 jacocoTestReport {
     doFirst {
         classDirectories = fileTree(dir: "${classFileDirectory}").exclude(jacocoExcludes).include(jacocoIncludes)
     }
-		
+
     reports {
         html.enabled = true
-        xml.enabled = true    
+        xml.enabled = true
         xml.destination "${reportDir}/summary.xml"
         html.destination "${reportDir}"
     }
 }
-	
+
 test {
     finalizedBy jacocoTestReport
     jacoco {
@@ -118,7 +117,7 @@ allprojects {
         mavenCentral()
     }
     apply plugin: 'net.saliman.cobertura'
-	
+
     dependencies {
         testCompile 'org.slf4j:slf4j-api:1.7.12'
     }
@@ -141,7 +140,7 @@ allprojects {
         mavenCentral()
     }
     apply plugin: 'net.saliman.cobertura'
-	
+
     dependencies {
         testCompile 'org.slf4j:slf4j-api:1.7.12'
     }
@@ -149,12 +148,12 @@ allprojects {
     cobertura.coverageIncludes = [${includeFilter}]
     cobertura.coverageExcludes = [${excludeFilter}]
 }
-    
+
 test {
     dependsOn = subprojects.test
 }
 
-cobertura {	
+cobertura {
     coverageSourceDirs = []`;
 
     if (classDir) {
@@ -239,7 +238,7 @@ export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string,
         classNode += ` />` + os.EOL;
     });
     let srcNode = "";
-    if (str(srcData).isEmpty()) {
+    if (util.isNullOrWhitespace(srcData)) {
         srcNode = `<fileset dir="." />`;
     } else {
         srcData.split(",").forEach(c => {
@@ -312,12 +311,12 @@ export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string,
 export function coberturaMavenEnable(includeFilter: string, excludeFilter: string, aggregate: string): Q.Promise<any> {
     let includeTag = "";
     let excludeTag = "";
-    if (!str(excludeFilter).isEmpty()) {
+    if (!util.isNullOrWhitespace(excludeFilter)) {
         excludeFilter.split(",").forEach(ex => {
             excludeTag += `<exclude>${ex}</exclude>` + os.EOL;
         });
     }
-    if (!str(includeFilter).isEmpty()) {
+    if (!util.isNullOrWhitespace(includeFilter)) {
         includeFilter.split(",").forEach(ex => {
             includeTag += `<include>${ex}</include>` + os.EOL;
         });

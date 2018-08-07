@@ -74,6 +74,12 @@ export class azureclitask {
             if (scriptLocation === "inlineScript") {
                 this.deleteFile(scriptPath);
             }
+
+            if(this.cliPasswordPath) {
+                tl.debug('Removing spn certificate file');
+                tl.rmRF(this.cliPasswordPath);
+            }
+
             //Logout of Azure if logged in
             if (this.isLoggedIn) {
                 this.logoutAzure();
@@ -90,6 +96,7 @@ export class azureclitask {
     }
 
     private static isLoggedIn: boolean = false;
+    private static cliPasswordPath: string = null;
 
     private static loginAzure() {
         var connectedService: string = tl.getInput("connectedServiceNameARM", true);
@@ -98,11 +105,25 @@ export class azureclitask {
 
     private static loginAzureRM(connectedService: string): void {
         var servicePrincipalId: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
-        var servicePrincipalKey: string = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        let authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
+        let cliPassword: string = null;
+        if(authType == "spnCertificate") {
+            tl.debug('certificate based endpoint');
+            let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
+            cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
+            fs.writeFileSync(cliPassword, certificateContent);
+            this.cliPasswordPath = cliPassword;
+
+        }
+        else {
+            tl.debug('key based endpoint');
+            cliPassword = tl.getEndpointAuthorizationParameter(connectedService, "serviceprincipalkey", false);
+        }
+
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
         //login using svn
-        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + servicePrincipalKey + "\" --tenant \"" + tenantId + "\""));
+        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
         this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""));

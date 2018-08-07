@@ -80,7 +80,7 @@ function Add-Certificate
 
         # Explicitly set the key storage to use UserKeySet.  This will ensure the private key is stored in a folder location which the user has access to.
         # If we don't explicitly set it to UserKeySet, it's possible the MachineKeySet will be used which the user doesn't have access to that folder location, resulting in an access denied error.
-        $certificate.Import($bytes, $certPassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
+        $certificate.Import($bytes, $certPassword, "PersistKeySet,UserKeySet")
     }
     catch
     {
@@ -110,6 +110,29 @@ function Add-Certificate
 
     return $certificate
 }
+function Remove-ClientCertificate
+{
+    [CmdletBinding()]
+    Param (
+        $Certificate
+    )
+
+    try
+    {
+        if ($null -ne $Certificate)
+        {
+            $thumbprint = $Certificate.Thumbprint
+            if (Test-Path "Cert:\CurrentUser\My\$thumbprint")
+            {
+                Remove-Item "Cert:\CurrentUser\My\$thumbprint" -Force
+            }
+        }
+    }
+    catch
+    {
+        Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList $_)
+    }
+}
 function Connect-ServiceFabricClusterFromServiceEndpoint
 {
     [CmdletBinding()]
@@ -128,7 +151,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
 
     try
     {
-
+        $certificate = $null
         $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
         if (!(Test-Path $regKey))
         {
@@ -161,7 +184,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
             }
             elseif ($ConnectedServiceEndpoint.Auth.Scheme -eq "Certificate")
             {
-                Add-Certificate -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
+                $certificate = Add-Certificate -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
                 $clusterConnectionParameters["X509Credential"] = $true
             }
         }
@@ -185,6 +208,7 @@ function Connect-ServiceFabricClusterFromServiceEndpoint
         try
         {
             [void](Connect-ServiceFabricClusterAction -ClusterConnectionParameters $clusterConnectionParameters)
+            return $certificate
         }
         catch
         {

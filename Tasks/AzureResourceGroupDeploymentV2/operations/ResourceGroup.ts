@@ -170,14 +170,63 @@ export class ResourceGroup {
             tl.error(error.message);
             if (error.details) {
                 tl.error(tl.loc("Details"));
+                let policyLink = null;
+
                 for (var i = 0; i < error.details.length; i++) {
-                    var errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
+                    var errorMessage = null;
+                    if (error.details[i].code === "RequestDisallowedByPolicy") {
+                        if (!policyLink) {
+                            policyLink = this.getPolicyHelpLink(error.details[i]);
+                        }
+
+                        errorMessage = this.getPolicyErrorMessage(error.details[i]);
+                    } else {
+                        errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
+                    }
+
                     tl.error(errorMessage);
+                }
+
+                if (policyLink) {
+                    tl.error(util.format("[%s](%s)", tl.loc("MoreInformationOnAzurePortal"), policyLink));
                 }
             }
         } else {
             tl.error(error);
         }
+    }
+
+    private getPolicyHelpLink(errorDetail) {
+        var additionalInfo = errorDetail.additionalInfo;
+        if (!!additionalInfo) {
+            for (var i = 0; i < additionalInfo.length; i++) {
+                if (!!additionalInfo[i].info && !!additionalInfo[i].info.policyAssignmentId) {
+                    let portalUrl = this.taskParameters.endpointPortalUrl ? this.taskParameters.endpointPortalUrl : "https://portal.azure.com";
+                    return portalUrl + "#blade/Microsoft_Azure_Policy/EditAssignmentBlade/id/" + encodeURIComponent(additionalInfo[i].info.policyAssignmentId);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private getPolicyErrorMessage(errorDetail): string {
+        var errorMessage = errorDetail.message;
+
+        if (!!errorMessage) {
+            errorMessage = errorMessage.split(".")[0] + ".";
+        }
+
+        var additionalInfo = errorDetail.additionalInfo;
+        if (!!additionalInfo) {
+            for (var i = 0; i < additionalInfo.length; i++) {
+                if (!!additionalInfo[i].info) {
+                    errorMessage = util.format("%s %s %s, %s %s, %s %s.", errorMessage, tl.loc("ErrorType"), additionalInfo[i].type, tl.loc("PolicyDefinitionName"), additionalInfo[i].info.policyDefinitionDisplayName, tl.loc("PolicyAssignmentName"), additionalInfo[i].info.policyAssignmentName);
+                }
+            }
+        }
+
+        return errorMessage;
     }
 
     private async registerEnvironmentIfRequired(armClient: armResource.ResourceManagementClient) {

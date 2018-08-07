@@ -3,14 +3,13 @@ import * as util from "../utilities";
 import * as tl from "vsts-task-lib/task";
 import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
-import * as str from "string";
 import * as Q from "q";
 
 export class CoberturaGradleCodeCoverageEnabler extends cc.CoberturaCodeCoverageEnabler {
     // -----------------------------------------------------
     // Enable code coverage for Cobertura Gradle Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
-    // -----------------------------------------------------    
+    // -----------------------------------------------------
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
@@ -49,7 +48,7 @@ export class CoberturaGradleCodeCoverageEnabler extends cc.CoberturaCodeCoverage
         if (!util.isNullOrWhitespace(filter)) {
             util.trimToEmptyString(filter).split(":").forEach(exFilter => {
                 if (exFilter) {
-                    ccfilter.push(str(exFilter).endsWith("*") ? ("'.*" + util.trimEnd(exFilter, "*") + ".*'") : ("'.*" + exFilter + "'"));
+                    ccfilter.push(exFilter.endsWith("*") ? ("'.*" + util.trimEnd(exFilter, "*") + ".*'") : ("'.*" + exFilter + "'"));
                 }
             });
         }

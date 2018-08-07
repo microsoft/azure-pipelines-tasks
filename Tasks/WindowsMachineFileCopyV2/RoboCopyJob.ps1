@@ -231,19 +231,33 @@ param (
         Clean-Target
     }
 
-    $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
-
-    $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"                
-    Invoke-Expression $command   
-     
-    if ($LASTEXITCODE -ge 8)
+    try
     {
-        $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"            
-        ThrowError -errorMessage $errorMessage -fqdn $fqdn            
+        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy
+
+        $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
+        Invoke-Expression $command
+        if ($LASTEXITCODE -ge 8)
+        {
+            $errorMessage = Get-VstsLocString -Key "WFC_CopyingFailedConsultRobocopyLogsForMoreDetails"
+            ThrowError -errorMessage $errorMessage -fqdn $fqdn
+        }
+        else
+        {
+            $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
+            Write-Output $message
+        }
     }
-    else
-    {            
-        $message = (Get-VstsLocString -Key "WFC_CopyingRecurivelyFrom0to1MachineSucceed" -ArgumentList $sourcePath, $targetPath, $fqdn)
-        Write-Output $message            
-    }        
+    finally
+    {
+        if ($machineShare)
+        {
+            $remoteSharePsDrive = Get-PSDrive -Name 'WFCPSDrive' -ErrorAction 'SilentlyContinue'
+            if ($remoteSharePsDrive -ne $null)
+            {
+                Write-Verbose "Attempting to remove PSDrive 'WFCPSDrive'"
+                Remove-PSDrive -Name 'WFCPSDrive' -Force
+            }
+        }
+    }
 }

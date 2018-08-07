@@ -3,7 +3,6 @@ import * as Q from "q";
 import * as fs from "fs";
 import * as tl from "vsts-task-lib/task";
 import * as path from "path";
-import * as str from "string";
 import * as xml2js from "xml2js";
 import * as fse from "fs-extra";
 import * as cheerio from "cheerio";
@@ -120,7 +119,7 @@ export function trimEnd(data: string, trimChar: string) {
         return data;
     }
 
-    if (str(data).endsWith(trimChar)) {
+    if (data.endsWith(trimChar)) {
         return data.substring(0, data.length - trimChar.length);
     } else {
         return data;
@@ -146,7 +145,7 @@ export function writeJsonAsXmlFile(filePath: string, jsonContent: any): Q.Promis
     let builder = new xml2js.Builder();
     tl.debug("Writing JSON as XML file: " + filePath);
     let xml = builder.buildObject(jsonContent);
-    xml = str(xml).replaceAll("&#xD;", "").s;
+    xml = xml.replace(/&#xD;/g, "");
     return writeFile(filePath, xml);
 }
 

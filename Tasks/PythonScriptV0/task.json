@@ -3,7 +3,7 @@
     "name": "PythonScript",
     "friendlyName": "Python Script",
     "description": "Run a Python script.",
-    "helpMarkDown": "",
+    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=2006181)",
     "category": "Utility",
     "visibility": [
         "Build",
@@ -16,11 +16,11 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 136,
-        "Patch": 0
+        "Minor": 138,
+        "Patch": 1
     },
     "demands": [],
-    "instanceNameFormat": "Run Python script",
+    "instanceNameFormat": "Run a Python script",
     "groups": [
         {
             "name": "advanced",

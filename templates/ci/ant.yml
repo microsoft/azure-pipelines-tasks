@@ -5,12 +5,15 @@
 queue: 'Hosted VS2017'
 steps:
 
+# To do: edit the path to 'build.xml' as needed
   - task: Ant@1
     inputs:
       buildFile: 'build.xml'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.10'
+      jdkArchitectureOption: 'x64'
+      testResultsFiles: '**/TEST-*.xml'
 
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/*.{jar,war,ear}'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://aka.ms/yaml

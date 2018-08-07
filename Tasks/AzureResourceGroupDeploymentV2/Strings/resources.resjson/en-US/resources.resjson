@@ -64,6 +64,9 @@
   "loc.messages.CreateTemplateDeploymentFailed": "Task failed while creating or updating the template deployment.",
   "loc.messages.ErrorsInYourDeployment": "There were errors in your deployment. Error code: %s.",
   "loc.messages.Details": "Details:",
+  "loc.messages.ErrorType": "Error Type:",
+  "loc.messages.PolicyDefinitionName": "Policy Definition Name :",
+  "loc.messages.PolicyAssignmentName": "Policy Assignment Name :",
   "loc.messages.StartingValidation": "Starting template validation.",
   "loc.messages.ValidDeployment": "Template deployment validation was completed successfully.",
   "loc.messages.CreateTemplateDeploymentValidationFailed": "Template validation failed. Error: %s.",
@@ -179,5 +182,7 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
   "loc.messages.UserNameCannotBeNull": "If the 'Run agent service as a user' input is selected, then 'User name' cannot be null.",
-  "loc.messages.ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release definition."
+  "loc.messages.ASE_SSLIssueRecommendation": "To use a certificate, the certificate must be signed by a trusted certificate authority. If getting certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline.",
+  "loc.messages.MoreInformationOnAzurePortal": "More information on Azure Portal",
+  "loc.messages.ResponseNotValid": "Response is not in a valid format"
 }

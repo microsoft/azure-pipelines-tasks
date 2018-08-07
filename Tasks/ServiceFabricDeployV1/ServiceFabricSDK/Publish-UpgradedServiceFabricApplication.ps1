@@ -279,13 +279,8 @@ function Publish-UpgradedServiceFabricApplication
                 'ApplicationPathInImageStore' = $applicationPackagePathInImageStore
             }
 
-            if ($RegisterPackageTimeoutSec)
-            {
-                $registerParameters['TimeOutSec'] = $RegisterPackageTimeoutSec
-            }
-
             Write-Host (Get-VstsLocString -Key SFSDK_RegisterAppType)
-            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion
+            Register-ServiceFabricApplicationTypeAction -RegisterParameters $registerParameters -ApplicationTypeName $names.ApplicationTypeName -ApplicationTypeVersion $names.ApplicationTypeVersion -TimeoutSec $RegisterPackageTimeoutSec
         }
     }
 
@@ -370,6 +365,7 @@ function Publish-UpgradedServiceFabricApplication
         }
         elseif ($upgradeStatus.UpgradeState -eq "RollingBackCompleted")
         {
+            $global:operationId = $SF_Operations.WaitApplicationUpgradeStatus
             Write-Error (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
         }
     }

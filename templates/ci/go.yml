@@ -1,31 +1,23 @@
 # Go
 # Build your Go application.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/apps/go/go
 
-queue: 'Hosted Linux'
+queue: 'Hosted Ubuntu 1604'
+variables:
+  buildConfiguration: 'Release'
 steps:
 
   - task: GoTool@0
     inputs:
       version: '1.10'
+    displayName: 'Use Go 1.10'
+  
+  - script: |
+      go get -v -t -d
+      go test -v
+      go build -o "$(build.repository.name)"
+    displayName: 'Go get, test, and build'
 
-  - task: Go@0
-    inputs:
-      command: 'get'
-      arguments: '-v -t -d'
-
-  - task: Go@0
-    inputs:
-      command: 'test'
-      arguments: '-v'
-
-  - task: Go@0
-    inputs:
-      command: 'build'
-      arguments: '-o "$(build.repository.name)"'
-
-#  - task: ArchiveFiles@2
-#    inputs:
-#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#      includeRootFolder: false
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/apps/go/go

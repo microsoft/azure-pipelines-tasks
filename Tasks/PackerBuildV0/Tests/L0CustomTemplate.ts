@@ -36,7 +36,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json C:\\custom.template-fixed.json": {
+        "packer build -force -color=false -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json C:\\custom.template-fixed.json": {
             "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
             "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
          }

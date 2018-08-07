@@ -39,7 +39,7 @@
     }
   ],
   "releaseNotes": "ms-resource:loc.releaseNotes",
-  "minimumAgentVersion": "2.0.0",
+  "minimumAgentVersion": "2.134.0",
   "inputs": [
     {
       "name": "Machines",

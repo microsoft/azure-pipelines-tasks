@@ -11,14 +11,24 @@ tmr.setInput("ResourceType", "testResource.provider/type");
 tmr.setInput("ResourceName", "testResourceName");
 tmr.setInput("AlertRules", JSON.stringify(mocks.mockAlertRules));
 
+nock("https://login.windows.net", {
+	reqheaders: {
+		"content-type": "application/x-www-form-urlencoded; charset=utf-8"
+		}
+})
+.post("/tenantId/oauth2/token/")
+.reply(200, { 
+	access_token: "accessToken"
+}).persist();
+
 nock("http://example.com", {
 		reqheaders: {
         	'authorization': 'Bearer accessToken',
-        	"accept": "application/json",
+        	"content-type": "application/json; charset=utf-8",
     		"user-agent": "TFS_useragent"
       	}
 	})
-	.get(/\/subscriptions\/sId\/resourceGroups\/testRg\/providers\/Microsoft.insights\/alertrules\/Rule1/)
+	.get("/subscriptions/sId/resourceGroups/testRg/providers/microsoft.insights/alertrules/Rule1")
 	.query({"api-version": "2016-03-01"})
 	.reply(200, {
 		id: "id",

@@ -22,19 +22,28 @@ export class KuduServiceManagementClient {
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
         
-        try {
-            let httpResponse = await webClient.sendRequest(request, reqOptions);
-            return httpResponse;
-        }
-        catch(exception) {
-            let exceptionString: string = exception.toString();
-            if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
-                || exceptionString.indexOf("unable to verify the first certificate") != -1
-                || exceptionString.indexOf("unable to get local issuer certificate") != -1) {
-                    tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
+        let retryCount = reqOptions && reqOptions.retryCount ? reqOptions.retryCount : 5;
+        while(retryCount >= 0) {
+            try {
+                let httpResponse = await webClient.sendRequest(request, reqOptions);
+                return httpResponse;
             }
+            catch(exception) {
+                let exceptionString: string = exception.toString();
+                if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
+                    || exceptionString.indexOf("unable to verify the first certificate") != -1
+                    || exceptionString.indexOf("unable to get local issuer certificate") != -1) {
+                        tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
+                }
 
-            throw new Error(exceptionString);
+                if(retryCount > 0 && exceptionString.indexOf('Request timeout') != -1) {
+                    tl.debug('encountered request timedou issue in Kudu. Retrying again');
+                    retryCount -= 1;
+                    continue;
+                }
+
+                throw new Error(exceptionString);
+            }
         }
 
     }
