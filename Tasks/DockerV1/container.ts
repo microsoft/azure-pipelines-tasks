@@ -33,9 +33,13 @@ var command = tl.getInput("command", true);
 
 var dockerCommandMap = {
     "Build an image": "./containerbuild",
+    "build": "./containerbuild",
     "Tag image": "./containertag",
+    "tag": "./containertag",
     "Push an image": "./containerpush",
-    "Run an image": "./containerrun"    
+    "push": "./containerpush",
+    "Run an image": "./containerrun",
+    "run": "./containerrun"
 }  
 
 var commandImplementation = require("./containercommand");

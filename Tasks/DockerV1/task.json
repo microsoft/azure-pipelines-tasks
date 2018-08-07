@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [],
     "preview": "true",
@@ -86,7 +86,7 @@
             "label": "Dockerfile",
             "defaultValue": "**/Dockerfile",
             "required": true,
-            "visibleRule": "command = Build an image",
+            "visibleRule": "command = Build an image || command = build",
             "helpMarkDown": "Path to the Dockerfile to use. Must be within the Docker build context."
         }, 
         {
@@ -96,7 +96,7 @@
                 "resizable": "true",
                 "rows": "2"
             },
-            "visibleRule": "command != Run an image && command != Tag image",
+            "visibleRule": "command != Run an image && command != run && command != Tag image && command != tag",
             "label": "Arguments",
             "helpMarkDown": "Command arguments."
         },
@@ -105,14 +105,14 @@
             "type": "boolean",
             "label": "Use default build context",
             "defaultValue": "true",
-            "visibleRule": "command = Build an image",
+            "visibleRule": "command = Build an image || command = build",
             "helpMarkDown": "Set the build context to the directory that contains the Dockerfile."
         },
         {
             "name": "buildContext",
             "type": "filePath",
             "label": "Build context",
-            "visibleRule": "command = Build an image && useDefaultContext = false",
+            "visibleRule": "useDefaultContext = false",
             "helpMarkDown": "Path to the build context."
         },
         {
@@ -120,7 +120,7 @@
             "type": "boolean",
             "label": "Push multiple images",
             "defaultValue": "false",
-            "visibleRule": "command = Push an image",
+            "visibleRule": "command = Push an image || command = push",
             "helpMarkDown": "Push multiple images."
         },
         {
@@ -128,7 +128,7 @@
             "type": "boolean",
             "label": "Tag multiple images",
             "defaultValue": "false",
-            "visibleRule": "command = Tag image",
+            "visibleRule": "command = Tag image || command = tag",
             "helpMarkDown": "Tag multiple images."
         },
         {
@@ -137,7 +137,7 @@
             "label": "Image name",
             "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
             "required": true,
-            "visibleRule": "command = Build an image || command = Run an image || pushMultipleImages = false || tagMultipleImages = false",
+            "visibleRule": "command = Build an image || command = build || command = Run an image || command = run || pushMultipleImages = false || tagMultipleImages = false",
             "helpMarkDown": "Name of the Docker image to build, push, or run."
         },
         {
@@ -153,7 +153,7 @@
             "type": "boolean",
             "label": "Qualify image name",
             "defaultValue": "true",
-            "visibleRule": "command = Build an image || command = Tag image || command = Push an image || command = Run an image",
+            "visibleRule": "command = Build an image || command = build || command = Tag image || command = tag || command = Push an image || command = push || command = Run an image || command = run",
             "helpMarkDown": "Qualify the image name with the Docker registry service connection's hostname if not otherwise specified."
         },
         {
@@ -161,7 +161,7 @@
             "type": "boolean",
             "label": "Include source tags",
             "defaultValue": "false",
-            "visibleRule": "command = Build an image || command = Tag image || command = Push an image",
+            "visibleRule": "command = Build an image || command = build || command = Tag image || command = tag  || command = Push an image || command = push",
             "helpMarkDown": "Include Git tags when building or pushing the Docker image."
         },
         {
@@ -169,7 +169,7 @@
             "type": "boolean",
             "label": "Include latest tag",
             "defaultValue": "false",
-            "visibleRule": "command = Build an image || command = Push an image",
+            "visibleRule": "command = Build an image || command = build || command = Push an image || command = push",
             "helpMarkDown": "Include the 'latest' tag when building or pushing the Docker image."
         },
         {
@@ -177,21 +177,21 @@
             "type": "boolean",
             "label": "Add default labels",
             "defaultValue": "true",
-            "visibleRule": "command = Build an image",
+            "visibleRule": "command = Build an image || command = build",
             "helpMarkDown": "Add CI/CD metadata like repository, commit, build and release information to the container image by using Docker labels."
         },        
         {
             "name": "imageDigestFile",
             "type": "filePath",
             "label": "Image digest file",
-            "visibleRule": "command = Push an image",
+            "visibleRule": "command = Push an image || command = push",
             "helpMarkDown": "Path to a file that is created and populated with the full image repository digest of the Docker image that was pushed."
         },
         {
             "name": "containerName",
             "type": "string",
             "label": "Container name",
-            "visibleRule": "command = Run an image",
+            "visibleRule": "command = Run an image || command = run",
             "helpMarkDown": "Name of the Docker container to run."
         },
         {
@@ -202,7 +202,7 @@
                 "rows": "2"
             },
             "label": "Ports",
-            "visibleRule": "command = Run an image",
+            "visibleRule": "command = Run an image || command = run",
             "helpMarkDown": "Ports in the Docker container to publish to the host. Specify each host-port:container-port binding on a new line."
         },
         {
@@ -213,7 +213,7 @@
                 "rows": "2"
             },
             "label": "Volumes",
-            "visibleRule": "command = Run an image",
+            "visibleRule": "command = Run an image || command = run",
             "helpMarkDown": "Volumes to mount from the host. Specify each host-dir:container-dir on a new line."
         },
         {
@@ -224,28 +224,28 @@
                 "rows": "2"
             },
             "label": "Environment variables",
-            "visibleRule": "command = Run an image",
+            "visibleRule": "command = Run an image || command = run",
             "helpMarkDown": "Environment variables for the Docker container. Specify each name=value pair on a new line."
         },
         {
             "name": "workingDirectory",
             "type": "string",
             "label": "Working directory",
-            "visibleRule": "command = Run an image",
+            "visibleRule": "command = Run an image || command = run",
             "helpMarkDown": "The working directory for the Docker container."
         },
         {
             "name": "entrypointOverride",
             "type": "string",
             "label": "Entry point override",
-            "visibleRule": "command = Run an image",
+            "visibleRule": "command = Run an image || command = run",
             "helpMarkDown": "Override the default entry point for the Docker container."
         },
         {
             "name": "containerCommand",
             "type": "string",
             "label": "Command",
-            "visibleRule": "command = Run an image",
+            "visibleRule": "command = Run an image || command = run",
             "helpMarkDown": "Command to run in the Docker container. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application."
         },
         {
@@ -253,7 +253,7 @@
             "type": "boolean",
             "label": "Run in background",
             "defaultValue": "true",
-            "visibleRule": "command = Run an image",
+            "visibleRule": "command = Run an image || command = run",
             "helpMarkDown": "Run the Docker container in the background."
         },
         {
@@ -268,14 +268,14 @@
                 "always": "Always",
                 "unlessStopped": "Unless stopped"
             },
-            "visibleRule": "command = Run an image && runInBackground = true",
+            "visibleRule": "runInBackground = true",
             "helpMarkDown": "Select a restart policy."
         },
         {
             "name": "maxRestartRetries",
             "type": "string",
             "label": "Maximum restart retries",
-            "visibleRule": "command = Run an image && runInBackground = true && restartPolicy = onFailure",
+            "visibleRule": "runInBackground = true && restartPolicy = onFailure",
             "helpMarkDown": "The maximum number of restart retries the Docker daemon attempts."
         },
         {
