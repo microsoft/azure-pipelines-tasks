@@ -1,49 +1,54 @@
 {
-  "id": "67a719f0-9a6c-11e8-ae24-e92764d1c201",
-  "name": "UsePhpVersion",
-  "friendlyName": "Use PHP Version",
-  "description": "Retrieve the specified version of PHP from the tool cache and add it to PATH.",
-  "author": "Microsoft Corporation",
-  "helpMarkDown": "",
-  "category": "Tool",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "demands": [],
-  "version": {
-    "Major": "0",
-    "Minor": "140",
-    "Patch": "0"
-  },
-  "instanceNameFormat": "Use PHP Version $(versionSpec)",
-  "inputs": [
-    {
-        "name": "versionSpec",
-        "type": "string",
-        "label": "Version spec",
-        "required": true,
-        "defaultValue": "7.x",
-        "helpMarkDown": "Version range or exact version of a PHP version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
+    "id": "67a719f0-9a6c-11e8-ae24-e92764d1c201",
+    "name": "UsePhpVersion",
+    "friendlyName": "Use PHP Version",
+    "description": "Retrieve the specified version of PHP from the tool cache and add it to PATH.",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "",
+    "category": "Tool",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [],
+    "version": {
+        "Major": "0",
+        "Minor": "140",
+        "Patch": "0"
     },
-    {
-        "name": "architecture",
-        "type": "pickList",
-        "label": "Architecture",
-        "defaultValue": "x64",
-        "required": true,
-        "helpMarkDown": "The target architecture (x86, x64) of the PHP interpreter.",
-        "groupName": "advanced",
-        "options": {
-            "x86": "x86",
-            "x64": "x64"
+    "instanceNameFormat": "Use PHP Version $(versionSpec)",
+    "inputs": [
+        {
+            "name": "versionSpec",
+            "type": "string",
+            "label": "Version spec",
+            "required": true,
+            "defaultValue": "7.x",
+            "helpMarkDown": "Version range or exact version of a PHP version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
+        },
+        {
+            "name": "architecture",
+            "type": "pickList",
+            "label": "Architecture",
+            "defaultValue": "x64",
+            "required": true,
+            "helpMarkDown": "The target architecture (x86, x64) of the PHP interpreter.",
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
+            }
         }
+    ],
+    "execution": {
+        "Node": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "ListAvailableVersions": "Available versions:",
+        "PlatformNotRecognized": "Platform not recognized",
+        "VersionNotFound": "Version spec %s for architecture %s did not match any version in the tool cache."
     }
-  ],
-  "execution": {
-    "Node": {
-      "target": "main.js",
-      "argumentFormat": ""
-    }
-  }
 }

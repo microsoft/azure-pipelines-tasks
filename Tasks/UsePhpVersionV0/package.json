@@ -24,6 +24,7 @@
   "dependencies": {
     "@types/node": "^6.0.101",
     "@types/q": "^1.5.0",
-    "vsts-task-lib": "^2.6.0"
+    "vsts-task-lib": "^2.6.0",
+    "vsts-task-tool-lib": "^0.9.0"
   }
 }
