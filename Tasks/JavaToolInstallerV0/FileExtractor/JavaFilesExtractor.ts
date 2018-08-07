@@ -2,6 +2,7 @@ import fs = require('fs');
 import path = require('path');
 import taskLib = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
+import toolLib = require('vsts-task-tool-lib/tool');
 
 export class JavaFilesExtractor {
     public destinationFolder: string;
@@ -27,31 +28,32 @@ export class JavaFilesExtractor {
         }
     }
 
-    private async unzipExtract(file, destinationFolder) {
-        console.log(taskLib.loc('UnzipExtractFile', file));
-        if (process.platform === 'win32') {
-            // build the powershell command
-            const escapedFile = file.replace(/'/g, "''").replace(/"|\n|\r/g, ''); // double-up single quotes, remove double quotes and newlines
-            const escapedDest = destinationFolder.replace(/'/g, "''").replace(/"|\n|\r/g, '');
-            const command: string = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
-    
-            // change the console output code page to UTF-8.
-            const chcpPath = path.join(process.env.windir, "system32", "chcp.com");
-            await taskLib.exec(chcpPath, '65001');
-    
-            // run powershell
-            const powershell: tr.ToolRunner = taskLib.tool('powershell')
-                .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
-                .arg(command);
-            await powershell.exec();
-        } else {
-            const unzip: tr.ToolRunner = taskLib.tool('unzip')
-                .arg(file);
-            await unzip.exec(<tr.IExecOptions>{ cwd: destinationFolder });
-        }
+    private isTar(file) {
+        var name = this.win ? file.toLowerCase() : file;
+        // standard gnu-tar extension formats with recognized auto compression formats
+        // https://www.gnu.org/software/tar/manual/html_section/tar_69.html
+        return name.endsWith('.tar')      // no compression
+            || name.endsWith('.tar.gz')   // gzip
+            || name.endsWith('.tgz')      // gzip
+            || name.endsWith('.taz')      // gzip
+            || name.endsWith('.tar.Z')    // compress
+            || (this.win && name.endsWith('tar.z')) // no case comparison for win
+            || name.endsWith('.taZ')      // compress // no case for win already handled above
+            || name.endsWith('.tar.bz2')  // bzip2
+            || name.endsWith('.tz2')      // bzip2
+            || name.endsWith('.tbz2')     // bzip2
+            || name.endsWith('.tbz')      // bzip2
+            || name.endsWith('.tar.lz')   // lzip
+            || name.endsWith('.tar.lzma') // lzma
+            || name.endsWith('.tlz')      // lzma
+            || name.endsWith('.tar.lzo')  // lzop
+            || name.endsWith('.tar.xz')   // xz
+            || name.endsWith('.txz');     // xz
     }
 
     private async sevenZipExtract(file, destinationFolder) {
+        //We have to create our own 7Zip extract function as the vsts-task-tool-lib
+        //method uses 7zDec, which only decodes .7z archives
         console.log(taskLib.loc('SevenZipExtractFile', file));
         const sevenZip = taskLib.tool(this.getSevenZipLocation());
         sevenZip.arg('x');
@@ -61,13 +63,6 @@ export class JavaFilesExtractor {
         if (execResult.code != taskLib.TaskResult.Succeeded) {
             taskLib.debug('execResult: ' + JSON.stringify(execResult));
         }
-    }
-
-    private async tarExtract(file, destinationFolder) {
-        console.log(taskLib.loc('TarExtractFile', file));
-        const tr: tr.ToolRunner = taskLib.tool('tar');
-        tr.arg(['xzC', destinationFolder, '-f', file]);
-        tr.exec();
     }
 
     private async extractFiles(file: string, fileEnding: string) {
@@ -80,8 +75,8 @@ export class JavaFilesExtractor {
 
         if (this.win) {
             if ('.tar' === fileEnding) { // a simple tar
-                this.sevenZipExtract(file, this.destinationFolder);
-            } else if ('.tar.gz' === fileEnding) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
+                await this.sevenZipExtract(file, this.destinationFolder);
+            } else if (this.isTar(file)) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
                 // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
                 const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
                 // e.g. 'destinationFolder/_test.tar.gz_'
@@ -92,29 +87,28 @@ export class JavaFilesExtractor {
                 taskLib.mkdirP(tempFolder);
 
                 // 1 extract compressed tar
-                this.sevenZipExtract(file, tempFolder);
+                await this.sevenZipExtract(file, tempFolder);
+
                 console.log(taskLib.loc('TempDir', tempFolder));
                 const tempTar = tempFolder + path.sep + taskLib.ls('-A', [tempFolder])[0]; // should be only one
                 console.log(taskLib.loc('DecompressedTempTar', file, tempTar));
                     
                 // 2 expand extracted tar
-                this.sevenZipExtract(tempTar, this.destinationFolder);
+                await this.sevenZipExtract(tempTar, this.destinationFolder);
 
                 // 3 cleanup temp folder
                 console.log(taskLib.loc('RemoveTempDir', tempFolder));
                 taskLib.rmRF(tempFolder);
-            } else if ('.zip' === fileEnding) {
-                await this.unzipExtract(file, this.destinationFolder);
             } else { // use sevenZip
-                this.sevenZipExtract(file, this.destinationFolder);
+                await this.sevenZipExtract(file, this.destinationFolder);
             }
         } else { // not windows
             if ('.tar' === fileEnding || '.tar.gz' === fileEnding) {
-                this.tarExtract(file, this.destinationFolder);
+                await toolLib.extractTar(file, this.destinationFolder);
             } else if ('.zip' === fileEnding) {
-                this.unzipExtract(file, this.destinationFolder);
+                await toolLib.extractZip(file, this.destinationFolder);
             } else { // fall through and use sevenZip
-                this.sevenZipExtract(file, this.destinationFolder);
+                await this.sevenZipExtract(file, this.destinationFolder);
             }
         }
     }
@@ -160,7 +154,7 @@ export class JavaFilesExtractor {
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
             taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
             jdkDirectory = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
-            this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
+            await this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
             return jdkDirectory;
         }
     }
