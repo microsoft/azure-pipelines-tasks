@@ -106,7 +106,7 @@ export async function run(nuGetPath: string): Promise<void> {
         const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
         const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && (!useV1CredProvider && !useV2CredProvider);
 
-        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, ((!useV1CredProvider && !useV2CredProvider) ? credProviderPath : null), useCredConfig);
+        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null), useCredConfig);
 
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
