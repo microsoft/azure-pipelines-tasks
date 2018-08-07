@@ -7,9 +7,9 @@
   "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
   "category": "Package",
   "version": {
-    "Major": "0",
-    "Minor": "0",
-    "Patch": "1"
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
