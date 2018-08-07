@@ -17,7 +17,29 @@
     "Patch": "0"
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
-  "inputs": [],
+  "inputs": [
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "required": true,
+      "defaultValue": "7.x",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+    },
+    {
+      "name": "architecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.architecture",
+      "defaultValue": "x64",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.architecture",
+      "groupName": "advanced",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
+    }
+  ],
   "execution": {
     "Node": {
       "target": "main.js",

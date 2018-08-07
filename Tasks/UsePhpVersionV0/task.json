@@ -18,6 +18,27 @@
   },
   "instanceNameFormat": "Use PHP Version $(versionSpec)",
   "inputs": [
+    {
+        "name": "versionSpec",
+        "type": "string",
+        "label": "Version spec",
+        "required": true,
+        "defaultValue": "7.x",
+        "helpMarkDown": "Version range or exact version of a PHP version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
+    },
+    {
+        "name": "architecture",
+        "type": "pickList",
+        "label": "Architecture",
+        "defaultValue": "x64",
+        "required": true,
+        "helpMarkDown": "The target architecture (x86, x64) of the PHP interpreter.",
+        "groupName": "advanced",
+        "options": {
+            "x86": "x86",
+            "x64": "x64"
+        }
+    }
   ],
   "execution": {
     "Node": {
