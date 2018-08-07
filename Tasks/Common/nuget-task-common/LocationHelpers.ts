@@ -168,6 +168,19 @@ export function getNuGetConnectionData(serviceUri: string, accessToken: string):
         accessToken);
 }
 
+export function getServiceUriFromCollectionUri(
+    serviceUri: string,
+    accessToken: string,
+    areaName: string,
+    areaId: string): Q.Promise<string>{
+    return this.getConnectionDataForArea(serviceUri, areaName, areaId, "vstsBuild", accessToken)
+        .then((connectionData) => {
+            return connectionData.locationServiceData.accessMappings
+                .find((mapping) => mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker)
+                .accessPoint;
+        });
+}
+
 export function getServiceUrisFromCollectionUri(
     serviceUri: string,
     accessToken: string,
