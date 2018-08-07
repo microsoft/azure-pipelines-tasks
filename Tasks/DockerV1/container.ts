@@ -48,7 +48,9 @@ if(command in dockerCommandMap) {
 commandImplementation.run(connection)
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
-    command !== "login" &&  connection.close();    
+    if (command !== "login") {
+        connection.close();
+    }
 })
 .then(function success() {
     tl.setResult(tl.TaskResult.Succeeded, "");

@@ -14,9 +14,12 @@ export default class ClusterConnection {
     private kubeconfigFile: string;
     private userDir: string;
 
-    constructor() {
+    constructor(existingKubeConfigPath?: string) {
         this.kubectlPath = tl.which("kubectl", false);
         this.userDir = utils.getNewUserDirPath();
+        if (existingKubeConfigPath) {
+            this.kubeconfigFile = existingKubeConfigPath;
+        }
     }
 
     private loadClusterType(connectionType: string): any {
@@ -56,23 +59,28 @@ export default class ClusterConnection {
 
     // open kubernetes connection
     public async open(){
-        var kubeconfig = await this.getKubeConfig();
-         return this.initialize().then(() => {
-            if (kubeconfig != null)
+        var kubeconfig;
+        if (!this.kubeconfigFile) {
+            kubeconfig =  await this.getKubeConfig();
+        }
+
+        return this.initialize().then(() => {
+            if (kubeconfig)
             {
                 this.kubeconfigFile = path.join(this.userDir, "config");
                 fs.writeFileSync(this.kubeconfigFile, kubeconfig);
-                process.env["KUBECONFIG"] = this.kubeconfigFile;
             }
+
+            process.env["KUBECONFIG"] = this.kubeconfigFile;
          });
     }
 
     // close kubernetes connection
     public close(): void {
-        if (this.kubeconfigFile != null && fs.exists(this.kubeconfigFile))
+        if (this.kubeconfigFile != null && fs.existsSync(this.kubeconfigFile))
         {
            delete process.env["KUBECONFIG"];
-           fs.rmdirSync(this.kubeconfigFile);
+           fs.unlinkSync(this.kubeconfigFile);
         }    
     }
 

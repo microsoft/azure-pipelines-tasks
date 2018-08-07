@@ -19,10 +19,10 @@ export default class kubernetescli extends basecommand {
     }
 
     public logout(): void  {
-        if (this.kubeconfigPath != null && fs.exists(this.kubeconfigPath))
+        if (this.kubeconfigPath != null && fs.existsSync(this.kubeconfigPath))
         {
            delete process.env["KUBECONFIG"];
-           fs.rmdirSync(this.kubeconfigPath);
+           fs.unlinkSync(this.kubeconfigPath);
         } 
     }
 

@@ -4,6 +4,7 @@
   "loc.description": "Deploy, configure, update your Kubernetes cluster in Azure Container Service by running kubectl commands.",
   "loc.instanceNameFormat": "kubectl $(command)",
   "loc.releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
+  "loc.group.displayName.kubernetesRegistry": "Kubernetes Registry",
   "loc.group.displayName.commands": "Commands",
   "loc.group.displayName.secrets": "Secrets",
   "loc.group.displayName.configMaps": "ConfigMaps",

@@ -20,6 +20,17 @@
     "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
     "groups": [
         {
+            "name": "containerRegistry",
+            "displayName": "Container Registry",
+            "isExpanded": true,
+            "visibleRule": "command != logout"
+        },
+        {
+            "name": "commands",
+            "displayName": "Commands",
+            "isExpanded": true
+        },        
+        {
             "name": "advanced",
             "displayName": "Advanced Options",
             "isExpanded": false,
@@ -37,6 +48,7 @@
                 "Azure Container Registry": "Azure Container Registry",
                 "Container Registry": "Container Registry"
             },
+            "groupName": "containerRegistry",
             "helpMarkDown": "Select a Container Registry Type."
         },
         {
@@ -44,6 +56,7 @@
             "type": "connectedService:dockerregistry",
             "label": "Docker registry service connection",
             "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
+            "groupName": "containerRegistry",
             "visibleRule": "containerregistrytype = Container Registry"
         },
         {
@@ -51,6 +64,7 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
+            "groupName": "containerRegistry",
             "visibleRule": "containerregistrytype = Azure Container Registry"
         },
         {
@@ -60,6 +74,7 @@
             "helpMarkDown": "Select an Azure Container Registry",
             "visibleRule": "containerregistrytype = Azure Container Registry",
             "defaultValue": "",
+            "groupName": "containerRegistry",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -81,6 +96,7 @@
             "properties": {
                 "EditableOptions": "True"
             },
+            "groupName": "commands",
             "helpMarkDown": "Select a Docker command."
         },
         {
@@ -90,6 +106,7 @@
             "defaultValue": "**/Dockerfile",
             "required": true,
             "visibleRule": "command = Build an image",
+            "groupName": "commands",
             "helpMarkDown": "Path to the Dockerfile to use. Must be within the Docker build context."
         }, 
         {
@@ -101,6 +118,7 @@
             },
             "visibleRule": "command != Run an image && command != Tag image && command != login && command != logout",
             "label": "Arguments",
+            "groupName": "commands",
             "helpMarkDown": "Command arguments."
         },
         {
@@ -109,6 +127,7 @@
             "label": "Use default build context",
             "defaultValue": "true",
             "visibleRule": "command = Build an image",
+            "groupName": "commands",
             "helpMarkDown": "Set the build context to the directory that contains the Dockerfile."
         },
         {
@@ -116,6 +135,7 @@
             "type": "filePath",
             "label": "Build context",
             "visibleRule": "command = Build an image && useDefaultContext = false",
+            "groupName": "commands",
             "helpMarkDown": "Path to the build context."
         },
         {
@@ -124,6 +144,7 @@
             "label": "Push multiple images",
             "defaultValue": "false",
             "visibleRule": "command = Push an image",
+            "groupName": "commands",
             "helpMarkDown": "Push multiple images."
         },
         {
@@ -132,6 +153,7 @@
             "label": "Tag multiple images",
             "defaultValue": "false",
             "visibleRule": "command = Tag image",
+            "groupName": "commands",
             "helpMarkDown": "Tag multiple images."
         },
         {
@@ -141,6 +163,7 @@
             "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
             "required": true,
             "visibleRule": "command = Build an image || command = Run an image || pushMultipleImages = false || tagMultipleImages = false",
+            "groupName": "commands",
             "helpMarkDown": "Name of the Docker image to build, push, or run."
         },
         {
@@ -149,6 +172,7 @@
             "label": "Image names path",
             "required": true,
             "visibleRule": "tagMultipleImages = true || pushMultipleImages = true",
+            "groupName": "commands",
             "helpMarkDown": "Path to a text file that contains the names of the Docker images to tag or push. Each image name is contained on its own line."
         },
         {
@@ -157,6 +181,7 @@
             "label": "Qualify image name",
             "defaultValue": "true",
             "visibleRule": "command = Build an image || command = Tag image || command = Push an image || command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "Qualify the image name with the Docker registry service connection's hostname if not otherwise specified."
         },
         {
@@ -165,6 +190,7 @@
             "label": "Include source tags",
             "defaultValue": "false",
             "visibleRule": "command = Build an image || command = Tag image || command = Push an image",
+            "groupName": "commands",
             "helpMarkDown": "Include Git tags when building or pushing the Docker image."
         },
         {
@@ -173,6 +199,7 @@
             "label": "Include latest tag",
             "defaultValue": "false",
             "visibleRule": "command = Build an image || command = Push an image",
+            "groupName": "commands",
             "helpMarkDown": "Include the 'latest' tag when building or pushing the Docker image."
         },
         {
@@ -181,6 +208,7 @@
             "label": "Add default labels",
             "defaultValue": "true",
             "visibleRule": "command = Build an image",
+            "groupName": "commands",
             "helpMarkDown": "Add CI/CD metadata like repository, commit, build and release information to the container image by using Docker labels."
         },        
         {
@@ -188,6 +216,7 @@
             "type": "filePath",
             "label": "Image digest file",
             "visibleRule": "command = Push an image",
+            "groupName": "commands",
             "helpMarkDown": "Path to a file that is created and populated with the full image repository digest of the Docker image that was pushed."
         },
         {
@@ -195,6 +224,7 @@
             "type": "string",
             "label": "Container name",
             "visibleRule": "command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "Name of the Docker container to run."
         },
         {
@@ -206,6 +236,7 @@
             },
             "label": "Ports",
             "visibleRule": "command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "Ports in the Docker container to publish to the host. Specify each host-port:container-port binding on a new line."
         },
         {
@@ -217,6 +248,7 @@
             },
             "label": "Volumes",
             "visibleRule": "command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "Volumes to mount from the host. Specify each host-dir:container-dir on a new line."
         },
         {
@@ -228,6 +260,7 @@
             },
             "label": "Environment variables",
             "visibleRule": "command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "Environment variables for the Docker container. Specify each name=value pair on a new line."
         },
         {
@@ -235,6 +268,7 @@
             "type": "string",
             "label": "Working directory",
             "visibleRule": "command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "The working directory for the Docker container."
         },
         {
@@ -242,6 +276,7 @@
             "type": "string",
             "label": "Entry point override",
             "visibleRule": "command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "Override the default entry point for the Docker container."
         },
         {
@@ -249,6 +284,7 @@
             "type": "string",
             "label": "Command",
             "visibleRule": "command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "Command to run in the Docker container. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application."
         },
         {
@@ -257,6 +293,7 @@
             "label": "Run in background",
             "defaultValue": "true",
             "visibleRule": "command = Run an image",
+            "groupName": "commands",
             "helpMarkDown": "Run the Docker container in the background."
         },
         {
@@ -272,6 +309,7 @@
                 "unlessStopped": "Unless stopped"
             },
             "visibleRule": "command = Run an image && runInBackground = true",
+            "groupName": "commands",
             "helpMarkDown": "Select a restart policy."
         },
         {
@@ -279,6 +317,7 @@
             "type": "string",
             "label": "Maximum restart retries",
             "visibleRule": "command = Run an image && runInBackground = true && restartPolicy = onFailure",
+            "groupName": "commands",
             "helpMarkDown": "The maximum number of restart retries the Docker daemon attempts."
         },
         {

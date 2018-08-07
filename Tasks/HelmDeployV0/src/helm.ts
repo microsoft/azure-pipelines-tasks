@@ -64,7 +64,7 @@ async function run() {
     finally {
         if (command !== "login") {
             kubectlCli.logout();
-        }    
+        }
         helmCli.logout();
     }
 }

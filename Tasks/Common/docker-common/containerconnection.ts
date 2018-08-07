@@ -87,6 +87,7 @@ export default class ContainerConnection {
         var dockerConfigPath = tl.getVariable("DOCKER_CONFIG");
         if (dockerConfigPath) {
             tl.setVariable("DOCKER_CONFIG", "");
+            del.sync(dockerConfigPath, {force: true});
         }    
     }
 

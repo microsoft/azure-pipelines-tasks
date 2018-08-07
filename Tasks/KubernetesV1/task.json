@@ -20,6 +20,12 @@
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
     "groups": [
         {
+            "name": "kubernetesRegistry",
+            "displayName": "Kubernetes Registry",
+            "isExpanded": true,
+            "visibleRule": "command != logout"
+        },
+        {
             "name": "commands",
             "displayName": "Commands",
             "isExpanded": true
@@ -60,6 +66,7 @@
                 "Azure Resource Manager": "Azure Resource Manager",
                 "Kubernetes Service Connection": "Kubernetes Service Connection"
             },
+            "groupName": "kubernetesRegistry",
             "helpMarkDown": "Select a service connection type."
         },
         {
@@ -68,6 +75,7 @@
             "label": "Kubernetes service connection",
             "visibleRule": "connectionType = Kubernetes Service Connection",
             "helpMarkDown": "Select a Kubernetes service connection.",
+            "groupName": "kubernetesRegistry",
             "required": true
         },
         {
@@ -77,6 +85,7 @@
             "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry.Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
             "visibleRule": "connectionType = Azure Resource Manager",
             "defaultValue": "",
+            "groupName": "kubernetesRegistry",
             "required": true
         },
         {
@@ -87,6 +96,7 @@
             "visibleRule": "connectionType = Azure Resource Manager",
             "defaultValue": "",
             "required": true,
+            "groupName": "kubernetesRegistry",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -99,6 +109,7 @@
             "visibleRule": "connectionType = Azure Resource Manager",
             "defaultValue": "",
             "required": true,
+            "groupName": "kubernetesRegistry",
             "properties": {
                 "EditableOptions": "True"
             }
@@ -109,6 +120,7 @@
             "label": "Namespace",
             "required": false,
             "defaultValue": "",
+            "groupName": "kubernetesRegistry",
             "helpMarkDown": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
         },
         {

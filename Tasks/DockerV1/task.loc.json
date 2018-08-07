@@ -20,6 +20,17 @@
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {
+      "name": "containerRegistry",
+      "displayName": "ms-resource:loc.group.displayName.containerRegistry",
+      "isExpanded": true,
+      "visibleRule": "command != logout"
+    },
+    {
+      "name": "commands",
+      "displayName": "ms-resource:loc.group.displayName.commands",
+      "isExpanded": true
+    },
+    {
       "name": "advanced",
       "displayName": "ms-resource:loc.group.displayName.advanced",
       "isExpanded": false,
@@ -37,6 +48,7 @@
         "Azure Container Registry": "Azure Container Registry",
         "Container Registry": "Container Registry"
       },
+      "groupName": "containerRegistry",
       "helpMarkDown": "ms-resource:loc.input.help.containerregistrytype"
     },
     {
@@ -44,6 +56,7 @@
       "type": "connectedService:dockerregistry",
       "label": "ms-resource:loc.input.label.dockerRegistryEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpoint",
+      "groupName": "containerRegistry",
       "visibleRule": "containerregistrytype = Container Registry"
     },
     {
@@ -51,6 +64,7 @@
       "type": "connectedService:AzureRM",
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "groupName": "containerRegistry",
       "visibleRule": "containerregistrytype = Azure Container Registry"
     },
     {
@@ -60,6 +74,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureContainerRegistry",
       "visibleRule": "containerregistrytype = Azure Container Registry",
       "defaultValue": "",
+      "groupName": "containerRegistry",
       "properties": {
         "EditableOptions": "True"
       }
@@ -81,6 +96,7 @@
       "properties": {
         "EditableOptions": "True"
       },
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.command"
     },
     {
@@ -90,6 +106,7 @@
       "defaultValue": "**/Dockerfile",
       "required": true,
       "visibleRule": "command = Build an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.dockerFile"
     },
     {
@@ -101,6 +118,7 @@
       },
       "visibleRule": "command != Run an image && command != Tag image && command != login && command != logout",
       "label": "ms-resource:loc.input.label.arguments",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.arguments"
     },
     {
@@ -109,6 +127,7 @@
       "label": "ms-resource:loc.input.label.useDefaultContext",
       "defaultValue": "true",
       "visibleRule": "command = Build an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.useDefaultContext"
     },
     {
@@ -116,6 +135,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.buildContext",
       "visibleRule": "command = Build an image && useDefaultContext = false",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.buildContext"
     },
     {
@@ -124,6 +144,7 @@
       "label": "ms-resource:loc.input.label.pushMultipleImages",
       "defaultValue": "false",
       "visibleRule": "command = Push an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.pushMultipleImages"
     },
     {
@@ -132,6 +153,7 @@
       "label": "ms-resource:loc.input.label.tagMultipleImages",
       "defaultValue": "false",
       "visibleRule": "command = Tag image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.tagMultipleImages"
     },
     {
@@ -141,6 +163,7 @@
       "defaultValue": "$(Build.Repository.Name):$(Build.BuildId)",
       "required": true,
       "visibleRule": "command = Build an image || command = Run an image || pushMultipleImages = false || tagMultipleImages = false",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.imageName"
     },
     {
@@ -149,6 +172,7 @@
       "label": "ms-resource:loc.input.label.imageNamesPath",
       "required": true,
       "visibleRule": "tagMultipleImages = true || pushMultipleImages = true",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.imageNamesPath"
     },
     {
@@ -157,6 +181,7 @@
       "label": "ms-resource:loc.input.label.qualifyImageName",
       "defaultValue": "true",
       "visibleRule": "command = Build an image || command = Tag image || command = Push an image || command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.qualifyImageName"
     },
     {
@@ -165,6 +190,7 @@
       "label": "ms-resource:loc.input.label.includeSourceTags",
       "defaultValue": "false",
       "visibleRule": "command = Build an image || command = Tag image || command = Push an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.includeSourceTags"
     },
     {
@@ -173,6 +199,7 @@
       "label": "ms-resource:loc.input.label.includeLatestTag",
       "defaultValue": "false",
       "visibleRule": "command = Build an image || command = Push an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.includeLatestTag"
     },
     {
@@ -181,6 +208,7 @@
       "label": "ms-resource:loc.input.label.addDefaultLabels",
       "defaultValue": "true",
       "visibleRule": "command = Build an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.addDefaultLabels"
     },
     {
@@ -188,6 +216,7 @@
       "type": "filePath",
       "label": "ms-resource:loc.input.label.imageDigestFile",
       "visibleRule": "command = Push an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.imageDigestFile"
     },
     {
@@ -195,6 +224,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.containerName",
       "visibleRule": "command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.containerName"
     },
     {
@@ -206,6 +236,7 @@
       },
       "label": "ms-resource:loc.input.label.ports",
       "visibleRule": "command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.ports"
     },
     {
@@ -217,6 +248,7 @@
       },
       "label": "ms-resource:loc.input.label.volumes",
       "visibleRule": "command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.volumes"
     },
     {
@@ -228,6 +260,7 @@
       },
       "label": "ms-resource:loc.input.label.envVars",
       "visibleRule": "command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.envVars"
     },
     {
@@ -235,6 +268,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.workingDirectory",
       "visibleRule": "command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.workingDirectory"
     },
     {
@@ -242,6 +276,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.entrypointOverride",
       "visibleRule": "command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.entrypointOverride"
     },
     {
@@ -249,6 +284,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.containerCommand",
       "visibleRule": "command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.containerCommand"
     },
     {
@@ -257,6 +293,7 @@
       "label": "ms-resource:loc.input.label.runInBackground",
       "defaultValue": "true",
       "visibleRule": "command = Run an image",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.runInBackground"
     },
     {
@@ -272,6 +309,7 @@
         "unlessStopped": "Unless stopped"
       },
       "visibleRule": "command = Run an image && runInBackground = true",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.restartPolicy"
     },
     {
@@ -279,6 +317,7 @@
       "type": "string",
       "label": "ms-resource:loc.input.label.maxRestartRetries",
       "visibleRule": "command = Run an image && runInBackground = true && restartPolicy = onFailure",
+      "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.maxRestartRetries"
     },
     {
