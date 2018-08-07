@@ -77,7 +77,20 @@ export class Package {
         }
         return this._packageType;
     }
+
+    public isFolder(): boolean {
+        if(this._isFolder == undefined) {
+            if (!tl.exist(this._path)) {
+                throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', this._path));
+            }
+
+            this._isFolder = !tl.stats(this._path).isFile();
+        }
+
+        return this._isFolder;
+    }
     
+    private _isFolder?: boolean;
     private _path: string;
     private _isMSBuildPackage?: boolean;
     private _packageType?: PackageType;
