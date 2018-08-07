@@ -1,0 +1,6 @@
+{
+  "loc.friendlyName": "Use PHP Version",
+  "loc.helpMarkDown": "",
+  "loc.description": "Retrieve the specified version of PHP from the tool cache and add it to PATH.",
+  "loc.instanceNameFormat": "Use PHP Version $(versionSpec)"
+}

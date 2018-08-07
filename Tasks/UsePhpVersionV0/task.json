@@ -1,0 +1,28 @@
+{
+  "id": "67a719f0-9a6c-11e8-ae24-e92764d1c201",
+  "name": "UsePhpVersion",
+  "friendlyName": "Use PHP Version",
+  "description": "Retrieve the specified version of PHP from the tool cache and add it to PATH.",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "",
+  "category": "Tool",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "140",
+    "Patch": "0"
+  },
+  "instanceNameFormat": "Use PHP Version $(versionSpec)",
+  "inputs": [
+  ],
+  "execution": {
+    "Node": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  }
+}
