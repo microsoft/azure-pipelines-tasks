@@ -110,7 +110,7 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
 export async function getWebDeployArgumentsString(webDeployArguments: WebDeployArguments, publishingProfile: any) {
     return getMSDeployCmdArgs(webDeployArguments.package.getPath(), webDeployArguments.appName, publishingProfile, webDeployArguments.removeAdditionalFilesFlag,
     webDeployArguments.excludeFilesFromAppDataFlag, webDeployArguments.takeAppOfflineFlag, webDeployArguments.virtualApplication, 
-    webDeployArguments.setParametersFile, webDeployArguments.additionalArguments, await webDeployArguments.package.isMSBuildPackage(), webDeployArguments.package.getPackageType() === PackageType.folder, webDeployArguments.useWebDeploy);
+    webDeployArguments.setParametersFile, webDeployArguments.additionalArguments, await webDeployArguments.package.isMSBuildPackage(), webDeployArguments.package.isFolder(), webDeployArguments.useWebDeploy);
 }
 
 /**
