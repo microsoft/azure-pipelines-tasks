@@ -60,9 +60,12 @@ export class TaskParametersUtility {
                 if(taskParameters.WebConfigParameters.indexOf("-appType java_springboot") < 0) {
                     taskParameters.WebConfigParameters += " -appType java_springboot";
                 }
-                if(taskParameters.WebConfigParameters.indexOf("-JAR_PATH ") < 0 || taskParameters.WebConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") >= 0) {
+                if(taskParameters.WebConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") >= 0) {
                     var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
                     taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("D:\\home\\site\\wwwroot\\*.jar", jarPath);
+                } else if(taskParameters.WebConfigParameters.indexOf("-JAR_PATH ") < 0) {
+                    var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
+                    taskParameters.WebConfigParameters += " -JAR_PATH " + jarPath;
                 }
                 if(taskParameters.WebConfigParameters.indexOf("-Dserver.port=%HTTP_PLATFORM_PORT%") > 0) {
                     taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");  
