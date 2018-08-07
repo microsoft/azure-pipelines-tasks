@@ -614,6 +614,7 @@
     "ZipDeployLogsURL": "ms-resource:loc.messages.ZipDeployLogsURL",
     "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
-    "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID"
+    "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
+    "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent"
   }
 }
