@@ -369,7 +369,7 @@
       "endpointId": "tfs:feed",
       "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListPublish)/packages?includeUrls=false&includeDeleted=false",
       "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
-      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+      "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
