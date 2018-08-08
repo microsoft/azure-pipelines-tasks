@@ -168,27 +168,22 @@ export function getNuGetConnectionData(serviceUri: string, accessToken: string):
         accessToken);
 }
 
-export function getServiceUrisFromCollectionUri(
+export function getServiceUriFromCollectionUri(
     serviceUri: string,
     accessToken: string,
     areaName: string,
-    areaId: string): Q.Promise<string[]>{
+    areaId: string): Q.Promise<string>{
     return this.getConnectionDataForArea(serviceUri, areaName, areaId, "vstsBuild", accessToken)
         .then((connectionData) => {
-            const defaultMapping = connectionData.locationServiceData.accessMappings
-                .find((mapping) => mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker)
-                .accessPoint;
-            // It's important that the default mapping is the first one in the list
-            // Utility.getNuGetFeedRegistryUrl makes assumptions around this
-            const uris = [defaultMapping];
-            return uris.concat(
-                connectionData.locationServiceData.accessMappings.map((mapping: locationApi.AccessMapping) => {
-                    return mapping.accessPoint;
-            }));
-        });
+        return connectionData.locationServiceData.accessMappings.find(
+            (mapping) => mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker)
+            .accessPoint;
+     });
 }
 
 /**
+ * Make assumptions about VSTS domain names to generate URI prefixes for feeds in the current collection.
+ * Returns a promise so as to provide a drop-in replacement for location-service-based lookup.
  * - ! -
  * This is used by DotNet, NuGet and Maven.
  * All that is needed for this function is to return the collection URI pointing to the Packaging service.
@@ -197,12 +192,13 @@ export function getServiceUrisFromCollectionUri(
  */
 export function assumeNuGetUriPrefixes(collectionUri: string): Q.Promise<string[]> {
     const prefixes = [collectionUri];
-    return this.getServiceUrisFromCollectionUri(
+    return this.getServiceUriFromCollectionUri(
         collectionUri,
         auth.getSystemAccessToken(),
         "nuget",
         "b3be7473-68ea-4a81-bfc7-9530baaa19ad")
-        .then((uris: string[]) => {
-            return prefixes.concat(uris);
+        .then((uri) => {
+            prefixes.push(uri);
+            return prefixes;
         });
 }
