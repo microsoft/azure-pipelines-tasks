@@ -44,6 +44,10 @@ export class NonDistributedTest {
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'));
                 return;            
             } else {
+                if (exitCode !== 0)
+                {
+                    console.log('Tasked marked as success because IgnoreTestFailures is enabled');
+                }
                 tl.debug(`Modules/DTAExecutionHost.exe exited with code ${exitCode}`);
                 tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
             }
