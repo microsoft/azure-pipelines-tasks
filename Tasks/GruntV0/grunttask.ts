@@ -30,18 +30,18 @@ else {
 
 if (isCodeCoverageEnabled) {
 	var npm = tl.tool(tl.which('npm', true));
-	npm.arg('install istanbul');
+	npm.arg(['install', 'istanbul']);
 	var testFramework = tl.getInput('testFramework', true);
 	var srcFiles = tl.getInput('srcFiles', false);
 	var testSrc = tl.getPathInput('testFiles', true, false);
 	var istanbul = tl.tool(tl.which('node', true));
 	istanbul.arg('./node_modules/istanbul/lib/cli.js');
-	istanbul.arg('cover --report cobertura --report html');
+	istanbul.arg(['cover', '--report', 'cobertura', '--report', 'html']);
 	if (srcFiles) {
-		istanbul.arg('-i .' + path.sep + path.join(srcFiles));
+		istanbul.arg(['-i', '.' + path.sep + path.join(srcFiles)]);
 	}
 	if (testFramework.toLowerCase() == 'jasmine') {
-		istanbul.arg('./node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json');
+		istanbul.arg(['./node_modules/jasmine/bin/jasmine.js', 'JASMINE_CONFIG_PATH=node_modules/jasmine/lib/examples/jasmine.json']);
 	} else {
 		istanbul.arg('./node_modules/mocha/bin/_mocha');
 	}
