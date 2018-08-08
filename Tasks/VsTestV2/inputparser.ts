@@ -356,10 +356,20 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
 
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
-
+    
+    inputDataContract = getDiagnosticsSettings(inputDataContract);
     inputDataContract = getTiaSettings(inputDataContract);
     inputDataContract = getRerunSettings(inputDataContract);
 
+    return inputDataContract;
+}
+
+function getDiagnosticsSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
+    inputDataContract.ExecutionSettings.DiagnosticsSettings = <idc.DiagnosticsSettings>{};
+    inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = tl.getBoolInput('diagnosticsEnabled');
+    if(tl.getInput('collectDumpOn').toLowerCase() === 'always') {
+        inputDataContract.ExecutionSettings.DiagnosticsSettings.CollectDumpAlways = true;
+    }
     return inputDataContract;
 }
 

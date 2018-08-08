@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 139,
-        "Patch": 2
+        "Patch": 3
     },
     "demands": [
         "vstest"
@@ -404,6 +404,29 @@
             "required": false,
             "helpMarkDown": "Opt in/out of publishing run level attachments.",
             "groupName": "reportingOptions"
+        },
+        {
+            "name": "diagnosticsEnabled",
+            "type": "boolean",
+            "label": "Collect advanced diagnostics in case of catastrophic failures",
+            "defaultValue": "True",
+            "required": false,
+            "helpMarkDown": "Collect advanced diagnostics in case of catastrophic failures.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "collectDumpOn",
+            "type": "pickList",
+            "label": "Collect process dump and attach to test run report",
+            "defaultValue": "testAssemblies",
+            "required": false,
+            "helpMarkDown": "Collect process dump and attach to test run report.",
+            "groupName": "executionOptions",
+            "options": {
+                "onAbortOnly": "On abort only",
+                "always": "Always"
+            },
+            "visibleRule": "diagnosticsEnabled = true"
         },
         {
             "name": "rerunFailedTests",
