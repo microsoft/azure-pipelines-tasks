@@ -30,5 +30,5 @@ export async function usePhpVersion(parameters: Readonly<TaskParameters>, platfo
         ].join(os.EOL));
     }
 
-    // TODO add to PATH
+    tool.prependPath(installDir);
 }
