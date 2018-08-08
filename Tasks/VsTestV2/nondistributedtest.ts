@@ -83,6 +83,11 @@ export class NonDistributedTest {
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
     
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+
+        if(this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled)
+        {
+            utils.Helper.addToProcessEnvVars(envVars, 'PROCDUMP_PATH', path.join(__dirname, 'ProcDump'));
+        }
     
         // hydra: See which of these are required in C# layer. Do we want this for telemetry??
         // utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentVersion', tl.getVariable('AGENT.VERSION'));
