@@ -1,11 +1,9 @@
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
-import util = require('./DotnetMockHelper');
 
 let taskPath = path.join(__dirname, '..', 'dotnetcore.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
-let nmh: util.DotnetMockHelper = new util.DotnetMockHelper(tmr);
 
 tmr.setInput('command', process.env["__command__"]);
 tmr.setInput('projects', process.env["__projects__"]);
@@ -62,6 +60,5 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 tmr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-nmh.registerNugetLocationHelpersMock();
 
 tmr.run();

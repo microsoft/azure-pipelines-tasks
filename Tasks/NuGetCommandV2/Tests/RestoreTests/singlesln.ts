@@ -33,9 +33,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }, 
     "findMatch": {
         "single.sln" : ["c:\\agent\\home\\directory\\single.sln"]
-    },
-    "rmRF": {
-        "c:\\agent\\home\\directory\\tempNuGet_.config": { success: true }
     }
 };
 nmh.setAnswers(a);
@@ -44,6 +41,5 @@ nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
-nmh.registerNugetLocationHelpersMock();
 
 tmr.run();

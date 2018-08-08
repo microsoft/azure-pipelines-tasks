@@ -36,9 +36,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }, 
     "findMatch": {
         "packages.config" : ["c:\\agent\\home\\directory\\packages.config"]
-    },
-    "rmRF": {
-        "c:\\agent\\home\\directory\\tempNuGet_.config": { success: true }
     }
 };
 nmh.setAnswers(a);
@@ -47,6 +44,5 @@ nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\packages.config"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();
-nmh.registerNugetLocationHelpersMock();
 
 tmr.run();
