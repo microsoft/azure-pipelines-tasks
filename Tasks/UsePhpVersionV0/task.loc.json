@@ -45,5 +45,10 @@
       "target": "main.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
+    "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
+    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"
   }
 }
