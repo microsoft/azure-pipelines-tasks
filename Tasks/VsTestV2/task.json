@@ -418,7 +418,7 @@
             "name": "collectDumpOn",
             "type": "pickList",
             "label": "Collect process dump and attach to test run report",
-            "defaultValue": "testAssemblies",
+            "defaultValue": "onAbortOnly",
             "required": false,
             "helpMarkDown": "Collect process dump and attach to test run report.",
             "groupName": "executionOptions",

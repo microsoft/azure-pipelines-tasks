@@ -17,7 +17,7 @@
   "version": {
     "Major": 2,
     "Minor": 139,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [
     "vstest"
@@ -404,6 +404,29 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.publishRunAttachments",
       "groupName": "reportingOptions"
+    },
+    {
+      "name": "diagnosticsEnabled",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.diagnosticsEnabled",
+      "defaultValue": "True",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.diagnosticsEnabled",
+      "groupName": "executionOptions"
+    },
+    {
+      "name": "collectDumpOn",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.collectDumpOn",
+      "defaultValue": "onAbortOnly",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.collectDumpOn",
+      "groupName": "executionOptions",
+      "options": {
+        "onAbortOnly": "On abort only",
+        "always": "Always"
+      },
+      "visibleRule": "diagnosticsEnabled = true"
     },
     {
       "name": "rerunFailedTests",
