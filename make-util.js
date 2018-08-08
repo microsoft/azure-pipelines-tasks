@@ -1778,8 +1778,9 @@ var getYamlForTask = function (taskJsonPath) {
                      || input.type == 'secureFile' 
                      || input.type == 'identities' 
                      || input.type.startsWith('connectedService')
-                     || input.type == 'pickList' 
-                     || input.type == 'radio') {
+                     || input.type.toLowerCase() == 'picklist' 
+                     || input.type == 'radio'
+                     || input.type == 'querycontrol') {
                 thisProp.type = 'string';
             }
             else if (input.type == 'int') {

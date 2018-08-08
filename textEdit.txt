@@ -1,0 +1,1 @@
+Calling TextEdit.Replace with overwriteRange = [object Object] and suggestion.insertText = publishEndpoint: $1
