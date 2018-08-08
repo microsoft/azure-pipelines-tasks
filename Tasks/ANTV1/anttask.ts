@@ -1,15 +1,17 @@
-import tl = require('vsts-task-lib/task');
-import path = require('path');
-import fs = require('fs');
-import os = require('os');
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 import * as Q from "q";
-import javacommons = require('java-common/java-common');
-import ccUtils = require('codecoverage-tools/codecoverageutilities');
+import * as tl from 'vsts-task-lib/task';
+
+import * as javacommons from 'java-common/java-common';
+import * as ccUtils from 'codecoverage-tools/codecoverageutilities';
 import {CodeCoverageEnablerFactory} from 'codecoverage-tools/codecoveragefactory';
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-var isWindows = os.type().match(/^Win/);
+const TESTRUN_SYSTEM = "VSTS - ant";
+const isWindows = os.type().match(/^Win/);
 
 function pathExistsAsFile(path: string) {
     try {
@@ -23,26 +25,26 @@ function pathExistsAsFile(path: string) {
 function publishTestResults(publishJUnitResults, testResultsFiles: string) {
     if (publishJUnitResults == 'true') {
         //check for pattern in testResultsFiles
+        let matchingTestResultsFiles;
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
-            var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
-            var allFiles = tl.find(buildFolder);
-            var matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
+            const buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
+            matchingTestResultsFiles = tl.findMatch(buildFolder, testResultsFiles, null, { matchBase: true });
         }
         else {
             tl.debug('No pattern found in testResultsFiles parameter');
-            var matchingTestResultsFiles = [testResultsFiles];
+            matchingTestResultsFiles = [testResultsFiles];
         }
 
-        if (!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
+        if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found, so publishing JUnit test results is being skipped.');
             return 0;
         }
 
-        var tp = new tl.TestPublisher("JUnit");
+        let tp = new tl.TestPublisher("JUnit");
         const testRunTitle = tl.getInput('testRunTitle');
 
-        tp.publish(matchingTestResultsFiles, true, "", "", testRunTitle, true);
+        tp.publish(matchingTestResultsFiles, true, "", "", testRunTitle, true, TESTRUN_SYSTEM);
     }
 }
 
@@ -51,17 +53,17 @@ function processAntOutputLine(line) {
         return;
     }
 
-    let javacText = "[javac] ";
+    const javacText = "[javac] ";
     //[java] [javac] c:\path\to\file:100: error: error_msg
-    let compileErrorFileRegexWin = /^(\[java\])?\s*\[javac\]\s*([^:]:[^:]+):(\d+):\s*(.+)$/
+    const compileErrorFileRegexWin = /^(\[java\])?\s*\[javac\]\s*([^:]:[^:]+):(\d+):\s*(.+)$/
     //[java] [javac] /path/to/file:100: error: error_msg
-    let compileErrorFileRegexUnix = /^(\[java\])?\s*\[javac\]\s*([^:]+):(\d+):\s*(.+)$/
-    let compileErrorFileRegex = (isWindows) ? compileErrorFileRegexWin : compileErrorFileRegexUnix;
+    const compileErrorFileRegexUnix = /^(\[java\])?\s*\[javac\]\s*([^:]+):(\d+):\s*(.+)$/
+    const compileErrorFileRegex = (isWindows) ? compileErrorFileRegexWin : compileErrorFileRegexUnix;
 
     let severity = null;
     if (line.indexOf(javacText) >= 0) {
         // parse javac errors and warnings
-        let matches = compileErrorFileRegex.exec(line);
+        const matches = compileErrorFileRegex.exec(line);
         if (matches) {
             let errorMessage = matches[4];
             if (errorMessage) {
@@ -101,35 +103,35 @@ async function doWork() {
             return Q.resolve(true);
         }
 
-        var classFilter: string = tl.getInput('classFilter');
-        var classFilesDirectories: string = tl.getInput('classFilesDirectories', true);
-        var sourceDirectories: string = tl.getInput('srcDirectories');
+        const classFilter: string = tl.getInput('classFilter');
+        const classFilesDirectories: string = tl.getInput('classFilesDirectories', true);
+        const sourceDirectories: string = tl.getInput('srcDirectories');
         // appending with small guid to keep it unique. Avoiding full guid to ensure no long path issues.
-        var reportDirectoryName = "CCReport43F6D5EF";
+        const reportDirectoryName = "CCReport43F6D5EF";
         reportDirectory = path.join(buildRootPath, reportDirectoryName);
-        var reportBuildFileName = "CCReportBuildA4D283EG.xml";
+        const reportBuildFileName = "CCReportBuildA4D283EG.xml";
         reportBuildFile = path.join(buildRootPath, reportBuildFileName);
-        var summaryFileName = "";
+        let summaryFileName = "";
         if (ccTool.toLowerCase() == "jacoco") {
             summaryFileName = "summary.xml";
         }else if (ccTool.toLowerCase() == "cobertura") {
             summaryFileName = "coverage.xml";
         }
         summaryFile = path.join(buildRootPath, reportDirectoryName, summaryFileName);
-        var coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
-        var instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
+        const coberturaCCFile = path.join(buildRootPath, "cobertura.ser");
+        let instrumentedClassesDirectory = path.join(buildRootPath, "InstrumentedClasses");
 
         // clean any previous reports.
         try {
-            tl.rmRF(coberturaCCFile, true);
-            tl.rmRF(reportDirectory, true);
-            tl.rmRF(reportBuildFile, true);
-            tl.rmRF(instrumentedClassesDirectory, true);
+            tl.rmRF(coberturaCCFile);
+            tl.rmRF(reportDirectory);
+            tl.rmRF(reportBuildFile);
+            tl.rmRF(instrumentedClassesDirectory);
         } catch (err) {
             tl.debug("Error removing previous cc files: " + err);
         }
 
-        var buildProps: { [key: string]: string } = {};
+        let buildProps: { [key: string]: string } = {};
         buildProps['buildfile'] = antBuildFile;
         buildProps['classfilter'] = classFilter
         buildProps['classfilesdirectories'] = classFilesDirectories;
@@ -168,7 +170,7 @@ async function doWork() {
                     tl.debug("Summary file = " + summaryFile);
                     tl.debug("Report directory = " + reportDirectory);
                     tl.debug("Publishing code coverage results to TFS");
-                    var ccPublisher = new tl.CodeCoveragePublisher();
+                    let ccPublisher = new tl.CodeCoveragePublisher();
                     ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
                 }
                 else {
@@ -280,7 +282,7 @@ async function doWork() {
             });
     } catch (e) {
         tl.debug(e.message);
-        tl._writeError(e);
+        tl.error(e);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }

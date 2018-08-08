@@ -21,6 +21,7 @@ export interface InputDataContract {
 export interface TestReportingSettings {
     TestRunTitle : string;
     TestResultsDirectory : string;
+    TestRunSystem : string;
 }
 
 export interface TestSelectionSettings {

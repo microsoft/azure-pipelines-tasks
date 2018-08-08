@@ -353,7 +353,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
-            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to/ deleted from the Azure App Service."
         },
         {
             "name": "AdditionalArguments",

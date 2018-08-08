@@ -7,16 +7,15 @@ steps:
 
   - task: NodeTool@0
     inputs:
-      versionSpec: '8.x' 
+      versionSpec: '8.x'
+    displayName: 'Install Node.js'
 
   - script: |
       npm install -g @angular/cli
       npm install
       npm run build
-    displayName: 'Install and build'
+    displayName: 'npm install and build'
 
-#  - task: ArchiveFiles@2
-#    inputs:
-#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#      includeRootFolder: false
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://aka.ms/yaml
