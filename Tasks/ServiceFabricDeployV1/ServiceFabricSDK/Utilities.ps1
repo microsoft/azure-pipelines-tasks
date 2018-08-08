@@ -299,11 +299,21 @@ function Wait-ServiceFabricApplicationUpgradeAction
     }
 
     $upgradeStatusValidator = { param($upgradeStatus) return !($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
-    $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
-        -ResultRetryEvaluator $upgradeStatusValidator `
-        -MaxTries 2147483647 `
-        -RetryIntervalInSeconds 5 `
-        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
+
+    try
+    {
+        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+            -ResultRetryEvaluator $upgradeStatusValidator `
+            -MaxTries 2147483647 `
+            -RetryIntervalInSeconds 5 `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
+    }
+    catch
+    {
+        Trace-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
+        Trace-ServiceFabricClusterHealth
+        throw
+    }
 
     return $upgradeStatus
 }
