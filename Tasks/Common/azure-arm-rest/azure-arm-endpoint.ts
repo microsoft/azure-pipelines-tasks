@@ -54,6 +54,9 @@ export class AzureRMEndpoint {
                 this.endpoint.servicePrincipalKey = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', false);
             }
 
+            var isADFSEnabled = tl.getEndpointDataParameter(this._connectedServiceName, 'EnableAdfsAuthentication', true);
+            this.endpoint.isADFSEnabled = isADFSEnabled  && (isADFSEnabled.toLowerCase() == "true");
+            
             if(!!this.endpoint.environment && this.endpoint.environment.toLowerCase() == this._environments.AzureStack) {
                 if(!this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID) {
                     this.endpoint = await this._updateAzureStackData(this.endpoint);
@@ -63,9 +66,6 @@ export class AzureRMEndpoint {
                 this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
                 this.endpoint.activeDirectoryResourceID = this.endpoint.url;
             }
-
-            var isADFSEnabled = tl.getEndpointDataParameter(this._connectedServiceName, 'EnableAdfsAuthentication', true);
-            this.endpoint.isADFSEnabled = isADFSEnabled  && (isADFSEnabled.toLowerCase() == "true");
 
             this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
                 this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath, this.endpoint.isADFSEnabled);
@@ -108,7 +108,7 @@ export class AzureRMEndpoint {
                 loginEndpoint += (loginEndpoint[loginEndpoint.length - 1] == "/") ? "" : "/";
                 endpoint.activeDirectoryAuthority = loginEndpoint;
                 endpoint.environmentAuthorityUrl = loginEndpoint;
-                endpoint.isADFSEnabled = loginEndpoint.endsWith('/adfs');
+                endpoint.isADFSEnabled = loginEndpoint.endsWith('/adfs/');
             }
             else {
                 // change to login endpoint
