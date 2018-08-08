@@ -88,6 +88,7 @@ export class NonDistributedTest {
         }
     
         const execOptions: tr.IExecOptions = <any>{
+            IgnoreTestFailures: this.inputDataContract.ExecutionSettings.IgnoreTestFailures,
             env: envVars,
             failOnStdErr: false,
             // In effect this will not be called as failOnStdErr is false
