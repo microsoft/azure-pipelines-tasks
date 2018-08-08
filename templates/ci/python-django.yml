@@ -1,6 +1,6 @@
 # Python Django
 # Test a Django project on multiple versions of Python.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/languages/python
 
 phases:
 
@@ -37,7 +37,7 @@ phases:
             project_location = path.dirname(path.abspath(manage_py))
             print('Found Django project in', project_location)
             print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
-          
+
       - script: python -m pip install --upgrade pip setuptools wheel
         displayName: 'Install dependencies'
 
@@ -49,18 +49,13 @@ phases:
 
       - script: pushd '$(projectRoot)' && python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
         displayName: 'Run tests'
+        continueOnError: true
 
       - task: PublishTestResults@2
         inputs:
           testResultsFiles: "**/TEST-*.xml"
           testRunTitle: 'Python $(PYTHON_VERSION)'
 
-#  - phase: 'Publish'
-#    dependsOn: 'Test'
-#    queue: 'Hosted Ubuntu 1604'
-#    steps:
-#      - task: CopyFiles@2
-#        inputs:
-#          sourceFolder: '$(build.sourcesDirectory)'
-#          targetFolder: '$(build.artifactStagingDirectory)'
-#      - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/languages/python

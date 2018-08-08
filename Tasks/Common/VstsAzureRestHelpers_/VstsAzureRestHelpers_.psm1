@@ -3,6 +3,7 @@ $script:jsonContentType = "application/json;charset=utf-8"
 $script:formContentType = "application/x-www-form-urlencoded;charset=utf-8"
 $script:defaultAuthUri = "https://login.microsoftonline.com/"
 $script:defaultEnvironmentAuthUri = "https://login.windows.net/"
+$script:certificateAccessToken = $null
 
 # Connection Types
 $certificateConnection = 'Certificate'
@@ -333,7 +334,12 @@ function Get-AzureRMAccessToken {
     }
     else
     {
-        Get-SpnAccessToken $endpoint
+        if ($Endpoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
+            Get-SpnAccessTokenUsingCertificate $endpoint
+        }
+        else {
+            Get-SpnAccessToken $endpoint
+        }
     }   
 }
 
@@ -473,6 +479,92 @@ function Get-MsiAccessToken {
     }
 }
 
+function Get-SpnAccessTokenUsingCertificate {
+    param(
+        [Parameter(Mandatory=$true)] $endpoint
+    )
+
+    if ($script:certificateAccessToken -and $script:certificateAccessToken.expires_on) {
+        # there exists a token cache
+        $currentTime = [System.DateTime]::UtcNow
+        $tokenExpiryTime = $script:certificateAccessToken.expires_on.UtcDateTime
+        $timeDifference = $tokenExpiryTime - $currentTime
+
+        if ($timeDifference.Minutes -gt 5) {
+            Write-Verbose "Returning access token from cache."
+            return $script:certificateAccessToken
+        }
+    }
+
+    Write-Verbose "Fetching access token using client certificate."
+    
+    # load the ADAL library 
+    Add-Type -Path $PSScriptRoot\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+
+    $pemFileContent = $endpoint.Auth.Parameters.ServicePrincipalCertificate
+    $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
+    
+    $clientCertificate = Get-PfxCertificate -pfxFilePath $pfxFilePath -pfxFilePassword $pfxFilePassword
+
+    $servicePrincipalId = $endpoint.Auth.Parameters.ServicePrincipalId
+    $tenantId = $endpoint.Auth.Parameters.TenantId
+    $envAuthUrl = $script:defaultEnvironmentAuthUri
+    if($endpoint.Data.environmentAuthorityUrl) {
+        $envAuthUrl = $endpoint.Data.environmentAuthorityUrl
+    }
+
+    $envAuthUrl = Get-EnvironmentAuthUrl -endpoint $endpoint
+    $azureActiveDirectoryResourceId = Get-AzureActiverDirectoryResourceId -endpoint $endpoint
+    $authorityUrl = $envAuthUrl
+
+    $isADFSEnabled = $false
+    if ($endpoint.Data.EnableAdfsAuthentication -eq "true") {
+        $isADFSEnabled = $true
+    }
+
+    if (-not $isADFSEnabled) {
+        $authorityUrl = "$envAuthUrl$tenantId"
+    }
+
+    try {
+        $clientAssertionCertificate = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.ClientAssertionCertificate -ArgumentList $servicePrincipalId, $clientCertificate
+
+        $validateAuthority = -not $isADFSEnabled
+        $authenticationContext = New-Object Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext -ArgumentList $authorityUrl, $validateAuthority
+        $tokenResult = $authenticationContext.AcquireTokenAsync($azureActiveDirectoryResourceId, $clientAssertionCertificate).ConfigureAwait($false).GetAwaiter().GetResult()
+    }
+    catch {
+        $script:certificateAccessToken = $null
+        throw (Get-VstsLocString -Key "AZ_SPNCertificateAccessTokenFetchFailure" -ArgumentList $servicePrincipalId, $_)
+    }
+
+    if ($tokenResult) {
+        Write-Verbose "Successfully fetched access token using client certificate."
+        $script:certificateAccessToken = @{
+            token_type = $tokenResult.AccessTokenType;
+            access_token = $tokenResult.AccessToken;
+            expires_on = $tokenResult.ExpiresOn;
+        }
+
+        return $script:certificateAccessToken
+    }
+    else {
+        $script:certificateAccessToken = $null
+        throw (Get-VstsLocString -Key "AZ_SPNCertificateAccessTokenFetchFailureTokenNull" -ArgumentList $servicePrincipalId)
+    }
+}
+
+function Get-PfxCertificate {
+    param(
+        [string][Parameter(Mandatory=$true)] $pfxFilePath, 
+        [string][Parameter(Mandatory=$true)] $pfxFilePassword
+    )
+
+    $clientCertificate = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+    $clientCertificate.Import($pfxFilePath, $pfxFilePassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet)
+
+    return $clientCertificate
+}
 
 # Get the certificate from the Endpoint.
 function Get-Certificate {
@@ -1313,6 +1405,37 @@ function Add-PropertiesToRoot
     }
 
     return $rootObject
+}
+
+function ConvertTo-Pfx {
+    param(
+        [String][Parameter(Mandatory = $true)] $pemFileContent
+    )
+
+    if ($ENV:Agent_TempDirectory) {
+        $pemFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:Agent_TempDirectory\clientcertificate.pfx"
+        $pfxPasswordFilePath = "$ENV:Agent_TempDirectory\clientcertificatepassword.txt"
+    }
+    else {
+        $pemFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+        $pfxFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
+        $pfxPasswordFilePath = "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"    
+    }
+
+    # save the PEM certificate to a PEM file
+    Set-Content -Path $pemFilePath -Value $pemFileContent
+
+    # use openssl to convert the PEM file to a PFX file
+    $pfxFilePassword = [System.Guid]::NewGuid().ToString()
+    Set-Content -Path $pfxPasswordFilePath -Value $pfxFilePassword -NoNewline
+
+    $openSSLExePath = "$PSScriptRoot\openssl\openssl.exe"
+    $openSSLArgs = "pkcs12 -export -in $pemFilePath -out $pfxFilePath -password file:`"$pfxPasswordFilePath`""
+     
+    Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
+
+    return $pfxFilePath, $pfxFilePassword
 }
 
 # Export only the public function.

@@ -18,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 2,
-        "Patch": 8
+        "Patch": 10
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
     "minimumAgentVersion": "2.104.1",
@@ -353,7 +353,7 @@
             "required": false,
             "groupName": "AdditionalDeploymentOptions",
             "visibleRule": "UseWebDeploy == true && DeploymentType == webDeploy",
-            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to the Azure App Service."
+            "helpMarkDown": "Select the option to prevent files in the App_Data folder from being deployed to/ deleted from the Azure App Service."
         },
         {
             "name": "AdditionalArguments",

@@ -166,6 +166,11 @@ export async function run(nuGetPath: string): Promise<void> {
         let useConfigFile: boolean = selectOrConfig === "select" || (selectOrConfig === "config" && !!nuGetConfigPath);
         let configFile = useConfigFile ? nuGetConfigHelper.tempNugetConfigPath : undefined;
 
+        if (useConfigFile)
+        {
+            credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
+        }
+
         try {
             let restoreOptions = new RestoreOptions(
                 nuGetPath,

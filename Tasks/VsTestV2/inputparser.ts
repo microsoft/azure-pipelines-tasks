@@ -149,7 +149,8 @@ function getTargetBinariesSettings(inputDataContract : idc.InputDataContract) : 
 function getTestReportingSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.TestReportingSettings = <idc.TestReportingSettings>{};
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
-
+    inputDataContract.TestReportingSettings.TestRunSystem = "VSTS - vstest";
+    
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
         let definitionName = tl.getVariable('BUILD_DEFINITIONNAME');

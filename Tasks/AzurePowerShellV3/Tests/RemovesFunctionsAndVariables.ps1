@@ -12,6 +12,7 @@ Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Get-VstsInput { "continue" } -- -Name errorActionPreference
 Register-Mock Get-VstsInput { $true } -- -Name FailOnStandardError
 Register-Mock Update-PSModulePathForHostedAgent
+Register-Mock Remove-EndpointSecrets
 
 # Arrange the mock task SDK module.
 New-Module -Name VstsTaskSdk -ScriptBlock {

@@ -36,7 +36,7 @@ function getRedirectOptions(options: any, redirectUrl: string): any {
     return options;
 }
 
-export async function download(options: any, downloadPath: string, printData: boolean, handleRedirect: boolean = true): Promise<void> {
+export async function download(options: any, downloadPath: string, printData: boolean, handleRedirect: boolean): Promise<void> {
     var file = fs.createWriteStream(downloadPath);
     var body = ''
     return new Promise<void>((resolve, reject) => {

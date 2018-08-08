@@ -1,0 +1,28 @@
+{
+  "name": "Agent.Tasks.Maven",
+  "version": "1.0.37",
+  "author": "Microsoft Corporation",
+  "description": "Build with Apache Maven",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
+  },
+  "dependencies": {
+    "base-64": "^0.1.0",
+    "cheerio": "^0.22.0",
+    "codeanalysis-common": "file:../../_build/Tasks/Common/codeanalysis-common-1.0.0.tgz",
+    "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools-1.0.0.tgz",
+    "fs-extra": "^0.30.0",
+    "glob": "7.1.0",
+    "java-common": "file:../../_build/Tasks/Common/java-common-1.0.0.tgz",
+    "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common-1.0.1.tgz",
+    "request": "^2.74.0",
+    "strip-bom": "^3.0.0",
+    "utf8": "^2.1.0",
+    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+    "uuid": "^3.0.1",
+    "vso-node-api": "6.0.1-preview",
+    "vsts-task-lib": "1.1.0",
+    "xml2js": "^0.4.16"
+  }
+}

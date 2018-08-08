@@ -32,6 +32,7 @@ Register-Mock Get-ServiceFabricApplicationTypeAction {
     throw [System.Fabric.FabricTransientException]::new("Could not ping!!")
 } -- -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
 
+Register-Mock Get-SfSdkVersion { '3.1.183.9494' }
 Register-Mock Start-Sleep {}
 Register-Mock Write-VstsTaskError
 
