@@ -108,7 +108,7 @@ export class AzureRMEndpoint {
                 loginEndpoint += (loginEndpoint[loginEndpoint.length - 1] == "/") ? "" : "/";
                 endpoint.activeDirectoryAuthority = loginEndpoint;
                 endpoint.environmentAuthorityUrl = loginEndpoint;
-                endpoint.isADFSEnabled = loginEndpoint.endsWith('/adfs');
+                endpoint.isADFSEnabled = loginEndpoint.endsWith('/adfs/');
             }
             else {
                 // change to login endpoint
