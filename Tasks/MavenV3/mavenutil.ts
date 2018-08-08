@@ -8,7 +8,6 @@ import locationHelpers = require("nuget-task-common/LocationHelpers"); // TODO: 
 import systemToken = require('utility-common/accesstoken');
 
 import * as url from "url";
-import * as str from 'string';
 import * as xml2js from 'xml2js';
 import * as fse from 'fs-extra';
 import * as cheerio from 'cheerio';
@@ -44,7 +43,7 @@ function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string)
         rootName: rootName
     });
     let xml = builder.buildObject(jsonContent);
-    xml = str(xml).replaceAll('&#xD;', '').s;
+    xml = xml.replace(/&#xD;/g, '');
     return writeFile(filePath, xml);
 }
 

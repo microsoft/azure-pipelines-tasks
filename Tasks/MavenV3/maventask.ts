@@ -15,6 +15,7 @@ import {FindbugsTool} from 'codeanalysis-common/Common/FindbugsTool';
 import javacommons = require('java-common/java-common');
 import util = require('./mavenutil');
 
+const TESTRUN_SYSTEM = "VSTS - maven"; 
 var isWindows = os.type().match(/^Win/);
 
 // Set up localization resource file
@@ -323,8 +324,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
         tl.debug('Pattern found in testResultsFiles parameter');
         var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
         tl.debug(`buildFolder=${buildFolder}`);
-        var allFiles = tl.find(buildFolder);
-        matchingJUnitResultFiles = tl.match(allFiles, testResultsFiles, {
+        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles, null, {
             matchBase: true
         });
     }
@@ -339,7 +339,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
     }
 
     var tp = new tl.TestPublisher("JUnit");
-    tp.publish(matchingJUnitResultFiles, true, "", "", "", true);
+    tp.publish(matchingJUnitResultFiles, true, "", "", "", true, TESTRUN_SYSTEM);
 }
 
 function execEnableCodeCoverage(): Q.Promise<string> {
@@ -385,9 +385,9 @@ function enableCodeCoverage() : Q.Promise<any> {
     }
 
     // clean any previously generated files.
-    tl.rmRF(targetDirectory, true);
-    tl.rmRF(reportDirectory, true);
-    tl.rmRF(reportPOMFile, true);
+    tl.rmRF(targetDirectory);
+    tl.rmRF(reportDirectory);
+    tl.rmRF(reportPOMFile);
 
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = mavenPOMFile;
