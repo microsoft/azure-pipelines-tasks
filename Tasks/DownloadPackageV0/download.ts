@@ -46,10 +46,10 @@ function getAuthToken() {
 
 export async function downloadPackage(collectionUrl: string, credentialHandler: bearm.BearerCredentialHandler, feedId: string, packageId: string, version: string, downloadPath: string) {
 	
-	var feedsUrl = collectionUrl.replace(".visualstudio.com",".feeds.visualstudio.com");
+	var feedsUrl = collectionUrl.replace(".visualstudio.com",".feeds.visualstudio.com").replace("dev.azure.com","feeds.dev.azure.com");
 	var feedConnection = new vsts.WebApi(feedsUrl, credentialHandler);
 	
-	var packagesUrl = collectionUrl.replace(".visualstudio.com",".pkgs.visualstudio.com");
+	var packagesUrl = collectionUrl.replace(".visualstudio.com",".pkgs.visualstudio.com").replace("dev.azure.com","pkgs.dev.azure.com");
 	var packageConnection = new vsts.WebApi(packagesUrl, credentialHandler);
 	
 	var packageUrl = await getNuGetPackageUrl(feedConnection.getCoreApi().vsoClient, feedId, packageId);
