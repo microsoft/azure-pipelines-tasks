@@ -307,6 +307,12 @@ function Wait-ServiceFabricApplicationUpgradeAction
             -MaxTries 2147483647 `
             -RetryIntervalInSeconds 5 `
             -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
+
+        if($upgradeStatus.UpgradeState -eq "RollingBackCompleted")
+        {
+            Trace-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
+            Trace-ServiceFabricClusterHealth
+        }
     }
     catch
     {
