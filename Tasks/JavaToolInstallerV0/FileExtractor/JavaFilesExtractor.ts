@@ -74,7 +74,7 @@ export class JavaFilesExtractor {
         tar.execSync();
     }
 
-    private extractFiles(file: string, fileEnding: string) {
+    private async extractFiles(file: string, fileEnding: string) {
         const stats = taskLib.stats(file);
         if (!stats) {
             throw new Error(taskLib.loc('ExtractNonExistFile', file));
@@ -107,10 +107,8 @@ export class JavaFilesExtractor {
                 // 3 cleanup temp folder
                 console.log(taskLib.loc('RemoveTempDir', tempFolder));
                 taskLib.rmRF(tempFolder);
-            } else if ('.zip' === fileEnding) {
-                this.unzipExtract(file, this.destinationFolder);
             } else { // use sevenZip
-                this.sevenZipExtract(file, this.destinationFolder);
+                await this.sevenZipExtract(file, this.destinationFolder);
             }
         } else { // not windows
             if ('.tar' === fileEnding || '.tar.gz' === fileEnding) {
@@ -143,7 +141,7 @@ export class JavaFilesExtractor {
         }    
     }
 
-    public unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): string {
+    public async unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): Promise<string> {
         this.destinationFolder = extractLocation;
         let initialDirectoriesList: string[];
         let finalDirectoriesList: string[];
@@ -164,7 +162,7 @@ export class JavaFilesExtractor {
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
             taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
             jdkDirectory = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
-            this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
+            await this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
             return jdkDirectory;
         }
     }
