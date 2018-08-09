@@ -13,7 +13,14 @@ import * as commandHelper from "./CommandHelper";
 // It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
 
 interface EnvironmentDictionary { [key: string]: string; }
-
+interface EndpointCredentials {
+    endpoint: string;
+    username?: string;
+    password: string;
+}
+interface EnpointCredentialsContainer {
+    endpointCredentials: EndpointCredentials[];
+}
 export interface NuGetEnvironmentSettings {
     /* V1 credential provider folder path. Only populated if V1 should be used. */
     credProviderFolder?: string;
@@ -30,6 +37,7 @@ function prepareNuGetExeEnvironment(
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string = null;
     let envVarCredProviderPathV2: string = null;
+    let noTempConfigFile: string = null;
 
     for (let e in input) {
         if (!input.hasOwnProperty(e)) {
@@ -63,7 +71,12 @@ function prepareNuGetExeEnvironment(
 
     if (authInfo && authInfo.internalAuthInfo) {
         env["VSS_NUGET_ACCESSTOKEN"] = authInfo.internalAuthInfo.accessToken;
-        env["VSS_NUGET_URI_PREFIXES"] = authInfo.internalAuthInfo.uriPrefixes.join(";");
+        env["VSS_NUGET_URI_PREFIXES"] = authInfo.internalAuthInfo.uriPrefixes.join(";")
+    }
+
+    let externalCredentials = buildCredentialJson(authInfo);
+    if (externalCredentials) {
+        env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"] = externalCredentials;
     }
 
     env["NUGET_CREDENTIAL_PROVIDER_OVERRIDE_DEFAULT"] = "true";
@@ -294,4 +307,50 @@ export function getNuGetProxyFromEnvironment(): string {
     }
 
     return undefined;
+}
+
+function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
+    if (authInfo && authInfo.externalAuthInfo) {
+        let enpointCredentialsJson: EnpointCredentialsContainer = {
+            endpointCredentials: [] as EndpointCredentials[]
+        };
+        tl.debug(`Detected external credentials for:`);
+        authInfo.externalAuthInfo.forEach((authInfo) => {
+            switch(authInfo.authType) {
+                case (auth.ExternalAuthType.UsernamePassword):
+                    let usernamePasswordAuthInfo =  authInfo as auth.UsernamePasswordExternalAuthInfo;
+                    enpointCredentialsJson.endpointCredentials.push({
+                        endpoint: authInfo.packageSource.feedUri,
+                        username: usernamePasswordAuthInfo.username,
+                        password: usernamePasswordAuthInfo.password
+                        
+                    } as EndpointCredentials);
+                    tl.debug(authInfo.packageSource.feedUri);
+                    break;
+                case (auth.ExternalAuthType.Token):
+                    let tokenAuthInfo =  authInfo as auth.TokenExternalAuthInfo;
+                    enpointCredentialsJson.endpointCredentials.push({
+                        endpoint: authInfo.packageSource.feedUri,
+                        /* No username provided */
+                        password: tokenAuthInfo.token
+                    } as EndpointCredentials);
+                    tl.debug(authInfo.packageSource.feedUri);
+                    break;
+                case (auth.ExternalAuthType.ApiKey):
+                    let apiKeyAuthInfo =  authInfo as auth.ApiKeyExternalAuthInfo;
+                    enpointCredentialsJson.endpointCredentials.push({
+                        endpoint: authInfo.packageSource.feedUri,
+                        /* No username provided */
+                        password: apiKeyAuthInfo.apiKey
+                    } as EndpointCredentials);
+                    tl.debug(authInfo.packageSource.feedUri);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        const externalCredentials: string = JSON.stringify(enpointCredentialsJson);
+        return externalCredentials;
+    }
 }

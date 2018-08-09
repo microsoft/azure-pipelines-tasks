@@ -104,6 +104,7 @@ export async function run(nuGetPath: string): Promise<void> {
         // Setting up sources, either from provided config file or from feed selection
         tl.debug('Setting up sources');
         let nuGetConfigPath : string = undefined;
+        let configFile: string = undefined;
         let selectOrConfig = tl.getInput("selectOrConfig");
         // This IF is here in order to provide a value to nuGetConfigPath (if option selected, if user provided it)
         // and then pass it into the config helper
@@ -111,6 +112,12 @@ export async function run(nuGetPath: string): Promise<void> {
             nuGetConfigPath = tl.getPathInput("nugetConfigPath", false, true);
             if (!tl.filePathSupplied("nugetConfigPath")) {
                 nuGetConfigPath = undefined;
+            }
+
+            // If using NuGet version 4.8 or greater and nuget.config was provided, 
+            // do not create temp config file
+            if (useV2CredProvider && nuGetConfigPath) {
+                configFile = nuGetConfigPath;
             }
         }
 
@@ -163,19 +170,30 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         }
 
-        // Setting creds in the temp NuGet.config if needed
-        await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        tl.debug('nuGetConfigPath'); // satus debugging
+        tl.debug(nuGetConfigPath);
 
-        // Use config file if:
-        //     - User selected "Select feeds" option
-        //     - User selected "NuGet.config" option and the nuGetConfig input has a value
-        let useConfigFile: boolean = selectOrConfig === "select" || (selectOrConfig === "config" && !!nuGetConfigPath);
-        let configFile = useConfigFile ? nuGetConfigHelper.tempNugetConfigPath : undefined;
-
-        if (useConfigFile)
-        {
-            credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
+        if (!useV2CredProvider && !configFile) {
+            // Setting creds in the temp NuGet.config if needed
+            await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+            tl.debug('Setting nuget.config auth');
+        } else {
+            tl.debug('Not setting temp nuget.config auth');
         }
+        // if configfile has already been set, let it be
+        if (!configFile) {
+            // Use config file if:
+            //     - User selected "Select feeds" option
+            //     - User selected "NuGet.config" option and the nuGetConfig input has a value
+            let useConfigFile: boolean = selectOrConfig === "select" || (selectOrConfig === "config" && !!nuGetConfigPath);
+            configFile = useConfigFile ? nuGetConfigHelper.tempNugetConfigPath : undefined;
+
+            if (useConfigFile)
+            {
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
+            }
+        }
+        tl.debug(`ConfigFile: ${configFile}`);
 
         try {
             let restoreOptions = new RestoreOptions(
