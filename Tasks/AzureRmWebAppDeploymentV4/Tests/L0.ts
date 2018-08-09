@@ -138,4 +138,22 @@ describe('AzureRmWebAppDeployment Suite', function() {
         assert(tr.stdout.search('## mkdir Successful ##') >= 0, 'should have created dir including dest folder');
         done();
     });
+
+    it('AzureRmWebAppDeploymentV4 DeploymentFactoryTests', (done: MochaDone) => {
+        let tp = path.join(__dirname,'DeploymentFactoryTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+            assert(tr.stdOutContained('LinuxWebAppDeploymentProvider should be excepted.'), 'Should have printed: LinuxWebAppDeploymentProvider should be expected.');
+            assert(tr.stdOutContained('WindowsWebAppRunFromZipProvider should be excepted.'), 'Should have printed: WindowsWebAppRunFromZipProvider should be expected.');
+            assert(tr.stdOutContained('WindowsWebAppWarDeployProvider should be excepted.'), 'Should have printed: WindowsWebAppWarDeployProvider should be expected.');
+            assert(tr.stdOutContained('WindowsWebAppZipDeployProvider should be excepted.'), 'Should have printed: WindowsWebAppZipDeployProvider should be expected.');
+            assert(tr.stdOutContained('WindowsWebAppWebDeployProvider should be excepted.'), 'Should have printed: WindowsWebAppWebDeployProvider should be expected.');
+            done();
+        }
+        catch(error) {
+            done(error);
+        }
+    });
+
 });
