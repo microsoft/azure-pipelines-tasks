@@ -43,22 +43,15 @@ function Get-AadSecurityToken
 
     try
     {
-        if($script:RefreshToken)
-        {
-            $token = $authContext.AcquireTokenByRefreshToken($RefreshToken, $clientApplicationId)
-        }
-        else
-        {
-            # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
-            $token = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential)
-        }
-        $script:RefreshToken = $token.RefreshToken
-        return $token.AccessToken
+        # Acquiring a token using UserCredential implies a non-interactive flow. No credential prompts will occur.
+        $accessToken = $authContext.AcquireToken($clusterApplicationId, $clientApplicationId, $userCredential).AccessToken
     }
     catch
     {
         throw (Get-VstsLocString -Key ErrorOnAcquireToken -ArgumentList $_)
     }
+
+    return $accessToken
 }
 
 function Add-Certificate
