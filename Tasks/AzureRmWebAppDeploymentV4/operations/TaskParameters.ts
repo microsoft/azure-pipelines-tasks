@@ -14,7 +14,7 @@ export class TaskParametersUtility {
     public static getParameters(): TaskParameters {
         var taskParameters: TaskParameters = {
             ConnectionType: tl.getInput('ConnectionType', true),
-            WebAppKind: tl.getInput('WebAppKind', false),
+            WebAppKind: tl.getInput('WebAppKind', true),
             DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
             VirtualApplication: tl.getInput('VirtualApplication', false),
             GenerateWebConfig: tl.getBoolInput('GenerateWebConfig', false),
