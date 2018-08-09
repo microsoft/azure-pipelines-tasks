@@ -31,7 +31,7 @@ async function execute() {
         inputParser.setIsServerBasedRun(serverBasedRun);
 
         const enableDiagnostics = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
-        'TestExecution.EnableTranslationApi', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+        'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
         inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
         if (serverBasedRun) {
