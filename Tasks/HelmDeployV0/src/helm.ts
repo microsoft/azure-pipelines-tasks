@@ -70,7 +70,7 @@ function requiresKubeConfig() {
         || command === "template"
         || command === "create") return false;
 
-    if (command === "init" && args.indexOf("--client-only") < 0) return false;
+    if (command === "init" && args && args.indexOf("--client-only") >= 0) return false;
 
     return true;
 }
