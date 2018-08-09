@@ -9,7 +9,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 18
+    "Patch": 19
   },
   "runsOn": [
     "Agent",
@@ -183,6 +183,7 @@
     "TestDebugLog": "ms-resource:loc.messages.TestDebugLog",
     "OverridingProjectNpmrc": "ms-resource:loc.messages.OverridingProjectNpmrc",
     "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
-    "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory"
+    "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory",
+    "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps"
   }
 }
