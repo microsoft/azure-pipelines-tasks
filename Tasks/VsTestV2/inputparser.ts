@@ -12,6 +12,7 @@ import * as uuid from 'uuid';
 const regedit = require('regedit');
 
 let serverBasedRun = false;
+let enableDiagnosticsSettings = false;
 
 // TODO: refactor all log messages to a separate function
 // replace else if ladders with switch if possible
@@ -366,9 +367,15 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
 
 function getDiagnosticsSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.ExecutionSettings.DiagnosticsSettings = <idc.DiagnosticsSettings>{};
-    inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = tl.getBoolInput('diagnosticsEnabled');
-    if(tl.getInput('collectDumpOn').toLowerCase() === 'always') {
-        inputDataContract.ExecutionSettings.DiagnosticsSettings.CollectDumpAlways = true;
+    if(enableDiagnosticsSettings)
+    {
+        inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = tl.getBoolInput('diagnosticsEnabled');
+        if(tl.getInput('collectDumpOn').toLowerCase() === 'always') {
+            inputDataContract.ExecutionSettings.DiagnosticsSettings.CollectDumpAlways = true;
+        }
+    }
+    else {
+        inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = false;
     }
     return inputDataContract;
 }
@@ -542,6 +549,10 @@ function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
 
 export function setIsServerBasedRun(isServerBasedRun: boolean) {
     serverBasedRun = isServerBasedRun;
+}
+
+export function setEnableDiagnosticsSettings(enableDiagnosticsSettingsFF: boolean) {
+    enableDiagnosticsSettings = enableDiagnosticsSettingsFF;
 }
 
 export function getDtaInstanceId(): number {

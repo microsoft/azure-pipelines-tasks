@@ -319,10 +319,8 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
 
 function getDiagnosticsConfiguration(): models.DiagnosticsConfiguration {
     const diagnosticsConfiguration = {} as models.DiagnosticsConfiguration;
-    diagnosticsConfiguration.enabled = tl.getBoolInput('diagnosticsEnabled');
-    if(tl.getInput('collectDumpOn').toLowerCase() === 'always') {
-        diagnosticsConfiguration.collectDumpAlways = true;
-    }
+    // Diagnostics is not supported for non-api based local test run flows.
+    diagnosticsConfiguration.enabled = false;
     return diagnosticsConfiguration;
 }
 
