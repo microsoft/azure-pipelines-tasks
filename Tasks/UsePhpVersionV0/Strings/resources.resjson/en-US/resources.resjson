@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Use PHP Version",
   "loc.helpMarkDown": "",
-  "loc.description": "Retrieve the specified version of PHP from the tool cache and add it to PATH.",
+  "loc.description": "Retrieve a version of PHP from Agent.ToolsDirectory and add it to PATH.",
   "loc.instanceNameFormat": "Use PHP Version $(versionSpec)",
   "loc.input.label.versionSpec": "Version spec",
   "loc.input.help.versionSpec": "Version range or exact version of a PHP version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)",
