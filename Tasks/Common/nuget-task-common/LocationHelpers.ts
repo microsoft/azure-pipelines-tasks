@@ -141,10 +141,11 @@ export function getConnectionDataForArea(
                     .then((spsConnectionData) => {
                         tl.debug("successfully loaded SPS location data");
                         const areaService = findServiceByIdentifier(spsConnectionData, areaId);
+                        // If no areaService it's quite probably the service containing the area has not been
+                        // faulted in
                         if (!areaService) {
-                            throw new GetConnectionDataForAreaError(
-                                tl.loc("NGCommon_AreaNotFoundInSps", areaName, areaId),
-                                "AreaNotFoundInSps");
+                            tl.debug(tl.loc("NGCommon_AreaNotFoundInSps", areaName, areaId));
+                            return null;
                         }
 
                         const areaServiceUri = getUriForServiceDefinition(areaService);
@@ -175,6 +176,10 @@ export function getServiceUrisFromCollectionUri(
     areaId: string): Q.Promise<string[]>{
     return this.getConnectionDataForArea(serviceUri, areaName, areaId, "vstsBuild", accessToken)
         .then((connectionData) => {
+            if (!connectionData) {
+                return [];
+            }
+
             const defaultMapping = connectionData.locationServiceData.accessMappings
                 .find((mapping) => mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker)
                 .accessPoint;
@@ -197,6 +202,12 @@ export function getServiceUrisFromCollectionUri(
  */
 export function assumeNuGetUriPrefixes(collectionUri: string): Q.Promise<string[]> {
     const prefixes = [collectionUri];
+
+    const serverType = tl.getVariable("System.ServerType");
+    if (!serverType || serverType.toLowerCase() !== "hosted") {
+        return Q.resolve(prefixes);
+    }
+
     return this.getServiceUrisFromCollectionUri(
         collectionUri,
         auth.getSystemAccessToken(),
