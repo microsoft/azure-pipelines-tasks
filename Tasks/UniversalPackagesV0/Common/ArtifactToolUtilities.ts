@@ -1,9 +1,8 @@
 // Placed as a separate file for the purpose of unit testing
 import AdmZip = require('adm-zip');
-import * as locatorHelper from "nuget-task-common/LocationHelpers"
 import os = require("os");
 import * as path from "path";
-import * as semver from 'semver';
+import * as semver from "semver";
 import * as vsts from "vso-node-api";
 import * as tl from "vsts-task-lib";
 import * as toollib from "vsts-task-tool-lib/tool";
@@ -35,6 +34,18 @@ export async function extractZip(file: string): Promise<string> {
     return dest;
 }
 
+// Getting service urls from resource areas api
+export async function getServiceUriFromAreaCode(serviceUri: string, accessToken: string, areaId: string){
+    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
+    const connectionData = new vsts.WebApi(serviceUri, credentialHandler);
+
+    let locationApi = await connectionData.getLocationsApi();
+
+    const serviceUriFromArea = await locationApi.getResourceArea(areaId);
+
+    return serviceUriFromArea.locationUrl;
+}
+
 export async function getArtifactToolFromService(serviceUri: string, accessToken: string, toolName: string){
 
     let osName = tl.osType();
@@ -45,53 +56,43 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
     if (arch === "x64"){
         arch = "amd64";
     }
+
     const blobstoreAreaName = "clienttools";
     const blobstoreAreaId = "187ec90d-dd1e-4ec6-8c57-937d979261e5";
     const ApiVersion = "5.0-preview";
 
-    const credentialHandler = vsts.getBasicHandler("fakeUsername", accessToken);
+    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
     const blobstoreConnection = new vsts.WebApi(serviceUri, credentialHandler);
 
-    let blobstoreApi = blobstoreConnection.getCoreApi();
-
-    // Get packaging versions url
-    const artifactToolGetUrl = await new Promise<string>((resolve, reject) => {
-        let getToolDataPromise = blobstoreApi.vsoClient.getVersioningData(ApiVersion,
+    try{
+        const artifactToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion,
             blobstoreAreaName, blobstoreAreaId, { toolName }, {osName, arch});
-        getToolDataPromise.then((result) => {
-            return resolve(result.requestUrl);
-        });
-        getToolDataPromise.catch((error) => {
-            return reject(error);
-        });
-    });
 
-    // Get highest version
-    const artifactToolUri =  await new Promise<any>((resolve, reject) => {
-        blobstoreApi.restClient.get(artifactToolGetUrl, ApiVersion, null, { responseIsCollection: false },
-            async function (error, status, toolResult) {
-                if (!!error || status !== 200) {
-                    return reject(error.message);
-                }
-                // Getting the tool uri
-                return resolve(toolResult);
-            });
-    });
+        const artifactToolUri =  await blobstoreConnection.rest.get(artifactToolGetUrl.requestUrl);
 
-    let artifactToolPath = toollib.findLocalTool(toolName, artifactToolUri.version);
-    if (!artifactToolPath) {
-        tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.uri));
+        if (artifactToolUri.statusCode !== 200){
+            throw new Error(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", artifactToolGetUrl.requestUrl));
+        }
 
-        const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.uri);
+        let artifactToolPath = toollib.findLocalTool(toolName, artifactToolUri.result.version);
+        if (!artifactToolPath) {
+            tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result.uri));
 
-        const unzippedToolsDir = await extractZip(zippedToolsDir);
+            const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result.uri);
 
-        artifactToolPath = await toollib.cacheDir(unzippedToolsDir, "ArtifactTool", artifactToolUri.version);
+            const unzippedToolsDir = await extractZip(zippedToolsDir);
+
+            artifactToolPath = await toollib.cacheDir(unzippedToolsDir, "ArtifactTool", artifactToolUri.result.version);
+        }
+        else{
+            tl.debug(tl.loc("Info_ResolvedToolFromCache", artifactToolPath));
+        }
+        return getArtifactToolLocation(artifactToolPath);
     }
-    else{
-        tl.debug(tl.loc("Info_ResolvedToolFromCache", artifactToolPath));
+    catch(err){
+        tl.error(err);
+        tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToGetArtifactTool", err));
     }
-    return getArtifactToolLocation(artifactToolPath);
 }
 
 export function getVersionUtility(versionRadio: string, highestVersion: string): string {
@@ -109,16 +110,15 @@ export function getVersionUtility(versionRadio: string, highestVersion: string):
 
 // Feeds url from location service
 export async function getFeedUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string>{
-    const feedAreaName = "Packaging";
     const feedAreaId = "7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5";
 
-    return locatorHelper.getServiceUriFromCollectionUri(serviceUri, accesstoken, feedAreaName, feedAreaId);
+    return getServiceUriFromAreaCode(serviceUri, accesstoken, feedAreaId);
 }
 
 export async function getBlobstoreUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string>{
-    const blobAreaName = "blob";
     const blobAreaId = "5294ef93-12a1-4d13-8671-9d9d014072c8";
-    return locatorHelper.getServiceUriFromCollectionUri(serviceUri, accesstoken, blobAreaName, blobAreaId);
+
+    return getServiceUriFromAreaCode(serviceUri, accesstoken, blobAreaId);
 }
 
 export async function getPackageNameFromId(serviceUri: string, accessToken: string, feedId: string, packageId: string): Promise<string> {
@@ -129,11 +129,9 @@ export async function getPackageNameFromId(serviceUri: string, accessToken: stri
     const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
     const feedConnection = new vsts.WebApi(serviceUri, credentialHandler);
 
-    let feedApi = feedConnection.getCoreApi();
-
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {
-        let getVersioningDataPromise = feedApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId, packageId });
+        let getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId, packageId });
         getVersioningDataPromise.then((result) => {
             return resolve(result.requestUrl);
         });
@@ -142,19 +140,17 @@ export async function getPackageNameFromId(serviceUri: string, accessToken: stri
         });
     });
 
-    // getting package name from the right url
-    const packageName =  await new Promise<string>((resolve, reject) => {
-        feedApi.restClient.get(packageUrl, ApiVersion, null, { responseIsCollection: false },
-            async function (error, status, result) {
-                if (!!error || status !== 200) {
-                    // returning the user entered name if id not found
-                    return resolve(packageId);
-                }
-                return resolve(result.name);
-            });
-    });
-
-    return packageName;
+    // Return the user input incase of failure
+    try{
+        const response = await feedConnection.rest.get(packageUrl);
+        if(response.statusCode === 200 && response.result.name){
+            return response.result.name;
+        }
+        return packageId;
+    }
+    catch(err){
+        return packageId;
+    }
 }
 
 export async function getHighestPackageVersionFromFeed(serviceUri: string, accessToken: string, feedId: string, packageName: string): Promise<string> {
@@ -165,11 +161,9 @@ export async function getHighestPackageVersionFromFeed(serviceUri: string, acces
     const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
     const feedConnection = new vsts.WebApi(serviceUri, credentialHandler);
 
-    let feedApi = feedConnection.getCoreApi();
-
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {
-        var getVersioningDataPromise = feedApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId }, {packageNameQuery: packageName, protocolType: "upack", includeDeleted: "true", includeUrls: "false"});
+        var getVersioningDataPromise = feedConnection.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId }, {packageNameQuery: packageName, protocolType: "upack", includeDeleted: "true", includeUrls: "false"});
         getVersioningDataPromise.then((result) => {
             return resolve(result.requestUrl);
         });
@@ -178,24 +172,24 @@ export async function getHighestPackageVersionFromFeed(serviceUri: string, acces
         });
     });
 
-    // getting package name from the right url
-    const highestPackageVersion =  await new Promise<string>((resolve, reject) => {
-        feedApi.restClient.get(packageUrl, ApiVersion, null, { responseIsCollection: false },
-            async function (error, status, result) {
-                if (!!error || status !== 200) {
-                    return reject(error);
-                }
-                if (result.count === 0) {
-                    // If package Id not found then eat exception. This might be a new package name
-                    return resolve("0.0.0");
-                }
-                result.value.forEach((element) => {
+    const versionResponse = await new Promise<string>((resolve, reject) => {
+        let responsePromise = feedConnection.rest.get(packageUrl);
+        responsePromise.then((result) => {
+            if (result.result.count === 0){
+                return resolve("0.0.0");
+            }
+            else{
+                result.result.value.forEach((element) => {
                     if (element.name === packageName.toLowerCase()){
                         return resolve(element.versions[0].version);
                     }
                 });
-                return resolve("0.0.0");
-            });
+            }
+        });
+        responsePromise.catch((error) => {
+            return reject(error);
+        });
     });
-    return highestPackageVersion;
+
+    return versionResponse;
 }
