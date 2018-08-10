@@ -4,7 +4,7 @@ import * as tl from 'vsts-task-lib/task';
 import { publishEvent } from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
-const TESTRUN_SYSTEM = 'PublishTestResults';
+const TESTRUN_SYSTEM = 'VSTS - PTR';
 
 function isNullOrWhitespace(input: any) {
     if (typeof input === 'undefined' || input === null) {
