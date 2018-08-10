@@ -51,7 +51,7 @@ export class JavaFilesExtractor {
         }
     }
 
-    private async sevenZipExtract(file, destinationFolder) {
+    private sevenZipExtract(file, destinationFolder) {
         console.log(taskLib.loc('SevenZipExtractFile', file));
         const sevenZip = taskLib.tool(this.getSevenZipLocation());
         sevenZip.arg('x');
@@ -108,7 +108,7 @@ export class JavaFilesExtractor {
                 console.log(taskLib.loc('RemoveTempDir', tempFolder));
                 taskLib.rmRF(tempFolder);
             } else { // use sevenZip
-                await this.sevenZipExtract(file, this.destinationFolder);
+                this.sevenZipExtract(file, this.destinationFolder);
             }
         } else { // not windows
             if ('.tar' === fileEnding || '.tar.gz' === fileEnding) {
@@ -158,11 +158,11 @@ export class JavaFilesExtractor {
         const jdkFile = path.normalize(repoRoot);
         const stats = taskLib.stats(jdkFile);
         if (stats.isFile()) {
-            this.extractFiles(jdkFile, fileEnding);
+            await this.extractFiles(jdkFile, fileEnding);
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
             taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
             jdkDirectory = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
-            await this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
+            this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
             return jdkDirectory;
         }
     }
