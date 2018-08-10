@@ -6,7 +6,7 @@ phases:
 
   - phase: 'Test'
     queue:
-      name: 'Hosted Ubuntu 1604'
+      name: 'Hosted Linux Preview'
       parallel: 1
       matrix:
         Python27:
@@ -42,7 +42,7 @@ phases:
 
   - phase: 'Publish'
     dependsOn: 'Test'
-    queue: 'Hosted Ubuntu 1604'
+    queue: 'Hosted Linux Preview'
     steps:
 
       - task: UsePythonVersion@0
