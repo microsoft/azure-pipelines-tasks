@@ -3,17 +3,17 @@
 # https://docs.microsoft.com/vsts/pipelines/apps/java/build-maven
 
 queue: 'Hosted Ubuntu 1604'
-steps:
 
+steps:
 # To do: edit the goals and path to 'pom.xml' as needed
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      goals: 'package'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.10'
-      jdkArchitectureOption: 'x64'
-      testResultsFiles: '**/TEST-*.xml'
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'package'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.10'
+    jdkArchitectureOption: 'x64'
+    testResultsFiles: '**/TEST-*.xml'
 
 # For information on extending this YAML to:
 # - Save the artifacts of this build with the build record

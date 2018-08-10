@@ -3,10 +3,10 @@
 # https://aka.ms/yaml
 
 queue: 'Hosted Ubuntu 1604'
-steps:
 
-  - script: composer install
-    displayName: 'composer install'
+steps:
+- script: composer install
+  displayName: 'composer install'
 
 # For information on extending this YAML to:
 # - Run tests with phpunit

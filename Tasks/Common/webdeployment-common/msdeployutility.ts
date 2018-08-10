@@ -3,7 +3,7 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 import path = require('path');
-import { Package } from './packageUtility';
+import { Package, PackageType } from './packageUtility';
 
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
