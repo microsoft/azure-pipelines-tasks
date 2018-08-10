@@ -17,7 +17,7 @@ export function parse(input: string): {[key: string]: any} {
             }
             obj.name = literal.substr(1, literal.length);
         }
-        else if(obj.name && literal.replace(/\s/g, "")) {
+        else {
             obj.value = literal;
             result[obj.name] = { value: obj.value };
             obj = { name: "", value: "" };
@@ -42,7 +42,7 @@ function findLiteral(input, currentPosition): {[key: string]: any} {
     for (; currentPosition < input.length; currentPosition++) {
         if (input[currentPosition] == " " || input[currentPosition] == "\t") {
             for (; currentPosition < input.length; currentPosition++) {
-                if (input[currentPosition + 1] != " " || input[currentPosition + 1] != "\t") {
+                if (input[currentPosition + 1] != " " && input[currentPosition + 1] != "\t") {
                     break;
                 }
             }
