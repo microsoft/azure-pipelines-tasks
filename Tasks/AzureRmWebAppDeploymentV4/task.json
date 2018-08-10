@@ -2,8 +2,8 @@
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
-    "description": "Update Azure WebApp Services On Windows, Web App On Linux with built-in images or docker containers, ASP.NET, .NET Core, PHP, Python or Node based Web applications, Function Apps, Mobile Apps, Api applications, Web Jobs using Web Deploy / Kudu REST APIs",
-    "helpMarkDown": "[More Information](https://aka.ms/azurermwebdeployreadme)",
+    "description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
+    "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -18,9 +18,9 @@
     "version": {
         "Major": 4,
         "Minor": 2,
-        "Patch": 10
+        "Patch": 11
     },
-    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more Information.",
+    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -402,7 +402,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: the build or release's system definition variables are excluded in substitution."
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: pipeline variables are excluded in substitution."
         }
     ],
     "outputVariables": [
