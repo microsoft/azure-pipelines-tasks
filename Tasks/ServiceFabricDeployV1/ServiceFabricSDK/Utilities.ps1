@@ -299,11 +299,30 @@ function Wait-ServiceFabricApplicationUpgradeAction
     }
 
     $upgradeStatusValidator = { param($upgradeStatus) return !($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
+
+    $exceptionRetryEvaluator = {
+        param($ex)
+
+        if ($ex.GetType().FullName -eq "System.Fabric.FabricException")
+        {
+            if($ex.ErrorCode -eq "InvalidCredentials")
+            {
+                $clusterConnectionParameters = @{}
+                $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
+                Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+                return $true
+            }
+            return $false
+        }
+        return $true
+    }
+
     $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
         -ResultRetryEvaluator $upgradeStatusValidator `
         -MaxTries 2147483647 `
         -RetryIntervalInSeconds 5 `
-        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
+        -ExceptionRetryEvaluator $exceptionRetryEvaluator `
+        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException", "System.Fabric.FabricException")
 
     return $upgradeStatus
 }
