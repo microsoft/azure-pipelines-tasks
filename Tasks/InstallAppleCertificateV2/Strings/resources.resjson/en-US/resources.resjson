@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Install Apple Certificate",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=862067)",
+  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=862067)",
   "loc.description": "Install an Apple certificate required to build on a macOS agent",
   "loc.instanceNameFormat": "Install an Apple certificate",
   "loc.releaseNotes": "Fixes codesign hangs on a self hosted agent. Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
@@ -22,9 +22,9 @@
   "loc.input.label.signingIdentity": "Certificate signing identity",
   "loc.input.help.signingIdentity": "The Common Name of the subject in the signing certificate.  Will attempt to parse the Common Name if this is left empty.",
   "loc.messages.INVALID_P12": "Unable to find the certificate SHA1 hash and common name (CN). Verify that the certificate is a valid P12.",
-  "loc.messages.NoP12PwdWarning": "No P12 password supplied. If the P12 file requires a password, best practice is to supply it as process variable and mark it secret (lock icon).",
+  "loc.messages.NoP12PwdWarning": "No P12 password was supplied. If the P12 file requires a password, the best practice is to supply it as pipeline variable and mark it secret by enabling the lock icon.",
   "loc.messages.P12PrivateKeyNameNotFound": "Failed to identify the private key name: %s",
-  "loc.messages.SetKeyPartitionListCommandNotFound": "Skipping unnecessary keychain partition_id ACL assignment on older OS. The security command 'set-key-partition-list' was added in macOS Sierra (10.12).",
-  "loc.messages.SetKeyPartitionListCommandFailed": "Error setting partition_id ACL for private key. Check `Keychain password` is correct, or use `Temporary Keychain` instead.",
-  "loc.messages.InstallRequiresMac": "Install Apple Certificate requires a macOS agent. Installing on Windows or Linux is not supported by Apple."
+  "loc.messages.SetKeyPartitionListCommandNotFound": "Skipping unnecessary keychain partition_id ACL assignment on this older OS. The security command 'set-key-partition-list' was introduced in macOS Sierra (10.12).",
+  "loc.messages.SetKeyPartitionListCommandFailed": "Error setting the partition_id ACL for the private key. Verify that the `Keychain password` is correct, or use a `Temporary Keychain` instead.",
+  "loc.messages.InstallRequiresMac": "Install Apple Certificate requires a macOS agent. Installing Apple Certificates on Linux or Windows is not supported by Apple."
 }

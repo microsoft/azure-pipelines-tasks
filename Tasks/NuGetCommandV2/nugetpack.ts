@@ -145,7 +145,6 @@ export async function run(nuGetPath: string): Promise<void> {
         }
 
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
-            credProviderFolder: null,
             extensionsDisabled: true
         };
 
