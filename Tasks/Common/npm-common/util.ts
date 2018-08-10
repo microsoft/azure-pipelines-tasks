@@ -8,6 +8,7 @@ import * as vsts from 'vso-node-api/WebApi';
 
 import { INpmRegistry, NpmRegistry } from './npmregistry';
 import * as NpmrcParser from './npmrcparser';
+import locationHelpers = require("./LocationHelpers");
 
 export function appendToNpmrc(npmrc: string, data: string): void {
     tl.writeFile(npmrc, data, {
@@ -17,12 +18,20 @@ export function appendToNpmrc(npmrc: string, data: string): void {
 
 export async function getLocalRegistries(npmrc: string): Promise<string[]> {
     // Local registries are VSTS feeds from the SAME collection host 
-    const collectionHost = url.parse(await getPackagingCollectionUrl()).host;
+    const packagingUrls = await getPackagingCollectionUrls();
+    const collectionHosts = packagingUrls.map((pkgUrl: string) => {
+        const parsedUrl = url.parse(pkgUrl);
+        if (parsedUrl)
+        {
+            return parsedUrl.host.toLowerCase();
+        }
+        return undefined;
+    });
     const registries = NpmrcParser.GetRegistries(npmrc);
 
     const localRegistries = registries.filter(registry => {
         const registryHost = url.parse(registry).host;
-        return registryHost.toLowerCase() === collectionHost.toLowerCase();
+        return collectionHosts.indexOf(registryHost.toLowerCase()) >= 0;
     });
 
     tl.debug(tl.loc('FoundLocalRegistries', localRegistries.length));
@@ -58,17 +67,23 @@ export async function getPackagingCollectionUrl(): Promise<string> {
         return Q(url.format(testUrl));
     }
 
-    let collectionUrl = url.parse(tl.getVariable('System.TeamFoundationCollectionUri'));
+    let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+    let packagingCollectionUrl = (await locationHelpers.assumeNuGetUriPrefixes(collectionUrl))[1];
 
-    if (collectionUrl.hostname.toUpperCase().endsWith('.VISUALSTUDIO.COM')) {
-        let hostParts = collectionUrl.hostname.split('.');
-        let packagingHostName = hostParts[0] + '.pkgs.visualstudio.com';
-        collectionUrl.hostname = packagingHostName;
-        // remove the host property so it doesn't override the hostname property for url.format
-        delete collectionUrl.host;
+    return Q(packagingCollectionUrl);
+}
+
+export async function getPackagingCollectionUrls(): Promise<string[]> {
+    let forcedUrl = tl.getVariable('Npm.PackagingCollectionUrl');
+    const urls: string[] = [];
+    if (forcedUrl) {
+        urls.push(forcedUrl);
     }
 
-    return Q(url.format(collectionUrl));
+    let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+    let packagingCollectionUrls = await locationHelpers.assumeNuGetUriPrefixes(collectionUrl);
+
+    return Q(urls.concat(packagingCollectionUrls));
 }
 
 export function getTempNpmrcPath(): string {

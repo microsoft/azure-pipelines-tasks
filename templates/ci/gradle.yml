@@ -3,16 +3,16 @@
 # https://docs.microsoft.com/vsts/pipelines/apps/java/build-gradle
 
 queue: 'Hosted Ubuntu 1604'
-steps:
 
-  - task: Gradle@2
-    inputs:
-      tasks: 'build'
-      gradleWrapperFile: 'gradlew'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.10'
-      jdkArchitectureOption: 'x64'
-      testResultsFiles: '**/TEST-*.xml'
+steps:
+- task: Gradle@2
+  inputs:
+    tasks: 'build'
+    gradleWrapperFile: 'gradlew'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.10'
+    jdkArchitectureOption: 'x64'
+    testResultsFiles: '**/TEST-*.xml'
 
 # For information on extending this YAML to:
 # - Save the artifacts of this build with the build record

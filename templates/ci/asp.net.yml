@@ -1,31 +1,33 @@
 # ASP.NET
 # Build and test ASP.NET web applications.
+# Add steps that publish symbols, save build artifacts, deploy, and more by visiting:
 # https://docs.microsoft.com/vsts/pipelines/apps/aspnet/build-aspnet-4
 
 queue: 'Hosted VS2017'
+
 variables:
   buildConfiguration: 'Release'
   buildPlatform: 'Any CPU'
   solution: '**/*.sln'
+
 steps:
+- task: NuGetToolInstaller@0
 
-  - task: NuGetToolInstaller@0
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
 
-  - task: NuGetCommand@2
-    inputs:
-      restoreSolution: '$(solution)'
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-  - task: VSBuild@1
-    inputs:
-      solution: '$(solution)'
-      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
-
-  - task: VSTest@2
-    inputs:
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
 # For information on extending this YAML to:
 # - Deploy to a web app

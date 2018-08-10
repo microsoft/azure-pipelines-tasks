@@ -97,6 +97,12 @@ export interface ExecutionSettings {
     TiaSettings : TiaSettings;
     TempFolder : string;
     VideoDataCollectorEnabled : boolean;
+    DiagnosticsSettings : DiagnosticsSettings;
+}
+
+export interface DiagnosticsSettings {
+    Enabled : boolean;
+    CollectDumpAlways : boolean;
 }
 
 export interface TiaSettings {

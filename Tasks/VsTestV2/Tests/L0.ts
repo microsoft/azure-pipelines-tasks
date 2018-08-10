@@ -45,6 +45,10 @@ describe('VsTest Suite', function() {
             interfacesDictionary[interfaceName] = interfacePropertiesDictionary;
         });
 
+        console.log('#######################################################################################################################');
+        console.log('Ensure that the interfaces file is well formatted without extra newlines or whitespaces as the parser this test uses depends on the correct formatting of the inputdatacontract.ts file');
+        console.log('#######################################################################################################################');
+        
         checkParity(inputDataContractParityToolOutput, interfacesDictionary, interfacesDictionary.InputDataContract);
 
         function checkParity(dataContractObject: any, interfacesDictionary: any, subInterface: any) {
@@ -75,10 +79,6 @@ describe('VsTest Suite', function() {
             //console.log(JSON.stringify(subInterface));
             assert(Object.keys(subInterface).length === 1, `${JSON.stringify(subInterface)} properties are not present in the C# data contract.`);
         }
-
-        console.log('#######################################################################################################################');
-        console.log('Ensure that the interfaces file is well formatted without extra newlines or whitespaces as the parser this test uses depends on the correct formatting of the inputdatacontract.ts file');
-        console.log('#######################################################################################################################');
 
         done();
     });

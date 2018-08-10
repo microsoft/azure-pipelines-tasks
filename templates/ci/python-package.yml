@@ -4,54 +4,54 @@
 
 phases:
 
-  - phase: 'Test'
-    queue:
-      name: 'Hosted Ubuntu 1604'
-      parallel: 1
-      matrix:
-        Python27:
-          python.version: '2.7'
-        Python35:
-          python.version: '3.5'
-        Python36:
-          python.version: '3.6'
-        Python37-dev:
-          python.version: '>= 3.7.0a'
-    steps:
+- phase: 'Test'
+  queue:
+    name: 'Hosted Ubuntu 1604'
+    parallel: 1
+    matrix:
+      Python27:
+        python.version: '2.7'
+      Python35:
+        python.version: '3.5'
+      Python36:
+        python.version: '3.6'
+      Python37-dev:
+        python.version: '>= 3.7.0a'
 
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '$(python.version)'
-          architecture: 'x64'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
 
-      - script: python -m pip install --upgrade pip && pip install -r requirements.txt
-        displayName: 'Install dependencies'
+  - script: python -m pip install --upgrade pip && pip install -r requirements.txt
+    displayName: 'Install dependencies'
 
 # Uncomment to install and run Flake8 style enforcement
 #      - script: 'pip install flake8 && flake8'
 #        displayName: 'Flake8 style enforcement'
 
-      - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
-        displayName: 'pytest'
-        continueOnError: true
+  - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
+    displayName: 'pytest'
+    continueOnError: true
 
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFiles: '**/test-results.xml'
-          testRunTitle: 'Python $(python.version)'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/test-results.xml'
+      testRunTitle: 'Python $(python.version)'
 
-  - phase: 'Publish'
-    dependsOn: 'Test'
-    queue: 'Hosted Ubuntu 1604'
-    steps:
+- phase: 'Publish'
+  dependsOn: 'Test'
+  queue: 'Hosted Ubuntu 1604'
 
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '3.6'
-          architecture: 'x64'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      architecture: 'x64'
 
-      - script: python setup.py sdist
-        displayName: 'Build sdist'
+  - script: python setup.py sdist
+    displayName: 'Build sdist'
 
 # Uncomment to publish the dist to a package index
 #      - task: PyPIPublisher@0

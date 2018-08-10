@@ -2,8 +2,8 @@
     "id": "1B467810-6725-4B6D-ACCD-886174C09BBA",
     "name": "IISWebAppDeploymentOnMachineGroup",
     "friendlyName": "IIS Web App Deploy",
-    "description": "Deploy a Website or Web Application using WebDeploy",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=866789)",
+    "description": "Deploy a website or web application using Web Deploy",
+    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=866789)",
     "category": "Deploy",
     "visibility": [
         "Release"
@@ -15,7 +15,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 42
+        "Patch": 43
     },
     "demands": [],
     "minimumAgentVersion": "2.104.1",
@@ -124,7 +124,7 @@
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
-            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's environment). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: The build or release’s system definition variables are excluded in substitution."
+            "helpMarkDown": "Provide new line separated list of JSON files to substitute the variable values. Files names are to be provided relative to the root folder. <br/> To substitute JSON variables that are nested or hierarchical, specify them using JSONPath expressions. <br/> <br/> For example, to replace the value of ‘ConnectionString’ in the sample below, you need to define a variable as ‘Data.DefaultConnection.ConnectionString’ in the build or release pipeline (or release pipeline's stage). <br/> {<br/>&nbsp;&nbsp;\"Data\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;\"DefaultConnection\": {<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"ConnectionString\": \"Server=(localdb)\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True\"<br/>&nbsp;&nbsp;&nbsp;&nbsp;}<br/>&nbsp;&nbsp;}<br/> }<br/> Variable Substitution is run after configuration transforms. <br/><br/> Note: pipeline variables are excluded in substitution."
         }
     ],
     "instanceNameFormat": "Deploy IIS Website/App: $(WebDeployPackage)",

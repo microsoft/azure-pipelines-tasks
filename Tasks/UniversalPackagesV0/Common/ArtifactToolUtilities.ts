@@ -1,4 +1,5 @@
 // Placed as a separate file for the purpose of unit testing
+import AdmZip = require('adm-zip');
 import * as locatorHelper from "nuget-task-common/LocationHelpers"
 import os = require("os");
 import * as path from "path";
@@ -6,7 +7,6 @@ import * as semver from 'semver';
 import * as vsts from "vso-node-api";
 import * as tl from "vsts-task-lib";
 import * as toollib from "vsts-task-tool-lib/tool";
-import AdmZip = require('adm-zip');
 
 export function getArtifactToolLocation(dirName: string): string {
     let toolPath: string = path.join(dirName, "ArtifactTool.exe");
