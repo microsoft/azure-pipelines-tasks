@@ -182,8 +182,12 @@ export function getBundledNuGetLocation(uxOption: string): string {
     return toolPath;
 }
 
-export function locateCredentialProvider(): string {
-    return path.join(__dirname, 'NuGet/CredentialProvider'); 
+export function locateCredentialProvider(useV2CredProvider?: boolean): string {
+    if (useV2CredProvider === true) {
+        return path.join(__dirname, 'NuGet/CredentialProviderV2/plugins/netfx/CredentialProvider.Microsoft/CredentialProvider.Microsoft.exe');
+    } else {
+        return path.join(__dirname, 'NuGet/CredentialProvider');
+    }
 }
 
 // set the console code page to "UTF-8"
