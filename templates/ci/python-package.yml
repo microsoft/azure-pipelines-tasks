@@ -16,6 +16,7 @@ phases:
         python.version: '3.6'
       Python37:
         python.version: '3.7'
+
   steps:
   - task: UsePythonVersion@0
     inputs:
@@ -41,6 +42,7 @@ phases:
 - phase: 'Publish'
   dependsOn: 'Test'
   queue: 'Hosted Linux Preview'
+
   steps:
   - task: UsePythonVersion@0
     inputs:
