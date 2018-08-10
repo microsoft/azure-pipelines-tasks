@@ -3,22 +3,23 @@
 # https://docs.microsoft.com/vsts/pipelines/apps/mobile/xamarin
 
 queue: 'Hosted macOS Preview'
+
 variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
+
 steps:
+- task: NuGetToolInstaller@0
 
-  - task: NuGetToolInstaller@0
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/*.sln'
 
-  - task: NuGetCommand@2
-    inputs:
-      restoreSolution: '**/*.sln'
-
-  - task: XamarinAndroid@1
-    inputs:
-      projectFile: '**/*Droid*.csproj'
-      outputDirectory: '$(outputDirectory)'
-      configuration: '$(buildConfiguration)'
+- task: XamarinAndroid@1
+  inputs:
+    projectFile: '**/*Droid*.csproj'
+    outputDirectory: '$(outputDirectory)'
+    configuration: '$(buildConfiguration)'
 
 # For information on extending this YAML to:
 # - Sign your APK with a keystore file

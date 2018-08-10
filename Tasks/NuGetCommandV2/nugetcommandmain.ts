@@ -30,7 +30,7 @@ async function main(): Promise<void> {
             }
             nuGetPath = await nuGetGetter.getNuGet(cachedVersionToUse);
         }
-        let nugetVersionInfo: VersionInfo  = await peParser.getFileVersionInfoAsync(nuGetPath);
+        let nugetVersionInfo: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
         if (nugetVersionInfo && nugetVersionInfo.fileVersion){
             nugetVersion = nugetVersionInfo.fileVersion.toString();
         }

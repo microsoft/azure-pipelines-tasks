@@ -36,7 +36,7 @@ async function run() {
         //--------------------------------------------------------
         let ws: string = tl.getPathInput('xcWorkspacePath', false, false);
         if (tl.filePathSupplied('xcWorkspacePath')) {
-            let workspaceMatches = tl.findMatch(workingDir, ws, { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+            let workspaceMatches = tl.findMatch(workingDir, ws, { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
             tl.debug("Found " + workspaceMatches.length + ' workspaces matching.');
 
             if (workspaceMatches.length > 0) {
@@ -307,7 +307,7 @@ async function run() {
             }
             await xcodeArchive.exec();
 
-            let archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+            let archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
             if (archiveFolders && archiveFolders.length > 0) {
                 tl.debug(archiveFolders.length + ' archives found for exporting.');
 
@@ -320,12 +320,12 @@ async function run() {
                 let macOSEmbeddedProfilesFound: boolean;
 
                 // iOS provisioning profiles use the .mobileprovision suffix. macOS profiles have the .provisionprofile suffix.
-                let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+                let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
 
                 if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
                     tl.debug(`${embeddedProvProfiles.length} iOS embedded.mobileprovision file(s) found.`);
                 } else {
-                    embeddedProvProfiles = tl.findMatch(archiveToCheck, '**/embedded.provisionprofile', { followSymbolicLinks: false, followSpecifiedSymbolicLink: false });
+                    embeddedProvProfiles = tl.findMatch(archiveToCheck, '**/embedded.provisionprofile', { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
 
                     if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
                         tl.debug(`${embeddedProvProfiles.length} macOS embedded.provisionprofile file(s) found.`);

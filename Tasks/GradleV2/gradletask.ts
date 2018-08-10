@@ -20,6 +20,7 @@ import javacommons = require('java-common/java-common');
 import systemToken = require('utility-common/accesstoken');
 
 const accessTokenEnvSetting: string = 'VSTS_ENV_ACCESS_TOKEN';
+const TESTRUN_SYSTEM = "VSTS - gradle"; 
 
 // Configure the JVM associated with this run.
 function setGradleOpts(gradleOptions: string): void {
@@ -36,8 +37,7 @@ function publishTestResults(publishJUnitResults: boolean, testResultsFiles: stri
         if (testResultsFiles.indexOf('*') >= 0 || testResultsFiles.indexOf('?') >= 0) {
             tl.debug('Pattern found in testResultsFiles parameter');
             let buildFolder: string = tl.getVariable('System.DefaultWorkingDirectory');
-            let allFiles: string[] = tl.find(buildFolder);
-            matchingTestResultsFiles = tl.match(allFiles, testResultsFiles, { matchBase: true });
+            matchingTestResultsFiles = tl.findMatch(buildFolder, testResultsFiles, null, { matchBase: true });
         } else {
             tl.debug('No pattern found in testResultsFiles parameter');
             matchingTestResultsFiles = [testResultsFiles];
@@ -49,7 +49,7 @@ function publishTestResults(publishJUnitResults: boolean, testResultsFiles: stri
         }
 
         let tp: tl.TestPublisher = new tl.TestPublisher('JUnit');
-        tp.publish(matchingTestResultsFiles, true, '', '', '', true);
+        tp.publish(matchingTestResultsFiles, true, '', '', '', true, TESTRUN_SYSTEM);
     }
 }
 
@@ -229,7 +229,7 @@ async function run() {
                 // END: determine isMultiModule
 
                 // Clean the report directory before enabling code coverage
-                tl.rmRF(reportDirectory, true);
+                tl.rmRF(reportDirectory);
                 await enableCodeCoverage(wrapperScript, isCodeCoverageOpted,
                                          classFilter, classFilesDirectories,
                                          codeCoverageTool, workingDirectory, reportDirectoryName,
