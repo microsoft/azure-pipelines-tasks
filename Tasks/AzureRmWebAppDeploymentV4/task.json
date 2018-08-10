@@ -17,8 +17,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 4,
-        "Minor": 2,
-        "Patch": 11
+        "Minor": 3,
+        "Patch": 0
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
@@ -27,13 +27,13 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp"
+            "visibleRule": "WebAppKind != webAppContainer && WebAppKind != webAppLinux && Package NotEndsWith .war"
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
         },
         {
             "name": "PostDeploymentAction",
@@ -257,7 +257,7 @@
         {
             "name": "WebConfigParameters",
             "type": "multiLine",
-            "label": "Generate web.config parameters for Python, Node.js and Go apps",
+            "label": "Generate web.config parameters for Python, Node.js, Go and Java apps",
             "required": false,
             "defaultValue": "",
             "groupName": "FileTransformsAndVariableSubstitution",
@@ -584,6 +584,7 @@
         "MultipleResourceGroupFoundForAppService": "Multiple resource group found for App Service '%s'.",
         "PackageDeploymentUsingZipDeployFailed": "Package deployment using ZIP Deploy failed. Refer logs for more details.",
         "PackageDeploymentInitiated": "Package deployment using ZIP Deploy initiated.",
+        "WarPackageDeploymentInitiated": "Package deployment using WAR Deploy initiated.",
         "FailedToGetDeploymentLogs": "Failed to get deployment logs. Error: %s",
         "GoExeNameNotPresent": "Go exe name is not present",
         "WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier.",
@@ -598,8 +599,10 @@
         "InvalidPublishProfile": "Publish profile file is invalid.",
         "ASE_SSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to set a variable named VSTS_ARM_REST_IGNORE_SSL_ERRORS to the value true in the build or release pipeline",
         "ZipDeployLogsURL": "Zip Deploy logs can be viewed at %s",
+        "DeployLogsURL": "Deploy logs can be viewed at %s",
         "AppServiceApplicationURL": "App Service Application URL: %s",
         "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
-        "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s"
+        "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
+        "JarPathNotPresent" : "Java jar path is not present"
     }
 }
