@@ -33,12 +33,12 @@ phases:
 
       - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
         displayName: 'pytest'
-        continueOnError: true
 
       - task: PublishTestResults@2
         inputs:
           testResultsFiles: '**/test-results.xml'
           testRunTitle: 'Python $(python.version)'
+        condition: succeededOrFailed()
 
   - phase: 'Publish'
     dependsOn: 'Test'
