@@ -66,6 +66,11 @@ export class DistributedTest {
         // Pass the acess token as an environment variable for security purposes
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
+        if(this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled)
+        {
+            utils.Helper.addToProcessEnvVars(envVars, 'PROCDUMP_PATH', path.join(__dirname, 'ProcDump'));
+        }
+
         // Invoke DtaExecutionHost with the input json file
         const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v1() + '.json');
         utils.Helper.removeEmptyNodes(this.inputDataContract);

@@ -406,6 +406,29 @@
             "groupName": "reportingOptions"
         },
         {
+            "name": "diagnosticsEnabled",
+            "type": "boolean",
+            "label": "Collect advanced diagnostics in case of catastrophic failures",
+            "defaultValue": "True",
+            "required": false,
+            "helpMarkDown": "Collect advanced diagnostics in case of catastrophic failures.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "collectDumpOn",
+            "type": "pickList",
+            "label": "Collect process dump and attach to test run report",
+            "defaultValue": "onAbortOnly",
+            "required": false,
+            "helpMarkDown": "Collect process dump and attach to test run report.",
+            "groupName": "executionOptions",
+            "options": {
+                "onAbortOnly": "On abort only",
+                "always": "Always"
+            },
+            "visibleRule": "diagnosticsEnabled = true"
+        },
+        {
             "name": "rerunFailedTests",
             "type": "boolean",
             "label": "Rerun failed tests",
@@ -590,6 +613,7 @@
         "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
         "VsTestVersionEmpty": "VsTestVersion is null or empty",
         "UserProvidedSourceFilter": "Source filter: %s",
-        "UnableToGetFeatureFlag": "Unable to get feature flag: %s"
+        "UnableToGetFeatureFlag": "Unable to get feature flag: %s",
+        "diagnosticsInput": "Diagnostics enabled : %s"
     }
 }
