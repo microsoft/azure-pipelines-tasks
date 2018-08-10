@@ -3,13 +3,13 @@
 # https://docs.microsoft.com/vsts/pipelines/apps/mobile/xcode-ios
 
 queue: 'Hosted macOS Preview'
-steps:
 
-  - task: Xcode@4
-    inputs:
-      configuration: 'Release'
-      scheme: ''
-      sdk: 'iphoneos'
+steps:
+- task: Xcode@4
+  inputs:
+    configuration: 'Release'
+    scheme: ''
+    sdk: 'iphoneos'
 
 # For information on extending this YAML to:
 # - Install an Apple certificate

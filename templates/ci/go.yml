@@ -1,23 +1,21 @@
 # Go
 # Build your Go application.
+# Add steps that run tests, save build artifacts, deploy, and more by visiting:
 # https://docs.microsoft.com/vsts/pipelines/apps/go/go
 
 queue: 'Hosted Ubuntu 1604'
+
 variables:
   buildConfiguration: 'Release'
+
 steps:
+- task: GoTool@0
+  inputs:
+    version: '1.10'
+  displayName: 'Use Go 1.10'
 
-  - task: GoTool@0
-    inputs:
-      version: '1.10'
-    displayName: 'Use Go 1.10'
-  
-  - script: |
-      go get -v -t -d
-      go test -v
-      go build -o "$(build.repository.name)"
-    displayName: 'Go get, test, and build'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/apps/go/go
+- script: |
+    go get -v -t -d
+    go test -v
+    go build -o "$(build.repository.name)"
+  displayName: 'Go get, test, and build'
