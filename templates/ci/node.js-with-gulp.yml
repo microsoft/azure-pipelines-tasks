@@ -1,27 +1,24 @@
 # Node.js with gulp
 # Build a Node.js application using the gulp task runner.
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/apps/nodejs/build-gulp
 
 queue: 'Hosted Ubuntu 1604'
+
 steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+  displayName: 'Install Node.js'
 
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '8.x'
-    displayName: 'Install Node.js'
+- task: Npm@1
+  inputs:
+    command: 'install'
 
-  - task: Npm@1
-    inputs:
-      command: 'install'
+- task: Gulp@0
+  inputs:
+    gulpFile: 'gulpfile.js'
+    targets: ''
 
-  - task: Gulp@0
-    inputs:
-      gulpFile: 'gulpfile.js'
-      targets: ''
-
-# Uncomment to save the artifacts of this build with the build record
-#  - task: ArchiveFiles@2
-#    inputs:
-#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#      includeRootFolder: false
-#  - task: PublishBuildArtifacts@1
+# For information on extending this YAML to:
+# - Save the artifacts of this build with the build record
+# See https://docs.microsoft.com/vsts/pipelines/apps/nodejs/build-gulp

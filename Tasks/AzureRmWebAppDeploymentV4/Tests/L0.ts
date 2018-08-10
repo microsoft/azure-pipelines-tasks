@@ -68,9 +68,17 @@ describe('AzureRmWebAppDeployment Suite', function() {
             done();
         });
     }
-    else {
 
-    }
+    it('Validate operations.ParameterParserUtility.parse()', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'L0ParameterParserUtility.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        tr.run();
+
+        assert(tr.stdout.search('PARAMETERPARSERUTILITY CASE 1 PASSED') >=0, 'should have printed PARAMETERPARSERUTILITY CASE 1 PASSED');
+        assert(tr.stdout.search('PARAMETERPARSERUTILITY CASE 2 WITH EMPTY VALUE PASSED') >= 0, 'should have printed PARAMETERPARSERUTILITY CASE 2 WITH EMPTY VALUE PASSED');
+        assert(tr.stdout.search('PARAMETERPARSERUTILITY CASE 3 WITH EXTRA SPACES PASSED') >= 0, 'should have printed PARAMETERPARSERUTILITY CASE 3 WITH EXTRA SPACES PASSED');
+        done();
+    });
 
     it('Runs successfully with XML variable substitution', (done:MochaDone) => {
         let tp = path.join(__dirname, "..", "node_modules", "webdeployment-common", "Tests", 'L1XmlVarSub.js');

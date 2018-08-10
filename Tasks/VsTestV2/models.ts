@@ -44,6 +44,7 @@ export interface TestConfigurations {
     rerunMaxAttempts: number;
     toolsInstallerConfig: ToolsInstallerConfiguration;
     proxyConfiguration: ProxyConfiguration;
+    diagnosticsConfiguration: DiagnosticsConfiguration
 }
 
 export interface DtaTestConfigurations extends TestConfigurations {
@@ -82,6 +83,11 @@ export interface VsTestConfigurations extends TestConfigurations {
     vstestArgsFile: string;
     responseFileSupported: boolean;
     publishTestResultsInTiaMode: boolean;
+}
+
+export interface DiagnosticsConfiguration {
+    enabled: boolean;
+    collectDumpAlways: boolean;
 }
 
 export interface TiaConfiguration {

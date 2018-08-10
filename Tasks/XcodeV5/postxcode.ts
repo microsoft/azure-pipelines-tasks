@@ -33,7 +33,7 @@ async function run() {
                     if (testResultsFiles.indexOf('*') >= 0) {
                         tl.debug('Pattern found in testResultsFiles parameter');
                         matchingTestResultsFiles = tl.findMatch(workingDir, testResultsFiles, 
-                            { followSymbolicLinks: false, followSpecifiedSymbolicLink: false }, 
+                            { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false }, 
                             { matchBase: true, nocase: true });
                     }
                     else {
@@ -44,8 +44,9 @@ async function run() {
                     if (!matchingTestResultsFiles) {
                         tl.warning(tl.loc('NoTestResultsFound', testResultsFiles));
                     } else {
+                        const TESTRUN_SYSTEM = "VSTS - xcode";
                         const tp = new tl.TestPublisher("JUnit");
-                        tp.publish(matchingTestResultsFiles, false, "", "", "", true);
+                        tp.publish(matchingTestResultsFiles, false, "", "", "", true, TESTRUN_SYSTEM);
                     }
                 }
             }
