@@ -1,6 +1,7 @@
 # Xamarin.Android
 # Build a Xamarin.Android app and Xamarin.UITest assembly.
-# https://docs.microsoft.com/vsts/pipelines/apps/mobile/xamarin
+# Add steps that test, sign, and distribute the app, save build artifacts, and more:
+# https://aka.ms/yaml
 
 queue: 'Hosted macOS Preview'
 
@@ -20,11 +21,3 @@ steps:
     projectFile: '**/*Droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-
-# For information on extending this YAML to:
-# - Sign your APK with a keystore file
-# - Test apps on hosted, physical devices with the App Center Test task
-# - Distribute apps to testers and users with the App Center Distribute task
-# - Release to Google Play with the Google Play extension
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/apps/mobile/xamarin

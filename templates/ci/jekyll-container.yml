@@ -1,8 +1,9 @@
 # Jekyll container
 # Package your Jekyll site from within the Jekyll Docker container image.
+# Add steps that save build artifacts, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
 
 steps:
 # Run the latest 'jekyll/builder' container and from within the container, package the Jekyll site
@@ -17,11 +18,3 @@ steps:
       $(build.binariesDirectory):/srv/jekyll/_site
     containerCommand: 'jekyll build --future'
     detached: false
-
-# Zip the contents of the repository and save the archive in the build record
-- task: ArchiveFiles@1
-  inputs:
-    includeRootFolder: false
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'

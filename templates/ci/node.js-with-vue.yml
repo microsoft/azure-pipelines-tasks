@@ -1,8 +1,9 @@
 # Node.js with Vue
 # Build a Node.js application that uses Vue.
+# Add steps that analyze code, save build artifacts, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
 
 steps:
 - task: NodeTool@0
@@ -14,7 +15,3 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml

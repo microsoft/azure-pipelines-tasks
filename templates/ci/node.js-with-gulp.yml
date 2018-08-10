@@ -1,8 +1,9 @@
 # Node.js with gulp
 # Build a Node.js application using the gulp task runner.
-# https://docs.microsoft.com/vsts/pipelines/apps/nodejs/build-gulp
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://aka.ms/yaml
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
 
 steps:
 - task: NodeTool@0
@@ -18,7 +19,3 @@ steps:
   inputs:
     gulpFile: 'gulpfile.js'
     targets: ''
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/apps/nodejs/build-gulp

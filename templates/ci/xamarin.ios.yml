@@ -1,6 +1,7 @@
 # Xamarin.iOS
 # Build a Xamarin.iOS app and Xamarin.UITest assembly.
-# https://docs.microsoft.com/vsts/pipelines/apps/mobile/xamarin
+# Add steps that install certificates, test, sign, and distribute the app, save build artifacts, and more:
+# https://aka.ms/yaml
 
 queue: 'Hosted macOS Preview'
 
@@ -10,13 +11,3 @@ steps:
     solutionFile: '**/*.sln'
     configuration: 'Release'
     buildForSimulator: true
-
-# For information on extending this YAML to:
-# - Install an Apple certificate
-# - Install an Apple provisioning profile
-# - Sign your app
-# - Test apps on hosted, physical devices with the App Center Test task
-# - Distribute apps to testers and users with the App Center Distribute task
-# - Release to the Apple App Store with the Apple App Store extension
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/apps/mobile/xamarin

@@ -1,9 +1,9 @@
 # Go
 # Build your Go application.
-# Add steps that run tests, save build artifacts, deploy, and more by visiting:
+# Add steps that run tests, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/apps/go/go
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
 
 variables:
   buildConfiguration: 'Release'

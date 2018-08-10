@@ -1,5 +1,6 @@
 # Universal Windows Platform
 # Build a Universal Windows Platform application using Visual Studio.
+# Add steps that test and distribute the app, save build artifacts, and more:
 # https://aka.ms/yaml
 
 queue: 'Hosted VS2017'
@@ -23,10 +24,3 @@ steps:
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
     msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
-
-# For information on extending this YAML to:
-# - Test apps on hosted, physical devices with the App Center Test task
-# - Distribute apps to testers and users with the App Center Distribute task
-# - Release to the Windows Store with the Windows Store extension
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml

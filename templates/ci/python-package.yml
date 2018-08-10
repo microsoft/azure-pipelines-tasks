@@ -1,12 +1,13 @@
 # Python package
-# Create and test a Python package on multiple Python versions. Then, upload it to a PyPI-compatible index.
-# # https://docs.microsoft.com/vsts/pipelines/languages/python
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/python
 
 phases:
 
 - phase: 'Test'
   queue:
-    name: 'Hosted Ubuntu 1604'
+    name: 'Hosted Linux Preview'
     parallel: 1
     matrix:
       Python27:
@@ -15,8 +16,8 @@ phases:
         python.version: '3.5'
       Python36:
         python.version: '3.6'
-      Python37-dev:
-        python.version: '>= 3.7.0a'
+      Python37:
+        python.version: '3.7'
 
   steps:
   - task: UsePythonVersion@0
@@ -27,40 +28,24 @@ phases:
   - script: python -m pip install --upgrade pip && pip install -r requirements.txt
     displayName: 'Install dependencies'
 
-# Uncomment to install and run Flake8 style enforcement
-#      - script: 'pip install flake8 && flake8'
-#        displayName: 'Flake8 style enforcement'
-
   - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
     displayName: 'pytest'
-    continueOnError: true
 
   - task: PublishTestResults@2
     inputs:
       testResultsFiles: '**/test-results.xml'
       testRunTitle: 'Python $(python.version)'
+    condition: succeededOrFailed()
 
 - phase: 'Publish'
   dependsOn: 'Test'
-  queue: 'Hosted Ubuntu 1604'
+  queue: 'Hosted Linux Preview'
 
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.6'
+      versionSpec: '3.x'
       architecture: 'x64'
 
   - script: python setup.py sdist
     displayName: 'Build sdist'
-
-# Uncomment to publish the dist to a package index
-#      - task: PyPIPublisher@0
-#        inputs:
-#          pypiConnection: ''
-#          packageDirectory: '$(build.sourcesDirectory)'
-#          alsoPublishWheel: false
-
-# For more information on extending this YAML to:
-# - Publish the dist to a package index
-# - Save the dist with the build record
-# See https://docs.microsoft.com/vsts/pipelines/languages/python

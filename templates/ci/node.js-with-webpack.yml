@@ -1,8 +1,9 @@
 # Node.js with webpack
 # Build a Node.js application using the webpack CLI.
+# Add steps that analyze code, save build artifacts, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
 
 steps:
 - task: NodeTool@0
@@ -14,7 +15,3 @@ steps:
     npm install -g webpack webpack-cli --save-dev
     npx webpack # --config webpack.config.js
   displayName: 'npm install and run webpack'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml

@@ -1,14 +1,14 @@
 # ASP.NET Core (.NET Framework)
 # Build and test ASP.NET Core web applications targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more by visiting:
+# Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
 
 queue: 'Hosted VS2017'
 
 variables:
-  buildConfiguration: 'Release'
-  buildPlatform: 'Any CPU'
   solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
 
 steps:
 - task: NuGetToolInstaller@0

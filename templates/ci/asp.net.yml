@@ -1,14 +1,14 @@
 # ASP.NET
 # Build and test ASP.NET web applications.
-# Add steps that publish symbols, save build artifacts, deploy, and more by visiting:
+# Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/apps/aspnet/build-aspnet-4
 
 queue: 'Hosted VS2017'
 
 variables:
-  buildConfiguration: 'Release'
-  buildPlatform: 'Any CPU'
   solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
 
 steps:
 - task: NuGetToolInstaller@0
@@ -28,9 +28,3 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-# For information on extending this YAML to:
-# - Deploy to a web app
-# - Publish .pdb file symbols for debugging artifacts of this build
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/apps/aspnet/build-aspnet-4

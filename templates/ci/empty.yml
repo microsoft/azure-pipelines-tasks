@@ -1,9 +1,9 @@
 # Empty
 # Start with an empty pipeline and add your own tasks.
-# Add steps that build, run tests, deploy, and more by visiting:
+# Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
 
 steps:
 - script: |

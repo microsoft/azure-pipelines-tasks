@@ -1,6 +1,6 @@
 # Android
 # Build your Android project with Gradle.
-# Add steps that sign your APK, publish to Google Play, and more by visiting:
+# Add steps that test, sign, and distribute the APK, save build artifacts, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/android
 
 queue: 'Hosted macOS Preview'

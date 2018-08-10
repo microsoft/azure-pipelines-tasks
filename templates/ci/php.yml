@@ -1,14 +1,10 @@
 # PHP
 # Test and package your PHP application.
+# Add steps that run tests, save build artifacts, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
 
 steps:
 - script: composer install
   displayName: 'composer install'
-
-# For information on extending this YAML to:
-# - Run tests with phpunit
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml
