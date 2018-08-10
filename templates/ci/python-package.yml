@@ -26,8 +26,8 @@ phases:
     displayName: 'Install dependencies'
 
 # Uncomment to install and run Flake8 style enforcement
-#      - script: 'pip install flake8 && flake8'
-#        displayName: 'Flake8 style enforcement'
+#  - script: 'pip install flake8 && flake8'
+#    displayName: 'Flake8 style enforcement'
 
   - script: pip install pytest && pytest tests --doctest-modules --junitxml=junit/test-results.xml
     displayName: 'pytest'
@@ -52,11 +52,11 @@ phases:
     displayName: 'Build sdist'
 
 # Uncomment to publish the dist to a package index
-#      - task: PyPIPublisher@0
-#        inputs:
-#          pypiConnection: ''
-#          packageDirectory: '$(build.sourcesDirectory)'
-#          alsoPublishWheel: false
+#  - task: PyPIPublisher@0
+#    inputs:
+#      pypiConnection: ''
+#      packageDirectory: '$(build.sourcesDirectory)'
+#      alsoPublishWheel: false
 
 # For more information on extending this YAML to:
 # - Publish the dist to a package index
