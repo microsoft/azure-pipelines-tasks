@@ -320,11 +320,11 @@ function Wait-ServiceFabricApplicationUpgradeAction
     try
     {
         $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
-        -ResultRetryEvaluator $upgradeStatusValidator `
-        -MaxTries 2147483647 `
-        -RetryIntervalInSeconds 5 `
-        -ExceptionRetryEvaluator $exceptionRetryEvaluator `
-        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException", "System.Fabric.FabricException")
+            -ResultRetryEvaluator $upgradeStatusValidator `
+            -MaxTries 2147483647 `
+            -RetryIntervalInSeconds 5 `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException", "System.Fabric.FabricException")
     }
     catch
     {
