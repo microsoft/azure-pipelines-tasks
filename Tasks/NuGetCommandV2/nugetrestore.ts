@@ -11,8 +11,6 @@ import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as nutil from "nuget-task-common/Utility";
-import * as vsts from "vso-node-api/WebApi";
-import * as vsom from 'vso-node-api/VsoClient';
 import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
 import * as commandHelper from "nuget-task-common/CommandHelper";
@@ -170,15 +168,13 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         }
 
-        tl.debug('nuGetConfigPath'); // satus debugging
-        tl.debug(nuGetConfigPath);
-
         if (!useV2CredProvider && !configFile) {
             // Setting creds in the temp NuGet.config if needed
             await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
             tl.debug('Setting nuget.config auth');
         } else {
-            tl.debug('Not setting temp nuget.config auth');
+            // In case of !!useV2CredProvider, V2 credential provider will handle external credentials
+            tl.debug('No temp nuget.config auth');
         }
         // if configfile has already been set, let it be
         if (!configFile) {

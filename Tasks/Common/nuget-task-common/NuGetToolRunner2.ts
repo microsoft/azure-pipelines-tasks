@@ -37,7 +37,6 @@ function prepareNuGetExeEnvironment(
     let env: EnvironmentDictionary = {};
     let originalCredProviderPath: string = null;
     let envVarCredProviderPathV2: string = null;
-    let noTempConfigFile: string = null;
 
     for (let e in input) {
         if (!input.hasOwnProperty(e)) {
@@ -71,12 +70,7 @@ function prepareNuGetExeEnvironment(
 
     if (authInfo && authInfo.internalAuthInfo) {
         env["VSS_NUGET_ACCESSTOKEN"] = authInfo.internalAuthInfo.accessToken;
-        env["VSS_NUGET_URI_PREFIXES"] = authInfo.internalAuthInfo.uriPrefixes.join(";")
-    }
-
-    let externalCredentials = buildCredentialJson(authInfo);
-    if (externalCredentials) {
-        env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"] = externalCredentials;
+        env["VSS_NUGET_URI_PREFIXES"] = authInfo.internalAuthInfo.uriPrefixes.join(";");
     }
 
     env["NUGET_CREDENTIAL_PROVIDER_OVERRIDE_DEFAULT"] = "true";
@@ -100,6 +94,12 @@ function prepareNuGetExeEnvironment(
             env["NUGET_PLUGIN_PATHS"] = credProviderPath;
             tl.debug(`V2 credential provider set`);
             tl.debug(`credProviderPath = ${credProviderPath}`);
+        }
+
+        // NuGet restore task will pass external credentials to V2 credential provider
+        let externalCredentials = buildCredentialJson(authInfo);
+        if (externalCredentials) {
+            env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"] = externalCredentials;
         }
     }
 
@@ -314,6 +314,7 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
         let enpointCredentialsJson: EnpointCredentialsContainer = {
             endpointCredentials: [] as EndpointCredentials[]
         };
+
         tl.debug(`Detected external credentials for:`);
         authInfo.externalAuthInfo.forEach((authInfo) => {
             switch(authInfo.authType) {
@@ -337,13 +338,10 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
                     tl.debug(authInfo.packageSource.feedUri);
                     break;
                 case (auth.ExternalAuthType.ApiKey):
-                    let apiKeyAuthInfo =  authInfo as auth.ApiKeyExternalAuthInfo;
-                    enpointCredentialsJson.endpointCredentials.push({
-                        endpoint: authInfo.packageSource.feedUri,
-                        /* No username provided */
-                        password: apiKeyAuthInfo.apiKey
-                    } as EndpointCredentials);
+                    /* ApiKey is only valid form of credentials for the push command.
+                    Only the NuGet Restore task will use the V2 credential provider for handling external credentials.*/
                     tl.debug(authInfo.packageSource.feedUri);
+                    tl.debug(`ApiKey is not supported`);
                     break;
                 default:
                     break;
@@ -353,4 +351,6 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
         const externalCredentials: string = JSON.stringify(enpointCredentialsJson);
         return externalCredentials;
     }
+
+    return null;
 }
