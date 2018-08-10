@@ -39,12 +39,15 @@ export class NonDistributedTest {
             const exitCode = await this.startDtaExecutionHost();
             tl.debug('DtaExecutionHost finished');
 
-
-            if (exitCode !== 0) {
+            if (exitCode !== 0 && !this.inputDataContract.ExecutionSettings.IgnoreTestFailures) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
                 tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailed'));
                 return;            
             } else {
+                if (exitCode !== 0)
+                {
+                    console.log('Task marked as success because IgnoreTestFailures is enabled');
+                }
                 tl.debug(`Modules/DTAExecutionHost.exe exited with code ${exitCode}`);
                 tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
             }
@@ -80,6 +83,11 @@ export class NonDistributedTest {
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
     
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+
+        if(this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled)
+        {
+            utils.Helper.addToProcessEnvVars(envVars, 'PROCDUMP_PATH', path.join(__dirname, 'ProcDump'));
+        }
     
         // hydra: See which of these are required in C# layer. Do we want this for telemetry??
         // utils.Helper.addToProcessEnvVars(envVars, 'DTA.AgentVersion', tl.getVariable('AGENT.VERSION'));
@@ -89,6 +97,7 @@ export class NonDistributedTest {
         }
     
         const execOptions: tr.IExecOptions = <any>{
+            IgnoreTestFailures: this.inputDataContract.ExecutionSettings.IgnoreTestFailures,
             env: envVars,
             failOnStdErr: false,
             // In effect this will not be called as failOnStdErr is false

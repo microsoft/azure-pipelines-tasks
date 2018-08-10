@@ -1,15 +1,11 @@
 # Build a Docker image
+# Add steps that use Docker Compose, tag images, push to a registry, run an image, and more by visiting:
 # https://docs.microsoft.com/vsts/pipelines/languages/docker
 
 queue: 'Hosted Ubuntu 1604'
+
 variables:
   imageName: '$(Build.Repository.Name):$(Build.BuildId)'
 
 steps:
 - script: docker build -f Dockerfile -t $(imageName) .
-
-# For information on extending this YAML to:
-# - Correctly tag your image
-# - Push the image to Docker Hub or Azure Container Registry
-# - Build and test your app prior to creating the Docker image
-# See https://docs.microsoft.com/vsts/pipelines/languages/docker
