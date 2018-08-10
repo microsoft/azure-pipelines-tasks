@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -406,6 +406,8 @@
     "Info_UsingToolPath": "ms-resource:loc.messages.Info_UsingToolPath",
     "Info_UsingVersion": "ms-resource:loc.messages.Info_UsingVersion",
     "FailedToGetPackageMetadata": "ms-resource:loc.messages.FailedToGetPackageMetadata",
+    "FailedToGetArtifactTool": "ms-resource:loc.messages.FailedToGetArtifactTool",
+    "Error_UnexpectedErrorFailedToGetToolMetadata": "ms-resource:loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata",
     "FailedToGetLatestPackageVersion": "ms-resource:loc.messages.FailedToGetLatestPackageVersion",
     "Warn_CredentialsNotFound": "ms-resource:loc.messages.Warn_CredentialsNotFound"
   }
