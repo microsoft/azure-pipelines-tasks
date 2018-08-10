@@ -1,19 +1,15 @@
 # Ant
 # Build your Java projects and run tests with Apache Ant.
+# Add steps that save build artifacts and more by visiting:
 # https://aka.ms/yaml
 
 queue: 'Hosted VS2017'
+
 steps:
-
-# To do: edit the path to 'build.xml' as needed
-  - task: Ant@1
-    inputs:
-      buildFile: 'build.xml'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.10'
-      jdkArchitectureOption: 'x64'
-      testResultsFiles: '**/TEST-*.xml'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml
+- task: Ant@1
+  inputs:
+    buildFile: 'build.xml' # Edit the path to 'build.xml' as needed
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.10'
+    jdkArchitectureOption: 'x64'
+    testResultsFiles: '**/TEST-*.xml'

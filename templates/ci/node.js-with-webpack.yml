@@ -3,17 +3,17 @@
 # https://aka.ms/yaml
 
 queue: 'Hosted Ubuntu 1604'
+
 steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+  displayName: 'Install Node.js'
 
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '8.x'
-    displayName: 'Install Node.js'
-
-  - script: |
-      npm install -g webpack webpack-cli --save-dev
-      npx webpack # --config webpack.config.js
-    displayName: 'npm install and run webpack'
+- script: |
+    npm install -g webpack webpack-cli --save-dev
+    npx webpack # --config webpack.config.js
+  displayName: 'npm install and run webpack'
 
 # For information on extending this YAML to:
 # - Save the artifacts of this build with the build record

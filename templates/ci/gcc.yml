@@ -1,19 +1,16 @@
 # C/C++ with GCC
 # Build your C/C++ project with GNU GCC.
+# Add steps that run tests, save build artifacts, deploy, and more by visiting:
 # https://docs.microsoft.com/vsts/pipelines/apps/c-cpp/gcc
 
 queue: 'Hosted Ubuntu 1604'
+
 steps:
+- script: ./configure
+  displayName: 'configure'
 
-  - script: ./configure
-    displayName: 'configure'
+- script: 'make'
+  displayName: 'make'
 
-  - script: 'make'
-    displayName: 'make'
-
-  - script: 'make test'
-    displayName: 'make test'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/apps/c-cpp/gcc
+- script: 'make test'
+  displayName: 'make test'

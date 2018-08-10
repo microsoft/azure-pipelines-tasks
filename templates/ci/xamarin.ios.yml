@@ -3,13 +3,13 @@
 # https://docs.microsoft.com/vsts/pipelines/apps/mobile/xamarin
 
 queue: 'Hosted macOS Preview'
-steps:
 
-  - task: XamariniOS@1
-    inputs:
-      solutionFile: '**/*.sln'
-      configuration: 'Release'
-      buildForSimulator: true
+steps:
+- task: XamariniOS@1
+  inputs:
+    solutionFile: '**/*.sln'
+    configuration: 'Release'
+    buildForSimulator: true
 
 # For information on extending this YAML to:
 # - Install an Apple certificate

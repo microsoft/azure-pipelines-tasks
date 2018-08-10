@@ -1,19 +1,12 @@
 # Android
-# Build your Android projects, run tests, and sign and align Android App Package files.
+# Build your Android project with Gradle.
+# Add steps that sign your APK, publish to Google Play, and more by visiting:
 # https://docs.microsoft.com/vsts/pipelines/languages/android
 
 queue: 'Hosted macOS Preview'
+
 steps:
-
-  - task: Gradle@2
-    inputs:
-      gradleWrapperFile: 'gradlew'
-      tasks: 'assembleRelease'
-
-# For information on extending this YAML to:
-# - Sign your APK with a keystore file
-# - Test apps on hosted, physical devices with the App Center Test task
-# - Distribute apps to testers and users with the App Center Distribute task
-# - Release to Google Play with the Google Play extension
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/languages/android
+- task: Gradle@2
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'assembleRelease'
