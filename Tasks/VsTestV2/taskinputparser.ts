@@ -124,7 +124,8 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
 
-    testConfiguration.diagnosticsConfiguration = getDiagnosticsConfiguration();    
+    testConfiguration.diagnosticsConfiguration = getDiagnosticsConfiguration();
+    console.log(tl.loc('diagnosticsInput', testConfiguration.diagnosticsConfiguration.enabled));    
 
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');

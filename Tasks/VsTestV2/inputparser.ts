@@ -359,6 +359,8 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
     console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
     
     inputDataContract = getDiagnosticsSettings(inputDataContract);
+    console.log(tl.loc('diagnosticsInput', inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled));
+
     inputDataContract = getTiaSettings(inputDataContract);
     inputDataContract = getRerunSettings(inputDataContract);
 
@@ -553,6 +555,7 @@ export function setIsServerBasedRun(isServerBasedRun: boolean) {
 
 export function setEnableDiagnosticsSettings(enableDiagnosticsSettingsFF: boolean) {
     enableDiagnosticsSettings = enableDiagnosticsSettingsFF;
+    tl.debug('Diagnostics feature flag is set to: ' + enableDiagnosticsSettingsFF);
 }
 
 export function getDtaInstanceId(): number {

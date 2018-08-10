@@ -17,7 +17,7 @@
     "version": {
         "Major": 2,
         "Minor": 139,
-        "Patch": 3
+        "Patch": 4
     },
     "demands": [
         "vstest"
@@ -613,6 +613,7 @@
         "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
         "VsTestVersionEmpty": "VsTestVersion is null or empty",
         "UserProvidedSourceFilter": "Source filter: %s",
-        "UnableToGetFeatureFlag": "Unable to get feature flag: %s"
+        "UnableToGetFeatureFlag": "Unable to get feature flag: %s",
+        "diagnosticsInput": "Diagnostics enabled : %s"
     }
 }
