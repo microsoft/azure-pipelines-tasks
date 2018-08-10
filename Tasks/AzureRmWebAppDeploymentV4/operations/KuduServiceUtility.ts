@@ -256,17 +256,17 @@ export class KuduServiceUtility {
     private async _processDeploymentResponse(deploymentDetails: any): Promise<void> {
         try {
             var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
-            tl.debug(`logs from ZIP deploy: ${kuduDeploymentDetails.log_url}`);
+            tl.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
 
             if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() == 'true') {
                 await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
             }
             else {
-                console.log(tl.loc('ZipDeployLogsURL', kuduDeploymentDetails.log_url));
+                console.log(tl.loc('DeployLogsURL', kuduDeploymentDetails.log_url));
             }
         }
         catch(error) {
-            tl.debug(`Unable to fetch logs for kudu ZIP Deploy: ${JSON.stringify(error)}`)
+            tl.debug(`Unable to fetch logs for kudu Deploy: ${JSON.stringify(error)}`)
         }
 
         if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {

@@ -103,7 +103,7 @@ export function addWebConfigFile(folderPath: any, webConfigParameters, rootDirec
             } else if(appType == 'java_springboot') {
                 if (util.isNullOrUndefined(webConfigParameters['JAR_PATH'])
                 || util.isNullOrUndefined(webConfigParameters['JAR_PATH'].value) 
-                || webConfigParameters['JAR_PATH'].value.length <=0) {
+                || webConfigParameters['JAR_PATH'].value.length <= 0) {
                     throw Error(tl.loc('JarPathNotPresent'));
                 }
                 selectedAppTypeParams['JAR_PATH'] = rootDirectoryPath + "\\" + webConfigParameters['JAR_PATH'].value;

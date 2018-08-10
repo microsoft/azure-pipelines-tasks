@@ -612,6 +612,7 @@
     "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ZipDeployLogsURL": "ms-resource:loc.messages.ZipDeployLogsURL",
+    "DeployLogsURL": "ms-resource:loc.messages.DeployLogsURL",
     "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",

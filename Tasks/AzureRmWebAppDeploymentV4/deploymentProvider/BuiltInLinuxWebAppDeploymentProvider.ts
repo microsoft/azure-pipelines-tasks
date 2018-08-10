@@ -32,7 +32,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                     this.taskParams.AppSettings = "-INIT_SCRIPT " + destInitScriptPath;
                 }
                 if(this.taskParams.AppSettings.indexOf("-INIT_SCRIPT") < 0) {
-                    this.taskParams.AppSettings += "-INIT_SCRIPT " + destInitScriptPath;
+                    this.taskParams.AppSettings += " -INIT_SCRIPT " + destInitScriptPath;
                 }
                 this.taskParams.AppSettings = this.taskParams.AppSettings.trim();
                 tl.writeFile(initScriptFile, script, { encoding: 'utf8' });
