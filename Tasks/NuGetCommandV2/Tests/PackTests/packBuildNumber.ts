@@ -21,7 +21,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "which": {},
     "exec": {
-        "c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -version 1.2.3": {
+        "c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -version 1.2.3-prerelease": {
             "code": 0,
             "stdout": "NuGet output here",
             "stderr": ""
@@ -41,7 +41,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 nmh.setAnswers(a);
 
-process.env['BUILD_BUILDNUMBER'] = '1.2.3'
+process.env['BUILD_BUILDNUMBER'] = '1.2.3-prerelease'
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nuspec"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
