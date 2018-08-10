@@ -35,7 +35,7 @@ export async function extractZip(file: string): Promise<string> {
 }
 
 // Getting service urls from resource areas api
-export async function getServiceUriFromAreaCode(serviceUri: string, accessToken: string, areaId: string){
+export async function getServiceUriFromAreaId(serviceUri: string, accessToken: string, areaId: string){
     const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
     const connectionData = new vsts.WebApi(serviceUri, credentialHandler);
 
@@ -71,6 +71,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
         const artifactToolUri =  await blobstoreConnection.rest.get(artifactToolGetUrl.requestUrl);
 
         if (artifactToolUri.statusCode !== 200){
+            tl.debug(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", artifactToolUri.toString()));
             throw new Error(tl.loc("Error_UnexpectedErrorFailedToGetToolMetadata", artifactToolGetUrl.requestUrl));
         }
 
@@ -79,7 +80,8 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
             tl.debug(tl.loc("Info_DownloadingArtifactTool", artifactToolUri.result.uri));
 
             const zippedToolsDir: string = await toollib.downloadTool(artifactToolUri.result.uri);
-
+            
+            tl.debug("Downloaded zipped artifact tool to " + zippedToolsDir);
             const unzippedToolsDir = await extractZip(zippedToolsDir);
 
             artifactToolPath = await toollib.cacheDir(unzippedToolsDir, "ArtifactTool", artifactToolUri.result.version);
@@ -112,13 +114,13 @@ export function getVersionUtility(versionRadio: string, highestVersion: string):
 export async function getFeedUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string>{
     const feedAreaId = "7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5";
 
-    return getServiceUriFromAreaCode(serviceUri, accesstoken, feedAreaId);
+    return getServiceUriFromAreaId(serviceUri, accesstoken, feedAreaId);
 }
 
 export async function getBlobstoreUriFromBaseServiceUri(serviceUri: string, accesstoken: string): Promise<string>{
     const blobAreaId = "5294ef93-12a1-4d13-8671-9d9d014072c8";
 
-    return getServiceUriFromAreaCode(serviceUri, accesstoken, blobAreaId);
+    return getServiceUriFromAreaId(serviceUri, accesstoken, blobAreaId);
 }
 
 export async function getPackageNameFromId(serviceUri: string, accessToken: string, feedId: string, packageId: string): Promise<string> {
