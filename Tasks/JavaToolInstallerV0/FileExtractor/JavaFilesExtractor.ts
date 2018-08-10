@@ -74,7 +74,7 @@ export class JavaFilesExtractor {
         tar.execSync();
     }
 
-    private async extractFiles(file: string, fileEnding: string) {
+    private extractFiles(file: string, fileEnding: string) {
         const stats = taskLib.stats(file);
         if (!stats) {
             throw new Error(taskLib.loc('ExtractNonExistFile', file));
@@ -141,7 +141,7 @@ export class JavaFilesExtractor {
         }    
     }
 
-    public async unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): Promise<string> {
+    public unzipJavaDownload(repoRoot: string, fileEnding: string, extractLocation: string): string {
         this.destinationFolder = extractLocation;
         let initialDirectoriesList: string[];
         let finalDirectoriesList: string[];
@@ -158,7 +158,7 @@ export class JavaFilesExtractor {
         const jdkFile = path.normalize(repoRoot);
         const stats = taskLib.stats(jdkFile);
         if (stats.isFile()) {
-            await this.extractFiles(jdkFile, fileEnding);
+            this.extractFiles(jdkFile, fileEnding);
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
             taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
             jdkDirectory = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
