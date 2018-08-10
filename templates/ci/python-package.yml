@@ -9,13 +9,13 @@ phases:
     parallel: 1
     matrix:
       Python27:
-          python.version: '2.7'
+        python.version: '2.7'
       Python35:
-          python.version: '3.5'
+        python.version: '3.5'
       Python36:
-          python.version: '3.6'
+        python.version: '3.6'
       Python37:
-          python.version: '3.7'
+        python.version: '3.7'
   steps:
   - task: UsePythonVersion@0
     inputs:
@@ -42,7 +42,6 @@ phases:
   dependsOn: 'Test'
   queue: 'Hosted Linux Preview'
   steps:
-
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.x'
