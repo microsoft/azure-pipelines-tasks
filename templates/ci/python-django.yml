@@ -14,8 +14,8 @@ phases:
         PYTHON_VERSION: '3.5'
       Python36:
         PYTHON_VERSION: '3.6'
-      Python37-dev:
-        PYTHON_VERSION: '>= 3.7.0a'
+      Python37:
+        PYTHON_VERSION: '3.7'
 
   steps:
   - task: UsePythonVersion@0
