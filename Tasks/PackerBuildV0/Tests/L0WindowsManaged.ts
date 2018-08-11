@@ -19,8 +19,11 @@ tr.setInput('deployScriptArguments', "-target \"subdir 1\" -shouldFail false");
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
-tr.setInput("additionalBuilderParameters", "{\"ssh_pty\": \"true\", \"type\":\"amazonaws\"}");
+tr.setInput("additionalBuilderParameters", "{}");
 tr.setInput("skipTempFileCleanupDuringVMDeprovision", "true");
+tr.setInput("skipTempFileCleanupDuringVMDeprovision", "true");
+tr.setInput("isManagedImage","true")
+tr.setInput("managedImageName","builtInWinManagedImageName")
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -29,11 +32,16 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
 process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
+process.env["ENDPOINT_URL_AzureRMSpn"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRMSpn_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_GRAPHURL"] = "https://graph.windows.net/";
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
+
+if(process.env["__spnObjectId_not_exists__"] === "true") {
+    delete process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"];
+}
 
 // provide answers for task mock
 let a: any = <any>{
@@ -42,7 +50,7 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": true,
-        "basedir\\DefaultTemplates\\default.windows.template.json": true,
+        "basedir\\DefaultTemplates\\default.managed.windows.template.json": true,
         "C:\\deploy.ps1": true
     },
     "exec": {
@@ -50,17 +58,17 @@ let a: any = <any>{
             "code": 0,
             "stdout": "1.2.4"
         },
-        "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated.json": {
+        "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.managed.windows.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated-fixed.json": {
+        "packer validate -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.managed.windows.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -color=false -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated-fixed.json": {
+        "packer build -force -color=false -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.managed.windows.template-fixed.json": {
             "code": 0,
-            "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
+            "stdout": "Executed Successfully\nManagedImageResourceGroupName: packer-managed-res-grp\nManagedImageName: builtInWinManagedImageName\nManagedImageLocation: westus"
         }
     },
     "exist": {
@@ -89,17 +97,14 @@ var utMock = {
     copyFile: function(source: string, destination: string) {
         console.log('copying ' + source + ' to ' + destination);
     },
-    readJsonFile: function(filePath: string) {
-        return "{\"builders\":[{\"type\":\"azure-arm\"}]}";
+    writeFile: function(filePath: string, content: string) {
+        console.log("writing to file " + filePath + " content: " + content);
     },
     generateTemporaryFilePath: function () {
         return "C:\\somefolder\\somevarfile.json";
     },
     getPackerVarFileContent: function(variables) {
         return ut.getPackerVarFileContent(variables);
-    },
-    writeFile: function(filePath: string, content: string) {
-        console.log("writing to file " + filePath + " content: " + content);
     },
     findMatch: function(root: string, patterns: string[] | string) {
         if(root === DefaultWorkingDirectory) {
@@ -123,4 +128,6 @@ tr.registerMock('./utilities', utMock);
 tr.registerMock('../utilities', utMock);
 
 tr.setAnswers(a);
+
+tr.registerMock('azure-arm-rest/azure-graph', require('./mock_node_modules/azure-graph'));
 tr.run();

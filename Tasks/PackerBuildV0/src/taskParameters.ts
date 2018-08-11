@@ -19,6 +19,8 @@ export default class TaskParameters {
     public baseImageSource: string;
     public builtinBaseImage: string;
     public customBaseImageUrl: string;
+    public isManagedImage: boolean;
+    public managedImageName: string;
     public imagePublisher: string;
     public imageOffer: string;
     public imageSku: string;
@@ -39,7 +41,8 @@ export default class TaskParameters {
     constructor() {
         try {
             this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
-
+            this.isManagedImage = tl.getBoolInput(constants.ManagedImageInputName, false);
+            
             if(this.templateType === constants.TemplateTypeCustom) {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
                 console.log(tl.loc("ParsingCustomTemplateParameters"));
@@ -49,6 +52,11 @@ export default class TaskParameters {
                 this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
                 this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
                 this.location = tl.getInput(constants.LocationInputName, true);
+
+                if(this.isManagedImage)
+                {
+                    this.managedImageName = tl.getInput(constants.ManagedImageNameInputName, true);
+                }
 
                 this.baseImageSource = tl.getInput(constants.BaseImageSourceInputName, true);
                 if(this.baseImageSource === constants.BaseImageSourceCustomVhd) {

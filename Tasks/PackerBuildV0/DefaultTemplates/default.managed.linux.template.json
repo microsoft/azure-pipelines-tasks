@@ -16,27 +16,24 @@
     "package_path": "",
     "package_name": "",
     "capture_name_prefix": "",
-    "skip_clean":""
+    "skip_clean": "",
+    "managed_image_name": ""
   },
   "builders": [{
         "type": "azure-arm",
         "client_id": "{{user `client_id`}}",
         "client_secret": "{{user `client_secret`}}",
-        "resource_group_name": "{{user `resource_group`}}",
-        "storage_account": "{{user `storage_account`}}",
+        "managed_image_resource_group_name": "{{user `resource_group`}}",
+        "managed_image_name": "{{user `managed_image_name`}}",
         "subscription_id": "{{user `subscription_id`}}",
         "tenant_id": "{{user `tenant_id`}}",
-        "object_id": "{{user `object_id`}}",
-                
+        "object_id": "{{user `object_id`}}",        
         "os_type": "Linux",
         "image_publisher": "{{user `image_publisher`}}",
         "image_offer": "{{user `image_offer`}}",
         "image_sku": "{{user `image_sku`}}",
         "location": "{{user `location`}}",
-        "vm_size": "Standard_D3_v2",
-
-        "capture_container_name": "vsts-buildimagetask",
-        "capture_name_prefix": "{{user `capture_name_prefix`}}"
+        "vm_size": "Standard_D3_v2"
     }],
     "provisioners": [{
         "type": "shell",

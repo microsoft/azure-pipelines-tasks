@@ -2,25 +2,27 @@ import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
 
-const DefaultWorkingDirectory: string = "C:\\a\\w\\";
+const DefaultWorkingDirectory: string = "/a/w";
 
-let taskPath = path.join(__dirname, '..\\src\\main.js');
+let taskPath = path.join(__dirname, '..', 'src', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('templateType', process.env["__template_type__"] || 'builtin');
 tr.setInput('azureResourceGroup', 'testrg');
 tr.setInput('storageAccountName', 'teststorage');
 tr.setInput('baseImageSource', 'default');
-tr.setInput('baseImage', 'MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:windows');
+tr.setInput('baseImage', 'Canonical:UbuntuServer:14.04.4-LTS:linux');
 tr.setInput('location', 'South India');
-tr.setInput('packagePath', 'dir1\\**\\dir2');
-tr.setInput('deployScriptPath', 'dir3\\**\\deploy.ps1');
-tr.setInput('deployScriptArguments', "-target \"subdir 1\" -shouldFail false");
+tr.setInput('packagePath', 'dir1/**/dir2');
+tr.setInput('deployScriptPath', 'dir3/**/deploy.sh');
+tr.setInput('deployScriptArguments', "\"subdir 1\" false");
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('imageUri', 'imageUri');
 tr.setInput('imageStorageAccount', 'imageStorageAccount');
-tr.setInput("additionalBuilderParameters", "{\"ssh_pty\": \"true\", \"type\":\"amazonaws\"}");
+tr.setInput("additionalBuilderParameters", "{}");
 tr.setInput("skipTempFileCleanupDuringVMDeprovision", "true");
+tr.setInput("isManagedImage","true")
+tr.setInput("managedImageName","builtInLinManagedImageName")
 
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -28,7 +30,7 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenant";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "sId";
-process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "oId";
+process.env["ENDPOINT_DATA_AzureRMSpn_SPNOBJECTID"] =  "";
 process.env["ENDPOINT_DATA_AzureRMSpn_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRMSpn_GRAPHURL"] = "https://graph.windows.net/";
@@ -42,37 +44,52 @@ let a: any = <any>{
     },
     "checkPath": {
         "packer": true,
-        "basedir\\DefaultTemplates\\default.windows.template.json": true,
-        "C:\\deploy.ps1": true
+        "/basedir/DefaultTemplates/default.managed.linux.template.json": true,
+        "/packer-user-scripts/deploy.sh": true
     },
     "exec": {
         "packer --version": {
             "code": 0,
             "stdout": "1.2.4"
         },
-        "packer fix -validate=false F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated.json": {
+        "packer fix -validate=false /tmp/tempdir/100/default.managed.linux.template.json": {
             "code": 0,
             "stdout": "{ \"some-key\": \"some-value\" }"
         },
-        "packer validate -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated-fixed.json": {
+        "packer validate -var-file=/somefolder/somevarfile.json -var-file=/somefolder/somevarfile.json /tmp/tempdir/100/default.managed.linux.template-fixed.json": {
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -color=false -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.windows.template-builderUpdated-fixed.json": {
+        "packer build -force -color=false -var-file=/somefolder/somevarfile.json -var-file=/somefolder/somevarfile.json /tmp/tempdir/100/default.managed.linux.template-fixed.json": {
+            "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
+            "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nManagedImageResourceGroupName: packer-managed-res-grp\nManagedImageName: builtInWinManagedImageName\nManagedImageLocation: westus",
+        },
+        "packer fix -validate=false \\tmp\\tempdir\\100\\default.linux.template.json": {
             "code": 0,
-            "stdout": "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia"
+            "stdout": "Executed Successfully"
+        },
+        "packer validate -var-file=/somefolder/somevarfile.json -var-file=/somefolder/somevarfile.json \\tmp\\tempdir\\100\\default.managed.linux.template-fixed.json": {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+        "packer build -force -color=false -var-file=/somefolder/somevarfile.json -var-file=/somefolder/somevarfile.json \\tmp\\tempdir\\100\\default.managed.linux.template-fixed.json": {
+            "code": process.env["__packer_build_fails__"] === "true" ? 1 : 0,
+            "stdout": process.env["__packer_build_fails__"] === "true" ? "packer build failed\r\nsome error" : "Executed Successfully\nOSDiskUri: https://bishalpackerimages.blob.core.windows.net/system/Microsoft.Compute/Images/packer/packer-osDisk.e2e08a75-2d73-49ad-97c2-77f8070b65f5.vhd\nStorageAccountLocation: SouthIndia",
         }
     },
     "exist": {
-        "F:\\somedir\\tempdir\\100": true,
-        "F:\\somedir\\tempdir\\100\\": true,
+        "/tmp/tempdir/100": true,
+        "\\tmp\\tempdir\\100": true,
+        "/tmp/tempdir/100/": true,
+        "\\tmp\\tempdir\\100/": true,
         "packer": true
     },
     "rmRF": {
-        "F:\\somedir\\tempdir\\100": { 'success': true }
+        "/tmp/tempdir/100": { 'success': true },
+        "\\tmp\\tempdir\\100": { 'success': true }
     },
     "osType": {
-        "osType": "Windows_NT"
+        "osType": "Linux"
     }
 };
 
@@ -89,11 +106,8 @@ var utMock = {
     copyFile: function(source: string, destination: string) {
         console.log('copying ' + source + ' to ' + destination);
     },
-    readJsonFile: function(filePath: string) {
-        return "{\"builders\":[{\"type\":\"azure-arm\"}]}";
-    },
     generateTemporaryFilePath: function () {
-        return "C:\\somefolder\\somevarfile.json";
+        return "/somefolder/somevarfile.json";
     },
     getPackerVarFileContent: function(variables) {
         return ut.getPackerVarFileContent(variables);
@@ -103,19 +117,19 @@ var utMock = {
     },
     findMatch: function(root: string, patterns: string[] | string) {
         if(root === DefaultWorkingDirectory) {
-            return ["C:\\dir1\\somedir\\dir2"];
+            return ["/tmp/dir1/somedir/dir2"];
         } else {
-            return ["C:\\dir1\\somedir\\dir2\\dir3\\somedir\\deploy.ps1"];
+            return ["/tmp/dir1/somedir/dir2/dir3/somedir/deploy.sh"];
         }
     },
     getCurrentTime: function() {
         return 100;
     },
     getTempDirectory: function() {
-        return "F:\\somedir\\tempdir"
+        return "/tmp/tempdir"
     },
     getCurrentDirectory: function() {
-        return "basedir\\currdir";
+        return "/basedir/currdir";
     }
 };
 

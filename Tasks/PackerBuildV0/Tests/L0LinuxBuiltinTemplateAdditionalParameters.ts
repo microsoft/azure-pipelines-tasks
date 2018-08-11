@@ -48,7 +48,7 @@ let a: any = <any>{
     "exec": {
         "packer --version": {
             "code": 0,
-            "stdout": "0.12.3"
+            "stdout": "1.2.4"
         },
         "packer fix -validate=false /tmp/tempdir/100/default.linux.template-builderUpdated.json": {
             "code": 0,
