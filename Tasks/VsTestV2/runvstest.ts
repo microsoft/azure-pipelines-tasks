@@ -30,6 +30,10 @@ async function execute() {
         const serverBasedRun = isServerBasedRun();
         inputParser.setIsServerBasedRun(serverBasedRun);
 
+        const enableDiagnostics = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+        'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+        inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
+
         if (serverBasedRun) {
             ci.publishEvent({
                 runmode: 'distributedtest', parallelism: tl.getVariable('System.ParallelExecutionType'),

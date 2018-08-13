@@ -1,16 +1,15 @@
 # Ant
 # Build your Java projects and run tests with Apache Ant.
+# Add steps that save build artifacts and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Windows Container'
+queue: 'Hosted Linux Preview'
+
 steps:
-
-  - task: Ant@1
-    inputs:
-      buildFile: 'build.xml'
-
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/*.{jar,war,ear}'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
+- task: Ant@1
+  inputs:
+    buildFile: 'build.xml'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.10'
+    jdkArchitectureOption: 'x64'
+    testResultsFiles: '**/TEST-*.xml'

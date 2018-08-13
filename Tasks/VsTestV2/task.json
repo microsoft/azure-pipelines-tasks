@@ -3,7 +3,7 @@
     "name": "VSTest",
     "friendlyName": "Visual Studio Test",
     "description": "Run unit and functional tests (Selenium, Appium, Coded UI test, etc.) using the Visual Studio Test (VsTest) runner. Test frameworks that have a Visual Studio test adapter such as MsTest, xUnit, NUnit, Chutzpah (for JavaScript tests using QUnit, Mocha and Jasmine), etc. can be run. Tests can be distributed on multiple agents using this task (version 2).",
-    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=835764)",
+    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=835764)",
     "category": "Test",
     "visibility": [
         "Build",
@@ -17,12 +17,12 @@
     "version": {
         "Major": 2,
         "Minor": 139,
-        "Patch": 1
+        "Patch": 5
     },
     "demands": [
         "vstest"
     ],
-    "releaseNotes": "<ul><li><b>Run tests using agent phase:</b> Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can distribute tests using the multi-agent phase setting. Multi-config phase setting can be used to replicate tests in different configurations. <a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Use the <b>Visual Studio Test Platform Installer task</b> to run tests without needing a full Visual Studio installation.</li></ul>",
+    "releaseNotes": "<ul><li><b>Run tests using an agent job:</b> Unified agent across Build, Release and Test allows for automation agents to be used for testing purposes as well. You can distribute tests using the multi-agent job setting. The multi-config job setting can be used to replicate tests in different configurations. <a href=\"https://aka.ms/testingwithphases\" target=\"_blank\">More information</a></li><li><b>Test Impact Analysis:</b> Automatically select and run only the tests needed to validate the code change.</li><li>Use the <b>Visual Studio Test Platform Installer task</b> to run tests without needing a full Visual Studio installation.</li></ul>",
     "minimumAgentVersion": "2.103.0",
     "groups": [
         {
@@ -70,7 +70,7 @@
             "label": "Test files",
             "defaultValue": "**\\*test*.dll\n!**\\*TestAdapter.dll\n!**\\obj\\**",
             "required": true,
-            "helpMarkDown": "Run tests from the specified files.<br>Ordered tests and webtests can be run by specifying the .orderedtest and .webtest files respectively. To run .webtest, Visual Studio 2017 Update 4 or higher is needed. <br><br>The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More Information](https://aka.ms/minimatchexamples)",
+            "helpMarkDown": "Run tests from the specified files.<br>Ordered tests and webtests can be run by specifying the .orderedtest and .webtest files respectively. To run .webtest, Visual Studio 2017 Update 4 or higher is needed. <br><br>The file paths are relative to the search folder. Supports multiple lines of minimatch patterns. [More information](https://aka.ms/minimatchexamples)",
             "groupName": "testSelection",
             "properties": {
                 "rows": "3",
@@ -271,7 +271,7 @@
             "label": "Run tests in isolation",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Runs the tests in an isolated process. This makes vstest.console.exe process less likely to be stopped on an error in the tests, but tests might run slower. This option currently cannot be used when running with the multi-agent phase setting.",
+            "helpMarkDown": "Runs the tests in an isolated process. This makes vstest.console.exe process less likely to be stopped on an error in the tests, but tests might run slower. This option currently cannot be used when running with the multi-agent job setting.",
             "groupName": "executionOptions"
         },
         {
@@ -289,7 +289,7 @@
             "label": "Other console options",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent phase or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
+            "helpMarkDown": "Other console options that can be passed to vstest.console.exe, as documented <a href=\"https://aka.ms/vstestotherconsoleoptions\" target=\"_blank\">here</a>. <p>These options are not supported and will be ignored when running tests using the ‘Multi agent’ parallel setting of an agent job or when running tests using ‘Test plan’ option. The options can be specified using a settings file instead.</p>",
             "groupName": "executionOptions"
         },
         {
@@ -298,7 +298,7 @@
             "label": "Batch tests",
             "defaultValue": "basedOnTestCases",
             "required": false,
-            "helpMarkDown": "A batch is a group of tests. A batch of tests runs at a time and results are published for that batch. If the phase in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.<br><br><b>Based on number of tests and agents:</b> Simple batching based on the number of tests and agents participating in the test run.<br><br><b>Based on past running time of tests:</b> This batching considers past running time to create batches of tests such that each batch has approximately equal running time.<br><br><b>Based on test assemblies:</b> Tests from an assembly are batched together.",
+            "helpMarkDown": "A batch is a group of tests. A batch of tests runs its tests at the same time and results are published for the batch. If the job in which the task runs is set to use multiple agents, each agent picks up any available batches of tests to run in parallel.<br><br><b>Based on the number of tests and agents:</b> Simple batching based on the number of tests and agents participating in the test run.<br><br><b>Based on past running time of tests:</b> This batching considers past running time to create batches of tests such that each batch has approximately equal running time.<br><br><b>Based on test assemblies:</b> Tests from an assembly are batched together.",
             "groupName": "advancedExecutionOptions",
             "options": {
                 "basedOnTestCases": "Based on number of tests and agents",
@@ -340,7 +340,7 @@
             "required": false,
             "groupName": "advancedExecutionOptions",
             "defaultValue": "autoBatchSize",
-            "helpMarkDown": "This batching considers past running time to create batches of tests such that each batch has approximately equal running time. Quick running tests will be batched together, while longer running tests may belong to a separate batch. When this option is used with the multi-agent phase setting, total test time is reduced to a minimum.",
+            "helpMarkDown": "This batching considers past running time to create batches of tests such that each batch has approximately equal running time. Quick running tests will be batched together, while longer running tests may belong to a separate batch. When this option is used with the multi-agent job setting, total test time is reduced to a minimum.",
             "options": {
                 "autoBatchSize": "Automatically determine the batch time",
                 "customTimeBatchSize": "Specify running time per batch"
@@ -363,10 +363,10 @@
         {
             "name": "dontDistribute",
             "type": "boolean",
-            "label": "Do not distribute tests and replicate instead when multiple agents are used in the phase",
+            "label": "Do not distribute tests and replicate instead when multiple agents are used in the job",
             "defaultValue": "False",
             "required": false,
-            "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is running in a multi-agent phase.<br>Each of the selected test(s) will be repeated on each agent.<br>The option is not applicable when the agent phase is configured to run with no parallelism or with the multi-config option.",
+            "helpMarkDown": "Choosing this option will not distribute tests across agents when the task is running in a multi-agent job.<br>Each of the selected test(s) will be repeated on each agent.<br>The option is not applicable when the agent job is configured to run with no parallelism or with the multi-config option.",
             "groupName": "advancedExecutionOptions"
         },
         {
@@ -404,6 +404,29 @@
             "required": false,
             "helpMarkDown": "Opt in/out of publishing run level attachments.",
             "groupName": "reportingOptions"
+        },
+        {
+            "name": "diagnosticsEnabled",
+            "type": "boolean",
+            "label": "Collect advanced diagnostics in case of catastrophic failures",
+            "defaultValue": "True",
+            "required": false,
+            "helpMarkDown": "Collect advanced diagnostics in case of catastrophic failures.",
+            "groupName": "executionOptions"
+        },
+        {
+            "name": "collectDumpOn",
+            "type": "pickList",
+            "label": "Collect process dump and attach to test run report",
+            "defaultValue": "onAbortOnly",
+            "required": false,
+            "helpMarkDown": "Collect process dump and attach to test run report.",
+            "groupName": "executionOptions",
+            "options": {
+                "onAbortOnly": "On abort only",
+                "always": "Always"
+            },
+            "visibleRule": "diagnosticsEnabled = true"
         },
         {
             "name": "rerunFailedTests",
@@ -528,15 +551,15 @@
         "NoIncludePatternFound": "No include pattern found. Specify at least one include pattern to search test assemblies.",
         "ErrorWhileUpdatingSettings": "Error occurred while updating the settings file. Using the specified settings file.",
         "VideoCollectorNotSupportedWithRunSettings": "Video collector is not supported with run settings.",
-        "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent phase setting. This option will be ignored.",
+        "runTestInIsolationNotSupported": "Running tests in isolation is not supported when using the multi-agent job setting. This option will be ignored.",
         "overrideNotSupported": "Overriding test run parameters is supported only with valid runsettings or testsettings file. This option will be ignored.",
         "testSettingPropertiesNotSupported": "Properties specified in testsettings file can be accessed via the TestContext using Visual Studio 2017 Update 4 or higher",
         "vstestVersionInvalid": "Given test platform version %s is not supported.",
         "configureDtaAgentFailed": "Configuring the test agent with the server failed even after %d retries with error %s",
-        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent phase setting. This option will be ignored.",
+        "otherConsoleOptionsNotSupported": "Other console options is not supported when using the multi-agent job setting. This option will be ignored.",
         "distributedTestWorkflow": "In distributed testing flow",
         "nonDistributedTestWorkflow": "Running tests using vstest.console.exe runner.",
-        "dtaNumberOfAgents": "Distributed test execution, number of agents in phase : %s",
+        "dtaNumberOfAgents": "Distributed test execution, number of agents in job : %s",
         "testSelectorInput": "Test selector : %s",
         "searchFolderInput": "Search folder : %s",
         "testFilterCriteriaInput": "Test filter criteria : %s",
@@ -590,6 +613,7 @@
         "UpgradeAgentMessage": "Please upgrade your agent version. https://github.com/Microsoft/vsts-agent/releases",
         "VsTestVersionEmpty": "VsTestVersion is null or empty",
         "UserProvidedSourceFilter": "Source filter: %s",
-        "UnableToGetFeatureFlag": "Unable to get feature flag: %s"
+        "UnableToGetFeatureFlag": "Unable to get feature flag: %s",
+        "diagnosticsInput": "Diagnostics enabled : %s"
     }
 }

@@ -1,17 +1,16 @@
 # Maven
 # Build your Java projects and run tests with Apache Maven.
-# https://aka.ms/yaml
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/vsts/pipelines/apps/java/build-maven
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
+
 steps:
-
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      goals: 'package'
-
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/target/*.{jar,war,ear}'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    goals: 'package'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.10'
+    jdkArchitectureOption: 'x64'
+    testResultsFiles: '**/TEST-*.xml'

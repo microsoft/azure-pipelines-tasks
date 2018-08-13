@@ -44,9 +44,8 @@ async function getKubeConfigFile(): Promise<string> {
 }
 
 async function run() {
-    var isKubConfigRequired = isKubConfigSetupRequired();
-    if (isKubConfigRequired) {
-        var kubeconfigfilePath = await getKubeConfigFile();
+    var command = tl.getInput("command", true); 
+    var kubeconfigfilePath = (command === "logout") ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
         var kubectlCli: kubernetescli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
     }
@@ -55,14 +54,22 @@ async function run() {
     helmCli.login();
 
     try {
-        runHelm(helmCli)
+        switch (command){
+            case "login":
+                kubectlCli.setKubeConfigEnvVariable();
+                break;
+            case "logout":
+                kubectlCli.unsetKubeConfigEnvVariable();
+                break;
+            default:
+                runHelm(helmCli, command);
+        }
     } catch(err) {
         // not throw error so that we can logout from helm and kubernetes
         tl.setResult(tl.TaskResult.Failed, err.message);
     } 
     finally {
-        if (isKubConfigRequired) {
-            helmutil.deleteFile(kubeconfigfilePath);
+        if (command !== "login") {
             kubectlCli.logout();
         }
         
@@ -70,10 +77,7 @@ async function run() {
     }
 }
 
-function runHelm(helmCli: helmcli) {
-
-    var command = tl.getInput("command", true);
-    
+function runHelm(helmCli: helmcli, command: string) {
     var helmCommandMap ={
         "init": "./helmcommands/helminit",
         "install": "./helmcommands/helminstall",
