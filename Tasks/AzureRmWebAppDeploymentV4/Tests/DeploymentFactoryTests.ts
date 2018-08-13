@@ -5,7 +5,7 @@ import * as path from 'path';
 
 export class DeploymentFactoryTests {
 
-    public static startDeploymentFactoryL0Tests(){
+    public static startDeploymentFactoryTests() {
         let tp = path.join(__dirname, 'DeploymentFactoryL0Tests.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
         tr.setInput("ConnectionType", "AzureRM");
@@ -23,7 +23,7 @@ export class DeploymentFactoryTests {
         process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
         process.env["AGENT_NAME"] = "author";
         process.env["AGENT_TEMPDIRECTORY"] = 'Agent.TempDirectory';
-        
+
         // provide answers for task mock
         let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "which": {
@@ -54,4 +54,4 @@ export class DeploymentFactoryTests {
 
 }
 
-DeploymentFactoryTests.startDeploymentFactoryL0Tests();
+DeploymentFactoryTests.startDeploymentFactoryTests();

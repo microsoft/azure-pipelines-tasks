@@ -156,4 +156,17 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
+    it('AzureRmWebAppDeploymentV4 AzureRmWebAppDeploymentProviderTests', (done: MochaDone) => {
+        let tp = path.join(__dirname,'AzureRmWebAppDeploymentProviderTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+            assert(tr.stdOutContained('set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net'), 'Should have printed: set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net');
+            done();
+        }
+        catch(error) {
+            done(error);
+        }
+    });
+
 });
