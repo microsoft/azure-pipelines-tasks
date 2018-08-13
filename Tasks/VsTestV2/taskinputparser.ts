@@ -124,6 +124,9 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
 
+    testConfiguration.diagnosticsConfiguration = getDiagnosticsConfiguration();
+    console.log(tl.loc('diagnosticsInput', testConfiguration.diagnosticsConfiguration.enabled));    
+
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
     testConfiguration.testRunTitle = tl.getInput('testRunTitle');
@@ -313,6 +316,13 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
             tl.debug('Setting the test source filter for the TestRun : ' + testConfiguration.sourceFilter);
             break;
     }
+}
+
+function getDiagnosticsConfiguration(): models.DiagnosticsConfiguration {
+    const diagnosticsConfiguration = {} as models.DiagnosticsConfiguration;
+    // Diagnostics is not supported for non-api based local test run flows.
+    diagnosticsConfiguration.enabled = false;
+    return diagnosticsConfiguration;
 }
 
 function getTiaConfiguration(): models.TiaConfiguration {

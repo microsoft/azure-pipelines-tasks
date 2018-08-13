@@ -66,6 +66,11 @@ export class DistributedTest {
         // Pass the acess token as an environment variable for security purposes
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
+        if(this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled)
+        {
+            utils.Helper.addToProcessEnvVars(envVars, 'PROCDUMP_PATH', path.join(__dirname, 'ProcDump'));
+        }
+
         // Invoke DtaExecutionHost with the input json file
         const inputFilePath = utils.Helper.GenerateTempFile('input_' + uuid.v1() + '.json');
         utils.Helper.removeEmptyNodes(this.inputDataContract);
@@ -82,7 +87,7 @@ export class DistributedTest {
 
         const dtaExecutionHostTool = tl.tool(path.join(__dirname, 'Modules/DTAExecutionHost.exe'));
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
-        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ env: envVars });
+        const code = await dtaExecutionHostTool.exec(<tr.IExecOptions>{ ignoreReturnCode:this.inputDataContract.ExecutionSettings.IgnoreTestFailures, env: envVars });
 
         //hydra: add consolidated ci for inputs in C# layer for now
         const consolidatedCiData = {

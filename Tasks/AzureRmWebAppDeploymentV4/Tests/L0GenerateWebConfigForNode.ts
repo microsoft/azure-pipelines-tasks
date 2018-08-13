@@ -236,7 +236,7 @@ tr.registerMock('webdeployment-common/utility.js', {
     }
 });
 
-tr.registerMock('./parameterparser', {
+tr.registerMock('./ParameterParserUtility', {
     parse: function (data) {
         return {
             "appType": {

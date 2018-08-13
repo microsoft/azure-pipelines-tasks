@@ -123,6 +123,14 @@ export class NpmMockHelper extends TaskMockRunner {
         process.env['ENDPOINT_AUTH_' + endpointId] = JSON.stringify(auth);
     }
 
+    public registerLocationHelpersMock() {
+        this.registerMock('./LocationHelpers', {
+            assumeNuGetUriPrefixes: function(input) {
+                return [input];
+            }
+        });
+    }
+
     private isDebugging() {
         let value = process.env[NpmMockHelper._getVariableKey('System.Debug')];
         return value === 'true';

@@ -4,6 +4,8 @@
   "loc.description": "Build, tag, push, or run Docker images, or run a Docker command. Task can be used with Docker or Azure Container registry.",
   "loc.instanceNameFormat": "$(command)",
   "loc.releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
+  "loc.group.displayName.containerRegistry": "Container Registry",
+  "loc.group.displayName.commands": "Commands",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.containerregistrytype": "Container registry type",
   "loc.input.help.containerregistrytype": "Select a Container Registry Type.",
@@ -73,5 +75,6 @@
   "loc.messages.NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
   "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
   "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
-  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
+  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s.",
+  "loc.messages.DockerRegistryNotFound": "Docker registry service connection not specified."
 }
