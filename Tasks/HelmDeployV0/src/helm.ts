@@ -28,9 +28,12 @@ function getClusterType(): any {
     return require("./clusters/generickubernetescluster")
 }
 
-function isKubConfigSetupRequired(): boolean {
-    var command = tl.getInput("command", true);
+function isKubConfigSetupRequired(command: string): boolean {
     return command !== "package";
+}
+
+function isKubConfigLogoutRequired(command: string): boolean {
+    return command !== "package" && command !== "login";
 }
 
 // get kubeconfig file path
@@ -44,9 +47,12 @@ async function getKubeConfigFile(): Promise<string> {
 }
 
 async function run() {
-    var command = tl.getInput("command", true); 
-    var kubeconfigfilePath = (command === "logout") ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
-        var kubectlCli: kubernetescli = new kubernetescli(kubeconfigfilePath);
+    var command = tl.getInput("command", true);
+    var isKubConfigRequired = isKubConfigSetupRequired(command);
+    var kubectlCli: kubernetescli;
+    if (isKubConfigRequired) {
+        var kubeconfigfilePath = command === "logout" ? tl.getVariable("KUBECONFIG") : await getKubeConfigFile();
+        kubectlCli = new kubernetescli(kubeconfigfilePath);
         kubectlCli.login();
     }
 
@@ -69,10 +75,10 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message);
     } 
     finally {
-        if (command !== "login") {
+        if (isKubConfigLogoutRequired(command)) {
             kubectlCli.logout();
         }
-        
+
         helmCli.logout();
     }
 }
