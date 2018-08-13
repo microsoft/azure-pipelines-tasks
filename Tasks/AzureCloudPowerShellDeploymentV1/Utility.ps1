@@ -261,7 +261,8 @@ function Validate-AzureCloudServiceStatus
     Param (
         [Parameter(Mandatory = $true)]
         [string] $CloudServiceName,
-        [string] $Slot = ''
+        [string] $Slot = '',
+        [string] $RetryLimit
     )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
