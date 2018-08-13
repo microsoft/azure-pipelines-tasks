@@ -14,6 +14,7 @@ try{
     $AllowUpgrade = Get-VstsInput -Name AllowUpgrade -Require -AsBool
     $SimultaneousUpgrade = Get-VstsInput -Name SimultaneousUpgrade -AsBool
     $ForceUpgrade = Get-VstsInput -Name ForceUpgrade -AsBool
+    $VerifyRoleInstanceRetryLimit = Get-VstsInput -Name VerifyRoleInstanceRetryLimit
     $DiagnosticStorageAccountKeys = Get-VstsInput -Name DiagnosticStorageAccountKeys
     $NewServiceAdditionalArguments = Get-VstsInput -Name NewServiceAdditionalArguments
     $NewServiceAffinityGroup = Get-VstsInput -Name NewServiceAffinityGroup
@@ -169,7 +170,11 @@ try{
             $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
         }
     }
-    Validate-AzureCloudServiceStatus -CloudServiceName $ServiceName -Slot $Slot
+
+    if ($VerifyRoleInstanceRetryLimit)
+    {   
+        Validate-AzureCloudServiceStatus -CloudServiceName $ServiceName -Slot $Slot -RetryLimit $VerifyRoleInstanceRetryLimit
+    }
 } finally {
 	Trace-VstsLeavingInvocation $MyInvocation
 }
