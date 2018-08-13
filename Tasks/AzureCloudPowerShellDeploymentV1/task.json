@@ -144,7 +144,7 @@
             "type": "boolean",
             "label": "Verify role instance status",
             "defaultValue": "false",
-            "helpMarkDown": "When selected then the task will check if role instances are in ready state.",
+            "helpMarkDown": "When selected then the task will wait until role instances are in ready state.",
             "required": false
         },
         {
