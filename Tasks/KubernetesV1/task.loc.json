@@ -20,8 +20,8 @@
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {
-      "name": "kubernetesRegistry",
-      "displayName": "ms-resource:loc.group.displayName.kubernetesRegistry",
+      "name": "kubernetesCluster",
+      "displayName": "ms-resource:loc.group.displayName.kubernetesCluster",
       "isExpanded": true,
       "visibleRule": "command != logout"
     },
@@ -66,7 +66,7 @@
         "Azure Resource Manager": "Azure Resource Manager",
         "Kubernetes Service Connection": "Kubernetes Service Connection"
       },
-      "groupName": "kubernetesRegistry",
+      "groupName": "kubernetesCluster",
       "helpMarkDown": "ms-resource:loc.input.help.connectionType"
     },
     {
@@ -75,7 +75,7 @@
       "label": "ms-resource:loc.input.label.kubernetesServiceEndpoint",
       "visibleRule": "connectionType = Kubernetes Service Connection",
       "helpMarkDown": "ms-resource:loc.input.help.kubernetesServiceEndpoint",
-      "groupName": "kubernetesRegistry",
+      "groupName": "kubernetesCluster",
       "required": true
     },
     {
@@ -85,7 +85,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
-      "groupName": "kubernetesRegistry",
+      "groupName": "kubernetesCluster",
       "required": true
     },
     {
@@ -96,7 +96,7 @@
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
       "required": true,
-      "groupName": "kubernetesRegistry",
+      "groupName": "kubernetesCluster",
       "properties": {
         "EditableOptions": "True"
       }
@@ -109,7 +109,7 @@
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
       "required": true,
-      "groupName": "kubernetesRegistry",
+      "groupName": "kubernetesCluster",
       "properties": {
         "EditableOptions": "True"
       }
@@ -120,7 +120,7 @@
       "label": "ms-resource:loc.input.label.namespace",
       "required": false,
       "defaultValue": "",
-      "groupName": "kubernetesRegistry",
+      "groupName": "kubernetesCluster",
       "helpMarkDown": "ms-resource:loc.input.help.namespace"
     },
     {
