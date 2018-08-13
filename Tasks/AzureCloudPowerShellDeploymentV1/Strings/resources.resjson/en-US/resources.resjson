@@ -28,6 +28,8 @@
   "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Force upgrade",
   "loc.input.help.ForceUpgrade": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.",
+  "loc.input.label.VerifyRoleInstanceStatus": "Verify role instance status",
+  "loc.input.help.VerifyRoleInstanceStatus": "When selected then the task will wait until role instances are in ready state.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Diagnostic storage account keys",
   "loc.input.help.DiagnosticStorageAccountKeys": "Provide storage keys for diagnostics storage account in Role:Storagekey format. The diagnostics storage account name for each role will be obtained from diagnostics config file (.wadcfgx). If the .wadcfgx file for a role is not found, diagnostics extensions won’t be set for the role. If the storage account name is missing in the .wadcfgx file, the default storage account will be used for storing diagnostics results and the storage key parameters from deployment task will be ignored. It’s recommended to save <storage_account_key> as a secret variable unless there is no sensitive information in the diagnostics result for your environment. <br/><br/>For example,<br/> WebRole: &lt;WebRole_storage_account_key&gt;<br/>WorkerRole: &lt;WorkerRole_stoarge_account_key&gt;",
   "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
