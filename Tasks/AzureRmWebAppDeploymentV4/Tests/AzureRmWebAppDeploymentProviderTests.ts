@@ -3,6 +3,7 @@ import tmrm = require('vsts-task-lib/mock-run');
 import ma = require('vsts-task-lib/mock-answer');
 import * as path from 'path';
 import { AzureResourceFilterUtility } from '../operations/AzureResourceFilterUtility';
+import { KuduServiceUtility } from '../operations/KuduServiceUtility';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import { ApplicationTokenCredentials } from 'azure-arm-rest/azure-arm-common';
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint'; 
@@ -40,9 +41,13 @@ export class AzureRmWebAppDeploymentProviderTests {
         process.env["AGENT_NAME"] = "author";
         process.env["AGENT_TEMPDIRECTORY"] = 'Agent.TempDirectory';
         
-        tr.registerMock('./AzureResourceFilterUtility.js', {
-            getResourceGroupName : function(endpoint, resourceName) {
-                return "ResourceGroupName";
+        tr.registerMock('../operations/KuduServiceUtility', {
+            KuduServiceUtility: function(A) {
+                return {
+                    updateDeploymentStatus : function(A, B, C) {
+                        return ;
+                    }
+                }
             }
         });
 

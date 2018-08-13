@@ -162,6 +162,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         try {
             tr.run();
             assert(tr.stdOutContained('set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net'), 'Should have printed: set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net');
+            assert(tr.stdOutContained('Application Insights is not configured for the App Service. Skipping adding release annotation'), 'Should have printed: Application Insights is not configured for the App Service. Skipping adding release annotation.');
             done();
         }
         catch(error) {

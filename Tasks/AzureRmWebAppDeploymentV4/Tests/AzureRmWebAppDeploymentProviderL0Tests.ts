@@ -17,6 +17,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
 
     public static async startAzureRmWebAppDeploymentProviderL0Tests() {
         await AzureRmWebAppDeploymentProviderL0Tests.testForPreDeploymentSteps();
+        await AzureRmWebAppDeploymentProviderL0Tests.testForUpdateDeploymentStatus();
     }
 
     public static async testForPreDeploymentSteps() {
@@ -26,6 +27,18 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             azureRmWebAppDeploymentProvider.PreDeploymentStep();
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps should succeeded with AppServiceApplicationUrl=http://mytestapp.azurewebsites.net but failed with error');
+        }
+    }
+
+
+    public static async testForUpdateDeploymentStatus() {
+        try {
+            var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
+            await azureRmWebAppDeploymentProvider.PreDeploymentStep();
+            azureRmWebAppDeploymentProvider.UpdateDeploymentStatus(true);
+        } catch(error) {
+            tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus steps should succeeded but failed with error');
         }
     }
 

@@ -710,7 +710,7 @@ export function mockAzureARMPreDeploymentSteps() {
         properties: {
             publishingUserName: "$mytestapp",
             publishingPassword: "MOCK_APP_SERVICE_MSDEPLOY_PASSWORD",
-            scmUri: "https://$v:MOCK_APP_SERVICE_MSDEPLOY_PASSWORD@mytestapp.scm.azurewebsites.net"
+            scmUri: "https://$mytestapp:MOCK_APP_SERVICE_MSDEPLOY_PASSWORD@mytestapp.scm.azurewebsites.net"
         }
     }).persist();
 
@@ -727,4 +727,36 @@ export function mockAzureARMPreDeploymentSteps() {
         userName="$mytestapp" userPWD="MOCK_APP_SERVICE_MSDEPLOY_PASSWORD" destinationAppUrl="http://mytestapp.azurewebsites.net">
     </publishProfile>
     </publishData>`).persist();
+
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/appsettings/list?api-version=2016-08-01")
+    .reply(200, {
+        id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/appsettings",
+        name: "mytestapp",
+        type: "Microsoft.Web/sites/config",
+        location: "South Central US",
+        properties: {
+            "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+            "MSDEPLOY_RENAME_LOCKED_FILES": "1"
+        }
+    }).persist();;
+
+    nock('https://$mytestapp:MOCK_APP_SERVICE_MSDEPLOY_PASSWORD@mytestapp.scm.azurewebsites.net',
+    {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).
+    put('/api/deployments/MOCK_DEPLOYMENT_ID').reply(200, {
+        type: 'Deployment',
+        url: 'http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID'
+    });
+    
 }
