@@ -22,6 +22,12 @@ This provides open examples on how we write tasks which will help you write othe
 [linux-build-badge]: https://mseng.visualstudio.com/pipelinetools/_apis/build/status/VSTS.Tasks.CI-Linux?branchName=master
 [linux-build]: https://mseng.visualstudio.com/PipelineTools/_build?_a=completed&definitionId=5667
 
+Samples from site:
+
+[![Build Status](https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Task/VSTS.Tasks.CI-Windows)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=5709)
+[![Build Status](https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Task/VSTS.Tasks.CI-macOS)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=5718)
+[![Build Status](https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Task/VSTS.Tasks.CI-Linux)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=5667)
+
 ## How to Use Tasks
 
 See the documentation for [Continuous integration and deployment](https://aka.ms/tfbuild).
