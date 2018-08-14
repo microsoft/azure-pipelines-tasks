@@ -26,7 +26,7 @@ phases:
   - task: PythonScript@0
     displayName: 'Export project path'
     inputs:
-      targetType: 'inline'
+      scriptSource: 'inline'
       script: |
         """Search all subdirectories for `manage.py`."""
         from glob import iglob
