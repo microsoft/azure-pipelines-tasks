@@ -162,7 +162,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
         try {
             tr.run();
             assert(tr.stdOutContained('set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net'), 'Should have printed: set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net');
-            assert(tr.stdOutContained('Application Insights is not configured for the App Service. Skipping adding release annotation'), 'Should have printed: Application Insights is not configured for the App Service. Skipping adding release annotation.');
+            assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.');
             done();
         }
         catch(error) {

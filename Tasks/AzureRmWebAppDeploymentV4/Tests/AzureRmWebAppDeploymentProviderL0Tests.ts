@@ -26,7 +26,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
             azureRmWebAppDeploymentProvider.PreDeploymentStep();
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps should succeeded with AppServiceApplicationUrl=http://mytestapp.azurewebsites.net but failed with error');
+            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps should succeeded but failed with error');
         }
     }
 

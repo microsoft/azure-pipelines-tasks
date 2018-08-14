@@ -7,6 +7,7 @@ import { KuduServiceUtility } from '../operations/KuduServiceUtility';
 import { AzureEndpoint } from 'azure-arm-rest/azureModels';
 import { ApplicationTokenCredentials } from 'azure-arm-rest/azure-arm-common';
 import { AzureRMEndpoint } from 'azure-arm-rest/azure-arm-endpoint'; 
+import { setEndpointData, setAgentsData, mockTaskArgument } from './utils';
 
 export class AzureRmWebAppDeploymentProviderTests {
 
@@ -22,60 +23,21 @@ export class AzureRmWebAppDeploymentProviderTests {
         tr.setInput('WebAppKind', "webAppLinux");
         tr.setInput('RuntimeStack', "dummy|version");
         tr.setInput('BuiltinLinuxPackage', 'webAppPkg.zip');
-
-        process.env["ENDPOINT_AUTH_AzureRMSpn"] = "{\"parameters\":{\"serviceprincipalid\":\"MOCK_SPN_ID\",\"serviceprincipalkey\":\"MOCK_SPN_KEY\",\"tenantid\":\"MOCK_TENANT_ID\"},\"scheme\":\"ServicePrincipal\"}";
-        process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "MOCK_SPN_ID";
-        process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "MOCK_SPN_KEY";
-        process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "MOCK_TENANT_ID";
-        process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONNAME"] = "MOCK_SUBSCRIPTION_NAME";
-        process.env["ENDPOINT_DATA_AzureRMSpn_SUBSCRIPTIONID"] =  "MOCK_SUBSCRIPTION_ID";
-        process.env["ENDPOINT_URL_AzureRMSpn"] = "https://management.azure.com/";
-        process.env["ENDPOINT_DATA_AzureRMSpn_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
-        process.env["ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com/";
         
+        setEndpointData();
+        setAgentsData();
 
-
-        process.env['TASK_TEST_TRACE'] = 1;
-        process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
-        process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
-        process.env["AGENT_NAME"] = "author";
-        process.env["AGENT_TEMPDIRECTORY"] = 'Agent.TempDirectory';
-        
-        tr.registerMock('../operations/KuduServiceUtility', {
-            KuduServiceUtility: function(A) {
+        tr.registerMock('azure-arm-rest/azure-arm-app-service-kudu', {
+            Kudu: function(A, B, C) {
                 return {
-                    updateDeploymentStatus : function(A, B, C) {
-                        return ;
+                    updateDeployment : function(D) {
+                        return "MOCK_DEPLOYMENT_ID";
                     }
                 }
             }
         });
 
-        // provide answers for task mock
-        let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
-            "which": {
-                "cmd": "cmd"
-            },
-            "stats": {
-                "webAppPkg.zip": {
-                    "isFile": true
-                }
-            },
-            "osType": {
-                "osType": "Linux"
-            },
-            "checkPath": {
-                "cmd": true,
-                "webAppPkg.zip": true,
-                "webAppPkg": true
-            },
-            "exist": {
-                "webAppPkg.zip": true,
-                "webAppPkg": true
-            }
-        }
-
-        tr.setAnswers(a);
+        tr.setAnswers(mockTaskArgument());
         tr.run();
     }
 
