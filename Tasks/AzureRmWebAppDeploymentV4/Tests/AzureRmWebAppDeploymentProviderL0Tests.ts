@@ -1,6 +1,5 @@
 import tl = require('vsts-task-lib');
 import { DeploymentFactory } from '../deploymentProvider/DeploymentFactory';
-import { BuiltInLinuxWebAppDeploymentProvider } from '../deploymentProvider/BuiltInLinuxWebAppDeploymentProvider'
 import { AzureRmWebAppDeploymentProvider } from '../deploymentProvider/AzureRmWebAppDeploymentProvider'
 import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeploymentProvider';
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
@@ -38,9 +37,9 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
             await azureRmWebAppDeploymentProvider.PreDeploymentStep();
-            tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps withSlotEnabled should succeeded');
+            tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps with slot enabled should succeeded');
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps withSlotEnabled should succeeded but failed with error');
+            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps with slot enabled should succeeded but failed with error');
         }
     }
 
