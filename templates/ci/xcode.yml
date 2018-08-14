@@ -6,7 +6,7 @@
 queue: 'Hosted macOS Preview'
 
 steps:
-- task: Xcode@4
+- task: Xcode@5
   inputs:
     scheme: ''
     sdk: 'iphoneos'

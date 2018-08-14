@@ -11,11 +11,7 @@ steps:
     versionSpec: '8.x'
   displayName: 'Install Node.js'
 
-- task: Npm@1
-  inputs:
-    command: 'install'
-
-- task: Grunt@0
-  inputs:
-    gruntFile: 'gruntfile.js'
-    targets: ''
+- script: |
+    npm install
+    grunt --gruntfile gruntfile.js
+  displayName: 'npm install and build'

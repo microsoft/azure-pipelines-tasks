@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 138,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "groups": [
@@ -21,7 +21,7 @@
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
             "isExpanded": true,
-            "visibleRule": "command != logout"
+            "visibleRule": "command != logout && command != package"
         },
         {
             "name": "commands",
@@ -32,13 +32,13 @@
             "name": "tls",
             "displayName": "TLS",
             "isExpanded": false,
-            "visibleRule": "command != login && command != logout"
+            "visibleRule": "command != login && command != logout && command != package"
         },
         {
             "name": "advanced",
             "displayName": "Advanced",
             "isExpanded": false,
-            "visibleRule": "command != login && command != logout"
+            "visibleRule": "command != login && command != logout && command != package"
         }
     ],
     "inputs": [

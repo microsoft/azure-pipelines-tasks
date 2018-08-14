@@ -11,11 +11,7 @@ steps:
     versionSpec: '8.x'
   displayName: 'Install Node.js'
 
-- task: Npm@1
-  inputs:
-    command: 'install'
-
-- task: Gulp@0
-  inputs:
-    gulpFile: 'gulpfile.js'
-    targets: ''
+- script: |
+    npm install
+    gulp default --gulpfile gulpfile.js
+  displayName: 'npm install and build'
