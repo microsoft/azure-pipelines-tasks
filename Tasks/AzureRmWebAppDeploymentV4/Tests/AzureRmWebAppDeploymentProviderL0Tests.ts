@@ -24,7 +24,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
-            azureRmWebAppDeploymentProvider.PreDeploymentStep();
+            await azureRmWebAppDeploymentProvider.PreDeploymentStep();
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps should succeeded but failed with error');
         }
@@ -39,7 +39,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             await azureRmWebAppDeploymentProvider.PreDeploymentStep();
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps with slot enabled should succeeded');
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps with slot enabled should succeeded but failed with error');
+            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps with slot enabled failed with error');
         }
     }
 
@@ -48,7 +48,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
             await azureRmWebAppDeploymentProvider.PreDeploymentStep();
-            azureRmWebAppDeploymentProvider.UpdateDeploymentStatus(true);
+            await azureRmWebAppDeploymentProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus steps should succeeded but failed with error');
         }

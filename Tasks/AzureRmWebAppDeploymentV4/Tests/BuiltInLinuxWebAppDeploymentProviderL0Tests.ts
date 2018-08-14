@@ -24,10 +24,10 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
-            builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for built in linux web app should succeeded');
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps should succeeded for built in linux web app but failed with error');
+            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for built in linux web app failed with error');
         }
     }
 
@@ -40,7 +40,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps for built in linux web app with slot enabled should succeeded');
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps with slot enabled should succeeded but failed with error');
+            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps for built in linux web app with slot enabled failed with error');
         }
     }
 
@@ -49,7 +49,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
             await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
-            builtInLinuxWebAppDeploymentProvider.UpdateDeploymentStatus(true);
+            await builtInLinuxWebAppDeploymentProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for built in linux web app steps should succeeded but failed with error');
         }
