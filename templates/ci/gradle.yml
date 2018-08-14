@@ -1,19 +1,16 @@
 # Gradle
 # Build your Java projects and run tests with Gradle using a Gradle wrapper script.
+# Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/apps/java/build-gradle
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
+
 steps:
-
-  - task: Gradle@2
-    inputs:
-      tasks: 'build'
-      gradleWrapperFile: 'gradlew'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.10'
-      jdkArchitectureOption: 'x64'
-      testResultsFiles: '**/TEST-*.xml'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/apps/java/build-gradle
+- task: Gradle@2
+  inputs:
+    tasks: 'build'
+    gradleWrapperFile: 'gradlew'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.10'
+    jdkArchitectureOption: 'x64'
+    testResultsFiles: '**/TEST-*.xml'

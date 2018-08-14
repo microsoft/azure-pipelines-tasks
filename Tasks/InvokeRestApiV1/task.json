@@ -2,9 +2,9 @@
   "id": "9C3E8943-130D-4C78-AC63-8AF81DF62DFB",
   "name": "InvokeRESTAPI",
   "friendlyName": "Invoke REST API",
-  "description": "Invoke REST API as a part of your process.",
+  "description": "Invoke a REST API as a part of your pipeline.",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870236)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 4
   }, 
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [{
@@ -131,7 +131,7 @@
       "label": "Success criteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+      "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More information](https://go.microsoft.com/fwlink/?linkid=842996)​",
       "groupName": "completionOptions",
       "visibleRule": "waitForCompletion = false"
     }

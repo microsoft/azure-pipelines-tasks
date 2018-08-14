@@ -68,12 +68,7 @@ let myAnswers: string = `{
       "${taskReportValidBuildSonarDirReplaced}":true,
       "${taskReportValidBuildSonarReportTaskTextDirReplaced}":true
    },
-   "find":{
-      "/user/build":[
-         "/user/build/fun/test-123.xml"
-      ]
-   },
-   "match":{
+   "findMatch":{
       "**/build/test-results/TEST-*.xml":[
          "/user/build/fun/test-123.xml"
       ]

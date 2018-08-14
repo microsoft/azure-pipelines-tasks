@@ -2,7 +2,6 @@ import path = require('path');
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import { PackageUtility, PackageType } from './packageUtility';
-import os = require('os');
 
 var zipUtility = require('webdeployment-common/ziputility.js');
 /**

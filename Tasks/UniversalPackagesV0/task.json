@@ -7,9 +7,9 @@
   "helpMarkDown": "[More Information](https://aka.ms/universalpackagesannounce)",
   "category": "Package",
   "version": {
-    "Major": "0",
-    "Minor": "0",
-    "Patch": "1"
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -345,7 +345,7 @@
     "endpointId": "tfs:feed",
     "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds/$(feedListPublish)/packages?includeUrls=false&includeDeleted=false",
     "resultSelector": "jsonpath:$.value[?(@.protocolType=='UPack')]",
-    "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    "resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
   }],
   
   "execution": {
@@ -383,6 +383,8 @@
     "Info_UsingToolPath": "Using tool path: %s",
     "Info_UsingVersion": "Using version: %s",
     "FailedToGetPackageMetadata": "Failed to get package metadata.",
+    "FailedToGetArtifactTool": "Failed to get artifact tool from service. %s",
+    "Error_UnexpectedErrorFailedToGetToolMetadata" : "Failed to get artifact tool metadata from source url %s",
     "FailedToGetLatestPackageVersion": "Failed to get package versions",
     "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages"
   }
