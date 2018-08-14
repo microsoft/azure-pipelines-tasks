@@ -13,11 +13,15 @@ export function getPatternsArrayFromInput(pattern: string): string[]
 }
 
 // Attempts to resolve paths the same way the legacy PowerShell's Find-Files worked
-export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEmptyMatch?: boolean, includeFolders?: boolean): string[] {
-    let patterns = getPatternsArrayFromInput(filterSpec);
-    let result = new Set<string>();
+export function resolveFilterSpec(
+    filterSpec: string,
+    basePath?: string,
+    allowEmptyMatch?: boolean,
+    includeFolders?: boolean): string[] {
+    const patterns = getPatternsArrayFromInput(filterSpec);
+    const result = new Set<string>();
 
-    patterns.forEach(pattern => {
+    patterns.forEach((pattern) => {
         let isNegative = false;
         if (pattern.startsWith("+:")) {
             pattern = pattern.substr(2);
@@ -33,8 +37,8 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
 
         tl.debug(`pattern: ${pattern}, isNegative: ${isNegative}`);
 
-        let thisPatternFiles = resolveWildcardPath(pattern, true, includeFolders);
-        thisPatternFiles.forEach(file => {
+        const thisPatternFiles = resolveWildcardPath(pattern, true, includeFolders);
+        thisPatternFiles.forEach((file) => {
             if (isNegative) {
                 result.delete(file);
             }
@@ -52,8 +56,11 @@ export function resolveFilterSpec(filterSpec: string, basePath?: string, allowEm
     return Array.from(result);
 }
 
-export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: boolean, includeFolders?: boolean): string[] {
-    let isWindows = tl.osType() === 'Windows_NT';
+export function resolveWildcardPath(
+    pattern: string,
+    allowEmptyWildcardMatch?: boolean,
+    includeFolders?: boolean): string[] {
+    const isWindows = tl.osType() === "Windows_NT";
 
     // Resolve files for the specified value or pattern
     let filesList: string[];
@@ -71,10 +78,10 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         filesList = [pattern];
 
     } else {
-        let firstWildcardIndex = function (str) {
-            let idx = str.indexOf("*");
+        const firstWildcardIndex = function (str) {
+            const idx = str.indexOf("*");
 
-            let idxOfWildcard = str.indexOf("?");
+            const idxOfWildcard = str.indexOf("?");
             if (idxOfWildcard > -1) {
                 return (idx > -1) ?
                     Math.min(idx, idxOfWildcard) : idxOfWildcard;
@@ -87,22 +94,22 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         tl.debug("Matching glob pattern: " + pattern);
 
         // First find the most complete path without any matching patterns
-        let idx = firstWildcardIndex(pattern);
+        const idx = firstWildcardIndex(pattern);
         tl.debug("Index of first wildcard: " + idx);
 
         // include the wildcard character because:
         //  dirname(c:\foo\bar\) => c:\foo (which will make find() return a bunch of stuff we know we'll discard)
         //  dirname(c:\foo\bar\*) => c:\foo\bar
-        let findPathRoot = path.dirname(pattern.slice(0, idx + 1));
+        const findPathRoot = path.dirname(pattern.slice(0, idx + 1));
 
         tl.debug("find root dir: " + findPathRoot);
 
         // Now we get a list of all files under this root
-        let allFiles = tl.find(findPathRoot);
+        const allFiles = tl.find(findPathRoot);
 
         // Now matching the pattern against all files
         // Turn off a bunch of minimatch features to replicate the behavior of Find-Files in the old PowerShell tasks
-        let patternFilter = tl.filter(
+        const patternFilter = tl.filter(
             pattern, {
                 matchBase: true,
                 nobrace: true,
@@ -116,10 +123,11 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         filesList = allFiles.filter(patternFilter);
 
         // Avoid matching anything other than files
-        if (!includeFolders)
-            filesList = filesList.filter(x => tl.stats(x).isFile());
-        else
-            filesList = filesList.filter(x => tl.stats(x).isFile() || tl.stats(x).isDirectory());
+        if (!includeFolders) {
+            filesList = filesList.filter((x) => tl.stats(x).isFile());
+        } else {
+            filesList = filesList.filter((x) => tl.stats(x).isFile() || tl.stats(x).isDirectory());
+        }
 
         // Fail if no matching .sln files were found
         if (!allowEmptyWildcardMatch && (!filesList || filesList.length === 0)) {
@@ -131,7 +139,7 @@ export function resolveWildcardPath(pattern: string, allowEmptyWildcardMatch?: b
         return filesList;
     }
     else {
-        return filesList.map(file => file.split("/").join("\\"));
+        return filesList.map((file) => file.split("/").join("\\"));
     }
 }
 
@@ -184,30 +192,35 @@ export function getBundledNuGetLocation(uxOption: string): string {
 
 export function locateCredentialProvider(useV2CredProvider?: boolean): string {
     if (useV2CredProvider === true) {
-        return path.join(__dirname, 'NuGet/CredentialProviderV2/plugins/netfx/CredentialProvider.Microsoft/CredentialProvider.Microsoft.exe');
+        // tslint:disable-next-line:max-line-length
+        return path.join(__dirname, "NuGet/CredentialProviderV2/plugins/netfx/CredentialProvider.Microsoft/CredentialProvider.Microsoft.exe");
     } else {
-        return path.join(__dirname, 'NuGet/CredentialProvider');
+        return path.join(__dirname, "NuGet/CredentialProvider");
     }
 }
 
 // set the console code page to "UTF-8"
 export function setConsoleCodePage() {
-    if (tl.osType() === 'Windows_NT') {
+    if (tl.osType() === "Windows_NT") {
         tl.execSync(path.resolve(process.env.windir, "system32", "chcp.com"), ["65001"]);
     }
 }
 
-export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string, nuGetVersion: VersionInfo): Promise<string>
+export async function getNuGetFeedRegistryUrl(
+    packagingCollectionUrl: string,
+    accessToken: string,
+    feedId: string,
+    nuGetVersion: VersionInfo): Promise<string>
 {
     const ApiVersion = "3.0-preview.1";
-    let PackagingAreaName: string = "nuget";
+    const PackagingAreaName: string = "nuget";
     // If no version is received, V3 is assumed
-    let PackageAreaId: string = nuGetVersion && nuGetVersion.productVersion.a < 3 ? "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA" : "9D3A4E8E-2F8F-4AE1-ABC2-B461A51CB3B3";
+    const PackageAreaId: string = nuGetVersion && nuGetVersion.productVersion.a < 3
+        ? "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA"
+        : "9D3A4E8E-2F8F-4AE1-ABC2-B461A51CB3B3";
 
-    let credentialHandler = vsts.getBearerHandler(accessToken);
-    let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-    // The second element contains the transformed packaging URL
-    let packagingCollectionUrl = (await locationHelpers.assumeNuGetUriPrefixes(collectionUrl))[1];
+    const credentialHandler = vsts.getBearerHandler(accessToken);
+    const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
 
     if (!packagingCollectionUrl)
     {
@@ -220,17 +233,23 @@ export async function getNuGetFeedRegistryUrl(accessToken:string, feedId: string
         packagingCollectionUrl = overwritePackagingCollectionUrl;
     }
 
-    let vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
-    let coreApi = vssConnection.getCoreApi();
+    tl.debug("Getting NuGet feed registry URL from " + packagingCollectionUrl);
 
-    let data = await Retry(async () => {
-        return await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
+    const vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
+    const coreApi = vssConnection.getCoreApi();
+
+    const data = await Retry(async () => {
+        return await coreApi.vsoClient.getVersioningData(
+            ApiVersion,
+            PackagingAreaName,
+            PackageAreaId,
+            { feedId: feedId });
     }, 4, 100);
     return data.requestUrl;
 }
 
 // This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
+async function Retry<T>(cb: () => Promise<T>, max_retry: number, retry_delay: number): Promise<T> {
     try {
         return await cb();
     } catch(exception) {
@@ -246,8 +265,9 @@ async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: n
         }
     }
 }
-function delay(delayMs:number) {
-    return new Promise(function(resolve) { 
+
+function delay(delayMs: number) {
+    return new Promise(function(resolve) {
         setTimeout(resolve, delayMs);
     });
- }
+}

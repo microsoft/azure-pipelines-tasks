@@ -26,6 +26,10 @@
             "check-catch",
             "check-finally",
             "check-else" */
-        ]
+        ],
+
+        // Submodules of some packages are treated as private APIs 
+        // There are a lot of submodules in the common libraries
+        "no-submodule-imports": false
     }
 }

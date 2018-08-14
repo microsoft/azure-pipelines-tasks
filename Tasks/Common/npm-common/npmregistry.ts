@@ -26,7 +26,7 @@ export class NpmRegistry implements INpmRegistry {
     }
 
     public static async FromServiceEndpoint(endpointId: string, authOnly?: boolean): Promise<NpmRegistry> {
-        let lineEnd = os.EOL;
+        const lineEnd = os.EOL;
         let endpointAuth: tl.EndpointAuthorization;
         let url: string;
         let nerfed: string;
@@ -60,32 +60,32 @@ export class NpmRegistry implements INpmRegistry {
                 password = endpointAuth.parameters['password'];
                 email = username; // npm needs an email to be set in order to publish, this is ignored on npmjs
                 password64 = (new Buffer(password).toString('base64'));
-                console.log("##vso[task.setvariable variable=" + endpointId + "BASE64_PASSWORD;issecret=true;]" + password64);
+                console.log('##vso[task.setvariable variable=' + endpointId + 'BASE64_PASSWORD;issecret=true;]' + password64);
 
-                auth = nerfed + ":username=" + username + lineEnd;
-                auth += nerfed + ":_password=" + password64 + lineEnd;
-                auth += nerfed + ":email=" + email + lineEnd;
+                auth = nerfed + ':username=' + username + lineEnd;
+                auth += nerfed + ':_password=' + password64 + lineEnd;
+                auth += nerfed + ':email=' + email + lineEnd;
                 break;
             case 'Token':
-                let apitoken = endpointAuth.parameters['apitoken'];
+                const apitoken = endpointAuth.parameters['apitoken'];
                 if (!isVstsTokenAuth){
                     // Use Bearer auth as it was intended.
-                    auth = nerfed + ":_authToken=" + apitoken + lineEnd;
-                }else{
+                    auth = nerfed + ':_authToken=' + apitoken + lineEnd;
+                } else {
                     // VSTS does not support PATs+Bearer only JWTs+Bearer
                     email = 'VssEmail';
                     username = 'VssToken';
                     password64 = (new Buffer(apitoken).toString('base64'));
-                    console.log("##vso[task.setvariable variable=" + endpointId + "BASE64_PASSWORD;issecret=true;]" + password64);
+                    console.log('##vso[task.setvariable variable=' + endpointId + 'BASE64_PASSWORD;issecret=true;]' + password64);
 
-                    auth = nerfed + ":username=" + username + lineEnd;
-                    auth += nerfed + ":_password=" + password64 + lineEnd;
-                    auth += nerfed + ":email=" + email + lineEnd;
+                    auth = nerfed + ':username=' + username + lineEnd;
+                    auth += nerfed + ':_password=' + password64 + lineEnd;
+                    auth += nerfed + ':email=' + email + lineEnd;
                 }
                 break;
         }
 
-        auth += nerfed + ":always-auth=true";
+        auth += nerfed + ':always-auth=true';
         return new NpmRegistry(url, auth, authOnly);
     }
 
@@ -114,14 +114,14 @@ export class NpmRegistry implements INpmRegistry {
         }
     }
 
-    public static async FromFeedId(feedId: string, authOnly?: boolean): Promise<NpmRegistry> {
-        let url = NormalizeRegistry(await util.getFeedRegistryUrl(feedId));
+    public static async FromFeedId(packagingUri: string, feedId: string, authOnly?: boolean): Promise<NpmRegistry> {
+        const url = NormalizeRegistry(await util.getFeedRegistryUrl(packagingUri, feedId));
         return NpmRegistry.FromUrl(url, authOnly);
     }
 
     public static FromUrl(url: string, authOnly?: boolean): NpmRegistry {
-        let nerfed = util.toNerfDart(url);
-        let auth = `${nerfed}:_authToken=${util.getSystemAccessToken()}`;
+        const nerfed = util.toNerfDart(url);
+        const auth = `${nerfed}:_authToken=${util.getSystemAccessToken()}`;
 
         return new NpmRegistry(url, auth, authOnly);
     }
