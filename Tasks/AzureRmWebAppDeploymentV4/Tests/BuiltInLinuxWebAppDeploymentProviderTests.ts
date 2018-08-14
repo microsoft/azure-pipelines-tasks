@@ -43,7 +43,7 @@ export class BuiltInLinuxWebAppDeploymentProviderTests {
                         return '{id: "ZIP_DEPLOY_FAILED_ID", status: 3, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"}';
                     },
                     warDeploy: function(G, H) {
-                        return null;
+                        return '{id: "ZIP_DEPLOY_FAILED_ID", status: 3, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"}';
                     },
                     getDeploymentDetails: function(I) {
                         return "{ type: 'Deployment',url: 'http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID'}";

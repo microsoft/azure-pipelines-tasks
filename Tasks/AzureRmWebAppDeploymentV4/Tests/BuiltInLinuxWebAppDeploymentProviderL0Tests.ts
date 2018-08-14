@@ -17,6 +17,8 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
         await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_BuiltInLinuxWebApp();
         await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForUpdateDeploymentStatus_BuiltInLinuxWebApp();
         await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForDeployWebAppStep_BuiltInLinuxWebApp_ZipPackage();
+        await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForDeployWebAppStep_BuiltInLinuxWebApp_FolderPackage();
+        await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForDeployWebAppStep_BuiltInLinuxWebApp_WarPackage();
     }
 
     public static async testForPreDeploymentSteps_BuiltInLinuxWebApp() {
@@ -60,8 +62,35 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
             await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
             await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
+            tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for built in linux web app steps with zip package succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for built in linux web app steps with zip package should succeeded but failed with error');
+        }
+    }
+
+    public static async testForDeployWebAppStep_BuiltInLinuxWebApp_FolderPackage() {
+        try {
+            var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.Package.getPackageType = () :PackageType => {return PackageType.war};
+            taskParameters.Package.getPath = () :string => { return "webAppPkg.war" };
+            var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
+            tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for built in linux web app steps with folder package succeeded');
+        } catch(error) {
+            tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for built in linux web app steps with folder package should succeeded but failed with error');
+        }
+    }
+
+    public static async testForDeployWebAppStep_BuiltInLinuxWebApp_WarPackage() {
+        try {
+            var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
+            tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for built in linux web app steps with war package succeeded');
+        } catch(error) {
+            tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for built in linux web app steps with war package should succeeded but failed with error');
         }
     }
 

@@ -34,10 +34,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    ApplicationInsightsTests.ApplicationInsightsTests();
+/*     ApplicationInsightsTests.ApplicationInsightsTests();
     AppServiceTests.AzureAppServiceMockTests();
     KuduServiceTests.KuduServiceTests();
-    ResourcesTests.ResourcesTests(); 
+    ResourcesTests.ResourcesTests();  */
     
     if (tl.osType().match(/^Win/)) {
         it('Runs successfully with XML Transformation (L1)', (done:MochaDone) => {
@@ -190,6 +190,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.');
             assert(tr.stdOutContained('loc_mock_PackageDeploymentSuccess'), 'Should have printed: loc_mock_PackageDeploymentSuccess');
             assert(tr.stdOutContained('Skipped updating the SCM value'), 'Should have printed: Skipped updating the SCM value');
+            assert(tr.stdOutContained('DeployWebAppStep for built in linux web app steps with zip package succeeded'), 'Should have printed: DeployWebAppStep for built in linux web app steps with zip package succeeded');
+            assert(tr.stdOutContained('DeployWebAppStep for built in linux web app steps with folder package succeeded'), 'Should have printed: DeployWebAppStep for built in linux web app steps with folder package succeeded');
+            assert(tr.stdOutContained('DeployWebAppStep for built in linux web app steps with war package succeeded'), 'Should have printed: DeployWebAppStep for built in linux web app steps with war package succeeded');
             done();
         }
         catch(error) {
