@@ -13,14 +13,14 @@ This provides open examples on how we write tasks which will help you write othe
 |![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test][macOS-build-badge]][macOS-build]| 
 |![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
 
-[win-build-badge]: https://mseng.visualstudio.com/pipelinetools/_apis/build/status/VSTS.Tasks.CI-Windows?branchName=master
-[win-build]: https://mseng.visualstudio.com/PipelineTools/_build?_a=completed&definitionId=5709
+[win-build-badge]: https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Tasks.CI-Windows?branchName=master
+[win-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5709
 
-[macOS-build-badge]: https://mseng.visualstudio.com/pipelinetools/_apis/build/status/VSTS.Tasks.CI-macOS?branchName=master
-[macOS-build]: https://mseng.visualstudio.com/PipelineTools/_build?_a=completed&definitionId=65718
+[macOS-build-badge]: https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Tasks.CI-macOS?branchName=master
+[macOS-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=65718
 
-[linux-build-badge]: https://mseng.visualstudio.com/pipelinetools/_apis/build/status/VSTS.Tasks.CI-Linux?branchName=master
-[linux-build]: https://mseng.visualstudio.com/PipelineTools/_build?_a=completed&definitionId=5667
+[linux-build-badge]: https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Tasks.CI-Linux?branchName=master
+[linux-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5667
 
 Samples from site:
 
