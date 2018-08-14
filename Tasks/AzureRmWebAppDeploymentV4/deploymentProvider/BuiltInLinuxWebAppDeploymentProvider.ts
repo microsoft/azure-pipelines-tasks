@@ -17,7 +17,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             case PackageType.folder:
             case PackageType.zip:
                 tl.debug("Initiated deployment via kudu service for webapp zip/folder package : "+ this.taskParams.Package.getPath());
-                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
                     { slotName: this.appService.getSlot() });
             break;
 
