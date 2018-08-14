@@ -13,6 +13,20 @@ This provides open examples on how we write tasks which will help you write othe
 |![Ubuntu14](docs/res/ubuntu_med.png) **Ubuntu 14.04**|![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4088/badge?branch=master)|
 |![Win](docs/res/win_med.png) **Windows**|![Build & Test](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/1474/badge?branch=master)|
 
+
+|![Win](docs/res/win_med.png) **Windows**|[![Build & Test][win-build-badge]][win-build]| 
+|![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test][macOS-build-badge]][macOS-build]| 
+|![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
+
+[win-build-badge]: https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4213/badge?branch=master
+[win-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5709
+
+[macOS-build-badge]: https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4088/badge?branch=master
+[macOS-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=65718
+
+[linux-build-badge]: https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/1474/badge?branch=master
+[linux-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5667
+
 ## How to Use Tasks
 
 See the documentation for [Continuous integration and deployment](https://aka.ms/tfbuild).
