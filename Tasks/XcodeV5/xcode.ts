@@ -6,6 +6,8 @@ import utils = require('./xcodeutils');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 async function run() {
+    const telemetryData: { [key: string]: any; } = {};
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
@@ -14,6 +16,7 @@ async function run() {
         //--------------------------------------------------------
 
         let xcodeVersionSelection: string = tl.getInput('xcodeVersion', true);
+        telemetryData.xcodeVersionSelection = xcodeVersionSelection;
 
         if (xcodeVersionSelection === 'specifyPath') {
             let devDir = tl.getInput('xcodeDeveloperDir', true);
@@ -115,6 +118,9 @@ async function run() {
         let packageApp: boolean = tl.getBoolInput('packageApp', true);
         let args: string = tl.getInput('args', false);
 
+        telemetryData.actions = actions;
+        telemetryData.packageApp = packageApp;
+
         //--------------------------------------------------------
         // Exec Tools
         //--------------------------------------------------------
@@ -122,21 +128,24 @@ async function run() {
         // --- Xcode Version ---
         let xcv: ToolRunner = tl.tool(tool);
         xcv.arg('-version');
-        let xcodeVersion: number = 0;
+        let xcodeMajorVersion: number = 0;
         xcv.on('stdout', (data) => {
-            let match = data.toString().trim().match(/Xcode (.+)/g);
+            const match = data.toString().trim().match(/Xcode (.+)/g);
             tl.debug('match = ' + match);
             if (match) {
-                let version: number = parseInt(match.toString().replace('Xcode', '').trim());
-                tl.debug('version = ' + version);
-                if (!isNaN(version)) {
-                    xcodeVersion = version;
+                const versionString = match.toString().replace('Xcode', '').trim();
+                const majorVersion: number = parseInt(versionString);
+                tl.debug('majorVersion = ' + majorVersion);
+                telemetryData.xcodeVersion = versionString;
+
+                if (!isNaN(majorVersion)) {
+                    xcodeMajorVersion = majorVersion;
                 }
             }
         });
 
         await xcv.exec();
-        tl.debug('xcodeVersion = ' + xcodeVersion);
+        tl.debug('xcodeMajorVersion = ' + xcodeMajorVersion);
 
         // --- Xcode build arguments ---
         let xcb: ToolRunner = tl.tool(tool);
@@ -172,6 +181,8 @@ async function run() {
         let xcode_provProfile: string;
         let xcode_provProfileSpecifier: string;
         let xcode_devTeam: string;
+
+        telemetryData.signingOption = signingOption;
 
         if (signingOption === 'nosign') {
             xcode_codeSigningAllowed = 'CODE_SIGNING_ALLOWED=NO';
@@ -257,7 +268,8 @@ async function run() {
         //--------------------------------------------------------
         // Package app to generate .ipa
         //--------------------------------------------------------
-        if (tl.getBoolInput('packageApp', true) && sdk !== 'iphonesimulator') {
+
+        if (packageApp && sdk !== 'iphonesimulator') {
             // use xcodebuild to create the app package
             if (!scheme) {
                 throw new Error(tl.loc("SchemeRequiredForArchive"));
@@ -318,6 +330,8 @@ async function run() {
                 let exportOptionsPlist: string;
                 let archiveToCheck: string = archiveFolders[0];
                 let macOSEmbeddedProfilesFound: boolean;
+
+                telemetryData.exportOptions = exportOptions;
 
                 // iOS provisioning profiles use the .mobileprovision suffix. macOS profiles have the .provisionprofile suffix.
                 let embeddedProvProfiles: string[] = tl.findMatch(archiveToCheck, '**/embedded.mobileprovision', { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
@@ -383,7 +397,7 @@ async function run() {
                     }
 
                     // For auto export, conditionally add entitlements, signingStyle and provisioning profiles.
-                    if (xcodeVersion >= 9 && exportOptions === 'auto') {
+                    if (xcodeMajorVersion >= 9 && exportOptions === 'auto') {
                         // Propagate any iCloud entitlement.
                         if (embeddedProvProfiles && embeddedProvProfiles.length > 0) {
                             const cloudEntitlement = await sign.getCloudEntitlement(embeddedProvProfiles[0], exportMethod);
@@ -460,6 +474,10 @@ async function run() {
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
+    }
+    finally {
+        // Publish telemetry
+        utils.emitTelemetry('TaskHub', 'Xcode', telemetryData);
     }
 }
 
