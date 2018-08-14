@@ -52,9 +52,25 @@ export class BuiltInLinuxWebAppDeploymentProviderTests {
             }
         });
 
+        tr.registerMock('webdeployment-common/utility.js', {
+            generateTemporaryFolderForDeployment: function () {
+                return "webAppPkg";
+            },
+            archiveFolderForDeployment: function() {
+                return {
+                    "webDeployPkg": "webAppPkg",
+                    "tempPackagePath": "webAppPkg"
+                };
+            },
+            getFileNameFromPath: function(A, B) {
+                return "webAppPkg";
+            }
+        });
+
         tr.setAnswers(mockTaskArgument());
         tr.run();
     }
+    
 
 }
 
