@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "preview": "true",
@@ -198,7 +198,7 @@
             "type": "boolean",
             "label": "Include latest tag",
             "defaultValue": "false",
-            "visibleRule": "command = Build an image || command = Push an image",
+            "visibleRule": "command = Build an image",
             "groupName": "commands",
             "helpMarkDown": "Include the 'latest' tag when building or pushing the Docker image."
         },

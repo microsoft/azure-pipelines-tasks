@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "preview": "true",
@@ -198,7 +198,7 @@
       "type": "boolean",
       "label": "ms-resource:loc.input.label.includeLatestTag",
       "defaultValue": "false",
-      "visibleRule": "command = Build an image || command = Push an image",
+      "visibleRule": "command = Build an image",
       "groupName": "commands",
       "helpMarkDown": "ms-resource:loc.input.help.includeLatestTag"
     },
