@@ -216,7 +216,7 @@ export function emitTelemetry(area: string, feature: string, taskSpecificTelemet
                 feature,
                 JSON.stringify(taskSpecificTelemetry));
         } else {
-            tl.debug(`Agent version of ( ${agentVersion} ) does not meet minimum reqiurements for telemetry`);
+            tl.debug(`Agent version is ${agentVersion}. Version 2.120.0 or higher is needed for telemetry.`);
         }
     } catch (err) {
         tl.debug(`Unable to log telemetry. Err:( ${err} )`);
