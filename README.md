@@ -16,6 +16,9 @@ This provides open examples on how we write tasks which will help you write othe
 [win-build-badge]: https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Tasks.CI-Windows?branchName=master
 [win-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5709
 
+https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Tasks.CI-Windows?branchName=master
+https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5709
+
 [macOS-build-badge]: https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Tasks.CI-macOS?branchName=master
 [macOS-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=65718
 
@@ -24,9 +27,9 @@ This provides open examples on how we write tasks which will help you write othe
 
 Samples from site:
 
-[![Build Status](https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Task/VSTS.Tasks.CI-Windows)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=5709)
+<!-- [![Build Status](https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Task/VSTS.Tasks.CI-Windows)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=5709)
 [![Build Status](https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Task/VSTS.Tasks.CI-macOS)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=5718)
-[![Build Status](https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Task/VSTS.Tasks.CI-Linux)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=5667)
+[![Build Status](https://mseng.visualstudio.com/VSOnline/_apis/build/status/VSTS.Task/VSTS.Tasks.CI-Linux)](https://mseng.visualstudio.com/VSOnline/_build/latest?definitionId=5667) -->
 
 ## How to Use Tasks
 
