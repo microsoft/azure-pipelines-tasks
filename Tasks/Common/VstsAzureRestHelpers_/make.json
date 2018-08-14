@@ -1,0 +1,23 @@
+{
+    "externals": {
+        "nugetv2": [
+            {
+                "name": "Microsoft.IdentityModel.Clients.ActiveDirectory",
+                "version": "2.23.302261847",
+                "repository": "https://www.nuget.org/api/v2/",
+                "cp": [
+                    {
+                        "source": "lib/net45/Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
+                    }
+                ]
+            }
+        ],
+        "archivePackages": [
+            {
+                "archiveName": "openssl.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/1.0.2/M138/openssl.zip",
+                "dest": "./openssl"
+            }
+        ]
+    }
+}

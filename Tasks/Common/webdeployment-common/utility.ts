@@ -1,6 +1,7 @@
 import path = require('path');
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
+import { PackageUtility, PackageType } from './packageUtility';
 
 var zipUtility = require('webdeployment-common/ziputility.js');
 /**
@@ -54,8 +55,8 @@ export function copySetParamFileIfItExists(setParametersFile: string) : string {
         throw Error(tl.loc('SetParamFilenotfound0', setParametersFile));
     }
     else if(fileExists(setParametersFile)) {
-        var tempSetParametersFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'),"tempSetParameters.xml");
-        tl.cp(setParametersFile, tempSetParametersFile);
+        var tempSetParametersFile = path.join(tl.getVariable('System.DefaultWorkingDirectory'), Date.now() + "_tempSetParameters.xml");
+        tl.cp(setParametersFile, tempSetParametersFile, '-f');
         setParametersFile = tempSetParametersFile;
     }
     
@@ -176,11 +177,10 @@ export function copyDirectory(sourceDirectory: string, destDirectory: string) {
     }
 }
 
-export async function generateTemporaryFolderForDeployment(isFolderBasedDeployment: boolean, webDeployPkg: string) {
+export async function generateTemporaryFolderForDeployment(isFolderBasedDeployment: boolean, webDeployPkg: string, packageType: PackageType) {  
     var folderName = tl.getVariable('Agent.TempDirectory') ? tl.getVariable('Agent.TempDirectory') : tl.getVariable('System.DefaultWorkingDirectory');
     var folderPath = generateTemporaryFolderOrZipPath(folderName, true);
-        
-    if(isFolderBasedDeployment) {
+    if(isFolderBasedDeployment || packageType === PackageType.jar) {
         tl.debug('Copying Web Packge: ' + webDeployPkg + ' to temporary location: ' + folderPath);
         copyDirectory(webDeployPkg, folderPath);
         tl.debug('Copied Web Package: ' + webDeployPkg + ' to temporary location: ' + folderPath + ' successfully.');
@@ -206,4 +206,17 @@ export async function archiveFolderForDeployment(isFolderBasedDeployment: boolea
         "webDeployPkg": webDeployPkg,
         "tempPackagePath": webDeployPkg
     };
+}
+
+export function getFileNameFromPath(filePath: string, extension?: string): string {
+    var isWindows = tl.osType().match(/^Win/);
+    var fileName;
+    if(isWindows) {
+        fileName = path.win32.basename(filePath, extension);
+    }
+    else {
+        fileName = path.posix.basename(filePath, extension);
+    }
+
+    return fileName;
 }

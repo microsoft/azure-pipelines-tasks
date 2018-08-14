@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 import { TaskParameters, TaskParametersUtility } from './operations/TaskParameters';
 import { DeploymentFactory } from './deploymentProvider/DeploymentFactory';
+import * as Endpoint from 'azure-arm-rest/azure-arm-endpoint';
 
 async function main() {
     let isDeploymentSuccess: boolean = true;
@@ -9,7 +10,8 @@ async function main() {
     try {
         tl.setResourcePath(path.join( __dirname, 'task.json'));
         var taskParams: TaskParameters = TaskParametersUtility.getParameters();
-        var deploymentProvider = await DeploymentFactory.GetDeploymentProvider(taskParams);
+        var deploymentFactory: DeploymentFactory = new DeploymentFactory(taskParams);
+        var deploymentProvider = await deploymentFactory.GetDeploymentProvider();
 
         tl.debug("Predeployment Step Started");
         await deploymentProvider.PreDeploymentStep();
@@ -26,7 +28,10 @@ async function main() {
         if(deploymentProvider != null) {
             await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
         }
-        tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "");
+        
+        Endpoint.dispose();
+        tl.debug(isDeploymentSuccess ? "Deployment Succeded" : "Deployment failed");
+
     }
 }
 

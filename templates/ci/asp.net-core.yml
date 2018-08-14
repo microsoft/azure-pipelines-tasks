@@ -1,36 +1,12 @@
 # ASP.NET Core
 # Build and test ASP.NET Core web applications targeting .NET Core.
-# https://aka.ms/yaml
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/dotnet-core
 
-queue: 'Hosted Linux'
+queue: 'Hosted Linux Preview'
+
 variables:
   buildConfiguration: 'Release'
+
 steps:
-
-#  - task: DotNetCoreInstaller@0
-#    inputs:
-#      version: '2.1.300'
-
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'restore'
-      projects: '**/*.csproj'
-
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'build'
-      projects: '**/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
-
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'test'
-      projects: '**/*[Tt]ests/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
-
-#  - task: DotNetCoreCLI@2
-#    inputs:
-#      command: 'publish'
-#      arguments: '--configuration $(buildConfiguration) --output $(build.artifactStagingDirectory)'
-
-#  - task: PublishBuildArtifacts@1
+- script: dotnet build --configuration $(buildConfiguration)

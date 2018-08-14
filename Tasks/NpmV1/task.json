@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 18
+        "Patch": 20
     },
     "runsOn": [
         "Agent",
@@ -182,6 +182,7 @@
         "TestDebugLog": "Trying debug log location: %s",
         "OverridingProjectNpmrc": "Overriding project .npmrc: %s",
         "RestoringProjectNpmrc": "Restoring project .npmrc",
-        "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory"
+        "WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
+        "NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
     }
 }

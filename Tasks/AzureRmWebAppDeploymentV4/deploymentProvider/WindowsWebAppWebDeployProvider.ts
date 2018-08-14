@@ -4,6 +4,7 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import { DeployWar } from '../operations/WarDeploymentUtilities';
 import * as Constant from '../operations/Constants';
 import { WebDeployUtility } from '../operations/WebDeployUtility';
+import { Package } from 'webdeployment-common/packageUtility';
 
 var deployUtility = require('webdeployment-common/utility.js');
 
@@ -20,6 +21,7 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
         }
 
         webPackage = await FileTransformsUtility.applyTransformations(webPackage, this.taskParams);
+        this.taskParams.Package = new Package(webPackage);
         
         if(deployUtility.canUseWebDeploy(this.taskParams.UseWebDeploy)) {
             tl.debug("Performing the deployment of webapp.");
@@ -29,15 +31,10 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
             }
     
             var msDeployPublishingProfile = await this.appServiceUtility.getWebDeployPublishingProfile();
-    
-            if(this.taskParams.Package.isWarFile()) {
-                await DeployWar(webPackage, this.taskParams, msDeployPublishingProfile, this.kuduService, this.appServiceUtility);
-            }
-            else {
-                await WebDeployUtility.publishUsingWebDeploy(this.taskParams,
-                    WebDeployUtility.constructWebDeployArguments(this.taskParams, msDeployPublishingProfile), this.appServiceUtility
-                );
-            }
+            await WebDeployUtility.publishUsingWebDeploy(this.taskParams,
+                WebDeployUtility.constructWebDeployArguments(this.taskParams, msDeployPublishingProfile), this.appServiceUtility
+            );
+            
         }
         else {
             tl.debug("Initiated deployment via kudu service for webapp package : ");

@@ -10,13 +10,8 @@ export abstract class AuthenticationTokenProvider {
     public abstract getAuthenticationToken(): RegistryAuthenticationToken
 
     protected getXMetaSourceClient(): string {
-        var collectionUri: string = tl.getVariable('System.TeamFoundationCollectionUri');
-        var collectionUrlObject = url.parse(collectionUri);
-         if(collectionUrlObject.hostname.toUpperCase().endsWith(".VISUALSTUDIO.COM")) {
-            return "VSTS";
-         }
-         
-         return "TFS";
+        var serverType = tl.getVariable('System.ServerType');       
+        return (serverType && serverType.toLowerCase() === "hosted") ? "VSTS" : "TFS";
     }
 }
 

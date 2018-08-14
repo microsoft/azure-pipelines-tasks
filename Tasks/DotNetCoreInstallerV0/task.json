@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 11
+        "Patch": 13
     },
     "satisfies": [
         "DotNetCore"
@@ -51,6 +51,7 @@
         "ToolFailed": "Tool install failed: %s",
         "ImplicitVersionNotSupported": "Version should be a valid and explicit version: %s",
         "getMachinePlatformFailed": "Failed to get machine platform details. Error: %s.",
+        "getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
         "UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
         "CheckingToolCache": "Checking if a cached copy exists for this version...",
         "InstallingAfresh": "Cache does not contains this particular .NET Core. Will be downloaded and installed.",
@@ -64,7 +65,7 @@
         "ToolToInstall": "Tool to install: .NET Core %s version %s.",
         "PrimaryPlatform": "Detected platform (Primary): %s",
         "LegacyPlatform": "Detected platform (Legacy): %s",
-        "VersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer https://github.com/dotnet/core/blob/master/release-notes/releases.json",
+        "WarningVersionNotFound": "Could not fetch download information for version %s. Please check if the version specified is correct. You can refer the link for supported versions => https://github.com/dotnet/core/blob/master/release-notes/releases.json. Falling back to creating convention based URL.",
         "CouldNotDownload": "Could not download installation package from this URL: %s Error: %s",
         "FailedToDownloadPackage": "Failed to download package for installation"
     }

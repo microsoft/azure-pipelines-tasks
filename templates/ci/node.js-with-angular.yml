@@ -1,0 +1,18 @@
+# Node.js with Angular
+# Build a Node.js application that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://aka.ms/yaml
+
+queue: 'Hosted Linux Preview'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install -g @angular/cli
+    npm install
+    npm run build
+  displayName: 'npm install and build'

@@ -13,9 +13,10 @@
   "license": "MIT",
   "dependencies": {
     "ini": "^1.3.4",
-    "q": "^1.5.0",
     "ip-address": "^5.8.9",
-    "vsts-task-lib": "2.0.6",
-    "vso-node-api": "^6.2.2-preview"
+    "q": "^1.5.0",
+    "typed-rest-client": "^0.11.0",
+    "vso-node-api": "5.1.2",
+    "vsts-task-lib": "2.0.6"
   }
 }

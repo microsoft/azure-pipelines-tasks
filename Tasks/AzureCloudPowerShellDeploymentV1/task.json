@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [
         "azureps"
@@ -137,6 +137,14 @@
             "defaultValue": "false",
             "visibleRule": "AllowUpgrade == true",
             "helpMarkDown": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.",
+            "required": false
+        },
+        {
+            "name": "VerifyRoleInstanceStatus",
+            "type": "boolean",
+            "label": "Verify role instance status",
+            "defaultValue": "false",
+            "helpMarkDown": "When selected then the task will wait until role instances are in ready state.",
             "required": false
         },
         {

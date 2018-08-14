@@ -217,6 +217,13 @@ function Get-ServiceFabricApplicationAction
         $ApplicationName
     )
 
+    $global:operationId = $SF_Operations.GetApplication
+
+    if(Test-OldSdk)
+    {
+        return Get-ServiceFabricApplicationActionOldSdk -ApplicationTypeName $ApplicationTypeName -ApplicationName $ApplicationName
+    }
+
     $getApplicationParams = @{}
     if ($ApplicationTypeName)
     {
@@ -228,7 +235,6 @@ function Get-ServiceFabricApplicationAction
         $getApplicationParams['ApplicationName'] = $ApplicationName
     }
 
-    $global:operationId = $SF_Operations.GetApplication
     return Get-ServiceFabricApplication @getApplicationParams
 }
 
@@ -293,12 +299,39 @@ function Wait-ServiceFabricApplicationUpgradeAction
     }
 
     $upgradeStatusValidator = { param($upgradeStatus) return !($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
-    $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
-        -ResultRetryEvaluator $upgradeStatusValidator `
-        -MaxTries 2147483647 `
-        -RetryIntervalInSeconds 5 `
-        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException")
 
+    $exceptionRetryEvaluator = {
+        param($ex)
+
+        if ($ex.GetType().FullName -eq "System.Fabric.FabricException")
+        {
+            if($ex.ErrorCode -eq "InvalidCredentials")
+            {
+                $clusterConnectionParameters = @{}
+                $connectedServiceEndpoint = Get-VstsEndpoint -Name $serviceConnectionName -Require
+                Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
+                return $true
+            }
+            return $false
+        }
+        return $true
+    }
+
+    try
+    {
+        $upgradeStatus = Invoke-ActionWithRetries -Action $upgradeStatusFetcher `
+            -ResultRetryEvaluator $upgradeStatusValidator `
+            -MaxTries 2147483647 `
+            -RetryIntervalInSeconds 5 `
+            -ExceptionRetryEvaluator $exceptionRetryEvaluator `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException", "System.Fabric.FabricException")
+    }
+    catch
+    {
+        Trace-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
+        Trace-ServiceFabricClusterHealth
+        throw
+    }
     return $upgradeStatus
 }
 
@@ -393,9 +426,15 @@ function Register-ServiceFabricApplicationTypeAction
         $TimeoutSec
     )
 
+    $global:operationId = $SF_Operations.RegisterApplicationType
+    if(Test-OldSdk)
+    {
+        Register-ServiceFabricApplicationTypeActionOldSdk -RegisterParameters $RegisterParameters -TimeoutSec $TimeoutSec
+        return
+    }
+
     $RegisterParameters['Async'] = $true
 
-    $global:operationId = $SF_Operations.RegisterApplicationType
     $registerAction = {
         Register-ServiceFabricApplicationType @RegisterParameters
         if (!$?)
@@ -452,8 +491,14 @@ function Get-ServiceFabricApplicationTypeAction
     )
 
     $global:operationId = $SF_Operations.GetApplicationType
+    if(Test-OldSdk)
+    {
+        return Get-ServiceFabricApplicationTypeActionOldSdk -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion
+    }
+
     $getApplicationTypeParams = @{
         'ApplicationTypeName' = $ApplicationTypeName
+        'UsePaging' = $true
     }
 
     if ($ApplicationTypeVersion)
@@ -463,40 +508,6 @@ function Get-ServiceFabricApplicationTypeAction
 
     $getAppTypeAction = { Get-ServiceFabricApplicationType @getApplicationTypeParams }
     return Invoke-ActionWithDefaultRetries -Action $getAppTypeAction `
-        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
-}
-
-function Wait-ServiceFabricApplicationTypeTerminalStatus
-{
-    Param (
-        [string]
-        $ApplicationTypeName,
-
-        [string]
-        $ApplicationTypeVersion
-    )
-
-    $global:operationId = $SF_Operations.GetApplicationType
-    $getAppTypeAction = { Get-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion }
-    $getAppTypeRetryEvaluator = {
-        param($appType)
-        # if app type does not exist (i.e it got unprovisioned) or if its status has changed to a terminal one, stop wait
-        if ((!$appType) -or (($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Provisioning) -and ($appType.Status -ne [System.Fabric.Query.ApplicationTypeStatus]::Unprovisioning)))
-        {
-            return $false
-        }
-        else
-        {
-            Write-Host (Get-VstsLocString -Key SFSDK_ApplicationTypeStatus -ArgumentList @($appType.Status, $appType.StatusDetails))
-            return $true
-        }
-    }
-
-    return Invoke-ActionWithRetries -Action $getAppTypeAction `
-        -ResultRetryEvaluator $getAppTypeRetryEvaluator `
-        -MaxTries 86400 `
-        -RetryIntervalInSeconds 10 `
-        -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
         -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
 }
 
@@ -617,6 +628,14 @@ function Unregister-ServiceFabricApplicationTypeAction
         [int]
         $TimeoutSec
     )
+
+    $global:operationId = $SF_Operations.UnregisterApplicationType
+
+    if(Test-OldSdk)
+    {
+        Unregister-ServiceFabricApplicationTypeActionOldSdk -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
+        return
+    }
 
     $global:operationId = $SF_Operations.UnregisterApplicationType
 
@@ -893,4 +912,113 @@ function Invoke-ActionWithDefaultRetries
     }
 
     Invoke-ActionWithRetries @parameters
+}
+
+function Test-OldSdk
+{
+    $sdkVersionString = (Get-SfSdkVersion)
+    $sdkVersion = New-Object Version
+    if ([Version]::TryParse($sdkVersionString, [ref]$sdkVersion))
+    {
+        $minVersion = New-Object -TypeName Version -ArgumentList '3.1.183.9494'
+        if ($sdkVersion -ge $minVersion)
+        {
+            return $false
+        }
+    }
+
+    return $true
+}
+
+function Register-ServiceFabricApplicationTypeActionOldSdk
+{
+    Param (
+        [hashtable]
+        $RegisterParameters,
+
+        [int]
+        $TimeoutSec
+    )
+
+    if ($TimeoutSec)
+    {
+        $RegisterParameters['TimeoutSec'] = $TimeoutSec
+    }
+
+    Register-ServiceFabricApplicationType @RegisterParameters
+    if (!$?)
+    {
+        throw (Get-VstsLocString -Key SFSDK_RegisterAppTypeFailed)
+    }
+}
+
+function Unregister-ServiceFabricApplicationTypeActionOldSdk
+{
+    Param(
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion,
+
+        [int]
+        $TimeoutSec
+    )
+
+    Unregister-ServiceFabricApplicationType -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec -Force
+    if (!$?)
+    {
+        throw (Get-VstsLocString -Key SFSDK_UnableToUnregisterAppType)
+    }
+}
+
+function Get-ServiceFabricApplicationActionOldSdk
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationName
+    )
+
+    $getApplicationParams = @{}
+
+    if ($ApplicationName)
+    {
+        $getApplicationParams['ApplicationName'] = $ApplicationName
+    }
+
+    $apps = Get-ServiceFabricApplication @getApplicationParams
+    if($ApplicationTypeName)
+    {
+        $apps = $apps | Where-Object { $_.ApplicationTypeName -eq $ApplicationTypeName }
+    }
+     return $apps
+}
+
+function Get-ServiceFabricApplicationTypeActionOldSdk
+{
+    Param (
+        [string]
+        $ApplicationTypeName,
+
+        [string]
+        $ApplicationTypeVersion
+    )
+
+    $getApplicationTypeParams = @{
+        'ApplicationTypeName' = $ApplicationTypeName
+    }
+
+    $getAppTypeAction = { Get-ServiceFabricApplicationType @getApplicationTypeParams }
+    $appTypes = Invoke-ActionWithDefaultRetries -Action $getAppTypeAction `
+        -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingGetApplicationType)
+
+    if($ApplicationTypeVersion)
+    {
+        $appTypes = $appTypes | Where-Object { $_.ApplicationTypeVersion -eq $ApplicationTypeVersion }
+    }
+
+    return $appTypes
 }

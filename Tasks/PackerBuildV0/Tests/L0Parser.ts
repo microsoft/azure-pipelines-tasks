@@ -57,7 +57,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "Executed Successfully"
         },
-        "packer build -force -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
+        "packer build -force -color=false -var-file=C:\\somefolder\\somevarfile.json -var-file=C:\\somefolder\\somevarfile.json F:\\somedir\\tempdir\\100\\default.windows.template-fixed.json": {
             "code": 0,
             "stdout": process.env["__build_output__"]
         }

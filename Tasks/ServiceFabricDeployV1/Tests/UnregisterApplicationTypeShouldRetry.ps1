@@ -10,6 +10,7 @@ $TimeoutSec = 120
 $getApplicationTypeParams = @{
     'ApplicationTypeName'    = $ApplicationTypeName;
     'ApplicationTypeVersion' = $ApplicationTypeVersion
+    'UsePaging' = $true
 }
 $global:getRetriesAttempted = 0
 
@@ -29,6 +30,7 @@ Register-Mock Get-ServiceFabricApplicationType {
     throw [System.Fabric.FabricTransientException]::new("Cound not ping!")
 } -- @getApplicationTypeParams
 
+Register-Mock Get-SfSdkVersion { '3.1.183.9494' }
 Register-Mock Start-Sleep {}
 Register-Mock Write-VstsTaskError
 

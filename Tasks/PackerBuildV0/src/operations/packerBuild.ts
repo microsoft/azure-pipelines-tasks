@@ -11,8 +11,9 @@ import * as utils from "../utilities"
 
 export async function run(packerHost: packerHost): Promise<any> {
     var command = packerHost.createPackerTool();
-    command.arg("build");
-    command.arg("-force");
+    command.arg("build");    
+    command.arg("-force");    
+    command.arg("-color=false");
 
     // add all variables
     var variableProviders = packerHost.getTemplateVariablesProviders();

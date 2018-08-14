@@ -98,18 +98,22 @@ export async function run(nuGetPath: string): Promise<void> {
         // Setting up auth info
         let accessToken = auth.getSystemAccessToken();
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
-        let credProviderPath = nutil.locateCredentialProvider();
+
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
-        let useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
-        let useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
+        const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
+        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
+        const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && (!useV1CredProvider && !useV2CredProvider);
 
-        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, useCredConfig);
+        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null), useCredConfig);
 
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
-            credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
-            extensionsDisabled: true,
-            };
+            credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
+            V2CredProviderPath: useV2CredProvider === true ? credProviderPath : null,
+            extensionsDisabled: true
+        };
+        
         let configFile = null;
         let apiKey: string;
         let credCleanup = () => { return; };
@@ -135,8 +139,7 @@ export async function run(nuGetPath: string): Promise<void> {
             }
 
             apiKey = "VSTS";
-        }
-        else {
+        } else {
             const externalAuthArr = commandHelper.GetExternalAuthInfoArray("externalEndpoint");
             authInfo = new auth.NuGetExtendedAuthInfo(internalAuthInfo, externalAuthArr);
             nuGetConfigHelper = new NuGetConfigHelper2(nuGetPath, null, authInfo, environmentSettings, null);
