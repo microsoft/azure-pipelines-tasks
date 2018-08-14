@@ -363,14 +363,21 @@ function Publish-UpgradedServiceFabricApplication
         {
             Write-Host (Get-VstsLocString -Key SFSDK_UpgradeSuccess)
         }
-        elseif ($upgradeStatus.UpgradeState -eq "RollingBackCompleted")
+        else
         {
             $global:operationId = $SF_Operations.WaitApplicationUpgradeStatus
 
             Trace-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
             Trace-ServiceFabricClusterHealth
 
-            Write-Error (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
+            if ($upgradeStatus.UpgradeState -eq "RollingBackCompleted")
+            {
+                Write-Error (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
+            }
+            else
+            {
+                Write-Error (Get-VstsLocString -Key SFSDK_UpgradeCompletedWithNonSuccessState -ArgumentList @($upgradeStatus.UpgradeState))
+            }
         }
     }
 }

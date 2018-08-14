@@ -298,7 +298,7 @@ function Wait-ServiceFabricApplicationUpgradeAction
         return $upgradeStatus;
     }
 
-    $upgradeStatusValidator = { param($upgradeStatus) return !($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted") }
+    $upgradeStatusValidator = { param($upgradeStatus) return !($upgradeStatus.UpgradeState -eq "RollingBackCompleted" -or $upgradeStatus.UpgradeState -eq "RollingForwardCompleted" -or $upgradeStatus.UpgradeState -eq "Failed" -or $upgradeStatus.UpgradeState -eq "Invalid") }
 
     $exceptionRetryEvaluator = {
         param($ex)

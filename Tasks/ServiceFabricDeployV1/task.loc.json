@@ -456,6 +456,7 @@
     "SFSDK_UnregisterUnusedVersions": "ms-resource:loc.messages.SFSDK_UnregisterUnusedVersions",
     "SFSDK_UpgradeSuccess": "ms-resource:loc.messages.SFSDK_UpgradeSuccess",
     "SFSDK_UpgradeRolledBack": "ms-resource:loc.messages.SFSDK_UpgradeRolledBack",
+    "SFSDK_UpgradeCompletedWithNonSuccessState": "ms-resource:loc.messages.SFSDK_UpgradeCompletedWithNonSuccessState",
     "SFSDK_UnzipPackage": "ms-resource:loc.messages.SFSDK_UnzipPackage",
     "SFSDK_UnexpectedError": "ms-resource:loc.messages.SFSDK_UnexpectedError",
     "SFSDK_CopyPackageTimeoutSecWarning": "ms-resource:loc.messages.SFSDK_CopyPackageTimeoutSecWarning",
