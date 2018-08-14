@@ -16,11 +16,13 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         switch(this.taskParams.Package.getPackageType()){
             case PackageType.folder:
             case PackageType.zip:
-            this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
-                { slotName: this.appService.getSlot() });
+                tl.debug("Initiated deployment via kudu service for webapp zip/folder package : "+ this.taskParams.Package.getPath());
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
+                    { slotName: this.appService.getSlot() });
             break;
 
             case PackageType.jar:
+                tl.debug("Initiated deployment via kudu service for webapp jar package : "+ this.taskParams.Package.getPath());
                 var folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
                 var jarName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".jar");
                 var destRootPath = "/home/site/wwwroot/";
@@ -44,10 +46,10 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             break;
 
             case PackageType.war:
-            tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
-            var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
-            this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
-                { slotName: this.appService.getSlot() }, warName);
+                tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
+                var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
+                    { slotName: this.appService.getSlot() }, warName);
             break;
 
             default:

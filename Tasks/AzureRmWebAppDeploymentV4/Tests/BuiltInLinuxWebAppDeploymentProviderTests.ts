@@ -32,7 +32,22 @@ export class BuiltInLinuxWebAppDeploymentProviderTests {
                 return {
                     updateDeployment : function(D) {
                         return "MOCK_DEPLOYMENT_ID";
-                    }
+                    },
+                    getAppSettings : function() {
+                        var map: Map<string, string> = new Map<string, string>();
+                        map.set('MSDEPLOY_RENAME_LOCKED_FILES', '1');
+                        map.set('ScmType', 'ScmType');
+                        return map;
+                    },
+                    zipDeploy: function(E, F) {
+                        return '{id: "ZIP_DEPLOY_FAILED_ID", status: 3, deployer: "VSTS_ZIP_DEPLOY", author: "VSTS USER"}';
+                    },
+                    warDeploy: function(G, H) {
+                        return null;
+                    },
+                    getDeploymentDetails: function(I) {
+                        return "{ type: 'Deployment',url: 'http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID'}";
+                    }  
                 }
             }
         });

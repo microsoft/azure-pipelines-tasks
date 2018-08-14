@@ -5,11 +5,9 @@ import { IWebAppDeploymentProvider } from '../deploymentProvider/IWebAppDeployme
 import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operations/TaskParameters';
 import { stringify } from 'querystring';
 import { PackageType } from 'webdeployment-common/packageUtility';
-import { getMockEndpoint, mockAzureAppServiceTests, mockKuduServiceTests, mockAzureARMResourcesTests, mockAzureARMPreDeploymentSteps} from 'azure-arm-rest/tests/mock_utils';
+import { getMockEndpoint, mockAzureAppServiceTests, mockKuduServiceTests, mockAzureARMResourcesTests, mockAzureARMPreDeploymentSteps} from '../node_modules/azure-arm-rest/Tests/mock_utils';
 
 getMockEndpoint();
-mockAzureAppServiceTests();
-mockKuduServiceTests();
 mockAzureARMPreDeploymentSteps();
 
 export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
@@ -18,6 +16,7 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
         await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForPreDeploymentSteps_BuiltInLinuxWebApp();
         await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_BuiltInLinuxWebApp();
         await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForUpdateDeploymentStatus_BuiltInLinuxWebApp();
+        await BuiltInLinuxWebAppDeploymentProviderL0Tests.testForDeployWebAppStep_BuiltInLinuxWebApp_ZipPackage();
     }
 
     public static async testForPreDeploymentSteps_BuiltInLinuxWebApp() {
@@ -52,6 +51,17 @@ export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
             await builtInLinuxWebAppDeploymentProvider.UpdateDeploymentStatus(true);
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'UpdateDeploymentStatus for built in linux web app steps should succeeded but failed with error');
+        }
+    }
+
+    public static async testForDeployWebAppStep_BuiltInLinuxWebApp_ZipPackage() {
+        try {
+            var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            var builtInLinuxWebAppDeploymentProvider : BuiltInLinuxWebAppDeploymentProvider  = new BuiltInLinuxWebAppDeploymentProvider(taskParameters);
+            await builtInLinuxWebAppDeploymentProvider.PreDeploymentStep();
+            await builtInLinuxWebAppDeploymentProvider.DeployWebAppStep();
+        } catch(error) {
+            tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for built in linux web app steps with zip package should succeeded but failed with error');
         }
     }
 

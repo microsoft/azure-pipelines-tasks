@@ -8,8 +8,6 @@ import { PackageType } from 'webdeployment-common/packageUtility';
 import { getMockEndpoint, mockAzureAppServiceTests, mockKuduServiceTests, mockAzureARMResourcesTests, mockAzureARMPreDeploymentSteps} from 'azure-arm-rest/tests/mock_utils';
 
 getMockEndpoint();
-mockAzureAppServiceTests();
-mockKuduServiceTests();
 mockAzureARMPreDeploymentSteps();
 
 export class AzureRmWebAppDeploymentProviderL0Tests  {

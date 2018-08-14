@@ -758,5 +758,41 @@ export function mockAzureARMPreDeploymentSteps() {
         type: 'Deployment',
         url: 'http://MOCK_SCM_WEBSITE/api/deployments/MOCK_DEPLOYMENT_ID'
     });
+
+    // linux built in app
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).get("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/web?api-version=2016-08-01")
+    .reply(200, {
+        id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/mytestapp/config/web",
+        name: "mytestapp",
+        type: "Microsoft.Web/sites",
+        kind: "app",
+        location: "South Central US",
+        properties: {
+            "alwaysOn": true
+        }
+    }).persist();
     
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).patch("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/web?api-version=2016-08-01")
+    .reply(200, {
+        id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/vincaAzureRG/providers/Microsoft.Web/sites/mytestapp/config/web",
+        name: "mytestapp",
+        type: "Microsoft.Web/sites",
+        kind: "app",
+        location: "South Central US",
+        properties: {
+            "alwaysOn": true
+        }
+    }).persist();
 }
