@@ -12,7 +12,7 @@ steps:
 
 - script: |
     gem install bundler
-    bundle install --retry=3 --jobs=3 # Add --deployment if a Gemfile.lock file exists
+    bundle install --retry=3 --jobs=3
   displayName: 'bundle install'
 
 - script: bundle exec rake
