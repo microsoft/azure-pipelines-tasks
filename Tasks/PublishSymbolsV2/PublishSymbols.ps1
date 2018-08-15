@@ -99,6 +99,7 @@ try {
         [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
     }
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
+    [bool]$CompressSymbols = (Get-VstsInput -Name 'CompressSymbols' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
     [string]$defaultSymbolFolder = (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Default "")
     [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default $defaultSymbolFolder
@@ -154,7 +155,7 @@ try {
 
             # Publish the symbols.
             Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
-            Invoke-PublishSymbols -PdbFiles $fileList -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $SymbolsMaximumWaitTime -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage
+            Invoke-PublishSymbols -PdbFiles $fileList -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $SymbolsMaximumWaitTime -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage -CompressSymbols:$CompressSymbols
         } else {
             Write-Verbose "SymbolsPath was not set, publish symbols step was skipped."
         }
