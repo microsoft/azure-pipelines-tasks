@@ -18,4 +18,4 @@ steps:
     go get -v -t -d
     go test -v
     go build -o "$(build.repository.name)"
-  displayName: 'Go get, test, and build'
+  displayName: 'go get, test, and build'
