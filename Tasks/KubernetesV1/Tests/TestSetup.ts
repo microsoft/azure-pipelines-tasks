@@ -75,6 +75,11 @@ process.env['ENDPOINT_DATA_AzureRMSpn_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID']
 process.env['AZURE_HTTP_USER_AGENT'] = 'TEST_AGENT';
 process.env['PATH'] = KubectlPath;
 
+if (process.env["AGENT_TEMPDIRECTORY"] == null || process.env["AGENT_TEMPDIRECTORY"] == undefined || process.env["AGENT_TEMPDIRECTORY"] == "")
+{
+    process.env["AGENT_TEMPDIRECTORY"] = "/agent/_temp";
+}
+
 //mock responses for Azure Resource Manager connection type
 nock("https://login.windows.net", {
 		reqheaders: {
