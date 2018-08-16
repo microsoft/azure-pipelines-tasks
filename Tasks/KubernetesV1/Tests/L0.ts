@@ -36,7 +36,7 @@ describe('Kubernetes Suite', function() {
     });
     after(function () {
     });
-
+ 
     it('Run successfully when the connectionType is Kubernetes Service Connection', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -88,7 +88,7 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);
         done();
     });
-
+ 
     it('Run successfully when the user provides the version for kubectl with checkLatest as false and version that dosent have a v prefix', (done:MochaDone) => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -519,5 +519,21 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`[command]kubectl get pods -o json`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
-    }); 
+    });
+ 
+    it('Run successfully using the specified kubectl version when kubectl is present on machine and version is specified ', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";    
+        process.env[shared.TestEnvVars.versionSpec] = "1.10.1";
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} get pods -o json`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
+    });
 });
