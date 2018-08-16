@@ -1,6 +1,14 @@
 import tl = require('vsts-task-lib/task');
 import utility = require('./utility');
 var zipUtility = require('webdeployment-common/ziputility.js');
+import path = require('path');
+
+export enum PackageType {
+    war,
+    zip,
+    jar,
+    folder
+}
 
 export class PackageUtility {
     public static getPackagePath(packagePath: string): string {
@@ -21,8 +29,6 @@ export class Package {
     constructor(packagePath: string) {
         this._path = PackageUtility.getPackagePath(packagePath);
         this._isMSBuildPackage = undefined;
-        this._isFolder = undefined;
-        this._isWarFile = undefined;
     }
 
     public getPath(): string {
@@ -32,7 +38,7 @@ export class Package {
     public async isMSBuildPackage(): Promise<boolean> {
         if(this._isMSBuildPackage == undefined) {
             this._isMSBuildPackage = false;
-            if(!this.isFolder()) {
+            if(this.getPackageType() != PackageType.folder) {
                 var pacakgeComponent = await zipUtility.getArchivedEntries(this._path);
                 if (((pacakgeComponent["entries"].indexOf("parameters.xml") > -1) || (pacakgeComponent["entries"].indexOf("Parameters.xml") > -1)) && 
                     ((pacakgeComponent["entries"].indexOf("systemInfo.xml") > -1) || (pacakgeComponent["entries"].indexOf("systeminfo.xml") > -1)
@@ -47,6 +53,31 @@ export class Package {
         return this._isMSBuildPackage;
     }
 
+    public getPackageType(): PackageType {
+        if (this._packageType == undefined) {
+            if (!tl.exist(this._path)) {
+                throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', this._path));
+            } else{
+                if (this._path.toLowerCase().endsWith('.war')) {
+                    this._packageType = PackageType.war;
+                    tl.debug("This is war package ");
+                } else if(this._path.toLowerCase().endsWith('.jar')){
+                    this._packageType = PackageType.jar;
+                    tl.debug("This is jar package ");
+                } else if (this._path.toLowerCase().endsWith('.zip')){
+                    this._packageType = PackageType.zip;
+                    tl.debug("This is zip package ");
+                } else if(!tl.stats(this._path).isFile()){
+                    this._packageType = PackageType.folder;
+                    tl.debug("This is folder package ");
+                }else{
+                    throw new Error(tl.loc('Invalidwebapppackageorfolderpathprovided', this._path));
+                }
+            }
+        }
+        return this._packageType;
+    }
+
     public isFolder(): boolean {
         if(this._isFolder == undefined) {
             if (!tl.exist(this._path)) {
@@ -58,19 +89,9 @@ export class Package {
 
         return this._isFolder;
     }
-    public isWarFile(): boolean {
-        if (this._isWarFile == undefined) {
-            this._isWarFile = false;
-            if (this._path.toString().toLowerCase().endsWith('.war')) {
-                this._isWarFile = true;
-            }
-        }
-        tl.debug("Is this a war file : " + this._isWarFile)
-        return this._isWarFile;
-    }
     
+    private _isFolder?: boolean;
     private _path: string;
     private _isMSBuildPackage?: boolean;
-    private _isFolder?: boolean;
-    private _isWarFile?: boolean;
+    private _packageType?: PackageType;
 }

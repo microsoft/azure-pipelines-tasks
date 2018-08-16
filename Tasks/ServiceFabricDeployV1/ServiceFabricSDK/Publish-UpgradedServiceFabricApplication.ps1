@@ -366,6 +366,10 @@ function Publish-UpgradedServiceFabricApplication
         elseif ($upgradeStatus.UpgradeState -eq "RollingBackCompleted")
         {
             $global:operationId = $SF_Operations.WaitApplicationUpgradeStatus
+
+            Trace-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
+            Trace-ServiceFabricClusterHealth
+
             Write-Error (Get-VstsLocString -Key SFSDK_UpgradeRolledBack)
         }
     }

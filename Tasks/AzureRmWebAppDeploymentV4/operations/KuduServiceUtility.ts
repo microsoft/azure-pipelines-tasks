@@ -148,17 +148,11 @@ export class KuduServiceUtility {
         }
     }
 
-    public async zipDeploy(packagePath: string, runFromZip?: boolean, appOffline?: boolean, customMessage?: any): Promise<string> {
+    public async deployUsingZipDeploy(packagePath: string, appOffline?: boolean, customMessage?: any): Promise<string> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
 
-            if(tl.stats(packagePath).isDirectory()) {
-                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
-                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
-                tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
-            }
-
-            if(!runFromZip && appOffline) {
+            if(appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, true);
                 tl.debug('Wait for 5 seconds for app_offline to take effect');
                 await webClient.sleepFor(5);
@@ -166,40 +160,64 @@ export class KuduServiceUtility {
 
             let queryParameters: Array<string> = [
                 'isAsync=true',
-                'deployer=' +  (runFromZip ? VSTS_DEPLOY: VSTS_ZIP_DEPLOY)
+                'deployer=' + VSTS_ZIP_DEPLOY
             ];
 
-            if(runFromZip) {
-                var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
-                queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            }
-
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
-
-            try {
-                var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
-                tl.debug(`logs from ZIP deploy: ${kuduDeploymentDetails.log_url}`);
-
-                if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() == 'true') {
-                    await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
-                }
-                else {
-                    console.log(tl.loc('ZipDeployLogsURL', kuduDeploymentDetails.log_url));
-                }
-            }
-            catch(error) {
-                tl.debug(`Unable to fetch logs for kudu ZIP Deploy: ${JSON.stringify(error)}`)
-            }
-
-            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
-                throw tl.loc('PackageDeploymentUsingZipDeployFailed');
-            }
-
-            if(!runFromZip && appOffline) {
+            await this._processDeploymentResponse(deploymentDetails);
+            if(appOffline) {
                 await this._appOfflineKuduService(physicalRootPath, false);
             }
 
             console.log(tl.loc('PackageDeploymentSuccess'));
+            return deploymentDetails.id;
+        }
+        catch(error) {
+            tl.error(tl.loc('PackageDeploymentFailed'));
+            throw Error(error);
+        }
+    }
+
+    public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<string> {
+        try {
+            console.log(tl.loc('PackageDeploymentInitiated'));
+
+            let queryParameters: Array<string> = [
+                'isAsync=true',
+                'deployer=' +   VSTS_DEPLOY
+            ];
+
+            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
+            queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
+            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
+            await this._processDeploymentResponse(deploymentDetails);
+            console.log(tl.loc('PackageDeploymentSuccess'));
+            return deploymentDetails.id;
+        }
+        catch(error) {
+            tl.error(tl.loc('PackageDeploymentFailed'));
+            throw Error(error);
+        }
+    }
+
+    public async deployUsingWarDeploy(packagePath: string, customMessage?: any, targetFolderName?: any): Promise<string> {
+        try {
+            console.log(tl.loc('WarPackageDeploymentInitiated'));
+
+            let queryParameters: Array<string> = [
+                'isAsync=true'
+            ];
+            
+            if(targetFolderName) {
+                queryParameters.push('name=' + encodeURIComponent(targetFolderName));
+            }
+
+            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
+            queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
+            let deploymentDetails = await this._appServiceKuduService.warDeploy(packagePath, queryParameters);
+            await this._processDeploymentResponse(deploymentDetails);
+            console.log(tl.loc('PackageDeploymentSuccess'));
+
             return deploymentDetails.id;
         }
         catch(error) {
@@ -232,6 +250,27 @@ export class KuduServiceUtility {
         }
         catch(error) {
             tl.debug('Failed to warm-up Kudu: ' + error.toString());
+        }
+    }
+
+    private async _processDeploymentResponse(deploymentDetails: any): Promise<void> {
+        try {
+            var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentDetails.id);
+            tl.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
+
+            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() == 'true') {
+                await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
+            }
+            else {
+                console.log(tl.loc('DeployLogsURL', kuduDeploymentDetails.log_url));
+            }
+        }
+        catch(error) {
+            tl.debug(`Unable to fetch logs for kudu Deploy: ${JSON.stringify(error)}`)
+        }
+
+        if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
+            throw tl.loc('PackageDeploymentUsingZipDeployFailed');
         }
     }
 

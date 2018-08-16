@@ -1,21 +1,17 @@
 # Node.js with React
 # Build a Node.js application that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
+
 steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+  displayName: 'Install Node.js'
 
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '8.x' 
-
-  - script: |
-      npm install
-      npm run build
-    displayName: 'Install and build'
-
-#  - task: ArchiveFiles@2
-#    inputs:
-#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#      includeRootFolder: false
-#  - task: PublishBuildArtifacts@1
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'

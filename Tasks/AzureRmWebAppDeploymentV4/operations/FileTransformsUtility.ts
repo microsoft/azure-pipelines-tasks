@@ -9,12 +9,12 @@ var generateWebConfigUtil = require('webdeployment-common/webconfigutil.js');
 export class FileTransformsUtility {
 
     private static rootDirectoryPath: string = "D:\\home\\site\\wwwroot";
-
     public static async applyTransformations(webPackage: string, taskParams: TaskParameters): Promise<string> {
+        tl.debug("WebConfigParameters is "+ taskParams.WebConfigParameters);
         var applyFileTransformFlag = taskParams.JSONFiles.length != 0 || taskParams.XmlTransformation || taskParams.XmlVariableSubstitution;
         if (applyFileTransformFlag || taskParams.WebConfigParameters) {
             var isFolderBasedDeployment: boolean = tl.stats(webPackage).isDirectory();
-            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webPackage);
+            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, webPackage, taskParams.Package.getPackageType());
             if (taskParams.WebConfigParameters) {
                 tl.debug('parsing web.config parameters');
                 var webConfigParameters = parse(taskParams.WebConfigParameters);

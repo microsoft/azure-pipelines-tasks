@@ -11,8 +11,6 @@ import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
 import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as nutil from "nuget-task-common/Utility";
-import * as vsts from "vso-node-api/WebApi";
-import * as vsom from 'vso-node-api/VsoClient';
 import peParser = require('nuget-task-common/pe-parser/index');
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
 import * as commandHelper from "nuget-task-common/CommandHelper";
@@ -69,11 +67,13 @@ export async function run(nuGetPath: string): Promise<void> {
         // Discovering NuGet quirks based on the version
         tl.debug('Getting NuGet quirks');
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
-        let credProviderPath = nutil.locateCredentialProvider();
+        
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
-        const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
-        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
+        const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
+        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
+        const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && (!useV1CredProvider && !useV2CredProvider);
 
         // Setting up auth-related variables
         tl.debug('Setting up auth');
@@ -89,15 +89,20 @@ export async function run(nuGetPath: string): Promise<void> {
         }
         let accessToken = auth.getSystemAccessToken();
         let externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
-        const authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, useCredConfig), externalAuthArr);
+        const authInfo = new auth.NuGetExtendedAuthInfo(
+            new auth.InternalAuthInfo(urlPrefixes, accessToken, ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null), useCredConfig),
+            externalAuthArr);
+
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
-            credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
+            credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
+            V2CredProviderPath: useV2CredProvider === true ? credProviderPath : null,
             extensionsDisabled: true
         };
 
         // Setting up sources, either from provided config file or from feed selection
         tl.debug('Setting up sources');
         let nuGetConfigPath : string = undefined;
+        let configFile: string = undefined;
         let selectOrConfig = tl.getInput("selectOrConfig");
         // This IF is here in order to provide a value to nuGetConfigPath (if option selected, if user provided it)
         // and then pass it into the config helper
@@ -105,6 +110,12 @@ export async function run(nuGetPath: string): Promise<void> {
             nuGetConfigPath = tl.getPathInput("nugetConfigPath", false, true);
             if (!tl.filePathSupplied("nugetConfigPath")) {
                 nuGetConfigPath = undefined;
+            }
+
+            // If using NuGet version 4.8 or greater and nuget.config was provided, 
+            // do not create temp config file
+            if (useV2CredProvider && nuGetConfigPath) {
+                configFile = nuGetConfigPath;
             }
         }
 
@@ -124,7 +135,7 @@ export async function run(nuGetPath: string): Promise<void> {
             let sources: Array<IPackageSource> = new Array<IPackageSource>();
             let feed = tl.getInput("feedRestore");
             if (feed) {
-                let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(accessToken, feed, nuGetVersion);
+                let feedUrl: string = await nutil.getNuGetFeedRegistryUrl(accessToken, feed, nuGetVersion);
                 sources.push(<IPackageSource>
                 {
                     feedName: feed,
@@ -157,14 +168,28 @@ export async function run(nuGetPath: string): Promise<void> {
             }
         }
 
-        // Setting creds in the temp NuGet.config if needed
-        await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+        if (!useV2CredProvider && !configFile) {
+            // Setting creds in the temp NuGet.config if needed
+            await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
+            tl.debug('Setting nuget.config auth');
+        } else {
+            // In case of !!useV2CredProvider, V2 credential provider will handle external credentials
+            tl.debug('No temp nuget.config auth');
+        }
+        // if configfile has already been set, let it be
+        if (!configFile) {
+            // Use config file if:
+            //     - User selected "Select feeds" option
+            //     - User selected "NuGet.config" option and the nuGetConfig input has a value
+            let useConfigFile: boolean = selectOrConfig === "select" || (selectOrConfig === "config" && !!nuGetConfigPath);
+            configFile = useConfigFile ? nuGetConfigHelper.tempNugetConfigPath : undefined;
 
-        // Use config file if:
-        //     - User selected "Select feeds" option
-        //     - User selected "NuGet.config" option and the nuGetConfig input has a value
-        let useConfigFile: boolean = selectOrConfig === "select" || (selectOrConfig === "config" && !!nuGetConfigPath);
-        let configFile = useConfigFile ? nuGetConfigHelper.tempNugetConfigPath : undefined;
+            if (useConfigFile)
+            {
+                credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
+            }
+        }
+        tl.debug(`ConfigFile: ${configFile}`);
 
         try {
             let restoreOptions = new RestoreOptions(
