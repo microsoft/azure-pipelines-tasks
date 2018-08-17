@@ -11,7 +11,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
  
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
-
+        
         if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.runFromZip) {
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage();
             if(_isMSBuildPackage) {
@@ -30,7 +30,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         var customApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
         await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
 
-        await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
+        await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
             { slotName: this.appService.getSlot() });
 
         await this.PostDeploymentStep();
