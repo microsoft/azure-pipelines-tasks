@@ -4,6 +4,7 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as Constant from '../operations/Constants';
 import * as ParameterParser from '../operations/parameterparser'
 import { DeploymentType } from '../operations/TaskParameters';
+import { PackageType } from 'webdeployment-common/packageUtility';
 const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 0';
 
 export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvider{
@@ -21,7 +22,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
             else if(this.taskParams.VirtualApplication) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedforvirtualapplication"));
             }
-            else if(this.taskParams.Package.isWarFile()) {
+            else if(this.taskParams.Package.getPackageType() === PackageType.war) {
                 throw Error(tl.loc("Publishusingzipdeploydoesnotsupportwarfile"));
             }
         }
@@ -31,7 +32,7 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         var customApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
         await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
 
-        this.zipDeploymentID = await this.kuduServiceUtility.zipDeploy(webPackage, false, this.taskParams.TakeAppOfflineFlag, 
+        this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
             { slotName: this.appService.getSlot() });
 
         await this.PostDeploymentStep();
