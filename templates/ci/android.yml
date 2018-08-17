@@ -8,5 +8,9 @@ queue: 'Hosted macOS Preview'
 steps:
 - task: Gradle@2
   inputs:
+    workingDirectory: ''
     gradleWrapperFile: 'gradlew'
-    tasks: 'assembleRelease'
+    gradleOptions: '-Xmx1024m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'assembleDebug'
