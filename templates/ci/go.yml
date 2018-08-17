@@ -1,7 +1,7 @@
 # Go
 # Build your Go application.
 # Add steps that run tests, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/vsts/pipelines/apps/go/go
+# https://docs.microsoft.com/vsts/pipelines/languages/go
 
 queue: 'Hosted Linux Preview'
 
