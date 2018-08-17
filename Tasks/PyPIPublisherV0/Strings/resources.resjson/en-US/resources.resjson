@@ -5,8 +5,7 @@
   "loc.instanceNameFormat": "Package and publish to PyPI",
   "loc.input.label.serviceEndpoint": "PyPI service connection",
   "loc.input.help.serviceEndpoint": "A generic service connection for connecting to the package index.",
-  "loc.input.label.wd": "Python package directory",
-  "loc.input.help.wd": "The directory of the Python package to be created and published, where setup.py is present.",
-  "loc.input.label.wheel": "Also publish a wheel",
-  "loc.input.help.wheel": "Select whether to create and publish a universal wheel package (platform independent) in addition to an sdist package. [More information](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
+  "loc.input.label.pathToPublish": "Path to publish",
+  "loc.input.help.pathToPublish": "Path of the Python package (sdist or wheel) to upload. Must be a fully qualified path or relative to the working directory.",
+  "loc.messages.UploadFailed": "Upload failed: %s"
 }

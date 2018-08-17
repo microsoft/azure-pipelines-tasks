@@ -12,9 +12,9 @@
   ],
   "demands": [],
   "version": {
-    "Major": 0,
-    "Minor": 137,
-    "Patch": 1
+    "Major": 1,
+    "Minor": 139,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Package and publish to PyPI",
@@ -26,23 +26,14 @@
       "label": "PyPI service connection",
       "required": true,
       "helpMarkDown": "A generic service connection for connecting to the package index."
-    },    
-    {
-      "name": "wd",
-      "aliases": [ "packageDirectory" ],
-      "type": "filePath",
-      "label": "Python package directory",
-      "required": true,
-      "helpMarkDown": "The directory of the Python package to be created and published, where setup.py is present."
     },
     {
-        "name": "wheel",
-        "aliases": [ "alsoPublishWheel" ],
-        "type": "boolean",
-        "label": "Also publish a wheel",
-        "defaultValue": "false",
-        "required": false,
-        "helpMarkDown": "Select whether to create and publish a universal wheel package (platform independent) in addition to an sdist package. [More information](https://packaging.python.org/tutorials/distributing-packages/#wheels)."
+        "name": "pathToPublish",
+        "type": "filePath",
+        "label": "Path to publish",
+        "required": true,
+        "defaultValue": "",
+        "helpMarkDown": "Path of the Python package (sdist or wheel) to upload. Must be a fully qualified path or relative to the working directory."
     }
   ],
   "execution": {
@@ -50,5 +41,8 @@
       "target": "publisher.js",
       "argumentFormat": ""
     }
+  },
+  "messages": {
+    "UploadFailed": "Upload failed: %s"
   }
 }

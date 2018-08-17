@@ -1,53 +1,44 @@
-var tl = require('vsts-task-lib/task');
-var os = require('os');
-var path = require('path');
-var util = require("util");
+import * as tl from 'vsts-task-lib/task';
+import * as os from 'os';
+import * as path from 'path';
+import * as util from "util";
 
-var workingDirectory = tl.getInput('wd', true);
-var serviceEndpointId = tl.getInput('serviceEndpoint', true);
-var wheel: boolean = tl.getBoolInput('wheel');
-var homedir = os.homedir();
-var pypircFilePath = path.join(homedir, ".pypirc");
-var pythonToolPath = tl.which('python', true);
-var error = '';
+const serviceEndpointId = tl.getInput('serviceEndpoint', true);
 
-//Generic service endpoint
-var pythonServer = tl.getEndpointUrl(serviceEndpointId, false);
-var username = tl.getEndpointAuthorizationParameter(serviceEndpointId, 'username', false);
-var password = tl.getEndpointAuthorizationParameter(serviceEndpointId, 'password', false);
+// Generic service endpoint
+const pypiServer = tl.getEndpointUrl(serviceEndpointId, false);
+const username = tl.getEndpointAuthorizationParameter(serviceEndpointId, 'username', false);
+const password = tl.getEndpointAuthorizationParameter(serviceEndpointId, 'password', false);
 
-//Create .pypirc file
-var text = util.format("[distutils] \nindex-servers =\n    pypi \n[pypi] \nrepository=%s \nusername=%s \npassword=%s", pythonServer, username, password);
+// Create .pypirc file
+const homedir = os.homedir();
+const pypircFilePath = path.join(homedir, ".pypirc");
+const text = util.format("[distutils] \nindex-servers =\n    pypi \n[pypi] \nrepository=%s \nusername=%s \npassword=%s", pypiServer, username, password);
 tl.writeFile(pypircFilePath, text, 'utf8');
 
-async function run(){
-    //PyPI upload
-    try{
-        tl.cd(workingDirectory);
+async function run() {
+    try {
         await executePythonTool("-m pip install twine --user");
-        await executePythonTool("setup.py sdist");
-        if(wheel){
-            await executePythonTool("-m pip install wheel --user");
-            await executePythonTool("setup.py bdist_wheel --universal");
-        }
         await executePythonTool("-m twine upload dist/*");
-    }
-    catch(err){
-        tl.setResult(tl.TaskResult.Failed, error);
-    }
-    finally{
-        //Delete .pypirc file
+    } catch (err) {
+        tl.setResult(tl.TaskResult.Failed, err.message);
+    } finally {
+        // Delete .pypirc file
         tl.rmRF(pypircFilePath);
-        tl.setResult(tl.TaskResult.Succeeded);
-    };
+        tl.setResult(tl.TaskResult.Succeeded, '');
+    }
 }
 
-async function executePythonTool(commandToExecute){
-    var pythonTool = tl.tool(pythonToolPath);
-    pythonTool.on('stderr', function (data) {
-        error += (data || '').toString();
-    });
-    await pythonTool.line(commandToExecute).exec();
+async function executePythonTool(commandToExecute: string): Promise<void> {
+    const python = tl.tool('python');
+    python.line(commandToExecute);
+
+    try {
+        await python.exec();
+    } catch (err) {
+        // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
+        throw new Error(tl.loc('UploadFailed', err));
+    }
 }
 
 run();
