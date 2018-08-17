@@ -218,5 +218,6 @@
   "loc.messages.AppServiceApplicationURL": "App Service Application URL: %s",
   "loc.messages.ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
   "loc.messages.FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
-  "loc.messages.JarPathNotPresent": "Java jar path is not present"
+  "loc.messages.JarPathNotPresent": "Java jar path is not present",
+  "loc.messages.FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s"
 }
