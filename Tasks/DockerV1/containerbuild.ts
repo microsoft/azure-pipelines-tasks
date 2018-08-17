@@ -63,6 +63,8 @@ function addReleaseLabels(command: ToolRunner, hostName: string): void {
 }
 
 function getReverseDNSName(): string {
+    // Hostname part of URL used as prefix for labels.
+    // it is safe to use url.parse on SYSTEM_TEAMFOUNDATIONCOLLECTIONURI here.
     var teamFoundationCollectionURI = tl.getVariable("SYSTEM_TEAMFOUNDATIONCOLLECTIONURI");
     if (teamFoundationCollectionURI) {
         var parsedUrl = URL.parse(teamFoundationCollectionURI);
