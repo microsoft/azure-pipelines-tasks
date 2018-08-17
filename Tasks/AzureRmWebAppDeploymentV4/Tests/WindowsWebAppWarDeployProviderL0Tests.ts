@@ -21,7 +21,6 @@ export class WindowsWebAppWarDeployProviderL0Tests  {
         await WindowsWebAppWarDeployProviderL0Tests.testForDeployWebAppStep_WarDeployProvider();
     }
 
-
     public static async testForPreDeploymentSteps_WarDeployProvider() {
         try {
             var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
@@ -71,9 +70,9 @@ export class WindowsWebAppWarDeployProviderL0Tests  {
             var windowsWebAppWarDeployProvider : WindowsWebAppWarDeployProvider  = new WindowsWebAppWarDeployProvider(taskParameters);
             await windowsWebAppWarDeployProvider.PreDeploymentStep();
             await windowsWebAppWarDeployProvider.DeployWebAppStep();
-            tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for war deploy steps with folder package succeeded');
+            tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for war deploy steps with war package succeeded');
         } catch(error) {
-            tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for war deploy steps with folder package should succeeded but failed with error');
+            tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for war deploy steps with war package should succeeded but failed with error');
         }
     }
 
