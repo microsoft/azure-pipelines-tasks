@@ -80,7 +80,7 @@ export class AzureApplicationInsights {
         try {
             var response = await this._client.beginRequest(httpRequest);
             tl.debug(`addReleaseAnnotation. Data : ${JSON.stringify(response)}`);
-            if(response.statusCode == 200) {
+            if(response.statusCode == 200 || response.statusCode == 201) {
                 return ;
             }
 

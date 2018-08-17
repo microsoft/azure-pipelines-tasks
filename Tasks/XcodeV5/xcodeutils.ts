@@ -3,6 +3,7 @@ const readline = require('readline');
 const fs = require('fs');
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
+import * as semver from 'semver';
 
 // These fallback paths are checked if a XCODE_N_DEVELOPER_DIR environment variable is not found.
 // Using the environment variable for resolution is preferable to these hardcoded paths.
@@ -202,6 +203,23 @@ export function getUniqueLogFileName(logPrefix: string): string {
 export function uploadLogFile(logFile: string) {
     if (tl.exist(logFile)) {
         console.log(`##vso[task.uploadfile]${logFile}`);
+    }
+}
+
+// Same signature and behavior as utility-common/telemetry's emitTelemetry, minus the common vars.
+export function emitTelemetry(area: string, feature: string, taskSpecificTelemetry: { [key: string]: any; }): void {
+    try {
+        let agentVersion = tl.getVariable('Agent.Version');
+        if (semver.gte(agentVersion, '2.120.0')) {
+            console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+                area,
+                feature,
+                JSON.stringify(taskSpecificTelemetry));
+        } else {
+            tl.debug(`Agent version is ${agentVersion}. Version 2.120.0 or higher is needed for telemetry.`);
+        }
+    } catch (err) {
+        tl.debug(`Unable to log telemetry. Err:( ${err} )`);
     }
 }
 

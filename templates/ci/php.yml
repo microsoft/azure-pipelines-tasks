@@ -1,7 +1,7 @@
 # PHP
 # Test and package your PHP application.
 # Add steps that run tests, save build artifacts, deploy, and more:
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/languages/php
 
 queue: 'Hosted Linux Preview'
 
