@@ -6,10 +6,11 @@ import { TaskParametersUtility, TaskParameters, DeploymentType } from '../operat
 import { stringify } from 'querystring';
 import { PackageType } from 'webdeployment-common/packageUtility';
 import { getMockEndpoint } from '../node_modules/azure-arm-rest/Tests/mock_utils';
-import { mockAzureARMPreDeploymentSteps }  from "./mock_utils";
+import { mockAzureARMPreDeploymentSteps, mockLinuxAppSettings }  from "./mock_utils";
 
 getMockEndpoint();
 mockAzureARMPreDeploymentSteps();
+mockLinuxAppSettings();
 
 export class BuiltInLinuxWebAppDeploymentProviderL0Tests  {
 
