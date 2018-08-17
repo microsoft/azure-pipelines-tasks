@@ -63,7 +63,7 @@
       "label": "ms-resource:loc.input.label.isManagedImage",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.isManagedImage",
-      "defaultValue": false
+      "defaultValue": true
     },
     {
       "name": "managedImageName",
