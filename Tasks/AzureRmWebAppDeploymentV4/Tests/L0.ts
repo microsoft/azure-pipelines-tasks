@@ -237,4 +237,24 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
+    it('AzureRmWebAppDeploymentV4 WindowsWebAppWarDeployProviderTests', (done: MochaDone) => {
+        let tp = path.join(__dirname,'WindowsWebAppWarDeployProviderTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+            assert(tr.stdOutContained('PreDeployment steps for war deploy should succeeded'), 'Should have printed: PreDeployment steps for war deploy should succeeded');
+            assert(tr.stdOutContained('PreDeployment steps for war deploy with slot enabled should succeeded'), 'Should have printed: PreDeployment steps for war deploy with slot enabled should succeeded');
+            assert(tr.stdOutContained('set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net'), 'Should have printed: set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net');
+            assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.');   
+            assert(tr.stdOutContained('DeployWebAppStep for war deploy steps with folder package succeeded'), 'Should have printed: DeployWebAppStep for war deploy steps with folder package succeeded.')
+            assert(tr.stdOutContained('loc_mock_AppServiceApplicationURL http://mytestapp.azurewebsites.net'), 'Should have printed: loc_mock_AppServiceApplicationURL http://mytestapp.azurewebsites.net');
+            assert(tr.stdOutContained('loc_mock_WarPackageDeploymentInitiated'), 'Should have printed: loc_mock_WarPackageDeploymentInitiated.');
+            assert(tr.stdOutContained('loc_mock_PackageDeploymentSuccess'), 'Should have printed: loc_mock_PackageDeploymentSuccess.');
+            done();
+        }
+        catch(error) {
+            done(error);
+        }
+    });
+
 });
