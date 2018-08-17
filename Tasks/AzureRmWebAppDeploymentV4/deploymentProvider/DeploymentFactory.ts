@@ -85,5 +85,4 @@ export class DeploymentFactory {
                 return new WindowsWebAppRunFromZipProvider(this._taskParams);
         }
     }
-
 }
