@@ -1,16 +1,13 @@
 # C/C++ with GCC
 # Build your C/C++ project with GNU GCC.
-# Add steps that run tests, save build artifacts, deploy, and more:
+# Add steps that publish test results, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/apps/c-cpp/gcc
 
 queue: 'Hosted Linux Preview'
 
 steps:
-- script: ./configure
-  displayName: 'configure'
-
-- script: 'make'
-  displayName: 'make'
-
-- script: 'make test'
-  displayName: 'make test'
+- script: |
+    ./configure
+    make
+    make test
+  displayName: 'configure, make, make test'
