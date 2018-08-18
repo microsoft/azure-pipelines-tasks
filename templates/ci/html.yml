@@ -1,12 +1,11 @@
 # HTML
-# Package your static HTML application.
-# Add steps that run tests, save build artifacts, deploy, and more:
+# Archive your static HTML application and save it with the build record.
+# Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux Preview'
 
 steps:
-# Archive the contents of the repository (except the .git folder) and save it with the build record
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(system.defaultWorkingDirectory)/**/*.!(git)'
