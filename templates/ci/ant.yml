@@ -8,8 +8,11 @@ queue: 'Hosted Linux Preview'
 steps:
 - task: Ant@1
   inputs:
+    workingDirectory: ''
     buildFile: 'build.xml'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.10'
     jdkArchitectureOption: 'x64'
+    publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
+    options: '-DmyProperty=myPropertyValue'

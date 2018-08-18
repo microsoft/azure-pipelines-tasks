@@ -8,9 +8,12 @@ queue: 'Hosted Linux Preview'
 steps:
 - task: Gradle@2
   inputs:
-    tasks: 'build'
+    workingDirectory: ''
     gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx2048m'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.10'
     jdkArchitectureOption: 'x64'
+    publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
+    tasks: 'build'

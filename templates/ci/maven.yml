@@ -9,8 +9,10 @@ steps:
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
-    goals: 'package'
+    options: '-Xmx2048m'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.10'
     jdkArchitectureOption: 'x64'
+    publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
+    goals: 'package'
