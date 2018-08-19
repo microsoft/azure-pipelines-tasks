@@ -6,7 +6,10 @@
 queue: 'Hosted Linux Preview'
 
 steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
 - script: |
-    echo Write multiple lines of script here,
-    echo or add other tasks to build, test, and deploy your project.
-  displayName: 'Run a script'
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'

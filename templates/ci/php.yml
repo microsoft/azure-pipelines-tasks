@@ -6,5 +6,5 @@
 queue: 'Hosted Linux Preview'
 
 steps:
-- script: composer install
+- script: composer install -n --prefer-dist
   displayName: 'composer install'

@@ -45,9 +45,11 @@ phases:
       pip install unittest-xml-reporting
     displayName: 'Install prerequisites'
 
-  - script: pushd '$(projectRoot)' && python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
-    displayName: 'Run tests'
+  - script: |
+      pushd '$(projectRoot)'
+      python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
     continueOnError: true
+    displayName: 'Run tests'
 
   - task: PublishTestResults@2
     inputs:
