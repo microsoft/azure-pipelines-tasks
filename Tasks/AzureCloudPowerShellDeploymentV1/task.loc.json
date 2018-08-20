@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 3,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [
     "azureps"
@@ -141,6 +141,14 @@
       "defaultValue": "false",
       "visibleRule": "AllowUpgrade == true",
       "helpMarkDown": "ms-resource:loc.input.help.ForceUpgrade",
+      "required": false
+    },
+    {
+      "name": "VerifyRoleInstanceStatus",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.VerifyRoleInstanceStatus",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.VerifyRoleInstanceStatus",
       "required": false
     },
     {

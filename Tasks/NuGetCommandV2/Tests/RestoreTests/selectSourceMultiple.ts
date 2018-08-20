@@ -48,5 +48,6 @@ nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.RegisterLocationServiceMocks();
 nmh.registerNugetConfigMock();
+nmh.registerNugetLocationHelpersMock();
 
 tmr.run();

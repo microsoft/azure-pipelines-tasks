@@ -1,21 +1,13 @@
 # C/C++ with GCC
 # Build your C/C++ project with GNU GCC.
-# https://aka.ms/yaml
+# Add steps that publish test results, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/vsts/pipelines/apps/c-cpp/gcc
 
-queue: 'Hosted Ubuntu 1604'
+queue: 'Hosted Linux Preview'
+
 steps:
-
-  - script: ./configure
-    displayName: 'configure'
-
-  - script: 'make'
-    displayName: 'make'
-
-  - script: 'make test'
-    displayName: 'make test'
-
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/*.out'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
+- script: |
+    ./configure
+    make
+    make test
+  displayName: 'configure, compile, run tests'

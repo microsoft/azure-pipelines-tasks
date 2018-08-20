@@ -31,7 +31,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             'stderr': 'FAILED'
         }
     },
-    'match': {
+    'findMatch': {
         '**/build/test-results/TEST-*.xml': [
             '/user/build/fun/test-results/test-123.xml'
         ]

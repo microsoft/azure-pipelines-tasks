@@ -35,12 +35,12 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 
     try {
-        let credProviderPath = nutil.locateCredentialProvider();
-
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
-        const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
+        const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
+        const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
+        const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
         // useCredConfig not placed here: This task will only support NuGet versions >= 3.5.0 which support credProvider both hosted and OnPrem
 
         let accessToken = auth.getSystemAccessToken();
@@ -55,9 +55,11 @@ export async function run(nuGetPath: string): Promise<void> {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
-        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, useCredProvider, false), []);
+        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null), false), []);
+
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
-            credProviderFolder: useCredProvider ? path.dirname(credProviderPath) : null,
+            credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
+            V2CredProviderPath: useV2CredProvider === true ? credProviderPath : null,
             extensionsDisabled: true
         };
 
