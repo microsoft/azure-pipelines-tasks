@@ -1,7 +1,7 @@
 # Node.js with Grunt
 # Build a Node.js application using the Grunt task runner.
 # Add steps that analyze code, save build artifacts, deploy, and more:
-# https://aka.ms/yaml
+# https://docs.microsoft.com/vsts/pipelines/languages/javascript
 
 queue: 'Hosted Linux Preview'
 
@@ -11,11 +11,7 @@ steps:
     versionSpec: '8.x'
   displayName: 'Install Node.js'
 
-- task: Npm@1
-  inputs:
-    command: 'install'
-
-- task: Grunt@0
-  inputs:
-    gruntFile: 'gruntfile.js'
-    targets: ''
+- script: |
+    npm install
+    grunt --gruntfile gruntfile.js
+  displayName: 'npm install and run grunt'

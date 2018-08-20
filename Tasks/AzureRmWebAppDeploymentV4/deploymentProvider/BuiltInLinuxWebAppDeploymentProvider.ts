@@ -16,9 +16,8 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         switch(this.taskParams.Package.getPackageType()){
             case PackageType.folder:
             case PackageType.zip:
-                tl.debug("Initiated deployment via kudu service for webapp zip/folder package : "+ this.taskParams.Package.getPath());
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
-                    { slotName: this.appService.getSlot() });
+                { slotName: this.appService.getSlot() });
             break;
 
             case PackageType.jar:
@@ -49,7 +48,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
                 tl.debug("Initiated deployment via kudu service for webapp war package : "+ this.taskParams.Package.getPath());
                 var warName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".war");
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingWarDeploy(this.taskParams.Package.getPath(), 
-                    { slotName: this.appService.getSlot() }, warName);
+                { slotName: this.appService.getSlot() }, warName);
             break;
 
             default:

@@ -26,7 +26,7 @@ phases:
   - task: PythonScript@0
     displayName: 'Export project path'
     inputs:
-      targetType: 'inline'
+      scriptSource: 'inline'
       script: |
         """Search all subdirectories for `manage.py`."""
         from glob import iglob
@@ -39,18 +39,17 @@ phases:
         print('Found Django project in', project_location)
         print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
-  - script: python -m pip install --upgrade pip setuptools wheel
-    displayName: 'Install dependencies'
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel
+      pip install -r requirements.txt
+      pip install unittest-xml-reporting
+    displayName: 'Install prerequisites'
 
-  - script: pip install -r requirements.txt
-    displayName: 'Install requirements'
-
-  - script: pip install unittest-xml-reporting
-    displayName: 'Install unittest-xml-reporting'
-
-  - script: pushd '$(projectRoot)' && python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
-    displayName: 'Run tests'
+  - script: |
+      pushd '$(projectRoot)'
+      python manage.py test --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --no-input
     continueOnError: true
+    displayName: 'Run tests'
 
   - task: PublishTestResults@2
     inputs:

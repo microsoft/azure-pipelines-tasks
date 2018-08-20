@@ -1,12 +1,11 @@
 # Jekyll container
-# Package your Jekyll site from within the Jekyll Docker container image.
-# Add steps that save build artifacts, deploy, and more:
+# Package your Jekyll site using the jekyll/builder Docker container image.
+# Add steps that build, test, save build artifacts, deploy, and more:
 # https://aka.ms/yaml
 
 queue: 'Hosted Linux Preview'
 
 steps:
-# Run the latest 'jekyll/builder' container and from within the container, package the Jekyll site
 - task: Docker@0
   displayName: 'Run Jekyll'
   inputs:

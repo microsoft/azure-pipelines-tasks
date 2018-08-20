@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 3,
-    "Patch": 0
+    "Patch": 1
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -616,6 +616,7 @@
     "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
-    "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent"
+    "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource"
   }
 }
