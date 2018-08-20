@@ -97,7 +97,7 @@
             "properties": {
                 "resizable": "true",
                 "rows": "10",
-                "maxLength": "500"
+                "maxLength": "5000"
             }
         },
         {
