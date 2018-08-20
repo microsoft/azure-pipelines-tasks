@@ -106,7 +106,7 @@
             "groupName": "advanced"
         },
         {
-            "name": "preferPwsh",
+            "name": "pwsh",
             "type": "boolean",
             "label": "Prefer PowerShell Core over Windows PowerShell on Windows",
             "required": false,
