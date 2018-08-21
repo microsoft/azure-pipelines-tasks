@@ -91,9 +91,9 @@ export class ContainerBasedDeploymentUtility {
         }
     
         if(tag) {
-            imageName = namespace + "/" + repository + ":" + tag;
+            imageName = namespace + "/" + repository.toLowerCase() + ":" + tag;
         } else {
-            imageName = namespace + "/" + repository;
+            imageName = namespace + "/" + repository.toLowerCase();
         }
     
         return imageName;
