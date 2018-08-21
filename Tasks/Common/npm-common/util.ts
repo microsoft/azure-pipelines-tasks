@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as Q from 'q';
 import * as url from 'url';
 
 import * as tl from 'vsts-task-lib/task';
@@ -8,7 +7,6 @@ import * as vsts from 'vso-node-api/WebApi';
 
 import { INpmRegistry, NpmRegistry } from './npmregistry';
 import * as NpmrcParser from './npmrcparser';
-import locationHelpers = require("./LocationHelpers");
 
 export function appendToNpmrc(npmrc: string, data: string): void {
     tl.writeFile(npmrc, data, {
@@ -16,17 +14,15 @@ export function appendToNpmrc(npmrc: string, data: string): void {
     } as tl.FsOptions);
 }
 
-export async function getLocalRegistries(npmrc: string): Promise<string[]> {
-    // Local registries are VSTS feeds from the SAME collection host 
-    const packagingUrls = await getPackagingCollectionUrls();
+export async function getLocalRegistries(packagingUrls: string[], npmrc: string): Promise<string[]> {
     const collectionHosts = packagingUrls.map((pkgUrl: string) => {
         const parsedUrl = url.parse(pkgUrl);
-        if (parsedUrl)
-        {
+        if (parsedUrl) {
             return parsedUrl.host.toLowerCase();
         }
         return undefined;
     });
+
     const registries = NpmrcParser.GetRegistries(npmrc);
 
     const localRegistries = registries.filter(registry => {
@@ -39,66 +35,39 @@ export async function getLocalRegistries(npmrc: string): Promise<string[]> {
 }
 
 export function getFeedIdFromRegistry(registry: string) {
-    let registryUrl = url.parse(registry);
-    let registryPathname = registryUrl.pathname.toLowerCase();
-    let startingToken = '/_packaging/';
-    let startingIndex = registryPathname.indexOf(startingToken);
-    let endingIndex = registryPathname.indexOf('/npm/registry');
+    const registryUrl = url.parse(registry);
+    const registryPathname = registryUrl.pathname.toLowerCase();
+    const startingToken = '/_packaging/';
+    const startingIndex = registryPathname.indexOf(startingToken);
+    const endingIndex = registryPathname.indexOf('/npm/registry');
 
     return registryUrl.pathname.substring(startingIndex + startingToken.length, endingIndex);
 }
 
-export async function getLocalNpmRegistries(workingDir: string): Promise<INpmRegistry[]> {
-    let npmrcPath = path.join(workingDir, '.npmrc');
+export async function getLocalNpmRegistries(workingDir: string, packagingUrls: string[]): Promise<INpmRegistry[]> {
+    const npmrcPath = path.join(workingDir, '.npmrc');
 
     if (tl.exist(npmrcPath)) {
-        const localRegistries = await getLocalRegistries(npmrcPath);
+        const localRegistries = await getLocalRegistries(packagingUrls, npmrcPath);
         return localRegistries.map(registry => NpmRegistry.FromUrl(registry, true));
     }
 
     return [];
 }
 
-export async function getPackagingCollectionUrl(): Promise<string> {
-    let forcedUrl = tl.getVariable('Npm.PackagingCollectionUrl');
-    if (forcedUrl) {
-        let testUrl = url.parse(forcedUrl);
-        tl.debug(tl.loc('ForcePackagingUrl', forcedUrl));
-        return Q(url.format(testUrl));
-    }
-
-    let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
-    let packagingCollectionUrl = (await locationHelpers.assumeNuGetUriPrefixes(collectionUrl))[1];
-
-    return Q(packagingCollectionUrl);
-}
-
-export async function getPackagingCollectionUrls(): Promise<string[]> {
-    let forcedUrl = tl.getVariable('Npm.PackagingCollectionUrl');
-    const urls: string[] = [];
-    if (forcedUrl) {
-        urls.push(forcedUrl);
-    }
-
-    let collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
-    let packagingCollectionUrls = await locationHelpers.assumeNuGetUriPrefixes(collectionUrl);
-
-    return Q(urls.concat(packagingCollectionUrls));
-}
-
 export function getTempNpmrcPath(): string {
-    let id: string = tl.getVariable('Build.BuildId') || tl.getVariable('Release.ReleaseId');
-    let tempUserNpmrcPath: string = path.join(getTempPath(), `${id}.npmrc`);
+    const id: string = tl.getVariable('Build.BuildId') || tl.getVariable('Release.ReleaseId');
+    const tempUserNpmrcPath: string = path.join(getTempPath(), `${id}.npmrc`);
 
     return tempUserNpmrcPath;
 }
 
 export function getTempPath(): string {
-    let tempNpmrcDir
+    const tempNpmrcDir
         = tl.getVariable('Agent.BuildDirectory')
         || tl.getVariable('Agent.ReleaseDirectory')
         || process.cwd();
-    let tempPath = path.join(tempNpmrcDir, 'npm');
+        const tempPath = path.join(tempNpmrcDir, 'npm');
     if (tl.exist(tempPath) === false) {
         tl.mkdirP(tempPath);
     }
@@ -107,15 +76,15 @@ export function getTempPath(): string {
 }
 
 function copyFile(src: string, dst: string): void {
-    let content = fs.readFileSync(src);
+    const content = fs.readFileSync(src);
     fs.writeFileSync(dst, content);
 }
 
 export function saveFile(file: string): void {
     if (file && tl.exist(file)) {
-        let tempPath = getTempPath();
-        let baseName = path.basename(file);
-        let destination = path.join(tempPath, baseName);
+        const tempPath = getTempPath();
+        const baseName = path.basename(file);
+        const destination = path.join(tempPath, baseName);
 
         tl.debug(tl.loc('SavingFile', file));
         copyFile(file, destination);
@@ -124,7 +93,7 @@ export function saveFile(file: string): void {
 
 export function saveFileWithName(file: string, name: string, filePath: string): void {
     if (file && tl.exist(file)) {
-        let destination = path.join(filePath, name + '.npmrc');
+        const destination = path.join(filePath, name + '.npmrc');
         tl.debug(tl.loc('SavingFile', file));
         copyFile(file, destination);
     }
@@ -132,9 +101,9 @@ export function saveFileWithName(file: string, name: string, filePath: string): 
 
 export function restoreFile(file: string): void {
     if (file) {
-        let tempPath = getTempPath();
-        let baseName = path.basename(file);
-        let source = path.join(tempPath, baseName);
+        const tempPath = getTempPath();
+        const baseName = path.basename(file);
+        const source = path.join(tempPath, baseName);
 
         if (tl.exist(source)) {
             tl.debug(tl.loc('RestoringFile', file));
@@ -146,7 +115,7 @@ export function restoreFile(file: string): void {
 
 export function restoreFileWithName(file: string, name: string, filePath: string): void {
     if (file) {
-        let source = path.join(filePath, name + '.npmrc');
+        const source = path.join(filePath, name + '.npmrc');
         if (tl.exist(source)) {
             tl.debug(tl.loc('RestoringFile', file));
             copyFile(source, file);
@@ -156,7 +125,7 @@ export function restoreFileWithName(file: string, name: string, filePath: string
 }
 
 export function getSystemAccessToken(): string {
-    let auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+    const auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
     if (auth.scheme === 'OAuth') {
         tl.debug(tl.loc('FoundBuildCredentials'));
         return auth.parameters['AccessToken'];
@@ -178,18 +147,17 @@ export function toNerfDart(uri: string): string {
     return url.resolve(url.format(parsed), '.');
 }
 
-export async function getFeedRegistryUrl(feedId: string): Promise<string> {
+export async function getFeedRegistryUrl(packagingUrl: string, feedId: string): Promise<string> {
     const apiVersion = '3.0-preview.1';
     const area = 'npm';
     const locationId = 'D9B75B07-F1D9-4A67-AAA6-A4D9E66B3352';
 
-    let accessToken = getSystemAccessToken();
-    let credentialHandler = vsts.getBearerHandler(accessToken);
-    let collectionUrl = await getPackagingCollectionUrl();
-    let vssConnection = new vsts.WebApi(collectionUrl, credentialHandler);
-    let coreApi = vssConnection.getCoreApi();
+    const accessToken = getSystemAccessToken();
+    const credentialHandler = vsts.getBearerHandler(accessToken);
+    const vssConnection = new vsts.WebApi(packagingUrl, credentialHandler);
+    const coreApi = vssConnection.getCoreApi();
 
-    let data = await Retry(async () => {
+    const data = await Retry(async () => {
         return await coreApi.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
     }, 4, 100);
 
@@ -218,4 +186,3 @@ function delay(delayMs:number) {
         setTimeout(resolve, delayMs);
     });
  }
- 

@@ -73,6 +73,8 @@ export class NpmMockHelper extends TaskMockRunner {
                 };
             }
         });
+
+        this.registerLocationHelpersMock();
     }
 
     public run(noMockTask?: boolean): void {
@@ -124,10 +126,15 @@ export class NpmMockHelper extends TaskMockRunner {
     }
 
     public registerLocationHelpersMock() {
-        this.registerMock('./LocationHelpers', {
-            assumeNuGetUriPrefixes: function(input) {
-                return [input];
-            }
+        this.registerMock('utility-common/packaging/locationUtilities', {
+            getPackagingUris: function(input) {
+                const collectionUrl: string = "https://vsts/packagesource";
+                return {
+                    PackagingUris: [collectionUrl],
+                    DefaultPackagingUri: collectionUrl
+                };
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
         });
     }
 

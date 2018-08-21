@@ -1,20 +1,19 @@
-import * as tl from "vsts-task-lib/task";
 import * as path from "path";
-import * as Q  from "q";
+import * as tl from "vsts-task-lib/task";
 import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
 
 import * as auth from "nuget-task-common/Authentication";
 import { IPackageSource } from "nuget-task-common/Authentication";
-import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import * as commandHelper from "nuget-task-common/CommandHelper";
 import locationHelpers = require("nuget-task-common/LocationHelpers");
 import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import * as nutil from "nuget-task-common/Utility";
-import peParser = require('nuget-task-common/pe-parser/index');
+import peParser = require("nuget-task-common/pe-parser/index");
 import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
-import * as commandHelper from "nuget-task-common/CommandHelper";
-import * as telemetry from 'utility-common/telemetry';
+import * as nutil from "nuget-task-common/Utility";
+import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as telemetry from "utility-common/telemetry";
+import INuGetCommandOptions from "./Common/INuGetCommandOptions";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -25,38 +24,52 @@ class RestoreOptions implements INuGetCommandOptions {
         public verbosity: string,
         public packagesDirectory: string,
         public environment: ngToolRunner.NuGetEnvironmentSettings,
-        public authInfo: auth.NuGetExtendedAuthInfo
+        public authInfo: auth.NuGetExtendedAuthInfo,
     ) { }
 }
 
 export async function run(nuGetPath: string): Promise<void> {
-    let buildIdentityDisplayName: string = null;
-    let buildIdentityAccount: string = null;
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+    } catch (error) {
+        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug(JSON.stringify(error));
+        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+        packagingLocation = {
+            PackagingUris: [collectionUrl],
+            DefaultPackagingUri: collectionUrl};
+    }
+
+    const buildIdentityDisplayName: string = null;
+    const buildIdentityAccount: string = null;
 
     try {
         nutil.setConsoleCodePage();
 
         // Reading inputs
-        let solutionPattern = tl.getPathInput("solution", true, false);
-        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
+        const solutionPattern = tl.getPathInput("solution", true, false);
+        const useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
         if (!useLegacyFind) {
-            let findOptions: tl.FindOptions = <tl.FindOptions>{};
-            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(solutionPattern);
+            const findOptions: tl.FindOptions = <tl.FindOptions>{};
+            const matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
+            const searchPatterns: string[] = nutil.getPatternsArrayFromInput(solutionPattern);
             filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
         }
         else {
-            filesList = nutil.resolveFilterSpec(solutionPattern, tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
+            filesList = nutil.resolveFilterSpec(
+                solutionPattern,
+                tl.getVariable("System.DefaultWorkingDirectory") || process.cwd());
         }
-        filesList.forEach(solutionFile => {
+        filesList.forEach((solutionFile) => {
             if (!tl.stats(solutionFile).isFile()) {
                 throw new Error(tl.loc("NotARegularFile", solutionFile));
             }
         });
-        let noCache = tl.getBoolInput("noCache");
-        let disableParallelProcessing = tl.getBoolInput("disableParallelProcessing");
-        let verbosity = tl.getInput("verbosityRestore");
+        const noCache = tl.getBoolInput("noCache");
+        const disableParallelProcessing = tl.getBoolInput("disableParallelProcessing");
+        const verbosity = tl.getInput("verbosityRestore");
         let packagesDirectory = tl.getPathInput("packagesDirectory");
         if (!tl.filePathSupplied("packagesDirectory")) {
             packagesDirectory = null;
@@ -65,48 +78,52 @@ export async function run(nuGetPath: string): Promise<void> {
         const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
 
         // Discovering NuGet quirks based on the version
-        tl.debug('Getting NuGet quirks');
+        tl.debug("Getting NuGet quirks");
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
-        
+
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
         // is unconditionally displayed
         const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
         const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
         const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
-        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && (!useV1CredProvider && !useV2CredProvider);
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks)
+                                && (!useV1CredProvider && !useV2CredProvider);
 
         // Setting up auth-related variables
-        tl.debug('Setting up auth');
-        let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
-        tl.debug(`Discovered URL prefixes: ${urlPrefixes}`);;
+        tl.debug("Setting up auth");
+        let urlPrefixes = packagingLocation.PackagingUris;
+        tl.debug(`Discovered URL prefixes: ${urlPrefixes}`);
         // Note to readers: This variable will be going away once we have a fix for the location service for
         // customers behind proxies
-        let testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
+        const testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
         if (testPrefixes) {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
-        let accessToken = auth.getSystemAccessToken();
-        let externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
+        const accessToken = auth.getSystemAccessToken();
+        const externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
         const authInfo = new auth.NuGetExtendedAuthInfo(
-            new auth.InternalAuthInfo(urlPrefixes, accessToken, ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null), useCredConfig),
+            new auth.InternalAuthInfo(
+                urlPrefixes,
+                accessToken,
+                ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null),
+                useCredConfig),
             externalAuthArr);
 
-        let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
+        const environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
             V2CredProviderPath: useV2CredProvider === true ? credProviderPath : null,
-            extensionsDisabled: true
+            extensionsDisabled: true,
         };
 
         // Setting up sources, either from provided config file or from feed selection
-        tl.debug('Setting up sources');
+        tl.debug("Setting up sources");
         let nuGetConfigPath : string = undefined;
         let configFile: string = undefined;
         let selectOrConfig = tl.getInput("selectOrConfig");
         // This IF is here in order to provide a value to nuGetConfigPath (if option selected, if user provided it)
         // and then pass it into the config helper
-        if (selectOrConfig === "config" ) {
+        if (selectOrConfig === "config") {
             nuGetConfigPath = tl.getPathInput("nugetConfigPath", false, true);
             if (!tl.filePathSupplied("nugetConfigPath")) {
                 nuGetConfigPath = undefined;
@@ -120,7 +137,7 @@ export async function run(nuGetPath: string): Promise<void> {
         }
 
         // If there was no nuGetConfigPath, NuGetConfigHelper will create a temp one
-        let nuGetConfigHelper = new NuGetConfigHelper2(
+        const nuGetConfigHelper = new NuGetConfigHelper2(
                     nuGetPath,
                     nuGetConfigPath,
                     authInfo,
@@ -131,40 +148,45 @@ export async function run(nuGetPath: string): Promise<void> {
 
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
-        if (selectOrConfig === "select" ) {
-            let sources: Array<IPackageSource> = new Array<IPackageSource>();
-            let feed = tl.getInput("feedRestore");
+        if (selectOrConfig === "select") {
+            const sources: IPackageSource[] = new Array<IPackageSource>();
+            const feed = tl.getInput("feedRestore");
             if (feed) {
-                let feedUrl: string = await nutil.getNuGetFeedRegistryUrl(accessToken, feed, nuGetVersion);
-                sources.push(<IPackageSource>
-                {
+                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(
+                    packagingLocation.DefaultPackagingUri,
+                    accessToken,
+                    feed,
+                    nuGetVersion);
+                sources.push({
                     feedName: feed,
                     feedUri: feedUrl,
-                    isInternal: true
-                })
+                    isInternal: true,
+                });
             }
 
-            let includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
+            const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
-                let nuGetUrl: string = nuGetVersion.productVersion.a < 3 ? locationHelpers.NUGET_ORG_V2_URL : locationHelpers.NUGET_ORG_V3_URL;
-                sources.push(<IPackageSource>
-                {
+                const nuGetUrl: string = nuGetVersion.productVersion.a < 3
+                                        ? locationHelpers.NUGET_ORG_V2_URL
+                                        : locationHelpers.NUGET_ORG_V3_URL;
+                sources.push({
                     feedName: "NuGetOrg",
                     feedUri: nuGetUrl,
-                    isInternal: false
-                })
+                    isInternal: false,
+                });
             }
 
             // Creating NuGet.config for the user
             if (sources.length > 0)
             {
-                tl.debug(`Adding the following sources to the config file: ${sources.map(x => x.feedName).join(';')}`)
+                // tslint:disable-next-line:max-line-length
+                tl.debug(`Adding the following sources to the config file: ${sources.map((x) => x.feedName).join(";")}`);
                 nuGetConfigHelper.addSourcesToTempNuGetConfig(sources);
                 credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
                 nuGetConfigPath = nuGetConfigHelper.tempNugetConfigPath;
             }
             else {
-                tl.debug('No sources were added to the temp NuGet.config file');
+                tl.debug("No sources were added to the temp NuGet.config file");
             }
         }
 
@@ -192,7 +214,7 @@ export async function run(nuGetPath: string): Promise<void> {
         tl.debug(`ConfigFile: ${configFile}`);
 
         try {
-            let restoreOptions = new RestoreOptions(
+            const restoreOptions = new RestoreOptions(
                 nuGetPath,
                 configFile,
                 noCache,
@@ -222,7 +244,7 @@ export async function run(nuGetPath: string): Promise<void> {
 }
 
 function restorePackages(solutionFile: string, options: RestoreOptions): IExecSyncResult {
-    let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, options.authInfo);
+    const nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, options.authInfo);
 
     nugetTool.arg("restore");
     nugetTool.arg(solutionFile);
@@ -252,9 +274,9 @@ function restorePackages(solutionFile: string, options: RestoreOptions): IExecSy
         nugetTool.arg(options.configFile);
     }
 
-    let execResult = nugetTool.execSync({ cwd: path.dirname(solutionFile) } as IExecOptions);
+    const execResult = nugetTool.execSync({ cwd: path.dirname(solutionFile) } as IExecOptions);
     if (execResult.code !== 0) {
-        telemetry.logResult('Packaging', 'NuGetCommand', execResult.code);
+        telemetry.logResult("Packaging", "NuGetCommand", execResult.code);
         throw tl.loc("Error_NugetFailedWithCodeAndErr",
             execResult.code,
             execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
