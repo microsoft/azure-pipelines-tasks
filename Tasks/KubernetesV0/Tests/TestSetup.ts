@@ -150,6 +150,9 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = 
     "code": 0,
     "stdout": "successfully got secret my-secret and printed it in the specified format"
 };
+a.exec[`kubectl --kubeconfig ${KubconfigFile} logs nginx`] = {
+    "code": 0
+};
 
 tr.setAnswers(<any>a);
 
