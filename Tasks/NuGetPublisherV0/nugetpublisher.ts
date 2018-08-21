@@ -8,6 +8,7 @@ import locationHelpers = require("nuget-task-common/LocationHelpers");
 import {NuGetConfigHelper} from "nuget-task-common/NuGetConfigHelper";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
 import * as nutil from "nuget-task-common/Utility";
+import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -22,6 +23,18 @@ class PublishOptions implements INuGetCommandOptions {
 }
 
 async function main(): Promise<void> {
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+    } catch (error) {
+        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug(JSON.stringify(error));
+        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+        packagingLocation = {
+            PackagingUris: [collectionUrl],
+            DefaultPackagingUri: collectionUrl};
+    }
+
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
     try {
@@ -93,7 +106,7 @@ async function main(): Promise<void> {
         const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
 
         let accessToken = auth.getSystemAccessToken();
-        let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
+        let urlPrefixes = packagingLocation.PackagingUris;
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
         // Note to readers: This variable will be going away once we have a fix for the location service for
