@@ -51,7 +51,7 @@ export class JavaFilesExtractor {
         }
     }
 
-    private async sevenZipExtract(file, destinationFolder) {
+    private sevenZipExtract(file, destinationFolder) {
         console.log(taskLib.loc('SevenZipExtractFile', file));
         const sevenZip = taskLib.tool(this.getSevenZipLocation());
         sevenZip.arg('x');
@@ -107,8 +107,6 @@ export class JavaFilesExtractor {
                 // 3 cleanup temp folder
                 console.log(taskLib.loc('RemoveTempDir', tempFolder));
                 taskLib.rmRF(tempFolder);
-            } else if ('.zip' === fileEnding) {
-                this.unzipExtract(file, this.destinationFolder);
             } else { // use sevenZip
                 this.sevenZipExtract(file, this.destinationFolder);
             }
