@@ -214,11 +214,18 @@ function isOnPremisesTfs(): boolean {
         return false;
     }
 
-    // not an ideal way to detect hosted, but there isn't a variable for it, and we can't make network calls from here
-    // due to proxy issues.
-    const collectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
-    const parsedCollectionUri = url.parse(collectionUri);
-    return !(/\.visualstudio\.com$/i.test(parsedCollectionUri.hostname));
+    const serverType = tl.getVariable("System.ServerType");
+    if (serverType) {
+        return serverType.toLowerCase() !== "hosted";
+    }
+    else {
+        // Placed here as fallback in case the variable above is not defined
+        // not an ideal way to detect hosted, but there isn't a variable for it, and
+        // we can't make network calls from here due to proxy issues.
+        const collectionUri = tl.getVariable("System.TeamFoundationCollectionUri");
+        const parsedCollectionUri = url.parse(collectionUri);
+        return !(/\.visualstudio\.com$/i.test(parsedCollectionUri.hostname));
+    }
 }
 
 // Currently, there is a race condition of some sort that causes nuget to not send credentials sometimes

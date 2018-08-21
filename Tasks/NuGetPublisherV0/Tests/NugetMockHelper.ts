@@ -14,6 +14,8 @@ export class NugetMockHelper {
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
+
+        this.registerNugetLocationHelpersMock();
     }
     
     public setNugetVersionInputDefault() {
@@ -78,6 +80,16 @@ export class NugetMockHelper {
             assumeNuGetUriPrefixes: function(input) {
                 return [input];
             }
+        });
+        this.tmr.registerMock('utility-common/packaging/locationUtilities', {
+            getPackagingUris: function(input) {
+                const collectionUrl: string = "https://vsts/packagesource";
+                return {
+                    PackagingUris: [collectionUrl],
+                    DefaultPackagingUri: collectionUrl
+                };
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
         });
     }
 }
