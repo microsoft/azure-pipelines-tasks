@@ -51,3 +51,8 @@ phases:
 
   - script: python setup.py sdist
     displayName: 'Build sdist'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: 'dist'
+      artifactName: 'dist'
