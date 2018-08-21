@@ -93,12 +93,12 @@ export function run(connection: ContainerConnection): any {
     if (addDefaultLabels) {        
         var hostName = getReverseDNSName();
         if (hostName) {
-            var hostType = tl.getVariable("SYSTEM_HOSTTYPE");
             addCommonLabels(command, hostName);
-            if (hostType === "build") {            
+            var hostType = tl.getVariable("SYSTEM_HOSTTYPE");
+            if (hostType.toLowerCase() === "build") {
                 addBuildLabels(command, hostName);
             }
-            else if (hostType === "release") {
+            else {
                 addReleaseLabels(command, hostName);
             }
         }
