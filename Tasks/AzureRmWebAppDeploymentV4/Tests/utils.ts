@@ -43,6 +43,9 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
             "stats": {
                 "webAppPkg.zip": {
                     "isFile": true
+                },
+                "publishxml.pubxml": {
+                    "isFile": true
                 }
             },
             "osType": {
@@ -51,11 +54,15 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
             "checkPath": {
                 "cmd": true,
                 "webAppPkg.zip": true,
+                "publishxml.pubxml": true,
+                "publishxml": true,
                 "webAppPkg": true
             },
             "exist": {
                 "webAppPkg.zip": true,
-                "webAppPkg": true
+                "webAppPkg": true,
+                "publishxml.pubxml": true,
+                "publishxml": true
             }
         }
 
