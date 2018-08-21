@@ -6,7 +6,7 @@
 queue: 'Hosted Linux Preview'
 
 variables:
-  imageName: '$(Build.Repository.Name):$(Build.BuildId)'
+  imageName: 'your-container-image-name:$(build.buildId)'
 
 steps:
 - script: docker build -f Dockerfile -t $(imageName) .
