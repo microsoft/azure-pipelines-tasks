@@ -38,4 +38,14 @@ describe('JavaToolInstaller L0 Suite', function () {
         assert(testRunner.failed, 'task should have failed');
         done();
     });
+
+    it('should run succesfully when extracting zip file', (done) => {
+        const testPath: string = path.join(__dirname, 'L0UnzipTest.js');
+        const testRunner: ttm.MockTestRunner = new ttm.MockTestRunner(testPath);
+
+        testRunner.run();
+
+        assert(testRunner.succeeded, 'task should have succedded');
+        done();
+    });
 });

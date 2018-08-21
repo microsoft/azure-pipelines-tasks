@@ -4,6 +4,11 @@ import * as taskLib from 'vsts-task-lib/task';
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { HttpClientResponse } from 'typed-rest-client/HttpClient';
+import * as trm from 'vsts-task-lib/toolrunner';
+
+import * as os from 'os';
+import * as path from 'path';
+import * as utils from "./utilities";
 
 export class DotNetCoreReleaseFetcher {
 
@@ -19,23 +24,25 @@ export class DotNetCoreReleaseFetcher {
             return releaseInfo['version-' + type] === version || releaseInfo['version-' + type + '-display'] === version;
         });
 
-        if (releasesInfo.length == 0) {
-            throw taskLib.loc("VersionNotFound", version);
+        if (releasesInfo.length != 0) {
+            let release = releasesInfo[0];
+            let blobUrl: string = release['blob-' + type];
+            let dlcUrl: string = release['dlc-' + type];
+            let fileName: string = release[type + '-' + osSuffixes[0]] ? release[type + '-' + osSuffixes[0]] : release[type + '-' + osSuffixes[1]];
+
+            if (!!fileName) {
+                if (!!blobUrl) {
+                    downloadUrls.push(util.format("%s%s", blobUrl.trim(), fileName.trim()));
+                }
+
+                if (!!dlcUrl) {
+                    downloadUrls.push(util.format("%s%s", dlcUrl.trim(), fileName.trim()));
+                }
+            }
         }
-
-        let release = releasesInfo[0];
-        let blobUrl: string = release['blob-' + type];
-        let dlcUrl: string = release['dlc-' + type];
-        let fileName: string = release[type + '-' + osSuffixes[0]] ? release[type + '-' + osSuffixes[0]] : release[type + '-' + osSuffixes[1]];
-
-        if (!!fileName) {
-            if (!!blobUrl) {
-                downloadUrls.push(util.format("%s%s", blobUrl.trim(), fileName.trim()));
-            }
-
-            if (!!dlcUrl) {
-                downloadUrls.push(util.format("%s%s", dlcUrl.trim(), fileName.trim()));
-            }
+        else {
+            console.log(taskLib.loc("WarningVersionNotFound", version));
+            downloadUrls = this.getFallbackDownloadUrls(type, version);
         }
 
         if (downloadUrls.length == 0) {
@@ -58,6 +65,72 @@ export class DotNetCoreReleaseFetcher {
 
         var httpCallbackClient = new httpClient.HttpClient(taskLib.getVariable("AZURE_HTTP_USER_AGENT"), null, requestOptions);
         return httpCallbackClient.get(DotNetCoreReleasesUrl);
+    }
+
+    private static getFallbackDownloadUrls(packageType: string, version: string): string[] {
+        let scriptRunner: trm.ToolRunner;
+        let primaryUrlSearchString: string;
+        let legacyUrlSearchString: string;
+
+        if (taskLib.osType().match(/^Win/)) {
+            let escapedScript = path.join(utils.getCurrentDir(), 'externals', 'install-dotnet.ps1').replace(/'/g, "''");
+            let command = `& '${escapedScript}' -Version ${version} -DryRun`
+            if (packageType === 'runtime') {
+                command = command.concat(" -SharedRuntime");
+            }
+
+            let powershellPath = taskLib.which('powershell', true);
+            scriptRunner = taskLib.tool(powershellPath)
+                .line('-NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command')
+                .arg(command);
+
+            primaryUrlSearchString = "dotnet-install: Primary - ";
+            legacyUrlSearchString = "dotnet-install: Legacy - ";
+        } else {
+            let escapedScript = path.join(utils.getCurrentDir(), 'externals', 'install-dotnet.sh').replace(/'/g, "''");
+            utils.setFileAttribute(escapedScript, "777");
+            scriptRunner = taskLib.tool(taskLib.which(escapedScript, true));
+            scriptRunner.arg('--version');
+            scriptRunner.arg(version);
+            scriptRunner.arg('--dry-run');
+            if (packageType === 'runtime') {
+                scriptRunner.arg('--shared-runtime');
+            }
+
+            primaryUrlSearchString = "dotnet-install: Payload URL: ";
+            legacyUrlSearchString = "dotnet-install: Legacy payload URL: ";
+        }
+
+        let result: trm.IExecSyncResult = scriptRunner.execSync();
+        if (result.code != 0) {
+            throw taskLib.loc("getDownloadUrlsFailed", result.error ? result.error.message : result.stderr);
+        }
+
+        let output: string = result.stdout;
+
+        let primaryUrl: string = null;
+        let legacyUrl: string = null;
+        if (!!output && output.length > 0) {
+            let lines: string[] = output.split(os.EOL);
+            if (!!lines && lines.length > 0) {
+                lines.forEach((line: string) => {
+                    if (!line) { return; }
+                    var primarySearchStringIndex = line.indexOf(primaryUrlSearchString);
+                    if (primarySearchStringIndex > -1) {
+                        primaryUrl = line.substring(primarySearchStringIndex + primaryUrlSearchString.length);
+                        return;
+                    }
+
+                    var legacySearchStringIndex = line.indexOf(legacyUrlSearchString);
+                    if (legacySearchStringIndex > -1) {
+                        legacyUrl = line.substring(legacySearchStringIndex + legacyUrlSearchString.length);
+                        return;
+                    }
+                });
+            }
+        }
+
+        return [primaryUrl, legacyUrl];
     }
 }
 

@@ -1,4 +1,3 @@
-var admZip = require('adm-zip');
 var check = require('validator');
 var fs = require('fs');
 var makeOptions = require('./make-options.json');
@@ -433,8 +432,15 @@ var downloadArchive = function (url, omitExtensionCheck) {
         // extract
         mkdir('-p', targetPath);
         if (isZip) {
-            var zip = new admZip(archivePath);
-            zip.extractAllTo(targetPath);
+            if (process.platform == 'win32') {
+                let escapedFile = archivePath.replace(/'/g, "''").replace(/"|\n|\r/g, ''); // double-up single quotes, remove double quotes and newlines
+                let escapedDest = targetPath.replace(/'/g, "''").replace(/"|\n|\r/g, '');
+
+                let command = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
+                run(`powershell -Command "${command}"`);
+            } else {
+                run(`unzip ${archivePath} -d ${targetPath}`);
+            }
         }
         else if (isTargz) {
             var originalCwd = process.cwd();
@@ -882,7 +888,8 @@ var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
     taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
     taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
 
-    taskMarkdown += '::: moniker range="vsts"' + os.EOL + os.EOL;
+    taskMarkdown += '::: moniker range="> tfs-2018"' + os.EOL + os.EOL;
+    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
     taskMarkdown += '[!INCLUDE [temp](../_shared/yaml/' + mdDocOutputFilename + ')]' + os.EOL + os.EOL;
     taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
 

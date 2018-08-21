@@ -561,7 +561,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
 
     // ***************************************************** Network Share Tests *************************************************************
 
-    it('Get latest pre-release version cache hit from network share', (done: MochaDone) => {
+    it('Get specified package from path provided from network share cache hit', (done: MochaDone) => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -589,7 +589,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         done();
     });
 
-    it('Get latest pre-release version cache miss from network share and copy successful', (done: MochaDone) => {
+    it('Get specified package from path provided from network share cache miss and copy successful', (done: MochaDone) => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -616,7 +616,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         done();
     });
 
-    it('Get latest pre-release version cache miss from network share and copy unsuccessful but fallback cache lookup successful', (done: MochaDone) => {
+    it('Get specified package from path provided from network share cache miss share and copy unsuccessful but fallback cache lookup successful', (done: MochaDone) => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -646,7 +646,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         done();
     });
 
-    it('Get latest pre-release version cache miss from network share and copy unsuccessful and fallback cache lookup unsuccessful', (done: MochaDone) => {
+    it('Get specified package from path provided from network share cache miss and copy unsuccessful and fallback cache lookup unsuccessful', (done: MochaDone) => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -671,6 +671,30 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Should have been a cache miss for ${process.env[testConstants.expectedTestPlatformVersion]}`);
         assert(tr.stdOutContained('NoPackageFoundInCache'), `Should warn no stable package found in cache`);
         assert(tr.stdOutContained('FailedToAcquireTestPlatform'), `Should fail with failed to acquire test platform`);
+
+        done();
+    });
+
+    it('Get specified package from path provided from network share invalid filename', (done: MochaDone) => {
+
+        // Setup the mock runner
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        // Set the inputs
+        process.env[constants.packageFeedSelector] = constants.netShare;
+        process.env[testConstants.packageSource] = '\\somesharepath';
+        process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
+        process.env[constants.netShare] = `\\\\somesharepath\\Miiiicrosoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
+        process.env[testConstants.listPackagesReturnCode] = 0;
+
+        // Start the run
+        tr.run();
+
+        // Asserts
+        assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.failed, `Task should have failed`);
+        assert(tr.stdOutContained(`UnexpectedFileName`));
 
         done();
     });

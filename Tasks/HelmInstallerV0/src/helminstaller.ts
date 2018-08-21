@@ -10,8 +10,8 @@ import * as util from "util";
 const uuidV4 = require('uuid/v4');
 import downloadutility = require("utility-common/downloadutility");
 const helmToolName = "helm"
-const helmLatestReleaseUrl = "https://api.github.com/repos/kubernetes/helm/releases/latest";
-const stableHelmVersion = "v2.8.2"
+const helmLatestReleaseUrl = "https://api.github.com/repos/helm/helm/releases/latest";
+const stableHelmVersion = "v2.9.1"
 
 export async function getHelmVersion(): Promise<string> {
     var checkLatestHelmVersion = tl.getBoolInput('checkLatestHelmVersion', false); 
@@ -73,7 +73,7 @@ async function getStableHelmVersion() : Promise<string>{
     var options = {
         hostname: 'api.github.com',
         port: 443,
-        path: '/repos/kubernetes/helm/releases/latest',
+        path: '/repos/helm/helm/releases/latest',
         method: 'GET',
         secureProtocol: "TLSv1_2_method",
         headers: {
@@ -82,7 +82,7 @@ async function getStableHelmVersion() : Promise<string>{
     }
 
     try{
-        await downloadutility.download(options, downloadPath, true);
+        await downloadutility.download(options, downloadPath, true, true);
         var version = await getReleaseVersion(downloadPath);
         return version;
     } catch(error) {

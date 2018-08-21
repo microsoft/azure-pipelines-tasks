@@ -1,11 +1,13 @@
 import tl = require('vsts-task-lib/task');
 import * as Constant from '../operations/Constants'
-import { Package } from 'webdeployment-common/packageUtility';
+import { Package, PackageType } from 'webdeployment-common/packageUtility';
+var webCommonUtility = require('webdeployment-common/utility.js');
 
 export enum DeploymentType {
     webDeploy,
     zipDeploy,
-    runFromZip
+    runFromZip,
+    warDeploy
 }
 
 export class TaskParametersUtility {
@@ -50,6 +52,26 @@ export class TaskParametersUtility {
 
         if(!taskParameters.isContainerWebApp){            
             taskParameters.Package = new Package(tl.getPathInput('Package', true));
+            tl.debug("intially web config parameters :" + taskParameters.WebConfigParameters);
+            if(taskParameters.Package.getPackageType() === PackageType.jar && (!taskParameters.isLinuxApp)) {
+                if(!taskParameters.WebConfigParameters) {
+                    taskParameters.WebConfigParameters = "-appType java_springboot";
+                }
+                if(taskParameters.WebConfigParameters.indexOf("-appType java_springboot") < 0) {
+                    taskParameters.WebConfigParameters += " -appType java_springboot";
+                }
+                if(taskParameters.WebConfigParameters.indexOf("-JAR_PATH D:\\home\\site\\wwwroot\\*.jar") >= 0) {
+                    var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
+                    taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("D:\\home\\site\\wwwroot\\*.jar", jarPath);
+                } else if(taskParameters.WebConfigParameters.indexOf("-JAR_PATH ") < 0) {
+                    var jarPath = webCommonUtility.getFileNameFromPath(taskParameters.Package.getPath());
+                    taskParameters.WebConfigParameters += " -JAR_PATH " + jarPath;
+                }
+                if(taskParameters.WebConfigParameters.indexOf("-Dserver.port=%HTTP_PLATFORM_PORT%") > 0) {
+                    taskParameters.WebConfigParameters = taskParameters.WebConfigParameters.replace("-Dserver.port=%HTTP_PLATFORM_PORT%", "");  
+                }
+                tl.debug("web config parameters :" + taskParameters.WebConfigParameters);
+            }
         }
           
         taskParameters.UseWebDeploy = !taskParameters.isLinuxApp ? tl.getBoolInput('UseWebDeploy', false) : false;
@@ -91,6 +113,7 @@ export class TaskParametersUtility {
             case "webDeploy": return DeploymentType.webDeploy;
             case "zipDeploy": return DeploymentType.zipDeploy;
             case "runFromZip": return DeploymentType.runFromZip;
+            case "warDeploy": return DeploymentType.warDeploy;
         }
     }
 }

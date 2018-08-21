@@ -11,6 +11,16 @@ tmr.setInput("ResourceType", "testResource.provider/type");
 tmr.setInput("ResourceName", "testResourceName");
 tmr.setInput("AlertRules", JSON.stringify(mocks.mockAlertRules));
 
+nock("https://login.windows.net", {
+	reqheaders: {
+		"content-type": "application/x-www-form-urlencoded; charset=utf-8"
+		}
+})
+.post("/tenantId/oauth2/token/")
+.reply(200, { 
+	access_token: "accessToken"
+}).persist(); 
+
 nock("http://example.com", {
 		reqheaders: {
         	'authorization': 'Bearer accessToken',
@@ -26,15 +36,11 @@ nock("http://example.com", {
 nock("http://example.com", {
 		reqheaders: {
         	"authorization": "Bearer accessToken",
-        	"accept": "application/json",
+        	"content-type": "application/json; charset=utf-8",
     		"user-agent": "TFS_useragent"
       	}
 	})
-	.get("/subscriptions/sId/resourceGroups/testRg/resources")
-	.query({
-		"$filter": "resourceType EQ 'testResource.provider/type' AND name EQ 'testResourceName'" ,
-		"api-version": "2017-05-10"
-	})
+	.get("/subscriptions/sId/resources?$filter=resourceType%20EQ%20%27testResource.provider%2Ftype%27%20AND%20name%20EQ%20%27testResourceName%27&api-version=2016-07-01")
 	.reply(200, {
 		value: [{ 
 			id: "id",
@@ -47,7 +53,7 @@ nock("http://example.com", {
 nock("http://example.com", {
 		reqheaders: {
         	"authorization": "Bearer accessToken",
-        	"accept": "application/json",
+        	"content-type": "application/json; charset=utf-8",
     		"user-agent": "TFS_useragent"
       	}
 	})
@@ -55,8 +61,7 @@ nock("http://example.com", {
 	.query({
 		"api-version": "2016-03-01"
 	})
-	.reply(504);
+	.reply(501, 'failed');
 
 tmr.registerMock("./authorizationclient", mocks);
-tmr.registerMock("./utility", mocks.getUtilityMock());
 tmr.run();

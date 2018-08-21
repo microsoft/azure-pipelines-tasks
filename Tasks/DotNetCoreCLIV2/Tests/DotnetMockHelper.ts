@@ -10,7 +10,7 @@ export class DotnetMockHelper {
     constructor(
         private tmr: tmrm.TaskMockRunner) {
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
-        process.env['AGENT_TEMPDIRECTORY'] = "c:\\agent\\home\\temp";
+        process.env['AGENT.TEMPDIRECTORY'] = "c:\\agent\\home\\temp";
         process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
@@ -137,6 +137,15 @@ export class DotnetMockHelper {
         a.exist["c:\\from\\tool\\installer\\nuget.exe"] = true;
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
+    }
+
+    public registerNugetLocationHelpersMock() {
+        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
+            assumeNuGetUriPrefixes: function(input) {
+                return [input];
+            },
+            NUGET_ORG_V3_URL: 'https://api.nuget.org/v3/index.json'
+        });
     }
 
     private registerMockWithMultiplePaths(paths: string[], mock: any) {

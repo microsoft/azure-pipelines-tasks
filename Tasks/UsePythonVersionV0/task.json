@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 138,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",
@@ -31,7 +31,7 @@
             "label": "Version spec",
             "required": true,
             "defaultValue": "3.x",
-            "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://www.npmjs.com/package/semver)"
+            "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
         },
         {
             "name": "addToPath",

@@ -5,7 +5,6 @@
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
-Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
 $certificate = $null
 try
@@ -277,8 +276,7 @@ try
 }
 catch
 {
-    $exceptionData = Get-ExceptionData $_
-    Write-Telemetry "Task_InternalError" "$global:operationId|$exceptionData"
+    Publish-Telemetry -TaskName 'ServiceFabricComposeDeploy' -OperationId $global:operationId -ErrorData $_
     throw
 }
 finally

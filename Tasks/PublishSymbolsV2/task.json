@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 10
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
@@ -79,6 +79,15 @@
             "required": false,
             "helpMarkDown": "The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.",
             "visibleRule": "PublishSymbols = true && SymbolServerType = FileShare"
+        },
+        {
+            "name": "CompressSymbols",
+            "type": "boolean",
+            "label": "Compress symbols",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "Compress symbols when publishing to file share.",
+            "visibleRule": "SymbolServerType = FileShare"
         },
         {
             "name": "DetailedLog",

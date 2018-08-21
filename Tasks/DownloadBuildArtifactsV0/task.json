@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
+    "Minor": 139,
     "Patch": 0
   },
   "groups": [
@@ -77,7 +77,7 @@
       "required": true,
       "options": {
         "latest": "Latest",
-        "latestFromBranch": "Latest from specific branch",
+        "latestFromBranch": "Latest from specific branch and specified Build Tags",
         "specific": "Specific version"
       }
     },
@@ -104,14 +104,23 @@
       "helpMarkDown": "The build from which to download the artifacts"
     },
     {
+      "name": "Tags",
+      "type": "string",
+      "label": "Build Tags",
+      "defaultValue": "",
+      "visibleRule": "buildType == specific && buildVersionToDownload != specific",
+      "required": false,
+      "helpMarkDown": "A comma-delimited list of tags. Only builds with these tags will be returned."
+    },
+    {
       "name": "downloadType",
       "type": "radio",
       "label": "Download type",
       "defaultValue": "single",
       "required": true,
       "options": {
-          "single": "Specific artifact",
-          "specific": "Specific files"
+        "single": "Specific artifact",
+        "specific": "Specific files"
       },
       "helpMarkDown": "Download a specific artifact or specific files from the build."
     },
@@ -219,7 +228,7 @@
     "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
     "UnsupportedArtifactType" :"Unsupported artifact type: %s",
     "BuildNotFound": "Build with ID %s not found",
-    "BuildArtifactNotFound": "Artifact %s not found for build %s",
+    "BuildArtifactNotFound": "Artifact %s not found for build %s. Please ensure you have published artifacts in any previous phases of the current build.",
     "NoArtifactsFound": "No artifacts found for build %s",
     "BuildIdBuildDefinitionMismatch": "Build with ID %s not found for build pipeline ID %s",
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",

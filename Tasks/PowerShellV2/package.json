@@ -11,6 +11,6 @@
   "license": "MIT",
   "dependencies": {
     "uuid": "^3.0.1",
-    "vsts-task-lib": "2.0.5"
+    "vsts-task-lib": "2.6.0"
   }
 }

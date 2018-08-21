@@ -31,6 +31,7 @@ console.log("Inputs have been set");
 process.env["RELEASE_RELEASENAME"] = "Release-1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
+process.env["SYSTEM_SERVERTYPE"] = "hosted";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
@@ -102,13 +103,13 @@ a.exec[`docker build -f ${DockerFilePath} -t ${shared.ImageNamesFileImageName}`]
 a.exec[`docker tag test/test:2 ajgtestacr1.azurecr.io/test/test:2`] = {
     "code": 0
 };
-a.exec[`docker tag ${shared.ImageNamesFileImageName} ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName}:latest`] = {
+a.exec[`docker tag ${shared.ImageNamesFileImageName} ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
 a.exec[`docker run --rm ${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
-a.exec[`docker push ${shared.ImageNamesFileImageName}:latest`] = {
+a.exec[`docker push ${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
 a.exec[`docker build -f ${DockerFilePath} -t test/test:2 -t test/test:6`] = {

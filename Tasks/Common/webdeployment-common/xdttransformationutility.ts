@@ -56,7 +56,7 @@ export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
     var isTransformationApplied = false;
     Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
         sourceXmlFile = sourceXmlFiles[sourceXmlFile];
-        var sourceBasename = path.win32.basename(sourceXmlFile, ".config");    
+        var sourceBasename = path.win32.basename(sourceXmlFile.replace(/\.config/ig,'\.config'), ".config");    
         transformConfigs.forEach( function(transformConfig) {
             var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + "." + transformConfig);
             if(sourceXmlFiles[transformXmlFile.toLowerCase()]) {

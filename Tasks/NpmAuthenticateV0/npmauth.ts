@@ -57,10 +57,12 @@ async function main(): Promise<void> {
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
 
-    let endpointRegistries;
+    let endpointRegistries: npmregistry.INpmRegistry[];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
-        endpointRegistries = endpointIds.map(e => npmregistry.NpmRegistry.FromServiceEndpoint(e, true));
+        await Promise.all(endpointIds.map(async e => {
+            endpointRegistries.push(await npmregistry.NpmRegistry.FromServiceEndpoint(e, true));
+        }));
     }
     let LocalNpmRegistries = await util.getLocalNpmRegistries(workingDirectory);
     

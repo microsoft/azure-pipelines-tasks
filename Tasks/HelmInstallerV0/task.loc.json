@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 7
   },
   "demands": [],
   "satisfies": [
@@ -34,7 +34,7 @@
       "type": "string",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.helmVersion",
-      "defaultValue": "2.8.2"
+      "defaultValue": "2.9.1"
     },
     {
       "name": "checkLatestHelmVersion",

@@ -26,11 +26,20 @@ export class WebDeployUtility {
                 retryCount -= 1;
         }
 
+        if(webDeployArguments.setParametersFile) {
+            try {
+                tl.rmRF(webDeployArguments.setParametersFile);
+            }
+            catch(error) {
+                tl.debug('unable to delete setparams file: ');
+                tl.debug(error);
+            }
+        }
+
         if(!webDeployResult.isSuccess) {
             WebDeployUtility.webDeployRecommendationForIssue(taskParameters, webDeployResult.errorCode, azureAppServiceUtility, true);
             throw new Error(webDeployResult.error);
         }
-        
     }
 
     public static constructWebDeployArguments(taskParameters: TaskParameters, publishProfile: any): WebDeployArguments {

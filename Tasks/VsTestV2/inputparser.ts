@@ -12,6 +12,7 @@ import * as uuid from 'uuid';
 const regedit = require('regedit');
 
 let serverBasedRun = false;
+let enableDiagnosticsSettings = false;
 
 // TODO: refactor all log messages to a separate function
 // replace else if ladders with switch if possible
@@ -149,7 +150,8 @@ function getTargetBinariesSettings(inputDataContract : idc.InputDataContract) : 
 function getTestReportingSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.TestReportingSettings = <idc.TestReportingSettings>{};
     inputDataContract.TestReportingSettings.TestRunTitle = tl.getInput('testRunTitle');
-
+    inputDataContract.TestReportingSettings.TestRunSystem = "VSTS - vstest";
+    
     if (utils.Helper.isNullEmptyOrUndefined(inputDataContract.TestReportingSettings.TestRunTitle)) {
 
         let definitionName = tl.getVariable('BUILD_DEFINITIONNAME');
@@ -355,10 +357,28 @@ function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.I
 
     inputDataContract.ExecutionSettings.CodeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', inputDataContract.ExecutionSettings.CodeCoverageEnabled));
+    
+    inputDataContract = getDiagnosticsSettings(inputDataContract);
+    console.log(tl.loc('diagnosticsInput', inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled));
 
     inputDataContract = getTiaSettings(inputDataContract);
     inputDataContract = getRerunSettings(inputDataContract);
 
+    return inputDataContract;
+}
+
+function getDiagnosticsSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
+    inputDataContract.ExecutionSettings.DiagnosticsSettings = <idc.DiagnosticsSettings>{};
+    if(enableDiagnosticsSettings)
+    {
+        inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = tl.getBoolInput('diagnosticsEnabled');
+        if(tl.getInput('collectDumpOn').toLowerCase() === 'always') {
+            inputDataContract.ExecutionSettings.DiagnosticsSettings.CollectDumpAlways = true;
+        }
+    }
+    else {
+        inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = false;
+    }
     return inputDataContract;
 }
 
@@ -531,6 +551,11 @@ function isDontShowUIRegKeySet(regPath: string): Q.Promise<boolean> {
 
 export function setIsServerBasedRun(isServerBasedRun: boolean) {
     serverBasedRun = isServerBasedRun;
+}
+
+export function setEnableDiagnosticsSettings(enableDiagnosticsSettingsFF: boolean) {
+    enableDiagnosticsSettings = enableDiagnosticsSettingsFF;
+    tl.debug('Diagnostics feature flag is set to: ' + enableDiagnosticsSettingsFF);
 }
 
 export function getDtaInstanceId(): number {

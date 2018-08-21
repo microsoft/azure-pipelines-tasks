@@ -3,11 +3,18 @@ import Q = require('q');
 import querystring = require('querystring');
 import webClient = require("./webClient");
 import AzureModels = require("./azureModels");
+import constants = require('./constants');
+import path = require('path');
+import fs = require('fs');
+var jwt = require('jsonwebtoken');
 
 export class ApplicationTokenCredentials {
     private clientId: string;
     private domain: string;
-    private secret: string;
+    private authType: string;
+    private secret?: string;
+    private certFilePath?: string;
+    private isADFSEnabled?: boolean;
     public baseUrl: string;
     public authorityUrl: string;
     public activeDirectoryResourceId: string;
@@ -16,7 +23,7 @@ export class ApplicationTokenCredentials {
     public msiClientId: string;
     private token_deferred: Q.Promise<string>;
 
-    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string) {
+    constructor(clientId: string, domain: string, secret: string, baseUrl: string, authorityUrl: string, activeDirectoryResourceId: string, isAzureStackEnvironment: boolean, scheme?: string, msiClientId?: string, authType?: string, certFilePath?: string, isADFSEnabled?: boolean) {
 
         if (!Boolean(domain) || typeof domain.valueOf() !== 'string') {
             throw new Error(tl.loc("DomainCannotBeEmpty"));
@@ -27,9 +34,17 @@ export class ApplicationTokenCredentials {
                 throw new Error(tl.loc("ClientIdCannotBeEmpty"));
             }
     
-            if (!Boolean(secret) || typeof secret.valueOf() !== 'string') {
-                throw new Error(tl.loc("SecretCannotBeEmpty"));
+            if(!authType || authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+                if (!Boolean(secret) || typeof secret.valueOf() !== 'string') {
+                    throw new Error(tl.loc("SecretCannotBeEmpty"));
+                }
             }
+            else {
+                if (!Boolean(certFilePath) || typeof certFilePath.valueOf() !== 'string') {
+                    throw new Error(tl.loc("InvalidCertFileProvided"));
+                }
+            }
+            
         }
 
         if (!Boolean(baseUrl) || typeof baseUrl.valueOf() !== 'string') {
@@ -50,13 +65,25 @@ export class ApplicationTokenCredentials {
 
         this.clientId = clientId;
         this.domain = domain;
-        this.secret = secret;
         this.baseUrl = baseUrl;
         this.authorityUrl = authorityUrl;
         this.activeDirectoryResourceId = activeDirectoryResourceId;
         this.isAzureStackEnvironment = isAzureStackEnvironment;
-        this.scheme = scheme ? AzureModels.Scheme[scheme] :  AzureModels.Scheme['SPN'] ;
+
+        this.scheme = scheme ? AzureModels.Scheme[scheme] :  AzureModels.Scheme['ServicePrincipal'] ;
         this.msiClientId = msiClientId ;
+        if(this.scheme == AzureModels.Scheme['ServicePrincipal']) {
+            this.authType = authType ? authType : constants.AzureServicePrinicipalAuthentications.servicePrincipalKey;
+            if(this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+                this.secret = secret;
+            }
+            else {
+                this.certFilePath = certFilePath;
+            }
+        }
+        
+        this.isADFSEnabled = isADFSEnabled;
+
     }
 
     public getToken(force?: boolean): Q.Promise<string> {
@@ -130,6 +157,44 @@ export class ApplicationTokenCredentials {
     }
 
     private _getSPNAuthorizationToken(): Q.Promise<string> {
+        if(this.authType == constants.AzureServicePrinicipalAuthentications.servicePrincipalKey) {
+            return this._getSPNAuthorizationTokenFromKey();
+        }
+
+        return this._getSPNAuthorizationTokenFromCertificate()
+    }
+
+    private _getSPNAuthorizationTokenFromCertificate(): Q.Promise<string> {
+        var deferred = Q.defer<string>();
+        let webRequest = new webClient.WebRequest();
+        webRequest.method = "POST";
+        webRequest.uri = this.authorityUrl + (this.isADFSEnabled ? "" : this.domain) + "/oauth2/token/";
+        webRequest.body = querystring.stringify({
+            resource: this.activeDirectoryResourceId,
+            client_id: this.clientId,
+            grant_type: "client_credentials",
+            client_assertion: this._getSPNCertificateAuthorizationToken(),
+            client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+        });
+
+        webClient.sendRequest(webRequest).then(
+            (response: webClient.WebResponse) => {
+                if (response.statusCode == 200) {
+                    deferred.resolve(response.body.access_token);
+                }
+                else {
+                    deferred.reject(tl.loc('CouldNotFetchAccessTokenforAzureStatusCode', response.statusCode, response.statusMessage));
+                }
+            },
+            (error) => {
+                deferred.reject(error)
+            }
+        );
+        return deferred.promise;
+    }
+
+
+    private _getSPNAuthorizationTokenFromKey(): Q.Promise<string> {        
         var deferred = Q.defer<string>();
         let webRequest = new webClient.WebRequest();
         webRequest.method = "POST";
@@ -162,4 +227,57 @@ export class ApplicationTokenCredentials {
 
         return deferred.promise;
     }
+
+    private _getSPNCertificateAuthorizationToken(): string {
+        var openSSLPath =   tl.osType().match(/^Win/) ? tl.which(path.join(__dirname, 'openssl', 'openssl')) : tl.which('openssl');
+        var openSSLArgsArray= [
+            "x509",
+            "-noout",
+            "-in" ,
+            this.certFilePath,
+            "-fingerprint"
+        ];
+
+        var pemExecutionResult = tl.execSync(openSSLPath, openSSLArgsArray);
+        var additionalHeaders = {
+            "alg": "RS256",
+            "typ": "JWT",
+        };
+
+        if(pemExecutionResult.code == 0) {
+            tl.debug("FINGERPRINT CREATION SUCCESSFUL");
+            let shaFingerprint = pemExecutionResult.stdout;
+            let shaFingerPrintHashCode = shaFingerprint.split("=")[1].replace(new RegExp(":", 'g'), "");
+            let fingerPrintHashBase64: string = Buffer.from(
+                shaFingerPrintHashCode.match(/\w{2}/g).map(function(a) { 
+                    return String.fromCharCode(parseInt(a, 16));
+                } ).join(""),
+                'binary'
+            ).toString('base64');
+            additionalHeaders["x5t"] = fingerPrintHashBase64;
+        }
+        else {
+            console.log(pemExecutionResult);
+            throw new Error(pemExecutionResult.stderr);
+        }
+
+        return getJWT(this.authorityUrl, this.clientId, this.domain, this.certFilePath, additionalHeaders, this.isADFSEnabled);
+    }
+
+}
+
+function getJWT(url: string, clientId: string, tenantId: string, pemFilePath: string, additionalHeaders, isADFSEnabled: boolean) {
+
+    var pemFileContent = fs.readFileSync(pemFilePath);
+    var jwtObject = {
+        "aud": (`${url}/${!isADFSEnabled ? tenantId : ""}/oauth2/token`).replace(/([^:]\/)\/+/g, "$1"),
+        "iss": clientId,
+        "sub": clientId,
+        "jti": "" + Math.random(),
+        "nbf":  (Math.floor(Date.now()/1000)-1000),
+        "exp": (Math.floor(Date.now()/1000)+8640000)
+    };
+
+    var token = jwt.sign(jwtObject, pemFileContent,{ algorithm: 'RS256', header :additionalHeaders });
+    return token;
 }
