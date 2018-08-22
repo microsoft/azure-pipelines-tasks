@@ -60,7 +60,7 @@ function Initialize-AzureSubscription {
     Set-UserAgent
     
     # Clear context only for Azure RM
-    if($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")){
+    if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
         Write-Host "##[command]Clear-AzureRmContext -Scope Process"
         $null = Clear-AzureRmContext -Scope Process
         Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
@@ -512,7 +512,7 @@ function Add-AzureStackAzureRmEnvironment {
     if($armEnv -ne $null) {
         Write-Verbose "Updating AzureRm environment $name" -Verbose
         
-        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force){
+        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
             Remove-AzureRmEnvironment -Name $name -Force | Out-Null
         }
         else {
