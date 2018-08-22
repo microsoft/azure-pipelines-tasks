@@ -17,7 +17,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 5
+		"Patch": 6
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{
@@ -66,7 +66,7 @@
 			"properties": {
 				"resizable": "true",
 				"rows": "10",
-				"maxLength": "2000"
+				"maxLength": "5000"
 			},
 			"helpMarkDown": "Define a header in JSON format. The header shall be attached to the request that is sent."
 		}, {
