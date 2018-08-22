@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 139,
+        "Minor": 140,
         "Patch": 0
     },
     "satisfies": ["Java"],
@@ -32,7 +32,7 @@
             "label": "JDK version",
             "defaultValue": "8",
             "required": true,
-            "helpMarkDown": "A number that specifies the JDK version to make available on the path. Use whole number version, i.e. 10"
+            "helpMarkDown": "A number that specifies the JDK version to make available on the path. Use a whole number version, such as 10"
         },
         {
             "name": "jdkArchitectureOption",

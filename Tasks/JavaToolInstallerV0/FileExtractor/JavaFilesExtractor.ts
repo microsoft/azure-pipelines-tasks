@@ -1,19 +1,20 @@
 import fs = require('fs');
+import os = require('os');
 import path = require('path');
 import taskLib = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
-import toolLib = require('vsts-task-tool-lib/tool');
+import * as toolLib from 'vsts-task-tool-lib/tool';
 
 export class JavaFilesExtractor {
     public destinationFolder: string;
-    public win: RegExpMatchArray;
+    public win: Readonly<boolean>;
 
     // 7zip
     public xpSevenZipLocation: string;
     public winSevenZipLocation: string = path.join(__dirname, '7zip/7z.exe');
 
     constructor() {
-        this.win = taskLib.osType().match(/^Win/);
+        this.win = (os.platform() === 'win32');
         taskLib.debug('win: ' + this.win);
     }
 
@@ -28,17 +29,15 @@ export class JavaFilesExtractor {
         }
     }
 
-    private isTar(file) {
-        var name = this.win ? file.toLowerCase() : file;
+    private isTar(file): boolean {
+        const name = file.toLowerCase();
         // standard gnu-tar extension formats with recognized auto compression formats
         // https://www.gnu.org/software/tar/manual/html_section/tar_69.html
         return name.endsWith('.tar')      // no compression
             || name.endsWith('.tar.gz')   // gzip
             || name.endsWith('.tgz')      // gzip
             || name.endsWith('.taz')      // gzip
-            || name.endsWith('.tar.Z')    // compress
-            || (this.win && name.endsWith('tar.z')) // no case comparison for win
-            || name.endsWith('.taZ')      // compress // no case for win already handled above
+            || name.endsWith('.tar.z')    // compress
             || name.endsWith('.tar.bz2')  // bzip2
             || name.endsWith('.tz2')      // bzip2
             || name.endsWith('.tbz2')     // bzip2
@@ -51,7 +50,7 @@ export class JavaFilesExtractor {
             || name.endsWith('.txz');     // xz
     }
 
-    private async sevenZipExtract(file, destinationFolder) {
+    private sevenZipExtract(file: string, destinationFolder: string) {
         //We have to create our own 7Zip extract function as the vsts-task-tool-lib
         //method uses 7zDec, which only decodes .7z archives
         console.log(taskLib.loc('SevenZipExtractFile', file));
@@ -65,7 +64,7 @@ export class JavaFilesExtractor {
         }
     }
 
-    private async extractFiles(file: string, fileEnding: string) {
+    private async extractFiles(file: string, fileEnding: string): Promise<void> {
         const stats = taskLib.stats(file);
         if (!stats) {
             throw new Error(taskLib.loc('ExtractNonExistFile', file));
@@ -75,10 +74,10 @@ export class JavaFilesExtractor {
 
         if (this.win) {
             if ('.tar' === fileEnding) { // a simple tar
-                await this.sevenZipExtract(file, this.destinationFolder);
+                this.sevenZipExtract(file, this.destinationFolder);
             } else if (this.isTar(file)) { // a compressed tar, e.g. 'fullFilePath/test.tar.gz'
                 // e.g. 'fullFilePath/test.tar.gz' --> 'test.tar.gz'
-                const shortFileName = file.substring(file.lastIndexOf(path.sep) + 1, file.length);
+                const shortFileName = path.basename(file);
                 // e.g. 'destinationFolder/_test.tar.gz_'
                 const tempFolder = path.normalize(this.destinationFolder + path.sep + '_' + shortFileName + '_');
                 console.log(taskLib.loc('CreateTempDir', tempFolder, file));
@@ -87,20 +86,20 @@ export class JavaFilesExtractor {
                 taskLib.mkdirP(tempFolder);
 
                 // 1 extract compressed tar
-                await this.sevenZipExtract(file, tempFolder);
+                this.sevenZipExtract(file, tempFolder);
 
                 console.log(taskLib.loc('TempDir', tempFolder));
                 const tempTar = tempFolder + path.sep + taskLib.ls('-A', [tempFolder])[0]; // should be only one
                 console.log(taskLib.loc('DecompressedTempTar', file, tempTar));
                     
                 // 2 expand extracted tar
-                await this.sevenZipExtract(tempTar, this.destinationFolder);
+                this.sevenZipExtract(tempTar, this.destinationFolder);
 
                 // 3 cleanup temp folder
                 console.log(taskLib.loc('RemoveTempDir', tempFolder));
                 taskLib.rmRF(tempFolder);
             } else { // use sevenZip
-                await this.sevenZipExtract(file, this.destinationFolder);
+                this.sevenZipExtract(file, this.destinationFolder);
             }
         } else { // not windows
             if ('.tar' === fileEnding || '.tar.gz' === fileEnding) {
@@ -108,13 +107,13 @@ export class JavaFilesExtractor {
             } else if ('.zip' === fileEnding) {
                 await toolLib.extractZip(file, this.destinationFolder);
             } else { // fall through and use sevenZip
-                await this.sevenZipExtract(file, this.destinationFolder);
+                this.sevenZipExtract(file, this.destinationFolder);
             }
         }
     }
 
     // This method recursively finds all .pack files under fsPath and unpacks them with the unpack200 tool
-    private unpackJars(fsPath, javaBinPath) {
+    private unpackJars(fsPath: string, javaBinPath: string) {
         if (fs.existsSync(fsPath)) {
             if (fs.lstatSync(fsPath).isDirectory()) {
                 let self = this;
@@ -154,7 +153,7 @@ export class JavaFilesExtractor {
             finalDirectoriesList = taskLib.find(this.destinationFolder).filter(x => taskLib.stats(x).isDirectory());
             taskLib.setResult(taskLib.TaskResult.Succeeded, taskLib.loc('SucceedMsg'));
             jdkDirectory = finalDirectoriesList.filter(dir => initialDirectoriesList.indexOf(dir) < 0)[0];
-            await this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
+            this.unpackJars(jdkDirectory, path.join(jdkDirectory, 'bin'));
             return jdkDirectory;
         }
     }
