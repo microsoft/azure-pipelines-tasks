@@ -94,8 +94,8 @@ function Import-FromModulePath {
         }
 
         # Import the module.
-        Write-Host "##[command]Import-Module -Name $($module.Path) -Global"
-        $module = Import-Module -Name $module.Path -Global -PassThru
+        Write-Host "##[command]Import-Module -Name $($module.Path) -Global -Force"
+        $module = Import-Module -Name $module.Path -Global -PassThru -Force
         Write-Verbose "Imported module version: $($module.Version)"
 
         if ($Classic) {
@@ -117,8 +117,8 @@ function Import-FromModulePath {
                     throw (Get-VstsLocString -Key AZ_AzureRMProfileModuleNotFound)
                 }
                 # Import and then store the AzureRM.profile module. 
-                Write-Host "##[command]Import-Module -Name $($profileModule.Path) -Global" 
-                $script:azureRMProfileModule = Import-Module -Name $profileModule.Path -Global -PassThru 
+                Write-Host "##[command]Import-Module -Name $($profileModule.Path) -Global -Force" 
+                $script:azureRMProfileModule = Import-Module -Name $profileModule.Path -Global -PassThru -Force
             } else {
                 $script:azureRMProfileModule = $profileModule
             }
@@ -156,8 +156,8 @@ function Import-FromSdkPath {
                     continue
                 }
                 # Import the module.
-                Write-Host "##[command]Import-Module -Name $path -Global"
-                $module = Import-Module -Name $path -Global -PassThru
+                Write-Host "##[command]Import-Module -Name $path -Global -Force"
+                $module = Import-Module -Name $path -Global -PassThru -Force
                 Write-Verbose "Imported module version: $($module.Version)"
                 # Store the imported module.
                 if ($Classic) {
@@ -197,8 +197,8 @@ function Import-AzureRmSubmodulesFromSdkPath {
     try {
         # Azure.Storage submodule needs to be imported first
         $azureStorageModulePath = [System.IO.Path]::Combine($programFiles, "Microsoft SDKs\Azure\PowerShell\Storage\Azure.Storage\Azure.Storage.psd1")
-        Write-Host "##[command]Import-Module -Name $azureStorageModulePath -Global"
-        $azureStorageModule = Import-Module -Name $azureStorageModulePath -Global -PassThru
+        Write-Host "##[command]Import-Module -Name $azureStorageModulePath -Global -Force"
+        $azureStorageModule = Import-Module -Name $azureStorageModulePath -Global -PassThru -Force
         Write-Verbose "Imported module version: $($azureStorageModule.Version)"
     }
     catch {
@@ -215,8 +215,8 @@ function Import-AzureRmSubmodulesFromSdkPath {
         }
         $azureRmNestedModulePath = [System.IO.Path]::Combine($azureRmNestedModule.FullName, $azureRmNestedModule.Name + ".psd1") 
         try {
-            Write-Verbose "##[command]Import-Module -Name $azureRmNestedModulePath -Global"
-            $azureRmSubmodule = Import-Module -Name $azureRmNestedModulePath -Global -PassThru
+            Write-Verbose "##[command]Import-Module -Name $azureRmNestedModulePath -Global -Force"
+            $azureRmSubmodule = Import-Module -Name $azureRmNestedModulePath -Global -PassThru -Force
             Write-Verbose "Imported module version: $($azureRmSubmodule.Version)"
         }
         catch {
