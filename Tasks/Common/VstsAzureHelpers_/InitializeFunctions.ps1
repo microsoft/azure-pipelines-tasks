@@ -512,7 +512,7 @@ function Add-AzureStackAzureRmEnvironment {
     $armEnv = Get-AzureRmEnvironment -Name $name
     if($armEnv -ne $null) {
         Write-Verbose "Updating AzureRm environment $name" -Verbose
-        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force){
+        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
             Remove-AzureRmEnvironment -Name $name -Force | Out-Null
         }
         else {
