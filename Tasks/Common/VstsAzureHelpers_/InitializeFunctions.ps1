@@ -42,6 +42,14 @@ function Initialize-AzureSubscription {
     #Set UserAgent for Azure Calls
     Set-UserAgent
 
+    # Clear context only for Azure RM
+    if ($Endpoint.Auth.Scheme -eq 'ServicePrincipal' -and !$script:azureModule -and (Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue")) {
+        Write-Host "##[command]Clear-AzureRmContext -Scope Process"
+        $null = Clear-AzureRmContext -Scope Process
+        Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
+        $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+    }
+
     $environmentName = "AzureCloud"
     if($Endpoint.Data.Environment) {
         $environmentName = $Endpoint.Data.Environment
@@ -148,12 +156,6 @@ function Initialize-AzureSubscription {
         } else {
             # Else, this is AzureRM.
             try {
-                if(Get-Command -Name "Clear-AzureRmContext" -ErrorAction "SilentlyContinue"){
-                    Write-Host "##[command]Clear-AzureRmContext -Scope Process"
-                    $null = Clear-AzureRmContext -Scope Process
-                    Write-Host "##[command]Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue"
-                    $null = Clear-AzureRmContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
-                }
                 if (Get-Command -Name "Add-AzureRmAccount" -ErrorAction "SilentlyContinue") {                    
                     if (CmdletHasMember -cmdlet "Add-AzureRMAccount" -memberName "EnvironmentName") {
                         Write-Host "##[command]Add-AzureRMAccount -ServicePrincipal -Tenant $($Endpoint.Auth.Parameters.TenantId) -Credential $psCredential -EnvironmentName $environmentName"
@@ -464,7 +466,12 @@ function Add-AzureStackAzureRmEnvironment {
     $armEnv = Get-AzureRmEnvironment -Name $name
     if($armEnv -ne $null) {
         Write-Verbose "Updating AzureRm environment $name" -Verbose
-        Remove-AzureRmEnvironment -Name $name -Force | Out-Null
+        if (CmdletHasMember -cmdlet Remove-AzureRmEnvironment -memberName Force) {
+            Remove-AzureRmEnvironment -Name $name -Force | Out-Null
+        }
+        else {
+            Remove-AzureRmEnvironment -Name $name | Out-Null
+        }
     }
     else {
         Write-Verbose "Adding AzureRm environment $name" -Verbose
