@@ -78,7 +78,8 @@ export class Kudu {
         httpRequest.uri = this._client.getRequestUri(`/api/deployments/${requestBody.id}`);
 
         try {
-            var response = await this._client.beginRequest(httpRequest);
+            let webRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5};
+            var response = await this._client.beginRequest(httpRequest, webRequestOptions);
             tl.debug(`updateDeployment. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 console.log(tl.loc("Successfullyupdateddeploymenthistory", response.body.url));
