@@ -121,8 +121,8 @@ function Get-OverridenApplicationParameters
     $applicationManifestXml = [Xml] (Get-Content -LiteralPath $ApplicationManifestPath)
     foreach ($param in $applicationManifestXml.ApplicationManifest.Parameters.Parameter)
     {
-        $paramName = $param.Name -replace "\.", '_' -replace " ", '_'
-        $paramValue = (Get-Item env:$paramName -ErrorAction Ignore).Value
+        $paramName = $param.Name
+        $paramValue = Get-VstsTaskVariable -Name $paramName -ErrorAction Ignore
         if ($paramValue)
         {
             $overrideParameters.Add($paramName, $paramValue)

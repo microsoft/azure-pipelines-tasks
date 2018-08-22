@@ -260,40 +260,6 @@ describe('Npm Task', function () {
         done();
     });
 
-    it('gets correct packaging Url', () => {
-        let mockTask = {
-            getVariable: (v: string) => {
-                if (v === 'System.TeamFoundationCollectionUri') {
-                    return 'http://example.visualstudio.com';
-                }
-            },
-            debug: (message: string) => {
-                // no-op
-            },
-            loc: (key: string) => {
-                // no-op
-            }
-        };
-        mockery.registerMock('vsts-task-lib/task', mockTask);
-        let util = require('npm-common/util');
-
-        return util.getPackagingCollectionUrl().then(u => {
-            assert.equal(u, 'http://example.pkgs.visualstudio.com/'.toLowerCase());
-
-            mockTask.getVariable = (v: string) => 'http://TFSSERVER.com/';
-            return util.getPackagingCollectionUrl().then(u => {
-                assert.equal(u, 'http://TFSSERVER.com/'.toLowerCase());
-
-                mockTask.getVariable = (v: string) => 'http://serverWithPort:1234';
-                return util.getPackagingCollectionUrl().then(u => {
-                    assert.equal(u, 'http://serverWithPort:1234/'.toLowerCase());
-
-                    return;
-                });
-            });
-        });
-    });
-
     it('gets correct local registries', () => {
         let mockParser = {
             GetRegistries: (npmrc: string) => [
@@ -317,6 +283,20 @@ describe('Npm Task', function () {
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
+        mockery.registerMock('./LocationHelpers', {
+            assumeNuGetUriPrefixes: function(input) {
+                if (input === 'http://example.visualstudio.com') {
+                    return ['http://example.pkgs.visualstudio.com/', 'http://example.com'];
+                }
+                else if(input === 'http://localTFSServer/'){
+                    return ['http://localTFSServer/', 'http://example.com'];
+                }
+                else {
+                    return [input];
+                }
+            }
+        });
+
         let util = require('npm-common/util');
 
         return util.getLocalRegistries('').then((registries: string[]) => {
@@ -543,6 +523,11 @@ describe('Npm Task', function () {
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('./npmrcparser', mockParser);
+        mockery.registerMock('./LocationHelpers', {
+            assumeNuGetUriPrefixes: function(input) {
+                return ['https://mytfsserver.pkgs.visualstudio.com'];
+            }
+        });
         
         const util = require('npm-common/util');
         const registries = await util.getLocalNpmRegistries("somePath");

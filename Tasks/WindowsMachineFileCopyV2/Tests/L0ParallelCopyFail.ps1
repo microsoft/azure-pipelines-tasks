@@ -38,7 +38,7 @@ Register-Mock Start-Sleep { }
 #Remove-Job Register-Mocks
 Register-Mock Remove-Job { $testJobs.RemoveAt(0) }
 
-Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $EnvironmentNameForFailedJob  } -ParametersEvaluator{$EnvironmentName -eq $EnvironmentNameForFailedJob}
+Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $EnvironmentNameForFailedJob } -ParametersEvaluator{$EnvironmentName -eq $EnvironmentNameForFailedJob}
 
 #Import-Module Register-Mocks
 Register-Mock Import-Module { }
