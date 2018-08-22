@@ -265,11 +265,9 @@ function Validate-AzureCloudServiceStatus
     )
     Trace-VstsEnteringInvocation $MyInvocation
     try {
-        $retryLimit = 4
-        $retryCount = 0
         $retryDelay = 30
         Write-Host (Get-VstsLocString -Key 'ValidateAzureCloudServiceStatus' -ArgumentList $CloudServiceName)
-        while ($retryCount -lt $retryLimit) {
+        while ($true) {
             if (Test-AzureName -Service -Name $CloudServiceName) {
                 Write-Verbose "Azure Cloud Service with name:'$CloudServiceName' exists."
                 if (Assert-AzureCloudServiceIsReady -CloudServiceName $CloudServiceName -Slot $Slot) {
@@ -279,7 +277,7 @@ function Validate-AzureCloudServiceStatus
             } else {
                 Write-Warning (Get-VstsLocString -Key 'AzureCloudServiceNotFound' -ArgumentList $CloudServiceName)
             }
-            $retryCount++
+
             Write-Host (Get-VstsLocString -Key "RetryAzureCloudServiceStatusCheck" -ArgumentList $CloudServiceName, $retryDelay)
             Start-Sleep -Seconds $retryDelay
         }

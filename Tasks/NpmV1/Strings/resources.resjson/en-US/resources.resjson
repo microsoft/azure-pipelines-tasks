@@ -49,5 +49,6 @@
   "loc.messages.TestDebugLog": "Trying debug log location: %s",
   "loc.messages.OverridingProjectNpmrc": "Overriding project .npmrc: %s",
   "loc.messages.RestoringProjectNpmrc": "Restoring project .npmrc",
-  "loc.messages.WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory"
+  "loc.messages.WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
+  "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region."
 }

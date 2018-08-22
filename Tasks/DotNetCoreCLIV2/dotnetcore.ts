@@ -7,7 +7,7 @@ var archiver = require('archiver');
 import * as packCommand from './packcommand';
 import * as pushCommand from './pushcommand';
 import * as restoreCommand from './restorecommand';
-import * as utility from "./Common/utility";
+import * as utility from './Common/utility';
 
 export class dotNetExe {
     private command: string;

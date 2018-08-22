@@ -22,6 +22,7 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Register-Mock Get-VstsInput { 'Some input symbols path' } -- -Name 'SymbolsPath'
     Register-Mock Get-VstsInput { 'FileShare' } -ParametersEvaluator { $Name -eq 'SymbolServerType' }
     Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'IndexSources' }
+    Register-Mock Get-VstsInput { $false } -ParametersEvaluator { $Name -eq 'CompressSymbols' }
     Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'PublishSymbols' }
     Register-Mock Get-VstsInput { 'Some input search pattern' } -ParametersEvaluator { $Name -eq 'SearchPattern' }
     Register-Mock Get-VstsInput { 'Some input symbols product' } -ParametersEvaluator { $Name -eq 'SymbolsProduct' }
@@ -39,5 +40,5 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Assert-WasCalled Find-VstsMatch -- -DefaultRoot 'Some input symbols folder' -Pattern 'Some input search pattern'
     Assert-WasCalled Invoke-IndexSources -- -SymbolsFilePaths ('file-1.pdb', 'file-2.pdb') -TreatNotIndexedAsWarning: $treatNotIndexedAsWarning
     $semaphoreMessage = "Machine: $env:ComputerName, BuildUri: Some build URI, BuildNumber: Some build number, RepositoryName: Some build repository name, RepositoryUri: Some build repository URI, Team Project: Some team project, CollectionUri: Some team foundation collection URI at $($now.ToUniversalTime()) UTC"
-    Assert-WasCalled Invoke-PublishSymbols -- -PdbFiles ('file-1.pdb', 'file-2.pdb', 'file-3.dll') -Share 'Some input symbols path' -Product 'Some input symbols product' -Version 'Some input symbols version' -MaximumWaitTime ([timespan]::FromMinutes(123)) -ArtifactName 'Some symbols artifact name' -SemaphoreMessage $semaphoreMessage
+    Assert-WasCalled Invoke-PublishSymbols -- -PdbFiles ('file-1.pdb', 'file-2.pdb', 'file-3.dll') -Share 'Some input symbols path' -Product 'Some input symbols product' -Version 'Some input symbols version' -MaximumWaitTime ([timespan]::FromMinutes(123)) -ArtifactName 'Some symbols artifact name' -SemaphoreMessage $semaphoreMessage -CompressSymbols:$false
 }

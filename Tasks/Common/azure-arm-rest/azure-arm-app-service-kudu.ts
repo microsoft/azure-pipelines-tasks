@@ -78,7 +78,8 @@ export class Kudu {
         httpRequest.uri = this._client.getRequestUri(`/api/deployments/${requestBody.id}`);
 
         try {
-            var response = await this._client.beginRequest(httpRequest);
+            let webRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5};
+            var response = await this._client.beginRequest(httpRequest, webRequestOptions);
             tl.debug(`updateDeployment. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 console.log(tl.loc("Successfullyupdateddeploymenthistory", response.body.url));
@@ -466,8 +467,41 @@ export class Kudu {
         catch(error) {
             throw new Error(tl.loc('PackageDeploymentFailed', this._getFormattedError(error)));
         }
-
     }
+
+    public async warDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
+        let httpRequest = new webClient.WebRequest();
+        httpRequest.method = 'POST';
+        httpRequest.uri = this._client.getRequestUri(`/api/wardeploy`, queryParameters);
+        httpRequest.body = fs.createReadStream(webPackage);
+
+        try {
+            let response = await this._client.beginRequest(httpRequest);
+            tl.debug(`War Deploy response: ${JSON.stringify(response)}`);
+            if(response.statusCode == 200) {
+                tl.debug('Deployment passed');
+                return null;
+            }
+            else if(response.statusCode == 202) {
+                let pollableURL: string = response.headers.location;
+                if(!!pollableURL) {
+                    tl.debug(`Polling for War Deploy URL: ${pollableURL}`);
+                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
+                }
+                else {
+                    tl.debug('war deploy returned 202 without pollable URL.');
+                    return null;
+                }
+            }
+            else {
+                throw response;
+            }
+        }
+        catch(error) {
+            throw new Error(tl.loc('PackageDeploymentFailed', this._getFormattedError(error)));
+        }
+    }
+
 
     public async getDeploymentDetails(deploymentID: string): Promise<any> {
         try {
