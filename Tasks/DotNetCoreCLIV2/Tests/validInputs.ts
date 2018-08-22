@@ -62,6 +62,5 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tmr.setAnswers(a);
 tmr.registerMock('vsts-task-lib/toolrunner', require('vsts-task-lib/mock-toolrunner'));
-nmh.registerNugetLocationHelpersMock();
 
 tmr.run();

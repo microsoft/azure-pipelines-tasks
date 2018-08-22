@@ -1,44 +1,58 @@
 import * as path from 'path';
-import * as url from 'url';
 
-import {IExecSyncResult} from "vsts-task-lib/toolrunner";
+import {IExecSyncResult} from 'vsts-task-lib/toolrunner';
 import * as tl from 'vsts-task-lib/task';
-import * as vsts from 'vso-node-api/WebApi';
-import * as Q from 'q';
 
-import { NpmCommand, NpmTaskInput, RegistryLocation } from './constants';
+import { NpmCommand, NpmTaskInput } from './constants';
 import * as npmCustom from './npmcustom';
 import * as npmPublish from './npmpublish';
-import { GetRegistries, NormalizeRegistry } from 'npm-common/npmrcparser';
-import { INpmRegistry, NpmRegistry } from 'npm-common/npmregistry';
+import { INpmRegistry } from 'npm-common/npmregistry';
 import * as telemetry from 'utility-common/telemetry';
-import { NpmToolRunner } from './npmtoolrunner';
 import * as util from 'npm-common/util';
+import * as pkgLocationUtils from 'utility-common/packaging/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
-    await _logNpmStartupVariables();
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+    } catch (error) {
+        tl.debug('Unable to get packaging URIs, using default collection URI');
+        tl.debug(JSON.stringify(error));
+        const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+        packagingLocation = {
+            PackagingUris: [collectionUrl],
+            DefaultPackagingUri: collectionUrl
+        };
+    }
+    const forcedUrl = tl.getVariable('Npm.PackagingCollectionUrl');
+    if (forcedUrl) {
+        packagingLocation.DefaultPackagingUri = forcedUrl;
+        packagingLocation.PackagingUris.push(forcedUrl);
+    }
+
+    await _logNpmStartupVariables(packagingLocation);
 
     const command = tl.getInput(NpmTaskInput.Command);
     switch (command) {
         case NpmCommand.Install:
-            return npmCustom.run(NpmCommand.Install);
+            return npmCustom.run(packagingLocation, NpmCommand.Install);
         case NpmCommand.Publish:
-            return npmPublish.run();
+            return npmPublish.run(packagingLocation);
         case NpmCommand.Custom:
-            return npmCustom.run();
+            return npmCustom.run(packagingLocation);
         default:
             tl.setResult(tl.TaskResult.Failed, tl.loc('UnknownCommand', command));
             return;
     }
 }
 
-async function _logNpmStartupVariables() {
+async function _logNpmStartupVariables(packagingLocation: pkgLocationUtils.PackagingLocation) {
     try {
         // Log the NPM version
         let version: string;
         try {
-            let syncResult: IExecSyncResult = tl.execSync('npm', '--version');
+            const syncResult: IExecSyncResult = tl.execSync('npm', '--version');
             if (syncResult.stdout) {
                 version = syncResult.stdout.trim();
             }
@@ -47,23 +61,23 @@ async function _logNpmStartupVariables() {
         }
 
         // Log the NPM registries
-        let command = tl.getInput(NpmTaskInput.Command);
+        const command = tl.getInput(NpmTaskInput.Command);
         let npmRegistriesAry: INpmRegistry[];
-        let registryUrlAry = [];
+        const registryUrlAry = [];
         switch (command) {
             case NpmCommand.Install:
             case NpmCommand.Custom:
-                npmRegistriesAry = await npmCustom.getCustomRegistries();
+                npmRegistriesAry = await npmCustom.getCustomRegistries(packagingLocation);
                 break;
             case NpmCommand.Publish:
-                npmRegistriesAry = [await npmPublish.getPublishRegistry()];
+                npmRegistriesAry = [await npmPublish.getPublishRegistry(packagingLocation)];
                 break;
         }
-        for (let registry of npmRegistriesAry) {
+        for (const registry of npmRegistriesAry) {
             registryUrlAry.push(registry.url);
         }
 
-        let npmTelem = {
+        const npmTelem = {
             'command': command,
             'verbose': tl.getInput(NpmTaskInput.Verbose),
             'customRegistry': tl.getInput(NpmTaskInput.CustomRegistry),
