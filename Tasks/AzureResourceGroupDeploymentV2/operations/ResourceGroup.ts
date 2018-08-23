@@ -170,26 +170,26 @@ export class ResourceGroup {
             tl.error(error.message);
             if (error.details) {
                 tl.error(tl.loc("Details"));
-                let policyLink = null;
+                
 
                 for (var i = 0; i < error.details.length; i++) {
                     var errorMessage = null;
-                    if (error.details[i].code === "RequestDisallowedByPolicy") {
-                        if (!policyLink) {
-                            policyLink = this.getPolicyHelpLink(error.details[i]);
-                        }
+                    let policyLink = null;
 
+                    if (error.details[i].code === "RequestDisallowedByPolicy") {
+                        policyLink = this.getPolicyHelpLink(error.details[i]);
                         errorMessage = this.getPolicyErrorMessage(error.details[i]);
                     } else {
                         errorMessage = util.format("%s: %s %s", error.details[i].code, error.details[i].message, error.details[i].details);
                     }
 
                     tl.error(errorMessage);
+                    if (policyLink) {
+                        tl.error(util.format("[%s](%s)", tl.loc("MoreInformationOnAzurePortal"), policyLink));
+                    }
                 }
 
-                if (policyLink) {
-                    tl.error(util.format("[%s](%s)", tl.loc("MoreInformationOnAzurePortal"), policyLink));
-                }
+                
             }
         } else {
             tl.error(error);
