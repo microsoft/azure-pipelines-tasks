@@ -1,6 +1,6 @@
 {
-  "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
-  "name": "DownloadBuildDrop",
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishPipelineArtifact",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -17,33 +17,26 @@
   "minimumAgentVersion": "2.138.0",
   "inputs": [
     {
-      "name": "buildid",
+      "name": "artifactName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.buildid",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.buildid"
-    },
-    {
-      "name": "artifactname",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.artifactname",
+      "label": "ms-resource:loc.input.label.artifactName",
       "defaultValue": "drop",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.artifactname"
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
     },
     {
-      "name": "targetpath",
+      "name": "targetPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.targetpath",
+      "label": "ms-resource:loc.input.label.targetPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.targetpath"
+      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.BuildDrop.DownloadBuildDropTask, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTask, Agent.Plugins"
     }
   },
   "messages": {}
