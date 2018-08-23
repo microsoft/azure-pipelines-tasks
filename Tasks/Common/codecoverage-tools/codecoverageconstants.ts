@@ -189,7 +189,7 @@ export function jacocoMavenPluginEnable(includeFilter: string[], excludeFilter: 
     let plugin = {
         "groupId": "org.jacoco",
         "artifactId": "jacoco-maven-plugin",
-        "version": "0.7.5.201505241946",
+        "version": "0.8.1",
         "configuration": {
             "destFile": path.join(outputDirectory, "jacoco.exec"),
             "outputDirectory": outputDirectory,
@@ -294,8 +294,8 @@ export function jacocoMavenMultiModuleReport(reportDir: string, srcData: string,
         <dependencies>
           <dependency>
             <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.ant</artifactId>
-            <version>0.7.5.201505241946</version>
+            <artifactIdorg.jacoco.ant</artifactId>
+            <version>0.8.1</version>
           </dependency>
         </dependencies>
       </plugin>
