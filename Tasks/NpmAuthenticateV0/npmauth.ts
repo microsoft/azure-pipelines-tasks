@@ -58,7 +58,7 @@ async function main(): Promise<void> {
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
 
-    let endpointRegistries: npmregistry.INpmRegistry[];
+    let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
         await Promise.all(endpointIds.map(async e => {
