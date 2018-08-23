@@ -158,12 +158,6 @@ export class KuduServiceUtility {
                 await webClient.sleepFor(5);
             }
 
-            if(tl.stats(packagePath).isDirectory()) {
-                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
-                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
-                tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
-            }
-
             let queryParameters: Array<string> = [
                 'isAsync=true',
                 'deployer=' + VSTS_ZIP_DEPLOY
