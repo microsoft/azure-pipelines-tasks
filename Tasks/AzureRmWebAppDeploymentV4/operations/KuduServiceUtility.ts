@@ -195,6 +195,12 @@ export class KuduServiceUtility {
 
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
+            
+            if(tl.stats(packagePath).isDirectory()) {
+                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+                packagePath = await zipUtility.archiveFolder(packagePath, "", tempPackagePath);
+                tl.debug("Compressed folder " + packagePath + " into zip : " +  packagePath);
+            }
 
             let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             await this._processDeploymentResponse(deploymentDetails);
