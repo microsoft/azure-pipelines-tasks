@@ -3,7 +3,7 @@
 # Add steps that save build artifacts and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/java
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Ubuntu 1604'
 
 steps:
 - task: Ant@1

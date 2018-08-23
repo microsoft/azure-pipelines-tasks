@@ -3,7 +3,7 @@
 # Add steps that publish test results, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/apps/c-cpp/gcc
 
-queue: 'Hosted Linux Preview'
+queue: 'Hosted Ubuntu 1604'
 
 steps:
 - script: |
