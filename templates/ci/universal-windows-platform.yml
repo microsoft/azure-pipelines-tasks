@@ -3,7 +3,8 @@
 # Add steps that test and distribute the app, save build artifacts, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted VS2017'
+pool:
+  vmImage: 'VS2017-Win2016'
 
 variables:
   solution: '**/*.sln'
