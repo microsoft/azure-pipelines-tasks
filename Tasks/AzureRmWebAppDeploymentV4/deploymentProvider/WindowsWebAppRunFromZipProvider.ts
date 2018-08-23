@@ -6,6 +6,8 @@ import * as ParameterParser from '../operations/parameterparser'
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common/packageUtility';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
+var deployUtility = require('webdeployment-common/utility.js');
+var zipUtility = require('webdeployment-common/ziputility.js');
 
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
  
@@ -23,6 +25,12 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             else if(this.taskParams.Package.getPackageType() === PackageType.war) {
                 throw Error(tl.loc("Publishusingzipdeploydoesnotsupportwarfile"));
             }
+        }
+
+        if(tl.stats(webPackage).isDirectory()) {
+            let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+            webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath);
+            tl.debug("Compressed folder into zip " +  webPackage);
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
