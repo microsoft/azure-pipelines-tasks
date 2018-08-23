@@ -18,17 +18,25 @@ export function run(connection: ClusterConnection, kubecommand: string, outputUp
     command.arg(getNameSpace());
     command.arg(getCommandConfigurationFile());
     command.line(getCommandArguments());
-    command.arg(getCommandOutputFormat());
+    command.arg(getCommandOutputFormat(kubecommand));
     return connection.execCommand(command);
 }
 
-function getCommandOutputFormat() : string[] {
+function getCommandOutputFormat(kubecommand: string) : string[] {
     var args: string[] =[];
     var outputFormat = tl.getInput("outputFormat", false);
     if(outputFormat)
     {
-        args[0] = "-o";
-        args[1] = outputFormat;
+       if (outputFormat === "json" || outputFormat === "yaml")
+       {
+           if (!isJsonOrYamlOutputFormatSupported(kubecommand))
+           {
+               return args;
+           }
+       }
+      
+       args[0] = "-o";
+       args[1] = outputFormat;
     }
    
     return args;
@@ -55,6 +63,20 @@ function getCommandConfigurationFile() : string[] {
 
 function getCommandArguments(): string {
     return tl.getInput("arguments", false);
+}
+
+function isJsonOrYamlOutputFormatSupported(kubecommand) : boolean
+{
+   switch (kubecommand) {
+       case "delete":
+          return false;
+       case "exec":
+          return false;
+       case "logs":
+          return false;
+       default: 
+          return true;
+   }
 }
 
 export function getNameSpace(): string[] {

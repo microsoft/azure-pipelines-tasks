@@ -58,6 +58,5 @@ nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\single.sln"]);
 nmh.registerDefaultNugetVersionMock();
 nmh.registerNugetConfigMock();
 nmh.registerToolRunnerMock();
-nmh.registerNugetLocationHelpersMock();
 
 tmr.run();

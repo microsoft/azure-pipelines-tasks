@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 136,
+        "Minor": 141,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -103,6 +103,15 @@
             "required": false,
             "defaultValue": "false",
             "helpMarkDown": "If this is false, the line `if ((Test-Path -LiteralPath variable:\\LASTEXITCODE)) { exit $LASTEXITCODE }` is appended to the end of your script. This will cause the last exit code from an external command to be propagated as the exit code of powershell. Otherwise the line is not appended to the end of your script.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "pwsh",
+            "type": "boolean",
+            "label": "Prefer PowerShell Core over Windows PowerShell on Windows",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "If this is true, the task will look for the release binary of PowerShell Core {`pwsh.exe`) on the `PATH` and if so use this as the main entry assembly. This applies to Windows only and if this is not true, it will default to Windows PowerShell (`powershell.exe`)",
             "groupName": "advanced"
         },
         {
