@@ -41,7 +41,8 @@ phases:
 
 - phase: 'Publish'
   dependsOn: 'Test'
-  queue: 'Hosted Ubuntu 1604'
+  pool:
+    vmImage: 'Ubuntu 16.04'
 
   steps:
   - task: UsePythonVersion@0
