@@ -3,7 +3,8 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/javascript
 
-queue: 'Hosted Linux Preview'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: NodeTool@0
@@ -13,5 +14,5 @@ steps:
 
 - script: |
     npm install
-    grunt --gruntfile gruntfile.js
+    grunt --gruntfile Gruntfile.js
   displayName: 'npm install and run grunt'
