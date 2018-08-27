@@ -9,9 +9,6 @@ export class ContainerWebAppDeploymentProvider extends AzureRmWebAppDeploymentPr
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
 
-        if(this.taskParams.ScriptType) {
-            await this.kuduServiceUtility.runPostDeploymentScript(this.taskParams);
-        }
         await this.appServiceUtility.updateScmTypeAndConfigurationDetails();
     }
 }
