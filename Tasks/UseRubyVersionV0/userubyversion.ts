@@ -41,11 +41,7 @@ export async function useRubyVersion(parameters: TaskParameters, platform: Platf
     if (platform !== Platform.Windows) {
         // replace the default
         const dest: string = '/usr/bin/ruby';
-        if (fs.existsSync(dest)) {
-            task.debug('removing ' + dest);
-            fs.unlinkSync(dest);
-        }
-        fs.symlinkSync(path.join(toolPath, 'ruby'), dest);
+        task.execSync('sudo', 'ln -sf ' + dest); // replace any existing
     }
 
     task.setVariable('rubyLocation', toolPath);
