@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 28
+    "Patch": 29
   },
   "demands": [],
   "preview": "false",
@@ -178,7 +178,10 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
       "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
       "defaultValue": "",
-      "groupName": "secrets"
+      "groupName": "secrets",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "azureContainerRegistry",

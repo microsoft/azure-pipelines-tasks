@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -47,7 +47,10 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "This is needed to connect to your Azure account.<br>To configure new service connection, select the Azure subscription from the list and click 'Authorize'.<br>If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button."
+            "helpMarkDown": "This is needed to connect to your Azure account.<br>To configure new service connection, select the Azure subscription from the list and click 'Authorize'.<br>If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "ServerName",

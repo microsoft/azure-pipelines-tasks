@@ -17,7 +17,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 9
+    "Patch": 10
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "groups": [],
@@ -28,7 +28,10 @@
       "label": "ms-resource:loc.input.label.connectedServiceNameARM",
       "defaultValue": "",
       "required": "true",
-      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM"
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "ResourceGroupName",

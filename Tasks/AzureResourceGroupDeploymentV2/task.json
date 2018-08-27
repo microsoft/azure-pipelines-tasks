@@ -14,7 +14,7 @@
     "version": {
         "Major": 2,
         "Minor": 139,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "2.119.1",
@@ -54,7 +54,10 @@
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "action",

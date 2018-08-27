@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "1.95.0",
     "instanceNameFormat": "Azure Network Load Balancer: $(LoadBalancer) - $(Action)",
@@ -28,7 +28,10 @@
             "label": "Azure Subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "ResourceGroupName",

@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 40
+        "Patch": 41
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -38,7 +38,10 @@
             "label": "Azure subscription",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the Azure Resource Manager subscription"
+            "helpMarkDown": "Select the Azure Resource Manager subscription",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "Action",

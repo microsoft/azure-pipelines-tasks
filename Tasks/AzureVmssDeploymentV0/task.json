@@ -14,7 +14,7 @@
     "version": {
         "Major": 0,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 18
     },
     "demands": [],
     "minimumAgentVersion": "2.0.0",
@@ -51,7 +51,10 @@
             "defaultValue": "",
             "required": true,
             "groupName": "AzureDetails",
-            "helpMarkDown": "Select the Azure Resource Manager subscription for the scale set."
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the scale set.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "action",

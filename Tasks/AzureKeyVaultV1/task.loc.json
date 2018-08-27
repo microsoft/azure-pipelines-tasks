@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 21
+    "Patch": 22
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -28,7 +28,10 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "KeyVaultName",

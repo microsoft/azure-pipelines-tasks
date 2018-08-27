@@ -18,7 +18,7 @@
   "version": {
     "Major": 1,
     "Minor": 138,
-    "Patch": 0
+    "Patch": 1
   },
   "groups": [
     {
@@ -181,7 +181,10 @@
       "required": true,
       "groupName": "propagatedArtifactsGroup",
       "visibleRule": "propagatedArtifacts == true",
-      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM"
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "storageAccountName",

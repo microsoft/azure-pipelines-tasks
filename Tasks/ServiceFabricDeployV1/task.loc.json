@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 7,
-    "Patch": 22
+    "Patch": 23
   },
   "demands": [
     "Cmd"
@@ -366,7 +366,10 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
       "visibleRule": "configureDockerSettings = true && registryCredentials = AzureResourceManagerEndpoint",
       "required": true,
-      "groupname": "docker"
+      "groupname": "docker",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "registryUserName",
