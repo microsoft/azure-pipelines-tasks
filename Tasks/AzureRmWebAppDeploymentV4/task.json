@@ -98,7 +98,7 @@
             "options": {
                 "webApp": "Web App on Windows",
                 "webAppLinux": "Web App on Linux",
-                "webAppContainer": "Web App for Containers",
+                "webAppContainer": "Web App for Containers (Linux)",
                 "functionApp": "Function App",
                 "functionAppContainer" : "Function App for Containers",
                 "apiApp": "API App",
