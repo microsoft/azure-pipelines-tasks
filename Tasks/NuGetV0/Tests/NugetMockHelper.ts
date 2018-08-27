@@ -13,6 +13,8 @@ export class NugetMockHelper {
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
+
+        this.registerNugetLocationHelpersMock();
     }
     
     public registerDefaultNugetVersionMock() {
@@ -87,5 +89,24 @@ export class NugetMockHelper {
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe"] = true;
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
+    }
+
+    public registerNugetLocationHelpersMock() {
+        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
+            assumeNuGetUriPrefixes: function(input) {
+                return [input];
+            }
+        });
+
+        this.tmr.registerMock('utility-common/packaging/locationUtilities', {
+            getPackagingUris: function(input) {
+                const collectionUrl: string = "https://vsts/packagesource";
+                return {
+                    PackagingUris: [collectionUrl],
+                    DefaultPackagingUri: collectionUrl
+                };
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
+        });
     }
 }

@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 2,
-    "Patch": 9
+    "Minor": 3,
+    "Patch": 4
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -27,13 +27,13 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp"
+      "visibleRule": "WebAppKind != webAppContainer && WebAppKind != webAppLinux && Package NotEndsWith .war"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\""
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "PostDeploymentAction",
@@ -597,6 +597,7 @@
     "MultipleResourceGroupFoundForAppService": "ms-resource:loc.messages.MultipleResourceGroupFoundForAppService",
     "PackageDeploymentUsingZipDeployFailed": "ms-resource:loc.messages.PackageDeploymentUsingZipDeployFailed",
     "PackageDeploymentInitiated": "ms-resource:loc.messages.PackageDeploymentInitiated",
+    "WarPackageDeploymentInitiated": "ms-resource:loc.messages.WarPackageDeploymentInitiated",
     "FailedToGetDeploymentLogs": "ms-resource:loc.messages.FailedToGetDeploymentLogs",
     "GoExeNameNotPresent": "ms-resource:loc.messages.GoExeNameNotPresent",
     "WarDeploymentRetry": "ms-resource:loc.messages.WarDeploymentRetry",
@@ -611,8 +612,11 @@
     "InvalidPublishProfile": "ms-resource:loc.messages.InvalidPublishProfile",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ZipDeployLogsURL": "ms-resource:loc.messages.ZipDeployLogsURL",
+    "DeployLogsURL": "ms-resource:loc.messages.DeployLogsURL",
     "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
-    "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID"
+    "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
+    "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource"
   }
 }

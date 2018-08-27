@@ -2,9 +2,9 @@
 	"id": "537FDB7A-A601-4537-AA70-92645A2B5CE4",
 	"name": "AzureFunction",
 	"friendlyName": "Invoke Azure Function",
-	"description": "Invoke Azure function as a part of your process.",
+	"description": "Invoke an Azure Function as a part of your pipeline.",
 	"author": "Microsoft Corporation",
-	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870235)",
+	"helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870235)",
 	"category": "Utility",
 	"visibility": [
 		"Build",
@@ -17,7 +17,7 @@
 	"version": {
 		"Major": 1,
 		"Minor": 0,
-		"Patch": 4
+		"Patch": 6
 	},
 	"instanceNameFormat": "Azure Function: $(function)",
 	"groups": [{
@@ -39,7 +39,7 @@
 			"label": "Function key",
 			"defaultValue": "",
 			"required": true,
-			"helpMarkDown": "Function or Host key with which we can access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is an environment level secret variable with value as the secret key like ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw=="
+			"helpMarkDown": "Function or Host key with which to access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is a secret pipeline variable with a value of the secret key, like `ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==`"
 		}, {
 			"name": "method",
 			"type": "pickList",
@@ -56,7 +56,7 @@
 				"TRACE": "TRACE",
 				"PATCH": "PATCH"
 			},
-			"helpMarkDown": "Select the http method with which the function should be invoked with."
+			"helpMarkDown": "Select the HTTP method with which the function should be invoked."
 		}, {
 			"name": "headers",
 			"type": "multiLine",
@@ -66,16 +66,16 @@
 			"properties": {
 				"resizable": "true",
 				"rows": "10",
-				"maxLength": "2000"
+				"maxLength": "5000"
 			},
-			"helpMarkDown": "Define header in JSON format. The header shall be attached with request to be sent."
+			"helpMarkDown": "Define a header in JSON format. The header shall be attached to the request that is sent."
 		}, {
 			"name": "queryParameters",
 			"type": "string",
 			"label": "Query parameters",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Query parameters string append to the function URL. Should not start with with \"?\" and \"&\"."
+			"helpMarkDown": "Query parameters string to append to the function URL. It should not start with with \"?\" nor \"&\"."
 		}, {
 			"name": "body",
 			"type": "multiLine",
@@ -88,14 +88,14 @@
 				"maxLength": "2000"
 			},
 			"visibleRule": "method != GET && method != HEAD",
-			"helpMarkDown": "JSON formatted message body for the request."
+			"helpMarkDown": "JSON-formatted message body for the request."
 		}, {
 			"name": "waitForCompletion",
 			"type": "pickList",
 			"label": "Completion event",
 			"defaultValue": "false",
 			"required": true,
-			"helpMarkDown": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
+			"helpMarkDown": "Default value \"ApiResponse\". Available values: \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
 			"groupName": "completionOptions",
 			"options": {
 				"true": "Callback",
@@ -107,7 +107,7 @@
 			"label": "Success criteria",
 			"defaultValue": "",
 			"required": false,
-			"helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+			"helpMarkDown": "Criteria which defines when to pass the task. No criteria means the response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More information](https://go.microsoft.com/fwlink/?linkid=842996)​",
 			"groupName": "completionOptions",
 			"visibleRule": "waitForCompletion = false"
 		}

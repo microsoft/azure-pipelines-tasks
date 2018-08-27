@@ -13,9 +13,19 @@ import * as commandHelper from "./CommandHelper";
 // It is used by the NuGetCommand >= v2.0.0 and DotNetCoreCLI >= v2.0.0
 
 interface EnvironmentDictionary { [key: string]: string; }
-
+interface EndpointCredentials {
+    endpoint: string;
+    username?: string;
+    password: string;
+}
+interface EnpointCredentialsContainer {
+    endpointCredentials: EndpointCredentials[];
+}
 export interface NuGetEnvironmentSettings {
-    credProviderFolder: string;
+    /* V1 credential provider folder path. Only populated if V1 should be used. */
+    credProviderFolder?: string;
+    /* V2 credential provider path. Only populated if V2 should be used. */
+    V2CredProviderPath?: string
     extensionsDisabled: boolean;
 }
 
@@ -25,7 +35,9 @@ function prepareNuGetExeEnvironment(
     authInfo: auth.NuGetExtendedAuthInfo): EnvironmentDictionary {
 
     let env: EnvironmentDictionary = {};
-    let originalCredProviderPath: string;
+    let originalCredProviderPath: string = null;
+    let envVarCredProviderPathV2: string = null;
+
     for (let e in input) {
         if (!input.hasOwnProperty(e)) {
             continue;
@@ -41,31 +53,54 @@ function prepareNuGetExeEnvironment(
             }
         }
 
+        // New credential provider
+        if (e.toUpperCase() === "NUGET_PLUGIN_PATHS") {
+            envVarCredProviderPathV2 = input[e];
+            continue;
+        }
+
+        // Old credential provider
         if (e.toUpperCase() === "NUGET_CREDENTIALPROVIDERS_PATH") {
             originalCredProviderPath = input[e];
-
-            // will re-set this variable below
             continue;
         }
 
         env[e] = input[e];
     }
 
-    let credProviderPath = settings.credProviderFolder || originalCredProviderPath;
-    if (settings.credProviderFolder && originalCredProviderPath) {
-        credProviderPath = settings.credProviderFolder + ";" + originalCredProviderPath;
-    }
-
-    if (authInfo && authInfo.internalAuthInfo){
+    if (authInfo && authInfo.internalAuthInfo) {
         env["VSS_NUGET_ACCESSTOKEN"] = authInfo.internalAuthInfo.accessToken;
         env["VSS_NUGET_URI_PREFIXES"] = authInfo.internalAuthInfo.uriPrefixes.join(";");
     }
 
     env["NUGET_CREDENTIAL_PROVIDER_OVERRIDE_DEFAULT"] = "true";
 
-    if (credProviderPath) {
-        tl.debug(`credProviderPath = ${credProviderPath}`);
-        env["NUGET_CREDENTIALPROVIDERS_PATH"] = credProviderPath;
+    // Old credential provider
+    if (settings.credProviderFolder != null || originalCredProviderPath != null) {
+        let credProviderPath = buildCredProviderPath(originalCredProviderPath, settings.credProviderFolder);
+
+        if (credProviderPath) {
+            env["NUGET_CREDENTIALPROVIDERS_PATH"] = credProviderPath;
+            tl.debug(`V1 credential provider set`);
+            tl.debug(`credProviderPath = ${credProviderPath}`);
+        }
+    }
+    
+    // New credential provider
+    if (settings.V2CredProviderPath != null || envVarCredProviderPathV2 != null) {
+        let credProviderPath = buildCredProviderPath(envVarCredProviderPathV2, settings.V2CredProviderPath);
+
+        if (credProviderPath) {
+            env["NUGET_PLUGIN_PATHS"] = credProviderPath;
+            tl.debug(`V2 credential provider set`);
+            tl.debug(`credProviderPath = ${credProviderPath}`);
+        }
+
+        // NuGet restore task will pass external credentials to V2 credential provider
+        let externalCredentials = buildCredentialJson(authInfo);
+        if (externalCredentials) {
+            env["VSS_NUGET_EXTERNAL_FEED_ENDPOINTS"] = externalCredentials;
+        }
     }
 
     let httpProxy = getNuGetProxyFromEnvironment();
@@ -75,6 +110,13 @@ function prepareNuGetExeEnvironment(
     }
 
     return env;
+}
+
+function buildCredProviderPath(credProviderPath1: string, credProviderPath2: string): string {
+    if (credProviderPath1 && credProviderPath2) {
+        return credProviderPath1 + ";" + credProviderPath2;
+    }
+    return credProviderPath1 || credProviderPath2;
 }
 
 export class NuGetToolRunner2 extends ToolRunner {
@@ -149,22 +191,62 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
 // identity's token.
 // Therefore, we are enabling credential provider on on-premises and disabling it on hosted (only when the version of NuGet does not support it). We allow for test
 // instances by an override variable.
-
+// This checks if V1 credential provider is enabled
 export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialProvider to "true" to force allowing the credential provider flow, "false"
     // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the 
     // hosted environment detection logic
-    const credentialProviderOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialProvider");
+    const credentialProviderOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialProvider"); // forces V1 credential provider
     if (credentialProviderOverrideFlag === "true") {
-        tl.debug("Credential provider is force-enabled for testing purposes.");
+        tl.debug("V1 credential provider is force-enabled for testing purposes.");
         return true;
     }
 
     if (credentialProviderOverrideFlag === "false") {
-        tl.debug("Credential provider is force-disabled for testing purposes.");
+        tl.debug("V1 credential provider is force-disabled for testing purposes.");
         return false;
     }
 
+    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
+        tl.debug("Credential provider V1 is disabled in favor of V2 plugin.");
+        return false;
+    }
+    
+    if (isAnyCredentialProviderEnabled(quirks)) {
+        tl.debug("V1 credential provider is enabled");
+        return true;
+    }
+
+    return false;
+}
+
+// This checks if V2 credential provider is enabled
+export function isCredentialProviderV2Enabled(quirks: NuGetQuirks): boolean {
+    const credentialProviderOverrideFlagV2 = tl.getVariable("NuGet_ForceEnableCredentialProviderV2");
+    if (credentialProviderOverrideFlagV2 === "true") {
+        tl.debug("V2 Credential provider is force-enabled.");
+        return true;
+    }
+
+    if (credentialProviderOverrideFlagV2 === "false") {
+        tl.debug("V2 Credential provider is force-disabled.");
+        return false;
+    }
+
+    if (isAnyCredentialProviderEnabled(quirks) === false) {
+        return false;
+    }
+
+    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
+        tl.debug("V2 credential provider is enabled.");
+        return true;
+    }
+
+    tl.debug("V2 credential provider is disabled due to quirks. To use V2 credential provider use NuGet version 4.8 or higher.");
+    return false;
+}
+
+function isAnyCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     if (quirks.hasQuirk(NuGetQuirkName.NoCredentialProvider)
         || quirks.hasQuirk(NuGetQuirkName.CredentialProviderRace)) {
         tl.debug("Credential provider is disabled due to quirks.");
@@ -177,7 +259,6 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    tl.debug("Credential provider is enabled.");
     return true;
 }
 
@@ -226,4 +307,50 @@ export function getNuGetProxyFromEnvironment(): string {
     }
 
     return undefined;
+}
+
+function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
+    if (authInfo && authInfo.externalAuthInfo) {
+        let enpointCredentialsJson: EnpointCredentialsContainer = {
+            endpointCredentials: [] as EndpointCredentials[]
+        };
+
+        tl.debug(`Detected external credentials for:`);
+        authInfo.externalAuthInfo.forEach((authInfo) => {
+            switch(authInfo.authType) {
+                case (auth.ExternalAuthType.UsernamePassword):
+                    let usernamePasswordAuthInfo =  authInfo as auth.UsernamePasswordExternalAuthInfo;
+                    enpointCredentialsJson.endpointCredentials.push({
+                        endpoint: authInfo.packageSource.feedUri,
+                        username: usernamePasswordAuthInfo.username,
+                        password: usernamePasswordAuthInfo.password
+                        
+                    } as EndpointCredentials);
+                    tl.debug(authInfo.packageSource.feedUri);
+                    break;
+                case (auth.ExternalAuthType.Token):
+                    let tokenAuthInfo =  authInfo as auth.TokenExternalAuthInfo;
+                    enpointCredentialsJson.endpointCredentials.push({
+                        endpoint: authInfo.packageSource.feedUri,
+                        /* No username provided */
+                        password: tokenAuthInfo.token
+                    } as EndpointCredentials);
+                    tl.debug(authInfo.packageSource.feedUri);
+                    break;
+                case (auth.ExternalAuthType.ApiKey):
+                    /* ApiKey is only valid form of credentials for the push command.
+                    Only the NuGet Restore task will use the V2 credential provider for handling external credentials.*/
+                    tl.debug(authInfo.packageSource.feedUri);
+                    tl.debug(`ApiKey is not supported`);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        const externalCredentials: string = JSON.stringify(enpointCredentialsJson);
+        return externalCredentials;
+    }
+
+    return null;
 }

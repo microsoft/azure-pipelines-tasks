@@ -4,6 +4,7 @@ import * as util from "util";
 import * as vstsWebApi from "vso-node-api/WebApi";
 import * as tl from "vsts-task-lib/task";
 
+import * as auth from "./Authentication";
 import * as locationApi from "./LocationApi";
 
 export const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
@@ -23,8 +24,19 @@ function getUriForAccessMapping(mapping: locationApi.AccessMapping): string {
     return accessPoint + virtualDirectory;
 }
 
-function getConnectionData(uri: string, accessToken: string): Q.Promise<locationApi.ConnectionData> {
-    return new locationApi.QLocationApi(uri, [vstsWebApi.getBearerHandler(accessToken)]).getConnectionData();
+function getConnectionData(uri: string, username: string, password: string): Q.Promise<locationApi.ConnectionData> {
+    const defer = Q.defer<locationApi.ConnectionData>();
+    new locationApi.LocationApi(uri, [vstsWebApi.getBasicHandler(username, password)])
+        .getConnectionData((err: any, statusCode: number, connectionData: locationApi.ConnectionData) => {
+        if (err) {
+            err.statusCode = statusCode;
+            defer.reject(err);
+        }
+        else {
+            defer.resolve(connectionData);
+        }
+    });
+    return defer.promise;
 }
 
 function getUriForServiceDefinition(serviceDefinition: locationApi.ServiceDefinition): string {
@@ -103,10 +115,10 @@ export function getConnectionDataForArea(
     serviceUri: string,
     areaName: string,
     areaId: string,
+    username: string,
     accessToken: string): Q.Promise<locationApi.ConnectionData> {
-
-    return getConnectionData(serviceUri, accessToken)
-        .then(connectionData => {
+    return getConnectionData(serviceUri, username, accessToken)
+        .then((connectionData) => {
             tl.debug("successfully loaded origin service location data");
             if (hasServicesOfType(connectionData, areaName)) {
                 tl.debug(util.format("found %s routes on %s", areaName, serviceUri));
@@ -115,30 +127,31 @@ export function getConnectionDataForArea(
             else {
                 tl.debug(util.format("did not find %s routes directly on %s, trying SPS", areaName, serviceUri));
                 const rootLocationServiceId = "951917AC-A960-4999-8464-E3F0AA25B381";
-                let sps = findServiceByIdentifier(connectionData, rootLocationServiceId);
+                const sps = findServiceByIdentifier(connectionData, rootLocationServiceId);
                 if (!sps) {
                     throw new GetConnectionDataForAreaError(
                         tl.loc("NGCommon_SpsNotFound", areaName, areaId),
                         "SpsNotFound");
                 }
 
-                let spsUri = getUriForServiceDefinition(sps);
+                const spsUri = getUriForServiceDefinition(sps);
                 tl.debug(util.format("found SPS at %s", spsUri));
 
-                return getConnectionData(spsUri, accessToken)
-                    .then(spsConnectionData => {
+                return getConnectionData(spsUri, username, accessToken)
+                    .then((spsConnectionData) => {
                         tl.debug("successfully loaded SPS location data");
-                        let areaService = findServiceByIdentifier(spsConnectionData, areaId);
+                        const areaService = findServiceByIdentifier(spsConnectionData, areaId);
+                        // If no areaService it's quite probably the service containing the area has not been
+                        // faulted in
                         if (!areaService) {
-                            throw new GetConnectionDataForAreaError(
-                                tl.loc("NGCommon_AreaNotFoundInSps", areaName, areaId),
-                                "AreaNotFoundInSps");
+                            tl.debug(tl.loc("NGCommon_AreaNotFoundInSps", areaName, areaId));
+                            return null;
                         }
 
-                        let areaServiceUri = getUriForServiceDefinition(areaService);
+                        const areaServiceUri = getUriForServiceDefinition(areaService);
                         tl.debug(util.format("found %s service in SPS at %s", areaId, areaServiceUri));
-                        return getConnectionData(areaServiceUri, accessToken)
-                            .then(targetConnectionData => {
+                        return getConnectionData(areaServiceUri, username, accessToken)
+                            .then((targetConnectionData) => {
                                 tl.debug("successfully loaded target service location data");
                                 return targetConnectionData;
                             });
@@ -148,26 +161,70 @@ export function getConnectionDataForArea(
 }
 
 export function getNuGetConnectionData(serviceUri: string, accessToken: string): Q.Promise<locationApi.ConnectionData> {
-    return getConnectionDataForArea(serviceUri, "nuget", "b3be7473-68ea-4a81-bfc7-9530baaa19ad", accessToken);
+    return getConnectionDataForArea(
+        serviceUri,
+        "nuget",
+        "b3be7473-68ea-4a81-bfc7-9530baaa19ad",
+        "vstsBuild",
+        accessToken);
 }
 
-/** 
- * Make assumptions about VSTS domain names to generate URI prefixes for feeds in the current collection.
- * Returns a promise so as to provide a drop-in replacement for location-service-based lookup.
+export function getServiceUriFromCollectionUri(
+    serviceUri: string,
+    accessToken: string,
+    areaName: string,
+    areaId: string): Q.Promise<string>{
+    return this.getConnectionDataForArea(serviceUri, areaName, areaId, "vstsBuild", accessToken)
+        .then((connectionData) => {
+            return connectionData.locationServiceData.accessMappings
+                .find((mapping) => mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker)
+                .accessPoint;
+        });
+}
+
+export function getServiceUrisFromCollectionUri(
+    serviceUri: string,
+    accessToken: string,
+    areaName: string,
+    areaId: string): Q.Promise<string[]>{
+    return this.getConnectionDataForArea(serviceUri, areaName, areaId, "vstsBuild", accessToken)
+        .then((connectionData) => {
+            if (!connectionData) {
+                return [];
+            }
+
+            const defaultMapping = connectionData.locationServiceData.accessMappings
+                .find((mapping) => mapping.moniker === connectionData.locationServiceData.defaultAccessMappingMoniker)
+                .accessPoint;
+            // It's important that the default mapping is the first one in the list
+            // Utility.getNuGetFeedRegistryUrl makes assumptions around this
+            const uris = [defaultMapping];
+            return uris.concat(
+                connectionData.locationServiceData.accessMappings.map((mapping: locationApi.AccessMapping) => {
+                    return mapping.accessPoint;
+            }));
+        });
+}
+
+/**
+ * - ! -
+ * IMPORTANT
+ * This should not be used anymore, use utility-common/packaging/locationUtilities instead
  */
 export function assumeNuGetUriPrefixes(collectionUri: string): Q.Promise<string[]> {
-    let prefixes = [collectionUri];
+    const prefixes = [collectionUri];
 
-    let collectionUrlObject = url.parse(collectionUri);
-    if(collectionUrlObject.hostname.toUpperCase().endsWith(".VISUALSTUDIO.COM"))
-    {
-        let hostparts = collectionUrlObject.hostname.split(".");
-        let packagingHostName = hostparts[0] + ".pkgs.visualstudio.com";
-        collectionUrlObject.hostname = packagingHostName;
-        // remove the host property so it doesn't override the hostname property for url.format
-        delete collectionUrlObject.host;
-        prefixes.push(url.format(collectionUrlObject));
+    const serverType = tl.getVariable("System.ServerType");
+    if (!serverType || serverType.toLowerCase() !== "hosted") {
+        return Q.resolve(prefixes);
     }
 
-    return Q(prefixes);
+    return this.getServiceUrisFromCollectionUri(
+        collectionUri,
+        auth.getSystemAccessToken(),
+        "nuget",
+        "b3be7473-68ea-4a81-bfc7-9530baaa19ad")
+        .then((uris: string[]) => {
+            return prefixes.concat(uris);
+        });
 }

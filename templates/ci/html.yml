@@ -1,12 +1,14 @@
 # HTML
-# Package your static HTML application.
+# Archive your static HTML application and save it with the build record.
+# Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Ubuntu 1604'
-steps:
+pool:
+  vmImage: 'Ubuntu 16.04'
 
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-      includeRootFolder: false
-  - task: PublishBuildArtifacts@1
+steps:
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(build.sourcesDirectory)'
+    includeRootFolder: false
+- task: PublishBuildArtifacts@1

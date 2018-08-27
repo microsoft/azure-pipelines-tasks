@@ -4,7 +4,6 @@ import tl = require('vsts-task-lib/task');
 import path = require('path');
 
 import ClusterConnection from "./clusterconnection";
-import * as kubectl from "./kubernetescommand";
 import * as kubectlConfigMap from "./kubernetesconfigmap";
 import * as kubectlSecret from "./kubernetessecret";
 
@@ -12,16 +11,23 @@ tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
+var command = tl.getInput("command", true);
+var kubeconfigfilePath;
+if (command === "logout") {
+    kubeconfigfilePath = tl.getVariable("KUBECONFIG");
+}
 // open kubectl connection and run the command
-var connection = new ClusterConnection();
+var connection = new ClusterConnection(kubeconfigfilePath);
 try
 {
     connection.open().then(  
-        () => { return run(connection) }
+        () => { return run(connection, command) }
     ).then(
        () =>  {
            tl.setResult(tl.TaskResult.Succeeded, "");
-           connection.close();
+           if (command !== "login") {
+                connection.close();
+           }
        }
     ).catch((error) => {
        tl.setResult(tl.TaskResult.Failed, error.message)
@@ -33,7 +39,7 @@ catch (error)
     tl.setResult(tl.TaskResult.Failed, error.message);
 }
 
-async function run(clusterConnection: ClusterConnection) 
+async function run(clusterConnection: ClusterConnection, command: string) 
 {
     var secretName = tl.getInput("secretName", false);
     var configMapName = tl.getInput("configMapName", false);
@@ -46,14 +52,23 @@ async function run(clusterConnection: ClusterConnection)
         await kubectlConfigMap.run(clusterConnection, configMapName);
     }
     
-    await executeKubectlCommand(clusterConnection);  
+    await executeKubectlCommand(clusterConnection, command);  
 }
 
 // execute kubectl command
-function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
-    var command = tl.getInput("command", true);
+function executeKubectlCommand(clusterConnection: ClusterConnection, command: string) : any {
+    var commandMap = {
+        "login": "./kuberneteslogin",
+        "logout": "./kuberneteslogout"
+    }
+    
+    var commandImplementation = require("./kubernetescommand");
+    if(command in commandMap) {
+        commandImplementation = require(commandMap[command]);
+    }
+
     var result = "";
-    return kubectl.run(clusterConnection, command, (data) => result += data)
+    return commandImplementation.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
         tl.setVariable('KubectlOutput', result);
     });

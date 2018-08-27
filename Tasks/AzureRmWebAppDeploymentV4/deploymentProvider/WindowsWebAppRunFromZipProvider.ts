@@ -2,15 +2,18 @@ import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvid
 import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as Constant from '../operations/Constants';
-import * as ParameterParser from '../operations/parameterparser'
+import * as ParameterParser from '../operations/ParameterParserUtility'
 import { DeploymentType } from '../operations/TaskParameters';
+import { PackageType } from 'webdeployment-common/packageUtility';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
+var deployUtility = require('webdeployment-common/utility.js');
+var zipUtility = require('webdeployment-common/ziputility.js');
 
 export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProvider{
  
     public async DeployWebAppStep() {
         var webPackage = await FileTransformsUtility.applyTransformations(this.taskParams.Package.getPath(), this.taskParams);
-
+        
         if(this.taskParams.UseWebDeploy && this.taskParams.DeploymentType === DeploymentType.runFromZip) {
             var _isMSBuildPackage = await this.taskParams.Package.isMSBuildPackage();
             if(_isMSBuildPackage) {
@@ -19,9 +22,15 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
             else if(this.taskParams.VirtualApplication) {
                 throw Error(tl.loc("Publishusingzipdeploynotsupportedforvirtualapplication"));
             }
-            else if(this.taskParams.Package.isWarFile()) {
+            else if(this.taskParams.Package.getPackageType() === PackageType.war) {
                 throw Error(tl.loc("Publishusingzipdeploydoesnotsupportwarfile"));
             }
+        }
+
+        if(tl.stats(webPackage).isDirectory()) {
+            let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+            webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath);
+            tl.debug("Compressed folder into zip " +  webPackage);
         }
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
@@ -29,7 +38,7 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
         var customApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
         await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
 
-        await this.kuduServiceUtility.zipDeploy(webPackage, true, this.taskParams.TakeAppOfflineFlag, 
+        await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
             { slotName: this.appService.getSlot() });
 
         await this.PostDeploymentStep();

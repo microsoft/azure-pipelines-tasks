@@ -1,23 +1,14 @@
 # Xamarin.iOS
 # Build a Xamarin.iOS app and Xamarin.UITest assembly.
-# https://aka.ms/yaml
+# Add steps that install certificates, test, sign, and distribute the app, save build artifacts, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/xamarin
 
-queue: 'Hosted macOS'
+pool:
+  vmImage: 'macOS 10.13'
+
 steps:
-
-  - task: XamariniOS@1
-    inputs:
-      solutionFile: '**/*.sln'
-      configuration: 'Release'
-      buildForSimulator: true
-
-#  - task: CopyFiles@2
-#    inputs:
-#      contents: '**/*.ipa'
-#      targetFolder: '$(build.artifactStagingDirectory)'
-#  - task: PublishBuildArtifacts@1
-
-# Next steps:
-# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/pipelines/tasks/test/appcentertest
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/pipelines/tasks/deploy/appcenterdistribute
-# Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store
+- task: XamariniOS@1
+  inputs:
+    solutionFile: '**/*.sln'
+    configuration: 'Release'
+    buildForSimulator: true

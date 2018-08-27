@@ -73,6 +73,8 @@ export class NpmMockHelper extends TaskMockRunner {
                 };
             }
         });
+
+        this.registerLocationHelpersMock();
     }
 
     public run(noMockTask?: boolean): void {
@@ -121,6 +123,19 @@ export class NpmMockHelper extends TaskMockRunner {
     public mockServiceEndpoint(endpointId: string, url: string, auth: any): void {
         process.env['ENDPOINT_URL_' + endpointId] = url;
         process.env['ENDPOINT_AUTH_' + endpointId] = JSON.stringify(auth);
+    }
+
+    public registerLocationHelpersMock() {
+        this.registerMock('utility-common/packaging/locationUtilities', {
+            getPackagingUris: function(input) {
+                const collectionUrl: string = "https://vsts/packagesource";
+                return {
+                    PackagingUris: [collectionUrl],
+                    DefaultPackagingUri: collectionUrl
+                };
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
+        });
     }
 
     private isDebugging() {

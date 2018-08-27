@@ -7,8 +7,7 @@ export class DotnetMockHelper {
     private defaultNugetVersion = '4.0.0';
     private defaultNugetVersionInfo = [4,0,0,0];
 
-    constructor(
-        private tmr: tmrm.TaskMockRunner) {
+    constructor(private tmr: tmrm.TaskMockRunner) {
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['AGENT.TEMPDIRECTORY'] = "c:\\agent\\home\\temp";
         process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
@@ -17,6 +16,8 @@ export class DotnetMockHelper {
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
         process.env['BUILD_BUILDID'] = "1";
+
+        this.registerNugetLocationHelpersMock();
     }
 
     public setNugetVersionInputDefault() {
@@ -137,6 +138,22 @@ export class DotnetMockHelper {
         a.exist["c:\\from\\tool\\installer\\nuget.exe"] = true;
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\CredentialProvider\\CredentialProvider.TeamBuild.exe"] = true;
         this.tmr.setAnswers(a);
+    }
+
+    public registerNugetLocationHelpersMock() {
+        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
+            NUGET_ORG_V3_URL: 'https://api.nuget.org/v3/index.json'
+        });
+        this.tmr.registerMock('utility-common/packaging/locationUtilities', {
+            getPackagingUris: function(input) {
+                const collectionUrl: string = "https://vsts/packagesource";
+                return {
+                    PackagingUris: [collectionUrl],
+                    DefaultPackagingUri: collectionUrl
+                };
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
+        });
     }
 
     private registerMockWithMultiplePaths(paths: string[], mock: any) {

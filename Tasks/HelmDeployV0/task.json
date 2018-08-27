@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 137,
+        "Minor": 138,
         "Patch": 2
     },
     "demands": [],
@@ -20,7 +20,8 @@
         {
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
-            "isExpanded": true
+            "isExpanded": true,
+            "visibleRule": "command != logout && command != package"
         },
         {
             "name": "commands",
@@ -30,12 +31,14 @@
         {
             "name": "tls",
             "displayName": "TLS",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout && command != package"
         },
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout && command != package"
         }
     ],
     "inputs": [
@@ -120,6 +123,8 @@
                 "get": "get",
                 "init": "init",
                 "install": "install",
+                "login": "login",
+                "logout": "logout",
                 "ls": "ls",
                 "package": "package",
                 "rollback": "rollback",
@@ -307,7 +312,8 @@
             },
             "label": "Arguments",
             "helpMarkDown": "Command arguments.",
-            "groupName": "commands"
+            "groupName": "commands",
+            "visibleRule": "command != login && command != logout"
         },
         {
             "name": "enableTls",
@@ -405,6 +411,7 @@
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
         "SkipDeleteSecureFiles":"TLS not enabled in the Task. Skipping delete of certificates.",
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
-        "FileNotFound": "File not found at %s"
+        "FileNotFound": "File not found at %s",
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
     }
 }

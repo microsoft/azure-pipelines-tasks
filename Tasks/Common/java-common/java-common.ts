@@ -52,8 +52,8 @@ export function findJavaHome(jdkVersion: string, jdkArch: string): string {
         if (!discoveredJavaHome) {
             throw new Error(tl.loc('FailedToLocateSpecifiedJVM', envName));
         }
-    } 
-    
+    }
+
     return discoveredJavaHome;
 }
 
@@ -62,7 +62,7 @@ export function publishJavaTelemetry(taskName: string, javaTelemetryData) {
         //tl.assertAgent('2.120.0'); -> we can use this when all the tasks using this common module use vsts-task-lib 2.1.0 or higher
         let agentVersion: string = tl.getVariable('Agent.Version');
         if (agentVersion && !semver.lt(agentVersion, '2.120.0') && taskName && javaTelemetryData) {
-            console.log('##vso[telemetry.publish area=Tasks.CrossPlatform;feature=' + taskName + ']' + JSON.stringify(javaTelemetryData));
+            console.log('##vso[telemetry.publish area=TaskHub;feature=' + taskName + ']' + JSON.stringify(javaTelemetryData));
         } else {
             tl.debug('Failed to publish java telemetry. Agent version 2.120.0 or higher is required.');
         }

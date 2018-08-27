@@ -1,27 +1,20 @@
 # Ruby
 # Package your Ruby application.
-# https://aka.ms/yaml
+# Add steps that install rails, analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/ruby
 
-queue: 'Hosted Ubuntu 1604'
+pool:
+  vmImage: 'Ubuntu 16.04'
+
 steps:
+- task: UseRubyVersion@0
+  inputs:
+    versionSpec: '>= 2.5'
 
-  - task: UseRubyVersion@0
-    inputs:
-      versionSpec: '>= 2.5'
+- script: |
+    gem install bundler
+    bundle install --retry=3 --jobs=4
+  displayName: 'bundle install'
 
-#  - script: gem install rails && rails -v
-#    displayName: 'gem install rails'
-
-  - script: |
-      gem install bundler
-      bundle install --retry=3 --jobs=3 # Add --deployment if a Gemfile.lock file exists
-    displayName: 'bundle install'
-
-  - script: bundle exec rake
-    displayName: 'bundle exec rake'
-
-#  - task: ArchiveFiles@2
-#    inputs:
-#      rootFolderOrFile: '$(system.defaultWorkingDirectory)'
-#      includeRootFolder: false
-#  - task: PublishBuildArtifacts@1
+- script: bundle exec rake
+  displayName: 'bundle exec rake'
