@@ -26,6 +26,6 @@
         "azure-blobstorage-artifactProvider": "file:../../_build/Tasks/Common/azure-blobstorage-artifactProvider-1.0.0.tgz",
         "moment": "2.21.0",
         "vsts-task-lib": "2.4.0",
-        "vsts-task-tool-lib": "0.9.0"
+        "vsts-task-tool-lib": "0.10.0"
     }
 }

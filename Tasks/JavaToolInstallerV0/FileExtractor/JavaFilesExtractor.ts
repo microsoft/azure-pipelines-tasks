@@ -1,13 +1,12 @@
-import fs = require('fs');
-import os = require('os');
-import path = require('path');
-import taskLib = require('vsts-task-lib/task');
-import tr = require('vsts-task-lib/toolrunner');
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 
 export class JavaFilesExtractor {
     public destinationFolder: string;
-    public win: Readonly<boolean>;
+    public readonly win: boolean;
 
     // 7zip
     public xpSevenZipLocation: string;
