@@ -1,14 +1,12 @@
 import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
 import * as utils from './helpers';
 import * as constants from './constants';
-import * as os from 'os';
 import * as ci from './cieventlogger';
-import { AreaCodes, ResultMessages, DistributionTypes } from './constants';
+import { AreaCodes, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
 import * as versionfinder from './versionfinder';
-import * as uuid from 'uuid';
+import * as isUncPath from 'is-unc-path';
 const regedit = require('regedit');
 
 let serverBasedRun = false;
@@ -122,6 +120,11 @@ function getTestSelectionInputs(inputDataContract : idc.InputDataContract) : idc
     if (inputDataContract.TestSelectionSettings.SearchFolder && !utils.Helper.pathExistsAsDirectory(inputDataContract.TestSelectionSettings.SearchFolder)) {
         throw new Error(tl.loc('searchLocationNotDirectory', inputDataContract.TestSelectionSettings.SearchFolder));
     }
+
+    if (isUncPath(inputDataContract.TestSelectionSettings.SearchFolder)) {
+        throw new Error(tl.loc('UncPathNotSupported'));
+    }
+
     console.log(tl.loc('searchFolderInput', inputDataContract.TestSelectionSettings.SearchFolder));
 
     return inputDataContract;
