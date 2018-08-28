@@ -185,13 +185,13 @@ fsClone.writeFileSync = function(fileName, data) {
     }
 };
 
-fsClone.chmod = function(path, mode) {
+fsClone.chmodSync = function(path, mode) {
       switch(path){
           case KubectlPath:
             console.log(`Set kubectlPath to ${KubectlPath} and added permissions`);
             break;
           default:
-            fs.chmod(path, mode);        
+            fs.chmodSync(path, mode);        
       }
 };
 
