@@ -77,6 +77,9 @@ export class NugetMockHelper {
             getBundledNuGetLocation: function(version) {
                 return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
             },
+            resolveToolPath: function(path) {
+                return path;
+            },
             stripLeadingAndTrailingQuotes: function(path) {
                 return path;
             },
@@ -103,6 +106,9 @@ export class NugetMockHelper {
             },
             getBundledNuGetLocation: function(version) {
                 return '~/myagent/_work/_tasks/NuGet/nuget.exe';
+            },
+            resolveToolPath: function(path) {
+                return path;
             },
             locateCredentialProvider: function(path) {
                 return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
