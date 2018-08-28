@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 138,
-        "Patch": 0
+        "Patch": 1
     },
     "satisfies": ["Java"],
     "demands": [],
@@ -70,7 +70,10 @@
             "label": "Azure subscription",
             "required": true,
             "visibleRule": "jdkSourceOption == AzureStorage",
-            "helpMarkDown": "Choose the Azure Resource Manager subscription for the JDK."
+            "helpMarkDown": "Choose the Azure Resource Manager subscription for the JDK.",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "azureStorageAccountName",

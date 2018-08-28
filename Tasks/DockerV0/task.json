@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 15
+        "Patch": 16
     },
     "demands": [],
     "preview": "false",
@@ -51,7 +51,10 @@
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
-            "visibleRule": "containerregistrytype = Azure Container Registry"
+            "visibleRule": "containerregistrytype = Azure Container Registry",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "azureContainerRegistry",

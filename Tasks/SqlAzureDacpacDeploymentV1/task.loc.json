@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [
     "sqlpackage"
@@ -77,7 +77,10 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "ServerName",

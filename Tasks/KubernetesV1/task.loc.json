@@ -85,7 +85,10 @@
       "visibleRule": "connectionType = Azure Resource Manager",
       "defaultValue": "",
       "groupName": "kubernetesCluster",
-      "required": true
+      "required": true,
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "azureResourceGroup",
@@ -236,7 +239,10 @@
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpointForSecrets",
       "visibleRule": "secretType = dockerRegistry && containerRegistryType = Azure Container Registry",
       "defaultValue": "",
-      "groupName": "secrets"
+      "groupName": "secrets",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "azureContainerRegistry",

@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 17
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -82,7 +82,10 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
-      "groupName": "AzureDetails"
+      "groupName": "AzureDetails",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "location",

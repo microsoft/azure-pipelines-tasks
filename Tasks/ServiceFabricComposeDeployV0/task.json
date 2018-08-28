@@ -17,7 +17,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 7
+        "Patch": 8
     },
     "demands": [
         "Cmd"
@@ -101,7 +101,10 @@
             "helpMarkDown": "Select an Azure subscription",
             "groupName": "registry",
             "visibleRule": "registryCredentials = AzureResourceManagerEndpoint",
-            "required": true
+            "required": true,
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "registryUserName",

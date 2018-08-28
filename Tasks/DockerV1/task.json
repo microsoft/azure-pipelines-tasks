@@ -64,7 +64,10 @@
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
             "groupName": "containerRegistry",
-            "visibleRule": "containerregistrytype = Azure Container Registry"
+            "visibleRule": "containerregistrytype = Azure Container Registry",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "azureContainerRegistry",

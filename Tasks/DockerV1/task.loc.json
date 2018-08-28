@@ -64,7 +64,10 @@
       "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
       "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
       "groupName": "containerRegistry",
-      "visibleRule": "containerregistrytype = Azure Container Registry"
+      "visibleRule": "containerregistrytype = Azure Container Registry",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+      }
     },
     {
       "name": "azureContainerRegistry",

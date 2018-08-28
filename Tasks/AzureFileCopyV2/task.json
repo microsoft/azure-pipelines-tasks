@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
 
     },
     "preview": true,
@@ -69,7 +69,10 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Azure Resource Manager subscription to target for copying the files.",
-            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+            "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
+            "properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
         },
         {
             "name": "Destination",

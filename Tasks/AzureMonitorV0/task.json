@@ -17,7 +17,7 @@
 	"version": {
 		"Major": 0,
 		"Minor": 0,
-		"Patch": 9
+		"Patch": 10
 	},
 	"instanceNameFormat": "Query Azure Monitor alerts",
 	"groups": [],
@@ -27,7 +27,10 @@
 			"label": "Azure subscription",
 			"defaultValue": "",
 			"required": "true",
-			"helpMarkDown": "Select an Azure Resource Manager subscription to monitor."
+			"helpMarkDown": "Select an Azure Resource Manager subscription to monitor.",
+			"properties": {
+                "EndpointFilterRule": "ScopeLevel != ManagementGroup"
+            }
 		}, {
 			"name": "ResourceGroupName",
 			"type": "pickList",
