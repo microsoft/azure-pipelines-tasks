@@ -22,3 +22,8 @@ export const AzureServicePrinicipalAuthentications = {
     "servicePrincipalKey": "spnKey",
     "servicePrincipalCertificate": "spnCertificate"
 }
+
+export const AzureRmEndpointAuthenticationScheme = {
+	"ServicePrincipal": "serviceprincipal",
+	"ManagedServiceIdentity": "managedserviceidentity"
+}
