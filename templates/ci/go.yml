@@ -1,6 +1,6 @@
 # Go
-# Build and test your Go application.
-# Add steps that save build artifacts, deploy, and more:
+# Build your Go application.
+# Add steps that test, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/go
 
 pool:
@@ -29,6 +29,6 @@ steps:
         curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
         dep ensure
     fi
-    go test -v ./...
+    go build -v .
   workingDirectory: '$(modulePath)'
-  displayName: 'Get dependencies and run tests'
+  displayName: 'Get dependencies, then build'
