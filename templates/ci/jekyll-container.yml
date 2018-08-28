@@ -1,9 +1,10 @@
-# Jekyll container
+# Jekyll site
 # Package your Jekyll site using the jekyll/builder Docker container image.
 # Add steps that build, test, save build artifacts, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: Docker@0

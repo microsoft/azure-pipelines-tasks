@@ -19,5 +19,6 @@
   "loc.messages.NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
   "loc.messages.HelmNotFoundInFolder": "Helm executable not found in path %s",
   "loc.messages.HelmDownloadFailed": "Failed to download Helm from location %s. Error %s",
-  "loc.messages.HelmLatestNotKnown": "Cannot get the latest Helm info from %s. Error %s. Using default Helm version %s."
+  "loc.messages.HelmLatestNotKnown": "Cannot get the latest Helm info from %s. Error %s. Using default Helm version %s.",
+  "loc.messages.VerifyHelmInstallation": "Verifying helm installation..."
 }

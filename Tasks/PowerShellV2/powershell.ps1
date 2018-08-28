@@ -17,6 +17,7 @@ try {
     }
     $input_failOnStderr = Get-VstsInput -Name 'failOnStderr' -AsBool
     $input_ignoreLASTEXITCODE = Get-VstsInput -Name 'ignoreLASTEXITCODE' -AsBool
+    $input_pwsh = Get-VstsInput -Name 'pwsh' -AsBool
     $input_workingDirectory = Get-VstsInput -Name 'workingDirectory' -Require
     Assert-VstsPath -LiteralPath $input_workingDirectory -PathType 'Container'
     $input_targetType = Get-VstsInput -Name 'targetType'
@@ -69,13 +70,22 @@ try {
         $filePath,
         $joinedContents,
         ([System.Text.Encoding]::UTF8))
+        
+    if ($input_pwsh ) {
+        $pwsh = Get-Command -Name pwsh.exe -CommandType Application -ErrorAction SilentlyContinue
+        if ($null -ne $pwsh) {
+            $powershellPath = $pwsh | Select-Object -First 1 -ExpandProperty Path
+        }
+    }
+    if ($null -eq $powershellPath) {
+        $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
+    }
+    Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
 
     # Prepare the external command values.
     #
     # Note, use "-Command" instead of "-File". On PowerShell v4 and V3 when using "-File", terminating
     # errors do not cause a non-zero exit code.
-    $powershellPath = Get-Command -Name powershell.exe -CommandType Application | Select-Object -First 1 -ExpandProperty Path
-    Assert-VstsPath -LiteralPath $powershellPath -PathType 'Leaf'
     $arguments = "-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command `". '$($filePath.Replace("'", "''"))'`""
     $splat = @{
         'FileName' = $powershellPath
