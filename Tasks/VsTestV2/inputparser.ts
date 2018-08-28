@@ -295,18 +295,13 @@ function getDistributionSettings(inputDataContract : idc.InputDataContract) : id
 
 function getExecutionSettings(inputDataContract : idc.InputDataContract) : idc.InputDataContract {
     inputDataContract.ExecutionSettings = <idc.ExecutionSettings>{};
-    inputDataContract.ExecutionSettings.SettingsFile = tl.getPathInput('runSettingsFile');
+
+    if (tl.filePathSupplied('runSettingsFile')) {
+        inputDataContract.ExecutionSettings.SettingsFile = path.resolve(tl.getPathInput('runSettingsFile'));
+        console.log(tl.loc('runSettingsFileInput', inputDataContract.ExecutionSettings.SettingsFile));
+    }
 
     inputDataContract.ExecutionSettings.TempFolder = utils.Helper.GetTempFolder();
-
-    if (!utils.Helper.isNullOrWhitespace(inputDataContract.ExecutionSettings.SettingsFile)) {
-        inputDataContract.ExecutionSettings.SettingsFile = path.resolve(inputDataContract.ExecutionSettings.SettingsFile);
-    }
-
-    if (inputDataContract.ExecutionSettings.SettingsFile === tl.getVariable('System.DefaultWorkingDirectory')) {
-        delete inputDataContract.ExecutionSettings.SettingsFile;
-    }
-    console.log(tl.loc('runSettingsFileInput', inputDataContract.ExecutionSettings.SettingsFile));
 
     inputDataContract.ExecutionSettings.OverridenParameters = tl.getInput('overrideTestrunParameters');
     tl.debug(`OverrideTestrunParameters set to ${inputDataContract.ExecutionSettings.OverridenParameters}`);
