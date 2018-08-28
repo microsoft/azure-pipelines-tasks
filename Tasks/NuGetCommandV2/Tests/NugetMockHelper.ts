@@ -77,9 +77,6 @@ export class NugetMockHelper {
             getBundledNuGetLocation: function(version) {
                 return 'c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe';
             },
-            resolveToolPath: function(path) {
-                return path;
-            },
             stripLeadingAndTrailingQuotes: function(path) {
                 return path;
             },
@@ -92,6 +89,11 @@ export class NugetMockHelper {
             },
             getNuGetFeedRegistryUrl(accessToken, feedId, nuGetVersion) {
                 return 'https://vsts/packagesource';
+            }
+        });
+        this.tmr.registerMock('./Utility', {
+            resolveToolPath: function(path) {
+                return path;
             }
         });
     }
@@ -116,6 +118,11 @@ export class NugetMockHelper {
             setConsoleCodePage: function() {
                 var tlm = require('vsts-task-lib/mock-task');
                 tlm.debug(`setting console code page`);
+            }
+        });
+        this.tmr.registerMock('./Utility', {
+            resolveToolPath: function(path) {
+                return path;
             }
         });
     }
