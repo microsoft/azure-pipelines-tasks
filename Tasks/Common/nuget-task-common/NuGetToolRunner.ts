@@ -100,6 +100,7 @@ export class NuGetToolRunner extends ToolRunner {
 }
 
 export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings): NuGetToolRunner {
+    nuGetExePath = ngutil.resolveToolPath(nuGetExePath);
     let runner = new NuGetToolRunner(nuGetExePath, settings);
     runner.on("debug", message => tl.debug(message));
     return runner;

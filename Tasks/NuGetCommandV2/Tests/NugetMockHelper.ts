@@ -91,6 +91,11 @@ export class NugetMockHelper {
                 return 'https://vsts/packagesource';
             }
         });
+        this.tmr.registerMock('./Utility', {
+            resolveToolPath: function(path) {
+                return path;
+            }
+        });
     }
 
     public registerNugetUtilityMockUnix() {
@@ -104,12 +109,20 @@ export class NugetMockHelper {
             getBundledNuGetLocation: function(version) {
                 return '~/myagent/_work/_tasks/NuGet/nuget.exe';
             },
+            resolveToolPath: function(path) {
+                return path;
+            },
             locateCredentialProvider: function(path) {
                 return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
             },
             setConsoleCodePage: function() {
                 var tlm = require('vsts-task-lib/mock-task');
                 tlm.debug(`setting console code page`);
+            }
+        });
+        this.tmr.registerMock('./Utility', {
+            resolveToolPath: function(path) {
+                return path;
             }
         });
     }
