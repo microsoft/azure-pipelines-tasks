@@ -41,9 +41,10 @@ export class AzureRMEndpoint {
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
-
             this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
-            if (this.endpoint.scheme && this.endpoint.scheme.toLowerCase() === constants.AzureRmEndpointAuthenticationScheme.ServicePrincipal) {
+
+            if (!this.endpoint.scheme || this.endpoint.scheme.toLowerCase() !== constants.AzureRmEndpointAuthenticationScheme.ManagedServiceIdentity) {
+                // if sheme is null, we assume the scheme to be ServicePrincipal
                 if(this.endpoint.authenticationType && this.endpoint.authenticationType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
                     tl.debug('certificate spn endpoint');
                     this.endpoint.servicePrincipalCertificate = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'servicePrincipalCertificate', false);
