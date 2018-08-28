@@ -14,9 +14,7 @@ tr.registerMock('vsts-task-tool-lib/tool', {
 });
 
 tr.registerMock('fs', {
-    symlinkSync: () => { },
-    unlinkSync: () => { },
-    existsSync: () => { return true; },
+    execSync: () => { },
     statSync: fs.statSync,
     writeFileSync: fs.writeFileSync,
     readFileSync: fs.readFileSync
