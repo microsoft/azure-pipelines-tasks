@@ -3,7 +3,8 @@
 # Add steps that save build artifacts and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/java
 
-queue: 'Hosted Linux Preview'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: Ant@1
@@ -15,4 +16,3 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
-    options: '-DmyProperty=myPropertyValue'

@@ -1,6 +1,6 @@
 {
     "name": "nugetcommand",
-    "version": "2.0.35",
+    "version": "2.0.36",
     "description": "Restore, pack, or push NuGet packages, or run a NuGet command.",
     "main": "nugetcommandmain.js",
     "scripts": {
@@ -20,7 +20,7 @@
         "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common-1.0.1.tgz",
         "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
         "vso-node-api": "6.0.1-preview",
-        "vsts-task-lib": "2.0.6",
+        "vsts-task-lib": "2.6.0",
         "xmlreader": "^0.2.3"
     }
 }

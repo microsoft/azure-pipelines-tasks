@@ -2,7 +2,7 @@
     "id": "497D490F-EEA7-4F2B-AB94-48D9C1ACDCB1",
     "name": "AzureRmWebAppDeployment",
     "friendlyName": "Azure App Service Deploy",
-    "description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
+    "description": "Update Azure App Services on Windows, Web App on Linux with built-in images or Docker containers, ASP.NET, .NET Core, PHP, Python or Node.js based Web applications, Function Apps on Windows or Linux with Docker Containers, Mobile Apps, API applications, Web Jobs using Web Deploy / Kudu REST APIs",
     "helpMarkDown": "[More information](https://aka.ms/azurermwebdeployreadme)",
     "category": "Deploy",
     "visibility": [
@@ -18,7 +18,7 @@
     "version": {
         "Major": 4,
         "Minor": 3,
-        "Patch": 1
+        "Patch": 5
     },
     "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
@@ -27,19 +27,19 @@
             "name": "FileTransformsAndVariableSubstitution",
             "displayName": "File Transforms & Variable Substitution Options",
             "isExpanded": false,
-            "visibleRule": "WebAppKind != webAppContainer && WebAppKind != webAppLinux && Package NotEndsWith .war"
+            "visibleRule": "WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && Package NotEndsWith .war"
         },
         {
             "name": "AdditionalDeploymentOptions",
             "displayName": "Additional Deployment Options",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
         },
         {
             "name": "PostDeploymentAction",
             "displayName": "Post Deployment Action",
             "isExpanded": false,
-            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer"
+            "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppkind != functionAppContainer"
         },
         {
             "name": "ApplicationAndConfigurationSettings",
@@ -98,12 +98,13 @@
             "options": {
                 "webApp": "Web App on Windows",
                 "webAppLinux": "Web App on Linux",
-                "webAppContainer": "Web App for Containers",
+                "webAppContainer": "Web App for Containers (Linux)",
                 "functionApp": "Function App",
+                "functionAppContainer" : "Function App for Containers",
                 "apiApp": "API App",
                 "mobileApp": "Mobile App"
             },
-            "helpMarkDown": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App and Mobile App.",
+            "helpMarkDown": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App, Function App for Containers and Mobile App.",
             "visibleRule": "ConnectionType = AzureRM"
         },
         {
@@ -158,7 +159,7 @@
             "label": "Registry or Namespace",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = webAppContainer",
+            "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
             "helpMarkDown": "A globally unique top-level domain name for your specific registry or namespace.<br/> Note: Fully qualified image name will be of the format: '<b>`<registry or namespace`></b>/`<repository`>:`<tag`>'. For example, '<b>myregistry.azurecr.io</b>/nginx:latest'."
         },
         {
@@ -167,7 +168,7 @@
             "label": "Image",
             "defaultValue": "",
             "required": true,
-            "visibleRule": "WebAppKind = webAppContainer",
+            "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
             "helpMarkDown": "Name of the repository where the container images are stored.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/<b>`<repository`></b>:`<tag`>'. For example, 'myregistry.azurecr.io/<b>nginx</b>:latest'."
         },
         {
@@ -176,7 +177,7 @@
             "label": "Tag",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = webAppContainer",
+            "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
             "helpMarkDown": "Tags are optional, it is the mechanism that registries use to give Docker images a version.<br/> Note: Fully qualified image name will be of the format: '`<registry or namespace`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'."
         },
         {
@@ -185,7 +186,7 @@
             "label": "Virtual application",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != functionApp && WebAppKind != \"\"",
+            "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && WebAppKind != \"\"",
             "helpMarkDown": "Specify the name of the Virtual application that has been configured in the Azure portal. The option is not required for deployments to the App Service root."
         },
         {
@@ -216,7 +217,7 @@
             "label": "Startup command ",
             "defaultValue": "",
             "required": false,
-            "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer",
+            "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
             "helpMarkDown": "Enter the start up command."
         },
         {
