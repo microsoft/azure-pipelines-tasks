@@ -196,13 +196,9 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
             return Q.resolve(repos);
         }
         const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-        
-
         let packagingLocation: pkgLocationUtils.PackagingLocation;
-        console.log("packagingLocation is: " + packagingLocation + ".......................................................");
         try {
             packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Maven);
-            console.log("packagingLocation is: " + packagingLocation + ".......................................................");
         } catch (error) {
             tl.debug("Unable to get packaging URIs, using default collection URI");
             tl.debug(JSON.stringify(error));
@@ -212,15 +208,10 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
         }
 
         let packageUrl = packagingLocation.DefaultPackagingUri;
-        console.log("packageUrl is: " + packageUrl + ".......................................................");
-        console.log('collectionUrl is: ' + collectionUrl + ".......................................................");
-        console.log("collectionUrl.hostname is: " + url.parse(collectionUrl).hostname + ".......................................................");
         tl.debug('collectionUrl=' + collectionUrl);
         tl.debug('packageUrl=' + packageUrl);
         let collectionHostname:string = url.parse(collectionUrl).hostname.toLowerCase();
-        //let packageHostname:string = packageUrl[1];
         if (packageUrl) {
-            console.log("packageHostname.hostname is: " + url.parse(packageUrl).hostname + ".......................................................");
             url.parse(packageUrl).hostname.toLowerCase();
         } else {
             packageUrl = collectionHostname;
@@ -260,53 +251,6 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
 
         tl.debug('Feeds found: ' + JSON.stringify(repos));
         return Q.resolve(repos);
-            
-        // return locationHelpers.assumeNuGetUriPrefixes(collectionUrl).then(function (packageUrl) {
-        //     tl.debug('collectionUrl=' + collectionUrl);
-        //     tl.debug('packageUrl=' + packageUrl);
-        //     let collectionHostname:string = url.parse(collectionUrl).hostname.toLowerCase();
-        //     let packageHostname:string = packageUrl[1];
-        //     if (packageHostname) {
-        //         url.parse(packageHostname).hostname.toLowerCase();
-        //     } else {
-        //         packageHostname = collectionHostname;
-        //     }
-        //     let parseRepos:(project) => void = function(project) {
-        //         if (project && project.repositories) {
-        //             for (let r of project.repositories) {
-        //                 r = r instanceof Array ? r[0] : r;
-        //                 if (r.repository) {
-        //                     for (let repo of r.repository) {
-        //                         repo = repo instanceof Array ? repo[0] : repo;
-        //                         let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
-        //                         if (url && (url.toLowerCase().includes(collectionHostname) ||
-        //                                     url.toLowerCase().includes(packageHostname))) {
-        //                         tl.debug('using credentials for url: ' + url);
-        //                         repos.push({
-        //                             id: (repo.id && repo.id instanceof Array)
-        //                                 ? repo.id[0]
-        //                                 : repo.id
-        //                             });
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     };
-
-        //     if (pomJson.projects && pomJson.projects.project) {
-        //         for (let project of pomJson.projects.project) {
-        //             parseRepos(project);
-        //         }
-        //     } else if (pomJson.project) {
-        //         parseRepos(pomJson.project);
-        //     } else {
-        //         tl.warning(tl.loc('EffectivePomInvalid'));
-        //     }
-
-        //     tl.debug('Feeds found: ' + JSON.stringify(repos));
-        //     return Q.resolve(repos);
-        // });
     });
 }
 
