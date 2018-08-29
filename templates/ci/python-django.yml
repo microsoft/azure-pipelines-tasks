@@ -5,15 +5,15 @@
 
 pool:
   vmImage: 'Ubuntu 16.04'
-  strategy:
-    matrix:
-      Python35:
-        PYTHON_VERSION: '3.5'
-      Python36:
-        PYTHON_VERSION: '3.6'
-      Python37:
-        PYTHON_VERSION: '3.7'
-    maxParallel: 3
+strategy:
+  matrix:
+    Python35:
+      PYTHON_VERSION: '3.5'
+    Python36:
+      PYTHON_VERSION: '3.6'
+    Python37:
+      PYTHON_VERSION: '3.7'
+  maxParallel: 3
 
 steps:
 - task: UsePythonVersion@0
