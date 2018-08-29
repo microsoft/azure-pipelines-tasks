@@ -62,7 +62,13 @@ tmr.registerMock('nuget-task-common/Utility', {
         var tlm = require('vsts-task-lib/mock-task');
         tlm.debug(`setting console code page`);
     }
-} )
+} );
+
+tmr.registerMock('./Utility', {
+    resolveToolPath: function(path) {
+        return path;
+    }
+});
 
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
