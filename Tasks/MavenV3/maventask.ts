@@ -194,7 +194,7 @@ async function execBuild() {
                     }
                     return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
                 })
-                .fail(function (err) {
+                .catch(function (err) {
                     return Q.reject(err);
                 });
             } else {
