@@ -32,6 +32,7 @@ connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 
 // Run the specified action
 var action = tl.getInput("action", true);
+var result = "";
 /* tslint:disable:no-var-requires */
 require({
     "Build an image": "./containerbuild",
@@ -40,10 +41,11 @@ require({
     "Push images": "./containerpush",
     "Run an image": "./containerrun",
     "Run a Docker command": "./containercommand"
-}[action]).run(connection)
+}[action]).run(connection, (data) => result += data)
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
     connection.close();
+    tl.setVariable("DockerOutput", result);
 })
 .then(function success() {
     tl.setResult(tl.TaskResult.Succeeded, "");
