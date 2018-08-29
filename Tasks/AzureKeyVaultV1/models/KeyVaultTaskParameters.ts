@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 import msRestAzure = require('azure-arm-rest/azure-arm-common');
 import tl = require("vsts-task-lib/task");
 import util = require("util")
