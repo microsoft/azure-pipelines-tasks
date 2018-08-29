@@ -190,6 +190,10 @@ export function getBundledNuGetLocation(uxOption: string): string {
     return toolPath;
 }
 
+export function resolveToolPath(path: string ): string {
+    return tl.resolve(path);
+}
+
 export function locateCredentialProvider(): string {
     return path.join(__dirname, 'NuGet/CredentialProvider'); 
 }

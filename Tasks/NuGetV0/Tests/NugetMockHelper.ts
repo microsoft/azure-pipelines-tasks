@@ -71,7 +71,13 @@ export class NugetMockHelper {
                 var tlm = require('vsts-task-lib/mock-task');
                 tlm.debug(`setting console code page`);
             }
-        } )
+        } );
+        
+        this.tmr.registerMock('./Utility', {
+            resolveToolPath: function(path) {
+                return path;
+            }
+        });
     }
     
     public registerNugetConfigMock() {
