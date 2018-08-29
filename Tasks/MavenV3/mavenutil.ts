@@ -250,7 +250,7 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
         }
 
         tl.debug('Feeds found: ' + JSON.stringify(repos));
-        return Q.resolve(repos);
+        return Promise.resolve(repos);
     });
 }
 
