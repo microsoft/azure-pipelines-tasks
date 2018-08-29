@@ -4,15 +4,12 @@ import path = require('path');
 import fs = require('fs');
 import tl = require('vsts-task-lib/task');
 import tr = require('vsts-task-lib/toolrunner');
-import locationHelpers = require("nuget-task-common/LocationHelpers"); // TODO: refactor
 import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
 import systemToken = require('utility-common/accesstoken');
 
 import * as url from "url";
 import * as xml2js from 'xml2js';
 import * as fse from 'fs-extra';
-import * as cheerio from 'cheerio';
-import * as vsts from "vso-node-api/WebApi";
 
 let stripbom = require('strip-bom');
 let base64 = require('base-64');
@@ -20,9 +17,6 @@ let utf8 = require('utf8');
 let uuidV4 = require("uuid/v4");
 
 const accessTokenEnvSetting: string = 'ENV_MAVEN_ACCESS_TOKEN';
-const ApiVersion = "3.0-preview.1";
-const PackagingAreaName: string = "maven";
-const PackageAreaId: string = "F285A171-0DF5-4C49-AAF2-17D0D37D9F0E";
 
 function readXmlFileAsJson(filePath: string): Q.Promise<any> {
     return readFile(filePath, 'utf-8')
@@ -205,8 +199,10 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
         
 
         let packagingLocation: pkgLocationUtils.PackagingLocation;
+        console.log("packagingLocation is: " + packagingLocation + ".......................................................");
         try {
-            packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+            packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Maven);
+            console.log("packagingLocation is: " + packagingLocation + ".......................................................");
         } catch (error) {
             tl.debug("Unable to get packaging URIs, using default collection URI");
             tl.debug(JSON.stringify(error));
@@ -216,50 +212,54 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
         }
 
         let packageUrl = packagingLocation.DefaultPackagingUri;
+        console.log("packageUrl is: " + packageUrl + ".......................................................");
+        console.log('collectionUrl is: ' + collectionUrl + ".......................................................");
+        console.log("collectionUrl.hostname is: " + url.parse(collectionUrl).hostname + ".......................................................");
         tl.debug('collectionUrl=' + collectionUrl);
-            tl.debug('packageUrl=' + packageUrl);
-            let collectionHostname:string = url.parse(collectionUrl).hostname.toLowerCase();
-            let packageHostname:string = packageUrl[1];
-            if (packageHostname) {
-                url.parse(packageHostname).hostname.toLowerCase();
-            } else {
-                packageHostname = collectionHostname;
-            }
-            let parseRepos:(project) => void = function(project) {
-                if (project && project.repositories) {
-                    for (let r of project.repositories) {
-                        r = r instanceof Array ? r[0] : r;
-                        if (r.repository) {
-                            for (let repo of r.repository) {
-                                repo = repo instanceof Array ? repo[0] : repo;
-                                let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
-                                if (url && (url.toLowerCase().includes(collectionHostname) ||
-                                            url.toLowerCase().includes(packageHostname))) {
-                                tl.debug('using credentials for url: ' + url);
-                                repos.push({
-                                    id: (repo.id && repo.id instanceof Array)
-                                        ? repo.id[0]
-                                        : repo.id
-                                    });
-                                }
+        tl.debug('packageUrl=' + packageUrl);
+        let collectionHostname:string = url.parse(collectionUrl).hostname.toLowerCase();
+        //let packageHostname:string = packageUrl[1];
+        if (packageUrl) {
+            console.log("packageHostname.hostname is: " + url.parse(packageUrl).hostname + ".......................................................");
+            url.parse(packageUrl).hostname.toLowerCase();
+        } else {
+            packageUrl = collectionHostname;
+        }
+        let parseRepos:(project) => void = function(project) {
+            if (project && project.repositories) {
+                for (let r of project.repositories) {
+                    r = r instanceof Array ? r[0] : r;
+                    if (r.repository) {
+                        for (let repo of r.repository) {
+                            repo = repo instanceof Array ? repo[0] : repo;
+                            let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
+                            if (url && (url.toLowerCase().includes(collectionHostname) ||
+                                        url.toLowerCase().includes(packageUrl))) {
+                            tl.debug('using credentials for url: ' + url);
+                            repos.push({
+                                id: (repo.id && repo.id instanceof Array)
+                                    ? repo.id[0]
+                                    : repo.id
+                                });
                             }
                         }
                     }
                 }
-            };
-
-            if (pomJson.projects && pomJson.projects.project) {
-                for (let project of pomJson.projects.project) {
-                    parseRepos(project);
-                }
-            } else if (pomJson.project) {
-                parseRepos(pomJson.project);
-            } else {
-                tl.warning(tl.loc('EffectivePomInvalid'));
             }
+        };
 
-            tl.debug('Feeds found: ' + JSON.stringify(repos));
-            return Q.resolve(repos);
+        if (pomJson.projects && pomJson.projects.project) {
+            for (let project of pomJson.projects.project) {
+                parseRepos(project);
+            }
+        } else if (pomJson.project) {
+            parseRepos(pomJson.project);
+        } else {
+            tl.warning(tl.loc('EffectivePomInvalid'));
+        }
+
+        tl.debug('Feeds found: ' + JSON.stringify(repos));
+        return Q.resolve(repos);
             
         // return locationHelpers.assumeNuGetUriPrefixes(collectionUrl).then(function (packageUrl) {
         //     tl.debug('collectionUrl=' + collectionUrl);
