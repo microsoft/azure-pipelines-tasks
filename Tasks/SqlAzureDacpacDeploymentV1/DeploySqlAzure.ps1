@@ -69,8 +69,6 @@ try {
         New-Item -Path $generatedOutputFilesRoot -ItemType Directory | Out-Null
     }
 
-    $sqlPassword = EscapeSpecialChars -str $sqlPassword
-
     switch ($deploymentAction) {
         "Publish" {
             Write-Verbose "Executing 'Publish' action."
