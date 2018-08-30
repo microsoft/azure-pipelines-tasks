@@ -264,10 +264,10 @@ function Run-SqlCmd {
         $sqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverName
     }
 
-    $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
+    $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username '$sqlUsername' "
 
-    $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
-    $commandToLog = $scriptArgument + " -Password ****** "
+    $commandToRun = $scriptArgument + " -Password '$sqlPassword' "
+    $commandToLog = $scriptArgument + " -Password '******' "
 
     # Increase Timeout to 120 seconds in case its not provided by User
     if (-not ($sqlcmdAdditionalArguments.ToLower().Contains("-connectiontimeout")))
