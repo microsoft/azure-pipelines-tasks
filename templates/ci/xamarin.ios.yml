@@ -7,8 +7,9 @@ pool:
   vmImage: 'macOS 10.13'
 
 steps:
-- task: XamariniOS@1
+- task: XamariniOS@2
   inputs:
     solutionFile: '**/*.sln'
     configuration: 'Release'
+    packageApp: false
     buildForSimulator: true

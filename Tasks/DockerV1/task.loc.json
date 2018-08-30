@@ -13,10 +13,9 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 2
+    "Patch": 12
   },
   "demands": [],
-  "preview": "true",
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
     {

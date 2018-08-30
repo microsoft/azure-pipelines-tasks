@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 import keyVaultTaskParameters = require("../models/KeyVaultTaskParameters");
 import armKeyVault = require("./azure-arm-keyvault");
 import util = require("util");

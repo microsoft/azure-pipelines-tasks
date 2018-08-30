@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 7
+    "Patch": 8
   },
   "demands": [],
   "satisfies": [
@@ -89,6 +89,7 @@
     "NotAValidSemverVersion": "ms-resource:loc.messages.NotAValidSemverVersion",
     "HelmNotFoundInFolder": "ms-resource:loc.messages.HelmNotFoundInFolder",
     "HelmDownloadFailed": "ms-resource:loc.messages.HelmDownloadFailed",
-    "HelmLatestNotKnown": "ms-resource:loc.messages.HelmLatestNotKnown"
+    "HelmLatestNotKnown": "ms-resource:loc.messages.HelmLatestNotKnown",
+    "VerifyHelmInstallation": "ms-resource:loc.messages.VerifyHelmInstallation"
   }
 }
