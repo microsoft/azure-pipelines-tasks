@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 141,
+        "Minor": 140,
         "Patch": 0
     },
     "releaseNotes": "Script task consistency. Added support for macOS and Linux.",
@@ -108,10 +108,10 @@
         {
             "name": "pwsh",
             "type": "boolean",
-            "label": "Prefer PowerShell Core over Windows PowerShell on Windows",
+            "label": "Use PowerShell Core",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "If this is true, the task will look for the release binary of PowerShell Core {`pwsh.exe`) on the `PATH` and if so use this as the main entry assembly. This applies to Windows only and if this is not true, it will default to Windows PowerShell (`powershell.exe`)",
+            "helpMarkDown": "If this is true, then on Windows the task will use pwsh.exe from your PATH instead of powershell.exe.",
             "groupName": "advanced"
         },
         {
