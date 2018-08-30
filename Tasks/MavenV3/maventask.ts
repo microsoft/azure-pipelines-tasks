@@ -2,7 +2,6 @@
 import Q = require('q');
 import os = require('os');
 import path = require('path');
-import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
@@ -194,7 +193,7 @@ async function execBuild() {
                     }
                     return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
                 })
-                .fail(function (err) {
+                .catch(function (err) {
                     return Q.reject(err);
                 });
             } else {
