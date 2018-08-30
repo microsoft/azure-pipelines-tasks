@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 4
+        "Patch": 12
     },
     "demands": [],
     "releaseNotes": "Simplified the task by:<br/>&nbsp;- Providing an option to simply select or type a command.<br/>&nbsp;- Retaining the useful input fields and providing an option to pass the rest as an argument to the command.",
@@ -48,7 +48,7 @@
                 "Container Registry": "Container Registry"
             },
             "groupName": "containerRegistry",
-            "helpMarkDown": "Select a Container Registry Type."
+            "helpMarkDown": "Select 'Azure Container Registry' to connect to it by using an Azure Service Connection. Select 'Container registry' to connect to Docker Hub or any other private container registry."
         },
         {
             "name": "dockerRegistryEndpoint",
@@ -70,7 +70,7 @@
             "name": "azureContainerRegistry",
             "label": "Azure container registry",
             "type": "pickList",
-            "helpMarkDown": "Select an Azure Container Registry",
+            "helpMarkDown": "Select an Azure Container Registry in the selected Azure Subscription. The container image will be built and pushed to this container registry.",
             "visibleRule": "containerregistrytype = Azure Container Registry",
             "defaultValue": "",
             "groupName": "containerRegistry",
@@ -106,7 +106,7 @@
             "required": true,
             "visibleRule": "command = Build an image || command = build",
             "groupName": "commands",
-            "helpMarkDown": "Path to the Dockerfile to use. Must be within the Docker build context."
+            "helpMarkDown": "Path to the Dockerfile."
         }, 
         {
             "name": "arguments",
@@ -118,7 +118,7 @@
             "visibleRule": "command != Run an image && command != run && command != Tag image && command != tag && command != login && command != logout",
             "label": "Arguments",
             "groupName": "commands",
-            "helpMarkDown": "Command arguments."
+            "helpMarkDown": "Docker command options."
         },
         {
             "name": "useDefaultContext",
@@ -144,7 +144,7 @@
             "defaultValue": "false",
             "visibleRule": "command = Push an image || command = push",
             "groupName": "commands",
-            "helpMarkDown": "Push multiple images."
+            "helpMarkDown": "Push multiple images by using a text file that contains the names of the Docker images to push. Each image name is contained on its own line.<br>For example:<br>  Imagename1:tag1<br>  Imagename2:tag2<br>  Imagename3<br>In case only image name is provided,  all tags of the ImageName3 container image will be pushed."
         },
         {
             "name": "tagMultipleImages",
@@ -153,7 +153,7 @@
             "defaultValue": "false",
             "visibleRule": "command = Tag image || command = tag",
             "groupName": "commands",
-            "helpMarkDown": "Tag multiple images."
+            "helpMarkDown": "Tag multiple images by using a text file that contains the names of the Docker images to tag. Each image name is contained on its own line.<br>For example:<br>  Imagename1:tag1<br>  Imagename2:tag2<br>  Imagename3<br>In case only image name is provided, that image will be tagged as 'latest'."
         },
         {
             "name": "imageName",
@@ -284,7 +284,7 @@
             "label": "Command",
             "visibleRule": "command = Run an image || command = run",
             "groupName": "commands",
-            "helpMarkDown": "Command to run in the Docker container. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application."
+            "helpMarkDown": "The docker run command first creates a writeable container layer over the specified image, and then starts it by using the specified run command. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application."
         },
         {
             "name": "runInBackground",
