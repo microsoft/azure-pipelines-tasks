@@ -190,7 +190,7 @@
                 "dockerRegistry": "dockerRegistry",
                 "generic": "generic"
             },
-            "helpMarkDown": "Create/update a generic or dockerimagepullsecret.",
+            "helpMarkDown": "Create/update a generic or docker imagepullsecret. Select dockerRegistry to create/update the imagepullsecret of the selected registry. An imagePullSecret is a way to pass a secret that contains a container registry password to the Kubelet so it can pull a private image on behalf of your Pod.",
             "groupName": "secrets"
         },
         {
@@ -321,6 +321,7 @@
                 "version": "Version",
                 "location": "Specify location"
             },
+            "helpMarkDown": "kubectl is a command line interface for running commands against Kubernetes clusters.",
             "groupName": "advanced"
         },
         {
