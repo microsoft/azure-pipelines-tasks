@@ -210,11 +210,16 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
         let packageUrl = packagingLocation.DefaultPackagingUri;
         tl.debug('collectionUrl=' + collectionUrl);
         tl.debug('packageUrl=' + packageUrl);
-        let collectionHostname:string = url.parse(collectionUrl).hostname.toLowerCase();
+        let collectionName:string = url.parse(collectionUrl).hostname.toLowerCase();
+        let collectionPathName = url.parse(collectionUrl).pathname;
+        if(collectionPathName && collectionPathName.length > 1) {
+            collectionName = collectionName + collectionPathName.toLowerCase();
+            tl.debug('collectionName=' + collectionName);
+        }
         if (packageUrl) {
             url.parse(packageUrl).hostname.toLowerCase();
         } else {
-            packageUrl = collectionHostname;
+            packageUrl = collectionName;
         }
         let parseRepos:(project) => void = function(project) {
             if (project && project.repositories) {
@@ -224,7 +229,7 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
                         for (let repo of r.repository) {
                             repo = repo instanceof Array ? repo[0] : repo;
                             let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
-                            if (url && (url.toLowerCase().includes(collectionHostname) ||
+                            if (url && (url.toLowerCase().includes(collectionName) ||
                                         url.toLowerCase().includes(packageUrl))) {
                             tl.debug('using credentials for url: ' + url);
                             repos.push({
