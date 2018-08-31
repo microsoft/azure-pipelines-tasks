@@ -13,6 +13,9 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "@types/mocha": "2.2.48",
+    "@types/node": "6.0.68",
+    "@types/q": "1.0.7",
     "@types/semver": "5.3.33",
     "semver": "^5.4.1",
     "vso-node-api": "6.5.0",
