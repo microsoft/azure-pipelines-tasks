@@ -32,6 +32,7 @@ connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 
 // Run the specified action
 var action = tl.getInput("action", true);
+    command: action !== "Run a Docker command" ? action : tl.getInput("customCommand", true)
 /* tslint:disable:no-var-requires */
 require({
     "Build an image": "./containerbuild",
