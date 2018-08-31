@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 16
+        "Patch": 17
     },
     "demands": [],
     "preview": "false",
@@ -35,7 +35,7 @@
                 "Azure Container Registry": "Azure Container Registry",
                 "Container Registry": "Container Registry"
             },
-            "helpMarkDown": "Select a Container Registry Type."
+            "helpMarkDown": "Select 'Azure Container Registry' to connect to it by using an Azure Service Connection. Select 'Container registry' to connect to Docker Hub or any other private container registry."
         },
         {
             "name": "dockerRegistryEndpoint",
@@ -57,7 +57,7 @@
             "name": "azureContainerRegistry",
             "label": "Azure Container Registry",
             "type": "pickList",
-            "helpMarkDown": "Select an Azure Container Registry",
+            "helpMarkDown": "Select an Azure Container Registry in the selected Azure Subscription. The container image will be built and pushed to this container registry.",
             "visibleRule": "containerregistrytype = Azure Container Registry",
             "defaultValue": "",
             "properties": {
@@ -87,7 +87,7 @@
             "defaultValue": "**/Dockerfile",
             "required": true,
             "visibleRule": "action = Build an image",
-            "helpMarkDown": "Path to the Docker file to use. Must be within the Docker build context."
+            "helpMarkDown": "Path to the Dockerfile."
         },
         {
             "name": "buildArguments",
@@ -233,7 +233,7 @@
             "type": "string",
             "label": "Command",
             "visibleRule": "action = Run an image",
-            "helpMarkDown": "Command to run in the Docker container. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application."
+            "helpMarkDown": "The docker run command first creates a writeable container layer over the specified image, and then starts it by using the specified run command. For example, if the image contains a simple Python Flask web application you can specify 'python app.py' to launch the web application."
         },
         {
             "name": "detached",
