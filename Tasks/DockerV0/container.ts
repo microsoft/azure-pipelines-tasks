@@ -34,7 +34,7 @@ connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 var action = tl.getInput("action", true);
 var telemetry = {
     registryType: registryType,
-    command: action
+    command: action !== "Run a Docker command" ? action : tl.getInput("customCommand", true)
 };
 
 console.log("##vso[telemetry.publish area=%s;feature=%s]%s",

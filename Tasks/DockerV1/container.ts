@@ -44,17 +44,18 @@ var dockerCommandMap = {
     "logout": "./dockerlogout"
 }
 
+var telemetry = {
+    registryType: registryType,
+    command: command
+};
+
+console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+    "TaskEndpointId",
+    "DockerV1",
+    JSON.stringify(telemetry));
+
 var commandImplementation = require("./containercommand");
 if (command in dockerCommandMap) {
-    var telemetry = {
-        registryType: registryType,
-        command: command
-    };
-
-    console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
-        "TaskEndpointId",
-        "DockerV1",
-        JSON.stringify(telemetry));
     commandImplementation = require(dockerCommandMap[command]);
 }
 
