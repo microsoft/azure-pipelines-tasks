@@ -321,8 +321,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
         tl.debug('Pattern found in testResultsFiles parameter');
         var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
         tl.debug(`buildFolder=${buildFolder}`);
-        var allFiles = tl.find(buildFolder);
-        matchingJUnitResultFiles = tl.match(allFiles, testResultsFiles, {
+        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles, null, {
             matchBase: true
         });
     }
@@ -383,9 +382,9 @@ function enableCodeCoverage() : Q.Promise<any> {
     }
 
     // clean any previously generated files.
-    tl.rmRF(targetDirectory, true);
-    tl.rmRF(reportDirectory, true);
-    tl.rmRF(reportPOMFile, true);
+    tl.rmRF(targetDirectory);
+    tl.rmRF(reportDirectory);
+    tl.rmRF(reportPOMFile);
 
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = mavenPOMFile;

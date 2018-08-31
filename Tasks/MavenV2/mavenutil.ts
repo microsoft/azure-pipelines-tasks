@@ -189,73 +189,74 @@ interface RepositoryInfo {
 }
 
 async function collectFeedRepositories(pomContents:string): Promise<any> {
-    let pomJson = await convertXmlStringToJson(pomContents);
-    let repos:RepositoryInfo[] = [];
-    if (!pomJson) {
-        tl.debug('Incomplete pom: ' + pomJson);
-        return Promise.resolve(repos);
-    }
-    let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-    let packagingLocation: pkgLocationUtils.PackagingLocation;
-    try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Maven);
-    } catch (error) {
-        tl.debug("Unable to get packaging URIs, using default collection URI");
-        tl.debug(JSON.stringify(error));
-        packagingLocation = {
-            PackagingUris: [collectionUrl],
-            DefaultPackagingUri: collectionUrl};
-    }
+    return convertXmlStringToJson(pomContents).then(async function (pomJson) {
+        let repos:RepositoryInfo[] = [];
+        if (!pomJson) {
+            tl.debug('Incomplete pom: ' + pomJson);
+            return Q.resolve(repos);
+        }
+        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+        let packagingLocation: pkgLocationUtils.PackagingLocation;
+        try {
+            packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Maven);
+        } catch (error) {
+            tl.debug("Unable to get packaging URIs, using default collection URI");
+            tl.debug(JSON.stringify(error));
+            packagingLocation = {
+                PackagingUris: [collectionUrl],
+                DefaultPackagingUri: collectionUrl};
+        }
 
-    let packageUrl = packagingLocation.DefaultPackagingUri;
-    tl.debug('collectionUrl=' + collectionUrl);
-    tl.debug('packageUrl=' + packageUrl);
-    let collectionName:string = url.parse(collectionUrl).hostname.toLowerCase();
-    let collectionPathName = url.parse(collectionUrl).pathname;
-    if(collectionPathName && collectionPathName.length > 1) {
-        collectionName = collectionName + collectionPathName.toLowerCase();
-        tl.debug('collectionName=' + collectionName);
-    }
-    if (packageUrl) {
-        url.parse(packageUrl).hostname.toLowerCase();
-    } else {
-        packageUrl = collectionName;
-    }
-    let parseRepos:(project) => void = function(project) {
-        if (project && project.repositories) {
-            for (let r of project.repositories) {
-                r = r instanceof Array ? r[0] : r;
-                if (r.repository) {
-                    for (let repo of r.repository) {
-                        repo = repo instanceof Array ? repo[0] : repo;
-                        let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
-                        if (url && (url.toLowerCase().includes(collectionName) ||
-                                    url.toLowerCase().includes(packageUrl))) {
-                        tl.debug('using credentials for url: ' + url);
-                        repos.push({
-                            id: (repo.id && repo.id instanceof Array)
-                                ? repo.id[0]
-                                : repo.id
-                            });
+        let packageUrl = packagingLocation.DefaultPackagingUri;
+        tl.debug('collectionUrl=' + collectionUrl);
+        tl.debug('packageUrl=' + packageUrl);
+        let collectionName:string = url.parse(collectionUrl).hostname.toLowerCase();
+        let collectionPathName = url.parse(collectionUrl).pathname;
+        if(collectionPathName && collectionPathName.length > 1) {
+            collectionName = collectionName + collectionPathName.toLowerCase();
+            tl.debug('collectionName=' + collectionName);
+        }
+        if (packageUrl) {
+            url.parse(packageUrl).hostname.toLowerCase();
+        } else {
+            packageUrl = collectionName;
+        }
+        let parseRepos:(project) => void = function(project) {
+            if (project && project.repositories) {
+                for (let r of project.repositories) {
+                    r = r instanceof Array ? r[0] : r;
+                    if (r.repository) {
+                        for (let repo of r.repository) {
+                            repo = repo instanceof Array ? repo[0] : repo;
+                            let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
+                            if (url && (url.toLowerCase().includes(collectionName) ||
+                                        url.toLowerCase().includes(packageUrl))) {
+                            tl.debug('using credentials for url: ' + url);
+                            repos.push({
+                                id: (repo.id && repo.id instanceof Array)
+                                    ? repo.id[0]
+                                    : repo.id
+                                });
+                            }
                         }
                     }
                 }
             }
-        }
-    };
+        };
 
-    if (pomJson.projects && pomJson.projects.project) {
-        for (let project of pomJson.projects.project) {
-            parseRepos(project);
+        if (pomJson.projects && pomJson.projects.project) {
+            for (let project of pomJson.projects.project) {
+                parseRepos(project);
+            }
+        } else if (pomJson.project) {
+            parseRepos(pomJson.project);
+        } else {
+            tl.warning(tl.loc('EffectivePomInvalid'));
         }
-    } else if (pomJson.project) {
-        parseRepos(pomJson.project);
-    } else {
-        tl.warning(tl.loc('EffectivePomInvalid'));
-    }
 
-    tl.debug('Feeds found: ' + JSON.stringify(repos));
-    return Promise.resolve(repos);
+        tl.debug('Feeds found: ' + JSON.stringify(repos));
+        return Promise.resolve(repos);
+    });
 }
 
 export function collectFeedRepositoriesFromEffectivePom(mavenOutput:string): Promise<any> {
