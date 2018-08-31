@@ -72,6 +72,15 @@ function executeKubectlCommand(clusterConnection: ClusterConnection) : any {
     var command = tl.getInput("command", true);
     var result = "";
     var ouputVariableName =  tl.getInput("kubectlOutput", false);  
+    var telemetry = {
+        registryType: registryType,
+        command: command
+    };
+
+    console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+        "TaskEndpointId",
+        "KubernetesV0",
+        JSON.stringify(telemetry));
     return kubectl.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
         if(ouputVariableName) {

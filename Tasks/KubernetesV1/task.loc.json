@@ -13,7 +13,7 @@
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 8
+    "Patch": 5
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -321,6 +321,7 @@
         "version": "Version",
         "location": "Specify location"
       },
+      "helpMarkDown": "ms-resource:loc.input.help.versionOrLocation",
       "groupName": "advanced"
     },
     {

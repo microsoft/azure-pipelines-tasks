@@ -1,5 +1,5 @@
 # C/C++ with GCC
-# Build your C/C++ project with GCC and run tests.
+# Build your C/C++ project with GCC using make.
 # Add steps that publish test results, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/apps/c-cpp/gcc
 
@@ -8,7 +8,5 @@ pool:
 
 steps:
 - script: |
-    ./configure
     make
-    make test
-  displayName: 'Configure, compile, and run tests'
+  displayName: 'make'
