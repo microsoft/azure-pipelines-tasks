@@ -2,7 +2,6 @@
 import Q = require('q');
 import os = require('os');
 import path = require('path');
-import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
@@ -46,7 +45,6 @@ var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestr
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
-
 if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
     tl.debug('Using Maven path from user input');
@@ -193,7 +191,7 @@ async function execBuild() {
                     }
                     return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
                 })
-                .fail(function (err) {
+                .catch(function (err) {
                     return Q.reject(err);
                 });
             } else {
