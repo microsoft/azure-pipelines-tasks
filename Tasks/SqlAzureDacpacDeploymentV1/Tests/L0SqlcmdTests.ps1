@@ -8,6 +8,7 @@ param()
 
 # Test Run-SqlCmd 
 $sqlFilePath = "C:\Test\TestFile.sql"
+Register-Mock EscapeSpecialChars {return $sqlPassword}
 Register-Mock Get-FormattedSqlUsername { return $sqlUsername }
 Register-Mock Invoke-Expression { }
 

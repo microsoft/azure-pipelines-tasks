@@ -61,9 +61,8 @@ export class AzureAppServiceUtils {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;
-            tl.debug('pausing for 5 seconds before request');
-            await webClient.sleepFor(5);
-            var response = await webClient.sendRequest(webRequest);
+            let webRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5};
+            var response = await webClient.sendRequest(webRequest, webRequestOptions);
             tl.debug(`App Service status Code: '${response.statusCode}'. Status Message: '${response.statusMessage}'`);
         }
         catch(error) {
