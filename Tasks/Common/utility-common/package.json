@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "@types/semver": "5.3.33",
     "semver": "^5.4.1",
     "vso-node-api": "6.5.0",
     "vsts-task-lib": "2.6.0",
