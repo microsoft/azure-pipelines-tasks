@@ -8,7 +8,6 @@ import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
 import systemToken = require('utility-common/accesstoken');
 
 import * as url from "url";
-import * as str from 'string';
 import * as xml2js from 'xml2js';
 import * as fse from 'fs-extra';
 
@@ -208,7 +207,7 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
             DefaultPackagingUri: collectionUrl
         };
     }
-     let packageUrl = packagingLocation.DefaultPackagingUri;
+    let packageUrl = packagingLocation.DefaultPackagingUri;
     tl.debug('collectionUrl=' + collectionUrl);
     tl.debug('packageUrl=' + packageUrl);
     let collectionName:string = url.parse(collectionUrl).hostname.toLowerCase();
@@ -244,6 +243,7 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
             }
         }
     };
+
     if (pomJson.projects && pomJson.projects.project) {
         for (let project of pomJson.projects.project) {
             parseRepos(project);
@@ -253,7 +253,8 @@ async function collectFeedRepositories(pomContents:string): Promise<any> {
     } else {
         tl.warning(tl.loc('EffectivePomInvalid'));
     }
-        tl.debug('Feeds found: ' + JSON.stringify(repos));
+    
+    tl.debug('Feeds found: ' + JSON.stringify(repos));
     return Promise.resolve(repos);
 }
 
