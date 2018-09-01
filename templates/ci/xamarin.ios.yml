@@ -1,5 +1,5 @@
 # Xamarin.iOS
-# Build a Xamarin.iOS app and Xamarin.UITest assembly.
+# Build a Xamarin.iOS app.
 # Add steps that install certificates, test, sign, and distribute the app, save build artifacts, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/xamarin
 
@@ -7,9 +7,22 @@ pool:
   vmImage: 'macOS 10.13'
 
 steps:
+# To manually select a Xamarin SDK version on the Microsoft-hosted macOS agent,
+# configure this task with the SDK version you want to target and set the "enabled" property to true.
+# See https://go.microsoft.com/fwlink/?linkid=871629
+- script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 5_4_1 
+  displayName: 'Select the Xamarin SDK version'
+  enabled: false
+
+- task: NuGetToolInstaller@0
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/*.sln'
+
 - task: XamariniOS@2
   inputs:
     solutionFile: '**/*.sln'
     configuration: 'Release'
-    packageApp: false
     buildForSimulator: true
+    packageApp: false
