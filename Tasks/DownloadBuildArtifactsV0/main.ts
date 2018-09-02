@@ -185,6 +185,9 @@ async function main(): Promise<void> {
 
         console.log(tl.loc("DownloadingArtifactsForBuild", buildId));
 
+        // populate output variable 'BuildNumber' with buildId
+        tl.setVariable('BuildNumber', buildId.toString());
+
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName", true);
