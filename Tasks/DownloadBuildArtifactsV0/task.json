@@ -239,5 +239,11 @@
     "LatestBuildNotFound":"Latest build not found",
     "LatestBuildFromBranchNotFound":"Latest build from branch %s not found",
     "DownloadingContainerResource": "Downloading items from container resource %s"
-  }
+  },
+  "outputVariables": [
+    {
+      "name": "BuildNumber",
+      "description": "Stores the build number of the build artifact source"
+    }
+  ]
 }
