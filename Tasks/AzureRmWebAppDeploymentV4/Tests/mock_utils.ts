@@ -258,3 +258,58 @@ export function mockZipDeploySettings() {
         }
     }).persist();
 }
+
+export function mockContainerDeploySettings() {
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).post("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/appsettings/list?api-version=2016-08-01")
+    .reply(200, {
+        id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/appsettings",
+        name: "mytestapp",
+        type: "Microsoft.Web/sites/config",
+        location: "South Central US",
+        properties: {
+            "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+            "MSDEPLOY_RENAME_LOCKED_FILES": "1",
+            "WEBSITE_RUN_FROM_ZIP":"0",
+            "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag"
+        }
+    }).persist();
+
+    var appSettings = {
+        id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/appsettings",
+        name: "mytestapp",
+        type: "Microsoft.Web/sites/config",
+        location: "South Central US",
+        properties: {
+            "WEBSITE_NODE_DEFAULT_VERSION":"6.9.1",
+            "MSDEPLOY_RENAME_LOCKED_FILES":"1",
+            "WEBSITE_RUN_FROM_ZIP":"0",
+            "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag"
+        }
+    };
+    
+    nock('https://management.azure.com', {
+        reqheaders: {
+            "authorization": "Bearer DUMMY_ACCESS_TOKEN",
+            "content-type": "application/json; charset=utf-8",
+            "user-agent": "TFS_useragent"
+        }
+    }).put("/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/config/appsettings?api-version=2016-08-01", JSON.stringify(appSettings))
+    .reply(200, {
+        id: "/subscriptions/MOCK_SUBSCRIPTION_ID/resourceGroups/MOCK_RESOURCE_GROUP_NAME/providers/Microsoft.Web/sites/mytestapp/appsettings",
+        name: "mytestapp",
+        type: "Microsoft.Web/sites/config",
+        location: "South Central US",
+        properties: {
+            "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+            "MSDEPLOY_RENAME_LOCKED_FILES": "1",
+            "WEBSITE_RUN_FROM_ZIP":"0",
+            "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag"
+        }
+    }).persist();
+}

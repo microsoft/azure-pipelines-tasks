@@ -32,6 +32,7 @@ export function setAgentsData() {
     process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
     process.env["AGENT_NAME"] = "author";
     process.env["AGENT_TEMPDIRECTORY"] = 'Agent.TempDirectory';
+    process.env["BUILD_BUILDID"] = 'Build.BuildId';
 }
 
 export function mockTaskArgument():  ma.TaskLibAnswers{

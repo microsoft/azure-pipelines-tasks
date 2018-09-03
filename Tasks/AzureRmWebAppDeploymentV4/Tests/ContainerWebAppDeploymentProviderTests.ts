@@ -15,6 +15,9 @@ export class ContainerWebAppDeploymentProviderTests {
         let tp = path.join(__dirname, 'ContainerWebAppDeploymentProviderL0Tests.js');
         let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
         mockTaskInputParameters(tr);
+        tr.setInput("DockerNamespace", "DockerNamespace");
+        tr.setInput("DockerRepository", "DockerRepository");
+        tr.setInput("DockerImageTag","DockerImageTag");
         setEndpointData();
         setAgentsData();
 
@@ -30,6 +33,7 @@ export class ContainerWebAppDeploymentProviderTests {
 
         tr.setAnswers(mockTaskArgument());
         tr.run();
+
     }
 
 }

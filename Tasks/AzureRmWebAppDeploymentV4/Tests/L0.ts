@@ -211,6 +211,10 @@ describe('AzureRmWebAppDeployment Suite', function() {
             assert(tr.stdOutContained('PreDeployment steps for container web app with slot enabled should succeeded'), 'Should have printed: PreDeployment steps for container web app withSlotEnabled should succeeded');
             assert(tr.stdOutContained('set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net'), 'Should have printed: set AppServiceApplicationUrl=http://mytestapp.azurewebsites.net');
             assert(tr.stdOutContained('Active DeploymentId :MOCK_DEPLOYMENT_ID'), 'Should have printed: Active DeploymentId :MOCK_DEPLOYMENT_ID.');
+            assert(tr.stdOutContained('loc_mock_UpdatingAppServiceConfigurationSettings {"appCommandLine":null,"linuxFxVersion":"DOCKER|dockernamespace/dockerrepository:DockerImageTag"}'), 'Should have printed: loc_mock_UpdatingAppServiceConfigurationSettings {"appCommandLine":null,"linuxFxVersion":"DOCKER|dockernamespace/dockerrepository:DockerImageTag"}');
+            assert(tr.stdOutContained('loc_mock_UpdatedAppServiceConfigurationSettings'), 'Should have printed: loc_mock_UpdatedAppServiceConfigurationSettings');
+            assert(tr.stdOutContained('loc_mock_UpdatedAppServiceApplicationSettings'), 'Should have printed: loc_mock_UpdatedAppServiceApplicationSettings');
+            assert(tr.stdOutContained('Web app Deployment steps for container should succeeded'), 'Should have printed: Web app Deployment steps for container should succeeded');
             done();
         }
         catch(error) {
