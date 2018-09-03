@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 10
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -28,6 +28,9 @@
     "inputs": [
         {
             "name": "testRunner",
+            "aliases": [
+                "testResultsFormat"
+            ],
             "type": "pickList",
             "label": "Test result format",
             "defaultValue": "JUnit",
@@ -78,8 +81,11 @@
         },
         {
             "name": "platform",
+            "aliases": [
+                "buildPlatform"
+            ],
             "type": "string",
-            "label": "Platform",
+            "label": "Build Platform",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
@@ -87,8 +93,11 @@
         },
         {
             "name": "configuration",
+            "aliases": [
+                "buildConfiguration"
+            ],
             "type": "string",
-            "label": "Configuration",
+            "label": "Build Configuration",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
