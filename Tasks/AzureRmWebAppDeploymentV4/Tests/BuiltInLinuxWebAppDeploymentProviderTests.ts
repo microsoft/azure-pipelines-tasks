@@ -64,6 +64,15 @@ export class BuiltInLinuxWebAppDeploymentProviderTests {
             },
             getFileNameFromPath: function(A, B) {
                 return "webAppPkg";
+            },
+            generateTemporaryFolderOrZipPath: function(C, D) {
+                return "webAppPkg.zip";
+            }
+        });
+        
+        tr.registerMock('webdeployment-common/ziputility.js', {
+            archiveFolder: function(A, B){
+                return "webAppPkg.zip";
             }
         });
 
