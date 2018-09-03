@@ -19,6 +19,10 @@ Checkout how to troubleshoot failures and collect debug logs: https://docs.micro
 
 [Include task name(s), screenshots and any other relevant details]
 
+### Task logs
+
+[Enable debug logging and please provide the zip file containing all the logs for a speedy resolution]
+
 ### Error logs
 
-[Insert error from the logs here]
+[Insert error from the logs here for a quick overview]
