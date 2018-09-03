@@ -16,6 +16,7 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
     public static async startAzureRmWebAppDeploymentProviderL0Tests() {
         await AzureRmWebAppDeploymentProviderL0Tests.testForPreDeploymentSteps();
         await AzureRmWebAppDeploymentProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled();
+        await AzureRmWebAppDeploymentProviderL0Tests.testForVirtualApplication();
         await AzureRmWebAppDeploymentProviderL0Tests.testForUpdateDeploymentStatus();
     }
 
@@ -39,6 +40,20 @@ export class AzureRmWebAppDeploymentProviderL0Tests  {
             tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps with slot enabled should succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps with slot enabled failed with error');
+        }
+    }
+
+    public static async testForVirtualApplication() {
+        try {
+            var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.DeployToSlotOrASEFlag = true;
+            taskParameters.ResourceGroupName = "MOCK_RESOURCE_GROUP_NAME";
+            taskParameters.VirtualApplication = "VirtualApplication";
+            var azureRmWebAppDeploymentProvider : AzureRmWebAppDeploymentProvider  = new AzureRmWebAppDeploymentProvider(taskParameters);
+            await azureRmWebAppDeploymentProvider.PreDeploymentStep();
+            tl.setResult(tl.TaskResult.Succeeded, 'PreDeployment steps with virtual application should succeeded');
+        } catch(error) {
+            tl.setResult(tl.TaskResult.Failed, 'PreDeployment steps with virtual application failed with error');
         }
     }
 
