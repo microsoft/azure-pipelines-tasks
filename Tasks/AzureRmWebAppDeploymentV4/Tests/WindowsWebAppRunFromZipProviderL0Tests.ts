@@ -19,6 +19,7 @@ export class WindowsWebAppRunFromZipProviderL0Tests  {
         await WindowsWebAppRunFromZipProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_RunFromZipProvider();
         await WindowsWebAppRunFromZipProviderL0Tests.testForUpdateDeploymentStatus_RunFromZipProvider();
         await WindowsWebAppRunFromZipProviderL0Tests.testForDeployWebAppStep_RunFromZipProvider();
+        await WindowsWebAppRunFromZipProviderL0Tests.testForDeployWebAppStepForFolder_RunFromZipProvider();
     }
 
     public static async testForPreDeploymentSteps_RunFromZipProvider() {
@@ -68,6 +69,20 @@ export class WindowsWebAppRunFromZipProviderL0Tests  {
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for run from zip steps with zip package succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for run from zip steps with zip package should succeeded but failed with error');
+        }
+    }
+
+    public static async testForDeployWebAppStepForFolder_RunFromZipProvider() {
+        try {
+            var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.Package.getPackageType = () :PackageType => {return PackageType.folder};
+            taskParameters.Package.getPath = () :string => { return "webAppPkg" };
+            var windowsWebAppRunFromZipProvider : WindowsWebAppRunFromZipProvider  = new WindowsWebAppRunFromZipProvider(taskParameters);
+            await windowsWebAppRunFromZipProvider.PreDeploymentStep();
+            await windowsWebAppRunFromZipProvider.DeployWebAppStep();
+            tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for run from zip steps with folder package succeeded');
+        } catch(error) {
+            tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for run from zip steps with folder package should succeeded but failed with error');
         }
     }
 

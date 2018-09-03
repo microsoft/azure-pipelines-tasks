@@ -47,6 +47,9 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
                 },
                 "publishxml.pubxml": {
                     "isFile": true
+                },
+                "webAppPkg": {
+                    "isDirectory": true
                 }
             },
             "osType": {

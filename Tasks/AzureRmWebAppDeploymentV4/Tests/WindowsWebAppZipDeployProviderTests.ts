@@ -43,6 +43,30 @@ export class WindowsWebAppZipDeployProviderTests {
                 }
             }
         });
+
+        tr.registerMock('webdeployment-common/utility.js', {
+            generateTemporaryFolderForDeployment: function () {
+                return "webAppPkg";
+            },
+            archiveFolderForDeployment: function() {
+                return {
+                    "webDeployPkg": "webAppPkg",
+                    "tempPackagePath": "webAppPkg"
+                };
+            },
+            getFileNameFromPath: function(A, B) {
+                return "webAppPkg";
+            },
+            generateTemporaryFolderOrZipPath: function(C, D) {
+                return "webAppPkg.zip";
+            }
+        });
+        
+        tr.registerMock('webdeployment-common/ziputility.js', {
+            archiveFolder: function(A, B){
+                return "webAppPkg.zip";
+            }
+        });
         
 
         tr.setAnswers(mockTaskArgument());
