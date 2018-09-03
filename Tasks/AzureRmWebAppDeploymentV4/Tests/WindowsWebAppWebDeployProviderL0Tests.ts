@@ -19,6 +19,7 @@ export class WindowsWebAppWebDeployProviderL0Tests  {
         await WindowsWebAppWebDeployProviderL0Tests.testForPreDeploymentStepsWithSlotEnabled_WebDeployProvider();
         await WindowsWebAppWebDeployProviderL0Tests.testForUpdateDeploymentStatus_WebDeployProvider();
         await WindowsWebAppWebDeployProviderL0Tests.testForDeployWebAppStep_WebDeployProvider();
+        await WindowsWebAppWebDeployProviderL0Tests.testForDeployWebAppStepForVirtualApplication_WebDeployProvider();
     }
 
     public static async testForPreDeploymentSteps_WebDeployProvider() {
@@ -68,6 +69,21 @@ export class WindowsWebAppWebDeployProviderL0Tests  {
             tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for web deploy steps with zip package succeeded');
         } catch(error) {
             tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for web deploy steps with zip package should succeeded but failed with error');
+        }
+    }
+
+    public static async testForDeployWebAppStepForVirtualApplication_WebDeployProvider() {
+        try {
+            var taskParameters: TaskParameters = TaskParametersUtility.getParameters();
+            taskParameters.Package.getPackageType = () :PackageType => {return PackageType.zip};
+            taskParameters.Package.getPath = () :string => { return "webAppPkg.zip" };
+            taskParameters.VirtualApplication = "VirtualApplication";
+            var windowsWebAppWebDeployProvider : WindowsWebAppWebDeployProvider  = new WindowsWebAppWebDeployProvider(taskParameters);
+            await windowsWebAppWebDeployProvider.PreDeploymentStep();
+            await windowsWebAppWebDeployProvider.DeployWebAppStep();
+            tl.setResult(tl.TaskResult.Succeeded, 'DeployWebAppStep for web deploy steps with virtual application with zip package succeeded');
+        } catch(error) {
+            tl.setResult(tl.TaskResult.Failed, 'DeployWebAppStep for web deploy steps with virtual application with zip package should succeeded but failed with error');
         }
     }
 

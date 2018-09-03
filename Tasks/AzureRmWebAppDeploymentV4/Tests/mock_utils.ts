@@ -80,7 +80,8 @@ export function mockAzureARMPreDeploymentSteps() {
         kind: "app",
         location: "South Central US",
         properties: {
-            "alwaysOn": true
+            "alwaysOn": true,
+            "virtualApplications": [ {"physicalPath" : "physicalPath", "virtualPath":  "/virtualApplication" }]
         }
     }).persist();
     

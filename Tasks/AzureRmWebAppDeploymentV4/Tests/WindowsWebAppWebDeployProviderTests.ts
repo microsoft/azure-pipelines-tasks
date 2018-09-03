@@ -42,6 +42,9 @@ export class WindowsWebAppWebDeployProviderTests {
                     },
                     extractZIP: function(J, K){
                         
+                    },
+                    listDir: function(L){
+                        return "VirtualApplication";
                     }
                 }
             }
