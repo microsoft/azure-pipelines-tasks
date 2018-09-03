@@ -1,6 +1,6 @@
 {
   "name": "vsts-npm-authenticate-task",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "VSTS npm Authenticate Task",
   "main": "npmauth.js",
   "scripts": {
@@ -18,6 +18,7 @@
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
     "npm-common": "file:../../_build/Tasks/Common/npm-common-1.0.1.tgz",
-    "vsts-task-lib": "2.0.6"
+    "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+    "vsts-task-lib": "2.6.0"
   }
 }

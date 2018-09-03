@@ -266,6 +266,8 @@ function Run-SqlCmd {
 
     $scriptArgument = "Invoke-Sqlcmd -ServerInstance `"$serverName`" -Database `"$databaseName`" -Username `"$sqlUsername`" "
 
+    $sqlPassword = EscapeSpecialChars -str $sqlPassword
+
     $commandToRun = $scriptArgument + " -Password `"$sqlPassword`" "
     $commandToLog = $scriptArgument + " -Password ****** "
 

@@ -151,6 +151,7 @@ export class NuGetToolRunner2 extends ToolRunner {
 }
 
 export function createNuGetToolRunner(nuGetExePath: string, settings: NuGetEnvironmentSettings, authInfo: auth.NuGetExtendedAuthInfo): NuGetToolRunner2 {
+    nuGetExePath = ngutil.resolveToolPath(nuGetExePath);
     let runner = new NuGetToolRunner2(nuGetExePath, settings, authInfo);
     runner.on("debug", message => tl.debug(message));
     return runner;

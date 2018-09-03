@@ -41,7 +41,7 @@ export default class ClusterConnection {
          return this.initialize().then(() => {
             var authorizationType = tl.getEndpointDataParameter(kubernetesEndpoint, 'authorizationType', true);
             var kubeconfig = null;
-            if (authorizationType == null || authorizationType === "Kubeconfig")
+            if (!authorizationType || authorizationType === "Kubeconfig")
             {
                 if (kubernetesEndpoint) {
                      kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
@@ -86,7 +86,7 @@ export default class ClusterConnection {
         let versionOrLocation = tl.getInput("versionOrLocation");
         if( versionOrLocation === "location") {
             let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
-            fs.chmod(pathToKubectl, "777");
+            fs.chmodSync(pathToKubectl, "777");
             return pathToKubectl;
         }
         else if(versionOrLocation === "version") {

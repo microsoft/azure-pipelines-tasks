@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 5
     },
     "demands": [
         "sqlpackage"
@@ -95,7 +95,7 @@
             "name": "SqlUsername",
             "type": "string",
             "label": "Server Admin Login",
-            "required": false,
+            "required": true,
             "groupName": "target",
             "defaultValue": "",
             "helpMarkDown": "Specify the Azure SQL Server administrator login."
@@ -104,7 +104,7 @@
             "name": "SqlPassword",
             "type": "string",
             "label": "Password",
-            "required": false,
+            "required": true,
             "groupName": "target",
             "defaultValue": "",
             "helpMarkDown": "Password for the Azure SQL Server administrator.<br>It can accept variable defined in build or release pipelines as '$(passwordVariable)'.<br>You may mark the variable type as 'secret' to secure it."

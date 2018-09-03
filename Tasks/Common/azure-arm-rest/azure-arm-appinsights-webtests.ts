@@ -63,7 +63,7 @@ export class ApplicationInsightsWebTests {
 
         try {
             let response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode != 200) {
+            if(response.statusCode != 200 && response.statusCode != 201) {
                 throw ToError(response);
             }
 

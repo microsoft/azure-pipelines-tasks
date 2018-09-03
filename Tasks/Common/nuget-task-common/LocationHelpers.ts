@@ -208,10 +208,8 @@ export function getServiceUrisFromCollectionUri(
 
 /**
  * - ! -
- * This is used by DotNet, NuGet and Maven.
- * All that is needed for this function is to return the collection URI pointing to the Packaging service.
- * Note the use of 'nuget', refactoring is needed to make this generic and to place this in a common location
- * from which the tasks can consume it.
+ * IMPORTANT
+ * This should not be used anymore, use utility-common/packaging/locationUtilities instead
  */
 export function assumeNuGetUriPrefixes(collectionUri: string): Q.Promise<string[]> {
     const prefixes = [collectionUri];

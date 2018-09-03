@@ -3,11 +3,12 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-queue: 'Hosted Linux Preview'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(system.defaultWorkingDirectory)/**/*.!(git)'
+    rootFolderOrFile: '$(build.sourcesDirectory)'
     includeRootFolder: false
 - task: PublishBuildArtifacts@1

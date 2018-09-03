@@ -311,6 +311,14 @@ function ConvertParamToSqlSupported
 
     return $param
 }
+function EscapeSpecialChars
+{
+    param(
+        [string]$str
+    )
+
+    return $str.Replace('`', '``').Replace('"', '`"').Replace('$', '`$')
+}
 
 # Function to import SqlPS module & avoid directory switch
 function Import-Sqlps {

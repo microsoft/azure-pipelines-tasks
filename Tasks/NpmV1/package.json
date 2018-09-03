@@ -1,6 +1,6 @@
 {
   "name": "vsts-npm-task",
-  "version": "1.0.19",
+  "version": "1.0.21",
   "description": "VSTS NPM Task",
   "main": "npmtask.js",
   "scripts": {
@@ -22,6 +22,6 @@
     "npm-common": "file:../../_build/Tasks/Common/npm-common-1.0.1.tgz",
     "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
     "vso-node-api": "^6.2.2-preview",
-    "vsts-task-lib": "2.0.6"
+    "vsts-task-lib": "2.6.0"
   }
 }

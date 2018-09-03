@@ -41,17 +41,21 @@ export class AzureRMEndpoint {
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
-
             this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
-            if(this.endpoint.authenticationType && this.endpoint.authenticationType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
-                tl.debug('certificate spn endpoint');
-                this.endpoint.servicePrincipalCertificate = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'servicePrincipalCertificate', false);
-                this.endpoint.servicePrincipalCertificatePath = certFilePath;
-                fs.writeFileSync(this.endpoint.servicePrincipalCertificatePath, this.endpoint.servicePrincipalCertificate);
-            }
-            else {
-                tl.debug('credentials spn endpoint');
-                this.endpoint.servicePrincipalKey = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', false);
+
+            // if scheme is null, we assume the scheme to be ServicePrincipal
+            let isServicePrincipalAuthenticationScheme = !this.endpoint.scheme || this.endpoint.scheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.ServicePrincipal;
+            if (isServicePrincipalAuthenticationScheme) {
+                if(this.endpoint.authenticationType && this.endpoint.authenticationType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
+                    tl.debug('certificate spn endpoint');
+                    this.endpoint.servicePrincipalCertificate = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'servicePrincipalCertificate', false);
+                    this.endpoint.servicePrincipalCertificatePath = certFilePath;
+                    fs.writeFileSync(this.endpoint.servicePrincipalCertificatePath, this.endpoint.servicePrincipalCertificate);
+                }
+                else {
+                    tl.debug('credentials spn endpoint');
+                    this.endpoint.servicePrincipalKey = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', false);
+                }
             }
 
             var isADFSEnabled = tl.getEndpointDataParameter(this._connectedServiceName, 'EnableAdfsAuthentication', true);

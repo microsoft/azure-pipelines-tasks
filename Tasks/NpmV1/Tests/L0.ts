@@ -283,28 +283,15 @@ describe('Npm Task', function () {
             }
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
-        mockery.registerMock('./LocationHelpers', {
-            assumeNuGetUriPrefixes: function(input) {
-                if (input === 'http://example.visualstudio.com') {
-                    return ['http://example.pkgs.visualstudio.com/', 'http://example.com'];
-                }
-                else if(input === 'http://localTFSServer/'){
-                    return ['http://localTFSServer/', 'http://example.com'];
-                }
-                else {
-                    return [input];
-                }
-            }
-        });
 
         let util = require('npm-common/util');
 
-        return util.getLocalRegistries('').then((registries: string[]) => {
+        return util.getLocalRegistries(['http://example.pkgs.visualstudio.com/', 'http://example.com'], '').then((registries: string[]) => {
             assert.equal(registries.length, 1);
             assert.equal(registries[0], 'http://example.pkgs.visualstudio.com/npmRegistry/');
 
             mockTask.getVariable = () => 'http://localTFSServer/';
-            return util.getLocalRegistries('').then((registries: string[]) => {
+            return util.getLocalRegistries(['http://localTFSServer/', 'http://example.com'], '').then((registries: string[]) => {
                 assert.equal(registries.length, 1);
                 assert.equal(registries[0], 'http://localTFSServer/npmRegistry/');
             });
@@ -436,14 +423,9 @@ describe('Npm Task', function () {
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('./npmrcparser', mockParser);
-        mockery.registerMock('./LocationHelpers', {
-            assumeNuGetUriPrefixes: function(input) {
-                return ['https://mytfsserver.pkgs.visualstudio.com'];
-            }
-        });
         
         const util = require('npm-common/util');
-        const registries = await util.getLocalNpmRegistries("somePath");
+        const registries = await util.getLocalNpmRegistries("foobarPath", ['https://mytfsserver.pkgs.visualstudio.com']);
 
         assert.equal(registries.length, 1, "Expected one response");
         const npmRegistry: Lazy_NpmRegistry.INpmRegistry = registries[0];

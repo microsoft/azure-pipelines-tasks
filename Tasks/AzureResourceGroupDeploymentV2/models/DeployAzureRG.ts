@@ -122,7 +122,7 @@ export class AzureRGTaskParameters {
             this.deploymentGroupName = tl.getInput("deploymentGroupName");
             this.copyAzureVMTags = tl.getBoolInput("copyAzureVMTags");
             var deploymentGroupEndpointName = tl.getInput("deploymentGroupEndpoint", false);
-            if(deploymentGroupEndpointName){
+            if(this.enableDeploymentPrerequisites && this.enableDeploymentPrerequisites == "ConfigureVMWithDGAgent"){
                 this.tokenCredentials = this.getVSTSPatToken(deploymentGroupEndpointName);
             }
             this.runAgentServiceAsUser = tl.getBoolInput("runAgentServiceAsUser");
