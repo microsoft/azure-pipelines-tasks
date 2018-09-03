@@ -68,3 +68,15 @@ export function mockTaskArgument():  ma.TaskLibAnswers{
 
         return a;
 }
+
+export function mockTaskInputParameters(tr) {
+    tr.setInput("ConnectionType", "AzureRM");
+    tr.setInput('ConnectedServiceName', 'AzureRMSpn');
+    tr.setInput('WebAppName', 'mytestapp');
+    tr.setInput('Package', 'webAppPkg.zip');
+    tr.setInput('UseWebDeploy', 'false');
+    tr.setInput('ImageSource', "Builtin Image");
+    tr.setInput('WebAppKind', "webAppLinux");
+    tr.setInput('RuntimeStack', "dummy|version");
+    tr.setInput('BuiltinLinuxPackage', 'webAppPkg.zip');
+}
