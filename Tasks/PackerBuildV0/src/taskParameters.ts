@@ -36,6 +36,8 @@ export default class TaskParameters {
 
     public graphCredentials: msRestAzure.ApplicationTokenCredentials;
 
+    public packerVersion: string;
+
     constructor() {
         try {
             this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
@@ -78,6 +80,7 @@ export default class TaskParameters {
             this.additionalBuilderParameters = JSON.parse(tl.getInput("additionalBuilderParameters"));
             this.skipTempFileCleanupDuringVMDeprovision = tl.getBoolInput("skipTempFileCleanupDuringVMDeprovision", false);
             this.imageUri = tl.getInput(constants.OutputVariableImageUri, false);
+            this.packerVersion = tl.getInput(constants.PackerVersionInputName, true);
         }
         catch (error) {
             throw (tl.loc("TaskParametersConstructorFailed", error));

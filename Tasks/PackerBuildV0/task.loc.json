@@ -32,6 +32,11 @@
       "visibleRule": "templateType = builtin"
     },
     {
+      "name": "PackerVersion",
+      "displayName": "ms-resource:loc.group.displayName.PackerVersion",
+      "isExpanded": true
+    },
+    {
       "name": "Advanced",
       "displayName": "ms-resource:loc.group.displayName.Advanced",
       "isExpanded": false,
@@ -226,6 +231,15 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.imageUri",
       "groupName": "Output"
+    },
+    {
+      "name": "packerVersion",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packerVersion",
+      "required": true,
+      "defaultValue": "0.12.3",
+      "helpMarkDown": "ms-resource:loc.input.help.packerVersion",
+      "groupName": "PackerVersion"
     }
   ],
   "dataSourceBindings": [

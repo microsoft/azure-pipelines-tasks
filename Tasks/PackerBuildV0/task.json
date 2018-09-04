@@ -32,6 +32,11 @@
             "visibleRule": "templateType = builtin"
         },
         {
+            "name": "PackerVersion",
+            "displayName": "Packer Version Options",
+            "isExpanded": true
+        },
+        {
             "name": "Advanced",
             "displayName": "Advanced",
             "isExpanded": false,
@@ -226,6 +231,15 @@
             "defaultValue": "",
             "helpMarkDown": "Provide a name for the output variable which will store generated machine image URL.",
             "groupName": "Output"
+        },
+        {
+            "name": "packerVersion",
+            "type": "string",
+            "label": "Packer Version",
+            "required": true,
+            "defaultValue": "0.12.3",
+            "helpMarkDown": "Provide the version of Packer to execute. Packer versions are available here:  [https://releases.hashicorp.com/packer/](https://releases.hashicorp.com/packer/). Use the format MAJOR.MINOR.PATCH (e.g. 1.2.5).",
+            "groupName": "PackerVersion"
         }
     ],
     "dataSourceBindings": [
