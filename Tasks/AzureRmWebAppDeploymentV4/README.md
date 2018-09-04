@@ -6,7 +6,7 @@ The Azure App Service Deployment task is used to update different Azure App Serv
 
 The task works for [ASP.NET](https://www.visualstudio.com/en-us/docs/release/examples/azure/azure-web-apps-from-build-and-release-hubs), [ASP.NET Core](https://www.visualstudio.com/en-us/docs/release/examples/azure/aspnet-core10-azure-web-apps), PHP, Java, Python, Go and [Node.js](https://www.visualstudio.com/en-us/docs/release/examples/nodejs/node-to-azure-webapps) based web applications.
 
-The task can be used to deploy different Azure App Services like Function App (Windows/Linux/Containers), Web App on Windows, Web App on Linux, Web App for Containers and Azure App Service Environments.
+The task can be used to deploy different Azure App Services like Function App (Windows/Linux/Containers), Web App on Windows, Web App on Linux, Web App for Containers and apps configured under Azure App Service Environments.
 
 The task is **under development and is available to a limited set of accounts on Visual Studio Team Services (VSTS)**. The [video](https://www.youtube.com/watch?v=uQ2qCmaZ_Ag&feature=youtu.be) describes the features that are available in the task currently.
 
@@ -22,7 +22,7 @@ The following pre-requisites need to be setup in the target machine(s) for the t
 
 The task is used to deploy a Web  project to an existing Azure Web App. The Web App should exist prior to running the task. The Web App can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) can be used to run [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx) to provision and configure the Web App.
 
-The task can also be used to deply [Azure Functions] (https://azure.microsoft.com/en-in/services/functions/) (Windows/Linux/Containers).
+The task can also be used to deply [Azure Functions](https://azure.microsoft.com/en-in/services/functions/) (Windows/Linux/Containers).
 
 ##### Azure Subscription
 
@@ -49,7 +49,7 @@ Based on the type of Azure App Service and VSTS agent, the task chooses a suitab
 
 By default the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
-* For msdeploy package, use Web Deploy 
+* For msdeploy (MSBuild generated package) package, use Web Deploy 
 * When post deployment script is provided, use Zip Deploy 
 * When the App Service type is Web App on Linux App, use Zip Deploy 
 * If War file is provided, use War Deploy 
