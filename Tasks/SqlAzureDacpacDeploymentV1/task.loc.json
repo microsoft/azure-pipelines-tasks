@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 4
+    "Patch": 5
   },
   "demands": [
     "sqlpackage"
@@ -101,7 +101,7 @@
       "name": "SqlUsername",
       "type": "string",
       "label": "ms-resource:loc.input.label.SqlUsername",
-      "required": false,
+      "required": true,
       "groupName": "target",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
@@ -110,7 +110,7 @@
       "name": "SqlPassword",
       "type": "string",
       "label": "ms-resource:loc.input.label.SqlPassword",
-      "required": false,
+      "required": true,
       "groupName": "target",
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"

@@ -190,6 +190,10 @@ export function getBundledNuGetLocation(uxOption: string): string {
     return toolPath;
 }
 
+export function resolveToolPath(path: string ): string {
+    return tl.resolve(path);
+}
+
 export function locateCredentialProvider(useV2CredProvider?: boolean): string {
     if (useV2CredProvider === true) {
         // tslint:disable-next-line:max-line-length

@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
+    "Minor": 140,
     "Patch": 0
   },
   "satisfies": [
@@ -32,7 +32,7 @@
       "name": "versionSpec",
       "type": "string",
       "label": "ms-resource:loc.input.label.versionSpec",
-      "defaultValue": "1.8",
+      "defaultValue": "8",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
     },

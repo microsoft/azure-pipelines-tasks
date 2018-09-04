@@ -83,6 +83,12 @@ export class DotnetMockHelper {
                 return 'https://vsts/packagesource';
             }
         });
+        
+        this.tmr.registerMock('./Utility', {
+            resolveToolPath: function(path) {
+                return path;
+            }
+        });
     }
 
     public registerVstsNuGetPushRunnerMock() {

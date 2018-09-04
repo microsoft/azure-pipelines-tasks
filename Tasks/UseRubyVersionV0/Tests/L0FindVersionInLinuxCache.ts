@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as tmrm from 'vsts-task-lib/mock-run';
+import * as ma from 'vsts-task-lib/mock-answer';
 
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -13,18 +14,24 @@ tr.registerMock('vsts-task-tool-lib/tool', {
     findLocalTool: () => path.join('/', 'Ruby', '2.5.4')
 });
 
-tr.registerMock('fs', {
-    symlinkSync: () => { },
-    unlinkSync: () => { },
-    existsSync: () => { return true; },
-    statSync: fs.statSync,
-    writeFileSync: fs.writeFileSync,
-    readFileSync: fs.readFileSync
-});
-
 tr.registerMock('os', {
     type: () => { return 'linux'; },
     EOL: os.EOL
+});
+
+tr.setAnswers(<ma.TaskLibAnswers> {
+    "which": {
+        "sudo": "sudo"
+    },
+    "checkPath": {
+        "sudo": true,
+    },
+    "exec": {
+       "sudo ln -sf /Ruby/2.5.4/bin/ruby /usr/bin/ruby": {
+            "code": 0,
+            "stdout": "Executed Successfully"
+        },
+    },
 });
 
 tr.run();

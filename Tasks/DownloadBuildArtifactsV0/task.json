@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 139,
+    "Minor": 141,
     "Patch": 0
   },
   "groups": [
@@ -181,7 +181,7 @@
     {
       "endpointId": "tfs:teamfoundation",
       "target": "definition",
-      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=1000&continuationToken={{{continuationToken}}}&queryOrder=2",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=500&continuationToken={{{continuationToken}}}&queryOrder=2",
       "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
       "parameters": {
           "project": "$(project)"
@@ -239,5 +239,11 @@
     "LatestBuildNotFound":"Latest build not found",
     "LatestBuildFromBranchNotFound":"Latest build from branch %s not found",
     "DownloadingContainerResource": "Downloading items from container resource %s"
-  }
+  },
+  "outputVariables": [
+    {
+      "name": "BuildNumber",
+      "description": "Stores the build number of the build artifact source"
+    }
+  ]
 }

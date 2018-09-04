@@ -185,6 +185,9 @@ async function main(): Promise<void> {
 
         console.log(tl.loc("DownloadingArtifactsForBuild", buildId));
 
+        // populate output variable 'BuildNumber' with buildId
+        tl.setVariable('BuildNumber', buildId.toString());
+
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
             var artifactName = tl.getInput("artifactName", true);
@@ -238,6 +241,12 @@ async function main(): Promise<void> {
                     
                     var containerId = parseInt(containerParts[1]);
                     var containerPath = containerParts.slice(2,containerParts.length).join('/');
+
+                    if (containerPath == "/") {
+                        //container REST api oddity. Passing '/' as itemPath downloads the first file instead of returning the meta data about the all the files in the root level. 
+                        //This happens only if the first item is a file.
+                        containerPath = ""
+                    }
 
                     var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
                     console.log(tl.loc("DownloadArtifacts", artifact.name, itemsUrl));
