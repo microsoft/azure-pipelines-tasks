@@ -58,22 +58,6 @@
             "defaultValue": "builtin"
         },
         {
-            "name": "isManagedImage",
-            "type": "boolean",
-            "label": "Managed VM disk image",
-            "required": true,
-            "helpMarkDown": "Check if generated image should be a managed image.",
-            "defaultValue": true
-        },
-        {
-            "name": "managedImageName",
-            "type": "string",
-            "label": "Managed VM Disk Image Name ",
-            "required": true,
-            "helpMarkDown": "The Name of the Managed disk image for Auto Generated Templates.",
-            "visibleRule": "isManagedImage = true && templateType = builtin"
-        },
-        {
             "name": "customTemplateLocation",
             "type": "filePath",
             "label": "Packer template location",
@@ -123,6 +107,24 @@
             "label": "Resource group",
             "helpMarkDown": "Azure Resource group that contains the selected storage account.",
             "required": true,
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "isManagedImage",
+            "type": "boolean",
+            "label": "Managed VM disk image",
+            "required": true,
+            "helpMarkDown": "Check if generated image should be a managed image.",
+            "defaultValue": true,
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "managedImageName",
+            "type": "string",
+            "label": "Managed VM Disk Image Name ",
+            "required": true,
+            "helpMarkDown": "The Name of the Managed disk image for Auto Generated Templates.",
+            "visibleRule": "isManagedImage = true",
             "groupName": "AzureDetails"
         },
         {
@@ -293,6 +295,7 @@
         "PackerBuildCompleted": "packer build completed.",
         "ImageURIOutputVariableNotFound": "Could not get vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
         "ManagedImageNameOutputVariableNotFound": "Could not get managed image name from packer execution. Output variable will not be set.",
+        "CustumTemplateOutputVariableNotFound": "Could not get managed image name or vhd image URI (unmanaged image) from packer execution. Output variable will not be set.",
         "BuiltInTemplateNotFoundErrorMessagePathName": "Built-in template for OS type: %s ",
         "CustomTemplateNotFoundErrorMessagePathName": "Custom template not found at location: %s",
         "CouldNotDeleteTemporaryTemplateDirectory": "Could not delete temporary template directory %s. Please delete manually.",

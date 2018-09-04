@@ -151,6 +151,19 @@ describe('PackerBuild Suite', function() {
             }, tr, done);
         });
 
+        it('Creates output variables from packer log for custom template generating managed image', (done:MochaDone) => {
+            let tp = path.join(__dirname, 'L0CustomManagedTemplate.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            tr.run();
+
+            runValidations(() => {
+                assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
+                assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+                assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf("##vso[task.setvariable variable=imageUri;issecret=false;]builtInWinManagedImageName") != -1, "image uri output variable not set");
+            }, tr, done);
+        });
+
         it('Creates output variables from packer log for custom windows base image', (done:MochaDone) => {
             let tp = path.join(__dirname, 'L0WindowsCustomImage.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);

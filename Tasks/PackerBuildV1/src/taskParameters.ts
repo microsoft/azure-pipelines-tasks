@@ -41,7 +41,6 @@ export default class TaskParameters {
     constructor() {
         try {
             this.templateType = tl.getInput(constants.TemplateTypeInputName, true);
-            this.isManagedImage = tl.getBoolInput(constants.ManagedImageInputName, false);
             
             if(this.templateType === constants.TemplateTypeCustom) {
                 this.customTemplateLocation = tl.getPathInput(constants.CustomTemplateLocationInputType, true, true);
@@ -52,6 +51,7 @@ export default class TaskParameters {
                 this.resourceGroup = tl.getInput(constants.ResourceGroupInputName, true);
                 this.storageAccount = tl.getInput(constants.StorageAccountInputName, true);
                 this.location = tl.getInput(constants.LocationInputName, true);
+                this.isManagedImage = tl.getBoolInput(constants.ManagedImageInputName, false);
 
                 if(this.isManagedImage)
                 {
