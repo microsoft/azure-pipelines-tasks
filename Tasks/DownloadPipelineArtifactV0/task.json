@@ -8,20 +8,20 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
+    "Minor": 139,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.138.0",
+  "minimumAgentVersion": "2.140.1",
   "inputs": [
 	{
       "name": "pipelineId",
       "type": "string",
       "label": "The specific pipeline to download from",
       "required": false,
-      "helpMarkDown": "The build to download from. Target the current build if left blank."
+      "helpMarkDown": "The pipeline to download from. Target the current pipeline if left blank."
     },
 	{
       "name": "artifactName",
@@ -29,7 +29,7 @@
       "label": "The name of artifact to download.",
       "defaultValue": "drop",
       "required": true,
-      "helpMarkDown": "The name of artifact to download. The artifact must be a build drop."
+      "helpMarkDown": "The name of artifact to download. The artifact must be a pipeline artifact."
     },
     {
       "name": "targetPath",
