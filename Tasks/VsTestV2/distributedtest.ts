@@ -63,6 +63,9 @@ export class DistributedTest {
             envVars = utils.Helper.setProfilerVariables(envVars);
         }
 
+        // Pass the test case acess token as an environment variable for security purposes.
+        utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
+
         // Pass the acess token as an environment variable for security purposes
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 

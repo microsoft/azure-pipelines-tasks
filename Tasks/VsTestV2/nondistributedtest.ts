@@ -82,6 +82,9 @@ export class NonDistributedTest {
     
         dtaExecutionHostTool.arg(['--inputFile', inputFilePath]);
     
+        // Pass the test case acess token as an environment variable for security purposes.
+        utils.Helper.addToProcessEnvVars(envVars, 'Test.TestCaseAccessToken', tl.getVariable('Test.TestCaseAccessToken'));
+
         utils.Helper.addToProcessEnvVars(envVars, 'DTA.AccessToken', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
 
         if(this.inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled)
