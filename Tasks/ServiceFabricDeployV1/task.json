@@ -214,15 +214,6 @@
             "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
         },
         {
-            "name": "ReplicaQuorumTimeoutSec",
-            "type": "string",
-            "label": "ReplicaQuorumTimeoutSec",
-            "defaultValue": "",
-            "required": false,
-            "groupname": "upgrade",
-            "visibleRule": "overridePublishProfileSettings = true && isUpgrade = true"
-        },
-        {
             "name": "TimeoutSec",
             "type": "string",
             "label": "TimeoutSec",

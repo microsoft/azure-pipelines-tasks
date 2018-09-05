@@ -152,7 +152,6 @@ function Get-VstsUpgradeParameters
 
     $parameterNames = @(
         "UpgradeReplicaSetCheckTimeoutSec",
-        "ReplicaQuorumTimeoutSec",
         "TimeoutSec",
         "ForceRestart"
     )
