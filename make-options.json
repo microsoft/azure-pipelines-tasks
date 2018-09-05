@@ -112,11 +112,9 @@
         "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
-        "XamarinComponentRestoreV0",
         "XamariniOSV2",
         "XamarinTestCloudV1",
-        "XcodeV5",
-        "XcodePackageiOSV0"
+        "XcodeV5"
     ],
     "taskResources": [
         "*.ps1",
