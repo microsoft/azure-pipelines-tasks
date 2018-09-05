@@ -6,6 +6,7 @@ import * as ci from './cieventlogger';
 import { AreaCodes, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
 import * as versionfinder from './versionfinder';
+import * as Q from "q";
 import * as isUncPath from 'is-unc-path';
 const regedit = require('regedit');
 
