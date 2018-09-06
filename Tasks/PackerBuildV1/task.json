@@ -86,6 +86,24 @@
             "groupName": "AzureDetails"
         },
         {
+            "name": "isManagedImage",
+            "type": "boolean",
+            "label": "Managed VM disk image",
+            "required": true,
+            "helpMarkDown": "Check if generated image should be a managed image.",
+            "defaultValue": true,
+            "groupName": "AzureDetails"
+        },
+        {
+            "name": "managedImageName",
+            "type": "string",
+            "label": "Managed VM Disk Image Name ",
+            "required": true,
+            "helpMarkDown": "The Name of the Managed disk image for Auto Generated Templates.",
+            "visibleRule": "isManagedImage = true",
+            "groupName": "AzureDetails"
+        },
+        {
             "name": "location",
             "type": "pickList",
             "label": "Storage location",
@@ -107,24 +125,6 @@
             "label": "Resource group",
             "helpMarkDown": "Azure Resource group that contains the selected storage account.",
             "required": true,
-            "groupName": "AzureDetails"
-        },
-        {
-            "name": "isManagedImage",
-            "type": "boolean",
-            "label": "Managed VM disk image",
-            "required": true,
-            "helpMarkDown": "Check if generated image should be a managed image.",
-            "defaultValue": true,
-            "groupName": "AzureDetails"
-        },
-        {
-            "name": "managedImageName",
-            "type": "string",
-            "label": "Managed VM Disk Image Name ",
-            "required": true,
-            "helpMarkDown": "The Name of the Managed disk image for Auto Generated Templates.",
-            "visibleRule": "isManagedImage = true",
             "groupName": "AzureDetails"
         },
         {
