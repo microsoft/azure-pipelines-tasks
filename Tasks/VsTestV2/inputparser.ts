@@ -61,6 +61,8 @@ export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
     inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.RunIdentifier = getRunIdentifier();
+    inputDataContract.EnableSingleAgentAPIFlow = utils.Helper.stringToBool(tl.getVariable('Hydra.EnableApiFlow'));
+
 
     logWarningForWER(tl.getBoolInput('uiTests'));
 
