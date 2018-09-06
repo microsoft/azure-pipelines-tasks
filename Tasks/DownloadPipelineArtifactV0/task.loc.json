@@ -1,6 +1,6 @@
 {
   "id": "61F2A582-95AE-4948-B34D-A1B3C4F6A737",
-  "name": "DownloadBuildDrop",
+  "name": "DownloadPipelineArtifact",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -8,42 +8,42 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
+    "Minor": 139,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.138.0",
+  "minimumAgentVersion": "2.140.1",
   "inputs": [
     {
-      "name": "buildid",
+      "name": "pipelineId",
       "type": "string",
-      "label": "ms-resource:loc.input.label.buildid",
+      "label": "ms-resource:loc.input.label.pipelineId",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.buildid"
+      "helpMarkDown": "ms-resource:loc.input.help.pipelineId"
     },
     {
-      "name": "artifactname",
+      "name": "artifactName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.artifactname",
+      "label": "ms-resource:loc.input.label.artifactName",
       "defaultValue": "drop",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.artifactname"
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
     },
     {
-      "name": "targetpath",
+      "name": "targetPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.targetpath",
+      "label": "ms-resource:loc.input.label.targetPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.targetpath"
+      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.BuildDrop.DownloadBuildDropTask, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineArtifact.DownloadPipelineArtifactTask, Agent.Plugins"
     }
   },
   "messages": {}

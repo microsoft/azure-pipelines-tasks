@@ -1,6 +1,6 @@
 {
   "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
-  "name": "PublishBuildDrop",
+  "name": "PublishPipelineArtifact",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -8,35 +8,35 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 138,
+    "Minor": 139,
     "Patch": 0
   },
   "groups": [],
   "demands": [],
   "preview": true,
-  "minimumAgentVersion": "2.138.0",
+  "minimumAgentVersion": "2.140.1",
   "inputs": [
     {
-      "name": "artifactname",
+      "name": "artifactName",
       "type": "string",
-      "label": "ms-resource:loc.input.label.artifactname",
+      "label": "ms-resource:loc.input.label.artifactName",
       "defaultValue": "drop",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.artifactname"
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
     },
     {
-      "name": "targetpath",
+      "name": "targetPath",
       "type": "filePath",
-      "label": "ms-resource:loc.input.label.targetpath",
+      "label": "ms-resource:loc.input.label.targetPath",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.targetpath"
+      "helpMarkDown": "ms-resource:loc.input.help.targetPath"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "AgentPlugin": {
-      "target": "Agent.Plugins.BuildDrop.PublishBuildDropTask, Agent.Plugins"
+      "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTask, Agent.Plugins"
     }
   },
   "messages": {}
