@@ -86,7 +86,7 @@
       "name": "testResultsFiles",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.testResultsFiles",
-      "defaultValue": "**/surefire-reports/Test-*.xml",
+      "defaultValue": "**/surefire-reports/TEST-*.xml",
       "required": true,
       "groupName": "junitTestResults",
       "helpMarkDown": "ms-resource:loc.input.help.testResultsFiles",
