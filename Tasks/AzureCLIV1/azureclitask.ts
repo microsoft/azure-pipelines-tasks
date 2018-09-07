@@ -123,10 +123,10 @@ export class azureclitask {
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
         //login using svn
-        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""));
+        this.throwIfFailed(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
-        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""));
+        this.throwIfFailed(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""));
     }
 
     private static logoutAzure() {
@@ -139,7 +139,7 @@ export class azureclitask {
         }
     }
 
-    private static throwIfError(resultOfToolExecution): void {
+    private static throwIfFailed(resultOfToolExecution): void {
         if (resultOfToolExecution.code != 0) {
             throw resultOfToolExecution;
         }
