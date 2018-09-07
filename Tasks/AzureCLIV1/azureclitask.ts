@@ -1,3 +1,4 @@
+import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
@@ -55,7 +56,7 @@ export class azureclitask {
             else {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
-
+            this.throwIfError(tl.execSync("az", "--version"));
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
@@ -139,9 +140,11 @@ export class azureclitask {
         }
     }
 
-    private static throwIfError(resultOfToolExecution): void {
-        if (resultOfToolExecution.stderr) {
-            throw resultOfToolExecution;
+    private static throwIfError(resultOfToolExecution: IExecSyncResult): void {
+        if (resultOfToolExecution.code != 0) {
+            if (resultOfToolExecution.stderr) {
+                throw resultOfToolExecution;
+            }
         }
     }
 
