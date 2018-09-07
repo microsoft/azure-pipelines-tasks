@@ -98,6 +98,19 @@ export class TaskParametersUtility {
             taskParameters.AdditionalArguments = '-retryAttempts:6 -retryInterval:10000';
         }
 
+        if(taskParameters.isLinuxApp && taskParameters.ScriptType) {
+            let retryTimeoutValue = tl.getVariable('appservicedeploy.retrytimeout');
+            let timeoutAppSettings = retryTimeoutValue ? Number(retryTimeoutValue) * 60 : 1800;
+
+            tl.debug(`setting app setting SCM_COMMAND_IDLE_TIMEOUT to ${timeoutAppSettings}`);
+            if(taskParameters.AppSettings) {
+                taskParameters.AppSettings = taskParameters.AppSettings + ` -SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
+            }
+            else {
+                taskParameters.AppSettings = `-SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
+            }
+        }
+
         return taskParameters;
     }
 

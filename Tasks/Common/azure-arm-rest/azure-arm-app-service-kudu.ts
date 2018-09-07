@@ -22,7 +22,7 @@ export class KuduServiceManagementClient {
         request.headers["Authorization"] = "Basic " + this._accesssToken;
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
         
-        let retryCount = reqOptions && reqOptions.retryCount ? reqOptions.retryCount : 5;
+        let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
         while(retryCount >= 0) {
             try {
                 let httpResponse = await webClient.sendRequest(request, reqOptions);
@@ -395,7 +395,8 @@ export class Kudu {
 
         try {
             tl.debug('Executing Script on Kudu. Command: ' + command);
-            var response = await this._client.beginRequest(httpRequest);
+            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 0, retryIntervalInSeconds: 5};
+            var response = await this._client.beginRequest(httpRequest, webRequestOptions);
             tl.debug(`runCommand. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
                 return ;
