@@ -140,7 +140,7 @@ export class azureclitask {
     }
 
     private static throwIfError(resultOfToolExecution): void {
-        if (resultOfToolExecution.stderr) {
+        if (resultOfToolExecution.code != 0) {
             throw resultOfToolExecution;
         }
     }
