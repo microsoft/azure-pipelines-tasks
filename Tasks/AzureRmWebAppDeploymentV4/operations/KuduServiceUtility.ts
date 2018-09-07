@@ -55,12 +55,11 @@ export class KuduServiceUtility {
             await this._appServiceKuduService.uploadFile(vstsPostDeploymentFolderPath, 'kuduPostDeploymentScript' + fileExtension, scriptFile.filePath);
             console.log(tl.loc('ExecuteScriptOnKudu'));
             var cmdFilePath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\mainCmdFile' + fileExtension;
-            var scriprResultPath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\script_result.txt';
+            var scriprResultPath = '/site/VSTS_PostDeployment_' + uniqueID;
             if (taskParams.isLinuxApp){
                 cmdFilePath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/mainCmdFile' + fileExtension
-                scriprResultPath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/script_result.txt';
             }
-            await this.runCommand(rootDirectoryPath, cmdFilePath + ' ' + uniqueID, 30, scriprResultPath);
+            await this.runCommand(rootDirectoryPath, cmdFilePath + ' ' + uniqueID, 30, scriprResultPath, 'script_result.txt');
             await this._printPostDeploymentLogs(vstsPostDeploymentFolderPath);
 
         }
@@ -79,7 +78,7 @@ export class KuduServiceUtility {
         finally {
             try {
                 await this._appServiceKuduService.uploadFile(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
-                await this.runCommand(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension, 0, null);
+                await this.runCommand(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension, 0, null, null);
                 await this._appServiceKuduService.deleteFolder(vstsPostDeploymentFolderPath);
             }
             catch(error) {
@@ -313,14 +312,14 @@ export class KuduServiceUtility {
         }
     }
 
-    private async runCommand(physicalPath: string, command: string, timeOutInMinutes: number, pollFile: string): Promise<void> {
+    private async runCommand(physicalPath: string, command: string, timeOutInMinutes: number, pollFolderPath: string, pollFile: string): Promise<void> {
         try {
             await this._appServiceKuduService.runCommand(physicalPath, command);
         }
         catch(error) {
-            if(timeOutInMinutes > 0 && error.toString().indexOf('Request timeout: /api/command') != -1) {
+            if(!!pollFolderPath && !!pollFile && timeOutInMinutes > 0 && error.toString().indexOf('Request timeout: /api/command') != -1) {
                 tl.debug('Request timeout occurs. Trying to poll for file: ' + pollFile);
-                await this._pollForFile(physicalPath, pollFile, timeOutInMinutes);
+                await this._pollForFile(pollFolderPath, pollFile, timeOutInMinutes);
             }
             else {
                 if(typeof error.valueOf() == 'string') {
