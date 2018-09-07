@@ -1,21 +1,21 @@
 @echo off
 
-DEL "mainCmdFile_%1.cmd" 
+DEL "mainCmdFile.cmd" 
 
-DEL "kuduPostDeploymentScript_%1.cmd"
+DEL "kuduPostDeploymentScript.cmd"
 
 :: Do not delete file if the execution is not completed within time range
 :: This can help in retrieving the logs and script result
 
-if exist "script_result_%1.txt" (
+if exist "script_result.txt" (
 
     echo remove log files
 
-    DEL "stdout_%1.txt"
+    DEL "stdout.txt"
 
-    DEL "stderr_%1.txt"
+    DEL "stderr.txt"
 
-    DEL "script_result_%1.txt"
+    DEL "script_result.txt"
 )
 
 :: Delete the file after execution 

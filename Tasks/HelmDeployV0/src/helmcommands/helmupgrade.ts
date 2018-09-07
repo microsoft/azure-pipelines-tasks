@@ -21,6 +21,11 @@ export function addArguments(helmCli: helmcli) : void {
     var enableTls = tl.getBoolInput("enableTls", false);
     var rootFolder = tl.getVariable('System.DefaultWorkingDirectory');
 
+    if(!releaseName) {
+        var hostType = tl.getVariable("SYSTEM_HOSTTYPE");
+        releaseName = (hostType === "build") ? tl.getVariable("BUILD_BUILDNUMBER") : tl.getVariable("RELEASE_RELEASENAME");
+    }
+
     if(namespace) {
         helmCli.addArgument("--namespace ".concat(namespace));
     }
@@ -69,7 +74,6 @@ export function addArguments(helmCli: helmcli) : void {
     if(chartType === "Name") {
         var chartName = tl.getInput("chartName", true);
         helmCli.addArgument(chartName);
-
     }
     else {
         var chartPath = tl.getInput("chartPath", true);

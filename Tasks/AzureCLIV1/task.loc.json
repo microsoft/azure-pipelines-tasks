@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 132,
-    "Patch": 0
+    "Minor": 137,
+    "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -73,7 +73,7 @@
       "properties": {
         "resizable": "true",
         "rows": "10",
-        "maxLength": "4000"
+        "maxLength": "5000"
       }
     },
     {

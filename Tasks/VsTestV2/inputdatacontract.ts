@@ -1,12 +1,14 @@
 export interface InputDataContract {
     AgentName : string;
     AccessToken : string;
+    AccessTokenType : string;
     CollectionUri : string;
     RunIdentifier : string;
     TeamProject : string;
     TestSelectionSettings : TestSelectionSettings;
     VsTestConsolePath : string;
     UsingXCopyTestPlatformPackage : boolean;
+    EnableSingleAgentAPIFlow : boolean;
     TestReportingSettings : TestReportingSettings;
     TfsSpecificSettings : TfsSpecificSettings;
     TargetBinariesSettings : TargetBinariesSettings;
@@ -15,13 +17,12 @@ export interface InputDataContract {
     DistributionSettings : DistributionSettings;
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
-    TiaBaseLineBuildIdFile : string;
-    UseNewCollector : boolean;
 }
 
 export interface TestReportingSettings {
     TestRunTitle : string;
-    TestResultDirectory : string;
+    TestResultsDirectory : string;
+    TestRunSystem : string;
 }
 
 export interface TestSelectionSettings {
@@ -40,12 +41,14 @@ export interface TestPlanTestSuiteSettings {
 }
 
 export interface TfsSpecificSettings {
-    DefinitionId : number;
+    BuildDefinitionId : number;
+    ReleaseDefinitionId : number;
     BuildId : number;
     BuildUri : string;
     ReleaseId : number;
     ReleaseUri : string;
     ReleaseEnvironmentUri : string;
+    WorkFolder : string;
 }
 
 export interface TestSpecificSettings {
@@ -80,17 +83,27 @@ export interface DistributionSettings {
 }
 
 export interface ExecutionSettings {
+    TestPlatformExecutionMode : string;
+    DefaultTestBatchSize : number;
     AssemblyLevelParallelism : boolean;
     CodeCoverageEnabled : boolean;
-    CustomTestAdapters : string;
-    ExecutionMode : string;
+    PathToCustomTestAdapters : string;
     IgnoreTestFailures : boolean;
     ProceedAfterAbortedTestCase : boolean;
     SettingsFile : string;
+    AdditionalConsoleParameters : string;
     OverridenParameters : string;
     RerunSettings : RerunSettings;
+    RunTestsInIsolation : boolean;
     TiaSettings : TiaSettings;
+    TempFolder : string;
     VideoDataCollectorEnabled : boolean;
+    DiagnosticsSettings : DiagnosticsSettings;
+}
+
+export interface DiagnosticsSettings {
+    Enabled : boolean;
+    CollectDumpAlways : boolean;
 }
 
 export interface TiaSettings {
@@ -100,8 +113,9 @@ export interface TiaSettings {
     SourcesDirectory : string;
     FileLevel : boolean;
     FilterPaths : string;
-    UserMapFile : string;    
+    UserMapFile : string;
     IsPrFlow : boolean;
+    UseTestCaseFilterInResponseFile : boolean;
 }
 
 export interface Logging {

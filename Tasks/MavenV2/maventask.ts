@@ -2,7 +2,6 @@
 import Q = require('q');
 import os = require('os');
 import path = require('path');
-import fs = require('fs');
 
 import tl = require('vsts-task-lib/task');
 import {ToolRunner} from 'vsts-task-lib/toolrunner';
@@ -46,7 +45,6 @@ var codeAnalysisOrchestrator:CodeAnalysisOrchestrator = new CodeAnalysisOrchestr
 
 // Determine the version and path of Maven to use
 var mvnExec: string = '';
-
 if (mavenVersionSelection == 'Path') {
     // The path to Maven has been explicitly specified
     tl.debug('Using Maven path from user input');
@@ -193,7 +191,7 @@ async function execBuild() {
                     }
                     return util.mergeCredentialsIntoSettingsXml(settingsXmlFile, repositories);
                 })
-                .fail(function (err) {
+                .catch(function (err) {
                     return Q.reject(err);
                 });
             } else {
@@ -323,8 +321,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
         tl.debug('Pattern found in testResultsFiles parameter');
         var buildFolder = tl.getVariable('System.DefaultWorkingDirectory');
         tl.debug(`buildFolder=${buildFolder}`);
-        var allFiles = tl.find(buildFolder);
-        matchingJUnitResultFiles = tl.match(allFiles, testResultsFiles, {
+        matchingJUnitResultFiles = tl.findMatch(buildFolder, testResultsFiles, null, {
             matchBase: true
         });
     }
@@ -385,9 +382,9 @@ function enableCodeCoverage() : Q.Promise<any> {
     }
 
     // clean any previously generated files.
-    tl.rmRF(targetDirectory, true);
-    tl.rmRF(reportDirectory, true);
-    tl.rmRF(reportPOMFile, true);
+    tl.rmRF(targetDirectory);
+    tl.rmRF(reportDirectory);
+    tl.rmRF(reportPOMFile);
 
     var buildProps: { [key: string]: string } = {};
     buildProps['buildfile'] = mavenPOMFile;

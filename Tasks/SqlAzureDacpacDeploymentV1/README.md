@@ -136,6 +136,7 @@ Other supported versions:
         * Check if any firewall rules are preventing the connection.
         * Check if the supplied credentials have appropriate permission to either the master DB or the specific DB.
         * Check if the SQL server name resolution succeeds.
+	* DAC tooling is not up to date and the target database is configured with an incompatible Compatibility Level. It tend to happen when Azure SQL receives an update and you are deploying on a new database. You can either update DAC tooling on self hosted agent or [reduce the compatibility level of your DB](https://azure.microsoft.com/en-us/blog/default-compatibility-level-140-for-azure-sql-databases/)
 - **Connection timed out**
     * Consider using /TargetTimeout: property for connections that times out
     

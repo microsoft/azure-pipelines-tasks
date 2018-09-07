@@ -187,16 +187,16 @@ export class JobQueue {
         };
 
         function walkHierarchy(job: Job, indent: string, padding: number): string {
-            let jobContents: string = indent + '<ul style="padding-left:' + padding + '">\n';
+            let jobContents: string = indent;
 
             // if this job was joined to another follow that one instead
             job = findWorkingJob(job);
 
             if (job.ExecutableNumber === -1) {
-                jobContents += indent + job.Name + ' ' + colorize(job.GetResultString()) + '<br />\n';
+                jobContents += indent + job.Name + ' ' + colorize(job.GetResultString()) + '<br />';
             } else {
                 const url = job.ExecutableUrl && job.ExecutableUrl.replace('"', '%22');
-                jobContents += indent + '<a href="' + url + '">' + job.Name + ' #' + job.ExecutableNumber + '</a> ' + colorize(job.GetResultString()) + '<br />\n';
+                jobContents += indent + '[' + job.Name + ' #' + job.ExecutableNumber + '](' + url + ') ' + colorize(job.GetResultString()) + '<br />';
             }
 
             let childContents: string = '';
@@ -204,7 +204,7 @@ export class JobQueue {
                 const child: Job = job.Children[i];
                 childContents += walkHierarchy(child, indent + tab, padding + paddingTab);
             }
-            return jobContents + childContents + indent + '\n</ul>\n';
+            return jobContents + childContents + indent;
         }
 
         function findWorkingJob(job: Job): Job {
@@ -240,7 +240,7 @@ export class JobQueue {
             };
 
             // Top level pipeline job status
-            let jobContent: string = '<ul style="padding-left: 0">';
+            let jobContent: string = '';
             let jobName: string = taskOptions.jobName;
             if (taskOptions.isMultibranchPipelineJob) {
                 jobName = `${jobName}/${taskOptions.multibranchPipelineBranch}`;
@@ -264,8 +264,6 @@ export class JobQueue {
                 jobContent += '</ul>';
             }
 
-            //close out the element for the entire job
-            jobContent += '</ul>';
             return jobContent;
         }
 
@@ -319,7 +317,11 @@ export class JobQueue {
                     } else {
                         message = tl.loc('JenkinsJobQueued');
                     }
-                    tl.setResult(tl.TaskResult.Succeeded, message);
+                    if (thisQueue.TaskOptions.shouldFail) {
+                        tl.setResult(tl.TaskResult.Failed, thisQueue.TaskOptions.failureMsg);
+                    } else {
+                        tl.setResult(tl.TaskResult.Succeeded, message);
+                    }
                 } else {
                     if (thisQueue.TaskOptions.capturePipeline) {
                         message = tl.loc('JenkinsPipelineFailed');

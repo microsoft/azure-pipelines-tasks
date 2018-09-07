@@ -1,19 +1,14 @@
-# Docker container
-# Build a Docker image and push it to a container registry.
-# https://aka.ms/yaml
+# Docker image
+# Build a Docker image to run, deploy, or push to a container registry.
+# Add steps that use Docker Compose, tag images, push to a registry, run an image, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/docker
 
-queue: 'Hosted Linux'
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+variables:
+  imageName: 'your-container-image-name:$(build.buildId)'
+
 steps:
-
-- task: Docker@0
-  inputs:
-    action: 'build an image'
-    dockerFile: '**/Dockerfile' 
-    imageName: '$(build.repository.name):$(build.buildId)'
-
-#- task: Docker@0
-#  inputs:
-#    action: 'Push an image'
-#    containerregistrytype: 'container registry'
-#    dockerRegistryEndpoint: ''
-#    imageName: '$(build.repository.name):$(build.buildId)'
+- script: docker build -f Dockerfile -t $(imageName) .
+  displayName: 'docker build'

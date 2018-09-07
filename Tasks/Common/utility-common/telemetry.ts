@@ -36,8 +36,7 @@ export function emitTelemetry(area: string, feature: string, taskSpecificTelemet
                 'BUILD_REPOSITORY_GIT_SUBMODULECHECKOUT': tl.getVariable('BUILD_REPOSITORY_GIT_SUBMODULECHECKOUT'),
                 'BUILD_REPOSITORY_NAME': tl.getVariable('BUILD_REPOSITORY_NAME'),
                 'BUILD_REPOSITORY_PROVIDER': tl.getVariable('BUILD_REPOSITORY_PROVIDER'),
-                'BUILD_SOURCEVERSION': tl.getVariable('BUILD_SOURCEVERSION'),
-                'agent.proxyurl': tl.getVariable("agent.proxyurl")
+                'BUILD_SOURCEVERSION': tl.getVariable('BUILD_SOURCEVERSION')
             };
             let copy = Object.assign(commonTelem, taskSpecificTelemetry);
             console.log("##vso[telemetry.publish area=%s;feature=%s]%s",

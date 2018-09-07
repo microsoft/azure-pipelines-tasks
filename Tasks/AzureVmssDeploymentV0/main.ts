@@ -5,7 +5,7 @@ import AzureVmssTaskParameters from "./models/AzureVmssTaskParameters";
 import VirtualMachineScaleSet from "./operations/VirtualMachineScaleSet";
 
 async function run(): Promise<void> {
-    var taskParameters = new AzureVmssTaskParameters();
+    var taskParameters = await new AzureVmssTaskParameters().getAzureVmssTaskParameters();
     var vmssOperation = new VirtualMachineScaleSet(taskParameters);
     await vmssOperation.execute();
 }

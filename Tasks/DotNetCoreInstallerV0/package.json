@@ -23,6 +23,7 @@
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "2.0.6",
-    "vsts-task-tool-lib": "0.4.1"
+    "vsts-task-tool-lib": "0.4.1",
+    "typed-rest-client": "0.11.0"
   }
 }

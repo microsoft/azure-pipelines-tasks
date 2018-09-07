@@ -28,6 +28,8 @@
   "loc.input.help.SimultaneousUpgrade": "Updates all instances at once. Your cloud service will be unavailable during update.",
   "loc.input.label.ForceUpgrade": "Force upgrade",
   "loc.input.help.ForceUpgrade": "When selected sets the upgrade to a forced upgrade, which could potentially cause loss of local data.",
+  "loc.input.label.VerifyRoleInstanceStatus": "Verify role instance status",
+  "loc.input.help.VerifyRoleInstanceStatus": "When selected then the task will wait until role instances are in ready state.",
   "loc.input.label.DiagnosticStorageAccountKeys": "Diagnostic storage account keys",
   "loc.input.help.DiagnosticStorageAccountKeys": "Provide storage keys for diagnostics storage account in Role:Storagekey format. The diagnostics storage account name for each role will be obtained from diagnostics config file (.wadcfgx). If the .wadcfgx file for a role is not found, diagnostics extensions won’t be set for the role. If the storage account name is missing in the .wadcfgx file, the default storage account will be used for storing diagnostics results and the storage key parameters from deployment task will be ignored. It’s recommended to save <storage_account_key> as a secret variable unless there is no sensitive information in the diagnostics result for your environment. <br/><br/>For example,<br/> WebRole: &lt;WebRole_storage_account_key&gt;<br/>WorkerRole: &lt;WorkerRole_stoarge_account_key&gt;",
   "loc.input.label.NewServiceCustomCertificates": "Custom certificates to import",
@@ -47,13 +49,10 @@
   "loc.messages.Currentversionofazurepowershelldontsupportexternalstorageaccountforconfiguringdiagnostics": "Current version of azure powershell does not support external storage account for configuring diagnostics.",
   "loc.messages.Customcertificatesaredefinedininvalidformat": "Custom certificates are defined in invalid format.",
   "loc.messages.Addinganyconfiguredcustomcertificates": "Adding any configured custom certificates.",
-  "loc.messages.AllInstancesReadyRole0status": "All instances are in ReadyRole state now, and instances count is '{0}' ",
-  "loc.messages.EachInstancesNameAndStatus0": "Status is 'ReadyRole' for the Instance name '{0}'",
-  "loc.messages.Instance0Name": "Service instance name {0} to find status",
-  "loc.messages.RetryForService0Availablity": "Retried for service availability for 4 times, 30 secs each, after 4 retries still service not available, check teh service deployment again",
-  "loc.messages.Role0OrRoleInstanceNotfound": "Either Role or Role Instance not found for a service '{0}'",
-  "loc.messages.ServiceNotFound0": "Either Service not found or Test AzureName returned nothing for service '{0}'",
-  "loc.messages.Unabletofindservicestatus0": "Status is not 'ReadyRole' for instance name '{0}'",
-  "loc.messages.WaitingForInstance0Beforefindstatus": "Service not yet ready sleeping for 120 seconds ...Waiting for roles of '{0}' to come on-line..",
-  "loc.messages.WaitingForService0Available": "Service not yet ready sleeping for 210 seconds ... retry the task again"
+  "loc.messages.ValidateAzureCloudServiceStatus": "Validating status of Azure Cloud Service: '{0}'",
+  "loc.messages.RetryAzureCloudServiceStatusCheck": "Azure Cloud Service: '{0}' validation failed. Retrying in '{1}' seconds.",
+  "loc.messages.AzureCloudServiceIsReady": "Azure Cloud Service: '{0}' is ready.",
+  "loc.messages.AzureCloudServiceIsNotReady": "Azure Cloud Service: '{0}' is not ready. This can be due to one or more RoleInstances not being in 'ReadyRole' state. Check logs for more details.",
+  "loc.messages.AllRoleInstancesAreReady": "All role instances (count: '{1}') for Azure Cloud Service: '{0}' are in 'ReadyRole' state.",
+  "loc.messages.AzureCloudServiceNotFound": "Azure Cloud Service: '{0}' not found."
 }

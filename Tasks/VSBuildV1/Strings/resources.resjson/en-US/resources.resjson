@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Visual Studio Build",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Build with MSBuild and set the Visual Studio version property",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property.",
   "loc.instanceNameFormat": "Build solution $(solution)",
   "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.solution": "Solution",
@@ -19,7 +19,7 @@
   "loc.input.label.maximumCpuCount": "Build in Parallel",
   "loc.input.help.maximumCpuCount": "If your MSBuild target configuration is compatible with building in parallel, you can optionally check this input to pass the /m switch to MSBuild (Windows only). If your target configuration is not compatible with building in parallel, checking this option may cause your build to result in file-in-use errors, or intermittent or inconsistent build failures.",
   "loc.input.label.restoreNugetPackages": "Restore NuGet Packages",
-  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a NuGet Installer step before the build.",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
   "loc.input.label.msbuildArchitecture": "MSBuild Architecture",
   "loc.input.help.msbuildArchitecture": "Optionally supply the architecture (x86, x64) of MSBuild to run.",
   "loc.input.label.logProjectEvents": "Record Project Details",

@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 28
+        "Patch": 29
     },
     "demands": [
         "msbuild",
@@ -26,7 +26,7 @@
             "type": "connectedService:Generic",
             "label": "VS Team Services Connection",
             "defaultValue": "",
-            "helpMarkDown": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new connection."
+            "helpMarkDown": "Select a previously registered service connection to talk to the cloud-based load test service. Choose 'Manage' to register a new service connection."
         },
         {
             "name": "TestDrop",
@@ -54,7 +54,7 @@
                 "useFile": "As specified in the load test file",
                 "changeActive": "Change the active run settings"
             },
-            "helpMarkDown": "Use the active run settings as specified in the file (values can be overriden) or change the active run setting for the load test file."
+            "helpMarkDown": "Use the active run settings as specified in the file (values can be overridden) or change the active run setting for the load test file."
         },
         {
             "name": "runSettingName",
@@ -117,11 +117,11 @@
         {
             "name": "numOfSelfProvisionedAgents",
             "type": "int",
-            "label": "No. of agents to use",
+            "label": "Number of agents to use",
             "required": false,
             "defaultValue": 1,
             "visibleRule": "MachineType == 2",
-            "helpMarkDown": "Number of self provisioned agents to use for this test."
+            "helpMarkDown": "Number of self-provisioned agents to use for this test."
         }
     ],
     "instanceNameFormat": "Cloud Load Test $(LoadTest)",

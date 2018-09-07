@@ -104,7 +104,7 @@ export class PublishProfileWebAppDeploymentProvider implements IWebAppDeployment
     }
 
     private GetDeployCmdFilePath(): string {
-        var webPackagePath = packageUtility.PackageUtility.getPackagePath(this.taskParams.Package);
+        var webPackagePath = this.taskParams.Package.getPath();
         var packageDir = path.dirname(webPackagePath);
         return packageUtility.PackageUtility.getPackagePath(packageDir + "\\*.deploy.cmd");
     }

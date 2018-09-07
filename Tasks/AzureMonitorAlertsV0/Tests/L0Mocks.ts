@@ -6,6 +6,9 @@ process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_TENANTID"] = "tenantId";
 process.env["ENDPOINT_URL_azureRMSpn"] = "http://example.com/"
 process.env["AZURE_HTTP_USER_AGENT"] = "TFS_useragent";
+process.env['Release.ReleaseWebUrl'] = 'TEST';
+process.env['RELEASE_RELEASEWEBURL'] = 'TEST';
+process.env['AGENT_TEMPDIRECTORY'] = 'TempDrive:/TempFolder'
 
 export class AuthorizationClient {
 	constructor() {
@@ -67,13 +70,4 @@ export function getMetricRequestBody(ruleName: string, location: string, operato
 			actions: []
 		}
 	}
-}
-
-export function getUtilityMock() {
-	var utility = require("../utility");	
-	utility.getDeploymentUri = () => {
-		return "TEST";
-	}
-
-	return utility;
 }

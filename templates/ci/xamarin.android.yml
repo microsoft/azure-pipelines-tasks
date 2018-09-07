@@ -1,13 +1,16 @@
 # Xamarin.Android
 # Build a Xamarin.Android app and Xamarin.UITest assembly.
-# https://aka.ms/yaml
+# Add steps that test, sign, and distribute the app, save build artifacts, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/xamarin
 
-queue: 'Hosted VS2017'
+pool:
+  vmImage: 'macOS 10.13'
+
 variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(build.binariesDirectory)/$(buildConfiguration)'
-steps:
 
+steps:
 - task: NuGetToolInstaller@0
 
 - task: NuGetCommand@2
@@ -16,15 +19,6 @@ steps:
 
 - task: XamarinAndroid@1
   inputs:
-    projectFile: '**/*Droid*.csproj'
+    projectFile: '**/*droid*.csproj'
     outputDirectory: '$(outputDirectory)'
     configuration: '$(buildConfiguration)'
-
-#- task: PublishBuildArtifacts@1
-#  inputs:
-#    pathtoPublish: '$(outputDirectory)'
-
-# Next steps:
-# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/build-release/tasks/deploy/appcenterdistribute
-# Release to Google Play with the Google Play extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play

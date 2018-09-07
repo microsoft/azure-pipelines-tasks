@@ -55,7 +55,7 @@
   "loc.input.label.destinationTypeOption": "Destination type",
   "loc.input.help.destinationTypeOption": "Choose the destination type to be used for UI testing. Devices must be connected to the Mac performing the build via a cable or network connection. See <strong>Devices and Simulators</strong> in Xcode.",
   "loc.input.label.destinationSimulators": "Simulator",
-  "loc.input.help.destinationSimulators": "Enter an Xcode simulator name to be used for UI testing. For example, enter `iPhone X` (iOS and watchOS) or `Apple TV 4K` (tvOS). A target OS version is optional and can be specified in the format 'OS=<i>versionNumber</i>', such as `iPhone X,OS=11.1`. A list of simulators installed on the <strong>Hosted macOS</strong> agent can be [found here](https://docs.microsoft.com/en-us/mobile-center/build/software).",
+  "loc.input.help.destinationSimulators": "Enter an Xcode simulator name to be used for UI testing. For example, enter `iPhone X` (iOS and watchOS) or `Apple TV 4K` (tvOS). A target OS version is optional and can be specified in the format 'OS=<i>versionNumber</i>', such as `iPhone X,OS=11.1`. A list of simulators installed on the <strong>Hosted macOS</strong> agent can be [found here](https://go.microsoft.com/fwlink/?linkid=875290).",
   "loc.input.label.destinationDevices": "Device",
   "loc.input.help.destinationDevices": "Enter the name of the device to be used for UI testing, such as `Raisa's iPad`.",
   "loc.input.label.args": "Arguments",

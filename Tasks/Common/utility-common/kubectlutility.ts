@@ -7,6 +7,7 @@ import * as util from "util";
 const uuidV4 = require('uuid/v4');
 const kubectlToolName = "kubectl"
 export const stableKubectlVersion = "v1.8.9"
+var Base64 = require('js-base64').Base64;
 
 
 var fs = require('fs');
@@ -16,7 +17,7 @@ export async function getStableKubectlVersion() : Promise<string> {
     var version;
     var stableVersionUrl = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
     var downloadPath = path.join(getTempDirectory(), uuidV4() +".txt");
-    return downloadutility.download(stableVersionUrl, downloadPath, false).then((resolve) => {
+    return downloadutility.download(stableVersionUrl, downloadPath, false, true).then((resolve) => {
         version = fs.readFileSync(downloadPath, "utf8").toString().trim();
         if(!version){
             version = stableKubectlVersion;
@@ -49,6 +50,19 @@ export async function downloadKubectl(version: string) : Promise<string> {
     return kubectlPath;
 }
 
+export function createKubeconfig(kubernetesServiceEndpoint: string): string
+{
+    var kubeconfigTemplateString = '{"apiVersion":"v1","kind":"Config","clusters":[{"cluster":{"certificate-authority-data": null,"server": null}}], "users":[{"user":{"token": null}}]}';
+    var kubeconfigTemplate = JSON.parse(kubeconfigTemplateString);
+
+    //populate server url, ca cert and token fields
+    kubeconfigTemplate.clusters[0].cluster.server = tl.getEndpointUrl(kubernetesServiceEndpoint, false);
+    kubeconfigTemplate.clusters[0].cluster["certificate-authority-data"] = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'serviceAccountCertificate', false);
+    kubeconfigTemplate.users[0].user.token = Base64.decode(tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'apiToken', false));
+
+    return JSON.stringify(kubeconfigTemplate);
+}
+
 function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
 }
@@ -76,4 +90,3 @@ function getExecutableExtention(): string {
 
     return "";
 }
-

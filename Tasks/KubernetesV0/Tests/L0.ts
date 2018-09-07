@@ -12,6 +12,7 @@ describe('Kubernetes Suite', function() {
     });
     beforeEach(() => {
         process.env[shared.isKubectlPresentOnMachine] = "true";
+        process.env[shared.endpointAuthorizationType] = "Kubeconfig";
         delete process.env[shared.TestEnvVars.command];
         delete process.env[shared.TestEnvVars.containerType];
         delete process.env[shared.TestEnvVars.versionOrLocation];
@@ -34,6 +35,26 @@ describe('Kubernetes Suite', function() {
         delete process.env[shared.TestEnvVars.kubectlOutput];
     });
     after(function () {
+    });
+
+    it('Run successfully when the authorization type of the endpoint is service account', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;
+        process.env[shared.TestEnvVars.arguments] = "pods";    
+        process.env[shared.TestEnvVars.versionOrLocation] = "location";
+        process.env[shared.TestEnvVars.specifyLocation] = shared.formatPath("newUserDir/kubectl.exe");
+        process.env[shared.isKubectlPresentOnMachine] = "false";
+        process.env[shared.endpointAuthorizationType] = "ServiceAccount";
+        tr.run();
+        
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`Set kubectlPath to ${shared.formatPath("newUserDir/kubectl.exe")} and added permissions`) != -1, "Kubectl path should be set to the correct location");
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
+        console.log(tr.stderr);
+        done();
     });
 
     it('Run successfully when the user provides a specific location for kubectl', (done:MochaDone) => {
@@ -486,5 +507,36 @@ describe('Kubernetes Suite', function() {
         assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");
         console.log(tr.stderr);
         done();
-    }); 
+    });
+    
+    it('Run successfully using the specified kubectl version when kubectl is present on machine and version is specified ', (done:MochaDone) => {	
+        let tp = path.join(__dirname, 'TestSetup.js');	
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);	
+        process.env[shared.TestEnvVars.command] = shared.Commands.get;	
+        process.env[shared.TestEnvVars.arguments] = "pods";    	
+        process.env[shared.TestEnvVars.versionSpec] = "1.10.1";	
+        tr.run();	
+        
+        assert(tr.succeeded, 'task should have succeeded');	
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);	
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');	
+        assert(tr.stdout.indexOf(`[command]${shared.formatPath("newUserDir/kubectl.exe")} --kubeconfig ${shared.formatPath("newUserDir/config")} get pods`) != -1, "kubectl get should run");	
+        console.log(tr.stderr);	
+        done();	
+    });
+
+    it('Json and yaml output format should not added for commands that dont support it', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.logs;
+        process.env[shared.TestEnvVars.arguments] = "nginx";    
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} logs nginx`) != -1, "kubectl logs should run");
+        console.log(tr.stderr);
+        done();
+    });
 });

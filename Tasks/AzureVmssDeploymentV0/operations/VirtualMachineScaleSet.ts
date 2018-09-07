@@ -77,7 +77,7 @@ export default class VirtualMachineScaleSet {
             //return;
             var extensionMetadata: azureModel.VMExtensionMetadata = this._getCustomScriptExtensionMetadata(osType);
             var customScriptExtension: azureModel.VMExtension = {
-                name: "CustomScriptExtension" + Date.now().toString(),
+                name: "AzureVmssDeploymentTask",
                 properties: {
                     type: extensionMetadata.type,
                     publisher: extensionMetadata.publisher,
@@ -96,9 +96,9 @@ export default class VirtualMachineScaleSet {
 
             var matchingExtension = await this._getExistingCustomScriptExtension(client, resourceGroupName, customScriptExtension);
 
-            // if extension already exists, remove it
+            // if extension already exists, use the same name as the existing extension.
             if (!!matchingExtension) {
-                await this._deleteCustomScriptExtension(client, resourceGroupName, matchingExtension);
+                customScriptExtension.name = matchingExtension.name;
             }
 
             await this._installCustomScriptExtension(client, resourceGroupName, customScriptExtension);
@@ -257,22 +257,6 @@ export default class VirtualMachineScaleSet {
                 });
 
                 return resolve(matchingExtension);
-            });
-        });
-    }
-
-    private _deleteCustomScriptExtension(client: armCompute.ComputeManagementClient, resourceGroupName: string, customScriptExtension: azureModel.VMExtension): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            console.log(tl.loc("RemovingCustomScriptExtension", customScriptExtension.name));
-            client.virtualMachineExtensions.deleteMethod(resourceGroupName, this.taskParameters.vmssName, azureModel.ComputeResourceType.VirtualMachineScaleSet, customScriptExtension.name, (error, result, request, response) => {
-                if (error) {
-                    // Just log warning, do not fail
-                    tl.warning(tl.loc("RemoveVMSSExtensionsFailed", customScriptExtension.name, utils.getError(error)));
-                } else {
-                    console.log(tl.loc("CustomScriptExtensionRemoved", customScriptExtension.name));
-                }
-
-                return resolve();
             });
         });
     }

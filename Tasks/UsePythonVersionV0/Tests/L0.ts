@@ -31,7 +31,7 @@ describe('UsePythonVersion L0 Suite', function () {
         testRunner.run();
 
         const errorMessage = [
-            'loc_mock_VersionNotFound 3.x',
+            'loc_mock_VersionNotFound 3.x x64',
             'loc_mock_ListAvailableVersions',
             '2.6.0 (x86)',
             '2.7.13 (x86)',

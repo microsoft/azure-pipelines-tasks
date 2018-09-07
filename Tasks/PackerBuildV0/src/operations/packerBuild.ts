@@ -11,16 +11,18 @@ import * as utils from "../utilities"
 
 export async function run(packerHost: packerHost): Promise<any> {
     var command = packerHost.createPackerTool();
-    command.arg("build");
-    command.arg("-force");
+    command.arg("build");    
+    command.arg("-force");    
+    command.arg("-color=false");
 
     // add all variables
     var variableProviders = packerHost.getTemplateVariablesProviders();
     for (var provider of variableProviders) {
         var variables = await provider.getTemplateVariables(packerHost);
-        variables.forEach((value: string, key: string) => {
-            command.arg(["-var", util.format("%s=%s", key, value)]);
-        });
+        let filePath: string = utils.generateTemporaryFilePath();
+        let content: string = utils.getPackerVarFileContent(variables);
+        utils.writeFile(filePath, content);
+        command.arg(util.format("%s=%s", '-var-file', filePath));
     }
 
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));

@@ -2,9 +2,9 @@
   "id": "9C3E8943-130D-4C78-AC63-8AF81DF62DFB",
   "name": "InvokeRESTAPI",
   "friendlyName": "Invoke REST API",
-  "description": "Invoke REST API as a part of your process.",
+  "description": "Invoke a REST API as a part of your pipeline.",
   "author": "Microsoft Corporation",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870236)",
+  "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=870236)",
   "category": "Deploy",
   "visibility": [
     "Build",
@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 4
   }, 
   "instanceNameFormat": "Invoke REST API: $(method)",
   "groups": [{
@@ -27,15 +27,39 @@
 		}
 	],
   "inputs": [
+    { 
+      "name": "connectedServiceNameSelector", 
+      "aliases": ["connectionType"], 
+      "type": "pickList", 
+      "label": "Connection type", 
+      "required": true, 
+      "helpMarkDown": "Select the service connection type to use to invoke the REST API.", 
+      "defaultValue": "connectedServiceName", 
+      "options": { 
+        "connectedServiceName": "Generic", 
+        "connectedServiceNameARM": "Azure Resource Manager" 
+      } 
+    }, 
     {
       "name": "connectedServiceName",
       "aliases": ["serviceConnection"],
       "type": "connectedService:Generic",
-      "label": "Generic endpoint",
+      "label": "Generic service connection",
       "defaultValue": "",
       "required": "true",
-      "helpMarkDown": "Select a generic endpoint that should be used to pick the url and construct authorization header for the http request."
+      "helpMarkDown": "Select a generic service connection that should be used to pick the URL and construct authorization header for the http request.",
+      "visibleRule": "connectedServiceNameSelector = connectedServiceName" 
     },
+    { 
+      "name": "connectedServiceNameARM", 
+      "aliases": ["azureServiceConnection"], 
+      "type": "connectedService:AzureRM", 
+      "label": "Azure subscription", 
+      "defaultValue": "", 
+      "required": true, 
+      "helpMarkDown": "Select an Azure Resource Manager subscription that should be used to pick the url and construct authorization header for the http request.", 
+      "visibleRule": "connectedServiceNameSelector = connectedServiceNameARM" 
+    }, 
     {
       "name": "method",
       "type": "pickList",
@@ -52,7 +76,7 @@
         "TRACE":"TRACE",
         "PATCH": "PATCH"
       },
-      "helpMarkDown": "Select the http method with which the API should be invoked with."
+      "helpMarkDown": "Select the HTTP method with which the API should be invoked."
     },
     {
       "name":"headers",
@@ -83,10 +107,10 @@
     {
       "name": "urlSuffix",
       "type": "string",
-      "label": "Url suffix and parameters",
+      "label": "URL suffix and parameters",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Given string append to the url. Example: If endpoint url is https:...TestProj/_apis/Release/releases and url suffix is /2/environments/1, endpoint url becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If url suffix is ?definitionId=1&releaseCount=1 then endpoint url becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1."
+      "helpMarkDown": "Given string append to the URL. Example: If the service connection URL is https:...TestProj/_apis/Release/releases and the URL suffix is /2/environments/1, the service connection URL becomes https:.../TestProj/_apis/Release/releases/2/environments/1. If the URL suffix is ?definitionId=1&releaseCount=1 then the service connection URL becomes https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1."
     },
     {
       "name": "waitForCompletion",
@@ -107,7 +131,7 @@
       "label": "Success criteria",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​",
+      "helpMarkDown": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More information](https://go.microsoft.com/fwlink/?linkid=842996)​",
       "groupName": "completionOptions",
       "visibleRule": "waitForCompletion = false"
     }
@@ -116,7 +140,7 @@
   "execution": {
     "HttpRequest": {
       "Execute": {
-        "EndpointId":"$(connectedServiceName)",
+        "EndpointId":"TaskInputs[TaskInputs['connectedServiceNameSelector']]",
         "EndpointUrl": "$(endpoint.url)$(urlSuffix)",
         "Method": "$(method)",
         "Body": "$(body)",

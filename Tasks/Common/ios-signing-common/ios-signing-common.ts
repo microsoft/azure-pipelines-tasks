@@ -2,8 +2,6 @@ import Q = require('q');
 import tl = require('vsts-task-lib/task');
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
-var userProvisioningProfilesPath = tl.resolve(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
-
 /**
  * Creates a temporary keychain and installs the P12 cert in the temporary keychain
  * @param keychainPath the path to the keychain file
@@ -248,7 +246,7 @@ export async function installProvisioningProfile(provProfilePath: string) : Prom
 
     if (provProfileUUID) {
         //copy the provisioning profile file to ~/Library/MobileDevice/Provisioning Profiles
-        tl.mkdirP(userProvisioningProfilesPath); // Path may not exist if Xcode has not been run yet.
+        tl.mkdirP(getUserProvisioningProfilesPath()); // Path may not exist if Xcode has not been run yet.
         let pathToProvProfile: string = getProvisioningProfilePath(provProfileUUID);
         let copyProvProfileCmd: ToolRunner = tl.tool(tl.which('cp', true));
         copyProvProfileCmd.arg(['-f', provProfilePath, pathToProvProfile]);
@@ -674,7 +672,7 @@ async function printFromPlist(itemToPrint: string, plistPath: string) {
 }
 
 function getProvisioningProfilePath(uuid: string): string {
-    return tl.resolve(userProvisioningProfilesPath, uuid.trim().concat('.mobileprovision'));
+    return tl.resolve(getUserProvisioningProfilesPath(), uuid.trim().concat('.mobileprovision'));
 }
 
 /**
@@ -721,4 +719,8 @@ async function setKeyPartitionList(keychainPath: string, keychainPwd: string, pr
 
 function generatePassword(): string {
     return Math.random().toString(36);
+}
+
+function getUserProvisioningProfilesPath(): string {
+    return tl.resolve(tl.getVariable('HOME'), 'Library', 'MobileDevice', 'Provisioning Profiles');
 }

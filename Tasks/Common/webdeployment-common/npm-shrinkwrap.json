@@ -376,15 +376,16 @@
       }
     },
     "inherits": {
-      "version": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz",
-      "integrity": "sha512-x00IRNXNy63jwGkJmzPigoySHbaqpNuzKbBOmzK+g2OdZpQ9w+sxCN+VSB3ja7IAge2OP2qpfxTjeNcyjmW1uw=="
+      "version": "2.0.3",
+      "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz",
+      "integrity": "sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4="
     },
     "ltx": {
       "version": "2.6.2",
       "resolved": "https://registry.npmjs.org/ltx/-/ltx-2.6.2.tgz",
       "integrity": "sha1-cD5EN9XjlNJsAxT9j9Xevtjgmdk=",
       "requires": {
-        "inherits": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz"
+        "inherits": "2.0.3"
       }
     },
     "q": {

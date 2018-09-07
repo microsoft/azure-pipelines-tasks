@@ -1,34 +1,17 @@
 # Android
-# Build your Android projects, run tests, and sign and align Android App Package files.
-# https://aka.ms/yaml
+# Build your Android project with Gradle.
+# Add steps that test, sign, and distribute the APK, save build artifacts, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/android
 
-queue: 'Hosted VS2017'
+pool:
+  vmImage: 'macOS 10.13'
+
 steps:
-
 - task: Gradle@2
   inputs:
+    workingDirectory: ''
     gradleWrapperFile: 'gradlew'
-    tasks: 'assembleRelease'
-
-#- task: AndroidSigning@2
-#  inputs:
-#    apkFiles: '**/*.apk'
-#    jarsign: true
-#    jarsignerKeystoreFile: ''
-#    jarsignerKeystorePassword: ''
-#    jarsignerKeystoreAlias: ''
-#    jarsignerKeyPassword: ''
-#    jarsignerArguments: '-verbose -sigalg MD5withRSA -digestalg SHA1'
-#    zipalign: true
-#    zipalignFile: ''
-
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.apk'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
-
-# Next steps:
-# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/build-release/tasks/deploy/appcenterdistribute
-# Release to Google Play with the Google Play extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'assembleDebug'

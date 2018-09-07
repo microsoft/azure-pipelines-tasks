@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 130,
+    "Minor": 137,
     "Patch": 0
   },
   "runsOn": [
@@ -41,8 +41,8 @@
       "defaultValue": "ServiceEndpoint",
       "helpMarkDown": "",
       "options": {
-        "ServiceEndpoint": "Service Endpoint",
-        "UserAndPass": "Username and Password"
+        "ServiceEndpoint": "Service connection",
+        "UserAndPass": "Username and password"
       }
     },
     {
@@ -85,7 +85,7 @@
       "name": "remotePath",
       "type": "string",
       "label": "ms-resource:loc.input.label.remotePath",
-      "defaultValue": "/upload/$(Build.BuildId)/",
+      "defaultValue": "upload/$(Build.BuildId)/",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.remotePath"
     },

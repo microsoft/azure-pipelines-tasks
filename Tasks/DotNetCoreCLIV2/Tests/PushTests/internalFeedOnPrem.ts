@@ -51,6 +51,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 nmh.setAnswers(a);
 
 nmh.registerNugetUtilityMock(["c:\\agent\\home\\directory\\foo.nupkg"]);
+process.env["SYSTEM_SERVERTYPE"] = "OnPremises";
 nmh.registerDefaultNugetVersionMock();
 nmh.registerToolRunnerMock();
 nmh.registerNugetConfigMock();

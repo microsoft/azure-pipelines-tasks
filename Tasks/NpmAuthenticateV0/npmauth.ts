@@ -3,10 +3,11 @@ import * as tl from 'vsts-task-lib/task';
 import * as URL from 'url';
 import * as fs from 'fs';
 import * as constants from './constants';
-import * as npmregistry from 'npm-common/npmregistry'
+import * as npmregistry from 'npm-common/npmregistry';
 import * as util from 'npm-common/util';
 import * as os from 'os';
 import * as npmrcparser from 'npm-common/npmrcparser';
+import * as pkgLocationUtils from 'utility-common/packaging/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -57,13 +58,27 @@ async function main(): Promise<void> {
         util.saveFileWithName(npmrc, npmrcTable[npmrc], saveNpmrcPath);
     }
 
-    let endpointRegistries;
+    let endpointRegistries: npmregistry.INpmRegistry[] = [];
     let endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (endpointIds && endpointIds.length > 0) {
-        endpointRegistries = endpointIds.map(e => npmregistry.NpmRegistry.FromServiceEndpoint(e, true));
+        await Promise.all(endpointIds.map(async e => {
+            endpointRegistries.push(await npmregistry.NpmRegistry.FromServiceEndpoint(e, true));
+        }));
     }
-    let LocalNpmRegistries = await util.getLocalNpmRegistries(workingDirectory);
-    
+
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+    } catch (error) {
+        tl.debug('Unable to get packaging URIs, using default collection URI');
+        tl.debug(JSON.stringify(error));
+        const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+        packagingLocation = {
+            PackagingUris: [collectionUrl],
+            DefaultPackagingUri: collectionUrl
+        };
+    }
+    let LocalNpmRegistries = await util.getLocalNpmRegistries(workingDirectory, packagingLocation.PackagingUris);
     
     let npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
     for (let RegistryURLString of npmrcparser.GetRegistries(npmrc)) {

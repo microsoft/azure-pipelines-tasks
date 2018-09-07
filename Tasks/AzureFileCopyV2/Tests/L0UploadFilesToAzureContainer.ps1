@@ -9,7 +9,9 @@ $invalidInputStorageAccount = "invalidInputStorageAccount"
 $exceptionMessage = "Exception thrown"
 
 Register-Mock Write-Telemetry { }
-Register-Mock Test-Path { return $false }
+Register-Mock Test-Path { return $true } -ParametersEvaluator { $Path -eq "c:\foo\bar" }
+Register-Mock Test-Path { return $false } -ParametersEvaluator { $Path -eq $validInputSourcePath }
+Register-Mock Get-VstsTaskVariable { return 'c:\foo\bar' }
 
 # Test 1 "Should throw if Invoke-Expression fails"
 Register-Mock Invoke-Expression { throw $exceptionMessage }

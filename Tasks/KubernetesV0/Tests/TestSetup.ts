@@ -44,9 +44,15 @@ console.log("Inputs have been set");
 
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  DefaultWorkingDirectory;
 process.env["SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"] = "https://abc.visualstudio.com/";
+process.env["SYSTEM_SERVERTYPE"] = "hosted";
 process.env["ENDPOINT_AUTH_dockerhubendpoint"] = "{\"parameters\":{\"username\":\"test\", \"password\":\"regpassword\", \"email\":\"test@microsoft.com\",\"registry\":\"https://index.docker.io/v1/\"},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_kubernetesEndpoint"] = "{\"parameters\":{\"kubeconfig\":\"kubeconfig\", \"username\":\"test\", \"password\":\"regpassword\",},\"scheme\":\"UsernamePassword\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_kubernetesEndpoint_KUBECONFIG"] =  "{\"apiVersion\":\"v1\", \"clusters\": [{\"cluster\": {\"insecure-skip-tls-verify\":\"true\", \"server\":\"https://5.6.7.8\", \"name\" : \"scratch\"}}], \"contexts\": [{\"context\" : {\"cluster\": \"scratch\", \"namespace\" : \"default\", \"user\": \"experimenter\", \"name\" : \"exp-scratch\"}], \"current-context\" : \"exp-scratch\", \"kind\": \"Config\", \"users\" : [{\"user\": {\"password\": \"regpassword\", \"username\" : \"test\"}]}";
+process.env["ENDPOINT_DATA_kubernetesEndpoint_AUTHORIZATIONTYPE"] = process.env[shared.endpointAuthorizationType];
+process.env["ENDPOINT_URL_kubernetesEndpoint"] = "https://mycluster.azure.com";
+process.env["ENDPOINT_AUTH_PARAMETER_kubernetesEndpoint_APITOKEN"] =  "saToken";
+process.env["ENDPOINT_AUTH_PARAMETER_kubernetesEndpoint_SERVICEACCOUNTCERTIFICATE"] =  "saCert";
+
 process.env["ENDPOINT_AUTH_SCHEME_AzureRMSpn"] = "ServicePrincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALID"] = "spId";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRMSpn_SERVICEPRINCIPALKEY"] = "spKey";
@@ -144,6 +150,9 @@ a.exec[`kubectl --kubeconfig ${KubconfigFile} get secrets my-secret -o yaml`] = 
     "code": 0,
     "stdout": "successfully got secret my-secret and printed it in the specified format"
 };
+a.exec[`kubectl --kubeconfig ${KubconfigFile} logs nginx`] = {
+    "code": 0
+};
 
 tr.setAnswers(<any>a);
 
@@ -176,13 +185,13 @@ fsClone.writeFileSync = function(fileName, data) {
     }
 };
 
-fsClone.chmod = function(path, mode) {
+fsClone.chmodSync = function(path, mode) {
       switch(path){
           case KubectlPath:
             console.log(`Set kubectlPath to ${KubectlPath} and added permissions`);
             break;
           default:
-            fs.chmod(path, mode);        
+            fs.chmodSync(path, mode);        
       }
 };
 

@@ -1,0 +1,124 @@
+{
+  "id": "731004D4-1D66-4F70-8C05-638018B22210",
+  "name": "WindowsMachineFileCopy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 43
+  },
+  "minimumAgentVersion": "1.104.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "SourcePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.SourcePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.SourcePath"
+    },
+    {
+      "name": "EnvironmentName",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.EnvironmentName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.EnvironmentName"
+    },
+    {
+      "name": "AdminUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminUserName"
+    },
+    {
+      "name": "AdminPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AdminPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.AdminPassword"
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPath"
+    },
+    {
+      "name": "CleanTargetBeforeCopy",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CleanTargetBeforeCopy",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.CleanTargetBeforeCopy"
+    },
+    {
+      "name": "CopyFilesInParallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.CopyFilesInParallel",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.CopyFilesInParallel"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "ResourceFilteringMethod",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.ResourceFilteringMethod",
+      "required": false,
+      "defaultValue": "machineNames",
+      "groupName": "advanced",
+      "options": {
+        "machineNames": "Machine Names",
+        "tags": "Tags"
+      }
+    },
+    {
+      "name": "MachineNames",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.MachineNames",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.MachineNames"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\WindowsMachineFileCopy.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

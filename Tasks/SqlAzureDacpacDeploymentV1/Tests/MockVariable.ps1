@@ -34,14 +34,21 @@ $ipDetectionMethod = "IPAddressRange";
 #### Main File Mock Constants ####
 
 $validInputConnectedServiceName = "validConnectedServiceName"
-$dacpacFile = "C:\Test\Test.ps1"
+
+$dacpacFile = "C:\Test\TestFile.dacpac"
+$bacpacFile = "C:\Test\TestFile.bacpac"
+$sqlFile = "C:\Test\TestFile.sql"
+
 $serverName = "a0nuel7r2k.database.windows.net"
+$serverNameWithTcpPrefix = "tcp:a0nuel7r2k.database.windows.net,1433"
 $serverFriendlyName = "a0nuel7r2k"
 $databaseName = "TestDatabase"
 $sqlUsername = "TestUser"
 $sqlUsernameWithServerName = "TestUser@a0nuel7r2k.database.windows.net"
 $sqlUsernameWithAtSymbol = "TestUser@123"
 $sqlPassword = "TestPassword"
+$sqlPasswordSpecialCharacter = '~`!@#$%^&*()_+{}[]:;<>,.?/Aa"'''
+$sqlPasswordEscapedSpecialCharacter = '~``!@#`$%^&*()_+{}[]:;<>,.?/Aa`"'''
 $publishProfile = "C:\Test\publish.xml"
 $ipDetectionMethodAuto = "AutoDetect"
 $ipDetectionMethodRange = "IPAddressRange"

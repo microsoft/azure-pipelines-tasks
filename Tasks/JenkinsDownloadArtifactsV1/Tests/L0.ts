@@ -103,6 +103,82 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 
+    it('Validate github commit url', (done) => {
+
+        const tp: string = path.join(__dirname, 'L0ValidateGitHubCommitUrl.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('Translated url git@github.com:user/TestRepo.git/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to https://github.com/user/TestRepo/commit/3cbfc14e3f482a25e5122323f3273b89677d9875') !== -1, tr.stdout);
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Validate gitlab commit url', (done) => {
+
+        const tp: string = path.join(__dirname, 'L0ValidateGitLabCommitUrl.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('Translated url git@gitlab.com:admin/projectk.git/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to https://gitlab.com/admin/projectk/commit/3cbfc14e3f482a25e5122323f3273b89677d9875') !== -1, tr.stdout);
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+    
+    it('Validate http commit url', (done) => {
+
+        const tp: string = path.join(__dirname, 'L0ValidateHttpCommitUrl.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('Translated url https://github.com/user/TestRepo/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to https://github.com/user/TestRepo/commit/3cbfc14e3f482a25e5122323f3273b89677d9875') !== -1, tr.stdout);
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
+    it('Validate invalid commit url', (done) => {
+
+        const tp: string = path.join(__dirname, 'L0ValidateInvalidCommitUrl.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf('Translated url ssh://user@server/project.git/commit/3cbfc14e3f482a25e5122323f3273b89677d9875 to') !== -1, tr.stdout);
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+
     it('Should download commits from build range', (done) => {
         const tp: string = path.join(__dirname, 'L0DownloadCommitsFromBuildRange.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

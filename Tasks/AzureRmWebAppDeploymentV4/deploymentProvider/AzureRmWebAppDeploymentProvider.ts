@@ -8,7 +8,7 @@ import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureAppServiceUtility } from '../operations/AzureAppServiceUtility';
 import tl = require('vsts-task-lib/task');
-import * as ParameterParser from '../operations/parameterparser'
+import * as ParameterParser from '../operations/ParameterParserUtility'
 import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 import * as Constant from '../operations/Constants';
 
@@ -38,11 +38,12 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
             this.taskParams.SlotName, this.taskParams.WebAppKind);
         this.appServiceUtility = new AzureAppServiceUtility(this.appService);
 
-        await this.appServiceUtility.pingApplication();
         this.kuduService = await this.appServiceUtility.getKuduService();
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
-        tl.setVariable('AppServiceApplicationUrl', await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
-            ? this.taskParams.VirtualApplication : null));
+        let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL(!this.taskParams.isLinuxApp 
+            ? this.taskParams.VirtualApplication : null);
+        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+        tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
 
     public async DeployWebAppStep() {}
@@ -51,6 +52,7 @@ export class AzureRmWebAppDeploymentProvider implements IWebAppDeploymentProvide
         if(this.kuduServiceUtility) {
             await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
             this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.appService.getSlot()});
+            tl.debug('Active DeploymentId :'+ this.activeDeploymentID);
         }
     }
 

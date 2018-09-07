@@ -2,6 +2,7 @@ import path = require('path');
 import sign = require('ios-signing-common/ios-signing-common');
 import secureFilesCommon = require('securefiles-common/securefiles-common');
 import tl = require('vsts-task-lib/task');
+import os = require('os');
 
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
@@ -11,6 +12,11 @@ async function run() {
 
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+
+        // Check platform is macOS since demands are not evaluated on Hosted pools
+        if (os.platform() !== 'darwin') {
+            throw new Error(tl.loc('InstallRequiresMac'));
+        }
 
         // download decrypted contents
         secureFileId = tl.getInput('certSecureFile', true);

@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 135,
+        "Minor": 137,
         "Patch": 0
     },
     "demands": [],
@@ -33,10 +33,10 @@
         {
             "name": "sshEndpoint",
             "type": "connectedService:ssh",
-            "label": "SSH endpoint",
+            "label": "SSH service connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "SSH endpoint with connection details for the remote machine."
+            "helpMarkDown": "SSH service connection with connection details for the remote machine."
         },
         {
             "name": "runOptions",
@@ -113,9 +113,9 @@
     },
     "messages": {
         "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-        "SettingUpSshConnection": "Trying to setup SSH connection to %s@%s:%s",
+        "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
         "SshConnectionSuccessful": "Successfully connected.",
-        "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. Error: %s.",
+        "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. Error: %s.",
         "RemoteCopyFailed": "Failed to copy script to remote machine. Error: %s.",
         "RemoteCmdExecutionErr": "Command failed with errors on remote machine.",
         "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",

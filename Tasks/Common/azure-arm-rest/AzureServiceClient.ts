@@ -122,12 +122,26 @@ export class ServiceClient {
         }
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
 
-        var httpResponse = await webClient.sendRequest(request);
-        if (httpResponse.statusCode === 401 && httpResponse.body && httpResponse.body.error && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
-            // The access token might have expire. Re-issue the request after refreshing the token.
-            token = await this.credentials.getToken(true);
-            request.headers["Authorization"] = "Bearer " + token;
+        var httpResponse = null;
+
+        try
+        {
             httpResponse = await webClient.sendRequest(request);
+            if (httpResponse.statusCode === 401 && httpResponse.body && httpResponse.body.error && httpResponse.body.error.code === "ExpiredAuthenticationToken") {
+                // The access token might have expire. Re-issue the request after refreshing the token.
+                token = await this.credentials.getToken(true);
+                request.headers["Authorization"] = "Bearer " + token;
+                httpResponse = await webClient.sendRequest(request);
+            }
+        } catch(exception) {
+            let exceptionString: string = exception.toString();
+            if(exceptionString.indexOf("Hostname/IP doesn't match certificates's altnames") != -1
+                || exceptionString.indexOf("unable to verify the first certificate") != -1
+                || exceptionString.indexOf("unable to get local issuer certificate") != -1) {
+                    tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
+            } 
+
+            throw exception;
         }
 
         return httpResponse;

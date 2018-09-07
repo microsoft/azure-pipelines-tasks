@@ -16,14 +16,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 0,
-    "Patch": 4
+    "Minor": 1,
+    "Patch": 5
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
     "azureps"
   ],
-  "preview": true,
   "groups": [
     {
       "name": "AzurePowerShellVersionOptions",
@@ -70,7 +69,10 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
-      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+      "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
+      "properties": {
+        "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel == Subscription"
+      }
     },
     {
       "name": "ScriptType",
@@ -104,7 +106,7 @@
       "properties": {
         "resizable": "true",
         "rows": "10",
-        "maxLength": "500"
+        "maxLength": "5000"
       }
     },
     {

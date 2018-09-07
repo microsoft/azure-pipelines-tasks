@@ -13,9 +13,9 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
-    "azurestack-common": "file:../../_build/Tasks/Common/azurestack-common-1.0.0.tgz",
+    "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
+    "moment": "2.21.0",
     "q": "1.5.0",
-    "typed-rest-client": "0.12.0",
-    "vsts-task-lib": "2.1.0"
+    "typed-rest-client": "0.12.0"
   }
 }

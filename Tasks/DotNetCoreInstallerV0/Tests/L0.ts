@@ -40,7 +40,7 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("Checking local tool for dncs and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting zip archieve from C:\\agent\\_temp\\someArchieve") > -1, "Should extract downloaded archieve corectly");
+                assert(tr.stdout.indexOf("Extracting zip archive from C:\\agent\\_temp\\someArchive.zip") > -1, "Should extract downloaded archive corectly");
                 assert(tr.stdout.indexOf("Caching dir C:\\agent\\_temp\\someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled sdk 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: C:\\agent\\_tools\\cacheDir") > -1, "should pre-prend to PATH");
@@ -60,7 +60,7 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-runtime-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting zip archieve from C:\\agent\\_temp\\someArchieve") > -1, "Should extract downloaded archieve corectly");
+                assert(tr.stdout.indexOf("Extracting zip archive from C:\\agent\\_temp\\someArchive.zip") > -1, "Should extract downloaded archive corectly");
                 assert(tr.stdout.indexOf("Caching dir C:\\agent\\_temp\\someDir for tool dncr version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled runtime 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: C:\\agent\\_tools\\cacheDir") > -1, "should pre-prend to PATH");
@@ -96,7 +96,7 @@ describe('DotNetCoreInstaller', function() {
 
             runValidations(() => {
                 assert(tr.succeeded, "Should have succeeded");
-                assert(tr.stdout.indexOf("loc_mock_PrimaryUrlDownloadFailed 404 not found https://primary-url") >= -1, "should print primary url failure error")
+                assert(tr.stdout.indexOf("404 not found https://primary-url") > -1, "should print primary url failure error")
                 assert(tr.stdout.indexOf("Downloading tool from https://legacy-url") > -1, "should download from legacy url");
             }, tr, done);
         });
@@ -137,9 +137,9 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_ToolToInstall sdk 1.0.4") > -1, "should print to-be-installed info");
                 assert(tr.stdout.indexOf("Checking local tool for dncs and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
-                assert(tr.stdout.indexOf("Changing attribute for file /somedir/currdir/externals/install-dotnet.sh to 777") > -1, "should iset executable attribute for install script");
+                assert(tr.stdout.indexOf("Changing attribute for file /somedir/currdir/externals/get-os-distro.sh to 777") > -1, "should iset executable attribute for install script");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting tar archieve from /agent/_temp/someArchieve") > -1, "Should extract downloaded archieve corectly");
+                assert(tr.stdout.indexOf("Extracting tar archive from /agent/_temp/someArchive.tar") > -1, "Should extract downloaded archive corectly");
                 assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncs version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled sdk 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/cacheDir") > -1, "should pre-prend to PATH");
@@ -159,7 +159,7 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("Checking local tool for dncr and version 1.0.4") > -1, "should check for local cached tool");
                 assert(tr.stdout.indexOf("loc_mock_InstallingAfresh") > -1, "should install fresh if cache miss");
                 assert(tr.stdout.indexOf("Downloading tool from https://primary-runtime-url") > -1, "should download from correct url");
-                assert(tr.stdout.indexOf("Extracting tar archieve from /agent/_temp/someArchieve") > -1, "Should extract downloaded archieve corectly");
+                assert(tr.stdout.indexOf("Extracting tar archive from /agent/_temp/someArchive.tar") > -1, "Should extract downloaded archive corectly");
                 assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncr version 1.0.4") > -1, "should cache correctly");
                 assert(tr.stdout.indexOf("loc_mock_SuccessfullyInstalled runtime 1.0.4") > -1, "should print installed tool info");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/cacheDir") > -1, "should pre-prend to PATH");
@@ -182,6 +182,20 @@ describe('DotNetCoreInstaller', function() {
                 assert(tr.stdout.indexOf("loc_mock_UsingCachedTool") > -1, "should print that cached dir is being used");
                 assert(tr.stdout.indexOf("Caching dir /agent/_temp/someDir for tool dncs version 1.0.4") == -1, "should not update cache again");
                 assert(tr.stdout.indexOf("prepending path: /agent/_tools/oldCacheDir") > -1, "should pre-prend to PATH");
+            }, tr, done);
+        });
+
+        it("[nix]Should download using DLC url if primary url does not work", (done) => {
+            process.env["__primary_url_failed__"] = "true";
+            let tp = path.join(__dirname, "InstallNix.js");
+            let tr = new ttm.MockTestRunner(tp);
+            tr.run();
+            delete process.env["__primary_url_failed__"];
+
+            runValidations(() => {
+                assert(tr.succeeded, "Should have succeeded");
+                assert(tr.stdout.indexOf("404 not found https://primary-url") > -1, "should print primary url failure error")
+                assert(tr.stdout.indexOf("Downloading tool from https://legacy-url") > -1, "should download from legacy url");
             }, tr, done);
         });
     }

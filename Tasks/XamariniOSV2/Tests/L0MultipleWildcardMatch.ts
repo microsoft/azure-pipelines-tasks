@@ -2,6 +2,7 @@
 import ma = require('vsts-task-lib/mock-answer');
 import tmrm = require('vsts-task-lib/mock-run');
 import path = require('path');
+import os = require('os');
 
 let taskPath = path.join(__dirname, '..', 'xamarinios.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -56,5 +57,10 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 tr.setAnswers(a);
+
+os.platform = () => {
+    return 'darwin';
+}
+tr.registerMock('os', os);
 
 tr.run();

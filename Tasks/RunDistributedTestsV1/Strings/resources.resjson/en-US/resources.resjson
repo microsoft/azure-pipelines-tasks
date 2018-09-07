@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Run Functional Tests",
-  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=624389)",
-  "loc.description": "Deprecated: This task and it’s companion task (Visual Studio Test Agent Deployment) are deprecated. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent phase setting. Use the 'Visual Studio Test Platform' task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests.",
+  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkId=624389)",
+  "loc.description": "Deprecated: This task and it’s companion task (Visual Studio Test Agent Deployment) are deprecated. Use the 'Visual Studio Test' task instead. The VSTest task can run unit as well as functional tests. Run tests on one or more agents using the multi-agent job setting. Use the 'Visual Studio Test Platform' task to run tests without needing Visual Studio on the agent. VSTest task also brings new capabilities such as automatically rerunning failed tests.",
   "loc.instanceNameFormat": "Run Tests $(sourcefilters) on $(testMachineGroup)",
   "loc.group.displayName.setupOptions": "Setup Options",
   "loc.group.displayName.executionOptions": "Execution Options",

@@ -1,14 +1,17 @@
 # .NET Desktop
 # Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# https://aka.ms/yaml
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/vsts/pipelines/apps/windows/dot-net
 
-queue: 'Hosted VS2017'
+pool:
+  vmImage: 'VS2017-Win2016'
+
 variables:
-  buildConfiguration: 'Release'
-  buildPlatform: 'Any CPU'
   solution: '**/*.sln'
-steps:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
 
+steps:
 - task: NuGetToolInstaller@0
 
 - task: NuGetCommand@2
@@ -25,12 +28,3 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-#- task: PublishSymbols@1
-#  inputs:
-#    searchPattern: '**/bin/$(buildConfiguration)/*.pdb'
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/bin/$(buildConfiguration)/**'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1

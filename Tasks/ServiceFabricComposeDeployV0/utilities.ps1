@@ -65,6 +65,7 @@ function Get-ServiceFabricComposeApplicationStatusHelper
         $GetStatusParameters
     )
 
+    $global:operationId = $SF_Operations.GetComposeDeploymentStatus
     switch ($ApiVersion)
     {
         "255.255"
@@ -127,6 +128,8 @@ function Remove-ServiceFabricComposeApplicationHelper
         $RemoveParameters
     )
 
+    $global:operationId = $SF_Operations.RemoveComposeDeployment
+
     switch ($ApiVersion)
     {
         "255.255"
@@ -155,6 +158,8 @@ function New-ServiceFabricComposeApplicationHelper
         [HashTable]
         $DeployParameters
     )
+
+    $global:operationId = $SF_Operations.CreateNewComposeDeployment
 
     switch ($ApiVersion)
     {
@@ -185,6 +190,7 @@ function Start-ServiceFabricComposeDeploymentUpgradeHelper
         $UpgradeParameters
     )
 
+    $global:operationId = $SF_Operations.StartComposeDeploymentUpgrade
     Start-ServiceFabricComposeDeploymentUpgrade @UpgradeParameters
 }
 
@@ -200,6 +206,7 @@ function Get-ServiceFabricComposeDeploymentUpgradeHelper
         $GetUpgradeParameters
     )
 
+    $global:operationId = $SF_Operations.GetComposeDeploymentUpgradeStatus
     $composeDeploymentUpgrade = Get-ServiceFabricComposeDeploymentUpgrade @GetUpgradeParameters
 
     if ($composeDeploymentUpgrade -eq $null)
@@ -265,7 +272,7 @@ function Test-ApplicationName
             return
         }
         Default
-        { 
+        {
             if ($ApplicationName.StartsWith("fabric:/", [StringComparison]::OrdinalIgnoreCase))
             {
                 Write-Warning (Get-VstsLocString -Key InvalidApplicationNameWarning -ArgumentList $ApplicationName)

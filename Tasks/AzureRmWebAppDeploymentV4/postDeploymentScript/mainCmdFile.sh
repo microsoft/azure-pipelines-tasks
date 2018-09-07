@@ -1,4 +1,4 @@
 #!/bin/bash
 # Send stdout and stderr to seperate file
-sh "kuduPostDeploymentScript_$1.sh" 2> "stderr_$1.txt" 1> "stdout_$1.txt" 
-echo "$?" > "script_result_$1.txt"
+sh "$HOME/site/VSTS_PostDeployment_$1/kuduPostDeploymentScript.sh" 2> "$HOME/site/VSTS_PostDeployment_$1/stderr.txt" 1> "$HOME/site/VSTS_PostDeployment_$1/stdout.txt" 
+echo "$?" > "$HOME/site/VSTS_PostDeployment_$1/script_result.txt"

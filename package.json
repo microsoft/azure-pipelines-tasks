@@ -9,7 +9,8 @@
   "scripts": {
     "build": "node make.js build",
     "test": "node make.js test",
-    "testLegacy": "node make.js testLegacy"
+    "testLegacy": "node make.js testLegacy",
+    "package": "node make.js package"
   },
   "repository": {
     "type": "git",
@@ -27,13 +28,13 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks",
   "devDependencies": {
-    "adm-zip": "0.4.7",
     "gulp": "3.9.0",
     "gulp-util": "3.0.4",
     "markdown-toc": "^1.2.0",
     "minimatch": "3.0.2",
     "minimist": "1.1.1",
     "mocha": "2.3.3",
+    "mocha-junit-reporter": "1.17.0",
     "node-uuid": "1.4.6",
     "q": "1.4.1",
     "semver": "4.3.3",

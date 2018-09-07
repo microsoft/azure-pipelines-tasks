@@ -10,7 +10,7 @@ import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
 import * as inputdatacontract from './inputdatacontract';
-const uuid = require('uuid');
+import * as uuid from 'uuid';
 const regedit = require('regedit');
 
 export function getvsTestConfigurations() {
@@ -123,6 +123,9 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
 
     testConfiguration.codeCoverageEnabled = tl.getBoolInput('codeCoverageEnabled');
     console.log(tl.loc('codeCoverageInput', testConfiguration.codeCoverageEnabled));
+
+    testConfiguration.diagnosticsConfiguration = getDiagnosticsConfiguration();
+    console.log(tl.loc('diagnosticsInput', testConfiguration.diagnosticsConfiguration.enabled));    
 
     testConfiguration.buildConfig = tl.getInput('configuration');
     testConfiguration.buildPlatform = tl.getInput('platform');
@@ -313,6 +316,13 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
             tl.debug('Setting the test source filter for the TestRun : ' + testConfiguration.sourceFilter);
             break;
     }
+}
+
+function getDiagnosticsConfiguration(): models.DiagnosticsConfiguration {
+    const diagnosticsConfiguration = {} as models.DiagnosticsConfiguration;
+    // Diagnostics is not supported for non-api based local test run flows.
+    diagnosticsConfiguration.enabled = false;
+    return diagnosticsConfiguration;
 }
 
 function getTiaConfiguration(): models.TiaConfiguration {

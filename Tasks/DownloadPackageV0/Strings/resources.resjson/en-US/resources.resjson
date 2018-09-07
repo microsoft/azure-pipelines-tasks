@@ -6,7 +6,7 @@
   "loc.input.label.feed": "Feed",
   "loc.input.help.feed": "Select the package source",
   "loc.input.label.definition": "Package",
-  "loc.input.help.definition": "Select the package to download, only nuget packages are supported currently",
+  "loc.input.help.definition": "Select the package to download. Only NuGet packages are currently supported.",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "Version of the package",
   "loc.input.label.downloadPath": "Destination directory",

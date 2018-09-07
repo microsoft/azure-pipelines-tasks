@@ -4,6 +4,9 @@ import webClient = require("./webClient");
 import { AzureEndpoint } from "./azureModels";
 import { ApplicationTokenCredentials } from './azure-arm-common';
 import constants = require('./constants');
+import fs = require('fs');
+import path = require('path');
+const certFilePath: string = path.join(tl.getVariable('Agent.TempDirectory'), 'spnCert.pem');
 
 export class AzureRMEndpoint {
     public endpoint: AzureEndpoint;
@@ -29,7 +32,6 @@ export class AzureRMEndpoint {
                 subscriptionID: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionid', true),
                 subscriptionName: tl.getEndpointDataParameter(this._connectedServiceName, 'subscriptionname', true),
                 servicePrincipalClientID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalid', true),
-                servicePrincipalKey: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', true),
                 environmentAuthorityUrl: tl.getEndpointDataParameter(this._connectedServiceName, 'environmentAuthorityUrl', true),
                 tenantID: tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'tenantid', false),
                 url: tl.getEndpointUrl(this._connectedServiceName, true),
@@ -39,8 +41,30 @@ export class AzureRMEndpoint {
                 activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
             } as AzureEndpoint;
 
-            if(this.endpoint.environment != null && this.endpoint.environment.toLowerCase() == this._environments.AzureStack && ( !this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID)) {
-                this.endpoint = await this._updateAzureStackData(this.endpoint);
+            this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
+
+            // if scheme is null, we assume the scheme to be ServicePrincipal
+            let isServicePrincipalAuthenticationScheme = !this.endpoint.scheme || this.endpoint.scheme.toLowerCase() == constants.AzureRmEndpointAuthenticationScheme.ServicePrincipal;
+            if (isServicePrincipalAuthenticationScheme) {
+                if(this.endpoint.authenticationType && this.endpoint.authenticationType == constants.AzureServicePrinicipalAuthentications.servicePrincipalCertificate) {
+                    tl.debug('certificate spn endpoint');
+                    this.endpoint.servicePrincipalCertificate = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'servicePrincipalCertificate', false);
+                    this.endpoint.servicePrincipalCertificatePath = certFilePath;
+                    fs.writeFileSync(this.endpoint.servicePrincipalCertificatePath, this.endpoint.servicePrincipalCertificate);
+                }
+                else {
+                    tl.debug('credentials spn endpoint');
+                    this.endpoint.servicePrincipalKey = tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'serviceprincipalkey', false);
+                }
+            }
+
+            var isADFSEnabled = tl.getEndpointDataParameter(this._connectedServiceName, 'EnableAdfsAuthentication', true);
+            this.endpoint.isADFSEnabled = isADFSEnabled  && (isADFSEnabled.toLowerCase() == "true");
+            
+            if(!!this.endpoint.environment && this.endpoint.environment.toLowerCase() == this._environments.AzureStack) {
+                if(!this.endpoint.environmentAuthorityUrl || !this.endpoint.activeDirectoryResourceID) {
+                    this.endpoint = await this._updateAzureStackData(this.endpoint);
+                }
             }
             else {
                 this.endpoint.environmentAuthorityUrl = (!!this.endpoint.environmentAuthorityUrl) ? this.endpoint.environmentAuthorityUrl : "https://login.windows.net/";
@@ -48,9 +72,10 @@ export class AzureRMEndpoint {
             }
 
             this.endpoint.applicationTokenCredentials = new ApplicationTokenCredentials(this.endpoint.servicePrincipalClientID, this.endpoint.tenantID, this.endpoint.servicePrincipalKey, 
-                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId);
+                this.endpoint.url, this.endpoint.environmentAuthorityUrl, this.endpoint.activeDirectoryResourceID, !!this.endpoint.environment && this.endpoint.environment.toLowerCase() == constants.AzureEnvironments.AzureStack, this.endpoint.scheme, this.endpoint.msiClientId, this.endpoint.authenticationType, this.endpoint.servicePrincipalCertificatePath, this.endpoint.isADFSEnabled);
         }
 
+        tl.debug(JSON.stringify(this.endpoint));
         return this.endpoint;
     }
 
@@ -82,11 +107,12 @@ export class AzureRMEndpoint {
         endpoint.portalEndpoint = azureStackResult.portalEndpoint;
         var authenticationData = azureStackResult.authentication;
         if(!!authenticationData) {
-            var loginEndpoint = authenticationData.loginEndpoint;
+            var loginEndpoint: string = authenticationData.loginEndpoint;
             if(!!loginEndpoint) {
                 loginEndpoint += (loginEndpoint[loginEndpoint.length - 1] == "/") ? "" : "/";
                 endpoint.activeDirectoryAuthority = loginEndpoint;
                 endpoint.environmentAuthorityUrl = loginEndpoint;
+                endpoint.isADFSEnabled = loginEndpoint.endsWith('/adfs/');
             }
             else {
                 // change to login endpoint
@@ -113,5 +139,12 @@ export class AzureRMEndpoint {
         }
 
         return endpoint;
+    }
+}
+
+export function dispose() {
+    if(tl.exist(certFilePath)) {
+        tl.rmRF(certFilePath);
+        tl.debug('Removed cert endpoint file');
     }
 }

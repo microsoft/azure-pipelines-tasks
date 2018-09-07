@@ -62,7 +62,7 @@ export async function getStableKubectlVersion() : Promise<string> {
     var version;
     var stableVersionUrl = "https://storage.googleapis.com/kubernetes-release/release/stable.txt";
     var downloadPath = path.join(getTempDirectory(), getCurrentTime().toString()+".txt");
-    return downloadutility.download(stableVersionUrl, downloadPath, false).then((resolve) => {
+    return downloadutility.download(stableVersionUrl, downloadPath, false, true).then((resolve) => {
         version = fs.readFileSync(downloadPath, "utf8").toString().trim();
         if(!version){
             version = stableVersion;
@@ -80,7 +80,7 @@ export async function downloadKubectl(version: string, kubectlPath: string): Pro
     var kubectlURL = getkubectlDownloadURL(version);
     tl.debug(tl.loc('DownloadingKubeCtlFromUrl', kubectlURL));
     var kubectlPathTmp = kubectlPath+".tmp";
-    return downloadutility.download(kubectlURL, kubectlPathTmp, false).then( (res) => {
+    return downloadutility.download(kubectlURL, kubectlPathTmp, false, true).then( (res) => {
             tl.cp(kubectlPathTmp, kubectlPath, "-f");
             fs.chmod(kubectlPath, "777");
             assertFileExists(kubectlPath);

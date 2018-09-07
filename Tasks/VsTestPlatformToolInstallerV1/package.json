@@ -24,7 +24,9 @@
     "homepage": "https://github.com/microsoft/vsts-tasks#readme",
     "dependencies": {
         "performance-now": "0.2.0",
-        "vsts-task-lib": "2.0.6",
-        "vsts-task-tool-lib": "0.4.1"
+        "vsts-task-lib": "2.6.0",
+        "vsts-task-tool-lib": "0.4.1",
+        "@types/node": "^6.0.101",
+        "@types/q": "^1.5.0"
     }
 }

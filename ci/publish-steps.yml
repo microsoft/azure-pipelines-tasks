@@ -60,6 +60,18 @@ steps:
     artifactName: TaskPackage
     publishLocation: container
 
+# Stage per task NuGet package
+- script: npm run package
+  displayName: npm run package
+
+# Publish per task NuGet package artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish per task NuGet package artifact
+  inputs:
+    pathToPublish: _package/nuget-packages
+    artifactName: IndividualNuGetPackages
+    publishLocation: container
+
 # Publish milestone package
 - task: NuGetCommand@2
   displayName: Publish milestone package

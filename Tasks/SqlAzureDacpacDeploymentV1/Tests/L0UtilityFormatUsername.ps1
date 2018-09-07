@@ -16,3 +16,13 @@ Assert-AreEqual  $sqlUsernameWithServerName $formattedSqlUsername
 $formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsernameWithAtSymbol -serverName $serverName
 $expectedUsername = $sqlUsernameWithAtSymbol + "@" + $serverName
 Assert-AreEqual  $expectedUsername $formattedSqlUsername
+
+$formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsernameWithAtSymbol -serverName $serverNameWithTcpPrefix
+$expectedUsername = $sqlUsernameWithAtSymbol + "@" + $serverName
+Assert-AreEqual  $expectedUsername $formattedSqlUsername
+
+$formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsernameWithServerName -serverName $serverNameWithTcpPrefix
+Assert-AreEqual  $sqlUsernameWithServerName $formattedSqlUsername
+
+$formattedSqlUsername = Get-FormattedSqlUsername -sqlUserName $sqlUsername -serverName $serverNameWithTcpPrefix
+Assert-AreEqual  $sqlUsername $formattedSqlUsername

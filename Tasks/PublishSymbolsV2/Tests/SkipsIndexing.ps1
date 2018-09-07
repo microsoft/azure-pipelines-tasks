@@ -27,6 +27,7 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Register-Mock Get-VstsInput { 'Some symbols artifact name' } -- -Name 'SymbolsArtifactName'
     Register-Mock Get-VstsInput { $treatNotIndexedAsWarning } -ParametersEvaluator { $Name -eq 'TreatNotIndexedAsWarning' }
     Register-Mock Get-VstsInput { $false } -- -Name 'IndexSources' -AsBool
+    Register-Mock Get-VstsInput { $false } -- -Name 'CompressSymbols' -AsBool
     Register-Mock Get-VstsInput { $true } -ParametersEvaluator { $Name -eq 'PublishSymbols' }
     $env:PublishSymbols_Debug = $null
 
@@ -37,5 +38,5 @@ foreach ($treatNotIndexedAsWarning in @($true, $false)) {
     Assert-WasCalled Find-VstsMatch -- -DefaultRoot 'Some input symbols folder' -Pattern 'Some input search pattern'
     Assert-WasCalled Invoke-IndexSources -Times 0
     $semaphoreMessage = "Machine: $env:ComputerName, BuildUri: Some build URI, BuildNumber: Some build number, RepositoryName: Some build repository name, RepositoryUri: Some build repository URI, Team Project: Some team project, CollectionUri: Some team foundation collection URI at $($now.ToUniversalTime()) UTC"
-    Assert-WasCalled Invoke-PublishSymbols -- -PdbFiles ('Some PDB file 1', 'Some PDB file 2') -Share 'Some input symbols path' -Product 'Some input symbols product' -Version 'Some input symbols version' -MaximumWaitTime ([timespan]::FromMinutes(123)) -ArtifactName 'Some symbols artifact name' -SemaphoreMessage $semaphoreMessage
+    Assert-WasCalled Invoke-PublishSymbols -- -PdbFiles ('Some PDB file 1', 'Some PDB file 2') -Share 'Some input symbols path' -Product 'Some input symbols product' -Version 'Some input symbols version' -MaximumWaitTime ([timespan]::FromMinutes(123)) -ArtifactName 'Some symbols artifact name' -SemaphoreMessage $semaphoreMessage -CompressSymbols:$false
 }

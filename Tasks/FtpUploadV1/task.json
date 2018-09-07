@@ -17,7 +17,7 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 128,
+        "Minor": 137,
         "Patch": 0
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
@@ -36,19 +36,19 @@
             "label": "Authentication Method",
             "defaultValue": "serviceEndpoint",
             "required": true,
-            "helpMarkDown": "Use FTP service endpoint connection or enter connection credentials.",
+            "helpMarkDown": "Use FTP service connection or enter connection credentials.",
             "options": {
-                "serviceEndpoint": "FTP Service Endpoint",
-                "inputs": "Enter Credentials"
+                "serviceEndpoint": "FTP service connection",
+                "inputs": "Enter credentials"
             }
         },
         {
             "name": "serverEndpoint",
             "type": "connectedService:Generic",
-            "label": "FTP Service Endpoint",
+            "label": "FTP Service Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Select the service endpoint for your FTP server.  To create one, click the Manage link and create a new Generic Service Endpoint, enter the FTP server URL for the server URL, e.g. <b>`ftp://server.example.com`</b>, and required credentials.<p>Secure connections will always be made regardless of the specified protocol (<b>`ftp://`</b> or <b>`ftps://`</b>) if the target server supports FTPS.  To allow only secure connections, use the <b>`ftps://`</b> protocol, e.g. <b>`ftps://server.example.com`</b>.  Connections to servers not supporting FTPS will fail if <b>`ftps://`</b> is specified.",
+            "helpMarkDown": "Select the service connection for your FTP server.  To create one, click the Manage link and create a new Generic service connection, enter the FTP server URL for the server URL, e.g. <b>`ftp://server.example.com`</b>, and required credentials.<p>Secure connections will always be made regardless of the specified protocol (<b>`ftp://`</b> or <b>`ftps://`</b>) if the target server supports FTPS.  To allow only secure connections, use the <b>`ftps://`</b> protocol, e.g. <b>`ftps://server.example.com`</b>.  Connections to servers not supporting FTPS will fail if <b>`ftps://`</b> is specified.",
             "visibleRule": "credsType = serviceEndpoint"
         },
         {

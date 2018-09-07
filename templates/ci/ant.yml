@@ -1,16 +1,18 @@
 # Ant
 # Build your Java projects and run tests with Apache Ant.
-# https://aka.ms/yaml
+# Add steps that save build artifacts and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/java
 
-queue: 'Hosted VS2017'
+pool:
+  vmImage: 'Ubuntu 16.04'
+
 steps:
-
 - task: Ant@1
   inputs:
+    workingDirectory: ''
     buildFile: 'build.xml'
-
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.{jar,war,ear}'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.10'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'

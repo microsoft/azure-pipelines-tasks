@@ -1,23 +1,28 @@
 # Xamarin.iOS
-# Build a Xamarin.iOS app and Xamarin.UITest assembly.
-# https://aka.ms/yaml
+# Build a Xamarin.iOS app.
+# Add steps that install certificates, test, sign, and distribute the app, save build artifacts, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/xamarin
 
-queue: 'Hosted macOS'
+pool:
+  vmImage: 'macOS 10.13'
+
 steps:
+# To manually select a Xamarin SDK version on the Microsoft-hosted macOS agent,
+# configure this task with the SDK version you want to target and set the "enabled" property to true.
+# See https://go.microsoft.com/fwlink/?linkid=871629
+- script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 5_4_1 
+  displayName: 'Select the Xamarin SDK version'
+  enabled: false
 
-- task: XamariniOS@1
+- task: NuGetToolInstaller@0
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/*.sln'
+
+- task: XamariniOS@2
   inputs:
     solutionFile: '**/*.sln'
     configuration: 'Release'
     buildForSimulator: true
-
-#- task: CopyFiles@2
-#  inputs:
-#    contents: '**/*.ipa'
-#    targetFolder: '$(build.artifactStagingDirectory)'
-#- task: PublishBuildArtifacts@1
-
-# Next steps:
-# Test apps on real devices with the App Center Test task: https://docs.microsoft.com/vsts/build-release/tasks/test/appcentertest
-# Distribute apps to testers and users with the App Center Distribute task: https://docs.microsoft.com/vsts/build-release/tasks/deploy/appcenterdistribute
-# Release to the Apple App Store with the Apple App Store extension: https://marketplace.visualstudio.com/items?itemName=ms-vsclient.app-store
+    packageApp: false

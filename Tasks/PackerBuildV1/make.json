@@ -1,0 +1,24 @@
+{
+    "common": [
+        {
+            "module": "../Common/azure-arm-rest",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
+        }
+    ],
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-arm-rest/node_modules/vsts-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ],
+    "cp": [
+        {
+            "source": "DefaultTemplates",
+            "options": "-R"
+        }
+    ]
+}

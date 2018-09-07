@@ -8,7 +8,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 131,
+        "Minor": 137,
         "Patch": 0
     },
     "runsOn": [
@@ -41,17 +41,17 @@
             "defaultValue": "ServiceEndpoint",
             "helpMarkDown": "",
             "options": {
-                "ServiceEndpoint": "Service Endpoint",
-                "UserAndPass": "Username and Password"
+                "ServiceEndpoint": "Service connection",
+                "UserAndPass": "Username and password"
             }
         },
         {
             "name": "serviceEndpoint",
             "type": "connectedService:Generic",
-            "label": "Service Endpoint",
+            "label": "Service Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The service endpoint with the credentials for the server authentication. Use the Generic connection type for the service endpoint.",
+            "helpMarkDown": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
             "visibleRule": "authType = ServiceEndpoint"
         },
         {
@@ -121,6 +121,6 @@
         "UploadingFiles": "Uploading file(s): %s",
         "CurlNotFound": "curl was not found in the PATH.",
         "NotAllFilesUploaded": "Not all files were uploaded; Uploaded: %d; Total: %d",
-        "IncompleteEndpoint": "The service endpoint does not contain all required fields."
+        "IncompleteEndpoint": "The service connection does not contain all required fields."
     }
 }

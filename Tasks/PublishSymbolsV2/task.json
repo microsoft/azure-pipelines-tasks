@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 8
+        "Patch": 10
     },
     "minimumAgentVersion": "1.95.0",
     "groups": [
@@ -81,6 +81,15 @@
             "visibleRule": "PublishSymbols = true && SymbolServerType = FileShare"
         },
         {
+            "name": "CompressSymbols",
+            "type": "boolean",
+            "label": "Compress symbols",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "Compress symbols when publishing to file share.",
+            "visibleRule": "SymbolServerType = FileShare"
+        },
+        {
             "name": "DetailedLog",
             "type": "boolean",
             "label": "Verbose logging",
@@ -104,7 +113,7 @@
             "label": "Max wait time (min)",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The number of minutes to wait before failing the step",
+            "helpMarkDown": "The number of minutes to wait before failing this task.",
             "groupName": "advanced"
         },
         {

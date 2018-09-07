@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 131,
+    "Minor": 137,
     "Patch": 0
   },
   "groups": [
@@ -305,7 +305,7 @@
       "groupName": "run",
       "helpMarkDown": "ms-resource:loc.input.help.credsType",
       "options": {
-        "serviceEndpoint": "App Center Connection",
+        "serviceEndpoint": "App Center service connection",
         "inputs": "Credentials"
       }
     },

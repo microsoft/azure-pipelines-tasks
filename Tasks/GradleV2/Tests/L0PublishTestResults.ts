@@ -32,7 +32,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             'stdout': 'Sample gradle output'
         }
     },
-    'match': {
+    'findMatch': {
         '**/TEST-*.xml': [
             '/user/build/fun/test-123.xml'
         ]

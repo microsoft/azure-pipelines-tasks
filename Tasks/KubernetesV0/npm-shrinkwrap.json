@@ -127,6 +127,11 @@
         "path-is-inside": "1.0.2"
       }
     },
+    "js-base64": {
+      "version": "2.4.3",
+      "resolved": "https://registry.npmjs.org/js-base64/-/js-base64-2.4.3.tgz",
+      "integrity": "sha512-H7ErYLM34CvDMto3GbD6xD0JLUGYXR3QTcH6B/tr4Hi/QpSThnCsIp+Sy5FRTw3B0d6py4HcNkW7nO/wdtGWEw=="
+    },
     "minimatch": {
       "version": "3.0.4",
       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
@@ -251,6 +256,7 @@
     "utility-common": {
       "version": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
       "requires": {
+        "js-base64": "2.4.3",
         "semver": "5.5.0",
         "vso-node-api": "6.0.1-preview",
         "vsts-task-lib": "2.0.6",

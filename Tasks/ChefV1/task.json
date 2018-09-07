@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 17
+        "Patch": 18
     },
     "deprecated": true,
     "demands": [
@@ -30,10 +30,10 @@
         {
             "name": "connectedServiceName",
             "type": "connectedService:Chef",
-            "label": "Chef Connection",
+            "label": "Chef Service Connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Name of the Chef subscription"
+            "helpMarkDown": "Name of the Chef subscription service connection."
         },
         {
             "name": "Environment",

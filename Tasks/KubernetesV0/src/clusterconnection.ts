@@ -8,6 +8,7 @@ import * as tr from "vsts-task-lib/toolrunner";
 import AuthenticationToken from "docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as utils from "./utilities";
 import * as os from "os";
+import kubectlutility = require("utility-common/kubectlutility");
 
 export default class ClusterConnection {
     private kubectlPath: string;
@@ -20,12 +21,9 @@ export default class ClusterConnection {
     }
 
     private async initialize(): Promise<void> {
-        if(!this.kubectlPath || !fs.existsSync(this.kubectlPath))
-        {
-            return this.getKubectl().then((kubectlpath)=> {
-                this.kubectlPath = kubectlpath;
-            });
-        }
+        return this.getKubectl().then((kubectlpath)=> {
+            this.kubectlPath = kubectlpath;
+        });
     }
 
     public createCommand(): tr.ToolRunner {
@@ -41,9 +39,21 @@ export default class ClusterConnection {
     // open kubernetes connection
     public async open(kubernetesEndpoint?: string){
          return this.initialize().then(() => {
-            if (kubernetesEndpoint) {
-                this.downloadKubeconfigFileFromEndpoint(kubernetesEndpoint);
+            var authorizationType = tl.getEndpointDataParameter(kubernetesEndpoint, 'authorizationType', true);
+            var kubeconfig = null;
+            if (!authorizationType || authorizationType === "Kubeconfig")
+            {
+                if (kubernetesEndpoint) {
+                     kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
+                } 
             }
+            else if (authorizationType === "ServiceAccount")
+            {
+                kubeconfig = kubectlutility.createKubeconfig(kubernetesEndpoint);
+            }
+            
+            this.kubeconfigFile = path.join(this.userDir, "config");
+            fs.writeFileSync(this.kubeconfigFile, kubeconfig);
          });
     }
 
@@ -64,13 +74,6 @@ export default class ClusterConnection {
         });
     }
 
-    // download kubernetes cluster config file from endpoint
-    private downloadKubeconfigFileFromEndpoint(kubernetesEndpoint: string) : void {
-        this.kubeconfigFile = path.join(this.userDir, "config");
-        var kubeconfig = tl.getEndpointAuthorizationParameter(kubernetesEndpoint, 'kubeconfig', false);
-        fs.writeFileSync(this.kubeconfigFile, kubeconfig);
-    }
-
     private getExecutableExtention(): string {
         if(os.type().match(/^Win/)){
             return ".exe";
@@ -83,17 +86,35 @@ export default class ClusterConnection {
         let versionOrLocation = tl.getInput("versionOrLocation");
         if( versionOrLocation === "location") {
             let pathToKubectl = tl.getPathInput("specifyLocation", true, true);
-            fs.chmod(pathToKubectl, "777");
+            fs.chmodSync(pathToKubectl, "777");
             return pathToKubectl;
         }
         else if(versionOrLocation === "version") {
-            tl.debug(tl.loc("DownloadingClient"));
+            var defaultVersionSpec = "1.7.0";
             var kubectlPath = path.join(this.userDir, "kubectl") + this.getExecutableExtention();
             let versionSpec = tl.getInput("versionSpec");
             let checkLatest: boolean = tl.getBoolInput('checkLatest', false);
-            return utils.getKubectlVersion(versionSpec, checkLatest).then((version) => {
+
+            if (versionSpec != defaultVersionSpec || checkLatest)
+            {
+                tl.debug(tl.loc("DownloadingClient"));
+                return utils.getKubectlVersion(versionSpec, checkLatest).then((version) => {
+                    return utils.downloadKubectl(version, kubectlPath);
+                });
+            }
+
+            // Reached here => default version
+            // Now to handle back-compat, return the version installed on the machine
+            if(this.kubectlPath && fs.existsSync(this.kubectlPath))
+            {
+                return this.kubectlPath;
+            }
+
+             // Download the default version
+             tl.debug(tl.loc("DownloadingClient"));
+             return utils.getKubectlVersion(versionSpec, checkLatest).then((version) => {
                 return utils.downloadKubectl(version, kubectlPath);
-            })
+            });
         }
     }
 }

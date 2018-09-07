@@ -73,4 +73,19 @@ describe('InstallAppleProvisioningProfile Suite', function () {
 
         done();
     });
+
+    it('Fails on windows', (done: MochaDone) => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0FailOnWindows.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.errorIssues.length > 0, 'should have written to stderr');
+        assert(tr.errorIssues[0].indexOf('Error: loc_mock_InstallRequiresMac') >= 0, 'error message should match expected');
+
+        done();
+    });
 });

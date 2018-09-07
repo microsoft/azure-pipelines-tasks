@@ -54,6 +54,27 @@ export class NpmMockHelper extends TaskMockRunner {
         this.answers.rmRF[tempNpmPath] = { success: true };
         const tempNpmrcPath = path.join(tempNpmPath, `${NpmMockHelper.BuildBuildId}.npmrc`);
         this.answers.rmRF[tempNpmrcPath] = { success: true };
+
+        this.registerMock('typed-rest-client/HttpClient', {
+            HttpClient: function() {
+                return {
+                    get: function(url, headers) {
+                        return {
+                        then: function(handler) {
+                            handler({
+                                message: {
+                                    statusCode: 401,
+                                    rawHeaders: ['x-tfs-foo: abc', 'x-content-type-options: nosniff', 'X-Powered-By: ASP.NET']
+                                }
+                            });
+                        }
+                        };
+                    }
+                };
+            }
+        });
+
+        this.registerLocationHelpersMock();
     }
 
     public run(noMockTask?: boolean): void {
@@ -102,6 +123,19 @@ export class NpmMockHelper extends TaskMockRunner {
     public mockServiceEndpoint(endpointId: string, url: string, auth: any): void {
         process.env['ENDPOINT_URL_' + endpointId] = url;
         process.env['ENDPOINT_AUTH_' + endpointId] = JSON.stringify(auth);
+    }
+
+    public registerLocationHelpersMock() {
+        this.registerMock('utility-common/packaging/locationUtilities', {
+            getPackagingUris: function(input) {
+                const collectionUrl: string = "https://vsts/packagesource";
+                return {
+                    PackagingUris: [collectionUrl],
+                    DefaultPackagingUri: collectionUrl
+                };
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
+        });
     }
 
     private isDebugging() {

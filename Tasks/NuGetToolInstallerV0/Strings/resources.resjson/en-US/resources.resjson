@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet Tool Installer",
   "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=852538)",
-  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this step to change the version of NuGet used in the NuGet steps.",
+  "loc.description": "Acquires a specific version of NuGet from the internet or the tools cache and adds it to the PATH. Use this task to change the version of NuGet used in the NuGet tasks.",
   "loc.instanceNameFormat": "Use NuGet $(versionSpec)",
   "loc.input.label.versionSpec": "Version of NuGet.exe to install",
   "loc.input.help.versionSpec": "A version or version range that specifies the NuGet version to make available on the path. Use x as a wildcard. See the [list of available NuGet versions](http://dist.nuget.org/tools.json).\n\nIf you want to match a pre-release version, the specification must contain a major, minor, patch, and pre-release version from the list above.\n\nExamples: 4.x, 3.3.x, 2.8.6, >=4.0.0-0",

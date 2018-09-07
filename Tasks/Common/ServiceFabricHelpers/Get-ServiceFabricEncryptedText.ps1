@@ -16,7 +16,7 @@ function Get-ServiceFabricEncryptedText
 
     if ($serverCertThumbprints -is [array])
     {
-        foreach($serverCertThumbprint in $serverCertThumbprints)
+        foreach ($serverCertThumbprint in $serverCertThumbprints)
         {
             $cert = Get-Item "Cert:\$defaultCertStoreLocation\$defaultCertStoreName\$serverCertThumbprint" -ErrorAction SilentlyContinue
             if ($cert)
@@ -37,5 +37,6 @@ function Get-ServiceFabricEncryptedText
     }
 
     # Encrypt the text using the cluster connection's certificate.
+    $global:operationId = $SF_Operations.EncryptServiceFabricText
     return Invoke-ServiceFabricEncryptText -Text $Text -CertStore -CertThumbprint $cert.Thumbprint -StoreName $defaultCertStoreName -StoreLocation $defaultCertStoreLocation
 }

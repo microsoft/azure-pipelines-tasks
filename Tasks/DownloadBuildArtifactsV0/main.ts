@@ -71,6 +71,11 @@ async function main(): Promise<void> {
         var branchName: string =  tl.getInput("branchName", false);;
         var downloadPath: string = tl.getInput("downloadPath", true);
         var downloadType: string = tl.getInput("downloadType", true);
+        var tagFiltersInput = tl.getInput("tagFilters", false);
+        var tagFilters = [];
+        if (!!tagFiltersInput) {
+            tagFilters = tagFiltersInput.split(",");
+        }
 
         var endpointUrl: string = tl.getVariable("System.TeamFoundationCollectionUri");
         var accessToken: string = tl.getEndpointAuthorizationParameter('SYSTEMVSSCONNECTION', 'AccessToken', false);
@@ -84,7 +89,7 @@ async function main(): Promise<void> {
         var templatePath: string = path.join(__dirname, 'vsts.handlebars.txt');
         var buildApi: IBuildApi = webApi.getBuildApi();
         var artifacts = [];
-        var itemPattern: string = '**';
+        var itemPattern: string = tl.getInput("itemPattern", false) || '**';
 
         if (isCurrentBuild) {
             projectId = tl.getVariable("System.TeamProjectId");
@@ -143,10 +148,10 @@ async function main(): Promise<void> {
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;
                 
                 // get latest successful build filtered by branch
-                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds( projectId, [parseInt(definitionId)],null,null,null,null,null,null,BuildStatus.Completed,BuildResult.Succeeded,null,null,null,null,null,null, BuildQueryOrder.FinishTimeDescending,branchNameFilter), retryLimit).catch((reason) => {
+                var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, BuildResult.Succeeded, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
-                }); 
+                });
 
                 if (!buildsForThisDefinition || buildsForThisDefinition.length == 0){ 
                     if (buildVersionToDownload == "latestFromBranch") reject(tl.loc("LatestBuildFromBranchNotFound", branchNameFilter));
@@ -180,9 +185,12 @@ async function main(): Promise<void> {
 
         console.log(tl.loc("DownloadingArtifactsForBuild", buildId));
 
+        // populate output variable 'BuildNumber' with buildId
+        tl.setVariable('BuildNumber', buildId.toString());
+
         // populate itempattern and artifacts based on downloadType
         if (downloadType === 'single') {
-            var artifactName = tl.getInput("artifactName");
+            var artifactName = tl.getInput("artifactName", true);
             var artifact = await executeWithRetries("getArtifact", () => buildApi.getArtifact(buildId, artifactName, projectId), retryLimit).catch((reason) => {
                 reject(reason);
                 return;
@@ -194,7 +202,6 @@ async function main(): Promise<void> {
             }
 
             artifacts.push(artifact);
-            itemPattern = '**';
         }
         else {
             var buildArtifacts = await executeWithRetries("getArtifacts", () => buildApi.getArtifacts(buildId, projectId), retryLimit).catch((reason) => {
@@ -209,7 +216,6 @@ async function main(): Promise<void> {
 
             console.log(tl.loc("LinkedArtifactCount", buildArtifacts.length));
             artifacts = artifacts.concat(buildArtifacts);
-            itemPattern = tl.getInput("itemPattern", false) || '**';
         }
 
         if (artifacts) {
@@ -225,13 +231,22 @@ async function main(): Promise<void> {
 
                 if (artifact.resource.type.toLowerCase() === "container") {
                     let downloader = new engine.ArtifactEngine();
-                    var containerParts: string[] = artifact.resource.data.split('/', 3);
-                    if (containerParts.length !== 3) {
+
+                    console.log(tl.loc("DownloadingContainerResource", artifact.resource.data));
+                    var containerParts = artifact.resource.data.split('/');
+
+                    if (containerParts.length < 3) {
                         throw new Error(tl.loc("FileContainerInvalidArtifactData"));
                     }
+                    
+                    var containerId = parseInt(containerParts[1]);
+                    var containerPath = containerParts.slice(2,containerParts.length).join('/');
 
-                    var containerId: number = parseInt(containerParts[1]);
-                    var containerPath: string = containerParts[2];
+                    if (containerPath == "/") {
+                        //container REST api oddity. Passing '/' as itemPath downloads the first file instead of returning the meta data about the all the files in the root level. 
+                        //This happens only if the first item is a file.
+                        containerPath = ""
+                    }
 
                     var itemsUrl = endpointUrl + "/_apis/resources/Containers/" + containerId + "?itemPath=" + encodeURIComponent(containerPath) + "&isShallow=true&api-version=4.1-preview.4";
                     console.log(tl.loc("DownloadArtifacts", artifact.name, itemsUrl));

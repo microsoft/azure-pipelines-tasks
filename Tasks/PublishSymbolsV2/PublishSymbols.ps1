@@ -14,6 +14,38 @@ Trace-VstsEnteringInvocation $MyInvocation
 
 $ErrorActionPreference = "Stop"
 
+function Get-SymbolServiceUri ([string]$collectionUri)
+{
+    $serviceDefinitionUri = "$collectionUri/_apis/servicedefinitions/locationservice2/951917ac-a960-4999-8464-e3f0aa25b381"
+    $result = Invoke-WebRequest $serviceDefinitionUri -UseBasicParsing
+
+    if ($result.StatusCode -eq 200) {
+        $locationUri = (ConvertFrom-Json $result.Content).locationMappings[0].location
+        if (-not $locationUri) {
+            throw "No location mappings found while querying $serviceDefinitionUri"
+        }
+        $locationServiceUri = "$locationUri/_apis/servicedefinitions/locationservice2/00000016-0000-8888-8000-000000000000"
+        $result = Invoke-WebRequest $locationServiceUri -UseBasicParsing
+        if ($result.StatusCode -ne 200) {
+            throw "Failure while querying '$locationServiceUri', returned $($result.StatusCode)"
+        }
+        $artifactsUri = (ConvertFrom-Json $result.Content).locationMappings[0].location
+        if (-not $artifactsUri) {
+            throw "No location mappings found while querying $artifactsUri"
+        }
+        Write-Host "Retrieved artifact service url: '$artifactsUri'"
+    }
+    else { # Fallback
+        if ( [RegEx]::Match($collectionUri, '\.(visualstudio\.com|vsts\.me)').Success ) {
+            $artifactsUri = [RegEx]::Replace($collectionUri, '\.(visualstudio\.com|vsts\.me)', '.artifacts.$1')
+        }
+        else {
+            $artifactsUri = [RegEx]::Replace($collectionUri, '://[^/]+/([^/]+)', '://$1.artifacts.visualstudio.com')
+        }
+    }
+    return $artifactsUri
+}
+
 try {
     # Import the localized strings.
     Import-VstsLocStrings "$PSScriptRoot\Task.json"
@@ -67,6 +99,7 @@ try {
         [string]$SymbolsArtifactName = Get-VstsInput -Name 'SymbolsArtifactName'
     }
     [bool]$SkipIndexing = -not (Get-VstsInput -Name 'IndexSources' -AsBool)
+    [bool]$CompressSymbols = (Get-VstsInput -Name 'CompressSymbols' -AsBool)
     [bool]$TreatNotIndexedAsWarning = Get-VstsInput -Name 'TreatNotIndexedAsWarning' -AsBool
     [string]$defaultSymbolFolder = (Get-VstsTaskVariable -Name 'Build.SourcesDirectory' -Default "")
     [string]$SymbolsFolder = Get-VstsInput -Name 'SymbolsFolder' -Default $defaultSymbolFolder
@@ -122,7 +155,7 @@ try {
 
             # Publish the symbols.
             Import-Module -Name $PSScriptRoot\PublishHelpers\PublishHelpers.psm1
-            Invoke-PublishSymbols -PdbFiles $fileList -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $SymbolsMaximumWaitTime -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage
+            Invoke-PublishSymbols -PdbFiles $fileList -Share $SymbolsPath -Product $SymbolsProduct -Version $SymbolsVersion -MaximumWaitTime $SymbolsMaximumWaitTime -ArtifactName $SymbolsArtifactName -SemaphoreMessage $semaphoreMessage -CompressSymbols:$CompressSymbols
         } else {
             Write-Verbose "SymbolsPath was not set, publish symbols step was skipped."
         }
@@ -166,14 +199,7 @@ try {
                 throw "If PAT or UseAad is specified, then AccountName needs to be present"
             }
 
-            [string]$SymbolServiceUri = (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require)
-
-            if (-not $SymbolServiceUri.Contains(".visualstudio.com")) {
-                $SymbolServiceUri = $SymbolServiceUri.Replace(".vsts.me",".artifacts.vsts.me") # Handle Devfabric scenario
-            }
-            else {
-                $SymbolServiceUri = $SymbolServiceUri.Replace(".visualstudio.com",".artifacts.visualstudio.com")
-            }
+            [string]$SymbolServiceUri = Get-SymbolServiceUri (Get-VstsTaskVariable -Name 'System.TeamFoundationCollectionUri' -Require)
 
             $Endpoint = Get-VstsEndPoint -Name "SystemVssConnection"
             [string]$PersonalAccessToken = $Endpoint.Auth.Parameters.AccessToken

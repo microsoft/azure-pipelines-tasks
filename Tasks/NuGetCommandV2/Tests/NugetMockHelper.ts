@@ -8,14 +8,15 @@ export class NugetMockHelper {
     private defaultNugetVersion = '4.0.0';
     private defaultNugetVersionInfo = [4,0,0,0];
 
-    constructor(
-        private tmr: tmrm.TaskMockRunner) {
+    constructor(private tmr: tmrm.TaskMockRunner) {
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
         process.env['ENDPOINT_URL_SYSTEMVSSCONNECTION'] = "https://example.visualstudio.com/defaultcollection";
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
+
+        this.registerNugetLocationHelpersMock();
     }
 
     public setNugetVersionInputDefault() {
@@ -90,9 +91,14 @@ export class NugetMockHelper {
                 return 'https://vsts/packagesource';
             }
         });
+        this.tmr.registerMock('./Utility', {
+            resolveToolPath: function(path) {
+                return path;
+            }
+        });
     }
 
-        public registerNugetUtilityMockUnix() {
+    public registerNugetUtilityMockUnix() {
         this.tmr.registerMock('nuget-task-common/Utility', {
             getPatternsArrayFromInput: function(input) {
                 return [input];
@@ -103,6 +109,9 @@ export class NugetMockHelper {
             getBundledNuGetLocation: function(version) {
                 return '~/myagent/_work/_tasks/NuGet/nuget.exe';
             },
+            resolveToolPath: function(path) {
+                return path;
+            },
             locateCredentialProvider: function(path) {
                 return '~/myagent/_work/_tasks/NuGet/CredentialProvider';
             },
@@ -110,6 +119,24 @@ export class NugetMockHelper {
                 var tlm = require('vsts-task-lib/mock-task');
                 tlm.debug(`setting console code page`);
             }
+        });
+        this.tmr.registerMock('./Utility', {
+            resolveToolPath: function(path) {
+                return path;
+            }
+        });
+    }
+
+    public registerNugetLocationHelpersMock() {
+        this.tmr.registerMock('utility-common/packaging/locationUtilities', {
+            getPackagingUris: function(input) {
+                const collectionUrl: string = "https://vsts/packagesource";
+                return {
+                    PackagingUris: [collectionUrl],
+                    DefaultPackagingUri: collectionUrl
+                };
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
         });
     }
 
