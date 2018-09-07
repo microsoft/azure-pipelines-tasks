@@ -6,14 +6,12 @@
 pool:
   vmImage: 'macOS 10.13'
 
-variables:
-  Configuration: 'Release'
-  SDK: 'iphoneos'
-
 steps:
 - task: Xcode@5
   inputs:
     actions: 'build'
     xcWorkspacePath: '**/*.xcodeproj/project.xcworkspace'
     scheme: ''
+    sdk: 'iphoneos'
+    configuration: 'Release'
     xcodeVersion: 'default' # Options: 8, 9, default, specifyPath
