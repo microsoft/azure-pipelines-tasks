@@ -3,9 +3,7 @@
 
 import assert = require('assert');
 import trm = require('../../lib/taskRunner');
-import psm = require('../../lib/psRunner');
 import path = require('path');
-import shell = require('shelljs');
 import os = require('os');
 
 function setResponseFile(name: string) {
@@ -13,7 +11,7 @@ function setResponseFile(name: string) {
 }
 
 describe('Gulp Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
 	before((done) => {
 		// init here

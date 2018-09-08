@@ -11,15 +11,7 @@
             "stdout": "Xamarin android test project"
         }
     },
-    "checkPath" : {
-        "/user/build/fun/test.csproj": true
-    },
-    "find": {
-        "": [
-            "/user/build"
-        ]
-    },
-    "match": {
+    "findMatch": {
         "**/test*.csproj": [
             "/user/build/fun/test.csproj"
         ]      

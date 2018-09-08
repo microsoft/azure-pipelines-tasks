@@ -8,7 +8,7 @@ import path = require('path');
 let ff = require('../../../Tasks/Common/find-files-legacy/findfiles.legacy');
 
 describe('Common find files legacy suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     let data = path.join(__dirname, 'data');
 

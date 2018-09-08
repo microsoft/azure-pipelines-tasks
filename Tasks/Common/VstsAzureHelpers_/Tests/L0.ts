@@ -6,15 +6,13 @@ import Q = require('q');
 import assert = require('assert');
 import path = require('path');
 var psm = require('../../../../Tests/lib/psRunner');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('Common-VstsAzureHelpers_ Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -23,10 +21,12 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('(Import-AzureModule) azure preferred falls back', (done) => {
             psr.run(path.join(__dirname, 'Import-AzureModule.AzurePreferredFallsBack.ps1'), done);
         })
@@ -63,6 +63,9 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('(Initialize-Azure) throws when service name is null', (done) => {
             psr.run(path.join(__dirname, 'Initialize-Azure.ThrowsWhenServiceNameIsNull.ps1'), done);
         })
+        it('(Initialize-AzureSubscription) manged service identity should pass ', (done) => {
+            psr.run(path.join(__dirname, 'Initialize-AzureSubscription.ManagedServiceIdentity.ps1'), done);
+        })
         it('(Initialize-AzureSubscription) passes values when cert auth', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.PassesValuesWhenCertAuth.ps1'), done);
         })
@@ -83,6 +86,9 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         })
         it('(Initialize-AzureSubscription) passes values when cert auth and environment', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.PassesValuesWhenCertAuthAndEnvironment.ps1'), done);
+        })
+        it('(Initialize-AzureSubscription) passes values when cert auth with service principal scheme', (done) => {
+            psr.run(path.join(__dirname, 'Initialize-AzureSubscription.PassesValuesWhenSPNCertAuth.ps1'), done);
         })
         it('(Initialize-AzureSubscription) throws when SP auth and classic 0.9.9', (done) => {
             psr.run(path.join(__dirname, 'Initialize-AzureSubscription.ThrowsWhenSPAuthAndClassic099.ps1'), done);

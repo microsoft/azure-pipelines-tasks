@@ -1,0 +1,92 @@
+{
+  "id": "2FF763A7-CE83-4E1F-BC89-0AE63477CEBE",
+  "name": "PublishBuildArtifacts",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 135,
+    "Patch": 0
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.91.0",
+  "inputs": [
+    {
+      "name": "PathtoPublish",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.PathtoPublish",
+      "defaultValue": "$(Build.ArtifactStagingDirectory)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.PathtoPublish"
+    },
+    {
+      "name": "ArtifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ArtifactName",
+      "defaultValue": "drop",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ArtifactName"
+    },
+    {
+      "name": "ArtifactType",
+      "aliases": [
+        "publishLocation"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ArtifactType",
+      "defaultValue": "Container",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ArtifactType",
+      "options": {
+        "Container": "Visual Studio Team Services/TFS",
+        "FilePath": "A file share"
+      }
+    },
+    {
+      "name": "TargetPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.TargetPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.TargetPath",
+      "visibleRule": "ArtifactType = FilePath"
+    },
+    {
+      "name": "Parallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.Parallel",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.Parallel",
+      "visibleRule": "ArtifactType = FilePath"
+    },
+    {
+      "name": "ParallelCount",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.ParallelCount",
+      "defaultValue": 8,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ParallelCount",
+      "visibleRule": "ArtifactType = FilePath && Parallel = true"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node": {
+      "target": "publishbuildartifacts.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ErrorFileShareLinux": "ms-resource:loc.messages.ErrorFileShareLinux",
+    "ErrorHostTypeNotSupported": "ms-resource:loc.messages.ErrorHostTypeNotSupported",
+    "PublishBuildArtifactsFailed": "ms-resource:loc.messages.PublishBuildArtifactsFailed",
+    "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "id": "BCB64569-D51A-4AF0-9C01-EA5D05B3B622",
+  "name": "ManualIntervention",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "runsOn": [
+    "Server"
+  ],
+  "version": {
+    "Major": 8,
+    "Minor": 2,
+    "Patch": 4
+  },
+  "inputs": [
+    {
+      "name": "instructions",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.instructions",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.instructions",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "4000"
+      }
+    },
+    {
+      "name": "emailRecipients",
+      "type": "identities",
+      "label": "ms-resource:loc.input.label.emailRecipients",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.emailRecipients"
+    },
+    {
+      "name": "onTimeout",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.onTimeout",
+      "defaultValue": "reject",
+      "required": false,
+      "options": {
+        "reject": "Reject",
+        "resume": "Resume"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.onTimeout"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "RM:ManualIntervention": {}
+  }
+}

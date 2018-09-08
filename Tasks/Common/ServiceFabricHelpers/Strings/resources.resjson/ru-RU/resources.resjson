@@ -1,0 +1,13 @@
+{
+  "loc.messages.AadAuthority": "Центр AAD: {0}",
+  "loc.messages.ClientAppId": "Код клиентского приложения: {0}",
+  "loc.messages.ClusterAppId": "Код приложения кластера: {0}",
+  "loc.messages.ConnectedToCluster": "Успешное подключение к кластеру.",
+  "loc.messages.DefaultPortWarning": "Порт \"{0}\", указанный в конечной точке подключения, не соответствует порту конечной точки по умолчанию ClientConnectionEndpoint (19000). Это могло привести к сбою связи с кластером.",
+  "loc.messages.ErrorOnAcquireToken": "При попытке получить маркер Azure Active Directory произошла ошибка. Убедитесь, что конечная точка службы настроена правильно и заданы допустимые учетные данные. Сообщение об ошибке: {0}",
+  "loc.messages.ErrorOnCertificateImport": "При попытке импортировать сертификат произошла ошибка. Убедитесь, что конечная точка службы настроена правильно, задано правильное значение сертификата и, если сертификат защищен паролем, указан допустимый пароль. Сообщение об ошибке: {0}",
+  "loc.messages.ImportedCertificate": "Импортированный клиентский сертификат кластера с отпечатком \"{0}\".",
+  "loc.messages.ServiceFabricSDKNotInstalled": "Пакет SDK Service Fabric не установлен на агенте сборки. Перейдите на страницу https://aka.ms/servicefabric, чтобы скачать и установить его.",
+  "loc.messages.UseWindowsSecurity": "Указана безопасность Windows. При подключении будет использоваться параметр -WindowsCredential.",
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "Для шифрования текста необходим сертификат сервера кластера с отпечатком \"{0}\". Не удалось найти сертификат на компьютере агента в расположении \"CurrentUser\\My\" хранилища сертификатов."
+}

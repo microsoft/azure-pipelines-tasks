@@ -8,7 +8,7 @@ import path = require('path');
 import fs = require('fs');
 
 describe('General Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         // init here
@@ -20,7 +20,7 @@ describe('General Suite', function () {
     });
 
     it('Find invalid task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // get a list of all _build/task folders
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -56,7 +56,7 @@ describe('General Suite', function () {
     })
 
     it('Find nested task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Path to the _build/Tasks folder.
         var tasksFolder = path.resolve(__dirname, '../Tasks');
@@ -86,8 +86,8 @@ describe('General Suite', function () {
     })
 
     it('Find .js with uppercase', (done) => {
-        this.timeout(20000);
-
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+		
         // Path to the _build/Tasks folder.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
 
@@ -104,7 +104,7 @@ describe('General Suite', function () {
             var taskjson = path.join(taskFolder, 'task.json');
             var task = JSON.parse(fs.readFileSync(taskjson).toString());
 
-            if (task.execution['Node']) {
+            if (task.execution && task.execution['Node']) {
 
                 var jsFiles = fs.readdirSync(taskFolder).filter(file => {
                     return file.search(/\.js$/) > 0;
@@ -129,7 +129,7 @@ describe('General Suite', function () {
     })
 
     it('Find unsupported demands', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         var supportedDemands: string[] = ['AndroidSDK',
             'ant',
@@ -201,8 +201,132 @@ describe('General Suite', function () {
         done();
     })
 
+    it('Find unsupported runsOn', (done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+        var supportedRunsOn: string[] = ['Agent', 'DeploymentGroup', 'Server', 'ServerGate'];
+
+        supportedRunsOn.forEach(runsOn => {
+            if (supportedRunsOn.indexOf(runsOn.toLocaleLowerCase()) < 0) {
+                supportedRunsOn.push(runsOn.toLocaleLowerCase());
+            }
+        });
+
+        // Path to the _build/Tasks folder.
+        var tasksRootFolder = path.resolve(__dirname, '../Tasks');
+
+        var taskFolders: string[] = [];
+        fs.readdirSync(tasksRootFolder).forEach(folderName => {
+            if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
+                taskFolders.push(path.join(tasksRootFolder, folderName));
+            }
+        })
+
+        var unsupportedRunsOnCount = 0;
+        for (var i = 0; i < taskFolders.length; i++) {
+            var taskFolder = taskFolders[i];
+            var taskjson = path.join(taskFolder, 'task.json');
+
+            var task = JSON.parse(fs.readFileSync(taskjson).toString());
+            if (task.hasOwnProperty('runsOn')) {
+                task['runsOn'].forEach(runsOn => {
+                    if (supportedRunsOn.indexOf(runsOn.toLocaleLowerCase()) < 0) {
+                        ++unsupportedRunsOnCount;
+                        console.warn('found unsupported runsOn: ' + runsOn + ' in ' + taskjson);
+                    }
+                });
+            }
+        }
+        
+        if (unsupportedRunsOnCount > 0){
+            assert(false, 'found unsupported runsOn. please make necessary action to fix this. unsupported runsOn count: ' + unsupportedRunsOnCount);
+        }
+
+        done();
+    })
+
+    it('Find invalid server Task/ServerGate', (done) => {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+        // Path to the _build/Tasks folder.
+        var tasksRootFolder = path.resolve(__dirname, '../Tasks');
+        var taskFolders: string[] = [];
+        fs.readdirSync(tasksRootFolder).forEach(folderName => {
+            if (folderName != 'Common' && fs.statSync(path.join(tasksRootFolder, folderName)).isDirectory()) {
+                taskFolders.push(path.join(tasksRootFolder, folderName));
+            }
+        })
+
+        var supportedServerExecutionHandlers: string[] = [
+            'RM:ManualIntervention', 
+            'Delay',
+            'ServiceBus',
+            'HttpRequest'];
+			
+	var supportedServerGateExecutionHandlers: string[] = [
+            'ServiceBus',
+            'HttpRequest'];
+
+       var supportedTaskEvents: string[] = [
+           'TaskAssigned', 
+           'TaskStarted', 
+           'TaskCompleted'];
+
+        var invalidTaskFound: boolean = false;
+        for (var i = 0; i < taskFolders.length; i++) {
+            var taskFolder = taskFolders[i];
+            var taskjson = path.join(taskFolder, 'task.json');
+            var task = JSON.parse(fs.readFileSync(taskjson).toString());
+            if (task.hasOwnProperty('runsOn') && (task['runsOn'].some(x => x.toLowerCase() == 'server') || task['runsOn'].some(x => x.toLowerCase() == 'servergate'))) {
+                task['runsOn'].sort();
+                if (task['runsOn'].length > 2
+                    || (task['runsOn'].length == 2
+                        && (task['runsOn'][0].toLowerCase() != 'server' || task['runsOn'][1].toLowerCase() != 'servergate'))) {
+                        assert(false, 'Found invalid value of runsOn in ' + taskjson + '. RunsOn should "server" or "server","servergate" for server task. "servergate" for server gate');
+                }
+
+                if (task.hasOwnProperty('demands') && task['demands'].length > 0) {
+                    assert(false, 'Found invalid value for demands in ' + taskjson + '. Demands should be either empty or absent for server task/servergate.');
+                }
+
+                if (task.hasOwnProperty('minimumAgentVersion')){
+                     assert(false, 'Found minimumAgentVersion in ' + taskjson + '. This should not be present for server task/servergate.');
+                }
+
+                if (!task.hasOwnProperty('execution')) {
+                    assert(false, 'No execution section found for server task/servergate in ' + taskjson + '.');
+                }
+                
+                var handlers = Object.keys(task['execution']);
+
+                if (handlers.length != 1) {
+                    assert(false, 'Number of execution handlers should be 1. Invalid section found in ' + taskjson + '.');
+                }
+                
+                var handlerName : string = handlers[0];
+                if (task['runsOn'].some(x => x.toLowerCase() == 'servergate') && !supportedServerGateExecutionHandlers.some(x => x.toLowerCase() == handlerName.toLowerCase())) {
+                        assert(false, 'Found Invalid servergate handler name : ' + handlerName + ' in ' + taskjson + '.'); 
+                }
+                else if (!supportedServerExecutionHandlers.some(x => x.toLowerCase() == handlerName.toLowerCase())) {
+                        assert(false, 'Found Invalid task handler name : ' + handlerName + ' in ' + taskjson + '.');
+                }               
+
+                var execution = task['execution'][handlerName];
+                if (execution.hasOwnProperty('events')) {
+                    var taskEvents = execution['events'];
+                    Object.keys(taskEvents).forEach( eventName => {
+                        if (!supportedTaskEvents.some(x => x.toLowerCase() == eventName.toLowerCase())) {
+                            assert(false, 'Found Invalid task/servergate event name ' + eventName + 'in ' + taskjson + '.')
+                        }
+                    });
+                }
+            }
+        }
+
+        done();
+    })
+
     it('Find invalid message key in task.json', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // get all task.json and module.json paths under _build/Tasks.
         var tasksRootFolder = path.resolve(__dirname, '../Tasks');
@@ -254,7 +378,7 @@ describe('General Suite', function () {
     })
 
     it('Find missing string in .ts', (done: MochaDone) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // search the source dir for all _build/Tasks and module folders.
         let tasksPath = path.resolve(__dirname, '../Tasks');
@@ -377,7 +501,7 @@ describe('General Suite', function () {
     })
 
     it('Find missing string in .ps1/.psm1', (done) => {
-        this.timeout(20000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
         // Push all _build/Tasks folders onto the stack.
         var folders: string[] = [];
@@ -424,8 +548,13 @@ describe('General Suite', function () {
             var folderStack: string[] = [taskFolder];
             while (folderStack.length > 0) {
                 var folder = folderStack.pop();
-                if (path.basename(folder).toLowerCase() == "ps_modules") { continue } // Skip nested ps_modules folder.
-                if (folder == path.join(taskFolder, 'Tests')) { continue } // Skip [...]/Task/Tests and [...]/Common/Tests folders.
+                if (path.basename(folder).toLowerCase() == "node_modules" || // Skip nested node_modules folder.
+                    path.basename(folder).toLowerCase() == "ps_modules") {   // Skip nested ps_modules folder.
+                    continue;
+                }
+                if (folder == path.join(taskFolder, 'Tests')) { // Skip [...]/Task/Tests and [...]/Common/Tests folders.
+                    continue;
+                }
                 fs.readdirSync(folder).forEach(itemName => {
                     var itemPath = path.join(folder, itemName);
                     if (fs.statSync(itemPath).isDirectory()) {

@@ -1,0 +1,7 @@
+{
+    "messages": {
+        "ActionTimedOut": "Exceeded max retries. Timing out.",
+        "RetryAfterMessage": "Retrying after {0} second(s)...",
+        "ActionException": "Exception occurred: {0}"
+    }
+}

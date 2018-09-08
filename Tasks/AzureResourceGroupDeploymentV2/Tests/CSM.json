@@ -1,0 +1,8 @@
+{
+    "parameters": {
+        "param": {
+            "value": false,
+            "toBeRemoved": true
+        }
+    }
+}

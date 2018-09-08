@@ -68,6 +68,7 @@ describe(jobName + ' Suite', function () {
                     done(err);
                 });
         });
+
         it(os + ' check args: no filePatterns', (done) => {
             setResponseFile(responseFile);
 
@@ -127,6 +128,7 @@ describe(jobName + ' Suite', function () {
                     done(err);
                 });
         });
+
         it(os + ' check args: no overwrite', (done) => {
             setResponseFile(responseFile);
 
@@ -148,6 +150,7 @@ describe(jobName + ' Suite', function () {
                     done(err);
                 });
         });
+
         it(os + ' check args: no preservePaths', (done) => {
             setResponseFile(responseFile);
 
@@ -170,6 +173,7 @@ describe(jobName + ' Suite', function () {
                     done(err);
                 });
         });
+
         it(os + ' check args: trustSSL', (done) => {
             setResponseFile(responseFile);
 
@@ -193,12 +197,17 @@ describe(jobName + ' Suite', function () {
                     done(err);
                 });
         });
-        it(os + ' check args: bogusURL', (done) => {
+
+        it(os + ' check args: missing protocol on server URL (ftp:// or ftps://)', (done) => {
             setResponseFile(responseFile);
 
             var tr = new trm.TaskRunner(jobName, true);
-            tr.setInput('credsType', 'serviceEndpoint');
-            tr.setInput('serverEndpoint', 'ID1');
+            tr.setInput('credsType', 'inputs');
+
+            tr.setInput('serverUrl', 'noprotocol.microsoft.com');
+            tr.setInput('username', 'myUsername');
+            tr.setInput('password', 'myPassword');
+
             tr.setInput('rootFolder', 'rootFolder');
             tr.setInput('filePatterns', '**');
             tr.setInput('remotePath', '/upload/');
@@ -209,7 +218,7 @@ describe(jobName + ' Suite', function () {
 
             tr.run()
                 .then(() => {
-                    assert(tr.stderr.indexOf('Unhandled:Cannot read property \'toLowerCase\' of null') != -1, 'should have written to stderr');
+                    assert(tr.stderr.indexOf('The FTP server URL must begin with ftp:// or ftps://') != -1, 'A protocol should have been required in the server URL.');
                     assert(tr.failed, 'task should have failed');
                     done();
                 })
@@ -219,5 +228,34 @@ describe(jobName + ' Suite', function () {
                 });
         });
 
+        it(os + ' check args: missing host name on server URL', (done) => {
+            setResponseFile(responseFile);
+
+            var tr = new trm.TaskRunner(jobName, true);
+            tr.setInput('credsType', 'inputs');
+
+            tr.setInput('serverUrl', 'ftps://');
+            tr.setInput('username', 'myUsername');
+            tr.setInput('password', 'myPassword');
+
+            tr.setInput('rootFolder', 'rootFolder');
+            tr.setInput('filePatterns', '**');
+            tr.setInput('remotePath', '/upload/');
+            tr.setInput('clean', 'true');
+            tr.setInput('overwrite', 'true');
+            tr.setInput('preservePaths', 'true');
+            tr.setInput('trustSSL', 'true');
+
+            tr.run()
+                .then(() => {
+                    assert(tr.stderr.indexOf('The FTP server URL must include a host name') != -1, 'A host name should have been required in the server URL.');
+                    assert(tr.failed, 'task should have failed');
+                    done();
+                })
+                .fail((err) => {
+                    console.log(err)
+                    done(err);
+                });
+        });
     });
 });

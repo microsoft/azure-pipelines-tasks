@@ -1,0 +1,76 @@
+{
+  "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+  "name": "UsePythonVersion",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Tool",
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 138,
+    "Patch": 1
+  },
+  "demands": [],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "versionSpec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSpec",
+      "required": true,
+      "defaultValue": "3.x",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSpec"
+    },
+    {
+      "name": "addToPath",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.addToPath",
+      "required": true,
+      "defaultValue": "true",
+      "helpMarkDown": "ms-resource:loc.input.help.addToPath"
+    },
+    {
+      "name": "architecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.architecture",
+      "defaultValue": "x64",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.architecture",
+      "groupName": "advanced",
+      "options": {
+        "x86": "x86",
+        "x64": "x64"
+      }
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "pythonLocation",
+      "description": "The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "ListAvailableVersions": "ms-resource:loc.messages.ListAvailableVersions",
+    "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
+    "PrependPath": "ms-resource:loc.messages.PrependPath",
+    "VersionNotFound": "ms-resource:loc.messages.VersionNotFound"
+  }
+}

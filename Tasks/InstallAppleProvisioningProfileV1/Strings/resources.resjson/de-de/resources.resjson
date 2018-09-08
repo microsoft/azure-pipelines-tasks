@@ -1,0 +1,15 @@
+{
+  "loc.friendlyName": "Apple-Bereitstellungsprofil installieren",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=862068)",
+  "loc.description": "Die Installation eines Apple-Bereitstellungsprofils ist für die Erstellung auf einem macOS-Agent erforderlich.",
+  "loc.instanceNameFormat": "Installieren Sie ein Apple-Bereitstellungsprofil.",
+  "loc.input.label.provisioningProfileLocation": "Speicherort des Bereitstellungsprofils",
+  "loc.input.help.provisioningProfileLocation": "Wählen Sie den Speicherort des Bereitstellungsprofils aus, das installiert werden soll. Das Bereitstellungsprofil kann in \"Sichere Dateien\" hochgeladen oder in Ihrem Quellrepository oder in einem lokalen Pfad auf dem Agent gespeichert werden.",
+  "loc.input.label.provProfileSecureFile": "Provisioning profile",
+  "loc.input.help.provProfileSecureFile": "Wählen Sie das Bereitstellungsprofil aus, das in \"Secure Files\" (sSichere Dateien) für die Installation auf dem macOS-Agent hochgeladen wurde.",
+  "loc.input.label.provProfileSourceRepository": "Profil wird bereitgestellt",
+  "loc.input.help.provProfileSourceRepository": "Wählen Sie das Bereitstellungsprofil aus dem Quellrepository aus, oder geben Sie den lokalen Pfad zu einem Bereitstellungsprofil auf dem macOS-Agent an.",
+  "loc.input.label.removeProfile": "Remove profile after build",
+  "loc.input.help.removeProfile": "Wählen Sie dies aus, um anzugeben, dass das Bereitstellungsprofil nach Abschluss des Builds oder der Release aus dem Agent entfernt werden soll.",
+  "loc.messages.InputProvisioningProfileNotFound": "Das zu installierende Bereitstellungsprofil wurde nicht unter \"%s\" gefunden. Geben Sie den vollständigen Pfad zu einem Bereitstellungsprofil an."
+}

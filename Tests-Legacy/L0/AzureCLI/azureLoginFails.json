@@ -40,6 +40,12 @@
     "ENDPOINT_URL_AzureClassicFail":"https://www.sampleServiceUrl.net/",
     "ENDPOINT_AUTH_AzureRM": "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}",
     "ENDPOINT_AUTH_AzureRMFail": "{\"parameters\":{\"serviceprincipalid\":\"idf\",\"serviceprincipalkey\":\"keyf\",\"tenantid\":\"tenantf\"},\"scheme\":\"ServicePrincipal\"}",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID": "id",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALKEY": "key",
+    "ENDPOINT_AUTH_PARAMETER_AzureRM_TENANTID": "tenant",
+    "ENDPOINT_AUTH_PARAMETER_AzureRMFail_SERVICEPRINCIPALID": "idf",
+    "ENDPOINT_AUTH_PARAMETER_AzureRMFail_SERVICEPRINCIPALKEY": "keyf",
+    "ENDPOINT_AUTH_PARAMETER_AzureRMFail_TENANTID": "tenantf",
     "ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME": "sName",
     "ENDPOINT_DATA_AzureRMFail_SUBSCRIPTIONNAME": "sName"
 }

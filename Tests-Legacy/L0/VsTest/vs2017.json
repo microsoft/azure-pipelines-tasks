@@ -24,9 +24,22 @@
             "code": 0,
             "stdout": "vstest"
         },
-        "powershell -NonInteractive -ExecutionPolicy Unrestricted -file /path/to/vs15Helper.ps1": {
+        "\\VSTest\\vswhere.exe -version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -property installationPath": {
             "code": 0,
-            "stdout": "<Objs Version=\"1.1.0.1\" xmlns=\"http://schemas.microsoft.com/powershell/2004/04\"><S>\\vs2017\\installation\\folder</S></Objs>"
+            "stdout": "\\vs2017\\installation\\folder"
+        },
+        "wmic datafile where name='\\\\vs2017\\\\installation\\\\folder\\\\Common7\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
+			"code": 0,
+			"stdout" : "version=15.0.0.0"
+        },
+        "C:\\WINDOWS\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\Windows\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\windows\\system32\\chcp.com 65001": {
+            "code": 0
         }
     },
     "rmRF": {
@@ -41,7 +54,8 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": false,
         "some\\path\\to\\vstest.console.exe": true,
         "some\\illegal\\path\\to\\vstest.console.exe": false,
-        "\\path\\to\\vstest\\directory": true
+        "\\path\\to\\vstest\\directory": true,
+        "/source/dir":true
     },
     "stats": {
         "settings.runsettings": {
@@ -55,6 +69,9 @@
         },
         "\\path\\to\\vstest\\directory": {
             "isDirectory": true
-        }
+        },
+        "/source/dir": {
+            "isDirectory":true
+        } 
     }
 }

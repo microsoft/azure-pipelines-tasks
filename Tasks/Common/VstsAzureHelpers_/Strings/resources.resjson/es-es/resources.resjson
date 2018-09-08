@@ -2,9 +2,11 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "No se encuentra el módulo 'AzureRM.Profile'. Puede que el módulo 'AzureRM' no esté instalado completamente. Puede resolver el problema ejecutando los siguientes comandos de PowerShell en una sesión con permisos elevados: Import-Module AzureRM ; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "No se admite la autenticación basada en certificados. No se encuentra el módulo Azure PowerShell.",
   "loc.messages.AZ_CredentialsError": "Hubo un error con las credenciales de Azure usadas para la implementación.",
-  "loc.messages.AZ_ModuleNotFound": "No se encuentran ni el módulo Azure ni el módulo AzureRM. Si el módulo se instaló recientemente, vuelva a intentarlo después de reiniciar el agente de tareas de VSTS.",
+  "loc.messages.AZ_ModuleNotFound": "No se encuentran ni el módulo de Azure ({0}) ni el módulo de AzureRM ({0}). Si el módulo se instaló recientemente, vuelva a intentarlo después de reiniciar el agente de tareas de VSTS.",
   "loc.messages.AZ_RequiresMinVersion0": "No está instalada la versión mínima necesaria ({0}) del módulo Azure PowerShell.",
   "loc.messages.AZ_ServicePrincipalError": "Error con la entidad de servicio que se usó para la implementación.",
   "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "No se admite autenticación de entidad de servicio en la versión '{0}' del módulo Azure.",
-  "loc.messages.AZ_UnsupportedAuthScheme0": "Esquema de autenticación no admitido '{0}' para el punto de conexión de Azure."
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Esquema de autenticación no admitido '{0}' para el punto de conexión de Azure.",
+  "loc.messages.AZ_AvailableModules": "Lista de módulos de {0} disponibles:",
+  "loc.messages.AZ_InvalidARMEndpoint": "El punto de conexión de AzureRM especificado no es válido."
 }

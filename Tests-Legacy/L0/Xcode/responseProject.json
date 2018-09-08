@@ -1,18 +1,16 @@
 {
   "which": {
-    "xcodebuild": "/home/bin/xcodebuild",
-    "xcrun": "/home/bin/xcrun"
+    "xcodebuild": "/home/bin/xcodebuild"
   },
   "checkPath" : {
-    "/home/bin/xcodebuild": true,
-    "/home/bin/xcrun": true
+    "/home/bin/xcodebuild": true
   },
   "getVariable": {
     "build.sourcesDirectory": "/user/build",
     "HOME": "/users/test"
   },
-  "glob": {
-    "/user/build/output/$(SDK)/$(Configuration)/build.sym/**/*.app": [
+  "findMatch": {
+    "**/*.app": [
       "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app"
     ]
   },
@@ -21,13 +19,9 @@
       "code": 0,
       "stdout": "Xcode 6.4"
     },
-    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch -project test.xcodeproj": {
+    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) build -project test.xcodeproj": {
       "code": 0,
       "stdout": "xcodebuild output here"
-    },
-    "/home/bin/xcrun -sdk $(SDK) PackageApplication -v /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app -o /user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.ipa": {
-      "code": 0,
-      "stdout": "xcrun output here"
     }
   }
 }

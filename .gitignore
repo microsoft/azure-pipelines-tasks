@@ -1,12 +1,13 @@
 node_modules/
 _temp/
 .vscode
+.DS_Store
 gulp-tsc-tmp-*
 .gulp-tsc-tmp-*
 
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js
-!Tasks/AzureResourceGroupDeployment/Tests/mock_node_modules/**/*.js
+!**/mock_node_modules/**/*.js
 .taskkey
 
 ## Ignore Visual Studio temporary files, build results, and
@@ -16,14 +17,15 @@ gulp-tsc-tmp-*
 *.suo
 *.user
 *.sln.docstates
-/.vs
+.vs/
 
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 x64/
-build/
+build/**/*
+!**/data/**/build/**/*.*
 bld/
 [Bb]in/
 [Oo]bj/
@@ -34,6 +36,7 @@ _download/
 _package/
 _test/
 _working/
+_gendocs/
 
 # Roslyn cache directories
 *.ide/
@@ -167,7 +170,7 @@ csx/
 AppPackages/
 
 # Others
-sql/
+# sql/
 *.Cache
 ClientBin/
 [Ss]tyle[Cc]op.*
@@ -206,3 +209,4 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 /Package
+LoadTest.code-workspace

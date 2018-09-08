@@ -1,0 +1,27 @@
+{
+    "name": "nuget-tool-installer",
+    "version": "0.1.4",
+    "description": "NuGet Tool Installer",
+    "main": "nugetToolInstaller.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/microsoft/vsts-tasks.git"
+    },
+    "keywords": [
+        "VSTS",
+        "Tasks",
+        "NuGet"
+    ],
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/microsoft/vsts-tasks/issues"
+    },
+    "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+    "dependencies": {
+        "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common-1.0.1.tgz"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "messages": {
+        "RemoteDeployer_ConnectedMachines" : "PSSession created for Machines:'{0}'",
+        "RemoteDeployer_NotConnectedMachines" : "PSSession could not be created for Machine:'{0}:{1}'",
+        "RemoteDeployer_ScriptJobFailed" : "Execution of remote script job failed. ComputerName: '{0}', Message: '{1}'",
+        "RemoteDeployer_NonZeroExitCode" : "Non-Zero exit code: '{1}' for ComputerName: '{0}'",
+        "RemoteDeployer_ScriptExecutionSucceeded": "Script execution succeeded for ComputerName: '{0}'",
+        "RemoteDeployer_UnknownStatus": "Unknown remote script job execution status: '{0}'",
+        "RemoteDeployer_UnableToGetRemoteJobResults" : "Unable to get remote script job results",
+        "PS_TM_UnableToCreatePSSession": "Unable to create pssession. Error: '{0}'",
+        "RemoteDeployer_JobResultEvaluationFailure": "Atleast one remote job failed. Consult logs for more details. ErrorCodes(s): '{0}'",
+        "RemoteDeployer_UnableToUploadTargetMachineLogs": "Unable to upload target machine logs files. SourceFolder: '{0}'. Error: '{1}'"
+    }
+}

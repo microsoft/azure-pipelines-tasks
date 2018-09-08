@@ -2,6 +2,8 @@
 var minimist = require('minimist');
 var mopts = {
     string: [
+        'node',
+        'runner',
         'server',
         'suite',
         'task',
@@ -45,6 +47,9 @@ var getExternals = util.getExternals;
 var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
+var fileToJson = util.fileToJson;
+var createYamlSnippetFile = util.createYamlSnippetFile;
+var createMarkdownDocFile = util.createMarkdownDocFile;
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
@@ -55,7 +60,7 @@ var legacyTestPath = path.join(__dirname, '_test', 'Tests-Legacy');
 var legacyTestTasksPath = path.join(__dirname, '_test', 'Tasks');
 
 // node min version
-var minNodeVer = '4.0.0';
+var minNodeVer = '6.10.3';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
@@ -81,8 +86,14 @@ if (options.task) {
 }
 else {
     // load the default list
-    taskList = JSON.parse(fs.readFileSync(path.join(__dirname, 'make-options.json'))).tasks;
+    taskList = fileToJson(path.join(__dirname, 'make-options.json')).tasks;
 }
+
+// set the runner options. should either be empty or a comma delimited list of test runners.
+// for example: ts OR ts,ps
+//
+// note, currently the ts runner igores this setting and will always run.
+process.env['TASK_TEST_RUNNER'] = options.runner || '';
 
 target.clean = function () {
     rm('-Rf', path.join(__dirname, '_build'));
@@ -91,16 +102,52 @@ target.clean = function () {
 };
 
 //
+// Generate documentation (currently only YAML snippets)
+// ex: node make.js gendocs
+// ex: node make.js gendocs --task ShellScript
+//
+target.gendocs = function() {
+
+    var docsDir = path.join(__dirname, '_gendocs');
+    rm('-Rf', docsDir);
+    mkdir('-p', docsDir);
+    console.log();
+    console.log('> generating docs');
+
+    taskList.forEach(function(taskName) {
+        var taskPath = path.join(__dirname, 'Tasks', taskName);
+        ensureExists(taskPath);
+
+        // load the task.json
+        var taskJsonPath = path.join(taskPath, 'task.json');
+        if (test('-f', taskJsonPath)) {
+            var taskDef = fileToJson(taskJsonPath);
+            validateTask(taskDef);
+
+            // create YAML snippet Markdown
+            var yamlOutputFilename = taskName + '.md';
+            createYamlSnippetFile(taskDef, docsDir, yamlOutputFilename);
+
+            // create Markdown documentation file
+            var mdDocOutputFilename = taskName + '.md';
+            createMarkdownDocFile(taskDef, taskJsonPath, docsDir, mdDocOutputFilename);
+        }
+    });
+
+    banner('Generating docs successful', true);
+}
+
+//
 // ex: node make.js build
 // ex: node make.js build --task ShellScript
 //
 target.build = function() {
     target.clean();
 
-    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '3.0.0')) {
-            fail('expected 3.0.0 or higher');
+        if (semver.lt(output, '5.6.0')) {
+            fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
         }
     });
 
@@ -114,11 +161,11 @@ target.build = function() {
         var shouldBuildNode = test('-f', path.join(taskPath, 'tsconfig.json'));
         var taskJsonPath = path.join(taskPath, 'task.json');
         if (test('-f', taskJsonPath)) {
-            var taskDef = require(taskJsonPath);
+            var taskDef = fileToJson(taskJsonPath);
             validateTask(taskDef);
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
-            outDir = path.join(buildPath, taskDef.name);
+            outDir = path.join(buildPath, taskName);
 
             // create loc files
             createTaskLocJson(taskPath);
@@ -135,15 +182,17 @@ target.build = function() {
 
         // get externals
         var taskMakePath = path.join(taskPath, 'make.json');
-        var taskMake = test('-f', taskMakePath) ? require(taskMakePath) : {};
+        var taskMake = test('-f', taskMakePath) ? fileToJson(taskMakePath) : {};
         if (taskMake.hasOwnProperty('externals')) {
-            console.log('Getting task externals');
+            console.log('');
+            console.log('> getting task externals');
             getExternals(taskMake.externals, outDir);
         }
 
         //--------------------------------
         // Common: build, copy, install 
         //--------------------------------
+        var commonPacks = [];
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
 
@@ -160,7 +209,7 @@ target.build = function() {
                     // create loc files
                     var modJsonPath = path.join(modPath, 'module.json');
                     if (test('-f', modJsonPath)) {
-                        createResjson(require(modJsonPath), modPath);
+                        createResjson(fileToJson(modJsonPath), modPath);
                     }
 
                     // npm install and compile
@@ -172,29 +221,39 @@ target.build = function() {
                     console.log();
                     console.log('> copying module resources');
                     var modMakePath = path.join(modPath, 'make.json');
-                    var modMake = test('-f', modMakePath) ? require(modMakePath) : {};
+                    var modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
                     copyTaskResources(modMake, modPath, modOutDir);
 
                     // get externals
                     if (modMake.hasOwnProperty('externals')) {
-                        console.log('Getting module externals');
+                        console.log('');
+                        console.log('> getting module externals');
                         getExternals(modMake.externals, modOutDir);
+                    }
+
+                    if (mod.type === 'node' && mod.compile == true) {
+                        var commonPack = util.getCommonPackInfo(modOutDir);
+
+                        // assert the pack file does not already exist (name should be unique)
+                        if (test('-f', commonPack.packFilePath)) {
+                            fail(`Pack file already exists: ${commonPack.packFilePath}`);
+                        }
+
+                        // pack the Node module. a pack file is required for dedupe.
+                        // installing from a folder creates a symlink, and does not dedupe.
+                        cd(path.dirname(modOutDir));
+                        run(`npm pack ./${path.basename(modOutDir)}`);
                     }
                 }
 
-                // npm install the common module to the task dir
+                // store the npm pack file info
                 if (mod.type === 'node' && mod.compile == true) {
-                    mkdir('-p', path.join(taskPath, 'node_modules'));
-                    rm('-Rf', path.join(taskPath, 'node_modules', modName));
-                    var originalDir = pwd();
-                    cd(taskPath);
-                    run('npm install ' + modOutDir);
-                    cd(originalDir);
+                    commonPacks.push(util.getCommonPackInfo(modOutDir));
                 }
-                // copy module resources to the task output dir
+                // copy ps module resources to the task output dir
                 else if (mod.type === 'ps') {
                     console.log();
-                    console.log('> copying module resources to task');
+                    console.log('> copying ps module to task');
                     var dest;
                     if (mod.hasOwnProperty('dest')) {
                         dest = path.join(outDir, mod.dest, modName);
@@ -206,11 +265,37 @@ target.build = function() {
                     matchCopy('!Tests', modOutDir, dest, { noRecurse: true, matchBase: true });
                 }
             });
+
+            // npm install the common modules to the task dir
+            if (commonPacks.length) {
+                cd(taskPath);
+                var installPaths = commonPacks.map(function (commonPack) {
+                    return `file:${path.relative(taskPath, commonPack.packFilePath)}`;
+                });
+                run(`npm install --save-exact ${installPaths.join(' ')}`);
+            }
         }
 
         // build Node task
         if (shouldBuildNode) {
             buildNodeTask(taskPath, outDir);
+        }
+
+        // remove the hashes for the common packages, they change every build
+        if (commonPacks.length) {
+            var lockFilePath = path.join(taskPath, 'package-lock.json');
+            if (!test('-f', lockFilePath)) {
+                lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
+            }
+            var packageLock = fileToJson(lockFilePath);
+            Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
+                commonPacks.forEach(function (commonPack) {
+                    if (dependencyName == commonPack.packageName) {
+                        delete packageLock.dependencies[dependencyName].integrity;
+                    }
+                });
+            });
+            fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
         }
 
         // copy default resources and any additional resources defined in the task's make.json
@@ -229,7 +314,7 @@ target.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 target.test = function() {
-    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '2.3.3');
 
     // build the general tests and ps test infra
@@ -255,7 +340,10 @@ target.test = function() {
         fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2, pattern3])}`);
     }
 
-    run('mocha ' + testsSpec.join(' '), /*inheritStreams:*/true);
+    // setup the version of node to run the tests
+    util.installNode(options.node);
+
+    run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
 }
 
 //
@@ -264,7 +352,7 @@ target.test = function() {
 //
 
 target.testLegacy = function() {
-    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('tsc', '--version', 'Version 2.3.4');
     ensureTool('mocha', '--version', '2.3.3');
 
     if (options.suite) {
@@ -287,16 +375,14 @@ target.testLegacy = function() {
             matchCopy('*', testCopySource, testCopyDest, { noRecurse: true, matchBase: true });
 
             // copy the task layout
-            var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
-            var taskJson = JSON.parse(fs.readFileSync(taskJsonPath).toString());
-            var taskCopySource = path.join(buildPath, taskJson.name);
-            var taskCopyDest = path.join(legacyTestTasksPath, taskJson.name);
+            var taskCopySource = path.join(buildPath, taskName);
+            var taskCopyDest = path.join(legacyTestTasksPath, taskName);
             matchCopy('*', taskCopySource, taskCopyDest, { noRecurse: true, matchBase: true });
         }
 
         // copy each common-module L0 source files if exist
         var taskMakePath = path.join(__dirname, 'Tasks', taskName, 'make.json');
-        var taskMake = test('-f', taskMakePath) ? JSON.parse(fs.readFileSync(taskMakePath).toString()) : {};
+        var taskMake = test('-f', taskMakePath) ? fileToJson(taskMakePath) : {};
         if (taskMake.hasOwnProperty('common')) {
             var common = taskMake['common'];
             common.forEach(function(mod) {
@@ -307,10 +393,11 @@ target.testLegacy = function() {
                 var modTestCopyDest = path.join(legacyTestPath, 'L0', `Common-${modName}`);
                 if (test('-e', modTestCopySource) && !test('-e', modTestCopyDest)) {
                     matchCopy('*', modTestCopySource, modTestCopyDest, { noRecurse: true, matchBase: true });
-
+                }
+                var modCopySource = path.join(commonPath, modName);
+                var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
+                if (test('-e', modCopySource) && !test('-e', modCopyDest)) {
                     // copy the common module layout
-                    var modCopySource = path.join(commonPath, modName);
-                    var modCopyDest = path.join(legacyTestTasksPath, 'Common', modName);
                     matchCopy('*', modCopySource, modCopyDest, { noRecurse: true, matchBase: true });
                 }
             });
@@ -349,6 +436,9 @@ target.testLegacy = function() {
         fail(`Unable to find tests using the pattern: ${path.join('**', '_suite.js')}`);
     }
 
+    // setup the version of node to run the tests
+    util.installNode(options.node);
+
     // mocha doesn't always return a non-zero exit code on test failure. when only
     // a single suite fails during a run that contains multiple suites, mocha does
     // not appear to always return non-zero. as a workaround, the following code
@@ -380,59 +470,32 @@ target.testLegacy = function() {
     });
     contents += '});' + os.EOL;
     fs.writeFileSync(testsSpecPath, contents);
-    run('mocha ' + testsSpecPath, /*inheritStreams:*/true);
+    run('mocha ' + testsSpecPath /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-legacy-results.xml' */, /*inheritStreams:*/true);
 }
 
+// 
+// node make.js package
+// This will take the built tasks and create the files we need to publish them.
+// 
 target.package = function() {
-    // clean
-    rm('-Rf', packagePath);
+    banner('Starting package process...')
 
-    // create the non-aggregated layout
-    util.createNonAggregatedZip(buildPath, packagePath);
+    // START LOCAL CONFIG
+    // console.log('> Cleaning packge path');
+    // rm('-Rf', packagePath);
+    // TODO: Only need this when we run locally
+    //var layoutPath = util.createNonAggregatedZip(buildPath, packagePath);
+    // END LOCAL CONFIG
+    // Note: The local section above is needed when running layout locally due to discrepancies between local build and
+    //       slicing in CI. This will get cleaned up after we fully roll out and go to build only changed.
+    var layoutPath = path.join(packagePath, 'milestone-layout');
+    util.createNugetPackagePerTask(packagePath, layoutPath);
 
-    // if task specified, create hotfix layout and short-circuit
-    if (options.task) {
-        util.createHotfixLayout(packagePath, options.task);
-        return;
-    }
-
-    // create the aggregated tasks layout
-    util.createAggregatedZip(packagePath);
-
-    // nuspec
-    var version = options.version;
-    if (!version) {
-        console.warn('Skipping nupkg creation. Supply version with --version.');
-        return;
-    }
-
-    if (!semver.valid(version)) {
-        fail('invalid semver version: ' + version);
-    }
-
-    var pkgName = 'Mseng.MS.TF.Build.Tasks';
-    console.log();
-    console.log('> Generating .nuspec file');
-    var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
-    contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
-    contents += '   <metadata>' + os.EOL;
-    contents += '      <id>' + pkgName + '</id>' + os.EOL;
-    contents += '      <version>' + version + '</version>' + os.EOL;
-    contents += '      <authors>bigbldt</authors>' + os.EOL;
-    contents += '      <owners>bigbldt,Microsoft</owners>' + os.EOL;
-    contents += '      <requireLicenseAcceptance>false</requireLicenseAcceptance>' + os.EOL;
-    contents += '      <description>For VSS internal use only</description>' + os.EOL;
-    contents += '      <tags>VSSInternal</tags>' + os.EOL;
-    contents += '   </metadata>' + os.EOL;
-    contents += '</package>' + os.EOL;
-    var nuspecPath = path.join(packagePath, 'pack-source', pkgName + '.nuspec');
-    fs.writeFileSync(nuspecPath, contents);
-
-    // package
-    ensureTool('nuget.exe');
-    var nupkgPath = path.join(packagePath, 'pack-target', `${pkgName}.${version}.nupkg`);
-    mkdir('-p', path.dirname(nupkgPath));
-    run(`nuget.exe pack ${nuspecPath} -OutputDirectory ${path.dirname(nupkgPath)}`);
+    // These methods are to help with the migration to NuGet package per task.
+    // Get rid of them after transition is done.
+    //var path = '';
+    //util.renameFoldersFromAggregate(path);
+    //util.generatePerTaskForLegacyPackages(path);
 }
 
 // used by CI that does official publish

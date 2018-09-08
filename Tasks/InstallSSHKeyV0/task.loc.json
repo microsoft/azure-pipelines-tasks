@@ -1,0 +1,77 @@
+{
+  "id": "5c9af2eb-5fc5-42dc-9b91-dc234a8c4400",
+  "name": "InstallSSHKey",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 137,
+    "Patch": 1
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "minimumAgentVersion": "2.117.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "hostName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.hostName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.hostName"
+    },
+    {
+      "name": "sshPublicKey",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sshPublicKey",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sshPublicKey"
+    },
+    {
+      "name": "sshPassphrase",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sshPassphrase",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.sshPassphrase"
+    },
+    {
+      "name": "sshKeySecureFile",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.sshKeySecureFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sshKeySecureFile"
+    }
+  ],
+  "prejobexecution": {
+    "Node": {
+      "target": "preinstallsshkey.js",
+      "argumentFormat": ""
+    }
+  },
+  "postjobexecution": {
+    "Node": {
+      "target": "postinstallsshkey.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "SSHKeyAlreadyInstalled": "ms-resource:loc.messages.SSHKeyAlreadyInstalled",
+    "SSHPublicKeyMalformed": "ms-resource:loc.messages.SSHPublicKeyMalformed",
+    "SSHKeyInstallFailed": "ms-resource:loc.messages.SSHKeyInstallFailed",
+    "CannotResetKnownHosts": "ms-resource:loc.messages.CannotResetKnownHosts"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Code Coverage-Ergebnisse veröffentlichen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Veröffentlicht Cobertura- oder JaCoCo-Code Coverage-Ergebnisse von einem Build.",
+  "loc.instanceNameFormat": "Code Coverage veröffentlichen von $(summaryFileLocation)",
+  "loc.input.label.codeCoverageTool": "Code coverage tool",
+  "loc.input.help.codeCoverageTool": "Das Tool, mit dem die Code Coverage-Ergebnisse generiert werden.",
+  "loc.input.label.summaryFileLocation": "Summary file",
+  "loc.input.help.summaryFileLocation": "Der Pfad der Zusammenfassungsdatei mit der Code Coverage-Statistik, z. B. Zeile, Methode und Klassenabdeckung. Der Wert enthält unter Umständen Minimatch-Muster. Beispiel: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
+  "loc.input.label.reportDirectory": "Report directory",
+  "loc.input.help.reportDirectory": "Der Pfad des Code Coverage-HTML-Berichtsverzeichnisses. Das Berichtsverzeichnis wird als Artefakt des Builds zum späteren Anzeigen veröffentlicht. Der Wert enthält unter Umständen Minimatch-Muster. Beispiel: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura",
+  "loc.input.label.additionalCodeCoverageFiles": "Additional files",
+  "loc.input.help.additionalCodeCoverageFiles": "Dateipfadmuster, das zusätzliche Code Coverage-Dateien angibt, die als Artefakte des Builds veröffentlicht werden sollen. Der Wert enthält unter Umständen Minimatch-Muster. Beispiel: \"$(System.DefaultWorkingDirectory)/**/*.exec\"",
+  "loc.input.label.failIfCoverageEmpty": "Fail when code coverage results are missing",
+  "loc.input.help.failIfCoverageEmpty": "Fehlschlagen der Aufgabe festlegen, wenn die Code Coverage keine Ergebnisse zum Veröffentlichen ergeben hat.",
+  "loc.messages.FoundNMatchesForPattern": "%s Ergebnis(se) gefunden, die dem Muster: %s entsprechen",
+  "loc.messages.MultipleSummaryFilesFound": "Mehrere Datei- oder Verzeichnisübereinstimmungen gefunden. Die erste Übereinstimmung wird verwendet: %s.",
+  "loc.messages.NoCodeCoverage": "Keine Code Coverage-Ergebnisse zum Veröffentlichen gefunden."
+}

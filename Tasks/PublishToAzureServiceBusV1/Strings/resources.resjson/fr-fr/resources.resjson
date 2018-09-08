@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Publier sur Azure Service Bus",
+  "loc.helpMarkDown": "[Plus d'informations](https://docs.microsoft.com/fr-fr/vsts/build-release/tasks/utility/publish-to-azure-service-bus)",
+  "loc.description": "Envoie un message à Azure Service Bus à l'aide d'une connexion de service (aucun agent n'est nécessaire).",
+  "loc.instanceNameFormat": "Publier sur Azure Service Bus",
+  "loc.group.displayName.signingDetails": "Détails du certificat",
+  "loc.input.label.connectedServiceName": "Connexion Azure Service Bus",
+  "loc.input.help.connectedServiceName": "Sélectionnez une connexion Azure Service Bus.",
+  "loc.input.label.messageBody": "Corps du message",
+  "loc.input.help.messageBody": "Entrez le messageBody JSON.",
+  "loc.input.label.signPayload": "Signer le message",
+  "loc.input.help.signPayload": "Si la valeur est true, le message est signé à condition que le certificat soit privé.",
+  "loc.input.label.certificateString": "Variable de certificat",
+  "loc.input.help.certificateString": "Certificat tiré (pull) du magasin Key Vault. Créez un groupe de variables lié à un coffre Azure Key Vault, qui contient une variable dont la valeur est le certificat. Pour ce faire, allez dans Bibliothèque -> Groupe de variables -> + Groupe de variables -> Sélectionnez 'Lier les secrets d'un coffre de clés Azure Key Vault en tant que variables' -> Sélectionnez votre abonnement Azure -> Sélectionnez le nom du coffre de clés -> Vérifiez que la variable ayant pour valeur le certificat est bien sélectionnée. Vous pouvez également définir une variable ordinaire/secrète qui contient le certificat sous forme de chaîne.",
+  "loc.input.label.signatureKey": "Clé de propriété de signature",
+  "loc.input.help.signatureKey": "Clé où doit se trouver la signature dans les propriétés du message. En l'absence d'informations, la valeur par défaut est 'signature' dans les propriétés du message",
+  "loc.input.label.waitForCompletion": "Attendre l'exécution de la tâche",
+  "loc.input.help.waitForCompletion": "Si la valeur est true, cette tâche attend l'événement TaskCompleted jusqu'au délai d'expiration de tâche spécifié."
+}

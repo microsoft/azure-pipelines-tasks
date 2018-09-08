@@ -1,20 +1,17 @@
-
-var admZip = require('adm-zip');
 var check = require('validator');
 var fs = require('fs');
+var makeOptions = require('./make-options.json');
 var minimatch = require('minimatch');
+var ncp = require('child_process');
 var os = require('os');
 var path = require('path');
 var process = require('process');
-var ncp = require('child_process');
 var semver = require('semver');
 var shell = require('shelljs');
 var syncRequest = require('sync-request');
 
 // global paths
 var downloadPath = path.join(__dirname, '_download');
-
-var makeOptions = require('./make-options.json');
 
 // list of .NET culture names
 var cultureNames = ['cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant'];
@@ -30,8 +27,13 @@ var shellAssert = function () {
 }
 
 var cd = function (dir) {
-    shell.cd(dir);
-    shellAssert();
+    var cwd = process.cwd();
+    if (cwd != dir) {
+        console.log('');
+        console.log(`> cd ${path.relative(cwd, dir)}`);
+        shell.cd(dir);
+        shellAssert();
+    }
 }
 exports.cd = cd;
 
@@ -95,7 +97,6 @@ var banner = function (message, noBracket) {
     if (!noBracket) {
         console.log('------------------------------------------------------------');
     }
-    console.log();
 }
 exports.banner = banner;
 
@@ -125,11 +126,36 @@ var pathExists = function (checkPath) {
 }
 exports.pathExists = pathExists;
 
+/**
+ * Given a module path, gets the info used for generating a pack file
+ */
+var getCommonPackInfo = function (modOutDir) {
+    // assert the module has a package.json
+    var packageJsonPath = path.join(modOutDir, 'package.json');
+    if (!test('-f', packageJsonPath)) {
+        fail(`Common module package.json does not exist: '${packageJsonPath}'`);
+    }
+
+    // assert the package name and version
+    var packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+    if (!packageJson || !packageJson.name || !packageJson.version) {
+        fail(`The common module's package.json must define a name and version: ${packageJsonPath}`);
+    }
+
+    var packFileName = `${packageJson.name}-${packageJson.version}.tgz`;
+    return {
+        "packageName": packageJson.name,
+        "packFilePath": path.join(path.dirname(modOutDir), packFileName)
+    };
+}
+exports.getCommonPackInfo = getCommonPackInfo;
+
 var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
     var packageJsonPath = rp('package.json');
     if (test('-f', packageJsonPath)) {
+        // verify no dev dependencies
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
             fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
@@ -282,6 +308,59 @@ var ensureTool = function (name, versionArgs, validate) {
 }
 exports.ensureTool = ensureTool;
 
+var installNode = function (nodeVersion) {
+    switch (nodeVersion || '') {
+        case '':
+        case '6':
+            nodeVersion = 'v6.10.3';
+            break;
+        case '5':
+            nodeVersion = 'v5.10.1';
+            break;
+        default:
+            fail(`Unexpected node version '${nodeVersion}'. Expected 5 or 6.`);
+    }
+
+    if (nodeVersion === run('node -v')) {
+        console.log('skipping node install for tests since correct version is running');
+        return;
+    }
+
+    // determine the platform
+    var platform = os.platform();
+    if (platform != 'darwin' && platform != 'linux' && platform != 'win32') {
+        throw new Error('Unexpected platform: ' + platform);
+    }
+
+    var nodeUrl = 'https://nodejs.org/dist';
+    switch (platform) {
+        case 'darwin':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-darwin-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-darwin-x64', 'bin'));
+            break;
+        case 'linux':
+            var nodeArchivePath = downloadArchive(nodeUrl + '/' + nodeVersion + '/node-' + nodeVersion + '-linux-x64.tar.gz');
+            addPath(path.join(nodeArchivePath, 'node-' + nodeVersion + '-linux-x64', 'bin'));
+            break;
+        case 'win32':
+            var nodeDirectory = path.join(downloadPath, `node-${nodeVersion}`);
+            var marker = nodeDirectory + '.completed';
+            if (!test('-f', marker)) {
+                var nodeExePath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.exe');
+                var nodeLibPath = downloadFile(nodeUrl + '/' + nodeVersion + '/win-x64/node.lib');
+                rm('-Rf', nodeDirectory);
+                mkdir('-p', nodeDirectory);
+                cp(nodeExePath, path.join(nodeDirectory, 'node.exe'));
+                cp(nodeLibPath, path.join(nodeDirectory, 'node.lib'));
+                fs.writeFileSync(marker, '');
+            }
+
+            addPath(nodeDirectory);
+            break;
+    }
+}
+exports.installNode = installNode;
+
 var downloadFile = function (url) {
     // validate parameters
     if (!url) {
@@ -319,8 +398,21 @@ var downloadArchive = function (url, omitExtensionCheck) {
         throw new Error('Parameter "url" must be set.');
     }
 
-    if (!omitExtensionCheck && !url.match(/\.zip$/)) {
-        throw new Error('Expected .zip');
+    var isZip;
+    var isTargz;
+    if (omitExtensionCheck) {
+        isZip = true;
+    }
+    else {
+        if (url.match(/\.zip$/)) {
+            isZip = true;
+        }
+        else if (url.match(/\.tar\.gz$/) && (process.platform == 'darwin' || process.platform == 'linux')) {
+            isTargz = true;
+        }
+        else {
+            throw new Error('Unexpected archive extension');
+        }
     }
 
     // skip if already downloaded and extracted
@@ -339,8 +431,27 @@ var downloadArchive = function (url, omitExtensionCheck) {
 
         // extract
         mkdir('-p', targetPath);
-        var zip = new admZip(archivePath);
-        zip.extractAllTo(targetPath);
+        if (isZip) {
+            if (process.platform == 'win32') {
+                let escapedFile = archivePath.replace(/'/g, "''").replace(/"|\n|\r/g, ''); // double-up single quotes, remove double quotes and newlines
+                let escapedDest = targetPath.replace(/'/g, "''").replace(/"|\n|\r/g, '');
+
+                let command = `$ErrorActionPreference = 'Stop' ; try { Add-Type -AssemblyName System.IO.Compression.FileSystem } catch { } ; [System.IO.Compression.ZipFile]::ExtractToDirectory('${escapedFile}', '${escapedDest}')`;
+                run(`powershell -Command "${command}"`);
+            } else {
+                run(`unzip ${archivePath} -d ${targetPath}`);
+            }
+        }
+        else if (isTargz) {
+            var originalCwd = process.cwd();
+            cd(targetPath);
+            try {
+                run(`tar -xzf "${archivePath}"`);
+            }
+            finally {
+                cd(originalCwd);
+            }
+        }
 
         // write the completed marker
         fs.writeFileSync(marker, '');
@@ -470,6 +581,9 @@ var removeGroups = function (groups, pathRoot) {
 exports.removeGroups = removeGroups;
 
 var addPath = function (directory) {
+    console.log('');
+    console.log(`> prepending PATH ${directory}`);
+
     var separator;
     if (os.platform() == 'win32') {
         separator = ';';
@@ -550,6 +664,12 @@ exports.getExternals = getExternals;
 //------------------------------------------------------------------------------
 // task.json functions
 //------------------------------------------------------------------------------
+var fileToJson = function (file) {
+    var jsonFromFile = JSON.parse(fs.readFileSync(file).toString());
+    return jsonFromFile;
+}
+exports.fileToJson = fileToJson;
+
 var createResjson = function (task, taskPath) {
     var resources = {};
     if (task.hasOwnProperty('friendlyName')) {
@@ -566,6 +686,10 @@ var createResjson = function (task, taskPath) {
 
     if (task.hasOwnProperty('instanceNameFormat')) {
         resources['loc.instanceNameFormat'] = task.instanceNameFormat;
+    }
+
+    if (task.hasOwnProperty('releaseNotes')) {
+        resources['loc.releaseNotes'] = task.releaseNotes;
     }
 
     if (task.hasOwnProperty('groups')) {
@@ -596,7 +720,11 @@ var createResjson = function (task, taskPath) {
 
     var resjsonPath = path.join(taskPath, 'Strings', 'resources.resjson', 'en-US', 'resources.resjson');
     mkdir('-p', path.dirname(resjsonPath));
-    fs.writeFileSync(resjsonPath, JSON.stringify(resources, null, 2));
+    var resjsonContent = JSON.stringify(resources, null, 2);
+    if (process.platform == 'win32') {
+        resjsonContent = resjsonContent.replace(/\n/g, os.EOL);
+    }
+    fs.writeFileSync(resjsonPath, resjsonContent);
 };
 exports.createResjson = createResjson;
 
@@ -607,6 +735,10 @@ var createTaskLocJson = function (taskPath) {
     taskLoc.helpMarkDown = 'ms-resource:loc.helpMarkDown';
     taskLoc.description = 'ms-resource:loc.description';
     taskLoc.instanceNameFormat = 'ms-resource:loc.instanceNameFormat';
+    if (taskLoc.hasOwnProperty('releaseNotes')) {
+        taskLoc.releaseNotes = 'ms-resource:loc.releaseNotes';
+    }
+
     if (taskLoc.hasOwnProperty('groups')) {
         taskLoc.groups.forEach(function (group) {
             if (group.hasOwnProperty('name')) {
@@ -633,7 +765,11 @@ var createTaskLocJson = function (taskPath) {
         });
     }
 
-    fs.writeFileSync(path.join(taskPath, 'task.loc.json'), JSON.stringify(taskLoc, null, 2));
+    var taskLocContent = JSON.stringify(taskLoc, null, 2);
+    if (process.platform == 'win32') {
+        taskLocContent = taskLocContent.replace(/\n/g, os.EOL);
+    }
+    fs.writeFileSync(path.join(taskPath, 'task.loc.json'), taskLocContent);
 };
 exports.createTaskLocJson = createTaskLocJson;
 
@@ -656,6 +792,199 @@ var validateTask = function (task) {
     }
 };
 exports.validateTask = validateTask;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// Generate docs functions
+//------------------------------------------------------------------------------
+// Outputs a YAML snippet file for the specified task.
+var createYamlSnippetFile = function (taskJson, docsDir, yamlOutputFilename) {
+    var outFilePath = path.join(docsDir, yamlOutputFilename);
+    fs.writeFileSync(outFilePath, getTaskYaml(taskJson));
+}
+exports.createYamlSnippetFile = createYamlSnippetFile;
+
+var createMarkdownDocFile = function(taskJson, taskJsonPath, docsDir, mdDocOutputFilename) {
+    var outFilePath = path.join(docsDir, taskJson.category.toLowerCase(), mdDocOutputFilename);
+    if (!test('-e', path.dirname(outFilePath))) {
+        fs.mkdirSync(path.dirname(outFilePath));
+        fs.mkdirSync(path.join(path.dirname(outFilePath), '_img'));
+    }
+
+    var iconPath = path.join(path.dirname(taskJsonPath), 'icon.png');
+    if (test('-f', iconPath)) {
+        var docIconPath = path.join(path.dirname(outFilePath), '_img', cleanString(taskJson.name).toLowerCase() + '.png');
+        fs.copyFileSync(iconPath, docIconPath);
+    }
+
+    fs.writeFileSync(outFilePath, getTaskMarkdownDoc(taskJson, mdDocOutputFilename));
+}
+exports.createMarkdownDocFile = createMarkdownDocFile;
+
+// Returns a copy of the specified string with its first letter as a lowercase letter.
+// Example: 'NachoLibre' -> 'nachoLibre'
+function camelize(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+        return index == 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+}
+
+var getAliasOrNameForInputName = function(inputs, inputName) {
+    var returnInputName = inputName;
+    inputs.forEach(function(input) {
+        if (input.name == inputName) {
+            if (input.aliases && input.aliases.length > 0) {
+                returnInputName = input.aliases[0];
+            }
+            else {
+                returnInputName = input.name;
+            }
+        }
+    });
+    return camelize(returnInputName);
+};
+
+var getInputAliasOrName = function(input) {
+    var returnInputName;
+    if (input.aliases && input.aliases.length > 0) {
+        returnInputName = input.aliases[0];
+    }
+    else {
+        returnInputName = input.name;
+    }
+    return camelize(returnInputName);
+};
+
+var cleanString = function(str) {
+    if (str) {
+        return str
+            .replace(/\r/g, '')
+            .replace(/\n/g, '')
+            .replace(/\"/g, '');
+    }
+    else {
+        return str;
+    }
+}
+
+var getTaskMarkdownDoc = function(taskJson, mdDocOutputFilename) {
+    var taskMarkdown = '';
+
+    taskMarkdown += '---' + os.EOL;
+    taskMarkdown += 'title: ' + cleanString(taskJson.friendlyName) + os.EOL;
+    taskMarkdown += 'description: ' + cleanString(taskJson.description) + os.EOL;
+    taskMarkdown += 'ms.topic: reference' + os.EOL;
+    taskMarkdown += 'ms.prod: devops' + os.EOL;
+    taskMarkdown += 'ms.technology: devops-cicd' + os.EOL;
+    taskMarkdown += 'ms.assetid: ' + taskJson.id + os.EOL;
+    taskMarkdown += 'ms.manager: ' + os.userInfo().username + os.EOL;
+    taskMarkdown += 'ms.author: ' + os.userInfo().username + os.EOL;
+    taskMarkdown += 'ms.date: ' +
+                    new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()) +
+                    os.EOL;
+    taskMarkdown += 'monikerRange: \'vsts\'' + os.EOL;
+    taskMarkdown += '---' + os.EOL + os.EOL;
+
+    taskMarkdown += '# ' + cleanString(taskJson.category) + ': ' + cleanString(taskJson.friendlyName) + os.EOL + os.EOL;
+    taskMarkdown += '![](_img/' + cleanString(taskJson.name).toLowerCase() + '.png) ' + cleanString(taskJson.description) + os.EOL + os.EOL;
+
+    taskMarkdown += '::: moniker range="> tfs-2018"' + os.EOL + os.EOL;
+    taskMarkdown += '## YAML snippet' + os.EOL + os.EOL;
+    taskMarkdown += '[!INCLUDE [temp](../_shared/yaml/' + mdDocOutputFilename + ')]' + os.EOL + os.EOL;
+    taskMarkdown += '::: moniker-end' + os.EOL + os.EOL;
+
+    taskMarkdown += '## Arguments' + os.EOL + os.EOL;
+    taskMarkdown += '<table><thead><tr><th>Argument</th><th>Description</th></tr></thead>' + os.EOL;
+    taskJson.inputs.forEach(function(input) {
+        var requiredOrNot = input.required ? 'Required' : 'Optional';
+        var label = cleanString(input.label);
+        var description = input.helpMarkDown; // Do not clean white space from descriptions
+        taskMarkdown += '<tr><td>' + label + '</td><td>(' + requiredOrNot + ') ' + description + '</td></tr>' + os.EOL;
+    });
+
+    taskMarkdown += '[!INCLUDE [temp](../_shared/control-options-arguments.md)]' + os.EOL;
+    taskMarkdown += '</table>' + os.EOL + os.EOL;
+
+    taskMarkdown += '## Q&A' + os.EOL + os.EOL;
+    taskMarkdown += '<!-- BEGINSECTION class="md-qanda" -->' + os.EOL + os.EOL;
+    taskMarkdown += '<!-- ENDSECTION -->' + os.EOL;
+
+    return taskMarkdown;
+}
+
+var getTaskYaml = function(taskJson) {
+    var taskYaml = '';
+    taskYaml += '```YAML' + os.EOL;
+    taskYaml += '# ' + cleanString(taskJson.friendlyName) + os.EOL;
+    taskYaml += '# ' + cleanString(taskJson.description) + os.EOL;
+    taskYaml += '- task: ' + taskJson.name + '@' + taskJson.version.Major + os.EOL;
+    taskYaml += '  inputs:' + os.EOL;
+
+    taskJson.inputs.forEach(function(input) {
+        // Is the input required?
+        var requiredOrNot = input.required ? '' : '# Optional';
+        if (input.required && input.visibleRule && input.visibleRule.length > 0) {
+            var spaceIndex = input.visibleRule.indexOf(' ');
+            var visibleRuleInputName = input.visibleRule.substring(0, spaceIndex);
+            var visibleRuleInputNameCamel = camelize(visibleRuleInputName);
+            requiredOrNot += '# Required when ' + camelize(input.visibleRule)
+            .replace(/ = /g, ' == ')
+            .replace(visibleRuleInputNameCamel, getAliasOrNameForInputName(taskJson.inputs, visibleRuleInputName));
+        }
+
+        // Does the input have a default value?
+        var isDefaultValueAvailable = input.defaultValue && input.defaultValue.length > 0;
+        var defaultValue = isDefaultValueAvailable ? input.defaultValue : null;
+
+        // Comment out the input?
+        if (!input.required ||
+            (input.required && isDefaultValueAvailable) ||
+            (input.visibleRule && input.visibleRule.length > 0)) {
+            taskYaml += '    #';
+        }
+        else {
+            taskYaml += '    ';
+        }
+
+        // Append input name
+        taskYaml += getInputAliasOrName(input) + ': ';
+
+        // Append default value
+        if (defaultValue) {
+            if (input.type == 'boolean') {
+                taskYaml += cleanString(defaultValue) + ' ';
+            }
+            else {
+                taskYaml += '\'' + cleanString(defaultValue) + '\' ';
+            }
+        }
+
+        // Append required or optional
+        taskYaml += requiredOrNot;
+
+        // Append options?
+        if (input.options) {
+            var isFirstOption = true;
+            Object.keys(input.options).forEach(function(key) {
+                if (isFirstOption) {
+                    taskYaml += (input.required ? '# ' : '. ') + 'Options: ' + camelize(cleanString(key));
+                    isFirstOption = false;
+                }
+                else {
+                    taskYaml += ', ' + camelize(cleanString(key));
+                }
+            });
+        }
+
+        // Append end-of-line for the input
+        taskYaml += os.EOL;
+    });
+
+    // Append endings
+    taskYaml += '```' + os.EOL;
+
+    return taskYaml;
+};
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -852,6 +1181,8 @@ var compressTasks = function (sourceRoot, destPath, individually) {
 exports.compressTasks = compressTasks;
 
 var createNonAggregatedZip = function (buildPath, packagePath) {
+    console.log();
+    console.log('> Creating non aggregate zip');
     assert(buildPath, 'buildPath');
     assert(packagePath, 'packagePath');
 
@@ -881,9 +1212,281 @@ var createNonAggregatedZip = function (buildPath, packagePath) {
     console.log('> Zipping non-aggregated tasks layout');
     var nonAggregatedZipPath = path.join(packagePath, 'non-aggregated-tasks.zip');
     compressTasks(nonAggregatedLayoutPath, nonAggregatedZipPath);
+
+    return nonAggregatedLayoutPath;
 }
 exports.createNonAggregatedZip = createNonAggregatedZip;
 
+/**
+ * Create a NuGet package per task. This function assumes the tasks are already laid out on disk.
+ * 
+ * When running locally, layoutPath is something like: _package\non-aggregated-layout
+ * Within this folder we have one of these folders per task:
+ *  /CmdLineV2
+ *      /Strings
+ *      /task.json
+ *      /task.loc.json
+ *      /task.zip
+ * 
+ * Within the function we create an artifacts folder, this is what gets uploaded when we are done.
+ * The contents look something like:
+ * /artifacts
+ *  /AndroidSigningV2
+ *      /Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2.2.135.0.nupkg
+ *      /push.cmd
+ *  /AnotherTask
+ *      /Mseng.MS.TF.DistributedTask.Tasks.AnotherTaskV1.1.0.0.nupkg
+ *      /push.cmd
+ *  /push.cmd * Root push.cmd that runs all nested push.cmd's.
+ *  /servicing.xml * Convenience file. Generates all XML to update servicing configuration for tasks.
+ *  /unified_deps.xml * Convenience file. Generates all XML to update unified dependencies file.
+ * 
+ * @param {*} packagePath Path of _packages folder.
+ * @param {*} layoutPath Path that has task layouts.
+ */
+var createNugetPackagePerTask = function (packagePath, /*nonAggregatedLayoutPath*/layoutPath) {
+    console.log();
+    console.log('> Creating NuGet package per task')
+
+    // create folder for _package\task-zips
+    // Inside this folder we have one folder per task that contains the task.zip.
+    // It also has layout-version.txt and the nuspec file for the task.
+    // This folder is what we create the nupkg from.
+    console.log();
+    console.log('> Creating task zips folder');
+    var tasksZipsPath = path.join(packagePath, 'task-zips');
+    mkdir('-p', tasksZipsPath);
+
+    // _package\nuget-packages
+    // This is the final state of the task content and what is published as a build artifact.
+    console.log();
+    console.log('> Creating artifacts folder');
+    var nugetPackagesPath = path.join(packagePath, "nuget-packages");
+    mkdir('-p', nugetPackagesPath);
+
+    console.log();
+    console.log('> Zipping task folders')
+
+    // maintain package references that we need to add to unified dependencies
+    var unifiedDepsContent = [];
+
+    // maintain xml content for adding packages to servicing configuration
+    var servicingXmlContent = [];
+
+    // iterate all the tasks
+    fs.readdirSync(layoutPath)
+        .forEach(function (taskFolderName) {
+            // The non-aggregated-layout folder has a layout-version in it, skip when we hit it.
+            if (taskFolderName === 'layout-version.txt') {
+                return;
+            }
+
+            var taskLayoutPath = path.join(layoutPath, taskFolderName);
+            var taskJsonPath = path.join(taskLayoutPath, 'task.json');
+            var taskJsonContents = JSON.parse(fs.readFileSync(taskJsonPath));
+            var taskVersion = taskJsonContents.version.Major + '.' + taskJsonContents.version.Minor + '.' + taskJsonContents.version.Patch;
+            var taskName = taskJsonContents.name;
+
+            // Create the full task name so we don't need to rely on the folder name.
+            var fullTaskName = `Mseng.MS.TF.DistributedTask.Tasks.${taskName}V${taskJsonContents.version.Major}`;
+
+            // Create xml entry for UnifiedDependencies
+            unifiedDepsContent.push(`  <package id="${fullTaskName}" version="${taskVersion}" availableAtDeployTime="true" />`);
+
+            // Create xml entry that we need to configure servicing file
+            servicingXmlContent.push(getServicingXmlContent(taskFolderName, fullTaskName, taskVersion));
+
+            // Create a matching folder inside taskZipsPath
+            var taskZipPath = path.join(tasksZipsPath, taskFolderName);
+            mkdir('-p', taskZipPath);
+            console.log('root task folder: ' + taskZipPath);
+
+            // Following NuGet conventions, we want the NuGet content to go inside a content folder
+            // Our task.zip and layout-version.txt will go inside the content folder
+            var nugetContentPath = path.join(taskZipPath, 'content');
+            mkdir('-p', nugetContentPath);
+
+            // hard link task.zip from layout to nuget contents
+            var layoutZipPath = path.join(taskLayoutPath, 'task.zip');
+            var nugetContentsZipPath = path.join(nugetContentPath, 'task.zip');
+            fs.linkSync(layoutZipPath, nugetContentsZipPath);
+
+            // Write layout version file. This will help us if we change the structure of the individual NuGet packages in the future.
+            fs.writeFileSync(path.join(nugetContentPath, 'layout-version.txt'), '3');
+
+            // Create the nuspec file, nupkg, and push.cmd
+            var taskNuspecPath = createNuspecFile(taskZipPath, fullTaskName, taskVersion);
+            var taskPublishFolder = createNuGetPackage(nugetPackagesPath, taskFolderName, taskNuspecPath, taskZipPath);
+            createPushCmd(taskPublishFolder, fullTaskName, taskVersion);
+        });
+
+    console.log();
+    console.log('> Creating root push.cmd');
+    createRootPushCmd(nugetPackagesPath);
+
+    // Write file that has XML for unified dependencies, makes it easier to setup that file.
+    console.log('> Generating XML dependencies for UnifiedDependencies');
+    var depsContentPath = path.join(nugetPackagesPath, 'unified_deps.xml');
+    fs.writeFileSync(depsContentPath, unifiedDepsContent.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); }).join(os.EOL));
+
+    // Write file that has XML for servicing, makes it easier to setup that file.
+    console.log('> Generating XML dependencies for Servicing');
+    var servicingContentPath = path.join(nugetPackagesPath, 'servicing.xml');
+    fs.writeFileSync(servicingContentPath, servicingXmlContent.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); }).join(''));
+}
+exports.createNugetPackagePerTask = createNugetPackagePerTask;
+
+/**
+ * Create push.cmd at root of the nuget packages path.
+ * 
+ * This makes it easier to run all the nested push.cmds within the task folders.
+ * @param {*} nugetPackagesPath 
+ */
+var createRootPushCmd = function (nugetPackagesPath) {
+    var contents = 'for /D %%s in (.\\*) do ( ' + os.EOL;
+    contents +=     'pushd %%s' + os.EOL;
+    contents +=     'push.cmd' + os.EOL;
+    contents +=     'popd' + os.EOL;
+    contents += ')';
+    var rootPushCmdPath = path.join(nugetPackagesPath, 'push.cmd');
+    fs.writeFileSync(rootPushCmdPath, contents);
+}
+
+/**
+ * Create xml content for servicing.
+ * 
+ * e.g. - 
+ * <Directory Path="[ServicingDir]Tasks\Individual\AndroidSigningV2\">
+ *   <File Origin="nuget://Mseng.MS.TF.DistributedTask.Tasks.AndroidSigningV2/*" />
+ * </Directory>
+ *
+ * @param {*} taskFolderName 
+ * @param {*} fullTaskName 
+ * @param {*} taskVersion 
+ */
+var getServicingXmlContent = function (taskFolderName, fullTaskName, taskVersion) {
+    var servicingXmlContent = '';
+
+    servicingXmlContent += `  <Directory Path="[ServicingDir]Tasks\\Individual\\${taskFolderName}\\">` + os.EOL;
+    servicingXmlContent += `    <File Origin="nuget://${fullTaskName}/*" />` + os.EOL;
+    servicingXmlContent += `  </Directory>` + os.EOL;
+
+    return servicingXmlContent;
+}
+
+/**
+ * Create .nuspec file for a task.
+ * 
+ * @param {*} taskLayoutPath Layout path for the specific task we are creating nuspec for
+ * @param {*} fullTaskName Full name of the task. e.g. - Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1
+ * @param {*} taskVersion Version of the task. e.g. - 1.132.0
+ * @returns Path of the nuspec file that was created.
+ */
+var createNuspecFile = function (taskLayoutPath, fullTaskName, taskVersion) {
+    console.log('> Creating nuspec file');
+    
+    var contents = '<?xml version="1.0" encoding="utf-8"?>' + os.EOL;
+    contents += '<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">' + os.EOL;
+    contents += '   <metadata>' + os.EOL;
+    contents += '      <id>' + fullTaskName + '</id>' + os.EOL;
+    contents += '      <version>' + taskVersion + '</version>' + os.EOL;
+    contents += '      <authors>bigbldt</authors>' + os.EOL;
+    contents += '      <owners>bigbldt,Microsoft</owners>' + os.EOL;
+    contents += '      <requireLicenseAcceptance>false</requireLicenseAcceptance>' + os.EOL;
+    contents += '      <description>For VSS internal use only</description>' + os.EOL;
+    contents += '      <tags>VSSInternal</tags>' + os.EOL;
+    contents += '   </metadata>' + os.EOL;
+    contents += '</package>' + os.EOL;
+
+    var taskNuspecPath = path.join(taskLayoutPath, fullTaskName + '.nuspec');
+    console.log('taskNuspecPath: ' + taskNuspecPath);
+    fs.writeFileSync(taskNuspecPath, contents);
+
+    return taskNuspecPath;
+}
+
+/**
+ * Create .nupkg for a specific task.
+ * @param {*} publishPath Root path to publish tasks.
+ * @param {*} taskFolderName Folder name for the task we want to create a NuGet package for. e.g - AzurePowerShellV3
+ * @param {*} taskNuspecPath Path to existing Nuspec file. This is inside the layout folder for the task. e.g - _package\per-task-layout\AzureCLIV1\Mseng.MS.TF.DistributedTask.Tasks.AzureCLIV1.nuspec
+ * @param {*} taskLayoutPath Path where contents of a specific task are laid out on disk.
+ * @returns Publish folder for the task.
+ */
+var createNuGetPackage = function (publishPath, taskFolderName, taskNuspecPath, taskLayoutPath) {
+    console.log('> Creating nuget package for task ' + taskFolderName);
+    
+    var taskPublishFolder = path.join(publishPath, taskFolderName);
+    fs.mkdirSync(taskPublishFolder);
+    process.chdir(taskPublishFolder);
+
+    console.log('task nuspec path: ' + taskNuspecPath);
+    console.log('base path: ' + taskLayoutPath)
+    run(`nuget pack "${taskNuspecPath}" -BasePath "${taskLayoutPath}" -NoDefaultExcludes`, /*inheritStreams:*/ true);
+
+    return taskPublishFolder;
+}
+
+/**
+ * Create push.cmd for the task.
+ * @param {*} taskPublishFolder Folder for a specific task within the publish folder.
+ * @param {*} fullTaskName Full name of the task. e.g - Mseng.MS.TF.Build.Tasks.AzureCLIV1
+ * @param {*} taskVersion Version of the task. e.g - 1.132.0
+ */
+var createPushCmd = function (taskPublishFolder, fullTaskName, taskVersion) {
+    console.log('> Creating push.cmd for task ' + fullTaskName);
+
+    var taskPushCmdPath = path.join(taskPublishFolder, 'push.cmd');
+    var nupkgName = `${fullTaskName}.${taskVersion}.nupkg`;
+
+    var taskFeedUrl = process.env.AGGREGATE_TASKS_FEED_URL;
+    var apiKey = 'Skyrise';
+
+    fs.writeFileSync(taskPushCmdPath, `nuget.exe push ${nupkgName} -source "${taskFeedUrl}" -apikey ${apiKey}`);
+}
+
+// Rename task folders that are created from the aggregate. Allows NuGet generation from aggregate using same process as normal.
+// [stfrance]: remove this once we have fully migrated to nuget package per task.
+var renameFoldersFromAggregate = function renameFoldersFromAggregate(pathWithLegacyFolders) {
+    // Rename folders
+    fs.readdirSync(pathWithLegacyFolders)
+        .forEach(function (taskFolderName) {
+            if (taskFolderName.charAt(taskFolderName.length-1) === taskFolderName.charAt(taskFolderName.length-3)
+                && taskFolderName.charAt(taskFolderName.length-2) === taskFolderName.charAt(taskFolderName.length-4))
+            {
+                var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
+                var newPath = path.join(pathWithLegacyFolders, taskFolderName.substring(0, taskFolderName.length - 2));
+
+                fs.renameSync(currentPath, newPath);
+            }
+
+            var currentPath = path.join(pathWithLegacyFolders, taskFolderName);
+            if (taskFolderName.indexOf('__') !== -1) {
+                var s = taskFolderName.split('__');
+                var newFolderName = s[0] + s[1].toUpperCase();
+                var newPath = path.join(pathWithLegacyFolders, newFolderName);
+                
+                fs.renameSync(currentPath, newPath);
+            }
+        });
+}
+exports.renameFoldersFromAggregate = renameFoldersFromAggregate;
+
+// Use the main layout process on Task folders that were extracted from the aggregate.
+// This is what we use to seed packaging with older major versions.
+// [stfrance]: remove this once we have fully migrated to nuget package per task.
+var generatePerTaskForLegacyPackages = function generatePerTaskForLegacyPackages(pathWithLegacyFolders) {
+    // Generate NuGet package per task for legacy packages.
+    var legacyPath = path.join(__dirname, '_packageLegacy');
+    if (test('-d', legacyPath)) {
+        rm('-rf', legacyPath);
+    }
+    
+    createNugetPackagePerTask(legacyPath, pathWithLegacyFolders);
+}
+exports.generatePerTaskForLegacyPackages = generatePerTaskForLegacyPackages;
+
+// TODO: Do we need to fix this?
 var createHotfixLayout = function (packagePath, taskName) {
     assert(packagePath, 'packagePath');
     assert(taskName, 'taskName');

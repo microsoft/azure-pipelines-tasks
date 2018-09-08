@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Опубликовать результаты оценки объемов протестированного кода",
+  "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Опубликовать результаты оценки объема протестированного кода Cobertura или JaCoCo для сборки",
+  "loc.instanceNameFormat": "Опубликовать объем протестированного кода из $(summaryFileLocation)",
+  "loc.input.label.codeCoverageTool": "Code coverage tool",
+  "loc.input.help.codeCoverageTool": "Средство, с помощью которого создаются результаты объема протестированного кода.",
+  "loc.input.label.summaryFileLocation": "Summary file",
+  "loc.input.help.summaryFileLocation": "Путь к файлу сводки, который содержит статистику объема протестированного кода, например для строк, методов и классов. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
+  "loc.input.label.reportDirectory": "Report directory",
+  "loc.input.help.reportDirectory": "Путь к каталогу отчетов HTML об объеме протестированного кода. Каталог отчетов опубликован для более позднего просмотра как артефакт сборки. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura\"",
+  "loc.input.label.additionalCodeCoverageFiles": "Additional files",
+  "loc.input.help.additionalCodeCoverageFiles": "Шаблон пути к файлу, указывающий дополнительные файлы объема протестированного кода, которые будут опубликованы как артефакты сборки. Значение может содержать шаблоны minimatch. Пример: \"$(System.DefaultWorkingDirectory)/**/*.exec\"",
+  "loc.input.label.failIfCoverageEmpty": "Fail when code coverage results are missing",
+  "loc.input.help.failIfCoverageEmpty": "Происходит сбой задачи, если объем протестированного кода не создает результаты для публикации.",
+  "loc.messages.FoundNMatchesForPattern": "Найдены результаты (%s), соответствующие шаблону: %s",
+  "loc.messages.MultipleSummaryFilesFound": "Найдены совпадения в нескольких файлах или каталогах. Используется первое совпадение: %s",
+  "loc.messages.NoCodeCoverage": "Результаты по объему протестированного кода для публикации не найдены."
+}

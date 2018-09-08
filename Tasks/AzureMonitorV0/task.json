@@ -1,0 +1,110 @@
+{
+	"id": "99A72E7F-25E4-4576-BF38-22A42B995ED8",
+	"name": "AzureMonitor",
+	"friendlyName": "Query Azure Monitor Alerts",
+	"description": "Observe the configured Azure monitor rules for active alerts.",
+	"author": "Microsoft Corporation",
+	"helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870240)",
+	"category": "Utility",
+	"visibility": [
+		"Build",
+		"Release"
+	],
+	"runsOn": [
+		"Server",
+		"ServerGate"
+	],
+	"version": {
+		"Major": 0,
+		"Minor": 0,
+		"Patch": 9
+	},
+	"instanceNameFormat": "Query Azure Monitor alerts",
+	"groups": [],
+	"inputs": [{
+			"name": "connectedServiceNameARM",
+			"type": "connectedService:AzureRM",
+			"label": "Azure subscription",
+			"defaultValue": "",
+			"required": "true",
+			"helpMarkDown": "Select an Azure Resource Manager subscription to monitor."
+		}, {
+			"name": "ResourceGroupName",
+			"type": "pickList",
+			"label": "Resource group",
+			"required": true,
+			"helpMarkDown": "Provide the name of a resource group to monitor.",
+			"properties": {
+				"EditableOptions": "True"
+			}
+		}, {
+			"name": "ResourceType",
+			"type": "pickList",
+			"label": "Resource type",
+			"defaultValue": "Microsoft.Insights/components",
+			"options": {
+				"Microsoft.Insights/components": "Application Insights",
+				"Microsoft.Web/sites": "App Services",
+				"Microsoft.Storage/storageAccounts": "Storage Account",
+				"Microsoft.Compute/virtualMachines": "Virtual Machines"
+			},
+			"required": true,
+			"helpMarkDown": "Select the Azure resource type to monitor."
+		}, {
+			"name": "resourceName",
+			"type": "pickList",
+			"label": "Resource name",
+			"required": true,
+			"properties": {
+				"EditableOptions": "True"
+			},
+			"helpMarkDown": "Select name of Azure resource to monitor."
+		}, {
+			"name": "alertRules",
+			"type": "pickList",
+			"label": "Alert rules",
+			"defaultValue": "",
+			"required": true,
+			"properties": {
+				"MultiSelectFlatList": "True",
+				"EditableOptions": "True"
+			},
+			"helpMarkDown": "List of Azure alert rules to monitor."
+		}
+	],
+	"dataSourceBindings": [{
+			"target": "ResourceGroupName",
+			"endpointId": "$(connectedServiceNameARM)",
+			"dataSourceName": "AzureResourceGroups"
+		}, {
+			"target": "resourceName",
+			"endpointId": "$(connectedServiceNameARM)",
+			"dataSourceName": "AzureRMResourcesInRGBasedOnType",
+			"parameters": {
+				"ResourceGroupName": "$(ResourceGroupName)",
+				"ResourceType":"$(ResourceType)"	
+			},
+			"resultTemplate": "{ \"Value\" : \"{{{name}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+		}, {
+			"target": "alertRules",
+			"endpointId": "$(connectedServiceNameARM)",
+			"endpointUrl": "{{endpoint.url}}subscriptions/{{endpoint.subscriptionId}}/resourcegroups/$(ResourceGroupName)/providers/microsoft.insights/alertrules?api-version=2016-03-01&$filter=targetResourceUri eq /subscriptions/{{endpoint.subscriptionId}}/resourceGroups/$(ResourceGroupName)/providers/$(ResourceType)/$(resourceName)",
+			"resultSelector": "jsonpath:$.value[?(@.properties.isEnabled == true)]",
+			"resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\":\"{{name}}\"}"
+		}
+	],
+
+	"execution": {
+		"HttpRequest": {
+			"Execute": {
+				"EndpointId": "$(connectedServiceNameARM)",
+				"EndpointUrl": "$(endpoint.url)batch?api-version=2015-11-01",
+				"Method": "POST",
+				"Body": "{\"requests\":[{{#splitAndIterate ',' alertRules}}{\"httpMethod\": \"GET\",\"relativeUrl\":\"/subscriptions/{{#..}}{{subscriptionId}}{{/..}}/resourceGroups/{{#..}}{{ResourceGroupName}}{{/..}}/providers/microsoft.insights/alertrules/{{this}}/incidents?api-version=2016-03-01\"},{{/splitAndIterate}}]}",
+				"Headers": "{\"Content-Type\":\"application/json\"}",
+				"WaitForCompletion": "false",
+				"Expression": "and(gt(count(root['responses']), 0), eq(count(jsonpath('$.responses[?(@.httpStatusCode != 200)]')), 0), eq(count(jsonpath('$.responses[*].content.value[?(@.isActive == true)]')), 0))"
+			}
+		}
+	}
+}

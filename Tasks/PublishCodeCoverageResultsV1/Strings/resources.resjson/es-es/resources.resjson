@@ -1,0 +1,19 @@
+{
+  "loc.friendlyName": "Publicar resultados de cobertura de código",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?LinkID=626485)",
+  "loc.description": "Publicar los resultados de cobertura de código de Cobertura o JaCoCo de una compilación",
+  "loc.instanceNameFormat": "Publicar cobertura de código de $(summaryFileLocation)",
+  "loc.input.label.codeCoverageTool": "Code coverage tool",
+  "loc.input.help.codeCoverageTool": "Herramienta con la que se generan los resultados de cobertura de código.",
+  "loc.input.label.summaryFileLocation": "Summary file",
+  "loc.input.help.summaryFileLocation": "Ruta de acceso del archivo de resumen que contiene estadísticas de cobertura de código, como línea, método y cobertura de clase. El valor puede contener patrones minimatch. Por ejemplo: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura/coverage.xml\"",
+  "loc.input.label.reportDirectory": "Report directory",
+  "loc.input.help.reportDirectory": "Ruta de acceso del directorio de informes HTML de cobertura de código. El directorio de informes se publica para verlo después como artefacto de la compilación. El valor puede contener patrones minimatch. Por ejemplo: \"$(System.DefaultWorkingDirectory)/MyApp/**/site/cobertura\"",
+  "loc.input.label.additionalCodeCoverageFiles": "Additional files",
+  "loc.input.help.additionalCodeCoverageFiles": "Patrón de ruta de acceso de archivo que especifica archivos de cobertura de código adicionales que deben publicarse como artefactos de la compilación. El valor puede contener patrones minimatch. Por ejemplo: \"$(System.DefaultWorkingDirectory)/**/*.exec\"",
+  "loc.input.label.failIfCoverageEmpty": "Fail when code coverage results are missing",
+  "loc.input.help.failIfCoverageEmpty": "Error de tarea si la cobertura de código no produjo resultados para publicar.",
+  "loc.messages.FoundNMatchesForPattern": "Se encontraron %s resultados coincidentes con el patrón: %s",
+  "loc.messages.MultipleSummaryFilesFound": "Se encontraron varios archivos o directorios coincidentes. Se usará la primera coincidencia: %s",
+  "loc.messages.NoCodeCoverage": "No se encontraron resultados de cobertura de código para publicar."
+}

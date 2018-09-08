@@ -74,6 +74,7 @@
         "ENDPOINT_AUTH_ID1": "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}",
         "build.sourcesDirectory": "/user/build/s",
         "build.artifactStagingDirectory": "/user/build/a",
+        "Agent.TempDirectory": "/tmp",
         "System.DefaultWorkingDirectory": "/user/build/s"
     },
     "find": {

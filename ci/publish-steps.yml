@@ -1,0 +1,87 @@
+steps:
+
+# Clean
+- checkout: self
+  clean: true
+
+# Use node 8, npm 5
+- task: NodeTool@0
+  displayName: Use node 8
+  inputs:
+    versionSpec: "8.x"
+
+# Use NuGet 4
+- task: NuGetToolInstaller@0
+  displayName: Use NuGet 4
+  inputs:
+    versionSpec: 4.0.0
+
+# npm install
+- script: npm install
+  displayName: npm install
+
+# Set variables
+- powershell: .\ci\set-publish-variables.ps1
+  displayName: Set publish variables
+
+# Download slices
+- powershell: .\ci\download-slices.ps1
+  displayName: Download slices
+  env:
+    SYSTEM_ACCESSTOKEN: $(system.accessToken)
+
+# Stage milestone
+- script: node .\ci\stage-milestone.js
+  displayName: Stage milestone
+
+# Create packages.config for restoring previous milestones
+- script: node .\ci\create-restore-config.js
+  displayName: Create packages.config for restoring previous milestones
+
+# Restore previous milestones
+- task: NuGetCommand@2
+  displayName: Restore previous milestones
+  inputs:
+    command: restore
+    solution: _package\packages.config
+    selectOrConfig: select
+    feedRestore: $(task_milestone_feed_name)
+    includeNuGetOrg: false
+    packagesDirectory: $(system.defaultWorkingDirectory)\_package\restore
+
+# Stage aggregate
+- script: node .\ci\stage-aggregate.js
+  displayName: Stage aggregate
+
+# Publish aggregate artifact
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: _package/publish-layout
+    artifactName: TaskPackage
+    publishLocation: container
+
+# Stage per task NuGet package
+- script: npm run package
+  displayName: npm run package
+
+# Publish per task NuGet package artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish per task NuGet package artifact
+  inputs:
+    pathToPublish: _package/nuget-packages
+    artifactName: IndividualNuGetPackages
+    publishLocation: container
+
+# Publish milestone package
+- task: NuGetCommand@2
+  displayName: Publish milestone package
+  condition: and(succeeded(), variables.publish_milestone)
+  inputs:
+    command: push
+    searchPatternPush: _package\vsts-tasks-milestone.$(milestone_version).nupkg
+    nuGetFeedType: internal
+    feedPublish: $(task_milestone_feed_name)
+
+# Update build number
+- script: "echo ##vso[build.updatebuildnumber]$(aggregate_version)"
+  displayName: Update build number

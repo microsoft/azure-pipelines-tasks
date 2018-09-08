@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Intervento manuale",
+  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.description": "Sospende la distribuzione e attende l'intervento",
+  "loc.instanceNameFormat": "Intervento manuale",
+  "loc.input.label.instructions": "Istruzioni",
+  "loc.input.help.instructions": "Queste istruzioni verranno visualizzate agli utenti per consentire loro di riprendere o rifiutare l'intervento manuale. In base a queste istruzioni l'utente potrà prendere una decisione basata su informazioni aggiornate in merito a questo intervento manuale.",
+  "loc.input.label.emailRecipients": "Invia notifica agli utenti",
+  "loc.input.help.emailRecipients": "Consente di inviare un messaggio di posta elettronica relativo a un intervento manuale in sospeso a utenti o gruppi specifici. Solo gli utenti autorizzati a gestire le distribuzioni possono agire su un intervento manuale.",
+  "loc.input.label.onTimeout": "In caso di timeout",
+  "loc.input.help.onTimeout": "Rifiuta o riprende automaticamente questo intervento manuale dopo che è rimasto in sospeso per il timeout specificato o per 60 giorni, a seconda di quale sia la data più vicina."
+}

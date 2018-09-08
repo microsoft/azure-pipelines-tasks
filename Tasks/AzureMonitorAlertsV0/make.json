@@ -1,0 +1,10 @@
+{
+    "common": [
+        {
+            "module": "../Common/azure-arm-rest",
+            "type": "node",
+            "dest": "./",
+            "compile" : true
+        }
+    ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "2a6ca863-f2ce-4f4d-8bcb-15e64608ec4b",
+  "name": "DownloadSecureFile",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 137,
+    "Patch": 0
+  },
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [],
+  "minimumAgentVersion": "2.116.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "secureFile",
+      "type": "secureFile",
+      "label": "ms-resource:loc.input.label.secureFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.secureFile"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "secureFilePath",
+      "description": "The location of the secure file that was downloaded."
+    }
+  ],
+  "prejobexecution": {
+    "Node": {
+      "target": "predownloadsecurefile.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {}
+}

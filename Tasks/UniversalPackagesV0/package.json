@@ -1,0 +1,26 @@
+{
+    "name": "universalpackages",
+    "version": "0.0.1",
+    "description": "Download or publish universal packages.",
+    "main": "universalmain.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+    },
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Microsoft/vsts-tasks/issues"
+    },
+    "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+    "dependencies": {
+        "adm-zip": "^0.4.11",
+        "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+        "vso-node-api": "6.5.0",
+        "vsts-task-lib": "2.0.6",
+        "vsts-task-tool-lib": "0.4.0"
+    }
+}

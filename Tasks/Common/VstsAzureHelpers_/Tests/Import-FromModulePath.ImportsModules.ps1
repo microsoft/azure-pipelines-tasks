@@ -3,6 +3,8 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Unregister-Mock Import-Module
+Register-Mock Write-VstsTaskError
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $variableSets = @(
     @{
@@ -11,7 +13,7 @@ $variableSets = @(
             @{
                 Name = 'Azure'
                 Path = 'Path to Azure'
-                Version = [version]'1.2.3.4'
+                Version = [version]'4.1.0'
             }
         )
     }
@@ -21,12 +23,18 @@ $variableSets = @(
             @{
                 Name = 'AzureRM'
                 Path = 'Path to AzureRM'
-                Version = [version]'2.3.4.5'
+                Version = [version]'4.1.0'
+                NestedModules = @(
+                    @{
+                        Name = 'AzureRM.Profile'
+                        Path = 'Path to AzureRM.profile'
+                    }
+                )
             }
             @{
                 Name = 'AzureRM.profile'
                 Path = 'Path to AzureRM.profile'
-                Version = [version]'3.4.5.6'
+                Version = [version]'4.1.0'
             }
         )
     }
@@ -36,20 +44,20 @@ foreach ($variableSet in $variableSets) {
     Unregister-Mock Get-Module
     Unregister-Mock Import-Module
     Register-Mock Get-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Name -ListAvailable
-    Register-Mock Import-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Path -Global -PassThru
+    Register-Mock Import-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Path -Global -PassThru -Force
     if ($variableSet.Modules.Length -eq 2) {
-        Register-Mock Get-Module { $variableSet.Modules[1] } -- -Name $variableSet.Modules[1].Name -ListAvailable
-        Register-Mock Import-Module { $variableSet.Modules[1] } -- -Name $variableSet.Modules[1].Path -Global -PassThru
+        Register-Mock Get-Module { $variableSet.Modules[0] } -- -Name $variableSet.Modules[0].Name
+        Register-Mock Import-Module { $variableSet.Modules[1] } -- -Name $variableSet.Modules[1].Path -Global -PassThru -Force
     }
 
     # Act.
-    $result = & $module Import-FromModulePath -Classic:($variableSet.Classic)
+    $result = & $module Import-FromModulePath -Classic:($variableSet.Classic) -azurePsVersion "4.1.0"
 
     # Assert.
     Assert-AreEqual $true $result
-    Assert-WasCalled Import-Module -- -Name $variableSet.Modules[0].Path -Global -PassThru
+    Assert-WasCalled Import-Module -- -Name $variableSet.Modules[0].Path -Global -PassThru -Force
     if ($variableSet.Modules.Length -eq 2) {
-        Assert-WasCalled Import-Module -- -Name $variableSet.Modules[1].Path -Global -PassThru
+        Assert-WasCalled Import-Module -- -Name $variableSet.Modules[1].Path -Global -PassThru -Force
     }
 
     if ($variableSet.Classic) {

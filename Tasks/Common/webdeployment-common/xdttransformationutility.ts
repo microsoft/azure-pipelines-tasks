@@ -7,7 +7,7 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
     var filesList = {};
     for (let i = 0; i < matchingFiles.length; i++) {
         matchingFiles[i] = matchingFiles[i].replace(/\//g, '\\');
-        filesList[matchingFiles[i]] = true;
+        filesList[matchingFiles[i].toLowerCase()] = matchingFiles[i];
     }
 
     return filesList;
@@ -21,13 +21,24 @@ export function expandWildcardPattern(folderPath: string, wildcardPattern : stri
 *
 */
 export function applyXdtTransformation(sourceFile, transformFile) {
-    var cttBatchFile = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + 'cttCommand.bat';
+
     var cttPath = path.join(__dirname, "..", "..", "ctt", "ctt.exe"); 
-    var cttArgs = ' s:"' + sourceFile + '" t:"' + transformFile + '" d:"' + sourceFile + '" pw';
-    var cttCommand = '"' + cttPath + '" ' + cttArgs + '\n';
-    tl.writeFile(cttBatchFile, cttCommand);
-    tl.debug("Running command" + cttCommand);
-    var cttExecutionResult = tl.execSync("cmd", ['/C', cttBatchFile]);
+    var cttArgsArray= [
+        "s:" + sourceFile,
+        "t:" + transformFile,
+        "d:" + sourceFile,
+        "pw",
+        "i"
+    ];
+    
+    var debugModeEnabled = tl.getVariable('system.debug');
+    if(debugModeEnabled && debugModeEnabled.toLowerCase() == 'true') {
+        cttArgsArray.push("verbose");
+        tl.debug('Enabled debug mode for ctt.exe');
+    }
+
+    tl.debug("Running command: " + cttPath + ' ' + cttArgsArray.join(' '));
+    var cttExecutionResult = tl.execSync(cttPath, cttArgsArray);
     if(cttExecutionResult.stderr) {
         throw new Error(tl.loc("XdtTransformationErrorWhileTransforming", sourceFile, transformFile));
     }
@@ -40,16 +51,26 @@ export function applyXdtTransformation(sourceFile, transformFile) {
 * @param    transformConfigs  The array of transform config names, ex : ["Release.config", "EnvName.config"]
 * 
 */
-export function basicXdtTransformation(rootFolder, transformConfigs) {
+export function basicXdtTransformation(rootFolder, transformConfigs): boolean {
     var sourceXmlFiles = expandWildcardPattern(rootFolder, '**/*.config');
+    var isTransformationApplied = false;
     Object.keys(sourceXmlFiles).forEach( function(sourceXmlFile) {
-        var sourceBasename = path.win32.basename(sourceXmlFile, ".config");    
+        sourceXmlFile = sourceXmlFiles[sourceXmlFile];
+        var sourceBasename = path.win32.basename(sourceXmlFile.replace(/\.config/ig,'\.config'), ".config");    
         transformConfigs.forEach( function(transformConfig) {
             var transformXmlFile = path.join(path.dirname(sourceXmlFile), sourceBasename + "." + transformConfig);
-            if(sourceXmlFiles[transformXmlFile]) {
-                tl.debug('Applying XDT Transformation : ' + transformXmlFile + '->' + sourceXmlFile);
+            if(sourceXmlFiles[transformXmlFile.toLowerCase()]) {
+                tl.debug('Applying XDT Transformation : ' + transformXmlFile + ' -> ' + sourceXmlFile);
                 applyXdtTransformation(sourceXmlFile, transformXmlFile);
+                isTransformationApplied = true;
             }
         });
-    });    
+    });
+    if(!isTransformationApplied) {
+        tl.warning(tl.loc('FailedToApplyTransformation'));
+        tl.warning(tl.loc('FailedToApplyTransformationReason1'));
+        tl.warning(tl.loc('FailedToApplyTransformationReason2'));
+    }
+
+    return isTransformationApplied;
 }

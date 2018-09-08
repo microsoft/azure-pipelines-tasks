@@ -2,7 +2,7 @@
   "messages": {
     "SettingUpSSHConnection": "Setting up SSH connection to remote host %s.",
     "ConnectionNotSetup": "SSH connection is not setup.",
-    "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH endpoint details. %s.",
+    "ConnectionFailed": "Failed to connect to remote machine. Verify the SSH service connection details. %s.",
     "RemoteCmdExecutionErr": "Command %s failed with errors on remote machine. %s.",
     "CheckLogForStdErr": "Check the build log for STDERR from the command.",
     "RemoteCmdNonZeroExitCode": "Command %s exited with code %s.",

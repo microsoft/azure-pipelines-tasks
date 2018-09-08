@@ -3,6 +3,8 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Unregister-Mock Import-Module
+Register-Mock Write-VstsTaskError
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $variableSets = @(
     @{
@@ -78,14 +80,17 @@ foreach ($variableSet in $variableSets) {
     # Setup Import-Module.
     if ($variableSet.FoundInProgramFilesX86) {
         $expectedModule = @{ Version = [version]'1.2.3.4' }
-        Register-Mock Import-Module { $expectedModule } -Name $wowPsd1 -Global -PassThru
+        Register-Mock Import-Module { $expectedModule } -Name $wowPsd1 -Global -PassThru -Force
     }
 
     if ($variableSet.FoundInProgramFiles) {
         $expectedModule = @{ Version = [version]'2.3.4.5' }
-        Register-Mock Import-Module { $expectedModule } -Name $psd1 -Global -PassThru
+        Register-Mock Import-Module { $expectedModule } -Name $psd1 -Global -PassThru -Force
     }
 
+    if($variableSet.Classic -eq $false) {
+        Register-Mock Import-AzureRmSubmodulesFromSdkPath
+    }
     # Clear the private module variables.
     & $module { $script:azureModule = $null ; $script:azureRMProfileModule = $null }
 
@@ -95,9 +100,9 @@ foreach ($variableSet in $variableSets) {
     # Assert.
     Assert-AreEqual $true $result
     if ($variableSet.FoundInProgramFilesX86) {
-        Assert-WasCalled Import-Module -- -Name $wowPsd1 -Global -PassThru
+        Assert-WasCalled Import-Module -- -Name $wowPsd1 -Global -PassThru -Force
     } else {
-        Assert-WasCalled Import-Module -- -Name $psd1 -Global -PassThru
+        Assert-WasCalled Import-Module -- -Name $psd1 -Global -PassThru -Force
     }
 
     if ($variableSet.Classic) {

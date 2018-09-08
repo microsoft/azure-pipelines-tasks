@@ -21,7 +21,7 @@
     "build.sourcesDirectory": "/user/build",
     "HOME": "/users/test"
   },
-  "glob": {
+  "findMatch": {
     "**/*.xcodeproj/*.xcworkspace": [
       "/user/build/fun.xcodeproj/project.xcworkspace"
     ]
@@ -31,15 +31,15 @@
       "code": 0,
       "stdout": "Xcode 7.3.1"
     },
-    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid": {
+    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE=testuuid PROVISIONING_PROFILE_SPECIFIER=": {
       "code": 0,
       "stdout": "xcodebuild output here"
     },
-    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch OTHER_CODE_SIGN_FLAGS=--keychain=/user/build/_xcodetasktmp.keychain CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q)": {
+    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=iPhone Developer: XcodeTask Tester (HE432Y3E2Q) PROVISIONING_PROFILE= PROVISIONING_PROFILE_SPECIFIER=": {
       "code": 0,
       "stdout": "xcodebuild output here"
     },
-    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch PROVISIONING_PROFILE=testuuid": {
+    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme fun build CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE=testuuid PROVISIONING_PROFILE_SPECIFIER=": {
       "code": 0,
       "stdout": "xcodebuild output here"
     },

@@ -13,7 +13,7 @@ function setResponseFile(name: string) {
 }
 
 describe('ANT Suite', function() {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         // init here
@@ -27,7 +27,7 @@ describe('ANT Suite', function() {
     it('run ANT with all inputs', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
@@ -51,7 +51,7 @@ describe('ANT Suite', function() {
     it('fails if missing antBuildFile input', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
@@ -73,7 +73,7 @@ describe('ANT Suite', function() {
     it('fails if missing javaHomeSelection input', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('jdkVersion', 'default');
         tr.setInput('testResultsFiles', '**/TEST-*.xml');
@@ -95,7 +95,7 @@ describe('ANT Suite', function() {
     it('fails if missing testResultsFiles input', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
@@ -117,7 +117,7 @@ describe('ANT Suite', function() {
     it('run ANT with antHomeUserInputPath', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
@@ -143,7 +143,7 @@ describe('ANT Suite', function() {
     it('run ANT with antHomeUserInputPath set to invalid path', (done) => {
         setResponseFile('antVersionFails.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
@@ -167,7 +167,7 @@ describe('ANT Suite', function() {
     it('run ANT with ANT_HOME not set', (done) => {
         setResponseFile('antVersionFails.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
@@ -192,7 +192,7 @@ describe('ANT Suite', function() {
     it('run ANT with jdkVersion set to 1.8', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', '1.8');
@@ -218,7 +218,7 @@ describe('ANT Suite', function() {
     it('run ANT with jdkVersion set to 1.5', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', '1.5');
@@ -236,7 +236,7 @@ describe('ANT Suite', function() {
                 assert(tr.resultWasSet, 'task should have set a result');
                 assert(tr.stderr.length > 0, 'should have written to stderr');
                 assert(tr.failed, 'task should have failed');
-                assert(tr.stdout.indexOf('Failed to find specified JDK version') >= 0, 'JAVA_HOME set?');
+                assert(tr.stdout.indexOf('Failed to find the specified JDK version') >= 0, 'JAVA_HOME set?');
                 done();
             })
             .fail((err) => {
@@ -250,7 +250,7 @@ describe('ANT Suite', function() {
     it('run ANT valid inputs but it fails', (done) => {
         setResponseFile('antFails.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
@@ -275,7 +275,7 @@ describe('ANT Suite', function() {
     it('Ant build with Publish Test Results.', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
@@ -297,7 +297,7 @@ describe('ANT Suite', function() {
     it('Ant build with Publish Test Results with no matching test result files.', (done) => {
         setResponseFile('antGood.json');
 
-        var tr = new trm.TaskRunner('Ant');
+        var tr = new trm.TaskRunner('ANT');
         tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
         tr.setInput('javaHomeSelection', 'JDKVersion');
         tr.setInput('jdkVersion', 'default');
@@ -312,6 +312,28 @@ describe('ANT Suite', function() {
                 assert(tr.stderr.length == 0, 'should not have written to stderr');                
                 assert(tr.stdout.search(/##vso\[task.issue type=warning;\]No test result files matching/) >= 0, 'should have produced warning.');
                 assert(tr.succeeded, 'task should have succeeded');
+                done();
+            })
+            .fail((err) => {
+                assert.fail("task should not have failed");
+                done(err);
+            });
+    })
+
+    it('Ant build with Publish Test Results for failed builds.', (done) => {
+        setResponseFile('antFails.json');
+
+        var tr = new trm.TaskRunner('ANT');
+        tr.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
+        tr.setInput('javaHomeSelection', 'JDKVersion');
+        tr.setInput('jdkVersion', 'default');
+        tr.setInput('testResultsFiles', '**/TEST-*.xml');
+        tr.setInput('publishJUnitResults', 'true');
+        tr.setInput('codeCoverageTool', 'None');
+
+        tr.run()
+            .then(() => {
+                assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0)
                 done();
             })
             .fail((err) => {

@@ -40,9 +40,4 @@ export async function getFileVersionInfoAsync(file: string | IReadableFile): Pro
             await readableFile.closeAsync();
         }
     }
-
-    // this line is unreachable due to the return at the end of the try block, but there's a bug in the TS compiler
-    // where it computes reachability incorrectly after the finally block
-    // https://github.com/Microsoft/TypeScript/issues/7239
-    throw new Error("This line is unreachable.");
 }

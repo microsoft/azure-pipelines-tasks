@@ -1,0 +1,709 @@
+{
+    "id": "1b2aec60-dc49-11e6-9b76-63056e018cac",
+    "name": "IISWebAppManagementOnMachineGroup",
+    "friendlyName": "IIS Web App Manage",
+    "description": "Create or update a Website, Web App, Virtual Directories, and Application Pool",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://aka.ms/iis-webapp-management-readme)",
+    "category": "Deploy",
+    "visibility": [
+        "Release"
+    ],
+    "runsOn": [
+        "DeploymentGroup"
+    ],
+    "demands": [],
+    "version": {
+        "Major": 0,
+        "Minor": 5,
+        "Patch": 7
+    },
+    "minimumAgentVersion": "2.111.0",
+    "instanceNameFormat": "Manage $(IISDeploymentType)",
+    "groups": [
+        {
+            "name": "Website",
+            "displayName": "IIS Website",
+            "isExpanded": true,
+            "visibleRule": "ActionIISWebsite = CreateOrUpdateWebsite"
+        },
+        {
+            "name": "IISBindings", 
+            "displayName": "IIS Bindings",
+            "isExpanded": true, 
+            "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && AddBinding = true"
+        }, 
+        {
+            "name": "ApplicationPoolForWebsite",
+            "displayName": "IIS Application pool",
+            "isExpanded": true,
+            "visibleRule": "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && CreateOrUpdateAppPoolForWebsite = true"
+        },
+        {
+            "name": "IISWebsiteAuthentication",
+            "displayName": "IIS Authentication",
+            "isExpanded": true,
+            "visibleRule" : "IISDeploymentType = IISWebsite && ActionIISWebsite = CreateOrUpdateWebsite && ConfigureAuthenticationForWebsite = true"
+        },
+        {
+            "name": "ApplicationPool",
+            "displayName": "IIS Application pool",
+            "isExpanded": true,
+            "visibleRule": "ActionIISApplicationPool = CreateOrUpdateAppPool"
+        },
+        {
+            "name": "WebApplication", 
+            "displayName": "IIS Application", 
+            "isExpanded": true,
+            "visibleRule": "IISDeploymentType = IISWebApplication"
+        },
+        {
+            "name": "VirtualDirectory", 
+            "displayName": "IIS Virtual directory", 
+            "isExpanded": true,
+            "visibleRule": "IISDeploymentType = IISVirtualDirectory"
+        },
+        {
+            "name": "ApplicationPoolForApplication",
+            "displayName": "IIS Application pool",
+            "isExpanded": true,
+            "visibleRule": "IISDeploymentType = IISWebApplication && CreateOrUpdateAppPoolForApplication = true"
+        },
+        {
+            "name": "Advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
+    "inputs": [
+        {
+            "name": "EnableIIS",
+            "type": "boolean",
+            "label": "Enable IIS",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Check this if you want to install IIS on the machine."
+        },
+        {
+            "name": "IISDeploymentType",
+            "type": "pickList",
+            "label": "Configuration type",
+            "required": true,
+            "defaultValue": "IISWebsite",
+            "options": {
+                "IISWebsite": "IIS Website",
+                "IISWebApplication": "IIS Web Application",
+                "IISVirtualDirectory": "IIS Virtual Directory",
+                "IISApplicationPool": "IIS Application Pool"
+            },
+            "helpMarkDown": "You can create or update sites, applications, virtual directories, and application pools."
+        },
+        {
+            "name": "ActionIISWebsite",
+            "type": "pickList",
+            "label": "Action",
+            "required": true,
+            "defaultValue": "CreateOrUpdateWebsite",
+            "visibleRule": "IISDeploymentType = IISWebsite",
+            "options": {
+                "CreateOrUpdateWebsite": "Create Or Update",
+                "StartWebsite": "Start",
+                "StopWebsite": "Stop"
+            },
+            "helpMarkDown": "Select the appropriate action that you want to perform on an IIS website. \n\n\"Create Or Update\" will create a website or update an existing website.\n\n Start, Stop will start or stop the website respectively."
+        },
+        {
+            "name": "ActionIISApplicationPool",
+            "type": "pickList",
+            "label": "Action",
+            "required": true,
+            "visibleRule": "IISDeploymentType = IISApplicationPool",
+            "defaultValue": "CreateOrUpdateAppPool",
+            "options": {
+                "CreateOrUpdateAppPool": "Create Or Update",
+                "StartAppPool": "Start",
+                "StopAppPool": "Stop",
+                "RecycleAppPool": "Recycle"
+            },
+            "helpMarkDown": "Select the appropriate action that you want to perform on an IIS Application Pool. \n\n\"Create Or Update\" will create app-pool or update an existing one.\n\nStart, Stop, Recycle will start, stop or recycle the application pool respectively."
+        },
+        {
+            "name": "StartStopWebsiteName",
+            "type": "string",
+            "label": "Website name",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "ActionIISWebsite = StartWebsite || ActionIISWebsite = StopWebsite",
+            "helpMarkDown": "Provide the name of the IIS website."
+        },
+        {
+            "name": "WebsiteName",
+            "type": "string",
+            "label": "Website name",
+            "required": true,
+            "groupName": "Website",
+            "defaultValue": "",
+            "helpMarkDown": "Provide the name of the IIS website to create or update."
+        },
+        {
+            "name": "WebsitePhysicalPath",
+            "type": "string",
+            "label": "Physical path",
+            "required": true,
+            "groupName": "Website",
+            "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+            "helpMarkDown": "Provide the physical path where the website content will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
+        },
+        {
+            "name": "WebsitePhysicalPathAuth",
+            "type": "pickList",
+            "label": "Physical path authentication",
+            "required": true,
+            "groupName": "Website",
+            "defaultValue": "WebsiteUserPassThrough",
+            "options": {
+                "WebsiteUserPassThrough": "Application User (Pass-through)",
+                "WebsiteWindowsAuth": "Windows Authentication"
+            },
+            "helpMarkDown": "Select the authentication mechanism that will be used to access the physical path of the website."
+        },
+        {
+            "name": "WebsiteAuthUserName",
+            "type": "string",
+            "label": "Username",
+            "required": true,
+            "groupName": "Website",
+            "defaultValue": "",
+            "visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
+            "helpMarkDown": "Provide the user name that will be used to access the website's physical path."
+        },
+        {
+            "name": "WebsiteAuthUserPassword",
+            "type": "string",
+            "label": "Password",
+            "required": false,
+            "groupName": "Website",
+            "defaultValue": "",
+            "visibleRule": "WebsitePhysicalPathAuth = WebsiteWindowsAuth",
+            "helpMarkDown": "Provide the user's password that will be used to access the website's physical path. <br/>The best practice is to create a variable in the build or release pipeline, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>" 
+        },
+        {
+            "name": "AddBinding",
+            "type": "boolean",
+            "label": "Add binding",
+            "required": false,
+            "groupName": "Website",
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to add port binding for the website."
+        },
+        {
+            "name": "Protocol",
+            "type": "pickList",
+            "label": "Protocol",
+            "required": true,
+            "defaultValue": "http",
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "options": {
+                "https": "https",
+                "http": "http"
+            },
+            "helpMarkDown": "Select HTTP for the website to have an HTTP binding, or select HTTPS for the website to have a Secure Sockets Layer (SSL) binding."
+        },
+        {
+            "name": "IPAddress",
+            "type": "string",
+            "label": "IP address",
+            "required": true,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "defaultValue": "All Unassigned",
+            "helpMarkDown": "Provide an IP address that end-users can use to access this website. <br>If 'All Unassigned' is selected, then the website will respond to requests for all IP addresses on the port and for the host name, unless another website on the server has a binding on the same port but with a specific IP address.<br>"
+        },
+        {
+            "name": "Port",
+            "type": "string",
+            "label": "Port",
+            "required": true,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "defaultValue": "80",
+            "helpMarkDown": "Provide the port, where the Hypertext Transfer Protocol Stack (HTTP.sys) will listen to the website requests."
+        },
+        {
+            "name": "ServerNameIndication",
+            "type": "boolean",
+            "label": "Server Name Indication required",
+            "required": false,
+            "defaultValue": "false",
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Select the option to set the Server Name Indication (SNI) for the website. <br>SNI extends the SSL and TLS protocols to indicate the host name that the clients are attempting to connect to. It allows, multiple secure websites with different certificates, to use the same IP address.<br>"
+        },
+        {
+            "name": "HostNameWithOutSNI",
+            "type": "string",
+            "label": "Host name",
+            "required": false,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+        },
+        {
+            "name": "HostNameWithHttp",
+            "type": "string",
+            "label": "Host name",
+            "required": false,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+        },
+        {
+            "name": "HostNameWithSNI",
+            "type": "string",
+            "label": "Host name",
+            "required": true,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Enter a host name (or domain name) for the website. <br>If a host name is specified, then the clients must use the host name instead of the IP address to access the website.<br>"
+        },
+        {
+            "name": "SSLCertThumbPrint",
+            "type": "string",
+            "label": "SSL certificate thumbprint",
+            "required": true,
+            "visibleRule": "IISDeploymentType = randomDeployment",
+            "helpMarkDown": "Provide the thumb-print of the Secure Socket Layer certificate that the website is going to use for the HTTPS communication as a 40 character long hexadecimal string. The SSL certificate should be already installed on the Computer, at Local Computer, Personal store."
+        },
+        {
+            "name": "Bindings",
+            "type": "multiLine",
+            "label": "Add bindings",
+            "required": true,
+            "groupName": "IISBindings",
+            "properties": {
+                "resizable": "true",
+                "editorExtension": "ms.vss-services-azure.iis-multiple-binding",
+                "displayFormat": "{{#bindings}}{{protocol}}/{{ipAddress}}:{{port}}:{{hostname}}\n{{/bindings}}"
+            },
+            "helpMarkDown": "Click on the extension [...] button to add bindings for the website."
+        },
+        {
+            "name": "CreateOrUpdateAppPoolForWebsite",
+            "type": "boolean",
+            "label": "Create or update app pool",
+            "required": false,
+            "groupName": "Website",
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to create or update an application pool. If checked, the website will be created in the specified app pool."
+        },
+        {
+            "name": "ConfigureAuthenticationForWebsite",
+            "type": "boolean",
+            "label": "Configure authentication",
+            "required": false,
+            "groupName": "Website",
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to configure authentication for website."
+        },
+        {
+            "name": "AppPoolNameForWebsite",
+            "type": "string",
+            "label": "Name",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "ApplicationPoolForWebsite",
+            "helpMarkDown": "Provide the name of the IIS application pool to create or update."
+        },
+        {
+            "name": "DotNetVersionForWebsite",
+            "type": "pickList",
+            "label": ".NET version",
+            "defaultValue": "v4.0",
+            "required": true,
+            "groupName": "ApplicationPoolForWebsite",
+            "helpMarkDown": "Select the version of the .NET Framework that is loaded by the application pool. <br>If the applications assigned to this application pool do not contain managed code, then select the 'No Managed Code' option from the list.<br>",
+            "options": {
+                "v4.0": "v4.0",
+                "v2.0": "v2.0",
+                "No Managed Code": "No Managed Code"
+            }
+        },
+        {
+            "name": "PipeLineModeForWebsite",
+            "type": "pickList",
+            "label": "Managed pipeline mode",
+            "defaultValue": "Integrated",
+            "required": true,
+            "groupName": "ApplicationPoolForWebsite",
+            "helpMarkDown": "Select the managed pipeline mode that specifies how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in the Integrated mode.",
+            "options": {
+                "Integrated": "Integrated",
+                "Classic": "Classic"
+            }
+        },
+        {
+            "name": "AppPoolIdentityForWebsite",
+            "type": "pickList",
+            "label": "Identity",
+            "defaultValue": "ApplicationPoolIdentity",
+            "required": true,
+            "groupName": "ApplicationPoolForWebsite",
+            "helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
+            "options": {
+                "ApplicationPoolIdentity": "Application Pool Identity",
+                "LocalService": "Local Service",
+                "LocalSystem": "Local System",
+                "NetworkService": "Network Service",
+                "SpecificUser": "Custom Account"
+            }
+        },
+        {
+            "name": "AppPoolUsernameForWebsite",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "ApplicationPoolForWebsite",
+            "visibleRule": "AppPoolIdentityForWebsite = SpecificUser",
+            "helpMarkDown": "Provide the username of the custom account that you want to use."
+        },
+        {
+            "name": "AppPoolPasswordForWebsite",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationPoolForWebsite",
+            "helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the build or release pipeline, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>",
+            "visibleRule": "AppPoolIdentityForWebsite = SpecificUser"
+        },
+        {
+            "name": "AnonymousAuthenticationForWebsite",
+            "type": "boolean",
+            "label": "Anonymous authentication",
+            "required": false,
+            "groupName": "IISWebsiteAuthentication",
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to enable anonymous authentication for website."
+        },
+        {
+            "name": "BasicAuthenticationForWebsite",
+            "type": "boolean",
+            "label": "Basic authentication",
+            "required": false,
+            "groupName": "IISWebsiteAuthentication",
+            "defaultValue": "false",
+            "helpMarkDown": "Select the option to enable basic authentication for website."
+        },
+        {
+            "name": "WindowsAuthenticationForWebsite",
+            "type": "boolean",
+            "label": "Windows authentication",
+            "required": false,
+            "groupName": "IISWebsiteAuthentication",
+            "defaultValue": "true",
+            "helpMarkDown": "Select the option to enable windows authentication for website."
+        },
+        {
+            "name": "ParentWebsiteNameForVD",
+            "type": "string",
+            "label": "Parent website name",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "VirtualDirectory",
+            "helpMarkDown": "Provide the name of the parent Website of the virtual directory."
+        },
+        {
+            "name": "VirtualPathForVD",
+            "type": "string",
+            "label": "Virtual path",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "VirtualDirectory",
+            "helpMarkDown": "Provide the virtual path of the virtual directory. \n\nExample: To create a virtual directory Site/Application/VDir enter /Application/Vdir. The parent website and application should be already existing."
+        },
+        {
+            "name": "PhysicalPathForVD",
+            "type": "string",
+            "label": "Physical path",
+            "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+            "required": true,
+            "groupName": "VirtualDirectory",
+            "helpMarkDown": "Provide the physical path where the virtual directory's content will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
+        },
+        {
+            "name": "VDPhysicalPathAuth",
+            "type": "pickList",
+            "label": "Physical path authentication",
+            "required": false,
+            "groupName": "VirtualDirectory",
+            "defaultValue": "VDUserPassThrough",
+            "options": {
+                "VDUserPassThrough": "Application User (Pass-through)",
+                "VDWindowsAuth": "Windows Authentication"
+            },
+            "helpMarkDown": "Select the authentication mechanism that will be used to access the physical path of the virtual directory."
+        },
+        {
+            "name": "VDAuthUserName",
+            "type": "string",
+            "label": "Username",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "VirtualDirectory",
+            "visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
+            "helpMarkDown": "Provide the user name that will be used to access the virtual directory's physical path."
+        },
+        {
+            "name": "VDAuthUserPassword",
+            "type": "string",
+            "label": "Password",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "VirtualDirectory",
+            "visibleRule": "VDPhysicalPathAuth = VDWindowsAuth",
+            "helpMarkDown": "Provide the user's password that will be used to access the virtual directory's physical path. <br/>The best practice is to create a variable in the build or release pipeline, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>"
+        },
+        {
+            "name": "ParentWebsiteNameForApplication",
+            "type": "string",
+            "label": "Parent website name",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "WebApplication",
+            "helpMarkDown": "Provide the name of the parent Website under which the application will be created or updated."
+        },
+        {
+            "name": "VirtualPathForApplication",
+            "type": "string",
+            "label": "Virtual path",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "WebApplication",
+            "helpMarkDown": "Provide the virtual path of the application. \n\nExample: To create an application Site/Application enter /Application. The parent website should be already existing." 
+        },
+        {
+            "name": "PhysicalPathForApplication",
+            "type": "string",
+            "label": "Physical path",
+            "defaultValue": "%SystemDrive%\\inetpub\\wwwroot",
+            "required": true,
+            "groupName": "WebApplication",
+            "helpMarkDown": "Provide the physical path where the application's content will be stored. The content can reside on the local Computer, or in a remote directory, or on a network share, like C:\\Fabrikam or \\\\\\\\ContentShare\\Fabrikam."
+        },
+        {
+            "name": "ApplicationPhysicalPathAuth",
+            "type": "pickList",
+            "label": "Physical path authentication",
+            "required": false,
+            "groupName": "WebApplication",
+            "defaultValue": "ApplicationUserPassThrough",
+            "options": {
+                "ApplicationUserPassThrough": "Application User (Pass-through)",
+                "ApplicationWindowsAuth": "Windows Authentication"
+            },
+            "helpMarkDown": "Select the authentication mechanism that will be used to access the physical path of the application."
+        },
+        {
+            "name": "ApplicationAuthUserName",
+            "type": "string",
+            "label": "Username",
+            "required": true,
+            "defaultValue": "",
+            "groupName": "WebApplication",
+            "visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
+            "helpMarkDown": "Provide the user name that will be used to access the application's physical path."
+        },
+        {
+            "name": "ApplicationAuthUserPassword",
+            "type": "string",
+            "label": "Password",
+            "required": false,
+            "defaultValue": "",
+            "groupName": "WebApplication",
+            "visibleRule": "ApplicationPhysicalPathAuth = ApplicationWindowsAuth",
+            "helpMarkDown": "Provide the user's password that will be used to access the application's physical path. <br/>The best practice is to create a variable in the build or release pipeline, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>"
+        },
+        {
+            "name": "CreateOrUpdateAppPoolForApplication",
+            "type": "boolean",
+            "label": "Create or update app pool",
+            "required": false,
+            "defaultValue": "false",
+            "groupName": "WebApplication",
+            "helpMarkDown": "Select the option to create or update an application pool. If checked, the application will be created in the specified app pool."
+        },
+        {
+            "name": "AppPoolNameForApplication",
+            "type": "string",
+            "label": "Name",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "ApplicationPoolForApplication",
+            "helpMarkDown": "Provide the name of the IIS application pool to create or update."
+        },
+        {
+            "name": "DotNetVersionForApplication",
+            "type": "pickList",
+            "label": ".NET version",
+            "defaultValue": "v4.0",
+            "required": true,
+            "groupName": "ApplicationPoolForApplication",
+            "helpMarkDown": "Select the version of the .NET Framework that is loaded by the application pool. <br>If the applications assigned to this application pool do not contain managed code, then select the 'No Managed Code' option from the list.<br>",
+            "options": {
+                "v4.0": "v4.0",
+                "v2.0": "v2.0",
+                "No Managed Code": "No Managed Code"
+            }
+        },
+        {
+            "name": "PipeLineModeForApplication",
+            "type": "pickList",
+            "label": "Managed pipeline mode",
+            "defaultValue": "Integrated",
+            "required": true,
+            "groupName": "ApplicationPoolForApplication",
+            "helpMarkDown": "Select the managed pipeline mode that specifies how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in the Integrated mode.",
+            "options": {
+                "Integrated": "Integrated",
+                "Classic": "Classic"
+            }
+        },
+        {
+            "name": "AppPoolIdentityForApplication",
+            "type": "pickList",
+            "label": "Identity",
+            "defaultValue": "ApplicationPoolIdentity",
+            "required": true,
+            "groupName": "ApplicationPoolForApplication",
+            "helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
+            "options": {
+                "ApplicationPoolIdentity": "Application Pool Identity",
+                "LocalService": "Local Service",
+                "LocalSystem": "Local System",
+                "NetworkService": "Network Service",
+                "SpecificUser": "Custom Account"
+            }
+        },
+        {
+            "name": "AppPoolUsernameForApplication",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "ApplicationPoolForApplication",
+            "visibleRule": "AppPoolIdentityForApplication = SpecificUser",
+            "helpMarkDown": "Provide the username of the custom account that you want to use."
+        },
+        {
+            "name": "AppPoolPasswordForApplication",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationPoolForApplication",            
+            "visibleRule": "AppPoolIdentityForApplication = SpecificUser",
+            "helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the build or release pipeline, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>"
+        },
+        {
+            "name": "AppPoolName",
+            "type": "string",
+            "label": "Name",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "ApplicationPool",
+            "helpMarkDown": "Provide the name of the IIS application pool to create or update."
+        },
+        {
+            "name": "DotNetVersion",
+            "type": "pickList",
+            "label": ".NET version",
+            "defaultValue": "v4.0",
+            "required": true,
+            "groupName": "ApplicationPool",
+            "helpMarkDown": "Select the version of the .NET Framework that is loaded by the application pool. <br>If the applications assigned to this application pool do not contain managed code, then select the 'No Managed Code' option from the list.<br>",
+            "options": {
+                "v4.0": "v4.0",
+                "v2.0": "v2.0",
+                "No Managed Code": "No Managed Code"
+            }
+        },
+        {
+            "name": "PipeLineMode",
+            "type": "pickList",
+            "label": "Managed pipeline mode",
+            "defaultValue": "Integrated",
+            "required": true,
+            "groupName": "ApplicationPool",
+            "helpMarkDown": "Select the managed pipeline mode that specifies how IIS processes requests for managed content. Use classic mode only when the applications in the application pool cannot run in the Integrated mode.",
+            "options": {
+                "Integrated": "Integrated",
+                "Classic": "Classic"
+            }
+        },
+        {
+            "name": "AppPoolIdentity",
+            "type": "pickList",
+            "label": "Identity",
+            "defaultValue": "ApplicationPoolIdentity",
+            "required": true,
+            "groupName": "ApplicationPool",
+            "helpMarkDown": "Configure the account under which an application pool's worker process runs. Select one of the predefined security accounts or configure a custom account.",
+            "options": {
+                "ApplicationPoolIdentity": "Application Pool Identity",
+                "LocalService": "Local Service",
+                "LocalSystem": "Local System",
+                "NetworkService": "Network Service",
+                "SpecificUser": "Custom Account"
+            }
+        },
+        {
+            "name": "AppPoolUsername",
+            "type": "string",
+            "label": "Username",
+            "defaultValue": "",
+            "required": true,
+            "groupName": "ApplicationPool",
+            "visibleRule": "AppPoolIdentity = SpecificUser",
+            "helpMarkDown": "Provide the username of the custom account that you want to use."
+        },
+        {
+            "name": "AppPoolPassword",
+            "type": "string",
+            "label": "Password",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "ApplicationPool",
+            "visibleRule": "AppPoolIdentity = SpecificUser",
+            "helpMarkDown": "Provide the password for custom account. <br/>The best practice is to create a variable in the build or release pipeline, and mark it as 'Secret' to secure it, and then use it here, like '$(userCredentials)'. <br> Note: Special characters in password are interpreted as per <a href=\"https://go.microsoft.com/fwlink/?linkid=843470\">command-line arguments</a>"
+        },
+        {
+            "name": "StartStopRecycleAppPoolName",
+            "type": "string",
+            "label": "Application pool name",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "ActionIISApplicationPool = StartAppPool || ActionIISApplicationPool = StopAppPool || ActionIISApplicationPool = RecycleAppPool",
+            "helpMarkDown": "Provide the name of the IIS application pool."
+        },
+        {
+            "name": "AppCmdCommands",
+            "type": "multiLine",
+            "label": "Additional appcmd.exe commands",
+            "required": false,
+            "groupName": "Advanced",
+            "defaultValue": "",
+            "helpMarkDown": "Enter additional AppCmd.exe commands. For more than one command use a line separator, like <br/> list apppools <br/> list sites<br/> recycle apppool /apppool.name:ExampleAppPoolName"
+        }
+    ],
+    "execution": {
+        "PowerShell3": {
+            "target": "IISWebAppManagementOnMachineGroup.ps1"
+        }
+    },
+    "messages": {
+        "InvalidVirtualPath": "Virtual path should begin with a /",
+        "InvalidIISDeploymentType": "Invalid IIS Deployment Type : {0}",
+        "InvalidActionIISWebsite": "Invalid action '{0}' selected for the IIS Website.",
+        "InvalidActionIISAppPool": "Invalid action '{0}' selected for the IIS Application Pool.",
+        "PackageDeploymentFailed": "Failed to deploy web package to IIS website.",
+        "SSLCertificateThumbprintMissingInHttpsBinding": "SSL Certificate thumbprint missing in the https binding : ( {0}/{1}:{2} )",
+        "InvalidSslThumbprintInBinding": "Invalid thumbprint in binding ( {0}/{1}:{2} ). Length is not 40 characters or contains invalid characters.",
+        "SSLCertWarningInvalidCharactersInBinding": "SSL Certificate thumbprint contains non-hexadecimal characters in binding : ( {0}/{1}:{2} ). Trimming all non-hexadecimal characters."
+    }
+
+}

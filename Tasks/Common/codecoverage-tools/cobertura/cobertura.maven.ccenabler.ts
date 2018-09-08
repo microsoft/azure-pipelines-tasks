@@ -3,7 +3,6 @@ import * as util from "../utilities";
 import * as tl from "vsts-task-lib/task";
 import * as ccc from "../codecoverageconstants";
 import * as cc from "../codecoverageenabler";
-import * as str from "string";
 import * as Q from "q";
 
 export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageEnabler {
@@ -13,7 +12,7 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
     // -----------------------------------------------------
     // Enable code coverage for Cobertura Maven Builds
     // - enableCodeCoverage: CodeCoverageProperties  - ccProps
-    // -----------------------------------------------------    
+    // -----------------------------------------------------
     public enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean> {
         let _this = this;
 
@@ -38,9 +37,9 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
         let ccfilter = [];
 
         if (!util.isNullOrWhitespace(filter)) {
-            str(util.trimToEmptyString(filter)).replaceAll(".", "/").s.split(":").forEach(exFilter => {
+            util.trimToEmptyString(filter).replace(/\./g, "/").split(":").forEach(exFilter => {
                 if (exFilter) {
-                    ccfilter.push(str(exFilter).endsWith("*") ? (exFilter + "/**") : (exFilter + ".class"));
+                    ccfilter.push(exFilter.endsWith("*") ? (exFilter + "/**") : (exFilter + ".class"));
                 }
             });
         }
@@ -118,17 +117,6 @@ export class CoberturaMavenCodeCoverageEnabler extends cc.CoberturaCodeCoverageE
             } else {
                 pluginsNode = buildNode.plugins;
             }
-            /* if plugins node doesn't exist look for pluginManagement */
-        } else if (buildNode.pluginManagement) {
-            if (typeof buildNode.pluginManagement === "string") {
-                buildNode.pluginManagement = {};
-            }
-            if (buildNode.pluginManagement instanceof Array) {
-                pluginsNode = buildNode.pluginManagement[0].plugins;
-            } else {
-                pluginsNode = buildNode.pluginManagement.plugins;
-            }
-            /* if both doesn't exist, create plugins */
         } else {
             buildNode.plugins = {};
             pluginsNode = buildNode.plugins;

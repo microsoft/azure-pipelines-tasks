@@ -3,6 +3,8 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
+Unregister-Mock Import-Module
+Register-Mock Write-VstsTaskError
 $module = Microsoft.PowerShell.Core\Import-Module $PSScriptRoot\.. -PassThru
 $endpoint = @{
     Auth = @{

@@ -1,0 +1,25 @@
+{
+    "externals": {
+        "nugetv2": [
+            {
+                "name": "VstsTaskSdk",
+                "version": "0.11.0",
+                "repository": "https://www.powershellgallery.com/api/v2/",
+                "cp": [
+                    {
+                        "source": [
+                            "*.dll",
+                            "*.ps1",
+                            "*.psd1",
+                            "*.psm1",
+                            "lib.json",
+                            "Strings"
+                        ],
+                        "dest": "ps_modules/VstsTaskSdk/",
+                        "options": "-R"
+                    }
+                ]
+            }
+        ]
+    }
+}

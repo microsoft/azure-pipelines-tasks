@@ -10,36 +10,29 @@
   "resolve": {
     "**/build/reports/junit.xml": "/user/build/build/reports/junit.xml"
   },
-  "find": {
-    "/user/build": [
-      "/user/build/output/$(SDK)/$(Configuration)/build.sym/Release.iphoneos/fun.app",
-      "/user/build/build/reports/junit.xml"
-    ]
-  },
-  "match": {
+  "findMatch": {
     "/user/build/**/build/reports/junit.xml": [
       "/user/build/build/reports/junit.xml"
+    ],
+    "**/*.xcodeproj/*.xcworkspace": [
+      "/user/build/fun.xcodeproj/project.xcworkspace"
     ]
   },
   "getVariable": {
     "build.sourcesDirectory": "/user/build",
+    "Agent.TempDirectory": "/user/temp",
     "HOME": "/users/test"
-  },
-  "glob": {
-    "**/*.xcodeproj/*.xcworkspace": [
-      "/user/build/fun.xcodeproj/project.xcworkspace"
-    ]
   },
   "exec": {
     "/home/bin/xcodebuild -version": {
       "code": 0,
       "stdout": "Xcode 7.3.1"
     },
-    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace test DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch | /home/bin/xcpretty -r junit --no-color": {
+    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test | /home/bin/xcpretty -r junit --no-color": {
       "code": 0,
       "stdout": "xcodebuild | xcpretty output here"
     },
-    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace test DSTROOT=/user/build/output/$(SDK)/$(Configuration)/build.dst OBJROOT=/user/build/output/$(SDK)/$(Configuration)/build.obj SYMROOT=/user/build/output/$(SDK)/$(Configuration)/build.sym SHARED_PRECOMPS_DIR=/user/build/output/$(SDK)/$(Configuration)/build.pch": {
+    "/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) -workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme test": {
       "code": 0,
       "stdout": "xcodebuild output without xcpretty here"
     }

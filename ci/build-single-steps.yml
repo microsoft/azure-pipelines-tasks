@@ -1,0 +1,70 @@
+steps:
+
+# Clean
+- checkout: self
+  clean: true
+
+# Start collect diagnostics
+- powershell: ./ci/start-collect-diagnostics.ps1
+  displayName: Start collect diagnostics
+  condition: and(succeeded(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))
+
+# Use node 8, npm 5
+- task: NodeTool@0
+  displayName: Use node 8
+  inputs:
+    versionSpec: "8.x"
+
+# npm install
+- script: npm install
+  displayName: npm install
+
+# Build
+- script: node make.js build --task "$(task)"
+  displayName: Build
+
+# Stage hotfix
+- script: node ./ci/stage-hotfix.js
+  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
+  displayName: Stage hotfix
+
+# Publish hotfix artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish hotfix artifact
+  condition: and(succeeded(), eq(variables.os, 'Windows_NT'))
+  inputs:
+    pathToPublish: _package/hotfix-layout
+    artifactName: hotfix
+    publishLocation: container
+
+# Test
+- script: node make.js test
+  displayName: Test with node 6
+- script: node make.js testLegacy --task "$(task)"
+  displayName: Legacy tests with node 6
+
+# Publish test results
+- task: PublishTestResults@2
+  displayName: Publish Test Results test-*.xml
+  inputs:
+    testResultsFiles: 'test-*.xml'
+    testRunTitle: 'Node 6 Test Results'
+    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+
+
+# Test
+- script: node make.js test --node 5 --runner ts
+  displayName: Test with node 5
+- script: node make.js testLegacy --node 5 --runner ts --task "$(task)"
+  displayName: Legacy tests with node 5
+- task: PublishTestResults@2
+  displayName: Publish Test Results test-*.xml
+  inputs:
+    testResultsFiles: 'test-*.xml'
+    testRunTitle: 'Node 5 Test Results'
+    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+
+# Stop collect diagnostics
+- powershell: ./ci/stop-collect-diagnostics.ps1
+  displayName: Stop collect diagnostics
+  condition: and(always(), eq(variables.os, 'Windows_NT'), eq(variables.collect_diagnostics, 'true'))

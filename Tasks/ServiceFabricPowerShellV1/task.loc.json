@@ -1,0 +1,95 @@
+{
+  "id": "816979F7-C273-4347-9A55-845B721D82CB",
+  "name": "ServiceFabricPowerShell",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 16
+  },
+  "demands": [
+    "Cmd"
+  ],
+  "minimumAgentVersion": "1.95.0",
+  "inputs": [
+    {
+      "name": "serviceConnectionName",
+      "aliases": [
+        "clusterConnection"
+      ],
+      "type": "connectedService:servicefabric",
+      "label": "ms-resource:loc.input.label.serviceConnectionName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceConnectionName"
+    },
+    {
+      "name": "ScriptType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ScriptType",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptType",
+      "defaultValue": "FilePath",
+      "options": {
+        "FilePath": "Script File Path",
+        "InlineScript": "Inline Script"
+      }
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath",
+      "visibleRule": "ScriptType = FilePath"
+    },
+    {
+      "name": "Inline",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Inline",
+      "required": false,
+      "defaultValue": "# You can write your PowerShell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
+      "helpMarkDown": "ms-resource:loc.input.help.Inline",
+      "visibleRule": "ScriptType = InlineScript",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "500"
+      }
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "editorExtension": "ms.vss-services-azure.parameters-grid"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "ServiceFabricPowerShell.ps1"
+    }
+  },
+  "messages": {
+    "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0"
+  }
+}

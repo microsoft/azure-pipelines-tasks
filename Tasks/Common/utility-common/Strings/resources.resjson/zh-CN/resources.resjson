@@ -1,0 +1,3 @@
+{
+  "loc.messages.TokenUnavailable": "无法检索用于打包 TFS/Team Services 的令牌凭据。"
+}

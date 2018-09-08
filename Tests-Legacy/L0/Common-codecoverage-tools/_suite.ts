@@ -15,7 +15,7 @@ function setResponseFile(name: string) {
 }
 
 describe('Code Coverage enable tool tests', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     let data = path.join(__dirname, "data");
     let buildProps: { [key: string]: string } = {};

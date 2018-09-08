@@ -1,0 +1,194 @@
+{
+    "id": "97EF6E59-B8CC-48AA-9937-1A01E35E7584",
+    "name": "ServiceFabricUpdateManifests",
+    "friendlyName": "Update Service Fabric Manifests",
+    "description": "Automatically updates portions of the application and service manifests within a packaged Service Fabric application.",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkId=820529)",
+    "category": "Utility",
+    "visibility": [
+        "Build"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "demands": [
+        "Cmd"
+    ],
+    "version": {
+        "Major": 2,
+        "Minor": 3,
+        "Patch": 0
+    },
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "Update Service Fabric Manifests ($(updateType))",
+    "inputs": [
+        {
+            "name": "updateType",
+            "type": "pickList",
+            "label": "Update Type",
+            "defaultValue": "Manifest versions",
+            "required": true,
+            "helpMarkDown": "Specify the type of update that should be made to the manifest files. In order to use both update types, add an instance of this task to the build pipeline for each type of update to be executed.",
+            "options": {
+                "Manifest versions": "Manifest versions",
+                "Docker image settings": "Docker image settings"
+            }
+        },
+        {
+            "name": "applicationPackagePath",
+            "type": "filePath",
+            "label": "Application Package",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to the application package. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+        },
+        {
+            "name": "versionSuffix",
+            "_name_comment": "Intentionally leaving the name as 'versionSuffix' in order to be backwards compatible",
+            "type": "string",
+            "label": "Version Value",
+            "defaultValue": ".$(Build.BuildNumber)",
+            "required": true,
+            "visibleRule": "updateType = Manifest versions",
+            "helpMarkDown": "The value used to specify the version in the manifest files. Default is .$(Build.BuildNumber)."
+        },
+        {
+            "name": "versionBehavior",
+            "type": "pickList",
+            "label": "Version Behavior",
+            "defaultValue": "Append",
+            "required": false,
+            "visibleRule": "updateType = Manifest versions",
+            "helpMarkDown": "Specify whether to append the version value to existing values in the manifest files or replace them.",
+            "options": {
+                "Append": "Append",
+                "Replace": "Replace"
+            }
+        },
+        {
+            "name": "updateOnlyChanged",
+            "type": "boolean",
+            "label": "Update only if changed",
+            "defaultValue": "false",
+            "required": true,
+            "visibleRule": "updateType = Manifest versions",
+            "helpMarkDown": "Incrementally update only the packages that have changed. Use the [deterministic compiler flag](https://go.microsoft.com/fwlink/?LinkId=808668) to ensure builds with the same inputs produce the same outputs."
+        },
+        {
+            "name": "pkgArtifactName",
+            "type": "string",
+            "label": "Package Artifact Name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The name of the artifact containing the application package for comparison.",
+            "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
+        },
+        {
+            "name": "logAllChanges",
+            "type": "boolean",
+            "label": "Log all changes",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "Compare all files in every package and log if the file was added, removed, or if its content changed. Otherwise, compare files in a package only until the first change is found for faster performance.",
+            "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
+        },
+        {
+            "name": "compareType",
+            "type": "pickList",
+            "label": "Compare against",
+            "defaultValue": "LastSuccessful",
+            "required": false,
+            "helpMarkDown": "The build for comparison.",
+            "options": {
+                "LastSuccessful": "Last Successful Build",
+                "Specific": "Specific Build"
+            },
+            "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
+        },
+        {
+            "name": "buildNumber",
+            "type": "string",
+            "label": "Build Number",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The build number for comparison.",
+            "visibleRule": "updateType = Manifest versions && compareType = Specific"
+        },
+        {
+            "name": "overwriteExistingPkgArtifact",
+            "type": "boolean",
+            "label": "Overwrite Existing Package Artifact",
+            "defaultValue": "true",
+            "required": false,
+            "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true",
+            "helpMarkDown": "Always download a new copy of the artifact. Otherwise use an existing copy, if present."
+        },
+        {
+            "name": "imageNamesPath",
+            "type": "filePath",
+            "label": "Image Names Path",
+            "required": false,
+            "visibleRule": "updateType = Docker image settings",
+            "helpMarkDown": "Path to a text file that contains the names of the Docker images associated with the Service Fabric application that should be updated with digests. Each image name must be on its own line and must be in the same order as the digests in Image Digests file. If the images are created by the Service Fabric project, this file is generated as part of the Package target and its output location is controlled by the property BuiltDockerImagesFilePath."
+        },
+        {
+            "name": "imageDigestsPath",
+            "type": "filePath",
+            "label": "Image Digests Path",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "updateType = Docker image settings",
+            "helpMarkDown": "Path to a text file that contains the digest values of the Docker images associated with the Service Fabric application. This file can be output by the [Docker task](https://go.microsoft.com/fwlink/?linkid=848006) when using the push action. The file should contain lines of text in the format of 'registry/image_name@digest_value'."
+        }
+    ],
+    "execution": {
+        "PowerShell3": {
+            "target": "Update-Manifests.ps1"
+        }
+    },
+    "messages": {
+        "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
+        "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
+        "SearchingForApplicationPackage": "Searching for application package: {0}",
+        "FoundApplicationPackage": "Found application package: {0}",
+        "VersionValueLabel": "Version Value: '{0}'",
+        "BuildNumberNotSpecified": "Build Number cannot be null or empty.",
+        "VstsRestApiFailed": "Failed to communicate with VSTS: {0}",
+        "DownloadingArtifact": "Downloading artifact '{0}'...",
+        "DownloadingArtifactProgress": "Progress update: '{0}' bytes received...",
+        "FinishedDownloadingArtifact": "Finished downloading artifact '{0}'.",
+        "UnrecognizedArtifactType": "Unrecognized artifact type '{0}'",
+        "PreviousBuildNumberLabel": "Previous build number: '{0}'",
+        "PreviousBuildLocationLabel": "Previous build location: '{0}'",
+        "NoPreviousSuccessfulBuild": "Could not find previous build to compare against.",
+        "NoManifestInPreviousBuild": "Previous build does not contains application manifest. Force updating all manifest versions.",
+        "UpdatedApplicationTypeVersion": "Updated application type '{0}' to version '{1}'.",
+        "UpdatedServiceVerison": "Updated service '{0}' to version '{1}'.",
+        "UpdatedPackageVerison": "Updated package '{0}\\{1}' to version '{2}'.",
+        "UpdatedApplicationTypeVersionFromPrevious": "Updated application type '{0}' from version '{1}' to '{2}'.",
+        "UpdatedServiceVerisonFromPrevious": "Updated service '{0}' from version '{1}' to '{2}'.",
+        "UpdatedPackageVerisonFromPrevious": "Updated package '{0}\\{1}' from version '{2}' to '{3}'.",
+        "NewService": "Service did not exist in the previous build.",
+        "NewPackage": "Package did not exist in the previous build.",
+        "SearchingApplicationType": "Searching application type '{0}' for changes...",
+        "SearchingService": "Searching service '{0}' for changes...",
+        "SearchingPackage": "Searching package '{0}' for changes...",
+        "AppManifestChanged": "The application manifest has changed.",
+        "ServiceManifestChanged": "The service manifest has changed.",
+        "PackageManifestChanged": "The package element in the service manifest has changed.",
+        "FileRemoved": "The file '{0}' has been removed.",
+        "FileAdded": "The file '{0}' has been added.",
+        "FileChanged": "The file '{0}' has changed.",
+        "NoChanges": "Found no changes.",
+        "PdbWarning": "This package contains '*.pdb' files, which will change in every build even if the 'deterministic' compiler flag is used.  Exclude these files from your package in order to accurately detect if the package has changed.",
+        "InvalidImageDigestValue": "The image digest value '{0}' found in file '{1}' is invalid. Expected a value in the format of 'endpoint/image_name@digest_value'.",
+        "CouldNotFindSubPath": "Could not find a subpath of '{0}' under artifact path '{1}'.",
+        "PreviousPackageLocation": "Previous manifest package location: '{0}'.",
+        "ImageDigestListMismatch": "The list of image names and the list of digests must be the same length. Number of image names: '{0}', number of image digests: '{1}'.",
+        "AmbiguousImages": "The repository '{0}' has more than one digest. You must provide a path to the list of the original images names in the input \"Image Names Path\" to disambiguate.",
+        "ImageDigestNameMismatch": "The digest '{0}' does not match the image '{1}'.",
+        "NoDigestForImage": "No digest found for image '{0}'."
+    }
+}

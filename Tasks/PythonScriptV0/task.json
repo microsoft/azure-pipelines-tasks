@@ -1,0 +1,112 @@
+{
+    "id": "6392F95F-7E76-4A18-B3C7-7F078D2F7700",
+    "name": "PythonScript",
+    "friendlyName": "Python Script",
+    "description": "Run a Python script.",
+    "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?LinkID=2006181)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 138,
+        "Patch": 1
+    },
+    "demands": [],
+    "instanceNameFormat": "Run a Python script",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "scriptSource",
+            "type": "radio",
+            "label": "Script source",
+            "required": true,
+            "defaultValue": "filePath",
+            "helpMarkDown": "Whether the script is a file in the source tree or is written inline in this task.",
+            "options": {
+                "filePath": "File path",
+                "inline": "Inline"
+            }
+        },
+        {
+            "name": "scriptPath",
+            "type": "filePath",
+            "label": "Script path",
+            "visibleRule": "scriptSource = filePath",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Path of the script to execute. Must be a fully qualified path or relative to $(System.DefaultWorkingDirectory)."
+        },
+        {
+            "name": "script",
+            "type": "multiLine",
+            "label": "Script",
+            "visibleRule": "scriptSource = inline",
+            "required": true,
+            "defaultValue": "",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000"
+            },
+            "helpMarkDown": "The Python script to run"
+        },
+        {
+            "name": "arguments",
+            "type": "string",
+            "label": "Arguments",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Arguments passed to the script execution, available through `sys.argv`."
+        },
+        {
+            "name": "pythonInterpreter",
+            "type": "string",
+            "label": "Python interpreter",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Absolute path to the Python interpreter to use. If not specified, the task will use the interpreter in PATH.<br /> Run the [Use Python Version](https://go.microsoft.com/fwlink/?linkid=871498) task to add a version of Python to PATH.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "workingDirectory",
+            "type": "filePath",
+            "label": "Working directory",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced"
+        },
+        {
+            "name": "failOnStderr",
+            "type": "boolean",
+            "label": "Fail on standard error",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "If this is true, this task will fail if any text is written to the stderr stream.",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "NotAFile": "The given path was not to a file: '%s'.",
+        "ParameterRequired": "The `%s` parameter is required"
+    }
+}

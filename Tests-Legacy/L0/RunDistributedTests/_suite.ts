@@ -7,15 +7,13 @@ import assert = require('assert');
 import trm = require('../../lib/taskRunner');
 import psm = require('../../lib/psRunner');
 import path = require('path');
-var shell = require('shelljs');
-var ps = shell.which('powershell.exe');
 var psr = null;
 
 describe('Deploy Test Agent Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
-        if (ps) {
+        if (psm.testSupported()) {
             psr = new psm.PSRunner();
             psr.start();
         }
@@ -24,10 +22,12 @@ describe('Deploy Test Agent Suite', function () {
     });
 
     after(function () {
-        psr.kill();
+        if (psr) {
+            psr.kill();
+        }
     });
 
-    if (ps) {
+    if (psm.testSupported()) {
         it('(RunDistributedTests-VerifyAzureCompat.NewResource) verifies if new DTA bits are available for supporting Azure Env', (done) => {
             psr.run(path.join(__dirname, 'VerifyAzureCompat.NewResource.ps1'), done);
         })

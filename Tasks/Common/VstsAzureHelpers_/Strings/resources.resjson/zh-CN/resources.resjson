@@ -2,9 +2,11 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "找不到 \"AzureRM.Profile\" 模块。\"AzureRM\" 模块可能未完整安装。从提升的会话运行以下 PowerShell 命令可能解决该问题: Import-Module AzureRM；Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "不支持基于证书的身份验证。找不到 Azure PowerShell 模块。",
   "loc.messages.AZ_CredentialsError": "用于部署的 Azure 凭据有错。",
-  "loc.messages.AZ_ModuleNotFound": "找不到 Azure 模块和 AzureRM 模块。如果模块是最近安装的，请在重启 VSTS 任务代理后重试。",
+  "loc.messages.AZ_ModuleNotFound": "找不到 Azure 模块(“{0}”)和 AzureRM 模块(“{0}”)。如果模块是最近安装的，请在重启 VSTS 任务代理后重试。",
   "loc.messages.AZ_RequiresMinVersion0": "未安装 Azure PowerShell 模块的最低必需版本({0})。",
   "loc.messages.AZ_ServicePrincipalError": "用于部署的服务主体有错。",
   "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Azure 模块的版本“{0}”不支持服务主体身份验证。",
-  "loc.messages.AZ_UnsupportedAuthScheme0": "Azure 终结点不支持授权方案“{0}”。"
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Azure 终结点不支持授权方案“{0}”。",
+  "loc.messages.AZ_AvailableModules": "可用 {0} 模块的列表:",
+  "loc.messages.AZ_InvalidARMEndpoint": "指定的 AzureRM 终结点无效。"
 }

@@ -1,0 +1,8 @@
+﻿<ServiceManifest Name="Stateless2Pkg" Version="2.0.0">
+  <ServiceTypes>
+    <StatelessServiceType ServiceTypeName="Stateless2Type" />
+  </ServiceTypes>
+  <CodePackage Name="Code" Version="2.0.0">
+  </CodePackage>
+  <ConfigPackage Name="Config" Version="2.0.0" />
+</ServiceManifest>

@@ -1,0 +1,71 @@
+{
+  "id": "B719DB6C-40A2-4F43-9AFF-827825BAECAE",
+  "name": "Chef",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 18
+  },
+  "deprecated": true,
+  "demands": [
+    "Chef",
+    "KnifeReporting",
+    "DotNetFramework"
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "inputs": [
+    {
+      "name": "connectedServiceName",
+      "type": "connectedService:Chef",
+      "label": "ms-resource:loc.input.label.connectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.connectedServiceName"
+    },
+    {
+      "name": "Environment",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.Environment",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Environment"
+    },
+    {
+      "name": "Attributes",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.Attributes",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.Attributes"
+    },
+    {
+      "name": "chefWaitTime",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.chefWaitTime",
+      "defaultValue": "30",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.chefWaitTime"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\Chef.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

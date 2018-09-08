@@ -1,0 +1,95 @@
+{
+    "id": "816979F7-C273-4347-9A55-845B721D82CB",
+    "name": "ServiceFabricPowerShell",
+    "friendlyName": "Service Fabric PowerShell",
+    "description": "Run a PowerShell script within the context of an Azure Service Fabric cluster connection.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=841538)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 16
+    },
+    "demands": [
+        "Cmd"
+    ],
+    "minimumAgentVersion": "1.95.0",
+    "inputs": [
+        {
+            "name": "serviceConnectionName",
+            "aliases": [
+                "clusterConnection"
+            ],
+            "type": "connectedService:servicefabric",
+            "label": "Cluster Service Connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Azure Service Fabric cluster which will have an established service connection when executing the specified PowerShell script."
+        },
+        {
+            "name": "ScriptType",
+            "type": "pickList",
+            "label": "Script Type",
+            "required": true,
+            "helpMarkDown": "Type of the script: File Path or Inline Script",
+            "defaultValue": "FilePath",
+            "options": {
+                "FilePath": "Script File Path",
+                "InlineScript": "Inline Script"
+            }
+        },
+        {
+            "name": "ScriptPath",
+            "type": "filePath",
+            "label": "Script Path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path of the script. Should be fully qualified path or relative to the default working directory.",
+            "visibleRule": "ScriptType = FilePath"
+        },
+        {
+            "name": "Inline",
+            "type": "multiLine",
+            "label": "Inline Script",
+            "required": false,
+            "defaultValue": "# You can write your PowerShell scripts inline here. \n# You can also pass predefined and custom variables to this script using arguments",
+            "helpMarkDown": "Enter the script to execute.",
+            "visibleRule": "ScriptType = InlineScript",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "500"
+            }
+        },
+        {
+            "name": "ScriptArguments",
+            "type": "string",
+            "label": "Script Arguments",
+            "defaultValue": "",
+            "required": false,
+            "properties": {
+                "editorExtension": "ms.vss-services-azure.parameters-grid"
+            },
+            "helpMarkDown": "Additional parameters to pass to PowerShell.  Can be either ordinal or named parameters."
+        }
+    ],
+    "instanceNameFormat": "Service Fabric PowerShell script: $(ScriptType)",
+    "execution": {
+        "PowerShell3": {
+            "target": "ServiceFabricPowerShell.ps1"
+        }
+    },
+    "messages": {
+        "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+    }
+}

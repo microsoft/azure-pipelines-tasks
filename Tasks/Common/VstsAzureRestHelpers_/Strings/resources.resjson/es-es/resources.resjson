@@ -2,5 +2,8 @@
   "loc.messages.AZ_UnsupportedAuthScheme0": "Esquema de autenticación no admitido '{0}' para el punto de conexión de Azure.",
   "loc.messages.AZ_SpnAccessTokenFetchFailure": "No se puede obtener el token del id. de inquilino {0}.",
   "loc.messages.AZ_UserAccessTokenFetchFailure": "No se puede obtener el token del usuario dado.",
-  "loc.messages.AZ_NoValidResourceIdFound": "No se encontró ningún recurso con serverName {0} o serverType {1} en la suscripción {2}. Especifique el valor de serverName o serverType correcto y vuelva a intentarlo."
+  "loc.messages.AZ_NoValidResourceIdFound": "No se encontró ningún recurso con serverName {0} o serverType {1} en la suscripción {2}. Especifique el valor de serverName o serverType correcto y vuelva a intentarlo.",
+  "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "No se pueden capturar los detalles del equilibrador de carga.",
+  "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "No se pueden capturar los detalles de las direcciones IP públicas.",
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "No se pueden capturar los detalles de las interfaces de red."
 }

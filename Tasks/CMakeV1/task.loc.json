@@ -1,0 +1,53 @@
+{
+  "id": "7D831C3C-3C68-459A-A5C9-BDE6E659596C",
+  "name": "CMake",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "demands": [
+    "cmake"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 130,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.91.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "cwd",
+      "aliases": [
+        "workingDirectory"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.cwd",
+      "defaultValue": "build",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cwd"
+    },
+    {
+      "name": "cmakeArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.cmakeArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.cmakeArgs"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "cmaketask.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "CMakeReturnCode": "ms-resource:loc.messages.CMakeReturnCode",
+    "CMakeFailed": "ms-resource:loc.messages.CMakeFailed"
+  }
+}

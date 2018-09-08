@@ -1,0 +1,201 @@
+{
+    "id": "19C02B15-D377-40E0-9EFA-3168506E0933",
+    "name": "ServiceFabricComposeDeploy",
+    "friendlyName": "Service Fabric Compose Deploy",
+    "description": "Deploy a docker-compose application to a Service Fabric cluster.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=847030)",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 3,
+        "Patch": 7
+    },
+    "demands": [
+        "Cmd"
+    ],
+    "minimumAgentVersion": "1.95.0",
+    "groups": [
+        {
+            "name": "registry",
+            "displayName": "Registry Settings",
+            "isExpanded": true
+        },
+        {
+            "name": "advanced",
+            "displayName": "Advanced Settings",
+            "isExpanded": false
+        }
+    ],
+    "instanceNameFormat": "Deploy Compose Application to Service Fabric",
+    "inputs": [
+        {
+            "name": "serviceConnectionName",
+            "aliases": [
+                "clusterConnection"
+            ],
+            "type": "connectedService:serviceFabric",
+            "label": "Cluster Service Connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select an Azure Service Fabric service connection to be used to connect to the cluster. Choose 'Manage' to register a new service connection."
+        },
+        {
+            "name": "composeFilePath",
+            "type": "filePath",
+            "label": "Compose File Path",
+            "defaultValue": "**/docker-compose.yml",
+            "required": true,
+            "helpMarkDown": "Path to the compose file that is to be deployed. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) and wildcards can be used in the path."
+        },
+        {
+            "name": "applicationName",
+            "type": "string",
+            "label": "Application Name",
+            "defaultValue": "fabric:/Application1",
+            "required": true,
+            "helpMarkDown": "Name of the application being deployed."
+        },
+        {
+            "name": "registryCredentials",
+            "type": "pickList",
+            "label": "Registry Credentials Source",
+            "defaultValue": "AzureResourceManagerEndpoint",
+            "required": true,
+            "options": {
+                "AzureResourceManagerEndpoint": "Azure Resource Manager service connection",
+                "ContainerRegistryEndpoint": "Container Registry service connection",
+                "UsernamePassword": "Username and Password",
+                "None": "None"
+            },
+            "groupName": "registry",
+            "helpMarkDown": "Choose if/how credentials for the docker registry will be provided."
+        },
+        {
+            "name": "dockerRegistryEndpointName",
+            "aliases": [
+                "dockerRegistryConnection"
+            ],
+            "type": "connectedService:dockerRegistry",
+            "label": "Docker Registry Service Connection",
+            "required": false,
+            "helpMarkDown": "Select a Docker registry service connection. If a certificate matching the Server Certificate Thumbprint in the Cluster Service Connection is installed on the build agent, it will be used to encrypt the password; otherwise the password will not be encrypted.",
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = ContainerRegistryEndpoint"
+        },
+        {
+            "name": "azureSubscriptionEndpoint",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureRM",
+            "label": "Azure subscription",
+            "helpMarkDown": "Select an Azure subscription",
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = AzureResourceManagerEndpoint",
+            "required": true
+        },
+        {
+            "name": "registryUserName",
+            "type": "string",
+            "label": "Registry User Name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Username for the Docker registry",
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "registryPassword",
+            "type": "string",
+            "label": "Registry Password",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Password for the Docker registry. If the password is not encrypted, it is recommended that you use a custom release pipeline secret variable to store it.",
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "passwordEncrypted",
+            "type": "boolean",
+            "label": "Password Encrypted",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "It is recommended to encrypt your password using [Invoke-ServiceFabricEncryptText](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-application-secret-management#encrypt-application-secrets). If you do not, and a certificate matching the Server Certificate Thumbprint in the Cluster Service Connection is installed on the build agent, it will be used to encrypt the password; otherwise an error will occur.",
+            "groupName": "registry",
+            "visibleRule": "registryCredentials = UsernamePassword"
+        },
+        {
+            "name": "upgrade",
+            "type": "boolean",
+            "label": "Upgrade",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Upgrade an existing deployment rather than removing it.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "deployTimeoutSec",
+            "type": "string",
+            "label": "Deploy Timeout (s)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Timeout in seconds for deploying the application.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "removeTimeoutSec",
+            "type": "string",
+            "label": "Remove Timeout (s)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Timeout in seconds for removing an existing application.",
+            "groupName": "advanced"
+        },
+        {
+            "name": "getStatusTimeoutSec",
+            "type": "string",
+            "label": "Get Status Timeout (s)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Timeout in seconds for getting the status of an existing application.",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "PowerShell3": {
+            "target": "ServiceFabricComposeDeploy.ps1"
+        }
+    },
+    "messages": {
+        "ItemSearchMoreThanOneFound": "Found more than one item with search pattern {0}. There can be only one.",
+        "ItemSearchNoFilesFound": "No items were found with search pattern {0}.",
+        "SearchingForPath": "Searching for path: {0}",
+        "FoundPath": "Found path: {0}",
+        "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
+        "RemovingApplication": "Removing the existing application '{0}'.",
+        "ApplicationRemoved": "Application removed.",
+        "EncryptingPassword": "Encrypting the password with the Server Certificate.",
+        "CreatingApplication": "Creating application",
+        "UpgradingApplication": "Upgrading application",
+        "WaitingForDeploy": "Waiting for deploy...",
+        "WaitingForUpgrade": "Waiting for upgrade...",
+        "CurrentStatus": "Current Status: {0}",
+        "DeployFailed": "Deploy Failed\nStatus: {0}\nDetails: {1}",
+        "UpgradeFailed": "Upgrade Failed\nStatus: {0}\nDetails: {1}",
+        "CheckingComposeFile": "Checking compose file",
+        "UnsupportedAPIVersion": "Service Fabric SDK version {0} is not supported.",
+        "UsingAPIVersion": "Using cmdlets for Service Fabric SDK version {0}.",
+        "InvalidApplicationNameWarning": "Latest Service Fabric has stopped supporting compose application name starting with 'fabric:/' and hence compose deployment might fail with ServiceDnsName error for application name '{0}'. You can provide a different application name and re-run if required.",
+        "UpgradeInProgress": "An upgrade for the application '{0}' is already in progress."
+    }
+}

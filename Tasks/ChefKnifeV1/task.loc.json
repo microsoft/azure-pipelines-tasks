@@ -1,0 +1,61 @@
+{
+  "id": "C7B7CCF9-D6E0-472B-97BB-06B6E43504F3",
+  "name": "ChefKnife",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Preview",
+    "Build"
+  ],
+  "runsOn": [
+    "Agent"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 15
+  },
+  "deprecated": true,
+  "demands": [
+    "Chef",
+    "DotNetFramework"
+  ],
+  "minimumAgentVersion": "1.83.0",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "type": "connectedService:Chef",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ScriptPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.ScriptPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptPath"
+    },
+    {
+      "name": "ScriptArguments",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ScriptArguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.ScriptArguments"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\ChefKnife.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

@@ -41,7 +41,7 @@
     ],
     "max-line-length": [
       true,
-      140
+      1400
     ],
     "member-access": true,
     "member-ordering": [false],
@@ -63,7 +63,6 @@
       true,
       "debug",
       "info",
-      "log",
       "time",
       "timeEnd",
       "trace"

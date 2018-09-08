@@ -1,0 +1,29 @@
+{
+  "name": "dotnetcoreinstaller",
+  "version": "0.1.0",
+  "description": ".Net Core Installer",
+  "main": "dotnetcoreinstaller.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "keywords": [
+    "VSTS",
+    "Tasks",
+    "DotNetCore"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "vsts-task-lib": "2.0.6",
+    "vsts-task-tool-lib": "0.4.1",
+    "typed-rest-client": "0.11.0"
+  }
+}

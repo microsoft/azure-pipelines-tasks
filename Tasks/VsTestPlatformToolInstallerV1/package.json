@@ -1,0 +1,32 @@
+{
+    "name": "vstestplatform-tool-installer",
+    "version": "1.0.4",
+    "description": "Visual Studio Test Platform Installer",
+    "main": "vstestplatformtoolInstaller.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/microsoft/vsts-tasks.git"
+    },
+    "keywords": [
+        "VSTS",
+        "Tasks",
+        "VsTestplatform",
+        "VsTest"
+    ],
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/microsoft/vsts-tasks/issues"
+    },
+    "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+    "dependencies": {
+        "performance-now": "0.2.0",
+        "vsts-task-lib": "2.6.0",
+        "vsts-task-tool-lib": "0.4.1",
+        "@types/node": "^6.0.101",
+        "@types/q": "^1.5.0"
+    }
+}

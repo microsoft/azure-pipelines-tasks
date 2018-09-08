@@ -1,0 +1,24 @@
+{
+  "name": "vsts-xamarinandroid-task",
+  "version": "1.0.0",
+  "description": "VSTS Xamarin Android Task",
+  "main": "xamarinandroid.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "java-common": "file:../../_build/Tasks/Common/java-common-1.0.0.tgz",
+    "msbuildhelpers": "file:../../_build/Tasks/Common/msbuildhelpers-1.0.0.tgz",
+    "vsts-task-lib": "^2.0.3-preview"
+  }
+}

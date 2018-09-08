@@ -1,0 +1,76 @@
+{
+    "id": "33C63B11-352B-45A2-BA1B-54CB568A29CA",
+    "name": "UsePythonVersion",
+    "friendlyName": "Use Python Version",
+    "description": "Retrieves the specified version of Python from the tool cache. Optionally add it to PATH.",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=871498)",
+    "category": "Tool",
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 138,
+        "Patch": 1
+    },
+    "demands": [],
+    "instanceNameFormat": "Use Python $(versionSpec)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "versionSpec",
+            "type": "string",
+            "label": "Version spec",
+            "required": true,
+            "defaultValue": "3.x",
+            "helpMarkDown": "Version range or exact version of a Python version to use, using semver's version range syntax. [More information](https://go.microsoft.com/fwlink/?LinkID=2006180)"
+        },
+        {
+            "name": "addToPath",
+            "type": "boolean",
+            "label": "Add to PATH",
+            "required": true,
+            "defaultValue": "true",
+            "helpMarkDown": "Whether to prepend the retrieved Python version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable."
+        },
+        {
+            "name": "architecture",
+            "type": "pickList",
+            "label": "Architecture",
+            "defaultValue": "x64",
+            "required": true,
+            "helpMarkDown": "The target architecture (x86, x64) of the Python interpreter.",
+            "groupName": "advanced",
+            "options": {
+                "x86": "x86",
+                "x64": "x64"
+            }
+        }
+    ],
+    "outputVariables": [
+        {
+            "name": "pythonLocation",
+            "description": "The directory of the installed Python distribution. Use this in subsequent tasks to access this installation of Python."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "ListAvailableVersions": "Available versions:",
+        "PlatformNotRecognized": "Platform not recognized",
+        "PrependPath": "Prepending PATH environment variable with directory: %s",
+        "VersionNotFound": "Version spec %s for architecture %s did not match any version in the tool cache."
+    }
+}

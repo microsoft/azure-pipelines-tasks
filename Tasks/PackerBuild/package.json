@@ -1,7 +1,0 @@
-{
-  "name": "vsts-tasks-packerbuild",
-  "main":"main.js",
-  "dependencies": {
-    "vsts-task-lib" : "^1.1.0"
-  }
-}

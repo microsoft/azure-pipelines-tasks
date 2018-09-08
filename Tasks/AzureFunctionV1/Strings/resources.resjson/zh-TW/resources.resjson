@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Invoke Azure Function",
+  "loc.helpMarkDown": "[More Information](https://docs.microsoft.com/en-us/vsts/build-release/tasks/utility/azure-function)",
+  "loc.description": "Invoke Azure function as a part of your process.",
+  "loc.instanceNameFormat": "Azure Function: $(function)",
+  "loc.group.displayName.completionOptions": "進階",
+  "loc.input.label.function": "Azure function url",
+  "loc.input.help.function": "Url of the Azure function that needs to be invoked​. Example:- https://azurefunctionapp.azurewebsites.net/api/HttpTriggerJS1",
+  "loc.input.label.key": "Function key",
+  "loc.input.help.key": "Function or Host key with which we can access this function. To keep the key secure, define a secret variable and use it here. Example: - $(myFunctionKey) where myFunctionKey is an environment level secret variable with value as the secret key like ZxPXnIEODXLRzYwCw1TgZ4osMfoKs9Zn6se6X/N0FnztfDvZbdOmYw==",
+  "loc.input.label.method": "方法",
+  "loc.input.help.method": "Select the http method with which the function should be invoked with.",
+  "loc.input.label.headers": "標頭",
+  "loc.input.help.headers": "使用 JSON 格式定義標頭。標頭應附加在要傳送的要求上。",
+  "loc.input.label.queryParameters": "Query parameters",
+  "loc.input.help.queryParameters": "Query parameters string append to the function Url. Should not start with with \"?\" and \"&\".",
+  "loc.input.label.body": "本文",
+  "loc.input.help.body": "JSON formatted message body for the request.",
+  "loc.input.label.waitForCompletion": "Completion event",
+  "loc.input.help.waitForCompletion": "Default value \"ApiResponse\". Available values :  \"ApiResponse\", \"Callback\" call where the Azure function calls back to update the timeline record​.",
+  "loc.input.label.successCriteria": "Success criteria",
+  "loc.input.help.successCriteria": "Criteria which defines when to pass the task. No criteria means response content does not influence the result. Example:- For response {\"status\" : \"successful\"}, the expression can be eq(root['status'], 'successful'). [More Information](https://go.microsoft.com/fwlink/?linkid=842996)​"
+}

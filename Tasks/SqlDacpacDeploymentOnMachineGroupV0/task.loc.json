@@ -1,0 +1,209 @@
+{
+  "id": "4B506F7F-720F-47BB-BF21-029BAC6A690D",
+  "name": "SqlDacpacDeploymentOnMachineGroup",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "runsOn": [
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 3,
+    "Patch": 11
+  },
+  "demands": [],
+  "minimumAgentVersion": "1.102.0",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "TaskType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TaskType",
+      "required": true,
+      "defaultValue": "dacpac",
+      "options": {
+        "dacpac": "Sql Dacpac",
+        "sqlQuery": "Sql Query File",
+        "sqlInline": "Inline Sql"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TaskType"
+    },
+    {
+      "name": "DacpacFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.DacpacFile",
+      "required": true,
+      "visibleRule": "TaskType = dacpac",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.DacpacFile"
+    },
+    {
+      "name": "SqlFile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlFile",
+      "required": true,
+      "visibleRule": "TaskType = sqlQuery",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlFile"
+    },
+    {
+      "name": "ExecuteInTransaction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExecuteInTransaction",
+      "required": false,
+      "visibleRule": "TaskType = sqlQuery",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ExecuteInTransaction"
+    },
+    {
+      "name": "ExclusiveLock",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExclusiveLock",
+      "required": false,
+      "visibleRule": "ExecuteInTransaction = true",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ExclusiveLock"
+    },
+    {
+      "name": "AppLockName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppLockName",
+      "required": true,
+      "visibleRule": "ExclusiveLock = true",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AppLockName"
+    },
+    {
+      "name": "InlineSql",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.InlineSql",
+      "required": true,
+      "visibleRule": "TaskType = sqlInline",
+      "defaultValue": "",
+      "properties": {
+        "resizable": "true",
+        "rows": "10"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.InlineSql"
+    },
+    {
+      "name": "TargetMethod",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.TargetMethod",
+      "required": true,
+      "defaultValue": "server",
+      "visibleRule": "TaskType = dacpac",
+      "options": {
+        "server": "Server",
+        "connectionString": "Connection String",
+        "publishProfile": "Publish Profile"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.TargetMethod"
+    },
+    {
+      "name": "ServerName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ServerName",
+      "required": true,
+      "defaultValue": "localhost",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerName"
+    },
+    {
+      "name": "DatabaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.DatabaseName",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "helpMarkDown": "ms-resource:loc.input.help.DatabaseName"
+    },
+    {
+      "name": "AuthScheme",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.AuthScheme",
+      "required": true,
+      "defaultValue": "windowsAuthentication",
+      "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+      "options": {
+        "windowsAuthentication": "Windows Authentication",
+        "sqlServerAuthentication": "SQL Server Authentication"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.AuthScheme"
+    },
+    {
+      "name": "SqlUsername",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlUsername",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "AuthScheme = sqlServerAuthentication",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlUsername"
+    },
+    {
+      "name": "SqlPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.SqlPassword",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "AuthScheme = sqlServerAuthentication",
+      "helpMarkDown": "ms-resource:loc.input.help.SqlPassword"
+    },
+    {
+      "name": "ConnectionString",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.ConnectionString",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "TargetMethod = connectionString",
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectionString"
+    },
+    {
+      "name": "PublishProfile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.PublishProfile",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "TaskType = dacpac",
+      "helpMarkDown": "ms-resource:loc.input.help.PublishProfile"
+    },
+    {
+      "name": "AdditionalArguments",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArguments",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "TaskType = dacpac",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArguments"
+    },
+    {
+      "name": "AdditionalArgumentsSql",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.AdditionalArgumentsSql",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "TaskType = sqlQuery || TaskType = sqlInline",
+      "helpMarkDown": "ms-resource:loc.input.help.AdditionalArgumentsSql"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "$(currentDirectory)\\Main.ps1"
+    }
+  },
+  "messages": {
+    "SQLPowershellModuleisnotinstalledonyouragentmachine": "ms-resource:loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine",
+    "InstallPowershellToolsharedManagementObjectsdependency": "ms-resource:loc.messages.InstallPowershellToolsharedManagementObjectsdependency",
+    "RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "ms-resource:loc.messages.RestartagentmachineafterinstallingtoolstoregisterModulepathupdates",
+    "RunImportModuleSQLPSonyouragentPowershellprompt": "ms-resource:loc.messages.RunImportModuleSQLPSonyouragentPowershellprompt",
+    "Nofileswerefoundtodeploywithsearchpattern0": "ms-resource:loc.messages.Nofileswerefoundtodeploywithsearchpattern0",
+    "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "ms-resource:loc.messages.Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone"
+  }
+}

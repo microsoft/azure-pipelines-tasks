@@ -3,9 +3,11 @@ import tl = require('vsts-task-lib/task');
 import trm = require('vsts-task-lib/toolrunner');
 import fs = require('fs');
 import path = require('path');
+import { Package, PackageType } from './packageUtility';
 
 var winreg = require('winreg');
 var parseString = require('xml2js').parseString;
+const ERROR_FILE_NAME = "error.txt";
 
 /**
  * Constructs argument for MSDeploy command
@@ -34,27 +36,40 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     var webApplicationDeploymentPath = (virtualApplication) ? webAppName + "/" + virtualApplication : webAppName;
     
     if(isFolderBasedDeployment) {
-        msDeployCmdArgs += " -source:IisApp=\'" + webAppPackage + "\'";
-        msDeployCmdArgs += " -dest:iisApp=\'" + webApplicationDeploymentPath + "\'";
+        msDeployCmdArgs += " -source:IisApp=\"'" + webAppPackage + "'\"";
+        msDeployCmdArgs += " -dest:iisApp=\"'" + webApplicationDeploymentPath + "'\"";
     }
-    else {       
-        msDeployCmdArgs += " -source:package=\'" + webAppPackage + "\'";
+    else {
+        if (webAppPackage && webAppPackage.toLowerCase().endsWith('.war')) {
+            tl.debug('WAR: webAppPackage = ' + webAppPackage);
+            let warFile = path.basename(webAppPackage.slice(0, webAppPackage.length - '.war'.length));
+            let warExt = webAppPackage.slice(webAppPackage.length - '.war'.length)
+            tl.debug('WAR: warFile = ' + warFile);
+            warFile = (virtualApplication) ? warFile + "/" + virtualApplication + warExt : warFile + warExt;
+            tl.debug('WAR: warFile = ' + warFile);
+            msDeployCmdArgs += " -source:contentPath=\"'" + webAppPackage + "'\"";
+            // tomcat, jetty location on server => /site/webapps/
+            tl.debug('WAR: dest = /site/webapps/' + warFile);
+            msDeployCmdArgs += " -dest:contentPath=\"'/site/webapps/" + warFile + "'\"";
+        } else {
+            msDeployCmdArgs += " -source:package=\"'" + webAppPackage + "'\"";
 
-        if(isParamFilePresentInPacakge) {
-            msDeployCmdArgs += " -dest:auto";
-        }
-        else {
-            msDeployCmdArgs += " -dest:contentPath=\'" + webApplicationDeploymentPath + "\'";
+            if(isParamFilePresentInPacakge) {
+                msDeployCmdArgs += " -dest:auto";
+            }
+            else {
+                msDeployCmdArgs += " -dest:contentPath=\"'" + webApplicationDeploymentPath + "'\"";
+            }
         }
     }
 
     if(publishingProfile != null) {
-        msDeployCmdArgs += ",ComputerName='https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "',";
-        msDeployCmdArgs += "UserName='" + publishingProfile.userName + "',Password='" + publishingProfile.userPWD + "',AuthType='Basic'";
+        msDeployCmdArgs += ",ComputerName=\"'https://" + publishingProfile.publishUrl + "/msdeploy.axd?site=" + webAppName + "'\",";
+        msDeployCmdArgs += "UserName=\"'" + publishingProfile.userName + "'\",Password=\"'" + publishingProfile.userPWD + "'\",AuthType=\"'Basic'\"";
     }
     
     if(isParamFilePresentInPacakge) {
-        msDeployCmdArgs += " -setParam:name='IIS Web Application Name',value='" + webApplicationDeploymentPath + "'";
+        msDeployCmdArgs += " -setParam:name=\"'IIS Web Application Name'\",value=\"'" + webApplicationDeploymentPath + "'\"";
     }
 
     if(takeAppOfflineFlag) {
@@ -69,11 +84,10 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
         if(excludeFilesFromAppDataFlag) {
             msDeployCmdArgs += ' -skip:Directory=App_Data';
         }
-        
-        if(additionalArguments) {
-            msDeployCmdArgs += ' ' + additionalArguments;
-        }
     }
+
+    additionalArguments = additionalArguments ? additionalArguments : ' ';
+    msDeployCmdArgs += ' ' + additionalArguments;
 
     if(!(removeAdditionalFilesFlag && useWebDeploy)) {
         msDeployCmdArgs += " -enableRule:DoNotDeleteRule";
@@ -92,6 +106,13 @@ export function getMSDeployCmdArgs(webAppPackage: string, webAppName: string, pu
     return msDeployCmdArgs;
 }
 
+
+export async function getWebDeployArgumentsString(webDeployArguments: WebDeployArguments, publishingProfile: any) {
+    return getMSDeployCmdArgs(webDeployArguments.package.getPath(), webDeployArguments.appName, publishingProfile, webDeployArguments.removeAdditionalFilesFlag,
+    webDeployArguments.excludeFilesFromAppDataFlag, webDeployArguments.takeAppOfflineFlag, webDeployArguments.virtualApplication, 
+    webDeployArguments.setParametersFile, webDeployArguments.additionalArguments, await webDeployArguments.package.isMSBuildPackage(), webDeployArguments.package.isFolder(), webDeployArguments.useWebDeploy);
+}
+
 /**
  * Gets the full path of MSDeploy.exe
  * 
@@ -107,7 +128,7 @@ export async function getMSDeployFullPath() {
     }
     catch(error) {
         tl.debug(error);
-        return path.join(__dirname, "..", "..", "MSDeploy3.6", "msdeploy.exe"); 
+        return path.join(__dirname, "MSDeploy3.6", "msdeploy.exe"); 
     }
 }
 
@@ -136,7 +157,7 @@ function getMSDeployLatestRegKey(registryKey: string): Q.Promise<string> {
             }
         }
         if(latestKeyVersion < 3) {
-            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbealteast3orabove", latestKeyVersion));
+            defer.reject(tl.loc("UnsupportedinstalledversionfoundforMSDeployversionshouldbeatleast3orabove", latestKeyVersion));
         }
          defer.resolve(latestSubKey);
     });
@@ -167,7 +188,7 @@ function getMSDeployInstallPath(registryKey: string): Q.Promise<string> {
  * 2. Checks if there is file in use error , suggest to try app offline.
  */
 export function redirectMSDeployErrorToConsole() {
-    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\error.txt';
+    var msDeployErrorFilePath = tl.getVariable('System.DefaultWorkingDirectory') + '\\' + ERROR_FILE_NAME;
     
     if(tl.exist(msDeployErrorFilePath)) {
         var errorFileContent = fs.readFileSync(msDeployErrorFilePath).toString();
@@ -176,9 +197,14 @@ export function redirectMSDeployErrorToConsole() {
             if(errorFileContent.indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
                 tl.warning(tl.loc("Trytodeploywebappagainwithappofflineoptionselected"));
             }
-
-            if(errorFileContent.indexOf("FILE_IN_USE") !== -1) {
+            else if(errorFileContent.indexOf("An error was encountered when processing operation 'Delete Directory' on 'D:\\home\\site\\wwwroot\\app_data\\jobs'") !== -1) {
+                tl.warning(tl.loc('WebJobsInProgressIssue'));
+            }
+            else if(errorFileContent.indexOf("FILE_IN_USE") !== -1) {
                 tl.warning(tl.loc("Trytodeploywebappagainwithrenamefileoptionselected"));
+            }
+            else if(errorFileContent.indexOf("transport connection") != -1){
+                errorFileContent = errorFileContent + tl.loc("Updatemachinetoenablesecuretlsprotocol");
             }
           
             tl.error(errorFileContent);
@@ -186,4 +212,51 @@ export function redirectMSDeployErrorToConsole() {
 
         tl.rmRF(msDeployErrorFilePath);
     }
+}
+
+export function getWebDeployErrorCode(errorMessage): string {
+    if(errorMessage !== "") {
+        if(errorMessage.indexOf("ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER") !== -1) {
+            return "ERROR_INSUFFICIENT_ACCESS_TO_SITE_FOLDER";
+        }
+        else if(errorMessage.indexOf("An error was encountered when processing operation 'Delete Directory' on 'D:\\home\\site\\wwwroot\\app_data\\jobs") !== -1) {
+            return "WebJobsInProgressIssue";
+        }
+        else if(errorMessage.indexOf("FILE_IN_USE") !== -1) {
+            return "FILE_IN_USE";
+        }
+        else if(errorMessage.indexOf("transport connection") != -1){
+            return "transport connection";
+        }
+        else if(errorMessage.indexOf("ERROR_CONNECTION_TERMINATED") != -1) {
+            return "ERROR_CONNECTION_TERMINATED"
+        }
+        else if(errorMessage.indexOf("ERROR_CERTIFICATE_VALIDATION_FAILED") != -1) {
+            return "ERROR_CERTIFICATE_VALIDATION_FAILED";
+        }
+    }
+
+    return "";
+}
+
+export interface WebDeployArguments {
+    package: Package;
+    appName: string;
+    publishUrl?: string;
+    userName?: string;
+    password?: string;
+    removeAdditionalFilesFlag?: boolean;
+    excludeFilesFromAppDataFlag?: boolean;
+    takeAppOfflineFlag?: boolean;
+    virtualApplication?: string;
+    setParametersFile?: string
+    additionalArguments?: string;
+    useWebDeploy?: boolean;
+}
+
+
+export interface WebDeployResult {
+    isSuccess: boolean;
+    errorCode?: string;
+    error?: string;
 }

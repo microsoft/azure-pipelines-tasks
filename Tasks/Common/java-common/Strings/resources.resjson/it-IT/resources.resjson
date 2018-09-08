@@ -1,4 +1,4 @@
 {
   "loc.messages.LocateJVMBasedOnVersionAndArch": "Individuare JAVA_HOME per Java %s %s",
-  "loc.messages.FailedToLocateSpecifiedJVM": "La versione JDK specificata non è stata trovata. Assicurarsi che la variabile di ambiente '%s' sia presente e sia impostata sul percorso di un JDK corrispondente."
+  "loc.messages.FailedToLocateSpecifiedJVM": "La versione del JDK specificata non è stata trovata. Assicurarsi che sia installata nell'agente e che la variabile di ambiente '%s' sia presente e impostata sul percorso di un JDK corrispondente oppure usare l'attività [Programma di installazione strumenti Java](https://docs.microsoft.com/it-it/vsts/build-release/tasks/tool/java-tool-installer) per installare il JDK desiderato."
 }

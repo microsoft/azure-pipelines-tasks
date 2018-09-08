@@ -1,0 +1,194 @@
+{
+  "id": "97EF6E59-B8CC-48AA-9937-1A01E35E7584",
+  "name": "ServiceFabricUpdateManifests",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "demands": [
+    "Cmd"
+  ],
+  "version": {
+    "Major": 2,
+    "Minor": 3,
+    "Patch": 0
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "updateType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.updateType",
+      "defaultValue": "Manifest versions",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.updateType",
+      "options": {
+        "Manifest versions": "Manifest versions",
+        "Docker image settings": "Docker image settings"
+      }
+    },
+    {
+      "name": "applicationPackagePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.applicationPackagePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.applicationPackagePath"
+    },
+    {
+      "name": "versionSuffix",
+      "_name_comment": "Intentionally leaving the name as 'versionSuffix' in order to be backwards compatible",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionSuffix",
+      "defaultValue": ".$(Build.BuildNumber)",
+      "required": true,
+      "visibleRule": "updateType = Manifest versions",
+      "helpMarkDown": "ms-resource:loc.input.help.versionSuffix"
+    },
+    {
+      "name": "versionBehavior",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versionBehavior",
+      "defaultValue": "Append",
+      "required": false,
+      "visibleRule": "updateType = Manifest versions",
+      "helpMarkDown": "ms-resource:loc.input.help.versionBehavior",
+      "options": {
+        "Append": "Append",
+        "Replace": "Replace"
+      }
+    },
+    {
+      "name": "updateOnlyChanged",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.updateOnlyChanged",
+      "defaultValue": "false",
+      "required": true,
+      "visibleRule": "updateType = Manifest versions",
+      "helpMarkDown": "ms-resource:loc.input.help.updateOnlyChanged"
+    },
+    {
+      "name": "pkgArtifactName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pkgArtifactName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.pkgArtifactName",
+      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
+    },
+    {
+      "name": "logAllChanges",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.logAllChanges",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.logAllChanges",
+      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
+    },
+    {
+      "name": "compareType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.compareType",
+      "defaultValue": "LastSuccessful",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.compareType",
+      "options": {
+        "LastSuccessful": "Last Successful Build",
+        "Specific": "Specific Build"
+      },
+      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true"
+    },
+    {
+      "name": "buildNumber",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.buildNumber",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.buildNumber",
+      "visibleRule": "updateType = Manifest versions && compareType = Specific"
+    },
+    {
+      "name": "overwriteExistingPkgArtifact",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.overwriteExistingPkgArtifact",
+      "defaultValue": "true",
+      "required": false,
+      "visibleRule": "updateType = Manifest versions && updateOnlyChanged = true",
+      "helpMarkDown": "ms-resource:loc.input.help.overwriteExistingPkgArtifact"
+    },
+    {
+      "name": "imageNamesPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageNamesPath",
+      "required": false,
+      "visibleRule": "updateType = Docker image settings",
+      "helpMarkDown": "ms-resource:loc.input.help.imageNamesPath"
+    },
+    {
+      "name": "imageDigestsPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.imageDigestsPath",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "updateType = Docker image settings",
+      "helpMarkDown": "ms-resource:loc.input.help.imageDigestsPath"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "Update-Manifests.ps1"
+    }
+  },
+  "messages": {
+    "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
+    "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
+    "SearchingForApplicationPackage": "ms-resource:loc.messages.SearchingForApplicationPackage",
+    "FoundApplicationPackage": "ms-resource:loc.messages.FoundApplicationPackage",
+    "VersionValueLabel": "ms-resource:loc.messages.VersionValueLabel",
+    "BuildNumberNotSpecified": "ms-resource:loc.messages.BuildNumberNotSpecified",
+    "VstsRestApiFailed": "ms-resource:loc.messages.VstsRestApiFailed",
+    "DownloadingArtifact": "ms-resource:loc.messages.DownloadingArtifact",
+    "DownloadingArtifactProgress": "ms-resource:loc.messages.DownloadingArtifactProgress",
+    "FinishedDownloadingArtifact": "ms-resource:loc.messages.FinishedDownloadingArtifact",
+    "UnrecognizedArtifactType": "ms-resource:loc.messages.UnrecognizedArtifactType",
+    "PreviousBuildNumberLabel": "ms-resource:loc.messages.PreviousBuildNumberLabel",
+    "PreviousBuildLocationLabel": "ms-resource:loc.messages.PreviousBuildLocationLabel",
+    "NoPreviousSuccessfulBuild": "ms-resource:loc.messages.NoPreviousSuccessfulBuild",
+    "NoManifestInPreviousBuild": "ms-resource:loc.messages.NoManifestInPreviousBuild",
+    "UpdatedApplicationTypeVersion": "ms-resource:loc.messages.UpdatedApplicationTypeVersion",
+    "UpdatedServiceVerison": "ms-resource:loc.messages.UpdatedServiceVerison",
+    "UpdatedPackageVerison": "ms-resource:loc.messages.UpdatedPackageVerison",
+    "UpdatedApplicationTypeVersionFromPrevious": "ms-resource:loc.messages.UpdatedApplicationTypeVersionFromPrevious",
+    "UpdatedServiceVerisonFromPrevious": "ms-resource:loc.messages.UpdatedServiceVerisonFromPrevious",
+    "UpdatedPackageVerisonFromPrevious": "ms-resource:loc.messages.UpdatedPackageVerisonFromPrevious",
+    "NewService": "ms-resource:loc.messages.NewService",
+    "NewPackage": "ms-resource:loc.messages.NewPackage",
+    "SearchingApplicationType": "ms-resource:loc.messages.SearchingApplicationType",
+    "SearchingService": "ms-resource:loc.messages.SearchingService",
+    "SearchingPackage": "ms-resource:loc.messages.SearchingPackage",
+    "AppManifestChanged": "ms-resource:loc.messages.AppManifestChanged",
+    "ServiceManifestChanged": "ms-resource:loc.messages.ServiceManifestChanged",
+    "PackageManifestChanged": "ms-resource:loc.messages.PackageManifestChanged",
+    "FileRemoved": "ms-resource:loc.messages.FileRemoved",
+    "FileAdded": "ms-resource:loc.messages.FileAdded",
+    "FileChanged": "ms-resource:loc.messages.FileChanged",
+    "NoChanges": "ms-resource:loc.messages.NoChanges",
+    "PdbWarning": "ms-resource:loc.messages.PdbWarning",
+    "InvalidImageDigestValue": "ms-resource:loc.messages.InvalidImageDigestValue",
+    "CouldNotFindSubPath": "ms-resource:loc.messages.CouldNotFindSubPath",
+    "PreviousPackageLocation": "ms-resource:loc.messages.PreviousPackageLocation",
+    "ImageDigestListMismatch": "ms-resource:loc.messages.ImageDigestListMismatch",
+    "AmbiguousImages": "ms-resource:loc.messages.AmbiguousImages",
+    "ImageDigestNameMismatch": "ms-resource:loc.messages.ImageDigestNameMismatch",
+    "NoDigestForImage": "ms-resource:loc.messages.NoDigestForImage"
+  }
+}

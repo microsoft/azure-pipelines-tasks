@@ -21,6 +21,23 @@
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:settings.runsettings /logger:trx": {
             "code": 0,
             "stdout": "vstest"
+        },
+        "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\vstest.console.exe /source/dir/someFile1 /Settings:E:\\settings.runsettings /logger:trx": {
+            "code": 0,
+            "stdout": "vstest"
+        },
+        "wmic datafile where name='\\\\vs\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\TestWindow\\\\vstest.console.exe' get Version /Value": {
+			"code": 0,
+			"stdout" : "version=14.0.0.0"
+        },
+        "C:\\WINDOWS\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\Windows\\system32\\chcp.com 65001": {
+            "code": 0
+        },
+        "C:\\windows\\system32\\chcp.com 65001": {
+            "code": 0
         }
     },
     "rmRF": {
@@ -32,7 +49,12 @@
     "exist": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": true,
         "settings.runsettings": true,
-        "settings.testsettings": true
+        "settings.testsettings": true,
+        "E:\\settings.runsettings": true,
+        "/source/dir":true
+    },
+    "checkPath": {
+        "E:\\settings.runsettings": true
     },
     "stats": {
         "\\vs\\IDE\\CommonExtensions\\Microsoft\\TestWindow\\TE.TestModes.dll": {
@@ -43,6 +65,12 @@
         },
         "settings.testsettings": {
             "isFile": true
+        },
+        "E:\\settings.runsettings": {
+            "isFile": true
+        },
+        "/source/dir": {
+            "isDirectory":true
         }
     }
 }

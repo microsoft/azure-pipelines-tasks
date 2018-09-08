@@ -26,7 +26,8 @@ function Get-AadSecurityToken
     $connectionParametersWithGetMetadata.Add("GetMetadata", $true)
 
     # Query cluster metadata
-    $connectResult = Connect-ServiceFabricCluster @connectionParametersWithGetMetadata
+    $global:operationId = $SF_Operations.ConnectClusterMetadata
+    $connectResult = Connect-ServiceFabricClusterAction -ClusterConnectionParameters $connectionParametersWithGetMetadata
     $authority = $connectResult.AzureActiveDirectoryMetadata.Authority
     Write-Host (Get-VstsLocString -Key AadAuthority -ArgumentList $authority)
     $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
@@ -79,7 +80,7 @@ function Add-Certificate
 
         # Explicitly set the key storage to use UserKeySet.  This will ensure the private key is stored in a folder location which the user has access to.
         # If we don't explicitly set it to UserKeySet, it's possible the MachineKeySet will be used which the user doesn't have access to that folder location, resulting in an access denied error.
-        $certificate.Import($bytes, $certPassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
+        $certificate.Import($bytes, $certPassword, "PersistKeySet,UserKeySet")
     }
     catch
     {
@@ -109,8 +110,31 @@ function Add-Certificate
 
     return $certificate
 }
+function Remove-ClientCertificate
+{
+    [CmdletBinding()]
+    Param (
+        $Certificate
+    )
 
-function Connect-ServiceFabricClusterFromServiceEndpoint {
+    try
+    {
+        if ($null -ne $Certificate)
+        {
+            $thumbprint = $Certificate.Thumbprint
+            if (Test-Path "Cert:\CurrentUser\My\$thumbprint")
+            {
+                Remove-Item "Cert:\CurrentUser\My\$thumbprint" -Force
+            }
+        }
+    }
+    catch
+    {
+        Write-Warning (Get-VstsLocString -Key WarningOnRemoveCertificate -ArgumentList $_)
+    }
+}
+function Connect-ServiceFabricClusterFromServiceEndpoint
+{
     [CmdletBinding()]
     param(
         [Hashtable]
@@ -120,8 +144,14 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
-    try {
 
+    Import-Module $PSScriptRoot/../TlsHelper_
+    Import-Module $PSScriptRoot/../PowershellHelpers
+    Add-Tls12InSession
+
+    try
+    {
+        $certificate = $null
         $regKey = "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
         if (!(Test-Path $regKey))
         {
@@ -135,10 +165,10 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
         # Configure cluster connection pre-reqs
         if ($ConnectedServiceEndpoint.Auth.Scheme -ne "None")
         {
-            # Add server cert thumbprint (common to both auth-types)
+            # Add server cert thumbprint(s) (common to both auth-types)
             if ($ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint)
             {
-                $clusterConnectionParameters["ServerCertThumbprint"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint
+                $clusterConnectionParameters["ServerCertThumbprint"] = $ConnectedServiceEndpoint.Auth.Parameters.ServerCertThumbprint -split ',' | ForEach-Object { $_.Trim() }
             }
 
             # Add auth-specific parameters
@@ -154,29 +184,81 @@ function Connect-ServiceFabricClusterFromServiceEndpoint {
             }
             elseif ($ConnectedServiceEndpoint.Auth.Scheme -eq "Certificate")
             {
-                Add-Certificate -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
+                $certificate = Add-Certificate -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $ConnectedServiceEndpoint
                 $clusterConnectionParameters["X509Credential"] = $true
+            }
+        }
+        else
+        {
+            if ($ConnectedServiceEndpoint.Auth.Parameters.UseWindowsSecurity -eq "true")
+            {
+                Write-Debug (Get-VstsLocString -Key UseWindowsSecurity)
+                $clusterConnectionParameters["WindowsCredential"] = $true
+
+                $clusterSpn = $ConnectedServiceEndpoint.Auth.Parameters.ClusterSpn
+                if ($clusterSpn)
+                {
+                    $clusterConnectionParameters["ClusterSpn"] = $clusterSpn
+                }
             }
         }
 
         # Connect to cluster
-        try {
-            [void](Connect-ServiceFabricCluster @clusterConnectionParameters)
+        $global:operationId = $SF_Operations.ConnectCluster
+        try
+        {
+            [void](Connect-ServiceFabricClusterAction -ClusterConnectionParameters $clusterConnectionParameters)
+            return $certificate
         }
-        catch {
-            if ($connectionEndpointUrl.Port -ne "19000") {
+        catch
+        {
+            if ($connectionEndpointUrl.Port -ne "19000")
+            {
                 Write-Warning (Get-VstsLocString -Key DefaultPortWarning $connectionEndpointUrl.Port)
             }
 
             throw $_
         }
 
-        Write-Host (Get-VstsLocString -Key ConnectedToCluster)
-
-        # Reset the scope of the ClusterConnection variable that gets set by the call to Connect-ServiceFabricCluster so that it is available outside the scope of this module
-        Set-Variable -Name ClusterConnection -Value $Private:ClusterConnection -Scope Global
-
-    } finally {
+    }
+    catch
+    {
+        Assert-TlsError -exception $_.Exception
+        throw
+    }
+    finally
+    {
         Trace-VstsLeavingInvocation $MyInvocation
     }
+}
+
+function Connect-ServiceFabricClusterAction
+{
+    param(
+        [Hashtable]
+        $ClusterConnectionParameters
+    )
+
+    $connectResult = $null
+
+    try
+    {
+        # Call a trial Connect-ServiceFabricCluster first so that ServiceFabric PS module gets loaded. Retry only if this connect fails.
+        $connectResult = Connect-ServiceFabricCluster @clusterConnectionParameters
+    }
+    catch [System.Fabric.FabricTransientException], [System.TimeoutException]
+    {
+        $connectAction = { Connect-ServiceFabricCluster @clusterConnectionParameters }
+        $connectResult = Invoke-ActionWithRetries -Action $connectAction `
+            -MaxTries 3 `
+            -RetryIntervalInSeconds 10 `
+            -RetryableExceptions @("System.Fabric.FabricTransientException", "System.TimeoutException") `
+            -RetryMessage (Get-VstsLocString -Key RetryingClusterConnection)
+    }
+
+    Write-Host (Get-VstsLocString -Key ConnectedToCluster)
+
+    # Reset the scope of the ClusterConnection variable that gets set by the call to Connect-ServiceFabricCluster so that it is available outside the scope of this module
+    Set-Variable -Name ClusterConnection -Value $Private:ClusterConnection -Scope Global
+    return $connectResult
 }

@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Appeler l'API REST",
+  "loc.helpMarkDown": "[Plus d'informations](https://docs.microsoft.com/fr-fr/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.description": "Appelez l'API REST dans le cadre de votre processus.",
+  "loc.instanceNameFormat": "Appeler l'API REST : $(method)",
+  "loc.group.displayName.completionOptions": "Avancé",
+  "loc.input.label.connectedServiceName": "Point de terminaison générique",
+  "loc.input.help.connectedServiceName": "Sélectionnez un point de terminaison générique pour choisir l'URL et construire l'en-tête d'autorisation de la requête HTTP.",
+  "loc.input.label.method": "Méthode",
+  "loc.input.help.method": "Sélectionnez la méthode HTTP avec laquelle l'API doit être appelée.",
+  "loc.input.label.headers": "En-têtes",
+  "loc.input.help.headers": "Définissez l'en-tête au format JSON. L'en-tête doit être attaché à la requête à envoyer.",
+  "loc.input.label.body": "Corps",
+  "loc.input.label.urlSuffix": "Suffixe et paramètres d'URL",
+  "loc.input.help.urlSuffix": "La chaîne donnée est ajoutée à l'URL. Exemple : si l'URL du point de terminaison est https:...TestProj/_apis/Release/releases et si le suffixe de l'URL est /2/environments/1, l'URL du point de terminaison devient https:.../TestProj/_apis/Release/releases/2/environments/1. Si le suffixe de l'URL est ?definitionId=1&releaseCount=1 l'URL du point de terminaison devient https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
+  "loc.input.label.waitForCompletion": "Événement de complétion",
+  "loc.input.help.waitForCompletion": "La valeur par défaut est \"ApiResponse\". Valeurs disponibles : \"ApiResponse\", \"Callback\" quand l'API REST effectue un rappel pour mettre à jour l'enregistrement de chronologie​.",
+  "loc.input.label.successCriteria": "Critères de réussite",
+  "loc.input.help.successCriteria": "Critères qui définissent la réussite de la tâche. L'absence de critères signifie que le contenu de la réponse n'influence pas le résultat. Exemple : - Pour une réponse de type {\"état\" : \"réussite\"}, l'expression peut être eq(root['état'], 'réussite'). [Plus d'informations](https://go.microsoft.com/fwlink/?linkid=842996)​"
+}

@@ -1,3 +1,6 @@
+Refer to [https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/yamlgettingstarted.md](https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/yamlgettingstarted.md)
+
+<!--
 # Simple Yaml Builds
 
 ## Goals
@@ -226,6 +229,4 @@ New definition templates can be provided in the box or user created from a defin
 For the in the box templates we deliver, we will deliver yaml as the template.  When you create a user template from a definition it will be either a yaml or web edited definition.
 
 If the definition template is backed by yaml, then when creating a definition from a template, we will offer the choice of whether you want a yaml or web edited process.  We can derive both from a yaml (higher level construct) but not go the other way and create yaml from the lower level step construct.
-
-
-
+-->

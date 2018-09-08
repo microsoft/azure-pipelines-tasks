@@ -2,9 +2,11 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "Il modulo 'AzureRM.Profile' non è stato trovato. È possibile che il modulo 'AzureRM' non sia completamente installato. Per risolvere il problema, provare a eseguire i comandi di PowerShell seguenti da una sessione con privilegi elevati: Import-Module AzureRM; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "L'autenticazione basata su certificato non è supportata. Il modulo Azure PowerShell non è stato trovato.",
   "loc.messages.AZ_CredentialsError": "Si è verificato un errore con le credenziali di Azure usate per la distribuzione.",
-  "loc.messages.AZ_ModuleNotFound": "Non è stato trovato né il modulo Azure né quello AzureRM. Se il modulo è stato installato di recente, riprovare dopo aver riavviato l'agente delle attività VSTS.",
+  "loc.messages.AZ_ModuleNotFound": "Non è stato trovato né il modulo Azure ('{0}') né quello AzureRM ('{0}'). Se il modulo è stato installato di recente, riprovare dopo aver riavviato l'agente delle attività VSTS.",
   "loc.messages.AZ_RequiresMinVersion0": "La versione minima richiesta ({0}) del modulo Azure PowerShell non è installata.",
   "loc.messages.AZ_ServicePrincipalError": "Si è verificato un errore con l'entità servizio usata per la distribuzione.",
   "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "L'autenticazione basata su entità servizio non è supportata nella versione '{0}' del modulo Azure.",
-  "loc.messages.AZ_UnsupportedAuthScheme0": "Lo schema di autenticazione '{0}' non è supportato per l'endpoint di Azure."
+  "loc.messages.AZ_UnsupportedAuthScheme0": "Lo schema di autenticazione '{0}' non è supportato per l'endpoint di Azure.",
+  "loc.messages.AZ_AvailableModules": "Elenco dei moduli {0} disponibili:",
+  "loc.messages.AZ_InvalidARMEndpoint": "L'endpoint di AzureRm specificato non è valido."
 }

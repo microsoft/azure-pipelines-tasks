@@ -1,0 +1,18 @@
+{
+  "name": "vsts-tasks-msbuild",
+  "description": "VSTS MSBuild Task",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "msbuildhelpers": "file:../../_build/Tasks/Common/msbuildhelpers-1.0.0.tgz",
+    "vsts-task-lib": "^2.0.3-preview"
+  }
+}

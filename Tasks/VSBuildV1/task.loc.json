@@ -1,0 +1,151 @@
+{
+  "id": "71A9A2D3-A98A-4CAA-96AB-AFFCA411ECDA",
+  "name": "VSBuild",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 126,
+    "Patch": 0
+  },
+  "demands": [
+    "msbuild",
+    "visualstudio"
+  ],
+  "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "solution",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.solution",
+      "defaultValue": "**\\*.sln",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.solution"
+    },
+    {
+      "name": "vsVersion",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.vsVersion",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.vsVersion",
+      "defaultValue": "latest",
+      "options": {
+        "latest": "Latest",
+        "15.0": "Visual Studio 2017",
+        "14.0": "Visual Studio 2015",
+        "12.0": "Visual Studio 2013",
+        "11.0": "Visual Studio 2012"
+      }
+    },
+    {
+      "name": "msbuildArgs",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.msbuildArgs",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildArgs"
+    },
+    {
+      "name": "platform",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.platform",
+      "helpMarkDown": "ms-resource:loc.input.help.platform",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "configuration",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.configuration",
+      "helpMarkDown": "ms-resource:loc.input.help.configuration",
+      "defaultValue": "",
+      "required": false
+    },
+    {
+      "name": "clean",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.clean",
+      "helpMarkDown": "ms-resource:loc.input.help.clean",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
+      "name": "maximumCpuCount",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.maximumCpuCount",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.maximumCpuCount"
+    },
+    {
+      "name": "restoreNugetPackages",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.restoreNugetPackages",
+      "defaultValue": "false",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.restoreNugetPackages"
+    },
+    {
+      "name": "msbuildArchitecture",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.msbuildArchitecture",
+      "defaultValue": "x86",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.msbuildArchitecture",
+      "groupName": "advanced",
+      "options": {
+        "x86": "MSBuild x86",
+        "x64": "MSBuild x64"
+      }
+    },
+    {
+      "name": "logProjectEvents",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.logProjectEvents",
+      "defaultValue": "true",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.logProjectEvents"
+    },
+    {
+      "name": "createLogFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.createLogFile",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.createLogFile",
+      "groupName": "advanced"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "PowerShell3": {
+      "target": "VSBuild.ps1"
+    }
+  },
+  "messages": {
+    "MSBuildLocationDeprecated0": "ms-resource:loc.messages.MSBuildLocationDeprecated0",
+    "MSBuildVersionDeprecated0": "ms-resource:loc.messages.MSBuildVersionDeprecated0",
+    "UnexpectedVSVersion0": "ms-resource:loc.messages.UnexpectedVSVersion0",
+    "VSLocationDeprecated0": "ms-resource:loc.messages.VSLocationDeprecated0",
+    "VSNotFoundTry": "ms-resource:loc.messages.VSNotFoundTry",
+    "VSVersion0NotFound": "ms-resource:loc.messages.VSVersion0NotFound",
+    "VSVersion0NotFoundFallbackVersion1": "ms-resource:loc.messages.VSVersion0NotFoundFallbackVersion1",
+    "VSVersion15NotFound": "ms-resource:loc.messages.VSVersion15NotFound"
+  }
+}

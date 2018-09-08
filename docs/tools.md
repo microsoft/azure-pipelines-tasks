@@ -48,32 +48,32 @@ The binary folder which will be used may not be directly under the root of the b
 
 Some tools have specific  env vars like M2_HOME.
 
-## Capabilities
+## Satisfies
 
 Tasks typically demand a capability of the agent which demonstrates the tool is found and installed on that agent.  By adding the task to the job, it implicitly adds the demand so the build routes to the proper agent.
 
 Since using a tool installer means the tool will be acquired if not present, the demand is satisfied by adding the installer task.  The tool installer task will declare capabilities it satisfies as well any demands it has.
 
-As an example, consider writing a tool installer task for [choclatey](https://choclatey.org) and there is a separate choclatey task.  Choclatey is a windows only tool.
+As an example, consider writing a tool installer task for [chocolatey](https://chocolatey.org) and there is a separate chocolatey task.  Chocolatey is a windows only tool.
 
-Choclatey task:
+Chocolatey task:
 ```
 demands: [
-    "choclatey"
+    "chocolatey"
 ]
 ``` 
 
-Choclatey tool installer task:
+Chocolatey tool installer task:
 ```
 demands: [
     "powershell"
 ],
-capabilities: [
-    "choclatey"
+satisfies: [
+    "chocolatey"
 ]
 ```
 
-So, adding the choclatey task will mean the definition demands choclatey but the choclatey installer task will bring the choclatey capability and satisfy that demand.  The choclatey installer tasks needs powershell to install so it would route to a windows machine with powershell.
+So, adding the chocolatey task will mean the definition demands chocolatey but the chocolatey installer task will bring the chocolatey capability and satisfy that demand.  The chocolatey installer tasks needs powershell to install so it would route to a windows machine with powershell.
 
 The tool installer may demand on OS .  Locator aspect.
 

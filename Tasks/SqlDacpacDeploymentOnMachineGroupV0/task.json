@@ -1,0 +1,209 @@
+{
+    "id": "4B506F7F-720F-47BB-BF21-029BAC6A690D",
+    "name": "SqlDacpacDeploymentOnMachineGroup",
+    "friendlyName": "SQL Server Database Deploy",
+    "description": "Deploy to SQL Server Database using DACPAC or SQL scripts",
+    "helpMarkDown": "[More Information](https://aka.ms/sqldacpacmachinegroupreadme)",
+    "category": "Deploy",
+    "visibility": [
+        "Release"
+    ],
+    "runsOn": [
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 3,
+        "Patch": 11
+    },
+    "demands": [],
+    "minimumAgentVersion": "1.102.0",
+    "groups": [],
+    "inputs": [
+        {
+            "name": "TaskType",
+            "type": "pickList",
+            "label": "Deploy SQL Using",
+            "required": true,
+            "defaultValue": "dacpac",
+            "options": {
+                "dacpac": "Sql Dacpac",
+                "sqlQuery": "Sql Query File",
+                "sqlInline": "Inline Sql"
+            },
+            "helpMarkDown": "Specify the way in which you want to deploy DB, either by using Dacpac or by using Sql Script."
+        },
+        {
+            "name": "DacpacFile",
+            "type": "filePath",
+            "label": "DACPAC File",
+            "required": true,
+            "visibleRule": "TaskType = dacpac",
+            "defaultValue": "",
+            "helpMarkDown": "Location of the DACPAC file on the target machines or on a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.dacpac. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Wildcards can be used. For example, `**/*.dacpac` for DACPAC file present in all sub folders."
+        },
+        {
+            "name": "SqlFile",
+            "type": "string",
+            "label": "Sql File",
+            "required": true,
+            "visibleRule": "TaskType = sqlQuery",
+            "defaultValue": "",
+            "helpMarkDown": "Location of the SQL file on the target. Provide semi-colon separated list of SQL script files to execute multiple files. The SQL scripts will be executed in the order given. Location can also be a UNC path like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. The UNC path should be accessible to the machine's administrator account. Environment variables are also supported, like $env:windir, $env:systemroot, $env:windir\\FabrikamFibre\\DB. Wildcards can be used. For example, `**/*.sql` for sql file present in all sub folders."
+        },
+        {
+            "name": "ExecuteInTransaction",
+            "type": "boolean",
+            "label": "Execute within a transaction",
+            "required": false,
+            "visibleRule": "TaskType = sqlQuery",
+            "defaultValue": "false",
+            "helpMarkDown": "Executes SQL script(s) within a transaction"
+        },
+        {
+            "name": "ExclusiveLock",
+            "type": "boolean",
+            "label": "Acquire an exclusive app lock while executing script(s)",
+            "required": false,
+            "visibleRule": "ExecuteInTransaction = true",
+            "defaultValue": "false",
+            "helpMarkDown": "Acquires an exclusive app lock while executing script(s)"
+        },
+        {
+            "name": "AppLockName",
+            "type": "string",
+            "label": "App lock name",
+            "required": true,
+            "visibleRule": "ExclusiveLock = true",
+            "defaultValue": "",
+            "helpMarkDown": "App lock name"
+        },
+        {
+            "name": "InlineSql",
+            "type": "multiLine",
+            "label": "Inline Sql",
+            "required": true,
+            "visibleRule": "TaskType = sqlInline",
+            "defaultValue": "",
+            "properties": {
+                "resizable": "true",
+                "rows": "10"
+            },
+            "helpMarkDown": "Sql Queries inline"
+        },
+        {
+            "name": "TargetMethod",
+            "type": "pickList",
+            "label": "Specify SQL Using",
+            "required": true,
+            "defaultValue": "server",
+            "visibleRule": "TaskType = dacpac",
+            "options": {
+                "server": "Server",
+                "connectionString": "Connection String",
+                "publishProfile": "Publish Profile"
+            },
+            "helpMarkDown": "Specify the option to connect to the target SQL Server Database. The options are either to provide the SQL Server Database details, or the SQL Server connection string, or the Publish profile XML file."
+        },
+        {
+            "name": "ServerName",
+            "type": "string",
+            "label": "Server Name",
+            "required": true,
+            "defaultValue": "localhost",
+            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+            "helpMarkDown": "Provide the SQL Server name like, machinename\\FabriakmSQL,1433 or localhost or .\\SQL2012R2. Specifying localhost will connect to the Default SQL Server instance on the machine."
+        },
+        {
+            "name": "DatabaseName",
+            "type": "string",
+            "label": "Database Name",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+            "helpMarkDown": "Provide the name of the SQL Server database."
+        },
+        {
+            "name": "AuthScheme",
+            "type": "pickList",
+            "label": "Authentication",
+            "required": true,
+            "defaultValue": "windowsAuthentication",
+            "visibleRule": "TargetMethod = server || TaskType = sqlQuery || TaskType = sqlInline",
+            "options": {
+                "windowsAuthentication": "Windows Authentication",
+                "sqlServerAuthentication": "SQL Server Authentication"
+            },
+            "helpMarkDown": "Select the authentication mode for connecting to the SQL Server. In Windows authentication mode, the administrator's account, as specified in the Machines section, is used to connect to the SQL Server. In SQL Server Authentication mode, the SQL login and Password have to be provided in the parameters below."
+        },
+        {
+            "name": "SqlUsername",
+            "type": "string",
+            "label": "SQL User name",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "AuthScheme = sqlServerAuthentication",
+            "helpMarkDown": "Provide the SQL login to connect to the SQL Server. The option is only available if SQL Server Authentication mode has been selected."
+        },
+        {
+            "name": "SqlPassword",
+            "type": "string",
+            "label": "SQL Password",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "AuthScheme = sqlServerAuthentication",
+            "helpMarkDown": "Provide the Password of the SQL login. The option is only available if SQL Server Authentication mode has been selected."
+        },
+        {
+            "name": "ConnectionString",
+            "type": "multiLine",
+            "label": "Connection String",
+            "required": true,
+            "defaultValue": "",
+            "visibleRule": "TargetMethod = connectionString",
+            "helpMarkDown": "Specify the SQL Server connection string like \"Server=localhost;Database=Fabrikam;User ID=sqluser;Password=password;\"."
+        },
+        {
+            "name": "PublishProfile",
+            "type": "string",
+            "label": "Publish Profile",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "TaskType = dacpac",
+            "helpMarkDown": "Publish profile provide fine-grained control over SQL Server database deployments. Specify the path to the Publish profile XML file on the target machine or on a UNC share that is accessible by the machine administrator's credentials."
+        },
+        {
+            "name": "AdditionalArguments",
+            "type": "multiLine",
+            "label": "Additional Arguments",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "TaskType = dacpac",
+            "helpMarkDown": "Additional SqlPackage.exe arguments that will be applied when deploying the SQL Server database like, /p:IgnoreAnsiNulls=True /p:IgnoreComments=True. These arguments will override the settings in the Publish profile XML file (if provided)."
+        },
+        {
+            "name": "AdditionalArgumentsSql",
+            "type": "multiLine",
+            "label": "Additional Arguments",
+            "required": false,
+            "defaultValue": "",
+            "visibleRule": "TaskType = sqlQuery || TaskType = sqlInline",
+            "helpMarkDown": "Additional Invoke-Sqlcmd arguments that will be applied when deploying the SQL Server database."
+        }
+    ],
+    "instanceNameFormat": "Deploy using : $(TaskType)",
+    "execution": {
+        "PowerShell3": {
+            "target": "$(currentDirectory)\\Main.ps1"
+        }
+    },
+    "messages": {
+        "SQLPowershellModuleisnotinstalledonyouragentmachine": "SQL Powershell Module is not installed on your agent machine. Please follow steps given below to execute this task",
+        "InstallPowershellToolsharedManagementObjectsdependency": "1. Install PowershellTools & SharedManagementObjects(dependency), from https://www.microsoft.com/en-us/download/details.aspx?id=52676 (2016)",
+        "RestartagentmachineafterinstallingtoolstoregisterModulepathupdates": "2. Restart agent machine after installing tools to register Module path updates",
+        "RunImportModuleSQLPSonyouragentPowershellprompt": "3. Run Import-Module SQLPS on your agent Powershell prompt. (This step is not required on Powershell 3.0 enabled machines)",
+        "Nofileswerefoundtodeploywithsearchpattern0": "No files were found to deploy with search pattern {0}",
+        "Foundmorethanonefiletodeploywithsearchpattern0Therecanbeonlyone": "Found more than one file to deploy with search pattern {0}. There can be only one."
+    }
+}

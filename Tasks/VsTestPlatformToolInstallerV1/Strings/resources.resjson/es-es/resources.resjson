@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Visual Studio Test Platform Installer",
+  "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">Test platform package on NuGet</a>",
+  "loc.description": "Acquires the test platform from nuget.org or the tools cache. Satisfies the ‘vstest’ demand and can be used for running tests and collecting diagnostic data using the Visual Studio Test task.",
+  "loc.instanceNameFormat": "VsTest Platform Installer",
+  "loc.input.label.versionSelector": "Version",
+  "loc.input.help.versionSelector": "Pick whether to install the latest version or a specific version of the Visual Studio Test Platform.",
+  "loc.input.label.testPlatformVersion": "Test Platform Version",
+  "loc.input.help.testPlatformVersion": "Specify the version of Visual Studio Test Platform to install on the agent. Available versions can be viewed on <a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">nuget</a>.",
+  "loc.messages.StartingInstaller": "Starting VsTest platform tools installer task.",
+  "loc.messages.ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide an explicit version number.",
+  "loc.messages.NoPackageFoundInCache": "Failed to find any stable version of the test platform package in the cache.",
+  "loc.messages.OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
+  "loc.messages.RequiredVersionNotListed": "Required version of the Microsoft.Testplatform package was not listed in the nuget feed, looking for latest stable version cached.",
+  "loc.messages.FailedToListAvailablePackagesFromNuget": "Failed to fetch list of available packages from nuget, looking for latest stable version cached.",
+  "loc.messages.FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please refer to the logs for additional information.",
+  "loc.messages.InstallationSuccessful": "VsTest will use the Test Platform package found in %s",
+  "loc.messages.TestPlatformDownloadFailed": "Failed to download version %s of the test platform. Looking in the cache for the latest available stable version.",
+  "loc.messages.LookingForLatestStableVersion": "Looking for the latest stable version of the Microsoft.Testplatform.",
+  "loc.messages.LookingForLatestPreReleaseVersion": "Looking for the latest pre-release version of the Microsoft.Testplatform.",
+  "loc.messages.AgentWorkDirectoryPathTooLong": "Please ensure that the agent work directory path is less than 50 characters to guarantee successful download of the test platform package."
+}

@@ -31,7 +31,7 @@ export class NuGetConfigHelper {
 
     public ensureTempConfigCreated() {
         // save nuget config file to agent build directory
-        tl._writeLine("save nuget.config to temp config file");
+        console.log("save nuget.config to temp config file");
         if (!(fs.existsSync(this.tempNugetConfigDir))) {
             fs.mkdirSync(this.tempNugetConfigDir);
         }
@@ -47,16 +47,16 @@ export class NuGetConfigHelper {
         }
     }
 
-    public setSources(packageSources: IPackageSource[]): void {
+    public setSources(packageSources: IPackageSource[], includeAuth: boolean): void {
         this.ensureTempConfigCreated();
 
         // remove sources
-        tl._writeLine(tl.loc("NGCommon_RemovingSources"));
+        console.log(tl.loc("NGCommon_RemovingSources"));
         this.removeSourcesInNugetConfig(packageSources);
 
         // add sources
-        tl._writeLine(tl.loc("NGCommon_AddingSources"));
-        this.addSourcesInNugetConfig(packageSources);
+        console.log(tl.loc("NGCommon_AddingSources"));
+        this.addSourcesInNugetConfig(packageSources, includeAuth);
     }
 
     public getSourcesFromConfig(): Q.Promise<IPackageSource[]> {
@@ -130,7 +130,7 @@ export class NuGetConfigHelper {
         });
     }
 
-    private addSourcesInNugetConfig(packageSources: IPackageSource[]) {
+    private addSourcesInNugetConfig(packageSources: IPackageSource[], includeAuth: boolean) {
         packageSources.forEach((source) => {
             let nugetTool = ngToolRunner.createNuGetToolRunner(this.nugetPath, this.environmentSettings);
 
@@ -141,12 +141,16 @@ export class NuGetConfigHelper {
             nugetTool.arg(source.feedName);
             nugetTool.arg("-Source");
             nugetTool.arg(source.feedUri);
-            nugetTool.arg("-Username");
-            nugetTool.arg("VssSessionToken");
-            nugetTool.arg("-Password");
-            nugetTool.arg(this.authInfo.accessToken);
             nugetTool.arg("-ConfigFile");
             nugetTool.arg(this.tempNugetConfigPath);
+
+            if (includeAuth)
+            {
+                nugetTool.arg("-Username");
+                nugetTool.arg("VssSessionToken");
+                nugetTool.arg("-Password");
+                nugetTool.arg(this.authInfo.accessToken);
+            }
 
             if (tl.osType() !== 'Windows_NT') {
                 // only Windows supports DPAPI. Older NuGets fail to add credentials at all if DPAPI fails. 

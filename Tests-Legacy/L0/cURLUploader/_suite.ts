@@ -48,8 +48,8 @@ describe('cURLUploader Suite', function() {
     })  
 
     var assertFailedReqInputResponse = (done, tr, input) => {
-        assert(tr.resultWasSet, 'task should have set a result');
-        assert(tr.stderr.length > 0, 'should have written to stderr');
+        assert(tr.resultWasSet, 'task should have set a result std=' + tr.stdout);
+        assert(tr.stderr.length > 0, 'should have written to stderr std=' + tr.stdout);
         assert(tr.stdErrContained('Input required: ' + input));
         assert(tr.failed, 'task should have failed');
         assert(tr.invokedToolCount == 0, 'should exit before running curl');

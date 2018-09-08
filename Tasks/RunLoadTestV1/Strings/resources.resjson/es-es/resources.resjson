@@ -1,0 +1,23 @@
+{
+  "loc.friendlyName": "Prueba de carga basada en la nube",
+  "loc.helpMarkDown": "Esta tarea desencadena una prueba de carga basada en la nube con Visual Studio Team Services. [Más información](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "Ejecuta la prueba de carga en la nube con Visual Studio Team Services.",
+  "loc.instanceNameFormat": "Prueba de carga de nube $(LoadTest)",
+  "loc.input.label.connectedServiceName": "Conexión de VS Team Services",
+  "loc.input.help.connectedServiceName": "Seleccione una conexión de servicio ya registrada para comunicarse con el servicio de prueba de carga basada en la nube. Elija \"Administrar\" para registrar una conexión nueva.",
+  "loc.input.label.TestDrop": "Carpeta de archivos de prueba de carga",
+  "loc.input.help.TestDrop": "Ruta de acceso de salida en la que están disponibles la prueba de carga y los archivos auxiliares, incluidos los complementos y los archivos de datos. <ul><li><b>Ejemplo de compilación:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>Ejemplo de versión:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release, <br />donde SourceCI es el alias de origen y drop es el nombre del artefacto</li></ul>",
+  "loc.input.label.LoadTest": "Archivo de prueba de carga",
+  "loc.input.help.LoadTest": "Nombre de archivo de la prueba de carga que se va a usar de la carpeta de archivos de pruebas de carga especificada.",
+  "loc.input.label.activeRunSettings": "Active Run Settings",
+  "loc.input.help.activeRunSettings": "Use the active run settings as specified in the file (values can be overriden) or change the active run setting for the load test file.",
+  "loc.input.label.runSettingName": "Specify the name of the Run Settings",
+  "loc.input.help.runSettingName": "The name of the run setting that will be made active",
+  "loc.input.label.testContextParameters": "Override load test context parameters",
+  "loc.input.help.testContextParameters": "Override test context parameters defined in the load test. For example: `-parameter1 value1 -parameter2 \"value with spaces\"",
+  "loc.input.label.TestSettings": "Archivo de la configuración de la prueba",
+  "loc.input.help.TestSettings": "Nombre del archivo testsettings que se va a usar de la carpeta de pruebas de carga especificada anteriormente o una ruta de acceso completa. <ul><li><b>Ejemplo de compilación:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration)\\load.testsettings </li><li><b>Ejemplo de versión:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release\\load.testsettings, <br />donde SourceCI es el alias de origen y drop es el nombre del artefacto</li></ul>",
+  "loc.input.label.ThresholdLimit": "Número de infracciones del umbral permitidas",
+  "loc.input.help.ThresholdLimit": "Número de infracciones de umbral a partir del cual los resultados de la prueba de carga se consideran incorrectos.",
+  "loc.input.label.MachineType": "Ejecutar prueba de carga con"
+}

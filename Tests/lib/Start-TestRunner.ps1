@@ -90,4 +90,6 @@ while ($true) {
 
     # Write a special "end-of-test" message over STDOUT.
     Write-Host '_END_OF_TEST_ce10a77a_'
+    [System.Console]::Error.Flush()
+    [System.Console]::Out.Flush()
 }

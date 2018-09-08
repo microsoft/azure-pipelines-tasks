@@ -1,0 +1,24 @@
+{
+  "name": "vsts-tasks-installapplecertificate",
+  "version": "1.0.0",
+  "description": "VSTS InstallAppleCertificate Task",
+  "main": "preinstallcert.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
+  "dependencies": {
+    "ios-signing-common": "file:../../_build/Tasks/Common/ios-signing-common-1.0.0.tgz",
+    "securefiles-common": "file:../../_build/Tasks/Common/securefiles-common-1.0.0.tgz",
+    "vsts-task-lib": "2.0.6"
+  }
+}

@@ -1,4 +1,4 @@
 {
   "loc.messages.LocateJVMBasedOnVersionAndArch": "为 Java %s %s 查找 JAVA_HOME",
-  "loc.messages.FailedToLocateSpecifiedJVM": "未能找到指定 JDK 版本。请确保环境变量“%s”存在并被设置为相应 JDK 的位置。"
+  "loc.messages.FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://docs.microsoft.com/en-us/vsts/build-release/tasks/tool/java-tool-installer) task to install the desired JDK."
 }

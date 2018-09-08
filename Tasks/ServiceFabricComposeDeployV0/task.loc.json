@@ -1,0 +1,201 @@
+{
+  "id": "19C02B15-D377-40E0-9EFA-3168506E0933",
+  "name": "ServiceFabricComposeDeploy",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "runsOn": [
+    "Agent",
+    "DeploymentGroup"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 3,
+    "Patch": 7
+  },
+  "demands": [
+    "Cmd"
+  ],
+  "minimumAgentVersion": "1.95.0",
+  "groups": [
+    {
+      "name": "registry",
+      "displayName": "ms-resource:loc.group.displayName.registry",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "serviceConnectionName",
+      "aliases": [
+        "clusterConnection"
+      ],
+      "type": "connectedService:serviceFabric",
+      "label": "ms-resource:loc.input.label.serviceConnectionName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceConnectionName"
+    },
+    {
+      "name": "composeFilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.composeFilePath",
+      "defaultValue": "**/docker-compose.yml",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.composeFilePath"
+    },
+    {
+      "name": "applicationName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.applicationName",
+      "defaultValue": "fabric:/Application1",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.applicationName"
+    },
+    {
+      "name": "registryCredentials",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.registryCredentials",
+      "defaultValue": "AzureResourceManagerEndpoint",
+      "required": true,
+      "options": {
+        "AzureResourceManagerEndpoint": "Azure Resource Manager service connection",
+        "ContainerRegistryEndpoint": "Container Registry service connection",
+        "UsernamePassword": "Username and Password",
+        "None": "None"
+      },
+      "groupName": "registry",
+      "helpMarkDown": "ms-resource:loc.input.help.registryCredentials"
+    },
+    {
+      "name": "dockerRegistryEndpointName",
+      "aliases": [
+        "dockerRegistryConnection"
+      ],
+      "type": "connectedService:dockerRegistry",
+      "label": "ms-resource:loc.input.label.dockerRegistryEndpointName",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.dockerRegistryEndpointName",
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = ContainerRegistryEndpoint"
+    },
+    {
+      "name": "azureSubscriptionEndpoint",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.azureSubscriptionEndpoint",
+      "helpMarkDown": "ms-resource:loc.input.help.azureSubscriptionEndpoint",
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = AzureResourceManagerEndpoint",
+      "required": true
+    },
+    {
+      "name": "registryUserName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registryUserName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.registryUserName",
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = UsernamePassword"
+    },
+    {
+      "name": "registryPassword",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.registryPassword",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.registryPassword",
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = UsernamePassword"
+    },
+    {
+      "name": "passwordEncrypted",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.passwordEncrypted",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.passwordEncrypted",
+      "groupName": "registry",
+      "visibleRule": "registryCredentials = UsernamePassword"
+    },
+    {
+      "name": "upgrade",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.upgrade",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.upgrade",
+      "groupName": "advanced"
+    },
+    {
+      "name": "deployTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.deployTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.deployTimeoutSec",
+      "groupName": "advanced"
+    },
+    {
+      "name": "removeTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.removeTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.removeTimeoutSec",
+      "groupName": "advanced"
+    },
+    {
+      "name": "getStatusTimeoutSec",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.getStatusTimeoutSec",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.getStatusTimeoutSec",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "ServiceFabricComposeDeploy.ps1"
+    }
+  },
+  "messages": {
+    "ItemSearchMoreThanOneFound": "ms-resource:loc.messages.ItemSearchMoreThanOneFound",
+    "ItemSearchNoFilesFound": "ms-resource:loc.messages.ItemSearchNoFilesFound",
+    "SearchingForPath": "ms-resource:loc.messages.SearchingForPath",
+    "FoundPath": "ms-resource:loc.messages.FoundPath",
+    "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
+    "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
+    "RemovingApplication": "ms-resource:loc.messages.RemovingApplication",
+    "ApplicationRemoved": "ms-resource:loc.messages.ApplicationRemoved",
+    "EncryptingPassword": "ms-resource:loc.messages.EncryptingPassword",
+    "CreatingApplication": "ms-resource:loc.messages.CreatingApplication",
+    "UpgradingApplication": "ms-resource:loc.messages.UpgradingApplication",
+    "WaitingForDeploy": "ms-resource:loc.messages.WaitingForDeploy",
+    "WaitingForUpgrade": "ms-resource:loc.messages.WaitingForUpgrade",
+    "CurrentStatus": "ms-resource:loc.messages.CurrentStatus",
+    "DeployFailed": "ms-resource:loc.messages.DeployFailed",
+    "UpgradeFailed": "ms-resource:loc.messages.UpgradeFailed",
+    "CheckingComposeFile": "ms-resource:loc.messages.CheckingComposeFile",
+    "UnsupportedAPIVersion": "ms-resource:loc.messages.UnsupportedAPIVersion",
+    "UsingAPIVersion": "ms-resource:loc.messages.UsingAPIVersion",
+    "InvalidApplicationNameWarning": "ms-resource:loc.messages.InvalidApplicationNameWarning",
+    "UpgradeInProgress": "ms-resource:loc.messages.UpgradeInProgress"
+  }
+}

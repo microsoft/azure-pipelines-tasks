@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Richiama API REST",
+  "loc.helpMarkDown": "[Altre informazioni](https://docs.microsoft.com/it-it/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.description": "Richiama l'API REST come parte del processo.",
+  "loc.instanceNameFormat": "Richiama API REST: $(method)",
+  "loc.group.displayName.completionOptions": "Avanzate",
+  "loc.input.label.connectedServiceName": "Endpoint generico",
+  "loc.input.help.connectedServiceName": "Consente di selezionare un endpoint generico da usare per selezionare l'URL e costruire l'intestazione di autorizzazione per la richiesta HTTP.",
+  "loc.input.label.method": "Metodo",
+  "loc.input.help.method": "Consente di selezionare il metodo HTTP con cui deve essere richiamata l'API.",
+  "loc.input.label.headers": "Intestazioni",
+  "loc.input.help.headers": "Consente di definire l'intestazione in formato JSON. L'intestazione verrà allegata alla richiesta da inviare.",
+  "loc.input.label.body": "Corpo",
+  "loc.input.label.urlSuffix": "Parametri e suffisso dell'URL",
+  "loc.input.help.urlSuffix": "Stringa specificata da aggiungere all'URL. Esempio: se l'URL dell'endpoint è https:...TestProj/_apis/Release/releases e il suffisso dell'URL è /2/environments/1, l'URl dell'endpoint diventerà https:.../TestProj/_apis/Release/releases/2/environments/1. Se il suffisso dell'URL è ?definitionId=1&releaseCount=1, l'URl dell'endpoint diventerà https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1.",
+  "loc.input.label.waitForCompletion": "Evento di completamento",
+  "loc.input.help.waitForCompletion": "Valore predefinito \"ApiResponse\". I valori disponibili sono \"ApiResponse\" e \"Callback\", ovvero una chiamata in cui viene richiamata l'API REST per aggiornare il record della sequenza temporale.",
+  "loc.input.label.successCriteria": "Criteri di superamento",
+  "loc.input.help.successCriteria": "Criteri che consentono di definire quando passare l'attività. L'assenza di criteri indica che il contenuto della risposta non influisce sul risultato. Esempio: per la risposta {\"status\" : \"successful\"}, l'espressione può essere eq(root['status'], 'successful'). [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=842996)"
+}

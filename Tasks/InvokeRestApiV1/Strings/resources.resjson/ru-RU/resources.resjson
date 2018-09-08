@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "Вызвать REST API",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://docs.microsoft.com/ru-ru/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.description": "Вызвать REST API в ходе процесса.",
+  "loc.instanceNameFormat": "Вызвать REST API: $(method)",
+  "loc.group.displayName.completionOptions": "Дополнительно",
+  "loc.input.label.connectedServiceName": "Универсальная конечная точка",
+  "loc.input.help.connectedServiceName": "Выберите универсальную конечную точку, которую следует использовать для выбора URL-адреса и создания заголовка авторизации для HTTP-запроса.",
+  "loc.input.label.method": "Метод",
+  "loc.input.help.method": "Выберите метод HTTP, с помощью которого следует вызывать API.",
+  "loc.input.label.headers": "Заголовки",
+  "loc.input.help.headers": "Определите заголовок в формате JSON. Заголовок следует присоединить к отправляемому запросу.",
+  "loc.input.label.body": "Текст",
+  "loc.input.label.urlSuffix": "Суффикс и параметры URL-адреса",
+  "loc.input.help.urlSuffix": "Указанная строка, добавляемая к URL-адресу. Так, если URL-адрес конечной точки — \"https:...TestProj/_apis/Release/releases\" и суффикс URL-адреса — \"/2/environments/1\", URL-адрес конечной точки будет таким: \"https:.../TestProj/_apis/Release/releases/2/environments/1\". Если суффикс URL-адреса — \"?definitionId=1&releaseCount=1\", то URL-адрес конечной точки будет таким: \"https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1\".",
+  "loc.input.label.waitForCompletion": "Событие завершения",
+  "loc.input.help.waitForCompletion": "Значение по умолчанию: \"ApiResponse\". Доступные значения: \"ApiResponse\", \"Callback\"; последнее — вызов, при котором REST API совершает обратный вызов, чтобы обновить запись временной шкалы.",
+  "loc.input.label.successCriteria": "Условия успеха",
+  "loc.input.help.successCriteria": "Условия, которые определяют, когда передавать задачу. Отсутствие условий означает, что содержимое ответа не влияет на результат. Например: для ответа {\"status\" : \"successful\"} выражение может быть таким: eq(root[\"status\"], \"successful\"). [Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=842996)​"
+}

@@ -7,7 +7,7 @@
             "code": 0,
             "stdout": "Xamarin android"
         },
-        "/home/bin2/xbuild.exe /user/build/fun/project.csproj /t:PackageForAndroid": {
+        "/home/bin2/xbuild /user/build/fun/project.csproj /t:PackageForAndroid": {
             "code": 0,
             "stdout": "Xamarin android"
         },
@@ -45,18 +45,15 @@
         }
     },
     "checkPath" : {
-        "/user/build/fun/project.csproj": true,  
-        "/home/bin2/xbuild.exe": true
+        "/home/bin2/xbuild": true
     },
     "getVariable" : {
         "JAVA_HOME_8_X86": "/user/local/bin/Java8"
     },
-    "find": {
-        "": [
-            "/user/build"
-        ]
-    },
-    "match": {
+    "findMatch": {
+        "/user/build/fun/project.csproj": [
+            "/user/build/fun/project.csproj"
+        ],
         "**/Single*.csproj": [
             "/user/build/fun/project.csproj"
         ],

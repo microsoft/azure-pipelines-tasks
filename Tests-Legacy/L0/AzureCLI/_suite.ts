@@ -13,7 +13,7 @@ function setResponseFile(name: string) {
 }
 
 describe('AzureCLI Suite', function () {
-    this.timeout(20000);
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {
         done();

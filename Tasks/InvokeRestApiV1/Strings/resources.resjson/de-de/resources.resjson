@@ -1,0 +1,20 @@
+{
+  "loc.friendlyName": "REST-API aufrufen",
+  "loc.helpMarkDown": "[Weitere Informationen](https://docs.microsoft.com/de-de/vsts/build-release/tasks/utility/http-rest-api)",
+  "loc.description": "Rufen Sie die REST-API als Teil des Prozesses auf.",
+  "loc.instanceNameFormat": "REST-API aufrufen: $(method)",
+  "loc.group.displayName.completionOptions": "Erweitert",
+  "loc.input.label.connectedServiceName": "Generischer Endpunkt",
+  "loc.input.help.connectedServiceName": "Wählen Sie einen generischen Endpunkt aus, der zum Auswählen der URL und Erstellen des Autorisierungsheaders für die HTTP-Anforderung verwendet werden soll.",
+  "loc.input.label.method": "Methode",
+  "loc.input.help.method": "Wählen Sie die HTTP-Methode aus, mit der die API aufgerufen werden soll.",
+  "loc.input.label.headers": "Header",
+  "loc.input.help.headers": "Definieren Sie den Header im JSON-Format. Der Header muss mit der zu sendenden Anforderung angefügt werden.",
+  "loc.input.label.body": "Textkörper",
+  "loc.input.label.urlSuffix": "URL-Suffix und Parameter",
+  "loc.input.help.urlSuffix": "Hiermit wird die angegebene Zeichenfolge an die URL angehängt. Beispiel: Wenn die Endpunkt-URL https:...TestProj/_apis/Release/releases und das URL-Suffix \"/2/environments/1\" lautet, wird die folgende Endpunkt-URL generiert: https:.../TestProj/_apis/Release/releases/2/environments/1. Wenn das URL-Suffix \"?definitionId=1&releaseCount=1\" lautet, wird die Endpunkt-URL https//...TestProj/_apis/Release/releases?definitionId=1&releaseCount=1 generiert.",
+  "loc.input.label.waitForCompletion": "Abschlussereignis",
+  "loc.input.help.waitForCompletion": "Der Standardwert lautet \"ApiResponse\". Mögliche Werte: \"ApiResponse\" bzw. \"Callback\", wenn die REST-API einen Rückruf zum Aktualisieren des Zeitachsendatensatzes ausführt.",
+  "loc.input.label.successCriteria": "Erfolgskriterien",
+  "loc.input.help.successCriteria": "Kriterien, die definieren, wann die Aufgabe übergeben wird. Ohne Kriterium hat der Antwortinhalt keinen Einfluss auf das Ergebnis. Beispiel: Für die Antwort \"{\"status\" : \"successful\"}\" kann der Ausdruck \"eq(root['status'], 'successful')\" lauten. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=842996)"
+}
