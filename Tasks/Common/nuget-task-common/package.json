@@ -15,6 +15,7 @@
   "dependencies": {
     "ltx": "^2.6.2",
     "mockery": "^1.7.0",
+    "q": "^1.5.1",
     "typed-rest-client": "^1.0.9",
     "vso-node-api": "^5.0.5",
     "vsts-task-lib": "2.6.0",

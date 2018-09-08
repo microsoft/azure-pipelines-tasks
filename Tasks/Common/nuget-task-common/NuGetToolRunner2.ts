@@ -1,12 +1,13 @@
+import * as Q from "q";
 import * as url from "url";
 import * as tl from "vsts-task-lib/task";
-import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunner";
-
+import { IExecOptions, IExecSyncResult, ToolRunner } from "vsts-task-lib/toolrunner";
 import * as auth from "./Authentication";
-import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
-import * as ngutil from "./Utility";
-import * as peParser from "./pe-parser";
 import * as commandHelper from "./CommandHelper";
+import { defaultQuirks, NuGetQuirkName, NuGetQuirks } from "./NuGetQuirks";
+import * as peParser from "./pe-parser";
+import * as ngutil from "./Utility";
+
 
 // NuGetToolRunner2 can handle environment setup for new authentication scenarios where
 // we are accessing internal or external package sources.
@@ -85,7 +86,7 @@ function prepareNuGetExeEnvironment(
             tl.debug(`credProviderPath = ${credProviderPath}`);
         }
     }
-    
+
     // New credential provider
     if (settings.V2CredProviderPath != null || envVarCredProviderPathV2 != null) {
         let credProviderPath = buildCredProviderPath(envVarCredProviderPathV2, settings.V2CredProviderPath);
@@ -195,7 +196,7 @@ export async function getNuGetQuirksAsync(nuGetExePath: string): Promise<NuGetQu
 // This checks if V1 credential provider is enabled
 export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialProvider to "true" to force allowing the credential provider flow, "false"
-    // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the 
+    // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the
     // hosted environment detection logic
     const credentialProviderOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialProvider"); // forces V1 credential provider
     if (credentialProviderOverrideFlag === "true") {
@@ -212,7 +213,7 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
         tl.debug("Credential provider V1 is disabled in favor of V2 plugin.");
         return false;
     }
-    
+
     if (isAnyCredentialProviderEnabled(quirks)) {
         tl.debug("V1 credential provider is enabled");
         return true;
@@ -265,7 +266,7 @@ function isAnyCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
 
 export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialConfig to "true" to force allowing config-based credential flow, "false"
-    // to force *not* allowing config-based credential flow, or unset/anything else to fall through to the 
+    // to force *not* allowing config-based credential flow, or unset/anything else to fall through to the
     // hosted environment detection logic
     const credentialConfigOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialConfig");
     if (credentialConfigOverrideFlag === "true") {
@@ -325,7 +326,7 @@ function buildCredentialJson(authInfo: auth.NuGetExtendedAuthInfo): string {
                         endpoint: authInfo.packageSource.feedUri,
                         username: usernamePasswordAuthInfo.username,
                         password: usernamePasswordAuthInfo.password
-                        
+
                     } as EndpointCredentials);
                     tl.debug(authInfo.packageSource.feedUri);
                     break;

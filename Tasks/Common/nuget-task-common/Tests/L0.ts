@@ -1,8 +1,4 @@
-import * as path from "path";
 import * as assert from "assert";
-import * as ma from "vsts-task-lib/mock-answer";
-import * as tmrm from "vsts-task-lib/mock-run";
-import * as ttm from "vsts-task-lib/mock-test";
 import * as mockery from "mockery";
 import { INuGetXmlHelper } from "../INuGetXmlHelper";
 
