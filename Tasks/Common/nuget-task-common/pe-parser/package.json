@@ -4,7 +4,6 @@
   "description": "Parse Windows Portable Executable (.exe/.dll) files",
   "main": "index.js",
   "scripts": {
-    "prepublish": "typings install && tsc -p .",
     "test": "tsc -p . && mocha",
     "lint": "tslint --project tsconfig.json"
   },
@@ -14,8 +13,8 @@
     "q": "^1.4.1"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.5",
     "mocha": "^3.0.2",
-    "typescript": "^1.8.10",
-    "typings": "^1.3.2"
+    "typescript": "2.3.4"
   }
 }
