@@ -1,12 +1,13 @@
 import * as path from "path";
+import * as Q from "q";
 import * as url from "url";
 import * as tl from "vsts-task-lib/task";
-import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunner";
-
+import { IExecOptions, IExecSyncResult, ToolRunner } from "vsts-task-lib/toolrunner";
 import * as auth from "./Authentication";
-import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
-import * as ngutil from "./Utility";
+import { defaultQuirks, NuGetQuirkName, NuGetQuirks } from "./NuGetQuirks";
 import * as peParser from "./pe-parser";
+import * as ngutil from "./Utility";
+
 
 interface EnvironmentDictionary { [key: string]: string; }
 
@@ -238,7 +239,7 @@ function isOnPremisesTfs(): boolean {
 
 export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialProvider to "true" to force allowing the credential provider flow, "false"
-    // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the 
+    // to force *not* allowing the credential provider flow, or unset/anything else to fall through to the
     // hosted environment detection logic
     const credentialProviderOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialProvider");
     if (credentialProviderOverrideFlag === "true") {
@@ -269,7 +270,7 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
 
 export function isCredentialConfigEnabled(quirks: NuGetQuirks): boolean {
     // set NuGet.ForceEnableCredentialConfig to "true" to force allowing config-based credential flow, "false"
-    // to force *not* allowing config-based credential flow, or unset/anything else to fall through to the 
+    // to force *not* allowing config-based credential flow, or unset/anything else to fall through to the
     // hosted environment detection logic
     const credentialConfigOverrideFlag = tl.getVariable("NuGet.ForceEnableCredentialConfig");
     if (credentialConfigOverrideFlag === "true") {
