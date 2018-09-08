@@ -54,7 +54,7 @@ const nuGetVersions: NuGetVersion[] = [
     new NuGetVersion(
         "https://dist.nuget.org/win-x86-commandline/v4.0.0/nuget.exe",
         new VersionInfoVersion(4, 0, 0, 2283),
-        "4.0.0.2283"
+        "4.0.0"
     ),
     new NuGetVersion(
         "https://dist.nuget.org/win-x86-commandline/v3.5.0-rc1/NuGet.exe",
@@ -111,6 +111,11 @@ describe("Can read nuget.exe", function () {
     for (let i of nuGetVersions) {
         it(`can read version from nuget.exe ${i.version}`, async function () {
             const versionInfo = await peReader.getFileVersionInfoAsync(i.filePath);
+            console.log(`versionInfo(${JSON.stringify(versionInfo)}) path(${i.filePath})`)
+            console.log(`expectedVersion(${i.version}) ` +
+                `versionInfo.fileVersion(${versionInfo.fileVersion})`)
+            console.log(`stringVersion(${i.stringVersion}) ` +
+                `versionInfo.strings.ProductVersion(${versionInfo.strings.ProductVersion})`)
             assert(
                 versionInfo.fileVersion.equals(i.version),
                 `expected ${i.version}, actual ${versionInfo.fileVersion}`);
