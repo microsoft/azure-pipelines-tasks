@@ -29,6 +29,7 @@ export const NUGET_VERSION_4_0_0_PATH_SUFFIX: string = 'NuGet/4.0.0/';
 export const DEFAULT_NUGET_VERSION: string = '4.1.0';
 export const DEFAULT_NUGET_PATH_SUFFIX: string = 'NuGet/4.1.0/';
 export const NUGET_EXE_TOOL_PATH_ENV_VAR: string = 'NuGetExeToolPath';
+export const NUGET_VERSIONS_URL = 'https://dist.nuget.org/tools.json';
 
 export async function getNuGet(versionSpec: string, checkLatest?: boolean, addNuGetToPath?: boolean): Promise<string> {
     if (toolLib.isExplicitVersion(versionSpec)) {
@@ -118,7 +119,10 @@ export async function cacheBundledNuGet() {
 
 function GetRestClientOptions(): restm.IRequestOptions
 {
-    let options: restm.IRequestOptions = <restm.IRequestOptions>{};
+    let options: restm.IRequestOptions = <restm.IRequestOptions>{
+        proxy: taskLib.getHttpProxyConfiguration(NUGET_VERSIONS_URL)
+    };
+
     options.responseProcessor = (obj: any) => {
         return obj['nuget.exe'];
     }
@@ -127,11 +131,9 @@ function GetRestClientOptions(): restm.IRequestOptions
 
 async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVersionInfo> {
     taskLib.debug('Querying versions list');
-
-    let versionsUrl = 'https://dist.nuget.org/tools.json';
     let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller');
-
-    let nugetVersions: INuGetVersionInfo[] = (await rest.get<INuGetVersionInfo[]>(versionsUrl, GetRestClientOptions())).result;
+    let nugetVersions: INuGetVersionInfo[] = (await rest.get<INuGetVersionInfo[]>(NUGET_VERSIONS_URL,
+                                                                                  GetRestClientOptions())).result;
     // x.stage is the string representation of the enum, NuGetReleaseStage.Value = number, NuGetReleaseStage[NuGetReleaseStage.Value] = string, NuGetReleaseStage[x.stage] = number
     let releasedVersions: INuGetVersionInfo[] = nugetVersions.filter(x => x.stage.toString() !== NuGetReleaseStage[NuGetReleaseStage.EarlyAccessPreview]);
     let versionStringsFromDist: string[] = releasedVersions.map(x => x.version);
