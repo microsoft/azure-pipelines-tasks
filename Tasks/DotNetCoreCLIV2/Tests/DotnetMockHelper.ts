@@ -1,7 +1,6 @@
 import tmrm = require('vsts-task-lib/mock-run');
-import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
-import {VersionInfo, VersionStrings} from 'nuget-task-common/pe-parser/VersionResource'
-import * as auth from 'nuget-task-common/Authentication'
+import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion';
+import { VersionInfo } from 'nuget-task-common/pe-parser/VersionResource';
 
 export class DotnetMockHelper {
     private defaultNugetVersion = '4.0.0';
@@ -83,7 +82,7 @@ export class DotnetMockHelper {
                 return 'https://vsts/packagesource';
             }
         });
-        
+
         this.tmr.registerMock('./Utility', {
             resolveToolPath: function(path) {
                 return path;
@@ -147,9 +146,6 @@ export class DotnetMockHelper {
     }
 
     public registerNugetLocationHelpersMock() {
-        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
-            NUGET_ORG_V3_URL: 'https://api.nuget.org/v3/index.json'
-        });
         this.tmr.registerMock('utility-common/packaging/locationUtilities', {
             getPackagingUris: function(input) {
                 const collectionUrl: string = "https://vsts/packagesource";
