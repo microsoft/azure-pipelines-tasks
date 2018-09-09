@@ -1,12 +1,11 @@
 import * as os from 'os';
-import * as tl from 'vsts-task-lib/task';
-import * as URL from 'url';
-
-import { HttpClient, HttpClientResponse }  from 'typed-rest-client/HttpClient';
+import { HttpClient } from 'typed-rest-client/HttpClient';
 import { IHeaders, IRequestOptions } from 'typed-rest-client/Interfaces';
-
+import * as tl from 'vsts-task-lib/task';
 import { NormalizeRegistry } from './npmrcparser';
 import * as util from './util';
+
+
 
 export interface INpmRegistry {
     url: string;

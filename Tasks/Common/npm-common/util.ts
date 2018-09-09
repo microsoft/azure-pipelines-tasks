@@ -1,12 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
-
-import * as tl from 'vsts-task-lib/task';
+import * as corem from 'vso-node-api/CoreApi';
 import * as vsts from 'vso-node-api/WebApi';
-
-import { INpmRegistry, NpmRegistry } from './npmregistry';
+import * as tl from 'vsts-task-lib/task';
 import * as NpmrcParser from './npmrcparser';
+import { INpmRegistry, NpmRegistry } from './npmregistry';
+
+
 
 export function appendToNpmrc(npmrc: string, data: string): void {
     tl.writeFile(npmrc, data, {
@@ -154,11 +155,15 @@ export async function getFeedRegistryUrl(packagingUrl: string, feedId: string): 
 
     const accessToken = getSystemAccessToken();
     const credentialHandler = vsts.getBearerHandler(accessToken);
-    const vssConnection = new vsts.WebApi(packagingUrl, credentialHandler);
-    const coreApi = vssConnection.getCoreApi();
+    const vssConnection: vsts.WebApi  = new vsts.WebApi(packagingUrl, credentialHandler);
+    const coreApi: corem.ICoreApi  = await vssConnection.getCoreApi();
 
     const data = await Retry(async () => {
-        return await coreApi.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
+        return await coreApi.vsoClient.getVersioningData(
+            apiVersion,
+            area,
+            locationId,
+            { feedId: feedId });
     }, 4, 100);
 
     return data.requestUrl;
@@ -182,7 +187,7 @@ async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: n
     }
 }
 function delay(delayMs:number) {
-    return new Promise(function(resolve) { 
+    return new Promise(function(resolve) {
         setTimeout(resolve, delayMs);
     });
  }
