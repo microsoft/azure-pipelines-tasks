@@ -1,8 +1,7 @@
-import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunner";
 import * as auth from "nuget-task-common/Authentication";
+import * as Q from "q";
 import * as tl from "vsts-task-lib/task";
-import * as path from "path";
-import * as telemetry from 'utility-common/telemetry';
+import { IExecOptions, IExecSyncResult, ToolRunner } from "vsts-task-lib/toolrunner";
 
 export interface VstsNuGetPushSettings {
     continueOnConflict: boolean;

@@ -1,6 +1,6 @@
 {
     "name": "nugetpublisher",
-    "version": "0.2.36",
+    "version": "0.2.41",
     "description": "Nuget Publisher Build Task",
     "main": "nugetpublisher.js",
     "scripts": {

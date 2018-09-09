@@ -1,14 +1,13 @@
-import * as path from "path";
-import * as Q  from "q";
-import * as tl from "vsts-task-lib/task";
-
 import * as auth from "nuget-task-common/Authentication";
 import INuGetCommandOptions from "nuget-task-common/INuGetCommandOptions";
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import {NuGetConfigHelper} from "nuget-task-common/NuGetConfigHelper";
+import { NuGetConfigHelper } from "nuget-task-common/NuGetConfigHelper";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
 import * as nutil from "nuget-task-common/Utility";
+import * as path from "path";
+import * as Q from "q";
 import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as tl from "vsts-task-lib/task";
+
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(

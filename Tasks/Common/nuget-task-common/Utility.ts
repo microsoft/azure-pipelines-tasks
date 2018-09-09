@@ -1,10 +1,9 @@
 import * as path from "path";
+import * as corem from 'vso-node-api/CoreApi';
+import * as vsts from "vso-node-api/WebApi";
 import * as tl from "vsts-task-lib/task";
 import * as ngToolRunner from "./NuGetToolRunner";
-import * as vsts from "vso-node-api/WebApi";
-import {VersionInfo} from "./pe-parser/VersionResource";
-import locationHelpers = require("./LocationHelpers");
-import * as url from "url";
+import { VersionInfo } from "./pe-parser/VersionResource";
 
 export function getPatternsArrayFromInput(pattern: string): string[]
 {
@@ -239,8 +238,8 @@ export async function getNuGetFeedRegistryUrl(
 
     tl.debug("Getting NuGet feed registry URL from " + packagingCollectionUrl);
 
-    const vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
-    const coreApi = vssConnection.getCoreApi();
+    const vssConnection: vsts.WebApi = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
+    const coreApi: corem.ICoreApi = await vssConnection.getCoreApi();
 
     const data = await Retry(async () => {
         return await coreApi.vsoClient.getVersioningData(
