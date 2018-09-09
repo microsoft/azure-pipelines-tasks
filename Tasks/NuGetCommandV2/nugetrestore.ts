@@ -1,20 +1,20 @@
-import * as path from "path";
-import * as tl from "vsts-task-lib/task";
-import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
-
 import * as auth from "nuget-task-common/Authentication";
 import { IPackageSource } from "nuget-task-common/Authentication";
 import * as commandHelper from "nuget-task-common/CommandHelper";
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
+import { NuGetConfigHelper2 } from "nuget-task-common/NuGetConfigHelper2";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import peParser = require("nuget-task-common/pe-parser/index");
-import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
+import { VersionInfo } from "nuget-task-common/pe-parser/VersionResource";
 import * as nutil from "nuget-task-common/Utility";
+import * as path from "path";
 import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
+import * as tl from "vsts-task-lib/task";
+import { IExecOptions, IExecSyncResult } from "vsts-task-lib/toolrunner";
 import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import peParser = require("nuget-task-common/pe-parser/index");
 
+export const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
+export const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
         public nuGetPath: string,
@@ -129,7 +129,7 @@ export async function run(nuGetPath: string): Promise<void> {
                 nuGetConfigPath = undefined;
             }
 
-            // If using NuGet version 4.8 or greater and nuget.config was provided, 
+            // If using NuGet version 4.8 or greater and nuget.config was provided,
             // do not create temp config file
             if (useV2CredProvider && nuGetConfigPath) {
                 configFile = nuGetConfigPath;
@@ -167,8 +167,8 @@ export async function run(nuGetPath: string): Promise<void> {
             const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
                 const nuGetUrl: string = nuGetVersion.productVersion.a < 3
-                                        ? locationHelpers.NUGET_ORG_V2_URL
-                                        : locationHelpers.NUGET_ORG_V3_URL;
+                                        ? NUGET_ORG_V2_URL
+                                        : NUGET_ORG_V3_URL;
                 sources.push({
                     feedName: "NuGetOrg",
                     feedUri: nuGetUrl,

@@ -1,14 +1,14 @@
 import * as fs from 'fs';
+import * as util from 'npm-common/util';
 import * as path from 'path';
-import { format, parse, Url } from 'url';
 import * as Q from 'q';
-
+import { format, parse, Url } from 'url';
+import * as telemetry from 'utility-common/telemetry';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
-import {NpmTaskInput} from './constants';
+import { NpmTaskInput } from './constants';
 
-import * as util from 'npm-common/util';
-import * as telemetry from 'utility-common/telemetry';
+
 
 export class NpmToolRunner extends tr.ToolRunner {
     private cacheLocation: string;
@@ -120,7 +120,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         // check working dir
-        const cwd = options && options.cwd ? options.cwd : process.cwd;
+        const cwd : string = options && options.cwd ? options.cwd : process.cwd();
         const debugLog = path.join(cwd, 'npm-debug.log');
         tl.debug(tl.loc('TestDebugLog', debugLog));
         if (tl.exist(debugLog)) {
