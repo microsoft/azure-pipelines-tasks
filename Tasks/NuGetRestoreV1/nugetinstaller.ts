@@ -1,26 +1,18 @@
-import * as tl from "vsts-task-lib/task";
-// Remove once task lib 2.0.4 releases
-global['_vsts_task_lib_loaded'] = true;
-import * as path from "path";
-import * as Q  from "q";
-import {IExecOptions} from "vsts-task-lib/toolrunner";
-
 import * as auth from "nuget-task-common/Authentication";
+import { NUGET_ORG_V2_URL, NUGET_ORG_V3_URL } from 'nuget-task-common/index';
 import INuGetCommandOptions from "nuget-task-common/INuGetCommandOptions";
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import {NuGetConfigHelper} from "nuget-task-common/NuGetConfigHelper";
-import {IPackageSource} from "nuget-task-common/NuGetConfigHelper";
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
+import { IPackageSource, NuGetConfigHelper } from "nuget-task-common/NuGetConfigHelper";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
+import { VersionInfo } from "nuget-task-common/pe-parser/VersionResource";
 import * as nutil from "nuget-task-common/Utility";
-import * as vsts from "vso-node-api/WebApi";
-import * as vsom from 'vso-node-api/VsoClient';
-import peParser = require('nuget-task-common/pe-parser/index');
-import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
+import * as path from "path";
+import * as Q from "q";
 import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
-
-const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
-const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
+import * as vsts from "vso-node-api/WebApi";
+import * as tl from "vsts-task-lib/task";
+import { IExecOptions } from "vsts-task-lib/toolrunner";
+import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
+import peParser = require('nuget-task-common/pe-parser/index');
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -68,7 +60,7 @@ async function main(): Promise<void> {
         if (!tl.filePathSupplied("packagesDirectory")) {
             packagesDirectory = null;
         }
-        
+
         // Getting NuGet
         tl.debug('Getting NuGet');
         let nuGetPath: string = undefined;
@@ -82,7 +74,7 @@ async function main(): Promise<void> {
             tl.setResult(tl.TaskResult.Failed, error.message);
             return;
         }
-        
+
         const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
 
         // Discovering NuGet quirks based on the version
@@ -93,7 +85,7 @@ async function main(): Promise<void> {
         // is unconditionally displayed
         const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
         const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
-        
+
         // Setting up auth-related variables
         tl.debug('Setting up auth');
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
@@ -126,16 +118,16 @@ async function main(): Promise<void> {
                 nuGetConfigPath = undefined;
             }
         }
-        
+
         // If there was no nuGetConfigPath, NuGetConfigHelper will create one
         let nuGetConfigHelper = new NuGetConfigHelper(
                     nuGetPath,
                     nuGetConfigPath,
                     authInfo,
                     environmentSettings);
-        
+
         let credCleanup = () => { return; };
-        
+
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select" ) {
@@ -253,7 +245,7 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
         nugetTool.arg("-ConfigFile");
         nugetTool.arg(options.configFile);
     }
-    
+
     return nugetTool.exec({ cwd: path.dirname(solutionFile) } as IExecOptions);
 }
 
@@ -265,7 +257,7 @@ async function getNuGetFeedRegistryUrl(packagingCollectionUrl: string, accessTok
 
  	let credentialHandler = vsts.getBearerHandler(accessToken);
     let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-    
+
     if (!packagingCollectionUrl)
     {
         packagingCollectionUrl = collectionUrl;
@@ -276,7 +268,7 @@ async function getNuGetFeedRegistryUrl(packagingCollectionUrl: string, accessTok
         tl.debug("Overwriting packaging collection URL");
         packagingCollectionUrl = overwritePackagingCollectionUrl;
     }
-    
+
  	let vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
  	let coreApi = vssConnection.getCoreApi();
 

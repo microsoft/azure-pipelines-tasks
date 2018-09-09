@@ -1,15 +1,15 @@
-import * as tl from 'vsts-task-lib/task';
-import * as Q from 'q';
-import * as utility from './Common/utility';
-import locationHelpers = require('nuget-task-common/LocationHelpers');
+import { NUGET_ORG_V3_URL } from 'nuget-task-common/index';
 import * as auth from 'nuget-task-common/Authentication';
-import { NuGetConfigHelper2 } from 'nuget-task-common/NuGetConfigHelper2';
-import * as path from 'path';
 import { IPackageSource } from 'nuget-task-common/Authentication';
-import { IExecOptions } from 'vsts-task-lib/toolrunner';
-import * as nutil from 'nuget-task-common/Utility';
 import * as commandHelper from 'nuget-task-common/CommandHelper';
+import { NuGetConfigHelper2 } from 'nuget-task-common/NuGetConfigHelper2';
+import * as nutil from 'nuget-task-common/Utility';
+import * as path from 'path';
+import * as Q from 'q';
 import * as pkgLocationUtils from 'utility-common/packaging/locationUtilities';
+import * as tl from 'vsts-task-lib/task';
+import { IExecOptions } from 'vsts-task-lib/toolrunner';
+import * as utility from './Common/utility';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -109,7 +109,7 @@ export async function run(): Promise<void> {
                 sources.push(<IPackageSource>
                     {
                         feedName: 'NuGetOrg',
-                        feedUri: locationHelpers.NUGET_ORG_V3_URL,
+                        feedUri: NUGET_ORG_V3_URL,
                         isInternal: false
                     });
             }
