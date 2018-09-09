@@ -129,7 +129,8 @@ async function getLatestMatchVersionInfo(versionSpec: string): Promise<INuGetVer
     taskLib.debug('Querying versions list');
     let requestOptions = {
         // ignoreSslError: true,
-        proxy: taskLib.getHttpProxyConfiguration(NUGET_VERSIONS_URL)
+        proxy: taskLib.getHttpProxyConfiguration(NUGET_VERSIONS_URL),
+        cert: taskLib.getHttpCertConfiguration()
     } as ifm.IRequestOptions;
     let rest: restm.RestClient = new restm.RestClient('vsts-tasks/NuGetToolInstaller',
         undefined, undefined, requestOptions);
