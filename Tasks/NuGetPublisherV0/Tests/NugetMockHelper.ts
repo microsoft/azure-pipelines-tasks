@@ -1,13 +1,13 @@
 import tmrm = require('vsts-task-lib/mock-run');
-import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
-import {VersionInfo, VersionStrings} from 'nuget-task-common/pe-parser/VersionResource'
+import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion';
+import { VersionInfo } from 'nuget-task-common/pe-parser/VersionResource';
 
 export class NugetMockHelper {
     private defaultNugetVersion = '3.3.0';
     private defaultNugetVersionInfo = [3,3,0,212];
-    
+
     constructor(
-        private tmr: tmrm.TaskMockRunner) { 
+        private tmr: tmrm.TaskMockRunner) {
         process.env['AGENT_HOMEDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['BUILD_SOURCESDIRECTORY'] = "c:\\agent\\home\\directory\\sources",
         process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = "{\"parameters\":{\"AccessToken\":\"token\"},\"scheme\":\"OAuth\"}";
@@ -17,15 +17,15 @@ export class NugetMockHelper {
 
         this.registerNugetLocationHelpersMock();
     }
-    
+
     public setNugetVersionInputDefault() {
         this.tmr.setInput('nuGetVersion', this.defaultNugetVersion);
     }
-    
+
     public registerDefaultNugetVersionMock() {
         this.registerNugetVersionMock(this.defaultNugetVersion, this.defaultNugetVersionInfo);
     }
-    
+
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
         this.tmr.registerMock('./pe-parser', {
             getFileVersionInfoAsync: function(nuGetExePath) {
@@ -36,7 +36,7 @@ export class NugetMockHelper {
             }
         })
     }
-    
+
     public registerNugetUtilityMock(projectFile: string[]) {
         this.tmr.registerMock('nuget-task-common/Utility', {
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
@@ -56,24 +56,24 @@ export class NugetMockHelper {
                 tlm.debug(`setting console code page`);
             }
         } );
-        
+
         this.tmr.registerMock('./Utility', {
             resolveToolPath: function(path) {
                 return path;
             }
         });
     }
-    
+
     public registerNugetConfigMock() {
         var nchm = require('./NuGetConfigHelper-mock');
         this.tmr.registerMock('nuget-task-common/NuGetConfigHelper', nchm);
     }
-    
+
     public registerToolRunnerMock() {
         var mtt = require('vsts-task-lib/mock-toolrunner');
         this.tmr.registerMock('vsts-task-lib/toolrunner', mtt);
     }
-    
+
     public setAnswers(a) {
         a.osType["osType"] = "Windows_NT";
         a.exist["c:\\agent\\home\\directory\\externals\\nuget\\nuget.exe"] = true;
@@ -82,11 +82,6 @@ export class NugetMockHelper {
     }
 
     public registerNugetLocationHelpersMock() {
-        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
-            assumeNuGetUriPrefixes: function(input) {
-                return [input];
-            }
-        });
         this.tmr.registerMock('utility-common/packaging/locationUtilities', {
             getPackagingUris: function(input) {
                 const collectionUrl: string = "https://vsts/packagesource";
