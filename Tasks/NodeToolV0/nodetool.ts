@@ -1,6 +1,7 @@
 import * as taskLib from 'vsts-task-lib/task';
 import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as restm from 'typed-rest-client/RestClient';
+import * as ifm from 'typed-rest-client/Interfaces';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -103,14 +104,32 @@ async function queryLatestMatch(versionSpec: string): Promise<string> {
 
     let versions: string[] = [];
     let dataUrl = "https://nodejs.org/dist/index.json";
-    let rest: restm.RestClient = new restm.RestClient('vsts-node-tool');
-    let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
-    nodeVersions.forEach((nodeVersion:INodeVersion) => {
-        // ensure this version supports your os and platform
-        if (nodeVersion.files.indexOf(dataFileName) >= 0) {
-            versions.push(nodeVersion.version);
+    let requestOptions = {
+        // ignoreSslError: true,
+        proxy: taskLib.getHttpProxyConfiguration(dataUrl),
+        cert: taskLib.getHttpCertConfiguration()
+    } as ifm.IRequestOptions;
+    try{
+        let rest: restm.RestClient = new restm.RestClient('vsts-node-tool',
+                                                        undefined,
+                                                        undefined,
+                                                        requestOptions);
+        let nodeVersions: INodeVersion[] = (await rest.get<INodeVersion[]>(dataUrl)).result;
+        nodeVersions.forEach((nodeVersion:INodeVersion) => {
+            // ensure this version supports your os and platform
+            if (nodeVersion.files.indexOf(dataFileName) >= 0) {
+                versions.push(nodeVersion.version);
+            }
+        });
+    }catch(error){
+        if (error.code) {
+            throw new Error(taskLib.loc("ToolFailed",
+                `Unable to reach ${dataUrl}. Code: ${error.code})`));
+        }else{
+            throw new Error(taskLib.loc("ToolFailed",
+            `Unable to reach ${dataUrl}.`));
         }
-    });
+    }
 
     // get the latest version that matches the version spec
     let version: string = toolLib.evaluateVersions(versions, versionSpec);
@@ -123,21 +142,21 @@ async function acquireNode(version: string): Promise<string> {
     //
     version = toolLib.cleanVersion(version);
     let fileName: string = osPlat == 'win32'? 'node-v' + version + '-win-' + os.arch() :
-                                                'node-v' + version + '-' + osPlat + '-' + os.arch();  
+                                                'node-v' + version + '-' + osPlat + '-' + os.arch();
     let urlFileName: string = osPlat == 'win32'? fileName + '.7z':
-                                                    fileName + '.tar.gz';  
+                                                    fileName + '.tar.gz';
 
     let downloadUrl = 'https://nodejs.org/dist/v' + version + '/' + urlFileName;
 
     let downloadPath: string;
 
-    try 
+    try
     {
         downloadPath = await toolLib.downloadTool(downloadUrl);
-    } 
+    }
     catch (err)
     {
-        if (err['httpStatusCode'] && 
+        if (err['httpStatusCode'] &&
             err['httpStatusCode'] == '404')
         {
             return await acquireNodeFromFallbackLocation(version);
@@ -145,7 +164,7 @@ async function acquireNode(version: string): Promise<string> {
 
         throw err;
     }
-    
+
     //
     // Extract
     //
