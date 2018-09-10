@@ -313,7 +313,7 @@
     },
     "sax": {
       "version": "0.5.8",
-      "resolved": "https://registry.npmjs.org/sax/-/sax-0.5.8.tgz",
+      "resolved": "http://registry.npmjs.org/sax/-/sax-0.5.8.tgz",
       "integrity": "sha1-1HLbIo6zMcJQaw6MFVJK25OdEsE="
     },
     "semver": {
