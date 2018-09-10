@@ -54,19 +54,23 @@ export class TaskParametersUtility {
         }
 
         if(taskParameters.isLinuxApp && taskParameters.ScriptType) {
-            let retryTimeoutValue = tl.getVariable('appservicedeploy.retrytimeout');
-            let timeoutAppSettings = retryTimeoutValue ? Number(retryTimeoutValue) * 60 : 1800;
-
-            tl.debug(`setting app setting SCM_COMMAND_IDLE_TIMEOUT to ${timeoutAppSettings}`);
-            if(taskParameters.AppSettings) {
-                taskParameters.AppSettings = taskParameters.AppSettings + ` -SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
-            }
-            else {
-                taskParameters.AppSettings = `-SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
-            }
+            this.UpdateLinuxAppTypeScriptParameters(taskParameters);
         }
 
         return taskParameters;
+    }
+
+    private static UpdateLinuxAppTypeScriptParameters(taskParameters: TaskParameters) {
+        let retryTimeoutValue = tl.getVariable('appservicedeploy.retrytimeout');
+        let timeoutAppSettings = retryTimeoutValue ? Number(retryTimeoutValue) * 60 : 1800;
+
+        tl.debug(`setting app setting SCM_COMMAND_IDLE_TIMEOUT to ${timeoutAppSettings}`);
+        if(taskParameters.AppSettings) {
+            taskParameters.AppSettings = taskParameters.AppSettings + ` -SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
+        }
+        else {
+            taskParameters.AppSettings = `-SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
+        }
     }
 }
 

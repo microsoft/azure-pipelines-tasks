@@ -78,7 +78,7 @@ export class KuduServiceUtility {
         finally {
             try {
                 await this._appServiceKuduService.uploadFile(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
-                await this.runCommand(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension, 0, null, null);
+                await this.runCommand(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension);
                 await this._appServiceKuduService.deleteFolder(vstsPostDeploymentFolderPath);
             }
             catch(error) {
@@ -312,7 +312,7 @@ export class KuduServiceUtility {
         }
     }
 
-    private async runCommand(physicalPath: string, command: string, timeOutInMinutes: number, pollFolderPath: string, pollFile: string): Promise<void> {
+    private async runCommand(physicalPath: string, command: string, timeOutInMinutes?: number, pollFolderPath?: string, pollFile?: string): Promise<void> {
         try {
             await this._appServiceKuduService.runCommand(physicalPath, command);
         }
