@@ -82,7 +82,7 @@
       "name": "command",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.command",
-      "defaultValue": "Build an image",
+      "defaultValue": "build",
       "required": true,
       "options": {
         "build": "build",
