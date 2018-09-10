@@ -44,7 +44,7 @@ function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string)
         rootName: rootName
     });
     let xml = builder.buildObject(jsonContent);
-    xml = str(xml).replaceAll('&#xD;', '').s;
+    xml = xml.replace(/&#xD;/g, '');
     return writeFile(filePath, xml);
 }
 
@@ -202,52 +202,51 @@ function collectFeedRepositories(pomContents:string): Q.Promise<any> {
             return Q.resolve(repos);
         }
         let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-        return locationHelpers.assumeNuGetUriPrefixes(collectionUrl).then(function (packageUrl) {
-            tl.debug('collectionUrl=' + collectionUrl);
-            tl.debug('packageUrl=' + packageUrl);
-            let collectionHostname:string = url.parse(collectionUrl).hostname.toLowerCase();
-            let packageHostname:string = packageUrl[1];
-            if (packageHostname) {
-                url.parse(packageHostname).hostname.toLowerCase();
-            } else {
-                packageHostname = collectionHostname;
-            }
-            let parseRepos:(project) => void = function(project) {
-                if (project && project.repositories) {
-                    for (let r of project.repositories) {
-                        r = r instanceof Array ? r[0] : r;
-                        if (r.repository) {
-                            for (let repo of r.repository) {
-                                repo = repo instanceof Array ? repo[0] : repo;
-                                let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
-                                if (url && (url.toLowerCase().includes(collectionHostname) ||
-                                            url.toLowerCase().includes(packageHostname))) {
-                                tl.debug('using credentials for url: ' + url);
-                                repos.push({
-                                    id: (repo.id && repo.id instanceof Array)
-                                        ? repo.id[0]
-                                        : repo.id
-                                    });
-                                }
+        let packageName = 'pkgs.dev.azure.com';
+        tl.debug('collectionUrl=' + collectionUrl);
+        tl.debug('packageUrl=' + packageName);
+        let collectionName:string = url.parse(collectionUrl).hostname.toLowerCase();
+        let collectionPathName = url.parse(collectionUrl).pathname;
+        if(collectionPathName && collectionPathName.length > 1) {
+            collectionName = collectionName + collectionPathName.toLowerCase();
+            packageName = packageName + collectionPathName.toLowerCase(); //Appending the org name
+            tl.debug('collectionName=' + collectionName);
+        }
+        let parseRepos:(project) => void = function(project) {
+            if (project && project.repositories) {
+                for (let r of project.repositories) {
+                    r = r instanceof Array ? r[0] : r;
+                    if (r.repository) {
+                        for (let repo of r.repository) {
+                            repo = repo instanceof Array ? repo[0] : repo;
+                            let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
+                            if (url && (url.toLowerCase().includes(collectionName) ||
+                                        url.toLowerCase().includes(packageName))) {
+                            tl.debug('using credentials for url: ' + url);
+                            repos.push({
+                                id: (repo.id && repo.id instanceof Array)
+                                    ? repo.id[0]
+                                    : repo.id
+                                });
                             }
                         }
                     }
                 }
-            };
-
-            if (pomJson.projects && pomJson.projects.project) {
-                for (let project of pomJson.projects.project) {
-                    parseRepos(project);
-                }
-            } else if (pomJson.project) {
-                parseRepos(pomJson.project);
-            } else {
-                tl.warning(tl.loc('EffectivePomInvalid'));
             }
+        };
 
-            tl.debug('Feeds found: ' + JSON.stringify(repos));
-            return Q.resolve(repos);
-        });
+        if (pomJson.projects && pomJson.projects.project) {
+            for (let project of pomJson.projects.project) {
+                parseRepos(project);
+            }
+        } else if (pomJson.project) {
+            parseRepos(pomJson.project);
+        } else {
+            tl.warning(tl.loc('EffectivePomInvalid'));
+        }
+
+        tl.debug('Feeds found: ' + JSON.stringify(repos));
+        return Q.resolve(repos);
     });
 }
 
