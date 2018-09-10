@@ -21,6 +21,5 @@ tmr.mockNpmCommand('install', {
 } as TaskLibAnswerExecResult);
 tmr.answers.rmRF[path.join(process.cwd(), '.npmrc')] = { success: true };
 tmr.RegisterLocationServiceMocks();
-tmr.registerLocationHelpersMock();
 
 tmr.run();

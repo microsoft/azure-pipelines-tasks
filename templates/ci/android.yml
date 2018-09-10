@@ -3,7 +3,8 @@
 # Add steps that test, sign, and distribute the APK, save build artifacts, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/android
 
-queue: 'Hosted macOS Preview'
+pool:
+  vmImage: 'macOS 10.13'
 
 steps:
 - task: Gradle@2

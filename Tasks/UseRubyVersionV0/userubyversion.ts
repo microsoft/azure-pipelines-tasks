@@ -39,13 +39,11 @@ export async function useRubyVersion(parameters: TaskParameters, platform: Platf
 
     const toolPath: string = path.join(installDir, 'bin');
     if (platform !== Platform.Windows) {
+        // Ruby / Gem heavily use the '#!/usr/bin/ruby' to find ruby, so this task needs to
+        // replace that version of ruby so all the correct version of ruby gets selected
         // replace the default
         const dest: string = '/usr/bin/ruby';
-        if (fs.existsSync(dest)) {
-            task.debug('removing ' + dest);
-            fs.unlinkSync(dest);
-        }
-        fs.symlinkSync(path.join(toolPath, 'ruby'), dest);
+        task.execSync('sudo', `ln -sf ${path.join(toolPath, 'ruby')} ${dest}`); // replace any existing
     }
 
     task.setVariable('rubyLocation', toolPath);

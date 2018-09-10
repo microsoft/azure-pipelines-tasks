@@ -57,7 +57,7 @@ var MockToolRunner = function (tool) {
         var defer = Q.defer();
         console.log('exec: ' + _this._tool + ' line: ' + _this._line + ' args: ' + _this._args);
 
-        // Simulate som asynchronous event through timer
+        // Simulate some asynchronous event through timer
         setTimeout(function() {
             if (_this._tool == 'powershell') {
                 // update to pretend an unzip actually occurred

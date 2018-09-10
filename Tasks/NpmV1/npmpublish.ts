@@ -4,18 +4,19 @@ import { NpmTaskInput, RegistryLocation } from './constants';
 import { INpmRegistry, NpmRegistry } from 'npm-common/npmregistry';
 import { NpmToolRunner } from './npmtoolrunner';
 import * as util from 'npm-common/util';
+import { PackagingLocation } from 'utility-common/packaging/locationUtilities';
 
-export async function run(command?: string): Promise<void> {
-    let workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
-    let npmrc = util.getTempNpmrcPath();
-    let npmRegistry: INpmRegistry = await getPublishRegistry();
+export async function run(packagingLocation: PackagingLocation): Promise<void> {
+    const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
+    const npmrc = util.getTempNpmrcPath();
+    const npmRegistry: INpmRegistry = await getPublishRegistry(packagingLocation);
 
     tl.debug(tl.loc('PublishRegistry', npmRegistry.url));
     util.appendToNpmrc(npmrc, `registry=${npmRegistry.url}\n`);
     util.appendToNpmrc(npmrc, `${npmRegistry.auth}\n`);
 
     // For publish, always override their project .npmrc
-    let npm = new NpmToolRunner(workingDir, npmrc, true);
+    const npm = new NpmToolRunner(workingDir, npmrc, true);
     npm.line('publish');
 
     npm.execSync();
@@ -24,18 +25,18 @@ export async function run(command?: string): Promise<void> {
     tl.rmRF(util.getTempPath());
 }
 
-export async function getPublishRegistry(): Promise<INpmRegistry>{
+export async function getPublishRegistry(packagingLocation: PackagingLocation): Promise<INpmRegistry> {
     let npmRegistry: INpmRegistry;
-    let registryLocation = tl.getInput(NpmTaskInput.PublishRegistry);
+    const registryLocation = tl.getInput(NpmTaskInput.PublishRegistry);
     switch (registryLocation) {
         case RegistryLocation.Feed:
             tl.debug(tl.loc('PublishFeed'));
-            let feedId = tl.getInput(NpmTaskInput.PublishFeed, true);
-            npmRegistry = await NpmRegistry.FromFeedId(feedId);
+            const feedId = tl.getInput(NpmTaskInput.PublishFeed, true);
+            npmRegistry = await NpmRegistry.FromFeedId(packagingLocation.DefaultPackagingUri, feedId);
             break;
         case RegistryLocation.External:
             tl.debug(tl.loc('PublishExternal'));
-            let endpointId = tl.getInput(NpmTaskInput.PublishEndpoint, true);
+            const endpointId = tl.getInput(NpmTaskInput.PublishEndpoint, true);
             npmRegistry = await NpmRegistry.FromServiceEndpoint(endpointId);
             break;
     }

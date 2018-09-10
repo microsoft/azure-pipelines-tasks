@@ -3,11 +3,15 @@
 # Add steps that install certificates, test, sign, and distribute the app, save build artifacts, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/xcode
 
-queue: 'Hosted macOS Preview'
+pool:
+  vmImage: 'macOS 10.13'
 
 steps:
 - task: Xcode@5
   inputs:
+    actions: 'build'
+    xcWorkspacePath: '**/*.xcodeproj/project.xcworkspace'
     scheme: ''
     sdk: 'iphoneos'
     configuration: 'Release'
+    xcodeVersion: 'default' # Options: 8, 9, default, specifyPath

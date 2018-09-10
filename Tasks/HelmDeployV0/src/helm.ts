@@ -58,6 +58,16 @@ async function run() {
 
     var helmCli : helmcli = new helmcli();
     helmCli.login();
+    var connectionType = tl.getInput("connectionType", true);
+    var telemetry = {
+        connectionType: connectionType,
+        command: command
+    };
+
+    console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+        "TaskEndpointId",
+        "HelmDeployV0",
+        JSON.stringify(telemetry));
 
     try {
         switch (command){

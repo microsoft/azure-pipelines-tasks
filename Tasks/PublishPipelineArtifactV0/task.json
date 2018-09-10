@@ -1,0 +1,44 @@
+{
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishPipelineArtifact",
+  "friendlyName": "Publish Pipeline Artifact",
+  "description": "Publish Pipeline Artifact",
+  "helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 139,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": true,
+  "minimumAgentVersion": "2.140.1",
+  "inputs": [
+    {
+      "name": "artifactName",
+      "type": "string",
+      "label": "The name of this artifact",
+      "defaultValue": "drop",
+      "required": true,
+      "helpMarkDown": "The name of this artifact."
+    },
+    {
+      "name": "targetPath",
+      "type": "filePath",
+      "label": "Path to publish",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
+    }
+  ],
+  "instanceNameFormat": "Publish Pipeline Artifact",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTask, Agent.Plugins"
+    }
+  },
+  "messages": {
+  }
+}
