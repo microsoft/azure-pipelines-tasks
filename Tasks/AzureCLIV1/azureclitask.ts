@@ -142,9 +142,7 @@ export class azureclitask {
 
     private static throwIfError(resultOfToolExecution: IExecSyncResult): void {
         if (resultOfToolExecution.code != 0) {
-            if (resultOfToolExecution.stderr) {
-                throw resultOfToolExecution;
-            }
+            throw resultOfToolExecution;
         }
     }
 
