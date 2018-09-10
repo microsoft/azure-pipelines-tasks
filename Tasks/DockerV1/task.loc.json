@@ -85,10 +85,10 @@
       "defaultValue": "Build an image",
       "required": true,
       "options": {
-        "Build an image": "build",
-        "Tag image": "tag",
-        "Push an image": "push",
-        "Run an image": "run",
+        "build": "build",
+        "tag": "tag",
+        "push": "push",
+        "run": "run",
         "login": "login",
         "logout": "logout"
       },
