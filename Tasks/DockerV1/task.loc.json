@@ -82,13 +82,13 @@
       "name": "command",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.command",
-      "defaultValue": "Build an image",
+      "defaultValue": "build",
       "required": true,
       "options": {
-        "Build an image": "build",
-        "Tag image": "tag",
-        "Push an image": "push",
-        "Run an image": "run",
+        "build": "build",
+        "tag": "tag",
+        "push": "push",
+        "run": "run",
         "login": "login",
         "logout": "logout"
       },
