@@ -17,6 +17,7 @@ export interface InputDataContract {
     DistributionSettings : DistributionSettings;
     ExecutionSettings : ExecutionSettings;
     Logging : Logging;
+    BuildSourcesDirectory : string;
 }
 
 export interface TestReportingSettings {
