@@ -132,7 +132,8 @@ function getWebApiWithProxy(serviceUri: string, accessToken?: string): vsts.WebA
 
     const credentialHandler = vsts.getBasicHandler('vsts', accessToken);
     const options: IRequestOptions = {
-        proxy: tl.getHttpProxyConfiguration(serviceUri)
+        proxy: tl.getHttpProxyConfiguration(serviceUri),
+        cert: tl.getHttpCertConfiguration()
     };
     return new vsts.WebApi(serviceUri, credentialHandler, options);
 }

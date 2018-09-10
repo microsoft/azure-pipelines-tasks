@@ -42,7 +42,7 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
                 n = s.indexOf(os.EOL);
             }
 
-            strBuffer = s;                
+            strBuffer = s;
         }
         catch (err) {
             tl.debug('error processing line');
@@ -53,7 +53,7 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
     cp.stdout.on('data', (data: Buffer) => {
         process.stdout.write(data);
         processLineBuffer(data, stdbuffer, (line: string) => {
-            tl.debug('stdline:' + line);    
+            tl.debug('stdline:' + line);
         });
     });
 
@@ -62,8 +62,8 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
         // ssh-add puts output on stderr
         process.stderr.write(data);
         processLineBuffer(data, errbuffer, (line: string) => {
-            tl.debug('errline:' + line);    
-        });            
+            tl.debug('errline:' + line);
+        });
     });
 
     cp.on('error', (err) => {
@@ -76,7 +76,7 @@ function execSshAddPassphraseSync(tool, args, passphrase):Q.Promise<boolean> {
         if (stdbuffer.length > 0) {
             tl.debug('stdline:' + stdbuffer);
         }
-        
+
         if (errbuffer.length > 0) {
             tl.debug('errline:' + errbuffer);
         }
@@ -129,7 +129,7 @@ export class SshToolRunner {
                 tl.debug('Key=' + key + ' value=' + value);
                 if (sshAgentPidEnvVariableKey === key) {
                     tl.setVariable(key, value);
-                    tl.setTaskVariable(postKillAgentSetting, value);    
+                    tl.setTaskVariable(postKillAgentSetting, value);
                 }
                 else if (sshAgentSockEnvVariableKey === key) {
                     tl.setVariable(key, value);
@@ -160,7 +160,7 @@ export class SshToolRunner {
         fs.chmodSync(privateKeyLocation, '600'); // requires user only permissions when adding to agent
 
         let installedSSH:boolean = false;
-        if (passphrase) {        
+        if (passphrase) {
             installedSSH = await execSshAddPassphraseSync(this.getExecutable('ssh-add'), [privateKeyLocation], passphrase);
         } else {
             results = tl.execSync(this.getExecutable('ssh-add'), privateKeyLocation);
@@ -179,7 +179,9 @@ export class SshToolRunner {
         let deleteKey: string = tl.getTaskVariable(postDeleteKeySetting);
         if (deleteKey) {
             tl.debug('Deleting Key: ' + deleteKey);
-            tl.execSync(path.join(external, 'ssh-add.exe'), ['-d', deleteKey]);
+            tl.execSync('ssh-add.exe', ['-d', deleteKey]);
+            // @TODO Fixme !!!
+            //   tl.execSync(path.join(external, 'ssh-add.exe'), ['-d', deleteKey]);
         }
     }
 }
@@ -209,7 +211,7 @@ export function tryRestoreKnownHosts() {
     let knownHostsContents: string = tl.getTaskVariable(postKnownHostsContentsSetting);
     let knownHostsLocation: string = tl.getTaskVariable(postKnownHostsLocationSetting);
     let knownHostsDeleteFileOnExit: string = tl.getTaskVariable(postKnownHostsDeleteFileSetting);
-    
+
     tl.debug('Restoring known_hosts');
     if (knownHostsDeleteFileOnExit && knownHostsLocation) {
         fs.unlinkSync(knownHostsLocation);
