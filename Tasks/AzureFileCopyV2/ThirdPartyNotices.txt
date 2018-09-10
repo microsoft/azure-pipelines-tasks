@@ -2,7 +2,8 @@
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-Azure Monitor Alerts incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.  
+Azure File Copy incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.  
+
 
 1.	balanced-match  (https://github.com/juliangruber/balanced-match)
 2.	brace-expansion (https://github.com/juliangruber/brace-expansion)
@@ -31,7 +32,7 @@ Azure Monitor Alerts incorporates third party material from the projects listed 
 25. topo (https://github.com/hapijs/topo)
 26.	tunnel (https://github.com/koichik/node-tunnel)
 27.	underscore.js (http://underscorejs.org/; https://github.com/jashkenas/underscore)
-28. uuid (https://github.com/kelektiv/node-uuid)
+28.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
 29.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
 30.	Xml2JS  (https://github.com/Leonidas-from-XIV/node-xml2js)
 31.	Xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
@@ -932,32 +933,29 @@ OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF underscore.js NOTICES, INFORMATION, AND LICENSE
 
-%% uuid NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% vso-node-api NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-The MIT License (MIT)
+Copyright (c) Microsoft Corporation
 
-Copyright (c) 2010-2016 Robert Kieffer and other contributors
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+MIT License
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
+THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
-END OF uuid NOTICES, INFORMATION, AND LICENSE
+END OF vso-node-api NOTICES, INFORMATION, AND LICENSE
 
 %% VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
