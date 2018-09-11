@@ -57,7 +57,7 @@ export class KuduServiceUtility {
             var cmdFilePath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\mainCmdFile' + fileExtension;
             var scriprResultPath = '/site/VSTS_PostDeployment_' + uniqueID;
             if (taskParams.isLinuxApp){
-                cmdFilePath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/mainCmdFile' + fileExtension
+                cmdFilePath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/mainCmdFile' + fileExtension;
             }
             await this.runCommand(rootDirectoryPath, cmdFilePath + ' ' + uniqueID, 30, scriprResultPath, 'script_result.txt');
             await this._printPostDeploymentLogs(vstsPostDeploymentFolderPath);
@@ -77,8 +77,13 @@ export class KuduServiceUtility {
         }
         finally {
             try {
+                let deleteFilePath = '%Home%\\site\\VSTS_PostDeployment_' + uniqueID + '\\delete_log_file' + fileExtension;
+                if(taskParams.isLinuxApp) {
+                    deleteFilePath = '/home/site/VSTS_PostDeployment_' + uniqueID + '/delete_log_file' + fileExtension;
+                }
+                
                 await this._appServiceKuduService.uploadFile(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension, path.join(__dirname, '..', 'postDeploymentScript', 'deleteLogFile' + fileExtension));
-                await this.runCommand(vstsPostDeploymentFolderPath, 'delete_log_file' + fileExtension);
+                await this.runCommand(vstsPostDeploymentFolderPath, deleteFilePath);
                 await this._appServiceKuduService.deleteFolder(vstsPostDeploymentFolderPath);
             }
             catch(error) {
