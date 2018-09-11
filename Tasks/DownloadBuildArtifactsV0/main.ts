@@ -149,12 +149,12 @@ async function main(): Promise<void> {
             });
 
             if (!definitions || definitions.length < 1) {
-                reject(tl.loc("InvalidBuildDefinitionID", definitionId));
+                reject(tl.loc("InvalidBuildDefinitionName", definitionId));
                 return;
             }
 
             definitionId = String(definitions[0].id);
-            console.log(tl.loc("DefinitionIDFound", definitionIdSpecified, definitionId));
+            console.log(tl.loc("DefinitionNameMatchFound", definitionIdSpecified, definitionId));
         }
 
         // verify that buildId belongs to the definition selected
@@ -199,7 +199,7 @@ async function main(): Promise<void> {
             }
         }
         else {
-            reject(tl.loc("InvalidBuildDefinitionID", definitionId));
+            reject(tl.loc("UnresolvedDefinitionId"));
             return;
         }
 
