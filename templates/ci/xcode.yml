@@ -9,6 +9,8 @@ pool:
 steps:
 - task: Xcode@5
   inputs:
+    actions: 'build'
+    xcWorkspacePath: '**/*.xcodeproj/project.xcworkspace'
     scheme: ''
     sdk: 'iphoneos'
     configuration: 'Release'
