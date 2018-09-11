@@ -16,8 +16,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 139,
-        "Patch": 9
+        "Minor": 141,
+        "Patch": 0
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -126,11 +126,11 @@
         {
             "name": "publishTestResults",
             "type": "boolean",
-            "label": "Publish test results",
+            "label": "Publish test results and code coverage",
             "defaultValue": "true",
             "visibleRule": "command = test",
             "required": false,
-            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments."
+            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect “Code coverage”` option to the command line arguments. This is currently only available on the Windows platform."
         },
         {
             "name": "zipAfterPublish",

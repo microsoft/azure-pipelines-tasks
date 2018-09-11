@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 141,
+    "Minor": 140,
     "Patch": 0
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -103,6 +103,15 @@
       "required": false,
       "defaultValue": "false",
       "helpMarkDown": "ms-resource:loc.input.help.ignoreLASTEXITCODE",
+      "groupName": "advanced"
+    },
+    {
+      "name": "pwsh",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.pwsh",
+      "required": false,
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.pwsh",
       "groupName": "advanced"
     },
     {

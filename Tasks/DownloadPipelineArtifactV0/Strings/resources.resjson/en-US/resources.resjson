@@ -1,0 +1,12 @@
+{
+  "loc.friendlyName": "Download Pipeline Artifact",
+  "loc.helpMarkDown": "Download named artifact from a pipeline to a local path.",
+  "loc.description": "Download Pipeline Artifact",
+  "loc.instanceNameFormat": "Download Pipeline Artifact",
+  "loc.input.label.pipelineId": "The specific pipeline to download from",
+  "loc.input.help.pipelineId": "The pipeline to download from. Target the current pipeline if left blank.",
+  "loc.input.label.artifactName": "The name of artifact to download.",
+  "loc.input.help.artifactName": "The name of artifact to download. The artifact must be a pipeline artifact.",
+  "loc.input.label.targetPath": "Path to download to",
+  "loc.input.help.targetPath": "The folder path to download the artifact to. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported. If the folder doesn't exist it will be created."
+}

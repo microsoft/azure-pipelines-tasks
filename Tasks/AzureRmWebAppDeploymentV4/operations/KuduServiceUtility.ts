@@ -266,7 +266,7 @@ export class KuduServiceUtility {
             }
         }
         catch(error) {
-            tl.debug(`Unable to fetch logs for kudu Deploy: ${JSON.stringify(error)}`)
+            tl.debug(`Unable to fetch logs for kudu Deploy: ${JSON.stringify(error)}`);
         }
 
         if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {

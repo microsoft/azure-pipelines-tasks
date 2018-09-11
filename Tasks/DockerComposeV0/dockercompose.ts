@@ -42,6 +42,11 @@ if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
         .then(function runAction() {
             // Run the specified action
             var action = tl.getInput("action", true);
+            var telemetry = {
+                registryType: registryType,
+                command: action !== "Run a Docker Compose command" ? action : tl.getInput("dockerComposeCommand", true)
+            };
+            
             /* tslint:disable:no-var-requires */
             return require({
                 "Build services": "./dockercomposebuild",
