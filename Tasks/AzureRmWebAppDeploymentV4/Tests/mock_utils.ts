@@ -172,7 +172,7 @@ export function mockRunFromZipSettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_ZIP":"1"
+            "WEBSITE_RUN_FROM_PACKAGE":"1"
         }
     }).persist();
 
@@ -184,7 +184,7 @@ export function mockRunFromZipSettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION":"6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES":"1",
-            "WEBSITE_RUN_FROM_ZIP":"1"
+            "WEBSITE_RUN_FROM_PACKAGE":"1"
         }
     };
     
@@ -203,7 +203,7 @@ export function mockRunFromZipSettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_ZIP":"1"
+            "WEBSITE_RUN_FROM_PACKAGE":"1"
         }
     }).persist();
 }
@@ -224,7 +224,7 @@ export function mockZipDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_ZIP":"0"
+            "WEBSITE_RUN_FROM_PACKAGE":"0"
         }
     }).persist();
 
@@ -236,7 +236,7 @@ export function mockZipDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION":"6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES":"1",
-            "WEBSITE_RUN_FROM_ZIP":"0"
+            "WEBSITE_RUN_FROM_PACKAGE":"0"
         }
     };
     
@@ -255,7 +255,7 @@ export function mockZipDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_ZIP":"0"
+            "WEBSITE_RUN_FROM_PACKAGE":"0"
         }
     }).persist();
 }
@@ -276,7 +276,7 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_ZIP":"0",
+            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag"
         }
     }).persist();
@@ -289,7 +289,7 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION":"6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES":"1",
-            "WEBSITE_RUN_FROM_ZIP":"0",
+            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag"
         }
     };
@@ -309,7 +309,7 @@ export function mockContainerDeploySettings() {
         properties: {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "MSDEPLOY_RENAME_LOCKED_FILES": "1",
-            "WEBSITE_RUN_FROM_ZIP":"0",
+            "WEBSITE_RUN_FROM_PACKAGE":"0",
             "DOCKER_CUSTOM_IMAGE_NAME": "dockernamespace/dockerrepository:DockerImageTag"
         }
     }).persist();
