@@ -330,4 +330,19 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
+    it('AzureRmWebAppDeploymentV4 Validate TaskParameters', (done: MochaDone) => {
+        let tp = path.join(__dirname,'TaskParametersTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        try {
+            tr.run();
+            assert(tr.stdOutContained('SCM_COMMAND_IDLE_TIMEOUT variable PRESENT'), 'Should have printed: SCM_COMMAND_IDLE_TIMEOUT variable PRESENT');
+            done();
+        }
+        catch(error) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            done();
+        }
+    });
+
 });
