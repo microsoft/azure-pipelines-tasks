@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Ripristino componenti di Xamarin",
+  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=786653)",
+  "loc.description": "Ripristina i componenti di Xamarin per la soluzione specificata",
+  "loc.instanceNameFormat": "Ripristino componenti di Xamarin $(solution)",
+  "loc.input.label.solution": "Path to solution",
+  "loc.input.help.solution": "Percorso del file di soluzione di Visual Studio",
+  "loc.input.label.email": "Posta elettronica",
+  "loc.input.help.email": "Indirizzo di posta elettronica dell'account Xamarin.",
+  "loc.input.label.password": "Password",
+  "loc.input.help.password": "Password dell'account di Xamarin. Per crittografare questo valore, usare una nuova variabile di compilazione con il relativo blocco abilitato nella scheda Variabili.",
+  "loc.messages.XamarinComponentRestoreReturnCode": "xamarin-component.exe è stato terminato. Codice restituito: %d",
+  "loc.messages.XamarinComponentRestoreFailed": "xamarin-component.exe non è riuscito. Errore: %s"
+}
