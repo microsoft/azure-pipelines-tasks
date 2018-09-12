@@ -23,6 +23,7 @@ export class KuduServiceManagementClient {
         request.headers['Content-Type'] = 'application/json; charset=utf-8';
         
         let retryCount = reqOptions && util.isNumber(reqOptions.retryCount) ? reqOptions.retryCount : 5;
+
         while(retryCount >= 0) {
             try {
                 let httpResponse = await webClient.sendRequest(request, reqOptions);
@@ -36,13 +37,10 @@ export class KuduServiceManagementClient {
                         tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
                 }
 
-                if(retryCount > 0 && exceptionString.indexOf('Request timeout') != -1) {
-                    let retryRequestTimedout = reqOptions.retryRequestTimedout != false;
-                    if(retryRequestTimedout) {
-                        tl.debug('encountered request timedou issue in Kudu. Retrying again');
-                        retryCount -= 1;
-                        continue;
-                    }
+                if(retryCount > 0 && exceptionString.indexOf('Request timeout') != -1 && reqOptions.retryRequestTimedout) {
+                    tl.debug('encountered request timedou issue in Kudu. Retrying again');
+                    retryCount -= 1;
+                    continue;
                 }
 
                 throw new Error(exceptionString);
