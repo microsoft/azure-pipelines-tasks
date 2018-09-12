@@ -1,7 +1,7 @@
 # Xamarin.Android
-# Build a Xamarin.Android app and Xamarin.UITest assembly.
-# Add steps that test, sign, and distribute the app, save build artifacts, and more:
-# https://docs.microsoft.com/vsts/pipelines/languages/xamarin
+# Build a Xamarin.Android project.
+# Add steps that test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
 pool:
   vmImage: 'macOS 10.13'
