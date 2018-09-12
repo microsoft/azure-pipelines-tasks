@@ -12,7 +12,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 140,
+        "Minor": 141,
         "Patch": 0
     },
     "satisfies": ["Java"],
@@ -52,7 +52,9 @@
             "required": true,
             "options": {
                 "AzureStorage": "Azure Storage",
-                "LocalDirectory": "Local Directory"
+                "LocalDirectory": "Local Directory",
+                "AptGet": "Apt-Get (Debian or Ubuntu only)",
+                "ChocoInstall": "Chocolatey (Windows only)"
             },
             "helpMarkDown": "Source for the compressed JDK."
         },
@@ -108,6 +110,7 @@
             "label": "Destination directory",
             "defaultValue": "",
             "required": true,
+            "visibleRule": "jdkSourceOption == AzureStorage || jdkSourceOption == LocalDirectory",
             "helpMarkDown": "Destination directory into which JDK should be extracted."
         },
         {
@@ -116,6 +119,7 @@
             "label": "Clean destination directory",
             "required": true,
             "defaultValue": "true",
+            "visibleRule": "jdkSourceOption == AzureStorage || jdkSourceOption == LocalDirectory",
             "helpMarkDown": "Select this option to clean the destination directory before JDK is extracted into it."
         }
     ],
@@ -166,6 +170,11 @@
         "UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension.",
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+        "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+        "NotWindowsPlatform": "Installing via chocolatey is only available on Windows platform",
+        "NotLinuxPlatform": "Installing via apt-get is only available on Ubuntu and Debian platform",
+        "JS_ExitCode": "PowerShell exited with code '%s'.",
+        "AptGetFailed": "Apt-get java install failed. Error: %s.",
+        "CurrentPlatformInfo": "Current platform is: "
     }
 }

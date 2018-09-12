@@ -48,5 +48,10 @@
   "loc.messages.UnsupportedFileExtension": "Specified JDK source file does not have a supported file extension.",
   "loc.messages.CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
   "loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
-  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s"
+  "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
+  "loc.messages.NotWindowsPlatform": "Installing via chocolatey is only available on Windows platform",
+  "loc.messages.NotLinuxPlatform": "Installing via apt-get is only available on Ubuntu and Debian platform",
+  "loc.messages.JS_ExitCode": "PowerShell exited with code '%s'.",
+  "loc.messages.AptGetFailed": "Apt-get java install failed. Error: %s.",
+  "loc.messages.CurrentPlatformInfo": "Current platform is: "
 }

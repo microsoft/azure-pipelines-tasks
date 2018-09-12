@@ -12,7 +12,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 140,
+    "Minor": 141,
     "Patch": 0
   },
   "satisfies": [
@@ -54,7 +54,9 @@
       "required": true,
       "options": {
         "AzureStorage": "Azure Storage",
-        "LocalDirectory": "Local Directory"
+        "LocalDirectory": "Local Directory",
+        "AptGet": "Apt-Get (Debian or Ubuntu only)",
+        "ChocoInstall": "Chocolatey (Windows only)"
       },
       "helpMarkDown": "ms-resource:loc.input.help.jdkSourceOption"
     },
@@ -110,6 +112,7 @@
       "label": "ms-resource:loc.input.label.jdkDestinationDirectory",
       "defaultValue": "",
       "required": true,
+      "visibleRule": "jdkSourceOption == AzureStorage || jdkSourceOption == LocalDirectory",
       "helpMarkDown": "ms-resource:loc.input.help.jdkDestinationDirectory"
     },
     {
@@ -118,6 +121,7 @@
       "label": "ms-resource:loc.input.label.cleanDestinationDirectory",
       "required": true,
       "defaultValue": "true",
+      "visibleRule": "jdkSourceOption == AzureStorage || jdkSourceOption == LocalDirectory",
       "helpMarkDown": "ms-resource:loc.input.help.cleanDestinationDirectory"
     }
   ],
@@ -168,6 +172,11 @@
     "UnsupportedFileExtension": "ms-resource:loc.messages.UnsupportedFileExtension",
     "CouldNotFetchAccessTokenforAzureStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforAzureStatusCode",
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
-    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode"
+    "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
+    "NotWindowsPlatform": "ms-resource:loc.messages.NotWindowsPlatform",
+    "NotLinuxPlatform": "ms-resource:loc.messages.NotLinuxPlatform",
+    "JS_ExitCode": "ms-resource:loc.messages.JS_ExitCode",
+    "AptGetFailed": "ms-resource:loc.messages.AptGetFailed",
+    "CurrentPlatformInfo": "ms-resource:loc.messages.CurrentPlatformInfo"
   }
 }
