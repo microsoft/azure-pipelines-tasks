@@ -118,7 +118,7 @@ export class TaskParametersUtility {
 
         tl.debug(`setting app setting SCM_COMMAND_IDLE_TIMEOUT to ${timeoutAppSettings}`);
         if(taskParameters.AppSettings) {
-            taskParameters.AppSettings = taskParameters.AppSettings + ` -SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
+            taskParameters.AppSettings = `-SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings} ` + taskParameters.AppSettings;
         }
         else {
             taskParameters.AppSettings = `-SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;

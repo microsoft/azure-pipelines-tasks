@@ -37,9 +37,12 @@ export class KuduServiceManagementClient {
                 }
 
                 if(retryCount > 0 && exceptionString.indexOf('Request timeout') != -1) {
-                    tl.debug('encountered request timedou issue in Kudu. Retrying again');
-                    retryCount -= 1;
-                    continue;
+                    let retryRequestTimedout = reqOptions.retryRequestTimedout != false;
+                    if(retryRequestTimedout) {
+                        tl.debug('encountered request timedou issue in Kudu. Retrying again');
+                        retryCount -= 1;
+                        continue;
+                    }
                 }
 
                 throw new Error(exceptionString);
@@ -395,7 +398,7 @@ export class Kudu {
 
         try {
             tl.debug('Executing Script on Kudu. Command: ' + command);
-            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 0, retryIntervalInSeconds: 5};
+            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: null, retriableStatusCodes: null, retryCount: 5, retryIntervalInSeconds: 5, retryRequestTimedout: false};
             var response = await this._client.beginRequest(httpRequest, webRequestOptions);
             tl.debug(`runCommand. Data: ${JSON.stringify(response)}`);
             if(response.statusCode == 200) {
