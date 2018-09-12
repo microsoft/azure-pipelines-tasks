@@ -132,7 +132,7 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(properties)));
         await this._appService.patchApplicationSettings(properties);
         var kuduService = await this.getKuduService();
-        var noOftimesToIterate: number = 6;
+        var noOftimesToIterate: number = 12;
         tl.debug('retrieving values from Kudu service to check if new values are updated');
         while(noOftimesToIterate > 0) {
             var kuduServiceAppSettings = await kuduService.getAppSettings();

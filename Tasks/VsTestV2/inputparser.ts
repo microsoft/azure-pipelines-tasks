@@ -35,6 +35,7 @@ export function parseInputsForDistributedTestRun() : idc.InputDataContract {
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.RunIdentifier = getRunIdentifier();
+    inputDataContract.SourcesDirectory = tl.getVariable('Build.SourcesDirectory');
 
     logWarningForWER(tl.getBoolInput('uiTests'));
     ci.publishEvent({ 'UiTestsOptionSelected': tl.getBoolInput('uiTests')} );
@@ -62,6 +63,7 @@ export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.RunIdentifier = getRunIdentifier();
     inputDataContract.EnableSingleAgentAPIFlow = utils.Helper.stringToBool(tl.getVariable('Hydra.EnableApiFlow'));
+    inputDataContract.SourcesDirectory = tl.getVariable('Build.SourcesDirectory');
 
 
     logWarningForWER(tl.getBoolInput('uiTests'));

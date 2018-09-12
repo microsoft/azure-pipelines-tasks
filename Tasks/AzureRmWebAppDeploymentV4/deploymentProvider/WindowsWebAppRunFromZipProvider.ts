@@ -5,7 +5,8 @@ import * as Constant from '../operations/Constants';
 import * as ParameterParser from '../operations/ParameterParserUtility'
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common/packageUtility';
-const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
+const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
+const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
 var deployUtility = require('webdeployment-common/utility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 
@@ -35,8 +36,9 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
 
         tl.debug("Initiated deployment via kudu service for webapp package : ");
         
-        var customApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
-        await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
+        var addCustomApplicationSetting = ParameterParser.parse(runFromZipAppSetting);
+        var deleteCustomApplicationSetting = ParameterParser.parse(oldRunFromZipAppSetting);
+        await this.appServiceUtility.updateAndMonitorAppSettings(addCustomApplicationSetting, deleteCustomApplicationSetting);
 
         await this.kuduServiceUtility.deployUsingRunFromZip(webPackage, 
             { slotName: this.appService.getSlot() });

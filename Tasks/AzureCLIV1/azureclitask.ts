@@ -124,10 +124,10 @@ export class azureclitask {
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
         //login using svn
-        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""));
+        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
-        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""));
+        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
     }
 
     private static logoutAzure() {
@@ -140,11 +140,13 @@ export class azureclitask {
         }
     }
 
-    private static throwIfError(resultOfToolExecution: IExecSyncResult): void {
+    private static throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
         if (resultOfToolExecution.code != 0) {
-            if (resultOfToolExecution.stderr) {
-                throw resultOfToolExecution;
+            tl.error("Error Code: [" + resultOfToolExecution.code + "]");
+            if (errormsg) {
+                tl.error("Error: " + errormsg);
             }
+            throw resultOfToolExecution;
         }
     }
 

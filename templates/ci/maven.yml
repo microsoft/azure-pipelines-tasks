@@ -1,7 +1,7 @@
 # Maven
-# Build your Java projects and run tests with Apache Maven.
+# Build your Java project and run tests with Apache Maven.
 # Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/vsts/pipelines/languages/java
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 pool:
   vmImage: 'Ubuntu 16.04'
