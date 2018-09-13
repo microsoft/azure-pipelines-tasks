@@ -1,4 +1,4 @@
-#Debugging TypeScript Tasks in VS Code
+# Debugging TypeScript Tasks in VS Code
 
 Start by changing the build scripts to generate the required source mappings files.  In the root of the repo, edit the tsconfig.json folder to add sourceMaps, e.g.
 <pre>
