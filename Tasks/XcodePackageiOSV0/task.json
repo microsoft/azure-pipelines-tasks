@@ -1,0 +1,87 @@
+{
+    "id": "F54D001C-999F-408A-9867-0400C1838C5E",
+    "name": "XcodePackageiOS",
+    "friendlyName": "Xcode Package iOS",
+    "description": "Generate an .ipa file from Xcode build output using xcrun (Xcode 7 or below)",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613731)",
+    "category": "Build",
+    "visibility": [
+        "Build"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 0,
+        "Minor": 125,
+        "Patch": 0
+    },
+    "deprecated": true,
+    "instanceNameFormat": "Xcode Package $(appName)",
+    "demands": [
+        "xcode"
+    ],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "appName",
+            "type": "string",
+            "label": "Name of .app",
+            "defaultValue": "name.app",
+            "required": true,
+            "helpMarkDown": "Name of the .app, which is sometimes different from the .ipa"
+        },
+        {
+            "name": "ipaName",
+            "type": "string",
+            "label": "Name of .ipa",
+            "defaultValue": "name.ipa",
+            "required": true,
+            "helpMarkDown": "Name of the .ipa, which is sometimes different from the .app"
+        },
+        {
+            "name": "provisioningProfile",
+            "type": "string",
+            "label": "Provisioning Profile Name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Name of the provisioning profile to use when signing."
+        },
+        {
+            "name": "sdk",
+            "type": "string",
+            "label": "SDK",
+            "defaultValue": "iphoneos",
+            "required": true,
+            "helpMarkDown": "Use the specified SDK.  Run **xcodebuild -showsdks** to see the valid list of SDKs."
+        },
+        {
+            "name": "appPath",
+            "type": "string",
+            "label": "Path to .app",
+            "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)",
+            "required": true,
+            "helpMarkDown": "Relative path to the built .app file",
+            "groupName": "advanced"
+        },
+        {
+            "name": "ipaPath",
+            "type": "string",
+            "label": "Path to place .ipa",
+            "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)/output",
+            "required": true,
+            "helpMarkDown": "Relative path where the .ipa will be placed. The directory will be created if it doesn't exist.",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "xcodepkgios.js",
+            "argumentFormat": ""
+        }
+    }
+}

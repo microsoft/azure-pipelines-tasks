@@ -1,0 +1,14 @@
+{
+  "loc.friendlyName": "Xamarin 组件还原",
+  "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkId=786653)",
+  "loc.description": "还原指定解决方案的 Xamarin 组件",
+  "loc.instanceNameFormat": "Xamarin 组件还原 $(solution)",
+  "loc.input.label.solution": "Path to solution",
+  "loc.input.help.solution": "Visual Studio 解决方案文件的路径",
+  "loc.input.label.email": "电子邮件",
+  "loc.input.help.email": "Xamarin 帐户电子邮件地址。",
+  "loc.input.label.password": "密码",
+  "loc.input.help.password": "Xamarin 帐户密码。使用在“变量”选项卡上启用了锁定的新的生成变量来加密该值。",
+  "loc.messages.XamarinComponentRestoreReturnCode": "xamarin-component.exe 已退出，返回代码: %d",
+  "loc.messages.XamarinComponentRestoreFailed": "xamarin-component.exe 失败，出现错误: %s"
+}
