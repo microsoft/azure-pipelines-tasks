@@ -27,7 +27,6 @@ const a: ma.TaskLibAnswers = {
     "exec": {
         "python -m pip install twine --user": {
             "code": 1,
-            "stdout": "twine installed failed",
             "stderr": "failed to install twine"
         }
     },
