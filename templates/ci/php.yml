@@ -1,14 +1,23 @@
 # PHP
-# Test and package your PHP application.
-# https://aka.ms/yaml
+# Test and package your PHP project.
+# Add steps that run tests, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/php
 
-queue: 'Hosted Ubuntu 1604'
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+variables:
+  phpVersion: 7.2
 
 steps:
-- script: composer install
-  displayName: 'composer install'
+- script: |
+    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+    php -version
+  displayName: 'Use PHP version $(phpVersion)'
 
-# For information on extending this YAML to:
-# - Run tests with phpunit
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml
+- script: composer install --no-interaction --prefer-dist
+  displayName: 'composer install'

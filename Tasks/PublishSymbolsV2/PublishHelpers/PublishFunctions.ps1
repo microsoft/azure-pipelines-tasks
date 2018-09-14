@@ -15,7 +15,8 @@ function Invoke-PublishSymbols {
         [timespan]$MaximumWaitTime,
         [Parameter(Mandatory = $true)]
         [string]$SemaphoreMessage,
-        [string]$ArtifactName)
+        [string]$ArtifactName,
+        [switch]$CompressSymbols)
 
     Trace-VstsEnteringInvocation $MyInvocation
     try {
@@ -37,7 +38,7 @@ function Invoke-PublishSymbols {
             $semaphore = Lock-Semaphore -Share $Share -MaximumWaitTime $MaximumWaitTime -SemaphoreMessage $SemaphoreMessage
             try {
                 # Invoke symstore.exe.
-                $symstoreArgs = "add /f ""@$symbolsRspFile"" /s ""$Share"" /t ""$Product"" /v ""$Version"""
+                $symstoreArgs = "add /f ""@$symbolsRspFile"" /s ""$Share"" /t ""$Product"" /v ""$Version""$(if ($CompressSymbols) { " /compress" })"
                 Invoke-VstsTool -FileName (Get-SymStorePath) -Arguments $symstoreArgs -WorkingDirectory ([System.IO.Path]::GetTempPath()) 2>&1 |
                     ForEach-Object {
                         if ($_ -is [System.Management.Automation.ErrorRecord]) {

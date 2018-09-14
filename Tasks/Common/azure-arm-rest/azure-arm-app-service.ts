@@ -207,16 +207,23 @@ export class AzureAppService {
         }
     }
 
-    public async patchApplicationSettings(properties): Promise<boolean> {
+    public async patchApplicationSettings(addProperties: any, deleteProperties?: any): Promise<boolean> {
         var applicationSettings = await this.getApplicationSettings();
         var isNewValueUpdated: boolean = false;
-        for(var key in properties) {
-            if(applicationSettings.properties[key] != properties[key]) {
-                tl.debug(`old value : ${applicationSettings.properties[key]}. new value: ${properties[key]}`);
+        for(var key in addProperties) {
+            if(applicationSettings.properties[key] != addProperties[key]) {
+                tl.debug(`old value : ${applicationSettings.properties[key]}. new value: ${addProperties[key]}`);
                 isNewValueUpdated = true;
             }
 
-            applicationSettings.properties[key] = properties[key];
+            applicationSettings.properties[key] = addProperties[key];
+        }
+        for(var key in deleteProperties) {
+            if(key in applicationSettings.properties) {
+                delete applicationSettings.properties[key];
+                tl.debug(`Removing app setting : ${key}`);
+                isNewValueUpdated = true;
+            }
         }
 
         if(isNewValueUpdated) {

@@ -20,6 +20,7 @@
         "archiver": "1.2.0",
         "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common-1.0.1.tgz",
         "q": "^1.4.1",
+        "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
         "vso-node-api": "6.0.1-preview",
         "vsts-task-lib": "2.6.0"
     }

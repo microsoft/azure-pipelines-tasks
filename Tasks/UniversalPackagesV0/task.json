@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -383,6 +383,8 @@
     "Info_UsingToolPath": "Using tool path: %s",
     "Info_UsingVersion": "Using version: %s",
     "FailedToGetPackageMetadata": "Failed to get package metadata.",
+    "FailedToGetArtifactTool": "Failed to get artifact tool from service. %s",
+    "Error_UnexpectedErrorFailedToGetToolMetadata" : "Failed to get artifact tool metadata from source url %s",
     "FailedToGetLatestPackageVersion": "Failed to get package versions",
     "Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages"
   }

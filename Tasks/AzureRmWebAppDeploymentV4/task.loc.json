@@ -18,7 +18,7 @@
   "version": {
     "Major": 4,
     "Minor": 3,
-    "Patch": 0
+    "Patch": 7
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -27,19 +27,19 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != webAppContainer && WebAppKind != webAppLinux && Package NotEndsWith .war"
+      "visibleRule": "WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && Package NotEndsWith .war"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "PostDeploymentAction",
       "displayName": "ms-resource:loc.group.displayName.PostDeploymentAction",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer"
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != \"\" && WebAppKind != webAppContainer && WebAppkind != functionAppContainer"
     },
     {
       "name": "ApplicationAndConfigurationSettings",
@@ -102,8 +102,9 @@
       "options": {
         "webApp": "Web App on Windows",
         "webAppLinux": "Web App on Linux",
-        "webAppContainer": "Web App for Containers",
+        "webAppContainer": "Web App for Containers (Linux)",
         "functionApp": "Function App",
+        "functionAppContainer": "Function App for Containers",
         "apiApp": "API App",
         "mobileApp": "Mobile App"
       },
@@ -164,7 +165,7 @@
       "label": "ms-resource:loc.input.label.DockerNamespace",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = webAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerNamespace"
     },
     {
@@ -173,7 +174,7 @@
       "label": "ms-resource:loc.input.label.DockerRepository",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "WebAppKind = webAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerRepository"
     },
     {
@@ -182,7 +183,7 @@
       "label": "ms-resource:loc.input.label.DockerImageTag",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = webAppContainer",
+      "visibleRule": "WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.DockerImageTag"
     },
     {
@@ -191,7 +192,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppKind != functionApp && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -224,7 +225,7 @@
       "label": "ms-resource:loc.input.label.StartupCommand",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer",
+      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = webAppContainer || WebAppkind = functionAppContainer",
       "helpMarkDown": "ms-resource:loc.input.help.StartupCommand"
     },
     {
@@ -616,6 +617,7 @@
     "AppServiceApplicationURL": "ms-resource:loc.messages.AppServiceApplicationURL",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
-    "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent"
+    "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource"
   }
 }

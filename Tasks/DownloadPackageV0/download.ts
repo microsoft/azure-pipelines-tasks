@@ -5,6 +5,7 @@ var path = require('path')
 
 import * as corem from 'vso-node-api/CoreApi';
 import * as restm from 'vso-node-api/RestClient';
+import * as locationUtility from "utility-common/packaging/locationUtilities";
 import * as tl from 'vsts-task-lib/task';
 import * as vsom from 'vso-node-api/VsoClient';
 import * as vsts from "vso-node-api/WebApi"
@@ -31,7 +32,7 @@ async function main(): Promise<void> {
 	var vssConnection = new vsts.WebApi(collectionUrl, credentialHandler);
 	var coreApi = vssConnection.getCoreApi();
 
-	await downloadPackage(collectionUrl, credentialHandler, feedId, packageId, version, downloadPath);
+	await downloadPackage(collectionUrl, accessToken, credentialHandler, feedId, packageId, version, downloadPath);
 }
 
 function getAuthToken() {
@@ -44,12 +45,12 @@ function getAuthToken() {
 	}
 }
 
-export async function downloadPackage(collectionUrl: string, credentialHandler: bearm.BearerCredentialHandler, feedId: string, packageId: string, version: string, downloadPath: string) {
+export async function downloadPackage(collectionUrl: string, accessToken, credentialHandler: bearm.BearerCredentialHandler, feedId: string, packageId: string, version: string, downloadPath: string) {
 	
-	var feedsUrl = collectionUrl.replace(".visualstudio.com",".feeds.visualstudio.com");
+	var feedsUrl = await locationUtility.getFeedUriFromBaseServiceUri(collectionUrl, accessToken);
 	var feedConnection = new vsts.WebApi(feedsUrl, credentialHandler);
 	
-	var packagesUrl = collectionUrl.replace(".visualstudio.com",".pkgs.visualstudio.com");
+	var packagesUrl = await locationUtility.getNuGetUriFromBaseServiceUri(collectionUrl, accessToken);
 	var packageConnection = new vsts.WebApi(packagesUrl, credentialHandler);
 	
 	var packageUrl = await getNuGetPackageUrl(feedConnection.getCoreApi().vsoClient, feedId, packageId);
@@ -95,7 +96,7 @@ export async function downloadPackage(collectionUrl: string, credentialHandler: 
 				await unzipPromise;
 				
 				if (tl.exist(zipLocation)) {
-					tl.rmRF(zipLocation, false);
+					tl.rmRF(zipLocation);
 				}
 
 				return resolve();
@@ -165,7 +166,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 
 	await new Promise<void>(function (resolve, reject) {
 		if (tl.exist(unzipLocation)) {
-			tl.rmRF(unzipLocation, false);
+			tl.rmRF(unzipLocation);
 		}
 
 		tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);

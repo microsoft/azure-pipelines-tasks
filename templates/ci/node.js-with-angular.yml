@@ -1,8 +1,10 @@
 # Node.js with Angular
-# Build a Node.js application that uses Angular.
-# https://aka.ms/yaml
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-queue: 'Hosted Ubuntu 1604'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: NodeTool@0
@@ -13,9 +15,5 @@ steps:
 - script: |
     npm install -g @angular/cli
     npm install
-    npm run build
+    ng build --prod
   displayName: 'npm install and build'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml

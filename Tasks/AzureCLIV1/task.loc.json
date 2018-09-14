@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 1,
-    "Minor": 137,
-    "Patch": 2
+    "Minor": 140,
+    "Patch": 1
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -73,7 +73,7 @@
       "properties": {
         "resizable": "true",
         "rows": "10",
-        "maxLength": "4000"
+        "maxLength": "5000"
       }
     },
     {
@@ -123,6 +123,8 @@
     "ScriptFailed": "ms-resource:loc.messages.ScriptFailed",
     "UnsupportedEndpointScheme": "ms-resource:loc.messages.UnsupportedEndpointScheme",
     "AzureSDKNotFound": "ms-resource:loc.messages.AzureSDKNotFound",
-    "FailedToLogout": "ms-resource:loc.messages.FailedToLogout"
+    "FailedToLogout": "ms-resource:loc.messages.FailedToLogout",
+    "LoginFailed": "ms-resource:loc.messages.LoginFailed",
+    "ErrorInSettingUpSubscription": "ms-resource:loc.messages.ErrorInSettingUpSubscription"
   }
 }

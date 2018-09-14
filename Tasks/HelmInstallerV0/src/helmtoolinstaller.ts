@@ -3,22 +3,21 @@
 import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
-import * as toolLib from 'vsts-task-tool-lib/tool';
 
+import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as kubectlinstaller from "./kubectlinstaller"
 import * as helminstaller from "./helminstaller"
-import { resolve } from 'q';
 
-tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
+tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
 async function configureKubectl() {
     var version = await kubectlinstaller.getKuberctlVersion();
     var kubectlPath = await kubectlinstaller.downloadKubectl(version);
 
     // prepend the tools path. instructs the agent to prepend for future tasks
-    if(!process.env['PATH'].startsWith(path.dirname(kubectlPath))) {
+    if (!process.env['PATH'].startsWith(path.dirname(kubectlPath))) {
         toolLib.prependPath(path.dirname(kubectlPath));
-    }  
+    }
 }
 
 async function configureHelm() {
@@ -26,20 +25,29 @@ async function configureHelm() {
     var helmPath = await helminstaller.downloadHelm(version);
 
     // prepend the tools path. instructs the agent to prepend for future tasks
-    if(!process.env['PATH'].startsWith(path.dirname(helmPath))) {
+    if (!process.env['PATH'].startsWith(path.dirname(helmPath))) {
         toolLib.prependPath(path.dirname(helmPath));
-    }  
+    }
 }
 
-configureHelm().then(() => {
-    if(tl.getBoolInput("installKubeCtl", true))
-    {
-        return configureKubectl();
-    }
-}).then(()=>{
-    tl.setResult(tl.TaskResult.Succeeded, "");
-}, (reason) => {
-    tl.setResult(tl.TaskResult.Failed, reason)
-}).catch((error) => {
-    tl.setResult(tl.TaskResult.Failed, error)
-})  
+async function verifyHelm() {
+    console.log(tl.loc("VerifyHelmInstallation"));
+    var helmToolPath = tl.which("helm", true);
+    var helmTool = tl.tool(helmToolPath);
+    helmTool.arg("init");
+    helmTool.arg("--client-only");
+    return helmTool.exec()
+}
+
+configureHelm()
+    .then(() => verifyHelm())
+    .then(() => {
+        if (tl.getBoolInput("installKubeCtl", true)) {
+            return configureKubectl();
+        }
+    })
+    .then(() => {
+        tl.setResult(tl.TaskResult.Succeeded, "");
+    }).catch((error) => {
+        tl.setResult(tl.TaskResult.Failed, error)
+    });

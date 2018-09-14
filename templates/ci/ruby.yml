@@ -1,26 +1,20 @@
 # Ruby
-# Package your Ruby application.
-# https://aka.ms/yaml
+# Package your Ruby project.
+# Add steps that install rails, analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/ruby
 
-queue: 'Hosted Ubuntu 1604'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: UseRubyVersion@0
   inputs:
     versionSpec: '>= 2.5'
 
-# Uncomment to install rails
-#  - script: gem install rails && rails -v
-#    displayName: 'gem install rails'
-
 - script: |
     gem install bundler
-    bundle install --retry=3 --jobs=3 # Add --deployment if a Gemfile.lock file exists
+    bundle install --retry=3 --jobs=4
   displayName: 'bundle install'
 
 - script: bundle exec rake
   displayName: 'bundle exec rake'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml

@@ -1,8 +1,10 @@
 # Node.js
-# Build a general Node.js application with no specific framework.
-# https://aka.ms/yaml
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-queue: 'Hosted Ubuntu 1604'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: NodeTool@0
@@ -14,7 +16,3 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml

@@ -1,8 +1,10 @@
 # Node.js with Vue
-# Build a Node.js application that uses Vue.
-# https://aka.ms/yaml
+# Build a Node.js project that uses Vue.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-queue: 'Hosted Ubuntu 1604'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: NodeTool@0
@@ -14,7 +16,3 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml

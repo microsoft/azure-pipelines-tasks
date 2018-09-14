@@ -1,8 +1,10 @@
 # Node.js with Grunt
-# Build a Node.js application using the Grunt task runner.
-# https://aka.ms/yaml
+# Build a Node.js project using the Grunt task runner.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-queue: 'Hosted Ubuntu 1604'
+pool:
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 - task: NodeTool@0
@@ -10,15 +12,7 @@ steps:
     versionSpec: '8.x'
   displayName: 'Install Node.js'
 
-- task: Npm@1
-  inputs:
-    command: 'install'
-
-- task: Grunt@0
-  inputs:
-    gruntFile: 'gruntfile.js'
-    targets: ''
-
-# For information on extending this YAML to:
-# - Save the artifacts of this build with the build record
-# See https://aka.ms/yaml
+- script: |
+    npm install
+    grunt --gruntfile Gruntfile.js
+  displayName: 'npm install and run grunt'

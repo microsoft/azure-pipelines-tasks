@@ -72,6 +72,8 @@
   "loc.messages.Info_UsingToolPath": "Using tool path: %s",
   "loc.messages.Info_UsingVersion": "Using version: %s",
   "loc.messages.FailedToGetPackageMetadata": "Failed to get package metadata.",
+  "loc.messages.FailedToGetArtifactTool": "Failed to get artifact tool from service. %s",
+  "loc.messages.Error_UnexpectedErrorFailedToGetToolMetadata": "Failed to get artifact tool metadata from source url %s",
   "loc.messages.FailedToGetLatestPackageVersion": "Failed to get package versions",
   "loc.messages.Warn_CredentialsNotFound": "Could not determine credentials to use for Universal Packages"
 }

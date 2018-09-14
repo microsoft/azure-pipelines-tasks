@@ -1,23 +1,17 @@
 # Xcode
 # Build, test, and archive an Xcode workspace on macOS.
-# https://docs.microsoft.com/vsts/pipelines/apps/mobile/xcode-ios
+# Add steps that install certificates, test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xcode
 
-queue: 'Hosted macOS Preview'
+pool:
+  vmImage: 'macOS 10.13'
 
 steps:
-- task: Xcode@4
+- task: Xcode@5
   inputs:
-    configuration: 'Release'
+    actions: 'build'
     scheme: ''
     sdk: 'iphoneos'
-
-# For information on extending this YAML to:
-# - Install an Apple certificate
-# - Install an Apple provisioning profile
-# - Sign your app
-# - Run tests with Xcode
-# - Test apps on hosted, physical devices with the App Center Test task
-# - Distribute apps to testers and users with the App Center Distribute task
-# - Release to the Apple App Store with the Apple App Store extension
-# - Save the artifacts of this build with the build record
-# See https://docs.microsoft.com/vsts/pipelines/apps/mobile/xcode-ios
+    configuration: 'Release'
+    xcWorkspacePath: '**/*.xcodeproj/project.xcworkspace'
+    xcodeVersion: 'default' # Options: 8, 9, default, specifyPath

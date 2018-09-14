@@ -12,15 +12,16 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 137,
-        "Patch": 2
+        "Minor": 138,
+        "Patch": 4
     },
     "demands": [],
     "groups": [
         {
             "name": "cluster",
             "displayName": "Kubernetes Cluster",
-            "isExpanded": true
+            "isExpanded": true,
+            "visibleRule": "command != logout && command != package"
         },
         {
             "name": "commands",
@@ -30,12 +31,14 @@
         {
             "name": "tls",
             "displayName": "TLS",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout && command != package"
         },
         {
             "name": "advanced",
             "displayName": "Advanced",
-            "isExpanded": false
+            "isExpanded": false,
+            "visibleRule": "command != login && command != logout && command != package"
         }
     ],
     "inputs": [
@@ -49,7 +52,7 @@
                 "Azure Resource Manager": "Azure Resource Manager",
                 "Kubernetes Service Connection": "Kubernetes Service Connection"
             },
-            "helpMarkDown": "Select a Connection Type.",
+            "helpMarkDown": "Select 'Azure Resource Manager' to connect to an Azure Kubernetes Service by using Azure Service Connection. Select 'Kubernetes Service Connection' to connect to any Kubernetes cluster by using kubeconfig or Service Account",
             "groupName": "cluster"
         },
         {
@@ -103,7 +106,7 @@
             "name": "namespace",
             "label": "Namespace",
             "type": "string",
-            "helpMarkDown": "Specify K8 namespace to use. Use Tiller namespace in advance section to specify tiller namespace.",
+            "helpMarkDown": "Specify K8 namespace to use. Use Tiller namespace can be specified in the advanced section of the task or by passing the --tiller-namespace option as argument.",
             "defaultValue": "",
             "groupName": "cluster"
         },
@@ -120,6 +123,8 @@
                 "get": "get",
                 "init": "init",
                 "install": "install",
+                "login": "login",
+                "logout": "logout",
                 "ls": "ls",
                 "package": "package",
                 "rollback": "rollback",
@@ -152,7 +157,7 @@
             "name": "chartName",
             "label": "Chart Name",
             "type": "string",
-            "helpMarkDown": "Name of the chart to install or upgrade.",
+            "helpMarkDown": "Chart reference to install, this can be a url or a chart name. For example, if chart name is 'stable/mysql', the task will run 'helm install stable/mysql'.",
             "defaultValue": "",
             "visibleRule": "chartType == Name",
             "required":  "true",
@@ -162,7 +167,7 @@
             "name": "chartPath",
             "label": "Chart Path",
             "type": "filePath",
-            "helpMarkDown": "Path to the chart to install or upgrade.",
+            "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
             "defaultValue": "",
             "visibleRule": "chartType == FilePath || command == package",
             "required":  "true",
@@ -191,7 +196,7 @@
             "name": "overrideValues",
             "label": "Set Values",
             "type": "string",
-            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2).",
+            "helpMarkDown": "Set values on the command line (can specify multiple or separate values with commas: key1=val1,key2=val2). The task will construct the helm command by using these set values. For example, helm install --set key1=val1 ./redis.",
             "defaultValue": "",
             "visibleRule": "command == install || command == upgrade",
             "groupName": "commands"
@@ -201,7 +206,7 @@
             "label": "Value File",
             "type": "filePath",
             "defaultValue": "",
-            "helpMarkDown": "Specify values in a YAML file or a URL.",
+            "helpMarkDown": "Specify values in a YAML file or a URL. For example, specifying myvalues.yaml will result in 'helm install --values=myvals.yaml'.",
             "visibleRule": "command == install || command == upgrade",
             "groupName": "commands"
         },
@@ -220,7 +225,7 @@
             "type": "boolean",
             "label": "Use canary image version.",
             "defaultValue": "false",
-            "helpMarkDown": "Use the canary Tiller image. Will install the latest pre-release version of Tiller.",
+            "helpMarkDown": "Use the canary Tiller image, the latest pre-release version of Tiller.",
             "visibleRule": "command == init",
             "groupName": "commands"
         },
@@ -306,8 +311,9 @@
                 "rows": "2"
             },
             "label": "Arguments",
-            "helpMarkDown": "Command arguments.",
-            "groupName": "commands"
+            "helpMarkDown": "Helm command options.",
+            "groupName": "commands",
+            "visibleRule": "command != login && command != logout"
         },
         {
             "name": "enableTls",
@@ -405,6 +411,7 @@
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
         "SkipDeleteSecureFiles":"TLS not enabled in the Task. Skipping delete of certificates.",
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
-        "FileNotFound": "File not found at %s"
+        "FileNotFound": "File not found at %s",
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
     }
 }

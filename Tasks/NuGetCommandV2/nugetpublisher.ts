@@ -1,25 +1,19 @@
-import * as path from "path";
-import * as Q  from "q";
 import * as tl from "vsts-task-lib/task";
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 
-import INuGetCommandOptions from "./Common/INuGetCommandOptions";
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
-import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
-import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
-import * as nutil from "nuget-task-common/Utility";
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
-import * as vsts from "vso-node-api/WebApi";
-import * as vsom from 'vso-node-api/VsoClient';
-import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
-import {VersionInfoVersion} from "nuget-task-common/pe-parser/VersionInfoVersion";
 import * as auth from "nuget-task-common/Authentication";
 import { IPackageSource } from "nuget-task-common/Authentication";
-import peParser = require('nuget-task-common/pe-parser/index');
 import * as commandHelper from "nuget-task-common/CommandHelper";
-import * as telemetry from 'utility-common/telemetry';
+import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
+import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
+import peParser = require("nuget-task-common/pe-parser/index");
+import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
+import * as nutil from "nuget-task-common/Utility";
+import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as telemetry from "utility-common/telemetry";
+import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
+import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
 
 class PublishOptions implements INuGetCommandOptions {
     constructor(
@@ -29,40 +23,52 @@ class PublishOptions implements INuGetCommandOptions {
         public configFile: string,
         public verbosity: string,
         public authInfo: auth.NuGetExtendedAuthInfo,
-        public environment: ngToolRunner.NuGetEnvironmentSettings
-    ) { }
+        public environment: ngToolRunner.NuGetEnvironmentSettings)
+    { }
 }
 
 interface IVstsNuGetPushOptions {
-    vstsNuGetPushPath: string,
-    feedUri: string,
-    internalAuthInfo: auth.InternalAuthInfo,
-    verbosity: string,
-    settings: vstsNuGetPushToolRunner.VstsNuGetPushSettings
+    vstsNuGetPushPath: string;
+    feedUri: string;
+    internalAuthInfo: auth.InternalAuthInfo;
+    verbosity: string;
+    settings: vstsNuGetPushToolRunner.VstsNuGetPushSettings;
 }
 
 export async function run(nuGetPath: string): Promise<void> {
-    let buildIdentityDisplayName: string = null;
-    let buildIdentityAccount: string = null;
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+    } catch (error) {
+        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug(JSON.stringify(error));
+        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+        packagingLocation = {
+            PackagingUris: [collectionUrl],
+            DefaultPackagingUri: collectionUrl};
+    }
+
+    const buildIdentityDisplayName: string = null;
+    const buildIdentityAccount: string = null;
     try {
         nutil.setConsoleCodePage();
 
         // Get list of files to pusblish
-        let searchPatternInput = tl.getPathInput("searchPatternPush", true, false);
+        const searchPatternInput = tl.getPathInput("searchPatternPush", true, false);
 
-        let useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
+        const useLegacyFind: boolean = tl.getVariable("NuGet.UseLegacyFindFiles") === "true";
         let filesList: string[] = [];
         if (!useLegacyFind) {
-            let findOptions: tl.FindOptions = <tl.FindOptions>{};
-            let matchOptions: tl.MatchOptions = <tl.MatchOptions>{};
-            let searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
+            const findOptions: tl.FindOptions = {} as tl.FindOptions;
+            const matchOptions: tl.MatchOptions = {} as tl.MatchOptions;
+            const searchPatterns: string[] = nutil.getPatternsArrayFromInput(searchPatternInput);
             filesList = tl.findMatch(undefined, searchPatterns, findOptions, matchOptions);
         }
         else {
             filesList = nutil.resolveFilterSpec(searchPatternInput);
         }
 
-        filesList.forEach(packageFile => {
+        filesList.forEach((packageFile) => {
             if (!tl.stats(packageFile).isFile()) {
                 throw new Error(tl.loc("Error_PushNotARegularFile", packageFile));
             }
@@ -70,33 +76,33 @@ export async function run(nuGetPath: string): Promise<void> {
 
         if (filesList && filesList.length < 1)
         {
-            console.log(tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
+            tl.warning(tl.loc("Info_NoPackagesMatchedTheSearchPattern"));
             return;
         }
 
         // Get the info the type of feed
         let nugetFeedType = tl.getInput("nuGetFeedType") || "internal";
         // Make sure the feed type is an expected one
-        let normalizedNuGetFeedType = ["internal", "external"].find(x => nugetFeedType.toUpperCase() === x.toUpperCase());
+        const normalizedNuGetFeedType = ["internal", "external"]
+            .find((x) => nugetFeedType.toUpperCase() === x.toUpperCase());
         if (!normalizedNuGetFeedType) {
             throw new Error(tl.loc("UnknownFeedType", nugetFeedType));
         }
         nugetFeedType = normalizedNuGetFeedType;
 
-        let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
+        let urlPrefixes = packagingLocation.PackagingUris;
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 
         // Note to readers: This variable will be going away once we have a fix for the location service for
         // customers behind proxies
-        let testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
+        const testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
         if (testPrefixes) {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`all URL prefixes: ${urlPrefixes}`);
         }
 
         // Setting up auth info
-        let accessToken = auth.getSystemAccessToken();
+        const accessToken = auth.getSystemAccessToken();
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
@@ -104,22 +110,27 @@ export async function run(nuGetPath: string): Promise<void> {
         const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
         const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
         const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
-        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && (!useV1CredProvider && !useV2CredProvider);
+        const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks)
+                                && (!useV1CredProvider && !useV2CredProvider);
 
-        const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null), useCredConfig);
+        const internalAuthInfo = new auth.InternalAuthInfo(
+            urlPrefixes,
+            accessToken,
+            ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null),
+            useCredConfig);
 
-        let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
+        const environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
             V2CredProviderPath: useV2CredProvider === true ? credProviderPath : null,
-            extensionsDisabled: true
+            extensionsDisabled: true,
         };
-        
+
         let configFile = null;
         let apiKey: string;
         let credCleanup = () => { return; };
 
-        let feedUri: string = undefined;
-        let isInternalFeed: boolean = nugetFeedType === "internal";
+        let feedUri: string;
+        const isInternalFeed: boolean = nugetFeedType === "internal";
 
         let authInfo: auth.NuGetExtendedAuthInfo;
         let nuGetConfigHelper: NuGetConfigHelper2;
@@ -131,9 +142,19 @@ export async function run(nuGetPath: string): Promise<void> {
 
             const internalFeedId = tl.getInput("feedPublish");
             const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
-            feedUri = await nutil.getNuGetFeedRegistryUrl(accessToken, internalFeedId, nuGetVersion);
+            feedUri = await nutil.getNuGetFeedRegistryUrl(
+                packagingLocation.DefaultPackagingUri,
+                accessToken,
+                internalFeedId,
+                nuGetVersion);
             if (useCredConfig) {
-                nuGetConfigHelper.addSourcesToTempNuGetConfig([<IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
+                nuGetConfigHelper.addSourcesToTempNuGetConfig([
+                    // tslint:disable-next-line:no-object-literal-type-assertion
+                    {
+                        feedName: internalFeedId,
+                        feedUri,
+                        isInternal: true,
+                    } as IPackageSource]);
                 configFile = nuGetConfigHelper.tempNugetConfigPath;
                 credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
             }
@@ -157,14 +178,14 @@ export async function run(nuGetPath: string): Promise<void> {
             configFile = nuGetConfigHelper.tempNugetConfigPath;
             credCleanup = () => tl.rmRF(nuGetConfigHelper.tempNugetConfigPath);
 
-            let authType: auth.ExternalAuthType = externalAuth.authType;
+            const authType: auth.ExternalAuthType = externalAuth.authType;
             switch(authType) {
                 case (auth.ExternalAuthType.UsernamePassword):
                 case (auth.ExternalAuthType.Token):
                     apiKey = "RequiredApiKey";
                     break;
                 case (auth.ExternalAuthType.ApiKey):
-                    let apiKeyAuthInfo =  externalAuth as auth.ApiKeyExternalAuthInfo;
+                    const apiKeyAuthInfo =  externalAuth as auth.ApiKeyExternalAuthInfo;
                     apiKey = apiKeyAuthInfo.apiKey;
                     break;
                 default:
@@ -174,11 +195,11 @@ export async function run(nuGetPath: string): Promise<void> {
 
         await nuGetConfigHelper.setAuthForSourcesInTempNuGetConfigAsync();
 
-        let verbosity = tl.getInput("verbosityPush");
+        const verbosity = tl.getInput("verbosityPush");
 
-        let continueOnConflict: boolean = tl.getBoolInput("allowPackageConflicts");
-        let useVstsNuGetPush = shouldUseVstsNuGetPush(isInternalFeed, continueOnConflict, nuGetPath);
-        let vstsPushPath = undefined;
+        const continueOnConflict: boolean = tl.getBoolInput("allowPackageConflicts");
+        const useVstsNuGetPush = shouldUseVstsNuGetPush(isInternalFeed, continueOnConflict, nuGetPath);
+        let vstsPushPath: string;
         if (useVstsNuGetPush) {
             vstsPushPath = vstsNuGetPushToolUtilities.getBundledVstsNuGetPushLocation();
 
@@ -190,27 +211,27 @@ export async function run(nuGetPath: string): Promise<void> {
 
         try {
             if (useVstsNuGetPush && vstsPushPath) {
-                tl.debug('Using VstsNuGetPush.exe to push the packages');
-                let vstsNuGetPushSettings = <vstsNuGetPushToolRunner.VstsNuGetPushSettings>
+                tl.debug("Using VstsNuGetPush.exe to push the packages");
+                const vstsNuGetPushSettings: vstsNuGetPushToolRunner.VstsNuGetPushSettings =
                 {
-                    continueOnConflict: continueOnConflict
-                }
+                    continueOnConflict,
+                };
 
-                let publishOptions = <IVstsNuGetPushOptions> {
+                const publishOptions: IVstsNuGetPushOptions = {
                     vstsNuGetPushPath: vstsPushPath,
-                    feedUri: feedUri,
+                    feedUri,
                     internalAuthInfo: authInfo.internalAuthInfo,
-                    verbosity: verbosity,
-                    settings: vstsNuGetPushSettings
-                }
+                    verbosity,
+                    settings: vstsNuGetPushSettings,
+                };
 
                 for (const packageFile of filesList) {
                     publishPackageVstsNuGetPush(packageFile, publishOptions);
                 }
             }
             else {
-                tl.debug('Using NuGet.exe to push the packages');
-                let publishOptions = new PublishOptions(
+                tl.debug("Using NuGet.exe to push the packages");
+                const publishOptions = new PublishOptions(
                     nuGetPath,
                     feedUri,
                     apiKey,
@@ -241,8 +262,13 @@ export async function run(nuGetPath: string): Promise<void> {
     }
 }
 
-function publishPackageNuGet(packageFile: string, options: PublishOptions, authInfo: auth.NuGetExtendedAuthInfo): IExecSyncResult {
-    let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, authInfo);
+function publishPackageNuGet(
+    packageFile: string,
+    options: PublishOptions,
+    authInfo: auth.NuGetExtendedAuthInfo)
+    : IExecSyncResult {
+    const nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, authInfo);
+
     nugetTool.arg("push");
 
     nugetTool.arg(packageFile);
@@ -263,9 +289,9 @@ function publishPackageNuGet(packageFile: string, options: PublishOptions, authI
         nugetTool.arg(options.verbosity);
     }
 
-    let execResult = nugetTool.execSync();
+    const execResult = nugetTool.execSync();
     if (execResult.code !== 0) {
-        telemetry.logResult('Packaging', 'NuGetCommand', execResult.code);
+        telemetry.logResult("Packaging", "NuGetCommand", execResult.code);
         throw tl.loc("Error_NugetFailedWithCodeAndErr",
             execResult.code,
             execResult.stderr ? execResult.stderr.trim() : execResult.stderr);
@@ -274,36 +300,39 @@ function publishPackageNuGet(packageFile: string, options: PublishOptions, authI
 }
 
 function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNuGetPushOptions) {
-    let vstsNuGetPushTool = vstsNuGetPushToolRunner.createVstsNuGetPushToolRunner(options.vstsNuGetPushPath, options.settings, options.internalAuthInfo);
+    const vstsNuGetPushTool = vstsNuGetPushToolRunner.createVstsNuGetPushToolRunner(
+        options.vstsNuGetPushPath,
+        options.settings,
+        options.internalAuthInfo);
     vstsNuGetPushTool.arg(packageFile);
     vstsNuGetPushTool.arg(["-Source", options.feedUri]);
     vstsNuGetPushTool.arg(["-AccessToken", options.internalAuthInfo.accessToken]);
-    vstsNuGetPushTool.arg("-NonInteractive")
+    vstsNuGetPushTool.arg("-NonInteractive");
 
     if (options.verbosity && options.verbosity.toLowerCase() === "detailed") {
         vstsNuGetPushTool.arg(["-Verbosity", "Detailed"]);
     }
 
-    let execResult: IExecSyncResult = vstsNuGetPushTool.execSync();
+    const execResult: IExecSyncResult = vstsNuGetPushTool.execSync();
     if (execResult.code === 0) {
         return;
     }
 
     // ExitCode 2 means a push conflict occurred
     if (execResult.code === 2 && options.settings.continueOnConflict) {
-        tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`)
+        tl.debug(`A conflict ocurred with package ${packageFile}, ignoring it since "Allow duplicates" was selected.`);
         return;
     }
 
-    telemetry.logResult('Packaging', 'NuGetCommand', execResult.code);
+    telemetry.logResult("Packaging", "NuGetCommand", execResult.code);
     throw new Error(tl.loc("Error_UnexpectedErrorVstsNuGetPush",
         execResult.code,
         execResult.stderr ? execResult.stderr.trim() : execResult.stderr));
 }
 
 function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boolean, nugetExePath: string): boolean {
-    if (tl.osType() !== 'Windows_NT'){
-        tl.debug('Running on a non-windows platform so NuGet.exe will be used.');
+    if (tl.osType() !== "Windows_NT"){
+        tl.debug("Running on a non-windows platform so NuGet.exe will be used.");
         if(conflictsAllowed){
             tl.warning(tl.loc("Warning_SkipConflictsNotSupportedUnixAgents"));
         }
@@ -312,13 +341,13 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
 
     if (!isInternalFeed)
     {
-        tl.debug('Pushing to an external feed so NuGet.exe will be used.');
+        tl.debug("Pushing to an external feed so NuGet.exe will be used.");
         return false;
     }
 
     if (commandHelper.isOnPremisesTfs())
     {
-        tl.debug('Pushing to an onPrem environment, only NuGet.exe is supported.');
+        tl.debug("Pushing to an onPrem environment, only NuGet.exe is supported.");
         if(conflictsAllowed){
             tl.warning(tl.loc("Warning_AllowDuplicatesOnlyAvailableHosted"));
         }
