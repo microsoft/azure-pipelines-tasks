@@ -1,7 +1,6 @@
 import * as tl from 'vsts-task-lib/task';
 import * as os from 'os';
 import * as path from 'path';
-import * as util from "util";
 
 const serviceEndpointId = tl.getInput('serviceEndpoint', true);
 
@@ -13,7 +12,15 @@ const password = tl.getEndpointAuthorizationParameter(serviceEndpointId, 'passwo
 // Create .pypirc file
 const homedir = os.homedir();
 const pypircFilePath = path.join(homedir, ".pypirc");
-const text = util.format("[distutils] \nindex-servers =\n    pypi \n[pypi] \nrepository=%s \nusername=%s \npassword=%s", pypiServer, username, password);
+const text =
+`[distutils]
+index-servers =
+    pypi
+[pypi]
+repository=${pypiServer}
+username=${username}
+password=${password}`;
+
 tl.writeFile(pypircFilePath, text, 'utf8');
 
 async function run() {
