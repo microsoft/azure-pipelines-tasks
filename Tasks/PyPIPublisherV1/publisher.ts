@@ -43,7 +43,7 @@ async function executePythonTool(commandToExecute: string): Promise<void> {
     try {
         await python.exec();
     } catch (err) {
-        // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
+        // vsts-task-lib 2.1.0: `ToolRunner` does not localize its error messages
         throw new Error(tl.loc('UploadFailed', err));
     }
 }
