@@ -69,7 +69,7 @@
   "loc.messages.TempKeychainSetupFailed": "一時キーチェーンをキーチェーン検索パスに追加できませんでした。",
   "loc.messages.ProvProfileDetailsNotFound": "プロビジョニング プロファイルの詳細が見つかりませんでした: %s",
   "loc.messages.ProvProfileUUIDNotFound": "プロビジョニング プロファイルの UUID が見つかりませんでした: %s",
-  "loc.messages.MultipleWorkspacesFound": "Xcode ワークスペースの複数の一致が見つかりました。最初の一致が使用されます: %s",
+  "loc.messages.MultipleWorkspacesFound": "一致した複数の Xcode ワークスペースが見つかりました。最初に一致したものが使用されます: %s",
   "loc.messages.WorkspaceDoesNotExist": "Xcode ワークスペースが指定されていますが、存在しないか、ディレクトリではありません: %s",
   "loc.messages.UseXcprettyForTestPublishing": "xcodebuild を使用している場合、テスト結果を発行するには [xcpretty の使用] を有効にします。このビルドでは、テスト結果は発行されません。",
   "loc.messages.NoTestResultsFound": "`%s` と一致するテスト結果ファイルが見つかりませんでした。JUnit テスト結果の発行はスキップされます。",
