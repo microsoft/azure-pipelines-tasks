@@ -17,7 +17,7 @@
     "version": {
         "Major": 3,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 6
     },
     "releaseNotes": "Added support for Fail on standard error and ErrorActionPreference",
     "demands": [
@@ -65,7 +65,7 @@
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel == Subscription"
+                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
             }
         },
         {
