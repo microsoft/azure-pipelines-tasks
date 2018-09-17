@@ -65,7 +65,7 @@
             "helpMarkDown": "Azure Resource Manager subscription to configure before running PowerShell",
             "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
             "properties": {
-                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel == Subscription"
+                "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
             }
         },
         {

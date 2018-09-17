@@ -71,7 +71,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
       "properties": {
-        "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel == Subscription"
+        "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
       }
     },
     {
