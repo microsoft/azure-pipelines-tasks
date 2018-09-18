@@ -208,10 +208,11 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
+    // Disabling quirk check during investigation
+    /*if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
         tl.debug("Credential provider V1 is disabled in favor of V2 plugin.");
         return false;
-    }
+    }*/
     
     if (isAnyCredentialProviderEnabled(quirks)) {
         tl.debug("V1 credential provider is enabled");
@@ -238,10 +239,11 @@ export function isCredentialProviderV2Enabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
+    // Disabling quirk check during investigation
+    /*if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
         tl.debug("V2 credential provider is enabled.");
         return true;
-    }
+    }*/
 
     tl.debug("V2 credential provider is disabled due to quirks. To use V2 credential provider use NuGet version 4.8 or higher.");
     return false;
