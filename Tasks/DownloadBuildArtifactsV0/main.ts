@@ -133,28 +133,34 @@ async function main(): Promise<void> {
                     }
                 }
             }
+
             if (!triggeringBuildFound) {
                 // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
                 definitionId = definitionIdSpecified;
                 buildId = parseInt(tl.getInput("buildId", buildVersionToDownload == "specific"));
             }
-        }
+            
+            // if the definition name includes a variable then definitionIdSpecified is a name vs a number
+            if (Number.isNaN(parseInt(definitionIdSpecified))) {
+                var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimit).catch((reason) => {
+                    reject(reason);
+                    return;
+                });
 
-        // if the definition name includes a variable then definitionIdSpecified is a name vs a number
-        if (Number.isNaN(parseInt(definitionIdSpecified))) {
-            var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimit).catch((reason) => {
-                reject(reason);
-                return;
-            });
+                if (!definitions || definitions.length < 1) {
+                    reject(tl.loc("InvalidBuildDefinitionName", definitionIdSpecified));
+                    return;
+                }
 
-            if (!definitions || definitions.length < 1) {
-                reject(tl.loc("InvalidBuildDefinitionName", definitionId));
-                return;
+                definitionId = String(definitions[0].id);
+                console.log(tl.loc("DefinitionNameMatchFound", definitionIdSpecified, definitionId));
             }
 
-            definitionId = String(definitions[0].id);
-            console.log(tl.loc("DefinitionNameMatchFound", definitionIdSpecified, definitionId));
+            if (!definitionId) {
+                reject(tl.loc("UnresolvedDefinitionId"));
+                return;
+            }
         }
 
         // verify that buildId belongs to the definition selected
@@ -197,10 +203,6 @@ async function main(): Promise<void> {
                 reject(tl.loc("BuildNotFound", buildId));
                 return;
             }
-        }
-        else {
-            reject(tl.loc("UnresolvedDefinitionId"));
-            return;
         }
 
         console.log(tl.loc("DownloadingArtifactsForBuild", buildId));
