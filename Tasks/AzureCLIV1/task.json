@@ -18,9 +18,9 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 137,
-        "Patch": 3
-    },
+        "Minor": 140,
+        "Patch": 1
+        },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
     "groups": [
@@ -117,6 +117,8 @@
         "ScriptFailed": "Script failed with error: %s",
         "UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
         "AzureSDKNotFound": "Azure CLI 2.x is not installed on this machine.",
-        "FailedToLogout": "The following error occurred while logging out: %s"
+        "FailedToLogout": "The following error occurred while logging out: %s",
+        "LoginFailed": "Azure login failed",
+        "ErrorInSettingUpSubscription": "Error in setting up subscription"
     }
 }

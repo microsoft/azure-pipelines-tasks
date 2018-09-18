@@ -1,7 +1,7 @@
 # Go
-# Build your Go application.
+# Build your Go project.
 # Add steps that test, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/vsts/pipelines/languages/go
+# https://docs.microsoft.com/azure/devops/pipelines/languages/go
 
 pool:
   vmImage: 'Ubuntu 16.04'
