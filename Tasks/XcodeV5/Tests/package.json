@@ -1,8 +1,8 @@
 {
-  "name": "vsts-tasks-xcode",
+  "name": "vsts-tasks-xcode-tests",
   "version": "1.0.0",
-  "description": "VSTS Xcode Task",
-  "main": "xcode.js",
+  "description": "VSTS Xcode Task Tests",
+  "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,9 +16,7 @@
     "url": "https://github.com/Microsoft/vsts-tasks/issues"
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
-  "dependencies": {
-    "@types/node": "^6.0.101",
-    "ios-signing-common": "file:../../_build/Tasks/Common/ios-signing-common-1.0.0.tgz",
-    "vsts-task-lib": "2.6.0"
+  "devDependencies": {
+    "@types/mocha": "^5.2.0"
   }
 }
