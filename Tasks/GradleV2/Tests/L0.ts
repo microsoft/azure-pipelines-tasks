@@ -6,6 +6,7 @@ import path = require('path');
 import os = require('os');
 import process = require('process');
 import fs = require('fs');
+import 'mocha';
 
 import * as ttm from 'vsts-task-lib/mock-test';
 
