@@ -142,7 +142,7 @@ async function main(): Promise<void> {
             }
             
             // if the definition name includes a variable then definitionIdSpecified is a name vs a number
-            if (Number.isNaN(parseInt(definitionIdSpecified))) {
+            if (!!definitionIdSpecified && Number.isNaN(parseInt(definitionIdSpecified))) {
                 var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
