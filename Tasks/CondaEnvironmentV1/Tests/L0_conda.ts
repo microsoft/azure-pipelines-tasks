@@ -165,7 +165,10 @@ it('fails if installing packages to the base environment fails', async function 
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
-    const installPackagesGlobally = sinon.stub().throws();
+    // const installPackagesGlobally = sinon.stub().throws(new Error('installPackagesGlobally'));
+    const installPackagesGlobally = sinon.stub().rejects(new Error('installPackagesGlobally'));
+    sinon.expectation
+
     mockery.registerMock('./conda_internal', {
         findConda: findConda,
         prependCondaToPath: prependCondaToPath,
@@ -179,9 +182,16 @@ it('fails if installing packages to the base environment fails', async function 
         updateConda: false
     };
 
-    assert.throws(async () => {
+    // Can't use `assert.throws` with an async function
+    let error: any | undefined;
+    try {
         await uut.condaEnvironment(parameters, Platform.Linux);
-    });
+    } catch (err) {
+        error = err;
+    }
+
+    assert(error instanceof Error);
+    assert.strictEqual(error.message, 'installPackagesGlobally');
 
     assert(findConda.calledOnceWithExactly(Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
