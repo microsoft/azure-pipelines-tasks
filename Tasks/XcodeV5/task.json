@@ -11,10 +11,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 139,
-        "Patch": 1
+        "Minor": 141,
+        "Patch": 0
     },
-    "releaseNotes": "This version of the task is compatible with Xcode 8 and Xcode 9. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
+    "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
     "demands": [
         "xcode"
     ],
@@ -93,6 +93,7 @@
                 "default": "Default",
                 "8": "Xcode 8",
                 "9": "Xcode 9",
+                "10": "Xcode 10",
                 "specifyPath": "Specify path"
             }
         },
