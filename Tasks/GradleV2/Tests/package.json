@@ -7,7 +7,7 @@
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
-  "dependencies": {
+  "devDependencies": {
     "vsts-task-lib": "2.6.0",
     "@types/mocha": "5.2.5",
     "mocha": "5.2.0"

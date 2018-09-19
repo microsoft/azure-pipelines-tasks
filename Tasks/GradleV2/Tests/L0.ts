@@ -1,12 +1,8 @@
-// npm install mocha --save-dev
-// typings install dt~mocha --save --global
-
 import assert = require('assert');
 import path = require('path');
 import os = require('os');
 import process = require('process');
 import fs = require('fs');
-import 'mocha';
 
 import * as ttm from 'vsts-task-lib/mock-test';
 

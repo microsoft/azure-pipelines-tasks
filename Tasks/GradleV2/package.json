@@ -8,7 +8,7 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "@types/node": "^6.0.31",
+    "@types/node": "^6.0.101",
     "@types/q": "^1.0.7",
     "codeanalysis-common": "file:../../_build/Tasks/Common/codeanalysis-common-1.0.0.tgz",
     "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools-1.0.0.tgz",
