@@ -4,7 +4,6 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as Constant from '../operations/Constants';
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common/packageUtility';
-const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP 1';
 var webCommonUtility = require('webdeployment-common/utility.js');
 
 

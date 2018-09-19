@@ -1,11 +1,13 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import { DeployWar } from '../operations/WarDeploymentUtilities';
+import * as ParameterParser from '../operations/ParameterParserUtility'
 import * as Constant from '../operations/Constants';
 import { WebDeployUtility } from '../operations/WebDeployUtility';
 import { Package } from 'webdeployment-common/packageUtility';
 
+const deleteOldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
+const removeRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 0';
 var deployUtility = require('webdeployment-common/utility.js');
 
 export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvider{
@@ -22,6 +24,10 @@ export class WindowsWebAppWebDeployProvider extends AzureRmWebAppDeploymentProvi
 
         webPackage = await FileTransformsUtility.applyTransformations(webPackage, this.taskParams);
         this.taskParams.Package = new Package(webPackage);
+
+        var updateApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
+        var deleteApplicationSetting = ParameterParser.parse(deleteOldRunFromZipAppSetting)
+        await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
         
         if(deployUtility.canUseWebDeploy(this.taskParams.UseWebDeploy)) {
             tl.debug("Performing the deployment of webapp.");

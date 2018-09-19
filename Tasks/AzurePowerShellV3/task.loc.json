@@ -17,7 +17,7 @@
   "version": {
     "Major": 3,
     "Minor": 1,
-    "Patch": 5
+    "Patch": 6
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "demands": [
@@ -71,7 +71,7 @@
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceNameARM",
       "visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM",
       "properties": {
-        "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel == Subscription"
+        "EndpointFilterRule": "ScopeLevel == ManagementGroup || ScopeLevel != ManagementGroup"
       }
     },
     {

@@ -1,7 +1,7 @@
 # Gradle
-# Build your Java projects and run tests with Gradle using a Gradle wrapper script.
+# Build your Java project and run tests with Gradle using a Gradle wrapper script.
 # Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/vsts/pipelines/languages/java
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 pool:
   vmImage: 'Ubuntu 16.04'

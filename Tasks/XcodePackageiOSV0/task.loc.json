@@ -1,0 +1,87 @@
+{
+  "id": "F54D001C-999F-408A-9867-0400C1838C5E",
+  "name": "XcodePackageiOS",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Build",
+  "visibility": [
+    "Build"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 125,
+    "Patch": 0
+  },
+  "deprecated": true,
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "demands": [
+    "xcode"
+  ],
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "appName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appName",
+      "defaultValue": "name.app",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.appName"
+    },
+    {
+      "name": "ipaName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ipaName",
+      "defaultValue": "name.ipa",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ipaName"
+    },
+    {
+      "name": "provisioningProfile",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.provisioningProfile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.provisioningProfile"
+    },
+    {
+      "name": "sdk",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.sdk",
+      "defaultValue": "iphoneos",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.sdk"
+    },
+    {
+      "name": "appPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.appPath",
+      "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.appPath",
+      "groupName": "advanced"
+    },
+    {
+      "name": "ipaPath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.ipaPath",
+      "defaultValue": "$(SDK)/$(Configuration)/build.sym/$(Configuration)-$(SDK)/output",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ipaPath",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "xcodepkgios.js",
+      "argumentFormat": ""
+    }
+  }
+}
