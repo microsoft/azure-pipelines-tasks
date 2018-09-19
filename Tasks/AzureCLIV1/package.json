@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-azurecli",
   "version": "1.0.0",
-  "description": "VSTS Azure CLI Task",
+  "description": "Azure Pipelines Azure CLI Task",
   "main": "azureclitask.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

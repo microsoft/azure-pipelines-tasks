@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Cloudbasierter Webleistungstest",
-  "loc.helpMarkDown": "Löst einen cloudbasierten Auslastungstest mithilfe von Visual Studio Team Services aus. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=613203).",
-  "loc.description": "Führt einen schnellen Webleistungstest in der Cloud mit Visual Studio Team Services aus.",
+  "loc.helpMarkDown": "Löst einen cloudbasierten Auslastungstest mithilfe von Azure Pipelines aus. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=613203).",
+  "loc.description": "Führt einen schnellen Webleistungstest in der Cloud mit Azure Pipelines aus.",
   "loc.instanceNameFormat": "Schneller Webleistungstest $(testName)",
-  "loc.input.label.connectedServiceName": "VS Team Services-Verbindung",
+  "loc.input.label.connectedServiceName": "Azure Pipelines-Verbindung",
   "loc.input.help.connectedServiceName": "Wählen Sie eine zuvor registrierte Dienstverbindung aus, um mit dem Dienst \"Cloudbasierter Auslastungstest\" zu kommunizieren. Wählen Sie \"Verwalten\" aus, um eine neue Verbindung zu registrieren.",
   "loc.input.label.websiteUrl": "Website-URL",
   "loc.input.help.websiteUrl": "Geben Sie die URL der Anwendungswebsite im Format http://www.your.app/home.html ein.",

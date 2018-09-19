@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "パッケージのダウンロード",
   "loc.helpMarkDown": "Package Management 拡張機能をインストールする必要があります",
-  "loc.description": "VSTS または TFS で Package Management フィードからパッケージをダウンロードします。\r\nPackage Management 拡張機能が必要です。",
+  "loc.description": "Azure Artifacts または TFS で Package Management フィードからパッケージをダウンロードします。\r\nPackage Management 拡張機能が必要です。",
   "loc.instanceNameFormat": "パッケージのダウンロード",
   "loc.input.label.feed": "フィード",
   "loc.input.help.feed": "パッケージのソースを選択します",

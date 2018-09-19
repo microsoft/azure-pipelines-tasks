@@ -1,7 +1,7 @@
 {
   "name": "securefiles-common",
   "version": "1.0.0",
-  "description": "VSTS Tasks SecureFiles Common",
+  "description": "Azure Pipelines tasks SecureFiles Common",
   "main": "securefiles-common.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

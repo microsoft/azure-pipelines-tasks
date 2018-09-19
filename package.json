@@ -1,7 +1,7 @@
 {
   "name": "Agent.Tasks",
   "version": "0.5.0",
-  "description": "Tasks for the Team Services build system",
+  "description": "Tasks for the Azure Pipelines build system",
   "main": "gulpfile.js",
   "directories": {
     "doc": "docs"

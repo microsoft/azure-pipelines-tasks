@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-installappleprovisioningprofile",
   "version": "1.0.0",
-  "description": "VSTS InstallAppleProvisioningProfile Task",
+  "description": "Azure Pipelines InstallAppleProvisioningProfile Task",
   "main": "preinstallprovprofile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

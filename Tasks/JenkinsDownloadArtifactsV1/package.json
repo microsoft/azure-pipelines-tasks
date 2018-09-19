@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-jenkinsdownloadartifacts",
-  "description": "VSTS Jenkins Download Task",
+  "description": "Azure Pipelines Jenkins Download Task",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/microsoft/vsts-tasks.git"

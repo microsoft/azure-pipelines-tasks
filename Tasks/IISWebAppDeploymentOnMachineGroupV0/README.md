@@ -4,7 +4,7 @@
 
 The task is used to deploy a web application or a website to IIS web server, and the underlying technologies used by the task is [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy). Web Deploy packages the web application content, configuration and any other artifacts like registry, GAC assemblies etc. that can be used deployment. If the package needs to be redeployed to a different environment, configuration values within the package can be parameterized during deployment without requiring modifications to the packages themselves. Web deploy works with IIS 7, IIS 7.5, IIS 8, and IIS 8.5. 
 
-The task runs on the deployment target machine(s) registered with the Deployment Group configured for the task/phase. Deployment Groups are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring VSTS Release definition, you can specify the deployments targets for a Phase using the deployment group. 
+The task runs on the deployment target machine(s) registered with the Deployment Group configured for the task/phase. Deployment Groups are logical groups of deployment target machines with agents installed on each of them. They also specify the security context and runtime targets for the agents. When authoring Azure Pipelines Release definition, you can specify the deployments targets for a Phase using the deployment group. 
 
 
 ## Contact Information

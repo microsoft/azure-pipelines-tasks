@@ -1,7 +1,7 @@
 {
   "name": "ios-signing-common",
   "version": "1.0.0",
-  "description": "VSTS Tasks iOS Signing Common",
+  "description": "Azure Pipelines tasks iOS Signing Common",
   "main": "ios-signing-common.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

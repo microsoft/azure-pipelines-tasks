@@ -133,7 +133,7 @@ function* thirdPartyNotice(taskName, licenseInfo) {
     yield 'THIRD-PARTY SOFTWARE NOTICES AND INFORMATION';
     yield 'Do Not Translate or Localize';
     yield '';
-    yield `This Visual Studio Team Services extension (${taskName}) is based on or incorporates material from the projects listed below (Third Party IP). The original copyright notice and the license under which Microsoft received such Third Party IP, are set forth below. Such licenses and notices are provided for informational purposes only. Microsoft licenses the Third Party IP to you under the licensing terms for the Visual Studio Team Services extension. Microsoft reserves all other rights not expressly granted under this agreement, whether by implication, estoppel or otherwise.`;
+    yield `This Azure DevOps extension (${taskName}) is based on or incorporates material from the projects listed below (Third Party IP). The original copyright notice and the license under which Microsoft received such Third Party IP, are set forth below. Such licenses and notices are provided for informational purposes only. Microsoft licenses the Third Party IP to you under the licensing terms for the Azure DevOps extension. Microsoft reserves all other rights not expressly granted under this agreement, whether by implication, estoppel or otherwise.`;
     yield '';
 
     // Enumerated modules

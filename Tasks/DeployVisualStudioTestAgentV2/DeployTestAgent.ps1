@@ -54,7 +54,7 @@ try {
     $verifyTestAgentInstalledScript     = "$PSScriptRoot\VerifyTestAgentInstalled.ps1"
 
     # Fix Assembly Redirections
-    # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
+    # Azure Pipelines uses Newton Json 8.0 while the System.Net.Http uses 6.0
     # Redirection to Newton Json 8.0
     $jsonAssembly = [reflection.assembly]::LoadFrom($PSScriptRoot + "\modules\Newtonsoft.Json.dll")
     $onAssemblyResolve = [System.ResolveEventHandler] {

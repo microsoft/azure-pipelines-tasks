@@ -31,7 +31,7 @@
   "loc.messages.FoundApplicationPackage": "Package d'application trouvé : {0}",
   "loc.messages.VersionValueLabel": "Valeur de version : '{0}'",
   "loc.messages.BuildNumberNotSpecified": "Le numéro de build ne peut pas être null ou vide.",
-  "loc.messages.VstsRestApiFailed": "Échec de la communication avec VSTS : {0}",
+  "loc.messages.VstsRestApiFailed": "Échec de la communication avec Azure Pipelines : {0}",
   "loc.messages.DownloadingArtifact": "Téléchargement de l'artefact '{0}'...",
   "loc.messages.DownloadingArtifactProgress": "Mise à jour de la progression : '{0}' octets reçus...",
   "loc.messages.FinishedDownloadingArtifact": "Téléchargement de l'artefact '{0}' terminé.",

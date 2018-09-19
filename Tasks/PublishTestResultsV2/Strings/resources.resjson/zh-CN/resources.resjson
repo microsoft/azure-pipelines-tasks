@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "发布测试结果",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "将测试结果发布到 VSTS/TFS",
+  "loc.description": "将测试结果发布到 Azure Pipelines/TFS",
   "loc.instanceNameFormat": "发布测试结果 $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>NUnit3 支持</li><li>Minimatch 文件模式支持</li></ul>",
   "loc.group.displayName.advanced": "高级",

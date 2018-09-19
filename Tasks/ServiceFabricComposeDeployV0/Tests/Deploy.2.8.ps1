@@ -28,7 +28,7 @@ Register-Mock Find-VstsFiles { $composeFilePath } -- -LegacyPattern $composeFile
 Register-Mock Assert-VstsPath
 Register-Mock Test-Path { $true } -- "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK"
 
-# Setup mock VSTS service endpoint
+# Setup mock Azure Pipelines service endpoint
 $vstsEndpoint = @{
     "url"  = $connectionEndpointFullUrl
     "Auth" = @{
