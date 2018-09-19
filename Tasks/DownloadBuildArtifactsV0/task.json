@@ -226,19 +226,22 @@
     "DownloadingArtifactsForBuild": "Downloading artifacts for build: %s",
     "LinkedArtifactCount": "Linked artifacts count:  %s",
     "FileContainerInvalidArtifactData": "Invalid file container artifact. Resource data must be in the format #/{container id}/path",
-    "UnsupportedArtifactType" :"Unsupported artifact type: %s",
+    "UnsupportedArtifactType": "Unsupported artifact type: %s",
     "BuildNotFound": "Build with ID %s not found",
     "BuildArtifactNotFound": "Artifact %s not found for build %s. Please ensure you have published artifacts in any previous phases of the current build.",
     "NoArtifactsFound": "No artifacts found for build %s",
     "BuildIdBuildDefinitionMismatch": "Build with ID %s not found for build pipeline ID %s",
     "ArtifactsSuccessfullyDownloaded": "Successfully downloaded artifacts to %s",
-    "RetryingOperation" : "Error: in %s, so retrying => retries pending  : %s",
+    "RetryingOperation": "Error: in %s, so retrying => retries pending  : %s",
     "OperationFailed": "Failed in %s with error: %s",
     "ArtifactNameDirectoryNotFound": "Directory '%s' does not exist. Falling back to parent directory: %s",
     "LatestBuildFound": "Latest build found:  %s",
     "LatestBuildNotFound":"Latest build not found",
     "LatestBuildFromBranchNotFound":"Latest build from branch %s not found",
-    "DownloadingContainerResource": "Downloading items from container resource %s"
+    "DownloadingContainerResource": "Downloading items from container resource %s",
+    "DefinitionNameMatchFound": "Definition Name %s resolved to id %d",
+    "InvalidBuildDefinitionName": "Definition name %s didn't correspond to a valid definition",
+    "UnresolvedDefinitionId": "Could not resolve build definition id"
   },
   "outputVariables": [
     {
