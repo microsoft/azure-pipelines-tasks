@@ -165,9 +165,7 @@ it('fails if installing packages to the base environment fails', async function 
 
     const findConda = sinon.stub().returns('path-to-conda');
     const prependCondaToPath = sinon.spy();
-    // const installPackagesGlobally = sinon.stub().throws(new Error('installPackagesGlobally'));
     const installPackagesGlobally = sinon.stub().rejects(new Error('installPackagesGlobally'));
-    sinon.expectation
 
     mockery.registerMock('./conda_internal', {
         findConda: findConda,
