@@ -8,8 +8,7 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "devDependencies": {
-    "vsts-task-lib": "2.6.0",
     "@types/mocha": "5.2.5",
-    "mocha": "5.2.0"
+    "vsts-task-lib": "2.6.0"
   }
 }
