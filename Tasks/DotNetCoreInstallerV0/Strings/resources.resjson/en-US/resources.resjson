@@ -13,7 +13,7 @@
   "loc.messages.getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
   "loc.messages.UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
   "loc.messages.CheckingToolCache": "Checking if a cached copy exists for this version...",
-  "loc.messages.InstallingAfresh": "Cache does not contains this particular .NET Core. Will be downloaded and installed.",
+  "loc.messages.InstallingAfresh": "The cache does not contain the requested version of .NET Core. Downloading and installing it now.",
   "loc.messages.GettingDownloadUrl": "Getting URL to download .NET Core %s version: %s.",
   "loc.messages.CouldNotDetectPlatform": "Could not detect the machine's OS",
   "loc.messages.NullDownloadUrls": "Could not construct download URL. Please ensure that specified version %s is valid.",
