@@ -52,4 +52,19 @@ describe('InstallSSHKey Suite', function () {
 
         done();
     });
+
+    it('SSH key uninstalled from running agent', (done: MochaDone) => {
+        this.timeout(1000);
+
+        const tp: string = path.join(__dirname, 'L0RemoveFromAgent.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdOutContained('removed from running agent'), 'expected message: removed from running agent');
+        assert(tr.ran('/usr/bin/ssh-add -d keyToRemove'),'ssh should have been uninstalled');
+
+        done();
+    });
 });
