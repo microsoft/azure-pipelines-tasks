@@ -31,10 +31,10 @@ var connection = new ContainerConnection();
 connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 
 // Run the specified action
-var action = tl.getInput("action", true);
+var action = tl.getInput("action", true).toLowerCase();
 var telemetry = {
     registryType: registryType,
-    command: action !== "Run a Docker command" ? action : tl.getInput("customCommand", true)
+    command: action !== "run a docker command" ? action : tl.getInput("customCommand", true)
 };
 
 console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
@@ -43,12 +43,12 @@ console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
     JSON.stringify(telemetry));
 /* tslint:disable:no-var-requires */
 require({
-    "Build an image": "./containerbuild",
-    "Tag images": "./containertag",
-    "Push an image": "./containerpush",
-    "Push images": "./containerpush",
-    "Run an image": "./containerrun",
-    "Run a Docker command": "./containercommand"
+    "build an image": "./containerbuild",
+    "tag images": "./containertag",
+    "push an image": "./containerpush",
+    "push images": "./containerpush",
+    "run an image": "./containerrun",
+    "run a docker command": "./containercommand"
 }[action]).run(connection)
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
