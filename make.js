@@ -230,15 +230,13 @@ target.build = function() {
                         console.log('> getting module externals');
                         getExternals(modMake.externals, modOutDir);
                     }
+                }
 
-                    if (mod.type === 'node' && mod.compile == true) {
-                        var commonPack = util.getCommonPackInfo(modOutDir);
+                if (mod.type === 'node' && mod.compile == true) {
+                    var commonPack = util.getCommonPackInfo(modOutDir);
 
-                        // assert the pack file does not already exist (name should be unique)
-                        if (test('-f', commonPack.packFilePath)) {
-                            fail(`Pack file already exists: ${commonPack.packFilePath}`);
-                        }
-
+                    // check that the pack file does not already exist
+                    if (!test('-f', commonPack.packFilePath)) {
                         // pack the Node module. a pack file is required for dedupe.
                         // installing from a folder creates a symlink, and does not dedupe.
                         cd(path.dirname(modOutDir));
