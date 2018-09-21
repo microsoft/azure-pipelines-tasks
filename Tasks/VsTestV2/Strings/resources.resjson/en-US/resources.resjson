@@ -177,5 +177,6 @@
   "loc.messages.VsTestVersionEmpty": "VsTestVersion is null or empty",
   "loc.messages.UserProvidedSourceFilter": "Source filter: %s",
   "loc.messages.UnableToGetFeatureFlag": "Unable to get feature flag: %s",
-  "loc.messages.diagnosticsInput": "Diagnostics enabled : %s"
+  "loc.messages.diagnosticsInput": "Diagnostics enabled : %s",
+  "loc.messages.UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory)."
 }

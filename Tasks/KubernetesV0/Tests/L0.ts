@@ -524,4 +524,19 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);	
         done();	
     });
+
+    it('Json and yaml output format should not added for commands that dont support it', (done:MochaDone) => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.logs;
+        process.env[shared.TestEnvVars.arguments] = "nginx";    
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+        assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+        assert(tr.stdout.indexOf(`[command]kubectl --kubeconfig ${shared.formatPath("newUserDir/config")} logs nginx`) != -1, "kubectl logs should run");
+        console.log(tr.stderr);
+        done();
+    });
 });

@@ -67,6 +67,7 @@ async function getJava(versionSpec: string) {
     console.log(taskLib.loc('SetExtendedJavaHome', extendedJavaHome, jdkDirectory));
     taskLib.setVariable('JAVA_HOME', jdkDirectory);
     taskLib.setVariable(extendedJavaHome, jdkDirectory);
+    toolLib.prependPath(path.join(jdkDirectory, 'bin'));    
 }
 
 function sleepFor(sleepDurationInMillisecondsSeconds): Promise<any> {

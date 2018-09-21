@@ -85,7 +85,8 @@ export class AzureAppServiceUtility {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;
-            var response = await webClient.sendRequest(webRequest);
+            let webRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5};
+            var response = await webClient.sendRequest(webRequest, webRequestOptions);
             tl.debug(`App Service status Code: '${response.statusCode}'. Status Message: '${response.statusMessage}'`);
         }
         catch(error) {
@@ -133,15 +134,15 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
-    public async updateAndMonitorAppSettings(properties: any): Promise<void> {
-        for(var property in properties) {
-            if(!!properties[property] && properties[property].value !== undefined) {
-                properties[property] = properties[property].value;
+    public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<void> {
+        for(var property in addProperties) {
+            if(!!addProperties[property] && addProperties[property].value !== undefined) {
+                addProperties[property] = addProperties[property].value;
             }
         }
         
-        console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(properties)));
-        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(properties);
+        console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
+        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
 
         if(!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
@@ -154,8 +155,8 @@ export class AzureAppServiceUtility {
         while(noOftimesToIterate > 0) {
             var kuduServiceAppSettings = await kuduService.getAppSettings();
             var propertiesChanged: boolean = true;
-            for(var property in properties) {
-                if(kuduServiceAppSettings[property] != properties[property]) {
+            for(var property in addProperties) {
+                if(kuduServiceAppSettings[property] != addProperties[property]) {
                     tl.debug('New properties are not updated in Kudu service :(');
                     propertiesChanged = false;
                     break;

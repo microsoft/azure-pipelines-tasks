@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 139,
-        "Patch": 5
+        "Minor": 141,
+        "Patch": 2
     },
     "demands": [
         "vstest"
@@ -614,6 +614,7 @@
         "VsTestVersionEmpty": "VsTestVersion is null or empty",
         "UserProvidedSourceFilter": "Source filter: %s",
         "UnableToGetFeatureFlag": "Unable to get feature flag: %s",
-        "diagnosticsInput": "Diagnostics enabled : %s"
+        "diagnosticsInput": "Diagnostics enabled : %s",
+        "UncPathNotSupported": "Path to test sources search folder cannot be a UNC path. Please provide a rooted path or a path relative to $(System.DefaultWorkingDirectory)."
     }
 }

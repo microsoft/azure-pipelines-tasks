@@ -6,6 +6,8 @@ import path = require('path');
 
 var packageUtility = require('webdeployment-common/packageUtility.js');
 var webCommonUtility = require('webdeployment-common/utility.js');
+var deployUtility = require('webdeployment-common/utility.js');
+var zipUtility = require('webdeployment-common/ziputility.js');
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
     private zipDeploymentID: string;
@@ -15,12 +17,19 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         await this.kuduServiceUtility.warmpUp();
         switch(this.taskParams.Package.getPackageType()){
             case PackageType.folder:
+                let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);
+                let archivedWebPackage = await zipUtility.archiveFolder(this.taskParams.Package.getPath(), "", tempPackagePath);
+                tl.debug("Compressed folder into zip " +  archivedWebPackage);
+                this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(archivedWebPackage, this.taskParams.TakeAppOfflineFlag, 
+                    { slotName: this.appService.getSlot() });
+            break;
             case PackageType.zip:
                 this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(this.taskParams.Package.getPath(), this.taskParams.TakeAppOfflineFlag, 
                 { slotName: this.appService.getSlot() });
             break;
 
             case PackageType.jar:
+                tl.debug("Initiated deployment via kudu service for webapp jar package : "+ this.taskParams.Package.getPath());
                 var folderPath = await webCommonUtility.generateTemporaryFolderForDeployment(false, this.taskParams.Package.getPath(), PackageType.jar);
                 var jarName = webCommonUtility.getFileNameFromPath(this.taskParams.Package.getPath(), ".jar");
                 var destRootPath = "/home/site/wwwroot/";
