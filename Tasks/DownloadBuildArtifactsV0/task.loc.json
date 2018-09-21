@@ -8,7 +8,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 141,
+    "Minor": 142,
     "Patch": 0
   },
   "groups": [
@@ -57,7 +57,8 @@
       "visibleRule": "buildType == specific",
       "properties": {
         "EditableOptions": "True",
-        "DisableManageLink": "True"
+        "DisableManageLink": "True",
+        "IsSearchable": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.definition"
     },
@@ -183,10 +184,11 @@
     {
       "endpointId": "tfs:teamfoundation",
       "target": "definition",
-      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=500&continuationToken={{{continuationToken}}}&queryOrder=2",
+      "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview&$top=500&continuationToken={{{continuationToken}}}&name=*{{name}}*&queryOrder=2",
       "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
       "parameters": {
-        "project": "$(project)"
+        "project": "$(project)",
+        "name": "$(name)"
       },
       "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }",
       "callbackContextTemplate": "{\"continuationToken\" : \"{{{headers.x-ms-continuationtoken}}}\"}",
