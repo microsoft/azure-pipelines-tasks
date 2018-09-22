@@ -31,7 +31,7 @@
   "loc.messages.FoundApplicationPackage": "見つかったアプリケーション パッケージ: {0}",
   "loc.messages.VersionValueLabel": "バージョン値: '{0}'",
   "loc.messages.BuildNumberNotSpecified": "ビルド番号を NULL または空白にすることはできません。",
-  "loc.messages.VstsRestApiFailed": "VSTS との通信に失敗しました: {0}",
+  "loc.messages.VstsRestApiFailed": "Azure Pipelines との通信に失敗しました: {0}",
   "loc.messages.DownloadingArtifact": "成果物 '{0}' をダウンロードしています...",
   "loc.messages.DownloadingArtifactProgress": "進行状況の更新: '{0}' バイトを受信しました...",
   "loc.messages.FinishedDownloadingArtifact": "成果物 '{0}' のダウンロードを完了しました。",

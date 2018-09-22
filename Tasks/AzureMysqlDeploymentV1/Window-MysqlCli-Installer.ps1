@@ -1,7 +1,7 @@
 ################################################################################
 ##  File:  Install-MysqlCli.ps1
 ##  Team:  ReleaseManagement
-##  Desc:  Install Mysql CLI
+##  Desc:  Install MySQL CLI
 ################################################################################
 
 param (

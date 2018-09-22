@@ -1,7 +1,7 @@
 {
   "name": "vsts-npm-authenticate-task",
   "version": "0.0.5",
-  "description": "VSTS npm Authenticate Task",
+  "description": "Azure Pipelines npm Authenticate Task",
   "main": "npmauth.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

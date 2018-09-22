@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Test di carico basato sul cloud",
-  "loc.helpMarkDown": "Questa attività attiva un test di carico basato sul cloud con Visual Studio Team Services. [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "Consente di eseguire il test di carico nel cloud con Visual Studio Team Services",
+  "loc.helpMarkDown": "Questa attività attiva un test di carico basato sul cloud con Azure Pipelines. [Altre informazioni](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "Consente di eseguire il test di carico nel cloud con Azure Pipelines",
   "loc.instanceNameFormat": "Test di carico cloud $(LoadTest)",
-  "loc.input.label.connectedServiceName": "Connessione a VS Team Services",
+  "loc.input.label.connectedServiceName": "Connessione a Azure Pipelines",
   "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al servizio registrata in precedenza per comunicare con il servizio del test di carico basato sul cloud. Scegliere 'Gestisci' per registrare una nuova connessione.",
   "loc.input.label.TestDrop": "Cartella dei file dei test di carico",
   "loc.input.help.TestDrop": "Percorso di output in cui sono disponibili i file dei test di carico e di supporto, inclusi i plug-in e i file di dati. <ul><li><b>Esempio per compilazione:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>Esempio per versione:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />dove SourceCI è l'alias di origine e drop è il nome dell'artefatto</li></ul>",

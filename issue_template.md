@@ -2,11 +2,11 @@
 Checkout how to troubleshoot failures and collect debug logs: https://docs.microsoft.com/en-us/vsts/build-release/actions/troubleshooting
 
 ## Environment
-- Server - VSTS or TFS on-premises?
+- Server - Azure Pipelines or TFS on-premises?
     
     - If using TFS on-premises, provide the version: 
     
-    - If using VSTS, provide the account name, team project name, build definition name/build number: 
+    - If using Azure Pipelines, provide the account name, team project name, build definition name/build number: 
 
 
 - Agent - Hosted or Private: 

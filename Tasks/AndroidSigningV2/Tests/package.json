@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-androidsigningv2-tests",
   "version": "1.0.0",
-  "description": "VSTS Android Signing V2 Task Tests",
+  "description": "Azure Pipelines Android Signing V2 Task Tests",
   "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

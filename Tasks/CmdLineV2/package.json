@@ -1,7 +1,7 @@
 {
   "name": "vsts-cmdline-task",
   "version": "1.0.0",
-  "description": "VSTS Command Line Task",
+  "description": "Azure Pipelines Command Line Task",
   "main": "cmdline.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

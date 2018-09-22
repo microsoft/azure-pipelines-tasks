@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-installsshkey-tests",
   "version": "1.0.0",
-  "description": "VSTS Install SSH Key Task Tests",
+  "description": "Azure Pipelines Install SSH Key Task Tests",
   "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

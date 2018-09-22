@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Scarica pacchetto",
   "loc.helpMarkDown": "Richiede l'installazione dell'estensione Gestione pacchetti",
-  "loc.description": "Consente di scaricare un pacchetto da un feed di Gestione pacchetti in VSTS o TFS. \r\n Richiede l'estensione Gestione pacchetti.",
+  "loc.description": "Consente di scaricare un pacchetto da un feed di Gestione pacchetti in Azure Artifacts o TFS. \r\n Richiede l'estensione Gestione pacchetti.",
   "loc.instanceNameFormat": "Scarica pacchetto",
   "loc.input.label.feed": "Feed",
   "loc.input.help.feed": "Consente di selezionare l'origine dei pacchetti",

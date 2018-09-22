@@ -1,7 +1,7 @@
 {
   "name": "vsts-npm-task",
   "version": "1.0.21",
-  "description": "VSTS NPM Task",
+  "description": "Azure Pipelines npm Task",
   "main": "npmtask.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

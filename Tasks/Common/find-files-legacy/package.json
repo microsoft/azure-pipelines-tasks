@@ -2,7 +2,7 @@
   "name": "find-files-legacy",
   "version": "1.0.0",
   "author": "Microsoft Corporation",
-  "description": "Common lib for finding files with VSTS file pattern",
+  "description": "Common lib for finding files with Azure Pipelines file pattern",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"

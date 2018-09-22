@@ -18,14 +18,14 @@ export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
     abstract enableCodeCoverage(ccProps: { [name: string]: string }): Q.Promise<boolean>;
 
     // -----------------------------------------------------
-    // Convert the VSTS specific filter to comma seperated specific filter pattern
+    // Convert the Azure Pipelines specific filter to comma seperated specific filter pattern
     // - +:com.abc,-:com.xy -> com.abc,com.xy
     // -----------------------------------------------------    
     protected extractFilters(classFilter: string) {
         let includeFilter = "";
         let excludeFilter = "";
 
-        tl.debug("Extracting VSTS filter: " + classFilter);
+        tl.debug("Extracting Azure Pipelines filter: " + classFilter);
         if (util.isNullOrWhitespace(classFilter)) {
             return {
                 includeFilter: includeFilter,
@@ -62,14 +62,14 @@ export abstract class CodeCoverageEnabler implements ICodeCoverageEnabler {
 
 export abstract class CoberturaCodeCoverageEnabler extends CodeCoverageEnabler {
     // -----------------------------------------------------
-    // Convert the VSTS specific filter to Code Coverage Tool specific filter pattern
+    // Convert the Azure Pipelines specific filter to Code Coverage Tool specific filter pattern
     // -----------------------------------------------------   
     protected abstract applyFilterPattern(filter: string): string[];
 }
 
 export abstract class JacocoCodeCoverageEnabler extends CodeCoverageEnabler {
     // -----------------------------------------------------
-    // Convert the VSTS specific filter to Code Coverage Tool specific filter pattern
+    // Convert the Azure Pipelines specific filter to Code Coverage Tool specific filter pattern
     // -----------------------------------------------------   
     protected abstract applyFilterPattern(filter: string): string[];
 }

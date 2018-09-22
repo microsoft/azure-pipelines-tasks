@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "雲端式負載測試 ",
-  "loc.helpMarkDown": "此工作會使用 Visual Studio Team Services 觸發雲端架構負載測試。[深入了解](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "使用 Visual Studio Team Services，在雲端中執行負載測試",
+  "loc.helpMarkDown": "此工作會使用 Azure Pipelines 觸發雲端架構負載測試。[深入了解](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "使用 Azure Pipelines，在雲端中執行負載測試",
   "loc.instanceNameFormat": "雲端負載測試 $(LoadTest)",
-  "loc.input.label.connectedServiceName": "VS Team Services 連線",
+  "loc.input.label.connectedServiceName": "Azure Pipelines 連線",
   "loc.input.help.connectedServiceName": "選取先前註冊的服務連線，以與雲端式負載測試服務通訊。請選擇 [管理] 註冊新的連線。",
   "loc.input.label.TestDrop": "負載測試檔案資料夾",
   "loc.input.help.TestDrop": "負載測試及支援檔案 (包含外掛程式和資料檔案) 的輸出路徑可供使用。<ul><li><b>建置範例:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>發行範例:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />其中 SourceCI 是來源別名，而 drop 是成品名稱</li></ul>",

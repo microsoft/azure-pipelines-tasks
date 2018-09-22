@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "소스 인덱싱 및 기호 게시 ",
-  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Visual Studio Team Services Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in VSTS.",
-  "loc.description": "소스 코드를 인덱싱하고 파일 공유 또는 Visual Studio Team Services 기호 서버에 기호를 게시합니다.",
+  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Azure Pipelines Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in Azure Pipelines.",
+  "loc.description": "소스 코드를 인덱싱하고 파일 공유 또는 Azure Pipelines 기호 서버에 기호를 게시합니다.",
   "loc.instanceNameFormat": "기호 경로 게시",
   "loc.group.displayName.advanced": "고급",
   "loc.input.label.SymbolsFolder": "기호 폴더 경로",
@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "기호 게시",
   "loc.input.help.PublishSymbols": "기호 파일을 게시할지 여부를 나타냅니다.",
   "loc.input.label.SymbolServerType": "Symbol server type",
-  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the VSTS Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in VSTS.",
+  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the Azure Pipelines Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Pipelines.",
   "loc.input.label.SymbolsPath": "기호를 게시할 경로",
   "loc.input.help.SymbolsPath": "The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.",
   "loc.input.label.DetailedLog": "자세한 정보 로깅",

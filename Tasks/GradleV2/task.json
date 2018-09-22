@@ -81,11 +81,11 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to TFS/Team Services",
+            "label": "Publish to Azure Pipelines/TFS",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Gradle build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Gradle build to Azure Pipelines/TFS. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS."
         },
         {
             "name": "testResultsFiles",

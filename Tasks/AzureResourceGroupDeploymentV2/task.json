@@ -13,7 +13,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 140,
+        "Minor": 141,
         "Patch": 0
     },
     "demands": [],
@@ -195,11 +195,11 @@
                 "teamServicesConnection"
             ],
             "type": "connectedService:ExternalTfs",
-            "label": "VSTS/TFS service connection",
+            "label": "Azure Pipelines/TFS service connection",
             "groupName": "AdvancedDeploymentOptions",
             "visibleRule": "enableDeploymentPrerequisites = ConfigureVMWithDGAgent",
             "required": true,
-            "helpMarkDown": "Specify the service connection to connect to a VSTS/TFS account for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
+            "helpMarkDown": "Specify the service connection to connect to an Azure DevOps organization or TFS collection for agent registration.<br><br>You can create a service connection using \"+New\", and select \"Token-based authentication\". You need a [personal access token(PAT)](https://docs.microsoft.com/en-us/vsts/accounts/use-personal-access-tokens-to-authenticate?view=vsts) to setup a service connection. <br><br>​Click \"Manage\" to update the service connection details.",
             "properties": {
                 "EditableOptions": "True"
             }

@@ -1,7 +1,7 @@
 {
   "name": "msbuildhelpers",
   "version": "1.0.0",
-  "description": "VSTS Tasks MSBuild helpers",
+  "description": "Azure Pipelines tasks MSBuild helpers",
   "main": "msbuildhelpers.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Test di carico di Apache JMeter basato sul cloud",
-  "loc.helpMarkDown": "È possibile usare questa attività per attivare un test di carico di Apache JMeter nel cloud usando Visual Studio Team Services. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=784929)",
+  "loc.helpMarkDown": "È possibile usare questa attività per attivare un test di carico di Apache JMeter nel cloud usando Azure Pipelines. [Altre informazioni](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "Esegue il test di carico di Apache JMeter nel cloud",
   "loc.instanceNameFormat": "Test di Apache JMeter $(LoadTest)",
-  "loc.input.label.connectedServiceName": "Connessione a VS Team Services",
+  "loc.input.label.connectedServiceName": "Connessione a Azure Pipelines",
   "loc.input.help.connectedServiceName": "Consente di selezionare una connessione al servizio registrata in precedenza per comunicare con il servizio del test di carico basato sul cloud. Scegliere 'Gestisci' per registrare una nuova connessione.",
   "loc.input.label.TestDrop": "Cartella dei file di test di Apache JMeter",
   "loc.input.help.TestDrop": "Percorso relativo dalla radice del repository in cui sono disponibili i file del test di carico.",
