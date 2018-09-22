@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-installapplecertificate-tests",
   "version": "1.0.0",
-  "description": "VSTS Install Apple Certificate Task Tests",
+  "description": "Azure Pipelines Install Apple Certificate Task Tests",
   "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

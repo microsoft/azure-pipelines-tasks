@@ -17,7 +17,8 @@
     "url": "https://github.com/Microsoft/vsts-tasks"
   },
   "keywords": [
-    "VSTS",
+    "Azure",
+    "Pipelines",
     "build",
     "tasks"
   ],
