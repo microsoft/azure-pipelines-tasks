@@ -45,5 +45,8 @@
   "loc.messages.LatestBuildFound": "Latest build found:  %s",
   "loc.messages.LatestBuildNotFound": "Latest build not found",
   "loc.messages.LatestBuildFromBranchNotFound": "Latest build from branch %s not found",
-  "loc.messages.DownloadingContainerResource": "Downloading items from container resource %s"
+  "loc.messages.DownloadingContainerResource": "Downloading items from container resource %s",
+  "loc.messages.DefinitionNameMatchFound": "Definition Name %s resolved to id %d",
+  "loc.messages.InvalidBuildDefinitionName": "Definition name %s didn't correspond to a valid definition",
+  "loc.messages.UnresolvedDefinitionId": "Could not resolve build definition id"
 }

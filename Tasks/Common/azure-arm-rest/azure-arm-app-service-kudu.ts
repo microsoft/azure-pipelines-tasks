@@ -37,7 +37,7 @@ export class KuduServiceManagementClient {
                         tl.warning(tl.loc('ASE_SSLIssueRecommendation'));
                 }
 
-                if(retryCount > 0 && exceptionString.indexOf('Request timeout') != -1 && reqOptions.retryRequestTimedout) {
+                if(retryCount > 0 && exceptionString.indexOf('Request timeout') != -1 && reqOptions && reqOptions.retryRequestTimedout) {
                     tl.debug('encountered request timedou issue in Kudu. Retrying again');
                     retryCount -= 1;
                     continue;

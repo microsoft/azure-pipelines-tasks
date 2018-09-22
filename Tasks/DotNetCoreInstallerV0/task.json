@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 13
+        "Patch": 14
     },
     "satisfies": [
         "DotNetCore"
@@ -54,7 +54,7 @@
         "getDownloadUrlsFailed": "Failed to get download urls. Error: %s.",
         "UsingCachedTool": "Cached copy of .NET Core exists. No need to install afresh. Cached tool location: %s.",
         "CheckingToolCache": "Checking if a cached copy exists for this version...",
-        "InstallingAfresh": "Cache does not contains this particular .NET Core. Will be downloaded and installed.",
+        "InstallingAfresh": "The cache does not contain the requested version of .NET Core. Downloading and installing it now.",
         "GettingDownloadUrl": "Getting URL to download .NET Core %s version: %s.",
         "CouldNotDetectPlatform": "Could not detect the machine's OS",
         "NullDownloadUrls": "Could not construct download URL. Please ensure that specified version %s is valid.",

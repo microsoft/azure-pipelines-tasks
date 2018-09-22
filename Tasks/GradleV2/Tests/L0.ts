@@ -1,6 +1,3 @@
-// npm install mocha --save-dev
-// typings install dt~mocha --save --global
-
 import assert = require('assert');
 import path = require('path');
 import os = require('os');
