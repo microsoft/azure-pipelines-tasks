@@ -1,7 +1,7 @@
 {
   "name": "vsts-copyssh-task",
   "version": "1.0.0",
-  "description": "VSTS Copy Files over SSH Tasks",
+  "description": "Azure Pipelines Copy Files over SSH Tasks",
   "main": "copyfilesoverssh.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

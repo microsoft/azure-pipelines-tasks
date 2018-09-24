@@ -9,7 +9,7 @@ The name to give the published request.
 The root directory containing the files to be analyzed for inclusion in the request. Only valid debug files will actually be included in the published request.
 
 .PARAMETER SymbolServiceUri
-The VSTS Symbol Service to which the request should be published.
+The Azure Pipelines Symbol Service to which the request should be published.
 
 .PARAMETER ExpirationInDays
 The number of days that symbols should be retained.  If not specified, the default settings of the service will be used.
@@ -80,7 +80,7 @@ function Get-SymbolClientVersion([string]$symbolServiceUri)
         Write-Host "StatusCode '$($_.Exception.Response.StatusCode)' returned on account $symbolServiceUri"
         
         if ($_.Exception.Response.StatusCode -eq 404) {
-            throw "The VSTS Symbol Server feature is not enabled for this account. See https://go.microsoft.com/fwlink/?linkid=846265 for instructions on how to enable it.`n`n "
+            throw "The Azure Pipelines Symbol Server feature is not enabled for this account. See https://go.microsoft.com/fwlink/?linkid=846265 for instructions on how to enable it.`n`n "
         }
         
         throw  $_

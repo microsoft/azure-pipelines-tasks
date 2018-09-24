@@ -31,7 +31,7 @@
   "loc.messages.FoundApplicationPackage": "찾은 응용 프로그램 패키지: {0}",
   "loc.messages.VersionValueLabel": "버전 값: '{0}'",
   "loc.messages.BuildNumberNotSpecified": "빌드 번호는 null이거나 비워 둘 수 없습니다.",
-  "loc.messages.VstsRestApiFailed": "VSTS와 통신하지 못했습니다. {0}",
+  "loc.messages.VstsRestApiFailed": "Azure Pipelines와 통신하지 못했습니다. {0}",
   "loc.messages.DownloadingArtifact": "아티팩트 '{0}' 다운로드 중...",
   "loc.messages.DownloadingArtifactProgress": "진행률 업데이트: '{0}'바이트를 받았습니다.",
   "loc.messages.FinishedDownloadingArtifact": "'{0}' 아티팩트 다운로드를 완료했습니다.",

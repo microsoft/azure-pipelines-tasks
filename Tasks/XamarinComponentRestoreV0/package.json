@@ -1,7 +1,7 @@
 {
   "name": "vsts-xamarincomponentrestore-task",
   "version": "1.0.0",
-  "description": "VSTS Xamarin Component Restore Task",
+  "description": "Azure Pipelines Xamarin Component Restore Task",
   "main": "xamarincomponent.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

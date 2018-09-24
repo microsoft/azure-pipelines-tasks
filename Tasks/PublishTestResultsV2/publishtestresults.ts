@@ -1,12 +1,10 @@
-import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
 import * as publishTestResultsTool from './publishtestresultstool';
 import * as tl from 'vsts-task-lib/task';
-import * as tr from 'vsts-task-lib/toolrunner';
 import { publishEvent } from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
+const TESTRUN_SYSTEM = 'VSTS - PTR';
 
 function isNullOrWhitespace(input: any) {
     if (typeof input === 'undefined' || input === null) {
@@ -36,7 +34,6 @@ async function run() {
         tl.debug('testRunTitle: ' + testRunTitle);
         tl.debug('publishRunAttachments: ' + publishRunAttachments);
 
-
         if (isNullOrWhitespace(searchFolder)) {
             searchFolder = tl.getVariable('System.DefaultWorkingDirectory');
         }
@@ -49,11 +46,11 @@ async function run() {
             followSymbolicLinks: true
         };
 
-        let matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
+        const matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
 
         const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
 
-        tl.debug(`Detected ${testResultsFilesCount} test result files`)
+        tl.debug(`Detected ${testResultsFilesCount} test result files`);
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
         if (forceMerge) {
             tl.debug('Detected large number of test result files. Merged all of them into a single file and published a single test run to optimize for test result publish performance instead of publishing hundreds of test runs');
@@ -61,28 +58,45 @@ async function run() {
 
         if (testResultsFilesCount === 0) {
             tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
-        }
-        else {
-            let osType = tl.osType();
+        } else {
+            const osType = tl.osType();
             // This variable can be set as build variable to force the task to use command flow
-            let isExeFlowOverridden = tl.getVariable('PublishTestResults.OverrideExeFlow');
+            const isExeFlowOverridden = tl.getVariable('PublishTestResults.OverrideExeFlow');
 
             tl.debug('OS type: ' + osType);
 
             if (osType === 'Windows_NT' && isExeFlowOverridden != 'true') {
-                let testResultsPublisher = new publishTestResultsTool.TestResultsPublisher(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments, testRunner);
-                let exitCode = await testResultsPublisher.publishResultsThroughExe();
+                const testResultsPublisher = new publishTestResultsTool.TestResultsPublisher(matchingTestResultsFiles,
+                    forceMerge ? true.toString() : mergeResults,
+                    platform,
+                    config,
+                    testRunTitle,
+                    publishRunAttachments,
+                    testRunner,
+                    TESTRUN_SYSTEM);
+                const exitCode = await testResultsPublisher.publishResultsThroughExe();
                 tl.debug("Exit code of TestResultsPublisher: " + exitCode);
 
                 if (exitCode === 20000) {
                     // The exe returns with exit code: 20000 if the Feature flag is off or if it fails to fetch the Feature flag value
                     const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-                    tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
-                }                
-            }
-            else {
+                    tp.publish(matchingTestResultsFiles,
+                        forceMerge ? true.toString() : mergeResults,
+                        platform,
+                        config,
+                        testRunTitle,
+                        publishRunAttachments,
+                        TESTRUN_SYSTEM);
+                }
+            } else {
                 const tp: tl.TestPublisher = new tl.TestPublisher(testRunner);
-                tp.publish(matchingTestResultsFiles, forceMerge ? true.toString() : mergeResults, platform, config, testRunTitle, publishRunAttachments);
+                tp.publish(matchingTestResultsFiles,
+                    forceMerge ? true.toString() : mergeResults,
+                    platform,
+                    config,
+                    testRunTitle,
+                    publishRunAttachments,
+                    TESTRUN_SYSTEM);
             }
         }
 
@@ -92,8 +106,7 @@ async function run() {
         });
 
         tl.setResult(tl.TaskResult.Succeeded, '');
-    }
-    catch (err) {
+    } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }
 }

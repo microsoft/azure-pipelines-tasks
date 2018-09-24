@@ -12,7 +12,7 @@ For updating existing packages, user should have owner/maintainer role for the p
 - **Python package path :** This is a Required field. Provide path of python package directory which is to be published. Setup file with the name setup.py should be present in this directory. 
 
 - **PyPI connection :** This is a Required field. Select a generic endpoint where PyPI user and server details are present. 
-To create a new generic service endpoint, under your VSTS project, go to Settings -> Services -> New Service Endpoint -> Generic.
+To create a new generic service connection, under your Azure Pipelines project, go to Settings -> Service connections -> New service connection -> Generic.
 Connection Name – Use a friendly connection name of your choice
 Server URL – PyPI package server (for example: https://upload.pypi.org/legacy/)
 User Name – PyPI registered username

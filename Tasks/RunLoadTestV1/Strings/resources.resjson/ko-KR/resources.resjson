@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "클라우드 기반 부하 테스트",
-  "loc.helpMarkDown": "이 작업은 Visual Studio Team Services를 사용하여 클라우드 기반 부하 테스트를 트리거합니다. [자세한 정보](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "Visual Studio Team Services를 사용하여 클라우드에서 부하 테스트를 실행합니다.",
+  "loc.helpMarkDown": "이 작업은 Azure Pipelines를 사용하여 클라우드 기반 부하 테스트를 트리거합니다. [자세한 정보](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "Azure Pipelines를 사용하여 클라우드에서 부하 테스트를 실행합니다.",
   "loc.instanceNameFormat": "클라우드 부하 테스트 $(LoadTest)",
-  "loc.input.label.connectedServiceName": "VS Team Services 연결",
+  "loc.input.label.connectedServiceName": "Azure Pipelines 연결",
   "loc.input.help.connectedServiceName": "클라우드 기반 부하 테스트 서비스에 말할 이전에 등록한 서비스 연결을 선택하세요. 새 연결을 등록하려면 '관리'를 선택하세요.",
   "loc.input.label.TestDrop": "부하 테스트 파일 폴더",
   "loc.input.help.TestDrop": "플러그 인 및 데이터 파일을 비롯한 부하 테스트 및 지원 파일을 사용할 수 있는 출력 경로입니다. <ul><li><b>빌드 예:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>릴리스 예:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />여기서 SourceCI는 소스 별칭이고 drop은 아티팩트 이름입니다.</li></ul>",

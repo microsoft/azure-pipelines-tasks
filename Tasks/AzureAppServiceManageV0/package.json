@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-azurewebappslotswap",
   "version": "0.1.0",
-  "description": "VSTS Azure WebApp Slot Swap",
+  "description": "Azure Pipelines Azure WebApp Slot Swap",
   "main": "azurewebappslotswap.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "@types/mocha": "2.2.48",
+    "@types/node": "6.0.68",
+    "@types/q": "1.0.7",
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
     "q": "1.4.1",
     "xml2js": "0.4.13"

@@ -37,7 +37,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
 
         process.env[constants.packageFeedSelector] = constants.nugetOrg;
         process.env[testConstants.packageSource] = constants.defaultPackageSource;
-        process.env[testConstants.writeNugetConfigReturnCode] = 0;
+        process.env[testConstants.writeNugetConfigReturnCode] = '0';
         process.env[constants.agentTempDirectory] = 'temp';
         process.env[constants.downloadPath] = `${process.env[constants.agentTempDirectory]}\\VsTest`;
 
@@ -61,7 +61,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -89,8 +89,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.listPackagesReturnCode] = 0;
-        process.env[testConstants.downloadPackageReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
+        process.env[testConstants.downloadPackageReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -120,8 +120,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = 'x';
-        process.env[testConstants.listPackagesReturnCode] = 1;
-        process.env[testConstants.downloadPackageReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '1';
+        process.env[testConstants.downloadPackageReturnCode] = '0';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\15.6.0`;
 
         // Start the run
@@ -149,8 +149,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         // Set the inputs
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
-        process.env[testConstants.listPackagesReturnCode] = 1;
-        process.env[testConstants.downloadPackageReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '1';
+        process.env[testConstants.downloadPackageReturnCode] = '0';
         process.env[testConstants.expectedTestPlatformVersion] = 'x';
 
         // Start the run
@@ -179,8 +179,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.listPackagesReturnCode] = 0;
-        process.env[testConstants.downloadPackageReturnCode] = 1;
+        process.env[testConstants.listPackagesReturnCode] = '0';
+        process.env[testConstants.downloadPackageReturnCode] = '1';
         process.env[testConstants.findLocalToolSecondCallReturnValue] = `VsTest\\15.6.0`;
 
         // Start the run
@@ -211,8 +211,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestPreRelease';
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.listPackagesReturnCode] = 0;
-        process.env[testConstants.downloadPackageReturnCode] = 1;
+        process.env[testConstants.listPackagesReturnCode] = '0';
+        process.env[testConstants.downloadPackageReturnCode] = '1';
 
         // Start the run
         tr.run();
@@ -245,7 +245,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -273,7 +273,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'latestStable';
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = 'x';
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\15.6.0`;
         process.env[testConstants.listPackagesOutput] = '';
 
@@ -329,7 +329,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.versionSelector] = 'specificVersion';
         process.env[constants.testPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.downloadPackageReturnCode] = 0;
+        process.env[testConstants.downloadPackageReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -363,7 +363,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -398,7 +398,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -434,7 +434,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -470,8 +470,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.configFile] = `${process.env[constants.agentTempDirectory]}\\somefeedid.config`;
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
-        process.env[testConstants.listPackagesReturnCode] = 0;
-        process.env[testConstants.downloadPackageReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
+        process.env[testConstants.downloadPackageReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -508,8 +508,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = 'x';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
-        process.env[testConstants.listPackagesReturnCode] = 0;
-        process.env[testConstants.writeNugetConfigReturnCode] = 1;
+        process.env[testConstants.listPackagesReturnCode] = '0';
+        process.env[testConstants.writeNugetConfigReturnCode] = '1';
 
         // Start the run
         tr.run();
@@ -541,8 +541,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.configFile] = `${process.env[constants.agentTempDirectory]}\\somefeedid.config`;
         process.env[constants.testPlatformVersion] = '';
         process.env[testConstants.expectedTestPlatformVersion] = 'x';
-        process.env[testConstants.listPackagesReturnCode] = 0;
-        process.env[testConstants.writeNugetConfigReturnCode] = 1;
+        process.env[testConstants.listPackagesReturnCode] = '0';
+        process.env[testConstants.writeNugetConfigReturnCode] = '1';
 
         // Start the run
         tr.run();
@@ -573,7 +573,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
         process.env[constants.netShare] = `\\\\somesharepath\\Microsoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -600,7 +600,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[constants.netShare] = `\\\\somesharepath\\Microsoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
         process.env[testConstants.packageSource] = process.env[constants.netShare];
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();
@@ -627,8 +627,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[constants.netShare] = `\\\\somesharepath\\Microsoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
         process.env[testConstants.packageSource] = process.env[constants.netShare];
-        process.env[testConstants.listPackagesReturnCode] = 0;
-        process.env[testConstants.downloadPackageReturnCode] = 1;
+        process.env[testConstants.listPackagesReturnCode] = '0';
+        process.env[testConstants.downloadPackageReturnCode] = '1';
         process.env[testConstants.findLocalToolFirstCallReturnValue] = ``;
         process.env[testConstants.findLocalToolSecondCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
 
@@ -657,8 +657,8 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[constants.netShare] = `\\\\somesharepath\\Microsoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
         process.env[testConstants.packageSource] = process.env[constants.netShare];
-        process.env[testConstants.listPackagesReturnCode] = 0;
-        process.env[testConstants.downloadPackageReturnCode] = 1;
+        process.env[testConstants.listPackagesReturnCode] = '0';
+        process.env[testConstants.downloadPackageReturnCode] = '1';
 
         // Start the run
         tr.run();
@@ -686,7 +686,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.packageSource] = '\\somesharepath';
         process.env[testConstants.expectedTestPlatformVersion] = '15.6.0-preview-20171108-02';
         process.env[constants.netShare] = `\\\\somesharepath\\Miiiicrosoft.Testplatform.${process.env[testConstants.expectedTestPlatformVersion]}.nupkg`;
-        process.env[testConstants.listPackagesReturnCode] = 0;
+        process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
         tr.run();

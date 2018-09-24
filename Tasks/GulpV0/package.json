@@ -1,6 +1,6 @@
 {
   "name": "vsts-gulp-task",
-  "description": "VSTS Gulp Tasks",
+  "description": "Azure Pipelines gulp tasks",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/microsoft/vsts-tasks.git"

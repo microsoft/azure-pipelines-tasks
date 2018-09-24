@@ -11,10 +11,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 139,
+        "Minor": 141,
         "Patch": 1
     },
-    "releaseNotes": "This version of the task is compatible with Xcode 8 and Xcode 9. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
+    "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
     "demands": [
         "xcode"
     ],
@@ -93,6 +93,7 @@
                 "default": "Default",
                 "8": "Xcode 8",
                 "9": "Xcode 9",
+                "10": "Xcode 10",
                 "specifyPath": "Specify path"
             }
         },
@@ -323,17 +324,17 @@
             "label": "Use xcpretty",
             "required": false,
             "defaultValue": true,
-            "helpMarkDown": "Specify whether to use xcpretty to format xcodebuild output. Enabling this requires xcpretty to be installed on the agent machine. If xcpretty is not installed, raw xcodebuild output is shown. xcpretty is preinstalled on VSTS hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
+            "helpMarkDown": "Specify whether to use xcpretty to format xcodebuild output. Enabling this requires xcpretty to be installed on the agent machine. If xcpretty is not installed, raw xcodebuild output is shown. xcpretty is preinstalled on Azure Pipelines hosted build agents. See [xcpretty](https://github.com/supermarin/xcpretty) on GitHub.",
             "groupName": "advanced"
         },
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish test results to VSTS/TFS",
+            "label": "Publish test results to Azure Pipelines/TFS",
             "required": false,
             "defaultValue": false,
             "groupName": "advanced",
-            "helpMarkDown": "Specify whether to publish JUnit test results to VSTS/TFS. This requires xcpretty to be enabled to generate JUnit test results."
+            "helpMarkDown": "Specify whether to publish JUnit test results to Azure Pipelines/TFS. This requires xcpretty to be enabled to generate JUnit test results."
         }
     ],
     "execution": {

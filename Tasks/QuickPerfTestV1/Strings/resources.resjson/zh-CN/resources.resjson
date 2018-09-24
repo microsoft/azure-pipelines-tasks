@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "基于云的 Web 性能测试",
-  "loc.helpMarkDown": "使用 Visual Studio Team Services 触发基于云的负载测试。[了解详细信息](https://go.microsoft.com/fwlink/?linkid=613203)",
-  "loc.description": "使用 Visual Studio Team Services 在云中运行快速 Web 性能测试",
+  "loc.helpMarkDown": "使用 Azure Pipelines 触发基于云的负载测试。[了解详细信息](https://go.microsoft.com/fwlink/?linkid=613203)",
+  "loc.description": "使用 Azure Pipelines 在云中运行快速 Web 性能测试",
   "loc.instanceNameFormat": "快速 Web 性能测试 $(testName)",
-  "loc.input.label.connectedServiceName": "VS Team Services 连接",
+  "loc.input.label.connectedServiceName": "Azure Pipelines 连接",
   "loc.input.help.connectedServiceName": "选择以前注册的服务连接以与基于云的负载测试服务进行通话。选择“管理”可注册新连接。",
   "loc.input.label.websiteUrl": "网站 URL",
   "loc.input.help.websiteUrl": "以 http://www.your.app/home.html 的形式输入应用程序网站 URL",

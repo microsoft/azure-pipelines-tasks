@@ -115,8 +115,8 @@ export function activateEnvironment(environmentsDir: string, environmentName: st
     // For now we will assume these names are stable.
     // If we ever get broken, we should write code to run the activation script, diff the environment before and after,
     // and surface up the new environment variables as build variables.
-    task.setVariable('CONDA_DEFAULT_ENV', environmentName)
-    task.setVariable('CONDA_PREFIX', environmentPath)
+    task.setVariable('CONDA_DEFAULT_ENV', environmentName);
+    task.setVariable('CONDA_PREFIX', environmentPath);
 }
 
 /**

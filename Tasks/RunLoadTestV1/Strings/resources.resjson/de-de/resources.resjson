@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Cloudbasierter Auslastungstest",
-  "loc.helpMarkDown": "Diese Aufgabe löst einen cloudbasierten Auslastungstest mithilfe von Visual Studio Team Services aus. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "Führt den Auslastungstest in der Cloud mit Visual Studio Team Services aus.",
+  "loc.helpMarkDown": "Diese Aufgabe löst einen cloudbasierten Auslastungstest mithilfe von Azure Pipelines aus. [Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "Führt den Auslastungstest in der Cloud mit Azure Pipelines aus.",
   "loc.instanceNameFormat": "Cloudauslastungstest $(LoadTest)",
-  "loc.input.label.connectedServiceName": "VS Team Services-Verbindung",
+  "loc.input.label.connectedServiceName": "Azure Pipelines-Verbindung",
   "loc.input.help.connectedServiceName": "Wählen Sie eine zuvor registrierte Dienstverbindung aus, um mit dem Dienst \"Cloudbasierter Auslastungstest\" zu kommunizieren. Wählen Sie \"Verwalten\" aus, um eine neue Verbindung zu registrieren.",
   "loc.input.label.TestDrop": "Ordner für Auslastungstestdatei",
   "loc.input.help.TestDrop": "Der Ausgabepfad, in dem die Auslastungstest- und die Unterstützungsdateien einschließlich der Plug-Ins und Datendateien verfügbar sind. <ul><li><b>Buildbeispiel:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>Releasebeispiel:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />mit \"SourceCI\" als Quellalias und Drop als Artefaktname</li></ul>",

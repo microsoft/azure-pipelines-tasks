@@ -1,14 +1,12 @@
-import * as tl from "vsts-task-lib/task";
+import * as auth from "nuget-task-common/Authentication";
 import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
 import * as nutil from "nuget-task-common/Utility";
-import * as path from "path";
-import * as auth from "nuget-task-common/Authentication";
+import * as tl from "vsts-task-lib/task";
 
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
-import peParser = require('nuget-task-common/pe-parser/index');
+import peParser = require("nuget-task-common/pe-parser/index");
+import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as telemetry from "utility-common/telemetry";
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
-import * as telemetry from 'utility-common/telemetry';
 
 class NuGetExecutionOptions {
     constructor(
@@ -20,12 +18,24 @@ class NuGetExecutionOptions {
 }
 
 export async function run(nuGetPath: string): Promise<void> {
+    let packagingLocation: pkgLocationUtils.PackagingLocation;
+    try {
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+    } catch (error) {
+        tl.debug("Unable to get packaging URIs, using default collection URI");
+        tl.debug(JSON.stringify(error));
+        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+        packagingLocation = {
+            PackagingUris: [collectionUrl],
+            DefaultPackagingUri: collectionUrl};
+    }
+
     nutil.setConsoleCodePage();
 
-    let buildIdentityDisplayName: string = null;
-    let buildIdentityAccount: string = null;
+    const buildIdentityDisplayName: string = null;
+    const buildIdentityAccount: string = null;
 
-    let args: string = tl.getInput("arguments", false);
+    const args: string = tl.getInput("arguments", false);
 
     const version = await peParser.getFileVersionInfoAsync(nuGetPath);
     if(version.productVersion.a < 3 || (version.productVersion.a <= 3 && version.productVersion.b < 5))
@@ -41,29 +51,35 @@ export async function run(nuGetPath: string): Promise<void> {
         const useV1CredProvider: boolean = ngToolRunner.isCredentialProviderEnabled(quirks);
         const useV2CredProvider: boolean = ngToolRunner.isCredentialProviderV2Enabled(quirks);
         const credProviderPath: string = nutil.locateCredentialProvider(useV2CredProvider);
-        // useCredConfig not placed here: This task will only support NuGet versions >= 3.5.0 which support credProvider both hosted and OnPrem
+        // useCredConfig not placed here: This task will only support NuGet versions >= 3.5.0
+        // which support credProvider both hosted and OnPrem
 
-        let accessToken = auth.getSystemAccessToken();
-        let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-        let urlPrefixes = await locationHelpers.assumeNuGetUriPrefixes(serviceUri);
+        const accessToken = auth.getSystemAccessToken();
+        let urlPrefixes = packagingLocation.PackagingUris;
         tl.debug(`Discovered URL prefixes: ${urlPrefixes}`);
 
         // Note to readers: This variable will be going away once we have a fix for the location service for
         // customers behind proxies
-        let testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
+        const testPrefixes = tl.getVariable("NuGetTasks.ExtraUrlPrefixesForTesting");
         if (testPrefixes) {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
-        let authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null), false), []);
+        const authInfo = new auth.NuGetExtendedAuthInfo(
+            new auth.InternalAuthInfo(
+                urlPrefixes,
+                accessToken,
+                ((useV1CredProvider || useV2CredProvider) ? credProviderPath : null),
+                false),
+            []);
 
-        let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
+        const environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             credProviderFolder: useV2CredProvider === false ? credProviderPath : null,
             V2CredProviderPath: useV2CredProvider === true ? credProviderPath : null,
-            extensionsDisabled: true
+            extensionsDisabled: true,
         };
 
-        let executionOptions = new NuGetExecutionOptions(
+        const executionOptions = new NuGetExecutionOptions(
             nuGetPath,
             environmentSettings,
             args,
@@ -82,13 +98,16 @@ export async function run(nuGetPath: string): Promise<void> {
 }
 
 function runNuGet(executionOptions: NuGetExecutionOptions): IExecSyncResult {
-    let nugetTool = ngToolRunner.createNuGetToolRunner(executionOptions.nuGetPath, executionOptions.environment, executionOptions.authInfo);
+    const nugetTool = ngToolRunner.createNuGetToolRunner(
+        executionOptions.nuGetPath,
+        executionOptions.environment,
+        executionOptions.authInfo);
     nugetTool.line(executionOptions.args);
     nugetTool.arg("-NonInteractive");
 
-    let execResult = nugetTool.execSync();
+    const execResult = nugetTool.execSync();
     if (execResult.code !== 0) {
-        telemetry.logResult('Packaging', 'NuGetCommand', execResult.code);
+        telemetry.logResult("Packaging", "NuGetCommand", execResult.code);
         throw tl.loc("Error_NugetFailedWithCodeAndErr",
             execResult.code,
             execResult.stderr ? execResult.stderr.trim() : execResult.stderr);

@@ -1,3 +1,3 @@
 {
-  "loc.messages.TokenUnavailable": "TFS/Team Services のパッケージ化用のトークン資格情報を取得できませんでした。"
+  "loc.messages.TokenUnavailable": "Azure Artifacts/TFS のパッケージ化用のトークン資格情報を取得できませんでした。"
 }

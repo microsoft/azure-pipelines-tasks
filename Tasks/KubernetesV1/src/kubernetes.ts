@@ -11,7 +11,9 @@ tl.setResourcePath(path.join(__dirname, '..' , 'task.json'));
 // Change to any specified working directory
 tl.cd(tl.getInput("cwd"));
 
+var registryType = tl.getInput("containerRegistryType", true);
 var command = tl.getInput("command", true);
+
 var kubeconfigfilePath;
 if (command === "logout") {
     kubeconfigfilePath = tl.getVariable("KUBECONFIG");
@@ -67,6 +69,15 @@ function executeKubectlCommand(clusterConnection: ClusterConnection, command: st
         commandImplementation = require(commandMap[command]);
     }
 
+    var telemetry = {
+        registryType: registryType,
+        command: command
+    };
+
+    console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+        "TaskEndpointId",
+        "KubernetesV1",
+        JSON.stringify(telemetry));
     var result = "";
     return commandImplementation.run(clusterConnection, command, (data) => result += data)
     .fin(function cleanup() {
