@@ -30,14 +30,10 @@ function assertParameter<T>(value: T | undefined, propertyName: string): T {
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     // Find Conda on the system
-    const condaRoot = await (async () => {
-        const preinstalledConda = internal.findConda(platform);
-        if (preinstalledConda) {
-            return preinstalledConda;
-        } else {
-            throw new Error(task.loc('CondaNotFound'));
-        }
-    })();
+    const condaRoot = internal.findConda(platform);
+    if (!condaRoot) {
+        throw new Error(task.loc('CondaNotFound'));
+    }
 
     if (parameters.updateConda) {
         await internal.updateConda(condaRoot, platform);
