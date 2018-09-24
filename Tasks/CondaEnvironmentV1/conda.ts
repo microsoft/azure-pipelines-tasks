@@ -44,8 +44,7 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
     if (parameters.createCustomEnvironment) { // activate the environment, creating it if it does not exist
         const environmentName = assertParameter(parameters.environmentName, 'environmentName');
 
-        const agentWork = task.getVariable('Agent.WorkDirectory');
-        const environmentsDir = path.join(agentWork, 'envs');
+        const environmentsDir = path.join(condaRoot, 'envs');
         const environmentPath = path.join(environmentsDir, environmentName);
 
         if (fs.existsSync(environmentPath) && !parameters.cleanEnvironment) {
