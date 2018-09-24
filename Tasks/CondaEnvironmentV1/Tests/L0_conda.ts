@@ -187,6 +187,7 @@ it('fails if installing packages to the base environment fails', async function 
     try {
         await uut.condaEnvironment(parameters, Platform.Linux);
     } catch (e) {
+        // TODO move this out of here or it will get missed if no error is thrown
         assert(e instanceof Error);
         assert.strictEqual(e.message, 'installPackagesGlobally');
     }

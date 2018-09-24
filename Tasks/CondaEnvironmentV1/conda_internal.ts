@@ -14,11 +14,25 @@ import { Platform } from './taskutil';
  * @returns Whether `searchDir` has a `conda` executable for `platform`.
  */
 function hasConda(searchDir: string, platform: Platform): boolean {
-    const conda = platform === Platform.Windows ?
-        path.join(searchDir, 'Scripts', 'conda.exe') :
-        path.join(searchDir, 'bin', 'conda');
+    let conda = path.join(binaryDir(searchDir, platform), 'conda');
+    if (platform === Platform.Windows) {
+        conda += '.exe';
+    }
 
     return fs.existsSync(conda) && fs.statSync(conda).isFile();
+}
+
+/**
+ * Get the platform-dependent path where binaries are located in an environment.
+ * Windows: environmentRoot\Scripts
+ * Linux / macOS: environmentRoot/bin
+ */
+function binaryDir(environmentRoot: string, platform: Platform): string {
+    if (platform === Platform.Windows) {
+        return path.join(environmentRoot, 'Scripts');
+    } else {
+        return path.join(environmentRoot, 'bin');
+    }
 }
 
 function sudo(toolPath: string, platform: Platform): ToolRunner {
@@ -58,26 +72,18 @@ export function findConda(platform: Platform): string | null {
  * @param platform Platform for which Conda is installed
  */
 export function prependCondaToPath(condaRoot: string, platform: Platform): void {
+    tool.prependPath(binaryDir(condaRoot, platform));
+
     if (platform === Platform.Windows) {
         // Windows: `python` lives in `condaRoot` and `conda` lives in `condaRoot\Scripts`
-        tool.prependPath(condaRoot);
-        tool.prependPath(path.join(condaRoot, 'Scripts'));
-    } else {
         // Linux and macOS: `python` and `conda` both live in the `bin` directory
-        tool.prependPath(path.join(condaRoot, 'bin'));
+        tool.prependPath(condaRoot);
     }
 }
 
 export async function updateConda(condaRoot: string, platform: Platform): Promise<void> {
     try {
-        const conda = (() => {
-            if (platform === Platform.Windows) {
-                return new ToolRunner(path.join(condaRoot, 'Scripts', 'conda.exe'));
-            } else {
-                return new ToolRunner(path.join(condaRoot, 'bin', 'conda'));
-            }
-        })();
-
+        const conda = new ToolRunner(path.join(binaryDir(condaRoot, platform), 'conda.exe'));
         conda.line('update --name base conda --yes');
         await conda.exec();
     } catch (e) {
@@ -145,4 +151,15 @@ export async function installPackagesGlobally(packageSpecs: string, platform: Pl
         // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
         throw new Error(task.loc('InstallFailed', e));
     }
+}
+
+/**
+ * Look up the path to the base environment and add its binary directory to PATH.
+ * Precondition: `conda` executable is in PATH
+ */
+export function addBaseEnvironmentToPath(platform: Platform): void {
+    const execResult = task.execSync('conda', 'info --base'); // TODO error handling
+    const baseEnv = execResult.stdout;
+
+    tool.prependPath(binaryDir(baseEnv, platform));
 }
