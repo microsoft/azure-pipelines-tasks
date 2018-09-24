@@ -163,6 +163,6 @@ export function addBaseEnvironmentToPath(platform: Platform): void {
         throw execResult.error;
     }
 
-    const baseEnv = execResult.stdout;
+    const baseEnv = execResult.stdout.trim();
     tool.prependPath(binaryDir(baseEnv, platform));
 }
