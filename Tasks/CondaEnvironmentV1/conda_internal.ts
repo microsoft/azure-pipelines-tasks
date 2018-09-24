@@ -81,9 +81,13 @@ export function prependCondaToPath(condaRoot: string, platform: Platform): void 
     }
 }
 
+/**
+ * Update the `conda` installation
+ * Precondition: `conda` executable is in PATH
+ */
 export async function updateConda(condaRoot: string, platform: Platform): Promise<void> {
     try {
-        const conda = new ToolRunner(path.join(binaryDir(condaRoot, platform), 'conda.exe'));
+        const conda = task.tool('conda');
         conda.line('update --name base conda --yes');
         await conda.exec();
     } catch (e) {

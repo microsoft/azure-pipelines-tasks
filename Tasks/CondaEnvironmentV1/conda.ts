@@ -35,11 +35,11 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
         throw new Error(task.loc('CondaNotFound'));
     }
 
+    internal.prependCondaToPath(condaRoot, platform);
+
     if (parameters.updateConda) {
         await internal.updateConda(condaRoot, platform);
     }
-
-    internal.prependCondaToPath(condaRoot, platform);
 
     if (parameters.createCustomEnvironment) { // activate the environment, creating it if it does not exist
         const environmentName = assertParameter(parameters.environmentName, 'environmentName');
