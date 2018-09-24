@@ -17,13 +17,13 @@ taskRunner.setAnswers({
     },
     exec: {
         'sudo conda install python=3 --quiet --yes --json': {
-            'code': 0
+            code: 0
         },
         'conda install python=3 --quiet --yes --json': {
-            'code': 0
+            code: 0
         },
         '/miniconda/bin/conda info --base': {
-            'code': 0,
+            code: 0,
             stdout: '/base/environment'
         },
     },
