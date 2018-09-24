@@ -16,7 +16,7 @@ taskRunner.setAnswers({
         'conda': '/miniconda/bin/conda'
     },
     exec: {
-        'conda create --quiet --prefix /miniconda/envs/test --mkdir --yes': {
+        'sudo conda create --quiet --prefix /miniconda/envs/test --mkdir --yes': {
             'code': 0
         },
         'conda create --quiet --prefix \\miniconda\\envs\\test --mkdir --yes': {

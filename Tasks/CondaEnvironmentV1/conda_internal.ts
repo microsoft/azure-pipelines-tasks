@@ -84,8 +84,16 @@ export async function updateConda(condaRoot: string, platform: Platform): Promis
  * @param packageSpecs Optional list of Conda packages and versions to preinstall in the environment.
  * @param otherOptions Optional list of other options to pass to the `conda create` command.
  */
-export async function createEnvironment(environmentPath: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
-    const conda = task.tool('conda');
+export async function createEnvironment(environmentPath: string, platform: Platform, packageSpecs?: string, otherOptions?: string): Promise<void> {
+    const conda = (() => {
+        if (platform === Platform.Windows) {
+            return task.tool('conda');
+        } else {
+            // Need to elevate or else hosted agents will hit permissions issues
+            return task.tool('sudo').line('conda');
+        }
+    })();
+
     conda.line(`create --quiet --prefix ${environmentPath} --mkdir --yes`);
     if (packageSpecs) {
         conda.line(packageSpecs);
