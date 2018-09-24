@@ -226,3 +226,32 @@ it('activates Conda environment', async function () {
         assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
     }
 });
+
+it('adds base environment to path successfully', function () {
+    mockTask.setAnswers({
+        which: {
+            'conda': '/miniconda/bin/conda'
+        },
+        exec: {
+            '/miniconda/bin/conda info --base': {
+                code: 0,
+                stdout: '/base/environment'
+            }
+        },
+        checkPath: {
+            '/miniconda/bin/conda': true
+        }
+    });
+
+    mockery.registerMock('vsts-task-lib/task', mockTask);
+
+    const prependPath = sinon.spy();
+    mockery.registerMock('vsts-task-tool-lib/tool', {
+        prependPath: prependPath
+    });
+
+    const uut = reload('../conda_internal');
+    uut.addBaseEnvironmentToPath(Platform.Linux);
+
+    assert(prependPath.calledWithExactly(path.join('/base/environment', 'bin')));
+});
