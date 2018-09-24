@@ -45,9 +45,9 @@ require({
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
     connection.close();
-    tl.setVariable("DockerOutput", result);
 })
 .then(function success() {
+    tl.setVariable("DockerOutput", result);
     tl.setResult(tl.TaskResult.Succeeded, "");
 }, function failure(err) {
     tl.setResult(tl.TaskResult.Failed, err.message);

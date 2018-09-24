@@ -55,10 +55,10 @@ commandImplementation.run(connection, (data) => result += data)
 .fin(function cleanup() {
     if (command !== "login") {
         connection.close();
-        tl.setVariable("DockerOutput", result);
     }
 })
 .then(function success() {
+    tl.setVariable("DockerOutput", result);
     tl.setResult(tl.TaskResult.Succeeded, "");
 }, function failure(err) {
     tl.setResult(tl.TaskResult.Failed, err.message);
