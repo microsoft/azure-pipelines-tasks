@@ -158,8 +158,11 @@ export async function installPackagesGlobally(packageSpecs: string, platform: Pl
  * Precondition: `conda` executable is in PATH
  */
 export function addBaseEnvironmentToPath(platform: Platform): void {
-    const execResult = task.execSync('conda', 'info --base'); // TODO error handling
-    const baseEnv = execResult.stdout;
+    const execResult = task.execSync('conda', 'info --base');
+    if (execResult.error) {
+        throw execResult.error;
+    }
 
+    const baseEnv = execResult.stdout;
     tool.prependPath(binaryDir(baseEnv, platform));
 }
