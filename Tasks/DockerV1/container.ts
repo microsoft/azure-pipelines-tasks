@@ -59,7 +59,8 @@ if (command in dockerCommandMap) {
     commandImplementation = require(dockerCommandMap[command]);
 }
 
-commandImplementation.run(connection)
+var result = "";
+commandImplementation.run(connection, (data) => result += data)
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
     if (command !== "login") {
@@ -67,6 +68,7 @@ commandImplementation.run(connection)
     }
 })
 .then(function success() {
+    tl.setVariable("DockerOutput", result);
     tl.setResult(tl.TaskResult.Succeeded, "");
 }, function failure(err) {
     tl.setResult(tl.TaskResult.Failed, err.message);
