@@ -2,10 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import * as task from 'vsts-task-lib/task';
-import * as tool from 'vsts-task-tool-lib/tool';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import { Platform } from './taskutil';
+import { prependPathSafe } from './toolutil';
 
 /**
  * Whether `searchDir` has a `conda` executable for `platform`.
@@ -72,12 +72,12 @@ export function findConda(platform: Platform): string | null {
  * @param platform Platform for which Conda is installed
  */
 export function prependCondaToPath(condaRoot: string, platform: Platform): void {
-    tool.prependPath(binaryDir(condaRoot, platform));
+    prependPathSafe(binaryDir(condaRoot, platform));
 
     if (platform === Platform.Windows) {
         // Windows: `python` lives in `condaRoot` and `conda` lives in `condaRoot\Scripts`
         // Linux and macOS: `python` and `conda` both live in the `bin` directory
-        tool.prependPath(condaRoot);
+        prependPathSafe(condaRoot);
     }
 }
 
@@ -164,5 +164,5 @@ export function addBaseEnvironmentToPath(platform: Platform): void {
     }
 
     const baseEnv = execResult.stdout.trim();
-    tool.prependPath(binaryDir(baseEnv, platform));
+    prependPathSafe(binaryDir(baseEnv, platform));
 }

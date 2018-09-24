@@ -53,8 +53,6 @@ it('finds the Conda installation with the CONDA variable', async function () {
         getVariable: getVariable
     }));
 
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
-
     { // executable exists and is a file
         existsSync.returns(true);
         statSync.returns({
@@ -114,8 +112,6 @@ it('finds the Conda installation with PATH', async function () {
         getVariable: getVariable
     }));
 
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
-
     const uut = reload('../conda_internal');
 
     assert.strictEqual(uut.findConda(Platform.Linux), 'path-to-conda');
@@ -126,7 +122,6 @@ it('finds the Conda installation with PATH', async function () {
 it('creates Conda environment', async function () {
     mockery.registerMock('vsts-task-lib/task', mockTask);
     mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
     const uut = reload('../conda_internal');
 
     for (const platform of [Platform.Windows, Platform.Linux, Platform.MacOS])
@@ -192,35 +187,35 @@ it('activates Conda environment', async function () {
         setVariable: setVariable
     }));
 
-    const prependPath = sinon.spy();
-    mockery.registerMock('vsts-task-tool-lib/tool', {
-        prependPath: prependPath
+    const prependPathSafe = sinon.spy();
+    mockery.registerMock('./toolutil', {
+        prependPathSafe: prependPathSafe
     });
 
     const uut = reload('../conda_internal');
 
     { // Linux
         uut.activateEnvironment('envs', 'env', Platform.Linux);
-        assert(prependPath.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
+        assert(prependPathSafe.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
         assert(setVariable.calledTwice);
         assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
         assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
     }
     { // macOS
         setVariable.resetHistory();
-        prependPath.resetHistory();
+        prependPathSafe.resetHistory();
         uut.activateEnvironment('envs', 'env', Platform.MacOS);
-        assert(prependPath.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
+        assert(prependPathSafe.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
         assert(setVariable.calledTwice);
         assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
         assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
     }
     { // Windows
         setVariable.resetHistory();
-        prependPath.resetHistory();
+        prependPathSafe.resetHistory();
         uut.activateEnvironment('envs', 'env', Platform.Windows);
-        assert(prependPath.calledWithExactly(path.join('envs', 'env')));
-        assert(prependPath.calledWithExactly(path.join('envs', 'env', 'Scripts')));
+        assert(prependPathSafe.calledWithExactly(path.join('envs', 'env')));
+        assert(prependPathSafe.calledWithExactly(path.join('envs', 'env', 'Scripts')));
         assert(setVariable.calledTwice);
         assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
         assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
@@ -245,13 +240,13 @@ it('adds base environment to path successfully', function () {
 
     mockery.registerMock('vsts-task-lib/task', mockTask);
 
-    const prependPath = sinon.spy();
-    mockery.registerMock('vsts-task-tool-lib/tool', {
-        prependPath: prependPath
+    const prependPathSafe = sinon.spy();
+    mockery.registerMock('./toolutil', {
+        prependPathSafe: prependPathSafe
     });
 
     const uut = reload('../conda_internal');
     uut.addBaseEnvironmentToPath(Platform.Linux);
 
-    assert(prependPath.calledWithExactly(path.join('/base/environment', 'bin')));
+    assert(prependPathSafe.calledOnceWithExactly(path.join('/base/environment', 'bin')));
 });
