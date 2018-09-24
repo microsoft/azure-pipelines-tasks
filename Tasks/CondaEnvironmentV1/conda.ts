@@ -59,6 +59,6 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
 
         internal.activateEnvironment(environmentsDir, environmentName, platform);
     } else if (parameters.packageSpecs) {
-        await internal.installPackagesGlobally(parameters.packageSpecs, parameters.installOptions);
+        await internal.installPackagesGlobally(parameters.packageSpecs, platform, parameters.installOptions);
     }
 }

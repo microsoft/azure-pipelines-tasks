@@ -193,5 +193,5 @@ it('fails if installing packages to the base environment fails', async function 
 
     assert(findConda.calledOnceWithExactly(Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
-    assert(installPackagesGlobally.calledOnceWithExactly('pytest', undefined));
+    assert(installPackagesGlobally.calledOnceWithExactly('pytest', Platform.Linux, undefined));
 });

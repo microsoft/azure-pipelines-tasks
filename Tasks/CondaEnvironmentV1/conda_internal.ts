@@ -21,6 +21,14 @@ function hasConda(searchDir: string, platform: Platform): boolean {
     return fs.existsSync(conda) && fs.statSync(conda).isFile();
 }
 
+function sudo(toolPath: string, platform: Platform): ToolRunner {
+    if (platform === Platform.Windows) {
+        return task.tool('conda');
+    } else {
+        return task.tool('sudo').line('conda');
+    }
+}
+
 /**
  * Search the system for an existing Conda installation.
  * This function will check, in order:
@@ -85,14 +93,7 @@ export async function updateConda(condaRoot: string, platform: Platform): Promis
  * @param otherOptions Optional list of other options to pass to the `conda create` command.
  */
 export async function createEnvironment(environmentPath: string, platform: Platform, packageSpecs?: string, otherOptions?: string): Promise<void> {
-    const conda = (() => {
-        if (platform === Platform.Windows) {
-            return task.tool('conda');
-        } else {
-            // Need to elevate or else hosted agents will hit permissions issues
-            return task.tool('sudo').line('conda');
-        }
-    })();
+    const conda = sudo('conda', platform);
 
     conda.line(`create --quiet --prefix ${environmentPath} --mkdir --yes`);
     if (packageSpecs) {
@@ -130,8 +131,8 @@ export function activateEnvironment(environmentsDir: string, environmentName: st
 /**
  * Install the packages given by `packageSpecs` to the `base` environment.
  */
-export async function installPackagesGlobally(packageSpecs: string, otherOptions?: string): Promise<void> {
-    const conda = task.tool('conda');
+export async function installPackagesGlobally(packageSpecs: string, platform: Platform, otherOptions?: string): Promise<void> {
+    const conda = sudo('conda', platform);
     conda.line(`install ${packageSpecs} --quiet --yes`);
 
     if (otherOptions) {
