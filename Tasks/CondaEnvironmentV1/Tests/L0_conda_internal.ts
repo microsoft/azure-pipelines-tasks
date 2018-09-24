@@ -181,11 +181,7 @@ it('creates Conda environment', async function () {
             }
 
             assert(error instanceof Error);
-            if (platform === Platform.Windows) {
-                assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
-            } else {
-                assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: sudo failed with return code: 1`);
-            }
+            assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: ${platform === Platform.Windows ? 'conda' : 'sudo'} failed with return code: 1`);
         }
     }
 });
