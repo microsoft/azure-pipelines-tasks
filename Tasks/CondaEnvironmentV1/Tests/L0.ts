@@ -19,7 +19,7 @@ describe('CondaEnvironment L0 Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.ran(`conda create --quiet --prefix ${path.join('/', 'miniconda', 'envs', 'test')} --mkdir --yes`));
+        assert(testRunner.ran(`conda create --quiet --prefix ${path.join('/', 'agent', 'work', 'envs', 'test')} --mkdir --yes`));
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
