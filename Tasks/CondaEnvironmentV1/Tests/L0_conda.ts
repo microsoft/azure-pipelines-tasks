@@ -149,12 +149,15 @@ it('fails if `conda` is not found', async function () {
 
     // Can't use `assert.throws` with an async function
     // Node 10: use `assert.rejects`
+    let error: any | undefined;
     try {
         await uut.condaEnvironment(parameters, Platform.Windows);
     } catch (e) {
-        assert(e instanceof Error);
-        assert.strictEqual(e.message, 'loc_mock_CondaNotFound');
+        error = e;
     }
+
+    assert(error instanceof Error);
+    assert.strictEqual(error.message, 'loc_mock_CondaNotFound');
 
     assert(findConda.calledOnceWithExactly(Platform.Windows));
     assert(prependCondaToPath.notCalled);
@@ -184,13 +187,15 @@ it('fails if installing packages to the base environment fails', async function 
 
     // Can't use `assert.throws` with an async function
     // Node 10: use `assert.rejects`
+    let error: any | undefined;
     try {
         await uut.condaEnvironment(parameters, Platform.Linux);
     } catch (e) {
-        // TODO move this out of here or it will get missed if no error is thrown
-        assert(e instanceof Error);
-        assert.strictEqual(e.message, 'installPackagesGlobally');
+        error = e;
     }
+
+    assert(error instanceof Error);
+    assert.strictEqual(error.message, 'installPackagesGlobally');
 
     assert(findConda.calledOnceWithExactly(Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));

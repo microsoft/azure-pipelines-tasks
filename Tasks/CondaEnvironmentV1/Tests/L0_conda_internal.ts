@@ -173,15 +173,18 @@ it('creates Conda environment', async function () {
 
             // Can't use `assert.throws` with an async function
             // Node 10: use `assert.rejects`
+            let error: any | undefined;
             try {
                 await uut.createEnvironment(path.join('envsDir', 'env'), platform);
             } catch (e) {
-                assert(e instanceof Error);
-                if (platform === Platform.Windows) {
-                    assert.strictEqual(e.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
-                } else {
-                    assert.strictEqual(e.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: sudo failed with return code: 1`);
-                }
+                error = e;
+            }
+
+            assert(error instanceof Error);
+            if (platform === Platform.Windows) {
+                assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
+            } else {
+                assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: sudo failed with return code: 1`);
             }
         }
     }
