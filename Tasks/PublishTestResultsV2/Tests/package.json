@@ -1,8 +1,8 @@
 {
-  "name": "vsts-decrypt-task",
+  "name": "vsts-tasks-publishtestresults",
   "version": "1.0.0",
-  "description": "Azure Pipelines Decrypt Task",
-  "main": "decrypt.js",
+  "description": "Azure Pipelines Publish Test Results Task",
+  "main": "publishtestresults.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,8 +17,6 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
-    "@types/node": "^6.0.101",
-    "@types/q": "^1.0.7",
-    "vsts-task-lib": "^0.9.20"
+    "@types/mocha": "^5.2.0"
   }
 }
