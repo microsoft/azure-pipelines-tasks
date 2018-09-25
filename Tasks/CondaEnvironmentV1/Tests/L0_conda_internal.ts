@@ -53,8 +53,6 @@ it('finds the Conda installation with the CONDA variable', async function () {
         getVariable: getVariable
     }));
 
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
-
     { // executable exists and is a file
         existsSync.returns(true);
         statSync.returns({
@@ -114,8 +112,6 @@ it('finds the Conda installation with PATH', async function () {
         getVariable: getVariable
     }));
 
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
-
     const uut = reload('../conda_internal');
 
     assert.strictEqual(uut.findConda(Platform.Linux), 'path-to-conda');
@@ -123,46 +119,64 @@ it('finds the Conda installation with PATH', async function () {
     assert.strictEqual(uut.findConda(Platform.Windows), 'path-to-conda');
 });
 
-it('creates Conda environment', async function (done: MochaDone) {
+it('creates Conda environment', async function () {
     mockery.registerMock('vsts-task-lib/task', mockTask);
     mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
-    mockery.registerMock('vsts-task-tool-lib/tool', {});
     const uut = reload('../conda_internal');
 
-    { // success
-        mockToolRunner.setAnswers({
-            exec: {
-                'conda create --quiet --prefix envsDir/env --mkdir --yes': {
-                    code: 0
-                },
-                // workaround for running tests cross-platform
-                'conda create --quiet --prefix envsDir\\env --mkdir --yes': {
-                    code: 0
-                }
+    for (const platform of [Platform.Windows, Platform.Linux, Platform.MacOS])
+    {
+        { // success
+            if (platform === Platform.Windows) {
+                mockToolRunner.setAnswers({
+                    exec: {
+                        [`conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                            code: 0
+                        }
+                    }
+                });
+            } else {
+                mockToolRunner.setAnswers({
+                    exec: {
+                        [`sudo conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                            code: 0
+                        }
+                    }
+                });
             }
-        });
 
-        await uut.createEnvironment(path.join('envsDir', 'env'));
-    }
-    { // failure
-        mockToolRunner.setAnswers({
-            exec: {
-                'conda create --quiet --prefix envsDir/env --mkdir --yes': {
-                    code: 1
-                },
-                // workaround for running tests cross-platform
-                'conda create --quiet --prefix envsDir\\env --mkdir --yes': {
-                    code: 1
-                }
+            await uut.createEnvironment(path.join('envsDir', 'env'), platform);
+        }
+        { // failure
+            if (platform === Platform.Windows) {
+                mockToolRunner.setAnswers({
+                    exec: {
+                        [`conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                            code: 1
+                        }
+                    }
+                });
+            } else {
+                mockToolRunner.setAnswers({
+                    exec: {
+                        [`sudo conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                            code: 1
+                        }
+                    }
+                });
             }
-        });
 
-        try {
-            await uut.createEnvironment(path.join('envsDir', 'env'));
-            done(new Error('should not have succeeded'));
-        } catch (e) {
-            assert.strictEqual(e.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: conda failed with return code: 1`);
-            done();
+            // Can't use `assert.throws` with an async function
+            // Node 10: use `assert.rejects`
+            let error: any | undefined;
+            try {
+                await uut.createEnvironment(path.join('envsDir', 'env'), platform);
+            } catch (e) {
+                error = e;
+            }
+
+            assert(error instanceof Error);
+            assert.strictEqual(error.message, `loc_mock_CreateFailed ${path.join('envsDir', 'env')} Error: ${platform === Platform.Windows ? 'conda' : 'sudo'} failed with return code: 1`);
         }
     }
 });
@@ -173,37 +187,66 @@ it('activates Conda environment', async function () {
         setVariable: setVariable
     }));
 
-    const prependPath = sinon.spy();
-    mockery.registerMock('vsts-task-tool-lib/tool', {
-        prependPath: prependPath
+    const prependPathSafe = sinon.spy();
+    mockery.registerMock('./toolutil', {
+        prependPathSafe: prependPathSafe
     });
 
     const uut = reload('../conda_internal');
 
     { // Linux
         uut.activateEnvironment('envs', 'env', Platform.Linux);
-        assert(prependPath.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
+        assert(prependPathSafe.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
         assert(setVariable.calledTwice);
         assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
         assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
     }
     { // macOS
         setVariable.resetHistory();
-        prependPath.resetHistory();
+        prependPathSafe.resetHistory();
         uut.activateEnvironment('envs', 'env', Platform.MacOS);
-        assert(prependPath.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
+        assert(prependPathSafe.calledOnceWithExactly(path.join('envs', 'env', 'bin')));
         assert(setVariable.calledTwice);
         assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
         assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
     }
     { // Windows
         setVariable.resetHistory();
-        prependPath.resetHistory();
+        prependPathSafe.resetHistory();
         uut.activateEnvironment('envs', 'env', Platform.Windows);
-        assert(prependPath.calledWithExactly(path.join('envs', 'env')));
-        assert(prependPath.calledWithExactly(path.join('envs', 'env', 'Scripts')));
+        assert(prependPathSafe.calledWithExactly(path.join('envs', 'env')));
+        assert(prependPathSafe.calledWithExactly(path.join('envs', 'env', 'Scripts')));
         assert(setVariable.calledTwice);
         assert(setVariable.calledWithExactly('CONDA_DEFAULT_ENV', 'env'));
         assert(setVariable.calledWithExactly('CONDA_PREFIX', path.join('envs', 'env')));
     }
+});
+
+it('adds base environment to path successfully', function () {
+    mockTask.setAnswers({
+        which: {
+            'conda': '/miniconda/bin/conda'
+        },
+        exec: {
+            '/miniconda/bin/conda info --base': {
+                code: 0,
+                stdout: '/base/environment'
+            }
+        },
+        checkPath: {
+            '/miniconda/bin/conda': true
+        }
+    });
+
+    mockery.registerMock('vsts-task-lib/task', mockTask);
+
+    const prependPathSafe = sinon.spy();
+    mockery.registerMock('./toolutil', {
+        prependPathSafe: prependPathSafe
+    });
+
+    const uut = reload('../conda_internal');
+    uut.addBaseEnvironmentToPath(Platform.Linux);
+
+    assert(prependPathSafe.calledOnceWithExactly(path.join('/base/environment', 'bin')));
 });

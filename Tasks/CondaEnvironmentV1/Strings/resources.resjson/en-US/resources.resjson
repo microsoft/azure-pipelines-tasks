@@ -23,5 +23,6 @@
   "loc.messages.InstallFailed": "Failed to install packages. %s",
   "loc.messages.ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
   "loc.messages.ParameterRequired": "The `%s` parameter is required",
-  "loc.messages.PlatformNotRecognized": "Platform not recognized"
+  "loc.messages.PlatformNotRecognized": "Platform not recognized",
+  "loc.messages.PrependPath": "Prepending PATH environment variable with directory: %s"
 }

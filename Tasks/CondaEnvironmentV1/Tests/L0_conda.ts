@@ -59,7 +59,7 @@ it('creates and activates environment', async function () {
     await uut.condaEnvironment(parameters, Platform.Linux);
     assert(findConda.calledOnceWithExactly(Platform.Linux));
     assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
-    assert(createEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs', 'env'), undefined, undefined));
+    assert(createEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs', 'env'), Platform.Linux, undefined, undefined));
     assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', Platform.Linux));
 });
 
@@ -124,7 +124,7 @@ it('updates Conda if the user requests it', async function () {
     assert(updateConda.calledOnceWithExactly('path-to-conda', Platform.Linux));
 });
 
-it('fails if `conda` is not found', async function (done: MochaDone) {
+it('fails if `conda` is not found', async function () {
     mockery.registerMock('fs', {
         existsSync: () => false
     });
@@ -147,15 +147,57 @@ it('fails if `conda` is not found', async function (done: MochaDone) {
         updateConda: false
     };
 
+    // Can't use `assert.throws` with an async function
+    // Node 10: use `assert.rejects`
+    let error: any | undefined;
     try {
         await uut.condaEnvironment(parameters, Platform.Windows);
-        done(new Error('should not have succeeded'));
     } catch (e) {
-        assert.strictEqual(e.message, 'loc_mock_CondaNotFound');
-        assert(findConda.calledOnceWithExactly(Platform.Windows));
-        assert(prependCondaToPath.notCalled);
-        assert(createEnvironment.notCalled);
-        assert(activateEnvironment.notCalled);
-        done();
+        error = e;
     }
+
+    assert(error instanceof Error);
+    assert.strictEqual(error.message, 'loc_mock_CondaNotFound');
+
+    assert(findConda.calledOnceWithExactly(Platform.Windows));
+    assert(prependCondaToPath.notCalled);
+    assert(createEnvironment.notCalled);
+    assert(activateEnvironment.notCalled);
+});
+
+it('fails if installing packages to the base environment fails', async function () {
+    mockery.registerMock('vsts-task-lib/task', mockTask);
+
+    const findConda = sinon.stub().returns('path-to-conda');
+    const prependCondaToPath = sinon.spy();
+    const installPackagesGlobally = sinon.stub().rejects(new Error('installPackagesGlobally'));
+
+    mockery.registerMock('./conda_internal', {
+        findConda: findConda,
+        prependCondaToPath: prependCondaToPath,
+        installPackagesGlobally: installPackagesGlobally
+    });
+
+    const uut = reload('../conda');
+    const parameters = {
+        createCustomEnvironment: false,
+        packageSpecs: 'pytest',
+        updateConda: false
+    };
+
+    // Can't use `assert.throws` with an async function
+    // Node 10: use `assert.rejects`
+    let error: any | undefined;
+    try {
+        await uut.condaEnvironment(parameters, Platform.Linux);
+    } catch (e) {
+        error = e;
+    }
+
+    assert(error instanceof Error);
+    assert.strictEqual(error.message, 'installPackagesGlobally');
+
+    assert(findConda.calledOnceWithExactly(Platform.Linux));
+    assert(prependCondaToPath.calledOnceWithExactly('path-to-conda', Platform.Linux));
+    assert(installPackagesGlobally.calledOnceWithExactly('pytest', Platform.Linux, undefined));
 });
