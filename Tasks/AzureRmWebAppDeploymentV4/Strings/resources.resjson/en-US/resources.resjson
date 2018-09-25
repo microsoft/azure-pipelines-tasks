@@ -16,7 +16,7 @@
   "loc.input.label.PublishProfilePassword": "Publish profile password",
   "loc.input.help.PublishProfilePassword": "It is recommended to store password in a secret variable and use that variable here e.g. $(Password).",
   "loc.input.label.WebAppKind": "App Service type",
-  "loc.input.help.WebAppKind": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App, Function App for Containers and Mobile App.",
+  "loc.input.help.WebAppKind": "Choose from Web App On Windows, Web App On Linux, Web App for Containers, Function App, Function App on Linux, Function App for Containers and Mobile App.",
   "loc.input.label.WebAppName": "App Service name",
   "loc.input.help.WebAppName": "Enter or Select the name of an existing Azure App Service. App services based on selected app type will only be listed.",
   "loc.input.label.DeployToSlotOrASEFlag": "Deploy to Slot or App Service Environment",
