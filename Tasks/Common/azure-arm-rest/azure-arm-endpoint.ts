@@ -132,7 +132,7 @@ export class AzureRMEndpoint {
                 var index = endpointUrl.indexOf('.');
                 var domain = endpointUrl.substring(index+1);
                 domain = (domain.lastIndexOf("/") == domain.length-1) ? domain.substring(0, domain.length-1): domain;
-                endpoint.azureKeyVaultDnsSuffix = ("vault" + domain).toLowerCase();
+                endpoint.azureKeyVaultDnsSuffix = ("vault." + domain).toLowerCase();
                 endpoint.azureKeyVaultServiceEndpointResourceId = ("https://vault." + domain).toLowerCase();
             }
             catch(error) {
