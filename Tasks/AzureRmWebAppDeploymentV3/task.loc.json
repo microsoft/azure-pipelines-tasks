@@ -17,7 +17,7 @@
   "version": {
     "Major": 3,
     "Minor": 4,
-    "Patch": 10
+    "Patch": 11
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "minimumAgentVersion": "2.104.1",
@@ -26,7 +26,7 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\""
+      "visibleRule": "WebAppKind != linux && WebAppKind != applinux && WebAppKind != \"\" && Package NotEndsWith .war"
     },
     {
       "name": "AdditionalDeploymentOptions",
@@ -758,6 +758,8 @@
     "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode",
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
-    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource"
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
+    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported",
+    "WarNotSupportedFromLinuxAgent": "ms-resource:loc.messages.WarNotSupportedFromLinuxAgent"
   }
 }
