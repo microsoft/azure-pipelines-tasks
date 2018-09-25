@@ -1,7 +1,7 @@
 {
   "name": "vsts-decrypt-task",
   "version": "1.0.0",
-  "description": "VSTS Decrypt Task",
+  "description": "Azure Pipelines Decrypt Task",
   "main": "decrypt.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

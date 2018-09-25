@@ -12,7 +12,7 @@
 
 # Contributing
 
-This repo contains the in-the-box tasks for Team Services build. Tasks in this repo get deployed every three weeks to Team Services and appear in TFS quarterly updates.
+This repo contains the in-the-box tasks for Azure Pipelines build. Tasks in this repo get deployed every three weeks to Azure Pipelines and appear in TFS quarterly updates.
 
 If you are creating tasks that you believe the community can benefit from consider [creating an extension](https://www.visualstudio.com/integrate/extensions/develop/add-build-task).
 

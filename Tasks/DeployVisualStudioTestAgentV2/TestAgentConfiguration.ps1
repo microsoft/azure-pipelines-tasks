@@ -64,7 +64,7 @@
         }
 
         # Fix Assembly Redirections
-        # VSTS uses Newton Json 8.0 while the System.Net.Http uses 6.0
+        # Azure Pipelines uses Newton Json 8.0 while the System.Net.Http uses 6.0
         # Redirection to Newton Json 8.0
         $path = "$SetupPath\TfsAssemblies\Newtonsoft.Json.dll"
         Write-Verbose "Path: $path"

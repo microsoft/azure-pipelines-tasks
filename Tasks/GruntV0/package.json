@@ -1,7 +1,7 @@
 {
   "name": "vsts-grunt-task",
   "version": "1.0.0",
-  "description": "VSTS Grunt Task",
+  "description": "Azure Pipelines Grunt Task",
   "main": "grunttask.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

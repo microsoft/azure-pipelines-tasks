@@ -24,14 +24,14 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 #### Azure Subscription
 
-To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Team Services using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. Create a service endpoint of 'Azure Resource Manager' type. For more troubleshooting guidance around endpoint creation, refer [this](https://www.visualstudio.com/en-us/docs/build/actions/azure-rm-endpoint).
+To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. Create a service endpoint of 'Azure Resource Manager' type. For more troubleshooting guidance around endpoint creation, refer [this](https://www.visualstudio.com/en-us/docs/build/actions/azure-rm-endpoint).
 
 For Azure MSDN accounts, one can either use a [Service Principal](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409) or a work account. It's easy to create a work account as shown below:
 
-1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the account in Team Services:
+1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the organization in Azure Pipelines:
   - Add the Active Directory account to the co-administrators in the subscription. Go to the Settings and then click on administrators and add the account as a co-admin like, [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com)
   - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
-2. Add that user and password in the service connections in Team Services and deployments will work with that account.
+2. Add that user and password in the service connections in Azure Pipelines and deployments will work with that account.
 
 #### Azure PowerShell
 
@@ -83,7 +83,7 @@ The following parameters are shown when the selected action is to create or upda
   
    Limitation: VM details produced during execution will only contain the VM hostname(s) and (public) ports, if any. Credentials to connect to the VM host(s) are to be provided explicitly in the subsequent tasks.
 
-  * **TFS/VSTS endpoint**\*: Agent registration with Deployment group requires access to your Visual Studio project.​ Click "Add" to create an endpoint using personal access token (PAT) with scope restricted to "Deployment Group" and a default expiration time of 90 days. ​Click "Manage" to update endpoint details.​
+  * **TFS/Azure Pipelines endpoint**\*: Agent registration with Deployment group requires access to your Visual Studio project.​ Click "Add" to create an endpoint using personal access token (PAT) with scope restricted to "Deployment Group" and a default expiration time of 90 days. ​Click "Manage" to update endpoint details.​
   
   * **Team project**\*: Specify the Team Project which has the Deployment Group defined in it​.
   
@@ -97,7 +97,7 @@ The following parameters are shown when the selected action is to create or upda
 When "Enable Prerequisites" dropdown option is "Configure with Deployment Group agent", this task downloads the agent installer on each of the machines and register them with an existing Deployment group. If there is no pre-existing Deployment group, you can create one in the Deployment groups hub.
 
 Carry out the following steps to create a Deployment group:
-1. Open your Visual Studio Team Services account in your web browser
+1. Open your Azure Pipelines account in your web browser
 2. Open the Deployment groups tab of the Build & Release hub and choose +Deployment group to create a new group
 3. Enter a name for the group in the Details tab and then choose "Create"
 
@@ -107,9 +107,9 @@ Carry out the following steps to create a Deployment group:
 Tasks like Azure File Copy, PowerShell on Target Machines, Visual Studio Test Agent Deployment run on the automation agent machine and copy files or deploy apps to Azure VMs using the WinRM HTTPS protocol. For these tasks to work properly, the WinRM HTTPS port (default port is 5986) needs to be opened and configured properly on the virtual machines. Opening the ports and configuring them with the certificates is done using the Azure templates. The [sample template](https://aka.ms/sampletemplate) uploaded on GitHub shows how to enable the WinRM HTTPS protocol on Azure virtual machines and map them to a Public IP using the Azure resource providers' wiz. Network Interfaces, Load Balancers and Virtual Machines. In addition, it also shows how to specify the Azure Key Vault and its secret, and to download and install the certificate on the virtual machine.
 
 ### Supported Azure and AzureRM module versions:
-|  VSTS/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |
+|  Azure Pipelines/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |
 |:------------------:|:---------------------------:|:-------------------------:|
-|  VSTS              |  [v1.3.2](https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  Azure Pipelines              |  [v1.3.2](https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
 |  TFS 2015 Update 3  | [v1.3.2](https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
 |  TFS 2015 Update 2  | [v1.0.2](https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)  |  [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
 |  TFS 2015 Update 1  | [v0.9.8](https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |

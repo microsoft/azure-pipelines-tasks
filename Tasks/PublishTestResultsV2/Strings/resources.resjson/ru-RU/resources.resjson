@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Публикация результатов теста",
   "loc.helpMarkDown": "[Подробнее...](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Опубликовать результаты теста в VSTS или TFS",
+  "loc.description": "Опубликовать результаты теста в Azure Pipelines или TFS",
   "loc.instanceNameFormat": "Опубликовать результаты тестов $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Поддержка NUnit3</li><li>Поддержка шаблонов файлов Minimatch</li></ul>",
   "loc.group.displayName.advanced": "Дополнительно",

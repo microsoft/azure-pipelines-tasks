@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "test-cloud.exe location",
   "loc.input.label.optionalArgs": "Optional arguments",
   "loc.input.help.optionalArgs": "传递给 test-cloud.exe 还原的其他参数。",
-  "loc.input.label.publishNUnitResults": "将结果发布到 TFS/Team Services",
-  "loc.input.help.publishNUnitResults": "选择时，--nunit-xml 选项会传递给 test-cloud.exe。来自 NUnit xml 文件的结果会发布到 TFS/Team Services。"
+  "loc.input.label.publishNUnitResults": "将结果发布到 Azure Pipelines/TFS",
+  "loc.input.help.publishNUnitResults": "选择时，--nunit-xml 选项会传递给 test-cloud.exe。来自 NUnit xml 文件的结果会发布到 Azure Pipelines/TFS。"
 }

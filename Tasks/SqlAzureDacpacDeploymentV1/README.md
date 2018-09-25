@@ -14,7 +14,7 @@ The following pre-requisites need to be setup for the task to work properly.
 
 ##### Azure Subscription
 
-To deploy to Azure SQL Database, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Team Services using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
+To deploy to Azure SQL Database, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
 
 - For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported.
 
@@ -22,14 +22,14 @@ To deploy to Azure SQL Database, an Azure subscription has to be linked to Team 
 
 For Azure MSDN accounts, one can either use a [Service Principal](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409) or a work account. It's easy to create a work account as shown below:
 
-1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the account in Team Services:
+1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the organization in Azure Pipelines:
   - Add the Active Directory account to the co-administrators in the subscription. Go to the Settings and then click on administrators and add the account as a co-admin like, [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com)
   - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
-2. Add that user and password in the service connections in the Team Services and deployments will work with that account.
+2. Add that user and password in the service connections in the Azure Pipelines and deployments will work with that account.
 
 ##### Azure SQL Server
 
-There should be a Azure SQL Server that is already pre-created in the [Azure portal](https://ms.portal.azure.com/#create/Microsoft.SQLServer). The task deploys Azure SQL Databases but does not create Azure SQL Server.
+There should be an Azure SQL Server that is already pre-created in the [Azure portal](https://ms.portal.azure.com/#create/Microsoft.SQLServer). The task deploys Azure SQL Databases but does not create Azure SQL Server.
 
 ##### Automation Agent
 
@@ -111,7 +111,7 @@ The parameters of the task are described in details, including examples, to show
 
 ### Known Limitations :
 
-- The auto-detection of the automation agent's IP Address only works with hosted automation agent in Visual Studio Team Services (VSTS) and not in Team Foundation Server (TFS).
+- The auto-detection of the automation agent's IP Address only works with hosted automation agent in Azure Pipelines and not in Team Foundation Server (TFS).
 - The task does not put in a demand for SQL Server PowerShell and that is needed for running the SQL Server Scripts against the Azure SQL Database. Install the [Microsoft SQL Server 2016 Feature Pack ](https://www.microsoft.com/en-us/download/details.aspx?id=52676) as described above, else the task will fail to deploy the SQL Server Scripts.
 - The Azure SQL Database Deployment task does not support BACPAC. Please send us feedback for the task and for the support for BACPAC and SQL scripts at RM\_Customer\_Queries at microsoft dot com.
 

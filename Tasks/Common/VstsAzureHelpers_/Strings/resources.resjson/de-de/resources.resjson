@@ -2,7 +2,7 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "Das Modul \"AzureRM.Profile\" wurde nicht gefunden. Das Modul \"AzureRM\" ist ggf. nicht vollständig installiert. Das Ausführen der folgenden PowerShell-Befehle aus einer Sitzung mit erhöhten Rechten behebt dieses Problem möglicherweise: \"Import-Module AzureRM\", \"Install-AzureRM\".",
   "loc.messages.AZ_CertificateAuthNotSupported": "Zertifikatbasierte Authentifizierung wird nicht unterstützt. Das Azure PowerShell-Modul wurde nicht gefunden.",
   "loc.messages.AZ_CredentialsError": "Fehler mit den für die Bereitstellung verwendeten Azure-Anmeldeinformationen.",
-  "loc.messages.AZ_ModuleNotFound": "Das Azure-Modul (\"{0}\") und das AzureRM-Modul (\"{0}\") wurden nicht gefunden. Wenn das Modul vor Kurzem installiert wurde, versuchen Sie es nach dem Neustart des VSTS-Aufgaben-Agents noch mal.",
+  "loc.messages.AZ_ModuleNotFound": "Das Azure-Modul (\"{0}\") und das AzureRM-Modul (\"{0}\") wurden nicht gefunden. Wenn das Modul vor Kurzem installiert wurde, versuchen Sie es nach dem Neustart des Azure Artifacts-Aufgaben-Agents noch mal.",
   "loc.messages.AZ_RequiresMinVersion0": "Die erforderliche Mindestversion ({0}) des Azure PowerShell-Moduls ist nicht installiert.",
   "loc.messages.AZ_ServicePrincipalError": "Fehler im für die Bereitstellung verwendeten Dienstprinzipal.",
   "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "Dienstprinzipalauthentifizierung wird in Version \"{0}\" des Azure-Moduls nicht unterstützt.",

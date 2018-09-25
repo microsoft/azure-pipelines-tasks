@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "クラウドベースの Web パフォーマンス テスト",
-  "loc.helpMarkDown": "Visual Studio Team Services を使用するクラウドベースのロード テストをトリガーします。[詳細](https://go.microsoft.com/fwlink/?linkid=613203)",
-  "loc.description": "Visual Studio Team Services を使用して、クラウドでのクイック Web パフォーマンス テストを実行します",
+  "loc.helpMarkDown": "Azure Pipelines を使用するクラウドベースのロード テストをトリガーします。[詳細](https://go.microsoft.com/fwlink/?linkid=613203)",
+  "loc.description": "Azure Pipelines を使用して、クラウドでのクイック Web パフォーマンス テストを実行します",
   "loc.instanceNameFormat": "クイック Web パフォーマンス テスト $(testName)",
-  "loc.input.label.connectedServiceName": "VS Team Services 接続",
+  "loc.input.label.connectedServiceName": "Azure Pipelines 接続",
   "loc.input.help.connectedServiceName": "以前に登録されたサービス接続を選んで、クラウド ベースのロード テスト サービスと通信します。新しい接続を登録するには [管理] を選びます。",
   "loc.input.label.websiteUrl": "Web サイトの URL",
   "loc.input.help.websiteUrl": "アプリケーション Web サイトの URL を「http://www.your.app/home.html」のように入力します",

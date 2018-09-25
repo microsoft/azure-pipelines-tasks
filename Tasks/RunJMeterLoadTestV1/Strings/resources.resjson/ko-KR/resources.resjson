@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "클라우드 기반 Apache JMeter 부하 테스트",
-  "loc.helpMarkDown": "Visual Studio Team Services를 사용하여 클라우드에서 Apache JMeter 부하 테스트를 트리거하는 데 이 작업을 사용할 수 있습니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkId=784929)",
+  "loc.helpMarkDown": "Azure Pipelines를 사용하여 클라우드에서 Apache JMeter 부하 테스트를 트리거하는 데 이 작업을 사용할 수 있습니다. [자세한 정보](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "클라우드에서 Apache JMeter 부하 테스트를 실행합니다.",
   "loc.instanceNameFormat": "Apache JMeter 테스트 $(LoadTest)",
-  "loc.input.label.connectedServiceName": "VS Team Services 연결",
+  "loc.input.label.connectedServiceName": "Azure Pipelines 연결",
   "loc.input.help.connectedServiceName": "클라우드 기반 부하 테스트 서비스에 말할 이전에 등록한 서비스 연결을 선택하세요. 새 연결을 등록하려면 '관리'를 선택하세요.",
   "loc.input.label.TestDrop": "Apache JMeter 테스트 파일 폴더",
   "loc.input.help.TestDrop": "부하 테스트 파일을 사용할 수 있는 리포 루트로부터의 상대 경로입니다.",

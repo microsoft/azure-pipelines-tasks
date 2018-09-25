@@ -351,6 +351,12 @@
             "resultTemplate": "{\"Value\":\"{{{properties.loginServer}}}\",\"DisplayValue\":\"{{{name}}}\"}"
         }
     ],
+    "outputVariables": [
+	    {
+            "name" : "DockerOutput",
+            "description": "Stores the output of the docker command"
+        } 
+    ],
     "instanceNameFormat": "$(command)",
     "execution": {
         "Node": {
