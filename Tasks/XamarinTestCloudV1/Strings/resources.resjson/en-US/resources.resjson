@@ -27,6 +27,6 @@
   "loc.input.help.testCloudLocation": "The path to test-cloud.exe.  Wildcards can be used, in which case the first occurrence of test-cloud.exe is used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)).",
   "loc.input.label.optionalArgs": "Optional arguments",
   "loc.input.help.optionalArgs": "Additional arguments passed to test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Publish results to TFS/Team Services",
-  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to TFS/Team Services."
+  "loc.input.label.publishNUnitResults": "Publish results to Azure Pipelines/TFS",
+  "loc.input.help.publishNUnitResults": "When selected, --nunit-xml option will be passed to test-cloud.exe. Results from the NUnit xml file will be published to Azure Pipelines/TFS."
 }

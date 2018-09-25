@@ -8,12 +8,12 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
     "base-64": "^0.1.0",
-    "cheerio": "^0.22.0",
     "codeanalysis-common": "file:../../_build/Tasks/Common/codeanalysis-common-1.0.0.tgz",
     "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools-1.0.0.tgz",
     "fs-extra": "^0.30.0",
-    "glob": "7.1.0",
     "java-common": "file:../../_build/Tasks/Common/java-common-1.0.0.tgz",
     "nuget-task-common": "file:../../_build/Tasks/Common/nuget-task-common-1.0.1.tgz",
     "request": "^2.74.0",

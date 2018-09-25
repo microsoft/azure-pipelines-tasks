@@ -1,7 +1,7 @@
 {
   "name": "ssh-common",
   "version": "1.0.0",
-  "description": "VSTS SSH Common Module",
+  "description": "Azure Pipelines SSH Common Module",
   "main": "ssh-common.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

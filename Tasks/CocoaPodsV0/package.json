@@ -1,7 +1,7 @@
 {
   "name": "vsts-cocoapods-task",
   "version": "1.0.0",
-  "description": "VSTS Cocoa Pods Task",
+  "description": "Azure Pipelines Cocoa Pods Task",
   "main": "cocoapods.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

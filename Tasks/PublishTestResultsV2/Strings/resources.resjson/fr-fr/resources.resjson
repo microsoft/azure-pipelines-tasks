@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Publier les résultats des tests",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "Publier les résultats des tests sur VSTS/TFS",
+  "loc.description": "Publier les résultats des tests sur Azure Pipelines/TFS",
   "loc.instanceNameFormat": "Publier les résultats de test $(testResultsFiles)",
   "loc.releaseNotes": "<ul><li>Prise en charge de NUnit3</li><li>Prise en charge des modèles de fichiers Minimatch</li></ul>",
   "loc.group.displayName.advanced": "Avancé",

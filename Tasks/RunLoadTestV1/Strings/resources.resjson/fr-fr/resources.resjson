@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Test de charge basé sur le cloud",
-  "loc.helpMarkDown": "Cette tâche déclenche un test de charge basé sur le cloud à l'aide de Visual Studio Team Services. [En savoir plus](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "Exécute le test de charge dans le cloud avec Visual Studio Team Services",
+  "loc.helpMarkDown": "Cette tâche déclenche un test de charge basé sur le cloud à l'aide de Azure Pipelines. [En savoir plus](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "Exécute le test de charge dans le cloud avec Azure Pipelines",
   "loc.instanceNameFormat": "Test de charge cloud $(LoadTest)",
-  "loc.input.label.connectedServiceName": "Connexion Visual Studio Team Services",
+  "loc.input.label.connectedServiceName": "Connexion Azure Pipelines",
   "loc.input.help.connectedServiceName": "Sélectionnez une connexion de service préalablement inscrite pour communiquer avec le service de test de charge basé sur le cloud. Choisissez Gérer pour inscrire une nouvelle connexion.",
   "loc.input.label.TestDrop": "Dossier des fichiers de test de charge",
   "loc.input.help.TestDrop": "Chemin de sortie des fichiers de test de charge et des fichiers de prise en charge, ainsi que des plug-ins et des fichiers de données. <ul><li><b>Exemple de build :</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>Exemple de mise en production :</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />où SourceCI représente l'alias source et drop représente le nom d'artefact</li></ul>",

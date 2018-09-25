@@ -240,7 +240,10 @@
     "LatestBuildFound": "ms-resource:loc.messages.LatestBuildFound",
     "LatestBuildNotFound": "ms-resource:loc.messages.LatestBuildNotFound",
     "LatestBuildFromBranchNotFound": "ms-resource:loc.messages.LatestBuildFromBranchNotFound",
-    "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource"
+    "DownloadingContainerResource": "ms-resource:loc.messages.DownloadingContainerResource",
+    "DefinitionNameMatchFound": "ms-resource:loc.messages.DefinitionNameMatchFound",
+    "InvalidBuildDefinitionName": "ms-resource:loc.messages.InvalidBuildDefinitionName",
+    "UnresolvedDefinitionId": "ms-resource:loc.messages.UnresolvedDefinitionId"
   },
   "outputVariables": [
     {

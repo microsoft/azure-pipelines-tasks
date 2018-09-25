@@ -11,7 +11,8 @@
         "url": "git+https://github.com/microsoft/vsts-tasks.git"
     },
     "keywords": [
-        "VSTS",
+        "Azure",
+        "Pipelines",
         "Tasks",
         "Java"
     ],

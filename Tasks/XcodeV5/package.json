@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-xcode",
   "version": "1.0.0",
-  "description": "VSTS Xcode Task",
+  "description": "Azure Pipelines Xcode Task",
   "main": "xcode.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "@types/node": "^6.0.101",
     "ios-signing-common": "file:../../_build/Tasks/Common/ios-signing-common-1.0.0.tgz",
     "vsts-task-lib": "2.6.0"
   }

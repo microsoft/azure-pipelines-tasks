@@ -169,7 +169,7 @@ foreach ($ap in $appFiles)
     }
 }
 
-# Publish NUnit test results to Team Services
+# Publish NUnit test results to Azure Pipelines
 if($publishResults)
 {
     $searchPattern = Join-Path $testDir "xamarintest_$buildId*.xml"

@@ -43,6 +43,10 @@ export class TaskParametersUtility {
             taskParameters.TakeAppOfflineFlag = false;
         }
 
+        if(taskParameters.Package && taskParameters.Package.endsWith(".jar")) {
+            throw new Error(tl.loc('JarNotSupported'));
+        }
+
         taskParameters.VirtualApplication = taskParameters.VirtualApplication && taskParameters.VirtualApplication.startsWith('/') ?
             taskParameters.VirtualApplication.substr(1) : taskParameters.VirtualApplication;
 

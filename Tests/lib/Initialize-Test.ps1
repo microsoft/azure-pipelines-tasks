@@ -5,7 +5,7 @@ Write-Verbose "Importing module: TestHelpersModule"
 Import-Module $PSScriptRoot/TestHelpersModule -Verbose:$false
 Register-Mock Import-Module
 if (!$Legacy) {
-    # Mock implementations for common VSTS task SDK functions.
+    # Mock implementations for common Azure Pipelines task SDK functions.
     function global:Get-VstsLocString {
         [CmdletBinding()]
         param(

@@ -45,7 +45,7 @@ Register-Mock Get-Item { $fakeCert } -- "Cert:\CurrentUser\My\$serverCertThumbpr
 Register-Mock Get-Item { $null } -- "Cert:\CurrentUser\My\$badServerCertThumbprint1" -ErrorAction SilentlyContinue
 Register-Mock Get-Item { $null } -- "Cert:\CurrentUser\My\$badServerCertThumbprint2" -ErrorAction SilentlyContinue
 
-# Setup mock VSTS service endpoint
+# Setup mock Azure Pipelines service endpoint
 # NOTE: The value defined here is a Base64 encoding of a self-signed certificate created specifically for this test.
 $vstsEndpoint = @{
     "Auth" = @{
