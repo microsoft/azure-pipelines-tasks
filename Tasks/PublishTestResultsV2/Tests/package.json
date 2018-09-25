@@ -16,7 +16,7 @@
     "url": "https://github.com/microsoft/vsts-tasks/issues"
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
-  "dependencies": {
+  "devDependencies": {
     "@types/mocha": "^5.2.0"
   }
 }
