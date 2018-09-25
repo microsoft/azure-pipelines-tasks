@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "test-cloud.exe location",
   "loc.input.label.optionalArgs": "Optional arguments",
   "loc.input.help.optionalArgs": "Дополнительные аргументы, передаваемые в test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Опубликовать результаты в TFS или Team Services",
-  "loc.input.help.publishNUnitResults": "Если этот параметр выбран, параметр --nunit-xml будет передан в test-cloud.exe. Результаты из XML-файла NUnit будут опубликованы в TFS или Team Services."
+  "loc.input.label.publishNUnitResults": "Опубликовать результаты в TFS или Azure Pipelines",
+  "loc.input.help.publishNUnitResults": "Если этот параметр выбран, параметр --nunit-xml будет передан в test-cloud.exe. Результаты из XML-файла NUnit будут опубликованы в TFS или Azure Pipelines."
 }

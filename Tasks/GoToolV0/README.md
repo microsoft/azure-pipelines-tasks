@@ -2,9 +2,9 @@
  
 ## Overview
  
-The Go Tool Installer task acquires a specific version of Go Tool from the Internet or tools cache and adds it to the PATH of the VSTS Agent (hosted or private). You can use this task to change the version of Go Tool used in subsequent tasks. 
+The Go Tool Installer task acquires a specific version of Go Tool from the Internet or tools cache and adds it to the PATH of the Azure Pipelines Agent (hosted or private). You can use this task to change the version of Go Tool used in subsequent tasks. 
  
-If the targeted Go Tool version is already installed on the VSTS Agent (hosted or private), this task will skip the process of downloading and installing it again.
+If the targeted Go Tool version is already installed on the Azure Pipelines Agent (hosted or private), this task will skip the process of downloading and installing it again.
  
 ## Contact Information
  

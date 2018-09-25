@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "vsts-task-lib": "2.1.0",
-    "artifact-engine": "0.1.23",
+    "artifact-engine": "0.1.24",
     "@types/node": "^6.0.101"
   }
 }

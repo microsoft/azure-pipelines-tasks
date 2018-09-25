@@ -44,12 +44,23 @@ var dockerCommandMap = {
     "logout": "./dockerlogout"
 }
 
+var telemetry = {
+    registryType: registryType,
+    command: command
+};
+
+console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
+    "TaskEndpointId",
+    "DockerV1",
+    JSON.stringify(telemetry));
+
 var commandImplementation = require("./containercommand");
-if(command in dockerCommandMap) {
+if (command in dockerCommandMap) {
     commandImplementation = require(dockerCommandMap[command]);
 }
 
-commandImplementation.run(connection)
+var result = "";
+commandImplementation.run(connection, (data) => result += data)
 /* tslint:enable:no-var-requires */
 .fin(function cleanup() {
     if (command !== "login") {
@@ -57,6 +68,7 @@ commandImplementation.run(connection)
     }
 })
 .then(function success() {
+    tl.setVariable("DockerOutput", result);
     tl.setResult(tl.TaskResult.Succeeded, "");
 }, function failure(err) {
     tl.setResult(tl.TaskResult.Failed, err.message);

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Paquete de descarga",
   "loc.helpMarkDown": "Necesita que la extensión Administración de paquetes esté instalada",
-  "loc.description": "Descarga un paquete de una fuente de Administración de paquetes en VSTS o TFS. \r\n Requiere la extensión Administración de paquetes.",
+  "loc.description": "Descarga un paquete de una fuente de Administración de paquetes en Azure Artifacts o TFS. \r\n Requiere la extensión Administración de paquetes.",
   "loc.instanceNameFormat": "Paquete de descarga",
   "loc.input.label.feed": "Fuente",
   "loc.input.help.feed": "Seleccionar el origen del paquete",

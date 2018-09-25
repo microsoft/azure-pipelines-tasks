@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 0,
-    "Patch": 2
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -71,7 +71,7 @@
     "type": "radio",
     "label": "Feed location",
     "defaultValue": "internal",
-    "helpMarkDown": "You can either select a feed from this collection or any other collection in VSTS.",
+    "helpMarkDown": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
     "required": "true",
     "options": {
         "internal": "This account/collection",
@@ -183,7 +183,7 @@
     "type": "radio",
     "label": "Feed location",
     "defaultValue": "internal",
-    "helpMarkDown": "You can either select a feed from this collection or any other collection in VSTS.",
+    "helpMarkDown": "You can either select a feed from this collection or any other collection in Azure Artifacts.",
     "required": "true",
     "options": {
         "internal": "This account/collection",
@@ -358,9 +358,9 @@
   "messages": {
     "PackagesDownloadedSuccessfully": "Package were downloaded successfully",
     "PackagesFailedToDownload": "Packages failed to download",
-    "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
+    "ConnectingAs": "Connecting to feeds in your Azure Pipelines/TFS project collection as '%s' [%s]",
     "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
-    "CouldNotFindUniversalPackagesService": "Could not find the Universal Packages service. This task will not be able to authenticate to feeds hosted in your Team Services account/TFS project collection.",
+    "CouldNotFindUniversalPackagesService": "Could not find the Universal Packages service. This task will not be able to authenticate to feeds hosted in your Azure Pipelines/TFS project collection.",
     "Error_NoValueFoundForEnvVar": "No value was found for the provided environment variable.",
     "PackagesPublishedSuccessfully": "Packages were published successfully",
     "PackagesFailedToPublish": "Packages failed to publish",

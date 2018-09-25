@@ -12,7 +12,7 @@
 
 # Contributing
 
-This repo contains the in-the-box tasks for Team Services build. Tasks in this repo get deployed every three weeks to Team Services and appear in TFS quarterly updates.
+This repo contains the in-the-box tasks for Azure Pipelines build. Tasks in this repo get deployed every three weeks to Azure Pipelines and appear in TFS quarterly updates.
 
 If you are creating tasks that you believe the community can benefit from consider [creating an extension](https://www.visualstudio.com/integrate/extensions/develop/add-build-task).
 
@@ -110,6 +110,9 @@ Run tests for the task that you are intersted in:
 node make.js test --task ShellScript --suite L0
 ```
 
+Tests should be run with changes. Ideally, new tests are added for your change.
+[Read here](runningtests.md)
+
 ## Legacy Tests
 
 Legacy tests are located in a Tests-Legacy folder which is a sibling to Tasks.
@@ -121,16 +124,3 @@ For a specific task
 ```bash
 node make.js testLegacy --task Xcode
 ```
-
-# Package
-
-This must be done on a windows machine with `nuget.exe` in the path
-From the root of the repo (replace version with appropriate version)
-
-```bash
-gulp package --version 1.0.29
-```
-
-Tasks will be create a nuget package in the `_package` directory. This is only used for TFS internal engineering.
-Tests should be run with changes. Ideally, new tests are added for your change.
-[Read here](runningtests.md)

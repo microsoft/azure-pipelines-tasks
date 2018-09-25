@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "クラウド ベースの Apache JMeter ロード テスト",
-  "loc.helpMarkDown": "このタスクは、Visual Studio Team Services を使用したクラウド上での Apache JMeter ロード テストをトリガーするのに使用できます。[詳細](https://go.microsoft.com/fwlink/?LinkId=784929)",
+  "loc.helpMarkDown": "このタスクは、Azure Pipelines を使用したクラウド上での Apache JMeter ロード テストをトリガーするのに使用できます。[詳細](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "クラウドで Apache JMeter ロード テストを実行します",
   "loc.instanceNameFormat": "Apache JMeter テスト $(LoadTest)",
-  "loc.input.label.connectedServiceName": "VS Team Services 接続",
+  "loc.input.label.connectedServiceName": "Azure Pipelines 接続",
   "loc.input.help.connectedServiceName": "以前に登録されたサービス接続を選んで、クラウド ベースのロード テスト サービスと通信します。新しい接続を登録するには [管理] を選びます。",
   "loc.input.label.TestDrop": "Apache JMeter テスト ファイル フォルダー",
   "loc.input.help.TestDrop": "リポジトリのルートを基準に指定した、ロード テスト ファイルが利用可能な相対パス。",

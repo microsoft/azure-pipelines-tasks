@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Azure App Service Deployment task is used to update different Azure App Service to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works on cross platform VSTS agents running Windows, Linux or Mac and uses the underlying deployment technologies of [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy) and [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API).
+The Azure App Service Deployment task is used to update different Azure App Service to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works on cross platform Azure Pipelines agents running Windows, Linux or Mac and uses the underlying deployment technologies of [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy), RunFromZip, Zip Deploy, Containers and [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API).
 
-The task works for [ASP.NET](https://www.visualstudio.com/en-us/docs/release/examples/azure/azure-web-apps-from-build-and-release-hubs), [ASP.NET Core](https://www.visualstudio.com/en-us/docs/release/examples/azure/aspnet-core10-azure-web-apps), PHP, Java, Python and [Node.js](https://www.visualstudio.com/en-us/docs/release/examples/nodejs/node-to-azure-webapps) based web applications.
+The task works for [ASP.NET](https://www.visualstudio.com/en-us/docs/release/examples/azure/azure-web-apps-from-build-and-release-hubs), [ASP.NET Core](https://www.visualstudio.com/en-us/docs/release/examples/azure/aspnet-core10-azure-web-apps), PHP, Java, Python, Go and [Node.js](https://www.visualstudio.com/en-us/docs/release/examples/nodejs/node-to-azure-webapps) based web applications.
 
-The task can be used to deploy different Azure App Services like Function App, Web App on Windows, Web App on Linux, Web App for Containers and Azure App Service Environments.
+The task can be used to deploy different Azure App Services like Function App (Windows/Linux/Containers), Web App on Windows, Web App on Linux, Web App for Containers and apps configured under Azure App Service Environments.
 
-The task is **under development and is available to a limited set of accounts on Visual Studio Team Services (VSTS)**. The [video](https://www.youtube.com/watch?v=uQ2qCmaZ_Ag&feature=youtu.be) describes the features that are available in the task currently.
+The task is **under development and is available to a limited set of Azure DevOps organizations**. The [video](https://www.youtube.com/watch?v=uQ2qCmaZ_Ag&feature=youtu.be) describes the features that are available in the task currently.
 
 ## Contact Information
 
@@ -18,32 +18,45 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 The following pre-requisites need to be setup in the target machine(s) for the task to work properly.
 
-##### Azure Web App
+##### Azure Web App or Azure Function
 
 The task is used to deploy a Web  project to an existing Azure Web App. The Web App should exist prior to running the task. The Web App can be created from the [Azure portal](https://azure.microsoft.com/en-in/documentation/videos/azure-app-service-web-apps-with-yochay-kiriaty/) and [configured](https://azure.microsoft.com/en-us/documentation/articles/web-sites-configure/) there. Alternatively, the [Azure PowerShell task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/AzurePowerShell) can be used to run [AzureRM PowerShell scripts](https://msdn.microsoft.com/en-us/library/mt619237.aspx) to provision and configure the Web App.
 
+The task can also be used to deply [Azure Functions](https://azure.microsoft.com/en-in/services/functions/) (Windows/Linux/Containers).
+
 ##### Azure Subscription
 
-To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Team Services using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
+To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
 
 Create the [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) service endpoint, use **'Azure Resource Manager'** endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 
 The task does not work with the Azure Classic service endpoint and it will not list these connections in the parameters in the task.
 
-##### Azure PowerShell
-
-The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.3.0](https://github.com/Azure/azure-powershell/releases/tag/v1.3.0-March2016).
-
 ## Deployment
 
-Based on the type of Azure App Service and VSTS agent, the task chooses a suitable deployment technology. The different deployment technologies used by the task are:
+Several deployment methods are available in this task. Web Deploy (msdeploy.exe) is the default option. To change the deployment option, expand Additional Deployment Options and enable Select deployment method to choose from additional package-based deployment options.
+
+Based on the type of Azure App Service and Azure Pipelines agent, the task chooses a suitable deployment technology. The different deployment technologies used by the task are:
 * *Web Deploy* 
 
 * *Kudu REST APIs*
 
 * *Container Registry* 
 
-The task defaults to Web Deploy technology on a Windows Agent when the target is Web App for Windows. On other platforms (for any App service type), the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Web App.
+* *Zip Deploy* 
+
+* *RunFromZip* 
+
+By default the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
+
+* For msdeploy (MSBuild generated package) package, use Web Deploy 
+* When post deployment script is provided, use Zip Deploy 
+* When the App Service type is Web App on Linux App, use Zip Deploy 
+* If War file is provided, use War Deploy 
+* If Jar file is provided, use Run From Zip 
+* For all others, use Run From Zip (via Zip Deploy) 
+
+On non-Windows agent (for any App service type), the task relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the Web App.
 
 ### Web Deploy
 
@@ -65,9 +78,14 @@ Works on a Windows as well as Linux automation agent when the target is a Web Ap
 ### Container Registry
 Works on a Windows as well as Linux automation agent when the target is a Web App for Containers. The task updates the Azure Web App for Containers by setting the right Container registry, repository, image name and tag information. You can also use the task to pass a startup command for the container image.
 
-### Parameters of the task
+### Zip Deploy
+Creates a .zip deployment package of the chosen Package or folder and deploys the file contents to the wwwroot folder of the App Service name function app in Azure. This option overwrites all existing contents in the wwwroot folder. For more information, see [Zip deployment for Azure Functions](https://docs.microsoft.com/azure/azure-functions/deployment-zip-push).
 
-The task is used to deploy a Web  project to an existing Azure Web App. The mandatory fields are highlighted with a *.
+### RunFromZip
+Creates the same deployment package as Zip Deploy. However, instead of deploying files to the wwwroot folder, the entire package is mounted by the Functions runtime. With this option, files in the wwwroot folder become read-only. For more information, see [Run your Azure Functions from a package file](https://docs.microsoft.com/azure/azure-functions/run-functions-from-deployment-package).
+
+### Parameters of the task
+The task is used to deploy a Web  project to an existing Azure Web App or Function. The mandatory fields are highlighted with a *.
 
 * **Azure Subscription\*:** Select the AzureRM Subscription. If none exists, then click on the **Manage** link, to navigate to the Services tab in the Administrators panel. In the tab click on **New Service Endpoint** and select **Azure Resource Manager** from the dropdown.
 
@@ -85,7 +103,9 @@ The task is used to deploy a Web  project to an existing Azure Web App. The mand
 
 * **Package or Folder\*:** Location of the Web App zip package or folder on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here.
 
-* **Publish using Web Deploy:** Select the option to use Web Deploy technology on a Windows Agent. On other platforms, the task implicitly relies on [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API) to deploy the web App and following Web deploy options are not supported.
+* **Select deployment method:** Select the option to to choose from Web Deploy, Container, Zip Deploy, RunFromZip, Kudu REST apis
+
+By default (when 'Select deployment method' is not checked) the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
 * **Parameters File:** (Optional) The parameter file is used to override the default settings in the web deploy zip package file like, the IIS Web application name or the database connection string. This helps in having a single package that can be deployed across dev, test, staging, and production, with a specific parameter file for each environment.
 
@@ -108,7 +128,7 @@ In  case of Python, the path can be set as an output variable of the [Azure App 
   * [XML variable substitution](https://docs.microsoft.com/en-us/vsts/build-release/tasks/transforms-variable-substitution?view=vsts#xml-variable-substitution)
   * [JSON variable substitution](https://docs.microsoft.com/en-us/vsts/build-release/tasks/transforms-variable-substitution?view=vsts#json-variable-substitution)
 * **Deployment script:** 
-The task provides an option to customize the deployment by providing a script that will run on the Azure App Service once the application artifacts have been copied successfully to the App Service. You can choose to either provide an inline deployment script or point to a script file in your atifact folder. This is very useful when you want to restore your application dependencies on the App service directly. Restoring packages of Node, PHP, Python applications helps in avoiding timeouts when the application dependency results in a large artifact getting copied over from VSTS Agent to Azure app service. An example of this script is:
+The task provides an option to customize the deployment by providing a script that will run on the Azure App Service once the application artifacts have been copied successfully to the App Service. You can choose to either provide an inline deployment script or point to a script file in your atifact folder. This is very useful when you want to restore your application dependencies on the App service directly. Restoring packages of Node, PHP, Python applications helps in avoiding timeouts when the application dependency results in a large artifact getting copied over from Azure Pipelines Agent to Azure app service. An example of this script is:
 ```
 @echo off
 if NOT exist requirements.txt (
@@ -132,8 +152,8 @@ if %errorlevel% NEQ 0 (
 )
 ```
 
-* **Image Source:**
-App Service on Linux offers two different options to publish your application, one is Custom image deployment (Web App for Containers) and the other is App deployment with a built-in platform image (Web App on Linux). You will see this parameter only when you selected 'Linux Web App' in the App type selection option in the task.
+* **Runtime Stack:**
+Web App on Linux offers two different options to publish your application, one is Custom image deployment (Web App for Containers) and the other is App deployment with a built-in platform image (Web App on Linux). You will see this parameter only when you selected 'Linux Web App' in the App type selection option in the task.
 
 For Web **Web App for Containers** you need to provide the following details:
 * *Registry or Namespace:*
@@ -153,6 +173,16 @@ For Web **Web App on Linux** you need to provide the following details:
   
 * *Startup command:*
 Start up command for the app. For example if you are using PM2 process manager for Nodejs then you can specify the PM2 file here.
+
+* *Application and Configuration Settings*
+
+**App settings**: [App settings](https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#app-settings) contains name/value pairs that your web app will load on start up. Edit web app application settings by following the syntax '-key value'. Value containing spaces should be enclosed in double quotes.
+>Example : -Port 5000 -RequestTimeout 5000 
+>-WEBSITE_TIME_ZONE "Eastern Standard Time"
+
+**Configuration settings**:
+Edit web app [configuration settings](https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure) following the syntax -key value. Value containing spaces should be enclosed in double quotes.
+>Example : -phpVersion 5.6 -linuxFxVersion: node|6.11
 
 ### Output Variables
 

@@ -9,7 +9,7 @@ RunsOn property in task.json specifies where the task should run. The possible v
 - Server
 - ServerGate
 
-The default value of this property is Agent, but you can change it to ServerGate to specify that the task should run on VSTS/TFS server and should show up in the list of gates in the definition editor. In case you want the task to appear in both server tasks as well as gate tasks, specify the value of RunsOn as Server | ServerGate.
+The default value of this property is Agent, but you can change it to ServerGate to specify that the task should run on Azure Pipelines/TFS server and should show up in the list of gates in the definition editor. In case you want the task to appear in both server tasks as well as gate tasks, specify the value of RunsOn as Server | ServerGate.
 
 #### Provide the result evaulation expression :
 

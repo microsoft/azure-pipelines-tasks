@@ -1,7 +1,7 @@
 # Node.js with webpack
-# Build a Node.js application using the webpack CLI.
+# Build a Node.js project using the webpack CLI.
 # Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/vsts/pipelines/languages/javascript
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 pool:
   vmImage: 'Ubuntu 16.04'

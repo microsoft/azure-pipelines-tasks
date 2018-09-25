@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "クラウド ベースのロード テスト",
-  "loc.helpMarkDown": "このタスクは、Visual Studio Team Services を使用してクラウド ベースのロード テストをトリガーします。[詳細情報](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "Visual Studio Team Services を使用して、クラウドでロード テストを実行する",
+  "loc.helpMarkDown": "このタスクは、Azure Pipelines を使用してクラウド ベースのロード テストをトリガーします。[詳細情報](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "Azure Pipelines を使用して、クラウドでロード テストを実行する",
   "loc.instanceNameFormat": "クラウド ロード テスト $(LoadTest)",
-  "loc.input.label.connectedServiceName": "VS Team Services 接続",
+  "loc.input.label.connectedServiceName": "Azure Pipelines 接続",
   "loc.input.help.connectedServiceName": "以前に登録されたサービス接続を選んで、クラウド ベースのロード テスト サービスと通信します。新しい接続を登録するには [管理] を選びます。",
   "loc.input.label.TestDrop": "ロード テスト ファイルのフォルダー",
   "loc.input.help.TestDrop": "ロード テスト ファイルと、プラグインやデータ ファイルなどのサポート ファイルが利用可能な出力パス。<ul><li><b>ビルドの例:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration) </li><li><b>リリースの例:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />ここで、SourceCI はソース エイリアス、drop は成果物名です</li></ul>",

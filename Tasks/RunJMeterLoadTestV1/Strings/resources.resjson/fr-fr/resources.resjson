@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Test de charge Apache JMeter dans le cloud",
-  "loc.helpMarkDown": "Cette tâche permet de déclencher un test de charge Apache JMeter dans le cloud à l'aide de Visual Studio Team Services. [En savoir plus](https://go.microsoft.com/fwlink/?LinkId=784929)",
+  "loc.helpMarkDown": "Cette tâche permet de déclencher un test de charge Apache JMeter dans le cloud à l'aide de Azure Pipelines. [En savoir plus](https://go.microsoft.com/fwlink/?LinkId=784929)",
   "loc.description": "Exécute le test de charge Apache JMeter dans le cloud",
   "loc.instanceNameFormat": "Test Apache JMeter $(LoadTest)",
-  "loc.input.label.connectedServiceName": "Connexion Visual Studio Team Services",
+  "loc.input.label.connectedServiceName": "Connexion Azure Pipelines",
   "loc.input.help.connectedServiceName": "Sélectionnez une connexion de service préalablement inscrite pour communiquer avec le service de test de charge basé sur le cloud. Choisissez Gérer pour inscrire une nouvelle connexion.",
   "loc.input.label.TestDrop": "Dossier des fichiers de test Apache JMeter",
   "loc.input.help.TestDrop": "Chemin relatif de la racine de dépôt où les fichiers de test de charge sont disponibles.",

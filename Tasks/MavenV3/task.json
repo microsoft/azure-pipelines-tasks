@@ -16,8 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 3,
-        "Minor": 140,
-        "Patch": 1
+        "Minor": 141,
+        "Patch": 2
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -74,17 +74,17 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to TFS/Team Services",
+            "label": "Publish to Azure Pipelines/TFS",
             "required": true,
             "defaultValue": "true",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Maven build to TFS/Team Services. Each test results file matching `Test Results Files` will be published as a test run in TFS/Team Services."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Maven build to Azure Pipelines/TFS. Each test results file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS."
         },
         {
             "name": "testResultsFiles",
             "type": "filePath",
             "label": "Test results files",
-            "defaultValue": "**/TEST-*.xml",
+            "defaultValue": "**/surefire-reports/TEST-*.xml",
             "required": true,
             "groupName": "junitTestResults",
             "helpMarkDown": "Specify the path and pattern of test results files to publish. Wildcards can be used ([more information](https://go.microsoft.com/fwlink/?linkid=856077)). For example, `**/TEST-*.xml` for all XML files whose name starts with `TEST-`. If no root path is specified, files are matched beneath the default working directory, the value of which is available in the variable: $(System.DefaultWorkingDirectory).  For example, a value of '**/TEST-*.xml' will actually result in matching files from '$(System.DefaultWorkingDirectory)/**/TEST-*.xml'.",
@@ -270,7 +270,7 @@
             "required": true,
             "defaultValue": "false",
             "groupName": "advanced",
-            "helpMarkDown": "Automatically authenticate built-in Maven feeds from the VSTS/TFS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
+            "helpMarkDown": "Automatically authenticate built-in Maven feeds from the Azure Artifacts/TFS [Package Management](https://marketplace.visualstudio.com/items?itemName=ms.feed) extension. If built-in Maven feeds are not in use, deselect this option for faster builds."
         },
         {
             "name": "sqAnalysisEnabled",

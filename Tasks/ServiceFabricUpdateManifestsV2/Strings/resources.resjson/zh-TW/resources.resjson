@@ -31,7 +31,7 @@
   "loc.messages.FoundApplicationPackage": "找到應用程式套件: {0}",
   "loc.messages.VersionValueLabel": "版本值: '{0}'",
   "loc.messages.BuildNumberNotSpecified": "組建編號不可為 Null 或空白。",
-  "loc.messages.VstsRestApiFailed": "無法與 VSTS 通訊: {0}",
+  "loc.messages.VstsRestApiFailed": "無法與 Azure Pipelines 通訊: {0}",
   "loc.messages.DownloadingArtifact": "正在下載成品 '{0}'...",
   "loc.messages.DownloadingArtifactProgress": "進度更新: 已接收 '{0}' 位元組...",
   "loc.messages.FinishedDownloadingArtifact": "已完成下載成品 '{0}'。",

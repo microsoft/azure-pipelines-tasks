@@ -2,7 +2,7 @@
     "id": "0B0F01ED-7DDE-43FF-9CBB-E48954DAF9B1",
     "name": "PublishTestResults",
     "friendlyName": "Publish Test Results",
-    "description": "Publish Test Results to VSTS/TFS",
+    "description": "Publish Test Results to Azure Pipelines/TFS",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613742)",
     "category": "Test",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 9
+        "Patch": 13
     },
     "demands": [],
     "releaseNotes": "<ul><li>NUnit3 support</li><li>Support for Minimatch files pattern</li></ul>",
@@ -28,6 +28,9 @@
     "inputs": [
         {
             "name": "testRunner",
+            "aliases": [
+                "testResultsFormat"
+            ],
             "type": "pickList",
             "label": "Test result format",
             "defaultValue": "JUnit",
@@ -78,8 +81,11 @@
         },
         {
             "name": "platform",
+            "aliases": [
+                "buildPlatform"
+            ],
             "type": "string",
-            "label": "Platform",
+            "label": "Build Platform",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",
@@ -87,8 +93,11 @@
         },
         {
             "name": "configuration",
+            "aliases": [
+                "buildConfiguration"
+            ],
             "type": "string",
-            "label": "Configuration",
+            "label": "Build Configuration",
             "defaultValue": "",
             "required": false,
             "groupName": "advanced",

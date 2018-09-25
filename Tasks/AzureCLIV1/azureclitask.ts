@@ -1,3 +1,4 @@
+import { IExecSyncResult } from 'vsts-task-lib/toolrunner';
 import path = require("path");
 import tl = require("vsts-task-lib/task");
 import fs = require("fs");
@@ -55,7 +56,7 @@ export class azureclitask {
             else {
                 tool = tl.tool(tl.which(scriptPath, true));
             }
-
+            this.throwIfError(tl.execSync("az", "--version"));
             this.loginAzure();
 
             tool.line(args); // additional args should always call line. line() parses quoted arg strings
@@ -123,10 +124,10 @@ export class azureclitask {
         var tenantId: string = tl.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
         var subscriptionID: string = tl.getEndpointDataParameter(connectedService, "SubscriptionID", true);
         //login using svn
-        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""));
+        this.throwIfError(tl.execSync("az", "login --service-principal -u \"" + servicePrincipalId + "\" -p \"" + cliPassword + "\" --tenant \"" + tenantId + "\""), tl.loc("LoginFailed"));
         this.isLoggedIn = true;
         //set the subscription imported to the current subscription
-        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""));
+        this.throwIfError(tl.execSync("az", "account set --subscription \"" + subscriptionID + "\""), tl.loc("ErrorInSettingUpSubscription"));
     }
 
     private static logoutAzure() {
@@ -139,8 +140,12 @@ export class azureclitask {
         }
     }
 
-    private static throwIfError(resultOfToolExecution): void {
-        if (resultOfToolExecution.stderr) {
+    private static throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
+        if (resultOfToolExecution.code != 0) {
+            tl.error("Error Code: [" + resultOfToolExecution.code + "]");
+            if (errormsg) {
+                tl.error("Error: " + errormsg);
+            }
             throw resultOfToolExecution;
         }
     }

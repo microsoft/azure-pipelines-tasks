@@ -1,7 +1,7 @@
 # Android
 # Build your Android project with Gradle.
 # Add steps that test, sign, and distribute the APK, save build artifacts, and more:
-# https://docs.microsoft.com/vsts/pipelines/languages/android
+# https://docs.microsoft.com/azure/devops/pipelines/languages/android
 
 pool:
   vmImage: 'macOS 10.13'

@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "基于云的负载测试",
-  "loc.helpMarkDown": "此任务通过使用 Visual Studio Team Services 触发基于云的负载测试。[了解详细信息](https://go.microsoft.com/fwlink/?linkid=546976)",
-  "loc.description": "使用 Visual Studio Team Services 在云中运行负载测试",
+  "loc.helpMarkDown": "此任务通过使用 Azure Pipelines 触发基于云的负载测试。[了解详细信息](https://go.microsoft.com/fwlink/?linkid=546976)",
+  "loc.description": "使用 Azure Pipelines 在云中运行负载测试",
   "loc.instanceNameFormat": "云负载测试 $(LoadTest)",
-  "loc.input.label.connectedServiceName": "VS Team Services 连接",
+  "loc.input.label.connectedServiceName": "Azure Pipelines 连接",
   "loc.input.help.connectedServiceName": "选择以前注册的服务连接以与基于云的负载测试服务进行通话。选择“管理”可注册新连接。",
   "loc.input.label.TestDrop": "负载测试文件文件夹",
   "loc.input.help.TestDrop": "其中具有负载测试以及包含插件和数据文件的支持文件的输出路径。<ul><li><b>生成示例:</b><br /> $(System.DefaultWorkingDirectory)\\LoadTestproject\\bin\\$(BuildConfiguration)</li><li><b>发布示例:</b><br /> $(System.DefaultWorkingDirectory)\\SourceCI\\drop\\LoadTestproject\\bin\\Release <br />其中 SourceCI 是源别名，drop 是项目名</li></ul>",

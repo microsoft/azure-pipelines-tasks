@@ -16,8 +16,8 @@
     "demands": [],
     "version": {
         "Major": 2,
-        "Minor": 139,
-        "Patch": 9
+        "Minor": 141,
+        "Patch": 1
     },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "dotnet $(command)",
@@ -126,11 +126,11 @@
         {
             "name": "publishTestResults",
             "type": "boolean",
-            "label": "Publish test results",
+            "label": "Publish test results and code coverage",
             "defaultValue": "true",
             "visibleRule": "command = test",
             "required": false,
-            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments."
+            "helpMarkDown": "Enabling this option will generate a test results TRX file in `$(Agent.TempDirectory)` and results will be published to the server. <br>This option appends `--logger trx --results-directory $(Agent.TempDirectory)` to the command line arguments. <br><br>Code coverage can be collected by adding `--collect “Code coverage”` option to the command line arguments. This is currently only available on the Windows platform."
         },
         {
             "name": "zipAfterPublish",
@@ -158,7 +158,7 @@
             "type": "radio",
             "label": "Feeds to use",
             "defaultValue": "select",
-            "helpMarkDown": "You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
+            "helpMarkDown": "You can either select a feed from Azure Artifacts and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
             "required": "true",
             "options": {
                 "select": "Feed(s) I select here",
@@ -172,7 +172,7 @@
                 "vstsFeed"
             ],
             "type": "pickList",
-            "label": "Use packages from this VSTS/TFS feed",
+            "label": "Use packages from this Azure Artifacts/TFS feed",
             "defaultValue": "",
             "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
             "required": "false",

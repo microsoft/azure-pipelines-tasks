@@ -1,4 +1,4 @@
-# Build your Java code using Maven in VSTS
+# Build your Java code using Maven in Azure Pipelines
 
 ### Parameters for Maven build task are explained below
 
@@ -9,16 +9,16 @@
 - **Goal(s) :** In most cases, set this to `package` to compile your code and package it into a .war file. If you leave this argument blank, the build will fail. [Click here to know more about Maven Build Lifecycle](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
 
 #### JUnit Test Results
-Use the next three options to manage your JUnit test results in VSTS
+Use the next three options to manage your JUnit test results in Azure Pipelines
 
-- **Publish to VSTS/TFS :** Select this option to publish JUnit Test results produced by the Maven build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS/TFS.
+- **Publish to Azure Pipelines/TFS :** Select this option to publish JUnit Test results produced by the Maven build to Azure Pipelines/TFS. Each test result file matching `Test Results Files` will be published as a test run in Azure Pipelines/TFS.
 
 - **Test Results Files :** This option will appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`. Defaults to `$(System.DefaultWorkingDirectory)`
 
-- **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
+- **Test Run Title :** This option will appear if you select the `Publish to Azure Pipelines/TFS` option. Here provide a name for the Test Run
 
 #### Code Coverage
-Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
+Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/Azure Pipelines
 
 - **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported. [Click here](http://eclemma.org/jacoco/trunk/doc/maven.html) to know more about Jacoco and [Click here](http://www.mojohaus.org/cobertura-maven-plugin/index.html) to know more about Cobertura.
 
@@ -31,7 +31,7 @@ comma separated list of filters to include or exclude classes from collecting co
 #### Advanced
 Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Path
 
-- **Set JAVA_HOME by :** Select to set `JAVA_HOME` either by providing a path or let VSTS set the `JAVA_HOME` based on JDK version choosen. By default it is set to `JDK Version`
+- **Set JAVA_HOME by :** Select to set `JAVA_HOME` either by providing a path or let Azure Pipelines set the `JAVA_HOME` based on JDK version choosen. By default it is set to `JDK Version`
 
 - **JDK Version :** Here provide the PATH to `JAVA_HOME` if you want to set it by path or select the appropriate JDK verision.
 

@@ -1,7 +1,7 @@
 {
   "name": "vsts-xcodepackageios-task",
   "version": "1.0.0",
-  "description": "VSTS Xcode Package iOS Task",
+  "description": "Azure Pipelines Xcode Package iOS Task",
   "main": "xcodepkgios.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

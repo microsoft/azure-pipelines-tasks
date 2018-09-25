@@ -18,7 +18,7 @@
     ],
     "version": {
         "Major": 2,
-        "Minor": 3,
+        "Minor": 4,
         "Patch": 0
     },
     "minimumAgentVersion": "1.95.0",
@@ -155,7 +155,7 @@
         "FoundApplicationPackage": "Found application package: {0}",
         "VersionValueLabel": "Version Value: '{0}'",
         "BuildNumberNotSpecified": "Build Number cannot be null or empty.",
-        "VstsRestApiFailed": "Failed to communicate with VSTS: {0}",
+        "VstsRestApiFailed": "Failed to communicate with Azure Pipelines: {0}",
         "DownloadingArtifact": "Downloading artifact '{0}'...",
         "DownloadingArtifactProgress": "Progress update: '{0}' bytes received...",
         "FinishedDownloadingArtifact": "Finished downloading artifact '{0}'.",

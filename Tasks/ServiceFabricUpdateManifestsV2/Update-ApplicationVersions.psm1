@@ -46,7 +46,7 @@
             }
             catch
             {
-                # Failed to communicate with VSTS and get the previous build. Swallow exception and set oldDropLocation to null
+                # Failed to communicate with Azure Pipelines and get the previous build. Swallow exception and set oldDropLocation to null
                 Write-Warning (Get-VstsLocString -Key VstsRestApiFailed -ArgumentList $_)
                 $oldDropLocation = $null
             }
@@ -110,7 +110,7 @@
             }
             else
             {
-                # Failed to connect to VSTS or failed to find a build. Fall back to updating all versions.
+                # Failed to connect to Azure Pipelines or failed to find a build. Fall back to updating all versions.
                 Write-Warning (Get-VstsLocString -Key NoPreviousSuccessfulBuild)
                 $updateAllVersions = $true
             }

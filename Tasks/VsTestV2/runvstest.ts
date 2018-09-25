@@ -92,7 +92,7 @@ function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token:
                 tl.debug('Unable to get feature flag ' + featureFlag + ' Error:' + err.message);
                 resolve(state);
             }
-            if (faModel.effectiveState) {
+            if (faModel  && faModel.effectiveState) {
                 state = ('on' === faModel.effectiveState.toLowerCase());
                 tl.debug(' Final feature flag state: ' + state);
             }

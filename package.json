@@ -1,7 +1,7 @@
 {
   "name": "Agent.Tasks",
   "version": "0.5.0",
-  "description": "Tasks for the Team Services build system",
+  "description": "Tasks for the Azure Pipelines build system",
   "main": "gulpfile.js",
   "directories": {
     "doc": "docs"
@@ -17,7 +17,8 @@
     "url": "https://github.com/Microsoft/vsts-tasks"
   },
   "keywords": [
-    "VSTS",
+    "Azure",
+    "Pipelines",
     "build",
     "tasks"
   ],

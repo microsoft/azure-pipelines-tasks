@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "test-cloud.exe location",
   "loc.input.label.optionalArgs": "Optional arguments",
   "loc.input.help.optionalArgs": "추가 인수를 test-cloud.exe에 전달했습니다.",
-  "loc.input.label.publishNUnitResults": "TFS/Team Services에 결과 게시",
-  "loc.input.help.publishNUnitResults": "선택하면, --nunit-xml 옵션이 test-cloud.exe에 전달됩니다. NUnit xml 파일의 결과는 TFS/Team Services에 게시됩니다."
+  "loc.input.label.publishNUnitResults": "Azure Pipelines/TFS에 결과 게시",
+  "loc.input.help.publishNUnitResults": "선택하면, --nunit-xml 옵션이 test-cloud.exe에 전달됩니다. NUnit xml 파일의 결과는 Azure Pipelines/TFS에 게시됩니다."
 }

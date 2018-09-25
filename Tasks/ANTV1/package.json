@@ -7,6 +7,8 @@
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
     "codecoverage-tools": "file:../../_build/Tasks/Common/codecoverage-tools-1.0.0.tgz",
     "java-common": "file:../../_build/Tasks/Common/java-common-1.0.0.tgz",
     "vsts-task-lib": "2.6.0",

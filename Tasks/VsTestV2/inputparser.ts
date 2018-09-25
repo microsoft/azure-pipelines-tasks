@@ -6,6 +6,7 @@ import * as ci from './cieventlogger';
 import { AreaCodes, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
 import * as versionfinder from './versionfinder';
+import * as Q from "q";
 import * as isUncPath from 'is-unc-path';
 const regedit = require('regedit');
 
@@ -34,6 +35,7 @@ export function parseInputsForDistributedTestRun() : idc.InputDataContract {
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.RunIdentifier = getRunIdentifier();
+    inputDataContract.SourcesDirectory = tl.getVariable('Build.SourcesDirectory');
 
     logWarningForWER(tl.getBoolInput('uiTests'));
     ci.publishEvent({ 'UiTestsOptionSelected': tl.getBoolInput('uiTests')} );
@@ -60,6 +62,9 @@ export function parseInputsForNonDistributedTestRun() : idc.InputDataContract {
     inputDataContract.AccessTokenType = 'jwt';
     inputDataContract.AgentName = tl.getVariable('Agent.MachineName') + '-' + tl.getVariable('Agent.Name') + '-' + tl.getVariable('Agent.Id');
     inputDataContract.RunIdentifier = getRunIdentifier();
+    inputDataContract.EnableSingleAgentAPIFlow = utils.Helper.stringToBool(tl.getVariable('Hydra.EnableApiFlow'));
+    inputDataContract.SourcesDirectory = tl.getVariable('Build.SourcesDirectory');
+
 
     logWarningForWER(tl.getBoolInput('uiTests'));
 
