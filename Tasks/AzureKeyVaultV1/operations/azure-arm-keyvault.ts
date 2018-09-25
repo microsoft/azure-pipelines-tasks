@@ -26,6 +26,44 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         this.apiVersion = '2016-10-01';
     }
 
+    public async invokeRequest(request: webClient.WebRequest): Promise<webClient.WebResponse> {
+        try {
+            var response = await this.beginRequest(request);
+            if (response.statusCode == 401) {
+                var vaultResourceId = this.getValidVaultResourceId(response);
+                if(!!vaultResourceId) {
+                    console.log(tl.loc("RetryingWithVaultResourceIdFromResponse", vaultResourceId));
+                    
+                    this.getCredentials().activeDirectoryResourceId = vaultResourceId; // update vault resource Id
+                    this.getCredentials().getToken(true); // Refresh authorization token in cache
+                    var response = await this.beginRequest(request);
+                }
+            }
+            return response;
+        } catch(exception) {
+            throw exception;
+        }
+    }
+
+    public getValidVaultResourceId(response: webClient.WebResponse) {
+        if (!!response.headers) {
+            var authenticateHeader = response.headers['www-authenticate'];
+            if (!!authenticateHeader) {
+                var parsedParams = authenticateHeader.split(",").map(pair => pair.split("=").map(function(item) {
+                    return item.trim();
+                }));
+
+                const properties = {};
+                parsedParams.forEach(([key,value]) => properties[key] = value);
+                if(properties['resource']) {
+                    return properties['resource'].split('"').join('');
+                }
+            }
+        }
+
+        return null;
+    }
+
     public getSecrets(nextLink: string, callback: azureServiceClient.ApiCallback) {
         if (!callback) {
             throw new Error(tl.loc("CallbackCannotBeNull"));
@@ -49,7 +87,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
 
         console.log(tl.loc("DownloadingSecretsUsing", url));
         
-        this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+        this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             var result = [];
             if (response.statusCode == 200) {
                 if (response.body.value) {
@@ -96,7 +134,7 @@ export class KeyVaultClient extends azureServiceClient.ServiceClient {
         );
 
         console.log(tl.loc("DownloadingSecretValue", secretName));
-        this.beginRequest(httpRequest).then(async (response: webClient.WebResponse) => {
+        this.invokeRequest(httpRequest).then(async (response: webClient.WebResponse) => {
             if (response.statusCode == 200) {
                 var result = response.body.value;
                 return new azureServiceClient.ApiResult(null, result);
