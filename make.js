@@ -232,7 +232,7 @@ target.build = function() {
                     }
                 }
 
-                if (mod.type === 'node' && mod.compile == true) {
+                if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
                     var commonPack = util.getCommonPackInfo(modOutDir);
 
                     // check that the pack file does not already exist
