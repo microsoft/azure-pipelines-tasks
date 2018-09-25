@@ -1,6 +1,6 @@
 {
   "name": "vsts-tasks-jenkinsqueuejob",
-  "dependencies": {
+  "devDependencies": {
     "@types/mocha": "^5.2.0",
     "vsts-task-lib": "0.9.20"
   },
