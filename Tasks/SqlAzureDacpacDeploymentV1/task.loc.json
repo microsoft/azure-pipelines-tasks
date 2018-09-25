@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 5
+    "Patch": 6
   },
   "demands": [
     "sqlpackage"
@@ -177,6 +177,36 @@
       "defaultValue": "",
       "helpMarkDown": "ms-resource:loc.input.help.SqlFile",
       "visibleRule": "TaskNameSelector = SqlTask"
+    },
+    {
+      "name": "ExecuteInTransaction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExecuteInTransaction",
+      "required": false,
+      "groupName": "taskDetails",
+      "visibleRule": "TaskNameSelector = SqlTask",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ExecuteInTransaction"
+    },
+    {
+      "name": "ExclusiveLock",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.ExclusiveLock",
+      "required": false,
+      "groupName": "taskDetails",
+      "visibleRule": "ExecuteInTransaction = true",
+      "defaultValue": "false",
+      "helpMarkDown": "ms-resource:loc.input.help.ExclusiveLock"
+    },
+    {
+      "name": "AppLockName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.AppLockName",
+      "required": true,
+      "groupName": "taskDetails",
+      "visibleRule": "ExclusiveLock = true",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.AppLockName"
     },
     {
       "name": "SqlInline",

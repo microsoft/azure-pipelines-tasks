@@ -6,7 +6,10 @@ Trace-VstsEnteringInvocation $MyInvocation
 $connectedServiceNameSelector = Get-VstsInput -Name "ConnectedServiceNameSelector" -Require
 $taskNameSelector = Get-VstsInput -Name "TaskNameSelector" -Require
 $dacpacFile = Get-VstsInput -Name "DacpacFile"
-$sqlFile = Get-VstsInput -Name "SqlFile"
+$sqlFiles = Get-VstsInput -Name "sqlFile" 
+$executeInTransaction = Get-VstsInput -Name "ExecuteInTransaction" -AsBool
+$exclusiveLock = Get-VstsInput -Name "ExclusiveLock" -AsBool
+$appLockName = Get-VstsInput -Name "AppLockName"
 $sqlInline = Get-VstsInput -Name "SqlInline"
 $bacpacFile = Get-VstsInput -Name "BacpacFile"
 $serverName = Get-VstsInput -Name  "ServerName" -Require
@@ -38,6 +41,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\FindSqlPackagePath.ps1"
 . "$PSScriptRoot\SqlAzureActions.ps1"
+. "$PSScriptRoot\SqlBatchOperationsUtility.ps1"
 
 try {
     if ($connectedServiceNameSelector -eq "ConnectedServiceNameARM") {
@@ -73,7 +77,8 @@ try {
         "Publish" {
             Write-Verbose "Executing 'Publish' action."
             Execute-PublishAction -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -taskNameSelector $taskNameSelector -dacpacFile $dacpacFile `
-                -publishProfile $publishProfile -sqlFile $sqlFile -sqlInline $sqlInline -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -sqlcmdInlineAdditionalArguments $sqlcmdInlineAdditionalArguments
+                -publishProfile $publishProfile -sqlFile $sqlFiles -executeInTransaction $executeInTransaction -exclusiveLock $exclusiveLock -appLockName $appLockName -sqlInline $sqlInline `
+                -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments -sqlcmdInlineAdditionalArguments $sqlcmdInlineAdditionalArguments
         }
         "Extract" {
             Write-Verbose "Executing 'Extract' action."

@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 5
+        "Patch": 6
     },
     "demands": [
         "sqlpackage"
@@ -170,8 +170,38 @@
             "required": true,
             "groupName": "taskDetails",
             "defaultValue": "",
-            "helpMarkDown": "Location of the SQL script file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Predefined system variables like, $(agent.releaseDirectory) can also be used here.",
+            "helpMarkDown": "Location of the SQL script file on the automation agent or on a UNC path accessible to the automation agent like, \\\\\\\\BudgetIT\\Web\\Deploy\\FabrikamDB.sql. Predefined system variables like, $(agent.releaseDirectory) can also be used here. Provide semi-colon separated list of SQL script files to execute multiple files. The SQL scripts will be executed in the order given",
             "visibleRule": "TaskNameSelector = SqlTask"
+        },
+        {
+            "name": "ExecuteInTransaction",
+            "type": "boolean",
+            "label": "Execute within a transaction",
+            "required": false,
+            "groupName": "taskDetails",
+            "visibleRule": "TaskNameSelector = SqlTask",
+            "defaultValue": "false",
+            "helpMarkDown": "Executes SQL script(s) within a transaction"
+        },
+        {
+            "name": "ExclusiveLock",
+            "type": "boolean",
+            "label": "Acquire exclusive app lock while executing scripts",
+            "required": false,
+            "groupName": "taskDetails",
+            "visibleRule": "ExecuteInTransaction = true",
+            "defaultValue": "false",
+            "helpMarkDown": "Executes SQL script(s) within a transaction"
+        },
+        {
+            "name": "AppLockName",
+            "type": "string",
+            "label": "App lock name",
+            "required": true,
+            "groupName": "taskDetails",
+            "visibleRule": "ExclusiveLock = true",
+            "defaultValue": "",
+            "helpMarkDown": "App lock name"
         },
         {
             "name": "SqlInline",

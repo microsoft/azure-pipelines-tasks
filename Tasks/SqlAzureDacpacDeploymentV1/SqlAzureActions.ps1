@@ -181,7 +181,10 @@ function Execute-PublishAction {
         [string] $taskNameSelector,
         [string] $dacpacFile,
         [string] $publishProfile,
-        [string] $sqlFile,
+        [string] $sqlFiles,
+        [bool]   $executeInTransaction,
+        [bool]   $exclusiveLock,
+        [string] $appLockName,
         [string] $sqlInline,
         [string] $sqlpackageAdditionalArguments,
         [string] $sqlcmdAdditionalArguments,
@@ -193,7 +196,7 @@ function Execute-PublishAction {
             Publish-Dacpac -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -dacpacFile $dacpacFile -publishProfile $publishProfile -sqlpackageAdditionalArguments $sqlpackageAdditionalArguments
         }
         "SqlTask" {
-            Run-SqlFiles -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFile -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
+            Run-SqlFiles -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFile $sqlFiles -executeInTransaction $executeInTransaction -exclusiveLock $exclusiveLock -appLockName $appLockName -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
         }
         "InlineSqlTask" {
             Run-InlineSql -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlInline $sqlInline -sqlcmdAdditionalArguments $sqlcmdInlineAdditionalArguments
@@ -210,18 +213,72 @@ function Run-SqlFiles {
         [string] $databaseName,
         [string] $sqlUsername,
         [string] $sqlPassword,
-        [string] $sqlFile,
+        [string] $sqlFiles,
+        [bool]   $executeInTransaction,
+        [bool]   $exclusiveLock,
+        [string] $appLockName,
         [string] $sqlcmdAdditionalArguments
     )
 
-    #Ensure that a single .sql file is found
-    $sqlFilePath = Find-SqlFiles -filePathPattern $sqlFile -verboseMessage "Sql file:" -throwIfMultipleFilesOrNoFilePresent
-    
-    if ([System.IO.Path]::GetExtension($sqlFilePath) -ne ".sql") {
-        Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $FilePath)
+    $sqlFilesList = @()
+    $sqlScriptFiles = $sqlFiles -split ";"
+
+    foreach ($sqlScriptFile in $sqlScriptFiles) 
+    {
+        $sqlScriptFile = $sqlScriptFile.Trim()
+        if (-not [string]::IsNullOrEmpty($sqlScriptFile)) 
+        {
+            $sqlScriptFile = Find-SqlFiles -filePathPattern $sqlScriptFile -throwIfMultipleFilesOrNoFilePresent
+
+            if ([System.IO.Path]::GetExtension($sqlScriptFile) -ne ".sql") {
+                Write-Error (Get-VstsLocString -Key "SAD_InvalidSqlFile" -ArgumentList $sqlScriptFile)
+            }
+
+            $sqlFilesList += $sqlScriptFile
+        }
     }
 
-    Run-SqlCmd -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFilePath -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
+    if ($executeInTransaction)
+    {
+        if ($exclusiveLock -and ($appLockName.Length -eq 0))
+        {
+            Write-Error "Invalid Applock name. exclusiveLock: $exclusiveLock, appLockName: $appLockName"
+        }
+
+        $sqlScriptsWithExpandedPath = ""
+        $sqlScriptFiles = $sqlFiles -split ";"
+
+        $batch = 1
+        $destPath = [System.IO.Path]::Combine($env:SYSTEM_DEFAULTWORKINGDIRECTORY, "batchdir")
+        New-SqlBatchFilesDestDirectory -directoryName $destPath
+
+        foreach ($sqlFile in $sqlFilesList) 
+        {
+            $batchFiles = Create-BatchFilesForSqlFile -sqlFilePath $sqlFile -destPath $destPath -batch $batch
+            $sqlScriptsWithExpandedPath = $sqlScriptsWithExpandedPath + $batchFiles + "; "
+            $batch = [int]$batch + 1
+        }
+
+        Write-Verbose "Executing sql scripts $sqlScriptsWithExpandedPath under transaction using app lock $appLockName"
+
+        Invoke-SqlScriptsInTransaction -serverName $serverName -databaseName $databaseName -appLockName $appLockName -sqlscriptFiles $sqlScriptsWithExpandedPath -authscheme $authscheme -sqlServerCredentials $sqlServerCredentials -additionalArguments $additionalArguments
+
+        if ($env:system_debug -eq $false)
+        {
+            #Leave the batch files if in debug mode. Remove otherwise.
+            Get-ChildItem -Path $destPath -Force -Recurse |
+                Sort-Object -Property FullName -Descending |
+                Remove-Item -Recurse -Force | Out-Null
+            Remove-Item -Path $destPath -Force
+        }
+    }
+    else
+    {
+        foreach ($sqlFile in $sqlFilesList) 
+        {
+            Run-SqlCmd -serverName $serverName -databaseName $databaseName -sqlUsername $sqlUsername -sqlPassword $sqlPassword -sqlFilePath $sqlFile -sqlcmdAdditionalArguments $sqlcmdAdditionalArguments
+        }
+    }
 }
 
 function Run-InlineSql {
@@ -285,6 +342,53 @@ function Run-SqlCmd {
     Invoke-Expression $commandToRun
 }
 
+function Invoke-SqlScriptsInTransaction
+{
+    param
+    (
+        [string]$serverName,
+        [string]$databaseName,
+        [string]$appLockName,
+        [string]$sqlscriptFiles,
+        [string]$authscheme,
+        [System.Management.Automation.PSCredential]$sqlServerCredentials,
+        [string]$additionalArguments
+    )
+     Import-SqlPs
+     #Get Scalar Params to replace in SQL script
+    $_acquireLockParam = $appLockName
+    $_acquireLockMillisecondsParam = 10
+    $_acquireLockMaxAttemptsParam = 3
+    $_longRunningThresholdMilliSecondsParam = 10
+    $_acquireLockLastNAttemptsParam = 3
+    $_fileList = $sqlscriptFiles
+     #Get the wrapper sql script
+    $tsql = Get-Content $PSScriptRoot\ExecuteScriptsInTransaction.sql
+    $tsqlString = "$tsql"
+     #Splat the Arguments
+    $spaltArguments = @{
+        Query = $tsqlString
+        ServerInstance=$serverName
+        Database=$databaseName
+    }
+     if($authscheme -eq "sqlServerAuthentication")
+    {
+        if($sqlServerCredentials)
+        {
+            $sqlUsername = $sqlServerCredentials.Username
+            $sqlPassword = $sqlServerCredentials.GetNetworkCredential().password
+            $spaltArguments.Add("Username", $sqlUsername)
+            $spaltArguments.Add("Password", $sqlPassword)
+        }
+    }
+     $scriptVariables = "_acquireLockParam = '${_acquireLockParam}'", "_acquireLockMillisecondsParam = ${_acquireLockMillisecondsParam}", "_acquireLockMaxAttemptsParam = ${_acquireLockMaxAttemptsParam}", "_longRunningThresholdMilliSecondsParam = ${_longRunningThresholdMilliSecondsParam}", "_acquireLockLastNAttemptsParam = ${_acquireLockLastNAttemptsParam}", "_fileList = ${_fileList}"
+    $spaltArguments.Add("Variable", $scriptVariables)
+    $spaltArguments.Add("OutputSqlErrors", $true)
+     $additionalArguments = EscapeSpecialChars $additionalArguments
+     #Execute the query
+    Invoke-Expression "Invoke-SqlCmd @spaltArguments $additionalArguments"  
+}
+
 function Add-FirewallRule {
     param (
         [object] $endpoint,
@@ -338,7 +442,16 @@ function Find-SqlFiles {
 
     if ($throwIfMultipleFilesOrNoFilePresent) {
         ThrowIfMultipleFilesOrNoFilePresent -files $filePath -pattern $filePathPattern
+    } 
+    else
+    {
+        if (!$filePath)
+        {
+            throw (Get-VstsLocString -Key "Nofileswerefoundtodeploywithsearchpattern0" -ArgumentList $pattern)
+        }
+        return $filePath
     }
+    
 
     Write-Host "$verboseMessage $filePath"
 
