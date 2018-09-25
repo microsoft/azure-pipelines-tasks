@@ -1,0 +1,93 @@
+{
+  "id": "58b25f39-9b53-44ce-b6d1-08ef854e905b",
+  "name": "ManageExperiment",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 10
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ExperimentId",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ExperimentId",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.ExperimentId",
+      "properties": {
+        "EditableOptions": "False"
+      }
+    },
+    {
+      "name": "Action",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Action",
+      "defaultValue": "",
+      "required": true,
+      "options": {
+        "Start": "Start the experiment",
+        "Stop": "Stop the experiment",
+        "ChangeTraffic": "Change the traffic exposure of flights"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.Action"
+    },
+    {
+      "name": "FlightsTraffic",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.FlightsTraffic",
+      "defaultValue": "",
+      "required": true,
+      "visibleRule": "Action = ChangeTraffic",
+      "helpMarkDown": "ms-resource:loc.input.help.FlightsTraffic"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ExperimentId",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "ControlTowerExperiments",
+      "resultTemplate": "{ \"Value\" : \"{{{Id}}}\", \"DisplayValue\" : \"{{{Name}}}\" }"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "manageexperiment.js"
+    }
+  },
+  "messages": {
+    "CouldNotFetchNicDetails": "ms-resource:loc.messages.CouldNotFetchNicDetails",
+    "ConnectingVMtoLB": "ms-resource:loc.messages.ConnectingVMtoLB",
+    "DisconnectingVMfromLB": "ms-resource:loc.messages.DisconnectingVMfromLB",
+    "setNICStatusSuccess": "ms-resource:loc.messages.setNICStatusSuccess",
+    "MaxRetriesExceededForSettingNetworkInterface": "ms-resource:loc.messages.MaxRetriesExceededForSettingNetworkInterface",
+    "ActionCompletedSuccefully": "ms-resource:loc.messages.ActionCompletedSuccefully",
+    "CouldNotFetchAcessToken": "ms-resource:loc.messages.CouldNotFetchAcessToken",
+    "CouldNotFetchNetworkInterfacesInRg": "ms-resource:loc.messages.CouldNotFetchNetworkInterfacesInRg",
+    "CouldNotFetchLoadBalancer": "ms-resource:loc.messages.CouldNotFetchLoadBalancer",
+    "CouldNotFetchNetworkInterface": "ms-resource:loc.messages.CouldNotFetchNetworkInterface",
+    "FailedSettingNetworkInterface": "ms-resource:loc.messages.FailedSettingNetworkInterface",
+    "SettingTheNetworkInterface": "ms-resource:loc.messages.SettingTheNetworkInterface"
+  }
+}

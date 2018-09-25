@@ -42,5 +42,8 @@
     "sync-request": "3.0.1",
     "typescript": "2.3.4",
     "validator": "3.33.0"
+  },
+  "dependencies": {
+    "azure-arm-rest": "file:_build/Tasks/Common/azure-arm-rest-1.0.2.tgz"
   }
 }

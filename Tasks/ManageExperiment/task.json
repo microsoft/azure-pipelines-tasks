@@ -1,0 +1,91 @@
+{
+    "id": "58b25f39-9b53-44ce-b6d1-08ef854e905b",
+    "name": "ManageExperiment",
+    "friendlyName": "Manage Experiment",
+    "description": "Manage Experiments in Control Tower",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=837723)",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 10
+    },
+    "minimumAgentVersion": "1.95.0",
+    "instanceNameFormat": "Manage Experiment",
+    "inputs": [
+        {
+            "name": "ConnectedServiceName",
+            "aliases": ["azureSubscription"],
+            "type": "connectedService:AzureRM",
+            "label": "Azure Subscription",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the Azure Resource Manager subscription for the deployment."
+        },
+        {
+            "name": "ExperimentId",
+            "type": "pickList",
+            "label": "Choose experiment",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Select the experiment you want to edit.",
+            "properties": {
+                "EditableOptions": "False"
+            }
+        },
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "defaultValue": "",
+            "required": true,
+            "options": {
+                "Start": "Start the experiment",
+                "Stop": "Stop the experiment",
+                "ChangeTraffic": "Change the traffic exposure of flights"
+            },
+            "helpMarkDown": "Select the action you want to perform"
+        },
+        {
+            "name": "FlightsTraffic",
+            "type": "string",
+            "label": "Flights traffic exposures",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = ChangeTraffic",
+            "helpMarkDown": "Semicolon separated flight exposure. Example: 'flight1':10';'flight2':20"
+        }
+    ],
+    "dataSourceBindings": [
+        {
+            "target": "ExperimentId",
+            "endpointId": "$(ConnectedServiceName)",
+            "dataSourceName": "ControlTowerExperiments",
+            "resultTemplate": "{ \"Value\" : \"{{{Id}}}\", \"DisplayValue\" : \"{{{Name}}}\" }"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "manageexperiment.js"
+        }
+    },
+    "messages": {
+        "CouldNotFetchNicDetails": "Could not fetch primary network interface configuration for the Azure Virtual Machine : %s",
+        "ConnectingVMtoLB": "Connecting the Azure Virtual Machine to the Load Balancer - %s's backend pool.",
+        "DisconnectingVMfromLB": "Disconnecting the Azure Virtual Machine from the Load Balancer - %s's backend pool.",
+        "setNICStatusSuccess": "Network interface %s set successfully",
+        "MaxRetriesExceededForSettingNetworkInterface": "Maximum retries exceeded for setting the Network Interface : %s",
+        "ActionCompletedSuccefully": "The Action - %s completed successfully for the virtual machine %s and load balancer %s",
+        "CouldNotFetchAcessToken": "Could not fetch access token.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchNetworkInterfacesInRg": "Could not fetch Network Interfaces in the resource group %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchLoadBalancer": "Could not fetch Load Balancer %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "CouldNotFetchNetworkInterface": "Could not fetch Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "FailedSettingNetworkInterface": "Failed setting the Network Interface %s.\nStatus Code : %s\nStatus Message : %s\n%s",
+        "SettingTheNetworkInterface": "Setting the network interface %s"
+    }
+}
