@@ -759,7 +759,6 @@
     "ASE_SSLIssueRecommendation": "ms-resource:loc.messages.ASE_SSLIssueRecommendation",
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported",
-    "WarNotSupportedFromLinuxAgent": "ms-resource:loc.messages.WarNotSupportedFromLinuxAgent"
+    "JarNotSupported": "ms-resource:loc.messages.JarNotSupported"
   }
 }
