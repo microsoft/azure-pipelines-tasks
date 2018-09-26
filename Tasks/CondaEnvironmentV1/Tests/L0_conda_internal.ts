@@ -31,7 +31,7 @@ afterEach(function () {
     mockery.resetCache();
 });
 
-it('finds the Conda installation with the CONDA variable', async function () {
+it('finds the Conda installation with the CONDA variable', function () {
     const existsSync = sinon.stub();
     const statSync = sinon.stub();
 
@@ -87,7 +87,7 @@ it('finds the Conda installation with the CONDA variable', async function () {
     }
 });
 
-it('finds the Conda installation with PATH', async function () {
+it('finds the Conda installation with PATH', function () {
     const existsSync = sinon.stub().returns(true);
     const statSync = sinon.stub().returns({
         isFile: () => true
@@ -181,7 +181,7 @@ it('creates Conda environment', async function () {
     }
 });
 
-it('activates Conda environment', async function () {
+it('activates Conda environment', function () {
     const setVariable = sinon.spy();
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
         setVariable: setVariable
