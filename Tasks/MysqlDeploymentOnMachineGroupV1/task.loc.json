@@ -16,7 +16,7 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -59,14 +59,11 @@
     },
     {
       "name": "ServerName",
-      "type": "pickList",
+      "type": "string",
       "label": "ms-resource:loc.input.label.ServerName",
       "required": true,
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.ServerName",
-      "properties": {
-        "EditableOptions": "True"
-      }
+      "defaultValue": "localhost",
+      "helpMarkDown": "ms-resource:loc.input.help.ServerName"
     },
     {
       "name": "DatabaseName",

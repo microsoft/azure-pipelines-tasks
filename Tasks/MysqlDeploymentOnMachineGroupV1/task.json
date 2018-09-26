@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -59,14 +59,11 @@
         },
         {
             "name": "ServerName",
-            "type": "pickList",
+            "type": "string",
             "label": "Host Name",
             "required": true,
-            "defaultValue": "",
-            "helpMarkDown": "Server name of 'Database for MySQL'.Example: localhost. When you connect using MySQL Workbench, this is the same value that is used for 'Hostname' in 'Parameters'",
-            "properties": {
-                "EditableOptions": "True"
-            }
+            "defaultValue": "localhost",
+            "helpMarkDown": "Server name of 'Database for MySQL'.Example: localhost. When you connect using MySQL Workbench, this is the same value that is used for 'Hostname' in 'Parameters'"
         },
         {
             "name": "DatabaseName",
