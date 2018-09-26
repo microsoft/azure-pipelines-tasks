@@ -47,7 +47,7 @@ async function getKubeConfigFile(): Promise<string> {
 }
 
 async function run() {
-    var command = tl.getInput("command", true);
+    var command = tl.getInput("command", true).toLowerCase();
     var isKubConfigRequired = isKubConfigSetupRequired(command);
     var kubectlCli: kubernetescli;
     if (isKubConfigRequired) {

@@ -28,17 +28,17 @@ var connection = new ContainerConnection();
 connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 
 // Run the specified command
-var command = tl.getInput("command", true);
+var command = tl.getInput("command", true).toLowerCase();
 /* tslint:disable:no-var-requires */
 
 var dockerCommandMap = {
-    "Build an image": "./containerbuild",
+    "build an image": "./containerbuild",
     "build": "./containerbuild",
-    "Tag image": "./containertag",
+    "tag image": "./containertag",
     "tag": "./containertag",
-    "Push an image": "./containerpush",
+    "push an image": "./containerpush",
     "push": "./containerpush",
-    "Run an image": "./containerrun",
+    "run an image": "./containerrun",
     "run": "./containerrun",
     "login": "./dockerlogin",
     "logout": "./dockerlogout"
