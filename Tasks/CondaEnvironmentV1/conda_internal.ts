@@ -40,10 +40,10 @@ function binaryDir(environmentRoot: string, platform: Platform): string {
  * Precondition: `toolName` executable is in PATH
  */
 function sudo(toolName: string, platform: Platform): ToolRunner {
-    const toolPath = task.which(toolName);
     if (platform === Platform.Windows) {
-        return task.tool(toolPath);
+        return task.tool(toolName);
     } else {
+        const toolPath = task.which(toolName);
         return task.tool('sudo').line(toolPath);
     }
 }
