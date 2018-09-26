@@ -16,7 +16,7 @@ taskRunner.setAnswers({
         'conda': '/miniconda/bin/conda'
     },
     exec: {
-        'sudo conda create --quiet --prefix /miniconda/envs/test --mkdir --yes': {
+        'sudo /miniconda/bin/conda create --quiet --prefix /miniconda/envs/test --mkdir --yes': {
             code: 0
         },
         'conda create --quiet --prefix \\miniconda\\envs\\test --mkdir --yes': {
@@ -24,6 +24,9 @@ taskRunner.setAnswers({
         },
     }
 });
+
+// `getVariable` is not supported by `TaskLibAnswers`
+process.env['AGENT_TEMPDIRECTORY'] = path.join('/', 'tmp');
 
 // Mock vsts-task-tool-lib
 taskRunner.registerMock('vsts-task-tool-lib/tool', {

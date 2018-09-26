@@ -14,7 +14,7 @@ taskRunner.setAnswers({
         'conda': '/miniconda/bin/conda'
     },
     exec: {
-        'sudo conda install python=3 --quiet --yes --json': {
+        'sudo /miniconda/bin/conda install python=3 --quiet --yes --json': {
             code: 0
         },
         'conda install python=3 --quiet --yes --json': {
@@ -29,6 +29,9 @@ taskRunner.setAnswers({
         '/miniconda/bin/conda': true
     }
 });
+
+// `getVariable` is not supported by `TaskLibAnswers`
+process.env['AGENT_TEMPDIRECTORY'] = path.join('/', 'tmp');
 
 // Mock vsts-task-tool-lib
 taskRunner.registerMock('vsts-task-tool-lib/tool', {
