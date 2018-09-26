@@ -76,12 +76,12 @@ it('sets PATH correctly on Linux', async function () {
 
     const findLocalTool = sinon.stub().returns('findLocalTool');
     mockery.registerMock('vsts-task-tool-lib/tool', {
-        findLocalTool: findLocalTool
+        findLocalTool
     });
 
     const prependPathSafe = sinon.spy();
     mockery.registerMock('./toolutil', {
-        prependPathSafe: prependPathSafe
+        prependPathSafe
     });
 
     const uut = reload();
@@ -105,12 +105,12 @@ it('sets PATH correctly on Windows', async function () {
     const toolPath = path.join('/', 'Python', '3.6.4', 'x64');
     const findLocalTool = sinon.stub().returns(toolPath);
     mockery.registerMock('vsts-task-tool-lib/tool', {
-        findLocalTool: findLocalTool
+        findLocalTool
     });
 
     const prependPathSafe = sinon.spy();
     mockery.registerMock('./toolutil', {
-        prependPathSafe: prependPathSafe
+        prependPathSafe
     });
 
     process.env['APPDATA'] = '/mock-appdata'; // needed for running this test on Linux and macOS

@@ -43,10 +43,10 @@ it('creates and activates environment', async function () {
     const createEnvironment = sinon.spy();
     const activateEnvironment = sinon.spy();
     mockery.registerMock('./conda_internal', {
-        findConda: findConda,
-        prependCondaToPath: prependCondaToPath,
-        createEnvironment: createEnvironment,
-        activateEnvironment: activateEnvironment
+        findConda,
+        prependCondaToPath,
+        createEnvironment,
+        activateEnvironment
     });
 
     const uut = reload('../conda');
@@ -75,10 +75,10 @@ it('requires `createCustomEnvironment` to be set to create a custom environment'
     const createEnvironment = sinon.spy();
     const activateEnvironment = sinon.spy();
     mockery.registerMock('./conda_internal', {
-        findConda: findConda,
-        prependCondaToPath: prependCondaToPath,
-        createEnvironment: createEnvironment,
-        activateEnvironment: activateEnvironment
+        findConda,
+        prependCondaToPath,
+        createEnvironment,
+        activateEnvironment
     });
 
     const uut = reload('../conda');
@@ -106,11 +106,11 @@ it('updates Conda if the user requests it', async function () {
     const createEnvironment = sinon.spy();
     const activateEnvironment = sinon.spy();
     mockery.registerMock('./conda_internal', {
-        findConda: findConda,
-        prependCondaToPath: prependCondaToPath,
-        updateConda: updateConda,
-        createEnvironment: createEnvironment,
-        activateEnvironment: activateEnvironment
+        findConda,
+        prependCondaToPath,
+        updateConda,
+        createEnvironment,
+        activateEnvironment
     });
 
     const uut = reload('../conda');
@@ -136,9 +136,9 @@ it('fails if `conda` is not found', async function () {
     const createEnvironment = sinon.spy();
     const activateEnvironment = sinon.spy();
     mockery.registerMock('./conda_internal', {
-        findConda: findConda,
-        createEnvironment: createEnvironment,
-        activateEnvironment: activateEnvironment
+        findConda,
+        createEnvironment,
+        activateEnvironment
     });
 
     const uut = reload('../conda');
@@ -173,9 +173,9 @@ it('fails if installing packages to the base environment fails', async function 
     const installPackagesGlobally = sinon.stub().rejects(new Error('installPackagesGlobally'));
 
     mockery.registerMock('./conda_internal', {
-        findConda: findConda,
-        prependCondaToPath: prependCondaToPath,
-        installPackagesGlobally: installPackagesGlobally
+        findConda,
+        prependCondaToPath,
+        installPackagesGlobally
     });
 
     const uut = reload('../conda');
