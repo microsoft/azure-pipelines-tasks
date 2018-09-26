@@ -1,19 +1,23 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { PackageType } from 'webdeployment-common/packageUtility';
-import fs = require('fs');
 import path = require('path');
 
-var packageUtility = require('webdeployment-common/packageUtility.js');
 var webCommonUtility = require('webdeployment-common/utility.js');
 var deployUtility = require('webdeployment-common/utility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
+
+const customContainerImageAppSetting: string = 'DOCKER_CUSTOM_IMAGE_NAME';
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
     private zipDeploymentID: string;
 
     public async DeployWebAppStep() {
         tl.debug('Performing Linux built-in package deployment');
+        if(this.taskParams.isFunctionApp && this.appServiceUtility.hasApplicationSetting(customContainerImageAppSetting)) {
+            throw new Error(tl.loc('Incompatiblewebapptypeandname', this.taskParams.WebAppName));
+        }
+
         await this.kuduServiceUtility.warmpUp();
         switch(this.taskParams.Package.getPackageType()){
             case PackageType.folder:

@@ -20,7 +20,7 @@
         "Minor": 3,
         "Patch": 8
     },
-    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Kudu Zip Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
+    "releaseNotes": "What's new in version 4.* (preview)<br />Supports Zip Deploy, Run From Zip, War Deploy<br />Supports App Service Environments<br />Improved UI for discovering different App service types supported by the task<br/>Run From Zip is the preferred deployment method, which makes files in wwwroot folder read-only<br/>Click [here](https://aka.ms/azurermwebdeployreadme) for more information.",
     "minimumAgentVersion": "2.104.1",
     "groups": [
         {
@@ -210,7 +210,23 @@
                 "EditableOptions": "True"
             },
             "helpMarkDown": "Select the framework and version.",
-            "visibleRule": "WebAppKind = webAppLinux || WebAppKind = functionAppLinux"
+            "visibleRule": "WebAppKind = webAppLinux"
+        },        
+        {
+            "name": "RuntimeStackFunction",
+            "type": "pickList",
+            "label": "Runtime Stack",
+            "defaultValue": "",
+            "required": true,
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "options": {
+                "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".Net",
+                "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
+            },
+            "helpMarkDown": "Select the framework and version.",
+            "visibleRule": "WebAppKind = functionAppLinux"
         },
         {
             "name": "StartupCommand",
@@ -606,6 +622,7 @@
         "ASE_WebDeploySSLIssueRecommendation": "To use a certificate in App Service, the certificate must be signed by a trusted certificate authority. If your web app gives you certificate validation errors, you're probably using a self-signed certificate and to resolve them you need to pass -allowUntrusted in additional arguments of web deploy option.",
         "FailedToGetResourceID": "Failed to get resource ID for resource type '%s' and resource name '%s'. Error: %s",
         "JarPathNotPresent" : "Java jar path is not present",
-        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s"
+        "FailedToUpdateApplicationInsightsResource": "Failed to update Application Insights '%s' Resource. Error: %s",
+        "Incompatiblewebapptypeandname": "The app service %s is incompatible with app type Function on Linux. If it is not a container app, please delete app setting DOCKER_CUSTOM_IMAGE_NAME and try again."
     }
 }

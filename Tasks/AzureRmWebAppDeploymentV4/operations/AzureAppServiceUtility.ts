@@ -85,7 +85,7 @@ export class AzureAppServiceUtility {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;
-            let webRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5};
+            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
             var response = await webClient.sendRequest(webRequest, webRequestOptions);
             tl.debug(`App Service status Code: '${response.statusCode}'. Status Message: '${response.statusMessage}'`);
         }
@@ -120,6 +120,16 @@ export class AzureAppServiceUtility {
 
         tl.debug(`Virtual Application Map: Physical path: '${physicalToVirtualPathMap.physicalPath}'. Virtual path: '${physicalToVirtualPathMap.virtualPath}'.`);
         return physicalToVirtualPathMap.physicalPath;
+    }    
+
+    public async hasApplicationSetting(property: any): Promise<boolean> {
+        var applicationSettings = await this._appService.getApplicationSettings();
+        if(applicationSettings.properties[property]) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public async updateConfigurationSettings(properties: any) : Promise<void> {

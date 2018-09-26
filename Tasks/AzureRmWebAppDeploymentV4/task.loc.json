@@ -218,7 +218,23 @@
         "EditableOptions": "True"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
-      "visibleRule": "WebAppKind = webAppLinux || WebAppKind = functionAppLinux"
+      "visibleRule": "WebAppKind = webAppLinux"
+    },
+    {
+      "name": "RuntimeStackFunction",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.RuntimeStackFunction",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "options": {
+        "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".Net",
+        "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeStackFunction",
+      "visibleRule": "WebAppKind = functionAppLinux"
     },
     {
       "name": "StartupCommand",
@@ -619,6 +635,7 @@
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
-    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource"
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
+    "Incompatiblewebapptypeandname": "ms-resource:loc.messages.Incompatiblewebapptypeandname"
   }
 }
