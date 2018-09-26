@@ -30,20 +30,16 @@ function assertParameter<T>(value: T | undefined, propertyName: string): T {
 
 export async function condaEnvironment(parameters: Readonly<TaskParameters>, platform: Platform): Promise<void> {
     // Find Conda on the system
-    const condaRoot = await (async () => {
-        const preinstalledConda = internal.findConda(platform);
-        if (preinstalledConda) {
-            return preinstalledConda;
-        } else {
-            throw new Error(task.loc('CondaNotFound'));
-        }
-    })();
+    const condaRoot = internal.findConda(platform);
+    if (!condaRoot) {
+        throw new Error(task.loc('CondaNotFound'));
+    }
+
+    internal.prependCondaToPath(condaRoot, platform);
 
     if (parameters.updateConda) {
         await internal.updateConda(condaRoot, platform);
     }
-
-    internal.prependCondaToPath(condaRoot, platform);
 
     if (parameters.createCustomEnvironment) { // activate the environment, creating it if it does not exist
         const environmentName = assertParameter(parameters.environmentName, 'environmentName');
@@ -58,11 +54,12 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
                 console.log(task.loc('CleanEnvironment', environmentPath));
                 task.rmRF(environmentPath);
             }
-            await internal.createEnvironment(environmentPath, parameters.packageSpecs, parameters.createOptions);
+            await internal.createEnvironment(environmentPath, platform, parameters.packageSpecs, parameters.createOptions);
         }
 
         internal.activateEnvironment(environmentsDir, environmentName, platform);
     } else if (parameters.packageSpecs) {
-        internal.installPackagesGlobally(parameters.packageSpecs, parameters.installOptions);
+        await internal.installPackagesGlobally(parameters.packageSpecs, platform, parameters.installOptions);
+        internal.addBaseEnvironmentToPath(platform);
     }
 }
