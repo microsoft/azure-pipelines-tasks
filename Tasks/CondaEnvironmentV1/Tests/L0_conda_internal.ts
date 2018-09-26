@@ -31,13 +31,13 @@ afterEach(function () {
     mockery.resetCache();
 });
 
-it('finds the Conda installation with the CONDA variable', async function () {
+it('finds the Conda installation with the CONDA variable', function () {
     const existsSync = sinon.stub();
     const statSync = sinon.stub();
 
     mockery.registerMock('fs', {
-        existsSync: existsSync,
-        statSync: statSync
+        existsSync,
+        statSync
     });
 
     mockTask.setAnswers({
@@ -50,7 +50,7 @@ it('finds the Conda installation with the CONDA variable', async function () {
     getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        getVariable: getVariable
+        getVariable
     }));
 
     { // executable exists and is a file
@@ -87,15 +87,15 @@ it('finds the Conda installation with the CONDA variable', async function () {
     }
 });
 
-it('finds the Conda installation with PATH', async function () {
+it('finds the Conda installation with PATH', function () {
     const existsSync = sinon.stub().returns(true);
     const statSync = sinon.stub().returns({
         isFile: () => true
     });
 
     mockery.registerMock('fs', {
-        existsSync: existsSync,
-        statSync: statSync
+        existsSync,
+        statSync
     });
 
     mockTask.setAnswers({
@@ -109,7 +109,7 @@ it('finds the Conda installation with PATH', async function () {
     getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        getVariable: getVariable
+        getVariable
     }));
 
     const uut = reload('../conda_internal');
@@ -181,15 +181,15 @@ it('creates Conda environment', async function () {
     }
 });
 
-it('activates Conda environment', async function () {
+it('activates Conda environment', function () {
     const setVariable = sinon.spy();
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        setVariable: setVariable
+        setVariable
     }));
 
     const prependPathSafe = sinon.spy();
     mockery.registerMock('./toolutil', {
-        prependPathSafe: prependPathSafe
+        prependPathSafe
     });
 
     const uut = reload('../conda_internal');
@@ -242,7 +242,7 @@ it('adds base environment to path successfully', function () {
 
     const prependPathSafe = sinon.spy();
     mockery.registerMock('./toolutil', {
-        prependPathSafe: prependPathSafe
+        prependPathSafe
     });
 
     const uut = reload('../conda_internal');
