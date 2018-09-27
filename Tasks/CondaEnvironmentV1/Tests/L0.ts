@@ -19,6 +19,7 @@ describe('CondaEnvironment L0 Suite', function () {
         const testRunner = new MockTestRunner(testFile);
 
         testRunner.run();
+        console.log(JSON.stringify(testRunner));
 
         if (getPlatform() === Platform.Windows) {
             assert(testRunner.ran('conda create --quiet --prefix \\miniconda\\envs\\test --mkdir --yes'));
@@ -35,6 +36,7 @@ describe('CondaEnvironment L0 Suite', function () {
         const testRunner = new MockTestRunner(testFile);
 
         testRunner.run();
+        console.log(JSON.stringify(testRunner));
 
         if (getPlatform() === Platform.Windows) {
             assert(testRunner.ran('conda install python=3 --quiet --yes --json'));
