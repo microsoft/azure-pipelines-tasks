@@ -35,11 +35,16 @@ function binaryDir(environmentRoot: string, platform: Platform): string {
     }
 }
 
-function sudo(toolPath: string, platform: Platform): ToolRunner {
+/**
+ * Run a tool with `sudo` on Linux and macOS
+ * Precondition: `toolName` executable is in PATH
+ */
+function sudo(toolName: string, platform: Platform): ToolRunner {
     if (platform === Platform.Windows) {
-        return task.tool('conda');
+        return task.tool(toolName);
     } else {
-        return task.tool('sudo').line('conda');
+        const toolPath = task.which(toolName);
+        return task.tool('sudo').line(toolPath);
     }
 }
 
