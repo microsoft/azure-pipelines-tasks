@@ -20,7 +20,7 @@ describe('PackerBuild Suite', function() {
     before((done) => {
 
         delete process.env["__build_output__"] ;
-        delete  process.env["__copy_fails__"] ;
+        delete process.env["__copy_fails__"] ;
         delete process.env["__deploy_package_found__"] ;
         delete process.env["__dest_path_exists__"] ;
         delete process.env["__download_fails__"] ;
