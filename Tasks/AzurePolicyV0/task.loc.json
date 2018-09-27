@@ -1,0 +1,107 @@
+{
+  "id": "8BA74703-E94F-4A35-814E-FC21F44578A2",
+  "name": "AzurePolicyCheckGate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "runsOn": [
+    "ServerGate"
+  ],
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "preview": "true",
+  "inputs": [
+    {
+      "name": "ConnectedServiceName",
+      "aliases": [
+        "azureSubscription"
+      ],
+      "type": "connectedService:AzureRM",
+      "label": "ms-resource:loc.input.label.ConnectedServiceName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName"
+    },
+    {
+      "name": "ResourceGroupName",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.ResourceGroupName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.ResourceGroupName",
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "Resources",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.Resources",
+      "helpMarkDown": "ms-resource:loc.input.help.Resources",
+      "defaultValue": "",
+      "properties": {
+        "MultiSelectFlatList": "True",
+        "DisableManageLink": "True",
+        "EditableOptions": "False"
+      }
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "target": "ResourceGroupName",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureResourceGroups"
+    },
+    {
+      "target": "Resources",
+      "endpointId": "$(ConnectedServiceName)",
+      "dataSourceName": "AzureRMResourcesInRG",
+      "parameters": {
+        "ResourceGroupName": "$(ResourceGroupName)"
+      },
+      "resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "HttpRequestChain": {
+      "Execute": [
+        {
+          "RequestInputs": {
+            "EndpointId": "$(connectedServiceName)",
+            "EndpointUrl": "$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/triggerEvaluation?api-version=2018-07-01-preview",
+            "Method": "POST"
+          },
+          "ExecutionOptions": {
+            "OutputVariables": {
+              "locationUrl": "response['headers']['location']"
+            },
+            "SkipSectionExpression": "isUrl(variables['locationUrl'])"
+          }
+        },
+        {
+          "RequestInputs": {
+            "EndpointId": "$(connectedServiceName)",
+            "EndpointUrl": "$(locationUrl)",
+            "Method": "GET",
+            "Expression": "and(eq(response['statuscode'], 'OK'), eq(response['content']['status'], 'Succeeded'))"
+          }
+        },
+        {
+          "RequestInputs": {
+            "EndpointId": "$(connectedServiceName)",
+            "EndpointUrl": "$(endpoint.url)subscriptions/$(endpoint.subscriptionId)/resourceGroups/$(ResourceGroupName)/providers/Microsoft.PolicyInsights/policyStates/latest/queryResults?api-version=2018-04-04&$filter=IsCompliant eq false",
+            "Method": "POST",
+            "Expression": "or(and(eq(isNullOrEmpty(taskInputs['resources']), true), eq(count(jsonpath('value[*].resourceId')), 0)), and(eq(isNullOrEmpty(taskInputs['resources']), false), eq(count(intersect(split(taskInputs['resources'], ','), jsonpath('value[*].resourceId'))) ,0)))"
+          }
+        }
+      ]
+    }
+  },
+  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+}

@@ -1,4 +1,4 @@
-# For more information on the VSTS Task SDK:
+# For more information on the Azure Pipelines Task SDK:
 # https://github.com/Microsoft/vsts-task-lib
 
 [CmdletBinding()]

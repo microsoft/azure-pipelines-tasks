@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "테스트 결과 게시",
   "loc.helpMarkDown": "[자세한 정보](https://go.microsoft.com/fwlink/?LinkID=613742)",
-  "loc.description": "VSTS/TFS에 테스트 결과 게시",
+  "loc.description": "Azure Pipelines/TFS에 테스트 결과 게시",
   "loc.instanceNameFormat": "테스트 결과 $(testResultsFiles) 게시",
   "loc.releaseNotes": "<ul><li>NUnit3 지원</li><li>Minimatch 파일 패턴 지원</li></ul>",
   "loc.group.displayName.advanced": "고급",

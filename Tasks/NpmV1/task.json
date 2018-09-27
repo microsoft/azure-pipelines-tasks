@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 25
+        "Patch": 26
     },
     "runsOn": [
         "Agent",
@@ -78,7 +78,7 @@
             "groupName": "customRegistries",
             "name": "customRegistry",
             "label": "Registries to use",
-            "helpMarkDown": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from VSTS here.",
+            "helpMarkDown": "You can either commit a .npmrc file to your source code repository and set its path here or select a registry from Azure Artifacts here.",
             "type": "radio",
             "options": {
                 "useNpmrc": "Registries in my .npmrc",
@@ -89,7 +89,7 @@
         {
             "groupName": "customRegistries",
             "name": "customFeed",
-            "label": "Use packages from this VSTS/TFS registry",
+            "label": "Use packages from this Azure Artifacts/TFS registry",
             "helpMarkDown": "Include the selected feed in the generated .npmrc.",
             "type": "pickList",
             "visibleRule": "customRegistry = useFeed",

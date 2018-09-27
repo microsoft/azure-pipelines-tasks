@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "为源编制索引并发布符号",
-  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Visual Studio Team Services Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in VSTS.",
-  "loc.description": "为你的源代码编制索引并将符号发布到文件共享或 Visual Studio Team Services 符号服务器",
+  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Azure Pipelines Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in Azure Pipelines.",
+  "loc.description": "为你的源代码编制索引并将符号发布到文件共享或 Azure Pipelines 符号服务器",
   "loc.instanceNameFormat": "发布符号路径",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.SymbolsFolder": "符号文件夹的路径",
@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "发布符号",
   "loc.input.help.PublishSymbols": "指示是否发布符号文件。",
   "loc.input.label.SymbolServerType": "Symbol server type",
-  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the VSTS Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in VSTS.",
+  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the Azure Pipelines Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Pipelines.",
   "loc.input.label.SymbolsPath": "发布符号的路径",
   "loc.input.help.SymbolsPath": "The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.",
   "loc.input.label.DetailedLog": "详细日志记录",

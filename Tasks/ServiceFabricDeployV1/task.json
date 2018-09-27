@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 22
+        "Patch": 23
     },
     "demands": [
         "Cmd"
@@ -422,11 +422,11 @@
         "PathDoesNotExist": "Path '{0}' does not exist.",
         "EmptyApplicationName": "Application name should be a non-empty string",
         "ServiceEndpointUpgradeWarning": "Your deploy task has been upgraded to a new version with possible breaking changes. The Cluster Endpoint defined in your service connection was previously ignored, but will now override the value in the publish profile. Verify the endpoint is correct and prefixed with 'https://'. In addition, a Server Certificate Thumbprint field has been added to the service service connection and will also override the publish profile value. Your service connection may not have been updated to allow specifying the Server Certificate Thumbprint, in which case we will still use the value from the publish profile and you should try again soon.",
-        "OverrideApplicationParameterFile": "Overriding application parameter file specified in publish profile with '{0}' specified in the VSTS task.",
-        "OverrideUpgradeSettings": "Overriding upgrade settings specified in publish profile with the settings specified in the VSTS Task.",
-        "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the service connection or a publish profile must be specified in the VSTS task.",
-        "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the VSTS task.",
-        "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the VSTS task.",
+        "OverrideApplicationParameterFile": "Overriding application parameter file specified in publish profile with '{0}' specified in the Azure Pipelines task.",
+        "OverrideUpgradeSettings": "Overriding upgrade settings specified in publish profile with the settings specified in the Azure Pipelines task.",
+        "PublishProfileRequiredServerThumbprint": "A server certificate thumbprint must be defined on the service connection or a publish profile must be specified in the Azure Pipelines task.",
+        "PublishProfileRequiredAppParams": "An application parameters file or a publish profile must be specified in the Azure Pipelines task.",
+        "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the Azure Pipelines task.",
         "UnsupportedDockerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",

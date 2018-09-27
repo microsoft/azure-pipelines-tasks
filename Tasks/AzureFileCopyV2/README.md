@@ -12,7 +12,7 @@ Please report a problem at [Developer Community Forum](https://developercommunit
 
 **Azure Subscription**
 
-To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Team Services using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. 
+To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab. 
 
  - For Azure Classic resources use 'Azure' endpoint type with Certificate or Credentials based authentication. If you are using credentials based auth, ensure that the credentials are for a [**work account**](https://azure.microsoft.com/en-in/pricing/member-offers/msdn-benefits-details/work-accounts-faq/) because Microsoft accounts like [**joe@live.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) or [**joe@hotmail.com**](https://github.com/Microsoft/vsts-tasks/blob/master/Tasks/DeployAzureResourceGroup) are not supported. 
 
@@ -24,17 +24,17 @@ To deploy to Azure, an Azure subscription has to be linked to Team Foundation Se
 
 The following table lists the storage accounts and the service connections that with them. To identify whether a storage account is based on the classic APIs or the resource manager APIs, log into [https://portal.azure.com/](https://portal.azure.com/) and browse for storage accounts (classic) or storage accounts.
 
-| **Storage Account Type** | **Azure Service Connections in TFS/Team Services** |
+| **Storage Account Type** | **Azure Service Connections in TFS/Azure Pipelines** |
 | --- | --- |
 | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) |      Azure Resource Manager EndPoint  |
 | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) |      Azure EndPoint type with Certificate or credentials based authentication on work accounts |
 
 For Azure MSDN accounts, in addition to the certificates and the Service Principal, a work account can be easily created as shown below:
 
-1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the account in Team Services:
+1. Create an user in the Azure Active Directory from the [portal](https://msdn.microsoft.com/en-us/library/azure/hh967632.aspx) (this is the old Azure portal). After adding the account, the following two things need to be done to use the organization in Azure Pipelines:
   - Add the Active Directory account to the co-administrators in the subscription. Go to the Settings and then click on administrators and add the account as a co-admin like, [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com)
   - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
-2. Add that user and password in the service connections in the Team Services and deployments will work with that account.
+2. Add that user and password in the service connections in the Azure Pipelines and deployments will work with that account.
 
 **Azure PowerShell**
 
@@ -42,9 +42,9 @@ The task needs the Azure PowerShell version to be installed on the automation ag
 
 **Azure Virtual Machines**
 
-The task can copy files to the Azure Virtual Machines that are created either using the [new azure portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) or through the [azure classic portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/). For copying the files to VMs, they are first copied to an automatically generated container in the  Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs. The valid combination of Azure service connections and storage accounts for copying to a Azure is as given below:
+The task can copy files to the Azure Virtual Machines that are created either using the [new azure portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) or through the [azure classic portal](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/). For copying the files to VMs, they are first copied to an automatically generated container in the  Azure storage account, and then from there to the VMs. The container is deleted after the files are copied successfully to the VMs. The valid combination of Azure service connections and storage accounts for copying to Azure is as given below:
 
-| **Storage Account Type** | **Azure Service Connections in TFS/Team Services** | **Azure Virtual Machines** |
+| **Storage Account Type** | **Azure Service Connections in TFS/Azure Pipelines** | **Azure Virtual Machines** |
 | --- | --- | --- |
 | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) | Azure Resource Manager Endpoint | [Resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) Azure Virtual machines |
 | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) | Azure Endpoint type with Certificate or credentials based authentication on work accounts | [Classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) Azure Virtual machines |
@@ -118,9 +118,9 @@ The parameters of the task are described in details, including examples, to show
 If you want to work with earlier version of this task, please refer README.cmd present at https://github.com/Microsoft/vsts-tasks/tree/releases/m94/Tasks/AzureFileCopy/. 
 
 ### Supported Azure and AzureRM module versions:
-|  VSTS/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |
+|  Azure Pipelines/TFS Release  |  Recommended Azure Version  |  Other Supported Versions |
 |:------------------:|:---------------------------:|:-------------------------:|
-|  VSTS              |  [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
+|  Azure Pipelines              |  [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
 |  TFS 2015 Update 3  | [v1.3.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.3.2-April2016)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
 |  TFS 2015 Update 2  | [v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015)  |  [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |
 |  TFS 2015 Update 1  | [v0.9.8] (https://github.com/Azure/azure-powershell/releases/tag/v0.9.8-September2015)  |  |

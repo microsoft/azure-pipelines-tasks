@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-publishbuildartifacts",
   "version": "1.0.0",
-  "description": "VSTS Publish Build Artifacts Task",
+  "description": "Azure Pipelines Publish Build Artifacts Task",
   "main": "publishbuildartifacts.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
     "vsts-task-lib": "^0.9.20"
   }
 }

@@ -2,7 +2,7 @@
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-The Kubernetes task for Visual Studio Team Services or Team Foundation Server incorporates components from the projects listed below. Microsoft licenses these components to you under the Microsoft software license terms. The original copyright notices and the licenses under which Microsoft received such components are set forth below for informational purposes. Microsoft reserves all rights not expressly granted herein, whether by implication, estoppel or otherwise.
+The Kubernetes task for Azure Pipelines or Team Foundation Server incorporates components from the projects listed below. Microsoft licenses these components to you under the Microsoft software license terms. The original copyright notices and the licenses under which Microsoft received such components are set forth below for informational purposes. Microsoft reserves all rights not expressly granted herein, whether by implication, estoppel or otherwise.
 
 
 1.	argparse (https://github.com/nodeca/argparse)
@@ -675,7 +675,7 @@ END OF path-is-absolute  NOTICES, INFORMATION, AND LICENSE
 
 %% path-is-inside NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-Copyright © 2013–2014 Domenic Denicola <domenic@domenicdenicola.com>
+Copyright ï¿½ 2013ï¿½2014 Domenic Denicola <domenic@domenicdenicola.com>
 Licensed under the WTFPL Version 2 (http://www.wtfpl.net/about/)
 =========================================
 END OF path-is-inside NOTICES, INFORMATION, AND LICENSE
@@ -760,7 +760,7 @@ END OF pinkie-promise NOTICES, INFORMATION, AND LICENSE
 
 %% q NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-Copyright 2009–2014 Kristopher Michael Kowal. All rights reserved.
+Copyright 2009ï¿½2014 Kristopher Michael Kowal. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to

@@ -31,7 +31,7 @@
   "loc.input.help.deploymentMode": "増分モードでは、配置をリソース グループへの増分更新として処理します。リソース グループ内にあり、テンプレートで指定されていないリソースは変更されずに残されます。\n\n 完全モードではテンプレート内にないリソースが削除されます。\n\n 検証モードでは、実際のリソースを作成する前に、テンプレートの問題を検出することができます。\n\n 既定では増分モードが使用されます。",
   "loc.input.label.enableDeploymentPrerequisites": "前提条件を有効にする",
   "loc.input.help.enableDeploymentPrerequisites": "これらのオプションは、リソース グループに仮想マシンが含まれている場合にのみ適用可能です。<br><br>配置グループ オプションを選択すると、それぞれの仮想マシンに配置グループ エージェントが構成されます。<br><br>WinRM オプションを選択すると、自己署名証明書を使用して、ポート 5986 上に HTTPS プロトコルを介した Windows リモート管理 (WinRM) リスナーが構成されます。この構成は、Azure マシン上で配置操作を実行するために必要です。ターゲットの仮想マシンがロード バランサーに支援されている場合には、ターゲット ポート (5986) に受信 NAT 規則が構成されていることをご確認ください。",
-  "loc.input.label.deploymentGroupEndpoint": "TFS/VSTS エンドポイント",
+  "loc.input.label.deploymentGroupEndpoint": "TFS/Azure Pipelines エンドポイント",
   "loc.input.help.deploymentGroupEndpoint": "配置グループへのエージェント登録には、Visual Studio プロジェクトにアクセスする必要があります。<br><br>スコープを \"配置グループ\" に制限した、既定の有効期限 90 日の個人用アクセス トークン (PAT) を使用してエンドポイントを作成するには、[追加] をクリックします。<br><br>エンドポイントの詳細を更新するには、[管理] をクリックします。​",
   "loc.input.label.project": "チーム プロジェクト",
   "loc.input.help.project": "配置グループが定義されているチーム プロジェクトを指定する",

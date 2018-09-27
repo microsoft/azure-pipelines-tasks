@@ -9,7 +9,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 40
+        "Patch": 43
     },
     "runsOn": [
         "Agent",
@@ -82,7 +82,7 @@
             "type": "radio",
             "label": "Feeds to use",
             "defaultValue": "select",
-            "helpMarkDown": "You can either select a feed from VSTS and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
+            "helpMarkDown": "You can either select a feed from Azure Artifacts and/or NuGet.org here, or commit a nuget.config file to your source code repository and set its path here.",
             "required": "true",
             "options": {
                 "select": "Feed(s) I select here",
@@ -94,7 +94,7 @@
             "name": "feedRestore",
             "aliases": ["vstsFeed"],
             "type": "pickList",
-            "label": "Use packages from this VSTS/TFS feed",
+            "label": "Use packages from this Azure Artifacts/TFS feed",
             "defaultValue": "",
             "helpMarkDown": "Include the selected feed in the generated NuGet.config. You must have Package Management installed and licensed to select a feed here.",
             "required": "false",
@@ -219,7 +219,7 @@
             "label": "Allow duplicates to be skipped",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Visual Studio Team Services and using Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
+            "helpMarkDown": "If you continually publish a set of packages and only change the version number of the subset of packages that changed, use this option. It allows the task to report success even if some of your packages are rejected with 409 Conflict errors.\n\nThis option is currently only available on Azure Pipelines and using Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
             "visibleRule": "command = push && nuGetFeedType = internal"
         },
         {
@@ -438,16 +438,16 @@
         }
     },
     "messages": {
-        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection on this build agent, edit your build pipeline to choose a higher version of nuget or specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_NoConfigForNoCredentialProvider": "To connect to NuGet feeds hosted in your Azure Pipelines/TFS project collection on this build agent, edit your build pipeline to choose a higher version of nuget or specify a path to a NuGet.config containing the package sources you wish to use.",
         "Warning_ConflictingNuGetPreference": "NuGet 3.3 was selected, but a custom NuGet path was provided. The custom path will be preferred. To resolve this warning, edit your build task and select 'custom' for NuGet version under Advanced.",
         "PackagesInstalledSuccessfully": "Packages were restored successfully",
         "PackagesFailedToInstall": "Packages failed to restore",
-        "ConnectingAs": "Connecting to feeds in your Team Services account/TFS project collection as '%s' [%s]",
+        "ConnectingAs": "Connecting to feeds in your Azure Pipelines/TFS project collection as '%s' [%s]",
         "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
         "NoCredProviderOnAgent": "CredentialProvider.TeamBuild.exe not found on the agent. Falling back to config-based credential flow.",
         "NotARegularFile": "%s is not a solution file. Check the 'path to solution or packages.config' property of the NuGet Restore task.",
         "UnknownRestoreMode": "Unknown restore mode '%s'",
-        "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Team Services account/TFS project collection.",
+        "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Azure Pipelines/TFS project collection.",
         "NoNuGetSpecified": "If 'custom' is selected, you must provide a path to NuGet.exe",
 
         "Warning_AutomaticallyVersionReferencedProjects": "The automatic package versioning and include referenced projects options do not work together. Referenced projects will not inherit the custom version provided by the automatic versioning settings.",
@@ -458,7 +458,7 @@
         "Error_PackageFailure": "An error ocurred while trying to pack the files.",
         "Info_AttemptingToPackFile": "Attempting to pack file: ",
 
-        "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Team Services account/TFS project collection with NuGet 3.1 or below, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
+        "Warning_NoConfigForOldNuGet": "To connect to NuGet feeds hosted in your Azure Pipelines/TFS project collection with NuGet 3.1 or below, edit your build pipeline to specify a path to a NuGet.config containing the package sources you wish to use.",
         "PackagesPublishedSuccessfully": "Packages were published successfully",
         "PackagesFailedToPublish": "Packages failed to publish",
         "UnknownFeedType": "Unknown feed type '%s'",
@@ -468,7 +468,7 @@
         "Info_NoPackagesMatchedTheSearchPattern": "No packages matched the search pattern.",
         "Warning_ForceNuGetCannotSkipConflicts": "NuGet.exe was forced to be used for publish, if push conflicts occur it will result in a failure.",
         "Error_PushNotARegularFile": "%s is not a file. Check the 'Path/Pattern to nupkg' property of the task.",
-        "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Visual Studio Team Services. If NuGet.exe encounters a conflict, the task will fail.",
+        "Warning_AllowDuplicatesOnlyAvailableHosted": "The 'Allow duplicates to be skipped' option is currently only available on Azure Pipelines. If NuGet.exe encounters a conflict, the task will fail.",
         "Warning_SkipConflictsNotSupportedUnixAgents": "The 'Allow duplicates to be skipped' option is currently only available on Windows agents. If NuGet.exe encounters a conflict, the task will fail.",
         "Error_CommandNotRecognized": "The command %s was not recognized.",
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",

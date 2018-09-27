@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import { EOL } from 'os';
 import * as path from 'path';
 
 import { MockTestRunner } from 'vsts-task-lib/mock-test';

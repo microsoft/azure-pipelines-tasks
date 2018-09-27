@@ -31,13 +31,13 @@ afterEach(function () {
     mockery.resetCache();
 });
 
-it('finds the Conda installation with the CONDA variable', async function () {
+it('finds the Conda installation with the CONDA variable', function () {
     const existsSync = sinon.stub();
     const statSync = sinon.stub();
 
     mockery.registerMock('fs', {
-        existsSync: existsSync,
-        statSync: statSync
+        existsSync,
+        statSync
     });
 
     mockTask.setAnswers({
@@ -50,7 +50,7 @@ it('finds the Conda installation with the CONDA variable', async function () {
     getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        getVariable: getVariable
+        getVariable
     }));
 
     mockery.registerMock('vsts-task-tool-lib/tool', {});
@@ -89,15 +89,15 @@ it('finds the Conda installation with the CONDA variable', async function () {
     }
 });
 
-it('finds the Conda installation with PATH', async function () {
+it('finds the Conda installation with PATH', function () {
     const existsSync = sinon.stub().returns(true);
     const statSync = sinon.stub().returns({
         isFile: () => true
     });
 
     mockery.registerMock('fs', {
-        existsSync: existsSync,
-        statSync: statSync
+        existsSync,
+        statSync
     });
 
     mockTask.setAnswers({
@@ -111,7 +111,7 @@ it('finds the Conda installation with PATH', async function () {
     getVariable.withArgs('Agent.ToolsDirectory').returns('path-to-tools');
 
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        getVariable: getVariable
+        getVariable
     }));
 
     mockery.registerMock('vsts-task-tool-lib/tool', {});
@@ -167,15 +167,15 @@ it('creates Conda environment', async function (done: MochaDone) {
     }
 });
 
-it('activates Conda environment', async function () {
+it('activates Conda environment', function () {
     const setVariable = sinon.spy();
     mockery.registerMock('vsts-task-lib/task', Object.assign({}, mockTask, {
-        setVariable: setVariable
+        setVariable
     }));
 
     const prependPath = sinon.spy();
     mockery.registerMock('vsts-task-tool-lib/tool', {
-        prependPath: prependPath
+        prependPath
     });
 
     const uut = reload('../conda_internal');

@@ -18,7 +18,7 @@ describe('Azure Resource Group Deployment', function () {
     });
     after(function () {
     });
-    it("Successfully added Team Services Agent Extension on VM when option specified - Create or update RG", (done) => {
+    it("Successfully added Azure Pipelines Agent Extension on VM when option specified - Create or update RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
@@ -244,7 +244,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it("Successfully added Team Services Agent Extension on VM - Select RG", (done) => {
+    it("Successfully added Azure Pipelines Agent Extension on VM - Select RG", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Select Resource Group";
         process.env["resourceGroupName"] = "dummy";
@@ -270,7 +270,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it("Successfully added Team Services Agent Linux Extension on Linux VM", (done) => {
+    it("Successfully added Azure Pipelines Agent Linux Extension on Linux VM", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "NonWindowsVM";
@@ -297,7 +297,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it("Did not add Team Services Agent Extension on VM when option not specified", (done) => {
+    it("Did not add Azure Pipelines Agent Extension on VM when option not specified", (done) => {
         let tp = path.join(__dirname, "addVSTSExtension.js");
         process.env["action"] = "Create Or Update Resource Group";
         process.env["resourceGroupName"] = "dummy";
@@ -323,7 +323,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it("Successfully deleted Team Services Agent Extension on VM - Delete VMs", (done) => {
+    it("Successfully deleted Azure Pipelines Agent Extension on VM - Delete VMs", (done) => {
         let tp = path.join(__dirname, "deleteVSTSExtension.js");
         process.env["action"] = "Delete";
         process.env["resourceGroupName"] = "NonWindowsVM";
@@ -345,7 +345,7 @@ describe('Azure Resource Group Deployment', function () {
             done(error);
         }
     });
-    it("Successfully deleted Team Services Agent Extension on VM - Delete RG", (done) => {
+    it("Successfully deleted Azure Pipelines Agent Extension on VM - Delete RG", (done) => {
         let tp = path.join(__dirname, "deleteVSTSExtension.js");
         process.env["action"] = "DeleteRG";
         process.env["resourceGroupName"] = "NonWindowsVM";

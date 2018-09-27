@@ -10,7 +10,7 @@ If you have a problem using this task, report it at [Developer Community Forum](
  
 ## Pre-requisites for the task
  
-The only pre-requisite for this task is that Go Tool must be installed on the VSTS agent (hosted or private) machine. To specify the version of Go Tool to be installed on the agent, use Go Tool Installer Task.
+The only pre-requisite for this task is that Go Tool must be installed on the Azure Pipelines agent (hosted or private) machine. To specify the version of Go Tool to be installed on the agent, use Go Tool Installer Task.
   
 ### Parameters of the task
  

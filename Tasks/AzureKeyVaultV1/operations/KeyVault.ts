@@ -157,6 +157,7 @@ export class KeyVault {
 
     private downloadSecretValue(secretName: string, secretsToErrorsMap: SecretsToErrorsMapping): Promise<any> {
         tl.debug(util.format("Promise for downloading secret value for: %s", secretName));
+        secretName = secretName.trim();
 
         return new Promise<void>((resolve, reject) => {
             this.keyVaultClient.getSecretValue(secretName, (error, secretValue, request, response) => {

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "下載套件",
   "loc.helpMarkDown": "需要安裝套件管理延伸模組",
-  "loc.description": "從 VSTS 或 TFS 的套件管理摘要下載套件。\r\n需要套件管理延伸模組。",
+  "loc.description": "從 Azure Artifacts 或 TFS 的套件管理摘要下載套件。\r\n需要套件管理延伸模組。",
   "loc.instanceNameFormat": "下載套件",
   "loc.input.label.feed": "摘要",
   "loc.input.help.feed": "選取套件來源",

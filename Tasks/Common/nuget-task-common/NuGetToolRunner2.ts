@@ -208,7 +208,8 @@ export function isCredentialProviderEnabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
+    const isWindows = tl.osType() === "Windows_NT";
+    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true && isWindows) {
         tl.debug("Credential provider V1 is disabled in favor of V2 plugin.");
         return false;
     }
@@ -238,7 +239,8 @@ export function isCredentialProviderV2Enabled(quirks: NuGetQuirks): boolean {
         return false;
     }
 
-    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true) {
+    const isWindows = tl.osType() === "Windows_NT";
+    if (quirks.hasQuirk(NuGetQuirkName.V2CredentialProvider) === true && isWindows) {
         tl.debug("V2 credential provider is enabled.");
         return true;
     }

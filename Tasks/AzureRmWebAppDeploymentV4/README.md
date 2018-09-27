@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Azure App Service Deployment task is used to update different Azure App Service to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works on cross platform VSTS agents running Windows, Linux or Mac and uses the underlying deployment technologies of [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy), RunFromZip, Zip Deploy, Containers and [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API).
+The Azure App Service Deployment task is used to update different Azure App Service to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works on cross platform Azure Pipelines agents running Windows, Linux or Mac and uses the underlying deployment technologies of [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy), RunFromZip, Zip Deploy, Containers and [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API).
 
 The task works for [ASP.NET](https://www.visualstudio.com/en-us/docs/release/examples/azure/azure-web-apps-from-build-and-release-hubs), [ASP.NET Core](https://www.visualstudio.com/en-us/docs/release/examples/azure/aspnet-core10-azure-web-apps), PHP, Java, Python, Go and [Node.js](https://www.visualstudio.com/en-us/docs/release/examples/nodejs/node-to-azure-webapps) based web applications.
 
 The task can be used to deploy different Azure App Services like Function App (Windows/Linux/Containers), Web App on Windows, Web App on Linux, Web App for Containers and apps configured under Azure App Service Environments.
 
-The task is **under development and is available to a limited set of accounts on Visual Studio Team Services (VSTS)**. The [video](https://www.youtube.com/watch?v=uQ2qCmaZ_Ag&feature=youtu.be) describes the features that are available in the task currently.
+The task is **under development and is available to a limited set of Azure DevOps organizations**. The [video](https://www.youtube.com/watch?v=uQ2qCmaZ_Ag&feature=youtu.be) describes the features that are available in the task currently.
 
 ## Contact Information
 
@@ -26,7 +26,7 @@ The task can also be used to deply [Azure Functions](https://azure.microsoft.com
 
 ##### Azure Subscription
 
-To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Visual Studio Team Services using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
+To deploy to Azure, an Azure subscription has to be linked to Team Foundation Server or to Azure Pipelines using the Services tab in the Account Administration section. Add the Azure subscription to use in the Build or Release Management definition by opening the Account Administration screen (gear icon on the top-right of the screen) and then click on the Services Tab.
 
 Create the [ARM](https://azure.microsoft.com/en-in/documentation/articles/resource-group-overview/) service endpoint, use **'Azure Resource Manager'** endpoint type, for more details follow the steps listed in the link [here](https://go.microsoft.com/fwlink/?LinkID=623000&clcid=0x409).
 
@@ -36,7 +36,7 @@ The task does not work with the Azure Classic service endpoint and it will not l
 
 Several deployment methods are available in this task. Web Deploy (msdeploy.exe) is the default option. To change the deployment option, expand Additional Deployment Options and enable Select deployment method to choose from additional package-based deployment options.
 
-Based on the type of Azure App Service and VSTS agent, the task chooses a suitable deployment technology. The different deployment technologies used by the task are:
+Based on the type of Azure App Service and Azure Pipelines agent, the task chooses a suitable deployment technology. The different deployment technologies used by the task are:
 * *Web Deploy* 
 
 * *Kudu REST APIs*
@@ -128,7 +128,7 @@ In  case of Python, the path can be set as an output variable of the [Azure App 
   * [XML variable substitution](https://docs.microsoft.com/en-us/vsts/build-release/tasks/transforms-variable-substitution?view=vsts#xml-variable-substitution)
   * [JSON variable substitution](https://docs.microsoft.com/en-us/vsts/build-release/tasks/transforms-variable-substitution?view=vsts#json-variable-substitution)
 * **Deployment script:** 
-The task provides an option to customize the deployment by providing a script that will run on the Azure App Service once the application artifacts have been copied successfully to the App Service. You can choose to either provide an inline deployment script or point to a script file in your atifact folder. This is very useful when you want to restore your application dependencies on the App service directly. Restoring packages of Node, PHP, Python applications helps in avoiding timeouts when the application dependency results in a large artifact getting copied over from VSTS Agent to Azure app service. An example of this script is:
+The task provides an option to customize the deployment by providing a script that will run on the Azure App Service once the application artifacts have been copied successfully to the App Service. You can choose to either provide an inline deployment script or point to a script file in your atifact folder. This is very useful when you want to restore your application dependencies on the App service directly. Restoring packages of Node, PHP, Python applications helps in avoiding timeouts when the application dependency results in a large artifact getting copied over from Azure Pipelines Agent to Azure app service. An example of this script is:
 ```
 @echo off
 if NOT exist requirements.txt (
