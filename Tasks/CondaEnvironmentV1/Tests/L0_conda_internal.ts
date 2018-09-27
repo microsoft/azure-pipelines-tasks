@@ -120,6 +120,12 @@ it('finds the Conda installation with PATH', function () {
 });
 
 it('creates Conda environment', async function () {
+    mockTask.setAnswers({
+        which: {
+            'conda': '/miniconda/bin/conda'
+        }
+    });
+
     mockery.registerMock('vsts-task-lib/task', mockTask);
     mockery.registerMock('vsts-task-lib/toolrunner', mockToolRunner);
     const uut = reload('../conda_internal');
@@ -138,7 +144,7 @@ it('creates Conda environment', async function () {
             } else {
                 mockToolRunner.setAnswers({
                     exec: {
-                        [`sudo conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                        [`sudo /miniconda/bin/conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
                             code: 0
                         }
                     }
@@ -159,7 +165,7 @@ it('creates Conda environment', async function () {
             } else {
                 mockToolRunner.setAnswers({
                     exec: {
-                        [`sudo conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
+                        [`sudo /miniconda/bin/conda create --quiet --prefix ${path.join('envsDir', 'env')} --mkdir --yes`]: {
                             code: 1
                         }
                     }
