@@ -25,9 +25,6 @@ taskRunner.setAnswers({
     }
 });
 
-// `getVariable` is not supported by `TaskLibAnswers`
-process.env['AGENT_TEMPDIRECTORY'] = path.join('/', 'tmp');
-
 // Mock vsts-task-tool-lib
 taskRunner.registerMock('vsts-task-tool-lib/tool', {
     prependPath: () => undefined,
