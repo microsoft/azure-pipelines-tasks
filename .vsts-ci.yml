@@ -6,6 +6,8 @@ phases:
 
 # All tasks on Windows
 - phase: build_all_windows
+  variables:
+    TASK_TEST_TRACE: 1
   displayName: Build all tasks (Windows)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
   queue:
