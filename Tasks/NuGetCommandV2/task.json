@@ -9,14 +9,12 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 43
+        "Patch": 44
     },
-    "runsOn": [
-        "Agent",
-        "DeploymentGroup"
-    ],
+    "runsOn": ["Agent", "DeploymentGroup"],
     "minimumAgentVersion": "2.115.0",
-    "groups": [{
+    "groups": [
+        {
             "name": "restoreAuth",
             "displayName": "Feeds and authentication",
             "isExpanded": true,
@@ -48,7 +46,8 @@
         }
     ],
     "instanceNameFormat": "NuGet $(command)",
-    "inputs": [{
+    "inputs": [
+        {
             "name": "command",
             "type": "pickList",
             "label": "Command",
@@ -416,7 +415,8 @@
             "visibleRule": "command = custom"
         }
     ],
-    "dataSourceBindings": [{
+    "dataSourceBindings": [
+        {
             "target": "feedRestore",
             "endpointId": "tfs:feed",
             "endpointUrl": "{{endpoint.url}}/_apis/packaging/feeds",
