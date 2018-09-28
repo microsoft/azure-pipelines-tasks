@@ -1,4 +1,4 @@
-# Build your code using Gradle in VSTS
+# Build your code using Gradle in Azure Pipelines
 
 ### Parameters for Gradle build task are explained below
 
@@ -9,16 +9,16 @@
 - **Goal(s) :** The task(s) for Gradle to execute. A list of tasks can be taken from `gradlew tasks` issued from a command prompt. To know more [click here](https://docs.gradle.org/current/userguide/tutorial_using_tasks.html)
 
 #### JUnit Test Results
-Use the next three options to manage your JUnit test results in VSTS
+Use the next three options to manage your JUnit test results in Azure Pipelines
 
-- **Publish to VSTS :** Select this option to publish JUnit Test results produced by the Gradle build to Visual Studio Team Services/TFS. Each test result file matching `Test Results Files` will be published as a test run in VSTS.
+- **Publish to Azure Pipelines :** Select this option to publish JUnit Test results produced by the Gradle build to Azure Pipelines/TFS. Each test result file matching `Test Results Files` will be published as a test run in Azure Pipelines.
 
 - **Test Results Files :** This option will appear if you select the above option. Here, provide Test results files path. Wildcards can be used. For example, `**/TEST-*.xml` for all xml files whose name starts with `TEST-."`
 
-- **Test Run Title :** This option will appear if you select the `Publish to VSTS/TFS` option. Here provide a name for the Test Run
+- **Test Run Title :** This option will appear if you select the `Publish to Azure Pipelines/TFS` option. Here provide a name for the Test Run
 
 #### Code Coverage
-Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/VSTS
+Use the next options to manage your code coverage options. If your Build file already has Code Coverage enabled, you can ignore this section and use the Publish Code Coverage task to upload results to TFS/Azure Pipelines
 
 - **CodeCoverage Tool :** Select the code coverage tool you want to use. Currently JaCoCo and Cobertura are supported.
 
@@ -30,7 +30,7 @@ Use the next options to manage your `JAVA_HOME` attribute by JDK Version and Pat
 
 - **Working Directory :** Directory on the build agent where the Gradle wrapper will be invoked from. Defaults to the repository root.
 
-- **Set JAVA_HOME by :** Select to set `JAVA_HOME` either by providing a path or let VSTS set the `JAVA_HOME` based on JDK version choosen. By default it is set to `JDK Version`
+- **Set JAVA_HOME by :** Select to set `JAVA_HOME` either by providing a path or let Azure Pipelines set the `JAVA_HOME` based on JDK version choosen. By default it is set to `JDK Version`
 
 - **JDK Version :** Here provide the PATH to `JAVA_HOME` if you want to set it by path or select the appropriate JDK version.
 

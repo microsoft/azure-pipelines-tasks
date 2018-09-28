@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-publishtestresults",
   "version": "1.0.0",
-  "description": "VSTS Publish Test Results Task",
+  "description": "Azure Pipelines Publish Test Results Task",
   "main": "publishtestresults.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
   "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
     "vsts-task-lib": "2.6.0",
     "uuid": "^3.0.1"
   }

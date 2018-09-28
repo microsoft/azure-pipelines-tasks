@@ -2,7 +2,7 @@
   "loc.messages.AZ_AzureRMProfileModuleNotFound": "モジュール 'AzureRM.Profile' が見つかりません。'AzureRM' モジュールが完全にインストールされていない可能性があります。管理者特権のセッションから次の PowerShell コマンドを実行すると、問題が解決する場合があります。Import-Module AzureRM ; Install-AzureRM",
   "loc.messages.AZ_CertificateAuthNotSupported": "証明書に基づく認証はサポートされていません。Azure PowerShell モジュールが見つかりません。",
   "loc.messages.AZ_CredentialsError": "配置に使用した Azure 資格情報にエラーがありました。",
-  "loc.messages.AZ_ModuleNotFound": "Azure モジュール ('{0}') も AzureRM モジュール ('{0}') も見つかりませんでした。モジュールを最近インストールした場合は、VSTS タスク エージェントを再始動してから、もう一度お試しください。",
+  "loc.messages.AZ_ModuleNotFound": "Azure モジュール ('{0}') も AzureRM モジュール ('{0}') も見つかりませんでした。モジュールを最近インストールした場合は、Azure Pipelines タスク エージェントを再始動してから、もう一度お試しください。",
   "loc.messages.AZ_RequiresMinVersion0": "必要な最小バージョン ({0}) の Azure PowerShell モジュールがインストールされていません。",
   "loc.messages.AZ_ServicePrincipalError": "配置に使用したサービス プリンシパルにエラーがありました。",
   "loc.messages.AZ_ServicePrincipalAuthNotSupportedAzureVersion0": "バージョン '{0}' の Azure モジュールでは、サービス プリンシパル認証はサポートされていません。",

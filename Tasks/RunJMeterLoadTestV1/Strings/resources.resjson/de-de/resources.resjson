@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Cloudbasierter Apache JMeter-Auslastungstest",
-  "loc.helpMarkDown": "Diese Aufgabe kann zum Auslösen eines Apache JMeter-Auslastungstests in der Cloud mithilfe von Visual Studio Team Services verwendet werden. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=784929).",
+  "loc.helpMarkDown": "Diese Aufgabe kann zum Auslösen eines Apache JMeter-Auslastungstests in der Cloud mithilfe von Azure Pipelines verwendet werden. [Weitere Informationen](https://go.microsoft.com/fwlink/?LinkId=784929).",
   "loc.description": "Führt den Apache JMeter-Auslastungstest in der Cloud aus.",
   "loc.instanceNameFormat": "Apache JMeter-Test $(LoadTest)",
-  "loc.input.label.connectedServiceName": "VS Team Services-Verbindung",
+  "loc.input.label.connectedServiceName": "Azure Pipelines-Verbindung",
   "loc.input.help.connectedServiceName": "Wählen Sie eine zuvor registrierte Dienstverbindung aus, um mit dem Dienst \"Cloudbasierter Auslastungstest\" zu kommunizieren. Wählen Sie \"Verwalten\" aus, um eine neue Verbindung zu registrieren.",
   "loc.input.label.TestDrop": "Apache JMeter-Testdateienordner",
   "loc.input.help.TestDrop": "Der relative Pfad vom Repositorystamm, in dem die Auslastungstestdateien verfügbar sind.",

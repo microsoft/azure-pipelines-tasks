@@ -20,7 +20,7 @@ var password = tl.getEndpointAuthorizationParameter(serviceEndpointId, 'password
 var text = util.format("[distutils] \nindex-servers =\n    pypi \n[pypi] \nrepository=%s \nusername=%s \npassword=%s", pythonServer, username, password);
 tl.writeFile(pypircFilePath, text, 'utf8');
 
-async function run(){
+(async () => {
     //PyPI upload
     try{
         tl.cd(workingDirectory);
@@ -40,7 +40,7 @@ async function run(){
         tl.rmRF(pypircFilePath);
         tl.setResult(tl.TaskResult.Succeeded);
     };
-}
+})();
 
 async function executePythonTool(commandToExecute){
     var pythonTool = tl.tool(pythonToolPath);
@@ -50,4 +50,3 @@ async function executePythonTool(commandToExecute){
     await pythonTool.line(commandToExecute).exec();
 }
 
-run();

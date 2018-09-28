@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "下载包",
   "loc.helpMarkDown": "需要安装包管理扩展",
-  "loc.description": "从 VSTS 或 TFS 中的包管理源下载包。\r\n需要包管理扩展。",
+  "loc.description": "从 Azure Artifacts 或 TFS 中的包管理源下载包。\r\n需要包管理扩展。",
   "loc.instanceNameFormat": "下载包",
   "loc.input.label.feed": "源",
   "loc.input.help.feed": "选择包源",

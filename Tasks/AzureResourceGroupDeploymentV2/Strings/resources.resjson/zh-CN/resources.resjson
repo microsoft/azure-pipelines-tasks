@@ -31,7 +31,7 @@
   "loc.input.help.deploymentMode": "增量模式以资源组增量更新的形式处理部署。它留下资源组中存在的但模板中未指定的未更改资源。\n\n完成模式删除不属于模板的资源。\n\n验证模式让你能在创建实际资源前发现问题。\n\n默认情况下，使用增量模式。",
   "loc.input.label.enableDeploymentPrerequisites": "启用必备组件",
   "loc.input.help.enableDeploymentPrerequisites": "仅在资源组包含虚拟机时可应用这些选项。<br><br>选择部署组选项将在每台虚拟机上配置部署组代理。<br><br>选择 WinRM 选项将通过 HTTPS 协议在端口 5986 上使用自签名证书配置 Windows 远程管理(WinRM)侦听器。对 Azure 计算机执行部署操作需要此选项。如果负载均衡器支持目标虚拟机，请确保为目标端口(5986)配置了入站 NAT 规则。",
-  "loc.input.label.deploymentGroupEndpoint": "TFS/VSTS 终结点",
+  "loc.input.label.deploymentGroupEndpoint": "TFS/Azure Pipelines 终结点",
   "loc.input.help.deploymentGroupEndpoint": "通过部署组的代理注册需要对 Visual Studio 项目的访问权限。<br><br>单击“添加”使用个人访问令牌(PAT)创建终结点，并将其范围限制为“部署组”、过期时间默认为 90 天。<br><br>单击“管理”可更新终结点详细信息。",
   "loc.input.label.project": "团队项目",
   "loc.input.help.project": "指定其中定义了部署组的团队项目",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Paket herunterladen",
   "loc.helpMarkDown": "Die Paketverwaltungserweiterung muss installiert sein.",
-  "loc.description": "Laden Sie ein Paket von einem Paketverwaltungsfeed in VSTS oder TFS herunter. \r\n Erfordert die Paketverwaltungserweiterung.",
+  "loc.description": "Laden Sie ein Paket von einem Paketverwaltungsfeed in Azure Artifacts oder TFS herunter. \r\n Erfordert die Paketverwaltungserweiterung.",
   "loc.instanceNameFormat": "Paket herunterladen",
   "loc.input.label.feed": "Feed",
   "loc.input.help.feed": "Paketquelle auswählen",

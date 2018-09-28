@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 138,
-        "Patch": 0
+        "Minor": 140,
+        "Patch": 2
     },
     "demands": [],
     "instanceNameFormat": "Conda environment $(environmentName)",
@@ -92,6 +92,7 @@
         "InstallFailed": "Failed to install packages. %s",
         "ReactivateExistingEnvironment": "Found existing environment %s and the task's \"Clean environment\" parameter is not set. Reactivating ...",
         "ParameterRequired": "The `%s` parameter is required",
-        "PlatformNotRecognized": "Platform not recognized"
+        "PlatformNotRecognized": "Platform not recognized",
+        "PrependPath": "Prepending PATH environment variable with directory: %s"
     }
 }

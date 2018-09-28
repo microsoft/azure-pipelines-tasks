@@ -1,7 +1,7 @@
 {
   "name": "vsts-tasks-azurewebappslotswap",
   "version": "0.1.0",
-  "description": "VSTS Azure WebApp Slot Swap",
+  "description": "Azure Pipelines Azure WebApp Slot Swap",
   "main": "azurewebappslotswap.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

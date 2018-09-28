@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Indexar orígenes y publicar símbolos",
-  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Visual Studio Team Services Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in VSTS.",
-  "loc.description": "Indexe el código fuente y publique los símbolos en un recurso compartido de archivos o en un servidor de símbolos de Visual Studio Team Services",
+  "loc.helpMarkDown": "See [more information](https://go.microsoft.com/fwlink/?LinkID=613722) on how to use this task. The Azure Pipelines Symbol Server is in public preview. See [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) on how to use Symbol Server in Azure Pipelines.",
+  "loc.description": "Indexe el código fuente y publique los símbolos en un recurso compartido de archivos o en un servidor de símbolos de Azure Pipelines",
   "loc.instanceNameFormat": "Publicar ruta de acceso de símbolos",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.SymbolsFolder": "Ruta de acceso a la carpeta de los símbolos",
@@ -13,7 +13,7 @@
   "loc.input.label.PublishSymbols": "Publicar símbolos",
   "loc.input.help.PublishSymbols": "Indica si deben publicarse los archivos de símbolos.",
   "loc.input.label.SymbolServerType": "Symbol server type",
-  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the VSTS Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in VSTS.",
+  "loc.input.help.SymbolServerType": "Choose where to publish symbols. Symbols published to the Azure Pipelines Symbol Server are accessible by any user with access to the account/collection. Team Foundation Server only supports the \"File share\" option. Follow [these instructions](https://go.microsoft.com/fwlink/?linkid=846265) to use Symbol Server in Azure Pipelines.",
   "loc.input.label.SymbolsPath": "Ruta de acceso para publicar símbolos",
   "loc.input.help.SymbolsPath": "The file share that hosts your symbols. This value will be used in the call to `symstore.exe add` as the `/s` parameter.",
   "loc.input.label.DetailedLog": "Registro detallado",

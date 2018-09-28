@@ -6,7 +6,7 @@ import * as tl from 'vsts-task-lib/task';
 import { IBuildApi } from './vso-node-api/BuildApi';
 import { IRequestHandler } from './vso-node-api/interfaces/common/VsoBaseInterfaces';
 import { WebApi, getHandlerFromToken } from './vso-node-api/WebApi';
-import { BuildStatus, BuildResult, BuildQueryOrder, Build } from './vso-node-api/interfaces/BuildInterfaces';
+import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionReference } from './vso-node-api/interfaces/BuildInterfaces';
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
@@ -133,38 +133,60 @@ async function main(): Promise<void> {
                     }
                 }
             }
+
             if (!triggeringBuildFound) {
                 // Triggering build info not found, or requested, default to specified build info
                 projectId = tl.getInput("project", true);
                 definitionId = definitionIdSpecified;
                 buildId = parseInt(tl.getInput("buildId", buildVersionToDownload == "specific"));
             }
+            
+            // if the definition name includes a variable then definitionIdSpecified is a name vs a number
+            if (!!definitionIdSpecified && Number.isNaN(parseInt(definitionIdSpecified))) {
+                var definitions: BuildDefinitionReference[] = await executeWithRetries("getBuildDefinitions", () => buildApi.getDefinitions(projectId, definitionIdSpecified), retryLimit).catch((reason) => {
+                    reject(reason);
+                    return;
+                });
+
+                if (!definitions || definitions.length < 1) {
+                    reject(tl.loc("InvalidBuildDefinitionName", definitionIdSpecified));
+                    return;
+                }
+
+                definitionId = String(definitions[0].id);
+                console.log(tl.loc("DefinitionNameMatchFound", definitionIdSpecified, definitionId));
+            }
+
+            if (!definitionId) {
+                reject(tl.loc("UnresolvedDefinitionId"));
+                return;
+            }
         }
 
         // verify that buildId belongs to the definition selected
         if (definitionId) {
-            var build : Build;
-            if (buildVersionToDownload != "specific") { 
+            var build: Build;
+            if (buildVersionToDownload != "specific") {
                 var branchNameFilter = (buildVersionToDownload == "latest") ? null : branchName;
-                
+
                 // get latest successful build filtered by branch
                 var buildsForThisDefinition = await executeWithRetries("getBuildId", () => buildApi.getBuilds(projectId, [parseInt(definitionId)], null, null, null, null, null, null, BuildStatus.Completed, BuildResult.Succeeded, tagFilters, null, null, null, null, null, BuildQueryOrder.FinishTimeDescending, branchNameFilter), retryLimit).catch((reason) => {
                     reject(reason);
                     return;
                 });
 
-                if (!buildsForThisDefinition || buildsForThisDefinition.length == 0){ 
+                if (!buildsForThisDefinition || buildsForThisDefinition.length == 0) {
                     if (buildVersionToDownload == "latestFromBranch") reject(tl.loc("LatestBuildFromBranchNotFound", branchNameFilter));
                     else reject(tl.loc("LatestBuildNotFound"));
                     return;
                 }
-                
+
                 build = buildsForThisDefinition[0];
                 console.log(tl.loc("LatestBuildFound", build.id));
                 buildId = build.id
-            } 
+            }
 
-            if (!build){
+            if (!build) {
                 build = await executeWithRetries("getBuild", () => buildApi.getBuild(buildId, projectId), retryLimit).catch((reason) => {
                     reject(reason);
                     return;

@@ -26,6 +26,6 @@
   "loc.input.label.testCloudLocation": "test-cloud.exe location",
   "loc.input.label.optionalArgs": "Optional arguments",
   "loc.input.help.optionalArgs": "Arguments supplémentaires passés à test-cloud.exe.",
-  "loc.input.label.publishNUnitResults": "Publier les résultats sur TFS/Team Services",
-  "loc.input.help.publishNUnitResults": "Quand elle est sélectionnée, l'option --nunit-xml est passée à test-cloud.exe. Les résultats du fichier XML NUnit sont publiés sur TFS/Team Services."
+  "loc.input.label.publishNUnitResults": "Publier les résultats sur Azure Pipelines/TFS",
+  "loc.input.help.publishNUnitResults": "Quand elle est sélectionnée, l'option --nunit-xml est passée à test-cloud.exe. Les résultats du fichier XML NUnit sont publiés sur Azure Pipelines/TFS."
 }

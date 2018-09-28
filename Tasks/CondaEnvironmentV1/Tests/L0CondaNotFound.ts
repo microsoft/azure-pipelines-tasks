@@ -1,7 +1,5 @@
 import * as path from 'path';
 
-import * as sinon from 'sinon';
-
 import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 
 const taskPath = path.join(__dirname, '..', 'main.js');

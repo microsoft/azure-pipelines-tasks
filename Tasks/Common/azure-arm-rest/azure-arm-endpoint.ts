@@ -38,7 +38,9 @@ export class AzureRMEndpoint {
                 environment: tl.getEndpointDataParameter(this._connectedServiceName, 'environment', true),
                 scheme: tl.getEndpointAuthorizationScheme(this._connectedServiceName, true),
                 msiClientId:  tl.getEndpointDataParameter(this._connectedServiceName, 'msiclientId', true),
-                activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true)
+                activeDirectoryResourceID: tl.getEndpointDataParameter(this._connectedServiceName, 'activeDirectoryServiceEndpointResourceId', true),
+                azureKeyVaultServiceEndpointResourceId: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultServiceEndpointResourceId', true),
+                azureKeyVaultDnsSuffix: tl.getEndpointDataParameter(this._connectedServiceName, 'AzureKeyVaultDnsSuffix', true),
             } as AzureEndpoint;
 
             this.endpoint.authenticationType =  tl.getEndpointAuthorizationParameter(this._connectedServiceName, 'authenticationType', true);
@@ -130,8 +132,8 @@ export class AzureRMEndpoint {
                 var index = endpointUrl.indexOf('.');
                 var domain = endpointUrl.substring(index+1);
                 domain = (domain.lastIndexOf("/") == domain.length-1) ? domain.substring(0, domain.length-1): domain;
-                endpoint.AzureKeyVaultDnsSuffix = ("vault" + domain).toLowerCase();
-                endpoint.AzureKeyVaultServiceEndpointResourceId = ("https://vault." + domain).toLowerCase();
+                endpoint.azureKeyVaultDnsSuffix = ("vault." + domain).toLowerCase();
+                endpoint.azureKeyVaultServiceEndpointResourceId = ("https://vault." + domain).toLowerCase();
             }
             catch(error) {
                 throw new Error(tl.loc("SpecifiedAzureRmEndpointIsInvalid", endpointUrl));

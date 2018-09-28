@@ -15,7 +15,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 130,
+        "Minor": 141,
         "Patch": 0
     },
     "demands": [
@@ -87,10 +87,10 @@
         {
             "name": "publishJUnitResults",
             "type": "boolean",
-            "label": "Publish to TFS/Team Services",
+            "label": "Publish to Azure Pipelines/TFS",
             "defaultValue": "false",
             "groupName": "junitTestResults",
-            "helpMarkDown": "Select this option to publish JUnit test results produced by the Grunt build to TFS/Team Services."
+            "helpMarkDown": "Select this option to publish JUnit test results produced by the Grunt build to Azure Pipelines/TFS."
         },
         {
             "name": "testResultsFiles",

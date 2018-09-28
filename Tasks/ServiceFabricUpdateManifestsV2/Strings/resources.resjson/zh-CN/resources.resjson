@@ -31,7 +31,7 @@
   "loc.messages.FoundApplicationPackage": "找到应用程序包: {0}",
   "loc.messages.VersionValueLabel": "版本值:“{0}”",
   "loc.messages.BuildNumberNotSpecified": "生成号不能为 null 或为空。",
-  "loc.messages.VstsRestApiFailed": "与 VSTS 通信失败: {0}",
+  "loc.messages.VstsRestApiFailed": "与 Azure Pipelines 通信失败: {0}",
   "loc.messages.DownloadingArtifact": "正在下载项目“{0}”...",
   "loc.messages.DownloadingArtifactProgress": "进度更新: 已接收“{0}”字节...",
   "loc.messages.FinishedDownloadingArtifact": "已完成下载项目“{0}”。",

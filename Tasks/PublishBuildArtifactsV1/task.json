@@ -2,7 +2,7 @@
   "id": "2FF763A7-CE83-4E1F-BC89-0AE63477CEBE",
   "name": "PublishBuildArtifacts",
   "friendlyName": "Publish Build Artifacts",
-  "description": "Publish build artifacts to Visual Studio Team Services/TFS or a file share",
+  "description": "Publish build artifacts to Azure Pipelines/TFS or a file share",
   "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=708390)",
   "category": "Utility",
   "visibility": [
@@ -11,7 +11,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 135,
+    "Minor": 142,
     "Patch": 0
   },
   "demands": [],
@@ -40,9 +40,9 @@
       "label": "Artifact publish location",
       "defaultValue": "Container",
       "required": true,
-      "helpMarkDown": "Choose whether to store the artifact in Visual Studio Team Services/TFS, or to copy it to a file share that must be accessible from the build agent.",
+      "helpMarkDown": "Choose whether to store the artifact in Azure Pipelines/TFS, or to copy it to a file share that must be accessible from the build agent.",
       "options": {
-        "Container": "Visual Studio Team Services/TFS",
+        "Container": "Azure Pipelines/TFS",
         "FilePath": "A file share"
       }
     },
@@ -82,8 +82,8 @@
     }
   },
   "messages": {
-    "ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Visual Studio Team Services/TFS` or use a Windows agent.",
-    "ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Visual Studio Team Services/TFS.",
+    "ErrorFileShareLinux": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines/TFS` or use a Windows agent.",
+    "ErrorHostTypeNotSupported": "This task must run in a build to publish artifacts to Azure Pipelines/TFS.",
     "PublishBuildArtifactsFailed": "Publishing build artifacts failed with an error: %s",
     "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128."
   }

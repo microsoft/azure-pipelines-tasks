@@ -2,10 +2,10 @@
 
 ## Overview
 
-The .NET Core Tool Installer task acquires a specific version of [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x) from internet or the tools cache and adds it to the PATH of the VSTS Agent (hosted or private). Use this task to change the version of .NET Core used in subsequent tasks like [.NET Core cli task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DotNetCoreCLI).
+The .NET Core Tool Installer task acquires a specific version of [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x) from internet or the tools cache and adds it to the PATH of the Azure Pipelines Agent (hosted or private). Use this task to change the version of .NET Core used in subsequent tasks like [.NET Core cli task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DotNetCoreCLI).
 Adding this task before the [.NET Core cli task](https://github.com/Microsoft/vsts-tasks/tree/master/Tasks/DotNetCoreCLI) in a build definition ensures you are building, testing and publishing your app with the right .NET Core version.
 
-The tool installer approach also decouples you from the agent update cycles. If the .NET Core version you are looking for is missing from the VSTS agent (Hosted or Private), then you can use this task to get the right version installed on the agent.
+The tool installer approach also decouples you from the agent update cycles. If the .NET Core version you are looking for is missing from the Azure Pipelines agent (Hosted or Private), then you can use this task to get the right version installed on the agent.
 
 
 ## Contact Information
