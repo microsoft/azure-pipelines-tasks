@@ -120,17 +120,7 @@ export class AzureAppServiceUtility {
 
         tl.debug(`Virtual Application Map: Physical path: '${physicalToVirtualPathMap.physicalPath}'. Virtual path: '${physicalToVirtualPathMap.virtualPath}'.`);
         return physicalToVirtualPathMap.physicalPath;
-    }    
-
-    public async hasApplicationSetting(property: any): Promise<boolean> {
-        var applicationSettings = await this._appService.getApplicationSettings();
-        if(applicationSettings.properties[property]) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+    }   
 
     public async updateConfigurationSettings(properties: any) : Promise<void> {
         for(var property in properties) {

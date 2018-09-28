@@ -635,7 +635,6 @@
     "ASE_WebDeploySSLIssueRecommendation": "ms-resource:loc.messages.ASE_WebDeploySSLIssueRecommendation",
     "FailedToGetResourceID": "ms-resource:loc.messages.FailedToGetResourceID",
     "JarPathNotPresent": "ms-resource:loc.messages.JarPathNotPresent",
-    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource",
-    "Incompatiblewebapptypeandname": "ms-resource:loc.messages.Incompatiblewebapptypeandname"
+    "FailedToUpdateApplicationInsightsResource": "ms-resource:loc.messages.FailedToUpdateApplicationInsightsResource"
   }
 }
