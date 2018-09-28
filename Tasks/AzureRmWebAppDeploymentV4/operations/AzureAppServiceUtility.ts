@@ -4,7 +4,6 @@ import webClient = require('azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceConfigurationDetails } from 'azure-arm-rest/azureModels';
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
@@ -135,6 +134,8 @@ export class AzureAppServiceUtility {
     }
 
     public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<void> {
+        var kuduService = await this.getKuduService();
+        var kuduServiceAppSettings = await kuduService.getAppSettings();
         for(var property in addProperties) {
             if(!!addProperties[property] && addProperties[property].value !== undefined) {
                 addProperties[property] = addProperties[property].value;
@@ -142,18 +143,17 @@ export class AzureAppServiceUtility {
         }
         
         console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
-        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
+        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties, kuduServiceAppSettings);
 
         if(!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
             return;
         }
 
-        var kuduService = await this.getKuduService();
         var noOftimesToIterate: number = 12;
         tl.debug('retrieving values from Kudu service to check if new values are updated');
         while(noOftimesToIterate > 0) {
-            var kuduServiceAppSettings = await kuduService.getAppSettings();
+            kuduServiceAppSettings = await kuduService.getAppSettings();
             var propertiesChanged: boolean = true;
             for(var property in addProperties) {
                 if(kuduServiceAppSettings[property] != addProperties[property]) {

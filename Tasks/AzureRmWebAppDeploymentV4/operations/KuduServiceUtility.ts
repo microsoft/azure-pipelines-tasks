@@ -187,7 +187,6 @@ export class KuduServiceUtility {
             console.log(tl.loc('PackageDeploymentInitiated'));
 
             let queryParameters: Array<string> = [
-                'isAsync=true',
                 'deployer=' +   VSTS_DEPLOY
             ];
 
