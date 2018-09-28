@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 4,
-        "Patch": 20
+        "Patch": 21
     },
     "demands": [],
     "preview": "false",
@@ -147,7 +147,7 @@
             "type": "boolean",
             "label": "Include Latest Tag",
             "defaultValue": "false",
-            "visibleRule": "action = Build services || action = Push services",
+            "visibleRule": "action = Build services",
             "helpMarkDown": "Include the 'latest' tag when building or pushing Docker images."
         },
         {
