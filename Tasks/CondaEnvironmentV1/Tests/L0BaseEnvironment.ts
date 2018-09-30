@@ -14,7 +14,7 @@ taskRunner.setAnswers({
         'conda': '/miniconda/bin/conda'
     },
     exec: {
-        'sudo conda install python=3 --quiet --yes --json': {
+        'sudo /miniconda/bin/conda install python=3 --quiet --yes --json': {
             code: 0
         },
         'conda install python=3 --quiet --yes --json': {
