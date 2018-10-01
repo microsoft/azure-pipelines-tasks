@@ -22,6 +22,11 @@ function pushTag(promise: any, connection: DockerComposeConnection, imageName: s
 
 function pushTags(connection: DockerComposeConnection, imageName: string): any {
     var baseImageName = imageUtils.imageNameWithoutTag(imageName);
+    if (baseImageName == imageName)
+    {
+        tl.debug(tl.loc('ImageNameWithoutTag'));
+    }
+
     return dockerPush(connection, imageName)
     .then(function pushAdditionalTags() {
         var promise: any;
@@ -39,6 +44,12 @@ function pushTags(connection: DockerComposeConnection, imageName: string): any {
             });
         }
         return promise;
+    })
+    .then(function pushLatestTag() {
+        var includeLatestTag = tl.getBoolInput("includeLatestTag");
+        if (baseImageName !== imageName && includeLatestTag) {
+            return dockerPush(connection, baseImageName + ":latest");
+        }
     });
 }
 
