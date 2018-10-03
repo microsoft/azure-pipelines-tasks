@@ -58,22 +58,6 @@
       "defaultValue": "builtin"
     },
     {
-      "name": "isManagedImage",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.isManagedImage",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.isManagedImage",
-      "defaultValue": true
-    },
-    {
-      "name": "managedImageName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.managedImageName",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.managedImageName",
-      "visibleRule": "isManagedImage = true && templateType = builtin"
-    },
-    {
       "name": "customTemplateLocation",
       "type": "filePath",
       "label": "ms-resource:loc.input.label.customTemplateLocation",
@@ -99,6 +83,24 @@
       "label": "ms-resource:loc.input.label.ConnectedServiceName",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.ConnectedServiceName",
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "isManagedImage",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.isManagedImage",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.isManagedImage",
+      "defaultValue": true,
+      "groupName": "AzureDetails"
+    },
+    {
+      "name": "managedImageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.managedImageName",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.managedImageName",
+      "visibleRule": "isManagedImage = true",
       "groupName": "AzureDetails"
     },
     {
@@ -293,6 +295,7 @@
     "PackerBuildCompleted": "ms-resource:loc.messages.PackerBuildCompleted",
     "ImageURIOutputVariableNotFound": "ms-resource:loc.messages.ImageURIOutputVariableNotFound",
     "ManagedImageNameOutputVariableNotFound": "ms-resource:loc.messages.ManagedImageNameOutputVariableNotFound",
+    "CustumTemplateOutputVariableNotFound": "ms-resource:loc.messages.CustumTemplateOutputVariableNotFound",
     "BuiltInTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.BuiltInTemplateNotFoundErrorMessagePathName",
     "CustomTemplateNotFoundErrorMessagePathName": "ms-resource:loc.messages.CustomTemplateNotFoundErrorMessagePathName",
     "CouldNotDeleteTemporaryTemplateDirectory": "ms-resource:loc.messages.CouldNotDeleteTemporaryTemplateDirectory",
