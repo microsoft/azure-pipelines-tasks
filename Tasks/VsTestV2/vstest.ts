@@ -87,11 +87,11 @@ export function startTest() {
                 uploadFile(path.join(os.tmpdir(), 'TestSelector.log'));
             }
             if (taskResult == tl.TaskResult.Failed) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('VstestFailedReturnCode'), true);
             }
             else {
                 consolidatedCiData.result = 'Succeeded';
-                tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'));
+                tl.setResult(tl.TaskResult.Succeeded, tl.loc('VstestPassedReturnCode'), true);
             }
             ci.publishEvent(consolidatedCiData);
 
@@ -99,12 +99,12 @@ export function startTest() {
             uploadVstestDiagFile();
             utils.Helper.publishEventToCi(AreaCodes.INVOKEVSTEST, err.message, 1002, false);
             console.log('##vso[task.logissue type=error;code=' + err + ';TaskName=VSTest]');
-            tl.setResult(tl.TaskResult.Failed, err);
+            tl.setResult(tl.TaskResult.Failed, err, true);
         });
     } catch (error) {
         uploadVstestDiagFile();
         utils.Helper.publishEventToCi(AreaCodes.RUNTESTSLOCALLY, error.message, 1003, false);
-        tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, error, true);
     }
 }
 
@@ -141,7 +141,7 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
             if (!tl.exist(settingsFile)) {
                 // because this is filepath input build puts default path in the input. To avoid that we are checking this.
                 utils.Helper.publishEventToCi(AreaCodes.INVALIDSETTINGSFILE, 'InvalidSettingsFile', 1004, true);
-                tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile));
+                tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidSettingsFile', settingsFile, true));
                 throw Error((tl.loc('InvalidSettingsFile', settingsFile)));
             }
         }

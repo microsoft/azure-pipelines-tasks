@@ -25,7 +25,7 @@ async function execute() {
         utils.Helper.setConsoleCodePage();
         const blockRun = isMultiConfigOnDemandRun();
         if (blockRun) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('MultiConfigNotSupportedWithOnDemand'));
+            tl.setResult(tl.TaskResult.Failed, tl.loc('MultiConfigNotSupportedWithOnDemand'), true);
         }
         const serverBasedRun = isServerBasedRun();
         inputParser.setIsServerBasedRun(serverBasedRun);
@@ -65,7 +65,7 @@ async function execute() {
             console.log('======================================================');
         }
     } catch (error) {
-        tl.setResult(tl.TaskResult.Failed, error);
+        tl.setResult(tl.TaskResult.Failed, error, true);
         taskProps.result = error;
     }
     finally {
@@ -147,7 +147,7 @@ function isServerBasedRun(): boolean {
 
 if (osPlat !== 'win32') {
     // Fail the task if os is not windows
-    tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'));
+    tl.setResult(tl.TaskResult.Failed, tl.loc('OnlyWindowsOsSupported'), true);
 } else {
     //Starting the VsTest execution
     execute();

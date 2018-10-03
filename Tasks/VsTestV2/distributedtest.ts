@@ -36,15 +36,15 @@ export class DistributedTest {
 
             if (exitCode !== 0) {
                 tl.debug('Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
-                tl.setResult(tl.TaskResult.Failed, 'Modules/DTAExecutionHost.exe process exited with code ' + exitCode);
+                tl.setResult(tl.TaskResult.Failed, 'Modules/DTAExecutionHost.exe process exited with code ' + exitCode, true);
             } else {
                 tl.debug('Modules/DTAExecutionHost.exe exited');
-                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded');
+                tl.setResult(tl.TaskResult.Succeeded, 'Task succeeded', true);
             }
         } catch (error) {
             ci.publishEvent({ environmenturi: this.inputDataContract.RunIdentifier, error: error });
             tl.error(error);
-            tl.setResult(tl.TaskResult.Failed, error);
+            tl.setResult(tl.TaskResult.Failed, error, true);
         }
     }
 
@@ -78,7 +78,7 @@ export class DistributedTest {
         try {
             writeFileSync(inputFilePath, JSON.stringify(this.inputDataContract));
         } catch (e) {
-            tl.setResult(tl.TaskResult.Failed, `Failed to write to the input json file ${inputFilePath} with error ${e}`);
+            tl.setResult(tl.TaskResult.Failed, `Failed to write to the input json file ${inputFilePath} with error ${e}`, true);
         }
 
         if (utils.Helper.isDebugEnabled()) {
