@@ -114,7 +114,6 @@
     "MysqlTaskParameterCannotBeEmpty": "ms-resource:loc.messages.MysqlTaskParameterCannotBeEmpty",
     "ToolPathCannotBeNull": "ms-resource:loc.messages.ToolPathCannotBeNull",
     "SqlExecutionException": "ms-resource:loc.messages.SqlExecutionException",
-    "AzureEndpointCannotBeNull": "ms-resource:loc.messages.AzureEndpointCannotBeNull",
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
     "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",
     "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",

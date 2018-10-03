@@ -28,7 +28,6 @@
   "loc.messages.MysqlTaskParameterCannotBeEmpty": "The MySQL task parameter cannot be null.",
   "loc.messages.ToolPathCannotBeNull": "Tool path cannot be null.",
   "loc.messages.SqlExecutionException": "A SQL execution exception occurred. Please check the SQL script. Error: %s .",
-  "loc.messages.AzureEndpointCannotBeNull": "Invalid subscription name. The Azure service connection cannot be null.",
   "loc.messages.CallbackCannotBeNull": "The callback cannot be null.",
   "loc.messages.UnableToCreateDatabaseException": "Unable to create database.",
   "loc.messages.WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",

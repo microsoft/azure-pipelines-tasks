@@ -5,11 +5,11 @@ import tl = require('vsts-task-lib');
 import * as path from 'path';
 import { MysqlClient } from '../sql/MysqlClient';
 
-describe('AzureMySqlDeployment Suite', function() {
+describe('MySqlDeployment Suite', function() {
 
     this.timeout(60000);
 
-    it('AzureMySqlDeployment ToolPathOperationTests', (done: MochaDone) => {
+    it('MySqlDeployment ToolPathOperationTests', (done: MochaDone) => {
         let tp = path.join(__dirname, 'ToolPathOperationTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
@@ -22,7 +22,7 @@ describe('AzureMySqlDeployment Suite', function() {
         }
     });
     
-    it('AzureMySqlDeployment MysqlClient', (done: MochaDone) => {
+    it('MySqlDeployment MysqlClient', (done: MochaDone) => {
         let tp = path.join(__dirname, 'MysqlClientTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         try {
