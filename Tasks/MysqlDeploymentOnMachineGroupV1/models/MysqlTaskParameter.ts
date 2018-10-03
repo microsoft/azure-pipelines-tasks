@@ -21,9 +21,9 @@ export class MysqlTaskParameter {
 			this.sqlPassword = tl.getInput('SqlPassword', true);
 			this.sqlAdditionalArguments = tl.getInput('SqlAdditionalArguments', false);
 		}
-        catch (error) {
-            throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
-        }
+		catch (error) {
+			throw new Error(tl.loc("ARGD_ConstructorFailed", error.message));
+		}
 	}
 
 	public getServerName(): string {
