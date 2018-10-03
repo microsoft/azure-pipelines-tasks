@@ -24,6 +24,5 @@ export function publishEvent(properties: { [key: string]: any }): void {
 
 export function publishTelemetry(area: string, feature: string, properties: { [key: string]: any }): void {
     const data = JSON.stringify(properties);
-    tl.debug('telemetry area: ' + area + ' feature: ' + feature + ' data: ' + data);
     tl.command('telemetry.publish', { 'area': area, 'feature': feature }, data);
 }
