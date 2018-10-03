@@ -46,6 +46,7 @@ steps:
     SetParametersFile: '$(System.DefaultWorkingDirectory)/SetParameters.xml'
     RemoveAdditionalFilesFlag: true
     AdditionalArguments: '-disableLink:AppPoolExtension -disableLink:ContentExtension'
+```
 
 Note, we need to move file transformation and variable substitution features out into a separate task. 
 AppTypes - Windows, Linux Container, FunctionApp etc can be queried and right deployment method can be set
@@ -81,7 +82,7 @@ steps:
     azureSubscription: 'my subscription'
     WebAppName: 'myfunctionApp'
     package: '$(System.DefaultWorkingDirectory)/**/*.zip'
-
+```
 
 Function Aop Linux Container, example -
 
