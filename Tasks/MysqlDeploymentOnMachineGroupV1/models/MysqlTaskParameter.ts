@@ -1,7 +1,7 @@
 import tl = require("vsts-task-lib/task");
 
 export class MysqlTaskParameter {
-
+	
 	private taskNameSelector: string;
 	private sqlFile: string;
 	private sqlInline: string;
@@ -10,6 +10,7 @@ export class MysqlTaskParameter {
 	private sqlUserName: string;
 	private sqlPassword: string;
 	private sqlAdditionalArguments: string;
+	
 	constructor() {
 		try {
 			this.taskNameSelector = tl.getInput('TaskNameSelector', true);
