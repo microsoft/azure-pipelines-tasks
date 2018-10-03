@@ -81,6 +81,7 @@
         "NuGetPublisherV0",
         "NuGetToolInstallerV0",
         "PackerBuildV0",
+        "PackerBuildV1",
         "PowerShellV2",
         "PowerShellOnTargetMachinesV2",
         "PowerShellOnTargetMachinesV3",
