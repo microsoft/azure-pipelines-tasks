@@ -49,7 +49,8 @@ The parameters of the task are described in details, including examples, to show
 - **Password\*:** When you connect using MySQL Workbench, this is the same value that is used for "Password" in "Parameters".  
  
  
-- **Additional MySQL options:** Additional options supported by MySQL simple SQL shell.
+
+- **Additional MySQL options:** Additional options supported by MySQL simple SQL shell. 
 Example: You can change to default tab separated output format to HTML or even XML format. Or if you have problems due to insufficient memory for large result sets, use the --quick option. 
  
  
