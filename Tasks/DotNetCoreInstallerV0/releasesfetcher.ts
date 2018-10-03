@@ -31,12 +31,18 @@ export class DotNetCoreReleaseFetcher {
             let fileName: string = release[type + '-' + osSuffixes[0]] ? release[type + '-' + osSuffixes[0]] : release[type + '-' + osSuffixes[1]];
 
             if (!!fileName) {
-                if (!!blobUrl) {
-                    downloadUrls.push(util.format("%s%s", blobUrl.trim(), fileName.trim()));
-                }
+                // for some latest version, the filename itself can be full download url
+                // do a very basic check for url(instead of regex) as the url is only for downloading and is coming from .net core releases json and not some ransom user input
+                if(fileName.trim().toLowerCase().startsWith("https://")) {
+                    downloadUrls.push(fileName.trim());
+                } else {
+                    if (!!blobUrl) {
+                        downloadUrls.push(util.format("%s%s", blobUrl.trim(), fileName.trim()));
+                    }
 
-                if (!!dlcUrl) {
-                    downloadUrls.push(util.format("%s%s", dlcUrl.trim(), fileName.trim()));
+                    if (!!dlcUrl) {
+                        downloadUrls.push(util.format("%s%s", dlcUrl.trim(), fileName.trim()));
+                    }
                 }
             }
         }
