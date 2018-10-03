@@ -13,7 +13,7 @@ Start by changing the build scripts to generate the required source mappings fil
 
 Now run a gulp build.
 
-Next, create a launch.json file -- goto the debug section in VS Code, and click the gear icon, this will create a .vscode/launch.json file.
+Next, create a launch.json file -- go to the debug section in VS Code, and click the gear icon, this will create a .vscode/launch.json file.
 
 Edit the file as necessary.  You can run straight from the _build/Tasks, folder for the task you wish to debug, or you can copy the build artifacts into the Task itself and run from there.  If you choose the copy route, you will need to copy node_modules, and the generated .js and .js.map, along with any other build artifacts (e.g. in ArchiveFiles, 7zip), and this will allow you to debug directly from your source.  After the first build & copy, assuming no structural changes are made, you will only need to copy the .js and .js.map files for subsequent builds.
 
