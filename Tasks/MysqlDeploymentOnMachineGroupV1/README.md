@@ -25,19 +25,19 @@ The parameters of the task are described in details, including examples, to show
  
 - **Display name\*:** Provide a name to identify the task among others in your pipeline. 
  
-- **Deploy MySql Using\*:** Select one of the options between Script File & Inline Script. 
+ - **Deploy MySql Using\*:** Select one of the options between Script File & Inline Script. 
  
  
--  **Script file:** Use this option if you have a text file that has the necessary SQL statements to be executed on server. 
+**Script file:** Use this option if you have a text file that has the necessary SQL statements to be executed on server. 
  
  
--   **Script path\*:** Full path of the script file on the automation agent or on a UNC path accessible to the automation agent like,  \\BudgetIT\DeployBuilds\script.sql. Also, predefined [system variables](https://msdn.microsoft.com/Library/vs/alm/Build/scripts/variables) like, $(agent.releaseDirectory) can also be used here. 
+- **Script path\*:** Full path of the script file on the automation agent or on a UNC path accessible to the automation agent like,  \\BudgetIT\DeployBuilds\script.sql. Also, predefined [system variables](https://msdn.microsoft.com/Library/vs/alm/Build/scripts/variables) like, $(agent.releaseDirectory) can also be used here. 
  
  
--  **Inline script:** Use this option for running the Inline Script against the server.  
+**Inline script:** Use this option for running the Inline Script against the server.  
  
  
--    **Inline script\*:** Enter the actuall Script to be run. 
+- **Inline script\*:** Enter the actuall Script to be run. 
  
 - **Host name\*:** Server name of Mysql DB.Example: localhost. When you connect using MySQL Workbench, this is the same value that is used for "Hostname" in "Parameters".  
  
