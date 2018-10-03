@@ -183,7 +183,7 @@ if ($destination -eq "AzureBlob")
     # Get URI and SaSToken for output if needed
     if(-not [string]::IsNullOrEmpty($outputStorageURI))
     {
-        $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName
+        $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName + "/"
         Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
     }
     if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
