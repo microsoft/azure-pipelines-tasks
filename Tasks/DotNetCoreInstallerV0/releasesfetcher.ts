@@ -33,7 +33,7 @@ export class DotNetCoreReleaseFetcher {
             if (!!fileName) {
                 // for some latest version, the filename itself can be full download url
                 // do a very basic check for url(instead of regex) as the url is only for downloading and is coming from .net core releases json and not some ransom user input
-                if(fileName.trim().toLowerCase().startsWith("https://")) {
+                if (fileName.trim().toLowerCase().startsWith("https://")) {
                     downloadUrls.push(fileName.trim());
                 } else {
                     if (!!blobUrl) {
