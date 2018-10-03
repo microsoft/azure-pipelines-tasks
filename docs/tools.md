@@ -89,7 +89,7 @@ To achieve this, add a tool installer task and for the version, reference a vari
 
 ## Safe Tool Execution under Multiple Agents 
 
-Some tools have caches of there own which when used by multiple agents on the same machine can lead to concurrency issues and failures.  Examples are nuget and npm which have cache locations which can be overriden by environment variables.  Since the tool installer has the first class knowledge of the tool, it can set the cache location.
+Some tools have caches of their own which when used by multiple agents on the same machine can lead to concurrency issues and failures.  Examples are nuget and npm which have cache locations which can be overriden by environment variables.  Since the tool installer has the first class knowledge of the tool, it can set the cache location.
 
 The agent will provide a caches well known folder in the _work folder which has caches keyed by the tool name.
 
