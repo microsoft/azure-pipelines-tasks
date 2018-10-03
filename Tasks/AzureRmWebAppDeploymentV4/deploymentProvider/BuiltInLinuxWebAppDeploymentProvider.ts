@@ -9,6 +9,12 @@ var deployUtility = require('webdeployment-common/utility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
 
 const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
+const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME '
+
+const linuxFunctionRuntimeSettingValue = new Map([
+    [ 'DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0', 'dotnet ' ],
+    [ 'DOCKER|microsoft/azure-functions-node8:2.0', 'node ' ]
+]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
     private zipDeploymentID: string;
@@ -17,7 +23,9 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         tl.debug('Performing Linux built-in package deployment');
 
         if(this.taskParams.isFunctionApp) {
-            var customApplicationSetting = ParameterParser.parse(linuxFunctionStorageSetting);
+            var linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue[this.taskParams.RuntimeStack];
+            var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
+            var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
         }
 
