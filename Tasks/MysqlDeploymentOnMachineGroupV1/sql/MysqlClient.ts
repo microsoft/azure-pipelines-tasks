@@ -15,7 +15,7 @@ export class MysqlClient implements ISqlClient {
         if (!mysqlTaskParameter) {
             throw new Error(task.loc("MysqlTaskParameterCannotBeEmpty"));
         }
-        if (!mysqlTaskParameter.getServerName() ||typeof mysqlTaskParameter.getServerName().valueOf() !== 'string') {
+        if (!mysqlTaskParameter.getServerName() || typeof mysqlTaskParameter.getServerName().valueOf() !== 'string') {
             throw new Error(task.loc("MysqlServerNameCannotBeEmpty"));
         }
         if (!toolPath ||typeof toolPath.valueOf() !== 'string') {
