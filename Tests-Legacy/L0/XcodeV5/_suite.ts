@@ -26,7 +26,7 @@ describe('Xcode Suite', function() {
     it('run Xcode with all default inputs', (done) => {
         setResponseFile('responseDefaultInputs.json');
 
-        var tr = new trm.TaskRunner('Xcode', true, true);
+        var tr = new trm.TaskRunner('XcodeV5', true, true);
         tr.setInput('actions', 'build');
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
@@ -62,7 +62,7 @@ describe('Xcode Suite', function() {
     it('run Xcode with project and no workspace', (done) => {
         setResponseFile('responseProject.json');
 
-        var tr = new trm.TaskRunner('Xcode', true, true);
+        var tr = new trm.TaskRunner('XcodeV5', true, true);
         tr.setInput('actions', 'build');
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
@@ -98,7 +98,7 @@ describe('Xcode Suite', function() {
     it('run Xcode build with test action, with xcpretty', (done) => {
         setResponseFile('responseXcpretty.json');
 
-        var tr = new trm.TaskRunner('Xcode', true, true);
+        var tr = new trm.TaskRunner('XcodeV5', true, true);
         tr.setInput('actions', 'test');
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
@@ -138,7 +138,7 @@ describe('Xcode Suite', function() {
     it('run Xcode build with test action, without choosing xcpretty', (done) => {
         setResponseFile('responseXcpretty.json');
 
-        var tr = new trm.TaskRunner('Xcode', true, true);
+        var tr = new trm.TaskRunner('XcodeV5', true, true);
         tr.setInput('actions', 'test');
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
@@ -188,7 +188,7 @@ describe('Xcode Suite', function() {
         } else {
             setResponseFile('responseSigningFile.json');
 
-            var tr = new trm.TaskRunner('Xcode', true, true);
+            var tr = new trm.TaskRunner('XcodeV5', true, true);
             tr.setInput('actions', 'build');
             tr.setInput('configuration', '$(Configuration)');
             tr.setInput('sdk', '$(SDK)');
@@ -228,7 +228,7 @@ describe('Xcode Suite', function() {
         } else {
             setResponseFile('responseSigningFile.json');
 
-            var tr = new trm.TaskRunner('Xcode', true, true);
+            var tr = new trm.TaskRunner('XcodeV5', true, true);
             tr.setInput('actions', 'build');
             tr.setInput('configuration', '$(Configuration)');
             tr.setInput('sdk', '$(SDK)');
@@ -263,7 +263,7 @@ describe('Xcode Suite', function() {
     it('run Xcode build, signing with provisioning profile only, no P12', (done) => {
         setResponseFile('responseSigningFile.json');
 
-        var tr = new trm.TaskRunner('Xcode', true, true);
+        var tr = new trm.TaskRunner('XcodeV5', true, true);
         tr.setInput('actions', 'build');
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
@@ -298,7 +298,7 @@ describe('Xcode Suite', function() {
     it('run Xcode build, signing with identifiers', (done) => {
         setResponseFile('responseSigningId.json');
 
-        var tr = new trm.TaskRunner('Xcode', true, true);
+        var tr = new trm.TaskRunner('XcodeV5', true, true);
         tr.setInput('actions', 'build');
         tr.setInput('configuration', '$(Configuration)');
         tr.setInput('sdk', '$(SDK)');
@@ -332,7 +332,7 @@ describe('Xcode Suite', function() {
     it('run Xcode with required arg not specified', (done) => {
      setResponseFile('responseErrorArgs.json');
 
-     var tr = new trm.TaskRunner('Xcode', true, true);
+     var tr = new trm.TaskRunner('XcodeV5', true, true);
      tr.setInput('actions', '');
      tr.setInput('configuration', '');
      tr.setInput('sdk', '');
@@ -369,7 +369,7 @@ describe('Xcode Suite', function() {
     it('run Xcode with optional args specified', (done) => {
         setResponseFile('responseOptionalArgs.json');
 
-        var tr = new trm.TaskRunner('Xcode', true, true);
+        var tr = new trm.TaskRunner('XcodeV5', true, true);
         tr.setInput('actions', 'clean build');
         tr.setInput('configuration', 'Release');
         tr.setInput('sdk', 'iphone');

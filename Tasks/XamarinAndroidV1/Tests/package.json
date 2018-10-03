@@ -1,14 +1,14 @@
 {
-  "name": "vsts-cocoapods-task",
+  "name": "vsts-xamarinandroid-task-tests",
   "version": "1.0.0",
-  "description": "Azure Pipelines Cocoa Pods Task",
-  "main": "cocoapods.js",
+  "description": "Azure Pipelines Xamarin Android Task Tests",
+  "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+    "url": "git+ssh://git@github.com/Microsoft/vsts-tasks.git"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
@@ -16,8 +16,7 @@
     "url": "https://github.com/Microsoft/vsts-tasks/issues"
   },
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
-  "dependencies": {
-    "@types/node": "^6.0.101",
-    "vsts-task-lib": "^0.9.20"
+  "devDependencies": {
+    "@types/mocha": "^5.2.0"
   }
 }
