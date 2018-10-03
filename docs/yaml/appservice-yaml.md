@@ -48,7 +48,7 @@ steps:
     AdditionalArguments: '-disableLink:AppPoolExtension -disableLink:ContentExtension'
 
 Note, we need to move file transformation and variable substitution features out into a separate task. 
-AppType: Windows, Linux Container, FunctionApp etc can be queried and right deployment method can be set
+AppTypes - Windows, Linux Container, FunctionApp etc can be queried and right deployment method can be set
 
 
 WebApp for Linux Container, example -
