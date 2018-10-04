@@ -1,15 +1,11 @@
 import * as tl from 'vsts-task-lib/task';
-import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as os from 'os';
 import * as path from 'path';
 import * as perf from 'performance-now';
 import * as ci from './cieventlogger';
 import * as constants from './constants';
-import { TaskResult } from 'vsts-task-lib/task';
 import { NugetFeedInstaller } from './nugetfeedinstaller';
 import { NetworkShareInstaller } from './networkshareinstaller';
-import { async } from 'q';
-
 let startTime: number;
 
 // First function to be invoke starting the installation
@@ -72,11 +68,12 @@ async function startInstaller() {
 }
 
 // Execution start
-try {
-    tl.setResourcePath(path.join(__dirname, 'task.json'));
-    startTime = perf();
-    startInstaller();
-} finally {
+tl.setResourcePath(path.join(__dirname, 'task.json'));
+startTime = perf();
+startInstaller().then(() => {
     ci.addToConsolidatedCi('executionTime', perf() - startTime);
     ci.fireConsolidatedCi();
-}
+}).catch(() => {
+    ci.addToConsolidatedCi('executionTime', perf() - startTime);
+    ci.fireConsolidatedCi();
+});
