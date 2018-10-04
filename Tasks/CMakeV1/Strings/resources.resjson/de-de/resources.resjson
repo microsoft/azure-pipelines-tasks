@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613719)",
-  "loc.description": "Mit dem plattformübergreifenden CMake-Buildsystem erstellen",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.description": "Build with the CMake cross-platform build system",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
-  "loc.input.label.cwd": "Arbeitsverzeichnis",
-  "loc.input.help.cwd": "Aktuelles Arbeitsverzeichnis bei Ausführung von CMake.",
-  "loc.input.label.cmakeArgs": "Argumente",
-  "loc.input.help.cmakeArgs": "An CMake übergebene Argumente",
-  "loc.messages.CMakeReturnCode": "CMake wurde mit dem folgenden Rückgabecode beendet: %d",
-  "loc.messages.CMakeFailed": "CMake-Fehler: %s"
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory when cmake is run.",
+  "loc.input.label.cmakeArgs": "Arguments",
+  "loc.input.help.cmakeArgs": "Arguments passed to cmake",
+  "loc.messages.CMakeReturnCode": "CMake exited with return code: %d",
+  "loc.messages.CMakeFailed": "CMake failed with error: %s"
 }

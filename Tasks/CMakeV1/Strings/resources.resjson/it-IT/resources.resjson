@@ -1,12 +1,12 @@
 {
   "loc.friendlyName": "CMake",
-  "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613719)",
-  "loc.description": "Consente di compilare con il sistema di compilazione multipiattaforma CMake",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?LinkID=613719)",
+  "loc.description": "Build with the CMake cross-platform build system",
   "loc.instanceNameFormat": "CMake $(cmakeArgs)",
-  "loc.input.label.cwd": "Directory di lavoro",
-  "loc.input.help.cwd": "Directory di lavoro corrente durante l'esecuzione di cmake.",
-  "loc.input.label.cmakeArgs": "Argomenti",
-  "loc.input.help.cmakeArgs": "Argomenti passati a cmake",
-  "loc.messages.CMakeReturnCode": "CMake terminato. Codice restituito: %d",
-  "loc.messages.CMakeFailed": "CMake non riuscito. Errore: %s"
+  "loc.input.label.cwd": "Working Directory",
+  "loc.input.help.cwd": "Current working directory when cmake is run.",
+  "loc.input.label.cmakeArgs": "Arguments",
+  "loc.input.help.cmakeArgs": "Arguments passed to cmake",
+  "loc.messages.CMakeReturnCode": "CMake exited with return code: %d",
+  "loc.messages.CMakeFailed": "CMake failed with error: %s"
 }
