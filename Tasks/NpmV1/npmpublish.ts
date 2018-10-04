@@ -6,8 +6,6 @@ import { NpmToolRunner } from './npmtoolrunner';
 import * as util from 'npm-common/util';
 import { PackagingLocation } from 'utility-common/packaging/locationUtilities';
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 export async function run(packagingLocation: PackagingLocation): Promise<void> {
     const workingDir = tl.getInput(NpmTaskInput.WorkingDir) || process.cwd();
     const npmrc = util.getTempNpmrcPath();

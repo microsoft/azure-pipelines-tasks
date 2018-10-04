@@ -1,4 +1,3 @@
-import * as vsts from 'vso-node-api';
 import * as interfaces from 'vso-node-api/interfaces/common/VSSInterfaces';
 import * as tl from 'vsts-task-lib/task';
 import * as VsoBaseInterfaces from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
@@ -6,10 +5,26 @@ import * as locutil from './locationUtilities';
 import { ClientVersioningData } from 'vso-node-api/VsoClient';
 import { ICoreApi } from 'vso-node-api/CoreApi';
 import vstsClientBases = require("vso-node-api/ClientApiBases");
+// import {WebApi} from 'vso-node-api/WebApi';
 
 import * as restclient from 'typed-rest-client/RestClient';
 
+export interface SessionRequest {
+    feed: string;
+    source: string;
+    data: { [key: string] : string; };
+}
+
+export interface SessionResponse {
+    sessionId: string
+}
+
 export class ProvenanceApi extends vstsClientBases.ClientApiBase {
+
+   /* constructor(webApi: WebApi) {
+        super(webApi.serverUrl, [webApi.authHandler], "vsts-packageprovenance-api", webApi.options)
+    } */
+
     constructor(baseUrl: string, handlers: VsoBaseInterfaces.IRequestHandler[], options?: VsoBaseInterfaces.IRequestOptions) {
         super(baseUrl, handlers, "vsts-packageprovenance-api", options);
     }
@@ -17,18 +32,16 @@ export class ProvenanceApi extends vstsClientBases.ClientApiBase {
     /**
      * Create Provenance Session
      * 
-     * @param {string} feedId - the feed to create a session for
      * @param {string} protocol - the protocol (npm, nuget, etc) to create a session for
-     * @param {number} buildId - The ID of the build.
+     * @param {SessionRequest} sessionRequest - the data about the session.
      */
 
     public async createSession(
-        feedId: string,
         protocol: string,
-        buildId: number,
-        ): Promise<string[]> {
+        sessionRequest: SessionRequest,
+        ): Promise<SessionResponse> {
 
-        return new Promise<string[]>(async (resolve, reject) => {
+        return new Promise<SessionResponse>(async (resolve, reject) => {
 
             let routeValues: any = {
                 protocol: protocol
@@ -46,11 +59,11 @@ export class ProvenanceApi extends vstsClientBases.ClientApiBase {
                 let options: restclient.IRequestOptions = this.createRequestOptions('application/json', 
                                                                                 verData.apiVersion);
 
-                let res: restclient.IRestResponse<string[]>;
-                res = await this.rest.create<string[]>(url, feedId, options);
+                let res: restclient.IRestResponse<SessionResponse>;
+                res = await this.rest.create<SessionResponse>(url, sessionRequest, options);
                 let ret = this.formatResponse(res.result,
                                               null,
-                                              true);
+                                              false);
 
                 resolve(ret);
             }
@@ -59,30 +72,5 @@ export class ProvenanceApi extends vstsClientBases.ClientApiBase {
             }
         });
     }
-}
-
-export async function getProvenanceSessionUrl(packagingUrl: string, protocol: string): Promise<string> {
-    const apiVersion = '5.0-preview.1';
-    const area = 'Provenance';
-    const locationId = '503B4E54-EBF4-4D04-8EEE-21C00823C2AC';
-
-    const accessToken = locutil.getSystemAccessToken();
-    const credentialHandler = vsts.getBearerHandler(accessToken);
-    const vssConnection = new vsts.WebApi(packagingUrl, credentialHandler);
-    const coreApi: ICoreApi = await vssConnection.getCoreApi();
-
-    const routeValues: any = {
-        protocol: protocol
-    };
-
-    const data: ClientVersioningData = await locutil.Retry(async () => {
-        return await coreApi.vsoClient.getVersioningData(
-            apiVersion,
-            area,
-            locationId,
-            routeValues);
-    }, 4, 100);
-
-    return data.requestUrl;
 }
 

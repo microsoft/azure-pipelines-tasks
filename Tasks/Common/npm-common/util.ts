@@ -9,7 +9,7 @@ import { INpmRegistry, NpmRegistry } from './npmregistry';
 import * as NpmrcParser from './npmrcparser';
 
 import * as locationUtilities from 'utility-common/packaging/locationUtilities';
-// import * as provenance from 'utility-common/packaging/provenance';
+import * as provenance from 'utility-common/packaging/provenance';
 
 export function appendToNpmrc(npmrc: string, data: string): void {
     tl.writeFile(npmrc, data, {
@@ -149,50 +149,35 @@ export function toNerfDart(uri: string): string {
 
     return url.resolve(url.format(parsed), '.');
 }
-/*
-export async function CreateSession(packagingUrl: string, feedId: string): Promise<string> {
+
+export async function CreateSession(packagingUrl: string, feedId: string): Promise<provenance.SessionResponse> {
+    tl.debug("creating session");
+
+    var sessionRequest: provenance.SessionRequest = {
+        feed: feedId,
+        source: "Build",
+        data: {}
+    }
+
     const vssConnection = locationUtilities.getWebApiWithProxy(packagingUrl);
+    const prov = new provenance.ProvenanceApi(vssConnection.serverUrl, [vssConnection.authHandler], vssConnection.options)
+    return await prov.createSession("npm", sessionRequest);
 }
-*/
+
 export async function getFeedRegistryUrl(packagingUrl: string, feedId: string): Promise<string> {
+
+    const sessionResponse = await CreateSession(packagingUrl, feedId);
+    const sessionId = sessionResponse.sessionId;
+
     const apiVersion = '3.0-preview.1';
     const area = 'npm';
     const locationId = 'D9B75B07-F1D9-4A67-AAA6-A4D9E66B3352';
 
-    // const accessToken = getSystemAccessToken();
-    // const credentialHandler = vsts.getBearerHandler(accessToken);
-    // const vssConnection = new vsts.WebApi(packagingUrl, credentialHandler);
-
     const vssConnection = locationUtilities.getWebApiWithProxy(packagingUrl);
 
-    // const coreApi = await vssConnection.getCoreApi();
-
-    const data = await Retry(async () => {
-        return await vssConnection.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
+    const data = await locationUtilities.Retry(async () => {
+        return await vssConnection.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: sessionId });
     }, 4, 100);
 
     return data.requestUrl;
 }
-
-// This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
-    try {
-        return await cb();
-    } catch(exception) {
-        tl.debug(JSON.stringify(exception));
-        if(max_retry > 0)
-        {
-            tl.debug("Waiting " + retry_delay + "ms...");
-            await delay(retry_delay);
-            tl.debug("Retrying...");
-            return await Retry<T>(cb, max_retry-1, retry_delay*2);
-        } else {
-            throw exception;
-        }
-    }
-}
-function delay(delayMs:number) {
-    return new Promise(function(resolve) { 
-        setTimeout(resolve, delayMs);
-    });
- }
