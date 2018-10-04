@@ -23,13 +23,18 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
         tl.debug('Performing Linux built-in package deployment');
 
         if(this.taskParams.isFunctionApp) {
-            var linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
+            var linuxFunctionRuntimeSetting = "";
+            if(this.taskParams.RuntimeStack != null && this.taskParams.RuntimeStack != ""){
+                linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
+            }
             var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
             var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
             await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
         }
-
-        await this.kuduServiceUtility.warmpUp();
+        else {
+            await this.kuduServiceUtility.warmpUp();
+        }
+        
         switch(this.taskParams.Package.getPackageType()){
             case PackageType.folder:
                 let tempPackagePath = deployUtility.generateTemporaryFolderOrZipPath(tl.getVariable('AGENT.TEMPDIRECTORY'), false);

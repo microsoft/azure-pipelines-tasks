@@ -205,7 +205,7 @@
             "type": "pickList",
             "label": "Runtime Stack",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },
@@ -217,7 +217,7 @@
             "type": "pickList",
             "label": "Runtime Stack",
             "defaultValue": "",
-            "required": true,
+            "required": false,
             "properties": {
                 "EditableOptions": "True"
             },

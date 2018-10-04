@@ -133,9 +133,7 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
-    public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<void> {
-        var kuduService = await this.getKuduService();
-        var kuduServiceAppSettings = await kuduService.getAppSettings();
+    public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<boolean> {
         for(var property in addProperties) {
             if(!!addProperties[property] && addProperties[property].value !== undefined) {
                 addProperties[property] = addProperties[property].value;
@@ -143,17 +141,18 @@ export class AzureAppServiceUtility {
         }
         
         console.log(tl.loc('UpdatingAppServiceApplicationSettings', JSON.stringify(addProperties)));
-        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties, kuduServiceAppSettings);
+        var isNewValueUpdated: boolean = await this._appService.patchApplicationSettings(addProperties, deleteProperties);
 
         if(!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
-            return;
+            return isNewValueUpdated;
         }
 
+        var kuduService = await this.getKuduService();
         var noOftimesToIterate: number = 12;
         tl.debug('retrieving values from Kudu service to check if new values are updated');
         while(noOftimesToIterate > 0) {
-            kuduServiceAppSettings = await kuduService.getAppSettings();
+            var kuduServiceAppSettings = await kuduService.getAppSettings();
             var propertiesChanged: boolean = true;
             for(var property in addProperties) {
                 if(kuduServiceAppSettings[property] != addProperties[property]) {
@@ -166,7 +165,7 @@ export class AzureAppServiceUtility {
             if(propertiesChanged) {
                 tl.debug('New properties are updated in Kudu service.');
                 console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
-                return;
+                return isNewValueUpdated;
             }
 
             noOftimesToIterate -= 1;
@@ -174,6 +173,7 @@ export class AzureAppServiceUtility {
         }
 
         tl.debug('Timing out from app settings check');
+        return isNewValueUpdated;
     }
 
     public async enableRenameLockedFiles(): Promise<void> {
