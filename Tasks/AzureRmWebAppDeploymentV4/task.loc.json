@@ -230,7 +230,7 @@
         "EditableOptions": "True"
       },
       "options": {
-        "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".Net",
+        "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".NET",
         "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStackFunction",
