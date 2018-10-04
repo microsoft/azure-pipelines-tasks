@@ -16,6 +16,7 @@
     "ip-address": "^5.8.9",
     "q": "^1.5.0",
     "typed-rest-client": "^0.11.0",
+    "utility-common": "file:../utility-common",
     "vso-node-api": "5.1.2",
     "vsts-task-lib": "2.0.6"
   }

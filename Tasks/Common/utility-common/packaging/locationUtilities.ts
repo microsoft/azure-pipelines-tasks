@@ -50,7 +50,7 @@ export async function getBlobstoreUriFromBaseServiceUri(serviceUri: string, acce
 }
 
 /**
- * PackagingLocaiton.PackagingUris:
+ * PackagingLocation.PackagingUris:
  *  The first URI will always be the TFS collection URI
  *  The second URI, if existent, will be Packaging's default access point
  *  The remaining URI's will be alternate Packaging's access points
@@ -109,7 +109,7 @@ export function getSystemAccessToken(): string {
         tl.debug('Got auth token');
         return auth.parameters['AccessToken'];
     } else {
-        tl.warning('Could not determine credentials to use for NuGet');
+        tl.warning('Could not determine credentials to use for local feed authentication');
     }
 }
 
@@ -125,7 +125,7 @@ function getAreaIdForProtocol(protocolType: ProtocolType): string {
     }
 }
 
-function getWebApiWithProxy(serviceUri: string, accessToken?: string): vsts.WebApi {
+export function getWebApiWithProxy(serviceUri: string, accessToken?: string): vsts.WebApi {
     if (!accessToken) {
         accessToken = getSystemAccessToken();
     }
@@ -136,3 +136,27 @@ function getWebApiWithProxy(serviceUri: string, accessToken?: string): vsts.WebA
     };
     return new vsts.WebApi(serviceUri, credentialHandler, options);
 }
+
+// This should be replaced when retry is implemented in vso client.
+export async function Retry<T>(cb : () => Promise<T>, max_retry: number, retry_delay: number) : Promise<T> {
+    try {
+        return await cb();
+    } catch(exception) {
+        tl.debug(JSON.stringify(exception));
+        if(max_retry > 0)
+        {
+            tl.debug("Waiting " + retry_delay + "ms...");
+            await delay(retry_delay);
+            tl.debug("Retrying...");
+            return await Retry<T>(cb, max_retry-1, retry_delay*2);
+        } else {
+            throw exception;
+        }
+    }
+}
+
+function delay(delayMs:number) {
+    return new Promise(function(resolve) { 
+        setTimeout(resolve, delayMs);
+    });
+ }

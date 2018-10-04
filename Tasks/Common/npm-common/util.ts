@@ -8,6 +8,9 @@ import * as vsts from 'vso-node-api/WebApi';
 import { INpmRegistry, NpmRegistry } from './npmregistry';
 import * as NpmrcParser from './npmrcparser';
 
+import * as locationUtilities from 'utility-common/packaging/locationUtilities';
+// import * as provenance from 'utility-common/packaging/provenance';
+
 export function appendToNpmrc(npmrc: string, data: string): void {
     tl.writeFile(npmrc, data, {
         flag: 'a'
@@ -146,19 +149,26 @@ export function toNerfDart(uri: string): string {
 
     return url.resolve(url.format(parsed), '.');
 }
-
+/*
+export async function CreateSession(packagingUrl: string, feedId: string): Promise<string> {
+    const vssConnection = locationUtilities.getWebApiWithProxy(packagingUrl);
+}
+*/
 export async function getFeedRegistryUrl(packagingUrl: string, feedId: string): Promise<string> {
     const apiVersion = '3.0-preview.1';
     const area = 'npm';
     const locationId = 'D9B75B07-F1D9-4A67-AAA6-A4D9E66B3352';
 
-    const accessToken = getSystemAccessToken();
-    const credentialHandler = vsts.getBearerHandler(accessToken);
-    const vssConnection = new vsts.WebApi(packagingUrl, credentialHandler);
-    const coreApi = vssConnection.getCoreApi();
+    // const accessToken = getSystemAccessToken();
+    // const credentialHandler = vsts.getBearerHandler(accessToken);
+    // const vssConnection = new vsts.WebApi(packagingUrl, credentialHandler);
+
+    const vssConnection = locationUtilities.getWebApiWithProxy(packagingUrl);
+
+    // const coreApi = await vssConnection.getCoreApi();
 
     const data = await Retry(async () => {
-        return await coreApi.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
+        return await vssConnection.vsoClient.getVersioningData(apiVersion, area, locationId, { feedId: feedId });
     }, 4, 100);
 
     return data.requestUrl;
