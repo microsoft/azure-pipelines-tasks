@@ -2,7 +2,7 @@
   "name": "AzureKeyVault",
   "main": "main.js",
   "dependencies": {
-    "@types/node": "^10.9.2",
+    "@types/node": "^6.0.101",
     "@types/q": "^1.5.0",
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
     "moment": "2.21.0",

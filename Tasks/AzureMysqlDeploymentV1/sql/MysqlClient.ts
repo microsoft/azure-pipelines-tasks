@@ -89,7 +89,7 @@ export class MysqlClient implements ISqlClient {
     }
 
     private _createDatabaseScriptIfItDoesnotExist() : string {
-        return " -e" + '"' + "CREATE DATABASE IF NOT EXISTS " + this._azureMysqlTaskParameter.getDatabaseName() + " ; "  + '"' ;
+        return " -e" + '"' + "CREATE DATABASE IF NOT EXISTS `" + this._azureMysqlTaskParameter.getDatabaseName() + "` ; "  + '"' ;
     } 
 
     private async _executeSqlScript(argument: string): Promise<number> {
