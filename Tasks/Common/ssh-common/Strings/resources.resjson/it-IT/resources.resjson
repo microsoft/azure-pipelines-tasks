@@ -1,9 +1,0 @@
-{
-  "loc.messages.SettingUpSSHConnection": "Configurazione della connessione SSH all'host remoto %s.",
-  "loc.messages.ConnectionNotSetup": "La connessione SSH non è configurata.",
-  "loc.messages.ConnectionFailed": "Non è stato possibile connettersi al computer remoto. Verificare i dettagli dell'endpoint SSH. %s.",
-  "loc.messages.RemoteCmdExecutionErr": "Il comando %s non è riuscito e si sono verificati errori nel computer remoto. %s.",
-  "loc.messages.CheckLogForStdErr": "Per gli errori STDERR restituiti dal comando, vedere il log di compilazione.",
-  "loc.messages.RemoteCmdNonZeroExitCode": "Il comando %s è stato terminato. Codice: %s.",
-  "loc.messages.UploadFileFailed": "Non è stato possibile caricare %s in %s nel computer remoto. %s."
-}

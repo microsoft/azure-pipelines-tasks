@@ -1,9 +1,0 @@
-{
-  "loc.messages.SettingUpSSHConnection": "リモート ホスト %s への SSH 接続を設定しています。",
-  "loc.messages.ConnectionNotSetup": "SSH 接続が設定されていません。",
-  "loc.messages.ConnectionFailed": "リモート コンピューターに接続できませんでした。SSH エンドポイントの詳細を確認してください。%s。",
-  "loc.messages.RemoteCmdExecutionErr": "コマンド %s がリモート コンピューター上のエラーで失敗しました。%s。",
-  "loc.messages.CheckLogForStdErr": "コマンドからの STDERR がないかビルド ログをご確認ください。",
-  "loc.messages.RemoteCmdNonZeroExitCode": "コマンド %s がコード %s で終了しました。",
-  "loc.messages.UploadFileFailed": "%s をリモート コンピューター上の %s にアップロードできませんでした。%s。"
-}
