@@ -18,6 +18,23 @@ function runValidations(validator: () => void, tr, done) {
 describe('PackerBuild Suite', function() {
     this.timeout(30000);
     before((done) => {
+
+        delete process.env["__build_output__"] ;
+        delete process.env["__copy_fails__"] ;
+        delete process.env["__deploy_package_found__"] ;
+        delete process.env["__dest_path_exists__"] ;
+        delete process.env["__download_fails__"] ;
+        delete process.env["__extract_fails__"] ;
+        delete process.env["__lower_version__"] ;
+        delete process.env["__no_output_vars__"] ;
+        delete process.env["__ostype__"] ;
+        delete process.env["__packer_build_fails__"] ;
+        delete process.env["__packer_build_no_output__"] ;
+        delete process.env["__packer_exists__"] ;
+        delete process.env["__packer_fix_fails__"] ;
+        delete process.env["__packer_validate_fails__"] ;
+        delete process.env["__spnObjectId_not_exists__"] ;
+
         done();
     });
     after(function () {
