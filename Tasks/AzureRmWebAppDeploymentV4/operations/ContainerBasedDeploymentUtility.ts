@@ -55,14 +55,6 @@ export class ContainerBasedDeploymentUtility {
         await this._appServiceUtility.updateConfigurationSettings(appSettingsNewProperties);
     }
 
-    private getDockerHubImageName(): string {
-        var namespace = tl.getInput('DockerNamespace', true);
-        var image = tl.getInput('DockerRepository', true);
-        var tag = tl.getInput('DockerImageTag', false);
-    
-        return this._constructImageName(namespace, image, tag);
-    }
-
     private _getAzureContainerImageName(): string {
         var registry = tl.getInput('AzureContainerRegistryLoginServer', true) + ".azurecr.io";
         var image = tl.getInput('AzureContainerRegistryImage', true);
@@ -73,8 +65,17 @@ export class ContainerBasedDeploymentUtility {
 
     private _getDockerHubImageName(): string {
         var namespace = tl.getInput('DockerNamespace', true);
-        var image = tl.getInput('DockerRepository', true);
+        var image = tl.getInput('DockerRepository', false);
         var tag = tl.getInput('DockerImageTag', false);
+        
+        if(!image && (!tag || tag.trim() == "$(Build.BuildId)")) {
+            if(namespace.split("/").length == 2) {
+                return namespace;
+            }
+            else {
+                throw Error(tl.loc('InvalidDockerImageName'));
+            }
+        }
     
         return this._constructImageName(namespace, image, tag);
     }

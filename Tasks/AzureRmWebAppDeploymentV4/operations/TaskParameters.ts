@@ -2,6 +2,7 @@ import tl = require('vsts-task-lib/task');
 import * as Constant from '../operations/Constants'
 import { Package, PackageType } from 'webdeployment-common/packageUtility';
 var webCommonUtility = require('webdeployment-common/utility.js');
+import { AzureAppService } from 'azure-arm-rest/azure-arm-app-service';
 
 export enum DeploymentType {
     webDeploy,
@@ -11,9 +12,11 @@ export enum DeploymentType {
 }
 
 export class TaskParametersUtility {
+    private static _appService: AzureAppService;
+
     public static getParameters(): TaskParameters {
         var taskParameters: TaskParameters = {
-            ConnectionType: tl.getInput('ConnectionType', true),
+            ConnectionType: tl.getInput('ConnectionType', false),
             WebAppKind: tl.getInput('WebAppKind', false),
             DeployToSlotOrASEFlag: tl.getBoolInput('DeployToSlotOrASEFlag', false),
             VirtualApplication: tl.getInput('VirtualApplication', false),
@@ -28,18 +31,20 @@ export class TaskParametersUtility {
             ScriptType: tl.getInput('ScriptType', false),
             InlineScript: tl.getInput('InlineScript', false),
             ScriptPath : tl.getPathInput('ScriptPath', false),
-            DockerNamespace: tl.getInput('DockerNamespace', false),
             AppSettings: tl.getInput('AppSettings', false),
             StartupCommand: tl.getInput('StartupCommand', false),
             ConfigurationSettings: tl.getInput('ConfigurationSettings', false)
         }
-        
-        if(taskParameters.ConnectionType === Constant.ConnectionType.PublishProfile) {
+
+        taskParameters.connectedServiceName = tl.getInput('ConnectedServiceName', false);
+        if(taskParameters.ConnectionType === Constant.ConnectionType.PublishProfile || (taskParameters.ConnectionType === null && taskParameters.connectedServiceName === null)) {
             this._initializeDefaultParametersForPublishProfile(taskParameters);
             return taskParameters;
         }
-
-        taskParameters.connectedServiceName = tl.getInput('ConnectedServiceName', true);
+        
+        if(taskParameters.WebAppKind === null || taskParameters.WebAppKind === "") {
+            this.getWebAppKind(taskParameters);
+        }
         taskParameters.WebAppName = tl.getInput('WebAppName', true);
         taskParameters.isLinuxApp = taskParameters.WebAppKind && (taskParameters.WebAppKind.indexOf("Linux") !=-1 || taskParameters.WebAppKind.indexOf("Container") != -1);
         taskParameters.isBuiltinLinuxWebApp = taskParameters.WebAppKind.indexOf('Linux') != -1;
@@ -123,6 +128,11 @@ export class TaskParametersUtility {
         else {
             taskParameters.AppSettings = `-SCM_COMMAND_IDLE_TIMEOUT ${timeoutAppSettings}`;
         }
+    }    
+
+    public static async getWebAppKind(taskParameters: TaskParameters) {
+        var appInfo = await this._appService.get(true);
+        taskParameters.WebAppKind = appInfo["kind"];
     }
     
     private static getDeploymentType(type): DeploymentType {
@@ -163,7 +173,6 @@ export interface TaskParameters {
     ScriptType?: string;
     InlineScript?: string;
     ScriptPath ?: string;
-    DockerNamespace?: string;
     AppSettings?: string;
     StartupCommand?: string;
     RuntimeStack?: string;

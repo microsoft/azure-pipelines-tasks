@@ -4,7 +4,6 @@ import webClient = require('azure-arm-rest/webClient');
 var parseString = require('xml2js').parseString;
 import Q = require('q');
 import { Kudu } from 'azure-arm-rest/azure-arm-app-service-kudu';
-import { AzureAppServiceConfigurationDetails } from 'azure-arm-rest/azureModels';
 
 export class AzureAppServiceUtility {
     private _appService: AzureAppService;
