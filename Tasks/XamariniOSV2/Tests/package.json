@@ -1,8 +1,8 @@
 {
-  "name": "vsts-xamarinios-task",
+  "name": "vsts-xamarinios-task-tests",
   "version": "1.0.0",
-  "description": "Azure Pipelines Xamarin iOS Task",
-  "main": "xamarinios.js",
+  "description": "Azure Pipelines Xamarin iOS Task Tests",
+  "main": "L0.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,9 +16,7 @@
     "url": "https://github.com/microsoft/vsts-tasks/issues"
   },
   "homepage": "https://github.com/microsoft/vsts-tasks#readme",
-  "dependencies": {
-    "@types/node": "^6.0.101",
-    "msbuildhelpers": "file:../../_build/Tasks/Common/msbuildhelpers-1.0.0.tgz",
-    "vsts-task-lib": "^2.0.3-preview"
+  "devDependencies": {
+    "@types/mocha": "^5.2.0"
   }
 }
