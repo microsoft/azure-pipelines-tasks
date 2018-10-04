@@ -38,6 +38,7 @@ export function getImageMappings(connection: ContainerConnection, imageNames: st
         };
     });
 
+    let additionalImageTags = tl.getDelimitedInput("arguments", "\n");
     let includeSourceTags = tl.getBoolInput("includeSourceTags");
 
     let sourceTags: string[] = [];
@@ -52,6 +53,9 @@ export function getImageMappings(connection: ContainerConnection, imageNames: st
         imageInfo.taggedImages.push(imageInfo.qualifiedImageName);
         sourceTags.forEach(tag => {
             imageInfo.taggedImages.push(imageInfo.baseImageName + ":" + tag);
+        });
+        additionalImageTags.forEach(tag => {
+            imageInfo.taggedImages.push(tag);
         });
     }
 
