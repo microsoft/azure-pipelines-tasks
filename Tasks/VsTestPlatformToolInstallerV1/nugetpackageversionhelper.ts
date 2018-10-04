@@ -1,6 +1,5 @@
 import * as tl from 'vsts-task-lib/task';
 import * as path from 'path';
-import { exec } from 'child_process';
 import * as perf from 'performance-now';
 import * as ci from './cieventlogger';
 import * as constants from './constants';

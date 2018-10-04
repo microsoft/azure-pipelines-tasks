@@ -1,9 +1,5 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
-import { FileTransformsUtility } from '../operations/FileTransformsUtility';
-import * as Constant from '../operations/Constants';
-import { DeploymentType } from '../operations/TaskParameters';
-import { PackageType } from 'webdeployment-common/packageUtility';
 var webCommonUtility = require('webdeployment-common/utility.js');
 
 
