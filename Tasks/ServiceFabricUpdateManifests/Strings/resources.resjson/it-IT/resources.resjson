@@ -59,5 +59,6 @@
   "loc.messages.FileChanged": "Il file '{0}' è stato modificato.",
   "loc.messages.NoChanges": "Non sono state trovate modifiche.",
   "loc.messages.PdbWarning": "Questo pacchetto contiene file '*.pdb', che cambieranno in ogni compilazione anche se viene usato il flag 'deterministic' del compilatore. Escludere questi file dal pacchetto se si vuole che le modifiche al pacchetto vengano rilevate in modo accurato.",
-  "loc.messages.InvalidImageDigestValue": "Il valore digest '{0}' dell'immagine trovato nel file '{1}' non è valido. È previsto un valore in formato 'endpoint/nome_immagine@valore_digest'."
+  "loc.messages.InvalidImageDigestValue": "Il valore digest '{0}' dell'immagine trovato nel file '{1}' non è valido. È previsto un valore in formato 'endpoint/nome_immagine@valore_digest'.",
+  "loc.messages.CouldNotFindSubPath": "Non è stato possibile trovare un sottopercorso di '{0}' nel percorso '{1}' dell'artefatto."
 }

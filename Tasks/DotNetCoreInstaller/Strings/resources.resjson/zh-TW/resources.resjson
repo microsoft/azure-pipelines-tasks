@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": ".NET Core 工具安裝程式",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "從網際網路或工具快取取得特定 .NET Core 版本，並將其新增至 PATH。使用此工作以變更後續工作中使用的 .NET Core 版本。",
+  "loc.description": "從網際網路或工具快取取得特定 .NET Core 版本，然後將其新增至 PATH。使用此工作可變更後續工作中使用的 .NET Core 版本。",
   "loc.instanceNameFormat": "使用 .NET Core $(packageType) $(version)",
   "loc.input.label.packageType": "要安裝的套件",
   "loc.input.help.packageType": "請選取只要安裝執行階段或要安裝完整 SDK。",

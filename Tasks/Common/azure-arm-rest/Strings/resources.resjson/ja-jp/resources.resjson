@@ -128,6 +128,6 @@
   "loc.messages.FailedToGetFileContent": "Kudu からファイル コンテンツ '%s/%s' を取得できませんでした。エラー: %s",
   "loc.messages.FailedToListPath": "パス '%s' の一覧を取得できませんでした。エラー: %s",
   "loc.messages.FailedToGetDeploymentLogs": "配置ログを取得できませんでした。エラー: %s",
-  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "HTTP 応答コード: '%s' は無効なリダイレクト状態コードです。",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "HTTP 応答の場所ヘッダーは次の状態コードで null になっています: %s"
 }

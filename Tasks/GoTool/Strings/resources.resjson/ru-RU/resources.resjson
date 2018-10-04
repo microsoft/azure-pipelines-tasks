@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Установщик средства Go",
   "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "Находит или загружает конкретную версию средства перейдите в кэш средства и добавляет к НЕМУ. Используйте эту задачу, чтобы изменить версию перейти Lang используются следующие задачи",
+  "loc.description": "Находит или скачивает определенную версию средства Go в кэш инструментов и добавляет ее в PATH. Используйте эту задачу, чтобы изменить языковую версию Go, используемую в последующих задачах.",
   "loc.instanceNameFormat": "Использовать Go $(version)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.version": "Версия",
-  "loc.input.help.version": "Перейти версия средства для загрузки и установки. Пример: 1.9.3",
+  "loc.input.help.version": "Версия средства Go для скачивания и установки. Пример: 1.9.3",
   "loc.input.label.goPath": "GOPATH",
   "loc.input.help.goPath": "Значение переменной среды GOPATH.",
   "loc.input.label.goBin": "GOBIN",

@@ -89,6 +89,6 @@
   "loc.messages.AFC_CopyPrereqsFailed": "복사 필수 구성 요소를 사용하도록 설정하지 못했습니다. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "저장소 계정 {0}을(를) 찾을 수 없습니다. 기존 저장소 계정을 지정하세요.",
   "loc.messages.AFC_RootContainerAndDirectory": "$root 컨테이너에 대해 '/S' 옵션이 잘못되었습니다.",
-  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
-  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
+  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "HTTP 응답 코드: '{0}'은(는) 유효한 리디렉션 상태 코드가 아닙니다.",
+  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "리디렉션 응답 위치 헤더가 null입니다."
 }

@@ -84,8 +84,8 @@
   "loc.messages.LocateXcodeBasedOnVersion": "Individuazione del percorso sviluppatori per Xcode `%s`",
   "loc.messages.FailedToLocateSpecifiedXcode": "Non è possibile risolvere il percorso sviluppatori per Xcode `%s`. Impostare la variabile di ambiente `%s` nel computer agente oppure impostare `Versione di Xcode` su `Predefinita` o `Specificare il percorso`.",
   "loc.messages.CantDetermineProvisioningStyle": "Lo stile di provisioning non è stato trovato in un file pbxProject. Verrà usata la firma automatica. Se il progetto usa la firma manuale, è possibile che l'esportazione automatica non riesca. Per ovviare al problema, è possibile impostare `Opzioni esportazione` su `Plist` o `Specifica`.",
-  "loc.messages.MultipleSchemesFound": "L'area di lavoro contiene più schemi, ma non ne è stato selezionato nessuno. Usare `Schema` per specificare uno schema di destinazione.",
-  "loc.messages.NoSchemeFound": "Non è stato trovato alcuno schema condiviso nell'area di lavoro. Usare \"Gestisci schemi\" in Xcode per condividere uno schema.",
+  "loc.messages.MultipleSchemesFound": "L'area di lavoro contiene più schemi, ma non ne è stato selezionato nessuno. Usare `Scheme` per specificare uno schema di destinazione.",
+  "loc.messages.NoSchemeFound": "Non è stato trovato alcuno schema condiviso nell'area di lavoro. Usare \"Gestisci Schemes\" in Xcode per condividere uno schema.",
   "loc.messages.SchemeSelected": "L'area di lavoro contiene un unico schema condiviso. Verrà usato '%s'.",
   "loc.messages.FailedToFindScheme": "Non è stato possibile trovare uno schema nell'area di lavoro. Usare `Schema` per specificare uno schema di destinazione.",
   "loc.messages.OutputDirectoryIgnored": "La directory di output per l'output di compilazione (file binari) è stata ignorata. La specifica di una directory di output è incompatibile con l'azione '%s'."

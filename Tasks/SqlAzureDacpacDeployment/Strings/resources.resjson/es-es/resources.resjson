@@ -52,5 +52,6 @@
   "loc.messages.SAD_NoPassword": "No se especificó ninguna contraseña para el usuario de SQL: '{0}'.",
   "loc.messages.SAD_InvalidPublishProfile": "Se proporcionó un perfil de publicación '{0}' no válido.",
   "loc.messages.SAD_InvalidServerNameFormat": "El nombre del servidor '{0}' no tiene el formato adecuado. Use el formato de FQDN, como '{1}'",
-  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Error en la tarea DACPAC de Azure SQL."
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Error en la tarea DACPAC de Azure SQL.",
+  "loc.messages.SAD_TroubleshootingLink": "Compruebe cómo solucionar los errores en https://aka.ms/sqlazuredeployreadme#troubleshooting-"
 }

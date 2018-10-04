@@ -82,7 +82,7 @@
   "loc.messages.TestNameCannotBeNull": "테스트 이름은 null이거나 정의되지 않은 상태일 수 없으며, 문자열 형식이어야 합니다.",
   "loc.messages.TestDefinitionCannotBeNull": "테스트 정의는 null이거나 정의되지 않은 상태일 수 없습니다.",
   "loc.messages.AppInsightsPropertiesCannotBeNullOrEmpty": "Application Insights 속성은 null이거나 정의되지 않은 상태일 수 없습니다.",
-  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "지정한 AzureRM 끝점이 잘못됨: %s",
+  "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "지정한 AzureRM 엔드포인트가 잘못됨: %s",
   "loc.messages.FailedToFetchAzureStackDependencyData": "Azure Stack 종속성 데이터를 페치하지 못했습니다. 상태 코드: %s",
   "loc.messages.FailedToGetApplicationInsightsResource": "Application Insights '%s' 리소스를 가져오지 못했습니다. 오류: %s",
   "loc.messages.FailedToUpdateApplicationInsightsResource": "Application Insights '%s' 리소스를 업데이트하지 못했습니다. 오류: %s",
@@ -128,6 +128,6 @@
   "loc.messages.FailedToGetFileContent": "Kudu에서 파일 콘텐츠 '%s/%s'을(를) 가져오지 못했습니다. 오류: %s",
   "loc.messages.FailedToListPath": "'%s' 경로를 나열하지 못했습니다. 오류: %s",
   "loc.messages.FailedToGetDeploymentLogs": "배포 로그를 가져오지 못했습니다. 오류: %s",
-  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "HTTP 응답 코드: '%s'은(는) 유효한 리디렉션 상태 코드가 아닙니다.",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "HTTP 응답에 대한 위치 헤더가 null입니다(상태 코드: %s)."
 }

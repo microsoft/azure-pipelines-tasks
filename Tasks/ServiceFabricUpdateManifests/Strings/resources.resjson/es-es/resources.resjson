@@ -59,5 +59,6 @@
   "loc.messages.FileChanged": "El archivo '{0}' ha cambiado.",
   "loc.messages.NoChanges": "No se han encontrado cambios.",
   "loc.messages.PdbWarning": "Este paquete contiene archivos \"*.pdb\", que cambiarán en cada compilación incluso si se usa la marca de compilador \"determinista\". Excluya estos archivos de su paquete para detectar de forma precisa si el paquete ha cambiado.",
-  "loc.messages.InvalidImageDigestValue": "El valor de resumen de la imagen \"{0}\" que se encontró en el archivo \"{1}\" no es válido. Se esperaba un valor con el formato \"punto de conexión/nombre_imagen@valor_resumen\"."
+  "loc.messages.InvalidImageDigestValue": "El valor de resumen de la imagen \"{0}\" que se encontró en el archivo \"{1}\" no es válido. Se esperaba un valor con el formato \"punto de conexión/nombre_imagen@valor_resumen\".",
+  "loc.messages.CouldNotFindSubPath": "No se encontró ningún subtrazado de \"{0}\" en la ruta de acceso del artefacto \"{1}\"."
 }

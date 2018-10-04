@@ -7,7 +7,7 @@
   "loc.input.label.command": "명령",
   "loc.input.help.command": "Go 명령을 선택하여 실행합니다. 여기에 나열되지 않은 명령을 사용하려면 '사용자 지정'을 선택합니다.",
   "loc.input.label.customCommand": "사용자 지정 명령",
-  "loc.input.help.customCommand": "실행에 대한 사용자 지정 Go 명령입니다. 예: go 버전을 실행하려면 버전을 입력합니다.",
+  "loc.input.help.customCommand": "실행에 대한 사용자 지정 Go 명령입니다. 예를 들어 go 버전을 실행하려면 버전을 입력합니다.",
   "loc.input.label.arguments": "인수",
   "loc.input.help.arguments": "선택한 명령에 대한 인수입니다. 예를 들어 go 빌드 명령에 대한 빌드 시간 인수입니다.",
   "loc.input.label.workingDirectory": "작업 디렉터리",

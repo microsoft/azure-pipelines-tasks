@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": ".NET Core",
   "loc.helpMarkDown": "[追加情報](https://go.microsoft.com/fwlink/?linkid=832194)",
-  "loc.description": "dotnet アプリケーションのビルド、テスト、パッケージ管理、発行、またはカスタム dotnet コマンドの実行。パッケージ管理のコマンドとしては、NuGet.org と、Package Management や MyGet のような認証されたフィードがサポートされます。",
+  "loc.description": "dotnet アプリケーションのビルド、テスト、パッケージ、発行、またはカスタム dotnet コマンドの実行。パッケージのコマンドとしては、NuGet.org と、Package Management や MyGet のような認証されたフィードがサポートされます。",
   "loc.instanceNameFormat": "dotnet $(command)",
   "loc.group.displayName.restoreAuth": "フィードと認証",
   "loc.group.displayName.restoreAdvanced": "詳細設定",

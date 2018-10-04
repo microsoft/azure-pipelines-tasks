@@ -59,5 +59,6 @@
   "loc.messages.FileChanged": "Le fichier '{0}' a changé.",
   "loc.messages.NoChanges": "Changements introuvables.",
   "loc.messages.PdbWarning": "Ce package contient des fichiers '*.pdb', qui sont modifiés dans chaque build, même si l'indicateur de compilateur 'déterministe' est utilisé. Excluez ces fichiers de votre package pour détecter correctement si le package a été modifié.",
-  "loc.messages.InvalidImageDigestValue": "La valeur de condensat d'image '{0}' trouvée dans le fichier '{1}' est non valide. Une valeur au format 'point_de_terminaison/nom_image@valeur_condensat' est attendue."
+  "loc.messages.InvalidImageDigestValue": "La valeur de condensat d'image '{0}' trouvée dans le fichier '{1}' est non valide. Une valeur au format 'point_de_terminaison/nom_image@valeur_condensat' est attendue.",
+  "loc.messages.CouldNotFindSubPath": "Le sous-chemin de '{0}' dans le chemin d'artefact '{1}' est introuvable."
 }

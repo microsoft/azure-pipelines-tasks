@@ -2,7 +2,7 @@
   "loc.friendlyName": "Visual Studio 測試平台安裝程式",
   "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">NuGet 上的測試平台套件</a>",
   "loc.description": "從 nuget.org 或工具快取取得測試平台。不僅滿足 ‘vstest’ 要求，並且可以用於使用 Visual Studio 測試工作執行測試和收集診斷資料。",
-  "loc.instanceNameFormat": "VsTest 平台安裝程式",
+  "loc.instanceNameFormat": "VsTest Platform Installer",
   "loc.input.label.versionSelector": "版本",
   "loc.input.help.versionSelector": "請挑選要安裝 Visual Studio 測試平台的最新版本或特定版本。",
   "loc.input.label.testPlatformVersion": "測試平台版本",
@@ -18,5 +18,5 @@
   "loc.messages.TestPlatformDownloadFailed": "無法下載測試平台的 %s 版本。正於快取中尋找最新的可用穩定版本。",
   "loc.messages.LookingForLatestStableVersion": "正在尋找 Microsoft.Testplatform 的最新穩定版本。",
   "loc.messages.LookingForLatestPreReleaseVersion": "正在尋找 Microsoft.Testplatform 的最新發行前版本。",
-  "loc.messages.AgentWorkDirectoryPathTooLong": "請確定代理程式工作目錄路徑是少於 50 個字元，以確保測試的平台套件的順利下載。"
+  "loc.messages.AgentWorkDirectoryPathTooLong": "請確定代理程式工作目錄路徑長度少於 50 個字元，以確保測試平台套件能夠成功下載。"
 }

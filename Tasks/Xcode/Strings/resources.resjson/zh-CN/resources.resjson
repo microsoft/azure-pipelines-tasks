@@ -83,9 +83,9 @@
   "loc.messages.FailedToGenerateExportOptionsPlist": "未能自动生成“导出选项”plist 文件以导出 IPA。请在“包选项”中指定一个“导出选项”plist 文件。",
   "loc.messages.LocateXcodeBasedOnVersion": "正在定位 Xcode“%s”的开发人员路径",
   "loc.messages.FailedToLocateSpecifiedXcode": "无法解析 Xcode“%s”的开发人员路径。请在代理计算机上设置“%s”环境变量，或将“Xcode 版本”设置为“默认”或“指定路径”。",
-  "loc.messages.CantDetermineProvisioningStyle": "pbxProject 文件中找不到预配样式。将使用自动签名。如果项目使用手动签名，自动导出可能会失败。一种变通方法是将“导出选项”设置为 \"Plist\" 或“指定”作为一种解决办法。",
-  "loc.messages.MultipleSchemesFound": "工作区包含多个方案。未选定方案。使用“方案”指定一个目标方案。",
-  "loc.messages.NoSchemeFound": "工作区中找不到任何共享方案。在 Xcode 中使用“管理方案”来共享方案。",
+  "loc.messages.CantDetermineProvisioningStyle": "pbxProject 文件中找不到预配样式。将使用自动签名。如果项目使用手动签名，自动导出可能会失败。一种变通方法是将 `Export options` 设置为 `Plist` 或 `Specify`。",
+  "loc.messages.MultipleSchemesFound": "工作区包含多个方案。未选定方案。使用 `Scheme` 指定一个目标方案。",
+  "loc.messages.NoSchemeFound": "工作区中找不到任何共享方案。在 Xcode 中使用“管理 Schemes”来共享方案。",
   "loc.messages.SchemeSelected": "工作区包含一个共享方案。将使用“%s”。",
   "loc.messages.FailedToFindScheme": "未能在工作区中找到方案。请使用“方案”指定一个目标方案。",
   "loc.messages.OutputDirectoryIgnored": "已忽略生成输出(二进制文件)的输出目录。指定输出目录与“%s”操作不兼容。"

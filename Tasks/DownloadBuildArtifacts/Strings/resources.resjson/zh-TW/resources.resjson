@@ -33,7 +33,7 @@
   "loc.messages.NoArtifactsFound": "找不到組建 %s 的任何成品",
   "loc.messages.BuildIdBuildDefinitionMismatch": "識別碼為 %s 的組建無法用組建定義識別碼 %s 找到",
   "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功將成品下載到 %s",
-  "loc.messages.RetryingOperation": "錯誤: 在 %s，所以正在重試 => 暫止的重試: %s",
+  "loc.messages.RetryingOperation": "錯誤: 在 %s，因此即將重試 => 暫止的重試次數: %s",
   "loc.messages.OperationFailed": "無法於 %s，錯誤: %s",
   "loc.messages.ArtifactNameDirectoryNotFound": "目錄 '%s' 不存在。正在回復到父目錄: %s"
 }

@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "配置 Azure 警报: $(ResourceName)",
   "loc.group.displayName.NotifyViaEmail": "通过电子邮件通知",
   "loc.input.label.ConnectedServiceName": "Azure 订阅",
-  "loc.input.help.ConnectedServiceName": "选择 Azure Resource Manager 订阅。\n\n注意: 要配置新的服务连接，请从列表中选择 Azure 订阅并单击“授权”。\n\n如果未列出订阅，或若要使用现有服务主体，可使用“添加”或“管理”按钮设置 Azure 服务连接。",
+  "loc.input.help.ConnectedServiceName": "选择 Azure 资源管理器订阅。\n\n注意: 要配置新的服务连接，请从列表中选择 Azure 订阅并单击“授权”。\n\n如果未列出订阅，或若要使用现有服务主体，可使用“添加”或“管理”按钮设置 Azure 服务连接。",
   "loc.input.label.ResourceGroupName": "资源组",
   "loc.input.help.ResourceGroupName": "选择包含要配置警报的 Azure 资源的 Azure 资源组。",
   "loc.input.label.ResourceType": "资源类型",

@@ -2,7 +2,7 @@
   "loc.friendlyName": "Visual Studio 测试平台安装程序",
   "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">NuGet 上的测试平台包</a>",
   "loc.description": "从 nuget.org 或工具缓存获取测试平台。满足 \"vstest\" 需求，可用于使用 Visual Studio 测试任务运行测试和收集诊断数据。",
-  "loc.instanceNameFormat": "VsTest 平台安装程序",
+  "loc.instanceNameFormat": "VsTest Platform Installer",
   "loc.input.label.versionSelector": "版本",
   "loc.input.help.versionSelector": "选择安装最新版本还是特定版本的 Visual Studio 测试平台。",
   "loc.input.label.testPlatformVersion": "测试平台版本",

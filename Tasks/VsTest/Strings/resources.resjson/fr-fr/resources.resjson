@@ -9,7 +9,7 @@
   "loc.group.displayName.advancedExecutionOptions": "Options d'exécution avancées",
   "loc.group.displayName.reportingOptions": "Options de signalement",
   "loc.input.label.testSelector": "Sélectionner les tests avec",
-  "loc.input.help.testSelector": "<ul><li><b>Assembly de test : </b>utilisez cette option pour spécifier un ou plusieurs assemblys de tests contenant vos tests. Vous pouvez éventuellement spécifier des critères de filtre pour sélectionner uniquement des tests spécifiques.</li><li><b>Plan de test : </b>utilisez cette option pour exécuter des tests à partir de votre plan de test associé à une méthode de test automatisé.</li><li><b>Série de tests : </b>utilisez cette option quand vous configurez un environnement pour exécuter des tests à partir du hub de test. N'utilisez pas cette option durant l'exécution de tests dans un pipeline d'intégration continue/de déploiement continu.</li>",
+  "loc.input.help.testSelector": "<ul><li><b>Assembly de test : </b>utilisez cette option pour spécifier un ou plusieurs assemblys de tests contenant vos tests. Vous pouvez éventuellement spécifier des critères de filtre pour sélectionner uniquement des tests spécifiques.</li><li><b>Plan de test : </b>utilisez cette option pour exécuter des tests à partir de votre plan de test associé à une méthode de test automatisé.</li><li><b>Série de tests : </b>utilisez cette option quand vous configurez un environnement pour exécuter des tests à partir du hub de test. N'utilisez pas cette option durant l'exécution de tests dans un pipeline CI/CD.</li>",
   "loc.input.label.testAssemblyVer2": "Assemblys de tests",
   "loc.input.help.testAssemblyVer2": "Exécutez les tests à partir des fichiers spécifiés.<br>Vous pouvez exécuter les tests ordonnés et les tests web en spécifiant respectivement les fichiers .orderedtest et .webtest. Pour exécuter des fichiers .webtest, Visual Studio 2017 Update 4 (ou version ultérieure) est obligatoire. <br><br>Les chemins de fichiers sont relatifs au dossier de recherche. Prend en charge plusieurs lignes de modèles minimatch. [Plus d'informations](https://aka.ms/minimatchexamples)",
   "loc.input.label.testPlan": "Plan de test",
@@ -19,7 +19,7 @@
   "loc.input.label.testConfiguration": "Configuration de test",
   "loc.input.help.testConfiguration": "Sélectionnez la configuration de test.",
   "loc.input.label.tcmTestRun": "Série de tests",
-  "loc.input.help.tcmTestRun": "La sélection en fonction de la série de tests est utilisée quand les séries de tests automatisés sont déclenchées à partir du hub de test. Vous ne pouvez pas utiliser cette option pour exécuter des tests dans le pipeline d'intégration continue/de livraison continue.",
+  "loc.input.help.tcmTestRun": "La sélection en fonction de la série de tests est utilisée quand les séries de tests automatisés sont déclenchées à partir du hub de test. Vous ne pouvez pas utiliser cette option pour exécuter des tests dans le pipeline CI/CD.",
   "loc.input.label.searchFolder": "Dossier de recherche",
   "loc.input.help.searchFolder": "Dossier de recherche des assemblys de tests.",
   "loc.input.label.testFiltercriteria": "Critères de filtre de test",
@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "Le répertoire de résultats des tests est introuvable.",
   "loc.messages.OnlyWindowsOsSupported": "Cette tâche est prise en charge uniquement sur les agents Windows et ne peut pas être utilisée sur d'autres plateformes.",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "Les exécutions à la demande ne sont pas prises en charge avec l'option Multiconfiguration. Utilisez l'option de parallélisme 'Aucun' ou 'Multiagent'.",
-  "loc.messages.disabledRerun": "La désactivation de la réexécuter des tests ayant échoué en tant que le seuil réexécuter fourni est %s"
+  "loc.messages.disabledRerun": "Désactivation de la réexécution des tests ayant échoué car le seuil de réexécution fourni est %s"
 }

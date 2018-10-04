@@ -11,7 +11,7 @@
   "loc.input.label.ServiceName": "Nom du service",
   "loc.input.help.ServiceName": "Sélectionnez ou entrez un nom de service cloud existant.",
   "loc.input.label.ServiceLocation": "Emplacement du service",
-  "loc.input.help.ServiceLocation": "Sélectionnez une région pour le déploiement du nouveau service. Les options possibles sont **Est des États-Unis**, **Est des États-Unis 2**, **Centre des États-Unis**, **Sud du centre des États-Unis**, **Ouest des États-Unis**, **Europe du Nord**, **Europe de l'Ouest**, etc.",
+  "loc.input.help.ServiceLocation": "Sélectionnez une région pour le déploiement du nouveau service. Les options possibles sont **USA Est**, **USA Est 2**, **USA Centre**, **USA Centre Sud**, **USA Ouest**, **Europe Nord**, **Europe Ouest**, etc.",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "Chemin d'accès à CsPkg dans le répertoire de l'artefact par défaut.",
   "loc.input.label.CsCfg": "CsCfg",

@@ -4,7 +4,7 @@
   "loc.description": "PyPI에 Python 패키지 게시",
   "loc.instanceNameFormat": "PyPI 게시자",
   "loc.input.label.serviceEndpoint": "PyPI 연결",
-  "loc.input.help.serviceEndpoint": "PyPI 서버 세부 정보가 있는 일반 서비스 끝점을 선택합니다. \n\n참고: VSTS 프로젝트에서 새 제네릭 서비스 끝점을 구성하려면 [설정] -> [서비스] -> [새 서비스 끝점] -> [일반]으로 이동하세요. \n\n연결 이름 - 원하는 연결 이름 사용. \n서버 URL – PyPI 패키지 서버(예: https://upload.pypi.org/legacy/). \n사용자 이름 – PyPI에 등록된 사용자 이름. \n암호 – PyPI 계정의 암호",
+  "loc.input.help.serviceEndpoint": "PyPI 서버 세부 정보가 있는 일반 서비스 엔드포인트를 선택합니다. \n\n참고: VSTS 프로젝트에서 새 제네릭 서비스 엔드포인트를 구성하려면 [설정] -> [서비스] -> [새 서비스 엔드포인트] -> [일반]으로 이동하세요. \n\n연결 이름 - 원하는 연결 이름 사용. \n서버 URL – PyPI 패키지 서버(예: https://upload.pypi.org/legacy/). \n사용자 이름 – PyPI에 등록된 사용자 이름. \n암호 – PyPI 계정의 암호",
   "loc.input.label.wd": "Python 패키지 경로",
   "loc.input.help.wd": "게시할 Python 패키지 디렉터리입니다. 여기에 setup.py가 있습니다.",
   "loc.input.label.wheel": "휠 업로드",

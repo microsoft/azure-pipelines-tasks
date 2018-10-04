@@ -6,7 +6,7 @@
   "loc.group.displayName.registry": "레지스트리 설정",
   "loc.group.displayName.advanced": "고급 설정",
   "loc.input.label.serviceConnectionName": "클러스터 연결",
-  "loc.input.help.serviceConnectionName": "클러스터에 연결하는 데 사용할 Azure Service Fabric 서비스 끝점을 선택합니다. 새 끝점을 등록하려면 '관리'를 선택합니다.",
+  "loc.input.help.serviceConnectionName": "클러스터에 연결하는 데 사용할 Azure Service Fabric 서비스 엔드포인트를 선택합니다. 새 엔드포인트를 등록하려면 '관리'를 선택합니다.",
   "loc.input.label.composeFilePath": "작성 파일 경로",
   "loc.input.help.composeFilePath": "배포할 작성 파일의 경로입니다. 경로에 [변수](https://go.microsoft.com/fwlink/?LinkID=550988) 및 와일드카드를 사용할 수 있습니다.",
   "loc.input.label.applicationName": "응용 프로그램 이름",

@@ -120,7 +120,7 @@
   "loc.messages.RestartedKuduService": "Служба Kudu перезапущена",
   "loc.messages.FailedToRestartKuduService": "Не удалось перезапустить службу Kudu. %s.",
   "loc.messages.FailedToFetchKuduAppSettings": "Не удалось получить параметры приложения Kudu. Ошибка: %s",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Пакет (%s) успешно развернут при помощи службы kudu (%s).",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Пакет %s успешно развернут при помощи службы Kudu в %s",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Не удалось развернуть веб-пакет. Ошибка: %s",
   "loc.messages.FailedToCreatePath": "Не удалось создать путь \"%s\" из Kudu. Ошибка: %s",
   "loc.messages.FailedToDeleteFile": "Не удалось удалить файл \"%s/%s\" из Kudu. Ошибка: %s",
@@ -128,6 +128,6 @@
   "loc.messages.FailedToGetFileContent": "Не удалось получить содержимое файла \"%s/%s\" из Kudu. Ошибка: %s",
   "loc.messages.FailedToListPath": "Не удалось получить список элементов для пути \"%s\". Ошибка: %s",
   "loc.messages.FailedToGetDeploymentLogs": "Не удалось получить журналы развертывания. Ошибка: %s",
-  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "Код ответа HTTP \"%s\" не является допустимым кодом состояния перенаправления.",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Заголовок расположения равен NULL у ответа HTTP с кодом состояния %s."
 }

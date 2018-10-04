@@ -89,6 +89,6 @@
   "loc.messages.AFC_CopyPrereqsFailed": "Fehler beim Aktivieren der Kopiervoraussetzungen. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "Das Speicherkonto \"{0}\" wurde nicht gefunden. Bitte geben Sie ein vorhandenes Speicherkonto an.",
   "loc.messages.AFC_RootContainerAndDirectory": "Die Option \"/S\" gilt nicht für \"$root\"-Container.",
-  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
-  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
+  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "Der HTTP-Antwortcode \"{0}\" ist kein gültiger Umleitungsstatuscode.",
+  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Der Adressheader der Umleitungsantwort ist NULL."
 }

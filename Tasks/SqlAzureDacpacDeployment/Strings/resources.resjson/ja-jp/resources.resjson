@@ -29,7 +29,7 @@
   "loc.input.label.PublishProfile": "発行プロファイル",
   "loc.input.help.PublishProfile": "発行プロファイルを使用すると、Azure SQL Database の作成またはアップグレードを詳細に制御できるようになります。自動化エージェントまたは UNC 共有上で、発行プロファイル XML ファイルへのパスを指定します。$(agent.buildDirectory) または $(agent.releaseDirectory) などの定義済みシステム変数をここで使用することもできます。",
   "loc.input.label.AdditionalArguments": "SqlPackage.exe 追加引数",
-  "loc.input.help.AdditionalArguments": "Azure SQL Database の配置中に適用される追加の SqlPackage.exe 引数 (/p:IgnoreAnsiNulls=True /p:IgnoreComments=True など DACPAC オプションが選択されるケース)。これらの引数は、発行プロファイル XML ファイル (提供される場合) の設定を上書きします。",
+  "loc.input.help.AdditionalArguments": "Azure SQL Database の配置中に適用される追加の SqlPackage.exe 引数 (/p:IgnoreAnsiNulls=True /p:IgnoreComments=True など DACPAC オプションが選択されるケース)。これらの引数は、発行プロファイル XML ファイル (提供される場合) の設定をオーバーライドします。",
   "loc.input.label.SqlAdditionalArguments": "追加の Invoke-Sqlcmd 引数",
   "loc.input.help.SqlAdditionalArguments": "指定された SQL クエリを Azure SQL Database で実行するときに適用される追加の Invoke-Sqlcmd 引数 (-ConnectionTimeout 100 -OutputSqlErrors など)。",
   "loc.input.label.InlineAdditionalArguments": "追加の Invoke-Sqlcmd 引数",
@@ -52,5 +52,6 @@
   "loc.messages.SAD_NoPassword": "SQL ユーザーのパスワードが指定されていません: '{0}'",
   "loc.messages.SAD_InvalidPublishProfile": "無効な発行プロファイル '{0}' が指定されました",
   "loc.messages.SAD_InvalidServerNameFormat": "サーバー名 '{0}' の形式が正しくありません。'{1}' のように FQDN 形式を使用してください。",
-  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac タスクが失敗しました。"
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Azure SQL Dacpac タスクが失敗しました。",
+  "loc.messages.SAD_TroubleshootingLink": "エラーのトラブルシューティングの方法を https://aka.ms/sqlazuredeployreadme#troubleshooting- で確認します"
 }

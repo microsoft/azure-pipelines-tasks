@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "NuGet パブリッシャー",
   "loc.helpMarkDown": "[詳細](https://go.microsoft.com/fwlink/?LinkID=627417)",
-  "loc.description": "使用されていません。代わりに \"NuGet\" タスクをご利用ください。新しい Tool インストーラー フレームワークで機能するため、タスクの更新を待たずに新しいバージョンの NuGet を簡単に利用できます。このアカウント/コレクション外の認証されたフィードのサポートが強化され、既定で NuGet 4 を使用できます。",
+  "loc.description": "非推奨です。代わりに \"NuGet\" タスクをご利用ください。新しい Tool インストーラー フレームワークで機能するため、タスクの更新を待たずに新しいバージョンの NuGet を簡単に利用できます。このアカウント/コレクション外の認証されたフィードのサポートが強化され、既定で NuGet 4 を使用できます。",
   "loc.instanceNameFormat": "NuGet パブリッシャー $(solution)",
   "loc.group.displayName.advanced": "詳細設定",
   "loc.input.label.searchPattern": "Nupkg へのパス/パターン",
@@ -18,7 +18,7 @@
   "loc.input.label.nuGetVersion": "NuGet バージョン",
   "loc.input.help.nuGetVersion": "使用する NuGet のバージョン、またはカスタム バージョン。",
   "loc.input.label.nuGetPath": "NuGet.exe へのパス",
-  "loc.input.help.nuGetPath": "(省略可能) NuGet.exe へのパスを指定します。バージョンの選択が上書きされます。",
+  "loc.input.help.nuGetPath": "(省略可能) NuGet.exe へのパスを指定します。バージョンの選択がオーバーライドされます。",
   "loc.input.label.continueOnEmptyNupkgMatch": "[Nupkg へのパス/パターン]  と一致するパッケージがない場合は、続行します",
   "loc.input.help.continueOnEmptyNupkgMatch": "[Nupkg へのパス/パターン] と一致するパッケージがない場合は、失敗するのではなく続行します。",
   "loc.messages.Warning_NoConfigForOldNuGet": "NuGet 3.1 以前で Team Services アカウント/TFS プロジェクト コレクションでホストされている NuGet フィードに接続するには、ビルド定義を編集して、使用するパッケージ ソースを含む NuGet.config へのパスを指定します。",

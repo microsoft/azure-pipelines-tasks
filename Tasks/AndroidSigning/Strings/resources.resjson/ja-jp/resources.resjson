@@ -10,7 +10,7 @@
   "loc.input.label.jarsign": "APK の署名",
   "loc.input.help.jarsign": "指定したキーストア ファイルで APK に署名する場合に、このオプションを選択します。署名がない APK はエミュレーターだけでしか実行できません。デバイスで実行するには、APK に署名する必要があります。",
   "loc.input.label.keystoreFile": "Keystore ファイル",
-  "loc.input.help.keystoreFile": "APK の署名に使うために [セキュリティで保護されたファイル] にアップロードされたキーストア ファイルを選択します。",
+  "loc.input.help.keystoreFile": "APK の署名に使うために [セキュア ファイル] にアップロードされたキーストア ファイルを選択します。",
   "loc.input.label.keystorePass": "Keystore パスワード",
   "loc.input.help.keystorePass": "提供されているキーストア ファイルに関するパスワードを入力します。この値を暗号化するには、[変数] タブで、ロックを有効にして新しい変数をご使用ください。",
   "loc.input.label.keystoreAlias": "エイリアス",

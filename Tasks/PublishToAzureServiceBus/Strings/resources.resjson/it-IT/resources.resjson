@@ -9,7 +9,7 @@
   "loc.input.label.messageBody": "Corpo del messaggio",
   "loc.input.help.messageBody": "Consente di immettere il corpo del messaggio JSON.",
   "loc.input.label.signPayload": "Firma il messaggio",
-  "loc.input.help.signPayload": "Se è impostata su true, il messaggio verrà firmato specificato un certificato privato.",
+  "loc.input.help.signPayload": "Se è impostata su true, il messaggio verrà firmato un certificato privato, se fornito.",
   "loc.input.label.certificateString": "Variabile del certificato",
   "loc.input.help.certificateString": "Certificato inserito dall'archivio dell'insieme di credenziali delle chiavi. Creare un gruppo di variabili collegato a un'istanza di Azure Key Vault, che contiene una variabile il cui valore è il certificato. Per eseguire questa operazione, passare a Libreria -> Gruppo di variabili -> + Gruppo di variabili -> Selezionare 'Collega i segreti di un insieme di credenziali delle chiavi di Azure come variabili' -> Selezionare la sottoscrizione di Azure -> Selezionare il nome dell'insieme di credenziali delle chiavi -> Assicurarsi che sia selezionata la variabile con il certificato. È anche possibile definire la variabile normale/segreta che includerà il contenuto del certificato sotto forma di stringa.",
   "loc.input.label.signatureKey": "Chiave della proprietà della firma",

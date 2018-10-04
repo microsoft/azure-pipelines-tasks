@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Programme d'installation d'outils Go",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "Trouve ou télécharge une version spécifique d’outil d’aller dans le cache des outils et l’ajoute au chemin. Cette tâche permet de modifier la version d’aller Lang utilisée dans les tâches suivantes",
+  "loc.description": "Recherche ou télécharge une version spécifique de l'outil Go dans le cache d'outils, puis l'ajoute à PATH. Utilisez cette tâche pour changer la version de Go Lang utilisée dans les tâches suivantes",
   "loc.instanceNameFormat": "Utiliser Go $(version)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Atteindre la version de l’outil pour télécharger et installer. Exemple : 1.9.3",
+  "loc.input.help.version": "Version de l'outil Go à télécharger et à installer. Exemple : 1.9.3",
   "loc.input.label.goPath": "GOPATH",
   "loc.input.help.goPath": "Valeur de la variable d'environnement GOPATH.",
   "loc.input.label.goBin": "GOBIN",

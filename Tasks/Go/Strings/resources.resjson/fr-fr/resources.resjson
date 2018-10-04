@@ -1,16 +1,16 @@
 {
-  "loc.friendlyName": "OK",
-  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=846415)",
-  "loc.description": "Obtenir, générer, tester une application atteindre ou exécuter une commande go personnalisée.",
-  "loc.instanceNameFormat": "atteindre $(command)",
+  "loc.friendlyName": "Aller à",
+  "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.description": "Obtenez, générez et testez une application go, ou exécutez une commande go personnalisée.",
+  "loc.instanceNameFormat": "go $(commande)",
   "loc.group.displayName.advanced": "Avancé",
   "loc.input.label.command": "Commande",
-  "loc.input.help.command": "Commande dotnet à exécuter. Sélectionnez 'Personnalisé' pour ajouter des arguments ou utiliser une commande non listée ici.",
+  "loc.input.help.command": "Sélectionnez une commande Go à exécuter. Sélectionnez 'Personnalisé' pour utiliser une commande non listée ici.",
   "loc.input.label.customCommand": "Commande personnalisée",
-  "loc.input.help.customCommand": "Commande Go personnalisée pour l’exécution. Par exemple : pour exécuter la version atteindre, entrez version.",
+  "loc.input.help.customCommand": "Commande Go personnalisée pour l'exécution. Par exemple : pour exécuter la version de Go, entrez version.",
   "loc.input.label.arguments": "Arguments",
-  "loc.input.help.arguments": "Arguments de la commande sélectionnée. Par exemple, générer des arguments pour la commande de génération d’instructions go.",
+  "loc.input.help.arguments": "Arguments de la commande sélectionnée. Par exemple, les arguments d'heure de génération pour la commande de génération go.",
   "loc.input.label.workingDirectory": "Répertoire de travail",
   "loc.input.help.workingDirectory": "Répertoire de travail où le script est exécuté. En l'absence de valeur spécifiée, il s'agit de la racine du répertoire du dépôt (build) ou des artefacts (mise en production), c'est-à-dire $(System.DefaultWorkingDirectory)",
-  "loc.messages.TaskFailedWithError": "Atteindre le tâche a échoué avec l’erreur : %s"
+  "loc.messages.TaskFailedWithError": "Échec de la tâche Go avec l'erreur : %s"
 }

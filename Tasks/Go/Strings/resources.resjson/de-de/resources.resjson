@@ -1,16 +1,16 @@
 {
-  "loc.friendlyName": "Los",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=846415)",
-  "loc.description": "Abrufen, zum Erstellen, Testen einer Go-Anwendung, oder führen Sie einen benutzerdefinierte Go-Befehl.",
-  "loc.instanceNameFormat": "Wechseln zu $(command)",
+  "loc.friendlyName": "Go",
+  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.description": "Hiermit rufen Sie eine Go-Anwendung ab, erstellen oder testen sie bzw. führen einen benutzerdefinierten Go-Befehl aus.",
+  "loc.instanceNameFormat": "go $(Befehl)",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.command": "Befehl",
-  "loc.input.help.command": "Der auszuführende dotnet-Befehl. Wählen Sie \"Benutzerdefiniert\", um Argumente hinzuzufügen oder einen Befehl zu verwenden, der hier nicht aufgeführt ist.",
+  "loc.input.help.command": "Wählen Sie einen Go-Befehl für die Ausführung aus. Wählen Sie \"Benutzerdefiniert\", um einen Befehl zu verwenden, der hier nicht aufgeführt ist.",
   "loc.input.label.customCommand": "Benutzerdefinierter Befehl",
-  "loc.input.help.customCommand": "Benutzerdefinierte Go-Befehl für die Ausführung. Beispiel: Geben Sie zum Ausführen von Go Version Version.",
+  "loc.input.help.customCommand": "Ein benutzerdefinierter Go-Befehl für die Ausführung. Beispiel: Geben Sie zum Ausführen der Go-Version die Version ein.",
   "loc.input.label.arguments": "Argumente",
-  "loc.input.help.arguments": "Argumente für den ausgewählten Befehl. Erstellen Sie z. B. Zeit Argumente für die Go Buildbefehl.",
+  "loc.input.help.arguments": "Argumente für den ausgewählten Befehl. Erstellen Sie z. B. Zeitargumente für den Go-Buildbefehl.",
   "loc.input.label.workingDirectory": "Arbeitsverzeichnis",
   "loc.input.help.workingDirectory": "Das aktuelle Arbeitsverzeichnis, in dem das Skript ausgeführt wird. Sofern nicht angegeben, wird der Stamm des Repositorys (Build) oder der Artefakte (Release) verwendet, \"$(System.DefaultWorkingDirectory)\".",
-  "loc.messages.TaskFailedWithError": "Fehler bei der Aufgabe wechseln: %s"
+  "loc.messages.TaskFailedWithError": "Fehler bei Go-Aufgabe: %s"
 }

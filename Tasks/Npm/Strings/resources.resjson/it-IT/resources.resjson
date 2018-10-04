@@ -13,7 +13,7 @@
   "loc.input.label.verbose": "Registrazione dettagliata",
   "loc.input.help.verbose": "Selezionare questa opzione per visualizzare più informazioni nella console durante l'esecuzione",
   "loc.input.label.customCommand": "Comando e argomenti",
-  "loc.input.help.customCommand": "Comando personalizzato da eseguire, ad esempio \"dist-tag ls mypackage\".",
+  "loc.input.help.customCommand": "Comando personalizzato da eseguire, ad esempio \"dist-tag ls pacchetto\".",
   "loc.input.label.customRegistry": "Registri da usare",
   "loc.input.help.customRegistry": "È possibile eseguire il commit di un file con estensione npmrc nel repository del codice sorgente e impostarne qui il percorso o selezionare qui un registro da VSTS.",
   "loc.input.label.customFeed": "Usa pacchetti da questo registro VSTS/TFS",

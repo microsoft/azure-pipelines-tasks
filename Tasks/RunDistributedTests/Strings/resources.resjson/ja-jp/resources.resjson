@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "機能テストの実行",
   "loc.helpMarkDown": "[詳細] (https://go.microsoft.com/fwlink/?LinkId=624389)",
-  "loc.description": "使用されていない: このタスクとコンパニオン タスク (Visual Studio Test Agent の配置) は使用されていないものです。代わりに、'Visual Studio Test' タスクをご使用ください。VSTest タスクでは単体テストと機能テストを実行できます。複数エージェント フェーズ設定を使用して 1 つ以上のエージェントでテストを実行します。'Visual Studio テスト プラットフォーム ' タスクを使用して、エージェント上で Visual Studio なしでテストを実行できます。VSTest タスクには、失敗したテストの自動再実行などの新機能も導入されています。",
+  "loc.description": "非推奨: このタスクとコンパニオン タスク (Visual Studio Test Agent の配置) は使用されていないものです。代わりに、'Visual Studio Test' タスクをご使用ください。VSTest タスクでは単体テストと機能テストを実行できます。複数エージェント フェーズ設定を使用して 1 つ以上のエージェントでテストを実行します。'Visual Studio テスト プラットフォーム ' タスクを使用して、エージェント上で Visual Studio なしでテストを実行できます。VSTest タスクには、失敗したテストの自動再実行などの新機能も導入されています。",
   "loc.instanceNameFormat": "$(testMachineGroup) でのテスト $(sourcefilters) の実行",
   "loc.group.displayName.setupOptions": "セットアップ オプション",
   "loc.group.displayName.executionOptions": "実行オプション",
@@ -25,7 +25,7 @@
   "loc.input.label.runSettingsFile": "実行設定ファイル",
   "loc.input.help.runSettingsFile": "テストで使用する runsettings または testsettings ファイルへのパス。",
   "loc.input.label.overrideRunParams": "テスト実行パラメーターのオーバーライド",
-  "loc.input.help.overrideRunParams": "runsettings ファイルの `TestRunParameters` セクションまたは testsettings ファイルの `Properties` セクションで定義されたパラメーターを無視します。例: `AppURL=$(DeployURL);Port=8080`。注: testsettings ファイルで指定されたプロパティには、Test Agent 2017 Update 4 以降で TestContext を使用してアクセスできます。",
+  "loc.input.help.overrideRunParams": "runsettings ファイルの `TestRunParameters` セクションまたは testsettings ファイルの `Properties` セクションで定義されたパラメーターをオーバーライドします。例: `AppURL=$(DeployURL);Port=8080`。注: testsettings ファイルで指定されたプロパティには、Test Agent 2017 Update 4 以降で TestContext を使用してアクセスできます。",
   "loc.input.label.codeCoverageEnabled": "コード カバレッジ有効",
   "loc.input.help.codeCoverageEnabled": "コード カバレッジを有効にする必要があるかどうか。",
   "loc.input.label.customSlicingEnabled": "マシンの数に基づいてテストを配布する",

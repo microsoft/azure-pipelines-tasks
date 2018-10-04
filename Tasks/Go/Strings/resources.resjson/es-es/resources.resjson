@@ -1,16 +1,16 @@
 {
-  "loc.friendlyName": "Ir",
-  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=846415)",
-  "loc.description": "Obtener, compilación, prueba una aplicación vaya o ejecutar un comando Ir personalizado.",
-  "loc.instanceNameFormat": "Ir $(command)",
+  "loc.friendlyName": "Go",
+  "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.description": "Utilice los comandos go get, build, test o ejecute un comando go personalizado.",
+  "loc.instanceNameFormat": "go $(comando)",
   "loc.group.displayName.advanced": "Avanzado",
   "loc.input.label.command": "Comando",
-  "loc.input.help.command": "Comando dotnet para ejecutar. Seleccione \"Personalizado\" para agregar argumentos o usar un comando que no figure aquí.",
+  "loc.input.help.command": "Seleccione un comando de Go para ejecutarlo. Seleccione \"Personalizado\" para usar un comando que no esté en esta lista.",
   "loc.input.label.customCommand": "Comando personalizado",
-  "loc.input.help.customCommand": "Comando Ir personalizado para la ejecución. Por ejemplo: para ejecutar la versión de ir, escriba versión.",
+  "loc.input.help.customCommand": "Comando de Go personalizado que se debe ejecutar. Por ejemplo: para ejecutar go version, escriba version.",
   "loc.input.label.arguments": "Argumentos",
-  "loc.input.help.arguments": "Argumentos para el comando seleccionado. Por ejemplo, generar argumentos de tiempo para el comando de compilación ir.",
+  "loc.input.help.arguments": "Argumentos para el comando seleccionado. Por ejemplo, argumentos de tiempo de compilación para el comando go build.",
   "loc.input.label.workingDirectory": "Directorio de trabajo",
   "loc.input.help.workingDirectory": "Directorio de trabajo actual en el que se ejecuta el script. Vacío es la raíz del repositorio (compilación) o de los artefactos (versión), que es $(System.DefaultWorkingDirectory).",
-  "loc.messages.TaskFailedWithError": "Tarea ir con el error: %s"
+  "loc.messages.TaskFailedWithError": "No se pudo ejecutar la tarea de Go. Error: %s"
 }

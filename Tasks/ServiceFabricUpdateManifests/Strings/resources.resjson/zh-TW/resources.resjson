@@ -59,5 +59,6 @@
   "loc.messages.FileChanged": "檔案 '{0}' 已變更。",
   "loc.messages.NoChanges": "找不到變更。",
   "loc.messages.PdbWarning": "此套件包含 '*.pdb' 檔案，這在每個組建中都會變更，即使使用了 [確定性] 編譯器旗標亦然。請從您的套件中排除這些檔案，以準確偵測套件是否已變更。",
-  "loc.messages.InvalidImageDigestValue": "在檔案 '{1}' 中找到的映像摘要值 '{0}' 無效。值的格式應為 'endpoint/image_name@digest_value'。"
+  "loc.messages.InvalidImageDigestValue": "在檔案 '{1}' 中找到的映像摘要值 '{0}' 無效。值的格式應為 'endpoint/image_name@digest_value'。",
+  "loc.messages.CouldNotFindSubPath": "在成品路徑 '{1}' 下找不到子路徑 '{0}'。"
 }

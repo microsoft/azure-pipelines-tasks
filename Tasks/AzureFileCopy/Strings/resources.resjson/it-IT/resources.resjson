@@ -89,6 +89,6 @@
   "loc.messages.AFC_CopyPrereqsFailed": "Non è stato possibile abilitare i prerequisiti di copia. {0}",
   "loc.messages.AFC_BlobStorageNotFound": "L'account di archiviazione {0} non è stato trovato. Specificarne uno esistente",
   "loc.messages.AFC_RootContainerAndDirectory": "L'opzione '/S' non è valida per i contenitori $root.",
-  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
-  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
+  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "Il codice di risposta HTTP '{0}' non è un codice di stato di reindirizzamento valido",
+  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Intestazione del percorso della risposta di reindirizzamento è Null."
 }

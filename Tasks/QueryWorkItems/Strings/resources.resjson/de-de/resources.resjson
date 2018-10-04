@@ -5,7 +5,7 @@
   "loc.instanceNameFormat": "Arbeitselemente abfragen",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.queryId": "Abfrage",
-  "loc.input.help.queryId": "Wählen Sie eine gespeicherte Arbeitsabfrage zur Ausführung aus.",
+  "loc.input.help.queryId": "Wählen Sie eine gespeicherte Arbeitselementabfrage zur Ausführung aus.",
   "loc.input.label.maxThreshold": "Oberer Schwellenwert",
   "loc.input.help.maxThreshold": "Die maximale Anzahl übereinstimmender Arbeitselemente aus der Abfrage.",
   "loc.input.label.minThreshold": "Unterer Schwellenwert",

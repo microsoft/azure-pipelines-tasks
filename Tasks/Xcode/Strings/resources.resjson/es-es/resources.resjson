@@ -83,9 +83,9 @@
   "loc.messages.FailedToGenerateExportOptionsPlist": "No se pudo generar automáticamente un archivo .plist de \"Opciones de exportación\" para exportar un IPA. Especifique un archivo .plist de \"Opciones de exportación\" en \"Opciones del paquete\".",
   "loc.messages.LocateXcodeBasedOnVersion": "Buscando la ruta de acceso del desarrollador para Xcode \"%s\"",
   "loc.messages.FailedToLocateSpecifiedXcode": "No se puede resolver la ruta de acceso de desarrollador para Xcode \"%s\". Establezca la variable de entorno \"%s\" en la máquina del agente o bien defina \"Versión de Xcode\" como \"Predeterminada\"o \"Especificar la ruta de acceso\".",
-  "loc.messages.CantDetermineProvisioningStyle": "No se encontró el estilo de aprovisionamiento en un archivo pbxProject. Se usará la firma automática. Si el proyecto usa la firma manual, es posible que no se pueda realizar la exportación automática. Como solución alternativa, \"Opciones de exportación\" puede establecerse en \"Plist\" o \"Especificar\".",
-  "loc.messages.MultipleSchemesFound": "El área de trabajo contiene varios esquemas. No se ha seleccionado ninguno. Use \"Esquema\" para especificar un esquema de destino.",
-  "loc.messages.NoSchemeFound": "No se encontró ningún esquema compartido en el área de trabajo. Use \"Manage Schemes\" en Xcode para compartir un esquema.",
+  "loc.messages.CantDetermineProvisioningStyle": "No se encontró el estilo de aprovisionamiento en un archivo pbxProject. Se usará la firma automática. Si el proyecto usa la firma manual, la exportación automática puede generar errores. Como solución alternativa, establezca \"Opciones de exportación\" en \"Plist\" o \"Especificar\".",
+  "loc.messages.MultipleSchemesFound": "El área de trabajo contiene varios esquemas. No hay ningún esquema seleccionado. Use \"Scheme\" para especificar un esquema de destino.",
+  "loc.messages.NoSchemeFound": "No se encontró ningún esquema compartido en el área de trabajo. Use \"Administrar Schemes\" en Xcode para compartir un esquema.",
   "loc.messages.SchemeSelected": "El área de trabajo contiene un solo esquema compartido. Se usará \"%s\".",
   "loc.messages.FailedToFindScheme": "No se encontró ningún esquema en el área de trabajo. Use \"Esquema\" para especificar un esquema de destino.",
   "loc.messages.OutputDirectoryIgnored": "El directorio de salida para la salida de compilación (binarios) se ha omitido. La especificación de un directorio de salida es incompatible con la acción \"%s\"."

@@ -39,5 +39,6 @@
   "loc.messages.ConflictingVariableFound": "Die Variable mit dem Namen %s ist sowohl in der Umgebung als auch dem Schlüsseltresor definiert.",
   "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Das Geheimnis mit dem Namen \"%s\" wurde nicht gefunden. Der Geheimnisname muss eine 1–127 Zeichen lange Zeichenfolge sein, die nur folgende Zeichen enthalten darf: 0–9, a–z, A–Z, Bindestriche (-)",
   "loc.messages.UploadingAttachment": "\"%s\" wird als Anlage hochgeladen",
-  "loc.messages.CouldNotWriteToFile": "Inhalt konnte nicht in Datei gespeichert werden. Fehler: %s"
+  "loc.messages.CouldNotWriteToFile": "Inhalt konnte nicht in Datei gespeichert werden. Fehler: %s",
+  "loc.messages.CouldNotMaskSecret": "Der Wert \"%s\" umfasst reguläre Ausdrücke und konnte deshalb nicht vollständig maskiert werden."
 }

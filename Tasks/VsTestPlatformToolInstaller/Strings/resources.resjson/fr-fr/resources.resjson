@@ -2,7 +2,7 @@
   "loc.friendlyName": "Programme d'installation de Visual Studio Test Platform",
   "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">Package de plateforme de test sur NuGet</a>",
   "loc.description": "Acquiert la plateforme de test à partir de nuget.org ou du cache d'outils. Répond à la demande de 'vstest', et permet d'exécuter des tests et de collecter des données de diagnostic à l'aide de la tâche Visual Studio Test.",
-  "loc.instanceNameFormat": "Programme d'installation de VsTest Platform",
+  "loc.instanceNameFormat": "VsTest Platform Installer",
   "loc.input.label.versionSelector": "Version",
   "loc.input.help.versionSelector": "Choisissez d'installer la dernière version ou une version spécifique de Visual Studio Test Platform.",
   "loc.input.label.testPlatformVersion": "Version de la plateforme de test",
@@ -18,5 +18,5 @@
   "loc.messages.TestPlatformDownloadFailed": "Échec du téléchargement de la version %s de la plateforme de test. Recherche de la dernière version stable dans le cache.",
   "loc.messages.LookingForLatestStableVersion": "Recherche de la dernière version stable de Microsoft.Testplatform.",
   "loc.messages.LookingForLatestPreReleaseVersion": "Recherche de la dernière préversion de Microsoft.Testplatform.",
-  "loc.messages.AgentWorkDirectoryPathTooLong": "Veuillez vous assurer que le chemin de répertoire de travail de l’agent est inférieure à 50 caractères pour garantir le téléchargement du package plateforme test réussi."
+  "loc.messages.AgentWorkDirectoryPathTooLong": "Vérifiez que le chemin du répertoire de travail de l'agent est inférieur à 50 caractères pour garantir la réussite du téléchargement du package de plateforme de test."
 }

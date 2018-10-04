@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Azure App Service 部署",
+  "loc.friendlyName": "Azure 应用服务部署",
   "loc.helpMarkDown": "[详细信息](https://aka.ms/azurermwebdeployreadme)",
   "loc.description": "更新 Windows 上的 Azure WebApp 服务、 Linux 上带内置映像或 docker 容器的 Web 应用、基于 ASP.NET、.NET Core、PHP、Python 或 Node 的 Web 应用程序、Function Apps、移动应用、Api 应用程序、使用 Web 部署/ Kudu REST API 的 Web 作业",
   "loc.instanceNameFormat": "Azure 应用服务部署: $(WebAppName)",
@@ -38,13 +38,13 @@
   "loc.input.label.PrivateRegistryImage": "映像",
   "loc.input.help.PrivateRegistryImage": "用于存储容器映像的存储库的名称。<br/>注意: 完全限定的映像名称格式为:“`<registry`>/<b>`<repository`></b>:`<tag`> ”。例如，\"myregistry.azurecr.io/<b>nginx</b>:latest\"。",
   "loc.input.label.PrivateRegistryTag": "标记",
-  "loc.input.help.PrivateRegistryTag": "标记为可选项，它是注册表用于为 Docker 映像提供版本的机制。<br/>注意: 完全限定的映像名称格式为: '`<registry`>/`<repository`>:<b>`<tag`></b>'. For example, 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
+  "loc.input.help.PrivateRegistryTag": "标记为可选，注册该机制旨在为 Docker 映像提供一个版本。<br/>注意: 完全限定的映像名称格式为: '`<registry`>/`<repository`>:<b>`<tag`></b>'.例如 'myregistry.azurecr.io/nginx:<b>latest</b>'.",
   "loc.input.label.DockerNamespace": "注册表或命名空间",
   "loc.input.help.DockerNamespace": "特定注册表或命名空间的全局唯一顶级域名。<br/>注意: 完全限定的映像名称格式应为:“<b>`<注册表或命名空间`></b>/`<存储库`>:`<标记`>”。例如，\"<b>myregistry.azurecr.io</b>/nginx:latest\"。",
   "loc.input.label.DockerRepository": "映像",
   "loc.input.help.DockerRepository": "用于存储容器映像的存储库的名称。<br/>注意: 完全限定的映像名称格式应为:“`<注册表或命名空间`>/<b>`<存储库`></b>:`<标记`>”。例如，\"myregistry.azurecr.io/<b>nginx</b>:latest\"。",
   "loc.input.label.DockerImageTag": "标记",
-  "loc.input.help.DockerImageTag": "标记为可选项，它是注册表用以对 Docker 映像提供版本的机制。<br/>注意: 完全限定的映射名称格式应为:“`<注册表或命名空间`>/`<存储库`>:<b>`<标记`></b>”。例如，\"myregistry.azurecr.io/nginx:<b>latest</b>\"。",
+  "loc.input.help.DockerImageTag": "标记为可选项，它是注册表用以对 Docker 映像提供版本的机制。<br/>注意: 完全限定的映射名称格式应为:“`<registry or namespace`>/`<repository`>:<b>`<tag`></b>”。例如，\"myregistry.azurecr.io/nginx:<b>latest</b>\"。",
   "loc.input.label.VirtualApplication": "虚拟应用程序",
   "loc.input.help.VirtualApplication": "指定 Azure 门户中已配置的虚拟应用程序的名称。对于以应用服务根目录为目标的部署，此选项并非必需。",
   "loc.input.label.Package": "包或文件夹",
@@ -165,7 +165,7 @@
   "loc.messages.ScriptStatusTimeout": "因为超时，无法提取脚本状态。",
   "loc.messages.PollingForFileTimeOut": "因为超时，无法提取脚本状态。通过将 \"appservicedeploy.retrytimeout\" 变量设置为所需分钟数可以增加超时限制。",
   "loc.messages.InvalidPollOption": "提供的轮询选项无效: %s。",
-  "loc.messages.MissingAppTypeWebConfigParameters": "Web.config 参数中缺少属性 \"-appType\"。\"-appType\" 的有效值为: \"python_Bottle\"、\"python_Django\"、\"python_Flask\" 和 \"node\"。<br />例如，\"-appType python_Bottle\" (sans-quotes)用于 Python Bottle 框架..",
+  "loc.messages.MissingAppTypeWebConfigParameters": "Web.config 参数中缺少属性 \"-appType\"。\"-appType\" 的有效值为: \"python_Bottle\"、\"python_Django\"、\"python_Flask\"、\"node\" 和 \"Go\"。<br />例如，如果是 Python Bottle 框架，则应为 \"-appType python_Bottle\" (不带引号)。",
   "loc.messages.AutoDetectDjangoSettingsFailed": "无法检测 DJANGO_SETTINGS_MODULE \"settings.py\" 文件路径。请确保 \"settings.py\" 文件存在或采用格式 \"-DJANGO_SETTINGS_MODULE <folder_name>.settings\" 在 Web.config 参数输出中提供正确的路径",
   "loc.messages.FailedToApplyTransformation": "无法对给定的包应用转换。请验证以下各项。",
   "loc.messages.FailedToApplyTransformationReason1": "1. 在生成期间是否已对 MSBuild 生成的包应用转换。如果已应用，请删除 csproj 文件中每个配置的 <DependentUpon> 标记，然后重新生成。",
@@ -215,5 +215,6 @@
   "loc.messages.PackageDeploymentInitiated": "已启动使用 ZIP 部署的包部署。",
   "loc.messages.FailedToGetDeploymentLogs": "未能获取部署日志。错误: %s",
   "loc.messages.GoExeNameNotPresent": "Go exe 名称不存在",
-  "loc.messages.WarDeploymentRetry": "Retrying war file deployment as it did not expand successfully earlier."
+  "loc.messages.WarDeploymentRetry": "正在重试 war 文件部署，因为它之前未成功扩展。",
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "请确保计算机使用的是 TLS 1.2 协议或更高版本。请访问 https://aka.ms/enableTlsv2 获取有关如何在计算机中启用 TLS 的详细信息。"
 }

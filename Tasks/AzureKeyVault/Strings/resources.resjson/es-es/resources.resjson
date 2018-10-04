@@ -6,10 +6,10 @@
   "loc.releaseNotes": "Funciona con los agentes multiplataforma (Linux, macOS o Windows)",
   "loc.input.label.ConnectedServiceName": "Suscripción a Azure",
   "loc.input.help.ConnectedServiceName": "Seleccione la suscripción de Azure para el almacén de claves",
-  "loc.input.label.KeyVaultName": "Almacén de claves",
+  "loc.input.label.KeyVaultName": "Key Vault",
   "loc.input.help.KeyVaultName": "Proporcione el nombre de un almacén de claves existente",
   "loc.input.label.SecretsFilter": "Filtro de secretos",
-  "loc.input.help.SecretsFilter": "Lista separada por comas de nombres de secretos. Use * para descargar todos los secretos de la clave seleccionada.",
+  "loc.input.help.SecretsFilter": "Lista separada por comas de nombres de secretos. Use * para descargar todos los secretos del almacén de claves seleccionado.",
   "loc.messages.ClientIdCannotBeEmpty": "clientId debe ser una cadena no vacía.",
   "loc.messages.DomainCannotBeEmpty": "domain debe ser una cadena no vacía.",
   "loc.messages.SecretCannotBeEmpty": "secret debe ser una cadena no vacía.",
@@ -27,7 +27,7 @@
   "loc.messages.ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" debe cumplir la restricción - \"Patrón\": /^[-\\w\\._\\(\\)]+$/",
   "loc.messages.AzKv_ConstructorFailed": "No se pudieron inicializar los parámetros de Azure Key Vault. Error: %s.",
   "loc.messages.SubscriptionIdLabel": "Id. de suscripción: %s.",
-  "loc.messages.KeyVaultNameLabel": "Nombre del almacén de claves: %s.",
+  "loc.messages.KeyVaultNameLabel": "Nombre del Key Vault: %s.",
   "loc.messages.DownloadingSecretsUsing": "Descargando secretos con: %s.",
   "loc.messages.GetSecretsFailed": "No se pudieron obtener los secretos. Error: %s.",
   "loc.messages.NoSecretsFound": "No se han encontrado secretos en: %s",
@@ -39,5 +39,6 @@
   "loc.messages.ConflictingVariableFound": "La variable con el nombre %s está definida tanto en el entorno como en el almacén de claves",
   "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "No se encuentra el secreto con el nombre: %s. El nombre del secreto debe ser una cadena que tenga entre 1 y 127 caracteres de longitud y que solo contenga 0-9, a-z, A-Z y -",
   "loc.messages.UploadingAttachment": "Cargando %s como datos adjuntos.",
-  "loc.messages.CouldNotWriteToFile": "No se pudo guardar contenido en el archivo. Error: %s"
+  "loc.messages.CouldNotWriteToFile": "No se pudo guardar contenido en el archivo. Error: %s",
+  "loc.messages.CouldNotMaskSecret": "El valor %s tiene expresiones regulares, de ahí que no se haya podido enmascarar completamente"
 }

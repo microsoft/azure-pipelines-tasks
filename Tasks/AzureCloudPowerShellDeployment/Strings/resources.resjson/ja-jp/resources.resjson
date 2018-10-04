@@ -11,7 +11,7 @@
   "loc.input.label.ServiceName": "サービス名",
   "loc.input.help.ServiceName": "既存のクラウド サービス名を選択するか、入力してください。",
   "loc.input.label.ServiceLocation": "サービスの場所",
-  "loc.input.help.ServiceLocation": "新しいサービスを配置する地域を選択します。使用可能なオプションは、**米国東部**、**米国東部 2**、**米国中央部**、**米国中南部**、**米国西部**、**北欧**、**西欧** などです。",
+  "loc.input.help.ServiceLocation": "新しいサービスを配置する地域を選択します。使用可能なオプションは、**米国東部**、**米国東部 2**、**米国中部**、**米国中南部**、**米国西部**、**北欧**、**西欧** などです。",
   "loc.input.label.CsPkg": "CsPkg",
   "loc.input.help.CsPkg": "成果物の既定のディレクトリにある CsPkg のパス。",
   "loc.input.label.CsCfg": "CsCfg",

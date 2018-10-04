@@ -61,7 +61,7 @@
   "loc.messages.sqAnalysis_BuildSummaryTitle": "SonarQube 분석 보고서",
   "loc.messages.sqAnalysis_TaskReportInvalid": "작업 보고서가 잘못되었거나 없습니다. SonarQube가 완료되었는지 확인하세요.",
   "loc.messages.sqAnalysis_BuildSummary_LinkText": "자세한 SonarQube 보고서",
-  "loc.messages.sqAnalysis_BuildSummary_CannotAuthenticate": "SonarQube 서버에 인증할 수 없습니다. 저장된 끝점 세부 정보 및 서버 상태를 확인하세요.",
+  "loc.messages.sqAnalysis_BuildSummary_CannotAuthenticate": "SonarQube 서버에 인증할 수 없습니다. 저장된 엔드포인트 세부 정보 및 서버 상태를 확인하세요.",
   "loc.messages.sqAnalysis_AnalysisTimeout": "할당된 시간 %d초 내에 분석이 완료되지 않았습니다.",
   "loc.messages.sqAnalysis_IsPullRequest_SkippingBuildSummary": "끌어오기 요청 빌드: 자세한 SonarQube 빌드 요약을 사용할 수 없습니다.",
   "loc.messages.sqAnalysis_IsPullRequest_SkippingBuildBreaker": "끌어오기 요청 빌드: 품질 게이트가 실패하면 빌드가 분할되지 않습니다.",

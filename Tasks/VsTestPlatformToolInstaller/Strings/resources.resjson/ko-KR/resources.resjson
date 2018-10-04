@@ -2,7 +2,7 @@
   "loc.friendlyName": "Visual Studio Test 플랫폼 설치 관리자",
   "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">NuGet의 테스트 플랫폼 패키지</a>",
   "loc.description": "nuget.org 또는 도구 캐시에서 테스트 플랫폼을 가져옵니다. ‘vstest’ 요청을 충족하며 Visual Studio Test 작업을 사용하여 테스트를 실행하고 진단 데이터를 수집하는 데 사용될 수 있습니다.",
-  "loc.instanceNameFormat": "VsTest 플랫폼 설치 관리자",
+  "loc.instanceNameFormat": "VsTest Platform Installer",
   "loc.input.label.versionSelector": "버전",
   "loc.input.help.versionSelector": "Visual Studio Test 플랫폼의 최신 버전이나 특정 버전 중 무엇을 설치할지를 선택합니다.",
   "loc.input.label.testPlatformVersion": "테스트 플랫폼 버전",

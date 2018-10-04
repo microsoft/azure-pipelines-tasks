@@ -31,7 +31,7 @@
   "loc.messages.BuildNotFound": "ID %s のビルドが見つかりません",
   "loc.messages.BuildArtifactNotFound": "ビルド %s の成果物 %s が見つかりません",
   "loc.messages.NoArtifactsFound": "ビルド %s の成果物が見つかりません",
-  "loc.messages.BuildIdBuildDefinitionMismatch": "ビルド定義 ID %s に関して ID %s のビルドが見つかりません",
+  "loc.messages.BuildIdBuildDefinitionMismatch": "ID %s のビルドがビルド定義 ID %s で見つかりません",
   "loc.messages.ArtifactsSuccessfullyDownloaded": "成果物が %s に正常にダウンロードされました",
   "loc.messages.RetryingOperation": "%s でエラーが発生したため再試行しています => 再試行の保留中: %s",
   "loc.messages.OperationFailed": "%s でエラー %s のために失敗しました",

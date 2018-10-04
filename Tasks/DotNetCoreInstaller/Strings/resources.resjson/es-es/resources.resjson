@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Instalador de herramientas de .NET Core",
   "loc.helpMarkDown": "[Más información](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Adquiere una versión específica de .NET Core de Internet o de la memoria caché de herramientas y la agrega a la ruta de acceso. Use esta tarea para cambiar la versión de .NET Core que se usa en las tareas siguientes.",
+  "loc.description": "Adquiere una versión específica de .NET Core de Internet o de la memoria caché de herramientas y la agrega a PATH. Utilice esta tarea para cambiar la versión de .NET Core que se usa en las tareas siguientes.",
   "loc.instanceNameFormat": "Usar $(packageType) $(version) de .NET Core",
   "loc.input.label.packageType": "Paquete para instalar",
   "loc.input.help.packageType": "Seleccione si debe instalarse solo el entorno de ejecución o el SDK completo.",

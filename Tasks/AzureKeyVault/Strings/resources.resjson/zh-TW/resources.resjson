@@ -39,5 +39,6 @@
   "loc.messages.ConflictingVariableFound": "環境和金鑰保存庫中都定義了名稱為 %s 的變數",
   "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "找不到名稱為 %s 的祕密。祕密名稱必須是長度為 1-127 個字元的字串，且只包含 0-9、a-z、A-Z，和 -",
   "loc.messages.UploadingAttachment": "正在將 %s 上傳為附件",
-  "loc.messages.CouldNotWriteToFile": "無法將內容儲存至檔案。失敗，發生錯誤: %s"
+  "loc.messages.CouldNotWriteToFile": "無法將內容儲存至檔案。失敗，發生錯誤: %s",
+  "loc.messages.CouldNotMaskSecret": "因而無法完全遮罩 %s 值的規則運算式"
 }

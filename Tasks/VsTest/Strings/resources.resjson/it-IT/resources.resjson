@@ -19,7 +19,7 @@
   "loc.input.label.testConfiguration": "Configurazione di test",
   "loc.input.help.testConfiguration": "Consente di selezionare la configurazione di test.",
   "loc.input.label.tcmTestRun": "Esecuzione dei test",
-  "loc.input.help.tcmTestRun": "La selezione basata sull'esecuzione dei test viene usata quando si attivano esecuzione dei test automatizzati dall'hub di test. Non è possibile usare questa opzione per l'esecuzione dei test nella pipeline di CI/CD.",
+  "loc.input.help.tcmTestRun": "La selezione basata sull'esecuzione dei test viene usata quando si attivano esecuzione dei test automatizzati dall'hub di test. Non è possibile usare questa opzione per l'esecuzione dei test nella pipeline CI/CD.",
   "loc.input.label.searchFolder": "Cartella di ricerca",
   "loc.input.help.searchFolder": "Cartella in cui cercare gli assembly di test.",
   "loc.input.label.testFiltercriteria": "Criteri di filtro dei test",

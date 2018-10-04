@@ -121,13 +121,13 @@
   "loc.messages.FailedToRestartKuduService": "未能重启 kudu 服务。%s。",
   "loc.messages.FailedToFetchKuduAppSettings": "未能提取 Kudu 应用设置。错误: %s",
   "loc.messages.Successfullydeployedpackageusingkuduserviceat": "已成功部署了包 %s (通过在 %s 使用 kudu 服务)",
-  "loc.messages.Failedtodeploywebapppackageusingkuduservice": "未能部署 web 包。错误: %s",
+  "loc.messages.Failedtodeploywebapppackageusingkuduservice": "未能部署 Web 包。错误: %s",
   "loc.messages.FailedToCreatePath": "未能从 Kudu 创建路径“%s”。错误: %s",
   "loc.messages.FailedToDeleteFile": "未能从 Kudu 删除文件“%s/%s”。错误: %s",
   "loc.messages.FailedToUploadFile": "未能从 Kudu 上传文件“%s/%s”。错误: %s",
   "loc.messages.FailedToGetFileContent": "未能从 Kudu 获取文件内容“%s/%s”。错误: %s",
   "loc.messages.FailedToListPath": "未能列出路径“%s”。错误: %s",
   "loc.messages.FailedToGetDeploymentLogs": "未能获取部署日志。错误: %s",
-  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "HTTP 响应代码 \"%s\" 不是有效的重定向状态代码。",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "HTTP 响应的位置标头为 null 且状态代码为 %s"
 }

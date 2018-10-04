@@ -36,7 +36,7 @@
   "loc.input.label.allowPackageConflicts": "중복을 건너뛸 수 있음",
   "loc.input.help.allowPackageConflicts": "패키지 집합을 지속적으로 게시하고 변경된 패키지 하위 집합의 버전 번호만 변경하는 경우 이 옵션을 사용하세요. 이 옵션을 사용하면 패키지 중 일부가 409 충돌 오류로 거부된 경우에도 작업이 성공을 보고할 수 있습니다.\n\n이 옵션은 현재 Visual Studio Team Services에서 그리고 Windows 에이전트 사용 시에만 제공됩니다. NuGet.exe에서 충돌이 발생하면 작업이 실패합니다.",
   "loc.input.label.externalEndpoint": "NuGet 서버",
-  "loc.input.help.externalEndpoint": "외부 NuGet 서버의 자격 증명이 포함된 NuGet 서비스 끝점입니다.",
+  "loc.input.help.externalEndpoint": "외부 NuGet 서버의 자격 증명이 포함된 NuGet 서비스 엔드포인트입니다.",
   "loc.input.label.verbosityPush": "세부 정보 표시",
   "loc.input.help.verbosityPush": "출력에 표시되는 세부 정보의 양을 지정합니다.",
   "loc.input.label.searchPatternPack": "압축할 csproj 또는 nuspec 파일의 경로",

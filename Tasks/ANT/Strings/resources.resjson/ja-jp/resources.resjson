@@ -29,7 +29,7 @@
   "loc.input.label.failIfCoverageEmpty": "コード カバレッジの結果がない場合に失敗する",
   "loc.input.help.failIfCoverageEmpty": "コード カバレッジから発行するべき結果が生成されなかった場合に、ビルドを失敗にします。",
   "loc.input.label.antHomeUserInputPath": "ANT_HOME パスの設定",
-  "loc.input.help.antHomeUserInputPath": "設定されると、指定したパスの既存のあらゆる ANT_HOME 環境変数を上書きします。",
+  "loc.input.help.antHomeUserInputPath": "設定されると、指定したパスの既存のあらゆる ANT_HOME 環境変数をオーバーライドします。",
   "loc.input.label.javaHomeSelection": "次の条件で JAVA_HOME を設定します",
   "loc.input.help.javaHomeSelection": "ビルド中に検出される JDK バージョンを選択するか、JDK パスを手動で入力して JAVA_HOME を設定します。",
   "loc.input.label.jdkVersion": "JDK バージョン",

@@ -118,9 +118,9 @@
   "loc.messages.WebJobAlreadyInStoppedState": "El WebJob \"%s\" ya está detenido.",
   "loc.messages.RestartingKuduService": "Reiniciando el servicio Kudu.",
   "loc.messages.RestartedKuduService": "El servicio Kudu se ha reiniciado.",
-  "loc.messages.FailedToRestartKuduService": "No se pudo reiniciar el servicio kudu. %s.",
+  "loc.messages.FailedToRestartKuduService": "No se pudo reiniciar el servicio Kudu. %s.",
   "loc.messages.FailedToFetchKuduAppSettings": "No se pudo capturar la configuración de la aplicación de Kudu. Error: %s",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "El paquete %s se implementó correctamente mediante el servicio kudu en %s",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "El paquete %s se implementó correctamente mediante el servicio Kudu en %s",
   "loc.messages.Failedtodeploywebapppackageusingkuduservice": "No se pudo implementar el paquete web. Error: %s",
   "loc.messages.FailedToCreatePath": "No se pudo crear la ruta de acceso \"%s\" de Kudu. Error: %s",
   "loc.messages.FailedToDeleteFile": "No se pudo eliminar el archivo \"%s/%s\" de Kudu. Error: %s",
@@ -128,6 +128,6 @@
   "loc.messages.FailedToGetFileContent": "No se pudo obtener el contenido del archivo \"%s/%s\" de Kudu. Error: %s",
   "loc.messages.FailedToListPath": "No se pudo enumerar la ruta de acceso \"%s\". Error: %s",
   "loc.messages.FailedToGetDeploymentLogs": "No se pudieron obtener los registros de implementación. Error: %s",
-  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "El código de respuesta HTTP \"%s\" no es un código de estado de redireccionamiento válido.",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "El encabezado de la ubicación es NULL para la respuesta HTTP con el código de estado %s"
 }

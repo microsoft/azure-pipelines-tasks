@@ -59,5 +59,6 @@
   "loc.messages.FileChanged": "'{0}' 파일이 변경되었습니다.",
   "loc.messages.NoChanges": "변경 내용을 찾을 수 없습니다.",
   "loc.messages.PdbWarning": "이 패키지에는 'deterministic' 컴파일러 플래그에 사용된 경우에도 모든 빌드에서 변경되는 '*.pdb' 파일이 포함되어 있습니다. 패키지가 변경되었는지 정확히 감지하려면 이러한 파일을 패키지에서 제외하세요.",
-  "loc.messages.InvalidImageDigestValue": "'{1}' 파일에서 찾은 이미지 다이제스트 값 '{0}'이(가) 잘못되었습니다. 'endpoint/image_name@digest_value' 형식의 값이 필요합니다."
+  "loc.messages.InvalidImageDigestValue": "'{1}' 파일에서 찾은 이미지 다이제스트 값 '{0}'이(가) 잘못되었습니다. 'endpoint/image_name@digest_value' 형식의 값이 필요합니다.",
+  "loc.messages.CouldNotFindSubPath": "아티팩트 경로 '{1}' 아래에서 '{0}'의 하위 경로를 찾을 수 없습니다."
 }

@@ -19,5 +19,5 @@
   "loc.input.label.waitForCompletion": "Событие завершения",
   "loc.input.help.waitForCompletion": "Значение по умолчанию — \"ApiResponse\". Возможные значения: \"ApiResponse\", \"Callback\". При значении \"Callback\" функция Azure выполняет обратный вызов для обновления записи временной шкалы.",
   "loc.input.label.successCriteria": "Критерии успеха",
-  "loc.input.help.successCriteria": "Условие, которое определяет, когда должна передаваться задача. Отсутствие условия означает, что содержимое ответа не влияет на результат. Пример: для ответа {\"status\" : \"successful\"} выражением может быть eq(root['status'], 'successful'). [Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=842996)"
+  "loc.input.help.successCriteria": "Условие, которое определяет, когда должна передаваться задача. Отсутствие условия означает, что содержимое ответа не влияет на результат. Пример: для ответа {\"status\" : \"successful\"} выражением может быть eq(root['status'], 'successful'). [Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=842996)​"
 }

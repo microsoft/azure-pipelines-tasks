@@ -83,9 +83,9 @@
   "loc.messages.FailedToGenerateExportOptionsPlist": "IPA를 내보낼 '내보내기 옵션' plist 파일을 자동으로 생성하지 못했습니다. '패키지 옵션'에서 '내보내기 옵션' plist 파일을 지정하세요.",
   "loc.messages.LocateXcodeBasedOnVersion": "Xcode '%s'의 개발자 경로를 찾는 중",
   "loc.messages.FailedToLocateSpecifiedXcode": "Xcode '%s'의 개발자 경로를 확인할 수 없습니다. 에이전트 컴퓨터에서 '%s' 환경 변수를 설정하거나 'Xcode 버전'을 '기본값' 또는 '경로 지정'으로 설정하세요.",
-  "loc.messages.CantDetermineProvisioningStyle": "pbxProject 파일에 프로비전 스타일이 없습니다. 자동 서명이 사용됩니다. 프로젝트에서 수동 서명을 사용하는 경우 자동 내보내기가 실패할 수 있습니다. 이 문제를 해결하기 위해 '내보내기 옵션'을 'Plist' 또는 '지정'으로 설정할 수 있습니다.",
-  "loc.messages.MultipleSchemesFound": "작업 영역에 여러 스키마가 포함되어 있습니다. 선택된 스키마가 없습니다. '스키마'를 사용하여 대상 스키마를 지정하세요.",
-  "loc.messages.NoSchemeFound": "작업 영역에 공유 스키마가 없습니다. Xcode에서 \"스키마 관리\"를 사용하여 스키마를 공유하세요.",
+  "loc.messages.CantDetermineProvisioningStyle": "pbxProject 파일에 프로비저닝 스타일이 없습니다. 자동 서명이 사용됩니다. 프로젝트에서 수동 서명을 사용하는 경우 자동 내보내기가 실패할 수 있습니다. 이 문제를 해결하기 위해 '내보내기 옵션'을 'Plist' 또는 '지정'으로 설정할 수 있습니다.",
+  "loc.messages.MultipleSchemesFound": "작업 영역에 여러 스키마가 포함되어 있습니다. 선택된 스키마가 없습니다. 'Scheme'을 사용하여 대상 스키마를 지정하세요.",
+  "loc.messages.NoSchemeFound": "작업 영역에 공유 스키마가 없습니다. Xcode에서 \"Schemes 관리\"를 사용하여 스키마를 공유하세요.",
   "loc.messages.SchemeSelected": "작업 영역에 단일 공유 스키마가 포함되어 있습니다. '%s'이(가) 사용됩니다.",
   "loc.messages.FailedToFindScheme": "작업 영역에서 스키마를 찾지 못했습니다. '스키마'를 사용하여 대상 스키마를 지정하세요.",
   "loc.messages.OutputDirectoryIgnored": "빌드 출력(이진)의 출력 디렉터리가 무시됩니다. 출력 디렉터리 지정은 '%s' 작업과 호환되지 않습니다."

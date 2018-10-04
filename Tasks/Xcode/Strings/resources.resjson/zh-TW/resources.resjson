@@ -83,9 +83,9 @@
   "loc.messages.FailedToGenerateExportOptionsPlist": "無法自動產生要匯出 IPA 的 `Export options` plist 檔案。請在 `Package options` 中指定 `Export options` plist 檔案。",
   "loc.messages.LocateXcodeBasedOnVersion": "正在尋找 Xcode 開發人員路徑 `%s`",
   "loc.messages.FailedToLocateSpecifiedXcode": "無法解析 Xcode `%s` 的開發人員路徑。請在代理程式機器上設定 `%s` 環境變數，或將 `Xcode version` 設定為 `Default` 或 `Specify path`。",
-  "loc.messages.CantDetermineProvisioningStyle": "無法在 pbxProject 檔案中找到佈建樣式。將會使用自動簽署。若專案使用手動簽署，則自動匯出可能會失敗。您可以將 `Export options` 設為 `Plist` 或 `Specify` 作為因應措施。",
+  "loc.messages.CantDetermineProvisioningStyle": "無法在 pbxProject 檔案中找到佈建樣式。將會使用自動簽署。若專案使用手動簽署，則自動匯出可能會失敗。您可以將 [匯出選項] 設為 `Plist` 或 `Specify` 作為因應措施。",
   "loc.messages.MultipleSchemesFound": "工作區包含多個配置。未選取任何配置。請使用 `Scheme` 來指定目標配置。",
-  "loc.messages.NoSchemeFound": "在工作區中找不到任何共用的配置。請在 Xcode 中使用 [Manage Schemes] 來共用配置。",
+  "loc.messages.NoSchemeFound": "在工作區中找不到任何共用的配置。請在 Xcode 中使用 [受控 Schemes] 來共用配置。",
   "loc.messages.SchemeSelected": "工作區包含單一共用配置。將會使用 '%s'。",
   "loc.messages.FailedToFindScheme": "在工作區中找不到配置。請使用 `Scheme` 來指定目標配置。",
   "loc.messages.OutputDirectoryIgnored": "已忽略建置輸出 (二進位檔案) 的輸出目錄。指定的輸出目錄與 '%s' 動作不相容。"

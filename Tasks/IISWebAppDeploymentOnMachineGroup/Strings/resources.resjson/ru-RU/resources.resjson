@@ -48,8 +48,8 @@
   "loc.messages.Isparameterfilepresentinwebpackage0": "Присутствует ли файл параметров в веб-пакете: %s",
   "loc.messages.Requestingconfigdetails": "Запрос данных о конфигурации: %s",
   "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "Развертывание веб-пакета %s по виртуальному пути (физическому пути): %s (%s)",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Пакет (%s) успешно развернут при помощи службы kudu (%s).",
-  "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Не удалось развернуть пакет веб-приложения при помощи службы kudu: %s.",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "Пакет %s успешно развернут при помощи службы Kudu в %s",
+  "loc.messages.Failedtodeploywebapppackageusingkuduservice": "Не удалось развернуть пакет веб-приложения при помощи службы Kudu: %s.",
   "loc.messages.Unabletodeploywebappresponsecode": "Не удалось развернуть веб-приложение из-за ошибки: %s.",
   "loc.messages.Unabletopackagecontentoffolder": "Не удается добавить в пакет содержимое папки: %s.",
   "loc.messages.Compressedfolderintozip": "Папка %s сжата в ZIP-архив %s.",
@@ -72,5 +72,6 @@
   "loc.messages.FailedToApplyTransformationReason1": "1. Применено ли преобразование к созданному пакету MSBuild во время сборки. Если это так, удалите тег <DependentUpon> для каждой конфигурации в CSPROJ-файле и повторите сборку. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Убедитесь, что файлы конфигурации и преобразования находятся в одной и той же папке в пакете.",
   "loc.messages.AutoParameterizationMessage": "Атрибуты ConnectionString в Web.config параметризованы по умолчанию. Обратите внимание, что преобразование не влияет на атрибуты connectionString, так как значение переопределяется во время развертывания файлом \"Parameters.xml\" или \"SetParameters.xml\". Вы можете отключить автоматическую параметризацию, задав /p:AutoParameterizationWebConfigConnectionStrings=False во время создания пакета MSBuild.",
-  "loc.messages.PackageDeploymentFailed": "Не удалось развернуть веб-пакет на веб-сайте IIS."
+  "loc.messages.PackageDeploymentFailed": "Не удалось развернуть веб-пакет на веб-сайте IIS.",
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Компьютер должен использовать протокол TLS 1.2 или более поздней версии. Дополнительные сведения о том, как включить TLS на вашем компьютере: https://aka.ms/enableTlsv2."
 }

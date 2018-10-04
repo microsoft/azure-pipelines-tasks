@@ -70,7 +70,7 @@
   "loc.messages.ContainerPatternNotFound": "Kein Muster im Docker-Parameter \"filepath\" gefunden.",
   "loc.messages.ContainerDockerFileNotFound": "Es wurde keine Docker-Datei gefunden, die %s entspricht.",
   "loc.messages.NoImagesInImageNamesFile": "In der Datei \"%s\" wird mindestens ein Imagename erwartet.",
-  "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
-  "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
-  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
+  "loc.messages.CantWriteDataToFile": "In die Datei \"%s\" können keine Daten geschrieben werden. Fehler: %s",
+  "loc.messages.NoDataWrittenOnFile": "In die Datei \"%s\" wurden keine Daten geschrieben. ",
+  "loc.messages.FileContentSynced": "Der Inhalt der Datei wurde auf dem Datenträger synchronisiert. Der Inhalt ist \"%s\"."
 }

@@ -31,9 +31,9 @@
   "loc.messages.BuildNotFound": "找不到 ID 为 %s 的生成",
   "loc.messages.BuildArtifactNotFound": "找不到生成 %s 的项目 %s",
   "loc.messages.NoArtifactsFound": "找不到生成 %s 的项目",
-  "loc.messages.BuildIdBuildDefinitionMismatch": "无法为生成定义 ID %s 找到 ID 为 %s 的生成",
+  "loc.messages.BuildIdBuildDefinitionMismatch": "ID 为 %s 的生成未找到(对于 ID 为 %s 的生成定义)",
   "loc.messages.ArtifactsSuccessfullyDownloaded": "已成功将项目下载到 %s",
-  "loc.messages.RetryingOperation": "错误: 在 %s 中，重试 => 会停用挂起: %s",
+  "loc.messages.RetryingOperation": "错误 : 在 %s 中，正在重试 => 重试挂起  : %s",
   "loc.messages.OperationFailed": "%s 中失败，出现错误: %s",
   "loc.messages.ArtifactNameDirectoryNotFound": "目录“%s”不存在。请回退到父级目录: %s"
 }

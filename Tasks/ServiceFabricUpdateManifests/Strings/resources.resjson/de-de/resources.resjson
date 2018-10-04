@@ -59,5 +59,6 @@
   "loc.messages.FileChanged": "Die Datei \"{0}\" hat sich geändert.",
   "loc.messages.NoChanges": "Es wurden keine Änderungen gefunden.",
   "loc.messages.PdbWarning": "Dieses Paket enthält PDB-Dateien, die sich in jedem Build ändern, selbst wenn das Compilerflag \"deterministic\" verwendet wird. Schließen Sie diese Dateien aus Ihrem Paket aus, um genau ermitteln zu können, ob das Paket geändert wurde.",
-  "loc.messages.InvalidImageDigestValue": "Der Imagedigestwert \"{0}\" in der Datei \"{1}\" ist ungültig. Erwartet wird ein Wert im Format \"endpunkt/imagename@digestvalue\"."
+  "loc.messages.InvalidImageDigestValue": "Der Imagedigestwert \"{0}\" in der Datei \"{1}\" ist ungültig. Erwartet wird ein Wert im Format \"endpunkt/imagename@digestvalue\".",
+  "loc.messages.CouldNotFindSubPath": "Ein Unterpfad von \"{0}\" wurde unter dem Artefaktpfad \"{1}\" nicht gefunden."
 }

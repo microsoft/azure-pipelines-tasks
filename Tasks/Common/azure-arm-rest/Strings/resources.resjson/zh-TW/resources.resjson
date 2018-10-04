@@ -128,6 +128,6 @@
   "loc.messages.FailedToGetFileContent": "無法從 Kudu 取得檔案內容 '%s/%s'。錯誤: %s",
   "loc.messages.FailedToListPath": "無法列出路徑 '%s'。錯誤: %s",
   "loc.messages.FailedToGetDeploymentLogs": "無法取得部署記錄。錯誤: %s",
-  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "HTTP 回應碼: '%s' 不是有效的重新導向狀態碼。",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "HTTP 回應的位置標頭為 null，狀態碼: %s"
 }

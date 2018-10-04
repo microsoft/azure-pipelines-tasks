@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "转到工具安装程序",
   "loc.helpMarkDown": "[详细信息](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "查找特定版本的 Go 工具并将其下载到工具缓存，然后添加到该路径。此任务用于更改后续任务中使用的 Go Lang 的版本",
+  "loc.description": "查找 Go 工具的特定版本或将其下载到工具缓存，并将其添加到 PATH。使用此任务更改后续任务中使用的 Go Lang 版本",
   "loc.instanceNameFormat": "使用 Go $(version)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.version": "版本",
@@ -11,5 +11,5 @@
   "loc.input.label.goBin": "GOBIN",
   "loc.input.help.goBin": "GOBIN 环境变量的值。",
   "loc.messages.FailedToDownload": "未能下载版本 %s。请验证该版本是否有效，并解析任何其他问题。错误: %s",
-  "loc.messages.TempDirNotSet": "预期代理。TempDirectory 待设置"
+  "loc.messages.TempDirNotSet": "Agent.TempDirectory 待设置"
 }

@@ -89,6 +89,6 @@
   "loc.messages.AFC_CopyPrereqsFailed": "无法启用复制先决条件。{0}",
   "loc.messages.AFC_BlobStorageNotFound": "未找到存储帐户 {0}。请指定现有的存储帐户",
   "loc.messages.AFC_RootContainerAndDirectory": "\"/S\" 选项对 $root 容器无效。",
-  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "The HTTP response code: '{0}' is not a valid redirect status code",
-  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "Redirect response location header is null."
+  "loc.messages.AFC_RedirectResponseInvalidStatusCode": "HTTP 响应代码:“{0}”不是有效的重定向状态代码",
+  "loc.messages.AFC_RedirectResponseLocationHeaderIsNull": "重定向响应位置标头为 null。"
 }

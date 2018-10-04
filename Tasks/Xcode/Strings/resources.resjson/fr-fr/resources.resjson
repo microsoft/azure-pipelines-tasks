@@ -83,9 +83,9 @@
   "loc.messages.FailedToGenerateExportOptionsPlist": "Échec de la génération automatique d'un fichier Plist d'options d'exportation pour l'exportation d'un fichier IPA. Spécifiez un fichier plist d'options d'exportation dans 'Options de package'.",
   "loc.messages.LocateXcodeBasedOnVersion": "Localisation du chemin du développeur pour Xcode '%s'.",
   "loc.messages.FailedToLocateSpecifiedXcode": "Impossible de résoudre le chemin du développeur pour Xcode '%s'. Définissez la variable d'environnement '%s' sur la machine d'agent, ou affectez à 'Version de Xcode' la valeur 'Par défaut' ou 'Spécifier le chemin'.",
-  "loc.messages.CantDetermineProvisioningStyle": "Le style de provisionnement est introuvable dans un fichier pbxProject. La signature automatique va être utilisée. Si le projet utilise la signature manuelle, l'exportation automatique risque de ne pas pouvoir s'effectuer. Vous pouvez affecter à 'Options d'exportation' les valeurs 'Plist' ou 'Spécifier' comme solution de contournement.",
-  "loc.messages.MultipleSchemesFound": "L'espace de travail contient plusieurs schémas. Aucun schéma sélectionné. Utilisez 'Schéma' pour spécifier un schéma cible.",
-  "loc.messages.NoSchemeFound": "Schéma partagé introuvable dans l'espace de travail. Utilisez \"Gérer les schémas\" dans Xcode pour partager un schéma.",
+  "loc.messages.CantDetermineProvisioningStyle": "Le style de provisionnement est introuvable dans un fichier pbxProject. La signature automatique va être utilisée. Si le projet utilise la signature manuelle, l'exportation automatique risque de ne pas pouvoir s'effectuer. Vous pouvez affecter à Options d'exportation les valeurs Plist ou Spécifier comme solution de contournement.",
+  "loc.messages.MultipleSchemesFound": "L'espace de travail contient plusieurs schémas. Aucun schéma sélectionné. Utilisez Scheme pour spécifier un schéma cible.",
+  "loc.messages.NoSchemeFound": "Schéma partagé introuvable dans l'espace de travail. Utilisez Gérer Schemes dans Xcode pour partager un schéma.",
   "loc.messages.SchemeSelected": "L'espace de travail contient un seul schéma partagé. '%s' va être utilisé.",
   "loc.messages.FailedToFindScheme": "Schéma introuvable dans l'espace de travail. Utilisez 'Schéma' pour spécifier un schéma cible.",
   "loc.messages.OutputDirectoryIgnored": "Le répertoire de sortie de build (fichiers binaires) est ignoré. La spécification d'un répertoire de sortie est incompatible avec l'action '%s'."

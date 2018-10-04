@@ -1,11 +1,11 @@
 {
   "loc.friendlyName": "Installer für Go-Tool",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "Sucht nach oder downloads für bestimmte Version des Tools wechseln Sie in den Cache Tools, und auf den Pfad hinzugefügt. Verwenden Sie diesen Task zum Ändern der Version des wechseln Lang in nachfolgenden Tasks verwendet",
+  "loc.description": "Sucht eine bestimmte Version des Go-Tools oder lädt sie in den Toolcache herunter und fügt sie der PATH-Variablen hinzu. Verwenden Sie diese Aufgabe zum Ändern der Version von Golang, die in nachfolgenden Aufgaben verwendet wird.",
   "loc.instanceNameFormat": "Go $(version) verwenden",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.version": "Version",
-  "loc.input.help.version": "Wechseln Sie Toolversion herunterladen und installieren. Beispiel: 1.9.3",
+  "loc.input.help.version": "Die Version des Go-Tools, die heruntergeladen und installiert werden soll. Beispiel: 1.9.3",
   "loc.input.label.goPath": "GOPATH",
   "loc.input.help.goPath": "Wert für die GOPATH-Umgebungsvariable.",
   "loc.input.label.goBin": "GOBIN",

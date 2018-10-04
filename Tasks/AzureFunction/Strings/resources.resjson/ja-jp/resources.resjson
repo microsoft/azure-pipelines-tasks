@@ -19,5 +19,5 @@
   "loc.input.label.waitForCompletion": "完了イベント",
   "loc.input.help.waitForCompletion": "既定値は \"ApiResponse\"です。使用可能な値: \"ApiResponse\"、\"Callback\" (タイムライン レコードを更新するために Azure 関数がコールバックする呼び出し)。",
   "loc.input.label.successCriteria": "成功の条件",
-  "loc.input.help.successCriteria": "タスクを渡す場合について定義する条件。条件がない場合、応答内容は結果に影響しません。例: 応答 {\"status\" : \"successful\"} の場合、式は eq(root['status'], 'successful') とできます。[詳細](https://go.microsoft.com/fwlink/?linkid=842996)"
+  "loc.input.help.successCriteria": "いつタスクを渡すかを定義する条件。条件を指定しない場合、応答の内容は結果には影響しません。例: - 応答 {\"status\" : \"successful\"} の場合、式は eq(root['status'], 'successful') とすることができます。[詳細](https://go.microsoft.com/fwlink/?linkid=842996)"
 }

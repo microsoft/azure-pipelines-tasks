@@ -38,7 +38,7 @@
   "loc.input.label.runSettingsFile": "設定檔案",
   "loc.input.help.runSettingsFile": "要在測試中使用之 runsettings 或 testsettings 檔案的路徑。",
   "loc.input.label.overrideTestrunParameters": "覆寫測試回合參數",
-  "loc.input.help.overrideTestrunParameters": "覆寫在 runsettings 檔案 `TestRunParameters` 區段或 testsettings 檔案的 `Properties` 區段中定義的參數。例如: `-key1 value1 -key2 value2`。注意: 在 testsettings 檔案中指定的屬性可以透過使用 Test Agent 2017 Update 4 更高版本的 TestContext 存取 ",
+  "loc.input.help.overrideTestrunParameters": "覆寫在 runsettings 檔案 `TestRunParameters` 區段或 testsettings 檔案的 `Properties` 區段中定義的參數。例如: `-key1 value1 -key2 value2`。注意: 在 testsettings 檔案中指定的屬性可以透過使用 Visual Studio 2017 Update 4 更高版本的 TestContext 存取 ",
   "loc.input.label.pathtoCustomTestAdapters": "自訂測試配接器的路徑",
   "loc.input.help.pathtoCustomTestAdapters": "自訂測試配接器的目錄路徑。自動探索與測試組件在同一個資料夾內的配接器。",
   "loc.input.label.runInParallel": "在多核心電腦上平行執行測試",
@@ -112,7 +112,7 @@
   "loc.messages.VideoCollectorNotSupportedWithRunSettings": "回合設定不支援 Video collector。",
   "loc.messages.runTestInIsolationNotSupported": "使用多代理程式階段設定時，無法獨立執行測試。此選項將予忽略。",
   "loc.messages.overrideNotSupported": "只有有效的 runsettings 或 testsettings 檔案才支援覆寫測試回合參數。系統會忽略這個選項。",
-  "loc.messages.testSettingPropertiesNotSupported": "在 testsettings 檔案中指定的屬性可以透過使用 Test Agent 2017 Update 4 更高版本的 TestContext 存取",
+  "loc.messages.testSettingPropertiesNotSupported": "在 testsettings 檔案中指定的屬性可以透過使用 Visual Studio 2017 Update 4 更高版本的 TestContext 存取",
   "loc.messages.vstestVersionInvalid": "不支援指定的測試平台版本 %s。",
   "loc.messages.configureDtaAgentFailed": "嘗試了 %d 次之後，為伺服器設定測試代理程式仍然失敗。錯誤: %s",
   "loc.messages.otherConsoleOptionsNotSupported": "使用多重代理程式階段設定時，不支援其他主控台選項。將忽略此選項。",
@@ -167,5 +167,5 @@
   "loc.messages.NoTestResultsDirectoryFound": "找不到測試結果目錄。",
   "loc.messages.OnlyWindowsOsSupported": "只有 Windows 代理程式支援此工作，無法將其用於其他平台上。",
   "loc.messages.MultiConfigNotSupportedWithOnDemand": "不支援以 Multi-Configuration 選項配合進行指定的執行。請使用 'None' 或 'Multi-agent' 平行處理原則選項。",
-  "loc.messages.disabledRerun": "失敗的測試的重新執行重新執行的臨界值為停用，前提是 %s"
+  "loc.messages.disabledRerun": "因為提供的重新執行閾值為 %s，所以正在停用重新執行失敗的測試"
 }

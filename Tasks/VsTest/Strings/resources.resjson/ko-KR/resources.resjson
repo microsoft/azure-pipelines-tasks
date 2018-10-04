@@ -156,7 +156,7 @@
   "loc.messages.rerunFailedThreshold": "실패한 테스트 다시 실행 임계값: %s",
   "loc.messages.invalidRerunFailedThreshold": "실패한 테스트 다시 실행 임계값이 잘못되었습니다. 기본값인 30%로 설정합니다.",
   "loc.messages.rerunFailedTestCasesMaxLimit": "실패한 테스트 최대 다시 실행 사례 제한: %s",
-  "loc.messages.invalidRerunFailedTestCasesMaxLimit": "실패한 테스트 다시 실행 사례 제한이 잘못되었습니다. 기본값인 5로 설정합니다.",
+  "loc.messages.invalidRerunFailedTestCasesMaxLimit": "실패한 테스트 사례 다시 실행 제한이 잘못되었습니다. 기본값인 5로 설정합니다.",
   "loc.messages.rerunMaxAttempts": "다시 실행 최대 시도 횟수: %s",
   "loc.messages.invalidRerunMaxAttempts": "다시 실행 최대 시도 횟수를 초과했거나 잘못되었습니다. 기본값인 3으로 설정합니다.",
   "loc.messages.rerunNotSupported": "실패한 테스트를 다시 실행하려면 Visual Studio 2015 업데이트 3 또는 Visual Studio 2017을 설치합니다.",

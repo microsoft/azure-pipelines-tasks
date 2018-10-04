@@ -2,7 +2,7 @@
   "loc.friendlyName": "Azure Key Vault",
   "loc.helpMarkDown": "[Plus d'informations](https://go.microsoft.com/fwlink/?linkid=848891)",
   "loc.description": "Télécharger les secrets du coffre de clés Azure Key Vault",
-  "loc.instanceNameFormat": "Coffre de clés Azure Key Vault : $(KeyVaultName)",
+  "loc.instanceNameFormat": "Coffre de clés Azure : $(KeyVaultName)",
   "loc.releaseNotes": "Fonctionne avec les agents multiplateformes (Linux, macOS ou Windows)",
   "loc.input.label.ConnectedServiceName": "Abonnement Azure",
   "loc.input.help.ConnectedServiceName": "Sélectionnez l'abonnement Azure du coffre de clés",
@@ -25,7 +25,7 @@
   "loc.messages.ResourceGroupExceededLength": "\"resourceGroupName\" doit satisfaire la contrainte - \"MaxLength\" : 90",
   "loc.messages.ResourceGroupDeceededLength": "\"resourceGroupName\" doit satisfaire la contrainte - \"MinLength\" : 1",
   "loc.messages.ResourceGroupDoesntMatchPattern": "\"resourceGroupName\" doit satisfaire la contrainte - \"Pattern\" : /^[-\\w\\._\\(\\)]+$/",
-  "loc.messages.AzKv_ConstructorFailed": "Échec de l'initialisation des paramètres du coffre de clés Azure Key Vault. Erreur : %s.",
+  "loc.messages.AzKv_ConstructorFailed": "L'initialisation des paramètres du coffre de clés Azure a échoué. Erreur : %s.",
   "loc.messages.SubscriptionIdLabel": "SubscriptionId : %s.",
   "loc.messages.KeyVaultNameLabel": "Nom du coffre de clés : %s.",
   "loc.messages.DownloadingSecretsUsing": "Téléchargement des secrets à l'aide de %s.",
@@ -39,5 +39,6 @@
   "loc.messages.ConflictingVariableFound": "La variable nommée %s est définie à la fois dans l'environnement et le coffre de clés",
   "loc.messages.GetSecretFailedBecauseOfInvalidCharacters": "Le secret nommé %s est introuvable. Un nom de secret doit être une chaîne comprise entre 1 et 127 caractères. Elle doit contenir uniquement des chiffres, des lettres et des tirets : 0-9, a-z, A-Z et -",
   "loc.messages.UploadingAttachment": "Chargement de %s en tant que pièce jointe",
-  "loc.messages.CouldNotWriteToFile": "Impossible d'enregistrer le contenu dans le fichier. Échec avec une erreur %s"
+  "loc.messages.CouldNotWriteToFile": "Impossible d'enregistrer le contenu dans le fichier. Échec avec une erreur %s",
+  "loc.messages.CouldNotMaskSecret": "La valeur %s comporte des expressions régulières, donc elle n'a pas pu être totalement masquée"
 }

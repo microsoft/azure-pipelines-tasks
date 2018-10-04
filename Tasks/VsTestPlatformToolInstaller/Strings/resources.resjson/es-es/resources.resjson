@@ -2,7 +2,7 @@
   "loc.friendlyName": "Instalador de Visual Studio Test Platform",
   "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">Paquete de la plataforma de pruebas en NuGet</a>",
   "loc.description": "Adquiere la plataforma de pruebas de nuget.org o de la memoria caché de herramientas. Cumple la demanda de \"vstest\" y se puede usar para ejecutar pruebas y recopilar datos de diagnóstico mediante la tarea de Visual Studio Test.",
-  "loc.instanceNameFormat": "Instalador de plataforma VsTest",
+  "loc.instanceNameFormat": "VsTest Platform Installer",
   "loc.input.label.versionSelector": "Versión",
   "loc.input.help.versionSelector": "Seleccione si quiere instalar la última versión de Visual Studio Test Platform o bien una versión específica.",
   "loc.input.label.testPlatformVersion": "Versión de Test Platform",
@@ -18,5 +18,5 @@
   "loc.messages.TestPlatformDownloadFailed": "No se pudo descargar la versión %s de la plataforma de pruebas. Buscando en caché la última versión estable disponible.",
   "loc.messages.LookingForLatestStableVersion": "Buscando la última versión estable de Microsoft.Testplatform.",
   "loc.messages.LookingForLatestPreReleaseVersion": "Buscando la última versión preliminar de Microsoft.Testplatform.",
-  "loc.messages.AgentWorkDirectoryPathTooLong": "Asegúrese de que la ruta de acceso del directorio de trabajo de agente tiene menos de 50 caracteres para garantizar ha descargado correctamente el paquete de la plataforma de pruebas."
+  "loc.messages.AgentWorkDirectoryPathTooLong": "Asegúrese de que la ruta de acceso del directorio de trabajo del agente tiene menos de 50 caracteres para garantizar una descarga correcta del paquete de plataforma de pruebas."
 }

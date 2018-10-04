@@ -48,8 +48,8 @@
   "loc.messages.Isparameterfilepresentinwebpackage0": "El archivo de parámetros está presente en el paquete web : %s",
   "loc.messages.Requestingconfigdetails": "Solicitando detalles de configuración : %s",
   "loc.messages.Deployingwebapplicationatvirtualpathandphysicalpath": "Implementando el paquete web : %s en una ruta de acceso virtual (ruta de acceso física): %s (%s)",
-  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "El paquete %s se implementó correctamente mediante el servicio kudu en %s",
-  "loc.messages.Failedtodeploywebapppackageusingkuduservice": "No se pudo implementar el paquete webapp mediante el servicio kudu : %s",
+  "loc.messages.Successfullydeployedpackageusingkuduserviceat": "El paquete %s se implementó correctamente mediante el servicio Kudu en %s",
+  "loc.messages.Failedtodeploywebapppackageusingkuduservice": "No se pudo implementar el paquete webapp mediante el servicio Kudu : %s",
   "loc.messages.Unabletodeploywebappresponsecode": "No se puede implementar webapp debido al código de error : %s",
   "loc.messages.Unabletopackagecontentoffolder": "No se puede empaquetar el contenido de la carpeta : %s",
   "loc.messages.Compressedfolderintozip": "Carpeta comprimida %s en zip : %s",
@@ -72,5 +72,6 @@
   "loc.messages.FailedToApplyTransformationReason1": "1. Si la transformación ya se ha aplicado para el paquete generado por MSBuild durante la compilación. Si es así, quite la etiqueta <DependentUpon> para cada configuración del archivo csproj y compile de nuevo. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. Asegúrese de que el archivo de configuración y los archivos de transformación están presentes en la misma carpeta dentro del paquete.",
   "loc.messages.AutoParameterizationMessage": "Los atributos de ConnectionString en Web.config están parametrizados de manera predeterminada. Tenga en cuenta que la transformación no tiene efecto en los atributos connectionString porque el valor se invalida durante la implementación por los archivos \"Parameters.xml\" o \"SetParameters.xml\". Puede deshabilitar la parametrización automática estableciendo /p:AutoParameterizationWebConfigConnectionStrings=False durante la generación del paquete MSBuild.",
-  "loc.messages.PackageDeploymentFailed": "No se pudo implementar el paquete web en el sitio web de IIS."
+  "loc.messages.PackageDeploymentFailed": "No se pudo implementar el paquete web en el sitio web de IIS.",
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "Asegúrese de que el equipo usa el protocolo TLS 1.2 o posterior. Consulte https://aka.ms/enableTlsv2 para obtener más información sobre cómo habilitar TLS en la máquina."
 }

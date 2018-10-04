@@ -83,9 +83,9 @@
   "loc.messages.FailedToGenerateExportOptionsPlist": "Fehler beim automatischen Generieren einer PLIST-Datei mit Exportoptionen zum Exportieren einer IPA. Geben Sie in den Paketoptionen eine PLIST-Datei mit Exportoptionen an.",
   "loc.messages.LocateXcodeBasedOnVersion": "Entwicklerpfad für Xcode \"%s\" wird gesucht.",
   "loc.messages.FailedToLocateSpecifiedXcode": "Der Entwicklerpfad für Xcode \"%s\" kann nicht aufgelöst werden. Legen Sie die Umgebungsvariable \"%s\" auf dem Agent-Computer fest, oder legen Sie \"Xcode-Version\" auf \"Standard\" oder \"Pfad angeben\" fest.",
-  "loc.messages.CantDetermineProvisioningStyle": "Der Bereitstellungsstil wurde nicht in der pbxProject-Datei gefunden. Es wird die automatische Signatur verwendet. Wenn das Projekt eine manuelle Signatur verwendet, kommt es beim automatischen Exportieren möglicherweise zu einem Fehler. Als Problemumgehung kann \"Exportoptionen\" auf \"PLIST\" oder \"Angeben\" festgelegt werden.",
-  "loc.messages.MultipleSchemesFound": "Der Arbeitsbereich enthält mehrere Schemas. Es wurde kein Schema ausgewählt. Verwenden Sie \"Schema\", um ein Zielschema anzugeben.",
-  "loc.messages.NoSchemeFound": "Kein freigegebenes Schema im Arbeitsbereich gefunden. Verwenden Sie die Schemaverwaltung in Xcode, um ein Schema freizugeben.",
+  "loc.messages.CantDetermineProvisioningStyle": "Der Bereitstellungsstil wurde nicht in der pbxProject-Datei gefunden. Es wird die automatische Signatur verwendet. Wenn das Projekt eine manuelle Signatur verwendet, kommt es beim automatischen Exportieren möglicherweise zu einem Fehler. Als Problemumgehung kann \"Exportoptionen\" auf \"Plist\" oder \"Angeben\" festgelegt werden.",
+  "loc.messages.MultipleSchemesFound": "Der Arbeitsbereich enthält mehrere Schemas. Es wurde kein Schema ausgewählt. Verwenden Sie \"Scheme\", um ein Zielschema anzugeben.",
+  "loc.messages.NoSchemeFound": "Kein freigegebenes Schema im Arbeitsbereich gefunden. Verwenden Sie \"Verwalten von Schemes\" in Xcode, um ein Schema freizugeben.",
   "loc.messages.SchemeSelected": "Der Arbeitsbereich enthält ein einzelnes freigegebenes Schema. \"%s\" wird verwendet.",
   "loc.messages.FailedToFindScheme": "Fehler beim Ermitteln eines Schemas im Arbeitsbereich. Verwenden Sie \"Schema\", um ein Zielschema anzugeben.",
   "loc.messages.OutputDirectoryIgnored": "Das Ausgabeverzeichnis für die Buildausgabe (Binärdateien) wurde ignoriert. Die Angabe eines Ausgabeverzeichnisses ist nicht mit der Aktion \"%s\" kompatibel."

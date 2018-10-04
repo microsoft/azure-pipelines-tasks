@@ -59,5 +59,6 @@
   "loc.messages.FileChanged": "ファイル '{0}' が変更されました。",
   "loc.messages.NoChanges": "変更は検出されませんでした。",
   "loc.messages.PdbWarning": "このパッケージには '*.pdb' ファイルが含まれており、これらのファイルは 'deterministic' コンパイラ フラグが使用されている場合でもビルドごとに変わります。パッケージが変更されたかどうかを正確に検出するには、これらのファイルをパッケージから除外します。",
-  "loc.messages.InvalidImageDigestValue": "ファイル '{1}' で見つかったイメージ ダイジェスト値 '{0}' が無効です。'endpoint/image_name@digest_value' という形式の値が必要です。"
+  "loc.messages.InvalidImageDigestValue": "ファイル '{1}' で見つかったイメージ ダイジェスト値 '{0}' が無効です。'endpoint/image_name@digest_value' という形式の値が必要です。",
+  "loc.messages.CouldNotFindSubPath": "成果物パス '{1}' の下に '{0}' のサブパスが見つかりませんでした。"
 }

@@ -52,5 +52,6 @@
   "loc.messages.SAD_NoPassword": "Не указан пароль для пользователя SQL: \"{0}\"",
   "loc.messages.SAD_InvalidPublishProfile": "Указан недопустимый профиль публикации \"{0}\"",
   "loc.messages.SAD_InvalidServerNameFormat": "Формат названия сервера \"{0}\" неправилен. Используйте полное имя сервера в формате \"{1}\".",
-  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Сбой задачи DACPAC в SQL Azure."
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "Сбой задачи DACPAC в SQL Azure.",
+  "loc.messages.SAD_TroubleshootingLink": "Сведения об устранении сбоев: https://aka.ms/sqlazuredeployreadme#troubleshooting-"
 }

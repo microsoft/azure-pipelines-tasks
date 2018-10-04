@@ -52,5 +52,6 @@
   "loc.messages.SAD_NoPassword": "Non è stata specificata alcuna password per l'utente SQL: '{0}'",
   "loc.messages.SAD_InvalidPublishProfile": "Il profilo di pubblicazione '{0}' specificato non è valido",
   "loc.messages.SAD_InvalidServerNameFormat": "Il formato del nome del server '{0}' non è corretto. Usare il formato FQDN, ad esempio '{1}'",
-  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "L'attività del pacchetto di applicazione livello dati SQL di Azure non è riuscita."
+  "loc.messages.SAD_AzureSQLDacpacTaskFailed": "L'attività del pacchetto di applicazione livello dati SQL di Azure non è riuscita.",
+  "loc.messages.SAD_TroubleshootingLink": "Informazioni su come risolvere i problemi: https://aka.ms/sqlazuredeployreadme#troubleshooting-"
 }

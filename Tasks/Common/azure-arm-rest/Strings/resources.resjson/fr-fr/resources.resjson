@@ -63,7 +63,7 @@
   "loc.messages.FailedToRestartAppServiceSlot": "Échec du redémarrage de l'App Service '%s-%s'. Erreur : %s",
   "loc.messages.FailedToGetAppServiceDetails": "Échec de la récupération (fetch) des détails de l'App Service '%s'. Erreur : %s",
   "loc.messages.AppServiceState": "App Service est à l'état '%s'.",
-  "loc.messages.InvalidMonitorAppState": "État '%s' non valide pour la surveillance de l'état de l'application",
+  "loc.messages.InvalidMonitorAppState": "État '%s' non valide pour la supervision de l'état de l'application",
   "loc.messages.FailedToGetAppServicePublishingProfile": "Échec de la récupération (fetch) du profil de publication de l'App Service '%s'. Erreur : %s",
   "loc.messages.FailedToSwapAppServiceSlotWithProduction": "Échec de l'échange des emplacements de l'App Service '%s' - 'production' et '%s'. Erreur : %s",
   "loc.messages.FailedToSwapAppServiceSlotSlots": "Échec de l'échange des emplacements de l'App Service '%s' - '%s' et '%s'. Erreur : %s",
@@ -101,13 +101,13 @@
   "loc.messages.ExtensionAlreadyInstalled": "L'extension '%s' est déjà installée.",
   "loc.messages.InstallingSiteExtension": "Installation de l'extension de site '%s'",
   "loc.messages.FailedToGetResourceID": "Échec de l'obtention de l'ID de ressource pour le type de ressource '%s' et le nom de ressource '%s'. Erreur : %s",
-  "loc.messages.ContinousMonitoringEnabled": "Surveillance continue activée pour l'App Service '%s'.",
+  "loc.messages.ContinousMonitoringEnabled": "Supervision continue activée pour le service d'application '%s'.",
   "loc.messages.MultipleResourceGroupFoundForAppService": "Plusieurs groupes de ressources trouvés pour l'App Service '%s'.",
   "loc.messages.StartingContinousWebJobsinAppService": "Démarrage des WebJobs continus dans l'App Service '%s'",
   "loc.messages.StartedContinousWebJobsinAppService": "Les WebJobs continus ont démarré dans l'App Service '%s'",
   "loc.messages.StoppingContinousWebJobsinAppService": "Arrêt des WebJobs continus dans l'App Service '%s'",
   "loc.messages.StoppedContinousWebJobsinAppService": "Les WebJobs continus se sont arrêtés dans l'App Service '%s'",
-  "loc.messages.FailedToEnableContinuousMonitoring": "Échec de l'activation de la surveillance continue. Erreur : %s",
+  "loc.messages.FailedToEnableContinuousMonitoring": "Échec de l'activation de la supervision continue. Erreur : %s",
   "loc.messages.InvalidSlotSwapEntity": "Entité d'échange d'emplacements non valide. Erreur : %s",
   "loc.messages.FailedToUpdateDeploymentHistory": "Échec de la mise à jour de l'état du déploiement. Erreur : %s",
   "loc.messages.StartingWebJob": "Démarrage du WebJob '%s'.",
@@ -128,6 +128,6 @@
   "loc.messages.FailedToGetFileContent": "Échec de l'obtention du contenu du fichier '%s/%s' à partir de Kudu. Erreur : %s",
   "loc.messages.FailedToListPath": "Échec du listage du chemin '%s'. Erreur : %s",
   "loc.messages.FailedToGetDeploymentLogs": "Échec de l'obtention des journaux de déploiement. Erreur : %s",
-  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "The HTTP response code: '%s' is not a valid redirect status code.",
-  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "Location header is null for HTTP response with status code: %s"
+  "loc.messages.ARG_RedirectResponseInvalidStatusCode": "Le code de réponse HTTP '%s' n'est pas un code d'état de redirection valide.",
+  "loc.messages.ARG_RedirectResponseLocationHeaderIsNull": "L'en-tête d'emplacement a une valeur null pour la réponse HTTP ayant le code d'état : %s"
 }

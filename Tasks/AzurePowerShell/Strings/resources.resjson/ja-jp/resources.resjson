@@ -23,5 +23,5 @@
   "loc.messages.InvalidScriptArguments0": "スクリプトの引数 '{0}' が無効です。改行は使用できません。",
   "loc.messages.InvalidScriptPath0": "スクリプト パス '{0}' が無効です。無効なパス文字が指定されました。",
   "loc.messages.InvalidAzurePsVersion": "指定した Azure PowerShell バージョン '{0}' は、形式が正しくありません。形式をご確認ください。正しい形式の例は、1.0.1 です",
-  "loc.messages.OverrideAzurePowerShellVersion": "Azure PowerShell バージョン '{0}' はホストされたエージェントではサポートされていません。バージョン '{1}' で上書きされます。選択したバージョンを変更することをご検討ください。"
+  "loc.messages.OverrideAzurePowerShellVersion": "Azure PowerShell バージョン '{0}' はホストされたエージェントではサポートされていません。バージョン '{1}' でオーバーライドされます。選択したバージョンを変更することをご検討ください。"
 }

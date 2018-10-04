@@ -164,5 +164,5 @@
   "loc.messages.WebJobAlreadyInStoppedState": "El WebJob \"%s\" ya está detenido.",
   "loc.messages.RestartingKuduService": "Reiniciando el servicio Kudu.",
   "loc.messages.RestartedKuduService": "El servicio Kudu se ha reiniciado.",
-  "loc.messages.FailedToRestartKuduService": "No se pudo reiniciar el servicio kudu. %s."
+  "loc.messages.FailedToRestartKuduService": "No se pudo reiniciar el servicio Kudu. %s."
 }

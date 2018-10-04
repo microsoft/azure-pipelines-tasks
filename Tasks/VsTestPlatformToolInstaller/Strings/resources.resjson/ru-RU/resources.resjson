@@ -2,7 +2,7 @@
   "loc.friendlyName": "Установщик платформы тестирования Visual Studio",
   "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">Пакет платформы тестирования в NuGet</a>",
   "loc.description": "Получает платформу тестирования с сайта nuget.org или из кэша средств. Удовлетворяет потребность в vstest и может использоваться для выполнения тестов сбора данных диагностики с помощью задачи теста Visual Studio.",
-  "loc.instanceNameFormat": "Установщик платформы VsTest",
+  "loc.instanceNameFormat": "VsTest Platform Installer",
   "loc.input.label.versionSelector": "Версия",
   "loc.input.help.versionSelector": "Выберите, следует ли установить последнюю или определенную версию платформы тестирования Visual Studio.",
   "loc.input.label.testPlatformVersion": "Версия платформы тестирования",
@@ -18,5 +18,5 @@
   "loc.messages.TestPlatformDownloadFailed": "Не удалось скачать версию %s платформы тестирования. Идет поиск последней доступной стабильной версии в кэше.",
   "loc.messages.LookingForLatestStableVersion": "Идет поиск последней стабильной версии Microsoft.Testplatform.",
   "loc.messages.LookingForLatestPreReleaseVersion": "Идет поиск последней предварительной версии Microsoft.Testplatform.",
-  "loc.messages.AgentWorkDirectoryPathTooLong": "Убедитесь, что путь к каталогу работы агента превышать 50 символов для обеспечения успешной загрузке пакета платформы тестирования."
+  "loc.messages.AgentWorkDirectoryPathTooLong": "Убедитесь, что путь к рабочему каталогу агента короче 50 символов, чтобы гарантировать скачивание пакета платформы тестирования."
 }

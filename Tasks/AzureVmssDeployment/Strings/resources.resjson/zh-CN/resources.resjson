@@ -13,7 +13,7 @@
   "loc.input.label.action": "操作",
   "loc.input.help.action": "选择是使用 VHD 映像还是通过使用 Custom Script VM extension (自定义脚本 VM 扩展)运行部署/安装脚本来更新 VM 规模集。<br/>VHD 映像方法更适用于快速缩放和执行回滚。扩展方法有利于部署后配置、软件安装或任何其他配置/管理任务。<br/>只有通过自定义映像创建的 VM 规模集才可以使用 VHD 映像进行更新，如果该规模集是通过 Azure 中提供的平台/库映像创建的，则更新将失败。<br/>自定义脚本 VM 扩展方法可用于使用自定义映像或平台/库映像创建的 VM 规模集。",
   "loc.input.label.vmssName": "虚拟机规模集名称",
-  "loc.input.help.vmssName": "希望通过使用 VHD 映像或自定义脚本 VM 扩展更新的 VM 规模集的名称。",
+  "loc.input.help.vmssName": "希望通过使用 VHD 映像或 Custom script VM extension 更新的 VM 规模集的名称。",
   "loc.input.label.vmssOsType": "OS 类型",
   "loc.input.help.vmssOsType": "选择 VM 规模集的操作系统类型。",
   "loc.input.label.imageUrl": "映像 URL",
@@ -70,7 +70,7 @@
   "loc.messages.FailedToCreateBlob": "未能创建 blob %s。错误: %s。",
   "loc.messages.FailedToCreateContainer": "未能创建容器 %s。错误: %s。",
   "loc.messages.FailedToListItemInsideContainer": "未能列出容器 %s 中项。错误: %s。",
-  "loc.messages.SuccessFullyFetchedItemList": "已成功提取项目列表",
+  "loc.messages.SuccessFullyFetchedItemList": "已成功提取项列表",
   "loc.messages.UnableToFetchItem": "无法提取项: %s。错误: %s。",
   "loc.messages.UploadingItem": "正在上传 %s。"
 }

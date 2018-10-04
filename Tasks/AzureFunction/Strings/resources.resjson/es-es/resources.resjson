@@ -19,5 +19,5 @@
   "loc.input.label.waitForCompletion": "Evento de finalización",
   "loc.input.help.waitForCompletion": "Valor predeterminado \"ApiResponse\". Valores disponibles: \"ApiResponse\", llamada \"Callback\" donde la función de Azure devuelve la llamada para actualizar el registro de escala de tiempo.",
   "loc.input.label.successCriteria": "Criterios de éxito",
-  "loc.input.help.successCriteria": "Criterios que definen cuándo se debe pasar la tarea. Si no hay ningún criterio, significa que el contenido de la respuesta no influye en el resultado. Ejemplo: Para la respuesta {\"estado\" : \"correcto\"}, la expresión puede ser eq(root[\"estado\"], \"correcto\"). [Más información](https://go.microsoft.com/fwlink/?linkid=842996)"
+  "loc.input.help.successCriteria": "Criterios que definen cuándo se debe pasar la tarea. Si no hay ningún criterio, significa que el contenido de la respuesta no influye en el resultado. Ejemplo: Para la respuesta {\"status\" : \"successful\"}, la expresión puede ser eq(root['status'], 'successful'). [Más información](https://go.microsoft.com/fwlink/?linkid=842996)"
 }

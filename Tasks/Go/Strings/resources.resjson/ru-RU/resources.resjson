@@ -1,16 +1,16 @@
 {
-  "loc.friendlyName": "Вперед",
-  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=846415)",
-  "loc.description": "Получить, сборки, тестирования go приложения или выполнить настраиваемую команду go.",
-  "loc.instanceNameFormat": "Перейти $(command)",
+  "loc.friendlyName": "Go",
+  "loc.helpMarkDown": "[Дополнительные сведения](https://go.microsoft.com/fwlink/?linkid=867582)",
+  "loc.description": "Получение, сборка, тестирование приложения go или запуск пользовательской команды go.",
+  "loc.instanceNameFormat": "go $(command)",
   "loc.group.displayName.advanced": "Дополнительно",
   "loc.input.label.command": "Команда",
-  "loc.input.help.command": "Команда dotnet, которую необходимо выполнить. Выберите \"Пользовательская\", чтобы добавить аргументы или использовать команду, отсутствующую в списке.",
-  "loc.input.label.customCommand": "Настраиваемая команда",
-  "loc.input.help.customCommand": "Пользовательская команда Go для выполнения. Пример: чтобы выполнить последовательно выберите версию, введите версию.",
+  "loc.input.help.command": "Выберите команду Go для выполнения. Выберите \"Пользовательская\", чтобы использовать команду, отсутствующую в списке.",
+  "loc.input.label.customCommand": "Пользовательская команда",
+  "loc.input.help.customCommand": "Пользовательская команда Go, которую необходимо выполнить. Чтобы вызвать определенную версию Go, укажите версию.",
   "loc.input.label.arguments": "Аргументы",
-  "loc.input.help.arguments": "Аргументы для выбранной команды. Например сборка аргументов времени для команды go сборки.",
+  "loc.input.help.arguments": "Аргументы для выбранной команды. Например, аргументы времени сборки для команды сборки go.",
   "loc.input.label.workingDirectory": "Рабочий каталог",
   "loc.input.help.workingDirectory": "Текущий рабочий каталог, где выполняется скрипт. Если значение пусто, используется корень репозитория (сборка) или артефактов (выпуск): $(System.DefaultWorkingDirectory)",
-  "loc.messages.TaskFailedWithError": "Последовательно выберите задача завершена с ошибкой: %s"
+  "loc.messages.TaskFailedWithError": "Произошла ошибка задачи Go: %s"
 }

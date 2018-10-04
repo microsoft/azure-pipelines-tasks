@@ -34,7 +34,7 @@
   "loc.messages.JSONvariablesubstitutionappliedsuccessfully": "JSON 변수 대체를 적용했습니다.",
   "loc.messages.Successfullyupdateddeploymenthistory": "%s에서 배포 기록을 업데이트했습니다.",
   "loc.messages.Failedtoupdatedeploymenthistory": "배포 기록을 업데이트하지 못했습니다.",
-  "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "경고: 배포 상태를 업데이트할 수 없습니다. 이 웹 사이트에는 SCM 끝점을 사용할 수 없습니다.",
+  "loc.messages.WARNINGCannotupdatedeploymentstatusSCMendpointisnotenabledforthiswebsite": "경고: 배포 상태를 업데이트할 수 없습니다. 이 웹 사이트에는 SCM 엔드포인트를 사용할 수 없습니다.",
   "loc.messages.ErrorFetchingDeploymentPublishProfileStatusCode0": "배포 게시 프로필을 가져오는 동안 오류가 발생했습니다[상태 코드: '%s'].",
   "loc.messages.ErrorOccurredStatusCode0": "오류 발생: [상태 코드: '%s']",
   "loc.messages.CannotupdatedeploymentstatusuniquedeploymentIdCannotBeRetrieved": "배포 상태를 업데이트할 수 없습니다. uniquedeploymentIdCannotBeRetrieved",
@@ -72,5 +72,6 @@
   "loc.messages.FailedToApplyTransformationReason1": "1. 빌드 중 생성된 MSBuild 패키지에 대해 변환이 이미 적용되었는지 여부를 확인합니다. 그런 경우 csproj 파일에서 각 구성에 대해 <DependentUpon> 태그를 제거하고 다시 빌드합니다. ",
   "loc.messages.FailedToApplyTransformationReason2": "2. 구성 파일 및 변환 파일이 패키지 내의 동일한 폴더에 있는지 확인합니다.",
   "loc.messages.AutoParameterizationMessage": "Web.config의 ConnectionString 특성은 기본적으로 매개 변수가 있습니다. 'Parameters.xml' 또는 'SetParameters.xml' 파일로 배포 중 값이 재정의되므로 변환은 connectionString 특성에 아무런 영향을 미치지 않습니다. MSBuild 패키지 생성 중 p:AutoParameterizationWebConfigConnectionStrings=False를 설정하여 자동 매개 변수화를 사용하지 않도록 설정할 수 있습니다.",
-  "loc.messages.PackageDeploymentFailed": "웹 패키지를 IIS 웹 사이트에 배포하지 못했습니다."
+  "loc.messages.PackageDeploymentFailed": "웹 패키지를 IIS 웹 사이트에 배포하지 못했습니다.",
+  "loc.messages.Updatemachinetoenablesecuretlsprotocol": "머신에서 TLS 1.2 프로토콜 이상을 사용 중인지 확인하세요. 머신에서 TLS를 사용하도록 설정하는 방법에 대해 자세히 알아보려면 https://aka.ms/enableTlsv2를 참조하세요."
 }

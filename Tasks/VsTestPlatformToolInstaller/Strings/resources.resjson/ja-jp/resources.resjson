@@ -2,7 +2,7 @@
   "loc.friendlyName": "Visual Studio テスト プラットフォーム インストーラー",
   "loc.helpMarkDown": "<a href=\"https://www.nuget.org/packages/Microsoft.TestPlatform/\">NuGet におけるテスト プラットフォーム パッケージ</a>",
   "loc.description": "nuget.org またはツール キャッシュからのテスト プラットフォームを取得します。'vstest' 要求を満たし、Visual Studio テスト タスクを使用して、テストの実行と診断データの収集に使用できます。",
-  "loc.instanceNameFormat": "VsTest プラットフォーム インストーラー",
+  "loc.instanceNameFormat": "VsTest Platform Installer",
   "loc.input.label.versionSelector": "バージョン",
   "loc.input.help.versionSelector": "Visual Studio テスト プラットフォームの最新バージョンと指定のバージョンのどちらをインストールするかを選択します。",
   "loc.input.label.testPlatformVersion": "テスト プラットフォームのバージョン",

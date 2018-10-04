@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": ".NET Core-Toolinstaller",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=853651)",
-  "loc.description": "Ruft eine bestimmte .NET Core-Version aus dem Internet oder dem Toolcache ab und fügt sie dem PFAD hinzu. Verwenden Sie diese Aufgabe, um die in nachfolgenden Aufgaben verwendete .NET Core-Version zu ändern.",
+  "loc.description": "Ruft eine bestimmte .NET Core-Version aus dem Internet oder dem Toolcache ab und fügt sie dem PATH hinzu. Verwenden Sie diese Aufgabe, um die in nachfolgenden Aufgaben verwendete .NET Core-Version zu ändern.",
   "loc.instanceNameFormat": "Verwenden Sie .NET Core $(packageType) $(version).",
   "loc.input.label.packageType": "Zu installierendes Paket",
   "loc.input.help.packageType": "Wählen Sie aus, ob nur die Runtime oder das vollständige SDK installiert werden soll.",

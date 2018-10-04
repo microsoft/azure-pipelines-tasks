@@ -46,8 +46,8 @@
   "loc.input.help.envVars": "Docker コンテナーの環境変数です。名前=値のペアを新しい行ごとに指定します。",
   "loc.input.label.workDir": "作業ディレクトリ",
   "loc.input.help.workDir": "Docker コンテナーの作業ディレクトリです。",
-  "loc.input.label.entrypoint": "エントリポイントの無視",
-  "loc.input.help.entrypoint": "Docker コンテナーの既定のエントリポイントを無視します。",
+  "loc.input.label.entrypoint": "エントリポイントのオーバーライド",
+  "loc.input.help.entrypoint": "Docker コンテナーの既定のエントリポイントをオーバーライドします。",
   "loc.input.label.containerCommand": "コマンド",
   "loc.input.help.containerCommand": "Docker コンテナー内で実行するコマンドです。たとえば、イメージに単純な Python Flask Web アプリケーションが含まれている場合は、'python app.py' を指定して Web アプリケーションを起動することができます。",
   "loc.input.label.detached": "バックグラウンドで実行",
@@ -70,7 +70,7 @@
   "loc.messages.ContainerPatternNotFound": "docker filepath パラメーターにパターンが見つかりませんでした",
   "loc.messages.ContainerDockerFileNotFound": "%s に一致する Docker ファイルは見つかりませんでした。",
   "loc.messages.NoImagesInImageNamesFile": "ファイル '%s' には少なくとも 1 つのイメージ名が必要です。",
-  "loc.messages.CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
-  "loc.messages.NoDataWrittenOnFile": "No data was written into the file %s",
-  "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s."
+  "loc.messages.CantWriteDataToFile": "ファイル %s にデータを書き込めません。エラー: %s",
+  "loc.messages.NoDataWrittenOnFile": "ファイル %s にデータが書き込まれませんでした",
+  "loc.messages.FileContentSynced": "ファイルの内容がディスクに同期されました。内容は %s です。"
 }

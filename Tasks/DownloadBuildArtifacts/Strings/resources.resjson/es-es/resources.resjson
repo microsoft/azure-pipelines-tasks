@@ -31,7 +31,7 @@
   "loc.messages.BuildNotFound": "No se encontró la compilación con el identificador %s.",
   "loc.messages.BuildArtifactNotFound": "No se encontró el artefacto %s para la compilación %s",
   "loc.messages.NoArtifactsFound": "No se encontró ningún artefacto para la compilación %s",
-  "loc.messages.BuildIdBuildDefinitionMismatch": "No se encontró la compilación con el identificador %s como identificador %s de la definición de compilación.",
+  "loc.messages.BuildIdBuildDefinitionMismatch": "No se encontró la compilación con el identificador %s para la definición de compilación con el identificador %s.",
   "loc.messages.ArtifactsSuccessfullyDownloaded": "Los artefactos se han descargado correctamente en %s",
   "loc.messages.RetryingOperation": "Error en %s, se está reintentando => reintentos pendientes: %s",
   "loc.messages.OperationFailed": "Error en %s: %s",

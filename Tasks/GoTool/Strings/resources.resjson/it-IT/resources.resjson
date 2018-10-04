@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Programma di installazione strumento Go",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?linkid=867581)",
-  "loc.description": "Trova o scarica e memorizza nella cache la versione specificata di Go e lo aggiunge al PERCORSO.",
+  "loc.description": "Trova o scarica e memorizza nella cache la versione specificata di Go e la aggiunge a PATH. Usare questa attività per cambiare la versione di Go Lang usata nelle attività successive",
   "loc.instanceNameFormat": "Usa Go $(version)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.version": "Versione",
