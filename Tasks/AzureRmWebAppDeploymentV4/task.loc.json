@@ -27,13 +27,13 @@
       "name": "FileTransformsAndVariableSubstitution",
       "displayName": "ms-resource:loc.group.displayName.FileTransformsAndVariableSubstitution",
       "isExpanded": false,
-      "visibleRule": "WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && Package NotEndsWith .war"
+      "visibleRule": "WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != webAppLinux && webAppKind != functionAppLinux && Package NotEndsWith .war"
     },
     {
       "name": "AdditionalDeploymentOptions",
       "displayName": "ms-resource:loc.group.displayName.AdditionalDeploymentOptions",
       "isExpanded": false,
-      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
+      "visibleRule": "ConnectionType = AzureRM && WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && webAppKind != functionAppLinux && WebAppKind != \"\" && Package NotEndsWith .war && Package NotEndsWith .jar"
     },
     {
       "name": "PostDeploymentAction",
@@ -103,8 +103,9 @@
         "webApp": "Web App on Windows",
         "webAppLinux": "Web App on Linux",
         "webAppContainer": "Web App for Containers (Linux)",
-        "functionApp": "Function App",
-        "functionAppContainer": "Function App for Containers",
+        "functionApp": "Function App on Windows",
+        "functionAppLinux": "Function App on Linux",
+        "functionAppContainer": "Function App for Containers (Linux)",
         "apiApp": "API App",
         "mobileApp": "Mobile App"
       },
@@ -192,7 +193,7 @@
       "label": "ms-resource:loc.input.label.VirtualApplication",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && WebAppKind != \"\"",
+      "visibleRule": "WebAppKind != webAppLinux && WebAppKind != webAppContainer && WebAppkind != functionAppContainer && WebAppKind != functionApp && webAppKind != functionAppLinux && WebAppKind != \"\"",
       "helpMarkDown": "ms-resource:loc.input.help.VirtualApplication"
     },
     {
@@ -204,7 +205,7 @@
       "label": "ms-resource:loc.input.label.Package",
       "defaultValue": "$(System.DefaultWorkingDirectory)/**/*.zip",
       "required": true,
-      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux",
+      "visibleRule": "ConnectionType = PublishProfile || WebAppKind = webApp || WebAppKind = apiApp || WebAppKind = functionApp || WebAppKind = mobileApp || WebAppKind = webAppLinux || webAppKind = functionAppLinux",
       "helpMarkDown": "ms-resource:loc.input.help.Package"
     },
     {
@@ -218,6 +219,22 @@
       },
       "helpMarkDown": "ms-resource:loc.input.help.RuntimeStack",
       "visibleRule": "WebAppKind = webAppLinux"
+    },
+    {
+      "name": "RuntimeStackFunction",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.RuntimeStackFunction",
+      "defaultValue": "",
+      "required": true,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "options": {
+        "DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0": ".NET",
+        "DOCKER|microsoft/azure-functions-node8:2.0": "JavaScript"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.RuntimeStackFunction",
+      "visibleRule": "WebAppKind = functionAppLinux"
     },
     {
       "name": "StartupCommand",
