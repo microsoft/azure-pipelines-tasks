@@ -81,6 +81,7 @@
         "NuGetPublisherV0",
         "NuGetToolInstallerV0",
         "PackerBuildV0",
+        "PipAuthenticateV0",
         "PowerShellV2",
         "PowerShellOnTargetMachinesV2",
         "PowerShellOnTargetMachinesV3",
