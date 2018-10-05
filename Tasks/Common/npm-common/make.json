@@ -1,7 +1,9 @@
 {
     "common": [
         {
-            "module": "utility-common"
+            "module": "../utility-common",
+            "type": "node",
+            "compile": true
         }
     ]
 }

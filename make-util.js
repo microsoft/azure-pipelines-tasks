@@ -192,31 +192,19 @@ var installCommonModule = function (taskPath, commonPath, common) {
 
             var modMakePath = path.join(modPath, 'make.json');
             var modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
-
+       
             // install any common modules this module depends on
+            // circular dependencies will lead to a stack overflow
+            var commonModPacks = [];
             if (modMake.hasOwnProperty('common')) {
-                console.log('');
-                console.log('> installing common dependencies');
-
                 var commonMods = modMake['common'];
-
-                cd(modPath);
-                var commonModPacks = commonMods.map(function (commonModPack) {
-                    var modCommonPath = path.join(commonPath, commonModPack['module']);
-                    return getCommonPackInfo(modCommonPath);
-                });
-
-                var commonModInstallPaths = commonModPacks.map(function (commonModPack) {
-                    return `file:${path.relative(modPath, commonModPack.packFilePath)}`;
-                });
-                run(`npm install --save-exact --save-bundle ${commonModInstallPaths.join(' ')}`);
-
-                removeCommonPackHash(modPath, commonModPacks);
+                commonModPacks = installCommonModule(modPath, commonPath, commonMods);
             }
 
             // npm install and compile
             if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
                 buildNodeTask(modPath, modOutDir);
+                removeCommonPackHash(modPath, commonModPacks);
             }
             // copy default resources and any additional resources defined in the module's make.json
             console.log();
