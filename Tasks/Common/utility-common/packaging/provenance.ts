@@ -1,11 +1,6 @@
-import * as interfaces from 'vso-node-api/interfaces/common/VSSInterfaces';
-import * as tl from 'vsts-task-lib/task';
 import * as VsoBaseInterfaces from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
-import * as locutil from './locationUtilities';
 import { ClientVersioningData } from 'vso-node-api/VsoClient';
-import { ICoreApi } from 'vso-node-api/CoreApi';
 import vstsClientBases = require("vso-node-api/ClientApiBases");
-// import {WebApi} from 'vso-node-api/WebApi';
 
 import * as restclient from 'typed-rest-client/RestClient';
 
@@ -20,11 +15,6 @@ export interface SessionResponse {
 }
 
 export class ProvenanceApi extends vstsClientBases.ClientApiBase {
-
-   /* constructor(webApi: WebApi) {
-        super(webApi.serverUrl, [webApi.authHandler], "vsts-packageprovenance-api", webApi.options)
-    } */
-
     constructor(baseUrl: string, handlers: VsoBaseInterfaces.IRequestHandler[], options?: VsoBaseInterfaces.IRequestOptions) {
         super(baseUrl, handlers, "vsts-packageprovenance-api", options);
     }

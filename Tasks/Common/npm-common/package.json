@@ -16,8 +16,11 @@
     "ip-address": "^5.8.9",
     "q": "^1.5.0",
     "typed-rest-client": "^0.11.0",
-    "utility-common": "file:../utility-common",
-    "vso-node-api": "5.1.2",
-    "vsts-task-lib": "2.0.6"
-  }
+    "utility-common": "file:../../../_build/Tasks/Common/utility-common-1.0.2.tgz",
+    "vso-node-api": "6.5.0",
+    "vsts-task-lib": "2.6.0"
+  },
+  "bundleDependencies": [
+    "utility-common"
+  ]
 }

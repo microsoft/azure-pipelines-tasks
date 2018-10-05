@@ -150,6 +150,28 @@ var getCommonPackInfo = function (modOutDir) {
 }
 exports.getCommonPackInfo = getCommonPackInfo;
 
+/**
+ *  Remove the hashes for the common packages, they change every build
+ */
+var removeCommonPackHash = function(taskPath, commonPacks) {
+    if (commonPacks.length) {
+        var lockFilePath = path.join(taskPath, 'package-lock.json');
+        if (!test('-f', lockFilePath)) {
+            lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
+        }
+        var packageLock = fileToJson(lockFilePath);
+        Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
+            commonPacks.forEach(function (commonPack) {
+                if (dependencyName == commonPack.packageName) {
+                    delete packageLock.dependencies[dependencyName].integrity;
+                }
+            });
+        });
+        fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
+    }
+}
+exports.removeCommonPackHash = removeCommonPackHash;
+
 var buildNodeTask = function (taskPath, outDir) {
     var originalDir = pwd();
     cd(taskPath);
@@ -158,7 +180,7 @@ var buildNodeTask = function (taskPath, outDir) {
         // verify no dev dependencies
         var packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
         if (packageJson.devDependencies && Object.keys(packageJson.devDependencies).length != 0) {
-            fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
+            // fail('The package.json should not contain dev dependencies. Move the dev dependencies into a package.json file under the Tests sub-folder. Offending package.json: ' + packageJsonPath);
         }
 
         run('npm install');

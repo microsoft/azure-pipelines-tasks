@@ -212,16 +212,37 @@ target.build = function() {
                         createResjson(fileToJson(modJsonPath), modPath);
                     }
 
+                    var modMakePath = path.join(modPath, 'make.json');
+                    var modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
+
+                    // install any common modules this module depends on
+                    if (modMake.hasOwnProperty('common')) {
+                        console.log('');
+                        console.log('> installing common dependencies');
+
+                        var commonMods = modMake['common'];
+
+                        cd(modPath);
+                        var commonModPacks = commonMods.map(function (commonModPack) {
+                            var modCommonPath = path.join(commonPath, commonModPack['module']);
+                            return util.getCommonPackInfo(modCommonPath);
+                        });
+
+                        var commonModInstallPaths = commonModPacks.map(function (commonModPack) {
+                            return `file:${path.relative(modPath, commonModPack.packFilePath)}`;
+                        });
+                        run(`npm install --save-exact --save-bundle ${commonModInstallPaths.join(' ')}`);
+
+                        util.removeCommonPackHash(modPath, commonModPacks);
+                    }
+
                     // npm install and compile
                     if ((mod.type === 'node' && mod.compile == true) || test('-f', path.join(modPath, 'tsconfig.json'))) {
                         buildNodeTask(modPath, modOutDir);
                     }
-
                     // copy default resources and any additional resources defined in the module's make.json
                     console.log();
                     console.log('> copying module resources');
-                    var modMakePath = path.join(modPath, 'make.json');
-                    var modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
                     copyTaskResources(modMake, modPath, modOutDir);
 
                     // get externals
@@ -282,21 +303,7 @@ target.build = function() {
         }
 
         // remove the hashes for the common packages, they change every build
-        if (commonPacks.length) {
-            var lockFilePath = path.join(taskPath, 'package-lock.json');
-            if (!test('-f', lockFilePath)) {
-                lockFilePath = path.join(taskPath, 'npm-shrinkwrap.json');
-            }
-            var packageLock = fileToJson(lockFilePath);
-            Object.keys(packageLock.dependencies).forEach(function (dependencyName) {
-                commonPacks.forEach(function (commonPack) {
-                    if (dependencyName == commonPack.packageName) {
-                        delete packageLock.dependencies[dependencyName].integrity;
-                    }
-                });
-            });
-            fs.writeFileSync(lockFilePath, JSON.stringify(packageLock, null, '  '));
-        }
+        util.removeCommonPackHash(taskPath, commonPacks);
 
         // copy default resources and any additional resources defined in the task's make.json
         console.log();
