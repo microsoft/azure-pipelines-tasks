@@ -13,7 +13,7 @@
     "version": {
         "Major": 3,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 2
     },
     "preview": true,
     "groups": [
@@ -156,7 +156,7 @@
             "defaultValue": "Default",
             "helpMarkDown": "Select the authentication mechanism to be used for creating the pssession. For 'CredSSP' authentication, username and password fields are mandatory.",
             "groupName": "SessionOptions"
-        },        
+        },
         {
             "name": "NewPsSessionOptionArguments",
             "type": "multiLine",
@@ -224,9 +224,9 @@
         }
     },
     "messages": {
-        "PS_TM_ParseSessionVariablesValueNotFound" : "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
-        "PS_TM_ParseSessionVariablesKeyNotFound" : "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
-        "PS_TM_InvalidSessionVariablesInputFormat" : "Parsing operation failed. Check format of input",
+        "PS_TM_ParseSessionVariablesValueNotFound": "Parsing operation failed. ErrorMessage: 'value not found', Token: '{0}', CurrentKey: '{1}'",
+        "PS_TM_ParseSessionVariablesKeyNotFound": "Parsing operation failed. ErrorMessage: 'key not found', Token: '{0}', CurrentKey: '{1}'",
+        "PS_TM_InvalidSessionVariablesInputFormat": "Parsing operation failed. Check format of input",
         "PS_TM_TaskFailed": "Task failed with error: '{0}'",
         "PS_TM_SessionConfigurationNameCannotBeNull": "Session configuration name cannot be null",
         "PS_TM_UnableToParseSessionVariables": "Unable to parse session variables input. Verify that it is a valid script. Error: '{0}'"

@@ -14,12 +14,14 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 1
     },
-    "satisfies": ["GO"],
+    "satisfies": [
+        "GO"
+    ],
     "demands": [],
     "instanceNameFormat": "Use Go $(version)",
-    "groups":[
+    "groups": [
         {
             "name": "advanced",
             "displayName": "Advanced",
