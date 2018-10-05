@@ -7,8 +7,8 @@
   "loc.input.label.files": "Dateien",
   "loc.input.help.files": "Die hochzuladenden Dateien. Platzhalter können verwendet werden. Beispiel: \"*/*.zip\" für alle ZIP-Dateien in allen Unterordnern.",
   "loc.input.label.authType": "Authentifizierungsmethode",
-  "loc.input.label.serviceEndpoint": "Dienstendpunkt",
-  "loc.input.help.serviceEndpoint": "Der Dienstendpunkt mit den Anmeldeinformationen für die Serverauthentifizierung. Verwenden Sie für den Dienstendpunkt den Verbindungstyp \"Generisch\".",
+  "loc.input.label.serviceEndpoint": "Service Connection",
+  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
   "loc.input.label.username": "Benutzername",
   "loc.input.help.username": "Geben Sie den Benutzernamen für die Serverauthentifizierung an.",
   "loc.input.label.password": "Kennwort",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "Datei(en) werden hochgeladen: %s",
   "loc.messages.CurlNotFound": "curl wurde nicht in PATH gefunden.",
   "loc.messages.NotAllFilesUploaded": "Nicht alle Dateien wurden hochgeladen; hochgeladen: %d; gesamt: %d",
-  "loc.messages.IncompleteEndpoint": "Der Dienstendpunkt enthält nicht alle erforderlichen Felder."
+  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
 }

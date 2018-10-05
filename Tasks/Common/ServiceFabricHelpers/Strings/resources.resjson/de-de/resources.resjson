@@ -9,5 +9,9 @@
   "loc.messages.ImportedCertificate": "Das Clusterclientzertifikat mit dem Fingerabdruck \"{0}\" wurde importiert.",
   "loc.messages.ServiceFabricSDKNotInstalled": "Das Service Fabric SDK ist nicht auf dem Build-Agent installiert. Navigieren Sie zu https://aka.ms/servicefabric, um es herunterzuladen und zu installieren.",
   "loc.messages.UseWindowsSecurity": "Die Windows-Sicherheit ist festgelegt. Der Schalter \"WindowsCredential\" wird beim Herstellen einer Verbindung verwendet.",
-  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "Das Serverzertifikat des Clusters mit Fingerabdruck \"{0}\" ist für die Textverschlüsselung erforderlich, aber das Zertifikat wurde nicht auf dem Agent-Computer im Zertifikatspeicher \"CurrentUser\\My\" gefunden."
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "Das Serverzertifikat des Clusters mit Fingerabdruck \"{0}\" ist für die Textverschlüsselung erforderlich, aber das Zertifikat wurde nicht auf dem Agent-Computer im Zertifikatspeicher \"CurrentUser\\My\" gefunden.",
+  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
+  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
+  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
+  "loc.messages.SfSdkVersion": "Service fabric SDK version: {0}."
 }

@@ -5,11 +5,12 @@
   "loc.instanceNameFormat": "Installa un profilo di provisioning Apple",
   "loc.input.label.provisioningProfileLocation": "Posizione del profilo di provisioning",
   "loc.input.help.provisioningProfileLocation": "Consente di selezionare il percorso del profilo di provisioning da installare. Il profilo di provisioning può essere caricato in `File protetti` o archiviato nel repository di origine o in un percorso locale nell'agente.",
-  "loc.input.label.provProfileSecureFile": "Provisioning profile",
+  "loc.input.label.provProfileSecureFile": "Profilo di provisioning",
   "loc.input.help.provProfileSecureFile": "Consente di selezionare il profilo di provisioning caricato in `File protetti` da installare nell'agente macOS.",
   "loc.input.label.provProfileSourceRepository": "Profilo di provisioning",
   "loc.input.help.provProfileSourceRepository": "Consente di selezionare il profilo di provisioning dal repository di origine o di specificare il percorso locale di un profilo di provisioning nell'agente macOS.",
-  "loc.input.label.removeProfile": "Remove profile after build",
+  "loc.input.label.removeProfile": "Rimuovi profilo dopo la compilazione",
   "loc.input.help.removeProfile": "Selezionare questa opzione per specificare che il profilo di provisioning deve essere rimosso dall'agente al completamento della compilazione o della versione.",
-  "loc.messages.InputProvisioningProfileNotFound": "Il profilo di provisioning da installare non è stato trovato in %s. Specificare il percorso file completo di un profilo di provisioning."
+  "loc.messages.InputProvisioningProfileNotFound": "Il profilo di provisioning da installare non è stato trovato in %s. Specificare il percorso file completo di un profilo di provisioning.",
+  "loc.messages.InstallRequiresMac": "Install Apple Provisioning Profile requires a macOS agent. Installing on Windows or Linux is not supported by Apple."
 }

@@ -7,8 +7,8 @@
   "loc.input.label.files": "Файлы",
   "loc.input.help.files": "Файлы, которые нужно отправить. Можно использовать подстановочные знаки. Например: \"**\\*.zip\" для всех ZIP-файлов во всех вложенных папках.",
   "loc.input.label.authType": "Способ проверки подлинности",
-  "loc.input.label.serviceEndpoint": "Конечная точка службы",
-  "loc.input.help.serviceEndpoint": "Конечная точка службы с учетными данными для проверки подлинности сервера. Используйте универсальный тип подключения для конечной точки службы.",
+  "loc.input.label.serviceEndpoint": "Service Connection",
+  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
   "loc.input.label.username": "Имя пользователя",
   "loc.input.help.username": "Укажите имя пользователя для проверки подлинности сервера.",
   "loc.input.label.password": "Пароль",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "Отправка файлов: %s",
   "loc.messages.CurlNotFound": "curl не найдена в переменной среды PATH.",
   "loc.messages.NotAllFilesUploaded": "Отправлены не все файлы. Отправлено: %d; всего: %d",
-  "loc.messages.IncompleteEndpoint": "Конечная точка службы содержит не все обязательные поля."
+  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
 }

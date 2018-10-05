@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "Befehlszeile",
   "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "Dies ist eine frühe Vorschauversion. Führen Sie mithilfe von \"cmd.exe\" unter Windows und mithilfe von Bash unter macOS und Linux ein Befehlszeilenskript aus.",
+  "loc.description": "Run a command line script using cmd.exe on Windows and bash on macOS and Linux.",
   "loc.instanceNameFormat": "Befehlszeilenskript",
-  "loc.releaseNotes": "Dies ist eine frühe Vorschauversion. Skriptaufgabenkonsistenz. Unterstützung für mehrere Zeilen wurde hinzugefügt.",
+  "loc.releaseNotes": "Script task consistency. Added support for multiple lines.",
   "loc.group.displayName.advanced": "Erweitert",
   "loc.input.label.script": "Skript",
   "loc.input.label.workingDirectory": "Arbeitsverzeichnis",

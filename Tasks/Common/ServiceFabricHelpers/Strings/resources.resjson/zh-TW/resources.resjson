@@ -9,5 +9,9 @@
   "loc.messages.ImportedCertificate": "已匯入指紋為 '{0}' 的叢集用戶端憑證。",
   "loc.messages.ServiceFabricSDKNotInstalled": "組建代理程式上未安裝 Service Fabric SDK。請前往 https://aka.ms/servicefabric 加以下載並安裝。",
   "loc.messages.UseWindowsSecurity": "已指定 Windows 安全性。連線時將使用 -WindowsCredential 參數。",
-  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "The cluster's server certificate with thumbprint '{0}' is required in order to encrypt text but the certificate could not be found on the agent machine in the 'CurrentUser\\My' certificate store location."
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "需要具有指紋 '{0}' 的叢集伺服器憑證才能加密文字，但在代理程式機器中的 'CurrentUser\\My' 憑證存放區位置找不到所需的憑證。",
+  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
+  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
+  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
+  "loc.messages.SfSdkVersion": "Service fabric SDK version: {0}."
 }

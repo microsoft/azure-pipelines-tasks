@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Intervención manual",
-  "loc.helpMarkDown": "[Más información](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "Pause la implementación y espere intervención",
   "loc.instanceNameFormat": "Intervención manual",
   "loc.input.label.instructions": "Instrucciones",

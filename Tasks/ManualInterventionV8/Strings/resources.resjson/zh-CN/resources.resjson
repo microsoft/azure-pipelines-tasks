@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "手动干预",
-  "loc.helpMarkDown": "[详细信息](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "暂停部署并等待干预",
   "loc.instanceNameFormat": "手动干预",
   "loc.input.label.instructions": "说明",

@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Вмешательство вручную",
-  "loc.helpMarkDown": "[Дополнительная информация](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "Приостановка развертывания и ожидание вмешательства",
   "loc.instanceNameFormat": "Вмешательство вручную",
   "loc.input.label.instructions": "Инструкции",
