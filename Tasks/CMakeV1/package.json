@@ -1,7 +1,7 @@
 {
   "name": "vsts-cmake-task",
   "version": "1.0.0",
-  "description": "VSTS CMake Task",
+  "description": "Azure Pipelines CMake Task",
   "main": "cmaketask.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

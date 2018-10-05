@@ -38,7 +38,7 @@ export class WebRequestOptions {
     public retryCount: number;
     public retryIntervalInSeconds: number;
     public retriableStatusCodes: number[];
-    public retryRequestTimedout?: boolean = true;
+    public retryRequestTimedout: boolean;
 }
 
 export async function sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {

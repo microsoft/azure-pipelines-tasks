@@ -1,9 +1,0 @@
-{
-  "loc.messages.SettingUpSSHConnection": "Настройка SSH-подключения к удаленному узлу %s.",
-  "loc.messages.ConnectionNotSetup": "SSH-подключение не настроено.",
-  "loc.messages.ConnectionFailed": "Не удалось подключиться к удаленному компьютеру. Проверьте сведения о конечной точке SSH. %s.",
-  "loc.messages.RemoteCmdExecutionErr": "Сбой команды %s с ошибками на удаленном компьютере. %s.",
-  "loc.messages.CheckLogForStdErr": "Проверьте наличие в журнале сборки сообщений из потока STDERR от команды.",
-  "loc.messages.RemoteCmdNonZeroExitCode": "Выход из команды %s с кодом %s.",
-  "loc.messages.UploadFileFailed": "Не удалось отправить %s в %s на удаленном компьютере. %s."
-}

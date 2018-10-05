@@ -52,7 +52,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunTitle] = '';
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
-        process.env[constants.listPackagesReturnCode] = 20000;
+        process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname;
 
         // Start the run
@@ -83,7 +83,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunTitle] = '';
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
-        process.env[constants.listPackagesReturnCode] = 20000;
+        process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname;        
 
         // Start the run
@@ -114,7 +114,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunTitle] = '';
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
-        process.env[constants.listPackagesReturnCode] = 20000;
+        process.env[constants.listPackagesReturnCode] = '20000';
         process.env[constants.agentTempDirectory] = __dirname; 
 
         // Start the run
@@ -149,7 +149,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.testRunTitle] = '';
         process.env[constants.publishRunAttachments] = 'false';
         process.env[constants.searchFolder] = '';
-        process.env[constants.listPackagesReturnCode] = 0;
+        process.env[constants.listPackagesReturnCode] = '0';
         process.env[constants.agentTempDirectory] = __dirname; 
 
         // Start the run

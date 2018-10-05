@@ -14,9 +14,11 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 2
+        "Patch": 4
     },
-    "satisfies": ["VsTest"],
+    "satisfies": [
+        "VsTest"
+    ],
     "demands": [],
     "instanceNameFormat": "Visual Studio Test Platform Installer",
     "groups": [
@@ -109,27 +111,27 @@
         }
     },
     "messages": {
-      "StartingInstaller": "Starting VsTest platform tools installer task.",
-      "ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide a version number of the form majorVer.minorVer.patchVer.",
-      "NoPackageFoundInCache": "Failed to find any stable version of the test platform package in the cache.",
-      "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
-      "RequiredVersionNotListed": "Required version of the Microsoft.Testplatform package was not listed in the nuget feed, looking for latest stable version cached.",
-      "FailedToListAvailablePackagesFromNuget": "Failed to fetch list of available packages from nuget, looking for latest stable version cached.",
-      "FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please set system.debug to true and refer to the debug logs for additional information.",
-      "InstallationSuccessful": "VsTest will use the Test Platform package found in %s",
-      "TestPlatformDownloadFailed": "Failed to download version %s of the test platform with error %s.",
-      "LookingForLatestStableVersion": "Looking for the latest stable version of the Microsoft.Testplatform.",
-      "LookingForLatestPreReleaseVersion" : "Looking for the latest pre-release version of the Microsoft.Testplatform.",
-      "AgentWorkDirectoryPathTooLong": "Please ensure that the agent work directory path is less than 50 characters to guarantee successful download of the test platform package.",
-      "ListPackagesFailed": "Listing packages failed. Nuget.exe returned %s.\nStandard Error:\n%sStandard Out:\n%s",
-      "NugetErrorCode": "Nuget.exe returned error code: %s",
-      "UpgradeAgentMessage": "Please upgrade your agent to the latest available in https://github.com/Microsoft/vsts-agent/releases.",
-      "SpecifiedFileDoesNotExist": "The path provided %s does not exist, is not a valid file or is not accessible. Please provide a valid path to the microsoft.testplatform nupkg file you want to install.",
-      "UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
-      "ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s",
-      "LatestStableCached": "Looking for latest stable version cached.",
-      "DownloadFailed": "Download failed with error code: %s.",
-      "ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set.",
-      "ParsedVersion": "Parsed the version of the Microsoft.Testplatform package to be %s from the file name. Please ensure that the file name is the same as when the .nupkg file is downloaded from the official nuget feed."
+        "StartingInstaller": "Starting VsTest platform tools installer task.",
+        "ProvideExplicitVersion": "The version you provided (%s) is not an explicit version. Please provide a version number of the form majorVer.minorVer.patchVer.",
+        "NoPackageFoundInCache": "Failed to find any stable version of the test platform package in the cache.",
+        "OnlyWindowsOsSupported": "This task is supported only on Windows agents and cannot be used on other platforms.",
+        "RequiredVersionNotListed": "Required version of the Microsoft.Testplatform package was not listed in the nuget feed, looking for latest stable version cached.",
+        "FailedToListAvailablePackagesFromNuget": "Failed to fetch list of available packages from nuget, looking for latest stable version cached.",
+        "FailedToAcquireTestPlatform": "Failed to acquire the test platform. Please set system.debug to true and refer to the debug logs for additional information.",
+        "InstallationSuccessful": "VsTest will use the Test Platform package found in %s",
+        "TestPlatformDownloadFailed": "Failed to download version %s of the test platform with error %s.",
+        "LookingForLatestStableVersion": "Looking for the latest stable version of the Microsoft.Testplatform.",
+        "LookingForLatestPreReleaseVersion": "Looking for the latest pre-release version of the Microsoft.Testplatform.",
+        "AgentWorkDirectoryPathTooLong": "Please ensure that the agent work directory path is less than 50 characters to guarantee successful download of the test platform package.",
+        "ListPackagesFailed": "Listing packages failed. Nuget.exe returned %s.\nStandard Error:\n%sStandard Out:\n%s",
+        "NugetErrorCode": "Nuget.exe returned error code: %s",
+        "UpgradeAgentMessage": "Please upgrade your agent to the latest available in https://github.com/Microsoft/vsts-agent/releases.",
+        "SpecifiedFileDoesNotExist": "The path provided %s does not exist, is not a valid file or is not accessible. Please provide a valid path to the microsoft.testplatform nupkg file you want to install.",
+        "UnexpectedFileName": "Unable to extract version info from the file %s. Please do not rename the microsoft.testplatform nupkg file downloaded from nuget.org. If you have, then please redownload the file or rename it back to its original name.",
+        "ConfigFileWriteFailed": "Failed to write nuget.config file %s with error %s",
+        "LatestStableCached": "Looking for latest stable version cached.",
+        "DownloadFailed": "Download failed with error code: %s.",
+        "ExpectedTempToBeSet": "Expected Agent.TempDirectory to be set.",
+        "ParsedVersion": "Parsed the version of the Microsoft.Testplatform package to be %s from the file name. Please ensure that the file name is the same as when the .nupkg file is downloaded from the official nuget feed."
     }
 }

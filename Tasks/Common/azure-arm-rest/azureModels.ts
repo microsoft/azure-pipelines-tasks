@@ -221,8 +221,8 @@ export interface AzureEndpoint {
     graphEndpoint?: string;
     galleryUrl?: string;
     portalEndpoint?: string;
-    AzureKeyVaultDnsSuffix?: string;
-    AzureKeyVaultServiceEndpointResourceId?: string;
+    azureKeyVaultDnsSuffix?: string;
+    azureKeyVaultServiceEndpointResourceId?: string;
     msiClientId?: string;
     scheme?: string;
     applicationTokenCredentials: ApplicationTokenCredentials;

@@ -2,10 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import * as task from 'vsts-task-lib/task';
-import * as tool from 'vsts-task-tool-lib/tool';
 import { ToolRunner } from 'vsts-task-lib/toolrunner';
 
 import { Platform } from './taskutil';
+import { prependPathSafe } from './toolutil';
 
 /**
  * Whether `searchDir` has a `conda` executable for `platform`.
@@ -14,11 +14,38 @@ import { Platform } from './taskutil';
  * @returns Whether `searchDir` has a `conda` executable for `platform`.
  */
 function hasConda(searchDir: string, platform: Platform): boolean {
-    const conda = platform === Platform.Windows ?
-        path.join(searchDir, 'Scripts', 'conda.exe') :
-        path.join(searchDir, 'bin', 'conda');
+    let conda = path.join(binaryDir(searchDir, platform), 'conda');
+    if (platform === Platform.Windows) {
+        conda += '.exe';
+    }
 
     return fs.existsSync(conda) && fs.statSync(conda).isFile();
+}
+
+/**
+ * Get the platform-dependent path where binaries are located in an environment.
+ * Windows: environmentRoot\Scripts
+ * Linux / macOS: environmentRoot/bin
+ */
+function binaryDir(environmentRoot: string, platform: Platform): string {
+    if (platform === Platform.Windows) {
+        return path.join(environmentRoot, 'Scripts');
+    } else {
+        return path.join(environmentRoot, 'bin');
+    }
+}
+
+/**
+ * Run a tool with `sudo` on Linux and macOS
+ * Precondition: `toolName` executable is in PATH
+ */
+function sudo(toolName: string, platform: Platform): ToolRunner {
+    if (platform === Platform.Windows) {
+        return task.tool(toolName);
+    } else {
+        const toolPath = task.which(toolName);
+        return task.tool('sudo').line(toolPath);
+    }
 }
 
 /**
@@ -50,26 +77,22 @@ export function findConda(platform: Platform): string | null {
  * @param platform Platform for which Conda is installed
  */
 export function prependCondaToPath(condaRoot: string, platform: Platform): void {
+    prependPathSafe(binaryDir(condaRoot, platform));
+
     if (platform === Platform.Windows) {
         // Windows: `python` lives in `condaRoot` and `conda` lives in `condaRoot\Scripts`
-        tool.prependPath(condaRoot);
-        tool.prependPath(path.join(condaRoot, 'Scripts'));
-    } else {
         // Linux and macOS: `python` and `conda` both live in the `bin` directory
-        tool.prependPath(path.join(condaRoot, 'bin'));
+        prependPathSafe(condaRoot);
     }
 }
 
+/**
+ * Update the `conda` installation
+ * Precondition: `conda` executable is in PATH
+ */
 export async function updateConda(condaRoot: string, platform: Platform): Promise<void> {
     try {
-        const conda = (() => {
-            if (platform === Platform.Windows) {
-                return new ToolRunner(path.join(condaRoot, 'Scripts', 'conda.exe'));
-            } else {
-                return new ToolRunner(path.join(condaRoot, 'bin', 'conda'));
-            }
-        })();
-
+        const conda = task.tool('conda');
         conda.line('update --name base conda --yes');
         await conda.exec();
     } catch (e) {
@@ -84,8 +107,9 @@ export async function updateConda(condaRoot: string, platform: Platform): Promis
  * @param packageSpecs Optional list of Conda packages and versions to preinstall in the environment.
  * @param otherOptions Optional list of other options to pass to the `conda create` command.
  */
-export async function createEnvironment(environmentPath: string, packageSpecs?: string, otherOptions?: string): Promise<void> {
-    const conda = task.tool('conda');
+export async function createEnvironment(environmentPath: string, platform: Platform, packageSpecs?: string, otherOptions?: string): Promise<void> {
+    const conda = sudo('conda', platform);
+
     conda.line(`create --quiet --prefix ${environmentPath} --mkdir --yes`);
     if (packageSpecs) {
         conda.line(packageSpecs);
@@ -115,15 +139,15 @@ export function activateEnvironment(environmentsDir: string, environmentName: st
     // For now we will assume these names are stable.
     // If we ever get broken, we should write code to run the activation script, diff the environment before and after,
     // and surface up the new environment variables as build variables.
-    task.setVariable('CONDA_DEFAULT_ENV', environmentName)
-    task.setVariable('CONDA_PREFIX', environmentPath)
+    task.setVariable('CONDA_DEFAULT_ENV', environmentName);
+    task.setVariable('CONDA_PREFIX', environmentPath);
 }
 
 /**
  * Install the packages given by `packageSpecs` to the `base` environment.
  */
-export async function installPackagesGlobally(packageSpecs: string, otherOptions?: string): Promise<void> {
-    const conda = task.tool('conda');
+export async function installPackagesGlobally(packageSpecs: string, platform: Platform, otherOptions?: string): Promise<void> {
+    const conda = sudo('conda', platform);
     conda.line(`install ${packageSpecs} --quiet --yes`);
 
     if (otherOptions) {
@@ -136,4 +160,18 @@ export async function installPackagesGlobally(packageSpecs: string, otherOptions
         // vsts-task-lib 2.5.0: `ToolRunner` does not localize its error messages
         throw new Error(task.loc('InstallFailed', e));
     }
+}
+
+/**
+ * Look up the path to the base environment and add its binary directory to PATH.
+ * Precondition: `conda` executable is in PATH
+ */
+export function addBaseEnvironmentToPath(platform: Platform): void {
+    const execResult = task.execSync('conda', 'info --base');
+    if (execResult.error) {
+        throw execResult.error;
+    }
+
+    const baseEnv = execResult.stdout.trim();
+    prependPathSafe(binaryDir(baseEnv, platform));
 }

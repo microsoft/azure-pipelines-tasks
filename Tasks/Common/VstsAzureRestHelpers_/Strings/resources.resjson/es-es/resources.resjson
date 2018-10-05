@@ -5,5 +5,9 @@
   "loc.messages.AZ_NoValidResourceIdFound": "No se encontró ningún recurso con serverName {0} o serverType {1} en la suscripción {2}. Especifique el valor de serverName o serverType correcto y vuelva a intentarlo.",
   "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "No se pueden capturar los detalles del equilibrador de carga.",
   "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "No se pueden capturar los detalles de las direcciones IP públicas.",
-  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "No se pueden capturar los detalles de las interfaces de red."
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "No se pueden capturar los detalles de las interfaces de red.",
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: {0}, status message: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Service Principal. Status code: {0}, status message: {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Failed to obtain access token using client certificate for service principal id: {0}. {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Failed to obtain access token using client certificate for service principal id: {0}, tokenResult is null."
 }

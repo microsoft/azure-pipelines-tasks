@@ -1,117 +1,121 @@
 {
-  "id": "BA761F24-CBD6-48CB-92F3-FC13396405B1",
-  "name": "PublishToAzureServiceBus",
-  "friendlyName": "Publish To Azure Service Bus",
-  "description": "Sends a message to azure service bus using a service connection (no agent required).",
-  "category": "Utility",
-  "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870237)",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "runsOn": [
-      "Server"
-   ],
-  "author": "Microsoft Corporation",
-  "version": {
-    "Major": 1,
-    "Minor": 0,
-    "Patch": 10
-  },
-  "groups": [
-      {
-          "name": "signingDetails",
-          "displayName": "Signing Properties",
-          "isExpanded": false
-      }
-  ],
-  "inputs": [
-  {
-    "name": "connectedServiceName",
-    "aliases": ["azureSubscription"],
-    "type": "connectedService:AzureServiceBus",
-    "label": "Azure Service Bus service connection",
-    "defaultValue": "",
-    "required": true,
-    "helpMarkDown": "Select an Azure Service Bus service connection."
-  },
-  {
-    "name": "messageBody",
-    "type": "multiLine",
-    "label": "Message body",
-    "required": false,
-    "defaultValue": "",
-    "helpMarkDown": "Enter the json messageBody.",
-    "properties": {
-        "resizable": "true",
-        "rows": "10",
-        "maxLength": "5000",
-        "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
-    }
-  },
-  {
-    "name": "signPayload",
-    "type": "boolean",
-    "label": "Sign the Message",
-    "defaultValue": "false",
-    "required": true,
-    "helpMarkDown": "If this is set to true, message will be signed provided a private certificate.",
-    "groupName": "signingDetails"
-  },
-  {
-    "name": "certificateString",
-    "type": "string",
-    "label": "Certificate Variable",
-    "required": true,
-    "defaultValue": "",
-    "helpMarkDown": "Specify the secret variable that contains the certificate content.  This can also be a certificate stored in an Azure key vault that is [linked](https://docs.microsoft.com/en-us/vsts/pipelines/library/variable-groups?view=vsts#link-secrets-from-an-azure-key-vault-as-variables) to a Variable Group used by this release pipeline.",
-    "visibleRule": "signPayload = true",
-    "groupName": "signingDetails"
-  },
-  {
-    "name": "signatureKey",
-    "type": "string",
-    "label": "Signature Property Key",
-    "required": false,
-    "defaultValue": "signature",
-    "helpMarkDown": "Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties",
-    "visibleRule": "signPayload = true",
-    "groupName": "signingDetails"
-  },
-  {
-        "name": "waitForCompletion",
-        "type": "boolean",
-        "label": "Wait for task completion",
-        "defaultValue": "false",
-        "required": true,
-        "helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
-  }
-  ],
-  "instanceNameFormat": "Publish to Azure Service Bus",
-  "execution": {
-    "ServiceBus": {
-      "events": {
-        "taskCompleted": { "enabled": "$(waitForCompletion)" }
-      },
-      "execute": {
-        "endpointId": "$(connectedServiceName)",
-        "connectionString": "$(endpoint.serviceBusConnectionString)",
-        "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
-        "messageBody": "$(messageBody)",
-        "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
-        "signaturePropertyKey": "$(signatureKey)",
-        "messageProperties": {
-            "PlanUrl": "$(system.CollectionUri)",
-            "ProjectId": "$(system.TeamProjectId)",
-            "HubName": "$(system.HostType)",
-            "PlanId": "$(system.PlanId)",
-            "JobId": "$(system.JobId)",
-            "TimelineId": "$(system.TimelineId)",
-            "TaskInstanceName": "$(system.TaskInstanceName)",
-            "TaskInstanceId": "$(system.TaskInstanceId)",
-            "AuthToken": "$(system.AccessToken)"
+    "id": "BA761F24-CBD6-48CB-92F3-FC13396405B1",
+    "name": "PublishToAzureServiceBus",
+    "friendlyName": "Publish To Azure Service Bus",
+    "description": "Sends a message to azure service bus using a service connection (no agent required).",
+    "category": "Utility",
+    "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870237)",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Server"
+    ],
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 11
+    },
+    "groups": [
+        {
+            "name": "signingDetails",
+            "displayName": "Signing Properties",
+            "isExpanded": false
         }
-      }
+    ],
+    "inputs": [
+        {
+            "name": "connectedServiceName",
+            "aliases": [
+                "azureSubscription"
+            ],
+            "type": "connectedService:AzureServiceBus",
+            "label": "Azure Service Bus service connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select an Azure Service Bus service connection."
+        },
+        {
+            "name": "messageBody",
+            "type": "multiLine",
+            "label": "Message body",
+            "required": false,
+            "defaultValue": "",
+            "helpMarkDown": "Enter the json messageBody.",
+            "properties": {
+                "resizable": "true",
+                "rows": "10",
+                "maxLength": "5000",
+                "editorExtension": "ms.vss-services-azure.azure-servicebus-message-grid"
+            }
+        },
+        {
+            "name": "signPayload",
+            "type": "boolean",
+            "label": "Sign the Message",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "If this is set to true, message will be signed provided a private certificate.",
+            "groupName": "signingDetails"
+        },
+        {
+            "name": "certificateString",
+            "type": "string",
+            "label": "Certificate Variable",
+            "required": true,
+            "defaultValue": "",
+            "helpMarkDown": "Specify the secret variable that contains the certificate content.  This can also be a certificate stored in an Azure key vault that is [linked](https://docs.microsoft.com/en-us/vsts/pipelines/library/variable-groups?view=vsts#link-secrets-from-an-azure-key-vault-as-variables) to a Variable Group used by this release pipeline.",
+            "visibleRule": "signPayload = true",
+            "groupName": "signingDetails"
+        },
+        {
+            "name": "signatureKey",
+            "type": "string",
+            "label": "Signature Property Key",
+            "required": false,
+            "defaultValue": "signature",
+            "helpMarkDown": "Key where you want signature to be in Message Properties. If left Empty, default is 'signature' in message properties",
+            "visibleRule": "signPayload = true",
+            "groupName": "signingDetails"
+        },
+        {
+            "name": "waitForCompletion",
+            "type": "boolean",
+            "label": "Wait for task completion",
+            "defaultValue": "false",
+            "required": true,
+            "helpMarkDown": "If this is true, this task will wait for TaskCompleted event for the specified task timeout."
+        }
+    ],
+    "instanceNameFormat": "Publish to Azure Service Bus",
+    "execution": {
+        "ServiceBus": {
+            "events": {
+                "taskCompleted": {
+                    "enabled": "$(waitForCompletion)"
+                }
+            },
+            "execute": {
+                "endpointId": "$(connectedServiceName)",
+                "connectionString": "$(endpoint.serviceBusConnectionString)",
+                "serviceBusQueueName": "$(endpoint.serviceBusQueueName)",
+                "messageBody": "$(messageBody)",
+                "certificateString": "{{#notEquals signPayload 'false' 1}}{{#notEquals endpoint.signPayload 'false' 1}}$(certificateString){{/notEquals}}{{else}}{{/notEquals}}",
+                "signaturePropertyKey": "$(signatureKey)",
+                "messageProperties": {
+                    "PlanUrl": "$(system.CollectionUri)",
+                    "ProjectId": "$(system.TeamProjectId)",
+                    "HubName": "$(system.HostType)",
+                    "PlanId": "$(system.PlanId)",
+                    "JobId": "$(system.JobId)",
+                    "TimelineId": "$(system.TimelineId)",
+                    "TaskInstanceName": "$(system.TaskInstanceName)",
+                    "TaskInstanceId": "$(system.TaskInstanceId)",
+                    "AuthToken": "$(system.AccessToken)"
+                }
+            }
+        }
     }
-  }
 }

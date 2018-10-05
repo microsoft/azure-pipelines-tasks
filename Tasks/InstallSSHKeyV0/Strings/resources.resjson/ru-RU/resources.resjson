@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Установить ключ SSH",
-  "loc.helpMarkDown": "",
+  "loc.helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=875267)",
   "loc.description": "Установка ключа SSH до сборки или выпуска",
   "loc.instanceNameFormat": "Установка ключа SSH",
   "loc.input.label.hostName": "Запись известных узлов",

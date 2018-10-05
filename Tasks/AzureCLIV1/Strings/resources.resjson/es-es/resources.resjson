@@ -21,7 +21,9 @@
   "loc.input.help.failOnStandardError": "Si es true, la tarea no se podrá ejecutar cuando se registre algún error en la secuencia StandardError. Anule la selección de la casilla para ignorar los errores estándar y use los códigos de salida para determinar el estado.",
   "loc.messages.ScriptReturnCode": "El script finalizó con el código de retorno: %d",
   "loc.messages.ScriptFailed": "No se pudo ejecutar el script. Error: %s",
-  "loc.messages.UnsupportedEndpointScheme": "Esquema de autorización de punto de conexión no admitido: entidad de servicio para AzureRM",
+  "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
   "loc.messages.AzureSDKNotFound": "La CLI de Azure 2.x no está instalada en esta máquina.",
-  "loc.messages.FailedToLogout": "Error al cerrar sesión: %s"
+  "loc.messages.FailedToLogout": "Error al cerrar sesión: %s",
+  "loc.messages.LoginFailed": "Azure login failed",
+  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
 }

@@ -41,7 +41,7 @@ if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
     connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken)
         .then(function runAction() {
             // Run the specified action
-            var action = tl.getInput("action", true);
+            var action = tl.getInput("action", true).toLowerCase();
             var telemetry = {
                 registryType: registryType,
                 command: action !== "Run a Docker Compose command" ? action : tl.getInput("dockerComposeCommand", true)
@@ -49,14 +49,14 @@ if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
             
             /* tslint:disable:no-var-requires */
             return require({
-                "Build services": "./dockercomposebuild",
-                "Push services": "./dockercomposepush",
-                "Run services": "./dockercomposeup",
-                "Run a specific service": "./dockercomposerun",
-                "Lock services": "./dockercomposelock",
-                "Write service image digests": "./dockercomposedigests",
-                "Combine configuration": "./dockercomposeconfig",
-                "Run a Docker Compose command": "./dockercomposecommand"
+                "build services": "./dockercomposebuild",
+                "push services": "./dockercomposepush",
+                "run services": "./dockercomposeup",
+                "run a specific service": "./dockercomposerun",
+                "lock services": "./dockercomposelock",
+                "write service image digests": "./dockercomposedigests",
+                "combine configuration": "./dockercomposeconfig",
+                "run a docker compose command": "./dockercomposecommand"
             }[action]).run(connection);
             /* tslint:enable:no-var-requires */
         })

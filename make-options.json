@@ -57,6 +57,7 @@
         "GulpV0",
         "HelmDeployV0",
         "HelmInstallerV0",
+        "IISWebAppDeployment",
         "IISWebAppDeploymentOnMachineGroupV0",
         "IISWebAppManagementOnMachineGroupV0",
         "InstallAppleCertificateV2",
@@ -81,6 +82,7 @@
         "NuGetPublisherV0",
         "NuGetToolInstallerV0",
         "PackerBuildV0",
+        "PackerBuildV1",
         "PowerShellV2",
         "PowerShellOnTargetMachinesV2",
         "PowerShellOnTargetMachinesV3",
@@ -103,6 +105,7 @@
         "ServiceFabricUpdateManifestsV2",
         "SqlAzureDacpacDeploymentV1",
         "SqlDacpacDeploymentOnMachineGroupV0",
+        "SqlServerDacpacDeployment",
         "SshV0",
         "UniversalPackagesV0",
         "UsePythonVersionV0",
@@ -112,11 +115,9 @@
         "VsTestPlatformToolInstallerV1",
         "WindowsMachineFileCopyV2",
         "XamarinAndroidV1",
-        "XamarinComponentRestoreV0",
         "XamariniOSV2",
         "XamarinTestCloudV1",
-        "XcodeV5",
-        "XcodePackageiOSV0"
+        "XcodeV5"
     ],
     "taskResources": [
         "*.ps1",

@@ -108,8 +108,8 @@ export async function initializeAzureStackData(endpoint): Promise<any>
                 deferred.reject(tl.loc("SpecifiedAzureRmEndpointIsInvalid", endpointUrl));
             }
 
-            endpoint['AzureKeyVaultDnsSuffix'] = ("vault" + domain).toLowerCase();
-            endpoint['AzureKeyVaultServiceEndpointResourceId'] = ("https://vault." + domain).toLowerCase();
+            endpoint['azureKeyVaultDnsSuffix'] = ("vault." + domain).toLowerCase();
+            endpoint['azureKeyVaultServiceEndpointResourceId'] = ("https://vault." + domain).toLowerCase();
             deferred.resolve(endpoint);
         }
         else {

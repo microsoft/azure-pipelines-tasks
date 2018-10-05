@@ -16,7 +16,7 @@ process.env["ENDPOINT_AUTH_MyTestEndpoint"] = "{\"parameters\":{\"username\":\"u
 process.env["ENDPOINT_URL_MyTestEndpoint"] = "https://example/test";
 process.env["ENDPOINT_AUTH_PARAMETER_MyTestEndpoint_USERNAME"] = "username";
 process.env["ENDPOINT_AUTH_PARAMETER_MyTestEndpoint_PASSWORD"] = "password";
-process.env['MOCK_NORMALIZE_SLASHES'] = true
+process.env['MOCK_NORMALIZE_SLASHES'] = 'true'
 
 // provide answers for task mock
 var a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{

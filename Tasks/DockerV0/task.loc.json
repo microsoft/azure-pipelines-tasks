@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 3,
-    "Patch": 18
+    "Patch": 19
   },
   "demands": [],
   "preview": "false",
@@ -318,6 +318,12 @@
       "endpointId": "$(azureSubscriptionEndpoint)",
       "dataSourceName": "AzureRMContainerRegistries",
       "resultTemplate": "{\"Value\":\"{\\\"loginServer\\\":\\\"{{{properties.loginServer}}}\\\", \\\"id\\\" : \\\"{{{id}}}\\\"}\",\"DisplayValue\":\"{{{name}}}\"}"
+    }
+  ],
+  "outputVariables": [
+    {
+      "name": "DockerOutput",
+      "description": "Stores the output of the docker command"
     }
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

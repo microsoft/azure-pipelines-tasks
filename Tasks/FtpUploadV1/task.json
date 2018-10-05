@@ -17,8 +17,8 @@
     "demands": [],
     "version": {
         "Major": 1,
-        "Minor": 137,
-        "Patch": 0
+        "Minor": 142,
+        "Patch": 1
     },
     "instanceNameFormat": "FTP Upload: $(rootFolder)",
     "groups": [
@@ -31,7 +31,9 @@
     "inputs": [
         {
             "name": "credsType",
-            "aliases": [ "credentialsOption" ],
+            "aliases": [
+                "credentialsOption"
+            ],
             "type": "pickList",
             "label": "Authentication Method",
             "defaultValue": "serviceEndpoint",
@@ -77,7 +79,9 @@
         },
         {
             "name": "rootFolder",
-            "aliases": [ "rootDirectory" ],
+            "aliases": [
+                "rootDirectory"
+            ],
             "type": "filePath",
             "label": "Root folder",
             "defaultValue": "",
@@ -98,7 +102,9 @@
         },
         {
             "name": "remotePath",
-            "aliases": [ "remoteDirectory" ],
+            "aliases": [
+                "remoteDirectory"
+            ],
             "type": "string",
             "label": "Remote directory",
             "defaultValue": "/upload/$(Build.BuildId)/",

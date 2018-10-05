@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 138,
-    "Patch": 0
+    "Minor": 140,
+    "Patch": 2
   },
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -92,6 +92,7 @@
     "InstallFailed": "ms-resource:loc.messages.InstallFailed",
     "ReactivateExistingEnvironment": "ms-resource:loc.messages.ReactivateExistingEnvironment",
     "ParameterRequired": "ms-resource:loc.messages.ParameterRequired",
-    "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized"
+    "PlatformNotRecognized": "ms-resource:loc.messages.PlatformNotRecognized",
+    "PrependPath": "ms-resource:loc.messages.PrependPath"
   }
 }

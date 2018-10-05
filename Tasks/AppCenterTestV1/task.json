@@ -12,7 +12,7 @@
     "version": {
         "Major": 1,
         "Minor": 137,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -34,7 +34,9 @@
     "inputs": [
         {
             "name": "app",
-            "aliases": [ "appFile" ],
+            "aliases": [
+                "appFile"
+            ],
             "type": "filePath",
             "label": "Binary application file path",
             "defaultValue": "",
@@ -42,17 +44,21 @@
             "helpMarkDown": "Relative path from the repo root to the APK or IPA file you want to test."
         },
         {
-            "name":"artifactsDir",
-            "aliases": [ "artifactsDirectory" ],
-            "type":"filePath",
-            "label":"Artifacts directory",
-            "defaultValue":"$(Build.ArtifactStagingDirectory)/AppCenterTest",
+            "name": "artifactsDir",
+            "aliases": [
+                "artifactsDirectory"
+            ],
+            "type": "filePath",
+            "label": "Artifacts directory",
+            "defaultValue": "$(Build.ArtifactStagingDirectory)/AppCenterTest",
             "required": true,
-            "helpMarkDown":"Where to place the artifacts produced by the prepare step and used by the run step. This directory will be created if it does not exist."
+            "helpMarkDown": "Where to place the artifacts produced by the prepare step and used by the run step. This directory will be created if it does not exist."
         },
         {
             "name": "enablePrepare",
-            "aliases": [ "prepareTests" ],
+            "aliases": [
+                "prepareTests"
+            ],
             "type": "boolean",
             "label": "Prepare tests",
             "defaultValue": true,
@@ -60,7 +66,9 @@
         },
         {
             "name": "framework",
-            "aliases": [ "frameworkOption" ],
+            "aliases": [
+                "frameworkOption"
+            ],
             "type": "pickList",
             "label": "Test framework",
             "defaultValue": "appium",
@@ -76,65 +84,73 @@
             }
         },
         {
-            "name":"appiumBuildDir",
-            "aliases": [ "appiumBuildDirectory" ],
-            "type":"string",
-            "label":"Build directory",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = appium",
+            "name": "appiumBuildDir",
+            "aliases": [
+                "appiumBuildDirectory"
+            ],
+            "type": "string",
+            "label": "Build directory",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = appium",
             "required": true,
             "helpMarkDown": "Path to directory with Appium tests.",
             "groupName": "prepare"
         },
         {
-            "name":"espressoBuildDir",
-            "aliases": [ "espressoBuildDirectory" ],
-            "type":"string",
-            "label":"Build directory",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = espresso",
+            "name": "espressoBuildDir",
+            "aliases": [
+                "espressoBuildDirectory"
+            ],
+            "type": "string",
+            "label": "Build directory",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = espresso",
             "required": false,
             "helpMarkDown": "Path to Espresso output directory.",
             "groupName": "prepare"
         },
         {
-            "name":"espressoTestApkPath",
-            "aliases": [ "espressoTestApkFile" ],
-            "type":"string",
-            "label":"Test APK path",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = espresso",
+            "name": "espressoTestApkPath",
+            "aliases": [
+                "espressoTestApkFile"
+            ],
+            "type": "string",
+            "label": "Test APK path",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = espresso",
             "required": false,
             "helpMarkDown": "Path to APK file with Espresso tests. If not set, build-dir is used to discover it. Wildcard is allowed.",
             "groupName": "prepare"
         },
         {
-            "name":"calabashProjectDir",
-            "aliases": [ "calabashProjectDirectory" ],
-            "type":"string",
-            "label":"Project directory",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = calabash",
+            "name": "calabashProjectDir",
+            "aliases": [
+                "calabashProjectDirectory"
+            ],
+            "type": "string",
+            "label": "Project directory",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = calabash",
             "required": true,
             "helpMarkDown": "Path to Calabash workspace directory.",
             "groupName": "prepare"
         },
         {
-            "name":"calabashConfigFile",
-            "type":"filePath",
-            "label":"Cucumber config file",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = calabash",
+            "name": "calabashConfigFile",
+            "type": "filePath",
+            "label": "Cucumber config file",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = calabash",
             "required": false,
             "helpMarkDown": "Path to Cucumber configuration file, usually cucumber.yml.",
             "groupName": "prepare"
         },
         {
-            "name":"calabashProfile",
-            "type":"string",
-            "label":"Profile to run",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = calabash",
+            "name": "calabashProfile",
+            "type": "string",
+            "label": "Profile to run",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = calabash",
             "required": false,
             "helpMarkDown": "Profile to run.  This value must exists in the Cucumber configuration file.",
             "groupName": "prepare"
@@ -144,68 +160,76 @@
             "type": "boolean",
             "label": "Skip Configuration Check",
             "defaultValue": false,
-            "visibleRule":"enablePrepare = true && framework = calabash",
+            "visibleRule": "enablePrepare = true && framework = calabash",
             "required": false,
             "helpMarkDown": "Force running without Cucumber profile.",
             "groupName": "prepare"
         },
         {
-            "name":"uitestBuildDir",
-            "aliases": [ "uiTestBuildDirectory" ],
-            "type":"string",
-            "label":"Build directory",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = uitest",
+            "name": "uitestBuildDir",
+            "aliases": [
+                "uiTestBuildDirectory"
+            ],
+            "type": "string",
+            "label": "Build directory",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = uitest",
             "required": true,
             "helpMarkDown": "Path to directory with built test assemblies.",
             "groupName": "prepare"
         },
         {
-            "name":"uitestStoreFile",
-            "type":"string",
-            "label":"Store file",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = uitest",
+            "name": "uitestStoreFile",
+            "type": "string",
+            "label": "Store file",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = uitest",
             "required": false,
             "groupName": "prepare"
         },
         {
-            "name":"uitestStorePass",
-            "aliases": [ "uiTestStorePassword" ],
-            "type":"string",
-            "label":"Store password",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = uitest",
+            "name": "uitestStorePass",
+            "aliases": [
+                "uiTestStorePassword"
+            ],
+            "type": "string",
+            "label": "Store password",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = uitest",
             "required": false,
             "groupName": "prepare"
         },
         {
-            "name":"uitestKeyAlias",
-            "type":"string",
-            "label":"Key alias",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = uitest",
+            "name": "uitestKeyAlias",
+            "type": "string",
+            "label": "Key alias",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = uitest",
             "required": false,
             "groupName": "prepare"
         },
         {
-            "name":"uitestKeyPass",
-            "aliases": [ "uiTestKeyPassword" ],
-            "type":"string",
-            "label":"Key password",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = uitest",
+            "name": "uitestKeyPass",
+            "aliases": [
+                "uiTestKeyPassword"
+            ],
+            "type": "string",
+            "label": "Key password",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = uitest",
             "required": false,
             "groupName": "prepare"
         },
         {
-            "name":"uitestToolsDir",
-            "aliases": [ "uiTestToolsDirectory" ],
-            "type":"string",
-            "label":"Test tools directory",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = uitest",
-            "helpMarkDown":"Path to directory with Xamarin UI test tools that contains test-cloud.exe.",
+            "name": "uitestToolsDir",
+            "aliases": [
+                "uiTestToolsDirectory"
+            ],
+            "type": "string",
+            "label": "Test tools directory",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = uitest",
+            "helpMarkDown": "Path to directory with Xamarin UI test tools that contains test-cloud.exe.",
             "required": false,
             "groupName": "prepare"
         },
@@ -220,30 +244,36 @@
             "groupName": "prepare"
         },
         {
-            "name":"xcuitestBuildDir",
-            "aliases": [ "xcUITestBuildDirectory" ],
-            "type":"string",
-            "label":"Build directory",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = xcuitest",
+            "name": "xcuitestBuildDir",
+            "aliases": [
+                "xcUITestBuildDirectory"
+            ],
+            "type": "string",
+            "label": "Build directory",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = xcuitest",
             "required": false,
             "helpMarkDown": "Path to the build output directory (usually $(ProjectDir)/Build/Products/Debug-iphoneos).",
             "groupName": "prepare"
         },
         {
-            "name":"xcuitestTestIpaPath",
-            "aliases": [ "xcUITestIpaFile" ],
-            "type":"string",
-            "label":"Test IPA path",
-            "defaultValue":"",
-            "visibleRule":"enablePrepare = true && framework = xcuitest",
+            "name": "xcuitestTestIpaPath",
+            "aliases": [
+                "xcUITestIpaFile"
+            ],
+            "type": "string",
+            "label": "Test IPA path",
+            "defaultValue": "",
+            "visibleRule": "enablePrepare = true && framework = xcuitest",
             "required": false,
             "helpMarkDown": "Path to the *.ipa file with the XCUITest tests.",
             "groupName": "prepare"
         },
         {
             "name": "prepareOpts",
-            "aliases": [ "prepareOptions" ],
+            "aliases": [
+                "prepareOptions"
+            ],
             "type": "string",
             "label": "Additional options",
             "required": false,
@@ -254,7 +284,9 @@
         },
         {
             "name": "enableRun",
-            "aliases": [ "runTests" ],
+            "aliases": [
+                "runTests"
+            ],
             "type": "boolean",
             "label": "Run tests",
             "defaultValue": true,
@@ -262,7 +294,9 @@
         },
         {
             "name": "credsType",
-            "aliases": [ "credentialsOption" ],
+            "aliases": [
+                "credentialsOption"
+            ],
             "type": "pickList",
             "label": "Authentication method",
             "defaultValue": "serviceEndpoint",
@@ -337,7 +371,9 @@
         },
         {
             "name": "dsymDir",
-            "aliases": [ "dsymDirectory" ],
+            "aliases": [
+                "dsymDirectory"
+            ],
             "type": "string",
             "label": "dSYM directory",
             "defaultValue": "",
@@ -348,7 +384,9 @@
         },
         {
             "name": "locale",
-            "aliases": [ "localeOption" ],
+            "aliases": [
+                "localeOption"
+            ],
             "type": "pickList",
             "label": "System language",
             "defaultValue": "en_US",
@@ -382,7 +420,9 @@
         },
         {
             "name": "loginOpts",
-            "aliases": [ "loginOptions" ],
+            "aliases": [
+                "loginOptions"
+            ],
             "type": "string",
             "label": "Additional options for login",
             "defaultValue": "",
@@ -393,7 +433,9 @@
         },
         {
             "name": "runOpts",
-            "aliases": [ "runOptions" ],
+            "aliases": [
+                "runOptions"
+            ],
             "type": "string",
             "label": "Additional options for run",
             "required": false,
@@ -404,7 +446,9 @@
         },
         {
             "name": "async",
-            "aliases": [ "skipWaitingForResults" ],
+            "aliases": [
+                "skipWaitingForResults"
+            ],
             "type": "boolean",
             "label": "Do not wait for test result",
             "defaultValue": false,
@@ -415,17 +459,21 @@
         },
         {
             "name": "cliLocationOverride",
-            "aliases": [ "cliFile" ],
+            "aliases": [
+                "cliFile"
+            ],
             "type": "filePath",
             "label": "App Center CLI location",
             "groupName": "advanced",
             "defaultValue": "",
-            "required": false ,
+            "required": false,
             "helpMarkDown": "Path to the App Center CLI on the build or release agent."
         },
         {
             "name": "debug",
-            "aliases": [ "showDebugOutput" ],
+            "aliases": [
+                "showDebugOutput"
+            ],
             "type": "boolean",
             "label": "Enable debug output",
             "required": false,

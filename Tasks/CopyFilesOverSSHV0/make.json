@@ -1,11 +1,4 @@
 {
-    "common": [
-        {
-            "module": "../Common/ssh-common",
-            "type": "node",
-            "compile": true
-        }
-    ],
     "rm": [
         {
             "items": [

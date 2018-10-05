@@ -1,7 +1,7 @@
 {
   "name": "vsts-powershell-task",
   "version": "1.0.0",
-  "description": "VSTS PowerShell Task",
+  "description": "Azure Pipelines PowerShell Task",
   "main": "powershell.js",
   "repository": {
     "type": "git",

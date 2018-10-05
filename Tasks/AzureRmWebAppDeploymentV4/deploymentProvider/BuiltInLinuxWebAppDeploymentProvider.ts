@@ -1,19 +1,34 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
 import { PackageType } from 'webdeployment-common/packageUtility';
-import fs = require('fs');
 import path = require('path');
+import * as ParameterParser from '../operations/ParameterParserUtility'
 
-var packageUtility = require('webdeployment-common/packageUtility.js');
 var webCommonUtility = require('webdeployment-common/utility.js');
 var deployUtility = require('webdeployment-common/utility.js');
 var zipUtility = require('webdeployment-common/ziputility.js');
+
+const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE true';
+const linuxFunctionRuntimeSettingName: string = '-FUNCTIONS_WORKER_RUNTIME ';
+
+const linuxFunctionRuntimeSettingValue = new Map([
+    [ 'DOCKER|microsoft/azure-functions-dotnet-core2.0:2.0', 'dotnet ' ],
+    [ 'DOCKER|microsoft/azure-functions-node8:2.0', 'node ' ]
+]);
 
 export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
     private zipDeploymentID: string;
 
     public async DeployWebAppStep() {
         tl.debug('Performing Linux built-in package deployment');
+
+        if(this.taskParams.isFunctionApp) {
+            var linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
+            var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
+            var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
+            await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
+        }
+
         await this.kuduServiceUtility.warmpUp();
         switch(this.taskParams.Package.getPackageType()){
             case PackageType.folder:

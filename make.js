@@ -231,7 +231,7 @@ target.build = function() {
                         getExternals(modMake.externals, modOutDir);
                     }
 
-                    if (mod.type === 'node' && mod.compile == true) {
+                    if (mod.type === 'node' && mod.compile == true || test('-f', path.join(modPath, 'package.json'))) {
                         var commonPack = util.getCommonPackInfo(modOutDir);
 
                         // assert the pack file does not already exist (name should be unique)

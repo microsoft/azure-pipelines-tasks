@@ -5,10 +5,10 @@
   "loc.instanceNameFormat": "使用 cURL 上载 $(files)",
   "loc.group.displayName.advanced": "高级",
   "loc.input.label.files": "文件",
-  "loc.input.help.files": "File(s) to be uploaded. Wildcards can be used. For example, `**/*.zip` for all ZIP files in all subfolders.",
+  "loc.input.help.files": "要上传的文件。可以使用通配符。例如，\"**/*.zip\" 表示所有子文件夹中的所有 ZIP 文件。",
   "loc.input.label.authType": "身份验证方法",
-  "loc.input.label.serviceEndpoint": "服务终结点",
-  "loc.input.help.serviceEndpoint": "The service endpoint with the credentials for the server authentication. Use the Generic connection type for the service endpoint.",
+  "loc.input.label.serviceEndpoint": "Service Connection",
+  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
   "loc.input.label.username": "用户名",
   "loc.input.help.username": "指定要用于服务器身份验证的用户名。",
   "loc.input.label.password": "密码",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "正在上传文件: %s",
   "loc.messages.CurlNotFound": "路径中未找到 curl。",
   "loc.messages.NotAllFilesUploaded": "并非所有文件都已上传。已上传: %d；总计: %d",
-  "loc.messages.IncompleteEndpoint": "服务终结点未包含所有必填字段。"
+  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
 }

@@ -12,15 +12,14 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 137,
-        "Patch": 0
+        "Minor": 141,
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "demands": [
-    ],
+    "demands": [],
     "minimumAgentVersion": "2.116.0",
     "instanceNameFormat": "Download secure file",
     "inputs": [
@@ -45,7 +44,5 @@
             "argumentFormat": ""
         }
     },
-    "messages": {
-    }
+    "messages": {}
 }
-    

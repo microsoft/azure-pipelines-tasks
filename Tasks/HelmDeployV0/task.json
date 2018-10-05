@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 138,
-        "Patch": 4
+        "Patch": 6
     },
     "demands": [],
     "groups": [
@@ -57,7 +57,9 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription, which has your Azure Container Registry.",
@@ -94,7 +96,9 @@
         },
         {
             "name": "kubernetesServiceEndpoint",
-            "aliases": ["kubernetesServiceConnection"],
+            "aliases": [
+                "kubernetesServiceConnection"
+            ],
             "type": "connectedService:kubernetes",
             "label": "Kubernetes Service Connection",
             "helpMarkDown": "Select a Kubernetes service connection.",
@@ -142,7 +146,7 @@
             "label": "Chart Type",
             "required": true,
             "options": {
-                "Name" : "Name",
+                "Name": "Name",
                 "FilePath": "File Path"
             },
             "helpMarkDown": "Select how you want to enter chart info. You can either provide name of the chart or folder/file path to the chart.",
@@ -160,7 +164,7 @@
             "helpMarkDown": "Chart reference to install, this can be a url or a chart name. For example, if chart name is 'stable/mysql', the task will run 'helm install stable/mysql'.",
             "defaultValue": "",
             "visibleRule": "chartType == Name",
-            "required":  "true",
+            "required": "true",
             "groupName": "commands"
         },
         {
@@ -170,13 +174,15 @@
             "helpMarkDown": "Path to the chart to install. This can be a path to a packaged chart or a path to an unpacked chart directory. For example, if './redis' is specified the task will run 'helm install ./redis'.",
             "defaultValue": "",
             "visibleRule": "chartType == FilePath || command == package",
-            "required":  "true",
+            "required": "true",
             "groupName": "commands"
         },
         {
             "name": "version",
             "label": "Version",
-            "aliases": ["chartVersion"],
+            "aliases": [
+                "chartVersion"
+            ],
             "type": "string",
             "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
             "defaultValue": "",
@@ -212,16 +218,18 @@
         },
         {
             "name": "destination",
-            "label":"Destination",
+            "label": "Destination",
             "type": "string",
             "defaultValue": "$(Build.ArtifactStagingDirectory)",
             "helpMarkDown": "Specify values in a YAML file or a URL.",
             "visibleRule": "command == package",
-            "groupName": "commands"   
+            "groupName": "commands"
         },
         {
             "name": "canaryimage",
-            "aliases": ["canaryImage"],
+            "aliases": [
+                "canaryImage"
+            ],
             "type": "boolean",
             "label": "Use canary image version.",
             "defaultValue": "false",
@@ -231,7 +239,9 @@
         },
         {
             "name": "upgradetiller",
-            "aliases": ["upgradeTiller"],
+            "aliases": [
+                "upgradeTiller"
+            ],
             "type": "boolean",
             "label": "Upgrade Tiller",
             "defaultValue": "true",
@@ -241,7 +251,9 @@
         },
         {
             "name": "updatedependency",
-            "aliases": ["updateDependency"],
+            "aliases": [
+                "updateDependency"
+            ],
             "type": "boolean",
             "label": "Update Dependency",
             "defaultValue": "false",
@@ -355,7 +367,9 @@
         },
         {
             "name": "tillernamespace",
-            "aliases": ["tillerNamespace"],
+            "aliases": [
+                "tillerNamespace"
+            ],
             "label": "Tiller namespace",
             "helpMarkDown": "Specify K8 namespace of tiller.",
             "type": "string",
@@ -366,14 +380,14 @@
         {
             "target": "kubernetesCluster",
             "endpointId": "$(azureSubscriptionEndpoint)",
-            "endpointUrl":"{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{{{name}}}"
         },
         {
             "target": "azureResourceGroup",
             "endpointId": "$(azureSubscriptionEndpoint)",
-            "endpointUrl":"{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
         }
@@ -409,7 +423,7 @@
         "CouldNotFetchAccessTokenforAzureStatusCode": "Could not fetch access token for Azure. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIDueToMSINotConfiguredProperlyStatusCode": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: %s, status message: %s",
         "CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
-        "SkipDeleteSecureFiles":"TLS not enabled in the Task. Skipping delete of certificates.",
+        "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
         "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
         "FileNotFound": "File not found at %s",
         "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."

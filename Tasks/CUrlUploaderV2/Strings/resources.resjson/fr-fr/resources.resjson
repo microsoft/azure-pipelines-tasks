@@ -7,8 +7,8 @@
   "loc.input.label.files": "Fichiers",
   "loc.input.help.files": "Fichier(s) à charger. Vous pouvez utiliser des caractères génériques. Par exemple, '**/*.zip' pour tous les fichiers ZIP de tous les sous-dossiers.",
   "loc.input.label.authType": "Méthode d'authentification",
-  "loc.input.label.serviceEndpoint": "Point de terminaison de service",
-  "loc.input.help.serviceEndpoint": "Point de terminaison de service avec les informations d'identification pour l'authentification serveur. Utilisez le type de connexion Générique pour le point de terminaison de service.",
+  "loc.input.label.serviceEndpoint": "Service Connection",
+  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
   "loc.input.label.username": "Nom d'utilisateur",
   "loc.input.help.username": "Spécifiez le nom d'utilisateur pour l'authentification du serveur.",
   "loc.input.label.password": "Mot de passe",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "Téléchargement du ou des fichiers : %s",
   "loc.messages.CurlNotFound": "curl introuvable dans le CHEMIN.",
   "loc.messages.NotAllFilesUploaded": "Tous les fichiers n'ont pas été chargés. Fichiers chargés : %d. Total : %d",
-  "loc.messages.IncompleteEndpoint": "Le point de terminaison de service ne contient pas tous les champs obligatoires."
+  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
 }

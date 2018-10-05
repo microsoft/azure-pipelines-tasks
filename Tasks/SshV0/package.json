@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@types/node": "^6.0.101",
+    "@types/q": "^1.0.7",
     "ssh2": "0.5.0",
     "scp2": "0.5.0",
     "vsts-task-lib": "0.8.3"

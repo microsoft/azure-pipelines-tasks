@@ -55,18 +55,24 @@ async function run() {
         // Run bash.
         let exitCode: number = await bash.exec(options);
 
+        let result = tl.TaskResult.Succeeded;
+
         // Fail on exit code.
         if (exitCode !== 0) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('JS_ExitCode', exitCode));
+            tl.error(tl.loc('JS_ExitCode', exitCode));
+            result = tl.TaskResult.Failed;
         }
 
         // Fail on stderr.
         if (stderrFailure) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('JS_Stderr'));
+            tl.error(tl.loc('JS_Stderr'));
+            result = tl.TaskResult.Failed;
         }
+
+        tl.setResult(result, null, true);
     }
     catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
+        tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed', true);
     }
 }
 

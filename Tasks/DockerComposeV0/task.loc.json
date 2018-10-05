@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 4,
-    "Patch": 20
+    "Patch": 22
   },
   "demands": [],
   "preview": "false",
@@ -324,6 +324,7 @@
     "AdditionalDockerComposeFileDoesNotExists": "ms-resource:loc.messages.AdditionalDockerComposeFileDoesNotExists",
     "CantWriteDataToFile": "ms-resource:loc.messages.CantWriteDataToFile",
     "NoDataWrittenOnFile": "ms-resource:loc.messages.NoDataWrittenOnFile",
-    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced"
+    "FileContentSynced": "ms-resource:loc.messages.FileContentSynced",
+    "ImageNameWithoutTag": "ms-resource:loc.messages.ImageNameWithoutTag"
   }
 }
