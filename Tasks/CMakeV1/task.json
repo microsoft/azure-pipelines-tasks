@@ -15,14 +15,16 @@
     "version": {
         "Major": 1,
         "Minor": 130,
-        "Patch": 0
+        "Patch": 1
     },
     "minimumAgentVersion": "1.91.0",
     "instanceNameFormat": "CMake $(cmakeArgs)",
     "inputs": [
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "build",

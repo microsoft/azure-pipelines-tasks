@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 141,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
         "ant"
@@ -44,7 +44,9 @@
     "inputs": [
         {
             "name": "antBuildFile",
-            "aliases": ["buildFile"],
+            "aliases": [
+                "buildFile"
+            ],
             "type": "filePath",
             "label": "Ant build file",
             "defaultValue": "build.xml",
@@ -98,7 +100,9 @@
         },
         {
             "name": "codeCoverageTool",
-            "aliases": ["codeCoverageToolOptions"],
+            "aliases": [
+                "codeCoverageToolOptions"
+            ],
             "type": "pickList",
             "label": "Code coverage tool",
             "required": false,
@@ -113,7 +117,9 @@
         },
         {
             "name": "classFilesDirectories",
-            "aliases": ["codeCoverageClassFilesDirectories"],
+            "aliases": [
+                "codeCoverageClassFilesDirectories"
+            ],
             "type": "string",
             "label": "Class files directories",
             "defaultValue": ".",
@@ -124,7 +130,9 @@
         },
         {
             "name": "classFilter",
-            "aliases": ["codeCoverageClassFilter"],
+            "aliases": [
+                "codeCoverageClassFilter"
+            ],
             "type": "string",
             "label": "Class inclusion/exclusion filters",
             "defaultValue": "",
@@ -135,7 +143,9 @@
         },
         {
             "name": "srcDirectories",
-            "aliases": ["codeCoverageSourceDirectories"],
+            "aliases": [
+                "codeCoverageSourceDirectories"
+            ],
             "type": "string",
             "label": "Source files directories",
             "defaultValue": "",
@@ -146,7 +156,9 @@
         },
         {
             "name": "failIfCoverageEmpty",
-            "aliases": ["codeCoverageFailIfEmpty"],
+            "aliases": [
+                "codeCoverageFailIfEmpty"
+            ],
             "type": "boolean",
             "label": "Fail when code coverage results are missing",
             "defaultValue": "false",
@@ -157,7 +169,9 @@
         },
         {
             "name": "antHomeUserInputPath",
-            "aliases": ["antHomeDirectory"],
+            "aliases": [
+                "antHomeDirectory"
+            ],
             "type": "string",
             "label": "Set ANT_HOME path",
             "required": false,
@@ -167,7 +181,9 @@
         },
         {
             "name": "javaHomeSelection",
-            "aliases": ["javaHomeOption"],
+            "aliases": [
+                "javaHomeOption"
+            ],
             "type": "radio",
             "label": "Set JAVA_HOME by",
             "required": true,
@@ -181,7 +197,9 @@
         },
         {
             "name": "jdkVersion",
-            "aliases": ["jdkVersionOption"],
+            "aliases": [
+                "jdkVersionOption"
+            ],
             "type": "pickList",
             "label": "JDK version",
             "required": false,
@@ -200,7 +218,9 @@
         },
         {
             "name": "jdkUserInputPath",
-            "aliases": ["jdkUserInputDirectory"],
+            "aliases": [
+                "jdkUserInputDirectory"
+            ],
             "type": "string",
             "label": "JDK path",
             "required": true,
@@ -211,7 +231,9 @@
         },
         {
             "name": "jdkArchitecture",
-            "aliases": ["jdkArchitectureOption"],
+            "aliases": [
+                "jdkArchitectureOption"
+            ],
             "type": "pickList",
             "label": "JDK architecture",
             "defaultValue": "x64",
@@ -236,5 +258,5 @@
         "FailedToLocateSpecifiedJVM": "Failed to find the specified JDK version. Please ensure the specified JDK version is installed on the agent and the environment variable '%s' exists and is set to the location of a corresponding JDK or use the [Java Tool Installer](https://go.microsoft.com/fwlink/?linkid=875287) task to install the desired JDK.",
         "DiscontinueAntCodeCoverage": "We are discontinuing the support of automated code coverage report generation for Ant projects. Please refer to https://go.microsoft.com/fwlink/?linkid=875306 for more details.",
         "NoCodeCoverage": "No code coverage results were found to publish."
-   }
+    }
 }

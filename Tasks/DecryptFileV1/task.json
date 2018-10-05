@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 142,
-        "Patch": 0
+        "Patch": 1
     },
     "groups": [
         {
@@ -58,7 +58,9 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "",

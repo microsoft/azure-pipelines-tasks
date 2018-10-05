@@ -116,7 +116,7 @@ describe('AppCenterDistribute L0 Suite', function () {
     });
 
     it('Positive path: a single dSYM', function () {
-        this.timeout(4000);
+        this.timeout(6000);
 
         let tp = path.join(__dirname, 'L0SymMultipleDSYMs_single.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

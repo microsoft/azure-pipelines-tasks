@@ -15,7 +15,7 @@
     "version": {
         "Major": 8,
         "Minor": 2,
-        "Patch": 4
+        "Patch": 5
     },
     "inputs": [
         {
@@ -46,8 +46,8 @@
             "defaultValue": "reject",
             "required": false,
             "options": {
-               "reject": "Reject",
-               "resume": "Resume"
+                "reject": "Reject",
+                "resume": "Resume"
             },
             "helpMarkDown": "Reject or resume this manual intervention automatically after it is pending for the specified timeout or 60 days, whichever is earlier."
         }

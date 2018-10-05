@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "手動操作",
-  "loc.helpMarkDown": "[更多資訊](http://go.microsoft.com/fwlink/?LinkID=825235)",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870234)",
   "loc.description": "暫停部署並等候操作",
   "loc.instanceNameFormat": "手動操作",
   "loc.input.label.instructions": "指示",

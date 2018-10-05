@@ -1,9 +1,9 @@
 {
   "loc.friendlyName": "命令列",
   "loc.helpMarkDown": "[詳細資訊](https://go.microsoft.com/fwlink/?LinkID=613735)",
-  "loc.description": "此為早期預覽。請使用 cmd.exe (Windows) 與 bash (macOS 與 Linux 上) 來執行命令列指令碼。",
+  "loc.description": "Run a command line script using cmd.exe on Windows and bash on macOS and Linux.",
   "loc.instanceNameFormat": "命令列指令碼",
-  "loc.releaseNotes": "此為早期預覽。指令碼工作一致性。已新增多行支援。",
+  "loc.releaseNotes": "Script task consistency. Added support for multiple lines.",
   "loc.group.displayName.advanced": "進階",
   "loc.input.label.script": "指令碼",
   "loc.input.label.workingDirectory": "工作目錄",
@@ -14,5 +14,5 @@
   "loc.messages.JS_Stderr": "Bash 已將一或多行寫入標準錯誤資料流。",
   "loc.messages.PS_ExitCode": "Cmd.exe 已結束，代碼為 '{0}'。",
   "loc.messages.PS_UnableToDetermineExitCode": "未預期的例外狀況。無法從 cmd.exe 判斷結束代碼。",
-  "loc.messages.ScriptContents": "Script contents:"
+  "loc.messages.ScriptContents": "指令碼內容:"
 }

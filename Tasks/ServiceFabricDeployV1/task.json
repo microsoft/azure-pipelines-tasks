@@ -17,7 +17,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 23
+        "Patch": 24
     },
     "demands": [
         "Cmd"
@@ -451,8 +451,8 @@
         "SFSDK_StartAppUpgrade": "Start upgrading application...",
         "SFSDK_StartUpgradeFailed": "Failed to start application upgrade. Error {0}.",
         "SFSDK_UnregisterAppTypeOnUpgradeFailure": "Could not start upgrade successfully. Unregistering application type '{0}' and version '{1}'.",
-        "SFSDK_CurrentUpgradeState":"Current Upgrade State:",
-        "SFSDK_DomainUpgradeStatus":"Domain Wise Upgrade Status: ",
+        "SFSDK_CurrentUpgradeState": "Current Upgrade State:",
+        "SFSDK_DomainUpgradeStatus": "Domain Wise Upgrade Status: ",
         "SFSDK_UnregisterUnusedVersions": "Unregistering other unused versions for the application type...",
         "SFSDK_UpgradeSuccess": "Upgrade completed successfully.",
         "SFSDK_UpgradeRolledBack": "Upgrade was rolled back.",

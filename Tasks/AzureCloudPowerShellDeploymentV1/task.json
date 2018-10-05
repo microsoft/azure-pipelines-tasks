@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 3,
-        "Patch": 9
+        "Patch": 10
     },
     "demands": [
         "azureps"
@@ -32,7 +32,9 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureClassicSubscription"],
+            "aliases": [
+                "azureClassicSubscription"
+            ],
             "type": "connectedService:Azure:Certificate,UsernamePassword",
             "label": "Azure subscription (Classic)",
             "defaultValue": "",
@@ -90,7 +92,9 @@
         },
         {
             "name": "Slot",
-            "aliases": ["slotName"],
+            "aliases": [
+                "slotName"
+            ],
             "type": "string",
             "label": "Environment (Slot)",
             "defaultValue": "Production",

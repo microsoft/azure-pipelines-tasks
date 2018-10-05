@@ -12,7 +12,7 @@
   "loc.input.label.AdminUserName": "Administratoranmeldung",
   "loc.input.help.AdminUserName": "Die Administratoranmeldung für die Zielcomputer.",
   "loc.input.label.AdminPassword": "Kennwort",
-  "loc.input.help.AdminPassword": "Das Kennwort für die Administratoranmeldung für die Zielcomputer. <br>Es kann die Variable annehmen, die in Build-/Releasedefinitionen als\"$(passwordVariable)\" definiert wird. <br>Sie können den Variablentyp als \"secret\" markieren, um die Variable zu sichern. ",
+  "loc.input.help.AdminPassword": "Password for administrator login for the target machines. <br>It can accept a variable defined in build or release pipelines as '$(passwordVariable)'. <br>You may mark the variable as 'secret' to secure it. ",
   "loc.input.label.TargetPath": "Zielordner",
   "loc.input.help.TargetPath": "Der lokale Pfad auf den Zielcomputern oder ein UNC-Pfad, auf den zum Kopieren der Dateien aus der Quelle zugegriffen werden kann. Beispiel: \"d:\\fabrikam\" oder \"\\\\\\\\fabrikam\\Web\".",
   "loc.input.label.CleanTargetBeforeCopy": "Ziel bereinigen",
@@ -30,5 +30,7 @@
   "loc.messages.WFC_CopyStartedFor0": "Kopie für \"{0}\" gestartet",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment": "In der Umgebung \"{0}\" ist kein Computer für die Bereitstellung vorhanden.",
   "loc.messages.WFC_NoMachineExistsUnderEnvironment0ForDeployment": "In der Umgebung \"{0}\" ist kein Computer für die Bereitstellung vorhanden.",
-  "loc.messages.WFC_CopyingFailedForResource": "Fehler beim Kopieren für Ressource: {0}"
+  "loc.messages.WFC_CopyingFailedForResource": "Copying failed for resource: {0}",
+  "loc.messages.WFC_FailedToCreatePSDrive": "Failed to Create PSDrive with Destination: '{0}', ErrorMessage: '{1}'",
+  "loc.messages.WFC_RobocopyError": "Robocopy Error. Computer: '{0}'. ErrorMessage: '{1}'"
 }

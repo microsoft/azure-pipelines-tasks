@@ -22,7 +22,7 @@
   "loc.input.label.maximumCpuCount": "Parallel erstellen",
   "loc.input.help.maximumCpuCount": "Wenn die MSBuild-Zielkonfiguration mit parallelem Erstellen kompatibel ist, können Sie optional diese Option aktivieren, um das Kennzeichen \"/m\" an MSBuild zu übergeben (nur Windows). Wenn die Zielkonfiguration nicht mit parallelem Erstellen kompatibel ist, kann das Aktivieren dieser Option bewirken, dass der Build Fehler des Typs \"Datei in Gebrauch\" oder zeitweilige oder inkonsistente Buildfehler aufweist.",
   "loc.input.label.restoreNugetPackages": "NuGet-Pakete wiederherstellen",
-  "loc.input.help.restoreNugetPackages": "Diese Option ist veraltet. Fügen Sie zum Wiederherstellen von NuGet-Paketen einen NuGet-Installer-Schritt vor dem Buildvorgang hinzu.",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
   "loc.input.label.logProjectEvents": "Projektdetails aufzeichnen",
   "loc.input.help.logProjectEvents": "Optional Zeitachsendetails für jedes Projekt aufzeichnen (nur Windows).",
   "loc.input.label.createLogFile": "Protokolldatei erstellen",
