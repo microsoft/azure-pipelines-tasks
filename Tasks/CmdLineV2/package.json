@@ -18,6 +18,6 @@
   "homepage": "https://github.com/Microsoft/vsts-tasks#readme",
   "dependencies": {
     "uuid": "^3.0.1",
-    "vsts-task-lib": "2.0.5"
+    "vsts-task-lib": "2.7.0"
   }
 }

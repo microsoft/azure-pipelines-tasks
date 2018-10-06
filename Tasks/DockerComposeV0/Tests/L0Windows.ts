@@ -53,9 +53,9 @@ let a: any = <any>{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
         },
-        "docker push dir2_web:latest": {
+        "docker push dir2_web": {
             "code": 0,
-            "stdout": "sucessfully pushed dir2_web:latest"
+            "stdout": "sucessfully pushed dir2_web"
         },
         "docker-compose -f F:\\dir2\\docker-compose.yml up": {
             "code": 0,
@@ -65,7 +65,7 @@ let a: any = <any>{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: F:\\dir2\n    image: ajgtestacr1.azurecr.io/dir2_web\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - F:\\dir2:/code:rw\nversion: '2.0'"
         },
-        "docker push ajgtestacr1.azurecr.io/dir2_web:latest":{
+        "docker push ajgtestacr1.azurecr.io/dir2_web":{
             "code": 0,
             "stdout": "successfully pushed with qualified image"
         },
