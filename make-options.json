@@ -105,6 +105,7 @@
         "SqlAzureDacpacDeploymentV1",
         "SqlDacpacDeploymentOnMachineGroupV0",
         "SshV0",
+        "TwineAuthenticateV0",
         "UniversalPackagesV0",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
