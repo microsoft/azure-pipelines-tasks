@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Pip Authenticate",
+  "loc.friendlyName": "Python Pip Authenticate",
   "loc.helpMarkDown": "[More Information](https://pip.pypa.io/en/stable/reference/pip_install/)",
   "loc.description": "Authentication task for pip client used for installing python distributions.",
   "loc.instanceNameFormat": "Pip Authenticate $(message)",
