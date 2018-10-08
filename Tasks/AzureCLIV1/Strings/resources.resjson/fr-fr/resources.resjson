@@ -21,7 +21,9 @@
   "loc.input.help.failOnStandardError": "Si la valeur est true, cette tâche se solde par un échec quand des erreurs sont écrites dans le flux de données StandardError. Décochez la case pour ignorer les erreurs standard et utiliser les codes de sortie afin de déterminer l'état",
   "loc.messages.ScriptReturnCode": "Arrêt du script. Code de retour : %d",
   "loc.messages.ScriptFailed": "Échec du script. Erreur : %s",
-  "loc.messages.UnsupportedEndpointScheme": "Modèle d'autorisation de point de terminaison non pris en charge : principal du service pour AzureRM",
+  "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
   "loc.messages.AzureSDKNotFound": "Azure CLI 2.x n'est pas installé sur cette machine.",
-  "loc.messages.FailedToLogout": "L'erreur suivante s'est produite durant la déconnexion : %s"
+  "loc.messages.FailedToLogout": "L'erreur suivante s'est produite durant la déconnexion : %s",
+  "loc.messages.LoginFailed": "Azure login failed",
+  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
 }

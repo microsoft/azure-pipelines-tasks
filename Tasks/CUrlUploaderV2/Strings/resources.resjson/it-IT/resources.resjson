@@ -7,8 +7,8 @@
   "loc.input.label.files": "File",
   "loc.input.help.files": "File da caricare. È possibile usare i caratteri jolly. Usare ad esempio `**/*.zip` per indicare tutti i file ZIP in tutte le sottocartelle.",
   "loc.input.label.authType": "Metodo di autenticazione",
-  "loc.input.label.serviceEndpoint": "Endpoint servizio",
-  "loc.input.help.serviceEndpoint": "Endpoint servizio con le credenziali per l'autenticazione del server. Usare il tipo di connessione generico per l'endpoint servizio.",
+  "loc.input.label.serviceEndpoint": "Service Connection",
+  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
   "loc.input.label.username": "Nome utente",
   "loc.input.help.username": "Consente di specificare il nome utente per l'autenticazione server.",
   "loc.input.label.password": "Password",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "Caricamento dei file: %s",
   "loc.messages.CurlNotFound": "Il comando curl non è stato trovato in PATH.",
   "loc.messages.NotAllFilesUploaded": "Non sono stati caricati tutti i file. File caricati: %d; file totali: %d",
-  "loc.messages.IncompleteEndpoint": "L'endpoint servizio non contiene tutti i campi obbligatori."
+  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
 }

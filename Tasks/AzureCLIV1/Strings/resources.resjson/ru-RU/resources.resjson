@@ -21,7 +21,9 @@
   "loc.input.help.failOnStandardError": "Если задано значение true, то при наличии ошибок, записанных в стандартный поток ошибок, задача завершится сбоем. Снимите флажок, чтобы игнорировать стандартные ошибки и использовать коды завершения для определения состояния",
   "loc.messages.ScriptReturnCode": "Выход из сценария с кодом возврата: %d",
   "loc.messages.ScriptFailed": "Сбой сценария с ошибкой: %s",
-  "loc.messages.UnsupportedEndpointScheme": "Неподдерживаемая схема проверки подлинности конечной точки: субъект-служба для AzureRM",
+  "loc.messages.UnsupportedEndpointScheme": "Unsupported service connection authorization scheme: Service Principal for AzureRM",
   "loc.messages.AzureSDKNotFound": "На этом компьютере не установлен Azure CLI 2.x.",
-  "loc.messages.FailedToLogout": "Во время выхода из системы произошла следующая ошибка: %s"
+  "loc.messages.FailedToLogout": "Во время выхода из системы произошла следующая ошибка: %s",
+  "loc.messages.LoginFailed": "Azure login failed",
+  "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription"
 }

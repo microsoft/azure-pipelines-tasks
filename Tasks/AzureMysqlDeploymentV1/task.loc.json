@@ -6,7 +6,6 @@
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "category": "Deploy",
   "visibility": [
-    "Preview",
     "Build",
     "Release"
   ],
@@ -17,11 +16,10 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 7
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
-  "preview": true,
   "groups": [
     {
       "name": "target",

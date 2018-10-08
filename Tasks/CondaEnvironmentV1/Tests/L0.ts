@@ -1,8 +1,9 @@
 import * as assert from 'assert';
-import { EOL } from 'os';
 import * as path from 'path';
 
 import { MockTestRunner } from 'vsts-task-lib/mock-test';
+
+import { getPlatform, Platform } from '../taskutil';
 
 describe('CondaEnvironment L0 Suite', function () {
     describe('conda.ts', function () {
@@ -19,7 +20,12 @@ describe('CondaEnvironment L0 Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.ran(`conda create --quiet --prefix ${path.join('/', 'miniconda', 'envs', 'test')} --mkdir --yes`));
+        if (getPlatform() === Platform.Windows) {
+            assert(testRunner.ran('conda create --quiet --prefix \\miniconda\\envs\\test --mkdir --yes'));
+        } else {
+            assert(testRunner.ran('sudo /miniconda/bin/conda create --quiet --prefix /miniconda/envs/test --mkdir --yes'));
+        }
+
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });
@@ -30,7 +36,12 @@ describe('CondaEnvironment L0 Suite', function () {
 
         testRunner.run();
 
-        assert(testRunner.ran('conda install python=3 --quiet --yes --json'));
+        if (getPlatform() === Platform.Windows) {
+            assert(testRunner.ran('conda install python=3 --quiet --yes --json'));
+        } else {
+            assert(testRunner.ran('sudo /miniconda/bin/conda install python=3 --quiet --yes --json'));
+        }
+
         assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
         assert(testRunner.succeeded, 'task should have succeeded');
     });

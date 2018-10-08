@@ -8,10 +8,8 @@ import { WindowsWebAppZipDeployProvider } from './WindowsWebAppZipDeployProvider
 import { WindowsWebAppRunFromZipProvider } from './WindowsWebAppRunFromZipProvider';
 import { ContainerWebAppDeploymentProvider } from './ContainerWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
-import { Package, PackageType } from 'webdeployment-common/packageUtility';
+import { PackageType } from 'webdeployment-common/packageUtility';
 import { WindowsWebAppWarDeployProvider } from './WindowsWebAppWarDeployProvider';
-var zipUtility = require('webdeployment-common/ziputility.js');
-var webCommonUtility = require('webdeployment-common/utility.js');
 
 export class DeploymentFactory {
 

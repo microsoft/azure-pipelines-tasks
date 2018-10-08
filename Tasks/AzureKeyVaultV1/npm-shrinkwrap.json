@@ -3,6 +3,16 @@
   "requires": true,
   "lockfileVersion": 1,
   "dependencies": {
+    "@types/node": {
+      "version": "6.0.117",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-6.0.117.tgz",
+      "integrity": "sha512-sihk0SnN8PpiS5ihu5xJQ5ddnURNq4P+XPmW+nORlKkHy21CoZO/IVHK/Wq/l3G8fFW06Fkltgnqx229uPlnRg=="
+    },
+    "@types/q": {
+      "version": "1.5.1",
+      "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.1.tgz",
+      "integrity": "sha512-eqz8c/0kwNi/OEHQfvIuJVLTst3in0e7uTKeuY+WL/zfKn0xVujOTp42bS/vUUokhK5P2BppLd9JXMOMHcgbjA=="
+    },
     "azure-arm-rest": {
       "version": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
       "requires": {

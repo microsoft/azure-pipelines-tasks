@@ -1,0 +1,13 @@
+{
+  "loc.friendlyName": "Use Ruby Version",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=2005989)",
+  "loc.description": "Retrieves the specified version of Ruby from the tool cache. Optionally add it to PATH.",
+  "loc.instanceNameFormat": "Use Ruby $(versionSpec)",
+  "loc.input.label.versionSpec": "Version spec",
+  "loc.input.help.versionSpec": "Version range or exact version of a Ruby version to use.",
+  "loc.input.label.addToPath": "Add to PATH",
+  "loc.input.help.addToPath": "Prepend the retrieved Ruby version to the PATH environment variable to make it available in subsequent tasks or scripts without using the output variable.",
+  "loc.messages.ListAvailableVersions": "Available versions:",
+  "loc.messages.PlatformNotRecognized": "Platform not recognized",
+  "loc.messages.VersionNotFound": "Version spec %s did not match any version in the tool cache."
+}

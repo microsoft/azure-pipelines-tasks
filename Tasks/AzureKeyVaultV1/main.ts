@@ -12,7 +12,8 @@ async function run(): Promise<void> {
         tl.setResourcePath(taskManifestPath);
 
         var secretsToErrorsMap = new keyVault.SecretsToErrorsMapping();
-        var taskParameters = new keyVaultTaskParameters.KeyVaultTaskParameters();
+        var vaultParameters = new keyVaultTaskParameters.KeyVaultTaskParameters();
+        var taskParameters = await vaultParameters.getKeyVaultTaskParameters();
 
         var KeyVaultController = new keyVault.KeyVault(taskParameters);
         await KeyVaultController.downloadSecrets(secretsToErrorsMap);

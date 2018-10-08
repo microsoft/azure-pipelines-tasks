@@ -12,7 +12,7 @@
     "version": {
         "Major": 3,
         "Minor": 141,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "This version of the task uses apksigner instead of jarsigner to sign APKs.",
     "demands": [
@@ -35,7 +35,9 @@
     "inputs": [
         {
             "name": "files",
-            "aliases": ["apkFiles"],
+            "aliases": [
+                "apkFiles"
+            ],
             "type": "filePath",
             "label": "APK files",
             "defaultValue": "**/*.apk",
@@ -53,7 +55,9 @@
         },
         {
             "name": "keystoreFile",
-            "aliases": ["apksignerKeystoreFile"],
+            "aliases": [
+                "apksignerKeystoreFile"
+            ],
             "type": "secureFile",
             "label": "Keystore file",
             "defaultValue": "",
@@ -64,7 +68,9 @@
         },
         {
             "name": "keystorePass",
-            "aliases": ["apksignerKeystorePassword"],
+            "aliases": [
+                "apksignerKeystorePassword"
+            ],
             "type": "string",
             "label": "Keystore password",
             "defaultValue": "",
@@ -75,7 +81,9 @@
         },
         {
             "name": "keystoreAlias",
-            "aliases": ["apksignerKeystoreAlias"],
+            "aliases": [
+                "apksignerKeystoreAlias"
+            ],
             "type": "string",
             "label": "Alias",
             "defaultValue": "",
@@ -86,7 +94,9 @@
         },
         {
             "name": "keyPass",
-            "aliases": ["apksignerKeyPassword"],
+            "aliases": [
+                "apksignerKeyPassword"
+            ],
             "type": "string",
             "label": "Key password",
             "defaultValue": "",
@@ -107,7 +117,9 @@
         },
         {
             "name": "apksignerLocation",
-            "aliases": ["apksignerFile"],
+            "aliases": [
+                "apksignerFile"
+            ],
             "type": "string",
             "label": "apksigner location",
             "defaultValue": "",
@@ -127,7 +139,9 @@
         },
         {
             "name": "zipalignLocation",
-            "aliases": ["zipalignFile"],
+            "aliases": [
+                "zipalignFile"
+            ],
             "type": "string",
             "label": "Zipalign location",
             "defaultValue": "",
