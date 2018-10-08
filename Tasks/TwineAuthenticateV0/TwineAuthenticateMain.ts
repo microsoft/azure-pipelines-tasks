@@ -28,10 +28,8 @@ async function main(): Promise<void> {
     try {
         // Local feeds
         const internalFeeds = await auth.getInternalAuthInfoArray("feedList");
-
         // external service endpoints
         const externalEndpoints = await auth.getExternalAuthInfoArray("externalSources");
-
         // combination of both internal and external
         const newEndpointsToAdd = internalFeeds.concat(externalEndpoints);
 
@@ -91,10 +89,7 @@ async function main(): Promise<void> {
 function _logTwineAuthStartupVariables() {
     try {
         const twineAuthenticateTelemetry = {
-            "buildProperties": tl.getInput("buildProperties"),
-            "basePath": tl.getInput("basePath"),
             "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-            "solution": tl.getInput("solution"),
             };
         telemetry.emitTelemetry("Packaging", "TwineAuthenticate", twineAuthenticateTelemetry);
     } catch (err) {

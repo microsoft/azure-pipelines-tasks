@@ -41,7 +41,7 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
 
     let packagingLocation: string;
     const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-    const localAccessToken = getSystemAccessToken();
+    const localAccessToken = pkgLocationUtils.getSystemAccessToken();
     try {
         // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
         packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
@@ -61,7 +61,7 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
             isInternalSource: true,
             } as IPackageSource,
             AuthType.Token,
-            "azDev",
+            "build",
             localAccessToken,
         );
     }));
@@ -96,7 +96,7 @@ export async function getExternalAuthInfoArray(inputKey: string): Promise<AuthIn
                         isInternalSource: false,
                     } as IPackageSource,
                     AuthType.Token,
-                    "azDev",
+                    "build", // fake username, could be anything.
                     token,
                     ));
                 break;
@@ -119,15 +119,4 @@ export async function getExternalAuthInfoArray(inputKey: string): Promise<AuthIn
         }
     }
     return externalAuthArray;
-}
-
-export function getSystemAccessToken(): string {
-    tl.debug("Getting credentials for local feeds");
-    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
-    if (auth.scheme === "OAuth") {
-        tl.debug("Got auth token");
-        return auth.parameters["AccessToken"];
-    }
-    tl.warning(tl.loc("FeedTokenUnavailable"));
-    return "";
 }
