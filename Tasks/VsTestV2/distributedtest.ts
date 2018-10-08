@@ -1,20 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as ps from 'child_process';
 import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
-import * as models from './models';
-import * as constants from './constants';
 import * as inputdatacontract from './inputdatacontract';
-import * as settingsHelper from './settingshelper';
 import * as utils from './helpers';
-import * as ta from './testagent';
-import * as versionFinder from './versionfinder';
 import * as os from 'os';
 import * as ci from './cieventlogger';
 import { TestSelectorInvoker } from './testselectorinvoker';
 import { writeFileSync } from 'fs';
-import { TaskResult } from 'vso-node-api/interfaces/TaskAgentInterfaces';
 import * as uuid from 'uuid';
 
 const testSelector = new TestSelectorInvoker();
