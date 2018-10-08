@@ -19,6 +19,10 @@
     "q": "1.4.1",
     "vsts-task-lib": "2.0.1-preview",
     "winreg": "1.2.2",
-    "xml2js": "0.4.13"
+    "xml2js": "0.4.13",
+    "compress-commons": "1.1.0",
+    "crc32-stream": "1.0.0",
+    "zip-stream": "1.1.0",
+    "normalize-path": "2.0.1"
   }
 }
