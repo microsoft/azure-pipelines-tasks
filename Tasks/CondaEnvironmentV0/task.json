@@ -2,7 +2,7 @@
     "id": "03DD16C3-43E0-4667-BA84-40515D27A410",
     "name": "CondaEnvironment",
     "friendlyName": "Conda Environment",
-    "description": "Create and activate a Conda environment.",
+    "description": "Major version 0 of this task has been deprecated and is no longer supported on Microsoft-hosted agents. Please update to a newer version.",
     "helpMarkDown": "[More information](https://go.microsoft.com/fwlink/?linkid=873466)",
     "category": "Package",
     "runsOn": [
@@ -12,9 +12,10 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 139,
-        "Patch": 1
+        "Minor": 142,
+        "Patch": 0
     },
+    "deprecated": true,
     "demands": [],
     "instanceNameFormat": "Conda Environment $(environmentName)",
     "groups": [
