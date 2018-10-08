@@ -23,7 +23,7 @@ async function main(): Promise<void> {
         {
             tl.debug(tl.loc("Info_AddingInternalFeeds", feedIds.length));
             const serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-            const localAccessToken = auth.getSystemAccessToken();
+            const localAccessToken = pkgLocationUtils.getSystemAccessToken();
             try {
                 // This call is to get the packaging URI(abc.pkgs.vs.com) which is same for all protocols.
                 packagingLocation = await pkgLocationUtils.getNuGetUriFromBaseServiceUri(
