@@ -23,6 +23,7 @@
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
     "compress-commons": "1.1.0",
     "crc32-stream": "1.0.0",
+    "moment": "2.21.0",
     "normalize-path": "2.0.1",
     "q": "1.4.1",
     "tar-stream": "1.5.2",
