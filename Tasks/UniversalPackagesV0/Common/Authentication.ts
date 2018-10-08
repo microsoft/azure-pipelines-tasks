@@ -38,18 +38,6 @@ export enum ExternalAuthType
     UsernamePassword,
 }
 
-export function getSystemAccessToken(): string {
-    tl.debug("Getting credentials for local feeds");
-    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
-    if (auth.scheme === "OAuth") {
-        tl.debug("Got auth token");
-        return auth.parameters["AccessToken"];
-    }
-    else {
-        tl.warning(tl.loc("Warn_CredentialsNotFound"));
-    }
-}
-
 export function GetExternalAuthInfo(inputKey: string): ExternalAuthInfo
 {
     let externalAuthInfo: ExternalAuthInfo;

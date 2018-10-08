@@ -1,6 +1,7 @@
-import * as tl from "vsts-task-lib";
-import {IExecSyncResult, IExecOptions} from "vsts-task-lib/toolrunner";
+import * as pkgLocationUtils from "utility-common/packaging/locationUtilities"; 
 import * as telemetry from "utility-common/telemetry";
+import * as tl from "vsts-task-lib";
+import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
 import * as artifactToolRunner from "./Common/ArtifactToolRunner";
 import * as artifactToolUtilities from "./Common/ArtifactToolUtilities";
 import * as auth from "./Common/Authentication";
@@ -47,7 +48,7 @@ export async function run(artifactToolPath: string): Promise<void> {
             packageName = tl.getInput("packageListPublish");
             feedId = tl.getInput("feedListPublish");
             // Setting up auth info
-            accessToken = auth.getSystemAccessToken();
+            accessToken = pkgLocationUtils.getSystemAccessToken();
             internalAuthInfo = new auth.InternalAuthInfo([], accessToken);
 
             toolRunnerOptions.env.UNIVERSAL_PUBLISH_PAT = internalAuthInfo.accessToken;
@@ -74,7 +75,7 @@ export async function run(artifactToolPath: string): Promise<void> {
             version = tl.getInput("versionPublish");
         }
         else{
-            feedUri = await artifactToolUtilities.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
+            feedUri = await pkgLocationUtils.getFeedUriFromBaseServiceUri(serviceUri, accessToken);
 
             let highestVersion = await artifactToolUtilities.getHighestPackageVersionFromFeed(feedUri, accessToken, feedId, packageName);
 
