@@ -16,13 +16,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-<<<<<<< HEAD
         "Minor": 141,
         "Patch": 5
-=======
-        "Minor": 142,
-        "Patch": 4
->>>>>>> 12db2830db22da5a1e78f08af600e2af2c5e6eba
     },
     "demands": [
         "vstest"
