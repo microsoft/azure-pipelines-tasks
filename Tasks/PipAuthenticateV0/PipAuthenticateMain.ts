@@ -37,7 +37,7 @@ async function main(): Promise<void> {
             const globalWebApi = utils.getWebApi(packagingLocation, localAccessToken);
             for (const feedId of feedIds) {
                 const feedUri = await utils.getPyPiSimpleApiFromFeedId(globalWebApi, feedId);
-                const pipUri = utils.formPipCompatibleUri("azdev", localAccessToken, feedUri);
+                const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
                 pipEnvVar = pipEnvVar + " " + pipUri;
             }
         }
@@ -59,18 +59,15 @@ async function main(): Promise<void> {
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
         return;
     } finally{
-        _logUniversalStartupVariables();
+        _logPipAuthStartupVariables();
     }
 }
 
 // Telemetry
-function _logUniversalStartupVariables() {
+function _logPipAuthStartupVariables() {
     try {
         const pipAuthenticateTelemetry = {
-            "buildProperties": tl.getInput("buildProperties"),
-            "basePath": tl.getInput("basePath"),
             "System.TeamFoundationCollectionUri": tl.getVariable("System.TeamFoundationCollectionUri"),
-            "solution": tl.getInput("solution"),
             };
 
         telemetry.emitTelemetry("Packaging", "PipAuthenticate", pipAuthenticateTelemetry);

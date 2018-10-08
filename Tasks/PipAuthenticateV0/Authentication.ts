@@ -55,7 +55,7 @@ export function getExternalAuthInfoArray(inputKey: string): ExternalAuthInfo[]
                         feedUri: feedUri
                     },
                     ExternalAuthType.Token,
-                    "azDev",
+                    "build", // Fake username, could be anything.
                     token,
                     ));
                 break;
