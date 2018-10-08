@@ -7,6 +7,7 @@ import { TaskMockRunner } from 'vsts-task-lib/mock-run';
 const taskPath = path.join(__dirname, '..', 'main.js');
 const taskRunner = new TaskMockRunner(taskPath);
 
+// Designer uses the `createCustomEnvironment` checkbox to show/hide `environmentName`
 taskRunner.setInput('createCustomEnvironment', 'true');
 taskRunner.setInput('environmentName', 'test');
 

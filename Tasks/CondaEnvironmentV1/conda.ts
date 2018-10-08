@@ -41,7 +41,9 @@ export async function condaEnvironment(parameters: Readonly<TaskParameters>, pla
         await internal.updateConda(condaRoot, platform);
     }
 
-    if (parameters.createCustomEnvironment) { // activate the environment, creating it if it does not exist
+    // In Designer `environmentName` is conditionally visible based on `createCustomEnvironment`
+    // In YAML there is no need for `createCustomEnvironment`
+    if (parameters.createCustomEnvironment || parameters.environmentName) { // activate the environment, creating it if it does not exist
         const environmentName = assertParameter(parameters.environmentName, 'environmentName');
 
         const environmentsDir = path.join(condaRoot, 'envs');
