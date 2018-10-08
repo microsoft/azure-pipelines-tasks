@@ -31,7 +31,7 @@ describe('CondaEnvironment L0 Suite', function () {
     });
 
     it('succeeds when creating and activating an environment with a YAML definition', function () {
-        const testFile = path.join(__dirname, 'L0CreateEnvironmentYAML.js');
+        const testFile = path.join(__dirname, 'L0CreateEnvironmentYaml.js');
         const testRunner = new MockTestRunner(testFile);
 
         testRunner.run();
