@@ -103,6 +103,12 @@ a.exec[`docker build -f ${DockerFilePath} -t ${shared.ImageNamesFileImageName}`]
 a.exec[`docker tag test/test:2 ajgtestacr1.azurecr.io/test/test:2`] = {
     "code": 0
 };
+a.exec[`docker tag test/test:latest test/test:latest`] = {
+    "code": 0
+};
+a.exec[`docker tag test/test:latest test/test:v1`] = {
+    "code": 0
+};
 a.exec[`docker tag ${shared.ImageNamesFileImageName} ajgtestacr1.azurecr.io/${shared.ImageNamesFileImageName}`] = {
     "code": 0
 };
