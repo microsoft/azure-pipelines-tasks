@@ -48,7 +48,7 @@
             "label": "Actions",
             "defaultValue": "build",
             "required": true,
-            "helpMarkDown": "Enter a space-delimited list of actions. Valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example,`clean build` will run a clean build."
+            "helpMarkDown": "Enter a space-delimited list of actions. Some valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example,`clean build` will run a clean build."
         },
         {
             "name": "configuration",
