@@ -275,27 +275,6 @@ export class KuduServiceUtility {
         }
     }
 
-    private async _processSyncDeploymentResponse(deploymentId: any): Promise<void> {
-        try {
-            var kuduDeploymentDetails = await this._appServiceKuduService.getDeploymentDetails(deploymentId);
-            tl.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
-
-            if(kuduDeploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED || tl.getVariable('system.debug') && tl.getVariable('system.debug').toLowerCase() == 'true') {
-                await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
-            }
-            else {
-                console.log(tl.loc('DeployLogsURL', kuduDeploymentDetails.log_url));
-            }
-        }
-        catch(error) {
-            tl.debug(`Unable to fetch logs for kudu Deploy: ${JSON.stringify(error)}`);
-        }
-
-        if(kuduDeploymentDetails && kuduDeploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
-            throw tl.loc('PackageDeploymentUsingZipDeployFailed');
-        }
-    }
-
     private async _printZipDeployLogs(log_url: string): Promise<void> {
         if(!log_url) {
             return;
