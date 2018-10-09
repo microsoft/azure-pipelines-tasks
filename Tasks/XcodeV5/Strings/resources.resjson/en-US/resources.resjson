@@ -59,7 +59,7 @@
   "loc.input.label.destinationDevices": "Device",
   "loc.input.help.destinationDevices": "Enter the name of the device to be used for UI testing, such as `Raisa's iPad`.",
   "loc.input.label.args": "Arguments",
-  "loc.input.help.args": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
+  "loc.input.help.args": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme.",
   "loc.input.label.cwd": "Working directory",
   "loc.input.help.cwd": "(Optional) Enter the working directory in which to run the build. If no value is entered, the root of the repository will be used.",
   "loc.input.label.useXcpretty": "Use xcpretty",

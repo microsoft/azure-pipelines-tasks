@@ -305,7 +305,7 @@
             "type": "string",
             "label": "Arguments",
             "required": false,
-            "helpMarkDown": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
+            "helpMarkDown": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme.",
             "groupName": "advanced"
         },
         {
