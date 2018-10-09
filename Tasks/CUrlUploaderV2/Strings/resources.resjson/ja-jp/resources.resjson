@@ -7,8 +7,8 @@
   "loc.input.label.files": "ファイル",
   "loc.input.help.files": "アップロードするファイル。ワイルドカードを使用できます。たとえば、全サブフォルダー内のすべての ZIP ファイルの場合は `**/*.zip` です。",
   "loc.input.label.authType": "認証方法",
-  "loc.input.label.serviceEndpoint": "サービス エンドポイント",
-  "loc.input.help.serviceEndpoint": "サーバー認証の資格情報を持つサービス エンドポイントです。サービス エンドポイントには汎用の接続の種類を使用します。",
+  "loc.input.label.serviceEndpoint": "Service Connection",
+  "loc.input.help.serviceEndpoint": "The service connection with the credentials for the server authentication. Use the Generic service connection type for the service connection.",
   "loc.input.label.username": "ユーザー名",
   "loc.input.help.username": "サーバー認証のユーザー名を指定します。",
   "loc.input.label.password": "パスワード",
@@ -27,5 +27,5 @@
   "loc.messages.UploadingFiles": "ファイルをアップロードしています: %s",
   "loc.messages.CurlNotFound": "curl がパスにありませんでした。",
   "loc.messages.NotAllFilesUploaded": "一部のファイルがアップロードされませんでした。アップロード数: %d、合計数: %d",
-  "loc.messages.IncompleteEndpoint": "サービス エンドポイントに含まれていない必須フィールドがあります。"
+  "loc.messages.IncompleteEndpoint": "The service connection does not contain all required fields."
 }

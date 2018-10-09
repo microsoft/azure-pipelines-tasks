@@ -14,14 +14,13 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 1
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "demands": [
-    ],
+    "demands": [],
     "instanceNameFormat": "go $(command)",
     "groups": [
         {
@@ -70,14 +69,13 @@
             "groupName": "advanced"
         }
     ],
-    "dataSourceBindings": [
-    ],
+    "dataSourceBindings": [],
     "execution": {
         "Node": {
             "target": "main.js"
         }
     },
     "messages": {
-        "TaskFailedWithError" : "The Go task failed with an error: %s"
+        "TaskFailedWithError": "The Go task failed with an error: %s"
     }
 }

@@ -1,9 +1,0 @@
-{
-  "loc.messages.SettingUpSSHConnection": "Die SSH-Verbindung mit dem Remotehost %s wird eingerichtet.",
-  "loc.messages.ConnectionNotSetup": "Die SSH-Verbindung ist nicht eingerichtet.",
-  "loc.messages.ConnectionFailed": "Fehler beim Herstellen einer Verbindung mit dem Remotecomputer. Überprüfen Sie die SSH-Endpunktdetails. %s.",
-  "loc.messages.RemoteCmdExecutionErr": "Fehler des Befehls \"%s\" auf dem Remotecomputer. %s.",
-  "loc.messages.CheckLogForStdErr": "Überprüfen Sie das Buildprotokoll auf Ausgabe an STDERR vom Befehl.",
-  "loc.messages.RemoteCmdNonZeroExitCode": "Der Befehl \"%s\" wurde mit dem Code %s beendet.",
-  "loc.messages.UploadFileFailed": "Fehler beim Hochladen von %s auf %s auf dem Remotecomputer. %s"
-}

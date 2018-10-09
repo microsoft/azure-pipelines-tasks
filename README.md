@@ -37,4 +37,9 @@ For uploading custom tasks to Azure Pipelines use the [TFS Cross Platform Comman
 Tasks can also be deployed with an Azure DevOps extension. See [this tutorial](https://docs.microsoft.com/en-us/vsts/extend/develop/add-build-task) for how to package tasks inside an extension.
 
 ## Contributing
-We take contributions.  [Read here](docs/contribute.md) how to contribute.
+
+This project welcomes [contributions and suggestions](docs/contribute.md).
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
+contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
