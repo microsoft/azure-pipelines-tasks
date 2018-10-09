@@ -1,6 +1,11 @@
 /**
  * Run from the root of the vsts-tasks repo.
  * Usage: `node generate-third-party-notice.js <task name>`
+ *
+ * NOTE: delete node_modules and build the task before running this script!
+ * Otherwise, you may pick up old dependencies that are no longer needed.
+ *
+ * TODO: Make this part of the script
  */
 
 'use strict';
