@@ -147,6 +147,7 @@
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
     "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
-    "OverrideAzurePowerShellVersion": "ms-resource:loc.messages.OverrideAzurePowerShellVersion"
+    "OverrideAzurePowerShellVersion": "ms-resource:loc.messages.OverrideAzurePowerShellVersion",
+    "CertificateEndpointNotSupported": "ms-resource:loc.messages.CertificateEndpointNotSupported"
   }
 }
