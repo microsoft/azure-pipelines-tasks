@@ -15,12 +15,12 @@
   "loc.messages.Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
   "loc.messages.Info_StartParsingExistingPypircFile": "Starting to parse existing .pypirc file at %s",
   "loc.messages.Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
-  "loc.messages.Warning_DuplicateEntryForInternalFeed": "Duplicate entry found for feed %s. Auth entry already exists for this feed.",
-  "loc.messages.Error_DuplicateEntryForExternalFeed": "Duplicate entry found for endpoint name %s. Auth entry already exists for this name in .pypirc file. Please make sure that the endpointName is unique.",
+  "loc.messages.Warning_DuplicateEntryForInternalFeed": "Duplicate entry found for endpoint name %s. Auth already exists for this feed name. Please make sure all the endpoint names are unique and not colliding with feed names in this organization.",
+  "loc.messages.Error_DuplicateEntryForExternalFeed": "Duplicate entry found for endpoint name %s. Auth entry already exists for this name in .pypirc file. Please make sure all the endpoint names are unique and not colliding with feed names in this organization.",
   "loc.messages.FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
   "loc.messages.FailedToAddAuthentication": "Failed to add authentication.",
   "loc.messages.FeedTokenUnavailable": "Failed to get the access token for this organization.",
-  "loc.messages.NoPypircFile": "No pypirc file to clean up.",
+  "loc.messages.NoPypircFile": "No .pypirc file to clean up.",
   "loc.messages.VariableSetForPypirc": "Environment variable for .pypirc at %s is set.",
   "loc.messages.Info_RemovingPypircFile": "Removing .pypirc file from %s"
 }

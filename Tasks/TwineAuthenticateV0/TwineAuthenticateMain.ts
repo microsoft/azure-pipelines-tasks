@@ -44,17 +44,9 @@ async function main(): Promise<void> {
             // Adding new endpoints to already existing .pypirc file.
             for (const entry of newEndpointsToAdd){
                 if (entry.packageSource.feedName in fileContent){
-                    // Don't fail if new feed is from same collection
-                    if (entry.packageSource.isInternalSource){
-                        tl.warning(tl.loc("Warning_DuplicateEntryForInternalFeed",
-                        entry.packageSource.feedName));
-                        continue;
-                    }
-                    else{
-                        // Hard fail if there is a name collision from service endpoint
-                        throw new Error(tl.loc("Error_DuplicateEntryForExternalFeed",
-                        entry.packageSource.feedName));
-                    }
+                    // Hard fail if there is a name collision from service endpoint
+                    throw new Error(tl.loc("Error_DuplicateEntryForExternalFeed",
+                    entry.packageSource.feedName));
                 }
 
                 fileContent[entry.packageSource.feedName] = new Repository(
