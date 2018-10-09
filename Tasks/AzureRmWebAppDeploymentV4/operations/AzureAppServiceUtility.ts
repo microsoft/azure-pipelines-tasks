@@ -161,6 +161,13 @@ export class AzureAppServiceUtility {
                     break;
                 }
             }
+            for(var property in deleteProperties) {
+                if(kuduServiceAppSettings[property]) {
+                    tl.debug('Deleted properties are not reflected in Kudu service :(');
+                    propertiesChanged = false;
+                    break;
+                }
+            }
 
             if(propertiesChanged) {
                 tl.debug('New properties are updated in Kudu service.');

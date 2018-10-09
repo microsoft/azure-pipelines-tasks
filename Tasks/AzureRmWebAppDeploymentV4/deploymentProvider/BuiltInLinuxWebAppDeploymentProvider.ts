@@ -21,6 +21,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
     public async DeployWebAppStep() {
         tl.debug('Performing Linux built-in package deployment');
+        var isNewValueUpdated: boolean = false;
 
         if(this.taskParams.isFunctionApp) {
             var linuxFunctionRuntimeSetting = "";
@@ -29,9 +30,10 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
             }
             var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
             var customApplicationSetting = ParameterParser.parse(linuxFunctionAppSetting);
-            await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
+            isNewValueUpdated = await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
         }
-        else {
+        
+        if(!isNewValueUpdated) {
             await this.kuduServiceUtility.warmpUp();
         }
         
