@@ -99,7 +99,18 @@ pool:
 steps:
 - task: AzureFunctionApp@0
 #ToDo move application settings/connnection settings to Manage task, add new support for connection strings
-#ToDo support for multi-containers, AKS (either compose yaml or deployment yaml)
+#ToDo add runtime
+```
+
+Full version for Azure Function App on Linux containers
+
+```yaml
+pool: 
+  image: Hosted VS2017
+steps:
+- task: AzureFunctionApp@0
+#ToDo move application settings/connnection settings to Manage task, add new support for connection strings
+#ToDo containers related inputs  
 ```
 
 Full version example, 
