@@ -70,7 +70,7 @@ catch
    Write-Verbose "Unable to get the authScheme $error" 
 }
 
-if ($endpoint.Auth.parameters.authenticationType -ne $NULL -and $endpoint.Auth.parameters.authenticationType -eq "spnCertificate")
+if ($endpoint.Auth.parameters.authenticationType -eq "spnCertificate")
 {
 	throw (Get-VstsLocString -Key CertificateEndpointNotSupported)
 }
