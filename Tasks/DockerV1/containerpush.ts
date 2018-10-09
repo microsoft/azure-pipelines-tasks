@@ -50,7 +50,7 @@ export function run(connection: ContainerConnection): any {
         imageNames = [utils.getImageName()];
     }
     
-    let imageMappings = utils.getImageMappings(connection, imageNames);
+    let imageMappings = utils.getImageMappings(connection, imageNames, []);
 
     let imageDigestFile: string = null;
     if (tl.filePathSupplied("imageDigestFile")) {

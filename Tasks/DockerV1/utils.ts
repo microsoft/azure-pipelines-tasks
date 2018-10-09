@@ -26,7 +26,7 @@ export function getImageName(): string {
     return imageName;
 }
 
-export function getImageMappings(connection: ContainerConnection, imageNames: string[], additionalImageTags: string[] = []): ImageMapping[] {
+export function getImageMappings(connection: ContainerConnection, imageNames: string[], additionalImageTags: string[]): ImageMapping[] {
     let qualifyImageName = tl.getBoolInput("qualifyImageName");
     let imageInfos: ImageInfo[] = imageNames.map(imageName => {
         let qualifiedImageName = qualifyImageName ? connection.qualifyImageName(imageName) : imageName;
