@@ -338,7 +338,7 @@
             "options": {
                 "webDeploy": "Web Deploy",
                 "zipDeploy": "Zip Deploy",
-                "runFromZip": "RunFromZip"
+                "runFromZip": "Run From Package"
             },
             "helpMarkDown": "Choose the deployment method for the app.",
             "visibleRule": "UseWebDeploy == true"

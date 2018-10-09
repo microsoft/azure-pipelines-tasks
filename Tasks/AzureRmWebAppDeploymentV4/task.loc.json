@@ -338,7 +338,7 @@
       "options": {
         "webDeploy": "Web Deploy",
         "zipDeploy": "Zip Deploy",
-        "runFromZip": "RunFromZip"
+        "runFromZip": "Run From Package"
       },
       "helpMarkDown": "ms-resource:loc.input.help.DeploymentType",
       "visibleRule": "UseWebDeploy == true"
