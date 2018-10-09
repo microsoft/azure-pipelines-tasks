@@ -3,17 +3,103 @@
 Proposed changes for YAML friendly App service task. For example, typed tasks for WebApp for Windows, Linux (ContainerApp), 
 and FunctionApps. 
 
+Default is WebApp for Windows or Linux
+
 ```yaml
 pool: 
   image: Hosted VS2017
 steps:
-- task: AzureWebAppWindows@0
-# Typed task (or alias) for WebApp for Windows, shorthand needs only the subscription, webapp and package.
+- task: AzureWebApp@0
+# Typed task (or alias) for WebApp for Windows or Linux, shorthand needs only the subscription, webapp and package.
   displayName: 'Azure WebApp for Windows: myWindowsWebApp'
   inputs:
     azureSubscription: 'my subscription'
     webAppName: 'myWindowsWebApp'
     package: '$(build.artifactstagingdirectory)/**/*.zip'
+```
+
+Full version for Azure WebApp on Windows
+
+```yaml
+pool: 
+  image: Hosted VS2017
+steps:
+- task: AzureWebApp@0
+#ToDo with deployment options - msdeploy, kudu, runfromzip
+```
+
+Full version for Azure WebApp on Linux
+
+```yaml
+pool: 
+  image: Hosted VS2017
+steps:
+- task: AzureWebApp@0
+#ToDo to add runtime (optional)
+```
+
+WebApp for Containers, example -
+
+```yaml
+pool: 
+  image: 'Ubuntu 1604'
+steps:
+- task: AzureWebAppContainers@0
+# WebApp for containers Windows(private preview)/Linux deployment
+  displayName: 'Azure WebApp Containers: myLinuxContainerWebApp'
+  inputs:
+    azureSubscription: 'my subscription'
+    WebAppName: 'myLinuxContainerWebApp'
+    containerRegistry: 'myreg.azurecr.io'
+    imageName: '$(Build.Repository.Name):$(Build.BuildId)'
+    containerCommand: 'python app.py'
+```
+
+Full version for Azure WebApp for Containers
+
+```yaml
+pool: 
+  image: Hosted VS2017
+steps:
+- task: AzureWebAppContainers@0
+#ToDo move application settings/connnection settings to Manage task, add new support for connection strings
+#ToDo support for multi-containers, AKS (either compose yaml or deployment yaml)
+```
+
+Function Apps, example -
+
+```yaml
+pool: 
+  image: 'Ubuntu 1604'
+steps:
+- task: AzureFunctionApp@0
+# FunctionApp deployment
+  displayName: 'Azure FunctionApp: myfunctionApp'
+  inputs:
+    azureSubscription: 'my subscription'
+    WebAppName: 'myfunctionApp'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+```
+
+Full version for Azure Function App on Windows
+
+```yaml
+pool: 
+  image: Hosted VS2017
+steps:
+- task: AzureFunctionApp@0
+#ToDo move application settings/connnection settings to Manage task, add new support for connection strings
+```
+
+Full version for Azure Function App on Linux
+
+```yaml
+pool: 
+  image: Hosted VS2017
+steps:
+- task: AzureFunctionApp@0
+#ToDo move application settings/connnection settings to Manage task, add new support for connection strings
+#ToDo support for multi-containers, AKS (either compose yaml or deployment yaml)
 ```
 
 Full version example, 
@@ -22,7 +108,7 @@ Full version example,
 pool: 
   image: Hosted VS2017
 steps:
-- task: AzureWebAppWindows@4
+- task: AzureWebApp@4
   displayName: 'Azure WebApp for Windows: myWindowsWebApp'
   inputs:
     azureSubscription: 'my subscription'
@@ -50,53 +136,3 @@ steps:
 
 Note, we need to move file transformation and variable substitution features out into a separate task. 
 AppTypes - Windows, Linux Container, FunctionApp etc can be queried and right deployment method can be set
-
-
-WebApp for Linux Container, example -
-
-```yaml
-pool: 
-  image: 'Ubuntu 1604'
-steps:
-- task: AzureWebAppContainersLinux@0
-# WebApp for containers Linux deployment
-  displayName: 'Azure WebApp Linux Containers: myLinuxContainerWebApp'
-  inputs:
-    azureSubscription: 'my subscription'
-    WebAppName: 'myLinuxContainerWebApp'
-    containerRegistry: 'myreg.azurecr.io'
-    imageName: '$(Build.Repository.Name):$(Build.BuildId)'
-    containerCommand: 'python app.py'
-```
-
-Function Apps, example -
-
-```yaml
-pool: 
-  image: 'Ubuntu 1604'
-steps:
-- task: AzureFunctionApp@0
-# FunctionApp deployment
-  displayName: 'Azure FunctionApp: myfunctionApp'
-  inputs:
-    azureSubscription: 'my subscription'
-    WebAppName: 'myfunctionApp'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
-```
-
-Function Aop Linux Container, example -
-
-```yaml
-pool: 
-  image: 'Ubuntu 1604'
-steps:
-- task: AzureFunctionAppContainersLinux@0
-# FunctionApp for containers deployment
-  displayName: 'Azure App Service Deploy: functionappcontainers'
-  inputs:
-    azureSubscription: 'my subscription'
-    WebAppName: 'functionappcontainers'
-    containerRegistry: 'myreg.azurecr.io'
-    imageName: '$(Build.Repository.Name):$(Build.BuildId)'
-    containerCommand: 'python app.py'      
-```
