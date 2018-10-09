@@ -12,22 +12,20 @@ steps:
   displayName: 'Azure WebApp for Windows: myWindowsWebApp'
   inputs:
     azureSubscription: 'my subscription' .                 #can be $(endPointID) variable
-    webAppName: 'myWindowsWebApp'
+    appName: 'myWindowsWebApp'
     package: '$(build.artifactstagingdirectory)/**/*.zip'  #can work with *.war, *.jar or a folder. 
 ```
 
 Full version for Azure WebApp on Windows or Linux
 
 ```yaml
-pool: 
-  image: Hosted VS2017
 steps:
 - task: AzureWebApp@0
 #Typed task for WebApp for Windows or Linux, shorthand needs only the subscription, webapp and package.
   displayName: 'Azure WebApp for Windows: myWindowsWebApp'
   inputs:
     azureSubscription: 'my subscription'
-    webAppName: 'myWindowsWebApp'
+    appName: 'myWindowsWebApp'
     package: '$(build.artifactstagingdirectory)/**/*.zip'  #can work with *.war, *.jar or a folder. 
     
     resourceGroup: 'myRG' 
@@ -59,15 +57,13 @@ Note, we need to move file transformation, variable substitution, app/configurat
 WebApp for Containers, example -
 
 ```yaml
-pool: 
-  image: 'Ubuntu 1604'
 steps:
 - task: AzureWebAppContainers@0
 # WebApp for containers Windows(private preview)/Linux deployment
   displayName: 'Azure WebApp Containers: myLinuxContainerWebApp'
   inputs:
     azureSubscription: 'my subscription'
-    WebAppName: 'myLinuxContainerWebApp'
+    appName: 'myLinuxContainerWebApp'
     containerRegistry: 'myreg.azurecr.io'
     imageName: '$(Build.Repository.Name):$(Build.BuildId)'
     containerCommand: 'python app.py'
@@ -76,8 +72,6 @@ steps:
 Full version for Azure WebApp for Containers
 
 ```yaml
-pool: 
-  image: Hosted VS2017
 steps:
 - task: AzureWebAppContainers@0
 #ToDo move application settings/connnection settings to Manage task, add new support for connection strings
@@ -87,23 +81,19 @@ steps:
 Function Apps, example -
 
 ```yaml
-pool: 
-  image: 'Ubuntu 1604'
 steps:
 - task: AzureFunctionApp@0
 # FunctionApp deployment
   displayName: 'Azure FunctionApp: myfunctionApp'
   inputs:
     azureSubscription: 'my subscription'
-    WebAppName: 'myfunctionApp'
+    appName: 'myfunctionApp'
     package: '$(System.DefaultWorkingDirectory)/**/*.zip'
 ```
 
 Full version for Azure Function App on Windows
 
 ```yaml
-pool: 
-  image: Hosted VS2017
 steps:
 - task: AzureFunctionApp@0
 #ToDo move application settings/connnection settings to Manage task, add new support for connection strings
@@ -112,8 +102,6 @@ steps:
 Full version for Azure Function App on Linux
 
 ```yaml
-pool: 
-  image: Hosted VS2017
 steps:
 - task: AzureFunctionApp@0
 #ToDo move application settings/connnection settings to Manage task, add new support for connection strings
@@ -123,8 +111,6 @@ steps:
 Full version for Azure Function App on Linux containers
 
 ```yaml
-pool: 
-  image: Hosted VS2017
 steps:
 - task: AzureFunctionApp@0
 #ToDo move application settings/connnection settings to Manage task, add new support for connection strings
@@ -133,13 +119,11 @@ steps:
 Full version example, 
 
 ```yaml
-pool: 
-  image: Hosted VS2017
 steps:
 - task: AzureWebApp@4
   displayName: 'Azure WebApp for Windows: myWindowsWebApp'
   inputs:
     azureSubscription: 'my subscription'
-    webAppName: 'myWindowsWebApp'    
+    appName: 'myWindowsWebApp'    
     package: '$(build.artifactstagingdirectory)/**/*.zip'
     
