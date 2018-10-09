@@ -51,7 +51,6 @@ it('creates and activates environment', async function () {
 
     const uut = reload('../conda');
     const parameters = {
-        createCustomEnvironment: true,
         environmentName: 'env',
         updateConda: false
     };
@@ -62,36 +61,6 @@ it('creates and activates environment', async function () {
     assert(createEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs', 'env'), Platform.Linux, undefined, undefined));
     assert(activateEnvironment.calledOnceWithExactly(path.join('path-to-conda', 'envs'), 'env', Platform.Linux));
 });
-
-it('requires `createCustomEnvironment` to be set to create a custom environment', async function () {
-    mockery.registerMock('fs', {
-        existsSync: () => false
-    });
-
-    mockery.registerMock('vsts-task-lib/task', mockTask);
-
-    const findConda = sinon.stub().returns('path-to-conda');
-    const prependCondaToPath = sinon.spy();
-    const createEnvironment = sinon.spy();
-    const activateEnvironment = sinon.spy();
-    mockery.registerMock('./conda_internal', {
-        findConda,
-        prependCondaToPath,
-        createEnvironment,
-        activateEnvironment
-    });
-
-    const uut = reload('../conda');
-    const parameters = {
-        environmentName: 'env',
-        updateConda: false
-    };
-
-    await uut.condaEnvironment(parameters, Platform.Linux);
-    assert(createEnvironment.notCalled);
-    assert(activateEnvironment.notCalled);
-});
-
 
 it('updates Conda if the user requests it', async function () {
     mockery.registerMock('fs', {
