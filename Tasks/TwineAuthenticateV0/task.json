@@ -74,7 +74,7 @@
     "Info_StartParsingExistingPypircFile": "Starting to parse existing .pypirc file at %s",
     "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
     "Warning_DuplicateEntryForInternalFeed": "Duplicate entry found for endpoint name %s. Auth already exists for this feed name. Please make sure all the endpoint names are unique and not colliding with feed names in this organization.",
-    "Error_DuplicateEntryForExternalFeed": "Duplicate entry found for endpoint name %s. Auth entry already exists for this name in .pypirc file. Please make sure all the endpoint names are unique and not colliding with feed names in this organization.",
+    "Error_DuplicateEntryForExternalFeed": "Duplicate entry found for endpoint name %s. Auth entry already exists for this name in .pypirc file. Please make sure all the endpoint names are unique and does not collide with feed names from this organization.",
     "FailedToGetPackagingUri" : "Unable to get packaging uri, using default collection uri.",
     "FailedToAddAuthentication": "Failed to add authentication.",
     "FeedTokenUnavailable": "Failed to get the access token for this organization.",
