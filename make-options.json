@@ -107,6 +107,7 @@
         "SqlDacpacDeploymentOnMachineGroupV0",
         "SqlServerDacpacDeployment",
         "SshV0",
+        "TwineAuthenticateV0",
         "UniversalPackagesV0",
         "UsePythonVersionV0",
         "UseRubyVersionV0",
