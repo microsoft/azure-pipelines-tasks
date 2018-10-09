@@ -11,12 +11,12 @@ steps:
 #Typed task for WebApp for Windows or Linux, shorthand needs only the subscription, webapp and package.
   displayName: 'Azure WebApp for Windows: myWindowsWebApp'
   inputs:
-    azureSubscription: 'my subscription'
+    azureSubscription: 'my subscription' .                 #can be $(endPointID) variable
     webAppName: 'myWindowsWebApp'
     package: '$(build.artifactstagingdirectory)/**/*.zip'  #can work with *.war, *.jar or a folder. 
 ```
 
-Full version for Azure WebApp on Windows
+Full version for Azure WebApp on Windows or Linux
 
 ```yaml
 pool: 
@@ -36,6 +36,10 @@ steps:
     slotName: staging
     # deploy to slot
  
+    runTimeStack: 'Ruby 2.3'
+    startUpCommand: ''
+    # Applicable for WebApp on Linux
+    
     virtualApplication: 'myvirtualwebapp'
     # name of the Virtual application that has been configured in the Azure portal. 
 
@@ -50,18 +54,7 @@ steps:
 ```
 
 Note, we need to move file transformation, variable substitution, app/configuration settings features out. 
-AppTypes - Windows, Linux Container, FunctionApp etc can be queried and right deployment method can be set
 
-
-Full version for Azure WebApp on Linux
-
-```yaml
-pool: 
-  image: Hosted VS2017
-steps:
-- task: AzureWebApp@0
-#ToDo to add runtime (optional)
-```
 
 WebApp for Containers, example -
 
