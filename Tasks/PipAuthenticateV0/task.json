@@ -75,6 +75,7 @@
     "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
     "FailedToGetPackagingUri" : "Unable to get packaging uri, using default collection uri.",
     "FailedToAddAuthentication": "Failed to add authentication.",
-    "FeedTokenUnavailable": "Failed to get the access token for this organization."
+    "FeedTokenUnavailable": "Failed to get the access token for this organization.",
+    "Warn_TooManyFeedEntries": "Too many feed entries for auth. Please reduce the number of repositories in the task."
   }
 }

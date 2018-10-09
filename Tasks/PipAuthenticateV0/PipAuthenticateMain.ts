@@ -43,7 +43,9 @@ async function main(): Promise<void> {
         }
 
         // external service endpoints
-        const externalEndpoints = auth.getExternalAuthInfoArray("externalSources");
+        let endpointNames = tl.getDelimitedInput("externalSources", ',');
+
+        const externalEndpoints = auth.getExternalAuthInfoArray(endpointNames);
         externalEndpoints.forEach((id) => {
             const externalPipUri = utils.formPipCompatibleUri(id.username, id.password, id.packageSource.feedUri);
             pipEnvVar = pipEnvVar + " " + externalPipUri;
@@ -52,6 +54,11 @@ async function main(): Promise<void> {
         // Setting variable
         tl.setVariable("PIP_EXTRA_INDEX_URL", pipEnvVar, false);
         console.log(tl.loc("Info_SuccessAddingAuth", feedIds.length, externalEndpoints.length));
+
+        const pipauthvar = tl.getVariable("PIP_EXTRA_INDEX_URL");
+        if (pipauthvar.length < pipEnvVar.length){
+            tl.warning(tl.loc("Warn_TooManyFeedEntries"));
+        }
         tl.debug(pipEnvVar);
     }
     catch (error) {

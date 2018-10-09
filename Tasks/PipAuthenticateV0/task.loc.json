@@ -81,6 +81,7 @@
     "Error_FailedToParseFeedUrlAndAuth": "ms-resource:loc.messages.Error_FailedToParseFeedUrlAndAuth",
     "FailedToGetPackagingUri": "ms-resource:loc.messages.FailedToGetPackagingUri",
     "FailedToAddAuthentication": "ms-resource:loc.messages.FailedToAddAuthentication",
-    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable"
+    "FeedTokenUnavailable": "ms-resource:loc.messages.FeedTokenUnavailable",
+    "Warn_TooManyFeedEntries": "ms-resource:loc.messages.Warn_TooManyFeedEntries"
   }
 }

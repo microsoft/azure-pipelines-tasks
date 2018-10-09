@@ -1,5 +1,4 @@
 import * as tl from "vsts-task-lib/task";
-import * as utils from "./Utilities";
 
 export interface IPackageSource {
     feedUri: string;
@@ -29,10 +28,9 @@ export class ExternalAuthInfo
     }
 }
 
-export function getExternalAuthInfoArray(inputKey: string): ExternalAuthInfo[]
+export function getExternalAuthInfoArray(endpointNames: string[]): ExternalAuthInfo[]
 {
     let externalAuthArray: ExternalAuthInfo[] = [];
-    let endpointNames = tl.getDelimitedInput(inputKey, ',');
 
     if (!endpointNames || endpointNames.length === 0)
     {
@@ -42,7 +40,6 @@ export function getExternalAuthInfoArray(inputKey: string): ExternalAuthInfo[]
     tl.debug(tl.loc("Info_AddingExternalFeeds", endpointNames.length));
     endpointNames.forEach((endpointName: string) => {
         let feedUri = tl.getEndpointUrl(endpointName, false);
-        utils.formPipCompatibleUri("", "", feedUri);
         let externalAuth = tl.getEndpointAuthorization(endpointName, true);
         let scheme = tl.getEndpointAuthorizationScheme(endpointName, true).toLowerCase();
 
