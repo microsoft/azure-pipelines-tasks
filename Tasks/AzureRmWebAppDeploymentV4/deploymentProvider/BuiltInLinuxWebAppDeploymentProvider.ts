@@ -24,7 +24,7 @@ export class BuiltInLinuxWebAppDeploymentProvider extends AzureRmWebAppDeploymen
 
         if(this.taskParams.isFunctionApp) {
             var linuxFunctionRuntimeSetting = "";
-            if(this.taskParams.RuntimeStack != null && this.taskParams.RuntimeStack != ""){
+            if(this.taskParams.RuntimeStack){
                 linuxFunctionRuntimeSetting = linuxFunctionRuntimeSettingName + linuxFunctionRuntimeSettingValue.get(this.taskParams.RuntimeStack);
             }
             var linuxFunctionAppSetting = linuxFunctionRuntimeSetting + linuxFunctionStorageSetting;
