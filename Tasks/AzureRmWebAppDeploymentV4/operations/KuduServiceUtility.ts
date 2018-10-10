@@ -182,21 +182,18 @@ export class KuduServiceUtility {
         }
     }
 
-    public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<string> {
+    public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<void> {
         try {
             console.log(tl.loc('PackageDeploymentInitiated'));
 
             let queryParameters: Array<string> = [
-                'isAsync=true',
                 'deployer=' +   VSTS_DEPLOY
             ];
 
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            let deploymentDetails = await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
-            await this._processDeploymentResponse(deploymentDetails);
+            await this._appServiceKuduService.zipDeploy(packagePath, queryParameters);
             console.log(tl.loc('PackageDeploymentSuccess'));
-            return deploymentDetails.id;
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));

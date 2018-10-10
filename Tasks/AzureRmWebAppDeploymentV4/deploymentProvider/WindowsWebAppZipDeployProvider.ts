@@ -39,7 +39,11 @@ export class WindowsWebAppZipDeployProvider extends AzureRmWebAppDeploymentProvi
         
         var updateApplicationSetting = ParameterParser.parse(removeRunFromZipAppSetting)
         var deleteApplicationSetting = ParameterParser.parse(deleteOldRunFromZipAppSetting)
-        await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
+        var isNewValueUpdated: boolean = await this.appServiceUtility.updateAndMonitorAppSettings(updateApplicationSetting, deleteApplicationSetting);
+
+        if(!isNewValueUpdated) {
+            await this.kuduServiceUtility.warmpUp();
+        }
 
         this.zipDeploymentID = await this.kuduServiceUtility.deployUsingZipDeploy(webPackage, this.taskParams.TakeAppOfflineFlag, 
             { slotName: this.appService.getSlot() });

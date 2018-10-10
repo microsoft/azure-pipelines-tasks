@@ -79,10 +79,10 @@ export class TaskParametersUtility {
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
             if(taskParameters.isFunctionApp) {
-                taskParameters.RuntimeStack = tl.getInput('RuntimeStackFunction', true);
+                taskParameters.RuntimeStack = tl.getInput('RuntimeStackFunction', false);
             }
             else {
-                taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
+                taskParameters.RuntimeStack = tl.getInput('RuntimeStack', false);
             }
             taskParameters.TakeAppOfflineFlag = false;
         }
