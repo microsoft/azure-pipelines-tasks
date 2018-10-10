@@ -68,7 +68,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "TwineAuthenticateMain.js",
+      "target": "twineauthenticatemain.js",
       "argumentFormat": ""
     }
   },
@@ -91,7 +91,7 @@
   },
   "postjobexecution": {
     "Node": {
-      "target": "AuthCleanUp.js",
+      "target": "authcleanup.js",
       "argumentFormat": ""
     }
   }

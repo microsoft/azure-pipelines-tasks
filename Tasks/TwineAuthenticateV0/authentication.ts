@@ -1,6 +1,6 @@
 import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
 import * as tl from "vsts-task-lib/task";
-import * as utils from "./Utilities";
+import * as utils from "./utilities";
 
 export interface IPackageSource {
     feedUri: string;
