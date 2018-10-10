@@ -258,7 +258,7 @@ param (
                 $remoteSharePath = $remoteSharePsDrive.Root
                 Write-Verbose "Attempting to remove PSDrive 'WFCPSDrive'"
                 Remove-PSDrive -Name 'WFCPSDrive' -Force
-                Write-Verbose "RemoveSharePath: $remoteSharePath"
+                Write-Verbose "RemoteSharePath: $remoteSharePath"
                 net use /delete "$remoteSharePath"
             }
         }
