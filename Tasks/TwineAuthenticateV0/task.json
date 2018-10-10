@@ -7,9 +7,9 @@
   "helpMarkDown": "[More Information](https://pypi.org/project/twine/)",
   "category": "Package",
   "version": {
-    "Major": "0",
-    "Minor": "1",
-    "Patch": "0"
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
   }, 
   "runsOn": [
     "Agent",
