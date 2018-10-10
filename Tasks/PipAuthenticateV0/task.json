@@ -7,9 +7,9 @@
   "helpMarkDown": "[More Information](https://pip.pypa.io/en/stable/reference/pip_install/)",
   "category": "Package",
   "version": {
-    "Major": "0",
-    "Minor": "1",
-    "Patch": "0"
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
   }, 
   "runsOn": [
     "Agent",
