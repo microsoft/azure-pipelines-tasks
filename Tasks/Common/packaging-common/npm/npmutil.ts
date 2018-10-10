@@ -1,11 +1,9 @@
-import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';
 
 import * as util from '../util';
 
 import * as tl from 'vsts-task-lib/task';
-import * as vsts from 'vso-node-api/WebApi';
 
 import { INpmRegistry, NpmRegistry } from './npmregistry';
 import * as NpmrcParser from './npmrcparser';
