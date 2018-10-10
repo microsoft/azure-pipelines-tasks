@@ -207,6 +207,7 @@ export class AzureAppServiceUtility {
         startupCommand = (!!startupCommand) ? startupCommand  : "";
         var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
+        runtimeStack = (!!runtimeStack) ? runtimeStack : linuxFxVersion;
 
         if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
             await this.updateConfigurationSettings({linuxFxVersion: runtimeStack, appCommandLine: startupCommand});
