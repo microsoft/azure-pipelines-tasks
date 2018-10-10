@@ -7,7 +7,7 @@ import * as tl from 'vsts-task-lib/task';
 import * as tr from 'vsts-task-lib/toolrunner';
 import {NpmTaskInput} from './constants';
 
-import * as util from 'npm-common/util';
+import * as util from 'packaging-common/util';
 import * as telemetry from 'utility-common/telemetry';
 
 export class NpmToolRunner extends tr.ToolRunner {

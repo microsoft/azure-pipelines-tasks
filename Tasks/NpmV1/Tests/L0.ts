@@ -4,7 +4,7 @@ import * as mockery from 'mockery';
 import * as ttm from 'vsts-task-lib/mock-test';
 
 import { NpmMockHelper } from './NpmMockHelper';
-import Lazy_NpmRegistry = require('npm-common/npmregistry');
+import Lazy_NpmRegistry = require('packaging-common/npm/npmregistry');
 
 const BASIC_AUTH_PAT_PASSWD_REGEX = /\/\/.*\/:_password=.*/g;
 const BEARER_AUTH_REGEX = /\/\/.*\/:_authToken=AUTHTOKEN.*/g;
@@ -223,7 +223,7 @@ describe('Npm Task', function () {
         };
         mockery.registerMock('fs', mockFs);
 
-        let npmrcParser = require('npm-common/npmrcparser');
+        let npmrcParser = require('packaging-common/npm/npmrcparser');
         let registries = npmrcParser.GetRegistries('');
 
         assert.equal(registries.length, 3);
@@ -239,21 +239,21 @@ describe('Npm Task', function () {
             debug: message => {}
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
-        let util = require('npm-common/util');
+        let npmutil = require('packaging-common/npm/npmutil');
 
-        assert.equal(util.getFeedIdFromRegistry(
+        assert.equal(npmutil.getFeedIdFromRegistry(
             'https://account.visualstudio.com/_packaging/feedId/npm/registry'),
             'feedId');
-        assert.equal(util.getFeedIdFromRegistry(
+        assert.equal(npmutil.getFeedIdFromRegistry(
             'https://account.visualstudio.com/_packaging/feedId/npm/registry/'),
             'feedId');
-        assert.equal(util.getFeedIdFromRegistry(
+        assert.equal(npmutil.getFeedIdFromRegistry(
             'https://account.visualstudio.com/_packaging/feedId@PreRelease/npm/registry/'),
             'feedId@PreRelease');
-        assert.equal(util.getFeedIdFromRegistry(
+        assert.equal(npmutil.getFeedIdFromRegistry(
             'http://TFSSERVER/_packaging/feedId/npm/registry'),
             'feedId');
-        assert.equal(util.getFeedIdFromRegistry(
+        assert.equal(npmutil.getFeedIdFromRegistry(
             'http://TFSSERVER:1234/_packaging/feedId/npm/registry'),
             'feedId');
 
@@ -284,14 +284,14 @@ describe('Npm Task', function () {
         };
         mockery.registerMock('vsts-task-lib/task', mockTask);
 
-        let util = require('npm-common/util');
+        let npmutil = require('packaging-common/npm/npmutil');
 
-        return util.getLocalRegistries(['http://example.pkgs.visualstudio.com/', 'http://example.com'], '').then((registries: string[]) => {
+        return npmutil.getLocalRegistries(['http://example.pkgs.visualstudio.com/', 'http://example.com'], '').then((registries: string[]) => {
             assert.equal(registries.length, 1);
             assert.equal(registries[0], 'http://example.pkgs.visualstudio.com/npmRegistry/');
 
             mockTask.getVariable = () => 'http://localTFSServer/';
-            return util.getLocalRegistries(['http://localTFSServer/', 'http://example.com'], '').then((registries: string[]) => {
+            return npmutil.getLocalRegistries(['http://localTFSServer/', 'http://example.com'], '').then((registries: string[]) => {
                 assert.equal(registries.length, 1);
                 assert.equal(registries[0], 'http://localTFSServer/npmRegistry/');
             });
@@ -341,7 +341,7 @@ describe('Npm Task', function () {
             }
         });
 
-        const npmregistry = require("npm-common/npmregistry");
+        const npmregistry = require("packaging-common/npm/npmregistry");
         let registry = await npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
 
         assert(registry.auth.match(BASIC_AUTH_PAT_PASSWD_REGEX), `Auth must contain a password. Auth is: (${registry.auth})`);
@@ -391,7 +391,7 @@ describe('Npm Task', function () {
             }
         });
 
-        const npmregistry = require("npm-common/npmregistry");
+        const npmregistry = require("packaging-common/npm/npmregistry");
         let registry = await npmregistry.NpmRegistry.FromServiceEndpoint('endpointId');
 
         assert(registry.auth.match(BEARER_AUTH_REGEX), `Auth must contain _authToken. Auth is: (${registry.auth})`);
@@ -424,8 +424,8 @@ describe('Npm Task', function () {
         mockery.registerMock('vsts-task-lib/task', mockTask);
         mockery.registerMock('./npmrcparser', mockParser);
         
-        const util = require('npm-common/util');
-        const registries = await util.getLocalNpmRegistries("foobarPath", ['https://mytfsserver.pkgs.visualstudio.com']);
+        const npmutil = require('packaging-common/npm/npmutil');
+        const registries = await npmutil.getLocalNpmRegistries("foobarPath", ['https://mytfsserver.pkgs.visualstudio.com']);
 
         assert.equal(registries.length, 1, "Expected one response");
         const npmRegistry: Lazy_NpmRegistry.INpmRegistry = registries[0];
