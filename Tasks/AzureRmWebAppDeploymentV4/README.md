@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Azure App Service Deployment task is used to update different Azure App Service to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works on cross platform Azure Pipelines agents running Windows, Linux or Mac and uses the underlying deployment technologies of [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy), RunFromZip, Zip Deploy, Containers and [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API).
+The Azure App Service Deployment task is used to update different Azure App Service to deploy [Web Apps](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/) and [WebJobs](https://azure.microsoft.com/en-us/blog/webjobs-goes-into-full-production/) to Azure. The task works on cross platform Azure Pipelines agents running Windows, Linux or Mac and uses the underlying deployment technologies of [Web Deploy](https://www.iis.net/downloads/microsoft/web-deploy), RunFromPackage, Zip Deploy, Containers and [Kudu REST APIs](https://github.com/projectkudu/kudu/wiki/REST-API).
 
 The task works for [ASP.NET](https://www.visualstudio.com/en-us/docs/release/examples/azure/azure-web-apps-from-build-and-release-hubs), [ASP.NET Core](https://www.visualstudio.com/en-us/docs/release/examples/azure/aspnet-core10-azure-web-apps), PHP, Java, Python, Go and [Node.js](https://www.visualstudio.com/en-us/docs/release/examples/nodejs/node-to-azure-webapps) based web applications.
 
@@ -45,7 +45,7 @@ Based on the type of Azure App Service and Azure Pipelines agent, the task choos
 
 * *Zip Deploy* 
 
-* *RunFromZip* 
+* *RunFromPackage* 
 
 By default the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 
@@ -81,7 +81,7 @@ Works on a Windows as well as Linux automation agent when the target is a Web Ap
 ### Zip Deploy
 Creates a .zip deployment package of the chosen Package or folder and deploys the file contents to the wwwroot folder of the App Service name function app in Azure. This option overwrites all existing contents in the wwwroot folder. For more information, see [Zip deployment for Azure Functions](https://docs.microsoft.com/azure/azure-functions/deployment-zip-push).
 
-### RunFromZip
+### RunFromPackage
 Creates the same deployment package as Zip Deploy. However, instead of deploying files to the wwwroot folder, the entire package is mounted by the Functions runtime. With this option, files in the wwwroot folder become read-only. For more information, see [Run your Azure Functions from a package file](https://docs.microsoft.com/azure/azure-functions/run-functions-from-deployment-package).
 
 ### Parameters of the task
@@ -103,7 +103,7 @@ The task is used to deploy a Web  project to an existing Azure Web App or Functi
 
 * **Package or Folder\*:** Location of the Web App zip package or folder on the automation agent or on a UNC path accessible to the automation agent like, \\\\BudgetIT\\Web\\Deploy\\Fabrikam.zip. Predefined system variables and wild cards like, $(System.DefaultWorkingDirectory)\\\***.zip can be also used here.
 
-* **Select deployment method:** Select the option to to choose from Web Deploy, Container, Zip Deploy, RunFromZip, Kudu REST apis
+* **Select deployment method:** Select the option to to choose from Web Deploy, Container, Zip Deploy, RunFromPackage, Kudu REST apis
 
 By default (when 'Select deployment method' is not checked) the task tries to select the appropriate deployment technology given the input package, app service type and agent OS.
 

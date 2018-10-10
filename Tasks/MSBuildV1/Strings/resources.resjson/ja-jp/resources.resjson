@@ -22,7 +22,7 @@
   "loc.input.label.maximumCpuCount": "並列ビルド",
   "loc.input.help.maximumCpuCount": "MSBuild ターゲット構成が並列ビルドと互換性がある場合、この入力を任意にチェックし、/m スイッチを MSBuild に渡すことができます (Windows のみ)。ターゲット構成が並列ビルドと互換性がない場合、このオプションをオンにすると、ビルドに \"ファイル使用中\" エラーが発生するか、ビルドの断続的エラーまたは不整合エラーになることがあります。",
   "loc.input.label.restoreNugetPackages": "NuGet パッケージの復元",
-  "loc.input.help.restoreNugetPackages": "このオプションは使用されなくなりました。NuGet パッケージを復元するには、ビルドの前に NuGet インストーラーのステップを追加します。",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
   "loc.input.label.logProjectEvents": "プロジェクトの詳細の記録",
   "loc.input.help.logProjectEvents": "オプションで、各プロジェクトのタイムライン詳細を記録します (Windows のみ)。",
   "loc.input.label.createLogFile": "ログ ファイルを作成する",

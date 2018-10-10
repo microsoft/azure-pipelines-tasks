@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Delay",
-  "loc.helpMarkDown": "[Altre informazioni](http://go.microsoft.com/fwlink/?LinkID=825235)",
-  "loc.description": "Delay further execution of the workflow by a fixed time.",
-  "loc.instanceNameFormat": "Delay by $(delayForMinutes) minutes",
-  "loc.input.label.delayForMinutes": "Delay Time (minutes)",
-  "loc.input.help.delayForMinutes": "Delay the execution of the workflow by specified time in minutes."
+  "loc.friendlyName": "Ritarda",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870239)",
+  "loc.description": "Ritarda ulteriormente l'esecuzione del flusso di lavoro in base a un periodo di tempo fisso.",
+  "loc.instanceNameFormat": "Ritarda di $(delayForMinutes) minuti",
+  "loc.input.label.delayForMinutes": "Ritardo (minuti)",
+  "loc.input.help.delayForMinutes": "Ritarda l'esecuzione del flusso di lavoro in base al tempo specificato in minuti."
 }

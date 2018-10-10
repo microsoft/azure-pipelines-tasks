@@ -15,8 +15,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 136,
-        "Patch": 0
+        "Minor": 142,
+        "Patch": 1
     },
     "groups": [
         {
@@ -29,7 +29,9 @@
     "inputs": [
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "",

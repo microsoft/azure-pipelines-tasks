@@ -13,7 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 141,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Fixes codesign hangs on a self hosted agent. Keychain password is now required to use `Default Keychain` or `Custom Keychain`. Microsoft hosted builds should use `Temporary Keychain`.",
     "runsOn": [
@@ -23,7 +23,7 @@
     "demands": [
         "xcode"
     ],
-    "groups":[
+    "groups": [
         {
             "name": "advanced",
             "displayName": "Advanced",

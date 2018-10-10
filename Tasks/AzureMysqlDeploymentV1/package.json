@@ -21,11 +21,16 @@
     "@types/node": "6.0.68",
     "@types/q": "1.0.7",
     "azure-arm-rest": "file:../../_build/Tasks/Common/azure-arm-rest-1.0.2.tgz",
+    "compress-commons": "1.1.0",
+    "crc32-stream": "1.0.0",
     "moment": "2.21.0",
+    "normalize-path": "2.0.1",
     "q": "1.4.1",
+    "tar-stream": "1.5.2",
     "utility-common": "file:../../_build/Tasks/Common/utility-common-1.0.2.tgz",
     "vsts-task-lib": "2.1.0",
     "webdeployment-common": "file:../../_build/Tasks/Common/webdeployment-common-1.0.0.tgz",
-    "winreg": "1.2.2"
+    "winreg": "1.2.2",
+    "zip-stream": "1.1.0"
   }
 }

@@ -1,11 +1,19 @@
 import { AzureRmWebAppDeploymentProvider } from './AzureRmWebAppDeploymentProvider';
 import tl = require('vsts-task-lib/task');
+import * as ParameterParser from '../operations/ParameterParserUtility'
 import { ContainerBasedDeploymentUtility } from '../operations/ContainerBasedDeploymentUtility';
+const linuxFunctionStorageSetting: string = '-WEBSITES_ENABLE_APP_SERVICE_STORAGE false';
 
 export class ContainerWebAppDeploymentProvider extends AzureRmWebAppDeploymentProvider{
 
     public async DeployWebAppStep() {
         tl.debug("Performing container based deployment.");
+
+        if(this.taskParams.isFunctionApp) {
+            var customApplicationSetting = ParameterParser.parse(linuxFunctionStorageSetting);
+            await this.appServiceUtility.updateAndMonitorAppSettings(customApplicationSetting);
+        }
+
         let containerDeploymentUtility: ContainerBasedDeploymentUtility = new ContainerBasedDeploymentUtility(this.appService);
         await containerDeploymentUtility.deployWebAppImage(this.taskParams);
 

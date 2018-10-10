@@ -83,6 +83,26 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 
+    it('Should download commits from legacy project build', (done) => {
+
+        const tp: string = path.join(__dirname, 'L0ShouldDownloadCommitsFromLegacyProjectBuild.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        try {
+            tr.run();
+
+            assert(tr.stdout.indexOf("GettingCommitsFromSingleBuild") !== -1, "Failed to fetch commits from single build");
+            assert(tr.stdout.indexOf('20/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]') !== -1, "API parameter to fetch commits have changed");
+
+            done();
+        } catch(err) {
+            console.log(tr.stdout);
+            console.log(tr.stderr);
+            console.log(err);
+            done(err);
+        }
+    });
+    
     it('Should download commits from single build', (done) => {
 
         const tp: string = path.join(__dirname, 'L0DownloadCommitsFromSingleBuild.js');

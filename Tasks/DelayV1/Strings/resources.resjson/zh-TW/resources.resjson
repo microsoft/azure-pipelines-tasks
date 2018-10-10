@@ -1,8 +1,8 @@
 {
-  "loc.friendlyName": "Delay",
-  "loc.helpMarkDown": "[更多資訊](http://go.microsoft.com/fwlink/?LinkID=825235)",
-  "loc.description": "Delay further execution of the workflow by a fixed time.",
-  "loc.instanceNameFormat": "Delay by $(delayForMinutes) minutes",
-  "loc.input.label.delayForMinutes": "Delay Time (minutes)",
-  "loc.input.help.delayForMinutes": "Delay the execution of the workflow by specified time in minutes."
+  "loc.friendlyName": "延遲",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=870239)",
+  "loc.description": "讓工作流程的進一步執行延遲一段固定時間。",
+  "loc.instanceNameFormat": "延遲 $(delayForMinutes) 分鐘",
+  "loc.input.label.delayForMinutes": "延遲時間 (分鐘)",
+  "loc.input.help.delayForMinutes": "讓工作流程的執行延遲一段指定時間，以分鐘為單位。"
 }

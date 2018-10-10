@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 5,
-        "Minor": 141,
-        "Patch": 1
+        "Minor": 142,
+        "Patch": 0
     },
     "releaseNotes": "This version of the task is compatible with Xcode 8, Xcode 9 and Xcode 10. Features that were there solely to maintain compat with Xcode 7 have been removed. The task has better options to work with the Hosted macOS pool.",
     "demands": [
@@ -48,7 +48,7 @@
             "label": "Actions",
             "defaultValue": "build",
             "required": true,
-            "helpMarkDown": "Enter a space-delimited list of actions. Valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example,`clean build` will run a clean build. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html)."
+            "helpMarkDown": "Enter a space-delimited list of actions. Some valid options are `build`, `clean`, `test`, `analyze`, and `archive`. For example,`clean build` will run a clean build."
         },
         {
             "name": "configuration",
@@ -90,10 +90,10 @@
             "defaultValue": "default",
             ".comment": "//If you update the options here, be sure to update the Xcode.json build template as well.",
             "options": {
-                "default": "Default",
                 "8": "Xcode 8",
                 "9": "Xcode 9",
                 "10": "Xcode 10",
+                "default": "Default",
                 "specifyPath": "Specify path"
             }
         },
@@ -305,12 +305,14 @@
             "type": "string",
             "label": "Arguments",
             "required": false,
-            "helpMarkDown": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme. See the [xcodebuild man page](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html).",
+            "helpMarkDown": "(Optional) Enter additional command line arguments with which to build. This is useful for specifying `-target` or `-project` arguments instead of specifying a workspace/project and scheme.",
             "groupName": "advanced"
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "",

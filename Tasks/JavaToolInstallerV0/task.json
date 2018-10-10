@@ -13,13 +13,15 @@
     "version": {
         "Major": 0,
         "Minor": 141,
-        "Patch": 0
+        "Patch": 1
     },
-    "satisfies": ["Java"],
+    "satisfies": [
+        "Java"
+    ],
     "demands": [],
     "groups": [
         {
-            "name":"JavaInAzureGroup",
+            "name": "JavaInAzureGroup",
             "displayName": "Download Java from an Azure blob",
             "isExpanded": true
         }
@@ -78,7 +80,7 @@
             "label": "Storage account name",
             "required": true,
             "properties": {
-                "EditableOptions":"True"
+                "EditableOptions": "True"
             },
             "visibleRule": "jdkSourceOption == AzureStorage",
             "helpMarkDown": "Azure Classic and Resource Manager storage accounts are listed. Select the storage account name in which the JDK is located."
@@ -121,7 +123,7 @@
     ],
     "dataSourceBindings": [
         {
-            "endpointId":"$(azureResourceManagerEndpoint)",
+            "endpointId": "$(azureResourceManagerEndpoint)",
             "target": "azureStorageAccountName",
             "dataSourceName": "AzureStorageAccountRMandClassic"
         },
@@ -134,7 +136,7 @@
                 "storageAccount": "$(azureStorageAccountName)"
             }
         }
-      ],
+    ],
     "execution": {
         "Node": {
             "target": "javatoolinstaller.js",
@@ -142,7 +144,7 @@
         }
     },
     "messages": {
-        "DownloadFromAzureBlobStorage":"Downloading artifacts from Azure blob storage, Container Name: %s",
+        "DownloadFromAzureBlobStorage": "Downloading artifacts from Azure blob storage, Container Name: %s",
         "SuccessFullyFetchedItemList": "Successfully fetched list of items",
         "StorageAccountDoesNotExist": "Failed to get azure storage account with name %s.",
         "UnzipExtractFile": "Extracting file: %s",

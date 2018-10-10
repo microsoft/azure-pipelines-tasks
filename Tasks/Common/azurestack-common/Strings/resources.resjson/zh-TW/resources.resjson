@@ -1,4 +1,4 @@
 {
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "指定的 AzureRm 端點 URL '{0}' 無效。",
-  "loc.messages.FailedToFetchAzureStackDependencyData": "Failed to fetch azure stack dependency data. Error Code: %s"
+  "loc.messages.FailedToFetchAzureStackDependencyData": "無法擷取 Azure Stack 相依性資料。錯誤碼: %s"
 }

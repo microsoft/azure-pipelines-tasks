@@ -34,7 +34,7 @@
   "loc.input.label.PublishProfile": "発行プロファイル",
   "loc.input.help.PublishProfile": "発行プロファイルを使用すると、SQL Server データベースの配置を詳細に制御できるようになります。コンピューターの管理者資格情報でアクセスできるターゲット コンピューターまたは UNC 共有上で、発行プロファイル XML ファイルへのパスを指定します。",
   "loc.input.label.AdditionalArguments": "追加引数",
-  "loc.input.help.AdditionalArguments": "SQL Server データベースの配置中に適用される SqlPackage.exe 追加引数 (/p:IgnoreAnsiNulls=True /p:IgnoreComments=True など)。これらの引数は発行プロファイル XML ファイルの設定を上書きします (提供される場合)。",
+  "loc.input.help.AdditionalArguments": "SQL Server データベースの配置中に適用される SqlPackage.exe 追加引数 (/p:IgnoreAnsiNulls=True /p:IgnoreComments=True など)。これらの引数は発行プロファイル XML ファイルの設定をオーバーライドします (提供される場合)。",
   "loc.input.label.AdditionalArgumentsSql": "追加引数",
   "loc.input.help.AdditionalArgumentsSql": "SQL Server データベースの配置中に適用される Invoke-Sqlcmd 追加引数。",
   "loc.messages.SQLPowershellModuleisnotinstalledonyouragentmachine": "エージェント コンピューターで SQL PowerShell モジュールがインストールされていません。このタスクを実行するには、下記のステップに従ってください",

@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Compilazione Visual Studio",
   "loc.helpMarkDown": "[Altre informazioni](https://go.microsoft.com/fwlink/?LinkID=613727)",
-  "loc.description": "Consente di compilare con MSBuild e di impostare la proprietà della versione di Visual Studio",
+  "loc.description": "Build with MSBuild and set the Visual Studio version property.",
   "loc.instanceNameFormat": "Compila la soluzione $(solution)",
   "loc.group.displayName.advanced": "Avanzate",
   "loc.input.label.solution": "Soluzione",
@@ -19,7 +19,7 @@
   "loc.input.label.maximumCpuCount": "Compilazione in parallelo",
   "loc.input.help.maximumCpuCount": "Se la configurazione di destinazione di MSBuild è compatibile con la compilazione in parallelo, è possibile selezionare facoltativamente questa opzione di input per passare l'opzione /m a MSBuild (solo Windows). Se la configurazione di destinazione non è compatibile con la compilazione in parallelo, selezionando questa opzione durante la compilazione potrebbero verificarsi errori di file in uso oppure errori di compilazioni intermittenti o incoerenti.",
   "loc.input.label.restoreNugetPackages": "Ripristina pacchetti NuGet",
-  "loc.input.help.restoreNugetPackages": "Questa opzione è deprecata. Per ripristinare pacchetti NuGet, aggiungere un passaggio del programma di installazione di NuGet prima della compilazione.",
+  "loc.input.help.restoreNugetPackages": "This option is deprecated. To restore NuGet packages, add a [NuGet Tool Installer](https://docs.microsoft.com/vsts/pipelines/tasks/tool/nuget) task before the build.",
   "loc.input.label.msbuildArchitecture": "Architettura MSBuild",
   "loc.input.help.msbuildArchitecture": "Consente, facoltativamente, di specificare l'architettura (x86, x64) di MSBuild da eseguire.",
   "loc.input.label.logProjectEvents": "Registra dettagli progetto",

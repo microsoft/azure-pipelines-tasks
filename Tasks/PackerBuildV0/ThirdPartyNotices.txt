@@ -11,60 +11,74 @@ Build Machine Image (PREVIEW) task incorporates third party material from the pr
 5.	balanced-match  (https://github.com/juliangruber/balanced-match)
 6.	binary (https://github.com/substack/node-binary)
 7.	bl (Buffer List) (https://github.com/rvagg/bl)
-8.	brace-expansion (https://github.com/juliangruber/brace-expansion)
-9.	buffer-crc32 (https://github.com/brianloveswords/buffer-crc32)
-10.	buffers (DefinitelyTyped) (https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/buffers)
-11.	buffer-shims (https://github.com/calvinmetcalf/buffer-shims)
-12.	chainsaw (https://github.com/substack/node-chainsaw)
-13.	compress-commons  (https://github.com/archiverjs/node-compress-commons)
-14.	concat-map  (https://github.com/substack/node-concat-map)
-15.	core-util-is (https://github.com/isaacs/core-util-is)
-16.	Crc32-stream (https://github.com/archiverjs/node-crc32-stream)
-17.	Ctt (https://ctt.codeplex.com)
-18.	decompress-zip (https://github.com/bower/decompress-zip)
-19.	end-of-stream (https://github.com/mafintosh/end-of-stream)
-20.	fs.realpath (https://github.com/isaacs/fs.realpath)
-21.	Glob (https://github.com/isaacs/node-glob)
-22.	graceful-fs (https://github.com/isaacs/node-graceful-fs)
-23.	inflight (https://github.com/npm/inflight)
-24.	inherits (https://github.com/isaacs/inherits)
-25.	isarray (https://github.com/juliangruber/isarray/)
-26.	lazystream (https://github.com/jpommerening/node-lazystream)
-27.	lodash (https://lodash.com/)
+8.  buffer-equal-constant-time (https://github.com/salesforce/buffer-equal-constant-time)
+9.	brace-expansion (https://github.com/juliangruber/brace-expansion)
+10.	buffer-crc32 (https://github.com/brianloveswords/buffer-crc32)
+11.	buffers (DefinitelyTyped) (https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/buffers)
+12.	buffer-shims (https://github.com/calvinmetcalf/buffer-shims)
+13.	chainsaw (https://github.com/substack/node-chainsaw)
+14.	compress-commons  (https://github.com/archiverjs/node-compress-commons)
+15.	concat-map  (https://github.com/substack/node-concat-map)
+16.	core-util-is (https://github.com/isaacs/core-util-is)
+17.	Crc32-stream (https://github.com/archiverjs/node-crc32-stream)
+18.	Ctt (https://ctt.codeplex.com)
+19.	decompress-zip (https://github.com/bower/decompress-zip)
+20.	end-of-stream (https://github.com/mafintosh/end-of-stream)
+21.	fs.realpath (https://github.com/isaacs/fs.realpath)
+22.	Glob (https://github.com/isaacs/node-glob)
+23.	graceful-fs (https://github.com/isaacs/node-graceful-fs)
+24. hoek (https://github.com/hapijs/hoek)
+25.	inflight (https://github.com/npm/inflight)
+26.	inherits (https://github.com/isaacs/inherits)
+27.	isarray (https://github.com/juliangruber/isarray/)
+28. isemail (https://github.com/hapijs/isemail)
+29. joi (https://github.com/hapijs/joi)
+30. jsonwebtoken (https://github.com/auth0/node-jsonwebtoken)
+31.	lazystream (https://github.com/jpommerening/node-lazystream)
+32.	lodash (https://lodash.com/)
 		Includes:File(s) copyright John Resig (http://ejohn.org/blog/javascript-micro-templating/)
 		Includes:File(s) copyright Laura Doktorova (https://github.com/olado/doT)
-28.	Ltx (https://github.com/node-xmpp/ltx)
-29.	minimatch (https://github.com/isaacs/minimatch)
-30.	mkpath (https://github.com/jrajav/mkpath)
-31.	Mockery (https://github.com/mfncooper/mockery)
-32.	Node.js  (https://nodejs.org/)
-33.	node-tar (https://github.com/npm/node-tar/)
-34.	node-uuid (https://github.com/broofa/node-uuid/)
-35.	nopt (https://github.com/npm/nopt)
-36.	normalize-path (https://github.com/jonschlinkert/normalize-path)
-37.	once (https://github.com/isaacs/once)
-38.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
-39.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
-40.	Q (https://github.com/kriskowal/q)
-41.	readable-stream (https://github.com/isaacs/readable-stream)
-42.	sax js (https://github.com/isaacs/sax-js)
-43.	semver (https://github.com/npm/node-semver/)
-44.	ShellJS (https://github.com/shelljs/shelljs)
-45.	string_decoder (https://github.com/rvagg/string_decoder)
-46.	tar-stream (https://github.com/mafintosh/tar-stream)
-47.	touch (https://github.com/isaacs/node-touch)
-48.	traverse (https://github.com/substack/js-traverse)
-49.	tunnel (https://github.com/koichik/node-tunnel)
-50.	underscore.js (http://underscorejs.org/; https://github.com/jashkenas/underscore)
-51.	util-deprecate (https://github.com/TooTallNate/util-deprecate)
-52.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
-53.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
-54.	winreg  (https://github.com/fresc81/node-winreg)
-55.	wrappy (https://github.com/npm/wrappy)
-56.	Xml2JS  (https://github.com/Leonidas-from-XIV/node-xml2js)
-57.	Xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
-58.	xtend (https://github.com/Raynos/xtend)
-59.	zip-stream  (https://github.com/archiverjs/node-zip-stream)
+33. lodash.once (https://github.com/lodash/lodash)
+34.	Ltx (https://github.com/node-xmpp/ltx)
+35.	minimatch (https://github.com/isaacs/minimatch)
+36.	mkpath (https://github.com/jrajav/mkpath)
+37.	Mockery (https://github.com/mfncooper/mockery)
+38. Moment (https://github.com/moment/moment)
+39. ms (https://github.com/zeit/ms)
+40.	Node.js  (https://nodejs.org/)
+41. node-ecdsa-sig-formatter (https://github.com/Brightspace/node-ecdsa-sig-formatter)
+42. node-jwa (https://github.com/brianloveswords/node-jwa)
+43. node-jws (https://github.com/brianloveswords/node-jws)
+44.	node-tar (https://github.com/npm/node-tar/)
+45.	node-uuid (https://github.com/broofa/node-uuid/)
+46.	nopt (https://github.com/npm/nopt)
+47.	normalize-path (https://github.com/jonschlinkert/normalize-path)
+48.	once (https://github.com/isaacs/once)
+49. OpenSSL  (http://www.openssl.org)
+50.	path-is-absolute  (https://github.com/sindresorhus/path-is-absolute)
+51.	process-nextick-args (https://github.com/calvinmetcalf/process-nextick-args)
+52.	Q (https://github.com/kriskowal/q)
+53.	readable-stream (https://github.com/isaacs/readable-stream)
+54. safe-buffer (https://github.com/feross/safe-buffer)
+55.	sax js (https://github.com/isaacs/sax-js)
+56.	semver (https://github.com/npm/node-semver/)
+57.	ShellJS (https://github.com/shelljs/shelljs)
+58.	string_decoder (https://github.com/rvagg/string_decoder)
+59.	tar-stream (https://github.com/mafintosh/tar-stream)
+60. topo (https://github.com/hapijs/topo)
+61.	touch (https://github.com/isaacs/node-touch)
+62.	traverse (https://github.com/substack/js-traverse)
+63.	tunnel (https://github.com/koichik/node-tunnel)
+64.	underscore.js (http://underscorejs.org/; https://github.com/jashkenas/underscore)
+65.	util-deprecate (https://github.com/TooTallNate/util-deprecate)
+66.	vso-node-api (https://github.com/Microsoft/vsts-node-api)
+67.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+68.	winreg  (https://github.com/fresc81/node-winreg)
+69.	wrappy (https://github.com/npm/wrappy)
+70.	Xml2JS  (https://github.com/Leonidas-from-XIV/node-xml2js)
+71.	Xmlbuilder (https://github.com/oozcitak/xmlbuilder-js)
+72.	xtend (https://github.com/Raynos/xtend)
+73.	zip-stream  (https://github.com/archiverjs/node-zip-stream)
 
 
 %% abbrev NOTICES, INFORMATION, AND LICENSE BEGIN HERE
@@ -207,6 +221,23 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF bl (Buffer List) NOTICES, INFORMATION, AND LICENSE
+
+%% buffer-equal-constant-time NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2013, GoInstant Inc., a salesforce.com company
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+* Neither the name of salesforce.com, nor GoInstant, nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+=========================================
+END OF buffer-equal-constant-time NOTICES, INFORMATION, AND LICENSE
 
 %% brace-expansion NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -586,6 +617,53 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 =========================================
 END OF graceful-fs NOTICES, INFORMATION, AND LICENSE
 
+%% hoek NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+
+Copyright (c) 2011-2014, Walmart and other contributors.
+Copyright (c) 2011, Yahoo Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * The names of any contributors may not be used to endorse or promote
+      products derived from this software without specific prior written
+      permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS AND CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+                                  *   *   *
+
+The complete list of contributors can be found at: https://github.com/hapijs/hapi/graphs/contributors
+Portions of this project were initially based on the Yahoo! Inc. Postmile project,
+published at https://github.com/yahoo/postmile.
+=========================================
+Includes code from Deep-eql
+
+Copyright (c) 2013 Jake Luer jake@alogicalparadox.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF hoek NOTICES, INFORMATION, AND LICENSE
+
 %% inflight NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The ISC License
@@ -639,6 +717,83 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF isarray NOTICES, INFORMATION, AND LICENSE
+
+%% isemail NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2008-2011, Dominic Sayers
+Copyright (c) 2013-2014, GlobeSherpa
+Copyright (c) 2014-2015, Eli Skeggs
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+- Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+- Neither the name of Dominic Sayers nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+=========================================
+END OF isemail NOTICES, INFORMATION, AND LICENSE
+
+%% joi NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2012-2014, Walmart and other contributors.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * The names of any contributors may not be used to endorse or promote
+      products derived from this software without specific prior written
+      permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS AND CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+                                  *   *   *
+
+The complete list of contributors can be found at: https://github.com/hapijs/joi/graphs/contributors
+=========================================
+END OF joi NOTICES, INFORMATION, AND LICENSE
+
+%% jsonwebtoken NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The MIT License (MIT)
+ 
+Copyright (c) 2015 Auth0, Inc. <support@auth0.com> (http://auth0.com)
+ 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+ 
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+=========================================
+END OF jsonwebtoken NOTICES, INFORMATION, AND LICENSE
 
 %% lazystream NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -771,6 +926,59 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF lodash NOTICES, INFORMATION, AND LICENSE
 
+%% lodash.once NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright jQuery Foundation and other contributors <https://jquery.org/>
+
+Based on Underscore.js, copyright Jeremy Ashkenas,
+DocumentCloud and Investigative Reporters & Editors <http://underscorejs.org/>
+
+This software consists of voluntary contributions made by many
+individuals. For exact contribution history, see the revision history
+available at https://github.com/lodash/lodash
+
+The following license applies to all parts of this software except as
+documented below:
+
+====
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+====
+
+Copyright and related rights for sample code are waived via CC0. Sample
+code is defined as all source code displayed within the prose of the
+documentation.
+
+CC0: http://creativecommons.org/publicdomain/zero/1.0/
+
+====
+
+Files located in the node_modules and vendor directories are externally
+maintained libraries used by this software which have their own
+licenses; we recommend you read them, as their terms may differ from the
+terms above.
+=========================================
+END OF lodash.once NOTICES, INFORMATION, AND LICENSE
+
+
 %% Ltx NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 Copyright (c) 2010 Stephan Maka
@@ -857,6 +1065,75 @@ terms:
 =========================================
 END OF Mockery NOTICES, INFORMATION, AND LICENSE
 
+%% Moment NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) JS Foundation and other contributors
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+Files with code from Closure
+
+Copyright (c) 2006 The Closure Library Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=========================================
+END OF Moment NOTICES, INFORMATION, AND LICENSE
+
+%% ms NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+(The MIT License)
+
+Copyright (c) 2014 Guillermo Rauch <rauchg@gmail.com>
+Copyright (c) 2016 Zeit, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the Software), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF ms NOTICES, INFORMATION, AND LICENSE
+
 %% Node.js  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 Node.js is licensed for use as follows:
@@ -912,6 +1189,68 @@ The Node.js license applies to all parts of Node.js that are not externally
 maintained libraries.
 =========================================
 END OF Node.js  NOTICES, INFORMATION, AND LICENSE
+
+%% node-ecdsa-sig-formatter NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+ Copyright 2015 D2L Corporation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+=========================================
+END OF node-ecdsa-sig-formatter NOTICES, INFORMATION, AND LICENSE
+
+%% node-jwa NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2013 Brian J. Brennan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF node-jwa NOTICES, INFORMATION, AND LICENSE
+
+%% node-jws NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2013 Brian J. Brennan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+=========================================
+END OF node-jws NOTICES, INFORMATION, AND LICENSE
 
 %% node-tar NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -1009,6 +1348,135 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 =========================================
 END OF once NOTICES, INFORMATION, AND LICENSE
+
+%% OpenSSL  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+  LICENSE ISSUES
+  ==============
+
+  The OpenSSL toolkit stays under a dual license, i.e. both the conditions of
+  the OpenSSL License and the original SSLeay license apply to the toolkit.
+  See below for the actual license texts. Actually both licenses are BSD-style
+  Open Source licenses. In case of any license issues related to OpenSSL
+  please contact openssl-core@openssl.org.
+
+  OpenSSL License
+  ---------------
+
+/* ====================================================================
+ * Copyright (c) 1998-2011 The OpenSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)
+ *
+ * 4. The names OpenSSL Toolkit and OpenSSL Project must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    openssl-core@openssl.org.
+ *
+ * 5. Products derived from this software may not be called OpenSSL
+ *    nor may OpenSSL appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.openssl.org/)
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com).
+ *
+ */
+
+ Original SSLeay License
+ -----------------------
+
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
+ *
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ * 
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ * 
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from 
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    This product includes software written by Tim Hudson (tjh@cryptsoft.com)
+ * 
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.]
+=========================================
+END OF OpenSSL  NOTICES, INFORMATION, AND LICENSE
 
 %% path-is-absolute  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -1149,6 +1617,32 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 =========================================
 END OF readable-stream NOTICES, INFORMATION, AND LICENSE
+
+%% safe-buffer NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The MIT License (MIT)
+
+Copyright (c) Feross Aboukhadijeh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+=========================================
+END OF safe-buffer NOTICES, INFORMATION, AND LICENSE
 
 %% sax js NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -1298,6 +1792,39 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 =========================================
 END OF tar-stream NOTICES, INFORMATION, AND LICENSE
+
+%% topo NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+Copyright (c) 2012-2014, Walmart and other contributors.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * The names of any contributors may not be used to endorse or promote
+      products derived from this software without specific prior written
+      permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS AND CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+                                  *   *   *
+
+The complete list of contributors can be found at: https://github.com/hapijs/topo/graphs/contributors
+=========================================
+END OF topo NOTICES, INFORMATION, AND LICENSE
 
 %% touch NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

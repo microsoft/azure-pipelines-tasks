@@ -7,42 +7,42 @@ import * as toolLib from 'vsts-task-tool-lib/tool';
 import * as utils from './utils';
 import * as os from "os";
 import * as util from "util";
+import { WebRequest, sendRequest } from "./webClient";
 const uuidV4 = require('uuid/v4');
-import downloadutility = require("utility-common/downloadutility");
 const helmToolName = "helm"
 const helmLatestReleaseUrl = "https://api.github.com/repos/helm/helm/releases/latest";
 const stableHelmVersion = "v2.9.1"
 
 export async function getHelmVersion(): Promise<string> {
-    var checkLatestHelmVersion = tl.getBoolInput('checkLatestHelmVersion', false); 
-    if(checkLatestHelmVersion) {
+    var checkLatestHelmVersion = tl.getBoolInput('checkLatestHelmVersion', false);
+    if (checkLatestHelmVersion) {
         return await getStableHelmVersion();
     }
 
     return utils.sanitizeVersionString(tl.getInput("helmVersion", true));
 }
 
-export async function downloadHelm(version : string): Promise<string> {
+export async function downloadHelm(version: string): Promise<string> {
     var cachedToolpath = toolLib.findLocalTool(helmToolName, version);
-    if(!cachedToolpath) {
+    if (!cachedToolpath) {
         try {
-            var helmDownloadPath = await toolLib.downloadTool(getHelmDownloadURL(version), helmToolName + "-" + version + "-" + uuidV4() +".zip");
-        } catch(exception) {
+            var helmDownloadPath = await toolLib.downloadTool(getHelmDownloadURL(version), helmToolName + "-" + version + "-" + uuidV4() + ".zip");
+        } catch (exception) {
             throw new Error(tl.loc("HelmDownloadFailed", getHelmDownloadURL(version), exception));
         }
-        
+
         var unzipedHelmPath = await toolLib.extractZip(helmDownloadPath);
         cachedToolpath = await toolLib.cacheDir(unzipedHelmPath, helmToolName, version);
     }
 
     var helmpath = findHelm(cachedToolpath);
-    if(!helmpath) {
+    if (!helmpath) {
         throw new Error(tl.loc("HelmNotFoundInFolder", cachedToolpath))
     }
 
     fs.chmodSync(helmpath, "777");
     return helmpath;
-}   
+}
 
 function findHelm(rootFolder: string) {
     var helmPath = path.join(rootFolder, "*", helmToolName + getExecutableExtention());
@@ -52,9 +52,8 @@ function findHelm(rootFolder: string) {
 }
 
 
-function getHelmDownloadURL(version: string) : string {
-    switch(os.type())
-    {
+function getHelmDownloadURL(version: string): string {
+    switch (os.type()) {
         case 'Linux':
             return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-linux-amd64.zip", version);
 
@@ -63,29 +62,20 @@ function getHelmDownloadURL(version: string) : string {
 
         default:
         case 'Windows_NT':
-            return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-windows-amd64.zip", version);   
+            return util.format("https://storage.googleapis.com/kubernetes-helm/helm-%s-windows-amd64.zip", version);
 
     }
 }
 
-async function getStableHelmVersion() : Promise<string>{
-    var downloadPath = path.join(getTempDirectory(), uuidV4() +".json");
-    var options = {
-        hostname: 'api.github.com',
-        port: 443,
-        path: '/repos/helm/helm/releases/latest',
-        method: 'GET',
-        secureProtocol: "TLSv1_2_method",
-        headers: {
-            'User-Agent' : 'vsts'
-          }
-    }
+async function getStableHelmVersion(): Promise<string> {
+    var request = new WebRequest();
+    request.uri = "https://api.github.com/repos/helm/helm/releases/latest";
+    request.method = "GET";
 
-    try{
-        await downloadutility.download(options, downloadPath, true, true);
-        var version = await getReleaseVersion(downloadPath);
-        return version;
-    } catch(error) {
+    try {
+        var response = await sendRequest(request);
+        return response.body["tag_name"];
+    } catch (error) {
         tl.warning(tl.loc("HelmLatestNotKnown", helmLatestReleaseUrl, error, stableHelmVersion));
     }
 
@@ -93,25 +83,9 @@ async function getStableHelmVersion() : Promise<string>{
 }
 
 function getExecutableExtention(): string {
-    if(os.type().match(/^Win/)){
+    if (os.type().match(/^Win/)) {
         return ".exe";
     }
 
     return "";
-}
-
-function getTempDirectory(): string {
-    return tl.getVariable('agent.tempDirectory') || os.tmpdir();
-}
-
-function getReleaseVersion(jsonFilePath): Promise<string> {
-    return new Promise(function (fulfill, reject){
-        fs.readFile(jsonFilePath, {encoding: 'utf8'} ,function(err,data) {
-            if(err) {
-                reject(err);
-            }
-            var latestVersionInfo = JSON.parse(data);
-            fulfill(latestVersionInfo.tag_name);
-        })
-    });
-}
+} 

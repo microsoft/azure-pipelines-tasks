@@ -1,4 +1,4 @@
-Refer to [https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/yamlgettingstarted.md](https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/yamlgettingstarted.md)
+Refer to [the official documentation](https://docs.microsoft.com/azure/devops/pipelines/get-started-yaml)
 
 <!--
 # Simple Yaml Builds

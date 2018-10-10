@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 7
+        "Patch": 9
     },
     "demands": [],
     "minimumAgentVersion": "1.100.0",
@@ -40,7 +40,9 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "defaultValue": "",
@@ -204,7 +206,7 @@
         "NotAbleToGetAllServers": "Failed to retrieve all MySQL servers of a subscription. Error: %s .",
         "EmptyOrNullServerList": "The MySQL server list is empty. The MySQL server host name is invalid.",
         "UnableToFindResourceGroupDueToNullId": "Unable to find the resource group due to a null ID.",
-        "UnableToFindResourceGroupDueToInvalidId":  "Unable to find the resource group due to an invalid ID.",
+        "UnableToFindResourceGroupDueToInvalidId": "Unable to find the resource group due to an invalid ID.",
         "NotAbleToGetInstalledLocationOfMysqlFromPath": "The MySQL client is missing on the agent machine.",
         "UnableToFindMysqlFromRegistryOnMachineError": "Unable to find MySQL using the registry on the machine.",
         "UnableToFindMysqlFromRegistry": "Unable to find MySQL using the registry. Error: %s .",
