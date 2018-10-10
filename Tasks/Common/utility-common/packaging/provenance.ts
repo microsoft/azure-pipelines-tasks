@@ -5,30 +5,42 @@ import vstsClientBases = require("vso-node-api/ClientApiBases");
 import * as restclient from 'typed-rest-client/RestClient';
 
 export interface SessionRequest {
-    feed: string;
-    source: string;
+    /**
+     * Generic property bag to store data about the session
+     */
     data: { [key: string] : string; };
+    /**
+     * The feed name or id for the session
+     */
+    feed: string;
+    /**
+     * The type of session If a known value is provided, the Data dictionary will be validated for the presence of properties required by that type
+     */
+    source: string;
 }
 
 export interface SessionResponse {
-    sessionId: string
+    /**
+     * The identifier for the session
+     */
+    sessionId: string;
 }
+
 
 export class ProvenanceApi extends vstsClientBases.ClientApiBase {
     constructor(baseUrl: string, handlers: VsoBaseInterfaces.IRequestHandler[], options?: VsoBaseInterfaces.IRequestOptions) {
-        super(baseUrl, handlers, "vsts-packageprovenance-api", options);
+        super(baseUrl, handlers, "node-packageprovenance-api", options);
     }
 
     /**
-     * Create Provenance Session
+     * Creates a session, a wrapper around a feed that can store additional metadata on the packages published to the session.
      * 
-     * @param {string} protocol - the protocol (npm, nuget, etc) to create a session for
-     * @param {SessionRequest} sessionRequest - the data about the session.
+     * @param {SessionRequest} sessionRequest - The feed and metadata for the session
+     * @param {string} protocol - The protocol that the session will target
      */
-
     public async createSession(
-        protocol: string,
         sessionRequest: SessionRequest,
+        protocol: string
         ): Promise<SessionResponse> {
 
         return new Promise<SessionResponse>(async (resolve, reject) => {
