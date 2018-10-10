@@ -5,8 +5,8 @@ import * as path from "path";
 import * as util from "util";
 import * as telemetry from "utility-common/telemetry";
 import * as tl from "vsts-task-lib";
-import * as auth from "./Authentication";
-import * as utils from "./Utilities";
+import * as auth from "./authentication";
+import * as utils from "./utilities";
 
  // tslint:disable-next-line:max-classes-per-file
 export class Repository

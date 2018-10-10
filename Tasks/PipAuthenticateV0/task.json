@@ -61,7 +61,7 @@
   ,
    "execution": {
     "Node": {
-      "target": "PipAuthenticateMain.js",
+      "target": "pipauthenticatemain.js",
       "argumentFormat": ""
     }
   },
