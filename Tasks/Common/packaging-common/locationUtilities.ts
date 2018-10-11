@@ -115,7 +115,7 @@ export function getSystemAccessToken(): string {
         tl.debug('Got auth token');
         return auth.parameters['AccessToken'];
     } else {
-        tl.warning('Could not determine credentials to use for NuGet');
+        tl.warning('Could not determine credentials to use');
     }
 }
 
