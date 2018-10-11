@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 0,
-    "Patch": 12
+    "Minor": 1,
+    "Patch": 0
   },
   "demands": [
     "azureps"
@@ -147,6 +147,7 @@
     "InvalidScriptArguments0": "ms-resource:loc.messages.InvalidScriptArguments0",
     "InvalidScriptPath0": "ms-resource:loc.messages.InvalidScriptPath0",
     "InvalidAzurePsVersion": "ms-resource:loc.messages.InvalidAzurePsVersion",
-    "OverrideAzurePowerShellVersion": "ms-resource:loc.messages.OverrideAzurePowerShellVersion"
+    "OverrideAzurePowerShellVersion": "ms-resource:loc.messages.OverrideAzurePowerShellVersion",
+    "CertificateEndpointNotSupported": "ms-resource:loc.messages.CertificateEndpointNotSupported"
   }
 }
