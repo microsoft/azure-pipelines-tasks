@@ -228,6 +228,6 @@ export async function getNuGetFeedRegistryUrl(
         packagingCollectionUrl = collectionUrl;
     }
 
-    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId);
+    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, accessToken);
 }
 

@@ -180,12 +180,15 @@ export async function getFeedRegistryUrl(
             break;
     }
 
+    tl.debug("Getting feed registry url from " + packagingUrl);
+
     const vssConnection = getWebApiWithProxy(packagingUrl, accessToken);
 
     const data = await Retry(async () => {
         return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: feedId });
     }, 4, 100);
 
+    tl.debug("feed registry url: " + data.requestUrl);
     return data.requestUrl;
 }
 
