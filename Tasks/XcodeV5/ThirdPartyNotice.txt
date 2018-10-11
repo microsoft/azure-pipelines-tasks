@@ -2,53 +2,128 @@
 THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
 Do Not Translate or Localize
 
-Microsoft PyPI Publisher Task incorporates third party material from the projects listed below. The original copyright notice and the license under which Microsoft received such third party material are set forth below. Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.  
+This Azure DevOps extension (XcodeV5) is based on or incorporates material from the projects listed below (Third Party IP). The original copyright notice and the license under which Microsoft received such Third Party IP, are set forth below. Such licenses and notices are provided for informational purposes only. Microsoft licenses the Third Party IP to you under the licensing terms for the Azure DevOps extension. Microsoft reserves all other rights not expressly granted under this agreement, whether by implication, estoppel or otherwise.
 
-1.	balanced-match  (https://github.com/juliangruber/balanced-match)
-2.	brace-expansion (https://github.com/juliangruber/brace-expansion)
-3.	concat-map  (https://github.com/substack/node-concat-map)
-4.	minimatch (https://github.com/isaacs/minimatch)
-5.	Mockery (https://github.com/mfncooper/mockery)
-6.	Q (https://github.com/kriskowal/q)
-7.	semver (https://github.com/npm/node-semver/)
-8.	ShellJS (https://github.com/shelljs/shelljs)
-9.	uuid (https://github.com/kelektiv/node-uuid)
-10.	VSTS-task-lib  (https://github.com/Microsoft/vsts-task-lib)
+1.	@types/mocha (git+https://github.com/DefinitelyTyped/DefinitelyTyped.git)
+2.	@types/node (git+https://github.com/DefinitelyTyped/DefinitelyTyped.git)
+3.	balanced-match (git://github.com/juliangruber/balanced-match.git)
+4.	brace-expansion (git://github.com/juliangruber/brace-expansion.git)
+5.	concat-map (git://github.com/substack/node-concat-map.git)
+6.	minimatch (git://github.com/isaacs/minimatch.git)
+7.	mockery (git://github.com/mfncooper/mockery.git)
+8.	q (git://github.com/kriskowal/q.git)
+9.	semver (git+https://github.com/npm/node-semver.git)
+10.	shelljs (git://github.com/arturadib/shelljs.git)
+11.	uuid (git+https://github.com/kelektiv/node-uuid.git)
+12.	vsts-task-lib (git+https://github.com/Microsoft/vsts-task-lib.git)
 
-%% balanced-match  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+
+%% @types/mocha NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+MIT License
+
+    Copyright (c) Microsoft Corporation. All rights reserved.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE
+=========================================
+END OF @types/mocha NOTICES, INFORMATION, AND LICENSE
+
+%% @types/node NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+MIT License
+
+    Copyright (c) Microsoft Corporation. All rights reserved.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE
+=========================================
+END OF @types/node NOTICES, INFORMATION, AND LICENSE
+
+%% balanced-match NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 (MIT)
 
-Copyright (c) 2013 Julian Gruber <julian@juliangruber.com>
+Copyright (c) 2013 Julian Gruber &lt;julian@juliangruber.com&gt;
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 =========================================
-END OF balanced-match  NOTICES, INFORMATION, AND LICENSE
+END OF balanced-match NOTICES, INFORMATION, AND LICENSE
 
 %% brace-expansion NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-(MIT)
+MIT License
 
 Copyright (c) 2013 Julian Gruber <julian@juliangruber.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 =========================================
 END OF brace-expansion NOTICES, INFORMATION, AND LICENSE
 
-%% concat-map  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% concat-map NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-Copyright (c) James Halliday/substack
-
 This software is released under the MIT license:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -68,7 +143,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
-END OF concat-map  NOTICES, INFORMATION, AND LICENSE
+END OF concat-map NOTICES, INFORMATION, AND LICENSE
 
 %% minimatch NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -90,10 +165,10 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 =========================================
 END OF minimatch NOTICES, INFORMATION, AND LICENSE
 
-%% Mockery NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% mockery NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 Copyrights for code authored by Yahoo! Inc. is licensed under the following
-terms:
+ terms:
 
  MIT License
 
@@ -117,12 +192,11 @@ terms:
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE.
 =========================================
-END OF Mockery NOTICES, INFORMATION, AND LICENSE
+END OF mockery NOTICES, INFORMATION, AND LICENSE
 
-%% Q NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% q NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-Copyright 2009�2014 Kristopher Michael Kowal. All rights reserved.
-
+Copyright 2009–2017 Kristopher Michael Kowal. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
 deal in the Software without restriction, including without limitation the
@@ -140,37 +214,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
-
-The file q.js is prefaced by the following additional third-party subcomponent information:
-
-/*!
- *
- * Copyright 2009-2012 Kris Kowal under the terms of the MIT
- * license found at http://github.com/kriskowal/q/raw/master/LICENSE
- *
- * With parts by Tyler Close
- * Copyright 2007-2009 Tyler Close under the terms of the MIT X license found
- * at http://www.opensource.org/licenses/mit-license.html
- * Forked at ref_send.js version: 2009-05-11
- *
- * With parts by Mark Miller
- * Copyright (C) 2011 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
 =========================================
-END OF Q NOTICES, INFORMATION, AND LICENSE
+END OF q NOTICES, INFORMATION, AND LICENSE
 
 %% semver NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -192,9 +237,9 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 =========================================
 END OF semver NOTICES, INFORMATION, AND LICENSE
 
-%% ShellJS NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% shelljs NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
-Copyright (c) 2012, Artur Adib <arturadib@gmail.com>
+Copyright (c) 2012, Artur Adib <aadib@mozilla.com>
 All rights reserved.
 
 You may use this project under the terms of the New BSD license as follows:
@@ -221,33 +266,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================
-END OF ShellJS NOTICES, INFORMATION, AND LICENSE
+END OF shelljs NOTICES, INFORMATION, AND LICENSE
 
 %% uuid NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
+The MIT License (MIT)
+
 Copyright (c) 2010-2016 Robert Kieffer and other contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-Includes Chris Veness' SHA1
-
-Copyright (c) 2014 Chris Veness
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -269,7 +294,7 @@ SOFTWARE.
 =========================================
 END OF uuid NOTICES, INFORMATION, AND LICENSE
 
-%% VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+%% vsts-task-lib NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 The MIT License (MIT)
 
@@ -293,4 +318,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
-END OF VSTS-task-lib  NOTICES, INFORMATION, AND LICENSE
+END OF vsts-task-lib NOTICES, INFORMATION, AND LICENSE
+

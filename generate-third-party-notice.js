@@ -1,6 +1,11 @@
 /**
  * Run from the root of the vsts-tasks repo.
  * Usage: `node generate-third-party-notice.js <task name>`
+ *
+ * NOTE: delete node_modules and build the task before running this script!
+ * Otherwise, you may pick up old dependencies that are no longer needed.
+ *
+ * TODO: Make this part of the script
  */
 
 'use strict';
@@ -10,6 +15,12 @@ const os = require('os');
 const path = require('path');
 
 let verboseLogging = false;
+
+// TODO rebranding: change this URL when the repo URL changes
+function isThisRepo(url) {
+    return url === 'git+https://github.com/Microsoft/vsts-tasks.git'
+        || url ==='git+ssh://git@github.com/Microsoft/vsts-tasks.git';
+}
 
 const log = {
     info(message) {
@@ -104,6 +115,11 @@ function* collectLicenseInfo(modulesRoot) {
         const url = manifest.repository ? manifest.repository.url : null;
         if (!url) {
             log.warning(`Could not find a repository URL for ${absolutePath}`);
+        }
+
+        // Don't add license info for packages in this repo (such as those in Common)
+        if (isThisRepo(url)) {
+            continue;
         }
 
         const license = findLicense(absolutePath);
