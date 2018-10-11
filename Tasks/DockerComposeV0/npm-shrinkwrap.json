@@ -312,9 +312,9 @@
       }
     },
     "semver": {
-      "version": "5.5.1",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-5.5.1.tgz",
-      "integrity": "sha512-PqpAxfrEhlSUWge8dwIp4tZnQ25DIOthpiaHNIthsjEFQD6EvqUKUDM7L8O2rShkFccYo1VjJR0coWfNkCubRw=="
+      "version": "5.4.1",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.4.1.tgz",
+      "integrity": "sha512-WfG/X9+oATh81XtllIo/I8gOiY9EXRdv1cQdyykeXK17YcUW3EXUAi2To4pcH6nZtJPr7ZOpM5OMyWJZm+8Rsg=="
     },
     "shelljs": {
       "version": "0.3.0",
@@ -355,7 +355,7 @@
         "mockery": "1.7.0",
         "node-uuid": "1.4.8",
         "q": "1.4.1",
-        "semver": "5.5.1",
+        "semver": "5.4.1",
         "shelljs": "0.3.0"
       }
     },
