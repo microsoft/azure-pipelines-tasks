@@ -101,7 +101,7 @@ export async function run(nuGetPath: string): Promise<void> {
         }
 
         // Setting up auth info
-        const accessToken = auth.getSystemAccessToken();
+        const accessToken = pkgLocationUtils.getSystemAccessToken();
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions

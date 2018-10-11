@@ -2,7 +2,7 @@ import * as tl from "vsts-task-lib/task";
 import * as nutil from "packaging-common/nuget/Utility";
 import * as path from "path";
 import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner2";
-import * as packUtils from "packaging-common/nuget/PackUtilities";
+import * as packUtils from "packaging-common/PackUtilities";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 import * as telemetry from 'utility-common/telemetry';

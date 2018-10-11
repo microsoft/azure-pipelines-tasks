@@ -54,7 +54,7 @@ export async function run(nuGetPath: string): Promise<void> {
         // useCredConfig not placed here: This task will only support NuGet versions >= 3.5.0
         // which support credProvider both hosted and OnPrem
 
-        const accessToken = auth.getSystemAccessToken();
+        const accessToken = pkgLocationUtils.getSystemAccessToken();
         let urlPrefixes = packagingLocation.PackagingUris;
         tl.debug(`Discovered URL prefixes: ${urlPrefixes}`);
 

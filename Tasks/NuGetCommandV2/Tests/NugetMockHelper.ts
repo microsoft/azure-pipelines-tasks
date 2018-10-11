@@ -1,7 +1,7 @@
 import tmrm = require('vsts-task-lib/mock-run');
 import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
 import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
-import * as nugetPackUtils from "packaging-common/nuget/PackUtilities"
+import * as nugetPackUtils from "packaging-common/PackUtilities"
 
 export class NugetMockHelper {
     private defaultNugetVersion = '4.0.0';
@@ -167,7 +167,7 @@ export class NugetMockHelper {
     }
 
     public registerNuGetPackUtilsMock(date: Date) {
-        this.tmr.registerMock("packaging-common/nuget/PackUtilities", {
+        this.tmr.registerMock("packaging-common/PackUtilities", {
             getNowDateString: function(timezone: string) {
                 return nugetPackUtils.getUtcDateString(date);
             }
