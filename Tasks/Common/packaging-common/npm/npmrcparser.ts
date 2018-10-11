@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as ini from 'ini';
-import * as url from 'url';
 
 import * as tl from 'vsts-task-lib/task';
 

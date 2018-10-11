@@ -1,12 +1,12 @@
 import * as os from 'os';
 import * as tl from 'vsts-task-lib/task';
-import * as URL from 'url';
 
-import { HttpClient, HttpClientResponse }  from 'typed-rest-client/HttpClient';
+import { HttpClient }  from 'typed-rest-client/HttpClient';
 import { IHeaders, IRequestOptions } from 'typed-rest-client/Interfaces';
 
 import { NormalizeRegistry } from './npmrcparser';
-import * as util from './util';
+import * as util from '../util';
+import * as locationUtil from '../locationUtilities';
 
 export interface INpmRegistry {
     url: string;
@@ -115,13 +115,13 @@ export class NpmRegistry implements INpmRegistry {
     }
 
     public static async FromFeedId(packagingUri: string, feedId: string, authOnly?: boolean): Promise<NpmRegistry> {
-        const url = NormalizeRegistry(await util.getFeedRegistryUrl(packagingUri, feedId));
+        const url = NormalizeRegistry(await locationUtil.getFeedRegistryUrl(packagingUri, locationUtil.RegistryType.npm, feedId));
         return NpmRegistry.FromUrl(url, authOnly);
     }
 
     public static FromUrl(url: string, authOnly?: boolean): NpmRegistry {
         const nerfed = util.toNerfDart(url);
-        const auth = `${nerfed}:_authToken=${util.getSystemAccessToken()}`;
+        const auth = `${nerfed}:_authToken=${locationUtil.getSystemAccessToken()}`;
 
         return new NpmRegistry(url, auth, authOnly);
     }

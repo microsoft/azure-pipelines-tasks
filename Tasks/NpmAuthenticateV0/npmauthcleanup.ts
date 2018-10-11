@@ -1,4 +1,4 @@
-import * as util from 'npm-common/util';
+import * as util from 'packaging-common/util';
 import * as constants from './constants';
 import * as tl from 'vsts-task-lib/task';
 import * as fs from 'fs';

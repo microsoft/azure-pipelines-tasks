@@ -6,16 +6,16 @@ import * as tl from 'vsts-task-lib/task';
 import { NpmCommand, NpmTaskInput } from './constants';
 import * as npmCustom from './npmcustom';
 import * as npmPublish from './npmpublish';
-import { INpmRegistry } from 'npm-common/npmregistry';
+import { INpmRegistry } from 'packaging-common/npm/npmregistry';
 import * as telemetry from 'utility-common/telemetry';
-import * as util from 'npm-common/util';
-import * as pkgLocationUtils from 'utility-common/packaging/locationUtilities';
+import * as util from 'packaging-common/util';
+import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
     } catch (error) {
         tl.debug('Unable to get packaging URIs, using default collection URI');
         tl.debug(JSON.stringify(error));
