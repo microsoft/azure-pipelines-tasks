@@ -13,7 +13,7 @@
   "loc.messages.ListAvailableVersions": "Versions in %s:",
   "loc.messages.PlatformNotRecognized": "Platform not recognized",
   "loc.messages.PrependPath": "Prepending PATH environment variable with directory: %s",
-  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s.",
+  "loc.messages.ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
   "loc.messages.ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
-  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in $(Agent.ToolsDirectory)."
+  "loc.messages.VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
 }
