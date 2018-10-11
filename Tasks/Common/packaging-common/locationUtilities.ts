@@ -149,7 +149,11 @@ interface RegistryLocation {
     locationId: string
 };
 
-export async function getFeedRegistryUrl(packagingUrl: string, registryType: RegistryType, feedId: string): Promise<string> {
+export async function getFeedRegistryUrl(
+    packagingUrl: string, 
+    registryType: RegistryType, 
+    feedId: string,
+    accessToken?: string): Promise<string> {
     let loc : RegistryLocation;
     switch (registryType) {
         case RegistryType.npm:
@@ -176,7 +180,7 @@ export async function getFeedRegistryUrl(packagingUrl: string, registryType: Reg
             break;
     }
 
-    const vssConnection = getWebApiWithProxy(packagingUrl);
+    const vssConnection = getWebApiWithProxy(packagingUrl, accessToken);
 
     const data = await Retry(async () => {
         return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: feedId });
