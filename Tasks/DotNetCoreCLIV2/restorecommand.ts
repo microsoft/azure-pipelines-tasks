@@ -1,15 +1,13 @@
 import * as tl from 'vsts-task-lib/task';
 import * as Q from 'q';
 import * as utility from './Common/utility';
-import locationHelpers = require('nuget-task-common/LocationHelpers');
-import * as auth from 'nuget-task-common/Authentication';
-import { NuGetConfigHelper2 } from 'nuget-task-common/NuGetConfigHelper2';
+import * as auth from 'packaging-common/nuget/Authentication';
+import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
 import * as path from 'path';
-import { IPackageSource } from 'nuget-task-common/Authentication';
 import { IExecOptions } from 'vsts-task-lib/toolrunner';
-import * as nutil from 'nuget-task-common/Utility';
-import * as commandHelper from 'nuget-task-common/CommandHelper';
-import * as pkgLocationUtils from 'utility-common/packaging/locationUtilities';
+import * as nutil from 'packaging-common/nuget/Utility';
+import * as commandHelper from 'packaging-common/nuget/CommandHelper';
+import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -59,7 +57,7 @@ export async function run(): Promise<void> {
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
 
-        const accessToken = auth.getSystemAccessToken();
+        const accessToken = pkgLocationUtils.getSystemAccessToken();
 
         const externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray('externalEndpoints');
         const authInfo = new auth.NuGetExtendedAuthInfo(new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, /*useCredConfig*/ true), externalAuthArr);
@@ -92,11 +90,11 @@ export async function run(): Promise<void> {
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === 'select') {
-            const sources: Array<IPackageSource> = new Array<IPackageSource>();
+            const sources: Array<auth.IPackageSource> = new Array<auth.IPackageSource>();
             const feed = tl.getInput('feedRestore');
             if (feed) {
-                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, accessToken, feed, null);
-                sources.push(<IPackageSource>
+                const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, null, accessToken);
+                sources.push(<auth.IPackageSource>
                     {
                         feedName: feed,
                         feedUri: feedUrl,
@@ -106,12 +104,7 @@ export async function run(): Promise<void> {
 
             const includeNuGetOrg = tl.getBoolInput('includeNuGetOrg', false);
             if (includeNuGetOrg) {
-                sources.push(<IPackageSource>
-                    {
-                        feedName: 'NuGetOrg',
-                        feedUri: locationHelpers.NUGET_ORG_V3_URL,
-                        isInternal: false
-                    });
+                sources.push(auth.NuGetOrgV3PackageSource);
             }
 
             // Creating NuGet.config for the user
