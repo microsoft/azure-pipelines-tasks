@@ -112,5 +112,4 @@ export class NugetMockHelper {
         this.tmr.registerMock('packaging-common/locationUtilities', mockLocationUtils);
         this.tmr.registerMock('../locationUtilities', mockLocationUtils);
     }
-
 }

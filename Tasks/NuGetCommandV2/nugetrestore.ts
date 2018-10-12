@@ -13,9 +13,6 @@ import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
 import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 
-const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
-const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
-
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
         public nuGetPath: string,
@@ -167,14 +164,10 @@ export async function run(nuGetPath: string): Promise<void> {
 
             const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
-                const nuGetUrl: string = nuGetVersion.productVersion.a < 3
-                                        ? NUGET_ORG_V2_URL
-                                        : NUGET_ORG_V3_URL;
-                sources.push({
-                    feedName: "NuGetOrg",
-                    feedUri: nuGetUrl,
-                    isInternal: false,
-                });
+                const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
+                                        ? auth.NuGetOrgV2PackageSource
+                                        : auth.NuGetOrgV2PackageSource;
+                sources.push(nuGetSource);
             }
 
             // Creating NuGet.config for the user
