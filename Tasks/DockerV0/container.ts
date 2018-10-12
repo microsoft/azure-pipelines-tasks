@@ -32,9 +32,36 @@ connection.open(tl.getInput("dockerHostEndpoint"), registryAuthenticationToken);
 
 // Run the specified action
 var action = tl.getInput("action", true);
+let command = "";
+
+if(action !== "run a docker command") {
+    command = action;
+}
+else {
+    let customCommand = tl.getInput("customCommand", true);
+
+    // sanitize the custom command parameters to log just the action
+    let commandTokens = customCommand.split(" ");
+    if(commandTokens.length > 0) {
+        for(let index = 0; index < commandTokens.length; index ++) {
+            // Stop reading tokens when we see any that starts with a special character
+            if(/^[a-z0-9A-Z]/i.test(commandTokens[index])) {
+                command = command + commandTokens[index] + " ";
+            }
+            else{
+                break;
+            }
+        }
+        command = command.trim();
+    }
+    else {
+        command = "run a docker command"
+    }
+}
+
 var telemetry = {
     registryType: registryType,
-    command: action !== "Run a Docker command" ? action : tl.getInput("customCommand", true)
+    command: command
 };
 
 console.log("##vso[telemetry.publish area=%s;feature=%s]%s",
