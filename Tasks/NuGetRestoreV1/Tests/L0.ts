@@ -35,7 +35,6 @@ describe('NuGetRestore Suite', function () {
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe restore c:\\agent\\home\\directory\\single.sln -NonInteractive'), 'it should have run NuGet');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), "should have nuget output");
-        assert(tr.stdout.indexOf('Got auth token') >= 0, "should have got Auth token");
         assert(tr.stdout.indexOf('credProviderPath = ') >= 0, "should have found credential provider path");
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.warningIssues.length, 0, "should have no warnings");

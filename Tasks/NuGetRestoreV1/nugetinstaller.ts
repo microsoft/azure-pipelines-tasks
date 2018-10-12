@@ -1,23 +1,17 @@
-import * as tl from "vsts-task-lib/task";
-// Remove once task lib 2.0.4 releases
-global['_vsts_task_lib_loaded'] = true;
 import * as path from "path";
 import * as Q  from "q";
+import * as tl from "vsts-task-lib/task";
 import {IExecOptions} from "vsts-task-lib/toolrunner";
 
-import * as auth from "nuget-task-common/Authentication";
-import INuGetCommandOptions from "nuget-task-common/INuGetCommandOptions";
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import {NuGetConfigHelper} from "nuget-task-common/NuGetConfigHelper";
-import {IPackageSource} from "nuget-task-common/NuGetConfigHelper";
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
-import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
-import * as nutil from "nuget-task-common/Utility";
-import * as vsts from "vso-node-api/WebApi";
-import * as vsom from 'vso-node-api/VsoClient';
-import peParser = require('nuget-task-common/pe-parser/index');
-import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as auth from "packaging-common/nuget/Authentication";
+import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions";
+import {IPackageSource, NuGetConfigHelper} from "packaging-common/nuget/NuGetConfigHelper";
+import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
+import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
+import * as nutil from "packaging-common/nuget/Utility";
+import peParser = require('packaging-common/pe-parser/index');
+import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
 const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
@@ -36,6 +30,7 @@ class RestoreOptions implements INuGetCommandOptions {
 async function main(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
+        tl.debug("getting the uris");
         packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug("Unable to get packaging URIs, using default collection URI");
@@ -45,7 +40,7 @@ async function main(): Promise<void> {
             PackagingUris: [collectionUrl],
             DefaultPackagingUri: collectionUrl};
     }
-
+    tl.debug("got the uris");
     let buildIdentityDisplayName: string = null;
     let buildIdentityAccount: string = null;
 
@@ -106,7 +101,7 @@ async function main(): Promise<void> {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
-        let accessToken = auth.getSystemAccessToken();
+        let accessToken = pkgLocationUtils.getSystemAccessToken();
         const authInfo = new auth.NuGetAuthInfo(urlPrefixes, accessToken);
         let environmentSettings: ngToolRunner.NuGetEnvironmentSettings = {
             authInfo: authInfo,
@@ -142,7 +137,7 @@ async function main(): Promise<void> {
             let sources: Array<IPackageSource> = new Array<IPackageSource>();
             let feed = tl.getInput("feed");
             if (feed) {
-                let feedUrl:string = await getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, accessToken, feed, nuGetVersion);
+                let feedUrl:string = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, feed, nuGetVersion, accessToken);
                 sources.push(<IPackageSource>
                 {
                     feedName: feed,
@@ -255,34 +250,6 @@ function restorePackagesAsync(solutionFile: string, options: RestoreOptions): Q.
     }
     
     return nugetTool.exec({ cwd: path.dirname(solutionFile) } as IExecOptions);
-}
-
-async function getNuGetFeedRegistryUrl(packagingCollectionUrl: string, accessToken:string, feedId: string, nuGetVersion: VersionInfo): Promise<string>
-{
-    const ApiVersion = "3.0-preview.1";
-    let PackagingAreaName: string = "nuget";
-    let PackageAreaId: string = nuGetVersion.productVersion.a < 3 ? "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA" : "9D3A4E8E-2F8F-4AE1-ABC2-B461A51CB3B3";
-
- 	let credentialHandler = vsts.getBearerHandler(accessToken);
-    let collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-    
-    if (!packagingCollectionUrl)
-    {
-        packagingCollectionUrl = collectionUrl;
-    }
-
-    const overwritePackagingCollectionUrl = tl.getVariable("NuGet.OverwritePackagingCollectionUrl");
-    if (overwritePackagingCollectionUrl) {
-        tl.debug("Overwriting packaging collection URL");
-        packagingCollectionUrl = overwritePackagingCollectionUrl;
-    }
-    
- 	let vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
- 	let coreApi = vssConnection.getCoreApi();
-
-    let data = await coreApi.vsoClient.getVersioningData(ApiVersion, PackagingAreaName, PackageAreaId, { feedId: feedId });
-
-    return data.requestUrl;
 }
 
 main();
