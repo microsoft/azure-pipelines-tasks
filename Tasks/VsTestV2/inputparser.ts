@@ -375,9 +375,7 @@ function getDiagnosticsSettings(inputDataContract : idc.InputDataContract) : idc
     if(enableDiagnosticsSettings)
     {
         inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = tl.getBoolInput('diagnosticsEnabled');
-        if(tl.getInput('collectDumpOn').toLowerCase() === 'always') {
-            inputDataContract.ExecutionSettings.DiagnosticsSettings.CollectDumpAlways = true;
-        }
+        inputDataContract.ExecutionSettings.DiagnosticsSettings.DumpCollectionType = tl.getInput('collectDumpOn').toLowerCase();
     }
     else {
         inputDataContract.ExecutionSettings.DiagnosticsSettings.Enabled = false;

@@ -104,7 +104,7 @@ export interface ExecutionSettings {
 
 export interface DiagnosticsSettings {
     Enabled : boolean;
-    CollectDumpAlways : boolean;
+    DumpCollectionType : string;
 }
 
 export interface TiaSettings {

@@ -32,8 +32,10 @@ export async function useRubyVersion(parameters: TaskParameters, platform: Platf
         // Fail and list available versions
         throw new Error([
             task.loc('VersionNotFound', parameters.versionSpec),
-            task.loc('ListAvailableVersions'),
-            tool.findLocalToolVersions('Ruby')
+            task.loc('ListAvailableVersions', task.getVariable('Agent.ToolsDirectory')),
+            tool.findLocalToolVersions('Ruby'),
+            task.loc('ToolNotFoundMicrosoftHosted', 'Ruby', 'https://aka.ms/hosted-agent-software'),
+            task.loc('ToolNotFoundSelfHosted', 'Ruby', 'https://go.microsoft.com/fwlink/?linkid=2005989')
         ].join(os.EOL));
     }
 
