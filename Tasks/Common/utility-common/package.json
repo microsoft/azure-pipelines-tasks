@@ -16,7 +16,6 @@
     "semver": "^5.4.1",
     "vso-node-api": "6.5.0",
     "vsts-task-lib": "2.6.0",
-    "vsts-task-tool-lib": "0.4.0",
-    "js-base64": "2.4.3"
+    "vsts-task-tool-lib": "0.4.0"
   }
 }

@@ -7,8 +7,6 @@ import * as util from "util";
 const uuidV4 = require('uuid/v4');
 const kubectlToolName = "kubectl"
 export const stableKubectlVersion = "v1.8.9"
-var Base64 = require('js-base64').Base64;
-
 
 var fs = require('fs');
 
@@ -58,7 +56,8 @@ export function createKubeconfig(kubernetesServiceEndpoint: string): string
     //populate server url, ca cert and token fields
     kubeconfigTemplate.clusters[0].cluster.server = tl.getEndpointUrl(kubernetesServiceEndpoint, false);
     kubeconfigTemplate.clusters[0].cluster["certificate-authority-data"] = tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'serviceAccountCertificate', false);
-    kubeconfigTemplate.users[0].user.token = Base64.decode(tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'apiToken', false));
+    var base64ApiToken = Buffer.from(tl.getEndpointAuthorizationParameter(kubernetesServiceEndpoint, 'apiToken', false), 'base64');
+    kubeconfigTemplate.users[0].user.token = base64ApiToken.toString();
 
     return JSON.stringify(kubeconfigTemplate);
 }
