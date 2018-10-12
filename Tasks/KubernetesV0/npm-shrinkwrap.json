@@ -2,11 +2,6 @@
   "requires": true,
   "lockfileVersion": 1,
   "dependencies": {
-    "@types/chai": {
-      "version": "3.5.2",
-      "resolved": "https://registry.npmjs.org/@types/chai/-/chai-3.5.2.tgz",
-      "integrity": "sha1-wRzSgX06QBt7oPWkIPNcVhObHB4="
-    },
     "@types/del": {
       "version": "2.2.33",
       "resolved": "https://registry.npmjs.org/@types/del/-/del-2.2.33.tgz",
@@ -30,11 +25,6 @@
         "@types/node": "6.0.117"
       }
     },
-    "@types/js-yaml": {
-      "version": "3.11.2",
-      "resolved": "https://registry.npmjs.org/@types/js-yaml/-/js-yaml-3.11.2.tgz",
-      "integrity": "sha512-JRDtMPEqXrzfuYAdqbxLot1GvAr/QvicIZAnOAigZaj8xVMhuSJTg/xsv9E1TvyL+wujYhRLx9ZsQ0oFOSmwyA=="
-    },
     "@types/minimatch": {
       "version": "3.0.3",
       "resolved": "https://registry.npmjs.org/@types/minimatch/-/minimatch-3.0.3.tgz",
@@ -54,28 +44,6 @@
       "version": "1.5.1",
       "resolved": "https://registry.npmjs.org/@types/q/-/q-1.5.1.tgz",
       "integrity": "sha512-eqz8c/0kwNi/OEHQfvIuJVLTst3in0e7uTKeuY+WL/zfKn0xVujOTp42bS/vUUokhK5P2BppLd9JXMOMHcgbjA=="
-    },
-    "@types/shelljs": {
-      "version": "0.3.33",
-      "resolved": "https://registry.npmjs.org/@types/shelljs/-/shelljs-0.3.33.tgz",
-      "integrity": "sha1-32E73biCJe0JzlyDX2INyq8VXms=",
-      "requires": {
-        "@types/node": "6.0.117"
-      }
-    },
-    "@types/sinon": {
-      "version": "1.16.36",
-      "resolved": "https://registry.npmjs.org/@types/sinon/-/sinon-1.16.36.tgz",
-      "integrity": "sha1-dLtu15KFl8Gz+xsAkAXpTcbq41c="
-    },
-    "@types/sinon-chai": {
-      "version": "2.7.33",
-      "resolved": "https://registry.npmjs.org/@types/sinon-chai/-/sinon-chai-2.7.33.tgz",
-      "integrity": "sha512-NiLSxS6KXOO4jwUhgF9aaXFAn7MsVTEgA0oj0xE/m/eZaHZC6hgrCrW6VeWfDYjRt6XfQxwS4DY4R6oI5MukmQ==",
-      "requires": {
-        "@types/chai": "3.5.2",
-        "@types/sinon": "1.16.36"
-      }
     },
     "array-union": {
       "version": "1.0.2",
