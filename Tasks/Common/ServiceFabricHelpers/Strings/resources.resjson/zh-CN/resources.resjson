@@ -10,8 +10,8 @@
   "loc.messages.ServiceFabricSDKNotInstalled": "未在生成代理上安装 Service Fabric SDK。请转到 https://aka.ms/servicefabric 下载并安装它。",
   "loc.messages.UseWindowsSecurity": "已指定 Windows 安全性。连接时，将使用 -WindowsCredential 开关。",
   "loc.messages.ServerCertificateNotFoundForTextEncrypt": "需要指纹为“{0}”的群集服务器证书才可加密文本，但 \"CurrentUser\\My\" 证书存储位置中的代理计算机上找不到该证书。",
-  "loc.messages.RetryingClusterConnection": "Retrying to connect to cluster..",
-  "loc.messages.WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
-  "loc.messages.TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
-  "loc.messages.SfSdkVersion": "Service fabric SDK version: {0}."
+  "loc.messages.RetryingClusterConnection": "正在重试连接到群集...",
+  "loc.messages.WarningOnRemoveCertificate": "尝试删除客户端证书时出错。错误消息: {0}",
+  "loc.messages.TelemetryWarning": "无法推送遥测数据。错误: {0}",
+  "loc.messages.SfSdkVersion": "Service Fabric SDK 版本: {0}。"
 }

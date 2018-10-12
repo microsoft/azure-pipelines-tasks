@@ -1,9 +1,9 @@
 {
-  "loc.friendlyName": "Installer für Go-Tool",
-  "loc.helpMarkDown": "[Weitere Informationen](https://go.microsoft.com/fwlink/?linkid=867581)",
+  "loc.friendlyName": "Go Tool Installer",
+  "loc.helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867581)",
   "loc.description": "Finds or downloads a specific version of Go in the tools cache and adds it to the PATH. Use this to set the version of Go used in subsequent tasks.",
-  "loc.instanceNameFormat": "Go $(version) verwenden",
-  "loc.group.displayName.advanced": "Erweitert",
+  "loc.instanceNameFormat": "Use Go $(version)",
+  "loc.group.displayName.advanced": "Advanced",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "The Go version to download (if necessary) and use. Example: 1.9.3",
   "loc.input.label.goPath": "GOPATH",

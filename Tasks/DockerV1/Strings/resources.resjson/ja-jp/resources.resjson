@@ -20,7 +20,7 @@
   "loc.input.label.dockerFile": "Dockerfile",
   "loc.input.help.dockerFile": "Path to the Dockerfile.",
   "loc.input.label.arguments": "Arguments",
-  "loc.input.help.arguments": "Docker command options.",
+  "loc.input.help.arguments": "Docker command options. In case of 'tag' command, you can specify additional tags for Docker image here.",
   "loc.input.label.useDefaultContext": "Use default build context",
   "loc.input.help.useDefaultContext": "Set the build context to the directory that contains the Dockerfile.",
   "loc.input.label.buildContext": "Build context",

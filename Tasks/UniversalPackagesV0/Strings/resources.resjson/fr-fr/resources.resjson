@@ -32,7 +32,7 @@
   "loc.input.help.externalEndpoints": "Credentials to use for external feeds.",
   "loc.input.label.feedListPublish": "Destination Feed",
   "loc.input.label.packageListPublish": "Package name",
-  "loc.input.help.packageListPublish": "Select a package ID to publish or type a new package ID if you've never published a version of this package before.",
+  "loc.input.help.packageListPublish": "Select a package ID to publish or type a new package ID if you've never published a version of this package before. Package names must be lower case and can only use letters, numbers, and dashes(-).",
   "loc.input.label.feedPublishExternal": "Feed",
   "loc.input.help.feedPublishExternal": "Feed name",
   "loc.input.label.packagePublishExternal": "Package name",
