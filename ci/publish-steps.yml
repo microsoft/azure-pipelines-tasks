@@ -65,18 +65,18 @@ steps:
   displayName: 'Disk Info'
 
 # Stage aggregate
-- script: node .\ci\stage-aggregate.js
-  displayName: Stage aggregate
+# - script: node .\ci\stage-aggregate.js
+#   displayName: Stage aggregate
 
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
+# - powershell: 'Get-PSDrive C,D' 
+#   displayName: 'Disk Info'
 
 # Publish aggregate artifact
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathToPublish: _package/publish-layout
-    artifactName: TaskPackage
-    publishLocation: container
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     pathToPublish: _package/publish-layout
+#     artifactName: TaskPackage
+#     publishLocation: container
 
 - powershell: 'Get-PSDrive C,D' 
   displayName: 'Disk Info'
