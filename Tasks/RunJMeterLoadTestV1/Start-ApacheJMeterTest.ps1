@@ -34,6 +34,11 @@ else {
 $global:RestTimeout = 60
 $global:apiVersion = "api-version=1.0"
 
+# Force powershell to use TLS 1.2 for all communications
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls12;
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls11;
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls10;
+
 function InitializeRestHeaders()
 {
 	$restHeaders = New-Object -TypeName "System.Collections.Generic.Dictionary[[String], [String]]"
