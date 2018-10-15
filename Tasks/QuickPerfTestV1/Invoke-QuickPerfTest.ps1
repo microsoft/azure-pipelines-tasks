@@ -64,10 +64,13 @@ function ValidatePatToken($token)
 	}
 }
 
+# Force powershell to use TLS 1.2 for all communications
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+
 # Load all dependent files for execution
 . $PSScriptRoot/CltTasksUtility.ps1
 . $PSScriptRoot/VssConnectionHelper.ps1
-. $PSScriptRoot/CltThresholdValidationHelper
+. $PSScriptRoot/CltThresholdValidationHelpers
 
 #Set the userAgent appropriately based on whether the task is running as part of a ci or cd
 if($Env:SYSTEM_HOSTTYPE -ieq "build") {    
