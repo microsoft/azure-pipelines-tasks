@@ -1,7 +1,4 @@
 import * as path from "path";
-import * as vsts from "vso-node-api/WebApi";
-import locationHelpers = require("./LocationHelpers");
-import {VersionInfo} from "./pe-parser/VersionResource";
 import * as tl from "vsts-task-lib/task";
 import * as auth from "./Authentication";
 import { IPackageSource } from "./Authentication";

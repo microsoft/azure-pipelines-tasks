@@ -6,6 +6,21 @@ export interface IPackageSource {
     isInternal: boolean;
 }
 
+const NUGET_ORG_V2_URL: string = "https://www.nuget.org/api/v2/";
+const NUGET_ORG_V3_URL: string = "https://api.nuget.org/v3/index.json";
+
+export const NuGetOrgV2PackageSource: IPackageSource = {
+    feedName: "NuGetOrg",
+    feedUri: NUGET_ORG_V2_URL,
+    isInternal: false
+}
+
+export const NuGetOrgV3PackageSource: IPackageSource = {
+    feedName: "NuGetOrg",
+    feedUri: NUGET_ORG_V3_URL,
+    isInternal: false
+}
+
 export class NuGetAuthInfo {
     constructor(
         public uriPrefixes: string[],
@@ -74,16 +89,4 @@ export enum ExternalAuthType
     Token, 
     UsernamePassword,
     ApiKey
-}
-
-export function getSystemAccessToken(): string {
-    tl.debug("Getting credentials for local feeds");
-    let auth = tl.getEndpointAuthorization("SYSTEMVSSCONNECTION", false);
-    if (auth.scheme === "OAuth") {
-        tl.debug("Got auth token");
-        return auth.parameters["AccessToken"];
-    }
-    else {
-        tl.warning("Could not determine credentials to use for NuGet");
-    }
 }

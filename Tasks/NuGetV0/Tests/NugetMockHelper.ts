@@ -1,6 +1,6 @@
 import tmrm = require('vsts-task-lib/mock-run');
-import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
-import {VersionInfo, VersionStrings} from 'nuget-task-common/pe-parser/VersionResource'
+import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
+import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
 
 export class NugetMockHelper {
     private defaultNugetVersion = '3.5.0';
@@ -14,7 +14,7 @@ export class NugetMockHelper {
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
-        this.registerNugetLocationHelpersMock();
+        this.registerLocationHelpersMock();
     }
     
     public registerDefaultNugetVersionMock() {
@@ -22,7 +22,7 @@ export class NugetMockHelper {
     }
 
     public registerNugetToolGetterMock() {
-        this.tmr.registerMock('nuget-task-common/NuGetToolGetter', {
+        this.tmr.registerMock('packaging-common/nuget/NuGetToolGetter', {
             getNuGet: function(versionSpec) {
                 return "c:\\from\\tool\\installer\\nuget.exe";
             },
@@ -31,7 +31,7 @@ export class NugetMockHelper {
     
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
         this.registerNugetVersionMockInternal(productVersion, versionInfoVersion);
-        this.tmr.registerMock('nuget-task-common/pe-parser/index', {
+        this.tmr.registerMock('packaging-common/pe-parser/index', {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -43,7 +43,7 @@ export class NugetMockHelper {
     }
 
     private registerNugetVersionMockInternal(productVersion: string, versionInfoVersion: number[]) {
-        this.tmr.registerMock('./pe-parser', {
+        this.tmr.registerMock('../pe-parser', {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -54,7 +54,7 @@ export class NugetMockHelper {
     }
     
     public registerNugetUtilityMock(projectFile: string[]) {
-        this.tmr.registerMock('nuget-task-common/Utility', {
+        this.tmr.registerMock('packaging-common/nuget/Utility', {
             resolveFilterSpec: function(filterSpec, basePath?, allowEmptyMatch?) {
                 return projectFile;
             },
@@ -80,11 +80,6 @@ export class NugetMockHelper {
         });
     }
     
-    public registerNugetConfigMock() {
-        var nchm = require('./NuGetConfigHelper-mock');
-        this.tmr.registerMock('nuget-task-common/NuGetConfigHelper', nchm);
-    }
-    
     public registerToolRunnerMock() {
         var mtt = require('vsts-task-lib/mock-toolrunner');
         this.tmr.registerMock('vsts-task-lib/toolrunner', mtt);
@@ -97,14 +92,8 @@ export class NugetMockHelper {
         this.tmr.setAnswers(a);
     }
 
-    public registerNugetLocationHelpersMock() {
-        this.tmr.registerMock('nuget-task-common/LocationHelpers', {
-            assumeNuGetUriPrefixes: function(input) {
-                return [input];
-            }
-        });
-
-        this.tmr.registerMock('utility-common/packaging/locationUtilities', {
+    public registerLocationHelpersMock() {
+        const mockLocationUtils = {
             getPackagingUris: function(input) {
                 const collectionUrl: string = "https://vsts/packagesource";
                 return {
@@ -112,7 +101,26 @@ export class NugetMockHelper {
                     DefaultPackagingUri: collectionUrl
                 };
             },
-            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
-        });
+            getWebApiWithProxy: function(serviceUri: string, accessToken?: string) {
+                return {
+                    vsoClient: {
+                        getVersioningData: async function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
+                            return { requestUrl: 'foobar' };
+                        }
+                    }
+                }
+            },
+            getSystemAccessToken: function() {
+                return "token";
+            },
+            getFeedRegistryUrl: function(packagingUrl: string, registryType, feedId: string, accessToken?: string) {
+                return packagingUrl + "/" + feedId;
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3},
+            RegistryType: {npm: 1, NuGetV2: 2, NuGetV3: 3}
+        };
+
+        this.tmr.registerMock('packaging-common/locationUtilities', mockLocationUtils);
+        this.tmr.registerMock('../locationUtilities', mockLocationUtils);
     }
 }

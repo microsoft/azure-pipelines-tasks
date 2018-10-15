@@ -2,18 +2,16 @@ import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";
 
-import * as auth from "nuget-task-common/Authentication";
-import { IPackageSource } from "nuget-task-common/Authentication";
-import * as commandHelper from "nuget-task-common/CommandHelper";
-import locationHelpers = require("nuget-task-common/LocationHelpers");
-import {NuGetConfigHelper2} from "nuget-task-common/NuGetConfigHelper2";
-import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import peParser = require("nuget-task-common/pe-parser/index");
-import {VersionInfo} from "nuget-task-common/pe-parser/VersionResource";
-import * as nutil from "nuget-task-common/Utility";
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as auth from "packaging-common/nuget/Authentication";
+import * as commandHelper from "packaging-common/nuget/CommandHelper";
+import {NuGetConfigHelper2} from "packaging-common/nuget/NuGetConfigHelper2";
+import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner2";
+import peParser = require("packaging-common/pe-parser/index");
+import {VersionInfo} from "packaging-common/pe-parser/VersionResource";
+import * as nutil from "packaging-common/nuget/Utility";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
-import INuGetCommandOptions from "./Common/INuGetCommandOptions";
+import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions2";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -100,7 +98,7 @@ export async function run(nuGetPath: string): Promise<void> {
             urlPrefixes = urlPrefixes.concat(testPrefixes.split(";"));
             tl.debug(`All URL prefixes: ${urlPrefixes}`);
         }
-        const accessToken = auth.getSystemAccessToken();
+        const accessToken = pkgLocationUtils.getSystemAccessToken();
         const externalAuthArr: auth.ExternalAuthInfo[] = commandHelper.GetExternalAuthInfoArray("externalEndpoints");
         const authInfo = new auth.NuGetExtendedAuthInfo(
             new auth.InternalAuthInfo(
@@ -149,14 +147,14 @@ export async function run(nuGetPath: string): Promise<void> {
         // Now that the NuGetConfigHelper was initialized with all the known information we can proceed
         // and check if the user picked the 'select' option to fill out the config file if needed
         if (selectOrConfig === "select") {
-            const sources: IPackageSource[] = new Array<IPackageSource>();
+            const sources: auth.IPackageSource[] = new Array<auth.IPackageSource>();
             const feed = tl.getInput("feedRestore");
             if (feed) {
                 const feedUrl: string = await nutil.getNuGetFeedRegistryUrl(
                     packagingLocation.DefaultPackagingUri,
-                    accessToken,
                     feed,
-                    nuGetVersion);
+                    nuGetVersion,
+                    accessToken);
                 sources.push({
                     feedName: feed,
                     feedUri: feedUrl,
@@ -166,14 +164,10 @@ export async function run(nuGetPath: string): Promise<void> {
 
             const includeNuGetOrg = tl.getBoolInput("includeNuGetOrg", false);
             if (includeNuGetOrg) {
-                const nuGetUrl: string = nuGetVersion.productVersion.a < 3
-                                        ? locationHelpers.NUGET_ORG_V2_URL
-                                        : locationHelpers.NUGET_ORG_V3_URL;
-                sources.push({
-                    feedName: "NuGetOrg",
-                    feedUri: nuGetUrl,
-                    isInternal: false,
-                });
+                const nuGetSource: auth.IPackageSource = nuGetVersion.productVersion.a < 3
+                                        ? auth.NuGetOrgV2PackageSource
+                                        : auth.NuGetOrgV2PackageSource;
+                sources.push(nuGetSource);
             }
 
             // Creating NuGet.config for the user

@@ -5,7 +5,7 @@ import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunne
 import * as auth from "./Authentication";
 import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
 import * as ngutil from "./Utility";
-import * as peParser from "./pe-parser";
+import * as peParser from "../pe-parser";
 import * as commandHelper from "./CommandHelper";
 
 // NuGetToolRunner2 can handle environment setup for new authentication scenarios where

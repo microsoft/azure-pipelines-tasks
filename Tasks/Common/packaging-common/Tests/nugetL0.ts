@@ -1,10 +1,6 @@
-import * as path from "path";
 import * as assert from "assert";
-import * as ma from "vsts-task-lib/mock-answer";
-import * as tmrm from "vsts-task-lib/mock-run";
-import * as ttm from "vsts-task-lib/mock-test";
 import * as mockery from "mockery";
-import { INuGetXmlHelper } from "../INuGetXmlHelper";
+import { INuGetXmlHelper } from "../nuget/INuGetXmlHelper";
 
 class MockedTask {
     private _proxyUrl: string;
@@ -37,7 +33,7 @@ var mockedUsername: string = "mockedUsername";
 var mockedPassword: string = "mockedPassword";
 mockery.registerMock("vsts-task-lib/task", mockedTask);
 
-describe("nuget-task-common Task Suite", function() {
+export function nugetcommon() {
     beforeEach(() => {
         mockery.enable({
             useCleanCache: true,
@@ -52,7 +48,7 @@ describe("nuget-task-common Task Suite", function() {
 
     it("No HTTP_PROXY", (done: MochaDone) => {
         mockedTask.setMockedValues();
-        let ngToolRunner = require("../NuGetToolRunner");
+        let ngToolRunner = require("../nuget/NuGetToolRunner");
 
         let httpProxy: string = ngToolRunner.getNuGetProxyFromEnvironment();
         assert.strictEqual(httpProxy, undefined);
@@ -62,7 +58,7 @@ describe("nuget-task-common Task Suite", function() {
 
     it("Finds HTTP_PROXY", (done: MochaDone) => {
         mockedTask.setMockedValues(mockedProxy);
-        let ngToolRunner = require("../NuGetToolRunner");
+        let ngToolRunner = require("../nuget/NuGetToolRunner");
 
         let httpProxy: string = ngToolRunner.getNuGetProxyFromEnvironment();
         assert.strictEqual(httpProxy, mockedProxy);
@@ -72,7 +68,7 @@ describe("nuget-task-common Task Suite", function() {
 
     it("Finds HTTP_PROXYUSERNAME", (done: MochaDone) => {
         mockedTask.setMockedValues(mockedProxy, mockedUsername);
-        let ngToolRunner = require("../NuGetToolRunner");
+        let ngToolRunner = require("../nuget/NuGetToolRunner");
 
         let httpProxy: string = ngToolRunner.getNuGetProxyFromEnvironment();
         assert.strictEqual(httpProxy, `http://${mockedUsername}@proxy/`);
@@ -82,7 +78,7 @@ describe("nuget-task-common Task Suite", function() {
 
     it("Finds HTTP_PROXYPASSWORD", (done: MochaDone) => {
         mockedTask.setMockedValues(mockedProxy, mockedUsername, mockedPassword);
-        let ngToolRunner = require("../NuGetToolRunner");
+        let ngToolRunner = require("../nuget/NuGetToolRunner");
 
         let httpProxy: string = ngToolRunner.getNuGetProxyFromEnvironment();
         assert.strictEqual(httpProxy, `http://${mockedUsername}:${mockedPassword}@proxy/`);
@@ -97,7 +93,7 @@ describe("nuget-task-common Task Suite", function() {
             writeFileSync: (path, content) => { configFile = content; }
         });
 
-        let nugetXmlHelper = require("../NuGetXmlHelper");
+        let nugetXmlHelper = require("../nuget/NuGetXmlHelper");
         let helper: INuGetXmlHelper = new nugetXmlHelper.NuGetXmlHelper();
 
         configFile = "<configuration/>";
@@ -131,7 +127,7 @@ describe("nuget-task-common Task Suite", function() {
             writeFileSync: (path, content) => { configFile = content; }
         });
 
-        let nugetXmlHelper = require("../NuGetXmlHelper");
+        let nugetXmlHelper = require("../nuget/NuGetXmlHelper");
         let helper: INuGetXmlHelper = new nugetXmlHelper.NuGetXmlHelper();
 
         configFile = "<configuration/>";
@@ -151,4 +147,4 @@ describe("nuget-task-common Task Suite", function() {
 
         done();
     });
-});
+}

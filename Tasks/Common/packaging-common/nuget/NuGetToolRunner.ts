@@ -6,7 +6,7 @@ import {IExecOptions, IExecSyncResult, ToolRunner} from "vsts-task-lib/toolrunne
 import * as auth from "./Authentication";
 import {NuGetQuirkName, NuGetQuirks, defaultQuirks} from "./NuGetQuirks";
 import * as ngutil from "./Utility";
-import * as peParser from "./pe-parser";
+import * as peParser from "../pe-parser";
 
 interface EnvironmentDictionary { [key: string]: string; }
 

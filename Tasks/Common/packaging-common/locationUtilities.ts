@@ -115,7 +115,7 @@ export function getSystemAccessToken(): string {
         tl.debug('Got auth token');
         return auth.parameters['AccessToken'];
     } else {
-        tl.warning('Could not determine credentials to use for NuGet');
+        tl.warning('Could not determine credentials to use');
     }
 }
 
@@ -149,7 +149,11 @@ interface RegistryLocation {
     locationId: string
 };
 
-export async function getFeedRegistryUrl(packagingUrl: string, registryType: RegistryType, feedId: string): Promise<string> {
+export async function getFeedRegistryUrl(
+    packagingUrl: string, 
+    registryType: RegistryType, 
+    feedId: string,
+    accessToken?: string): Promise<string> {
     let loc : RegistryLocation;
     switch (registryType) {
         case RegistryType.npm:
@@ -176,12 +180,15 @@ export async function getFeedRegistryUrl(packagingUrl: string, registryType: Reg
             break;
     }
 
-    const vssConnection = getWebApiWithProxy(packagingUrl);
+    tl.debug("Getting feed registry url from " + packagingUrl);
+
+    const vssConnection = getWebApiWithProxy(packagingUrl, accessToken);
 
     const data = await Retry(async () => {
         return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: feedId });
     }, 4, 100);
 
+    tl.debug("feed registry url: " + data.requestUrl);
     return data.requestUrl;
 }
 

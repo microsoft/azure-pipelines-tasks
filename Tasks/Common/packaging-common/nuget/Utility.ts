@@ -1,10 +1,8 @@
 import * as path from "path";
 import * as tl from "vsts-task-lib/task";
 import * as ngToolRunner from "./NuGetToolRunner";
-import * as vsts from "vso-node-api/WebApi";
-import {VersionInfo} from "./pe-parser/VersionResource";
-import locationHelpers = require("./LocationHelpers");
-import * as url from "url";
+import * as locationUtilities from "../locationUtilities";
+import { VersionInfo } from "../pe-parser/VersionResource";
 
 export function getPatternsArrayFromInput(pattern: string): string[]
 {
@@ -212,66 +210,24 @@ export function setConsoleCodePage() {
 
 export async function getNuGetFeedRegistryUrl(
     packagingCollectionUrl: string,
-    accessToken: string,
     feedId: string,
-    nuGetVersion: VersionInfo): Promise<string>
+    nuGetVersion: VersionInfo,
+    accessToken?: string): Promise<string>
 {
-    const ApiVersion = "3.0-preview.1";
-    const PackagingAreaName: string = "nuget";
     // If no version is received, V3 is assumed
-    const PackageAreaId: string = nuGetVersion && nuGetVersion.productVersion.a < 3
-        ? "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA"
-        : "9D3A4E8E-2F8F-4AE1-ABC2-B461A51CB3B3";
-
-    const credentialHandler = vsts.getBearerHandler(accessToken);
-    const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
-
-    if (!packagingCollectionUrl)
-    {
-        packagingCollectionUrl = collectionUrl;
-    }
+    const registryType: locationUtilities.RegistryType = nuGetVersion && nuGetVersion.productVersion.a < 3
+        ? locationUtilities.RegistryType.NuGetV2
+        : locationUtilities.RegistryType.NuGetV3;
 
     const overwritePackagingCollectionUrl = tl.getVariable("NuGet.OverwritePackagingCollectionUrl");
     if (overwritePackagingCollectionUrl) {
         tl.debug("Overwriting packaging collection URL");
         packagingCollectionUrl = overwritePackagingCollectionUrl;
+    } else if (!packagingCollectionUrl) {
+        const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
+        packagingCollectionUrl = collectionUrl;
     }
 
-    tl.debug("Getting NuGet feed registry URL from " + packagingCollectionUrl);
-
-    const vssConnection = new vsts.WebApi(packagingCollectionUrl, credentialHandler);
-    const coreApi = vssConnection.getCoreApi();
-
-    const data = await Retry(async () => {
-        return await coreApi.vsoClient.getVersioningData(
-            ApiVersion,
-            PackagingAreaName,
-            PackageAreaId,
-            { feedId: feedId });
-    }, 4, 100);
-    return data.requestUrl;
+    return await locationUtilities.getFeedRegistryUrl(packagingCollectionUrl, registryType, feedId, accessToken);
 }
 
-// This should be replaced when retry is implemented in vso client.
-async function Retry<T>(cb: () => Promise<T>, max_retry: number, retry_delay: number): Promise<T> {
-    try {
-        return await cb();
-    } catch(exception) {
-        tl.debug(JSON.stringify(exception));
-        if(max_retry > 0)
-        {
-            tl.debug("Waiting " + retry_delay + "ms...");
-            await delay(retry_delay);
-            tl.debug("Retrying...");
-            return await Retry<T>(cb, max_retry-1, retry_delay*2);
-        } else {
-            throw exception;
-        }
-    }
-}
-
-function delay(delayMs: number) {
-    return new Promise(function(resolve) {
-        setTimeout(resolve, delayMs);
-    });
-}

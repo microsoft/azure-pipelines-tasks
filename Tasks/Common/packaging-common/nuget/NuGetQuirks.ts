@@ -1,4 +1,4 @@
-import VersionInfoVersion from "./pe-parser/VersionInfoVersion";
+import VersionInfoVersion from "../pe-parser/VersionInfoVersion";
 
 export enum NuGetQuirkName {
     /** Race condition in credential provider which causes NuGet to not supply credentials */
