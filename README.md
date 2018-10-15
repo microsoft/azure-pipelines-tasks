@@ -1,4 +1,4 @@
-# Azure Pipelines tasks
+# Azure Pipelines Tasks
 ![Tasks](/taskbanner.png "Tasks")
 
 ## Overview
