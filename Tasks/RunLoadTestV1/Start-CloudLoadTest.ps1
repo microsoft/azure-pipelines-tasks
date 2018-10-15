@@ -40,7 +40,9 @@ else {
 }
 
 # Force powershell to use TLS 1.2 for all communications
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls12;
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls11;
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls10;
 
 $global:apiVersion = "api-version=1.0"
 $global:ScopedTestDrop = $TestDrop
