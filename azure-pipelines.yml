@@ -20,7 +20,10 @@ jobs:
 # Publish on Windows
 - job: publish_windows
   displayName: Publish
-  dependsOn: build_all_windows # TODO: also depend on buildAll_darwin buildAll_linux
+  dependsOn:
+  - build_all_windows
+  - build_all_linux
+  - build_all_darwin
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
   pool:
     vmImage: vs2017-win2016
