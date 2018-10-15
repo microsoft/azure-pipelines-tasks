@@ -78,7 +78,11 @@ export class DotnetMockHelper {
             stripLeadingAndTrailingQuotes: function(path) {
                 return path;
             },
-            getNuGetFeedRegistryUrl(accessToken, feedId, nuGetVersion) {
+            getNuGetFeedRegistryUrl(
+                packagingCollectionUrl: string,
+                feedId: string,
+                nuGetVersion: VersionInfo,
+                accessToken?: string) {
                 return 'https://vsts/packagesource';
             }
         });

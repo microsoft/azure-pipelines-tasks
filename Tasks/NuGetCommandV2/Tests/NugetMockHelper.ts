@@ -86,7 +86,11 @@ export class NugetMockHelper {
                 var tlm = require('vsts-task-lib/mock-task');
                 tlm.debug(`setting console code page`);
             },
-            getNuGetFeedRegistryUrl(accessToken, feedId, nuGetVersion) {
+            getNuGetFeedRegistryUrl(
+                packagingCollectionUrl: string,
+                feedId: string,
+                nuGetVersion: VersionInfo,
+                accessToken?: string) {
                 return 'https://vsts/packagesource';
             }
         });
