@@ -20,7 +20,6 @@ jobs:
 - job: windows_badge
   pool: server
   dependsOn: build_all_windows
-  condition: false
 
 # Publish on Windows
 - job: publish_windows
@@ -48,6 +47,10 @@ jobs:
     parameters:
       os: Linux
 
+- job: linux_badge
+  pool: server
+  dependsOn: build_all_linux
+
 # All tasks on macOS
 - job: build_all_darwin
   displayName: Build all tasks (macOS)
@@ -60,6 +63,10 @@ jobs:
   - template: ci/build-all-steps.yml
     parameters:
       os: Darwin
+
+- job: darwin_badge
+  pool: server
+  dependsOn: build_all_darwin
 
 # Single task
 - job: buildSingle
