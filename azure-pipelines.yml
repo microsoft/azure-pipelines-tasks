@@ -20,6 +20,7 @@ jobs:
 - job: windows_badge
   pool: server
   dependsOn: build_all_windows
+  condition: false
 
 # Publish on Windows
 - job: publish_windows
