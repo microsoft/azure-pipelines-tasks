@@ -16,6 +16,10 @@ jobs:
   - template: ci/build-all-steps.yml
     parameters:
       os: Windows_NT
+  
+- job: windows_badge
+  pool: server
+  dependsOn: build_all_windows
 
 # Publish on Windows
 - job: publish_windows
