@@ -5,6 +5,7 @@ import * as models from './models';
 import * as utils from './helpers';
 import * as parameterParser from './parameterparser'
 import * as version from './vstestversion';
+import * as os from 'os';
 import * as fs from 'fs';
 
 const xml2js = require('./node_modules/xml2js');

@@ -1,4 +1,5 @@
 import * as tl from 'vsts-task-lib/task';
+import * as models from './models';
 import * as nondistributedtest from './nondistributedtest';
 import * as path from 'path';
 import * as distributedTest from './distributedtest';
@@ -14,7 +15,7 @@ const osPlat: string = os.platform();
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
 async function execute() {
-    const taskProps: { [key: string]: string; } = { state: 'started'};
+    const taskProps = { state: 'started', result: '' };
     ci.publishEvent(taskProps);
 
     const enableApiExecution = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
@@ -65,7 +66,7 @@ async function execute() {
         }
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
-        taskProps.result = error.message;
+        taskProps.result = error;
     }
     finally {
         taskProps.state = 'completed';
