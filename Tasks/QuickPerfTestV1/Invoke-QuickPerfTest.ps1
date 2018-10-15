@@ -70,7 +70,7 @@ function ValidatePatToken($token)
 # Load all dependent files for execution
 . $PSScriptRoot/CltTasksUtility.ps1
 . $PSScriptRoot/VssConnectionHelper.ps1
-. $PSScriptRoot/CltThresholdValidationHelpers
+. $PSScriptRoot/CltThresholdValidationHelper
 
 #Set the userAgent appropriately based on whether the task is running as part of a ci or cd
 if($Env:SYSTEM_HOSTTYPE -ieq "build") {    
