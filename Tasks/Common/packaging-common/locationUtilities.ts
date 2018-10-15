@@ -13,6 +13,7 @@ export enum RegistryType {
     npm,
     NuGetV2,
     NuGetV3,
+    PyPiSimple,
     PyPiUpload
 }
 
@@ -171,6 +172,13 @@ export async function getFeedRegistryUrl(
                 locationId: "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA"
             };
             break;
+        case RegistryType.PyPiSimple:
+            loc = {
+                apiVersion: '5.0',
+                area: 'pypi',
+                locationId: "93377A2C-F5FB-48B9-A8DC-7781441CABF1"
+            };
+            break;        
         case RegistryType.PyPiUpload:
             loc = {
                 apiVersion: '5.0',
