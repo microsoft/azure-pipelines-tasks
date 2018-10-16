@@ -22,8 +22,6 @@ jobs:
   displayName: Publish
   dependsOn: 
   - build_all_windows
-  - build_all_linux
-  - build_all_darwin
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'), eq(variables.os, 'Windows_NT'))
   pool:
     vmImage: vs2017-win2016
