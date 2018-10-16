@@ -12,7 +12,9 @@ export enum ProtocolType {
 export enum RegistryType {
     npm,
     NuGetV2,
-    NuGetV3
+    NuGetV3,
+    PyPiSimple,
+    PyPiUpload
 }
 
 export interface PackagingLocation {
@@ -168,6 +170,20 @@ export async function getFeedRegistryUrl(
                 apiVersion: '3.0-preview.1',
                 area: 'nuget',
                 locationId: "5D6FC3B3-EF78-4342-9B6E-B3799C866CFA"
+            };
+            break;
+        case RegistryType.PyPiSimple:
+            loc = {
+                apiVersion: '5.0',
+                area: 'pypi',
+                locationId: "93377A2C-F5FB-48B9-A8DC-7781441CABF1"
+            };
+            break;        
+        case RegistryType.PyPiUpload:
+            loc = {
+                apiVersion: '5.0',
+                area: 'pypi',
+                locationId: "C7A75C1B-08AC-4B11-B468-6C7EF835C85E"
             };
             break;
         default:

@@ -3,9 +3,7 @@ import AdmZip = require('adm-zip');
 import os = require("os");
 import * as path from "path";
 import * as semver from "semver";
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
-import * as vsts from "vso-node-api";
-import { IRequestOptions } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as tl from "vsts-task-lib";
 import * as toollib from "vsts-task-tool-lib/tool";
 
@@ -51,7 +49,7 @@ export async function getArtifactToolFromService(serviceUri: string, accessToken
     const blobstoreAreaId = "187ec90d-dd1e-4ec6-8c57-937d979261e5";
     const ApiVersion = "5.0-preview";
 
-    const blobstoreConnection = getWebApiWithProxy(serviceUri, accessToken);
+    const blobstoreConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
     try{
         const artifactToolGetUrl = await blobstoreConnection.vsoClient.getVersioningData(ApiVersion,
@@ -104,7 +102,7 @@ export async function getPackageNameFromId(serviceUri: string, accessToken: stri
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
-    const feedConnection = getWebApiWithProxy(serviceUri, accessToken);
+    const feedConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {
@@ -135,7 +133,7 @@ export async function getHighestPackageVersionFromFeed(serviceUri: string, acces
     const PackagingAreaName = "Packaging";
     const PackageAreaId = "7a20d846-c929-4acc-9ea2-0d5a7df1b197";
 
-    const feedConnection = getWebApiWithProxy(serviceUri, accessToken);
+    const feedConnection = pkgLocationUtils.getWebApiWithProxy(serviceUri, accessToken);
 
     // Getting url for feeds version API
     const packageUrl = await new Promise<string>((resolve, reject) => {
@@ -168,16 +166,4 @@ export async function getHighestPackageVersionFromFeed(serviceUri: string, acces
     });
 
     return versionResponse;
-}
-
-function getWebApiWithProxy(serviceUri: string, accessToken?: string): vsts.WebApi {
-    if (!accessToken) {
-        accessToken = pkgLocationUtils.getSystemAccessToken();
-    }
-
-    const credentialHandler = vsts.getBasicHandler("vsts", accessToken);
-    const options: IRequestOptions = {
-        proxy: tl.getHttpProxyConfiguration(serviceUri),
-    };
-    return new vsts.WebApi(serviceUri, credentialHandler, options);
 }
