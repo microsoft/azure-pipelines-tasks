@@ -548,11 +548,19 @@ target.publish = function() {
     run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
 }
 
+
+var agentPluginTasks = ['DownloadPipelineArtifact', 'PublishPipelineArtifact'];
 // used to bump the patch version in task.json files
 target.bump = function() {
     taskList.forEach(function (taskName) {
         var taskJsonPath = path.join(__dirname, 'Tasks', taskName, 'task.json');
         var taskJson = JSON.parse(fs.readFileSync(taskJsonPath));
+
+        // skip agent plugin tasks
+        if(agentPluginTasks.indexOf(taskJson.name) > -1) {
+            return;
+        }
+
         if (typeof taskJson.version.Patch != 'number') {
             fail(`Error processing '${taskName}'. version.Patch should be a number.`);
         }
