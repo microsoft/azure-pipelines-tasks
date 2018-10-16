@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 7
     },
     "runsOn": [
         "Agent",
@@ -19,7 +19,8 @@
     "deprecated": true,
     "groups": [],
     "instanceNameFormat": "NuGet $(command)",
-    "inputs": [{
+    "inputs": [
+        {
             "name": "command",
             "type": "string",
             "label": "Command",
@@ -45,7 +46,6 @@
     "messages": {
         "Info_NuGetSupportedAfter3_5": "The NuGet version being used is %s and only versions >= 3.5.0 are suported by this task. ",
         "BuildIdentityPermissionsHint": "For internal feeds, make sure the build service identity '%s' [%s] has access to the feed.",
-
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
         "Error_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s",

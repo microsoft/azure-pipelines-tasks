@@ -87,7 +87,7 @@ export interface VsTestConfigurations extends TestConfigurations {
 
 export interface DiagnosticsConfiguration {
     enabled: boolean;
-    collectDumpAlways: boolean;
+    dumpCollectionType: string;
 }
 
 export interface TiaConfiguration {

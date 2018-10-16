@@ -13,7 +13,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 14
+    "Patch": 18
   },
   "satisfies": [
     "DotNetCore"
@@ -67,6 +67,7 @@
     "LegacyPlatform": "ms-resource:loc.messages.LegacyPlatform",
     "WarningVersionNotFound": "ms-resource:loc.messages.WarningVersionNotFound",
     "CouldNotDownload": "ms-resource:loc.messages.CouldNotDownload",
-    "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage"
+    "FailedToDownloadPackage": "ms-resource:loc.messages.FailedToDownloadPackage",
+    "PrependGlobalToolPath": "ms-resource:loc.messages.PrependGlobalToolPath"
   }
 }

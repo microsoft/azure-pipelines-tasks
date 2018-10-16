@@ -13,8 +13,7 @@
     "version": {
         "Major": 2,
         "Minor": 0,
-        "Patch": 10
-
+        "Patch": 13
     },
     "preview": true,
     "demands": [
@@ -40,7 +39,9 @@
         },
         {
             "name": "ConnectedServiceNameSelector",
-            "aliases": ["azureConnectionType"],
+            "aliases": [
+                "azureConnectionType"
+            ],
             "type": "pickList",
             "label": "Azure Connection Type",
             "required": false,
@@ -53,7 +54,9 @@
         },
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureClassicSubscription"],
+            "aliases": [
+                "azureClassicSubscription"
+            ],
             "type": "connectedService:Azure",
             "label": "Azure Classic Subscription",
             "defaultValue": "",
@@ -63,7 +66,9 @@
         },
         {
             "name": "ConnectedServiceNameARM",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "defaultValue": "",
@@ -85,7 +90,9 @@
         },
         {
             "name": "StorageAccount",
-            "aliases": ["classicStorage"],
+            "aliases": [
+                "classicStorage"
+            ],
             "type": "pickList",
             "label": "Classic Storage Account",
             "defaultValue": "",
@@ -98,7 +105,9 @@
         },
         {
             "name": "StorageAccountRM",
-            "aliases": ["storage"],
+            "aliases": [
+                "storage"
+            ],
             "type": "pickList",
             "label": "RM Storage Account",
             "defaultValue": "",
@@ -129,7 +138,9 @@
         },
         {
             "name": "EnvironmentName",
-            "aliases": ["cloudService"],
+            "aliases": [
+                "cloudService"
+            ],
             "type": "pickList",
             "label": "Cloud Service",
             "defaultValue": "",
@@ -142,7 +153,9 @@
         },
         {
             "name": "EnvironmentNameRM",
-            "aliases": ["resourceGroup"],
+            "aliases": [
+                "resourceGroup"
+            ],
             "type": "pickList",
             "label": "Resource Group",
             "defaultValue": "",

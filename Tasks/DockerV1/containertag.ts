@@ -27,7 +27,8 @@ export function run(connection: ContainerConnection): Q.Promise<void> {
         imageNames = [utils.getImageName()];
     }
     
-    let imageMappings = utils.getImageMappings(connection, imageNames);
+    let additionalImageTags = tl.getDelimitedInput("arguments", "\n");
+    let imageMappings = utils.getImageMappings(connection, imageNames, additionalImageTags);
 
     let firstMapping = imageMappings.shift();
     let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName);

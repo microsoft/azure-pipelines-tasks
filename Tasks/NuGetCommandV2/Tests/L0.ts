@@ -234,7 +234,7 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
-    it('succeeds when conflict occurs using VstsNuGetPush.exe', (done: MochaDone) => {
+    it('succeeds when conflict occurs using VstsNuGetPush.exe (allow conflict)', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushAllowConflict.js')
@@ -250,7 +250,7 @@ describe('NuGetCommand Suite', function () {
         done();
     });
 
-    it('succeeds when conflict occurs using VstsNuGetPush.exe', (done: MochaDone) => {
+    it('fails when conflict occurs using VstsNuGetPush.exe (disallow conflict)', (done: MochaDone) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, './PublishTests/internalFeedVstsNuGetPushDisallowConflict.js')

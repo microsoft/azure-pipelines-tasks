@@ -12,7 +12,7 @@
     "version": {
         "Major": 2,
         "Minor": 141,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [
         "JDK",
@@ -34,7 +34,9 @@
     "inputs": [
         {
             "name": "files",
-            "aliases": ["apkFiles"],
+            "aliases": [
+                "apkFiles"
+            ],
             "type": "filePath",
             "label": "APK files",
             "defaultValue": "**/*.apk",
@@ -52,7 +54,9 @@
         },
         {
             "name": "keystoreFile",
-            "aliases": ["jarsignerKeystoreFile"],
+            "aliases": [
+                "jarsignerKeystoreFile"
+            ],
             "type": "secureFile",
             "label": "Keystore file",
             "defaultValue": "",
@@ -63,7 +67,9 @@
         },
         {
             "name": "keystorePass",
-            "aliases": ["jarsignerKeystorePassword"],
+            "aliases": [
+                "jarsignerKeystorePassword"
+            ],
             "type": "string",
             "label": "Keystore password",
             "defaultValue": "",
@@ -74,7 +80,9 @@
         },
         {
             "name": "keystoreAlias",
-            "aliases": ["jarsignerKeystoreAlias"],
+            "aliases": [
+                "jarsignerKeystoreAlias"
+            ],
             "type": "string",
             "label": "Alias",
             "defaultValue": "",
@@ -85,7 +93,9 @@
         },
         {
             "name": "keyPass",
-            "aliases": ["jarsignerKeyPassword"],
+            "aliases": [
+                "jarsignerKeyPassword"
+            ],
             "type": "string",
             "label": "Key password",
             "defaultValue": "",
@@ -115,7 +125,9 @@
         },
         {
             "name": "zipalignLocation",
-            "aliases": ["zipalignFile"],
+            "aliases": [
+                "zipalignFile"
+            ],
             "type": "string",
             "label": "Zipalign location",
             "defaultValue": "",

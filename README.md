@@ -1,4 +1,4 @@
-# Azure Pipelines tasks
+# Azure Pipelines Tasks
 ![Tasks](/taskbanner.png "Tasks")
 
 ## Overview
@@ -13,14 +13,14 @@ This provides open examples on how we write tasks which will help you write othe
 |![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test][macOS-build-badge]][macOS-build]| 
 |![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
 
-[win-build-badge]: https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4213/badge?branch=master
-[win-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5709
+[win-build-badge]: https://dev.azure.com/mseng/PipelineTools/_apis/build/status/azure-pipelines-tasks.ci-windows
+[win-build]: https://dev.azure.com/mseng/PipelineTools/_build/latest?definitionId=7634
 
-[macOS-build-badge]: https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/4088/badge?branch=master
-[macOS-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5718
+[macOS-build-badge]: https://dev.azure.com/mseng/PipelineTools/_apis/build/status/azure-pipelines-tasks.ci-macos
+[macOS-build]: https://dev.azure.com/mseng/PipelineTools/_build/latest?definitionId=7635
 
-[linux-build-badge]: https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/1474/badge?branch=master
-[linux-build]: https://mseng.visualstudio.com/VSOnline/_build?_a=completed&definitionId=5667
+[linux-build-badge]: https://dev.azure.com/mseng/PipelineTools/_apis/build/status/azure-pipelines-tasks.ci-linux
+[linux-build]: https://dev.azure.com/mseng/PipelineTools/_build/latest?definitionId=7636
 
 ## How to Use Tasks
 
@@ -37,4 +37,9 @@ For uploading custom tasks to Azure Pipelines use the [TFS Cross Platform Comman
 Tasks can also be deployed with an Azure DevOps extension. See [this tutorial](https://docs.microsoft.com/en-us/vsts/extend/develop/add-build-task) for how to package tasks inside an extension.
 
 ## Contributing
-We take contributions.  [Read here](docs/contribute.md) how to contribute.
+
+This project welcomes [contributions and suggestions](docs/contribute.md).
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
+contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.

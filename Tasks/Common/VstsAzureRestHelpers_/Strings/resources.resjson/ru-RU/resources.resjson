@@ -5,5 +5,9 @@
   "loc.messages.AZ_NoValidResourceIdFound": "В подписке {2} не найдено ни одного ресурса для названия сервера (serverName) {0} и типа сервера (serverType) {1}. Укажите правильные название и тип сервера и повторите попытку.",
   "loc.messages.AZ_UnableToFetchLoadbalancerDetails": "Не удалось получить сведения о балансировщике нагрузки",
   "loc.messages.AZ_UnableToFetchPublicIPAddressesDetails": "Не удалось получить сведения об общедоступных IP-адресах",
-  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Не удалось получить сведения о сетевых интерфейсах"
+  "loc.messages.AZ_UnableToFetchNetworkInterfacesDetails": "Не удалось получить сведения о сетевых интерфейсах",
+  "loc.messages.AZ_MsiAccessNotConfiguredProperlyFailure": "Could not fetch access token for Managed Service Principal. Please configure Managed Service Identity (MSI) for virtual machine 'https://aka.ms/azure-msi-docs'. Status code: {0}, status message: {1}",
+  "loc.messages.AZ_MsiAccessTokenFetchFailure": "Could not fetch access token for Managed Service Principal. Status code: {0}, status message: {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailure": "Failed to obtain access token using client certificate for service principal id: {0}. {1}",
+  "loc.messages.AZ_SPNCertificateAccessTokenFetchFailureTokenNull": "Failed to obtain access token using client certificate for service principal id: {0}, tokenResult is null."
 }

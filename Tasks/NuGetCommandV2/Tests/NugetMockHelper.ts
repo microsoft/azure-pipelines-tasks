@@ -1,8 +1,7 @@
 import tmrm = require('vsts-task-lib/mock-run');
-import VersionInfoVersion from 'nuget-task-common/pe-parser/VersionInfoVersion'
-import {VersionInfo, VersionStrings} from 'nuget-task-common/pe-parser/VersionResource'
-import * as auth from 'nuget-task-common/Authentication'
-import * as nugetPackUtils from "nuget-task-common/PackUtilities"
+import VersionInfoVersion from 'packaging-common/pe-parser/VersionInfoVersion'
+import {VersionInfo} from 'packaging-common/pe-parser/VersionResource'
+import * as nugetPackUtils from "packaging-common/PackUtilities"
 
 export class NugetMockHelper {
     private defaultNugetVersion = '4.0.0';
@@ -16,7 +15,7 @@ export class NugetMockHelper {
         process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = "c:\\agent\\home\\directory";
         process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = "https://example.visualstudio.com/defaultcollection";
 
-        this.registerNugetLocationHelpersMock();
+        this.RegisterLocationServiceMocks();
     }
 
     public setNugetVersionInputDefault() {
@@ -28,7 +27,7 @@ export class NugetMockHelper {
     }
 
     public registerNugetToolGetterMock() {
-        this.tmr.registerMock('nuget-task-common/NuGetToolGetter', {
+        this.tmr.registerMock('packaging-common/nuget/NuGetToolGetter', {
             getNuGet: function(versionSpec) {
                 return "c:\\from\\tool\\installer\\nuget.exe";
             },
@@ -44,7 +43,7 @@ export class NugetMockHelper {
 
     public registerNugetVersionMock(productVersion: string, versionInfoVersion: number[]) {
         this.registerNugetVersionMockInternal(productVersion, versionInfoVersion);
-        this.registerMockWithMultiplePaths(['nuget-task-common/pe-parser', './pe-parser'], {
+        this.registerMockWithMultiplePaths(['packaging-common/pe-parser', '../pe-parser'], {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -55,7 +54,7 @@ export class NugetMockHelper {
     }
 
     private registerNugetVersionMockInternal(productVersion: string, versionInfoVersion: number[]) {
-        this.registerMockWithMultiplePaths(['nuget-task-common/pe-parser/index', './pe-parser/index'], {
+        this.registerMockWithMultiplePaths(['packaging-common/pe-parser/index', '../pe-parser/index'], {
             getFileVersionInfoAsync: function(nuGetExePath) {
                 let result: VersionInfo = { strings: {} };
                 result.fileVersion = new VersionInfoVersion(versionInfoVersion[0], versionInfoVersion[1], versionInfoVersion[2], versionInfoVersion[3]);
@@ -67,7 +66,7 @@ export class NugetMockHelper {
     }
 
     public registerNugetUtilityMock(projectFile: string[]) {
-        this.tmr.registerMock('nuget-task-common/Utility', {
+        this.tmr.registerMock('packaging-common/nuget/Utility', {
             getPatternsArrayFromInput: function(input) {
                 return [input];
             },
@@ -87,7 +86,11 @@ export class NugetMockHelper {
                 var tlm = require('vsts-task-lib/mock-task');
                 tlm.debug(`setting console code page`);
             },
-            getNuGetFeedRegistryUrl(accessToken, feedId, nuGetVersion) {
+            getNuGetFeedRegistryUrl(
+                packagingCollectionUrl: string,
+                feedId: string,
+                nuGetVersion: VersionInfo,
+                accessToken?: string) {
                 return 'https://vsts/packagesource';
             }
         });
@@ -99,7 +102,7 @@ export class NugetMockHelper {
     }
 
     public registerNugetUtilityMockUnix() {
-        this.tmr.registerMock('nuget-task-common/Utility', {
+        this.tmr.registerMock('packaging-common/nuget/Utility', {
             getPatternsArrayFromInput: function(input) {
                 return [input];
             },
@@ -127,8 +130,8 @@ export class NugetMockHelper {
         });
     }
 
-    public registerNugetLocationHelpersMock() {
-        this.tmr.registerMock('utility-common/packaging/locationUtilities', {
+    public registerLocationHelpersMock() {
+        const mockLocationUtils = {
             getPackagingUris: function(input) {
                 const collectionUrl: string = "https://vsts/packagesource";
                 return {
@@ -136,8 +139,27 @@ export class NugetMockHelper {
                     DefaultPackagingUri: collectionUrl
                 };
             },
-            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3}
-        });
+            getWebApiWithProxy: function(serviceUri: string, accessToken?: string) {
+                return {
+                    vsoClient: {
+                        getVersioningData: async function (ApiVersion: string, PackagingAreaName: string, PackageAreaId: string, Obj) {
+                            return { requestUrl: 'foobar' };
+                        }
+                    }
+                }
+            },
+            getSystemAccessToken: function() {
+                return "token";
+            },
+            getFeedRegistryUrl: function(packagingUrl: string, registryType, feedId: string, accessToken?: string) {
+                return packagingUrl + "/" + feedId;
+            },
+            ProtocolType: {NuGet: 1, Npm: 2, Maven: 3},
+            RegistryType: {npm: 1, NuGetV2: 2, NuGetV3: 3}
+        };
+
+        this.tmr.registerMock('packaging-common/locationUtilities', mockLocationUtils);
+        this.tmr.registerMock('../locationUtilities', mockLocationUtils);
     }
 
     public registerVstsNuGetPushRunnerMock() {
@@ -149,7 +171,7 @@ export class NugetMockHelper {
     }
 
     public registerNuGetPackUtilsMock(date: Date) {
-        this.tmr.registerMock("nuget-task-common/PackUtilities", {
+        this.tmr.registerMock("packaging-common/PackUtilities", {
             getNowDateString: function(timezone: string) {
                 return nugetPackUtils.getUtcDateString(date);
             }
@@ -158,7 +180,7 @@ export class NugetMockHelper {
 
     public registerNugetConfigMock() {
         var nchm = require('./NuGetConfigHelper-mock');
-        this.tmr.registerMock('nuget-task-common/NuGetConfigHelper2', nchm);
+        this.tmr.registerMock('packaging-common/nuget/NuGetConfigHelper2', nchm);
     }
 
     public registerToolRunnerMock() {

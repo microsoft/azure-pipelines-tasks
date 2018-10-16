@@ -73,7 +73,7 @@ export class AzureAppServiceUtility {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;
-            let webRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5};
+            let webRequestOptions:webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
             var response = await webClient.sendRequest(webRequest, webRequestOptions);
             tl.debug(`App Service status Code: '${response.statusCode}'. Status Message: '${response.statusMessage}'`);
         }

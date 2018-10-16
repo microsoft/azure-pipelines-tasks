@@ -16,7 +16,7 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 5
+        "Patch": 7
     },
     "demands": [
         "sqlpackage"
@@ -42,7 +42,9 @@
     "inputs": [
         {
             "name": "ConnectedServiceNameSelector",
-            "aliases": ["azureConnectionType"],
+            "aliases": [
+                "azureConnectionType"
+            ],
             "type": "pickList",
             "label": "Azure Service Connection Type",
             "required": false,
@@ -55,7 +57,9 @@
         },
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureClassicSubscription"],
+            "aliases": [
+                "azureClassicSubscription"
+            ],
             "type": "connectedService:Azure",
             "label": "Azure Classic Subscription",
             "defaultValue": "",
@@ -65,7 +69,9 @@
         },
         {
             "name": "ConnectedServiceNameARM",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure Subscription",
             "defaultValue": "",
@@ -126,7 +132,6 @@
                 "DeployReport": "Deploy Report"
             },
             "helpMarkDown": "Choose one of the SQL Actions from the list. For more details refer <a href=\"https://go.microsoft.com/fwlink/?linkid=875177\">link</a>.​"
-
         },
         {
             "name": "TaskNameSelector",

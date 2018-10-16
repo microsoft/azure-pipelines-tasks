@@ -12,8 +12,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 0,
-        "Minor": 138,
-        "Patch": 1
+        "Minor": 142,
+        "Patch": 0
     },
     "demands": [],
     "instanceNameFormat": "Use Python $(versionSpec)",
@@ -68,9 +68,11 @@
         }
     },
     "messages": {
-        "ListAvailableVersions": "Available versions:",
+        "ListAvailableVersions": "Versions in %s:",
         "PlatformNotRecognized": "Platform not recognized",
         "PrependPath": "Prepending PATH environment variable with directory: %s",
-        "VersionNotFound": "Version spec %s for architecture %s did not match any version in the tool cache."
+        "ToolNotFoundMicrosoftHosted": "If this is a Microsoft-hosted agent, check that this image supports side-by-side versions of %s at %s.",
+        "ToolNotFoundSelfHosted": "If this is a self-hosted agent, see how to configure side-by-side %s versions at %s.",
+        "VersionNotFound": "Version spec %s for architecture %s did not match any version in Agent.ToolsDirectory."
     }
 }

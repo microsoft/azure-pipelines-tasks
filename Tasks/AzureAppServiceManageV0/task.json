@@ -18,7 +18,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 44
+        "Patch": 47
     },
     "minimumAgentVersion": "1.102.0",
     "instanceNameFormat": "$(Action): $(WebAppName)",
@@ -33,7 +33,9 @@
     "inputs": [
         {
             "name": "ConnectedServiceName",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "defaultValue": "",
@@ -71,7 +73,9 @@
         },
         {
             "name": "SpecifySlot",
-            "aliases": ["SpecifySlotOrASE"],
+            "aliases": [
+                "SpecifySlotOrASE"
+            ],
             "type": "boolean",
             "label": "Specify Slot or App Service Environment",
             "defaultValue": "false",
@@ -162,7 +166,7 @@
             "label": "Output variable",
             "defaultValue": "",
             "properties": {
-                "Disabled":"True"
+                "Disabled": "True"
             },
             "visibleRule": "Action = Install Extensions",
             "helpMarkDown": "Provide the variable name for the local installation path for the selected extension.<br/>This field is now deprecated and would be removed. Use LocalPathsForInstalledExtensions variable from Output Variables section in subsequent tasks."
@@ -328,7 +332,7 @@
         "ResourceDoesntExist": "Resource '%s' doesn't exist. Resource should exist before deployment.",
         "UnableToFetchContinuousWebJobs": "Unable to fetch continuous web jobs",
         "UnableToStartContinuousWebJob": "Unable to start continuous web job",
-        "UnableToStopContinuousWebJob":  "Unable to stop continuous web job",
+        "UnableToStopContinuousWebJob": "Unable to stop continuous web job",
         "AppNameCannotBeNull": "App name cannot be null or undefined and it must be of type string.",
         "SlotNameCannotBeNull": "Slot name cannot be null or undefined and it must be of type string.",
         "SourceSlotNameCannotBeNull": "Source slot name cannot be null or undefined and it must be of type string.",

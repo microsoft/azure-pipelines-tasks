@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 139,
-        "Patch": 0
+        "Patch": 1
     },
     "releaseNotes": "Add support for distribution to stores.",
     "groups": [
@@ -42,7 +42,9 @@
         },
         {
             "name": "app",
-            "aliases": [ "appFile" ],
+            "aliases": [
+                "appFile"
+            ],
             "type": "filePath",
             "label": "Binary file path",
             "defaultValue": "",
@@ -51,7 +53,9 @@
         },
         {
             "name": "symbolsType",
-            "aliases": [ "symbolsOption" ],
+            "aliases": [
+                "symbolsOption"
+            ],
             "type": "pickList",
             "label": "Symbols type",
             "required": false,
@@ -72,7 +76,9 @@
         },
         {
             "name": "pdbPath",
-            "aliases": [ "symbolsPdbFiles" ],
+            "aliases": [
+                "symbolsPdbFiles"
+            ],
             "type": "filePath",
             "label": "Symbols path (*.pdb)",
             "defaultValue": "**/*.pdb",
@@ -83,7 +89,9 @@
         },
         {
             "name": "dsymPath",
-            "aliases": [ "symbolsDsymFiles" ],
+            "aliases": [
+                "symbolsDsymFiles"
+            ],
             "type": "filePath",
             "label": "dSYM path",
             "groupName": "symbols",
@@ -93,7 +101,9 @@
         },
         {
             "name": "mappingTxtPath",
-            "aliases": [ "symbolsMappingTxtFile" ],
+            "aliases": [
+                "symbolsMappingTxtFile"
+            ],
             "type": "filePath",
             "label": "Mapping file",
             "groupName": "symbols",
@@ -103,7 +113,9 @@
         },
         {
             "name": "packParentFolder",
-            "aliases": [ "symbolsIncludeParentDirectory" ],
+            "aliases": [
+                "symbolsIncludeParentDirectory"
+            ],
             "type": "boolean",
             "label": "Include all items in parent folder",
             "groupName": "symbols",
@@ -112,7 +124,9 @@
         },
         {
             "name": "releaseNotesSelection",
-            "aliases": [ "releaseNotesOption" ],
+            "aliases": [
+                "releaseNotesOption"
+            ],
             "type": "radio",
             "label": "Create release notes",
             "required": true,
@@ -132,7 +146,7 @@
             "properties": {
                 "resizable": "true",
                 "rows": "10",
-                "maxLength": "5000"	
+                "maxLength": "5000"
             }
         },
         {

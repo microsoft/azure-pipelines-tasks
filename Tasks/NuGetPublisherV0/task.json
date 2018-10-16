@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 41
+        "Patch": 43
     },
     "runsOn": [
         "Agent",
@@ -20,13 +20,16 @@
     ],
     "minimumAgentVersion": "1.83.0",
     "deprecated": true,
-    "groups": [{
-        "name": "advanced",
-        "displayName": "Advanced",
-        "isExpanded": false
-    }],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "instanceNameFormat": "NuGet Publisher $(solution)",
-    "inputs": [{
+    "inputs": [
+        {
             "name": "searchPattern",
             "type": "filePath",
             "label": "Path/Pattern to nupkg",
@@ -139,7 +142,6 @@
         "UnknownFeedType": "Unknown feed type '%s'",
         "CouldNotFindNuGetService": "Could not find the NuGet service. This task will be unable to authenticate to feeds hosted in your Azure Pipelines/TFS project collection.",
         "NoNuGetSpecified": "If 'custom' is selected, you must provide a path to NuGet.exe",
-
         "Error_ApiKeyNotSupported": "DotNetCore currently does not support using an encrypted Api Key.",
         "Error_ExpectedConfigurationElement": "Invalid xml. Expected element named 'configuration'.",
         "Error_NoMatchingFilesFoundForPattern": "No matching files were found with search pattern: %s",

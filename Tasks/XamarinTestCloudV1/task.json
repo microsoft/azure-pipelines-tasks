@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 141,
-        "Patch": 0
+        "Patch": 1
     },
     "demands": [],
     "minimumAgentVersion": "1.83.0",
@@ -28,7 +28,9 @@
     "inputs": [
         {
             "name": "app",
-            "aliases": [ "appFile" ],
+            "aliases": [
+                "appFile"
+            ],
             "type": "filePath",
             "label": "App file",
             "defaultValue": "",
@@ -37,7 +39,9 @@
         },
         {
             "name": "dsym",
-            "aliases": [ "dsymFile" ],
+            "aliases": [
+                "dsymFile"
+            ],
             "type": "string",
             "label": "dSYM file (iOS only)",
             "required": false,
@@ -54,7 +58,9 @@
         },
         {
             "name": "user",
-            "aliases": [ "email" ],
+            "aliases": [
+                "email"
+            ],
             "type": "string",
             "label": "User email",
             "defaultValue": "",
@@ -79,7 +85,9 @@
         },
         {
             "name": "testDir",
-            "aliases": [ "testAssemblyDirectory" ],
+            "aliases": [
+                "testAssemblyDirectory"
+            ],
             "type": "filePath",
             "label": "Test assembly directory",
             "defaultValue": "",
@@ -88,7 +96,9 @@
         },
         {
             "name": "parallelization",
-            "aliases": [ "parallelizationOption" ],
+            "aliases": [
+                "parallelizationOption"
+            ],
             "type": "pickList",
             "label": "Parallelization",
             "required": true,
@@ -102,7 +112,9 @@
         },
         {
             "name": "locale",
-            "aliases": [ "localeOption" ],
+            "aliases": [
+                "localeOption"
+            ],
             "type": "pickList",
             "label": "System language",
             "defaultValue": "en_US",
@@ -135,7 +147,9 @@
         },
         {
             "name": "testCloudLocation",
-            "aliases": [ "testCloudFile" ],
+            "aliases": [
+                "testCloudFile"
+            ],
             "type": "filePath",
             "label": "test-cloud.exe location",
             "groupName": "advanced",

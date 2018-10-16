@@ -1,14 +1,12 @@
-import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
-import * as nutil from "nuget-task-common/Utility";
+import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
+import * as nutil from "packaging-common/nuget/Utility";
 import * as tl from "vsts-task-lib/task";
-// Remove once task lib 2.0.4 releases
-global['_vsts_task_lib_loaded'] = true;
 import * as path from "path";
-import * as auth from "nuget-task-common/Authentication";
+import * as auth from "packaging-common/nuget/Authentication";
 
-import nuGetGetter = require("nuget-task-common/NuGetToolGetter");
-import peParser = require('nuget-task-common/pe-parser/index');
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import nuGetGetter = require("packaging-common/nuget/NuGetToolGetter");
+import peParser = require('packaging-common/pe-parser/index');
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 class NuGetExecutionOptions {
     constructor(
@@ -72,7 +70,7 @@ async function main(): Promise<void> {
         const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
         // useCredConfig not placed here: This task will only support NuGet versions >= 3.5.0 which support credProvider both hosted and OnPrem
 
-        let accessToken = auth.getSystemAccessToken();
+        let accessToken = pkgLocationUtils.getSystemAccessToken();
         let serviceUri = tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
         let urlPrefixes = packagingLocation.PackagingUris;
         tl.debug(`Discovered URL prefixes: ${urlPrefixes}`);

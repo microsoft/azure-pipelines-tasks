@@ -3,12 +3,12 @@ import * as Q  from "q";
 import * as tl from "vsts-task-lib/task";
 import {IExecOptions} from "vsts-task-lib/toolrunner";
 
-import * as auth from "nuget-task-common/Authentication";
-import INuGetCommandOptions from "nuget-task-common/INuGetCommandOptions";
-import {NuGetConfigHelper} from "nuget-task-common/NuGetConfigHelper";
-import * as ngToolRunner from "nuget-task-common/NuGetToolRunner";
-import * as nutil from "nuget-task-common/Utility";
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as auth from "packaging-common/nuget/Authentication";
+import INuGetCommandOptions from "packaging-common/nuget/INuGetCommandOptions";
+import {NuGetConfigHelper} from "packaging-common/nuget/NuGetConfigHelper";
+import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner";
+import * as nutil from "packaging-common/nuget/Utility";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 
 class RestoreOptions implements INuGetCommandOptions {
     constructor(
@@ -109,7 +109,7 @@ async function main(): Promise<void> {
         const useCredProvider = ngToolRunner.isCredentialProviderEnabled(quirks) && credProviderPath;
         const useCredConfig = ngToolRunner.isCredentialConfigEnabled(quirks) && !useCredProvider;
 
-        let accessToken = auth.getSystemAccessToken();
+        let accessToken = pkgLocationUtils.getSystemAccessToken();
         let urlPrefixes = packagingLocation.PackagingUris;
         tl.debug(`discovered URL prefixes: ${urlPrefixes}`);
 

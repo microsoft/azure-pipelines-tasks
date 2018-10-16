@@ -74,7 +74,7 @@ export class TaskOptions {
 
         this.jobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
         tl.debug('jobQueueUrl=' + this.jobQueueUrl);
-        this.teamJobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, '/team-build/build/' + this.jobName + '?delay=0sec');
+        this.teamJobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, '/team-build/' + ((this.parameterizedJob) ? 'buildWithParameters/' : 'build/') + this.jobName + '?delay=0sec');
         tl.debug('teamJobQueueUrl=' + this.teamJobQueueUrl);
         this.teamPluginUrl = util.addUrlSegment(this.serverEndpointUrl, '/pluginManager/available');
         tl.debug('teamPluginUrl=' + this.teamPluginUrl);

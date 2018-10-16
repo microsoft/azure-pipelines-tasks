@@ -1,5 +1,5 @@
 {
-  "name": "nuget-task-common",
+  "name": "codecoverage-tools",
   "dependencies": {},
   "globalDependencies": {
     "cheerio": "registry:dt/cheerio#0.17.0+20160930124405",

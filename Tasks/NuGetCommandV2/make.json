@@ -6,15 +6,15 @@
             "compile": true
         },
         {
-            "module": "../Common/nuget-task-common",
+            "module": "../Common/packaging-common",
             "type": "node",
             "compile": true
         }
     ],
-    "rm": [
+    "rm": [       
         {
             "items": [
-                "node_modules/nuget-task-common/node_modules/vsts-task-lib"
+                "node_modules/packaging-common/node_modules/vsts-task-lib"
             ],
             "options": "-Rf"
         },
@@ -27,6 +27,10 @@
     ],
     "externals": {
         "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/VstsNuGetPush/0.17.0/microsoft.visualstudio.services.packaging.nuget.pushtool.0.17.0.zip",
+                "dest": "./VstsNuGetPush/0.17.0/"
+            },
             {
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/VstsNuGetPush/0.13.0/microsoft.visualstudio.services.packaging.nuget.pushtool.0.13.0.zip",
                 "dest": "./VstsNuGetPush/0.13.0/"

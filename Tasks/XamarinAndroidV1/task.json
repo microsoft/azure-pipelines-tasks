@@ -11,8 +11,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 140,
-        "Patch": 0
+        "Minor": 142,
+        "Patch": 1
     },
     "demands": [
         "MSBuild",
@@ -34,7 +34,9 @@
     "inputs": [
         {
             "name": "project",
-            "aliases": [ "projectFile" ],
+            "aliases": [
+                "projectFile"
+            ],
             "type": "filePath",
             "label": "Project",
             "defaultValue": "**/*.csproj",
@@ -51,7 +53,9 @@
         },
         {
             "name": "outputDir",
-            "aliases": [ "outputDirectory" ],
+            "aliases": [
+                "outputDirectory"
+            ],
             "type": "string",
             "label": "Output directory",
             "defaultValue": "",
@@ -83,7 +87,9 @@
         },
         {
             "name": "msbuildLocationMethod",
-            "aliases": [ "msbuildLocationOption" ],
+            "aliases": [
+                "msbuildLocationOption"
+            ],
             "type": "radio",
             "label": "MSBuild",
             "required": false,
@@ -96,7 +102,9 @@
         },
         {
             "name": "msbuildVersion",
-            "aliases": [ "msbuildVersionOption" ],
+            "aliases": [
+                "msbuildVersionOption"
+            ],
             "type": "pickList",
             "label": "MSBuild version",
             "required": false,
@@ -114,7 +122,9 @@
         },
         {
             "name": "msbuildLocation",
-            "aliases": [ "msbuildFile" ],
+            "aliases": [
+                "msbuildFile"
+            ],
             "type": "string",
             "label": "MSBuild location",
             "defaultValue": "",
@@ -125,7 +135,9 @@
         },
         {
             "name": "msbuildArchitecture",
-            "aliases": [ "msbuildArchitectureOption" ],
+            "aliases": [
+                "msbuildArchitectureOption"
+            ],
             "type": "pickList",
             "label": "MSBuild architecture",
             "defaultValue": "x86",
@@ -149,7 +161,9 @@
         },
         {
             "name": "jdkSelection",
-            "aliases": [ "jdkOption" ],
+            "aliases": [
+                "jdkOption"
+            ],
             "type": "radio",
             "label": "Select JDK to use for the build",
             "required": true,
@@ -163,7 +177,9 @@
         },
         {
             "name": "jdkVersion",
-            "aliases": [ "jdkVersionOption" ],
+            "aliases": [
+                "jdkVersionOption"
+            ],
             "type": "pickList",
             "label": "JDK version",
             "required": false,
@@ -182,7 +198,9 @@
         },
         {
             "name": "jdkUserInputPath",
-            "aliases": [ "jdkDirectory" ],
+            "aliases": [
+                "jdkDirectory"
+            ],
             "type": "string",
             "label": "JDK path",
             "required": true,
@@ -193,7 +211,9 @@
         },
         {
             "name": "jdkArchitecture",
-            "aliases": [ "jdkArchitectureOption" ],
+            "aliases": [
+                "jdkArchitectureOption"
+            ],
             "type": "pickList",
             "label": "JDK architecture",
             "defaultValue": "x64",

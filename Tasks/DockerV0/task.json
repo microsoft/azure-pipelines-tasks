@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 3,
-        "Patch": 19
+        "Patch": 22
     },
     "demands": [],
     "preview": "false",
@@ -39,7 +39,9 @@
         },
         {
             "name": "dockerRegistryEndpoint",
-            "aliases": ["dockerRegistryConnection"],
+            "aliases": [
+                "dockerRegistryConnection"
+            ],
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry Service Connection",
             "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
@@ -47,7 +49,9 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select an Azure subscription",
@@ -291,7 +295,9 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
@@ -315,10 +321,10 @@
         }
     ],
     "outputVariables": [
-	    {
-            "name" : "DockerOutput",
+        {
+            "name": "DockerOutput",
             "description": "Stores the output of the docker command"
-        } 
+        }
     ],
     "instanceNameFormat": "$(action)",
     "execution": {
@@ -329,10 +335,10 @@
     "messages": {
         "ContainerPatternFound": "Pattern found in docker filepath parameter",
         "ContainerPatternNotFound": "No pattern found in docker filepath parameter",
-        "ContainerDockerFileNotFound":"No Docker file matching  %s  was found.",
+        "ContainerDockerFileNotFound": "No Docker file matching  %s  was found.",
         "NoImagesInImageNamesFile": "At least one image name is expected in file '%s'.",
         "CantWriteDataToFile": "Can not write data to the file %s. Error: %s",
-        "NoDataWrittenOnFile":"No data was written into the file %s",
+        "NoDataWrittenOnFile": "No data was written into the file %s",
         "FileContentSynced": "Synced the file content to the disk. The content is %s."
     }
 }

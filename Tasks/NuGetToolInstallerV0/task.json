@@ -14,13 +14,16 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 5
+        "Patch": 7
     },
     "preview": false,
-    "satisfies": ["NuGet"],
+    "satisfies": [
+        "NuGet"
+    ],
     "demands": [],
     "instanceNameFormat": "Use NuGet $(versionSpec)",
-    "inputs": [{
+    "inputs": [
+        {
             "name": "versionSpec",
             "type": "string",
             "label": "Version of NuGet.exe to install",

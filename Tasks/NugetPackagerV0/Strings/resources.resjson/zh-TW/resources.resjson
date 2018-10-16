@@ -10,7 +10,7 @@
   "loc.input.label.outputdir": "封裝資料夾",
   "loc.input.help.outputdir": "將在其中建立封裝的資料夾。如果空白，則會建立封裝以及 csproj 或 nuspec 檔案。",
   "loc.input.label.includeReferencedProjects": "包含參考的專案",
-  "loc.input.help.includeReferencedProjects": "Include referenced projects either as dependencies or as part of the package. Cannot be used with automatic package versioning. If a referenced project has a corresponding nuspec file that has the same name as the project, then that referenced project is added as a dependency. Otherwise, the referenced project is added as part of the package. [Learn more](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
+  "loc.input.help.includeReferencedProjects": "將參考專案加入為相依性或套件的一部份。無法搭配自動套件版本設定使用。如果參考專案的對應 nuspec 檔案名稱與專案相同，就會將該參考專案新增為相依性。否則，會將參考專案新增為套件的一部份。[深入了解](https://docs.microsoft.com/zh-tw/nuget/tools/cli-ref-pack)。",
   "loc.input.label.versionByBuild": "自動封裝版本設定",
   "loc.input.help.versionByBuild": "無法與 [包含參考的專案] 一併使用。如果您選擇 [使用日期與時間]，這會產生符合 [SemVer](http://semver.org/spec/v1.0.0.html) 規範的版本，格式為 `X.Y.Z-ci-datetime`，其中 X、Y 和 Z 由您選擇。\n\n如果您選擇 [使用環境變數]，則必須選取環境變數，並確認其包含您要使用的版本號碼。\n\n如果您選擇 [使用組建編號]，這會用組建編號來設定您的套件版本。**注意:** 請在 [一般] 下，將組建格式設為 '[$(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)](https://go.microsoft.com/fwlink/?LinkID=627416)'。",
   "loc.input.label.versionEnvVar": "環境變數",
@@ -26,7 +26,7 @@
   "loc.input.label.buildProperties": "其他組建屬性",
   "loc.input.help.buildProperties": "用來建置封裝的屬性清單 (以分號分隔)。",
   "loc.input.label.nuGetAdditionalArgs": "NuGet 引數",
-  "loc.input.help.nuGetAdditionalArgs": "Additional arguments passed to NuGet.exe pack. [More Information](https://docs.microsoft.com/en-us/nuget/tools/cli-ref-pack).",
+  "loc.input.help.nuGetAdditionalArgs": "傳遞至 NuGet.exe 套件的其他引數。[詳細資訊](https://docs.microsoft.com/zh-tw/nuget/tools/cli-ref-pack)。",
   "loc.input.label.nuGetPath": "NuGet.exe 的路徑",
   "loc.input.help.nuGetPath": "選擇性地提供 NuGet.exe 的路徑"
 }

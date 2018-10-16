@@ -13,12 +13,15 @@
     "version": {
         "Major": 0,
         "Minor": 136,
-        "Patch": 0
+        "Patch": 1
     },
-    "satisfies": ["Node"],
+    "satisfies": [
+        "Node"
+    ],
     "demands": [],
     "instanceNameFormat": "Use Node $(versionSpec)",
-    "inputs": [{
+    "inputs": [
+        {
             "name": "versionSpec",
             "type": "string",
             "label": "Version Spec",

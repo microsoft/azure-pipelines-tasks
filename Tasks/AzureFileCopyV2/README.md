@@ -36,6 +36,10 @@ For Azure MSDN accounts, in addition to the certificates and the Service Princip
   - Login to the portal with this Active Directory account wiz. [testuser@joehotmail.onmicrosoft.com](mailto:testuser@joehotmail.onmicrosoft.com), and change the password. Initially a temporary password is created and that needs to be changed at the first login.
 2. Add that user and password in the service connections in the Azure Pipelines and deployments will work with that account.
 
+**PowerShell**
+
+The task needs at least version 3.0 of Powershell on the target machine.
+
 **Azure PowerShell**
 
 The task needs the Azure PowerShell version to be installed on the automation agent, and that can be done easily using the [Azure PowerShell Installer v1.0.2] (https://github.com/Azure/azure-powershell/releases/tag/v1.0.2-December2015). Refer to "Supported Azure and AzureRM module versions" section below for recommended versions.

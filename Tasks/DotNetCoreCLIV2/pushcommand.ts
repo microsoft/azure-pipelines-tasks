@@ -1,14 +1,13 @@
 import * as Q from 'q';
-import * as auth from 'nuget-task-common/Authentication';
-import * as commandHelper from 'nuget-task-common/CommandHelper';
-import * as nutil from 'nuget-task-common/Utility';
+import * as auth from 'packaging-common/nuget/Authentication';
+import * as commandHelper from 'packaging-common/nuget/CommandHelper';
+import * as nutil from 'packaging-common/nuget/Utility';
 import * as path from 'path';
 import * as tl from 'vsts-task-lib/task';
 
 import { IExecOptions } from 'vsts-task-lib/toolrunner';
-import { IPackageSource } from 'nuget-task-common/Authentication';
-import { NuGetConfigHelper2 } from 'nuget-task-common/NuGetConfigHelper2';
-import * as pkgLocationUtils from 'utility-common/packaging/locationUtilities';
+import { NuGetConfigHelper2 } from 'packaging-common/nuget/NuGetConfigHelper2';
+import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 
 export async function run(): Promise<void> {
     let packagingLocation: pkgLocationUtils.PackagingLocation;
@@ -68,7 +67,7 @@ export async function run(): Promise<void> {
         }
 
         // Setting up auth info
-        const accessToken = auth.getSystemAccessToken();
+        const accessToken = pkgLocationUtils.getSystemAccessToken();
         const isInternalFeed: boolean = nugetFeedType === 'internal';
         const useCredConfig = useCredentialConfiguration(isInternalFeed);
         const internalAuthInfo = new auth.InternalAuthInfo(urlPrefixes, accessToken, /*useCredProvider*/ null, useCredConfig);
@@ -100,8 +99,8 @@ export async function run(): Promise<void> {
                 false /* useNugetToModifyConfigFile */);
 
             const internalFeedId = tl.getInput('feedPublish');
-            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, accessToken, internalFeedId, null);
-            nuGetConfigHelper.addSourcesToTempNuGetConfig([<IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
+            feedUri = await nutil.getNuGetFeedRegistryUrl(packagingLocation.DefaultPackagingUri, internalFeedId, null, accessToken);
+            nuGetConfigHelper.addSourcesToTempNuGetConfig([<auth.IPackageSource>{ feedName: internalFeedId, feedUri: feedUri, isInternal: true }]);
             configFile = nuGetConfigHelper.tempNugetConfigPath;
             credCleanup = () => { tl.rmRF(tempNuGetConfigDirectory); };
 

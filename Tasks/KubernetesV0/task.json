@@ -13,7 +13,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 31
+        "Patch": 35
     },
     "demands": [],
     "preview": "false",
@@ -47,7 +47,9 @@
     "inputs": [
         {
             "name": "kubernetesServiceEndpoint",
-            "aliases": ["kubernetesServiceConnection"],
+            "aliases": [
+                "kubernetesServiceConnection"
+            ],
             "type": "connectedService:kubernetes",
             "label": "Kubernetes service connection",
             "helpMarkDown": "Select a Kubernetes service connection."
@@ -136,7 +138,7 @@
                 "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
             },
             "label": "Arguments",
-            "defaultValue":"",
+            "defaultValue": "",
             "helpMarkDown": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
             "visibleRule": "secretType = generic",
             "groupName": "secrets"
@@ -157,7 +159,9 @@
         },
         {
             "name": "dockerRegistryEndpoint",
-            "aliases": ["dockerRegistryConnection"],
+            "aliases": [
+                "dockerRegistryConnection"
+            ],
             "type": "connectedService:dockerregistry",
             "label": "Docker Registry service connection",
             "helpMarkDown": "Select a Docker registry service connection. Required for commands that need to authenticate with a registry.",
@@ -166,7 +170,9 @@
         },
         {
             "name": "azureSubscriptionEndpoint",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "helpMarkDown": "Select the Azure Resource Manager subscription, which contains Azure Container Registry. Note: To configure new service connection, select the Azure subscription from the list and click 'Authorize'. If your subscription is not listed or if you want to use an existing Service Principal, you can setup an Azure service connection using 'Add' or 'Manage' button.",
@@ -224,15 +230,15 @@
             "helpMarkDown": "Create a ConfigMap from an individual file, or from multiple files by specifying a directory.",
             "groupName": "configMaps"
         },
-        {	
-            "name": "configMapFile",	
+        {
+            "name": "configMapFile",
             "type": "filePath",
-            "label": "ConfigMap file",	
+            "label": "ConfigMap file",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Specify a file or directory that contains the configMaps",
             "visibleRule": "useConfigMapFile = true",
-            "groupName": "configMaps"	
+            "groupName": "configMaps"
         },
         {
             "name": "configMapArguments",
@@ -276,8 +282,8 @@
             "defaultValue": "false",
             "helpMarkDown": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
             "required": false,
-			"groupName": "advanced",
-			"visibleRule": "versionOrLocation = version"
+            "groupName": "advanced",
+            "visibleRule": "versionOrLocation = version"
         },
         {
             "name": "specifyLocation",
@@ -291,7 +297,9 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
@@ -353,6 +361,6 @@
         "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
-        "ConfigurationFileNotFound":"No configuration file matching %s was found."
+        "ConfigurationFileNotFound": "No configuration file matching %s was found."
     }
 }

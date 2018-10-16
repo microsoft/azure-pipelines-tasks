@@ -17,7 +17,7 @@
     "version": {
         "Major": 3,
         "Minor": 141,
-        "Patch": 2
+        "Patch": 4
     },
     "releaseNotes": "Configuration of the SonarQube analysis was moved to the [SonarQube](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarqube) or [SonarCloud](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarcloud) extensions, in task `Prepare Analysis Configuration`",
     "demands": [
@@ -50,7 +50,9 @@
     "inputs": [
         {
             "name": "mavenPOMFile",
-            "aliases": [ "mavenPomFile" ],
+            "aliases": [
+                "mavenPomFile"
+            ],
             "type": "filePath",
             "label": "Maven POM file",
             "defaultValue": "pom.xml",
@@ -102,7 +104,9 @@
         },
         {
             "name": "codeCoverageTool",
-            "aliases": [ "codeCoverageToolOption" ],
+            "aliases": [
+                "codeCoverageToolOption"
+            ],
             "type": "pickList",
             "label": "Code coverage tool",
             "required": false,
@@ -117,7 +121,9 @@
         },
         {
             "name": "classFilter",
-            "aliases": [ "codeCoverageClassFilter" ],
+            "aliases": [
+                "codeCoverageClassFilter"
+            ],
             "type": "string",
             "label": "Class inclusion/exclusion filters",
             "defaultValue": "",
@@ -128,7 +134,9 @@
         },
         {
             "name": "classFilesDirectories",
-            "aliases": [ "codeCoverageClassFilesDirectories" ],
+            "aliases": [
+                "codeCoverageClassFilesDirectories"
+            ],
             "type": "string",
             "label": "Class files directories",
             "required": false,
@@ -138,7 +146,9 @@
         },
         {
             "name": "srcDirectories",
-            "aliases": [ "codeCoverageSourceDirectories" ],
+            "aliases": [
+                "codeCoverageSourceDirectories"
+            ],
             "type": "string",
             "label": "Source files directories",
             "defaultValue": "",
@@ -149,7 +159,9 @@
         },
         {
             "name": "failIfCoverageEmpty",
-            "aliases": [ "codeCoverageFailIfEmpty" ],
+            "aliases": [
+                "codeCoverageFailIfEmpty"
+            ],
             "type": "boolean",
             "label": "Fail when code coverage results are missing",
             "defaultValue": "false",
@@ -160,7 +172,9 @@
         },
         {
             "name": "javaHomeSelection",
-            "aliases": [ "javaHomeOption" ],
+            "aliases": [
+                "javaHomeOption"
+            ],
             "type": "radio",
             "label": "Set JAVA_HOME by",
             "required": true,
@@ -174,7 +188,9 @@
         },
         {
             "name": "jdkVersion",
-            "aliases": [ "jdkVersionOption" ],
+            "aliases": [
+                "jdkVersionOption"
+            ],
             "type": "pickList",
             "label": "JDK version",
             "required": false,
@@ -193,7 +209,9 @@
         },
         {
             "name": "jdkUserInputPath",
-            "aliases": [ "jdkDirectory" ],
+            "aliases": [
+                "jdkDirectory"
+            ],
             "type": "string",
             "label": "JDK path",
             "required": true,
@@ -204,7 +222,9 @@
         },
         {
             "name": "jdkArchitecture",
-            "aliases": [ "jdkArchitectureOption" ],
+            "aliases": [
+                "jdkArchitectureOption"
+            ],
             "type": "pickList",
             "label": "JDK architecture",
             "defaultValue": "x64",
@@ -219,7 +239,9 @@
         },
         {
             "name": "mavenVersionSelection",
-            "aliases": [ "mavenVersionOption" ],
+            "aliases": [
+                "mavenVersionOption"
+            ],
             "type": "radio",
             "label": "Maven version",
             "defaultValue": "Default",
@@ -233,7 +255,9 @@
         },
         {
             "name": "mavenPath",
-            "aliases": [ "mavenDirectory" ],
+            "aliases": [
+                "mavenDirectory"
+            ],
             "type": "string",
             "label": "Maven path",
             "required": true,
@@ -254,7 +278,9 @@
         },
         {
             "name": "mavenOpts",
-            "aliases": [ "mavenOptions" ],
+            "aliases": [
+                "mavenOptions"
+            ],
             "type": "string",
             "label": "Set MAVEN_OPTS to",
             "required": false,
@@ -264,7 +290,9 @@
         },
         {
             "name": "mavenFeedAuthenticate",
-            "aliases": [ "mavenAuthenticateFeed" ],
+            "aliases": [
+                "mavenAuthenticateFeed"
+            ],
             "type": "boolean",
             "label": "Authenticate built-in Maven feeds",
             "required": true,
@@ -274,7 +302,9 @@
         },
         {
             "name": "sqAnalysisEnabled",
-            "aliases": [ "sonarQubeRunAnalysis" ],
+            "aliases": [
+                "sonarQubeRunAnalysis"
+            ],
             "type": "boolean",
             "label": "Run SonarQube or SonarCloud analysis",
             "required": true,
@@ -298,7 +328,9 @@
         },
         {
             "name": "checkstyleAnalysisEnabled",
-            "aliases": [ "checkStyleRunAnalysis" ],
+            "aliases": [
+                "checkStyleRunAnalysis"
+            ],
             "type": "boolean",
             "label": "Run Checkstyle",
             "required": false,
@@ -308,7 +340,9 @@
         },
         {
             "name": "pmdAnalysisEnabled",
-            "aliases": [ "pmdRunAnalysis" ],
+            "aliases": [
+                "pmdRunAnalysis"
+            ],
             "type": "boolean",
             "label": "Run PMD",
             "required": false,
@@ -318,7 +352,9 @@
         },
         {
             "name": "findbugsAnalysisEnabled",
-            "aliases": [ "findBugsRunAnalysis" ],
+            "aliases": [
+                "findBugsRunAnalysis"
+            ],
             "type": "boolean",
             "label": "Run FindBugs",
             "required": false,

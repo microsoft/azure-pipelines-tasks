@@ -30,4 +30,4 @@ export class StringErrorWritable extends stream.Writable {
     toString(): string {
         return this.value;
     }
-};
+}

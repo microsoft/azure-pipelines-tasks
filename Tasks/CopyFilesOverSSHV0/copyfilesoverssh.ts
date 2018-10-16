@@ -1,8 +1,7 @@
 import * as os from 'os';
 import * as path from 'path';
-
 import * as tl from 'vsts-task-lib/task';
-import { SshHelper } from 'ssh-common/ssh-common';
+import { SshHelper } from './sshhelper';
 
 // This method will find the list of matching files for the specified contents
 // This logic is the same as the one used by CopyFiles task except for allowing dot folders to be copied

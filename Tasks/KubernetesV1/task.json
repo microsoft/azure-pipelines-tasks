@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 8
+        "Patch": 12
     },
     "demands": [],
     "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -202,7 +202,7 @@
                 "editorExtension": "ms.vss-services-azure.kubernetes-parameters-grid"
             },
             "label": "Arguments",
-            "defaultValue":"",
+            "defaultValue": "",
             "helpMarkDown": "Specify keys and literal values to insert in secret.For example, --from-literal=key1=value1 --from-literal=key2=\"top secret\".",
             "visibleRule": "secretType = generic",
             "groupName": "secrets"
@@ -288,15 +288,15 @@
             "helpMarkDown": "Create a ConfigMap from an individual file, or from multiple files by specifying a directory.",
             "groupName": "configMaps"
         },
-        {	
-            "name": "configMapFile",	
+        {
+            "name": "configMapFile",
             "type": "filePath",
-            "label": "ConfigMap file",	
+            "label": "ConfigMap file",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Specify a file or directory that contains the configMaps",
             "visibleRule": "useConfigMapFile = true",
-            "groupName": "configMaps"	
+            "groupName": "configMaps"
         },
         {
             "name": "configMapArguments",
@@ -340,8 +340,8 @@
             "defaultValue": "false",
             "helpMarkDown": "Always checks online for the latest available version (stable.txt) that satisfies the version spec. This is typically false unless you have a specific scenario to always get latest. This will cause it to incur download costs when potentially not necessary, especially with the hosted build pool.",
             "required": false,
-			"groupName": "advanced",
-			"visibleRule": "versionOrLocation = version"
+            "groupName": "advanced",
+            "visibleRule": "versionOrLocation = version"
         },
         {
             "name": "specifyLocation",
@@ -355,7 +355,9 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working directory",
             "defaultValue": "$(System.DefaultWorkingDirectory)",
@@ -389,24 +391,24 @@
         {
             "target": "kubernetesCluster",
             "endpointId": "$(azureSubscriptionEndpoint)",
-            "endpointUrl":"{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/$(azureResourceGroup)/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{{{name}}}"
         },
         {
             "target": "azureResourceGroup",
             "endpointId": "$(azureSubscriptionEndpoint)",
-            "endpointUrl":"{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+            "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
             "resultSelector": "jsonpath:$.value[*]",
             "resultTemplate": "{{{ #extractResource id resourcegroups}}}"
         }
     ],
     "instanceNameFormat": "kubectl $(command)",
     "outputVariables": [
-	    {
-            "name" : "KubectlOutput",
+        {
+            "name": "KubectlOutput",
             "description": "Stores the output of the kubectl command"
-        } 
+        }
     ],
     "execution": {
         "Node": {
@@ -416,7 +418,7 @@
     "messages": {
         "CantDownloadAccessProfile": "Cannot download access profile/kube config file for the cluster %s. Reason %s.",
         "DownloadingClient": "Downloading kubernetes client.",
-        "KubernetesClusterResourceGroup" : "Kubernetes cluster %s, resource group %s.",
+        "KubernetesClusterResourceGroup": "Kubernetes cluster %s, resource group %s.",
         "CreatingSecret": "Executing create %s secret.",
         "DeleteSecret": "Executing delete %s secret",
         "CreatingConfigMap": "Executing create %s configmap.",
@@ -431,7 +433,7 @@
         "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
         "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
         "NotAValidSemverVersion": "Version not specified in correct format. E.g: 1.8.2, v1.8.2, 2.8.2, v2.8.2.",
-        "ConfigurationFileNotFound":"No configuration file matching %s was found.",
-        "KubernetesServiceConnectionNotFound":"Kubernetes service connection details not found."
+        "ConfigurationFileNotFound": "No configuration file matching %s was found.",
+        "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found."
     }
 }

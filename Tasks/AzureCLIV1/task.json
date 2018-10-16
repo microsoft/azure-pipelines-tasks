@@ -19,8 +19,8 @@
     "version": {
         "Major": 1,
         "Minor": 140,
-        "Patch": 1
-        },
+        "Patch": 3
+    },
     "minimumAgentVersion": "2.0.0",
     "instanceNameFormat": "Azure CLI $(scriptPath)",
     "groups": [
@@ -33,7 +33,9 @@
     "inputs": [
         {
             "name": "connectedServiceNameARM",
-            "aliases": ["azureSubscription"],
+            "aliases": [
+                "azureSubscription"
+            ],
             "type": "connectedService:AzureRM",
             "label": "Azure subscription",
             "required": true,
@@ -76,7 +78,9 @@
         },
         {
             "name": "args",
-            "aliases": ["arguments"],
+            "aliases": [
+                "arguments"
+            ],
             "type": "string",
             "label": "Arguments",
             "defaultValue": "",
@@ -88,7 +92,9 @@
         },
         {
             "name": "cwd",
-            "aliases": ["workingDirectory"],
+            "aliases": [
+                "workingDirectory"
+            ],
             "type": "filePath",
             "label": "Working Directory",
             "defaultValue": "",

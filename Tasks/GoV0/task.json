@@ -5,7 +5,6 @@
     "description": "Get, build, or test a Go application, or run a custom Go command.",
     "helpMarkDown": "[More Information](https://go.microsoft.com/fwlink/?linkid=867582)",
     "author": "Microsoft Corporation",
-    "preview": true,
     "category": "Build",
     "visibility": [
         "Build",
@@ -14,14 +13,13 @@
     "version": {
         "Major": 0,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 3
     },
     "runsOn": [
         "Agent",
         "DeploymentGroup"
     ],
-    "demands": [
-    ],
+    "demands": [],
     "instanceNameFormat": "go $(command)",
     "groups": [
         {
@@ -70,14 +68,13 @@
             "groupName": "advanced"
         }
     ],
-    "dataSourceBindings": [
-    ],
+    "dataSourceBindings": [],
     "execution": {
         "Node": {
             "target": "main.js"
         }
     },
     "messages": {
-        "TaskFailedWithError" : "The Go task failed with an error: %s"
+        "TaskFailedWithError": "The Go task failed with an error: %s"
     }
 }

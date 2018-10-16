@@ -1,10 +1,10 @@
-import * as auth from "nuget-task-common/Authentication";
-import * as ngToolRunner from "nuget-task-common/NuGetToolRunner2";
-import * as nutil from "nuget-task-common/Utility";
+import * as auth from "packaging-common/nuget/Authentication";
+import * as ngToolRunner from "packaging-common/nuget/NuGetToolRunner2";
+import * as nutil from "packaging-common/nuget/Utility";
 import * as tl from "vsts-task-lib/task";
 
-import peParser = require("nuget-task-common/pe-parser/index");
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import peParser = require("packaging-common/pe-parser/index");
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
 import {IExecSyncResult} from "vsts-task-lib/toolrunner";
 
@@ -54,7 +54,7 @@ export async function run(nuGetPath: string): Promise<void> {
         // useCredConfig not placed here: This task will only support NuGet versions >= 3.5.0
         // which support credProvider both hosted and OnPrem
 
-        const accessToken = auth.getSystemAccessToken();
+        const accessToken = pkgLocationUtils.getSystemAccessToken();
         let urlPrefixes = packagingLocation.PackagingUris;
         tl.debug(`Discovered URL prefixes: ${urlPrefixes}`);
 

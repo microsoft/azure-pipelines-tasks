@@ -1,9 +1,9 @@
 // Placed as a separate file for the purpose of unit testing
 import * as path from "path";
-import * as commandHelper from "nuget-task-common/CommandHelper";
+import * as commandHelper from "packaging-common/nuget/CommandHelper";
 
 export function getBundledVstsNuGetPushLocation(): string {
-    const vstsNuGetPushPaths: string[] = ["VstsNuGetPush/0.13.0"];
+    const vstsNuGetPushPaths: string[] = ["VstsNuGetPush/0.17.0/tools"];
 
     const toolPath = commandHelper.locateTool("VstsNuGetPush",
     <commandHelper.LocateOptions>{

@@ -46,6 +46,7 @@ export class TaskParametersUtility {
             this.getWebAppKind(taskParameters);
         }
         taskParameters.WebAppName = tl.getInput('WebAppName', true);
+        taskParameters.isFunctionApp = taskParameters.WebAppKind.indexOf("function") != -1;
         taskParameters.isLinuxApp = taskParameters.WebAppKind && (taskParameters.WebAppKind.indexOf("Linux") !=-1 || taskParameters.WebAppKind.indexOf("Container") != -1);
         taskParameters.isBuiltinLinuxWebApp = taskParameters.WebAppKind.indexOf('Linux') != -1;
         taskParameters.isContainerWebApp =taskParameters.WebAppKind.indexOf('Container') != -1;
@@ -82,7 +83,12 @@ export class TaskParametersUtility {
         taskParameters.UseWebDeploy = !taskParameters.isLinuxApp ? tl.getBoolInput('UseWebDeploy', false) : false;
 
         if(taskParameters.isLinuxApp && taskParameters.isBuiltinLinuxWebApp) {
-            taskParameters.RuntimeStack = tl.getInput('RuntimeStack', true);
+            if(taskParameters.isFunctionApp) {
+                taskParameters.RuntimeStack = tl.getInput('RuntimeStackFunction', false);
+            }
+            else {
+                taskParameters.RuntimeStack = tl.getInput('RuntimeStack', false);
+            }
             taskParameters.TakeAppOfflineFlag = false;
         }
 
@@ -181,4 +187,5 @@ export interface TaskParameters {
     isLinuxApp?: boolean;
     isBuiltinLinuxWebApp?: boolean;
     isContainerWebApp?: boolean;
+    isFunctionApp?: boolean;
 }

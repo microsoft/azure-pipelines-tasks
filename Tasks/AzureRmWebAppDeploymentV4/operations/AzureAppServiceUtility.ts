@@ -84,7 +84,7 @@ export class AzureAppServiceUtility {
             var webRequest = new webClient.WebRequest();
             webRequest.method = 'GET';
             webRequest.uri = applicationUrl;
-            let webRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5};
+            let webRequestOptions: webClient.WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: [], retryCount: 1, retryIntervalInSeconds: 5, retryRequestTimedout: true};
             var response = await webClient.sendRequest(webRequest, webRequestOptions);
             tl.debug(`App Service status Code: '${response.statusCode}'. Status Message: '${response.statusMessage}'`);
         }
@@ -119,7 +119,7 @@ export class AzureAppServiceUtility {
 
         tl.debug(`Virtual Application Map: Physical path: '${physicalToVirtualPathMap.physicalPath}'. Virtual path: '${physicalToVirtualPathMap.virtualPath}'.`);
         return physicalToVirtualPathMap.physicalPath;
-    }
+    }   
 
     public async updateConfigurationSettings(properties: any) : Promise<void> {
         for(var property in properties) {
@@ -133,7 +133,7 @@ export class AzureAppServiceUtility {
         console.log(tl.loc('UpdatedAppServiceConfigurationSettings'));
     }
 
-    public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<void> {
+    public async updateAndMonitorAppSettings(addProperties: any, deleteProperties?: any): Promise<boolean> {
         for(var property in addProperties) {
             if(!!addProperties[property] && addProperties[property].value !== undefined) {
                 addProperties[property] = addProperties[property].value;
@@ -145,7 +145,7 @@ export class AzureAppServiceUtility {
 
         if(!isNewValueUpdated) {
             console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
-            return;
+            return isNewValueUpdated;
         }
 
         var kuduService = await this.getKuduService();
@@ -161,11 +161,18 @@ export class AzureAppServiceUtility {
                     break;
                 }
             }
+            for(var property in deleteProperties) {
+                if(kuduServiceAppSettings[property]) {
+                    tl.debug('Deleted properties are not reflected in Kudu service :(');
+                    propertiesChanged = false;
+                    break;
+                }
+            }
 
             if(propertiesChanged) {
                 tl.debug('New properties are updated in Kudu service.');
                 console.log(tl.loc('UpdatedAppServiceApplicationSettings'));
-                return;
+                return isNewValueUpdated;
             }
 
             noOftimesToIterate -= 1;
@@ -173,6 +180,7 @@ export class AzureAppServiceUtility {
         }
 
         tl.debug('Timing out from app settings check');
+        return isNewValueUpdated;
     }
 
     public async enableRenameLockedFiles(): Promise<void> {
@@ -199,6 +207,7 @@ export class AzureAppServiceUtility {
         startupCommand = (!!startupCommand) ? startupCommand  : "";
         var linuxFxVersion: string = configDetails.properties.linuxFxVersion;
         var appCommandLine: string = configDetails.properties.appCommandLine;
+        runtimeStack = (!!runtimeStack) ? runtimeStack : linuxFxVersion;
 
         if (appCommandLine != startupCommand || runtimeStack != linuxFxVersion) {
             await this.updateConfigurationSettings({linuxFxVersion: runtimeStack, appCommandLine: startupCommand});

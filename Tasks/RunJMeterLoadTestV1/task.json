@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 23
+        "Patch": 25
     },
     "demands": [
         "azureps"
@@ -115,7 +115,7 @@
             "type": "radio",
             "label": "Run load test using",
             "required": false,
-            "visibleRule": "runDuration = 0", 
+            "visibleRule": "runDuration = 0",
             "defaultValue": "0",
             "options": {
                 "0": "Automatically provisioned agents",

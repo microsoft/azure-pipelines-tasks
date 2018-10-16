@@ -40,9 +40,11 @@ export async function usePythonVersion(parameters: Readonly<TaskParameters>, pla
 
         throw new Error([
             task.loc('VersionNotFound', parameters.versionSpec, parameters.architecture),
-            task.loc('ListAvailableVersions'),
+            task.loc('ListAvailableVersions', task.getVariable('Agent.ToolsDirectory')),
             x86Versions,
-            x64Versions
+            x64Versions,
+            task.loc('ToolNotFoundMicrosoftHosted', 'Python', 'https://aka.ms/hosted-agent-software'),
+            task.loc('ToolNotFoundSelfHosted', 'Python', 'https://go.microsoft.com/fwlink/?linkid=871498')
         ].join(os.EOL));
     }
 
