@@ -16,9 +16,6 @@ steps:
   inputs:
     versionSpec: 4.0.0
 
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
 # npm install
 - script: npm install
   displayName: npm install
@@ -33,22 +30,13 @@ steps:
   env:
     SYSTEM_ACCESSTOKEN: $(system.accessToken)
 
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
 # Stage milestone
 - script: node .\ci\stage-milestone.js
   displayName: Stage milestone
 
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
 # Create packages.config for restoring previous milestones
 - script: node .\ci\create-restore-config.js
   displayName: Create packages.config for restoring previous milestones
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
 
 # Restore previous milestones
 - task: NuGetCommand@2
@@ -61,15 +49,9 @@ steps:
     includeNuGetOrg: false
     packagesDirectory: $(system.defaultWorkingDirectory)\_package\restore
 
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
-
 # Stage per task NuGet package
 - script: npm run package
   displayName: npm run package
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
 
 # Publish per task NuGet package artifact
 - task: PublishBuildArtifacts@1
@@ -78,9 +60,6 @@ steps:
     pathToPublish: _package/nuget-packages
     artifactName: IndividualNuGetPackages
     publishLocation: container
-
-- powershell: 'Get-PSDrive C,D' 
-  displayName: 'Disk Info'
 
 # Publish milestone package
 - task: NuGetCommand@2
