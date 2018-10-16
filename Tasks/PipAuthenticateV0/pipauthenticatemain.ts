@@ -1,5 +1,5 @@
 import * as path from "path";
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities";
+import * as pkgLocationUtils from "packaging-common/locationUtilities";
 import * as telemetry from "utility-common/telemetry";
 import * as tl from "vsts-task-lib";
 import * as auth from "./authentication";
@@ -34,9 +34,13 @@ async function main(): Promise<void> {
                 tl.debug(JSON.stringify(error));
                 packagingLocation = serviceUri;
             }
-            const globalWebApi = utils.getWebApi(packagingLocation, localAccessToken);
+
             for (const feedId of feedIds) {
-                const feedUri = await utils.getPyPiSimpleApiFromFeedId(globalWebApi, feedId);
+                const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
+                    packagingLocation, 
+                    pkgLocationUtils.RegistryType.PyPiSimple, 
+                    feedId, 
+                    localAccessToken);
                 const pipUri = utils.formPipCompatibleUri("build", localAccessToken, feedUri);
                 pipEnvVar = pipEnvVar + " " + pipUri;
             }

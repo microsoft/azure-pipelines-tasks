@@ -1,4 +1,4 @@
-import * as pkgLocationUtils from "utility-common/packaging/locationUtilities"; 
+import * as pkgLocationUtils from "packaging-common/locationUtilities"; 
 import * as telemetry from "utility-common/telemetry";
 import * as tl from "vsts-task-lib";
 import {IExecOptions, IExecSyncResult} from "vsts-task-lib/toolrunner";

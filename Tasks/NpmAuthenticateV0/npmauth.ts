@@ -8,7 +8,7 @@ import * as util from 'packaging-common/util';
 import * as npmutil from 'packaging-common/npm/npmutil';
 import * as os from 'os';
 import * as npmrcparser from 'packaging-common/npm/npmrcparser';
-import * as pkgLocationUtils from 'utility-common/packaging/locationUtilities';
+import * as pkgLocationUtils from 'packaging-common/locationUtilities';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -69,7 +69,7 @@ async function main(): Promise<void> {
 
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Npm);
     } catch (error) {
         tl.debug('Unable to get packaging URIs, using default collection URI');
         tl.debug(JSON.stringify(error));
