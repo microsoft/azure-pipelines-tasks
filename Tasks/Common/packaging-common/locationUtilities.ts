@@ -8,7 +8,8 @@ import * as provenance from "./provenance";
 export enum ProtocolType {
     NuGet,
     Maven,
-    Npm
+    Npm,
+    PyPi
 }
 
 export enum RegistryType {
@@ -157,7 +158,8 @@ export async function getFeedRegistryUrl(
     packagingUrl: string, 
     registryType: RegistryType, 
     feedId: string,
-    accessToken?: string): Promise<string> {
+    accessToken?: string,
+    useSession?: boolean): Promise<string> {
     let loc : RegistryLocation;
     switch (registryType) {
         case RegistryType.npm:
@@ -202,10 +204,13 @@ export async function getFeedRegistryUrl(
 
     const vssConnection = getWebApiWithProxy(packagingUrl, accessToken);
 
-    const prov = new provenance.ProvenanceApi(vssConnection.serverUrl, [vssConnection.authHandler], vssConnection.options);
-    const sessionRequest = provenance.ProvenanceHelper.CreateSessionRequest(feedId);
-    const session = await prov.createSession(sessionRequest, "npm");
-    const sessionId = session.sessionId;
+    let sessionId = feedId;
+    if (useSession) {
+        const prov = new provenance.ProvenanceApi(vssConnection.serverUrl, [vssConnection.authHandler], vssConnection.options);
+        const sessionRequest = provenance.ProvenanceHelper.CreateSessionRequest(feedId);
+        const session = await prov.createSession(sessionRequest, loc.area);
+        sessionId = session.sessionId;
+    }
 
     const data = await Retry(async () => {
         return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId });
