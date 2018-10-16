@@ -2,14 +2,15 @@ trigger:
 - master
 - releases/*
 
-phases:
+jobs:
 
 # All tasks on Windows
-- phase: build_all_windows
+- job: build_all_windows
   displayName: Build all tasks (Windows)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Windows_NT'))
-  queue:
-    name: Hosted VS2017
+  pool:
+    vmImage: vs2017-win2016
+  strategy:
     parallel: $[ variables.build_windows_parallel ]
   steps:
   - template: ci/build-all-steps.yml
@@ -17,20 +18,25 @@ phases:
       os: Windows_NT
 
 # Publish on Windows
-- phase: publish_windows
+- job: publish_windows
   displayName: Publish
-  dependsOn: build_all_windows # TODO: also depend on buildAll_darwin buildAll_linux
+  dependsOn: 
+  - build_all_windows
+  - build_all_linux
+  - build_all_darwin
   condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
-  queue: Hosted VS2017
+  pool:
+    vmImage: vs2017-win2016
   steps:
   - template: ci/publish-steps.yml
 
 # All tasks on Linux
-- phase: build_all_linux
+- job: build_all_linux
   displayName: Build all tasks (Linux)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Linux'))
-  queue:
-    name: Hosted Linux Preview
+  pool:
+    vmImage: ubuntu-16.04
+  strategy:
     parallel: $[ variables.build_linux_parallel ]
   steps:
   - template: ci/build-all-steps.yml
@@ -38,11 +44,12 @@ phases:
       os: Linux
 
 # All tasks on macOS
-- phase: build_all_darwin
+- job: build_all_darwin
   displayName: Build all tasks (macOS)
   condition: and(succeeded(), not(variables.task), eq(variables.os, 'Darwin'))
-  queue:
-    name: Hosted macOS Preview
+  pool:
+    vmImage: macos-10.13
+  strategy:
     parallel: $[ variables.build_darwin_parallel ]
   steps:
   - template: ci/build-all-steps.yml
@@ -50,7 +57,7 @@ phases:
       os: Darwin
 
 # Single task
-- phase: buildSingle
+- job: buildSingle
   displayName: Build single task
   condition: and(succeeded(), variables.task)
   steps:
