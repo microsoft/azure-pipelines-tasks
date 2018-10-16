@@ -17,7 +17,7 @@ param(
     [string]$vstestLocation,
     [string]$runOnlyImpactedTests,
     [string]$runAllTestsAfterXBuilds
-    )
+)
 
 Write-Verbose "Entering script VSTest.ps1"
 Write-Verbose "vsTestVersion = $vsTestVersion"
@@ -33,6 +33,11 @@ Write-Verbose "platform = $platform"
 Write-Verbose "configuration = $configuration"
 Write-Verbose "publishRunAttachments = $publishRunAttachments"
 Write-Verbose "vstestLocation = $vstestLocation"
+
+# Force powershell to use TLS 1.2 for all communications
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls12;
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls11;
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls10;
 
 # Import the Task.Common and Task.Internal dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
