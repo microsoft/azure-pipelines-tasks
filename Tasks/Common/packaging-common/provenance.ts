@@ -42,7 +42,30 @@ export class ProvenanceHelper {
             return ProvenanceHelper.CreateBuildSessionRequest(feedId, buildId);
         }
 
-        // throw
+        throw new Error("Could not resolve Release.ReleaseId or Build.BuildId");
+    }
+
+    public static async GetSessionId(
+        feedId: string,
+        protocol: string,
+        baseUrl: string,
+        handlers: VsoBaseInterfaces.IRequestHandler[],
+        options: VsoBaseInterfaces.IRequestOptions): Promise<string> {
+        
+        // while this feature is in preview, it is enabled by the following variable
+        const useSessionEnabled = tl.getVariable("Packaging.SavePublishMetadata");
+        if (useSessionEnabled) {
+            tl.debug("Creating provenance session");
+            const prov = new ProvenanceApi(baseUrl, handlers, options);
+            const sessionRequest = ProvenanceHelper.CreateSessionRequest(feedId);
+            try {
+                const session = await prov.createSession(sessionRequest, protocol);
+                return session.sessionId;
+            } catch (error) {
+                tl.warning(tl.loc("Warning_SessionCreationFailed", JSON.stringify(error)));
+            }
+        }
+        return feedId;
     }
 
     private static CreateReleaseSessionRequest(feedId: string, releaseId: string): SessionRequest {

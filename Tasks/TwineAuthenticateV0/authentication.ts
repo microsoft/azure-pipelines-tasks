@@ -53,7 +53,12 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<AuthIn
     }
 
     internalAuthArray = await Promise.all(feedList.map(async (feedName: string) => {
-        const feedUri = await pkgLocationUtils.getFeedRegistryUrl(packagingLocation, pkgLocationUtils.RegistryType.PyPiUpload, feedName, localAccessToken);
+        const feedUri = await pkgLocationUtils.getFeedRegistryUrl(
+            packagingLocation,
+            pkgLocationUtils.RegistryType.PyPiUpload,
+            feedName,
+            localAccessToken,
+            true /* useSession */);
         return new AuthInfo({
             feedName,
             feedUri,
