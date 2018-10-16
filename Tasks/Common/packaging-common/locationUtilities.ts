@@ -3,6 +3,8 @@ import * as interfaces from 'vso-node-api/interfaces/common/VSSInterfaces';
 import * as tl from 'vsts-task-lib/task';
 import { IRequestOptions } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
 
+import * as provenance from "./provenance";
+
 export enum ProtocolType {
     NuGet,
     Maven,
@@ -200,8 +202,13 @@ export async function getFeedRegistryUrl(
 
     const vssConnection = getWebApiWithProxy(packagingUrl, accessToken);
 
+    const prov = new provenance.ProvenanceApi(vssConnection.serverUrl, [vssConnection.authHandler], vssConnection.options);
+    const sessionRequest = provenance.ProvenanceHelper.CreateSessionRequest(feedId);
+    const session = await prov.createSession(sessionRequest, "npm");
+    const sessionId = session.sessionId;
+
     const data = await Retry(async () => {
-        return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: feedId });
+        return await vssConnection.vsoClient.getVersioningData(loc.apiVersion, loc.area, loc.locationId, { feedId: sessionId });
     }, 4, 100);
 
     tl.debug("feed registry url: " + data.requestUrl);
