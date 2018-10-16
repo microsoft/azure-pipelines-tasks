@@ -4,6 +4,7 @@ import { FileTransformsUtility } from '../operations/FileTransformsUtility';
 import * as ParameterParser from '../operations/ParameterParserUtility'
 import { DeploymentType } from '../operations/TaskParameters';
 import { PackageType } from 'webdeployment-common/packageUtility';
+import { addReleaseAnnotation } from '../operations/ReleaseAnnotationUtility';
 const oldRunFromZipAppSetting: string = '-WEBSITE_RUN_FROM_ZIP';
 const runFromZipAppSetting: string = '-WEBSITE_RUN_FROM_PACKAGE 1';
 var deployUtility = require('webdeployment-common/utility.js');
@@ -52,6 +53,9 @@ export class WindowsWebAppRunFromZipProvider extends AzureRmWebAppDeploymentProv
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
         if(this.taskParams.ScriptType && this.kuduServiceUtility) {
             await super.UpdateDeploymentStatus(isDeploymentSuccess);
+        }
+        else {
+            await addReleaseAnnotation(this.azureEndpoint, this.appService, isDeploymentSuccess);
         }
     }
 }
